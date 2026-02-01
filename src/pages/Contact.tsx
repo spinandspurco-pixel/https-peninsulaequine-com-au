@@ -1,24 +1,8 @@
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
+import { PageHeader } from "@/components/PageHeader";
 import { InquiryForm } from "@/components/InquiryForm";
 import { siteConfig } from "@/data/content";
-
-function PageHeader() {
-  return (
-    <section className="pt-32 pb-16 bg-primary text-primary-foreground">
-      <div className="section-container">
-        <div className="max-w-3xl">
-          <div className="w-16 h-0.5 bg-accent mb-6" />
-          <h1 className="heading-display mb-6">Start Your Project</h1>
-          <p className="text-lg text-primary-foreground/80">
-            Tell us about your vision and we'll help you bring it to life. 
-            Complete our inquiry form to get started.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function ContactInfo() {
   return (
@@ -95,7 +79,10 @@ function ContactInfo() {
 export default function Contact() {
   return (
     <Layout>
-      <PageHeader />
+      <PageHeader 
+        title="Start Your Project"
+        description="Tell us about your vision and we'll help you bring it to life. Complete our inquiry form to get started."
+      />
 
       <section className="section-padding">
         <div className="section-container">

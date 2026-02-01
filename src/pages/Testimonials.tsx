@@ -2,24 +2,8 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
+import { PageHeader } from "@/components/PageHeader";
 import { testimonials, siteConfig } from "@/data/content";
-
-function PageHeader() {
-  return (
-    <section className="pt-32 pb-16 bg-primary text-primary-foreground">
-      <div className="section-container">
-        <div className="max-w-3xl">
-          <div className="w-16 h-0.5 bg-accent mb-6" />
-          <h1 className="heading-display mb-6">Testimonials</h1>
-          <p className="text-lg text-primary-foreground/80">
-            Don't just take our word for it. Here's what our clients have to say about 
-            working with Peninsula Equine.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -41,7 +25,10 @@ function StarRating({ rating }: { rating: number }) {
 export default function Testimonials() {
   return (
     <Layout>
-      <PageHeader />
+      <PageHeader 
+        title="Testimonials"
+        description="Don't just take our word for it. Here's what our clients have to say about working with Peninsula Equine."
+      />
 
       <section className="section-padding">
         <div className="section-container">
