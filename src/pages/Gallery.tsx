@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, X, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useParallax } from "@/hooks/useParallax";
 import { Layout } from "@/components/layout/Layout";
 
 // Main Ridge images
@@ -174,9 +175,21 @@ const galleryItems: GalleryItem[] = [
 ];
 
 function PageHeader() {
+  const { ref: parallaxRef, offset } = useParallax<HTMLElement>({ speed: 0.3 });
+
   return (
-    <section className="pt-32 pb-16 bg-primary text-primary-foreground">
-      <div className="section-container">
+    <section ref={parallaxRef} className="relative pt-32 pb-16 bg-primary text-primary-foreground overflow-hidden">
+      {/* Parallax background collage */}
+      <div 
+        className="absolute inset-0 opacity-10 will-change-transform"
+        style={{ 
+          transform: `translateY(${offset * 0.5}px)`,
+          backgroundImage: `url(${aberdeenBarnInterior})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
+      <div className="section-container relative z-10">
         <div className="max-w-3xl">
           <div className="w-16 h-0.5 bg-accent mb-6" />
           <h1 className="heading-display mb-6">Our Work</h1>

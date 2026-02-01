@@ -5,6 +5,7 @@ import { Layout } from "@/components/layout/Layout";
 import { FamilyVideoCarousel } from "@/components/FamilyVideoCarousel";
 import { aboutCiro } from "@/data/content";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useParallax } from "@/hooks/useParallax";
 
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
 import ciroWide from "@/assets/ciro-wide.png";
@@ -15,9 +16,21 @@ import ciroJoinUp1 from "@/assets/videos/ciro-bareback-join-up.mp4";
 import ciroJoinUp2 from "@/assets/videos/ciro-bareback-join-up-2.mp4";
 
 function PageHeader() {
+  const { ref: parallaxRef, offset } = useParallax<HTMLElement>({ speed: 0.3 });
+
   return (
-    <section className="pt-32 pb-16 bg-primary text-primary-foreground">
-      <div className="section-container">
+    <section ref={parallaxRef} className="relative pt-32 pb-16 bg-primary text-primary-foreground overflow-hidden">
+      {/* Parallax background layer */}
+      <div 
+        className="absolute inset-0 opacity-10 will-change-transform"
+        style={{ 
+          transform: `translateY(${offset * 0.6}px)`,
+          backgroundImage: `url(${ciroWithHorse})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
+      <div className="section-container relative z-10">
         <div className="max-w-3xl">
           <div className="w-16 h-0.5 bg-accent mb-6" />
           <h1 className="heading-display mb-6">About Peninsula Equine</h1>

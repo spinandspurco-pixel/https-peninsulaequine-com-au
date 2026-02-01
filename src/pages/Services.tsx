@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { services, lessonInfo, siteConfig } from "@/data/content";
 import { useStaggeredAnimation } from "@/hooks/useScrollAnimation";
+import { useParallax } from "@/hooks/useParallax";
 
 // Main Ridge construction process images
 import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
@@ -16,11 +17,23 @@ import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
 import mainRidgeTimberPosts from "@/assets/main-ridge-timber-posts.jpg";
 import mainRidgeTrenchUtilities from "@/assets/main-ridge-trench-utilities.jpg";
 
-// Page header component
+// Page header component with parallax
 function PageHeader({ title, description }: { title: string; description: string }) {
+  const { ref: parallaxRef, offset } = useParallax<HTMLElement>({ speed: 0.3 });
+
   return (
-    <section className="pt-32 pb-16 bg-primary text-primary-foreground">
-      <div className="section-container">
+    <section ref={parallaxRef} className="relative pt-32 pb-16 bg-primary text-primary-foreground overflow-hidden">
+      {/* Parallax decorative element */}
+      <div 
+        className="absolute right-0 top-0 w-1/3 h-full opacity-5 will-change-transform"
+        style={{ 
+          transform: `translateY(${offset * 0.5}px)`,
+          backgroundImage: `url(${mainRidgeBarnFrame})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
+      <div className="section-container relative z-10">
         <div className="max-w-3xl">
           <div className="w-16 h-0.5 bg-accent mb-6" />
           <h1 className="heading-display mb-6">{title}</h1>

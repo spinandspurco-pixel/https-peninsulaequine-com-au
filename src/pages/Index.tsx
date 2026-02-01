@@ -6,6 +6,7 @@ import { Layout } from "@/components/layout/Layout";
 import { MajorEventsSection } from "@/components/MajorEventsSection";
 import { siteConfig, services, testimonials, aboutCiro } from "@/data/content";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useParallax } from "@/hooks/useParallax";
 
 // Import images
 import heroSunset from "@/assets/hero-sunset.png";
@@ -32,6 +33,7 @@ function HeroSection() {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { ref: parallaxRef, offset } = useParallax<HTMLDivElement>({ speed: 0.4 });
 
   // Cycle videos every 15 seconds
   useEffect(() => {
@@ -55,9 +57,12 @@ function HeroSection() {
   }, [currentVideoIndex]);
 
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Full-bleed Background Video */}
-      <div className="absolute inset-0">
+    <section ref={parallaxRef} className="relative h-screen flex items-center justify-center overflow-hidden">
+      {/* Full-bleed Background Video with Parallax */}
+      <div 
+        className="absolute inset-0 will-change-transform"
+        style={{ transform: `translateY(${offset * 0.5}px) scale(1.1)` }}
+      >
         <video
           ref={videoRef}
           autoPlay
