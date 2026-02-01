@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, CheckCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -119,6 +119,31 @@ function ConstructionLightbox({
   currentIndex: number;
   total: number;
 }) {
+  // Keyboard navigation
+  useEffect(() => {
+    if (!step) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case "ArrowLeft":
+          e.preventDefault();
+          onPrev();
+          break;
+        case "ArrowRight":
+          e.preventDefault();
+          onNext();
+          break;
+        case "Escape":
+          e.preventDefault();
+          onClose();
+          break;
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [step, onNext, onPrev, onClose]);
+
   if (!step) return null;
 
   return (
@@ -129,7 +154,7 @@ function ConstructionLightbox({
       <button
         className="absolute top-6 right-6 text-primary-foreground/80 hover:text-primary-foreground z-10"
         onClick={onClose}
-        aria-label="Close lightbox"
+        aria-label="Close lightbox (Escape)"
       >
         <X className="h-8 w-8" />
       </button>
@@ -138,14 +163,14 @@ function ConstructionLightbox({
       <button
         className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-accent/20 hover:bg-accent/40 flex items-center justify-center text-primary-foreground transition-colors"
         onClick={(e) => { e.stopPropagation(); onPrev(); }}
-        aria-label="Previous image"
+        aria-label="Previous image (Left Arrow)"
       >
         <ArrowRight className="h-6 w-6 rotate-180" />
       </button>
       <button
         className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-accent/20 hover:bg-accent/40 flex items-center justify-center text-primary-foreground transition-colors"
         onClick={(e) => { e.stopPropagation(); onNext(); }}
-        aria-label="Next image"
+        aria-label="Next image (Right Arrow)"
       >
         <ArrowRight className="h-6 w-6" />
       </button>
@@ -165,6 +190,10 @@ function ConstructionLightbox({
           </h3>
           <p className="text-primary-foreground/70 text-sm">
             {step.description}
+          </p>
+          {/* Keyboard navigation hint */}
+          <p className="text-primary-foreground/40 text-xs mt-4">
+            Use ← → to navigate • Esc to close
           </p>
         </div>
       </div>
