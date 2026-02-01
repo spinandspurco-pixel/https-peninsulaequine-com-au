@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { aboutCiro, siteConfig } from "@/data/content";
@@ -7,6 +7,10 @@ import { aboutCiro, siteConfig } from "@/data/content";
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
 import ciroWide from "@/assets/ciro-wide.png";
 import horseAction from "@/assets/horse-action.png";
+
+// Import join-up videos
+import ciroJoinUp1 from "@/assets/videos/ciro-bareback-join-up.mp4";
+import ciroJoinUp2 from "@/assets/videos/ciro-bareback-join-up-2.mp4";
 
 function PageHeader() {
   return (
@@ -89,6 +93,62 @@ function ValuesSection() {
             </div>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+function NaturalHorsemanshipSection() {
+  const videos = [
+    { src: ciroJoinUp1, title: "Join-Up Session" },
+    { src: ciroJoinUp2, title: "Bareback Connection" },
+  ];
+
+  return (
+    <section className="section-padding bg-background">
+      <div className="section-container">
+        <div className="max-w-3xl mx-auto text-center mb-12">
+          <div className="w-16 h-0.5 bg-accent mx-auto mb-6" />
+          <h2 className="heading-section text-foreground mb-4">
+            Natural Horsemanship
+          </h2>
+          <p className="text-muted-foreground text-lg">
+            Before Ciro picks up a hammer, he picks up a halter. His deep understanding 
+            of horse behavior and natural horsemanship principles directly informs 
+            every facility he builds.
+          </p>
+        </div>
+
+        {/* Video Grid */}
+        <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+          {videos.map((video, index) => (
+            <div key={index} className="relative group">
+              <div className="aspect-video rounded-lg overflow-hidden bg-muted">
+                <video
+                  className="w-full h-full object-cover"
+                  controls
+                  muted
+                  playsInline
+                  preload="metadata"
+                >
+                  <source src={video.src} type="video/mp4" />
+                </video>
+              </div>
+              <p className="mt-3 text-center text-sm text-muted-foreground font-medium">
+                {video.title}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Quote */}
+        <blockquote className="max-w-2xl mx-auto mt-12 text-center">
+          <p className="font-serif text-xl sm:text-2xl text-foreground italic leading-relaxed">
+            "When you understand how a horse thinks and moves, you build facilities 
+            that work with their nature, not against it."
+          </p>
+          <footer className="mt-4 text-accent font-medium">— Ciro</footer>
+        </blockquote>
       </div>
     </section>
   );
@@ -182,6 +242,7 @@ export default function About() {
     <Layout>
       <PageHeader />
       <CiroSection />
+      <NaturalHorsemanshipSection />
       <ValuesSection />
       <ImageBreak />
       <StorySection />
