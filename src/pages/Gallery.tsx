@@ -93,21 +93,17 @@ const projects = [
   { id: "videos", name: "Videos" },
 ];
 
-// Featured slow-mo videos for hero section
-const featuredVideos = [
-  { id: 100, src: slowMo1, alt: "Graceful Movement", description: "Capturing the elegance of equine motion", thumbnail: mainRidgeInterior },
-  { id: 101, src: slowMo2, alt: "Power & Precision", description: "Every stride tells a story", thumbnail: mainRidgeTimber },
-  { id: 102, src: slowMo3, alt: "Natural Beauty", description: "The artistry of horse training", thumbnail: mainRidgeBrickwork },
+// All videos for dedicated sections (used in FeaturedVideoSection and VideoGallerySection)
+const allVideos = [
+  { id: 100, src: slowMo1, alt: "Graceful Movement", description: "Capturing the elegance of equine motion", project: "videos" as const, type: "video" as const, thumbnail: mainRidgeInterior },
+  { id: 101, src: slowMo2, alt: "Power & Precision", description: "Every stride tells a story", project: "videos" as const, type: "video" as const, thumbnail: mainRidgeTimber },
+  { id: 102, src: slowMo3, alt: "Natural Beauty", description: "The artistry of horse training", project: "videos" as const, type: "video" as const, thumbnail: mainRidgeBrickwork },
+  { id: 103, src: mainRidgeWoodwork1, alt: "Timber Craftsmanship", description: "Traditional woodworking techniques", project: "main-ridge" as const, type: "video" as const, thumbnail: mainRidgeCiroWoodwork1 },
+  { id: 104, src: mainRidgeWoodwork2, alt: "Woodworking Detail", description: "Hand-crafted precision", project: "main-ridge" as const, type: "video" as const, thumbnail: mainRidgeCiroWoodwork2 },
 ];
 
+// Gallery items for photo grid (videos are in dedicated sections above)
 const galleryItems: GalleryItem[] = [
-  // Videos first for prominence
-  { id: 100, src: slowMo1, alt: "Slow motion equine footage", project: "videos", type: "video", thumbnail: mainRidgeInterior },
-  { id: 101, src: slowMo2, alt: "Horse in slow motion", project: "videos", type: "video", thumbnail: mainRidgeTimber },
-  { id: 102, src: slowMo3, alt: "Equine slow motion detail", project: "videos", type: "video", thumbnail: mainRidgeBrickwork },
-  { id: 103, src: mainRidgeWoodwork1, alt: "Main Ridge woodworking process", project: "main-ridge", type: "video", thumbnail: mainRidgeCiroWoodwork1 },
-  { id: 104, src: mainRidgeWoodwork2, alt: "Timber craftsmanship video", project: "main-ridge", type: "video", thumbnail: mainRidgeCiroWoodwork2 },
-
   // Main Ridge images
   { id: 1, src: mainRidgeBrickwork, alt: "Main Ridge brickwork detail", project: "main-ridge", type: "image" },
   { id: 2, src: mainRidgeInterior, alt: "Main Ridge barn interior", project: "main-ridge", type: "image" },
@@ -194,13 +190,16 @@ function FeaturedVideoSection({ onVideoClick }: { onVideoClick: (item: GalleryIt
   const [activeVideo, setActiveVideo] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // Only show first 3 (slow-mo videos) in featured section
+  const featuredVideos = allVideos.slice(0, 3);
+  
   const handleVideoClick = () => {
     const video = featuredVideos[activeVideo];
     onVideoClick({
       id: video.id,
       src: video.src,
       alt: video.alt,
-      project: "videos",
+      project: video.project,
       type: "video",
       thumbnail: video.thumbnail,
     });
@@ -274,14 +273,6 @@ function FeaturedVideoSection({ onVideoClick }: { onVideoClick: (item: GalleryIt
   );
 }
 
-// All videos for dedicated gallery section
-const allVideos: GalleryItem[] = [
-  { id: 100, src: slowMo1, alt: "Graceful Movement", project: "videos", type: "video", thumbnail: mainRidgeInterior },
-  { id: 101, src: slowMo2, alt: "Power & Precision", project: "videos", type: "video", thumbnail: mainRidgeTimber },
-  { id: 102, src: slowMo3, alt: "Natural Beauty", project: "videos", type: "video", thumbnail: mainRidgeBrickwork },
-  { id: 103, src: mainRidgeWoodwork1, alt: "Timber Craftsmanship", project: "main-ridge", type: "video", thumbnail: mainRidgeCiroWoodwork1 },
-  { id: 104, src: mainRidgeWoodwork2, alt: "Woodworking Detail", project: "main-ridge", type: "video", thumbnail: mainRidgeCiroWoodwork2 },
-];
 
 function VideoGallerySection({ onVideoClick }: { onVideoClick: (item: GalleryItem) => void }) {
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>({
