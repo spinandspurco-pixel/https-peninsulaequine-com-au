@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { MajorEventsSection } from "@/components/MajorEventsSection";
 import { siteConfig, services, testimonials, aboutCiro } from "@/data/content";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 // Import images
 import heroSunset from "@/assets/hero-sunset.png";
@@ -113,12 +114,20 @@ function HeroSection() {
 }
 
 function IntroSection() {
+  const { ref: textRef, isVisible: textVisible } = useScrollAnimation<HTMLDivElement>();
+  const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
+
   return (
     <section id="intro" className="bg-background">
       {/* Location tagline */}
       <div className="section-padding border-b border-border">
         <div className="section-container">
-          <div className="max-w-4xl mx-auto text-center">
+          <div 
+            ref={textRef}
+            className={`max-w-4xl mx-auto text-center transition-all duration-700 ${
+              textVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
+          >
             <p className="text-muted-foreground uppercase tracking-[0.25em] text-sm mb-8">
               Mornington Peninsula, Victoria
             </p>
@@ -135,11 +144,18 @@ function IntroSection() {
       </div>
 
       {/* Large editorial image */}
-      <div className="relative h-[70vh] min-h-[500px]">
+      <div 
+        ref={imageRef}
+        className={`relative h-[70vh] min-h-[500px] transition-all duration-1000 ${
+          imageVisible ? "opacity-100" : "opacity-0"
+        }`}
+      >
         <img
           src={ciroWithHorse}
           alt="Ciro working with a horse"
-          className="w-full h-full object-cover"
+          className={`w-full h-full object-cover transition-transform duration-1000 ${
+            imageVisible ? "scale-100" : "scale-105"
+          }`}
         />
         <div className="absolute inset-0 image-overlay-subtle" />
       </div>
@@ -148,12 +164,20 @@ function IntroSection() {
 }
 
 function MissionSection() {
+  const { ref: textRef, isVisible: textVisible } = useScrollAnimation<HTMLDivElement>();
+  const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation<HTMLDivElement>();
+
   return (
     <section className="section-padding bg-card">
       <div className="section-container">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
           {/* Text Content */}
-          <div className="lg:col-span-5">
+          <div 
+            ref={textRef}
+            className={`lg:col-span-5 transition-all duration-700 ${
+              textVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
+            }`}
+          >
             <div className="divider mb-8" />
             <p className="text-muted-foreground uppercase tracking-[0.2em] text-sm mb-4">
               Our Mission
@@ -183,7 +207,12 @@ function MissionSection() {
           </div>
 
           {/* Image */}
-          <div className="lg:col-span-7">
+          <div 
+            ref={imageRef}
+            className={`lg:col-span-7 transition-all duration-700 delay-200 ${
+              imageVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
+            }`}
+          >
             <div className="aspect-[4/5] overflow-hidden">
               <img
                 src={horseAction}
@@ -199,10 +228,18 @@ function MissionSection() {
 }
 
 function ServicesSection() {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>();
+  const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+
   return (
     <section className="section-padding bg-background">
       <div className="section-container">
-        <div className="text-center max-w-3xl mx-auto mb-20">
+        <div 
+          ref={headerRef}
+          className={`text-center max-w-3xl mx-auto mb-20 transition-all duration-700 ${
+            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
           <div className="divider mx-auto mb-8" />
           <p className="text-muted-foreground uppercase tracking-[0.2em] text-sm mb-4">
             Our Services
@@ -213,12 +250,15 @@ function ServicesSection() {
         </div>
 
         {/* Services Grid */}
-        <div className="grid sm:grid-cols-2 gap-px bg-border">
-          {featuredServices.map((service) => (
+        <div ref={gridRef} className="grid sm:grid-cols-2 gap-px bg-border">
+          {featuredServices.map((service, index) => (
             <Link
               key={service.id}
               to={`/services#${service.id}`}
-              className="group p-10 sm:p-12 lg:p-16 bg-background hover:bg-card transition-colors"
+              className={`group p-10 sm:p-12 lg:p-16 bg-background hover:bg-card transition-all duration-500 ${
+                gridVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
             >
               <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-4">
                 {service.id.replace(/-/g, ' ')}
@@ -256,6 +296,9 @@ function ServicesSection() {
 }
 
 function GallerySection() {
+  const { ref: imagesRef, isVisible: imagesVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
+  const { ref: ctaRef, isVisible: ctaVisible } = useScrollAnimation<HTMLDivElement>();
+
   const images = [
     { src: hatDetail, alt: "Craftsmanship details" },
     { src: spurDetail, alt: "Equipment detail" },
@@ -265,9 +308,18 @@ function GallerySection() {
   return (
     <section className="bg-primary text-primary-foreground">
       {/* Full-width image strip */}
-      <div className="grid grid-cols-3 h-[40vh] min-h-[300px]">
+      <div 
+        ref={imagesRef}
+        className="grid grid-cols-3 h-[40vh] min-h-[300px]"
+      >
         {images.map((image, index) => (
-          <div key={index} className="overflow-hidden">
+          <div 
+            key={index} 
+            className={`overflow-hidden transition-all duration-700 ${
+              imagesVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
+            style={{ transitionDelay: `${index * 150}ms` }}
+          >
             <img
               src={image.src}
               alt={image.alt}
@@ -280,7 +332,12 @@ function GallerySection() {
       {/* Gallery CTA */}
       <div className="section-padding">
         <div className="section-container">
-          <div className="max-w-3xl mx-auto text-center">
+          <div 
+            ref={ctaRef}
+            className={`max-w-3xl mx-auto text-center transition-all duration-700 ${
+              ctaVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
+          >
             <div className="divider mx-auto mb-8 bg-accent" />
             <h2 className="heading-editorial mb-6">
               Craftsmanship in Every Detail
@@ -308,12 +365,18 @@ function GallerySection() {
 }
 
 function TestimonialsSection() {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>();
   const featured = featuredTestimonials[0];
 
   return (
     <section className="section-padding bg-card">
       <div className="section-container">
-        <div className="max-w-4xl mx-auto text-center">
+        <div 
+          ref={ref}
+          className={`max-w-4xl mx-auto text-center transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
           <div className="divider mx-auto mb-8" />
           
           {/* Stars */}
@@ -357,8 +420,10 @@ function TestimonialsSection() {
 }
 
 function CTASection() {
+  const { ref, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.2 });
+
   return (
-    <section className="relative py-32 lg:py-40">
+    <section ref={ref} className="relative py-32 lg:py-40">
       {/* Background */}
       <div className="absolute inset-0">
         <img
@@ -370,7 +435,11 @@ function CTASection() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 section-container text-center">
+      <div 
+        className={`relative z-10 section-container text-center transition-all duration-700 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}
+      >
         <div className="max-w-3xl mx-auto">
           <div className="divider mx-auto mb-8 bg-accent" />
           <p className="text-primary-foreground/70 uppercase tracking-[0.2em] text-sm mb-4">
