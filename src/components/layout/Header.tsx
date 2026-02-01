@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Phone } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { siteConfig } from "@/data/content";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -11,7 +10,6 @@ const navigation = [
   { name: "About", href: "/about" },
   { name: "Gallery", href: "/gallery" },
   { name: "Testimonials", href: "/testimonials" },
-  { name: "FAQ", href: "/faq" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -22,7 +20,7 @@ export function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 50);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -35,32 +33,32 @@ export function Header() {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         isScrolled
-          ? "bg-card/95 backdrop-blur-md shadow-sm border-b border-border"
+          ? "bg-background/95 backdrop-blur-md border-b border-border"
           : "bg-transparent"
       )}
     >
       <div className="section-container">
-        <nav className="flex items-center justify-between h-20">
-          {/* Logo */}
+        <nav className="flex items-center justify-between h-20 lg:h-24">
+          {/* Logo - Left */}
           <Link to="/" className="flex items-center gap-3 group">
             <span className={cn(
-              "font-serif text-2xl font-semibold tracking-tight transition-colors",
+              "font-serif text-lg sm:text-xl tracking-[0.1em] uppercase transition-colors",
               isScrolled ? "text-foreground" : "text-white"
             )}>
               Peninsula<span className="text-accent">Equine</span>
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-8">
+          {/* Desktop Navigation - Center */}
+          <div className="hidden lg:flex items-center gap-10">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-accent",
+                  "text-sm uppercase tracking-[0.15em] transition-colors hover:text-accent",
                   location.pathname === item.href
                     ? "text-accent"
                     : isScrolled
@@ -73,20 +71,18 @@ export function Header() {
             ))}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden lg:flex items-center gap-4">
-            <a
-              href={`tel:${siteConfig.phone}`}
+          {/* CTA Button - Right */}
+          <div className="hidden lg:flex items-center">
+            <Button 
+              asChild 
               className={cn(
-                "flex items-center gap-2 text-sm font-medium transition-colors",
-                isScrolled ? "text-muted-foreground hover:text-foreground" : "text-white/80 hover:text-white"
+                "uppercase tracking-[0.1em] text-xs px-6",
+                isScrolled 
+                  ? "bg-accent hover:bg-accent/90 text-accent-foreground"
+                  : "bg-white/10 backdrop-blur-sm border border-white/30 text-white hover:bg-white hover:text-primary"
               )}
             >
-              <Phone className="h-4 w-4" />
-              {siteConfig.phone}
-            </a>
-            <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground btn-hover-lift">
-              <Link to="/contact">Get a Quote</Link>
+              <Link to="/contact">Inquire</Link>
             </Button>
           </div>
 
@@ -107,17 +103,17 @@ export function Header() {
       {/* Mobile Menu */}
       <div
         className={cn(
-          "lg:hidden bg-card border-b border-border overflow-hidden transition-all duration-300",
+          "lg:hidden bg-background border-b border-border overflow-hidden transition-all duration-300",
           isMobileMenuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
         )}
       >
-        <div className="section-container py-4 space-y-4">
+        <div className="section-container py-6 space-y-1">
           {navigation.map((item) => (
             <Link
               key={item.name}
               to={item.href}
               className={cn(
-                "block py-2 text-base font-medium transition-colors",
+                "block py-3 text-sm uppercase tracking-[0.15em] transition-colors",
                 location.pathname === item.href
                   ? "text-accent"
                   : "text-foreground hover:text-accent"
@@ -126,16 +122,9 @@ export function Header() {
               {item.name}
             </Link>
           ))}
-          <div className="pt-4 border-t border-border space-y-3">
-            <a
-              href={`tel:${siteConfig.phone}`}
-              className="flex items-center gap-2 text-muted-foreground"
-            >
-              <Phone className="h-4 w-4" />
-              {siteConfig.phone}
-            </a>
-            <Button asChild className="w-full bg-accent hover:bg-accent/90">
-              <Link to="/contact">Get a Quote</Link>
+          <div className="pt-4 mt-4 border-t border-border">
+            <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.1em]">
+              <Link to="/contact">Inquire</Link>
             </Button>
           </div>
         </div>

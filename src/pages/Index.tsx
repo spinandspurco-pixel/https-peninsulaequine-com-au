@@ -3,7 +3,6 @@ import { ArrowRight, Phone, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { siteConfig, services, testimonials, aboutCiro } from "@/data/content";
-import { cn } from "@/lib/utils";
 
 // Import images
 import heroSunset from "@/assets/hero-sunset.png";
@@ -19,130 +18,129 @@ const featuredTestimonials = testimonials.slice(0, 3);
 
 function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center">
-      {/* Background Image */}
+    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      {/* Full-bleed Background Image */}
       <div className="absolute inset-0">
         <img
           src={heroSunset}
           alt="Horse silhouette at sunset"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover scale-105"
         />
-        <div className="absolute inset-0 image-overlay" />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-transparent to-primary/60" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 section-container w-full pt-32 pb-20">
-        <div className="max-w-3xl">
-          <p className="text-accent font-medium mb-4 animate-fade-in" style={{ animationDelay: "0.1s" }}>
-            Expert Equine Facility Construction
-          </p>
-          <h1
-            className="heading-display text-white mb-6 animate-fade-in"
-            style={{ animationDelay: "0.2s" }}
-          >
-            Built by a Horseman,<br />
-            <span className="text-accent">For Horsemen</span>
-          </h1>
-          <p
-            className="text-lg sm:text-xl text-white/80 max-w-2xl mb-10 animate-fade-in"
-            style={{ animationDelay: "0.3s" }}
-          >
-            Premium arenas, barns, and infrastructure designed by someone who rides—
-            not just builds. Ciro brings decades of construction expertise and a 
-            horseman's intuition to every project.
-          </p>
-          <div
-            className="flex flex-col sm:flex-row gap-4 animate-fade-in"
-            style={{ animationDelay: "0.4s" }}
-          >
-            <Button
-              asChild
-              size="lg"
-              className="bg-accent hover:bg-accent/90 text-accent-foreground btn-hover-lift text-base px-8"
-            >
-              <Link to="/contact">
-                Get a Quote
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="border-white/30 text-white hover:bg-white/10 hover:text-white text-base px-8"
-            >
-              <a href={`tel:${siteConfig.phone}`}>
-                <Phone className="mr-2 h-5 w-5" />
-                Call Now
-              </a>
-            </Button>
+      {/* Centered Content */}
+      <div className="relative z-10 text-center px-4">
+        <div className="divider mx-auto mb-8 bg-accent/80" />
+        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white tracking-[0.15em] uppercase font-normal text-shadow-editorial mb-6">
+          Peninsula Equine
+        </h1>
+        <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mb-4">
+          Facility Construction • Training • Excellence
+        </p>
+        
+        {/* Circular Logo Mark */}
+        <div className="mt-12 mb-16">
+          <div className="w-28 h-28 sm:w-36 sm:h-36 mx-auto rounded-full border border-white/30 flex items-center justify-center backdrop-blur-sm">
+            <div className="text-center">
+              <span className="font-serif text-white text-3xl sm:text-4xl tracking-wider">PE</span>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <ChevronDown className="h-8 w-8 text-white/60" />
-      </div>
+      <button 
+        onClick={() => document.getElementById('intro')?.scrollIntoView({ behavior: 'smooth' })}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/60 hover:text-white transition-colors cursor-pointer"
+        aria-label="Scroll to content"
+      >
+        <span className="text-xs tracking-[0.2em] uppercase">Scroll</span>
+        <ChevronDown className="h-5 w-5 animate-bounce" />
+      </button>
     </section>
   );
 }
 
 function IntroSection() {
   return (
+    <section id="intro" className="bg-background">
+      {/* Location tagline */}
+      <div className="section-padding border-b border-border">
+        <div className="section-container">
+          <div className="max-w-4xl mx-auto text-center">
+            <p className="text-muted-foreground uppercase tracking-[0.25em] text-sm mb-8">
+              Mornington Peninsula, Victoria
+            </p>
+            <h2 className="heading-section text-foreground mb-8">
+              Where world-class equine facilities are built by the hands of a horseman
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Peninsula Equine is a construction company specializing in premium arenas, barns, 
+              and equestrian infrastructure. With decades of experience in both riding and building, 
+              Ciro brings a horseman's intuition to every project.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Large editorial image */}
+      <div className="relative h-[70vh] min-h-[500px]">
+        <img
+          src={ciroWithHorse}
+          alt="Ciro working with a horse"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 image-overlay-subtle" />
+      </div>
+    </section>
+  );
+}
+
+function MissionSection() {
+  return (
     <section className="section-padding bg-card">
       <div className="section-container">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+          {/* Text Content */}
+          <div className="lg:col-span-5">
+            <div className="divider mb-8" />
+            <p className="text-muted-foreground uppercase tracking-[0.2em] text-sm mb-4">
+              Our Mission
+            </p>
+            <h2 className="heading-editorial text-foreground mb-8">
+              Built by a horseman,<br />
+              <span className="text-accent">for horsemen</span>
+            </h2>
+            <blockquote className="text-xl sm:text-2xl text-foreground font-serif italic leading-relaxed mb-8">
+              "The finest facilities come from understanding both the craft of construction 
+              and the soul of the horse."
+            </blockquote>
+            <p className="text-muted-foreground leading-relaxed mb-8">
+              When Ciro walks your property, he's not just seeing construction—he's seeing 
+              how your horses will move, where water will drain, and what will keep your 
+              operation running smoothly for decades.
+            </p>
+            <Link 
+              to="/about" 
+              className="inline-flex items-center text-foreground font-medium hover:text-accent transition-colors group"
+            >
+              <span className="border-b border-foreground group-hover:border-accent transition-colors pb-1">
+                Learn more about Ciro
+              </span>
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
           {/* Image */}
-          <div className="relative">
-            <div className="aspect-[4/5] rounded-lg overflow-hidden">
+          <div className="lg:col-span-7">
+            <div className="aspect-[4/5] overflow-hidden">
               <img
-                src={ciroWithHorse}
-                alt="Ciro working with a horse"
+                src={horseAction}
+                alt="Horse in training"
                 className="w-full h-full object-cover"
               />
             </div>
-            {/* Accent frame */}
-            <div className="absolute -bottom-4 -right-4 w-full h-full border-2 border-accent rounded-lg -z-10" />
-          </div>
-
-          {/* Content */}
-          <div>
-            <div className="divider mb-6" />
-            <h2 className="heading-section text-foreground mb-6">
-              The Difference a Horseman Makes
-            </h2>
-            <div className="space-y-4 text-muted-foreground">
-              <p>
-                When Ciro walks your property, he's not just seeing construction—he's seeing 
-                how your horses will move, where water will drain, and what will keep your 
-                operation running smoothly for decades.
-              </p>
-              <p>
-                That's the advantage of working with someone who doesn't just build equine 
-                facilities—he lives the equestrian life. Every arena, every barn, every 
-                paddock is designed with the practical insights that only come from years 
-                in the saddle.
-              </p>
-            </div>
-            <div className="mt-8 grid grid-cols-2 gap-6">
-              {aboutCiro.values.slice(0, 2).map((value) => (
-                <div key={value.title}>
-                  <h4 className="font-serif font-semibold text-foreground mb-2">{value.title}</h4>
-                  <p className="text-sm text-muted-foreground">{value.description}</p>
-                </div>
-              ))}
-            </div>
-            <Button
-              asChild
-              variant="outline"
-              className="mt-8 border-accent text-accent hover:bg-accent hover:text-accent-foreground"
-            >
-              <Link to="/about">
-                Learn More About Ciro
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
           </div>
         </div>
       </div>
@@ -152,49 +150,50 @@ function IntroSection() {
 
 function ServicesSection() {
   return (
-    <section className="section-padding">
+    <section className="section-padding bg-background">
       <div className="section-container">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="divider mx-auto mb-6" />
-          <h2 className="heading-section text-foreground mb-4">
+        <div className="text-center max-w-3xl mx-auto mb-20">
+          <div className="divider mx-auto mb-8" />
+          <p className="text-muted-foreground uppercase tracking-[0.2em] text-sm mb-4">
+            Our Services
+          </p>
+          <h2 className="heading-section text-foreground">
             What We Build
           </h2>
-          <p className="text-muted-foreground">
-            From world-class arenas to functional barns, we deliver equine facilities 
-            that perform as beautifully as they look.
-          </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredServices.map((service, index) => (
+        {/* Services Grid */}
+        <div className="grid sm:grid-cols-2 gap-px bg-border">
+          {featuredServices.map((service) => (
             <Link
               key={service.id}
               to={`/services#${service.id}`}
-              className={cn(
-                "group p-6 rounded-lg bg-card border border-border hover:border-accent transition-all duration-300",
-                "opacity-0 animate-fade-in-up"
-              )}
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className="group p-10 sm:p-12 lg:p-16 bg-background hover:bg-card transition-colors"
             >
-              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mb-4 group-hover:bg-accent/20 transition-colors">
-                <div className="w-6 h-6 bg-accent rounded" />
-              </div>
-              <h3 className="font-serif text-lg font-semibold text-foreground mb-2 group-hover:text-accent transition-colors">
+              <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-4">
+                {service.id.replace(/-/g, ' ')}
+              </p>
+              <h3 className="font-serif text-2xl sm:text-3xl text-foreground mb-4 group-hover:text-accent transition-colors">
                 {service.title}
               </h3>
-              <p className="text-sm text-muted-foreground mb-4">
+              <p className="text-muted-foreground mb-6 leading-relaxed">
                 {service.shortDescription}
               </p>
-              <span className="inline-flex items-center text-sm font-medium text-accent">
-                Learn more
-                <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              <span className="inline-flex items-center text-sm font-medium text-foreground group-hover:text-accent transition-colors">
+                <span className="border-b border-current pb-0.5">Learn more</span>
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </span>
             </Link>
           ))}
         </div>
 
-        <div className="text-center mt-12">
-          <Button asChild variant="outline" className="border-foreground text-foreground hover:bg-foreground hover:text-background">
+        <div className="text-center mt-16">
+          <Button 
+            asChild 
+            variant="outline" 
+            size="lg"
+            className="border-foreground text-foreground hover:bg-foreground hover:text-background"
+          >
             <Link to="/services">
               View All Services
               <ArrowRight className="ml-2 h-4 w-4" />
@@ -206,49 +205,52 @@ function ServicesSection() {
   );
 }
 
-function GalleryPreview() {
+function GallerySection() {
   const images = [
-    { src: horseAction, alt: "Horse in training" },
     { src: hatDetail, alt: "Craftsmanship details" },
     { src: spurDetail, alt: "Equipment detail" },
     { src: ciroWide, alt: "Ciro with horse" },
   ];
 
   return (
-    <section className="section-padding bg-primary text-primary-foreground">
-      <div className="section-container">
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-12">
-          <div>
-            <div className="divider mb-6 bg-accent" />
-            <h2 className="heading-section">
+    <section className="bg-primary text-primary-foreground">
+      {/* Full-width image strip */}
+      <div className="grid grid-cols-3 h-[40vh] min-h-[300px]">
+        {images.map((image, index) => (
+          <div key={index} className="overflow-hidden">
+            <img
+              src={image.src}
+              alt={image.alt}
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Gallery CTA */}
+      <div className="section-padding">
+        <div className="section-container">
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="divider mx-auto mb-8 bg-accent" />
+            <h2 className="heading-editorial mb-6">
               Craftsmanship in Every Detail
             </h2>
-          </div>
-          <Button
-            asChild
-            variant="outline"
-            className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary shrink-0"
-          >
-            <Link to="/gallery">
-              View Full Gallery
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {images.map((image, index) => (
-            <div
-              key={index}
-              className="aspect-[3/4] overflow-hidden rounded-lg group cursor-pointer"
+            <p className="text-primary-foreground/70 mb-10 leading-relaxed">
+              We invite you to explore our portfolio of completed projects, showcasing 
+              the artistry and precision that defines Peninsula Equine.
+            </p>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary"
             >
-              <img
-                src={image.src}
-                alt={image.alt}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-            </div>
-          ))}
+              <Link to="/gallery">
+                View Gallery
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     </section>
@@ -256,60 +258,48 @@ function GalleryPreview() {
 }
 
 function TestimonialsSection() {
+  const featured = featuredTestimonials[0];
+
   return (
-    <section className="section-padding">
+    <section className="section-padding bg-card">
       <div className="section-container">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="divider mx-auto mb-6" />
-          <h2 className="heading-section text-foreground mb-4">
-            What Our Clients Say
-          </h2>
-          <p className="text-muted-foreground">
-            Building lasting relationships, one facility at a time.
-          </p>
-        </div>
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="divider mx-auto mb-8" />
+          
+          {/* Stars */}
+          <div className="flex gap-1 justify-center mb-8">
+            {[...Array(featured.rating)].map((_, i) => (
+              <svg
+                key={i}
+                className="w-5 h-5 text-accent"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            ))}
+          </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {featuredTestimonials.map((testimonial, index) => (
-            <div
-              key={testimonial.id}
-              className={cn(
-                "p-8 rounded-lg bg-card border border-border",
-                "opacity-0 animate-fade-in-up"
-              )}
-              style={{ animationDelay: `${index * 0.15}s` }}
+          <blockquote className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground leading-relaxed mb-8">
+            "{featured.quote}"
+          </blockquote>
+          
+          <div>
+            <p className="font-serif font-semibold text-foreground text-lg">{featured.name}</p>
+            <p className="text-muted-foreground">{featured.role}</p>
+          </div>
+
+          <div className="mt-12">
+            <Link 
+              to="/testimonials" 
+              className="inline-flex items-center text-foreground font-medium hover:text-accent transition-colors group"
             >
-              {/* Stars */}
-              <div className="flex gap-1 mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <svg
-                    key={i}
-                    className="w-5 h-5 text-accent"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                ))}
-              </div>
-              <blockquote className="text-foreground mb-6">
-                "{testimonial.quote}"
-              </blockquote>
-              <div>
-                <p className="font-serif font-semibold text-foreground">{testimonial.name}</p>
-                <p className="text-sm text-muted-foreground">{testimonial.role}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="text-center mt-12">
-          <Button asChild variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground">
-            <Link to="/testimonials">
-              Read More Reviews
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <span className="border-b border-foreground group-hover:border-accent transition-colors pb-1">
+                Read more reviews
+              </span>
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Link>
-          </Button>
+          </div>
         </div>
       </div>
     </section>
@@ -318,7 +308,7 @@ function TestimonialsSection() {
 
 function CTASection() {
   return (
-    <section className="relative py-24 lg:py-32">
+    <section className="relative py-32 lg:py-40">
       {/* Background */}
       <div className="absolute inset-0">
         <img
@@ -326,40 +316,46 @@ function CTASection() {
           alt="Equine facility"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-primary/90" />
+        <div className="absolute inset-0 bg-primary/85" />
       </div>
 
       {/* Content */}
       <div className="relative z-10 section-container text-center">
-        <h2 className="heading-section text-primary-foreground mb-6">
-          Ready to Build Your Dream Facility?
-        </h2>
-        <p className="text-lg text-primary-foreground/80 max-w-2xl mx-auto mb-10">
-          Let's discuss your vision. Every great equine facility starts with a conversation
-          about your horses, your goals, and your property.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button
-            asChild
-            size="lg"
-            className="bg-accent hover:bg-accent/90 text-accent-foreground btn-hover-lift text-base px-8"
-          >
-            <Link to="/contact">
-              Schedule a Consultation
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
-          </Button>
-          <Button
-            asChild
-            variant="outline"
-            size="lg"
-            className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary text-base px-8"
-          >
-            <a href={`tel:${siteConfig.phone}`}>
-              <Phone className="mr-2 h-5 w-5" />
-              {siteConfig.phone}
-            </a>
-          </Button>
+        <div className="max-w-3xl mx-auto">
+          <div className="divider mx-auto mb-8 bg-accent" />
+          <p className="text-primary-foreground/70 uppercase tracking-[0.2em] text-sm mb-4">
+            We invite you to join us
+          </p>
+          <h2 className="heading-section text-primary-foreground mb-8">
+            Ready to Build Your Dream Facility?
+          </h2>
+          <p className="text-lg text-primary-foreground/80 mb-12 leading-relaxed">
+            Every great equine facility starts with a conversation about your horses, 
+            your goals, and your property. Let's discuss your vision.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button
+              asChild
+              size="lg"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground btn-hover-lift text-base px-10"
+            >
+              <Link to="/contact">
+                Get in Touch
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary text-base px-10"
+            >
+              <a href={`tel:${siteConfig.phone}`}>
+                <Phone className="mr-2 h-5 w-5" />
+                {siteConfig.phone}
+              </a>
+            </Button>
+          </div>
         </div>
       </div>
     </section>
@@ -371,8 +367,9 @@ export default function Index() {
     <Layout>
       <HeroSection />
       <IntroSection />
+      <MissionSection />
       <ServicesSection />
-      <GalleryPreview />
+      <GallerySection />
       <TestimonialsSection />
       <CTASection />
     </Layout>
