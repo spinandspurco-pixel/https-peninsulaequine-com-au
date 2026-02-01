@@ -282,6 +282,31 @@ export function InquiryForm() {
 
       if (error) throw error;
 
+      // Send email notification (don't block on failure)
+      try {
+        await supabase.functions.invoke("send-inquiry-notification", {
+          body: {
+            name: formData.name?.trim(),
+            email: formData.email?.trim(),
+            phone: formData.phone?.trim(),
+            services: formData.interestedServices || [],
+            horseName: formData.horseName?.trim(),
+            horseAge: formData.horseAge?.trim(),
+            horseBreed: formData.horseBreed?.trim(),
+            goals: formData.goals?.trim(),
+            experienceLevel: formData.experienceLevel,
+            budgetRange: formData.budgetRange,
+            preferredDate: formData.preferredDate 
+              ? format(formData.preferredDate, "yyyy-MM-dd") 
+              : undefined,
+            additionalNotes: formData.additionalNotes?.trim(),
+          },
+        });
+      } catch (emailError) {
+        // Log but don't fail the submission
+        console.error("Failed to send notification email:", emailError);
+      }
+
       setIsSubmitted(true);
       toast({
         title: "Inquiry submitted!",
