@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, X } from "lucide-react";
+import { ArrowRight, X, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Layout } from "@/components/layout/Layout";
@@ -67,11 +67,20 @@ import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
 import mainRidgeTimberPosts from "@/assets/main-ridge-timber-posts.jpg";
 import mainRidgeTrenchUtilities from "@/assets/main-ridge-trench-utilities.jpg";
 
-type GalleryImage = {
+// Videos
+import slowMo1 from "@/assets/videos/slow-mo-1.mp4";
+import slowMo2 from "@/assets/videos/slow-mo-2.mp4";
+import slowMo3 from "@/assets/videos/slow-mo-3.mp4";
+import mainRidgeWoodwork1 from "@/assets/videos/main-ridge-woodwork-1.mp4";
+import mainRidgeWoodwork2 from "@/assets/videos/main-ridge-woodwork-2.mp4";
+
+type GalleryItem = {
   id: number;
   src: string;
   alt: string;
   project: string;
+  type: "image" | "video";
+  thumbnail?: string;
 };
 
 const projects = [
@@ -81,68 +90,76 @@ const projects = [
   { id: "queensland", name: "Queensland Facility" },
   { id: "equitana", name: "Equitana Melbourne" },
   { id: "caulfield", name: "Melbourne Cup" },
+  { id: "videos", name: "Videos" },
 ];
 
-const galleryImages: GalleryImage[] = [
-  // Main Ridge
-  { id: 1, src: mainRidgeBrickwork, alt: "Main Ridge brickwork detail", project: "main-ridge" },
-  { id: 2, src: mainRidgeInterior, alt: "Main Ridge barn interior", project: "main-ridge" },
-  { id: 3, src: mainRidgeTimber, alt: "Main Ridge timber framing", project: "main-ridge" },
-  { id: 4, src: mainRidgeWorker, alt: "Craftsman at work on Main Ridge", project: "main-ridge" },
-  { id: 5, src: mainRidgeCiroWoodwork1, alt: "Ciro working timber at Main Ridge", project: "main-ridge" },
-  { id: 6, src: mainRidgeCiroWoodwork2, alt: "Ciro woodworking detail", project: "main-ridge" },
-  { id: 7, src: mainRidgeCiroWoodwork3, alt: "Timber craftsmanship", project: "main-ridge" },
-  { id: 8, src: mainRidgeCiroWoodwork4, alt: "Hand-crafted timber work", project: "main-ridge" },
+const galleryItems: GalleryItem[] = [
+  // Videos first for prominence
+  { id: 100, src: slowMo1, alt: "Slow motion equine footage", project: "videos", type: "video", thumbnail: mainRidgeInterior },
+  { id: 101, src: slowMo2, alt: "Horse in slow motion", project: "videos", type: "video", thumbnail: mainRidgeTimber },
+  { id: 102, src: slowMo3, alt: "Equine slow motion detail", project: "videos", type: "video", thumbnail: mainRidgeBrickwork },
+  { id: 103, src: mainRidgeWoodwork1, alt: "Main Ridge woodworking process", project: "main-ridge", type: "video", thumbnail: mainRidgeCiroWoodwork1 },
+  { id: 104, src: mainRidgeWoodwork2, alt: "Timber craftsmanship video", project: "main-ridge", type: "video", thumbnail: mainRidgeCiroWoodwork2 },
+
+  // Main Ridge images
+  { id: 1, src: mainRidgeBrickwork, alt: "Main Ridge brickwork detail", project: "main-ridge", type: "image" },
+  { id: 2, src: mainRidgeInterior, alt: "Main Ridge barn interior", project: "main-ridge", type: "image" },
+  { id: 3, src: mainRidgeTimber, alt: "Main Ridge timber framing", project: "main-ridge", type: "image" },
+  { id: 4, src: mainRidgeWorker, alt: "Craftsman at work on Main Ridge", project: "main-ridge", type: "image" },
+  { id: 5, src: mainRidgeCiroWoodwork1, alt: "Ciro working timber at Main Ridge", project: "main-ridge", type: "image" },
+  { id: 6, src: mainRidgeCiroWoodwork2, alt: "Ciro woodworking detail", project: "main-ridge", type: "image" },
+  { id: 7, src: mainRidgeCiroWoodwork3, alt: "Timber craftsmanship", project: "main-ridge", type: "image" },
+  { id: 8, src: mainRidgeCiroWoodwork4, alt: "Hand-crafted timber work", project: "main-ridge", type: "image" },
 
   // Aberdeen Farm
-  { id: 10, src: aberdeenBarnInterior, alt: "Aberdeen barn interior with chandeliers", project: "aberdeen" },
-  { id: 11, src: aberdeenStalls, alt: "Aberdeen luxury stalls", project: "aberdeen" },
-  { id: 12, src: aberdeenStallsDetail, alt: "Aberdeen stall detail", project: "aberdeen" },
-  { id: 13, src: aberdeenAisle, alt: "Aberdeen barn aisle", project: "aberdeen" },
-  { id: 14, src: aberdeenMural, alt: "Aberdeen decorative mural", project: "aberdeen" },
-  { id: 15, src: aberdeenMural2, alt: "Aberdeen mural detail", project: "aberdeen" },
-  { id: 16, src: aberdeenStonework, alt: "Aberdeen stonework", project: "aberdeen" },
-  { id: 17, src: aberdeenStoneworkColor, alt: "Aberdeen colored stonework", project: "aberdeen" },
-  { id: 18, src: aberdeenStoneworkBw, alt: "Aberdeen stonework architectural", project: "aberdeen" },
-  { id: 19, src: aberdeenInteriorStonework, alt: "Aberdeen interior stone detail", project: "aberdeen" },
-  { id: 20, src: aberdeenDeck, alt: "Aberdeen deck construction", project: "aberdeen" },
-  { id: 21, src: aberdeenExterior, alt: "Aberdeen exterior view", project: "aberdeen" },
+  { id: 10, src: aberdeenBarnInterior, alt: "Aberdeen barn interior with chandeliers", project: "aberdeen", type: "image" },
+  { id: 11, src: aberdeenStalls, alt: "Aberdeen luxury stalls", project: "aberdeen", type: "image" },
+  { id: 12, src: aberdeenStallsDetail, alt: "Aberdeen stall detail", project: "aberdeen", type: "image" },
+  { id: 13, src: aberdeenAisle, alt: "Aberdeen barn aisle", project: "aberdeen", type: "image" },
+  { id: 14, src: aberdeenMural, alt: "Aberdeen decorative mural", project: "aberdeen", type: "image" },
+  { id: 15, src: aberdeenMural2, alt: "Aberdeen mural detail", project: "aberdeen", type: "image" },
+  { id: 16, src: aberdeenStonework, alt: "Aberdeen stonework", project: "aberdeen", type: "image" },
+  { id: 17, src: aberdeenStoneworkColor, alt: "Aberdeen colored stonework", project: "aberdeen", type: "image" },
+  { id: 18, src: aberdeenStoneworkBw, alt: "Aberdeen stonework architectural", project: "aberdeen", type: "image" },
+  { id: 19, src: aberdeenInteriorStonework, alt: "Aberdeen interior stone detail", project: "aberdeen", type: "image" },
+  { id: 20, src: aberdeenDeck, alt: "Aberdeen deck construction", project: "aberdeen", type: "image" },
+  { id: 21, src: aberdeenExterior, alt: "Aberdeen exterior view", project: "aberdeen", type: "image" },
 
   // Queensland Facility
-  { id: 30, src: qldAerial1, alt: "Queensland facility aerial view", project: "queensland" },
-  { id: 31, src: qldAerial2, alt: "Queensland facility from above", project: "queensland" },
-  { id: 32, src: qldExterior1, alt: "Queensland facility exterior", project: "queensland" },
-  { id: 33, src: qldExterior2, alt: "Queensland barn exterior", project: "queensland" },
-  { id: 34, src: qldExterior3, alt: "Queensland facility buildings", project: "queensland" },
-  { id: 35, src: qldCourtyard, alt: "Queensland courtyard", project: "queensland" },
-  { id: 36, src: qldStalls, alt: "Queensland stalls interior", project: "queensland" },
-  { id: 37, src: qldConstruction, alt: "Queensland facility under construction", project: "queensland" },
+  { id: 30, src: qldAerial1, alt: "Queensland facility aerial view", project: "queensland", type: "image" },
+  { id: 31, src: qldAerial2, alt: "Queensland facility from above", project: "queensland", type: "image" },
+  { id: 32, src: qldExterior1, alt: "Queensland facility exterior", project: "queensland", type: "image" },
+  { id: 33, src: qldExterior2, alt: "Queensland barn exterior", project: "queensland", type: "image" },
+  { id: 34, src: qldExterior3, alt: "Queensland facility buildings", project: "queensland", type: "image" },
+  { id: 35, src: qldCourtyard, alt: "Queensland courtyard", project: "queensland", type: "image" },
+  { id: 36, src: qldStalls, alt: "Queensland stalls interior", project: "queensland", type: "image" },
+  { id: 37, src: qldConstruction, alt: "Queensland facility under construction", project: "queensland", type: "image" },
 
   // Equitana Melbourne
-  { id: 40, src: equitanaArena1, alt: "Equitana Melbourne arena", project: "equitana" },
-  { id: 41, src: equitanaArena2, alt: "Equitana arena preparation", project: "equitana" },
-  { id: 42, src: equitanaArena3, alt: "Equitana competition arena", project: "equitana" },
-  { id: 43, src: equitanaArena4, alt: "Equitana arena surface", project: "equitana" },
-  { id: 44, src: equitanaArena5, alt: "Equitana arena detail", project: "equitana" },
-  { id: 45, src: equitanaArena6, alt: "Equitana arena wide shot", project: "equitana" },
-  { id: 46, src: equitanaEquipment, alt: "Equitana preparation equipment", project: "equitana" },
-  { id: 47, src: equitanaTractors, alt: "Equitana tractors at work", project: "equitana" },
+  { id: 40, src: equitanaArena1, alt: "Equitana Melbourne arena", project: "equitana", type: "image" },
+  { id: 41, src: equitanaArena2, alt: "Equitana arena preparation", project: "equitana", type: "image" },
+  { id: 42, src: equitanaArena3, alt: "Equitana competition arena", project: "equitana", type: "image" },
+  { id: 43, src: equitanaArena4, alt: "Equitana arena surface", project: "equitana", type: "image" },
+  { id: 44, src: equitanaArena5, alt: "Equitana arena detail", project: "equitana", type: "image" },
+  { id: 45, src: equitanaArena6, alt: "Equitana arena wide shot", project: "equitana", type: "image" },
+  { id: 46, src: equitanaEquipment, alt: "Equitana preparation equipment", project: "equitana", type: "image" },
+  { id: 47, src: equitanaTractors, alt: "Equitana tractors at work", project: "equitana", type: "image" },
 
   // Melbourne Cup / Caulfield
-  { id: 50, src: caulfieldEvent, alt: "Melbourne Cup at Caulfield", project: "caulfield" },
-  { id: 51, src: arenaSandPrep1, alt: "Arena sand preparation", project: "caulfield" },
-  { id: 52, src: arenaSandPrep2, alt: "Sand grading in progress", project: "caulfield" },
-  { id: 53, src: arenaSandPrep3, alt: "Professional arena surface", project: "caulfield" },
+  { id: 50, src: caulfieldEvent, alt: "Melbourne Cup at Caulfield", project: "caulfield", type: "image" },
+  { id: 51, src: arenaSandPrep1, alt: "Arena sand preparation", project: "caulfield", type: "image" },
+  { id: 52, src: arenaSandPrep2, alt: "Sand grading in progress", project: "caulfield", type: "image" },
+  { id: 53, src: arenaSandPrep3, alt: "Professional arena surface", project: "caulfield", type: "image" },
 
   // Main Ridge Construction Process
-  { id: 60, src: mainRidgeTimberPosts, alt: "Main Ridge timber post installation", project: "main-ridge" },
-  { id: 61, src: mainRidgeBarnFrame, alt: "Main Ridge barn framing structure", project: "main-ridge" },
-  { id: 62, src: mainRidgeCraneLift, alt: "Main Ridge crane lifting timber frame", project: "main-ridge" },
-  { id: 63, src: mainRidgeFrameTrench, alt: "Main Ridge frame and foundation trench", project: "main-ridge" },
-  { id: 64, src: mainRidgeRebarFoundation, alt: "Main Ridge rebar foundation preparation", project: "main-ridge" },
-  { id: 65, src: mainRidgePostDepth, alt: "Main Ridge post depth measurement", project: "main-ridge" },
-  { id: 66, src: mainRidgeTrenchUtilities, alt: "Main Ridge utility trench excavation", project: "main-ridge" },
-  { id: 67, src: mainRidgeArenaGrading, alt: "Main Ridge arena grading", project: "main-ridge" },
+  { id: 60, src: mainRidgeTimberPosts, alt: "Main Ridge timber post installation", project: "main-ridge", type: "image" },
+  { id: 61, src: mainRidgeBarnFrame, alt: "Main Ridge barn framing structure", project: "main-ridge", type: "image" },
+  { id: 62, src: mainRidgeCraneLift, alt: "Main Ridge crane lifting timber frame", project: "main-ridge", type: "image" },
+  { id: 63, src: mainRidgeFrameTrench, alt: "Main Ridge frame and foundation trench", project: "main-ridge", type: "image" },
+  { id: 64, src: mainRidgeRebarFoundation, alt: "Main Ridge rebar foundation preparation", project: "main-ridge", type: "image" },
+  { id: 65, src: mainRidgePostDepth, alt: "Main Ridge post depth measurement", project: "main-ridge", type: "image" },
+  { id: 66, src: mainRidgeTrenchUtilities, alt: "Main Ridge utility trench excavation", project: "main-ridge", type: "image" },
+  { id: 67, src: mainRidgeArenaGrading, alt: "Main Ridge arena grading", project: "main-ridge", type: "image" },
 ];
 
 function PageHeader() {
@@ -163,13 +180,21 @@ function PageHeader() {
 }
 
 function Lightbox({
-  image,
+  item,
   onClose,
 }: {
-  image: GalleryImage | null;
+  item: GalleryItem | null;
   onClose: () => void;
 }) {
-  if (!image) return null;
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (item?.type === "video" && videoRef.current) {
+      videoRef.current.play();
+    }
+  }, [item]);
+
+  if (!item) return null;
 
   return (
     <div
@@ -177,20 +202,31 @@ function Lightbox({
       onClick={onClose}
     >
       <button
-        className="absolute top-6 right-6 text-primary-foreground/80 hover:text-primary-foreground"
+        className="absolute top-6 right-6 text-primary-foreground/80 hover:text-primary-foreground z-10"
         onClick={onClose}
         aria-label="Close lightbox"
       >
         <X className="h-8 w-8" />
       </button>
       <div className="max-w-5xl w-full" onClick={(e) => e.stopPropagation()}>
-        <img
-          src={image.src}
-          alt={image.alt}
-          className="max-w-full max-h-[85vh] object-contain rounded-lg mx-auto"
-        />
+        {item.type === "video" ? (
+          <video
+            ref={videoRef}
+            src={item.src}
+            controls
+            autoPlay
+            playsInline
+            className="max-w-full max-h-[85vh] object-contain rounded-lg mx-auto"
+          />
+        ) : (
+          <img
+            src={item.src}
+            alt={item.alt}
+            className="max-w-full max-h-[85vh] object-contain rounded-lg mx-auto"
+          />
+        )}
         <p className="text-center text-primary-foreground/70 mt-4 text-sm">
-          {image.alt}
+          {item.alt}
         </p>
       </div>
     </div>
@@ -198,11 +234,11 @@ function Lightbox({
 }
 
 function GalleryGrid({
-  images,
-  onImageClick,
+  items,
+  onItemClick,
 }: {
-  images: GalleryImage[];
-  onImageClick: (image: GalleryImage) => void;
+  items: GalleryItem[];
+  onItemClick: (item: GalleryItem) => void;
 }) {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({
     threshold: 0.05,
@@ -212,30 +248,28 @@ function GalleryGrid({
 
   useEffect(() => {
     if (isVisible) {
-      // Stagger the visibility of items
-      images.forEach((_, index) => {
+      items.forEach((_, index) => {
         setTimeout(() => {
           setVisibleItems((prev) => new Set(prev).add(index));
-        }, index * 50); // 50ms stagger for snappy feel
+        }, index * 50);
       });
     }
-  }, [isVisible, images.length]);
+  }, [isVisible, items.length]);
 
-  // Reset when images change (filter change)
   useEffect(() => {
     setVisibleItems(new Set());
-  }, [images]);
+  }, [items]);
 
   return (
     <div 
       ref={ref}
       className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
     >
-      {images.map((image, index) => (
+      {items.map((item, index) => (
         <button
-          key={image.id}
-          onClick={() => onImageClick(image)}
-          className={`group aspect-square overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted transition-all duration-500 ${
+          key={item.id}
+          onClick={() => onItemClick(item)}
+          className={`group aspect-square overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative transition-all duration-500 ${
             visibleItems.has(index)
               ? "opacity-100 translate-y-0 scale-100"
               : "opacity-0 translate-y-4 scale-95"
@@ -243,11 +277,18 @@ function GalleryGrid({
           style={{ transitionDelay: `${index * 30}ms` }}
         >
           <img
-            src={image.src}
-            alt={image.alt}
+            src={item.type === "video" ? (item.thumbnail || item.src) : item.src}
+            alt={item.alt}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
+          {item.type === "video" && (
+            <div className="absolute inset-0 flex items-center justify-center bg-primary/30 group-hover:bg-primary/40 transition-colors">
+              <div className="w-14 h-14 rounded-full bg-accent/90 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Play className="w-6 h-6 text-accent-foreground ml-1" fill="currentColor" />
+              </div>
+            </div>
+          )}
         </button>
       ))}
     </div>
@@ -256,14 +297,18 @@ function GalleryGrid({
 
 export default function Gallery() {
   const [activeProject, setActiveProject] = useState("all");
-  const [lightboxImage, setLightboxImage] = useState<GalleryImage | null>(null);
+  const [lightboxItem, setLightboxItem] = useState<GalleryItem | null>(null);
 
-  const filteredImages =
+  const filteredItems =
     activeProject === "all"
-      ? galleryImages
-      : galleryImages.filter((img) => img.project === activeProject);
+      ? galleryItems
+      : activeProject === "videos"
+      ? galleryItems.filter((item) => item.type === "video")
+      : galleryItems.filter((item) => item.project === activeProject);
 
   const currentProjectName = projects.find((p) => p.id === activeProject)?.name || "All Projects";
+  const videoCount = filteredItems.filter(i => i.type === "video").length;
+  const imageCount = filteredItems.filter(i => i.type === "image").length;
 
   return (
     <Layout>
@@ -293,22 +338,24 @@ export default function Gallery() {
             <div className="text-center mb-8">
               <h2 className="font-serif text-2xl text-foreground">{currentProjectName}</h2>
               <p className="text-muted-foreground text-sm mt-1">
-                {filteredImages.length} {filteredImages.length === 1 ? "photo" : "photos"}
+                {imageCount > 0 && `${imageCount} photo${imageCount !== 1 ? "s" : ""}`}
+                {imageCount > 0 && videoCount > 0 && " · "}
+                {videoCount > 0 && `${videoCount} video${videoCount !== 1 ? "s" : ""}`}
               </p>
             </div>
           )}
 
           {/* Gallery Grid */}
           <GalleryGrid 
-            images={filteredImages} 
-            onImageClick={setLightboxImage}
+            items={filteredItems} 
+            onItemClick={setLightboxItem}
             key={activeProject}
           />
 
           {/* Empty State */}
-          {filteredImages.length === 0 && (
+          {filteredItems.length === 0 && (
             <div className="text-center py-16">
-              <p className="text-muted-foreground">No photos in this category yet.</p>
+              <p className="text-muted-foreground">No media in this category yet.</p>
             </div>
           )}
         </div>
@@ -334,7 +381,7 @@ export default function Gallery() {
       </section>
 
       {/* Lightbox */}
-      <Lightbox image={lightboxImage} onClose={() => setLightboxImage(null)} />
+      <Lightbox item={lightboxItem} onClose={() => setLightboxItem(null)} />
     </Layout>
   );
 }
