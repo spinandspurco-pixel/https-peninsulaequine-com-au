@@ -36,7 +36,7 @@ function HeroSection() {
           loop
           playsInline
           poster={heroSunset}
-          className="w-full h-full object-cover scale-105"
+          className="w-full h-full object-cover animate-ken-burns"
         >
           <source src={heroVideos[0]} type="video/mp4" />
           {/* Fallback to image if video fails */}
