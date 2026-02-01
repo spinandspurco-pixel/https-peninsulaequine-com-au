@@ -1,12 +1,7 @@
-import { useState } from "react";
-import { Phone, Mail, MapPin, Clock, Send, CheckCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
+import { InquiryForm } from "@/components/InquiryForm";
 import { siteConfig } from "@/data/content";
-import { useToast } from "@/hooks/use-toast";
 
 function PageHeader() {
   return (
@@ -14,162 +9,14 @@ function PageHeader() {
       <div className="section-container">
         <div className="max-w-3xl">
           <div className="w-16 h-0.5 bg-accent mb-6" />
-          <h1 className="heading-display mb-6">Contact Us</h1>
+          <h1 className="heading-display mb-6">Start Your Project</h1>
           <p className="text-lg text-primary-foreground/80">
-            Ready to discuss your project? Get in touch and let's start the conversation.
+            Tell us about your vision and we'll help you bring it to life. 
+            Complete our inquiry form to get started.
           </p>
         </div>
       </div>
     </section>
-  );
-}
-
-function ContactForm() {
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    service: "",
-    message: "",
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    toast({
-      title: "Message sent!",
-      description: "We'll get back to you as soon as possible.",
-    });
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  if (isSubmitted) {
-    return (
-      <div className="text-center py-12">
-        <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6">
-          <CheckCircle className="h-8 w-8 text-accent" />
-        </div>
-        <h3 className="font-serif text-2xl font-semibold text-foreground mb-4">
-          Thank You!
-        </h3>
-        <p className="text-muted-foreground mb-6">
-          We've received your message and will be in touch within 1-2 business days.
-        </p>
-        <Button onClick={() => setIsSubmitted(false)} variant="outline">
-          Send Another Message
-        </Button>
-      </div>
-    );
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid sm:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <Label htmlFor="name">Name *</Label>
-          <Input
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            placeholder="Your name"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="email">Email *</Label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            placeholder="your@email.com"
-          />
-        </div>
-      </div>
-
-      <div className="grid sm:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <Label htmlFor="phone">Phone</Label>
-          <Input
-            id="phone"
-            name="phone"
-            type="tel"
-            value={formData.phone}
-            onChange={handleChange}
-            placeholder="(555) 123-4567"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="service">Service Interested In</Label>
-          <select
-            id="service"
-            name="service"
-            value={formData.service}
-            onChange={handleChange}
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          >
-            <option value="">Select a service</option>
-            <option value="arena">Arena Construction</option>
-            <option value="barn">Barn & Stable Building</option>
-            <option value="fencing">Equine Fencing</option>
-            <option value="infrastructure">Site Infrastructure</option>
-            <option value="round-pens">Round Pens & Paddocks</option>
-            <option value="renovations">Renovations & Repairs</option>
-            <option value="lessons">Lessons & Training</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="message">Message *</Label>
-        <Textarea
-          id="message"
-          name="message"
-          value={formData.message}
-          onChange={handleChange}
-          required
-          placeholder="Tell us about your project..."
-          rows={6}
-        />
-      </div>
-
-      <Button
-        type="submit"
-        size="lg"
-        className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground"
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? (
-          "Sending..."
-        ) : (
-          <>
-            Send Message
-            <Send className="ml-2 h-4 w-4" />
-          </>
-        )}
-      </Button>
-    </form>
   );
 }
 
@@ -252,17 +99,24 @@ export default function Contact() {
 
       <section className="section-padding">
         <div className="section-container">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
-            {/* Form */}
-            <div>
-              <h2 className="font-serif text-2xl font-semibold text-foreground mb-6">
-                Send Us a Message
-              </h2>
-              <ContactForm />
+          <div className="grid lg:grid-cols-3 gap-12 lg:gap-16">
+            {/* Form - Takes 2 columns */}
+            <div className="lg:col-span-2">
+              <div className="bg-card rounded-xl p-6 sm:p-8 border border-border">
+                <h2 className="font-serif text-2xl font-semibold text-foreground mb-2">
+                  Project Inquiry
+                </h2>
+                <p className="text-muted-foreground mb-8">
+                  Complete this form and we'll get back to you with a personalized consultation.
+                </p>
+                <InquiryForm />
+              </div>
             </div>
 
-            {/* Contact Info */}
-            <ContactInfo />
+            {/* Contact Info - Takes 1 column */}
+            <div>
+              <ContactInfo />
+            </div>
           </div>
         </div>
       </section>
