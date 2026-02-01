@@ -86,41 +86,73 @@ const BUDGET_RANGES = [
 ];
 
 function StepIndicator({ currentStep }: { currentStep: number }) {
+  const progressPercentage = ((currentStep - 1) / (STEPS.length - 1)) * 100;
+
   return (
-    <div className="flex items-center justify-between mb-8">
-      {STEPS.map((step, index) => (
-        <div key={step.id} className="flex items-center">
-          <div className="flex flex-col items-center">
-            <div
-              className={cn(
-                "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors",
-                currentStep > step.id
-                  ? "bg-accent text-accent-foreground"
-                  : currentStep === step.id
-                  ? "bg-accent text-accent-foreground"
-                  : "bg-muted text-muted-foreground"
-              )}
-            >
-              {currentStep > step.id ? (
-                <Check className="w-5 h-5" />
-              ) : (
-                step.id
-              )}
-            </div>
-            <span className="hidden sm:block text-xs mt-2 text-muted-foreground">
-              {step.title}
-            </span>
-          </div>
-          {index < STEPS.length - 1 && (
-            <div
-              className={cn(
-                "h-0.5 w-8 sm:w-16 lg:w-24 mx-2 transition-colors",
-                currentStep > step.id ? "bg-accent" : "bg-muted"
-              )}
-            />
-          )}
+    <div className="mb-8">
+      {/* Progress Bar */}
+      <div className="relative mb-6">
+        <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+          <div
+            className="h-full bg-accent rounded-full transition-all duration-500 ease-out"
+            style={{ width: `${progressPercentage}%` }}
+          />
         </div>
-      ))}
+        <div className="flex justify-between mt-2">
+          <span className="text-xs text-muted-foreground">
+            Step {currentStep} of {STEPS.length}
+          </span>
+          <span className="text-xs text-accent font-medium">
+            {Math.round(progressPercentage)}% Complete
+          </span>
+        </div>
+      </div>
+
+      {/* Step Circles */}
+      <div className="flex items-center justify-between">
+        {STEPS.map((step, index) => (
+          <div key={step.id} className="flex items-center">
+            <div className="flex flex-col items-center">
+              <div
+                className={cn(
+                  "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300",
+                  currentStep > step.id
+                    ? "bg-accent text-accent-foreground scale-100"
+                    : currentStep === step.id
+                    ? "bg-accent text-accent-foreground ring-4 ring-accent/20 scale-110"
+                    : "bg-muted text-muted-foreground scale-100"
+                )}
+              >
+                {currentStep > step.id ? (
+                  <Check className="w-5 h-5 animate-scale-in" />
+                ) : (
+                  step.id
+                )}
+              </div>
+              <span
+                className={cn(
+                  "hidden sm:block text-xs mt-2 transition-colors duration-300",
+                  currentStep >= step.id
+                    ? "text-foreground font-medium"
+                    : "text-muted-foreground"
+                )}
+              >
+                {step.title}
+              </span>
+            </div>
+            {index < STEPS.length - 1 && (
+              <div className="relative h-0.5 w-8 sm:w-16 lg:w-24 mx-2 bg-muted overflow-hidden rounded-full">
+                <div
+                  className={cn(
+                    "absolute inset-y-0 left-0 bg-accent transition-all duration-500 ease-out",
+                    currentStep > step.id ? "w-full" : "w-0"
+                  )}
+                />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
