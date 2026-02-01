@@ -168,13 +168,16 @@ export function SEOSchema() {
     // Add schema scripts
     const schemas = [localBusinessSchema, sportsActivityLocationSchema, organizationSchema];
 
-    schemas.forEach((schema, index) => {
+    schemas.forEach((schema) => {
       const script = document.createElement("script");
       script.type = "application/ld+json";
       script.setAttribute("data-schema", "seo");
       script.textContent = JSON.stringify(schema);
       document.head.appendChild(script);
     });
+
+    // Log confirmation for verification
+    console.log("[SEO] Schema markup injected:", schemas.map(s => s["@type"]));
 
     return () => {
       // Cleanup on unmount
