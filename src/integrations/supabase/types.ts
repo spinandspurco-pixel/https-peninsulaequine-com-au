@@ -14,7 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      inquiries: {
+        Row: {
+          budget_range: string | null
+          created_at: string
+          email: string
+          experience_level: string | null
+          horse_age: string | null
+          horse_breed: string | null
+          horse_name: string | null
+          id: string
+          name: string
+          phone: string | null
+          preferred_contact: string | null
+          preferred_start: string | null
+          project_details: string | null
+          project_vision: string | null
+          services: string[]
+          updated_at: string
+        }
+        Insert: {
+          budget_range?: string | null
+          created_at?: string
+          email: string
+          experience_level?: string | null
+          horse_age?: string | null
+          horse_breed?: string | null
+          horse_name?: string | null
+          id?: string
+          name: string
+          phone?: string | null
+          preferred_contact?: string | null
+          preferred_start?: string | null
+          project_details?: string | null
+          project_vision?: string | null
+          services?: string[]
+          updated_at?: string
+        }
+        Update: {
+          budget_range?: string | null
+          created_at?: string
+          email?: string
+          experience_level?: string | null
+          horse_age?: string | null
+          horse_breed?: string | null
+          horse_name?: string | null
+          id?: string
+          name?: string
+          phone?: string | null
+          preferred_contact?: string | null
+          preferred_start?: string | null
+          project_details?: string | null
+          project_vision?: string | null
+          services?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

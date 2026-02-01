@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { 
   ArrowLeft, 
@@ -228,15 +229,42 @@ export function InquiryForm() {
 
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const { error } = await supabase.from("inquiries").insert({
+        name: formData.name?.trim() || "",
+        email: formData.email?.trim() || "",
+        phone: formData.phone?.trim() || null,
+        preferred_contact: "email",
+        services: formData.interestedServices || [],
+        horse_name: formData.horseName?.trim() || null,
+        horse_age: formData.horseAge?.trim() || null,
+        horse_breed: formData.horseBreed?.trim() || null,
+        project_vision: formData.goals?.trim() || null,
+        project_details: formData.additionalNotes?.trim() || null,
+        experience_level: formData.experienceLevel || null,
+        budget_range: formData.budgetRange || null,
+        preferred_start: formData.preferredDate 
+          ? format(formData.preferredDate, "yyyy-MM-dd") 
+          : null,
+      });
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    toast({
-      title: "Inquiry submitted!",
-      description: "We'll review your project details and get back to you soon.",
-    });
+      if (error) throw error;
+
+      setIsSubmitted(true);
+      toast({
+        title: "Inquiry submitted!",
+        description: "We'll review your project details and get back to you soon.",
+      });
+    } catch (error) {
+      console.error("Failed to submit inquiry:", error);
+      toast({
+        title: "Submission failed",
+        description: "There was an error submitting your inquiry. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSubmitted) {
