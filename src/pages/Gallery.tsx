@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Layout } from "@/components/layout/Layout";
 
 // Main Ridge images
@@ -196,6 +197,63 @@ function Lightbox({
   );
 }
 
+function GalleryGrid({
+  images,
+  onImageClick,
+}: {
+  images: GalleryImage[];
+  onImageClick: (image: GalleryImage) => void;
+}) {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({
+    threshold: 0.05,
+    rootMargin: "50px",
+  });
+  const [visibleItems, setVisibleItems] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    if (isVisible) {
+      // Stagger the visibility of items
+      images.forEach((_, index) => {
+        setTimeout(() => {
+          setVisibleItems((prev) => new Set(prev).add(index));
+        }, index * 50); // 50ms stagger for snappy feel
+      });
+    }
+  }, [isVisible, images.length]);
+
+  // Reset when images change (filter change)
+  useEffect(() => {
+    setVisibleItems(new Set());
+  }, [images]);
+
+  return (
+    <div 
+      ref={ref}
+      className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
+    >
+      {images.map((image, index) => (
+        <button
+          key={image.id}
+          onClick={() => onImageClick(image)}
+          className={`group aspect-square overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted transition-all duration-500 ${
+            visibleItems.has(index)
+              ? "opacity-100 translate-y-0 scale-100"
+              : "opacity-0 translate-y-4 scale-95"
+          }`}
+          style={{ transitionDelay: `${index * 30}ms` }}
+        >
+          <img
+            src={image.src}
+            alt={image.alt}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+          />
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function Gallery() {
   const [activeProject, setActiveProject] = useState("all");
   const [lightboxImage, setLightboxImage] = useState<GalleryImage | null>(null);
@@ -241,22 +299,11 @@ export default function Gallery() {
           )}
 
           {/* Gallery Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-            {filteredImages.map((image) => (
-              <button
-                key={image.id}
-                onClick={() => setLightboxImage(image)}
-                className="group aspect-square overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted"
-              >
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
-                />
-              </button>
-            ))}
-          </div>
+          <GalleryGrid 
+            images={filteredImages} 
+            onImageClick={setLightboxImage}
+            key={activeProject}
+          />
 
           {/* Empty State */}
           {filteredImages.length === 0 && (
