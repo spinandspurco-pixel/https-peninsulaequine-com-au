@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle } from "lucide-react";
+import { ArrowRight, CheckCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { services, lessonInfo, siteConfig } from "@/data/content";
@@ -83,7 +84,98 @@ const constructionSteps = [
   { image: mainRidgeArenaGrading, title: "Arena Grading", description: "Perfectly leveled arena surfaces" },
 ];
 
+type ConstructionStep = {
+  image: string;
+  title: string;
+  description: string;
+};
+
+function ConstructionLightbox({
+  step,
+  onClose,
+  onNext,
+  onPrev,
+  currentIndex,
+  total,
+}: {
+  step: ConstructionStep | null;
+  onClose: () => void;
+  onNext: () => void;
+  onPrev: () => void;
+  currentIndex: number;
+  total: number;
+}) {
+  if (!step) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-primary/95 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <button
+        className="absolute top-6 right-6 text-primary-foreground/80 hover:text-primary-foreground z-10"
+        onClick={onClose}
+        aria-label="Close lightbox"
+      >
+        <X className="h-8 w-8" />
+      </button>
+      
+      {/* Navigation arrows */}
+      <button
+        className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-accent/20 hover:bg-accent/40 flex items-center justify-center text-primary-foreground transition-colors"
+        onClick={(e) => { e.stopPropagation(); onPrev(); }}
+        aria-label="Previous image"
+      >
+        <ArrowRight className="h-6 w-6 rotate-180" />
+      </button>
+      <button
+        className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-accent/20 hover:bg-accent/40 flex items-center justify-center text-primary-foreground transition-colors"
+        onClick={(e) => { e.stopPropagation(); onNext(); }}
+        aria-label="Next image"
+      >
+        <ArrowRight className="h-6 w-6" />
+      </button>
+
+      <div className="max-w-5xl w-full" onClick={(e) => e.stopPropagation()}>
+        <img
+          src={step.image}
+          alt={step.title}
+          className="max-w-full max-h-[75vh] object-contain rounded-lg mx-auto"
+        />
+        <div className="text-center mt-6">
+          <p className="text-accent text-sm font-medium mb-1">
+            Step {currentIndex + 1} of {total}
+          </p>
+          <h3 className="font-serif text-xl text-primary-foreground mb-2">
+            {step.title}
+          </h3>
+          <p className="text-primary-foreground/70 text-sm">
+            {step.description}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ConstructionProcessSection() {
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const openLightbox = (index: number) => setLightboxIndex(index);
+  const closeLightbox = () => setLightboxIndex(null);
+  
+  const goToNext = () => {
+    if (lightboxIndex !== null) {
+      setLightboxIndex((lightboxIndex + 1) % constructionSteps.length);
+    }
+  };
+  
+  const goToPrev = () => {
+    if (lightboxIndex !== null) {
+      setLightboxIndex((lightboxIndex - 1 + constructionSteps.length) % constructionSteps.length);
+    }
+  };
+
   return (
     <section className="section-padding bg-card">
       <div className="section-container">
@@ -100,7 +192,11 @@ function ConstructionProcessSection() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {constructionSteps.map((step, index) => (
-            <div key={index} className="group">
+            <button
+              key={index}
+              onClick={() => openLightbox(index)}
+              className="group text-left focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 rounded-lg"
+            >
               <div className="aspect-square rounded-lg overflow-hidden bg-muted mb-3">
                 <img
                   src={step.image}
@@ -122,10 +218,20 @@ function ConstructionProcessSection() {
                   </p>
                 </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </div>
+
+      {/* Lightbox */}
+      <ConstructionLightbox
+        step={lightboxIndex !== null ? constructionSteps[lightboxIndex] : null}
+        onClose={closeLightbox}
+        onNext={goToNext}
+        onPrev={goToPrev}
+        currentIndex={lightboxIndex ?? 0}
+        total={constructionSteps.length}
+      />
     </section>
   );
 }
