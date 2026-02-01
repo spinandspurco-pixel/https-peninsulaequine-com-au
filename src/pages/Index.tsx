@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Phone, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
+import { MajorEventsSection } from "@/components/MajorEventsSection";
 import { siteConfig, services, testimonials, aboutCiro } from "@/data/content";
 
 // Import images
@@ -368,6 +369,7 @@ export default function Index() {
       <HeroSection />
       <IntroSection />
       <MissionSection />
+      <MajorEventsSection />
       <ServicesSection />
       <GallerySection />
       <TestimonialsSection />
