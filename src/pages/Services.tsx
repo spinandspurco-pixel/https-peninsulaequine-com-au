@@ -4,6 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { services, lessonInfo, siteConfig } from "@/data/content";
 
+// Construction process images
+import arenaGrading from "@/assets/construction-arena-grading.jpg";
+import barnFrame from "@/assets/construction-barn-frame.jpg";
+import craneLift from "@/assets/construction-crane-lift.jpg";
+import frameTrench from "@/assets/construction-frame-trench.jpg";
+import postDepth from "@/assets/construction-post-depth.jpg";
+import rebarFoundation from "@/assets/construction-rebar-foundation.jpg";
+import timberPosts from "@/assets/construction-timber-posts-1.jpg";
+import trenchUtilities from "@/assets/construction-trench-utilities.jpg";
+
 // Page header component
 function PageHeader({ title, description }: { title: string; description: string }) {
   return (
@@ -62,9 +72,67 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
   );
 }
 
-function LessonsSection() {
+const constructionSteps = [
+  { image: trenchUtilities, title: "Site Preparation", description: "Trenching for utilities and drainage" },
+  { image: rebarFoundation, title: "Foundation Work", description: "Reinforced concrete foundations built to last" },
+  { image: postDepth, title: "Post Installation", description: "Deep-set posts for structural integrity" },
+  { image: frameTrench, title: "Frame Layout", description: "Precise framing aligned to specifications" },
+  { image: timberPosts, title: "Timber Framework", description: "Quality timber posts and structural elements" },
+  { image: barnFrame, title: "Barn Framing", description: "Complete structural framework taking shape" },
+  { image: craneLift, title: "Heavy Lifting", description: "Precision crane work for large components" },
+  { image: arenaGrading, title: "Arena Grading", description: "Perfectly leveled arena surfaces" },
+];
+
+function ConstructionProcessSection() {
   return (
     <section className="section-padding bg-card">
+      <div className="section-container">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <div className="w-16 h-0.5 bg-accent mx-auto mb-6" />
+          <h2 className="heading-section text-foreground mb-4">
+            Our Construction Process
+          </h2>
+          <p className="text-muted-foreground">
+            Quality equine facilities don't happen by accident. Here's a behind-the-scenes 
+            look at how we bring your vision to life—from ground-breaking to grand opening.
+          </p>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {constructionSteps.map((step, index) => (
+            <div key={index} className="group">
+              <div className="aspect-square rounded-lg overflow-hidden bg-muted mb-3">
+                <img
+                  src={step.image}
+                  alt={step.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center text-xs font-semibold text-accent">
+                  {index + 1}
+                </span>
+                <div>
+                  <h3 className="font-serif font-semibold text-foreground text-sm">
+                    {step.title}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {step.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function LessonsSection() {
+  return (
+    <section className="section-padding bg-background">
       <div className="section-container">
         <div className="max-w-3xl mx-auto text-center">
           <div className="w-16 h-0.5 bg-accent mx-auto mb-6" />
@@ -103,6 +171,8 @@ export default function Services() {
           <ServiceCard key={service.id} service={service} index={index} />
         ))}
       </section>
+
+      <ConstructionProcessSection />
 
       <LessonsSection />
 
