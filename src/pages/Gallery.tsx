@@ -51,18 +51,20 @@ import equitanaTractors from "@/assets/equitana-tractors.jpg";
 // Melbourne Cup / Caulfield
 import caulfieldEvent from "@/assets/caulfield-event.jpg";
 
-// Arena & Construction
+// Arena Sand Prep
 import arenaSandPrep1 from "@/assets/arena-sand-prep-1.jpg";
 import arenaSandPrep2 from "@/assets/arena-sand-prep-2.jpg";
 import arenaSandPrep3 from "@/assets/arena-sand-prep-3.jpg";
-import constructionArenaGrading from "@/assets/construction-arena-grading.jpg";
-import constructionBarnFrame from "@/assets/construction-barn-frame.jpg";
-import constructionCraneLift from "@/assets/construction-crane-lift.jpg";
-import constructionFrameTrench from "@/assets/construction-frame-trench.jpg";
-import constructionPostDepth from "@/assets/construction-post-depth.jpg";
-import constructionRebarFoundation from "@/assets/construction-rebar-foundation.jpg";
-import constructionTimberPosts from "@/assets/construction-timber-posts-1.jpg";
-import constructionTrenchUtilities from "@/assets/construction-trench-utilities.jpg";
+
+// Main Ridge Construction Process
+import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
+import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
+import mainRidgeCraneLift from "@/assets/main-ridge-crane-lift.jpg";
+import mainRidgeFrameTrench from "@/assets/main-ridge-frame-trench.jpg";
+import mainRidgePostDepth from "@/assets/main-ridge-post-depth.jpg";
+import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
+import mainRidgeTimberPosts from "@/assets/main-ridge-timber-posts.jpg";
+import mainRidgeTrenchUtilities from "@/assets/main-ridge-trench-utilities.jpg";
 
 type GalleryImage = {
   id: number;
@@ -78,7 +80,6 @@ const projects = [
   { id: "queensland", name: "Queensland Facility" },
   { id: "equitana", name: "Equitana Melbourne" },
   { id: "caulfield", name: "Melbourne Cup" },
-  { id: "construction", name: "Construction Process" },
 ];
 
 const galleryImages: GalleryImage[] = [
@@ -132,15 +133,15 @@ const galleryImages: GalleryImage[] = [
   { id: 52, src: arenaSandPrep2, alt: "Sand grading in progress", project: "caulfield" },
   { id: 53, src: arenaSandPrep3, alt: "Professional arena surface", project: "caulfield" },
 
-  // Construction Process
-  { id: 60, src: constructionTimberPosts, alt: "Timber post installation", project: "construction" },
-  { id: 61, src: constructionBarnFrame, alt: "Barn framing structure", project: "construction" },
-  { id: 62, src: constructionCraneLift, alt: "Crane lifting timber frame", project: "construction" },
-  { id: 63, src: constructionFrameTrench, alt: "Frame and foundation trench", project: "construction" },
-  { id: 64, src: constructionRebarFoundation, alt: "Rebar foundation preparation", project: "construction" },
-  { id: 65, src: constructionPostDepth, alt: "Post depth measurement", project: "construction" },
-  { id: 66, src: constructionTrenchUtilities, alt: "Utility trench excavation", project: "construction" },
-  { id: 67, src: constructionArenaGrading, alt: "Arena grading with materials", project: "construction" },
+  // Main Ridge Construction Process
+  { id: 60, src: mainRidgeTimberPosts, alt: "Main Ridge timber post installation", project: "main-ridge" },
+  { id: 61, src: mainRidgeBarnFrame, alt: "Main Ridge barn framing structure", project: "main-ridge" },
+  { id: 62, src: mainRidgeCraneLift, alt: "Main Ridge crane lifting timber frame", project: "main-ridge" },
+  { id: 63, src: mainRidgeFrameTrench, alt: "Main Ridge frame and foundation trench", project: "main-ridge" },
+  { id: 64, src: mainRidgeRebarFoundation, alt: "Main Ridge rebar foundation preparation", project: "main-ridge" },
+  { id: 65, src: mainRidgePostDepth, alt: "Main Ridge post depth measurement", project: "main-ridge" },
+  { id: 66, src: mainRidgeTrenchUtilities, alt: "Main Ridge utility trench excavation", project: "main-ridge" },
+  { id: 67, src: mainRidgeArenaGrading, alt: "Main Ridge arena grading", project: "main-ridge" },
 ];
 
 function PageHeader() {

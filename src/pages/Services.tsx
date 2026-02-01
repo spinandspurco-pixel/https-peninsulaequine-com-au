@@ -4,15 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { services, lessonInfo, siteConfig } from "@/data/content";
 
-// Construction process images
-import arenaGrading from "@/assets/construction-arena-grading.jpg";
-import barnFrame from "@/assets/construction-barn-frame.jpg";
-import craneLift from "@/assets/construction-crane-lift.jpg";
-import frameTrench from "@/assets/construction-frame-trench.jpg";
-import postDepth from "@/assets/construction-post-depth.jpg";
-import rebarFoundation from "@/assets/construction-rebar-foundation.jpg";
-import timberPosts from "@/assets/construction-timber-posts-1.jpg";
-import trenchUtilities from "@/assets/construction-trench-utilities.jpg";
+// Main Ridge construction process images
+import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
+import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
+import mainRidgeCraneLift from "@/assets/main-ridge-crane-lift.jpg";
+import mainRidgeFrameTrench from "@/assets/main-ridge-frame-trench.jpg";
+import mainRidgePostDepth from "@/assets/main-ridge-post-depth.jpg";
+import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
+import mainRidgeTimberPosts from "@/assets/main-ridge-timber-posts.jpg";
+import mainRidgeTrenchUtilities from "@/assets/main-ridge-trench-utilities.jpg";
 
 // Page header component
 function PageHeader({ title, description }: { title: string; description: string }) {
@@ -73,14 +73,14 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
 }
 
 const constructionSteps = [
-  { image: trenchUtilities, title: "Site Preparation", description: "Trenching for utilities and drainage" },
-  { image: rebarFoundation, title: "Foundation Work", description: "Reinforced concrete foundations built to last" },
-  { image: postDepth, title: "Post Installation", description: "Deep-set posts for structural integrity" },
-  { image: frameTrench, title: "Frame Layout", description: "Precise framing aligned to specifications" },
-  { image: timberPosts, title: "Timber Framework", description: "Quality timber posts and structural elements" },
-  { image: barnFrame, title: "Barn Framing", description: "Complete structural framework taking shape" },
-  { image: craneLift, title: "Heavy Lifting", description: "Precision crane work for large components" },
-  { image: arenaGrading, title: "Arena Grading", description: "Perfectly leveled arena surfaces" },
+  { image: mainRidgeTrenchUtilities, title: "Site Preparation", description: "Trenching for utilities and drainage" },
+  { image: mainRidgeRebarFoundation, title: "Foundation Work", description: "Reinforced concrete foundations built to last" },
+  { image: mainRidgePostDepth, title: "Post Installation", description: "Deep-set posts for structural integrity" },
+  { image: mainRidgeFrameTrench, title: "Frame Layout", description: "Precise framing aligned to specifications" },
+  { image: mainRidgeTimberPosts, title: "Timber Framework", description: "Quality timber posts and structural elements" },
+  { image: mainRidgeBarnFrame, title: "Barn Framing", description: "Complete structural framework taking shape" },
+  { image: mainRidgeCraneLift, title: "Heavy Lifting", description: "Precision crane work for large components" },
+  { image: mainRidgeArenaGrading, title: "Arena Grading", description: "Perfectly leveled arena surfaces" },
 ];
 
 function ConstructionProcessSection() {
