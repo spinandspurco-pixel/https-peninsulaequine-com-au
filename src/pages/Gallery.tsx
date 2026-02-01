@@ -395,9 +395,17 @@ function VideoGallerySection({ onVideoClick }: { onVideoClick: (item: GalleryIte
 function Lightbox({
   item,
   onClose,
+  onPrevious,
+  onNext,
+  hasPrevious,
+  hasNext,
 }: {
   item: GalleryItem | null;
   onClose: () => void;
+  onPrevious: () => void;
+  onNext: () => void;
+  hasPrevious: boolean;
+  hasNext: boolean;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -407,6 +415,28 @@ function Lightbox({
     }
   }, [item]);
 
+  // Keyboard navigation
+  useEffect(() => {
+    if (!item) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case "Escape":
+          onClose();
+          break;
+        case "ArrowLeft":
+          if (hasPrevious) onPrevious();
+          break;
+        case "ArrowRight":
+          if (hasNext) onNext();
+          break;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [item, onClose, onPrevious, onNext, hasPrevious, hasNext]);
+
   if (!item) return null;
 
   return (
@@ -414,13 +444,47 @@ function Lightbox({
       className="fixed inset-0 z-50 bg-primary/95 flex items-center justify-center p-4"
       onClick={onClose}
     >
+      {/* Close button */}
       <button
-        className="absolute top-6 right-6 text-primary-foreground/80 hover:text-primary-foreground z-10"
+        className="absolute top-6 right-6 text-primary-foreground/80 hover:text-primary-foreground z-10 transition-colors"
         onClick={onClose}
         aria-label="Close lightbox"
       >
         <X className="h-8 w-8" />
       </button>
+
+      {/* Previous button */}
+      {hasPrevious && (
+        <button
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-primary-foreground/60 hover:text-primary-foreground z-10 p-2 transition-colors"
+          onClick={(e) => {
+            e.stopPropagation();
+            onPrevious();
+          }}
+          aria-label="Previous image"
+        >
+          <svg className="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+      )}
+
+      {/* Next button */}
+      {hasNext && (
+        <button
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-primary-foreground/60 hover:text-primary-foreground z-10 p-2 transition-colors"
+          onClick={(e) => {
+            e.stopPropagation();
+            onNext();
+          }}
+          aria-label="Next image"
+        >
+          <svg className="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      )}
+
       <div className="max-w-5xl w-full" onClick={(e) => e.stopPropagation()}>
         {item.type === "video" ? (
           <video
@@ -440,6 +504,9 @@ function Lightbox({
         )}
         <p className="text-center text-primary-foreground/70 mt-4 text-sm">
           {item.alt}
+          <span className="block text-primary-foreground/50 text-xs mt-1">
+            Use arrow keys to navigate · Escape to close
+          </span>
         </p>
       </div>
     </div>
@@ -518,6 +585,36 @@ export default function Gallery() {
       : activeProject === "videos"
       ? galleryItems.filter((item) => item.type === "video")
       : galleryItems.filter((item) => item.project === activeProject);
+
+  // Combine all navigable items (gallery items + videos from allVideos)
+  const allNavigableItems: GalleryItem[] = [
+    ...galleryItems,
+    ...allVideos.map((v) => ({
+      id: v.id,
+      src: v.src,
+      alt: v.alt,
+      project: v.project,
+      type: v.type,
+      thumbnail: v.thumbnail,
+    })),
+  ];
+
+  // Find current index for navigation
+  const currentIndex = lightboxItem
+    ? allNavigableItems.findIndex((item) => item.id === lightboxItem.id)
+    : -1;
+
+  const handlePrevious = () => {
+    if (currentIndex > 0) {
+      setLightboxItem(allNavigableItems[currentIndex - 1]);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentIndex < allNavigableItems.length - 1) {
+      setLightboxItem(allNavigableItems[currentIndex + 1]);
+    }
+  };
 
   const currentProjectName = projects.find((p) => p.id === activeProject)?.name || "All Projects";
   const videoCount = filteredItems.filter(i => i.type === "video").length;
@@ -601,7 +698,14 @@ export default function Gallery() {
       </section>
 
       {/* Lightbox */}
-      <Lightbox item={lightboxItem} onClose={() => setLightboxItem(null)} />
+      <Lightbox
+        item={lightboxItem}
+        onClose={() => setLightboxItem(null)}
+        onPrevious={handlePrevious}
+        onNext={handleNext}
+        hasPrevious={currentIndex > 0}
+        hasNext={currentIndex < allNavigableItems.length - 1}
+      />
     </Layout>
   );
 }
