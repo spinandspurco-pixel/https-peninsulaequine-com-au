@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { FamilyVideoCarousel } from "@/components/FamilyVideoCarousel";
 import { aboutCiro } from "@/data/content";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
 import ciroWide from "@/assets/ciro-wide.png";
@@ -31,12 +32,20 @@ function PageHeader() {
 }
 
 function CiroSection() {
+  const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation<HTMLDivElement>();
+  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation<HTMLDivElement>();
+
   return (
     <section className="section-padding">
       <div className="section-container">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Image */}
-          <div className="relative">
+          <div 
+            ref={imageRef}
+            className={`relative transition-all duration-700 ${
+              imageVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
+            }`}
+          >
             <div className="aspect-[4/5] rounded-lg overflow-hidden">
               <img
                 src={ciroWithHorse}
@@ -48,7 +57,12 @@ function CiroSection() {
           </div>
 
           {/* Content */}
-          <div>
+          <div 
+            ref={contentRef}
+            className={`transition-all duration-700 delay-200 ${
+              contentVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
+            }`}
+          >
             <div className="w-16 h-0.5 bg-accent mb-6" />
             <h2 className="heading-section text-foreground mb-2">{aboutCiro.name}</h2>
             <p className="text-accent font-medium mb-6">{aboutCiro.title}</p>
@@ -65,10 +79,20 @@ function CiroSection() {
 }
 
 function ValuesSection() {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>();
+  const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation<HTMLDivElement>({
+    threshold: 0.1,
+  });
+
   return (
     <section className="section-padding bg-card">
       <div className="section-container">
-        <div className="text-center max-w-2xl mx-auto mb-16">
+        <div 
+          ref={headerRef}
+          className={`text-center max-w-2xl mx-auto mb-16 transition-all duration-700 ${
+            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
           <div className="w-16 h-0.5 bg-accent mx-auto mb-6" />
           <h2 className="heading-section text-foreground mb-4">
             Our Values
@@ -78,11 +102,17 @@ function ValuesSection() {
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div 
+          ref={gridRef}
+          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8"
+        >
           {aboutCiro.values.map((value, index) => (
             <div
               key={value.title}
-              className="text-center p-6"
+              className={`text-center p-6 transition-all duration-500 ${
+                gridVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
             >
               <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6">
                 <span className="font-serif text-2xl font-bold text-accent">{index + 1}</span>
@@ -100,6 +130,10 @@ function ValuesSection() {
 }
 
 function NaturalHorsemanshipSection() {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>();
+  const { ref: videosRef, isVisible: videosVisible } = useScrollAnimation<HTMLDivElement>();
+  const { ref: quoteRef, isVisible: quoteVisible } = useScrollAnimation<HTMLQuoteElement>();
+
   const videos = [
     { src: ciroJoinUp1, title: "Join-Up Session" },
     { src: ciroJoinUp2, title: "Bareback Connection" },
@@ -108,7 +142,12 @@ function NaturalHorsemanshipSection() {
   return (
     <section className="section-padding bg-background">
       <div className="section-container">
-        <div className="max-w-3xl mx-auto text-center mb-12">
+        <div 
+          ref={headerRef}
+          className={`max-w-3xl mx-auto text-center mb-12 transition-all duration-700 ${
+            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
           <div className="w-16 h-0.5 bg-accent mx-auto mb-6" />
           <h2 className="heading-section text-foreground mb-4">
             Natural Horsemanship
@@ -121,9 +160,18 @@ function NaturalHorsemanshipSection() {
         </div>
 
         {/* Video Grid */}
-        <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+        <div 
+          ref={videosRef}
+          className="grid md:grid-cols-2 gap-6 lg:gap-8"
+        >
           {videos.map((video, index) => (
-            <div key={index} className="relative group">
+            <div 
+              key={index} 
+              className={`relative group transition-all duration-700 ${
+                videosVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              }`}
+              style={{ transitionDelay: `${index * 150}ms` }}
+            >
               <div className="aspect-video rounded-lg overflow-hidden bg-muted">
                 <video
                   className="w-full h-full object-cover"
@@ -143,7 +191,12 @@ function NaturalHorsemanshipSection() {
         </div>
 
         {/* Quote */}
-        <blockquote className="max-w-2xl mx-auto mt-12 text-center">
+        <blockquote 
+          ref={quoteRef}
+          className={`max-w-2xl mx-auto mt-12 text-center transition-all duration-700 delay-300 ${
+            quoteVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
           <p className="font-serif text-xl sm:text-2xl text-foreground italic leading-relaxed">
             "When you understand how a horse thinks and moves, you build facilities 
             that work with their nature, not against it."
@@ -156,12 +209,23 @@ function NaturalHorsemanshipSection() {
 }
 
 function ImageBreak() {
+  const { ref, isVisible } = useScrollAnimation<HTMLElement>({
+    threshold: 0.2,
+  });
+
   return (
-    <section className="relative h-[50vh] min-h-[400px]">
+    <section 
+      ref={ref}
+      className={`relative h-[50vh] min-h-[400px] transition-all duration-1000 ${
+        isVisible ? "opacity-100" : "opacity-0"
+      }`}
+    >
       <img
         src={horseAction}
         alt="Horse training in arena"
-        className="w-full h-full object-cover"
+        className={`w-full h-full object-cover transition-transform duration-1000 ${
+          isVisible ? "scale-100" : "scale-105"
+        }`}
       />
       <div className="absolute inset-0 bg-primary/40" />
     </section>
@@ -169,10 +233,17 @@ function ImageBreak() {
 }
 
 function StorySection() {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>();
+
   return (
     <section className="section-padding">
       <div className="section-container">
-        <div className="max-w-3xl mx-auto">
+        <div 
+          ref={ref}
+          className={`max-w-3xl mx-auto transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
           <div className="w-16 h-0.5 bg-accent mb-6" />
           <h2 className="heading-section text-foreground mb-8">
             Why Peninsula Equine?
@@ -204,12 +275,20 @@ function StorySection() {
 }
 
 function FamilySection() {
+  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation<HTMLDivElement>();
+  const { ref: carouselRef, isVisible: carouselVisible } = useScrollAnimation<HTMLDivElement>();
+
   return (
     <section className="section-padding bg-card">
       <div className="section-container">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Content */}
-          <div>
+          <div 
+            ref={contentRef}
+            className={`transition-all duration-700 ${
+              contentVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
+            }`}
+          >
             <div className="w-16 h-0.5 bg-accent mb-6" />
             <h2 className="heading-section text-foreground mb-4">
               More Than a Business
@@ -228,7 +307,12 @@ function FamilySection() {
           </div>
 
           {/* Video Carousel */}
-          <div>
+          <div 
+            ref={carouselRef}
+            className={`transition-all duration-700 delay-200 ${
+              carouselVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
+            }`}
+          >
             <FamilyVideoCarousel />
           </div>
         </div>
@@ -238,8 +322,12 @@ function FamilySection() {
 }
 
 function CTASection() {
+  const { ref, isVisible } = useScrollAnimation<HTMLElement>({
+    threshold: 0.2,
+  });
+
   return (
-    <section className="relative py-24 lg:py-32">
+    <section ref={ref} className="relative py-24 lg:py-32">
       <div className="absolute inset-0">
         <img
           src={ciroWide}
@@ -249,7 +337,11 @@ function CTASection() {
         <div className="absolute inset-0 bg-primary/90" />
       </div>
 
-      <div className="relative z-10 section-container text-center">
+      <div 
+        className={`relative z-10 section-container text-center transition-all duration-700 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}
+      >
         <h2 className="heading-section text-primary-foreground mb-6">
           Let's Build Something Great Together
         </h2>
