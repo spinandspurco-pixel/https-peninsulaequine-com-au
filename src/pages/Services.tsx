@@ -4,6 +4,7 @@ import { ArrowRight, CheckCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { services, lessonInfo, siteConfig } from "@/data/content";
+import { useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 
 // Main Ridge construction process images
 import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
@@ -160,6 +161,7 @@ function ConstructionLightbox({
 
 function ConstructionProcessSection() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const { containerRef, visibleItems } = useStaggeredAnimation(constructionSteps.length);
 
   const openLightbox = (index: number) => setLightboxIndex(index);
   const closeLightbox = () => setLightboxIndex(null);
@@ -190,12 +192,16 @@ function ConstructionProcessSection() {
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div ref={containerRef} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {constructionSteps.map((step, index) => (
             <button
               key={index}
               onClick={() => openLightbox(index)}
-              className="group text-left focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 rounded-lg"
+              className={`group text-left focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 rounded-lg transition-all duration-700 ${
+                visibleItems[index]
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-8"
+              }`}
             >
               <div className="aspect-square rounded-lg overflow-hidden bg-muted mb-3">
                 <img
