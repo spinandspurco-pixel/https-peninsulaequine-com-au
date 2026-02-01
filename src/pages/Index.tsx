@@ -13,21 +13,40 @@ import hatDetail from "@/assets/hat-detail.png";
 import ciroWide from "@/assets/ciro-wide.png";
 import spurDetail from "@/assets/spur-detail.png";
 
+// Import slow-mo videos for hero
+import slowMo1 from "@/assets/videos/slow-mo-1.mp4";
+import slowMo2 from "@/assets/videos/slow-mo-2.mp4";
+import slowMo3 from "@/assets/videos/slow-mo-3.mp4";
+
 // Featured services for homepage
 const featuredServices = services.slice(0, 4);
 const featuredTestimonials = testimonials.slice(0, 3);
 
 function HeroSection() {
+  // Array of slow-mo videos for potential future cycling
+  const heroVideos = [slowMo1, slowMo2, slowMo3];
+  
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Full-bleed Background Image */}
+      {/* Full-bleed Background Video */}
       <div className="absolute inset-0">
-        <img
-          src={heroSunset}
-          alt="Horse silhouette at sunset"
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster={heroSunset}
           className="w-full h-full object-cover scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-transparent to-primary/60" />
+        >
+          <source src={heroVideos[0]} type="video/mp4" />
+          {/* Fallback to image if video fails */}
+          <img
+            src={heroSunset}
+            alt="Horse silhouette at sunset"
+            className="w-full h-full object-cover scale-105"
+          />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/30 via-primary/10 to-primary/70" />
       </div>
 
       {/* Centered Content */}
