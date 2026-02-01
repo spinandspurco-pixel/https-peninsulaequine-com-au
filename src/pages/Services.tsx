@@ -4,7 +4,7 @@ import { ArrowRight, CheckCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { services, lessonInfo, siteConfig } from "@/data/content";
-import { useStaggeredAnimation } from "@/hooks/useScrollAnimation";
+import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
 
 // Main Ridge construction process images
@@ -45,13 +45,29 @@ function PageHeader({ title, description }: { title: string; description: string
 }
 
 function ServiceCard({ service, index }: { service: typeof services[0]; index: number }) {
+  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation<HTMLDivElement>();
+  const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
+
+  const isEven = index % 2 === 0;
+
   return (
     <div
       id={service.id}
       className="scroll-mt-24 grid lg:grid-cols-2 gap-8 lg:gap-16 items-start py-16 border-b border-border last:border-0"
     >
-      <div className={index % 2 === 1 ? "lg:order-2" : ""}>
-        <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mb-6">
+      <div 
+        ref={contentRef}
+        className={`transition-all duration-700 ${
+          isEven ? "" : "lg:order-2"
+        } ${
+          contentVisible 
+            ? "opacity-100 translate-x-0" 
+            : `opacity-0 ${isEven ? "-translate-x-8" : "translate-x-8"}`
+        }`}
+      >
+        <div className={`w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mb-6 transition-all duration-500 delay-100 ${
+          contentVisible ? "opacity-100 scale-100" : "opacity-0 scale-75"
+        }`}>
           <div className="w-8 h-8 bg-accent rounded" />
         </div>
         <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-foreground mb-4">
@@ -62,7 +78,13 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
         </p>
         <ul className="space-y-3 mb-8">
           {service.features.map((feature, i) => (
-            <li key={i} className="flex items-start gap-3">
+            <li 
+              key={i} 
+              className={`flex items-start gap-3 transition-all duration-500 ${
+                contentVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
+              }`}
+              style={{ transitionDelay: `${200 + i * 75}ms` }}
+            >
               <CheckCircle className="h-5 w-5 text-accent mt-0.5 shrink-0" />
               <span className="text-foreground">{feature}</span>
             </li>
@@ -75,7 +97,16 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
           </Link>
         </Button>
       </div>
-      <div className={index % 2 === 1 ? "lg:order-1" : ""}>
+      <div 
+        ref={imageRef}
+        className={`transition-all duration-700 delay-200 ${
+          isEven ? "" : "lg:order-1"
+        } ${
+          imageVisible 
+            ? "opacity-100 translate-x-0 scale-100" 
+            : `opacity-0 ${isEven ? "translate-x-8" : "-translate-x-8"} scale-95`
+        }`}
+      >
         <div className="aspect-[4/3] bg-secondary rounded-lg overflow-hidden">
           <div className="w-full h-full flex items-center justify-center text-muted-foreground">
             {/* Placeholder for service image */}
@@ -204,6 +235,7 @@ function ConstructionLightbox({
 function ConstructionProcessSection() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const { containerRef, visibleItems } = useStaggeredAnimation(constructionSteps.length);
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>();
 
   const openLightbox = (index: number) => setLightboxIndex(index);
   const closeLightbox = () => setLightboxIndex(null);
@@ -223,8 +255,15 @@ function ConstructionProcessSection() {
   return (
     <section className="section-padding bg-card">
       <div className="section-container">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="w-16 h-0.5 bg-accent mx-auto mb-6" />
+        <div 
+          ref={headerRef}
+          className={`text-center max-w-3xl mx-auto mb-12 transition-all duration-700 ${
+            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
+          <div className={`w-16 h-0.5 bg-accent mx-auto mb-6 transition-all duration-500 delay-100 ${
+            headerVisible ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"
+          }`} />
           <h2 className="heading-section text-foreground mb-4">
             Our Construction Process
           </h2>
@@ -285,26 +324,85 @@ function ConstructionProcessSection() {
 }
 
 function LessonsSection() {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>();
+
   return (
     <section className="section-padding bg-background">
       <div className="section-container">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="w-16 h-0.5 bg-accent mx-auto mb-6" />
+        <div 
+          ref={ref}
+          className={`max-w-3xl mx-auto text-center transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
+          <div className={`w-16 h-0.5 bg-accent mx-auto mb-6 transition-all duration-500 delay-100 ${
+            isVisible ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"
+          }`} />
           <h2 className="heading-section text-foreground mb-4">
             Lessons & Training
           </h2>
-          <p className="text-accent font-medium mb-4">{lessonInfo.trainer}</p>
-          <p className="text-muted-foreground mb-6">
+          <p className={`text-accent font-medium mb-4 transition-all duration-500 delay-150 ${
+            isVisible ? "opacity-100" : "opacity-0"
+          }`}>{lessonInfo.trainer}</p>
+          <p className={`text-muted-foreground mb-6 transition-all duration-500 delay-200 ${
+            isVisible ? "opacity-100" : "opacity-0"
+          }`}>
             {lessonInfo.description}
           </p>
-          <p className="text-muted-foreground mb-8">
+          <p className={`text-muted-foreground mb-8 transition-all duration-500 delay-250 ${
+            isVisible ? "opacity-100" : "opacity-0"
+          }`}>
             {lessonInfo.contact}
           </p>
-          <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
+          <div className={`transition-all duration-500 delay-300 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          }`}>
+            <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
+              <Link to="/contact">
+                Inquire About Lessons
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CTASection() {
+  const { ref, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.2 });
+
+  return (
+    <section ref={ref} className="section-padding bg-primary text-primary-foreground">
+      <div className={`section-container text-center transition-all duration-700 ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      }`}>
+        <h2 className="heading-section mb-6">
+          Let's Discuss Your Project
+        </h2>
+        <p className={`text-primary-foreground/80 max-w-2xl mx-auto mb-8 transition-all duration-500 delay-150 ${
+          isVisible ? "opacity-100" : "opacity-0"
+        }`}>
+          Every great facility starts with a conversation. Tell us about your vision, 
+          and we'll show you how to make it reality.
+        </p>
+        <div className={`flex flex-col sm:flex-row gap-4 justify-center transition-all duration-500 delay-300 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+        }`}>
+          <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
             <Link to="/contact">
-              Inquire About Lessons
-              <ArrowRight className="ml-2 h-4 w-4" />
+              Get a Free Quote
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+          >
+            <a href={`tel:${siteConfig.phone}`}>Call {siteConfig.phone}</a>
           </Button>
         </div>
       </div>
@@ -330,34 +428,7 @@ export default function Services() {
 
       <LessonsSection />
 
-      {/* CTA */}
-      <section className="section-padding bg-primary text-primary-foreground">
-        <div className="section-container text-center">
-          <h2 className="heading-section mb-6">
-            Let's Discuss Your Project
-          </h2>
-          <p className="text-primary-foreground/80 max-w-2xl mx-auto mb-8">
-            Every great facility starts with a conversation. Tell us about your vision, 
-            and we'll show you how to make it reality.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-              <Link to="/contact">
-                Get a Free Quote
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-            >
-              <a href={`tel:${siteConfig.phone}`}>Call {siteConfig.phone}</a>
-            </Button>
-          </div>
-        </div>
-      </section>
+      <CTASection />
     </Layout>
   );
 }
