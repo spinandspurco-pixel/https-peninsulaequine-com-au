@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Phone, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,32 +14,61 @@ import hatDetail from "@/assets/hat-detail.png";
 import ciroWide from "@/assets/ciro-wide.png";
 import spurDetail from "@/assets/spur-detail.png";
 
-// Import slow-mo videos for hero
+// Import videos for hero rotation
 import slowMo1 from "@/assets/videos/slow-mo-1.mp4";
 import slowMo2 from "@/assets/videos/slow-mo-2.mp4";
 import slowMo3 from "@/assets/videos/slow-mo-3.mp4";
+import ciroJoinUp from "@/assets/videos/ciro-bareback-join-up.mp4";
 
 // Featured services for homepage
 const featuredServices = services.slice(0, 4);
 const featuredTestimonials = testimonials.slice(0, 3);
 
+// Hero videos for rotation
+const heroVideos = [slowMo1, ciroJoinUp, slowMo2, slowMo3];
+
 function HeroSection() {
-  // Array of slow-mo videos for potential future cycling
-  const heroVideos = [slowMo1, slowMo2, slowMo3];
-  
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Cycle videos every 15 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentVideoIndex((prev) => (prev + 1) % heroVideos.length);
+        setIsTransitioning(false);
+      }, 500);
+    }, 15000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Reset video when source changes
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.load();
+      videoRef.current.play().catch(() => {});
+    }
+  }, [currentVideoIndex]);
+
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Full-bleed Background Video */}
       <div className="absolute inset-0">
         <video
+          ref={videoRef}
           autoPlay
           muted
           loop
           playsInline
           poster={heroSunset}
-          className="w-full h-full object-cover animate-ken-burns"
+          className={`w-full h-full object-cover animate-ken-burns transition-opacity duration-500 ${
+            isTransitioning ? "opacity-0" : "opacity-100"
+          }`}
         >
-          <source src={heroVideos[0]} type="video/mp4" />
+          <source src={heroVideos[currentVideoIndex]} type="video/mp4" />
           {/* Fallback to image if video fails */}
           <img
             src={heroSunset}
