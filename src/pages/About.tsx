@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Play } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
-import { aboutCiro, siteConfig } from "@/data/content";
+import { FamilyVideoCarousel } from "@/components/FamilyVideoCarousel";
+import { aboutCiro } from "@/data/content";
 
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
 import ciroWide from "@/assets/ciro-wide.png";
@@ -202,6 +203,40 @@ function StorySection() {
   );
 }
 
+function FamilySection() {
+  return (
+    <section className="section-padding bg-card">
+      <div className="section-container">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Content */}
+          <div>
+            <div className="w-16 h-0.5 bg-accent mb-6" />
+            <h2 className="heading-section text-foreground mb-4">
+              More Than a Business
+            </h2>
+            <p className="text-muted-foreground mb-4">
+              Peninsula Equine isn't just a company—it's a family affair. When we're 
+              not building world-class equine facilities, you'll find us spending 
+              time together, often with our animals.
+            </p>
+            <p className="text-muted-foreground">
+              From custom chicken coops to matching PE caps, we bring the same 
+              attention to detail and love to everything we do. This personal 
+              approach is what sets us apart—we treat every client's project like 
+              it's our own.
+            </p>
+          </div>
+
+          {/* Video Carousel */}
+          <div>
+            <FamilyVideoCarousel />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function CTASection() {
   return (
     <section className="relative py-24 lg:py-32">
@@ -244,6 +279,7 @@ export default function About() {
       <CiroSection />
       <NaturalHorsemanshipSection />
       <ValuesSection />
+      <FamilySection />
       <ImageBreak />
       <StorySection />
       <CTASection />
