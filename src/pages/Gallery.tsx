@@ -73,6 +73,10 @@ import slowMo2 from "@/assets/videos/slow-mo-2.mp4";
 import slowMo3 from "@/assets/videos/slow-mo-3.mp4";
 import mainRidgeWoodwork1 from "@/assets/videos/main-ridge-woodwork-1.mp4";
 import mainRidgeWoodwork2 from "@/assets/videos/main-ridge-woodwork-2.mp4";
+import caulfieldVideo1 from "@/assets/videos/caulfield-1.mov";
+import caulfieldVideo2 from "@/assets/videos/caulfield-2.mov";
+import caulfieldVideo3 from "@/assets/videos/caulfield-3.mov";
+import equitanaArenaVideo from "@/assets/videos/equitana-arena.mov";
 
 type GalleryItem = {
   id: number;
@@ -100,6 +104,10 @@ const allVideos = [
   { id: 102, src: slowMo3, alt: "Natural Beauty", description: "The artistry of horse training", project: "videos" as const, type: "video" as const, thumbnail: mainRidgeBrickwork },
   { id: 103, src: mainRidgeWoodwork1, alt: "Timber Craftsmanship", description: "Traditional woodworking techniques", project: "main-ridge" as const, type: "video" as const, thumbnail: mainRidgeCiroWoodwork1 },
   { id: 104, src: mainRidgeWoodwork2, alt: "Woodworking Detail", description: "Hand-crafted precision", project: "main-ridge" as const, type: "video" as const, thumbnail: mainRidgeCiroWoodwork2 },
+  { id: 105, src: caulfieldVideo1, alt: "Melbourne Cup Arena Prep", description: "Professional sand management at Caulfield", project: "caulfield" as const, type: "video" as const, thumbnail: caulfieldEvent },
+  { id: 106, src: caulfieldVideo2, alt: "Caulfield Surface Work", description: "Race-day preparation in action", project: "caulfield" as const, type: "video" as const, thumbnail: arenaSandPrep1 },
+  { id: 107, src: caulfieldVideo3, alt: "Racecourse Finishing", description: "Final touches for competition readiness", project: "caulfield" as const, type: "video" as const, thumbnail: arenaSandPrep2 },
+  { id: 108, src: equitanaArenaVideo, alt: "Equitana Arena Setup", description: "Competition arena preparation at Australia's biggest event", project: "equitana" as const, type: "video" as const, thumbnail: equitanaArena1 },
 ];
 
 // Gallery items for photo grid (videos are in dedicated sections above)
