@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Plus, Minus } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
+import { PageHeader } from "@/components/PageHeader";
 import { faqs, siteConfig } from "@/data/content";
 import {
   Accordion,
@@ -10,27 +11,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-function PageHeader() {
-  return (
-    <section className="pt-32 pb-16 bg-primary text-primary-foreground">
-      <div className="section-container">
-        <div className="max-w-3xl">
-          <div className="w-16 h-0.5 bg-accent mb-6" />
-          <h1 className="heading-display mb-6">Frequently Asked Questions</h1>
-          <p className="text-lg text-primary-foreground/80">
-            Got questions? We've got answers. If you don't find what you're looking for, 
-            don't hesitate to reach out.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export default function FAQ() {
   return (
     <Layout>
-      <PageHeader />
+      <PageHeader 
+        title="Frequently Asked Questions"
+        description="Got questions? We've got answers. If you don't find what you're looking for, don't hesitate to reach out."
+      />
 
       <section className="section-padding">
         <div className="section-container max-w-3xl">
