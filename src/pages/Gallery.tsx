@@ -93,6 +93,13 @@ const projects = [
   { id: "videos", name: "Videos" },
 ];
 
+// Featured slow-mo videos for hero section
+const featuredVideos = [
+  { id: 100, src: slowMo1, alt: "Graceful Movement", description: "Capturing the elegance of equine motion", thumbnail: mainRidgeInterior },
+  { id: 101, src: slowMo2, alt: "Power & Precision", description: "Every stride tells a story", thumbnail: mainRidgeTimber },
+  { id: 102, src: slowMo3, alt: "Natural Beauty", description: "The artistry of horse training", thumbnail: mainRidgeBrickwork },
+];
+
 const galleryItems: GalleryItem[] = [
   // Videos first for prominence
   { id: 100, src: slowMo1, alt: "Slow motion equine footage", project: "videos", type: "video", thumbnail: mainRidgeInterior },
@@ -173,6 +180,94 @@ function PageHeader() {
             Explore our portfolio of premium equine facilities, from luxurious barns 
             to competition arenas at Australia's biggest events.
           </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FeaturedVideoSection({ onVideoClick }: { onVideoClick: (item: GalleryItem) => void }) {
+  const { ref, isVisible } = useScrollAnimation<HTMLElement>({
+    threshold: 0.1,
+    rootMargin: "0px",
+  });
+  const [activeVideo, setActiveVideo] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleVideoClick = () => {
+    const video = featuredVideos[activeVideo];
+    onVideoClick({
+      id: video.id,
+      src: video.src,
+      alt: video.alt,
+      project: "videos",
+      type: "video",
+      thumbnail: video.thumbnail,
+    });
+  };
+
+  return (
+    <section 
+      ref={ref}
+      className="py-16 bg-card"
+    >
+      <div className="section-container">
+        <div className="text-center mb-10">
+          <span className="text-accent text-sm font-medium tracking-wider uppercase">Featured</span>
+          <h2 className="font-serif text-3xl md:text-4xl text-foreground mt-2">
+            Horse Training in Slow Motion
+          </h2>
+          <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">
+            Experience the beauty and precision of natural horsemanship captured in stunning slow motion.
+          </p>
+        </div>
+
+        <div className={`grid lg:grid-cols-3 gap-6 transition-all duration-700 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}>
+          {featuredVideos.map((video, index) => (
+            <button
+              key={video.id}
+              onClick={() => {
+                setActiveVideo(index);
+                handleVideoClick();
+              }}
+              className={`group relative aspect-[4/3] overflow-hidden rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 transition-all duration-500 ${
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              }`}
+              style={{ transitionDelay: `${index * 150}ms` }}
+            >
+              {/* Video thumbnail with hover preview */}
+              <video
+                src={video.src}
+                muted
+                loop
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+                onMouseEnter={(e) => e.currentTarget.play()}
+                onMouseLeave={(e) => {
+                  e.currentTarget.pause();
+                  e.currentTarget.currentTime = 0;
+                }}
+              />
+              
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent group-hover:from-primary/70 transition-colors" />
+              
+              {/* Play button */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center group-hover:scale-110 group-hover:bg-accent transition-all duration-300 shadow-lg">
+                  <Play className="w-7 h-7 text-accent-foreground ml-1" fill="currentColor" />
+                </div>
+              </div>
+              
+              {/* Text */}
+              <div className="absolute bottom-0 left-0 right-0 p-5 text-left">
+                <h3 className="font-serif text-xl text-primary-foreground mb-1">{video.alt}</h3>
+                <p className="text-primary-foreground/70 text-sm">{video.description}</p>
+              </div>
+            </button>
+          ))}
         </div>
       </div>
     </section>
@@ -313,7 +408,11 @@ export default function Gallery() {
   return (
     <Layout>
       <PageHeader />
+      
+      {/* Featured Video Section */}
+      <FeaturedVideoSection onVideoClick={setLightboxItem} />
 
+      {/* Photo Gallery Section */}
       <section className="section-padding">
         <div className="section-container">
           {/* Project Filter Tabs */}
