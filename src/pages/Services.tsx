@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle, X, ZoomIn } from "lucide-react";
+import { ArrowRight, ArrowUp, CheckCircle, X, ZoomIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
@@ -527,6 +527,18 @@ function ConstructionProcessSection() {
             </button>
           ))}
         </div>
+
+        {/* Back to Services button */}
+        <div className="mt-12 text-center">
+          <Button
+            variant="outline"
+            className="border-accent/30 text-accent hover:bg-accent/10"
+            onClick={() => document.getElementById('services-list')?.scrollIntoView({ behavior: 'smooth' })}
+          >
+            <ArrowUp className="mr-2 h-4 w-4" />
+            Back to Services
+          </Button>
+        </div>
       </div>
 
       {/* Lightbox */}
@@ -612,7 +624,7 @@ export default function Services() {
         description="From custom arenas to complete barn construction, we deliver equine facilities built to last. Every project reflects our commitment to quality and our understanding of what horses—and their owners—truly need."
       />
 
-      <section className="section-container">
+      <section id="services-list" className="section-container scroll-mt-24">
         {services.map((service, index) => (
           <ServiceCard key={service.id} service={service} index={index} />
         ))}
