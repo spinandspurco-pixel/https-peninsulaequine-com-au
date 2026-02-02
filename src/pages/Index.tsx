@@ -33,7 +33,7 @@ function HeroSection() {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { ref: parallaxRef, offset } = useParallax<HTMLDivElement>({ speed: 0.4 });
+  const { ref: parallaxRef, offset } = useParallax<HTMLDivElement>({ speed: 0.5 });
 
   // Cycle videos every 15 seconds
   useEffect(() => {
@@ -60,8 +60,8 @@ function HeroSection() {
     <section ref={parallaxRef} className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Full-bleed Background Video with Parallax */}
       <div 
-        className="absolute inset-0 will-change-transform"
-        style={{ transform: `translateY(${offset * 0.5}px) scale(1.1)` }}
+        className="absolute inset-[-10%] will-change-transform transition-transform duration-100 ease-out"
+        style={{ transform: `translateY(${offset * 0.6}px) scale(1.15)` }}
       >
         <video
           ref={videoRef}
