@@ -412,6 +412,8 @@ function Lightbox({
   onNext,
   hasPrevious,
   hasNext,
+  currentIndex,
+  totalCount,
 }: {
   item: GalleryItem | null;
   onClose: () => void;
@@ -419,6 +421,8 @@ function Lightbox({
   onNext: () => void;
   hasPrevious: boolean;
   hasNext: boolean;
+  currentIndex: number;
+  totalCount: number;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -518,7 +522,7 @@ function Lightbox({
         <p className="text-center text-primary-foreground/70 mt-4 text-sm">
           {item.alt}
           <span className="block text-primary-foreground/50 text-xs mt-1">
-            Use arrow keys to navigate · Escape to close
+            {currentIndex + 1} of {totalCount} · Use arrow keys to navigate · Escape to close
           </span>
         </p>
       </div>
@@ -814,6 +818,8 @@ export default function Gallery() {
         onNext={handleNext}
         hasPrevious={currentIndex > 0}
         hasNext={currentIndex < allNavigableItems.length - 1}
+        currentIndex={currentIndex}
+        totalCount={allNavigableItems.length}
       />
     </Layout>
   );
