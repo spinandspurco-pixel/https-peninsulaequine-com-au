@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
+import { ChevronLeft, ChevronRight, Play, Pause, Hammer, Heart, Film, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 import familyPeCaps from "@/assets/videos/family-pe-caps.mp4";
@@ -13,54 +14,78 @@ import slowMo1 from "@/assets/videos/slow-mo-1.mp4";
 import slowMo2 from "@/assets/videos/slow-mo-2.mp4";
 import slowMo3 from "@/assets/videos/slow-mo-3.mp4";
 
-const videos = [
+type VideoCategory = "family" | "craftsmanship" | "horsemanship" | "cinematic";
+
+interface VideoItem {
+  src: string;
+  title: string;
+  description: string;
+  category: VideoCategory;
+}
+
+const categoryConfig: Record<VideoCategory, { label: string; icon: React.ReactNode; variant: "default" | "secondary" | "outline" }> = {
+  family: { label: "Family", icon: <Users className="h-3 w-3" />, variant: "secondary" },
+  craftsmanship: { label: "Craftsmanship", icon: <Hammer className="h-3 w-3" />, variant: "default" },
+  horsemanship: { label: "Horsemanship", icon: <Heart className="h-3 w-3" />, variant: "default" },
+  cinematic: { label: "Slow Motion", icon: <Film className="h-3 w-3" />, variant: "outline" },
+};
+
+const videos: VideoItem[] = [
   {
     src: familyPeCaps,
     title: "Family Time",
     description: "The Peninsula Equine crew sporting their PE caps",
+    category: "family",
   },
   {
     src: mainRidgeWoodwork1,
     title: "Main Ridge Woodwork",
     description: "Precision timber craftsmanship in action",
+    category: "craftsmanship",
   },
   {
     src: mainRidgeWoodwork2,
     title: "Timber Detailing",
     description: "Hand-finished woodwork for lasting quality",
+    category: "craftsmanship",
   },
   {
     src: ciroJoinUp,
     title: "Join-Up Session",
     description: "Ciro connecting with horses through natural horsemanship",
+    category: "horsemanship",
   },
   {
     src: ciroJoinUp2,
     title: "Bareback Connection",
     description: "Building trust and partnership in the round pen",
+    category: "horsemanship",
   },
   {
     src: slowMo1,
     title: "Poetry in Motion",
     description: "The beauty of horse movement captured in slow motion",
+    category: "cinematic",
   },
   {
     src: slowMo2,
     title: "Graceful Strides",
     description: "Every movement tells a story",
+    category: "cinematic",
   },
   {
     src: slowMo3,
     title: "Equine Elegance",
     description: "Celebrating the majesty of horses",
+    category: "cinematic",
   },
   {
     src: chickenCoopBuild,
     title: "Chicken Coop Build",
     description: "Even the chickens get custom-built homes around here",
+    category: "craftsmanship",
   },
 ];
-
 const AUTOPLAY_INTERVAL = 8000; // 8 seconds per video
 
 export function FamilyVideoCarousel() {
@@ -190,6 +215,24 @@ export function FamilyVideoCarousel() {
         >
           <ChevronRight className="h-5 w-5" />
         </Button>
+
+        {/* Category Badge */}
+        <div className="absolute top-4 left-4 z-20">
+          <Badge
+            variant={categoryConfig[currentVideo.category].variant}
+            className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5 backdrop-blur-sm"
+          >
+            {categoryConfig[currentVideo.category].icon}
+            {categoryConfig[currentVideo.category].label}
+          </Badge>
+        </div>
+
+        {/* Video Counter */}
+        <div className="absolute top-4 right-4 z-20">
+          <span className="text-xs font-medium text-white/80 bg-black/40 backdrop-blur-sm px-2 py-1 rounded">
+            {currentIndex + 1} / {videos.length}
+          </span>
+        </div>
 
         {/* Progress Bar */}
         {isAutoPlaying && !isPlaying && (
