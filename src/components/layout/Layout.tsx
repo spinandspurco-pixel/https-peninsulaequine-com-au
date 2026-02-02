@@ -3,6 +3,7 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { SEOSchema } from "@/components/SEOSchema";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { FloatingContactButton } from "@/components/FloatingContactButton";
 
 interface LayoutProps {
   children: ReactNode;
@@ -16,6 +17,7 @@ export function Layout({ children }: LayoutProps) {
       <main className="flex-1">{children}</main>
       <Footer />
       <ScrollToTop />
+      <FloatingContactButton />
     </div>
   );
 }
