@@ -18,6 +18,24 @@ import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
 import mainRidgeTimberPosts from "@/assets/main-ridge-timber-posts.jpg";
 import mainRidgeTrenchUtilities from "@/assets/main-ridge-trench-utilities.jpg";
 
+// Service card images
+import equitanaArena from "@/assets/equitana-arena-1.jpg";
+import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
+import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
+import qldFacilityConstruction from "@/assets/qld-facility-construction.jpg";
+import qldFacilityCourtyard from "@/assets/qld-facility-courtyard.jpg";
+import mainRidgeCiroWoodwork from "@/assets/main-ridge-ciro-woodwork-1.jpg";
+
+// Map service IDs to their images
+const serviceImages: Record<string, string> = {
+  "arena-construction": equitanaArena,
+  "barn-construction": aberdeenBarnInterior,
+  "fencing": aberdeenStalls,
+  "infrastructure": qldFacilityConstruction,
+  "round-pens": qldFacilityCourtyard,
+  "renovations": mainRidgeCiroWoodwork,
+};
+
 // Page header component with parallax
 function PageHeader({ title, description }: { title: string; description: string }) {
   const { ref: parallaxRef, offset } = useParallax<HTMLElement>({ speed: 0.3 });
@@ -109,10 +127,12 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
         }`}
       >
         <div className="aspect-[4/3] bg-secondary rounded-lg overflow-hidden transition-all duration-500 group-hover:shadow-xl group-hover:-translate-y-1">
-          <div className="w-full h-full flex items-center justify-center text-muted-foreground transition-transform duration-500 group-hover:scale-105">
-            {/* Placeholder for service image */}
-            <span className="text-sm">{service.title} Photo</span>
-          </div>
+          <img 
+            src={serviceImages[service.id]} 
+            alt={service.title}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+          />
         </div>
       </div>
     </div>
