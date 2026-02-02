@@ -415,6 +415,8 @@ function Lightbox({
   hasNext,
   currentIndex,
   totalCount,
+  allItems,
+  onNavigateTo,
 }: {
   item: GalleryItem | null;
   onClose: () => void;
@@ -424,6 +426,8 @@ function Lightbox({
   hasNext: boolean;
   currentIndex: number;
   totalCount: number;
+  allItems: GalleryItem[];
+  onNavigateTo: (index: number) => void;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const touchStartX = useRef<number | null>(null);
@@ -569,9 +573,45 @@ function Lightbox({
         )}
         <p className="text-center text-primary-foreground/70 mt-4 text-sm">
           {item.alt}
-          <span className="block text-primary-foreground/50 text-xs mt-1">
-            {currentIndex + 1} of {totalCount} · Use arrow keys to navigate · Escape to close
-          </span>
+        </p>
+
+        {/* Thumbnail strip */}
+        <div className="mt-6 px-4">
+          <div className="flex justify-center gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-accent/30 scrollbar-track-transparent">
+            {allItems.map((thumbItem, index) => (
+              <button
+                key={thumbItem.id}
+                onClick={() => onNavigateTo(index)}
+                className={`relative flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-md overflow-hidden transition-all duration-300 ${
+                  index === currentIndex 
+                    ? "ring-2 ring-accent ring-offset-2 ring-offset-primary scale-105" 
+                    : "opacity-60 hover:opacity-100 hover:scale-105"
+                }`}
+                aria-label={`Go to ${thumbItem.type === "video" ? "video" : "image"} ${index + 1}: ${thumbItem.alt}`}
+              >
+                <img
+                  src={thumbItem.type === "video" ? thumbItem.thumbnail : thumbItem.src}
+                  alt={thumbItem.alt}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+                {thumbItem.type === "video" && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                    <Play className="w-4 h-4 text-white" />
+                  </div>
+                )}
+                {index === currentIndex && (
+                  <div className="absolute inset-0 bg-accent/10" />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Navigation hint */}
+        <p className="text-primary-foreground/40 text-xs mt-4 text-center">
+          <span className="hidden sm:inline">Use ← → to navigate · Esc to close</span>
+          <span className="sm:hidden">Swipe to navigate · Tap outside to close</span>
         </p>
       </div>
     </div>
@@ -859,6 +899,8 @@ export default function Gallery() {
         hasNext={currentIndex < allNavigableItems.length - 1}
         currentIndex={currentIndex}
         totalCount={allNavigableItems.length}
+        allItems={allNavigableItems}
+        onNavigateTo={(index) => setLightboxItem(allNavigableItems[index])}
       />
     </Layout>
   );
