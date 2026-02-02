@@ -4,6 +4,7 @@ import { ArrowRight, Phone, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { MajorEventsSection } from "@/components/MajorEventsSection";
+import { MajorEventsVideoSection } from "@/components/MajorEventsVideoSection";
 import { siteConfig, services, testimonials, aboutCiro } from "@/data/content";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
@@ -493,6 +494,7 @@ export default function Index() {
       <IntroSection />
       <MissionSection />
       <MajorEventsSection />
+      <MajorEventsVideoSection />
       <ServicesSection />
       <GallerySection />
       <TestimonialsSection />
