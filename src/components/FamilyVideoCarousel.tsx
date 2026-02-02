@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Play, Pause, Hammer, Heart, Film, Users } from "lucide-react";
+import { ChevronLeft, ChevronRight, Play, Pause, Hammer, Heart, Film, Users, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -13,8 +13,14 @@ import ciroJoinUp2 from "@/assets/videos/ciro-bareback-join-up-2.mp4";
 import slowMo1 from "@/assets/videos/slow-mo-1.mp4";
 import slowMo2 from "@/assets/videos/slow-mo-2.mp4";
 import slowMo3 from "@/assets/videos/slow-mo-3.mp4";
+// Major events videos
+import arenaPrepVideo from "@/assets/videos/arena-prep.mov";
+import equitanaArenaVideo from "@/assets/videos/equitana-arena.mov";
+import caulfield1 from "@/assets/videos/caulfield-1.mov";
+import caulfield2 from "@/assets/videos/caulfield-2.mov";
+import caulfield3 from "@/assets/videos/caulfield-3.mov";
 
-type VideoCategory = "family" | "craftsmanship" | "horsemanship" | "cinematic";
+type VideoCategory = "family" | "craftsmanship" | "horsemanship" | "cinematic" | "events";
 
 interface VideoItem {
   src: string;
@@ -28,6 +34,7 @@ const categoryConfig: Record<VideoCategory, { label: string; icon: React.ReactNo
   craftsmanship: { label: "Craftsmanship", icon: <Hammer className="h-3 w-3" />, variant: "default" },
   horsemanship: { label: "Horsemanship", icon: <Heart className="h-3 w-3" />, variant: "default" },
   cinematic: { label: "Slow Motion", icon: <Film className="h-3 w-3" />, variant: "outline" },
+  events: { label: "Major Events", icon: <Trophy className="h-3 w-3" />, variant: "default" },
 };
 
 const videos: VideoItem[] = [
@@ -38,10 +45,34 @@ const videos: VideoItem[] = [
     category: "family",
   },
   {
+    src: equitanaArenaVideo,
+    title: "Equitana Arena Prep",
+    description: "Behind the scenes at Australia's premier equine event",
+    category: "events",
+  },
+  {
     src: mainRidgeWoodwork1,
     title: "Main Ridge Woodwork",
     description: "Precision timber craftsmanship in action",
     category: "craftsmanship",
+  },
+  {
+    src: caulfield1,
+    title: "Melbourne Cup Day 1",
+    description: "Arena preparation at Caulfield Racecourse",
+    category: "events",
+  },
+  {
+    src: ciroJoinUp,
+    title: "Join-Up Session",
+    description: "Ciro connecting with horses through natural horsemanship",
+    category: "horsemanship",
+  },
+  {
+    src: arenaPrepVideo,
+    title: "Arena Surface Work",
+    description: "Precision grading for competition-ready footing",
+    category: "events",
   },
   {
     src: mainRidgeWoodwork2,
@@ -50,10 +81,10 @@ const videos: VideoItem[] = [
     category: "craftsmanship",
   },
   {
-    src: ciroJoinUp,
-    title: "Join-Up Session",
-    description: "Ciro connecting with horses through natural horsemanship",
-    category: "horsemanship",
+    src: caulfield2,
+    title: "Melbourne Cup Day 2",
+    description: "Race-day surface maintenance in action",
+    category: "events",
   },
   {
     src: ciroJoinUp2,
@@ -66,6 +97,12 @@ const videos: VideoItem[] = [
     title: "Poetry in Motion",
     description: "The beauty of horse movement captured in slow motion",
     category: "cinematic",
+  },
+  {
+    src: caulfield3,
+    title: "Melbourne Cup Day 3",
+    description: "Final touches for world-class racing surfaces",
+    category: "events",
   },
   {
     src: slowMo2,
@@ -86,6 +123,7 @@ const videos: VideoItem[] = [
     category: "craftsmanship",
   },
 ];
+
 const AUTOPLAY_INTERVAL = 8000; // 8 seconds per video
 
 export function FamilyVideoCarousel() {
