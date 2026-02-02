@@ -5,6 +5,7 @@ import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { faqs, siteConfig } from "@/data/content";
+import { useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import {
   Accordion,
   AccordionContent,
@@ -15,6 +16,10 @@ import {
 import horseAction from "@/assets/horse-action.png";
 
 export default function FAQ() {
+  const { containerRef, visibleItems } = useStaggeredAnimation(faqs.length, {
+    threshold: 0.1,
+  });
+
   return (
     <Layout>
       <PageHeader 
@@ -24,12 +29,22 @@ export default function FAQ() {
 
       <section className="section-padding">
         <div className="section-container max-w-3xl">
-          <Accordion type="single" collapsible className="space-y-4">
+          <Accordion 
+            type="single" 
+            collapsible 
+            className="space-y-4"
+            ref={containerRef}
+          >
             {faqs.map((faq, index) => (
               <AccordionItem
                 key={index}
                 value={`item-${index}`}
-                className="border border-border rounded-lg px-6 data-[state=open]:border-accent"
+                className={`border border-border rounded-lg px-6 data-[state=open]:border-accent transition-all duration-500 ${
+                  visibleItems[index]
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-6"
+                }`}
+                style={{ transitionDelay: `${index * 100}ms` }}
               >
                 <AccordionTrigger className="text-left font-serif text-lg font-semibold text-foreground hover:text-accent hover:no-underline py-6">
                   {faq.question}
