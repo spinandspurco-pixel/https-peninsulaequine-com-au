@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
 import { usePinchZoom } from "@/hooks/usePinchZoom";
+import { SwipeIndicator } from "@/components/SwipeIndicator";
 import { Layout } from "@/components/layout/Layout";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 
@@ -520,6 +521,9 @@ function Lightbox({
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
+      {/* Swipe indicator for first-time users */}
+      <SwipeIndicator show={!!item && totalCount > 1} />
+
       {/* Close button */}
       <button
         className="absolute top-6 right-6 text-primary-foreground/80 hover:text-primary-foreground z-10 transition-colors"

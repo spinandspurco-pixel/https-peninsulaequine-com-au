@@ -4,6 +4,7 @@ import { ArrowRight, CheckCircle, X, ZoomIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
+import { SwipeIndicator } from "@/components/SwipeIndicator";
 import { services, lessonInfo, siteConfig } from "@/data/content";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
@@ -327,6 +328,9 @@ function ConstructionLightbox({
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
+      {/* Swipe indicator for first-time users */}
+      <SwipeIndicator show={!!step && total > 1} />
+
       <button
         className="absolute top-6 right-6 text-primary-foreground/80 hover:text-primary-foreground z-10"
         onClick={onClose}
