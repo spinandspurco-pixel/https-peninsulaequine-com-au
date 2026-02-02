@@ -251,6 +251,44 @@
                 0 4px 12px -2px hsl(var(--destructive) / 0.2);
   }
 
+  /* Card hover effects with glow */
+  .card-hover-glow {
+    @apply transition-all duration-500;
+    box-shadow: 0 1px 3px 0 hsl(var(--foreground) / 0.05),
+                0 1px 2px -1px hsl(var(--foreground) / 0.05);
+  }
+
+  .card-hover-glow:hover {
+    box-shadow: 0 0 30px -10px hsl(var(--accent) / 0.25),
+                0 20px 40px -15px hsl(var(--primary) / 0.15),
+                0 0 0 1px hsl(var(--accent) / 0.1);
+  }
+
+  /* Image card with glow */
+  .image-card-glow {
+    @apply transition-all duration-500;
+  }
+
+  .image-card-glow:hover {
+    box-shadow: 0 0 25px -8px hsl(var(--accent) / 0.3),
+                0 15px 30px -10px hsl(var(--primary) / 0.2);
+  }
+
+  /* Interactive card lift and glow */
+  .card-interactive {
+    @apply transition-all duration-300;
+  }
+
+  .card-interactive:hover {
+    @apply -translate-y-1;
+    box-shadow: 0 0 20px -8px hsl(var(--accent) / 0.2),
+                0 10px 25px -10px hsl(var(--primary) / 0.15);
+  }
+
+  .card-interactive:active {
+    @apply -translate-y-0.5;
+  }
+
   /* Editorial scroll fade */
   .editorial-fade-in {
     @apply opacity-0 translate-y-8 transition-all duration-700 ease-out;
