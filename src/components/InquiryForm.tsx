@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
@@ -32,6 +32,41 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { services } from "@/data/content";
+
+// Custom hook for swipe gestures
+function useSwipeGesture(onSwipeLeft: () => void, onSwipeRight: () => void) {
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+  const minSwipeDistance = 50;
+
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    touchEndX.current = null;
+    touchStartX.current = e.targetTouches[0].clientX;
+  }, []);
+
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  }, []);
+
+  const onTouchEnd = useCallback(() => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    
+    const distance = touchStartX.current - touchEndX.current;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      onSwipeLeft();
+    } else if (isRightSwipe) {
+      onSwipeRight();
+    }
+
+    touchStartX.current = null;
+    touchEndX.current = null;
+  }, [onSwipeLeft, onSwipeRight]);
+
+  return { onTouchStart, onTouchMove, onTouchEnd };
+}
 
 // Form validation schema
 const inquirySchema = z.object({
@@ -182,26 +217,29 @@ function StepIndicator({ currentStep }: { currentStep: number }) {
         </div>
       </div>
 
-      {/* Step Circles */}
+      {/* Step Circles - Touch-friendly with larger tap targets */}
       <div className="flex items-center justify-between">
         {STEPS.map((step, index) => (
           <div key={step.id} className="flex items-center">
             <div className="flex flex-col items-center">
-              <div
-                className={cn(
-                  "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300",
-                  currentStep > step.id
-                    ? "bg-accent text-accent-foreground scale-100"
-                    : currentStep === step.id
-                    ? "bg-accent text-accent-foreground ring-4 ring-accent/20 scale-110 animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"
-                    : "bg-muted text-muted-foreground scale-100"
-                )}
-              >
-                {currentStep > step.id ? (
-                  <Check className="w-5 h-5 animate-scale-in" />
-                ) : (
-                  step.id
-                )}
+              {/* Larger tap target wrapper for mobile */}
+              <div className="p-1 -m-1">
+                <div
+                  className={cn(
+                    "w-11 h-11 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300",
+                    currentStep > step.id
+                      ? "bg-accent text-accent-foreground scale-100"
+                      : currentStep === step.id
+                      ? "bg-accent text-accent-foreground ring-4 ring-accent/20 scale-110 animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"
+                      : "bg-muted text-muted-foreground scale-100"
+                  )}
+                >
+                  {currentStep > step.id ? (
+                    <Check className="w-5 h-5 animate-scale-in" />
+                  ) : (
+                    step.id
+                  )}
+                </div>
               </div>
               <span
                 className={cn(
@@ -215,7 +253,7 @@ function StepIndicator({ currentStep }: { currentStep: number }) {
               </span>
             </div>
             {index < STEPS.length - 1 && (
-              <div className="relative h-0.5 w-8 sm:w-16 lg:w-24 mx-2 bg-muted overflow-hidden rounded-full">
+              <div className="relative h-0.5 w-6 sm:w-16 lg:w-24 mx-1 sm:mx-2 bg-muted overflow-hidden rounded-full">
                 <div
                   className={cn(
                     "absolute inset-y-0 left-0 bg-accent transition-all duration-500 ease-out",
@@ -227,6 +265,11 @@ function StepIndicator({ currentStep }: { currentStep: number }) {
           </div>
         ))}
       </div>
+
+      {/* Swipe hint for mobile */}
+      <p className="text-center text-xs text-muted-foreground mt-4 sm:hidden">
+        Swipe left or right to navigate
+      </p>
     </div>
   );
 }
@@ -318,17 +361,20 @@ export function InquiryForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const nextStep = () => {
+  const nextStep = useCallback(() => {
     if (validateStep() && currentStep < STEPS.length) {
       setCurrentStep((prev) => prev + 1);
     }
-  };
+  }, [currentStep, validateStep]);
 
-  const prevStep = () => {
+  const prevStep = useCallback(() => {
     if (currentStep > 1) {
       setCurrentStep((prev) => prev - 1);
     }
-  };
+  }, [currentStep]);
+
+  // Swipe gesture handlers
+  const swipeHandlers = useSwipeGesture(nextStep, prevStep);
 
   const handleSubmit = async () => {
     if (!validateStep()) return;
@@ -445,7 +491,11 @@ export function InquiryForm() {
     <div>
       <StepIndicator currentStep={currentStep} />
 
-      <div className="min-h-[400px]">
+      {/* Swipeable form container */}
+      <div 
+        className="min-h-[400px] touch-pan-y"
+        {...swipeHandlers}
+      >
         {/* Step 1: Services */}
         {currentStep === 1 && (
           <div className="animate-fade-in">
@@ -456,7 +506,8 @@ export function InquiryForm() {
               Select all that apply to your project.
             </p>
             
-            <div className="grid sm:grid-cols-2 gap-3">
+            {/* Touch-friendly service cards with larger tap targets */}
+            <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
               {services.map((service) => {
                 const isSelected = formData.interestedServices?.includes(service.id);
                 return (
@@ -465,25 +516,25 @@ export function InquiryForm() {
                     type="button"
                     onClick={() => toggleService(service.id)}
                     className={cn(
-                      "p-4 rounded-lg border text-left transition-all",
+                      "p-5 sm:p-4 rounded-lg border text-left transition-all min-h-[80px] active:scale-[0.98]",
                       isSelected
-                        ? "border-accent bg-accent/5"
-                        : "border-border hover:border-accent/50"
+                        ? "border-accent bg-accent/5 shadow-sm"
+                        : "border-border hover:border-accent/50 active:bg-muted/50"
                     )}
                   >
                     <div className="flex items-start gap-3">
                       <div
                         className={cn(
-                          "w-5 h-5 rounded border flex items-center justify-center shrink-0 mt-0.5",
+                          "w-6 h-6 sm:w-5 sm:h-5 rounded border-2 flex items-center justify-center shrink-0 mt-0.5 transition-all",
                           isSelected
-                            ? "bg-accent border-accent text-accent-foreground"
+                            ? "bg-accent border-accent text-accent-foreground scale-110"
                             : "border-muted-foreground/30"
                         )}
                       >
-                        {isSelected && <Check className="w-3 h-3" />}
+                        {isSelected && <Check className="w-3.5 h-3.5 sm:w-3 sm:h-3" />}
                       </div>
                       <div>
-                        <p className="font-medium text-foreground">{service.title}</p>
+                        <p className="font-medium text-foreground text-base sm:text-sm">{service.title}</p>
                         <p className="text-sm text-muted-foreground mt-0.5">
                           {service.shortDescription}
                         </p>
@@ -513,46 +564,50 @@ export function InquiryForm() {
             <div className="space-y-4">
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="horseName">Horse Name(s)</Label>
+                  <Label htmlFor="horseName" className="text-base sm:text-sm">Horse Name(s)</Label>
                   <Input
                     id="horseName"
                     value={formData.horseName || ""}
                     onChange={(e) => updateField("horseName", e.target.value)}
                     placeholder="e.g., Star, Bella"
                     maxLength={100}
+                    className="h-12 sm:h-10 text-base sm:text-sm"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="numberOfHorses">Number of Horses</Label>
+                  <Label htmlFor="numberOfHorses" className="text-base sm:text-sm">Number of Horses</Label>
                   <Input
                     id="numberOfHorses"
                     value={formData.numberOfHorses || ""}
                     onChange={(e) => updateField("numberOfHorses", e.target.value)}
                     placeholder="e.g., 3"
                     maxLength={20}
+                    className="h-12 sm:h-10 text-base sm:text-sm"
                   />
                 </div>
               </div>
               
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="horseAge">Age(s)</Label>
+                  <Label htmlFor="horseAge" className="text-base sm:text-sm">Age(s)</Label>
                   <Input
                     id="horseAge"
                     value={formData.horseAge || ""}
                     onChange={(e) => updateField("horseAge", e.target.value)}
                     placeholder="e.g., 8 years, 12 years"
                     maxLength={50}
+                    className="h-12 sm:h-10 text-base sm:text-sm"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="horseBreed">Breed(s)</Label>
+                  <Label htmlFor="horseBreed" className="text-base sm:text-sm">Breed(s)</Label>
                   <Input
                     id="horseBreed"
                     value={formData.horseBreed || ""}
                     onChange={(e) => updateField("horseBreed", e.target.value)}
                     placeholder="e.g., Quarter Horse, Warmblood"
                     maxLength={100}
+                    className="h-12 sm:h-10 text-base sm:text-sm"
                   />
                 </div>
               </div>
@@ -571,7 +626,7 @@ export function InquiryForm() {
             </p>
             
             <div className="space-y-2">
-              <Label htmlFor="goals">Project Goals *</Label>
+              <Label htmlFor="goals" className="text-base sm:text-sm">Project Goals *</Label>
               <Textarea
                 id="goals"
                 value={formData.goals || ""}
@@ -579,7 +634,10 @@ export function InquiryForm() {
                 placeholder="Tell us about your vision... Are you building a training facility? Want to improve your current arena footing? Need better turnout space for your horses?"
                 rows={6}
                 maxLength={1000}
-                className={errors.goals ? "border-destructive" : ""}
+                className={cn(
+                  "text-base sm:text-sm min-h-[150px]",
+                  errors.goals ? "border-destructive" : ""
+                )}
               />
               <div className="flex justify-between text-sm">
                 {errors.goals ? (
@@ -611,22 +669,22 @@ export function InquiryForm() {
                 <RadioGroup
                   value={formData.experienceLevel}
                   onValueChange={(value) => updateField("experienceLevel", value)}
-                  className="grid sm:grid-cols-2 gap-3"
+                  className="grid sm:grid-cols-2 gap-3 sm:gap-4"
                 >
                   {EXPERIENCE_LEVELS.map((level) => (
                     <Label
                       key={level.value}
                       htmlFor={level.value}
                       className={cn(
-                        "flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-all",
+                        "flex items-start gap-3 p-5 sm:p-4 rounded-lg border cursor-pointer transition-all min-h-[80px] active:scale-[0.98]",
                         formData.experienceLevel === level.value
-                          ? "border-accent bg-accent/5"
-                          : "border-border hover:border-accent/50"
+                          ? "border-accent bg-accent/5 shadow-sm"
+                          : "border-border hover:border-accent/50 active:bg-muted/50"
                       )}
                     >
-                      <RadioGroupItem value={level.value} id={level.value} className="mt-0.5" />
+                      <RadioGroupItem value={level.value} id={level.value} className="mt-0.5 w-5 h-5 sm:w-4 sm:h-4" />
                       <div>
-                        <p className="font-medium text-foreground">{level.label}</p>
+                        <p className="font-medium text-foreground text-base sm:text-sm">{level.label}</p>
                         <p className="text-sm text-muted-foreground">{level.description}</p>
                       </div>
                     </Label>
@@ -643,7 +701,10 @@ export function InquiryForm() {
                   value={formData.budgetRange}
                   onValueChange={(value) => updateField("budgetRange", value)}
                 >
-                  <SelectTrigger className={errors.budgetRange ? "border-destructive" : ""}>
+                  <SelectTrigger className={cn(
+                    "h-12 sm:h-10 text-base sm:text-sm",
+                    errors.budgetRange ? "border-destructive" : ""
+                  )}>
                     <SelectValue placeholder="Select a budget range" />
                   </SelectTrigger>
                   <SelectContent>
@@ -672,24 +733,27 @@ export function InquiryForm() {
               We'll use this information to follow up on your inquiry.
             </p>
             
-            <div className="space-y-4">
+            <div className="space-y-4 sm:space-y-4">
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Name *</Label>
+                  <Label htmlFor="name" className="text-base sm:text-sm">Name *</Label>
                   <Input
                     id="name"
                     value={formData.name || ""}
                     onChange={(e) => updateField("name", e.target.value)}
                     placeholder="Your name"
                     maxLength={100}
-                    className={errors.name ? "border-destructive" : ""}
+                    className={cn(
+                      "h-12 sm:h-10 text-base sm:text-sm",
+                      errors.name ? "border-destructive" : ""
+                    )}
                   />
                   {errors.name && (
                     <p className="text-destructive text-sm">{errors.name}</p>
                   )}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email *</Label>
+                  <Label htmlFor="email" className="text-base sm:text-sm">Email *</Label>
                   <Input
                     id="email"
                     type="email"
@@ -697,7 +761,10 @@ export function InquiryForm() {
                     onChange={(e) => updateField("email", e.target.value)}
                     placeholder="your@email.com"
                     maxLength={255}
-                    className={errors.email ? "border-destructive" : ""}
+                    className={cn(
+                      "h-12 sm:h-10 text-base sm:text-sm",
+                      errors.email ? "border-destructive" : ""
+                    )}
                   />
                   {errors.email && (
                     <p className="text-destructive text-sm">{errors.email}</p>
@@ -707,7 +774,7 @@ export function InquiryForm() {
               
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone (optional)</Label>
+                  <Label htmlFor="phone" className="text-base sm:text-sm">Phone (optional)</Label>
                   <Input
                     id="phone"
                     type="tel"
@@ -715,20 +782,21 @@ export function InquiryForm() {
                     onChange={(e) => updateField("phone", e.target.value)}
                     placeholder="(555) 123-4567"
                     maxLength={20}
+                    className="h-12 sm:h-10 text-base sm:text-sm"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Preferred Contact Date (optional)</Label>
+                  <Label className="text-base sm:text-sm">Preferred Contact Date (optional)</Label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-left font-normal",
+                          "w-full h-12 sm:h-10 justify-start text-left font-normal text-base sm:text-sm",
                           !formData.preferredDate && "text-muted-foreground"
                         )}
                       >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        <CalendarIcon className="mr-2 h-5 w-5 sm:h-4 sm:w-4" />
                         {formData.preferredDate
                           ? format(formData.preferredDate, "PPP")
                           : "Pick a date"}
@@ -764,16 +832,19 @@ export function InquiryForm() {
         )}
       </div>
 
-      {/* Navigation Buttons */}
-      <div className="flex justify-between mt-8 pt-6 border-t border-border">
+      {/* Navigation Buttons - Touch-friendly with larger tap targets */}
+      <div className="flex justify-between mt-8 pt-6 border-t border-border gap-4">
         <Button
           type="button"
           variant="outline"
           onClick={prevStep}
           disabled={currentStep === 1}
-          className={currentStep === 1 ? "invisible" : ""}
+          className={cn(
+            "h-12 sm:h-10 px-6 sm:px-4 text-base sm:text-sm min-w-[100px] active:scale-[0.98] transition-transform",
+            currentStep === 1 ? "invisible" : ""
+          )}
         >
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          <ArrowLeft className="mr-2 h-5 w-5 sm:h-4 sm:w-4" />
           Back
         </Button>
 
@@ -781,24 +852,24 @@ export function InquiryForm() {
           <Button
             type="button"
             onClick={nextStep}
-            className="bg-accent hover:bg-accent/90 text-accent-foreground"
+            className="h-12 sm:h-10 px-6 sm:px-4 text-base sm:text-sm min-w-[120px] bg-accent hover:bg-accent/90 text-accent-foreground active:scale-[0.98] transition-transform"
           >
             Continue
-            <ArrowRight className="ml-2 h-4 w-4" />
+            <ArrowRight className="ml-2 h-5 w-5 sm:h-4 sm:w-4" />
           </Button>
         ) : (
           <Button
             type="button"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="bg-accent hover:bg-accent/90 text-accent-foreground"
+            className="h-12 sm:h-10 px-6 sm:px-4 text-base sm:text-sm min-w-[140px] bg-accent hover:bg-accent/90 text-accent-foreground active:scale-[0.98] transition-transform"
           >
             {isSubmitting ? (
               "Submitting..."
             ) : (
               <>
                 Submit Inquiry
-                <Send className="ml-2 h-4 w-4" />
+                <Send className="ml-2 h-5 w-5 sm:h-4 sm:w-4" />
               </>
             )}
           </Button>
