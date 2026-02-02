@@ -305,6 +305,36 @@
   }
 }
 
+/* Reduced motion: disable animations and transitions for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Disable parallax transforms */
+  .will-change-transform {
+    will-change: auto !important;
+    transform: none !important;
+  }
+
+  /* Disable hover lift effects */
+  .card-hover-glow:hover,
+  .card-interactive:hover {
+    transform: none !important;
+  }
+
+  /* Ensure content is visible immediately */
+  .editorial-fade-in {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 /* Confetti celebration animation */
 @keyframes confetti {
   0% {
