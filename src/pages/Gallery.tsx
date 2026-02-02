@@ -526,6 +526,87 @@ function Lightbox({
   );
 }
 
+function VideoGridItem({
+  item,
+  onClick,
+  isVisible,
+  delay,
+}: {
+  item: GalleryItem;
+  onClick: () => void;
+  isVisible: boolean;
+  delay: number;
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isHovering, setIsHovering] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovering(true);
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {
+        // Autoplay may be blocked, fail silently
+      });
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  };
+
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={`group aspect-square overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative transition-all duration-500 ${
+        isVisible
+          ? "opacity-100 translate-y-0 scale-100"
+          : "opacity-0 translate-y-4 scale-95"
+      }`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {/* Thumbnail image */}
+      <img
+        src={item.thumbnail || item.src}
+        alt={item.alt}
+        className={`w-full h-full object-cover transition-all duration-500 ${
+          isHovering ? "opacity-0" : "opacity-100"
+        } group-hover:scale-105`}
+        loading="lazy"
+      />
+      
+      {/* Video preview on hover */}
+      <video
+        ref={videoRef}
+        src={item.src}
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+          isHovering ? "opacity-100" : "opacity-0"
+        }`}
+        muted
+        playsInline
+        loop
+        preload="none"
+      />
+      
+      {/* Play icon overlay */}
+      <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${
+        isHovering ? "bg-primary/20" : "bg-primary/30 group-hover:bg-primary/40"
+      }`}>
+        <div className={`w-14 h-14 rounded-full bg-accent/90 flex items-center justify-center transition-all duration-300 ${
+          isHovering ? "scale-90 opacity-70" : "group-hover:scale-110"
+        }`}>
+          <Play className="w-6 h-6 text-accent-foreground ml-1" fill="currentColor" />
+        </div>
+      </div>
+    </button>
+  );
+}
+
 function GalleryGrid({
   items,
   onItemClick,
@@ -559,30 +640,33 @@ function GalleryGrid({
       className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
     >
       {items.map((item, index) => (
-        <button
-          key={item.id}
-          onClick={() => onItemClick(item)}
-          className={`group aspect-square overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative transition-all duration-500 ${
-            visibleItems.has(index)
-              ? "opacity-100 translate-y-0 scale-100"
-              : "opacity-0 translate-y-4 scale-95"
-          }`}
-          style={{ transitionDelay: `${index * 30}ms` }}
-        >
-          <img
-            src={item.type === "video" ? (item.thumbnail || item.src) : item.src}
-            alt={item.alt}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            loading="lazy"
+        item.type === "video" ? (
+          <VideoGridItem
+            key={item.id}
+            item={item}
+            onClick={() => onItemClick(item)}
+            isVisible={visibleItems.has(index)}
+            delay={index * 30}
           />
-          {item.type === "video" && (
-            <div className="absolute inset-0 flex items-center justify-center bg-primary/30 group-hover:bg-primary/40 transition-colors">
-              <div className="w-14 h-14 rounded-full bg-accent/90 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Play className="w-6 h-6 text-accent-foreground ml-1" fill="currentColor" />
-              </div>
-            </div>
-          )}
-        </button>
+        ) : (
+          <button
+            key={item.id}
+            onClick={() => onItemClick(item)}
+            className={`group aspect-square overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative transition-all duration-500 ${
+              visibleItems.has(index)
+                ? "opacity-100 translate-y-0 scale-100"
+                : "opacity-0 translate-y-4 scale-95"
+            }`}
+            style={{ transitionDelay: `${index * 30}ms` }}
+          >
+            <img
+              src={item.src}
+              alt={item.alt}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
+          </button>
+        )
       ))}
     </div>
   );
