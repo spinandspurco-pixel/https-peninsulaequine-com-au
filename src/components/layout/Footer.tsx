@@ -144,6 +144,12 @@ export function Footer() {
                 {link.name}
               </Link>
             ))}
+            <Link
+              to="/hq"
+              className="text-sm text-primary-foreground/40 hover:text-accent transition-colors"
+            >
+              Staff
+            </Link>
           </div>
         </div>
       </div>
