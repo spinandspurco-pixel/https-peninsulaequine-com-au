@@ -123,8 +123,7 @@ function ValuesSection() {
           {aboutCiro.values.map((value, index) => (
             <div
               key={value.title}
-              className={`group text-center p-6 rounded-lg cursor-default transition-all duration-500 
-                hover:bg-background hover:shadow-lg hover:-translate-y-1
+              className={`group text-center p-6 rounded-lg cursor-default card-hover-glow
                 ${gridVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
               style={{ transitionDelay: `${index * 100}ms` }}
             >
