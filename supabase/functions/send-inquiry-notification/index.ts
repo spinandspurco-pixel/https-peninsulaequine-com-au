@@ -181,7 +181,11 @@ const handler = async (req: Request): Promise<Response> => {
           .services-list { margin: 0; padding-left: 20px; }
           .services-list li { margin-bottom: 5px; }
           .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
-          .cta { background: #c9a227; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin-top: 10px; }
+          .cta { background: #c9a227; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin-top: 10px; font-weight: 600; }
+          .contact-box { background: #fff; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
+          .contact-box a { color: #c9a227; text-decoration: none; font-weight: 600; }
+          .social-links { margin-top: 15px; }
+          .social-links a { color: #666; text-decoration: none; margin: 0 10px; }
         </style>
       </head>
       <body>
@@ -206,7 +210,20 @@ const handler = async (req: Request): Promise<Response> => {
             <p><strong>What happens next?</strong></p>
             <p>A member of our team will review your inquiry and get back to you within 1-2 business days. We'll discuss your project in detail and provide you with a personalized quote.</p>
             
-            <p>In the meantime, feel free to explore our gallery to see examples of our recent work, or give us a call if you have any immediate questions.</p>
+            <div class="contact-box">
+              <p style="margin: 0 0 10px 0;"><strong>Need to reach us sooner?</strong></p>
+              <p style="margin: 0;">
+                📞 Call us: <a href="tel:+15551234567">(555) 123-4567</a>
+              </p>
+              <p style="margin: 10px 0 0 0;">
+                📧 Email: <a href="mailto:ciro@peninsulaequine.com">ciro@peninsulaequine.com</a>
+              </p>
+              <p style="margin-top: 15px;">
+                <a href="https://peninsulaequine.lovable.app" class="cta">Visit Our Website</a>
+              </p>
+            </div>
+            
+            <p>In the meantime, feel free to explore our <a href="https://peninsulaequine.lovable.app/gallery" style="color: #c9a227;">gallery</a> to see examples of our recent work.</p>
             
             <p style="margin-top: 25px;">
               We look forward to working with you!
@@ -214,13 +231,19 @@ const handler = async (req: Request): Promise<Response> => {
             
             <p>
               Warm regards,<br>
-              <strong>The Peninsula Equine Team</strong>
+              <strong>Ciro & The Peninsula Equine Team</strong><br>
+              <span style="color: #666; font-size: 14px;">Half Moon Bay, CA</span>
             </p>
           </div>
           
           <div class="footer">
-            <p>Peninsula Equine | Premium Equine Facilities</p>
-            <p>This is an automated confirmation of your inquiry submission.</p>
+            <p><strong>Peninsula Equine</strong> | Premium Equine Facilities</p>
+            <p>1234 Ranch Road, Half Moon Bay, CA 94019</p>
+            <div class="social-links">
+              <a href="https://instagram.com/peninsulaequine">Instagram</a> •
+              <a href="https://facebook.com/peninsulaequine">Facebook</a>
+            </div>
+            <p style="margin-top: 15px; font-size: 11px; color: #999;">This is an automated confirmation of your inquiry submission.</p>
           </div>
         </div>
       </body>
