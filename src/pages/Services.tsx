@@ -454,23 +454,27 @@ function ConstructionProcessSection() {
                   : "opacity-0 translate-y-8"
               }`}
             >
-              <div className="aspect-square rounded-lg overflow-hidden bg-muted mb-3 card-interactive image-card-glow">
+              <div className="aspect-square rounded-lg overflow-hidden bg-muted mb-3 card-interactive image-card-glow relative">
                 <img
                   src={step.image}
                   alt={step.title}
-                  className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+                  className="w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-110 group-hover:brightness-110"
                   loading="lazy"
                 />
+                {/* Subtle gradient overlay on hover */}
+                <div className="absolute inset-0 bg-gradient-to-t from-accent/15 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                {/* Border glow effect */}
+                <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none ring-1 ring-accent/30" />
               </div>
               <div className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center text-xs font-semibold text-accent">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center text-xs font-semibold text-accent transition-all duration-300 group-hover:bg-accent/20 group-hover:scale-110">
                   {index + 1}
                 </span>
                 <div>
-                  <h3 className="font-serif font-semibold text-foreground text-sm">
+                  <h3 className="font-serif font-semibold text-foreground text-sm transition-colors duration-300 group-hover:text-accent">
                     {step.title}
                   </h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <p className="text-xs text-muted-foreground mt-0.5 transition-colors duration-300 group-hover:text-foreground/70">
                     {step.description}
                   </p>
                 </div>
