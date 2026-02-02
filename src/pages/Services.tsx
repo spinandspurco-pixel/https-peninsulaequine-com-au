@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, CheckCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
+import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { services, lessonInfo, siteConfig } from "@/data/content";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
@@ -371,42 +372,15 @@ function LessonsSection() {
 }
 
 function CTASection() {
-  const { ref, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.2 });
-
   return (
-    <section ref={ref} className="section-padding bg-primary text-primary-foreground">
-      <div className={`section-container text-center transition-all duration-700 ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-      }`}>
-        <h2 className="heading-section mb-6">
-          Let's Discuss Your Project
-        </h2>
-        <p className={`text-primary-foreground/80 max-w-2xl mx-auto mb-8 transition-all duration-500 delay-150 ${
-          isVisible ? "opacity-100" : "opacity-0"
-        }`}>
-          Every great facility starts with a conversation. Tell us about your vision, 
-          and we'll show you how to make it reality.
-        </p>
-        <div className={`flex flex-col sm:flex-row gap-4 justify-center transition-all duration-500 delay-300 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-        }`}>
-          <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-            <Link to="/contact">
-              Get a Free Quote
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
-          </Button>
-          <Button
-            asChild
-            variant="outline"
-            size="lg"
-            className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-          >
-            <a href={`tel:${siteConfig.phone}`}>Call {siteConfig.phone}</a>
-          </Button>
-        </div>
-      </div>
-    </section>
+    <ParallaxCTA
+      title="Let's Discuss Your Project"
+      description="Every great facility starts with a conversation. Tell us about your vision, and we'll show you how to make it reality."
+      backgroundImage={mainRidgeBarnFrame}
+      primaryButtonText="Get a Free Quote"
+      primaryButtonLink="/contact"
+      showPhoneButton={true}
+    />
   );
 }
 

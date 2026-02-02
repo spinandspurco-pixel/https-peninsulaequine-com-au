@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
+import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { faqs, siteConfig } from "@/data/content";
 import {
   Accordion,
@@ -10,6 +11,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+
+import horseAction from "@/assets/horse-action.png";
 
 export default function FAQ() {
   return (
@@ -40,28 +43,15 @@ export default function FAQ() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="section-padding bg-card">
-        <div className="section-container text-center">
-          <h2 className="heading-section text-foreground mb-4">
-            Still Have Questions?
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
-            We're here to help. Reach out and we'll get back to you as soon as possible.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
-              <Link to="/contact">
-                Contact Us
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button asChild variant="outline">
-              <a href={`tel:${siteConfig.phone}`}>Call {siteConfig.phone}</a>
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* CTA with Parallax */}
+      <ParallaxCTA
+        title="Still Have Questions?"
+        description="We're here to help. Reach out and we'll get back to you as soon as possible."
+        backgroundImage={horseAction}
+        primaryButtonText="Contact Us"
+        primaryButtonLink="/contact"
+        showPhoneButton={true}
+      />
     </Layout>
   );
 }

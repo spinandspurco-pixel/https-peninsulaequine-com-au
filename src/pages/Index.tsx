@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { MajorEventsSection } from "@/components/MajorEventsSection";
 import { MajorEventsVideoSection } from "@/components/MajorEventsVideoSection";
+import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { siteConfig, services, testimonials, aboutCiro } from "@/data/content";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
@@ -426,64 +427,16 @@ function TestimonialsSection() {
 }
 
 function CTASection() {
-  const { ref, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.2 });
-
   return (
-    <section ref={ref} className="relative py-32 lg:py-40">
-      {/* Background */}
-      <div className="absolute inset-0">
-        <img
-          src={ciroWide}
-          alt="Equine facility"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-primary/85" />
-      </div>
-
-      {/* Content */}
-      <div 
-        className={`relative z-10 section-container text-center transition-all duration-700 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}
-      >
-        <div className="max-w-3xl mx-auto">
-          <div className="divider mx-auto mb-8 bg-accent" />
-          <p className="text-primary-foreground/70 uppercase tracking-[0.2em] text-sm mb-4">
-            We invite you to join us
-          </p>
-          <h2 className="heading-section text-primary-foreground mb-8">
-            Ready to Build Your Dream Facility?
-          </h2>
-          <p className="text-lg text-primary-foreground/80 mb-12 leading-relaxed">
-            Every great equine facility starts with a conversation about your horses, 
-            your goals, and your property. Let's discuss your vision.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              asChild
-              size="lg"
-              className="bg-accent hover:bg-accent/90 text-accent-foreground btn-hover-lift text-base px-10"
-            >
-              <Link to="/contact">
-                Get in Touch
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary text-base px-10"
-            >
-              <a href={`tel:${siteConfig.phone}`}>
-                <Phone className="mr-2 h-5 w-5" />
-                {siteConfig.phone}
-              </a>
-            </Button>
-          </div>
-        </div>
-      </div>
-    </section>
+    <ParallaxCTA
+      title="Ready to Build Your Dream Facility?"
+      description="Every great equine facility starts with a conversation about your horses, your goals, and your property. Let's discuss your vision."
+      subtitle="We invite you to join us"
+      backgroundImage={ciroWide}
+      primaryButtonText="Get in Touch"
+      primaryButtonLink="/contact"
+      showPhoneButton={true}
+    />
   );
 }
 
