@@ -14,6 +14,81 @@ export type Database = {
   }
   public: {
     Tables: {
+      announcements: {
+        Row: {
+          active: boolean
+          content: string | null
+          created_at: string
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          priority: string
+          title: string
+        }
+        Insert: {
+          active?: boolean
+          content?: string | null
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          priority?: string
+          title: string
+        }
+        Update: {
+          active?: boolean
+          content?: string | null
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          priority?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      employee_tasks: {
+        Row: {
+          assigned_to: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          priority: string | null
+          scheduled_date: string
+          scheduled_time: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          priority?: string | null
+          scheduled_date?: string
+          scheduled_time?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          priority?: string | null
+          scheduled_date?: string
+          scheduled_time?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       inquiries: {
         Row: {
           budget_range: string | null
