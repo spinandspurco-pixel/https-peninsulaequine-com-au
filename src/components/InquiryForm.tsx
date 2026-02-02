@@ -121,15 +121,22 @@ const BUDGET_RANGES = [
 ];
 
 // Confetti particle component
-function ConfettiParticle({ delay, color }: { delay: number; color: string }) {
+function ConfettiParticle({ delay, color, size }: { delay: number; color: string; size: 'sm' | 'md' | 'lg' }) {
+  const sizeClasses = {
+    sm: 'w-1.5 h-1.5',
+    md: 'w-2 h-2',
+    lg: 'w-2.5 h-2.5',
+  };
+  
   return (
     <div
-      className="absolute w-2 h-2 rounded-full animate-confetti"
+      className={`absolute ${sizeClasses[size]} rounded-full animate-confetti`}
       style={{
         backgroundColor: color,
-        left: `${Math.random() * 100}%`,
+        left: `${10 + Math.random() * 80}%`,
         animationDelay: `${delay}ms`,
-        animationDuration: `${1000 + Math.random() * 500}ms`,
+        animationDuration: `${1200 + Math.random() * 800}ms`,
+        opacity: 0.85,
       }}
     />
   );
@@ -137,27 +144,32 @@ function ConfettiParticle({ delay, color }: { delay: number; color: string }) {
 
 // Celebration confetti burst
 function CelebrationConfetti({ show }: { show: boolean }) {
-  const [particles, setParticles] = useState<{ id: number; delay: number; color: string }[]>([]);
+  const [particles, setParticles] = useState<{ id: number; delay: number; color: string; size: 'sm' | 'md' | 'lg' }[]>([]);
 
   useEffect(() => {
     if (show) {
+      // Warm, festive color palette matching the brand
       const colors = [
-        'hsl(var(--accent))',
-        'hsl(var(--primary))',
-        '#FFD700',
-        '#FF6B6B',
-        '#4ECDC4',
-        '#45B7D1',
+        'hsl(var(--accent))',           // Copper accent
+        'hsl(28 50% 60%)',              // Light copper
+        'hsl(28 65% 35%)',              // Dark copper
+        '#D4A574',                       // Warm gold
+        '#C4956A',                       // Antique brass
+        'hsl(40 30% 96%)',              // Linen highlight
       ];
-      const newParticles = Array.from({ length: 24 }, (_, i) => ({
+      const sizes: ('sm' | 'md' | 'lg')[] = ['sm', 'md', 'lg'];
+      
+      // Reduced particle count for subtlety (16 instead of 24)
+      const newParticles = Array.from({ length: 16 }, (_, i) => ({
         id: i,
-        delay: Math.random() * 300,
+        delay: Math.random() * 400,
         color: colors[Math.floor(Math.random() * colors.length)],
+        size: sizes[Math.floor(Math.random() * sizes.length)],
       }));
       setParticles(newParticles);
 
       // Clear particles after animation
-      const timer = setTimeout(() => setParticles([]), 2000);
+      const timer = setTimeout(() => setParticles([]), 2500);
       return () => clearTimeout(timer);
     }
   }, [show]);
@@ -167,7 +179,7 @@ function CelebrationConfetti({ show }: { show: boolean }) {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {particles.map((particle) => (
-        <ConfettiParticle key={particle.id} delay={particle.delay} color={particle.color} />
+        <ConfettiParticle key={particle.id} delay={particle.delay} color={particle.color} size={particle.size} />
       ))}
     </div>
   );
