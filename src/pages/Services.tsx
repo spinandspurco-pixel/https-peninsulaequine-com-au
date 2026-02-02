@@ -144,6 +144,7 @@ function ConstructionLightbox({
   currentIndex,
   total,
   allSteps,
+  onNavigateTo,
 }: {
   step: ConstructionStep | null;
   onClose: () => void;
@@ -152,6 +153,7 @@ function ConstructionLightbox({
   currentIndex: number;
   total: number;
   allSteps: ConstructionStep[];
+  onNavigateTo: (index: number) => void;
 }) {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
@@ -318,7 +320,9 @@ function ConstructionLightbox({
             onLoad={() => setIsImageLoaded(true)}
           />
         </div>
-        <div className="text-center mt-6">
+        
+        {/* Image info */}
+        <div className="text-center mt-4">
           <p className="text-accent text-sm font-medium mb-1">
             Step {currentIndex + 1} of {total}
           </p>
@@ -328,11 +332,41 @@ function ConstructionLightbox({
           <p className="text-primary-foreground/70 text-sm">
             {step.description}
           </p>
-          <p className="text-primary-foreground/40 text-xs mt-4">
-            <span className="hidden sm:inline">Use ← → to navigate • Esc to close</span>
-            <span className="sm:hidden">Swipe to navigate • Tap outside to close</span>
-          </p>
         </div>
+
+        {/* Thumbnail strip */}
+        <div className="mt-6 px-4">
+          <div className="flex justify-center gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-accent/30 scrollbar-track-transparent">
+            {allSteps.map((thumbStep, index) => (
+              <button
+                key={index}
+                onClick={() => onNavigateTo(index)}
+                className={`relative flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-md overflow-hidden transition-all duration-300 ${
+                  index === currentIndex 
+                    ? "ring-2 ring-accent ring-offset-2 ring-offset-primary scale-105" 
+                    : "opacity-60 hover:opacity-100 hover:scale-105"
+                }`}
+                aria-label={`Go to step ${index + 1}: ${thumbStep.title}`}
+              >
+                <img
+                  src={thumbStep.image}
+                  alt={thumbStep.title}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+                {index === currentIndex && (
+                  <div className="absolute inset-0 bg-accent/10" />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Navigation hint */}
+        <p className="text-primary-foreground/40 text-xs mt-4 text-center">
+          <span className="hidden sm:inline">Use ← → to navigate • Esc to close</span>
+          <span className="sm:hidden">Swipe to navigate • Tap outside to close</span>
+        </p>
       </div>
     </div>
   );
@@ -425,6 +459,7 @@ function ConstructionProcessSection() {
         currentIndex={lightboxIndex ?? 0}
         total={constructionSteps.length}
         allSteps={constructionSteps}
+        onNavigateTo={setLightboxIndex}
       />
     </section>
   );
