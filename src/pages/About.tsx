@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { FamilyVideoCarousel } from "@/components/FamilyVideoCarousel";
+import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { aboutCiro } from "@/data/content";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
@@ -335,45 +336,15 @@ function FamilySection() {
 }
 
 function CTASection() {
-  const { ref, isVisible } = useScrollAnimation<HTMLElement>({
-    threshold: 0.2,
-  });
-
   return (
-    <section ref={ref} className="relative py-24 lg:py-32">
-      <div className="absolute inset-0">
-        <img
-          src={ciroWide}
-          alt="Ciro with horse"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-primary/90" />
-      </div>
-
-      <div 
-        className={`relative z-10 section-container text-center transition-all duration-700 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}
-      >
-        <h2 className="heading-section text-primary-foreground mb-6">
-          Let's Build Something Great Together
-        </h2>
-        <p className="text-lg text-primary-foreground/80 max-w-2xl mx-auto mb-10">
-          Whether you're planning a new arena, expanding your barn, or starting from 
-          scratch, we'd love to hear about your project.
-        </p>
-        <Button
-          asChild
-          size="lg"
-          className="bg-accent hover:bg-accent/90 text-accent-foreground btn-hover-lift"
-        >
-          <Link to="/contact">
-            Schedule a Consultation
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Link>
-        </Button>
-      </div>
-    </section>
+    <ParallaxCTA
+      title="Let's Build Something Great Together"
+      description="Whether you're planning a new arena, expanding your barn, or starting from scratch, we'd love to hear about your project."
+      backgroundImage={ciroWide}
+      primaryButtonText="Schedule a Consultation"
+      primaryButtonLink="/contact"
+      showPhoneButton={false}
+    />
   );
 }
 

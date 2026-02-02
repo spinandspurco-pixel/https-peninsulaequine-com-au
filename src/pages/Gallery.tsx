@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
 import { Layout } from "@/components/layout/Layout";
+import { ParallaxCTA } from "@/components/ParallaxCTA";
 
 // Main Ridge images
 import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
@@ -822,24 +823,15 @@ export default function Gallery() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="section-padding bg-card">
-        <div className="section-container text-center">
-          <h2 className="heading-section text-foreground mb-4">
-            Ready to Start Your Project?
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
-            These projects represent our commitment to excellence. Let's discuss 
-            how we can bring your vision to life.
-          </p>
-          <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
-            <Link to="/contact">
-              Get in Touch
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
-      </section>
+      {/* CTA with Parallax */}
+      <ParallaxCTA
+        title="Ready to Start Your Project?"
+        description="These projects represent our commitment to excellence. Let's discuss how we can bring your vision to life."
+        backgroundImage={aberdeenBarnInterior}
+        primaryButtonText="Get in Touch"
+        primaryButtonLink="/contact"
+        showPhoneButton={false}
+      />
 
       {/* Lightbox */}
       <Lightbox

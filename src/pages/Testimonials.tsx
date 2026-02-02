@@ -3,7 +3,10 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
+import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { testimonials, siteConfig } from "@/data/content";
+
+import ciroWithHorse from "@/assets/ciro-with-horse.png";
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -54,33 +57,15 @@ export default function Testimonials() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="section-padding bg-primary text-primary-foreground">
-        <div className="section-container text-center">
-          <h2 className="heading-section mb-6">
-            Join Our Satisfied Clients
-          </h2>
-          <p className="text-primary-foreground/80 max-w-2xl mx-auto mb-8">
-            Ready to experience the Peninsula Equine difference? Let's discuss your project.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-              <Link to="/contact">
-                Get a Quote
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-            >
-              <a href={`tel:${siteConfig.phone}`}>Call {siteConfig.phone}</a>
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* CTA with Parallax */}
+      <ParallaxCTA
+        title="Join Our Satisfied Clients"
+        description="Ready to experience the Peninsula Equine difference? Let's discuss your project."
+        backgroundImage={ciroWithHorse}
+        primaryButtonText="Get a Quote"
+        primaryButtonLink="/contact"
+        showPhoneButton={true}
+      />
     </Layout>
   );
 }
