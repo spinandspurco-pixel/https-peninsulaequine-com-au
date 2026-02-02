@@ -71,7 +71,7 @@ function EventCard({ event, index }: EventCardProps) {
       <div
         ref={imageRef}
         className={cn(
-          "transition-all duration-700 ease-out",
+          "transition-all duration-700 ease-out group cursor-pointer",
           isReversed ? "lg:order-2" : "",
           imageVisible
             ? "opacity-100 translate-x-0"
@@ -80,24 +80,26 @@ function EventCard({ event, index }: EventCardProps) {
             : "opacity-0 -translate-x-12"
         )}
       >
-        <div className="relative">
+        <div className="relative transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-2xl group-hover:shadow-accent/10 rounded-sm">
           {/* Main Image */}
           <div className="aspect-[4/3] overflow-hidden rounded-sm">
             <img
               src={event.image}
               alt={event.title}
               className={cn(
-                "w-full h-full object-cover transition-transform duration-1000 ease-out",
+                "w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-105",
                 imageVisible ? "scale-100" : "scale-110"
               )}
             />
+            {/* Hover overlay gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </div>
           
           {/* Secondary Image (if exists) */}
           {event.secondaryImage && (
             <div
               className={cn(
-                "absolute -bottom-6 -right-6 w-1/2 aspect-square overflow-hidden rounded-sm border-4 border-card shadow-lg hidden md:block transition-all duration-700 delay-300",
+                "absolute -bottom-6 -right-6 w-1/2 aspect-square overflow-hidden rounded-sm border-4 border-card shadow-lg hidden md:block transition-all duration-700 delay-300 group-hover:scale-105 group-hover:shadow-xl group-hover:-translate-y-1",
                 imageVisible
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-8"
@@ -106,7 +108,7 @@ function EventCard({ event, index }: EventCardProps) {
               <img
                 src={event.secondaryImage}
                 alt={`${event.title} detail`}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
             </div>
           )}
@@ -114,13 +116,13 @@ function EventCard({ event, index }: EventCardProps) {
           {/* Badge overlay */}
           <div
             className={cn(
-              "absolute top-4 left-4 transition-all duration-500 delay-200",
+              "absolute top-4 left-4 transition-all duration-500 delay-200 group-hover:scale-105",
               imageVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
             )}
           >
             <Badge 
               variant={event.badgeVariant}
-              className="px-4 py-1.5 text-xs font-semibold uppercase tracking-wider"
+              className="px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition-all duration-300 group-hover:shadow-lg"
             >
               {event.badgeText}
             </Badge>
@@ -155,7 +157,7 @@ function EventCard({ event, index }: EventCardProps) {
         
         <h3
           className={cn(
-            "font-serif text-3xl sm:text-4xl text-foreground mb-6 transition-all duration-500 delay-100",
+            "font-serif text-3xl sm:text-4xl text-foreground mb-6 transition-all duration-500 delay-100 hover:text-accent cursor-pointer",
             contentVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           )}
         >
@@ -177,12 +179,12 @@ function EventCard({ event, index }: EventCardProps) {
             <li
               key={i}
               className={cn(
-                "flex items-center gap-3 text-foreground transition-all duration-500",
+                "flex items-center gap-3 text-foreground transition-all duration-300 hover:translate-x-2 hover:text-accent cursor-default group/item",
                 contentVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
               )}
               style={{ transitionDelay: `${300 + i * 100}ms` }}
             >
-              <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0" />
+              <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 transition-transform duration-300 group-hover/item:scale-110" />
               <span>{credential}</span>
             </li>
           ))}
@@ -195,14 +197,14 @@ function EventCard({ event, index }: EventCardProps) {
             contentVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           )}
         >
-          <div>
-            <p className="font-serif text-3xl text-accent">5+</p>
-            <p className="text-sm text-muted-foreground">Years Running</p>
+          <div className="group/stat cursor-default transition-transform duration-300 hover:scale-105">
+            <p className="font-serif text-3xl text-accent transition-all duration-300 group-hover/stat:text-foreground">5+</p>
+            <p className="text-sm text-muted-foreground transition-colors duration-300 group-hover/stat:text-accent">Years Running</p>
           </div>
           <div className="w-px h-12 bg-border" />
-          <div>
-            <p className="font-serif text-3xl text-accent">100%</p>
-            <p className="text-sm text-muted-foreground">Return Rate</p>
+          <div className="group/stat cursor-default transition-transform duration-300 hover:scale-105">
+            <p className="font-serif text-3xl text-accent transition-all duration-300 group-hover/stat:text-foreground">100%</p>
+            <p className="text-sm text-muted-foreground transition-colors duration-300 group-hover/stat:text-accent">Return Rate</p>
           </div>
         </div>
       </div>
