@@ -29,7 +29,7 @@ const majorEvents = [
   {
     id: "melbourne-cup",
     title: "Ranch Roundup",
-    subtitle: "Caulfield Racecourse",
+    subtitle: "Melbourne Racing Club",
     description:
       "Trusted by the Victoria Racing Club to prepare and maintain arena surfaces at Caulfield Racecourse during one of Australia's most prestigious racing events.",
     credentials: [
