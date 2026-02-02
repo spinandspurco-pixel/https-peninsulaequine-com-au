@@ -289,6 +289,73 @@
     @apply -translate-y-0.5;
   }
 
+  /* Subtle border glow for interactive elements */
+  .border-glow {
+    @apply relative transition-all duration-300;
+  }
+
+  .border-glow::before {
+    content: '';
+    @apply absolute inset-0 rounded-[inherit] opacity-0 transition-opacity duration-300 pointer-events-none;
+    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.4),
+                0 0 15px -3px hsl(var(--accent) / 0.3);
+  }
+
+  .border-glow:hover::before {
+    @apply opacity-100;
+  }
+
+  /* Button border glow */
+  .btn-glow {
+    @apply relative overflow-hidden transition-all duration-300;
+    box-shadow: 0 0 0 0 hsl(var(--accent) / 0);
+  }
+
+  .btn-glow:hover {
+    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.5),
+                0 0 20px -5px hsl(var(--accent) / 0.4),
+                0 4px 12px -4px hsl(var(--primary) / 0.2);
+  }
+
+  .btn-glow:active {
+    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.6),
+                0 0 10px -3px hsl(var(--accent) / 0.3);
+  }
+
+  /* Input field focus glow */
+  .input-glow {
+    @apply transition-all duration-300;
+  }
+
+  .input-glow:focus {
+    box-shadow: 0 0 0 2px hsl(var(--accent) / 0.2),
+                0 0 15px -5px hsl(var(--accent) / 0.25);
+  }
+
+  /* Link underline glow */
+  .link-glow {
+    @apply relative transition-all duration-300;
+  }
+
+  .link-glow::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-0.5 bg-accent scale-x-0 origin-right transition-transform duration-300;
+    box-shadow: 0 0 8px 0 hsl(var(--accent) / 0.5);
+  }
+
+  .link-glow:hover::after {
+    @apply scale-x-100 origin-left;
+  }
+
+  /* Thumbnail/icon glow */
+  .icon-glow {
+    @apply transition-all duration-300;
+  }
+
+  .icon-glow:hover {
+    filter: drop-shadow(0 0 6px hsl(var(--accent) / 0.4));
+  }
+
   /* Editorial scroll fade */
   .editorial-fade-in {
     @apply opacity-0 translate-y-8 transition-all duration-700 ease-out;
