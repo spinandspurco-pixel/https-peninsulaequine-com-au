@@ -105,6 +105,10 @@ keyframes: {
           "50%": { transform: "scale(1.08) translate(-1%, -1%)" },
           "100%": { transform: "scale(1.15) translate(-2%, 0)" },
         },
+        "pulse-subtle": {
+          "0%, 100%": { opacity: "1", transform: "scale(1)" },
+          "50%": { opacity: "0.85", transform: "scale(1.02)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -113,6 +117,7 @@ keyframes: {
         "fade-in-up": "fade-in-up 0.6s ease-out forwards",
         "scale-in": "scale-in 0.4s ease-out forwards",
         "ken-burns": "ken-burns 25s ease-in-out infinite alternate",
+        "pulse-subtle": "pulse-subtle 3s ease-in-out infinite",
       },
     },
   },
