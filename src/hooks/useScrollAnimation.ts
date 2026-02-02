@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useReducedMotion } from "./useReducedMotion";
 
 interface UseScrollAnimationOptions {
   threshold?: number;
@@ -12,8 +13,15 @@ export function useScrollAnimation<T extends HTMLElement = HTMLDivElement>(
   const { threshold = 0.1, rootMargin = "0px", triggerOnce = true } = options;
   const ref = useRef<T>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
+    // If user prefers reduced motion, show content immediately
+    if (prefersReducedMotion) {
+      setIsVisible(true);
+      return;
+    }
+
     const element = ref.current;
     if (!element) return;
 
@@ -34,7 +42,7 @@ export function useScrollAnimation<T extends HTMLElement = HTMLDivElement>(
     observer.observe(element);
 
     return () => observer.disconnect();
-  }, [threshold, rootMargin, triggerOnce]);
+  }, [threshold, rootMargin, triggerOnce, prefersReducedMotion]);
 
   return { ref, isVisible };
 }
@@ -49,8 +57,15 @@ export function useStaggeredAnimation(
   const [visibleItems, setVisibleItems] = useState<boolean[]>(
     new Array(itemCount).fill(false)
   );
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
+    // If user prefers reduced motion, show all items immediately
+    if (prefersReducedMotion) {
+      setVisibleItems(new Array(itemCount).fill(true));
+      return;
+    }
+
     const container = containerRef.current;
     if (!container) return;
 
@@ -79,7 +94,7 @@ export function useStaggeredAnimation(
     observer.observe(container);
 
     return () => observer.disconnect();
-  }, [itemCount, threshold, rootMargin, triggerOnce]);
+  }, [itemCount, threshold, rootMargin, triggerOnce, prefersReducedMotion]);
 
   return { containerRef, visibleItems };
 }

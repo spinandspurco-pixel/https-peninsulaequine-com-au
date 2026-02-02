@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, RefObject } from "react";
+import { useReducedMotion } from "./useReducedMotion";
 
 interface ParallaxOptions {
   speed?: number; // 0.1 = slow, 0.5 = medium, 1 = same as scroll
@@ -12,9 +13,11 @@ export function useParallax<T extends HTMLElement>(
   const { speed = 0.3, direction = "up", disabled = false } = options;
   const ref = useRef<T>(null);
   const [offset, setOffset] = useState(0);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (disabled) return;
+    // Disable parallax for users who prefer reduced motion
+    if (disabled || prefersReducedMotion) return;
 
     const handleScroll = () => {
       if (!ref.current) return;
@@ -49,7 +52,7 @@ export function useParallax<T extends HTMLElement>(
     handleScroll(); // Initial calculation
 
     return () => window.removeEventListener("scroll", onScroll);
-  }, [speed, direction, disabled]);
+  }, [speed, direction, disabled, prefersReducedMotion]);
 
   return { ref, offset };
 }
@@ -60,12 +63,15 @@ export function useBackgroundParallax(speed: number = 0.5): {
   style: React.CSSProperties;
 } {
   const { ref, offset } = useParallax<HTMLDivElement>({ speed });
+  const prefersReducedMotion = useReducedMotion();
 
   return {
     ref,
-    style: {
-      transform: `translateY(${offset}px)`,
-      willChange: "transform",
-    },
+    style: prefersReducedMotion 
+      ? {} 
+      : {
+          transform: `translateY(${offset}px)`,
+          willChange: "transform",
+        },
   };
 }
