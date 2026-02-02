@@ -29,7 +29,7 @@ interface VideoEvent {
 const majorEventVideos: VideoEvent[] = [
   {
     id: "equitana",
-    title: "Equitana Melbourne",
+    title: "Equitana Queensland",
     subtitle: "Australia's Premier Equine Event",
     description:
       "Watch our team prepare world-class arenas for Equitana Melbourne, ensuring perfect footing for thousands of horses and riders across multiple competition surfaces.",
