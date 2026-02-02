@@ -34,6 +34,10 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("RESEND_API_KEY is not configured");
     }
 
+    // Get notification email from secret or use default
+    const NOTIFICATION_EMAIL = Deno.env.get("NOTIFICATION_EMAIL") || "delivered@resend.dev";
+    const FROM_EMAIL = Deno.env.get("FROM_EMAIL") || "Peninsula Equine <onboarding@resend.dev>";
+
     const resend = new Resend(RESEND_API_KEY);
     const inquiry: InquiryNotificationRequest = await req.json();
 
@@ -165,8 +169,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send the notification email
     const emailResponse = await resend.emails.send({
-      from: "Peninsula Equine <onboarding@resend.dev>",
-      to: ["delivered@resend.dev"], // Replace with actual business email in production
+      from: FROM_EMAIL,
+      to: [NOTIFICATION_EMAIL],
       subject: `New Project Inquiry from ${inquiry.name}`,
       html: emailHtml,
       reply_to: inquiry.email,
