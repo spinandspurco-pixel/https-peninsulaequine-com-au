@@ -420,3 +420,50 @@
 .animate-confetti {
   animation: confetti 1.5s ease-out forwards;
 }
+
+/* Swipe indicator animations for lightbox onboarding */
+@keyframes swipe-hint-left {
+  0%, 100% {
+    transform: translateX(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateX(-12px);
+    opacity: 1;
+  }
+}
+
+@keyframes swipe-hint-right {
+  0%, 100% {
+    transform: translateX(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateX(12px);
+    opacity: 1;
+  }
+}
+
+@keyframes swipe-hand {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-30px);
+  }
+  75% {
+    transform: translateX(30px);
+  }
+}
+
+.animate-swipe-hint-left {
+  animation: swipe-hint-left 1.5s ease-in-out infinite;
+}
+
+.animate-swipe-hint-right {
+  animation: swipe-hint-right 1.5s ease-in-out infinite;
+}
+
+.animate-swipe-hand {
+  animation: swipe-hand 2s ease-in-out infinite;
+}
