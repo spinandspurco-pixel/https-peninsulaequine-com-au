@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -8,10 +8,23 @@ export function FloatingContactButton() {
   const [isVisible, setIsVisible] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNearFooter, setIsNearFooter] = useState(false);
   const location = useLocation();
 
   // Don't show on contact page
   const isContactPage = location.pathname === "/contact";
+
+  // Check if user is near the footer
+  const checkFooterProximity = useCallback(() => {
+    const footer = document.querySelector("footer");
+    if (!footer) return;
+
+    const footerRect = footer.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    // Hide when footer is within 150px of the bottom of the viewport
+    const isNear = footerRect.top < windowHeight + 150;
+    setIsNearFooter(isNear);
+  }, []);
 
   useEffect(() => {
     // Delay appearance for a smoother page load experience
@@ -22,6 +35,20 @@ export function FloatingContactButton() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    // Initial check
+    checkFooterProximity();
+
+    // Listen for scroll events
+    window.addEventListener("scroll", checkFooterProximity, { passive: true });
+    window.addEventListener("resize", checkFooterProximity, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", checkFooterProximity);
+      window.removeEventListener("resize", checkFooterProximity);
+    };
+  }, [checkFooterProximity]);
+
   if (isContactPage) return null;
 
   return (
@@ -29,7 +56,7 @@ export function FloatingContactButton() {
       <div
         className={cn(
           "fixed bottom-6 left-6 z-50 transition-all duration-500",
-          isVisible
+          isVisible && !isNearFooter
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-8 pointer-events-none"
         )}
