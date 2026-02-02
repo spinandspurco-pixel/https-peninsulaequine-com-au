@@ -123,18 +123,18 @@ function ValuesSection() {
           {aboutCiro.values.map((value, index) => (
             <div
               key={value.title}
-              className={`text-center p-6 transition-all duration-500 ${
-                gridVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-              }`}
+              className={`group text-center p-6 rounded-lg cursor-default transition-all duration-500 
+                hover:bg-background hover:shadow-lg hover:-translate-y-1
+                ${gridVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
               style={{ transitionDelay: `${index * 100}ms` }}
             >
-              <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6">
-                <span className="font-serif text-2xl font-bold text-accent">{index + 1}</span>
+              <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6 transition-all duration-300 group-hover:bg-accent/20 group-hover:scale-110">
+                <span className="font-serif text-2xl font-bold text-accent transition-transform duration-300 group-hover:scale-110">{index + 1}</span>
               </div>
-              <h3 className="font-serif text-lg font-semibold text-foreground mb-3">
+              <h3 className="font-serif text-lg font-semibold text-foreground mb-3 transition-colors duration-300 group-hover:text-accent">
                 {value.title}
               </h3>
-              <p className="text-sm text-muted-foreground">{value.description}</p>
+              <p className="text-sm text-muted-foreground transition-colors duration-300 group-hover:text-foreground/80">{value.description}</p>
             </div>
           ))}
         </div>
