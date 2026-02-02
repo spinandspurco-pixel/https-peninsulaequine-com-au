@@ -109,12 +109,21 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
             </li>
           ))}
         </ul>
-        <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-          <Link to="/contact">
-            Request a Quote
-            <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </Link>
-        </Button>
+        <div className="flex flex-wrap gap-3">
+          <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+            <Link to="/contact">
+              Request a Quote
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+          </Button>
+          <Button 
+            variant="outline" 
+            className="border-accent/30 text-accent hover:bg-accent/10 transition-all duration-300"
+            onClick={() => document.getElementById('construction-process')?.scrollIntoView({ behavior: 'smooth' })}
+          >
+            See Our Process
+          </Button>
+        </div>
       </div>
       <div 
         ref={imageRef}
@@ -413,7 +422,7 @@ function ConstructionProcessSection() {
   };
 
   return (
-    <section className="section-padding bg-card">
+    <section id="construction-process" className="section-padding bg-card scroll-mt-20">
       <div className="section-container">
         <div 
           ref={headerRef}
