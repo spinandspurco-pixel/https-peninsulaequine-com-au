@@ -8,7 +8,7 @@ import { MajorEventsVideoSection } from "@/components/MajorEventsVideoSection";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { siteConfig, services, testimonials, aboutCiro } from "@/data/content";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-
+import { useParallax } from "@/hooks/useParallax";
 // Import images
 import heroSunset from "@/assets/hero-sunset.png";
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
@@ -167,6 +167,7 @@ function HeroSection() {
 function IntroSection() {
   const { ref: textRef, isVisible: textVisible } = useScrollAnimation<HTMLDivElement>();
   const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
+  const { ref: parallaxRef, offset: parallaxOffset } = useParallax<HTMLDivElement>({ speed: 0.25 });
 
   return (
     <section id="intro" className="bg-background">
@@ -194,20 +195,31 @@ function IntroSection() {
         </div>
       </div>
 
-      {/* Large editorial image */}
+      {/* Large editorial image with parallax */}
       <div 
-        ref={imageRef}
-        className={`relative h-[70vh] min-h-[500px] transition-all duration-1000 ${
+        ref={(node) => {
+          // Combine both refs
+          (imageRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          (parallaxRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        }}
+        className={`relative h-[70vh] min-h-[500px] overflow-hidden transition-opacity duration-1000 ${
           imageVisible ? "opacity-100" : "opacity-0"
         }`}
       >
-        <img
-          src={ciroWithHorse}
-          alt="Ciro working with a horse"
-          className={`w-full h-full object-cover transition-transform duration-1000 ${
-            imageVisible ? "scale-100" : "scale-105"
-          }`}
-        />
+        <div 
+          className="absolute inset-[-15%] will-change-transform"
+          style={{ 
+            transform: `translateY(${parallaxOffset}px)`,
+          }}
+        >
+          <img
+            src={ciroWithHorse}
+            alt="Ciro working with a horse"
+            className={`w-full h-full object-cover transition-transform duration-1000 ${
+              imageVisible ? "scale-100" : "scale-105"
+            }`}
+          />
+        </div>
         <div className="absolute inset-0 image-overlay-subtle" />
       </div>
     </section>
