@@ -192,6 +192,8 @@ function ConstructionLightbox({
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [preloadedImages, setPreloadedImages] = useState<Set<string>>(new Set());
   const [isZooming, setIsZooming] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [displayedImage, setDisplayedImage] = useState(step?.image || "");
 
   // Pinch-to-zoom for images
   const pinchZoom = usePinchZoom({
@@ -204,9 +206,21 @@ function ConstructionLightbox({
   // Minimum swipe distance to trigger navigation (in pixels)
   const minSwipeDistance = 50;
 
-  // Reset zoom when step changes
+  // Handle image transition with fade effect
   useEffect(() => {
-    pinchZoom.reset();
+    if (step?.image && step.image !== displayedImage) {
+      // Start fade out
+      setIsTransitioning(true);
+      
+      // After fade out, switch image and fade in
+      const timeout = setTimeout(() => {
+        setDisplayedImage(step.image);
+        setIsTransitioning(false);
+        pinchZoom.reset();
+      }, 150); // Match the CSS transition duration
+      
+      return () => clearTimeout(timeout);
+    }
   }, [step?.image]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -372,10 +386,10 @@ function ConstructionLightbox({
             </div>
           )}
           <img
-            src={step.image}
+            src={displayedImage || step.image}
             alt={step.title}
-            className={`max-w-full max-h-[75vh] object-contain rounded-lg mx-auto transition-all duration-200 ${
-              isImageLoaded ? "opacity-100" : "opacity-0"
+            className={`max-w-full max-h-[75vh] object-contain rounded-lg mx-auto transition-all duration-150 ease-in-out ${
+              isImageLoaded && !isTransitioning ? "opacity-100 scale-100" : "opacity-0 scale-[0.98]"
             }`}
             style={{ transform: pinchZoom.transform }}
             onLoad={() => setIsImageLoaded(true)}
