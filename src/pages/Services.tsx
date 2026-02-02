@@ -155,6 +155,8 @@ function ConstructionLightbox({
 }) {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [preloadedImages, setPreloadedImages] = useState<Set<string>>(new Set());
 
   // Minimum swipe distance to trigger navigation (in pixels)
   const minSwipeDistance = 50;
@@ -185,26 +187,60 @@ function ConstructionLightbox({
     setTouchEnd(null);
   };
 
-  // Preload adjacent images for smoother navigation
+  // Reset loaded state when image changes
+  useEffect(() => {
+    if (step) {
+      // Check if image is already preloaded
+      setIsImageLoaded(preloadedImages.has(step.image));
+    }
+  }, [step, preloadedImages]);
+
+  // Preload ALL images when lightbox first opens
   useEffect(() => {
     if (step === null || allSteps.length === 0) return;
 
-    const preloadImage = (src: string) => {
-      const img = new Image();
-      img.src = src;
+    const preloadImage = (src: string): Promise<void> => {
+      return new Promise((resolve) => {
+        if (preloadedImages.has(src)) {
+          resolve();
+          return;
+        }
+        const img = new Image();
+        img.onload = () => {
+          setPreloadedImages(prev => new Set(prev).add(src));
+          resolve();
+        };
+        img.onerror = () => resolve();
+        img.src = src;
+      });
     };
 
-    // Preload next and previous images
-    const nextIndex = (currentIndex + 1) % total;
-    const prevIndex = (currentIndex - 1 + total) % total;
-    
-    preloadImage(allSteps[nextIndex].image);
-    preloadImage(allSteps[prevIndex].image);
-    
-    // Also preload 2 steps ahead for even smoother experience
-    const nextNextIndex = (currentIndex + 2) % total;
-    preloadImage(allSteps[nextNextIndex].image);
-  }, [currentIndex, step, allSteps, total]);
+    // Prioritize: current image first, then adjacent, then rest
+    const loadInOrder = async () => {
+      // Load current image first
+      await preloadImage(step.image);
+      setIsImageLoaded(true);
+
+      // Then preload adjacent images
+      const nextIndex = (currentIndex + 1) % total;
+      const prevIndex = (currentIndex - 1 + total) % total;
+      await Promise.all([
+        preloadImage(allSteps[nextIndex].image),
+        preloadImage(allSteps[prevIndex].image),
+      ]);
+
+      // Then preload all remaining images in background
+      const remainingIndices = allSteps
+        .map((_, i) => i)
+        .filter(i => i !== currentIndex && i !== nextIndex && i !== prevIndex);
+      
+      for (const i of remainingIndices) {
+        preloadImage(allSteps[i].image);
+      }
+    };
+
+    loadInOrder();
+  }, [step, currentIndex, allSteps, total]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -266,11 +302,22 @@ function ConstructionLightbox({
       </button>
 
       <div className="max-w-5xl w-full" onClick={(e) => e.stopPropagation()}>
-        <img
-          src={step.image}
-          alt={step.title}
-          className="max-w-full max-h-[75vh] object-contain rounded-lg mx-auto transition-opacity duration-200"
-        />
+        <div className="relative">
+          {/* Loading spinner */}
+          {!isImageLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-8 h-8 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
+            </div>
+          )}
+          <img
+            src={step.image}
+            alt={step.title}
+            className={`max-w-full max-h-[75vh] object-contain rounded-lg mx-auto transition-opacity duration-300 ${
+              isImageLoaded ? "opacity-100" : "opacity-0"
+            }`}
+            onLoad={() => setIsImageLoaded(true)}
+          />
+        </div>
         <div className="text-center mt-6">
           <p className="text-accent text-sm font-medium mb-1">
             Step {currentIndex + 1} of {total}
