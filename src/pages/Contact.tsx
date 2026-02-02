@@ -4,6 +4,9 @@ import { PageHeader } from "@/components/PageHeader";
 import { InquiryForm } from "@/components/InquiryForm";
 import { siteConfig } from "@/data/content";
 
+// Background image for header parallax
+import aberdeenInterior from "@/assets/aberdeen-barn-interior.jpg";
+
 function ContactInfo() {
   return (
     <div className="space-y-8">
@@ -82,6 +85,7 @@ export default function Contact() {
       <PageHeader 
         title="Start Your Project"
         description="Tell us about your vision and we'll help you bring it to life. Complete our inquiry form to get started."
+        backgroundImage={aberdeenInterior}
       />
 
       <section className="section-padding">
