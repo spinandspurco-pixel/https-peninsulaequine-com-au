@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, X, Play } from "lucide-react";
+import { ArrowRight, X, Play, ZoomIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
+import { usePinchZoom } from "@/hooks/usePinchZoom";
 import { Layout } from "@/components/layout/Layout";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 
@@ -433,6 +434,20 @@ function Lightbox({
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(true);
+  const [isZooming, setIsZooming] = useState(false);
+
+  // Pinch-to-zoom for images
+  const pinchZoom = usePinchZoom({
+    minScale: 1,
+    maxScale: 4,
+    onZoomStart: () => setIsZooming(true),
+    onZoomEnd: () => setIsZooming(false),
+  });
+
+  // Reset zoom when item changes
+  useEffect(() => {
+    pinchZoom.reset();
+  }, [item?.id]);
 
   useEffect(() => {
     if (item?.type === "video" && videoRef.current) {
@@ -466,17 +481,20 @@ function Lightbox({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [item, onClose, onPrevious, onNext, hasPrevious, hasNext]);
 
-  // Touch swipe handlers
+  // Touch swipe handlers (only when not zoomed)
   const handleTouchStart = (e: React.TouchEvent) => {
+    if (pinchZoom.isZoomed || e.touches.length > 1) return;
     touchStartX.current = e.touches[0].clientX;
     touchEndX.current = null;
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
+    if (pinchZoom.isZoomed || e.touches.length > 1) return;
     touchEndX.current = e.touches[0].clientX;
   };
 
   const handleTouchEnd = () => {
+    if (pinchZoom.isZoomed) return;
     if (touchStartX.current === null || touchEndX.current === null) return;
     
     const swipeDistance = touchStartX.current - touchEndX.current;
@@ -554,7 +572,15 @@ function Lightbox({
             className="max-w-full max-h-[85vh] object-contain rounded-lg mx-auto"
           />
         ) : (
-          <div className="relative">
+          <div 
+            ref={pinchZoom.containerRef}
+            className="relative overflow-hidden touch-none"
+            {...pinchZoom.handlers}
+            onTouchEnd={(e) => {
+              pinchZoom.handlers.onTouchEnd(e);
+              pinchZoom.handleDoubleTap(e);
+            }}
+          >
             {/* Loading spinner */}
             {isImageLoading && (
               <div className="absolute inset-0 flex items-center justify-center">
@@ -564,11 +590,26 @@ function Lightbox({
             <img
               src={item.src}
               alt={item.alt}
-              className={`max-w-full max-h-[85vh] object-contain rounded-lg mx-auto transition-opacity duration-300 ${
+              className={`max-w-full max-h-[85vh] object-contain rounded-lg mx-auto transition-all duration-200 ${
                 isImageLoading ? "opacity-0" : "opacity-100"
               }`}
+              style={{ transform: pinchZoom.transform }}
               onLoad={() => setIsImageLoading(false)}
+              draggable={false}
             />
+            {/* Zoom indicator */}
+            {pinchZoom.isZoomed && (
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-primary/80 text-primary-foreground text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5">
+                <ZoomIn className="w-3 h-3" />
+                {Math.round(pinchZoom.scale * 100)}%
+              </div>
+            )}
+            {/* Zoom hint for mobile */}
+            {!pinchZoom.isZoomed && !isImageLoading && (
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-primary/60 text-primary-foreground/70 text-xs px-3 py-1.5 rounded-full sm:hidden">
+                Pinch to zoom • Double-tap to zoom
+              </div>
+            )}
           </div>
         )}
         <p className="text-center text-primary-foreground/70 mt-4 text-sm">

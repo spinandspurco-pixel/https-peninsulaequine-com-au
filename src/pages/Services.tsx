@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckCircle, X } from "lucide-react";
+import { ArrowRight, CheckCircle, X, ZoomIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { services, lessonInfo, siteConfig } from "@/data/content";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
+import { usePinchZoom } from "@/hooks/usePinchZoom";
 
 // Main Ridge construction process images
 import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
@@ -189,20 +190,37 @@ function ConstructionLightbox({
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [preloadedImages, setPreloadedImages] = useState<Set<string>>(new Set());
+  const [isZooming, setIsZooming] = useState(false);
+
+  // Pinch-to-zoom for images
+  const pinchZoom = usePinchZoom({
+    minScale: 1,
+    maxScale: 4,
+    onZoomStart: () => setIsZooming(true),
+    onZoomEnd: () => setIsZooming(false),
+  });
 
   // Minimum swipe distance to trigger navigation (in pixels)
   const minSwipeDistance = 50;
 
+  // Reset zoom when step changes
+  useEffect(() => {
+    pinchZoom.reset();
+  }, [step?.image]);
+
   const handleTouchStart = (e: React.TouchEvent) => {
+    if (pinchZoom.isZoomed || e.touches.length > 1) return;
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
+    if (pinchZoom.isZoomed || e.touches.length > 1) return;
     setTouchEnd(e.targetTouches[0].clientX);
   };
 
   const handleTouchEnd = () => {
+    if (pinchZoom.isZoomed) return;
     if (!touchStart || !touchEnd) return;
     
     const distance = touchStart - touchEnd;
@@ -334,7 +352,15 @@ function ConstructionLightbox({
       </button>
 
       <div className="max-w-5xl w-full" onClick={(e) => e.stopPropagation()}>
-        <div className="relative">
+        <div 
+          ref={pinchZoom.containerRef}
+          className="relative overflow-hidden touch-none"
+          {...pinchZoom.handlers}
+          onTouchEnd={(e) => {
+            pinchZoom.handlers.onTouchEnd(e);
+            pinchZoom.handleDoubleTap(e);
+          }}
+        >
           {/* Loading spinner */}
           {!isImageLoaded && (
             <div className="absolute inset-0 flex items-center justify-center">
@@ -344,11 +370,26 @@ function ConstructionLightbox({
           <img
             src={step.image}
             alt={step.title}
-            className={`max-w-full max-h-[75vh] object-contain rounded-lg mx-auto transition-opacity duration-300 ${
+            className={`max-w-full max-h-[75vh] object-contain rounded-lg mx-auto transition-all duration-200 ${
               isImageLoaded ? "opacity-100" : "opacity-0"
             }`}
+            style={{ transform: pinchZoom.transform }}
             onLoad={() => setIsImageLoaded(true)}
+            draggable={false}
           />
+          {/* Zoom indicator */}
+          {pinchZoom.isZoomed && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-primary/80 text-primary-foreground text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5">
+              <ZoomIn className="w-3 h-3" />
+              {Math.round(pinchZoom.scale * 100)}%
+            </div>
+          )}
+          {/* Zoom hint for mobile */}
+          {!pinchZoom.isZoomed && isImageLoaded && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-primary/60 text-primary-foreground/70 text-xs px-3 py-1.5 rounded-full sm:hidden">
+              Pinch to zoom • Double-tap to zoom
+            </div>
+          )}
         </div>
         
         {/* Image info */}
@@ -395,7 +436,7 @@ function ConstructionLightbox({
         {/* Navigation hint */}
         <p className="text-primary-foreground/40 text-xs mt-4 text-center">
           <span className="hidden sm:inline">Use ← → to navigate • Esc to close</span>
-          <span className="sm:hidden">Swipe to navigate • Tap outside to close</span>
+          <span className="sm:hidden">Pinch to zoom • Swipe to navigate</span>
         </p>
       </div>
     </div>
