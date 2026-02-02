@@ -55,7 +55,8 @@ import {
   MessageSquare,
   Users,
   Clock,
-  CheckCircle
+  CheckCircle,
+  Download
 } from "lucide-react";
 import { format } from "date-fns";
 
@@ -201,6 +202,68 @@ export default function Admin() {
     return matchesSearch && matchesStatus;
   });
 
+  // Export to CSV
+  const exportToCSV = () => {
+    const headers = [
+      "Date",
+      "Name",
+      "Email",
+      "Phone",
+      "Services",
+      "Status",
+      "Budget Range",
+      "Preferred Start",
+      "Preferred Contact",
+      "Horse Name",
+      "Horse Age",
+      "Horse Breed",
+      "Experience Level",
+      "Project Vision",
+      "Project Details",
+      "Notes"
+    ];
+
+    const escapeCSV = (value: string | null | undefined): string => {
+      if (value === null || value === undefined) return "";
+      const stringValue = String(value);
+      if (stringValue.includes(",") || stringValue.includes('"') || stringValue.includes("\n")) {
+        return `"${stringValue.replace(/"/g, '""')}"`;
+      }
+      return stringValue;
+    };
+
+    const rows = filteredInquiries.map((inquiry) => [
+      format(new Date(inquiry.created_at), "yyyy-MM-dd HH:mm"),
+      escapeCSV(inquiry.name),
+      escapeCSV(inquiry.email),
+      escapeCSV(inquiry.phone),
+      escapeCSV(inquiry.services.join("; ")),
+      escapeCSV(inquiry.status),
+      escapeCSV(inquiry.budget_range),
+      escapeCSV(inquiry.preferred_start),
+      escapeCSV(inquiry.preferred_contact),
+      escapeCSV(inquiry.horse_name),
+      escapeCSV(inquiry.horse_age),
+      escapeCSV(inquiry.horse_breed),
+      escapeCSV(inquiry.experience_level),
+      escapeCSV(inquiry.project_vision),
+      escapeCSV(inquiry.project_details),
+      escapeCSV(inquiry.notes)
+    ]);
+
+    const csvContent = [headers.join(","), ...rows.map((row) => row.join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `inquiries-${format(new Date(), "yyyy-MM-dd")}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success(`Exported ${filteredInquiries.length} inquiries to CSV`);
+  };
+
   // Stats
   const stats = {
     total: inquiries.length,
@@ -307,6 +370,14 @@ export default function Admin() {
             <Button variant="outline" onClick={fetchInquiries} disabled={isLoadingData}>
               <RefreshCw className={`mr-2 h-4 w-4 ${isLoadingData ? "animate-spin" : ""}`} />
               Refresh
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={exportToCSV} 
+              disabled={filteredInquiries.length === 0}
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Export CSV
             </Button>
           </div>
 
