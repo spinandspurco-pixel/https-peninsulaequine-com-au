@@ -602,12 +602,14 @@ export default function Gallery() {
     thumbnail: v.thumbnail,
   }));
 
+  // Videos only appear in the grid when "Videos" filter is selected
+  // Otherwise, photos only - videos have their own dedicated sections (featured slider, video collection)
   const filteredItems =
     activeProject === "all"
-      ? [...galleryItems, ...videoGalleryItems]
+      ? galleryItems
       : activeProject === "videos"
       ? videoGalleryItems
-      : [...galleryItems.filter((item) => item.project === activeProject), ...videoGalleryItems.filter((item) => item.project === activeProject)];
+      : galleryItems.filter((item) => item.project === activeProject);
 
   // Combine all navigable items (gallery items + videos from allVideos)
   const allNavigableItems: GalleryItem[] = [
