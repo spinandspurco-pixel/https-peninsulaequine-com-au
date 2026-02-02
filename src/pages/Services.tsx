@@ -76,8 +76,7 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
     >
       <div 
         ref={contentRef}
-        className={`p-6 -m-6 rounded-xl transition-all duration-500 
-          group-hover:bg-card group-hover:shadow-lg group-hover:-translate-y-1
+        className={`p-6 -m-6 rounded-xl card-hover-glow
           ${isEven ? "" : "lg:order-2"}
           ${contentVisible 
             ? "opacity-100 translate-x-0" 
@@ -135,7 +134,7 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
             : `opacity-0 ${isEven ? "translate-x-8" : "-translate-x-8"} scale-95`
         }`}
       >
-      <div className="aspect-[4/3] bg-secondary rounded-lg overflow-hidden transition-all duration-500 group-hover:shadow-xl group-hover:-translate-y-1 relative">
+      <div className="aspect-[4/3] bg-secondary rounded-lg overflow-hidden image-card-glow relative">
         <img 
           src={serviceImages[service.id]} 
           alt={service.title}
@@ -143,7 +142,7 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
           loading="lazy"
         />
         {/* Subtle gradient overlay on hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-accent/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       </div>
       </div>
     </div>
@@ -455,7 +454,7 @@ function ConstructionProcessSection() {
                   : "opacity-0 translate-y-8"
               }`}
             >
-              <div className="aspect-square rounded-lg overflow-hidden bg-muted mb-3 transition-shadow duration-300 group-hover:shadow-lg">
+              <div className="aspect-square rounded-lg overflow-hidden bg-muted mb-3 card-interactive image-card-glow">
                 <img
                   src={step.image}
                   alt={step.title}
