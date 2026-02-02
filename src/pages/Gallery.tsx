@@ -592,12 +592,22 @@ export default function Gallery() {
   const [activeProject, setActiveProject] = useState("all");
   const [lightboxItem, setLightboxItem] = useState<GalleryItem | null>(null);
 
+  // Convert allVideos to GalleryItem format for filtering
+  const videoGalleryItems: GalleryItem[] = allVideos.map((v) => ({
+    id: v.id,
+    src: v.src,
+    alt: v.alt,
+    project: v.project,
+    type: v.type,
+    thumbnail: v.thumbnail,
+  }));
+
   const filteredItems =
     activeProject === "all"
-      ? galleryItems
+      ? [...galleryItems, ...videoGalleryItems]
       : activeProject === "videos"
-      ? galleryItems.filter((item) => item.type === "video")
-      : galleryItems.filter((item) => item.project === activeProject);
+      ? videoGalleryItems
+      : [...galleryItems.filter((item) => item.project === activeProject), ...videoGalleryItems.filter((item) => item.project === activeProject)];
 
   // Combine all navigable items (gallery items + videos from allVideos)
   const allNavigableItems: GalleryItem[] = [
