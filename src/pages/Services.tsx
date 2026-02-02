@@ -54,27 +54,27 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
   return (
     <div
       id={service.id}
-      className="scroll-mt-24 grid lg:grid-cols-2 gap-8 lg:gap-16 items-start py-16 border-b border-border last:border-0"
+      className="group scroll-mt-24 grid lg:grid-cols-2 gap-8 lg:gap-16 items-start py-16 border-b border-border last:border-0"
     >
       <div 
         ref={contentRef}
-        className={`transition-all duration-700 ${
-          isEven ? "" : "lg:order-2"
-        } ${
-          contentVisible 
+        className={`p-6 -m-6 rounded-xl transition-all duration-500 
+          group-hover:bg-card group-hover:shadow-lg group-hover:-translate-y-1
+          ${isEven ? "" : "lg:order-2"}
+          ${contentVisible 
             ? "opacity-100 translate-x-0" 
             : `opacity-0 ${isEven ? "-translate-x-8" : "translate-x-8"}`
-        }`}
+          }`}
       >
-        <div className={`w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mb-6 transition-all duration-500 delay-100 ${
+        <div className={`w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mb-6 transition-all duration-500 delay-100 group-hover:bg-accent/20 group-hover:scale-110 ${
           contentVisible ? "opacity-100 scale-100" : "opacity-0 scale-75"
         }`}>
-          <div className="w-8 h-8 bg-accent rounded" />
+          <div className="w-8 h-8 bg-accent rounded transition-transform duration-300 group-hover:rotate-12" />
         </div>
-        <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-foreground mb-4">
+        <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-foreground mb-4 transition-colors duration-300 group-hover:text-accent">
           {service.title}
         </h2>
-        <p className="text-muted-foreground mb-6">
+        <p className="text-muted-foreground mb-6 transition-colors duration-300 group-hover:text-foreground/80">
           {service.description}
         </p>
         <ul className="space-y-3 mb-8">
@@ -86,15 +86,15 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
               }`}
               style={{ transitionDelay: `${200 + i * 75}ms` }}
             >
-              <CheckCircle className="h-5 w-5 text-accent mt-0.5 shrink-0" />
+              <CheckCircle className="h-5 w-5 text-accent mt-0.5 shrink-0 transition-transform duration-300 group-hover:scale-110" />
               <span className="text-foreground">{feature}</span>
             </li>
           ))}
         </ul>
-        <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
+        <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
           <Link to="/contact">
             Request a Quote
-            <ArrowRight className="ml-2 h-4 w-4" />
+            <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </Button>
       </div>
@@ -108,8 +108,8 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
             : `opacity-0 ${isEven ? "translate-x-8" : "-translate-x-8"} scale-95`
         }`}
       >
-        <div className="aspect-[4/3] bg-secondary rounded-lg overflow-hidden">
-          <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+        <div className="aspect-[4/3] bg-secondary rounded-lg overflow-hidden transition-all duration-500 group-hover:shadow-xl group-hover:-translate-y-1">
+          <div className="w-full h-full flex items-center justify-center text-muted-foreground transition-transform duration-500 group-hover:scale-105">
             {/* Placeholder for service image */}
             <span className="text-sm">{service.title} Photo</span>
           </div>
