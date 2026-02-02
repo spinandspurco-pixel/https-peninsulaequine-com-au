@@ -119,7 +119,7 @@ function StepIndicator({ currentStep }: { currentStep: number }) {
                   currentStep > step.id
                     ? "bg-accent text-accent-foreground scale-100"
                     : currentStep === step.id
-                    ? "bg-accent text-accent-foreground ring-4 ring-accent/20 scale-110"
+                    ? "bg-accent text-accent-foreground ring-4 ring-accent/20 scale-110 animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"
                     : "bg-muted text-muted-foreground scale-100"
                 )}
               >
