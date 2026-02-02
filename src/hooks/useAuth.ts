@@ -7,6 +7,7 @@ export function useAuth() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isEmployee, setIsEmployee] = useState(false);
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -17,16 +18,27 @@ export function useAuth() {
         
         if (session?.user) {
           // Check admin role
-          const { data } = await supabase
+          const { data: adminData } = await supabase
             .from("user_roles")
             .select("role")
             .eq("user_id", session.user.id)
             .eq("role", "admin")
             .maybeSingle();
           
-          setIsAdmin(!!data);
+          setIsAdmin(!!adminData);
+
+          // Check employee role
+          const { data: employeeData } = await supabase
+            .from("user_roles")
+            .select("role")
+            .eq("user_id", session.user.id)
+            .eq("role", "employee")
+            .maybeSingle();
+          
+          setIsEmployee(!!employeeData);
         } else {
           setIsAdmin(false);
+          setIsEmployee(false);
         }
         
         setLoading(false);
@@ -39,16 +51,24 @@ export function useAuth() {
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", session.user.id)
-          .eq("role", "admin")
-          .maybeSingle()
-          .then(({ data }) => {
-            setIsAdmin(!!data);
-            setLoading(false);
-          });
+        Promise.all([
+          supabase
+            .from("user_roles")
+            .select("role")
+            .eq("user_id", session.user.id)
+            .eq("role", "admin")
+            .maybeSingle(),
+          supabase
+            .from("user_roles")
+            .select("role")
+            .eq("user_id", session.user.id)
+            .eq("role", "employee")
+            .maybeSingle(),
+        ]).then(([adminResult, employeeResult]) => {
+          setIsAdmin(!!adminResult.data);
+          setIsEmployee(!!employeeResult.data);
+          setLoading(false);
+        });
       } else {
         setLoading(false);
       }
@@ -86,6 +106,7 @@ export function useAuth() {
     session,
     loading,
     isAdmin,
+    isEmployee,
     signIn,
     signUp,
     signOut,
