@@ -40,7 +40,7 @@ const majorEventVideos: VideoEvent[] = [
   },
   {
     id: "melbourne-cup",
-    title: "Melbourne Cup",
+    title: "Ranch Roundup",
     subtitle: "Caulfield Racecourse",
     description:
       "Experience our precision arena preparation at Caulfield Racecourse during one of Australia's most prestigious racing events.",
