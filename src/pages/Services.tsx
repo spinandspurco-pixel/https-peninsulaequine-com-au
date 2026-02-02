@@ -153,6 +153,38 @@ function ConstructionLightbox({
   total: number;
   allSteps: ConstructionStep[];
 }) {
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  // Minimum swipe distance to trigger navigation (in pixels)
+  const minSwipeDistance = 50;
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      onNext();
+    } else if (isRightSwipe) {
+      onPrev();
+    }
+
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
+
   // Preload adjacent images for smoother navigation
   useEffect(() => {
     if (step === null || allSteps.length === 0) return;
@@ -205,6 +237,9 @@ function ConstructionLightbox({
     <div
       className="fixed inset-0 z-50 bg-primary/95 flex items-center justify-center p-4"
       onClick={onClose}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       <button
         className="absolute top-6 right-6 text-primary-foreground/80 hover:text-primary-foreground z-10"
@@ -246,9 +281,9 @@ function ConstructionLightbox({
           <p className="text-primary-foreground/70 text-sm">
             {step.description}
           </p>
-          {/* Keyboard navigation hint */}
           <p className="text-primary-foreground/40 text-xs mt-4">
-            Use ← → to navigate • Esc to close
+            <span className="hidden sm:inline">Use ← → to navigate • Esc to close</span>
+            <span className="sm:hidden">Swipe to navigate • Tap outside to close</span>
           </p>
         </div>
       </div>
