@@ -17,6 +17,7 @@ import horseAction from "@/assets/horse-action.png";
 import hatDetail from "@/assets/hat-detail.png";
 import ciroWide from "@/assets/ciro-wide.png";
 import spurDetail from "@/assets/spur-detail.png";
+import stoneworkBW from "@/assets/aberdeen-stonework-bw.jpg";
 
 // Import videos for hero rotation
 import slowMo1 from "@/assets/videos/slow-mo-1.mp4";
@@ -399,7 +400,7 @@ function GallerySection() {
 
   const images = [
     { src: hatDetail, alt: "Craftsmanship details" },
-    { src: spurDetail, alt: "Equipment detail" },
+    { src: stoneworkBW, alt: "Stone and wood craftsmanship" },
     { src: ciroWide, alt: "Ciro with horse" },
   ];
 
