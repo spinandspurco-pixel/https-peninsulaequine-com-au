@@ -444,11 +444,11 @@ function ConstructionProcessSection() {
                   : "opacity-0 translate-y-8"
               }`}
             >
-              <div className="aspect-square rounded-lg overflow-hidden bg-muted mb-3">
+              <div className="aspect-square rounded-lg overflow-hidden bg-muted mb-3 transition-shadow duration-300 group-hover:shadow-lg">
                 <img
                   src={step.image}
                   alt={step.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                   loading="lazy"
                 />
               </div>
