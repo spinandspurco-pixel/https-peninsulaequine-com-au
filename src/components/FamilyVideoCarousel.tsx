@@ -5,12 +5,54 @@ import { cn } from "@/lib/utils";
 
 import familyPeCaps from "@/assets/videos/family-pe-caps.mp4";
 import chickenCoopBuild from "@/assets/videos/chicken-coop-build.mp4";
+import mainRidgeWoodwork1 from "@/assets/videos/main-ridge-woodwork-1.mp4";
+import mainRidgeWoodwork2 from "@/assets/videos/main-ridge-woodwork-2.mp4";
+import ciroJoinUp from "@/assets/videos/ciro-bareback-join-up.mp4";
+import ciroJoinUp2 from "@/assets/videos/ciro-bareback-join-up-2.mp4";
+import slowMo1 from "@/assets/videos/slow-mo-1.mp4";
+import slowMo2 from "@/assets/videos/slow-mo-2.mp4";
+import slowMo3 from "@/assets/videos/slow-mo-3.mp4";
 
 const videos = [
   {
     src: familyPeCaps,
     title: "Family Time",
     description: "The Peninsula Equine crew sporting their PE caps",
+  },
+  {
+    src: mainRidgeWoodwork1,
+    title: "Main Ridge Woodwork",
+    description: "Precision timber craftsmanship in action",
+  },
+  {
+    src: mainRidgeWoodwork2,
+    title: "Timber Detailing",
+    description: "Hand-finished woodwork for lasting quality",
+  },
+  {
+    src: ciroJoinUp,
+    title: "Join-Up Session",
+    description: "Ciro connecting with horses through natural horsemanship",
+  },
+  {
+    src: ciroJoinUp2,
+    title: "Bareback Connection",
+    description: "Building trust and partnership in the round pen",
+  },
+  {
+    src: slowMo1,
+    title: "Poetry in Motion",
+    description: "The beauty of horse movement captured in slow motion",
+  },
+  {
+    src: slowMo2,
+    title: "Graceful Strides",
+    description: "Every movement tells a story",
+  },
+  {
+    src: slowMo3,
+    title: "Equine Elegance",
+    description: "Celebrating the majesty of horses",
   },
   {
     src: chickenCoopBuild,
