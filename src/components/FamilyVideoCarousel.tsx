@@ -131,7 +131,9 @@ export function FamilyVideoCarousel() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [progress, setProgress] = useState(0);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const thumbnailVideoRefs = useRef<Map<number, HTMLVideoElement>>(new Map());
   const progressIntervalRef = useRef<number | null>(null);
 
   // Autoplay timer
@@ -293,21 +295,78 @@ export function FamilyVideoCarousel() {
         </p>
       </div>
 
-      {/* Dots Indicator */}
-      <div className="flex justify-center gap-2 mt-4">
-        {videos.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => handleDotClick(index)}
-            className={cn(
-              "w-2 h-2 rounded-full transition-all duration-300",
-              index === currentIndex
-                ? "bg-accent w-6"
-                : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
-            )}
-            aria-label={`Go to video ${index + 1}`}
-          />
-        ))}
+      {/* Thumbnail Strip with Hover Preview */}
+      <div className="mt-6">
+        <div className="flex justify-center gap-2 overflow-x-auto pb-2 px-2 scrollbar-thin scrollbar-thumb-accent/30 scrollbar-track-transparent">
+          {videos.map((video, index) => {
+            const isActive = index === currentIndex;
+            const isHovered = hoveredIndex === index;
+            
+            return (
+              <button
+                key={index}
+                onClick={() => handleDotClick(index)}
+                onMouseEnter={() => {
+                  setHoveredIndex(index);
+                  // Play the thumbnail video on hover
+                  const thumbVideo = thumbnailVideoRefs.current.get(index);
+                  if (thumbVideo) {
+                    thumbVideo.currentTime = 0;
+                    thumbVideo.play().catch(() => {});
+                  }
+                }}
+                onMouseLeave={() => {
+                  setHoveredIndex(null);
+                  // Pause the thumbnail video
+                  const thumbVideo = thumbnailVideoRefs.current.get(index);
+                  if (thumbVideo) {
+                    thumbVideo.pause();
+                  }
+                }}
+                className={cn(
+                  "relative flex-shrink-0 w-16 h-12 sm:w-20 sm:h-14 rounded-md overflow-hidden transition-all duration-300",
+                  isActive 
+                    ? "ring-2 ring-accent ring-offset-2 ring-offset-background scale-105" 
+                    : "opacity-60 hover:opacity-100 hover:scale-105"
+                )}
+                aria-label={`Go to video ${index + 1}: ${video.title}`}
+              >
+                {/* Thumbnail Video (plays on hover) */}
+                <video
+                  ref={(el) => {
+                    if (el) thumbnailVideoRefs.current.set(index, el);
+                  }}
+                  src={video.src}
+                  muted
+                  playsInline
+                  loop
+                  className="w-full h-full object-cover"
+                />
+                
+                {/* Hover overlay with title */}
+                <div className={cn(
+                  "absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent flex items-end justify-center p-1 transition-opacity duration-300",
+                  isHovered ? "opacity-100" : "opacity-0"
+                )}>
+                  <span className="text-[9px] sm:text-[10px] text-white font-medium text-center leading-tight line-clamp-2">
+                    {video.title}
+                  </span>
+                </div>
+                
+                {/* Active indicator */}
+                {isActive && (
+                  <div className="absolute inset-0 bg-accent/10" />
+                )}
+                
+                {/* Category color indicator */}
+                <div className={cn(
+                  "absolute top-0 left-0 right-0 h-0.5",
+                  categoryConfig[video.category].variant === "secondary" ? "bg-secondary" : "bg-accent"
+                )} />
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Autoplay Toggle */}
