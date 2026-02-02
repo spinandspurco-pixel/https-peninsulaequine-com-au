@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import logoImage from "@/assets/logo-pe.png";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -43,8 +44,16 @@ export function Header() {
         <nav className="flex items-center justify-between h-20 lg:h-24">
           {/* Logo - Left */}
           <Link to="/" className="flex items-center gap-3 group">
+            <img 
+              src={logoImage} 
+              alt="Peninsula Equine" 
+              className={cn(
+                "h-10 w-10 sm:h-12 sm:w-12 transition-all duration-300 group-hover:scale-105",
+                isScrolled ? "" : "brightness-0 invert"
+              )}
+            />
             <span className={cn(
-              "font-serif text-lg sm:text-xl tracking-[0.1em] uppercase transition-colors",
+              "hidden sm:block font-serif text-lg tracking-[0.1em] uppercase transition-colors",
               isScrolled ? "text-foreground" : "text-white"
             )}>
               Peninsula<span className="text-accent">Equine</span>
