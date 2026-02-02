@@ -143,6 +143,7 @@ function ConstructionLightbox({
   onPrev,
   currentIndex,
   total,
+  allSteps,
 }: {
   step: ConstructionStep | null;
   onClose: () => void;
@@ -150,7 +151,29 @@ function ConstructionLightbox({
   onPrev: () => void;
   currentIndex: number;
   total: number;
+  allSteps: ConstructionStep[];
 }) {
+  // Preload adjacent images for smoother navigation
+  useEffect(() => {
+    if (step === null || allSteps.length === 0) return;
+
+    const preloadImage = (src: string) => {
+      const img = new Image();
+      img.src = src;
+    };
+
+    // Preload next and previous images
+    const nextIndex = (currentIndex + 1) % total;
+    const prevIndex = (currentIndex - 1 + total) % total;
+    
+    preloadImage(allSteps[nextIndex].image);
+    preloadImage(allSteps[prevIndex].image);
+    
+    // Also preload 2 steps ahead for even smoother experience
+    const nextNextIndex = (currentIndex + 2) % total;
+    preloadImage(allSteps[nextNextIndex].image);
+  }, [currentIndex, step, allSteps, total]);
+
   // Keyboard navigation
   useEffect(() => {
     if (!step) return;
@@ -211,7 +234,7 @@ function ConstructionLightbox({
         <img
           src={step.image}
           alt={step.title}
-          className="max-w-full max-h-[75vh] object-contain rounded-lg mx-auto"
+          className="max-w-full max-h-[75vh] object-contain rounded-lg mx-auto transition-opacity duration-200"
         />
         <div className="text-center mt-6">
           <p className="text-accent text-sm font-medium mb-1">
@@ -319,6 +342,7 @@ function ConstructionProcessSection() {
         onPrev={goToPrev}
         currentIndex={lightboxIndex ?? 0}
         total={constructionSteps.length}
+        allSteps={constructionSteps}
       />
     </section>
   );
