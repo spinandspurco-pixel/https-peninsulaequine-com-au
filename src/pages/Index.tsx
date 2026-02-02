@@ -8,7 +8,6 @@ import { MajorEventsVideoSection } from "@/components/MajorEventsVideoSection";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { siteConfig, services, testimonials, aboutCiro } from "@/data/content";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { useParallax } from "@/hooks/useParallax";
 
 // Import images
 import heroSunset from "@/assets/hero-sunset.png";
@@ -34,8 +33,27 @@ const heroVideos = [slowMo1, ciroJoinUp, slowMo2, slowMo3];
 function HeroSection() {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { ref: parallaxRef, offset } = useParallax<HTMLDivElement>({ speed: 0.5 });
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Track scroll position for parallax
+  useEffect(() => {
+    let ticking = false;
+    
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          setScrollY(window.scrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Cycle videos every 15 seconds
   useEffect(() => {
@@ -58,12 +76,23 @@ function HeroSection() {
     }
   }, [currentVideoIndex]);
 
+  // Calculate parallax values
+  const parallaxOffset = scrollY * 0.4;
+  const contentOffset = scrollY * 0.15;
+  const overlayOpacity = Math.min(scrollY / 800, 0.5);
+
   return (
-    <section ref={parallaxRef} className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Full-bleed Background Video with Parallax */}
+    <section 
+      ref={sectionRef} 
+      className="relative h-screen flex items-center justify-center overflow-hidden"
+    >
+      {/* Full-bleed Background Video with Enhanced Parallax */}
       <div 
-        className="absolute inset-[-10%] will-change-transform transition-transform duration-100 ease-out"
-        style={{ transform: `translateY(${offset * 0.6}px) scale(1.15)` }}
+        className="absolute inset-[-20%] will-change-transform"
+        style={{ 
+          transform: `translateY(${parallaxOffset}px) scale(1.2)`,
+          transition: 'transform 0.1s ease-out'
+        }}
       >
         <video
           ref={videoRef}
@@ -72,7 +101,7 @@ function HeroSection() {
           loop
           playsInline
           poster={heroSunset}
-          className={`w-full h-full object-cover animate-ken-burns transition-opacity duration-500 ${
+          className={`w-full h-full object-cover transition-opacity duration-500 ${
             isTransitioning ? "opacity-0" : "opacity-100"
           }`}
         >
@@ -84,11 +113,25 @@ function HeroSection() {
             className="w-full h-full object-cover scale-105"
           />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/30 via-primary/10 to-primary/70" />
+        
+        {/* Gradient overlay with dynamic opacity */}
+        <div 
+          className="absolute inset-0 bg-gradient-to-b from-primary/30 via-primary/10 to-primary/70 transition-opacity duration-300"
+          style={{ opacity: 1 + overlayOpacity }}
+        />
+        
+        {/* Vignette effect */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.3)_100%)]" />
       </div>
 
-      {/* Centered Content */}
-      <div className="relative z-10 text-center px-4">
+      {/* Centered Content with subtle counter-parallax */}
+      <div 
+        className="relative z-10 text-center px-4 will-change-transform"
+        style={{ 
+          transform: `translateY(${-contentOffset}px)`,
+          opacity: Math.max(1 - scrollY / 600, 0)
+        }}
+      >
         <div className="divider mx-auto mb-8 bg-accent/80" />
         <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white tracking-[0.15em] uppercase font-normal text-shadow-editorial mb-6">
           Peninsula Equine
@@ -99,7 +142,7 @@ function HeroSection() {
         
         {/* Circular Logo Mark */}
         <div className="mt-12 mb-16">
-          <div className="w-28 h-28 sm:w-36 sm:h-36 mx-auto rounded-full border border-white/30 flex items-center justify-center backdrop-blur-sm">
+          <div className="w-28 h-28 sm:w-36 sm:h-36 mx-auto rounded-full border border-white/30 flex items-center justify-center backdrop-blur-sm transition-transform duration-500 hover:scale-105 hover:border-white/50">
             <div className="text-center">
               <span className="font-serif text-white text-3xl sm:text-4xl tracking-wider">PE</span>
             </div>
@@ -107,10 +150,11 @@ function HeroSection() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator with fade on scroll */}
       <button 
         onClick={() => document.getElementById('intro')?.scrollIntoView({ behavior: 'smooth' })}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/60 hover:text-white transition-colors cursor-pointer"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/60 hover:text-white transition-all cursor-pointer"
+        style={{ opacity: Math.max(1 - scrollY / 200, 0) }}
         aria-label="Scroll to content"
       >
         <span className="text-xs tracking-[0.2em] uppercase">Scroll</span>
