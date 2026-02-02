@@ -167,18 +167,95 @@ const handler = async (req: Request): Promise<Response> => {
       </html>
     `;
 
-    // Send the notification email
-    const emailResponse = await resend.emails.send({
-      from: FROM_EMAIL,
-      to: [NOTIFICATION_EMAIL],
-      subject: `New Project Inquiry from ${inquiry.name}`,
-      html: emailHtml,
-      reply_to: inquiry.email,
-    });
+    // Build the confirmation email HTML for the submitter
+    const confirmationHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: #2c3e50; color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+          .highlight { background: #fff; padding: 15px; border-left: 4px solid #c9a227; margin: 15px 0; }
+          .services-list { margin: 0; padding-left: 20px; }
+          .services-list li { margin-bottom: 5px; }
+          .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+          .cta { background: #c9a227; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin-top: 10px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1 style="margin: 0; font-size: 24px;">Thank You for Your Inquiry</h1>
+            <p style="margin: 10px 0 0 0; opacity: 0.9;">Peninsula Equine</p>
+          </div>
+          
+          <div class="content">
+            <p>Dear ${inquiry.name},</p>
+            
+            <p>Thank you for reaching out to Peninsula Equine! We've received your inquiry and are excited to learn more about your project.</p>
+            
+            <div class="highlight">
+              <strong>Services you're interested in:</strong>
+              <ul class="services-list">
+                ${inquiry.services?.map(s => `<li>${s}</li>`).join("") || "<li>General inquiry</li>"}
+              </ul>
+            </div>
+            
+            <p><strong>What happens next?</strong></p>
+            <p>A member of our team will review your inquiry and get back to you within 1-2 business days. We'll discuss your project in detail and provide you with a personalized quote.</p>
+            
+            <p>In the meantime, feel free to explore our gallery to see examples of our recent work, or give us a call if you have any immediate questions.</p>
+            
+            <p style="margin-top: 25px;">
+              We look forward to working with you!
+            </p>
+            
+            <p>
+              Warm regards,<br>
+              <strong>The Peninsula Equine Team</strong>
+            </p>
+          </div>
+          
+          <div class="footer">
+            <p>Peninsula Equine | Premium Equine Facilities</p>
+            <p>This is an automated confirmation of your inquiry submission.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
 
-    console.log("Inquiry notification email sent successfully:", emailResponse);
+    // Send both emails in parallel
+    const [notificationResponse, confirmationResponse] = await Promise.all([
+      // Send the notification email to the business
+      resend.emails.send({
+        from: FROM_EMAIL,
+        to: [NOTIFICATION_EMAIL],
+        subject: `New Project Inquiry from ${inquiry.name}`,
+        html: emailHtml,
+        reply_to: inquiry.email,
+      }),
+      // Send the confirmation email to the submitter
+      resend.emails.send({
+        from: FROM_EMAIL,
+        to: [inquiry.email],
+        subject: "Thank You for Your Inquiry - Peninsula Equine",
+        html: confirmationHtml,
+      }),
+    ]);
 
-    return new Response(JSON.stringify({ success: true, data: emailResponse }), {
+    console.log("Notification email sent:", notificationResponse);
+    console.log("Confirmation email sent:", confirmationResponse);
+
+    return new Response(JSON.stringify({ 
+      success: true, 
+      data: { 
+        notification: notificationResponse, 
+        confirmation: confirmationResponse 
+      } 
+    }), {
       status: 200,
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
