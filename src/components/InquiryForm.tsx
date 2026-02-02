@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
@@ -85,11 +85,79 @@ const BUDGET_RANGES = [
   { value: "not-sure", label: "Not sure yet" },
 ];
 
-function StepIndicator({ currentStep }: { currentStep: number }) {
-  const progressPercentage = ((currentStep - 1) / (STEPS.length - 1)) * 100;
+// Confetti particle component
+function ConfettiParticle({ delay, color }: { delay: number; color: string }) {
+  return (
+    <div
+      className="absolute w-2 h-2 rounded-full animate-confetti"
+      style={{
+        backgroundColor: color,
+        left: `${Math.random() * 100}%`,
+        animationDelay: `${delay}ms`,
+        animationDuration: `${1000 + Math.random() * 500}ms`,
+      }}
+    />
+  );
+}
+
+// Celebration confetti burst
+function CelebrationConfetti({ show }: { show: boolean }) {
+  const [particles, setParticles] = useState<{ id: number; delay: number; color: string }[]>([]);
+
+  useEffect(() => {
+    if (show) {
+      const colors = [
+        'hsl(var(--accent))',
+        'hsl(var(--primary))',
+        '#FFD700',
+        '#FF6B6B',
+        '#4ECDC4',
+        '#45B7D1',
+      ];
+      const newParticles = Array.from({ length: 24 }, (_, i) => ({
+        id: i,
+        delay: Math.random() * 300,
+        color: colors[Math.floor(Math.random() * colors.length)],
+      }));
+      setParticles(newParticles);
+
+      // Clear particles after animation
+      const timer = setTimeout(() => setParticles([]), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [show]);
+
+  if (!show || particles.length === 0) return null;
 
   return (
-    <div className="mb-8">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {particles.map((particle) => (
+        <ConfettiParticle key={particle.id} delay={particle.delay} color={particle.color} />
+      ))}
+    </div>
+  );
+}
+
+function StepIndicator({ currentStep }: { currentStep: number }) {
+  const progressPercentage = ((currentStep - 1) / (STEPS.length - 1)) * 100;
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [prevStep, setPrevStep] = useState(currentStep);
+
+  // Trigger confetti when reaching the final step
+  useEffect(() => {
+    if (currentStep === STEPS.length && prevStep < STEPS.length) {
+      setShowConfetti(true);
+      const timer = setTimeout(() => setShowConfetti(false), 2000);
+      return () => clearTimeout(timer);
+    }
+    setPrevStep(currentStep);
+  }, [currentStep, prevStep]);
+
+  return (
+    <div className="mb-8 relative">
+      {/* Celebration Confetti */}
+      <CelebrationConfetti show={showConfetti} />
+
       {/* Progress Bar */}
       <div className="relative mb-6">
         <div className="h-1.5 bg-muted rounded-full overflow-hidden">
@@ -102,8 +170,14 @@ function StepIndicator({ currentStep }: { currentStep: number }) {
           <span className="text-xs text-muted-foreground">
             Step {currentStep} of {STEPS.length}
           </span>
-          <span className="text-xs text-accent font-medium">
+          <span className={cn(
+            "text-xs font-medium transition-all duration-300",
+            currentStep === STEPS.length 
+              ? "text-accent scale-110" 
+              : "text-accent"
+          )}>
             {Math.round(progressPercentage)}% Complete
+            {currentStep === STEPS.length && " 🎉"}
           </span>
         </div>
       </div>
