@@ -16,14 +16,36 @@ import {
   User,
   Bell,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Play,
+  RefreshCw
 } from "lucide-react";
+
+interface Task {
+  id: string;
+  title: string;
+  description: string | null;
+  status: string;
+  scheduled_time: string | null;
+  scheduled_date: string;
+  priority: string;
+}
+
+interface Announcement {
+  id: string;
+  title: string;
+  content: string | null;
+  priority: string;
+}
 
 export default function EmployeeDashboard() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [isEmployee, setIsEmployee] = useState(false);
   const [checkingRole, setCheckingRole] = useState(true);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
     if (!loading) {
@@ -40,23 +62,81 @@ export default function EmployeeDashboard() {
       .from("user_roles")
       .select("role")
       .eq("user_id", userId)
-      .eq("role", "employee")
+      .in("role", ["employee", "admin"])
       .maybeSingle();
 
     if (!data) {
-      toast.error("Access denied. Employee role required.");
+      toast.error("Access denied. Employee or admin role required.");
       navigate("/hq");
       return;
     }
 
     setIsEmployee(true);
     setCheckingRole(false);
+    fetchData();
+  };
+
+  const fetchData = async () => {
+    setLoadingData(true);
+    
+    // Fetch today's tasks
+    const today = new Date().toISOString().split('T')[0];
+    const { data: tasksData, error: tasksError } = await supabase
+      .from("employee_tasks")
+      .select("*")
+      .eq("scheduled_date", today)
+      .order("scheduled_time", { ascending: true });
+
+    if (tasksError) {
+      console.error("Error fetching tasks:", tasksError);
+    } else {
+      setTasks(tasksData || []);
+    }
+
+    // Fetch active announcements
+    const { data: announcementsData, error: announcementsError } = await supabase
+      .from("announcements")
+      .select("*")
+      .eq("active", true)
+      .order("created_at", { ascending: false });
+
+    if (announcementsError) {
+      console.error("Error fetching announcements:", announcementsError);
+    } else {
+      setAnnouncements(announcementsData || []);
+    }
+
+    setLoadingData(false);
+  };
+
+  const updateTaskStatus = async (taskId: string, newStatus: string) => {
+    const { error } = await supabase
+      .from("employee_tasks")
+      .update({ status: newStatus })
+      .eq("id", taskId);
+
+    if (error) {
+      toast.error("Failed to update task status");
+      console.error(error);
+    } else {
+      toast.success(`Task marked as ${newStatus}`);
+      fetchData();
+    }
   };
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate("/hq");
     toast.success("Signed out successfully");
+  };
+
+  const formatTime = (time: string | null) => {
+    if (!time) return "";
+    const [hours, minutes] = time.split(':');
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    return `${displayHour}:${minutes} ${ampm}`;
   };
 
   if (loading || checkingRole) {
@@ -73,19 +153,8 @@ export default function EmployeeDashboard() {
     return null;
   }
 
-  // Mock data for employee dashboard
-  const todaysTasks = [
-    { id: 1, title: "Morning stable check", status: "completed", time: "6:00 AM" },
-    { id: 2, title: "Feed horses - Barn A", status: "completed", time: "7:00 AM" },
-    { id: 3, title: "Arena maintenance", status: "in-progress", time: "10:00 AM" },
-    { id: 4, title: "Afternoon riding lessons", status: "pending", time: "2:00 PM" },
-    { id: 5, title: "Evening stable check", status: "pending", time: "6:00 PM" },
-  ];
-
-  const announcements = [
-    { id: 1, title: "Team meeting Friday 3PM", priority: "normal" },
-    { id: 2, title: "New safety protocols in effect", priority: "important" },
-  ];
+  const completedTasks = tasks.filter(t => t.status === "completed").length;
+  const importantAnnouncements = announcements.filter(a => a.priority === "important").length;
 
   return (
     <Layout>
@@ -98,10 +167,15 @@ export default function EmployeeDashboard() {
               Welcome back, {user?.email?.split('@')[0]}
             </p>
           </div>
-          <Button variant="outline" onClick={handleSignOut}>
-            <LogOut className="mr-2 h-4 w-4" />
-            Sign Out
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" size="icon" onClick={fetchData} disabled={loadingData}>
+              <RefreshCw className={`h-4 w-4 ${loadingData ? 'animate-spin' : ''}`} />
+            </Button>
+            <Button variant="outline" onClick={handleSignOut}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Sign Out
+            </Button>
+          </div>
         </div>
 
         {/* Quick Stats */}
@@ -112,44 +186,48 @@ export default function EmployeeDashboard() {
               <ClipboardList className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{todaysTasks.length}</div>
+              <div className="text-2xl font-bold">{tasks.length}</div>
               <p className="text-xs text-muted-foreground">
-                {todaysTasks.filter(t => t.status === "completed").length} completed
+                {completedTasks} completed
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Hours Today</CardTitle>
+              <CardTitle className="text-sm font-medium">In Progress</CardTitle>
               <Clock className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">6.5</div>
-              <p className="text-xs text-muted-foreground">Started at 6:00 AM</p>
+              <div className="text-2xl font-bold">
+                {tasks.filter(t => t.status === "in-progress").length}
+              </div>
+              <p className="text-xs text-muted-foreground">Active tasks</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">This Week</CardTitle>
+              <CardTitle className="text-sm font-medium">Pending</CardTitle>
               <CalendarDays className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">32h</div>
-              <p className="text-xs text-muted-foreground">5 shifts scheduled</p>
+              <div className="text-2xl font-bold">
+                {tasks.filter(t => t.status === "pending").length}
+              </div>
+              <p className="text-xs text-muted-foreground">Not started</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Notifications</CardTitle>
+              <CardTitle className="text-sm font-medium">Announcements</CardTitle>
               <Bell className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{announcements.length}</div>
               <p className="text-xs text-muted-foreground">
-                {announcements.filter(a => a.priority === "important").length} important
+                {importantAnnouncements} important
               </p>
             </CardContent>
           </Card>
@@ -166,41 +244,82 @@ export default function EmployeeDashboard() {
               <CardDescription>Your tasks for today</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                {todaysTasks.map((task) => (
-                  <div
-                    key={task.id}
-                    className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      {task.status === "completed" ? (
-                        <CheckCircle2 className="h-5 w-5 text-green-500" />
-                      ) : task.status === "in-progress" ? (
-                        <Clock className="h-5 w-5 text-amber-500" />
-                      ) : (
-                        <AlertCircle className="h-5 w-5 text-muted-foreground" />
-                      )}
-                      <div>
-                        <p className={`font-medium ${task.status === "completed" ? "line-through text-muted-foreground" : ""}`}>
-                          {task.title}
-                        </p>
-                        <p className="text-sm text-muted-foreground">{task.time}</p>
+              {loadingData ? (
+                <div className="flex justify-center py-8">
+                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                </div>
+              ) : tasks.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <ClipboardList className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                  <p>No tasks scheduled for today</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {tasks.map((task) => (
+                    <div
+                      key={task.id}
+                      className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        {task.status === "completed" ? (
+                          <CheckCircle2 className="h-5 w-5 text-green-500" />
+                        ) : task.status === "in-progress" ? (
+                          <Clock className="h-5 w-5 text-amber-500" />
+                        ) : (
+                          <AlertCircle className="h-5 w-5 text-muted-foreground" />
+                        )}
+                        <div>
+                          <p className={`font-medium ${task.status === "completed" ? "line-through text-muted-foreground" : ""}`}>
+                            {task.title}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {formatTime(task.scheduled_time)}
+                            {task.priority === "urgent" && (
+                              <Badge variant="destructive" className="ml-2 text-xs">Urgent</Badge>
+                            )}
+                            {task.priority === "high" && (
+                              <Badge variant="default" className="ml-2 text-xs">High</Badge>
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {task.status === "pending" && (
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => updateTaskStatus(task.id, "in-progress")}
+                          >
+                            <Play className="h-3 w-3 mr-1" />
+                            Start
+                          </Button>
+                        )}
+                        {task.status === "in-progress" && (
+                          <Button 
+                            size="sm" 
+                            variant="default"
+                            onClick={() => updateTaskStatus(task.id, "completed")}
+                          >
+                            <CheckCircle2 className="h-3 w-3 mr-1" />
+                            Complete
+                          </Button>
+                        )}
+                        <Badge
+                          variant={
+                            task.status === "completed"
+                              ? "secondary"
+                              : task.status === "in-progress"
+                              ? "default"
+                              : "outline"
+                          }
+                        >
+                          {task.status === "in-progress" ? "In Progress" : task.status}
+                        </Badge>
                       </div>
                     </div>
-                    <Badge
-                      variant={
-                        task.status === "completed"
-                          ? "secondary"
-                          : task.status === "in-progress"
-                          ? "default"
-                          : "outline"
-                      }
-                    >
-                      {task.status === "in-progress" ? "In Progress" : task.status}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -214,25 +333,41 @@ export default function EmployeeDashboard() {
               <CardDescription>Team updates & notices</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                {announcements.map((announcement) => (
-                  <div
-                    key={announcement.id}
-                    className={`p-3 rounded-lg border ${
-                      announcement.priority === "important"
-                        ? "border-amber-500/50 bg-amber-500/5"
-                        : "bg-card"
-                    }`}
-                  >
-                    <div className="flex items-start gap-2">
-                      {announcement.priority === "important" && (
-                        <AlertCircle className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0" />
-                      )}
-                      <p className="text-sm font-medium">{announcement.title}</p>
+              {loadingData ? (
+                <div className="flex justify-center py-8">
+                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                </div>
+              ) : announcements.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Bell className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                  <p>No announcements</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {announcements.map((announcement) => (
+                    <div
+                      key={announcement.id}
+                      className={`p-3 rounded-lg border ${
+                        announcement.priority === "important"
+                          ? "border-amber-500/50 bg-amber-500/5"
+                          : "bg-card"
+                      }`}
+                    >
+                      <div className="flex items-start gap-2">
+                        {announcement.priority === "important" && (
+                          <AlertCircle className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0" />
+                        )}
+                        <div>
+                          <p className="text-sm font-medium">{announcement.title}</p>
+                          {announcement.content && (
+                            <p className="text-xs text-muted-foreground mt-1">{announcement.content}</p>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
 
               <div className="mt-6 pt-4 border-t">
                 <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
