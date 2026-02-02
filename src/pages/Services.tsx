@@ -135,14 +135,16 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
             : `opacity-0 ${isEven ? "translate-x-8" : "-translate-x-8"} scale-95`
         }`}
       >
-        <div className="aspect-[4/3] bg-secondary rounded-lg overflow-hidden transition-all duration-500 group-hover:shadow-xl group-hover:-translate-y-1">
-          <img 
-            src={serviceImages[service.id]} 
-            alt={service.title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            loading="lazy"
-          />
-        </div>
+      <div className="aspect-[4/3] bg-secondary rounded-lg overflow-hidden transition-all duration-500 group-hover:shadow-xl group-hover:-translate-y-1 relative">
+        <img 
+          src={serviceImages[service.id]} 
+          alt={service.title}
+          className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-110 group-hover:saturate-[1.1]"
+          loading="lazy"
+        />
+        {/* Subtle gradient overlay on hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      </div>
       </div>
     </div>
   );
