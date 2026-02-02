@@ -223,24 +223,33 @@ function NaturalHorsemanshipSection() {
 }
 
 function ImageBreak() {
-  const { ref, isVisible } = useScrollAnimation<HTMLElement>({
+  const { ref: scrollRef, isVisible } = useScrollAnimation<HTMLElement>({
     threshold: 0.2,
   });
+  const { ref: parallaxRef, offset } = useParallax<HTMLDivElement>({ speed: 0.3 });
 
   return (
     <section 
-      ref={ref}
-      className={`relative h-[50vh] min-h-[400px] transition-all duration-1000 ${
+      ref={scrollRef}
+      className={`relative h-[50vh] min-h-[400px] overflow-hidden transition-all duration-1000 ${
         isVisible ? "opacity-100" : "opacity-0"
       }`}
     >
-      <img
-        src={horseAction}
-        alt="Horse training in arena"
-        className={`w-full h-full object-cover transition-transform duration-1000 ${
-          isVisible ? "scale-100" : "scale-105"
-        }`}
-      />
+      <div 
+        ref={parallaxRef}
+        className="absolute inset-[-15%] will-change-transform"
+        style={{ 
+          transform: `translateY(${offset * 0.4}px)`,
+        }}
+      >
+        <img
+          src={horseAction}
+          alt="Horse training in arena"
+          className={`w-full h-full object-cover transition-transform duration-1000 ${
+            isVisible ? "scale-100" : "scale-105"
+          }`}
+        />
+      </div>
       <div className="absolute inset-0 bg-primary/40" />
     </section>
   );
