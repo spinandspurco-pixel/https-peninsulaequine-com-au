@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -61,27 +61,64 @@ const videos = [
   },
 ];
 
+const AUTOPLAY_INTERVAL = 8000; // 8 seconds per video
+
 export function FamilyVideoCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [progress, setProgress] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const progressIntervalRef = useRef<number | null>(null);
+
+  // Autoplay timer
+  useEffect(() => {
+    if (!isAutoPlaying || isPlaying) return;
+
+    // Reset progress
+    setProgress(0);
+
+    // Start progress animation
+    const startTime = Date.now();
+    progressIntervalRef.current = window.setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const newProgress = Math.min((elapsed / AUTOPLAY_INTERVAL) * 100, 100);
+      setProgress(newProgress);
+    }, 50);
+
+    // Auto-advance timer
+    const timer = setTimeout(() => {
+      setCurrentIndex((prev) => (prev === videos.length - 1 ? 0 : prev + 1));
+    }, AUTOPLAY_INTERVAL);
+
+    return () => {
+      clearTimeout(timer);
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+      }
+    };
+  }, [currentIndex, isAutoPlaying, isPlaying]);
 
   const goToPrevious = () => {
     setCurrentIndex((prev) => (prev === 0 ? videos.length - 1 : prev - 1));
     setIsPlaying(false);
+    setIsAutoPlaying(true);
   };
 
   const goToNext = () => {
     setCurrentIndex((prev) => (prev === videos.length - 1 ? 0 : prev + 1));
     setIsPlaying(false);
+    setIsAutoPlaying(true);
   };
 
   const togglePlay = () => {
     if (videoRef.current) {
       if (isPlaying) {
         videoRef.current.pause();
+        setIsAutoPlaying(true);
       } else {
         videoRef.current.play();
+        setIsAutoPlaying(false);
       }
       setIsPlaying(!isPlaying);
     }
@@ -89,8 +126,16 @@ export function FamilyVideoCarousel() {
 
   const handleVideoEnd = () => {
     setIsPlaying(false);
+    setIsAutoPlaying(true);
+    // Auto-advance to next video
+    setCurrentIndex((prev) => (prev === videos.length - 1 ? 0 : prev + 1));
   };
 
+  const handleDotClick = (index: number) => {
+    setCurrentIndex(index);
+    setIsPlaying(false);
+    setIsAutoPlaying(true);
+  };
   const currentVideo = videos[currentIndex];
 
   return (
@@ -145,6 +190,16 @@ export function FamilyVideoCarousel() {
         >
           <ChevronRight className="h-5 w-5" />
         </Button>
+
+        {/* Progress Bar */}
+        {isAutoPlaying && !isPlaying && (
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-muted-foreground/20">
+            <div 
+              className="h-full bg-accent transition-all duration-100 ease-linear"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        )}
       </div>
 
       {/* Caption */}
@@ -162,10 +217,7 @@ export function FamilyVideoCarousel() {
         {videos.map((_, index) => (
           <button
             key={index}
-            onClick={() => {
-              setCurrentIndex(index);
-              setIsPlaying(false);
-            }}
+            onClick={() => handleDotClick(index)}
             className={cn(
               "w-2 h-2 rounded-full transition-all duration-300",
               index === currentIndex
@@ -175,6 +227,19 @@ export function FamilyVideoCarousel() {
             aria-label={`Go to video ${index + 1}`}
           />
         ))}
+      </div>
+
+      {/* Autoplay Toggle */}
+      <div className="flex justify-center mt-3">
+        <button
+          onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+          className={cn(
+            "text-xs uppercase tracking-wider transition-colors",
+            isAutoPlaying ? "text-accent" : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          {isAutoPlaying ? "Autoplay On" : "Autoplay Off"}
+        </button>
       </div>
     </div>
   );
