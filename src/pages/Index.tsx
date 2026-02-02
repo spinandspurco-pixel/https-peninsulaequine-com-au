@@ -168,6 +168,7 @@ function IntroSection() {
   const { ref: textRef, isVisible: textVisible } = useScrollAnimation<HTMLDivElement>();
   const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
   const { ref: parallaxRef, offset: parallaxOffset } = useParallax<HTMLDivElement>({ speed: 0.25 });
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
     <section id="intro" className="bg-background">
@@ -195,7 +196,7 @@ function IntroSection() {
         </div>
       </div>
 
-      {/* Large editorial image with parallax */}
+      {/* Large editorial image with parallax and progressive loading */}
       <div 
         ref={(node) => {
           // Combine both refs
@@ -206,6 +207,13 @@ function IntroSection() {
           imageVisible ? "opacity-100" : "opacity-0"
         }`}
       >
+        {/* Skeleton placeholder */}
+        <div 
+          className={`absolute inset-0 bg-gradient-to-br from-muted/30 to-muted/10 transition-opacity duration-700 ${
+            imageLoaded ? "opacity-0" : "opacity-100"
+          }`}
+        />
+        
         <div 
           className="absolute inset-[-15%] will-change-transform"
           style={{ 
@@ -215,9 +223,12 @@ function IntroSection() {
           <img
             src={ciroWithHorse}
             alt="Ciro working with a horse"
-            className={`w-full h-full object-cover transition-transform duration-1000 ${
+            loading="lazy"
+            decoding="async"
+            onLoad={() => setImageLoaded(true)}
+            className={`w-full h-full object-cover transition-all duration-1000 ${
               imageVisible ? "scale-100" : "scale-105"
-            }`}
+            } ${imageLoaded ? "opacity-100 blur-0" : "opacity-0 blur-md"}`}
           />
         </div>
         <div className="absolute inset-0 image-overlay-subtle" />
@@ -269,17 +280,19 @@ function MissionSection() {
             </Link>
           </div>
 
-          {/* Image */}
+          {/* Image with lazy loading */}
           <div 
             ref={imageRef}
             className={`lg:col-span-7 transition-all duration-700 delay-200 ${
               imageVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
             }`}
           >
-            <div className="aspect-[4/5] overflow-hidden">
+            <div className="aspect-[4/5] overflow-hidden bg-muted/20">
               <img
                 src={horseAction}
                 alt="Horse in training"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -378,7 +391,7 @@ function GallerySection() {
         {images.map((image, index) => (
           <div 
             key={index} 
-            className={`overflow-hidden transition-all duration-700 ${
+            className={`overflow-hidden bg-muted/20 transition-all duration-700 ${
               imagesVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
             style={{ transitionDelay: `${index * 150}ms` }}
@@ -386,6 +399,8 @@ function GallerySection() {
             <img
               src={image.src}
               alt={image.alt}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
             />
           </div>
