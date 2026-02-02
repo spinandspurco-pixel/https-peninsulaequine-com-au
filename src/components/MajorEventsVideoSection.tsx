@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 
 // Import event videos
 import equitanaVideo from "@/assets/videos/equitana-arena.mov";
+import arenaPrepVideo from "@/assets/videos/arena-prep.mov";
 import caulfield1 from "@/assets/videos/caulfield-1.mov";
 import caulfield2 from "@/assets/videos/caulfield-2.mov";
 import caulfield3 from "@/assets/videos/caulfield-3.mov";
@@ -32,7 +33,7 @@ const majorEventVideos: VideoEvent[] = [
     subtitle: "Australia's Premier Equine Event",
     description:
       "Watch our team prepare world-class arenas for Equitana Melbourne, ensuring perfect footing for thousands of horses and riders across multiple competition surfaces.",
-    videos: [equitanaVideo],
+    videos: [equitanaVideo, arenaPrepVideo],
     thumbnail: equitanaArena1,
     badgeText: "Exclusive Partner",
     badgeIcon: <Award className="h-3.5 w-3.5" />,
