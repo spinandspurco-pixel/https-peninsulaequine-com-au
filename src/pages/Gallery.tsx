@@ -428,10 +428,15 @@ function Lightbox({
   const videoRef = useRef<HTMLVideoElement>(null);
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
+  const [isImageLoading, setIsImageLoading] = useState(true);
 
   useEffect(() => {
     if (item?.type === "video" && videoRef.current) {
       videoRef.current.play();
+    }
+    // Reset loading state when item changes
+    if (item?.type === "image") {
+      setIsImageLoading(true);
     }
   }, [item]);
 
@@ -545,11 +550,22 @@ function Lightbox({
             className="max-w-full max-h-[85vh] object-contain rounded-lg mx-auto"
           />
         ) : (
-          <img
-            src={item.src}
-            alt={item.alt}
-            className="max-w-full max-h-[85vh] object-contain rounded-lg mx-auto"
-          />
+          <div className="relative">
+            {/* Loading spinner */}
+            {isImageLoading && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-10 h-10 border-3 border-accent/30 border-t-accent rounded-full animate-spin" />
+              </div>
+            )}
+            <img
+              src={item.src}
+              alt={item.alt}
+              className={`max-w-full max-h-[85vh] object-contain rounded-lg mx-auto transition-opacity duration-300 ${
+                isImageLoading ? "opacity-0" : "opacity-100"
+              }`}
+              onLoad={() => setIsImageLoading(false)}
+            />
+          </div>
         )}
         <p className="text-center text-primary-foreground/70 mt-4 text-sm">
           {item.alt}
