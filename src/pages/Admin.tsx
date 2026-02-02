@@ -1,0 +1,578 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { Layout } from "@/components/layout/Layout";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "sonner";
+import { 
+  LogOut, 
+  Eye, 
+  Trash2, 
+  RefreshCw, 
+  Search,
+  Mail,
+  Phone,
+  Calendar,
+  Filter,
+  MessageSquare,
+  Users,
+  Clock,
+  CheckCircle
+} from "lucide-react";
+import { format } from "date-fns";
+
+interface Inquiry {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  services: string[];
+  project_details: string | null;
+  project_vision: string | null;
+  budget_range: string | null;
+  preferred_start: string | null;
+  preferred_contact: string | null;
+  horse_name: string | null;
+  horse_age: string | null;
+  horse_breed: string | null;
+  experience_level: string | null;
+  status: string;
+  notes: string | null;
+}
+
+const statusOptions = [
+  { value: "new", label: "New", color: "bg-blue-500" },
+  { value: "contacted", label: "Contacted", color: "bg-yellow-500" },
+  { value: "in_progress", label: "In Progress", color: "bg-purple-500" },
+  { value: "quoted", label: "Quoted", color: "bg-orange-500" },
+  { value: "won", label: "Won", color: "bg-green-500" },
+  { value: "lost", label: "Lost", color: "bg-red-500" },
+];
+
+function getStatusBadge(status: string) {
+  const statusConfig = statusOptions.find((s) => s.value === status) || statusOptions[0];
+  return (
+    <Badge variant="secondary" className={`${statusConfig.color} text-white`}>
+      {statusConfig.label}
+    </Badge>
+  );
+}
+
+export default function Admin() {
+  const { user, isAdmin, loading, signOut } = useAuth();
+  const navigate = useNavigate();
+  const [inquiries, setInquiries] = useState<Inquiry[]>([]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [selectedInquiry, setSelectedInquiry] = useState<Inquiry | null>(null);
+  const [deleteInquiry, setDeleteInquiry] = useState<Inquiry | null>(null);
+  const [editNotes, setEditNotes] = useState("");
+  const [editStatus, setEditStatus] = useState("");
+
+  // Redirect if not admin
+  useEffect(() => {
+    if (!loading && (!user || !isAdmin)) {
+      navigate("/login");
+    }
+  }, [user, isAdmin, loading, navigate]);
+
+  // Fetch inquiries
+  const fetchInquiries = async () => {
+    setIsLoadingData(true);
+    const { data, error } = await supabase
+      .from("inquiries")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      toast.error("Failed to load inquiries");
+      console.error(error);
+    } else {
+      setInquiries(data || []);
+    }
+    setIsLoadingData(false);
+  };
+
+  useEffect(() => {
+    if (isAdmin) {
+      fetchInquiries();
+    }
+  }, [isAdmin]);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
+
+  const handleViewInquiry = (inquiry: Inquiry) => {
+    setSelectedInquiry(inquiry);
+    setEditNotes(inquiry.notes || "");
+    setEditStatus(inquiry.status);
+  };
+
+  const handleUpdateInquiry = async () => {
+    if (!selectedInquiry) return;
+
+    const { error } = await supabase
+      .from("inquiries")
+      .update({ 
+        status: editStatus, 
+        notes: editNotes,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", selectedInquiry.id);
+
+    if (error) {
+      toast.error("Failed to update inquiry");
+    } else {
+      toast.success("Inquiry updated");
+      setSelectedInquiry(null);
+      fetchInquiries();
+    }
+  };
+
+  const handleDeleteInquiry = async () => {
+    if (!deleteInquiry) return;
+
+    const { error } = await supabase
+      .from("inquiries")
+      .delete()
+      .eq("id", deleteInquiry.id);
+
+    if (error) {
+      toast.error("Failed to delete inquiry");
+    } else {
+      toast.success("Inquiry deleted");
+      setDeleteInquiry(null);
+      fetchInquiries();
+    }
+  };
+
+  // Filter inquiries
+  const filteredInquiries = inquiries.filter((inquiry) => {
+    const matchesSearch =
+      inquiry.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      inquiry.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (inquiry.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false);
+    
+    const matchesStatus = statusFilter === "all" || inquiry.status === statusFilter;
+    
+    return matchesSearch && matchesStatus;
+  });
+
+  // Stats
+  const stats = {
+    total: inquiries.length,
+    new: inquiries.filter((i) => i.status === "new").length,
+    inProgress: inquiries.filter((i) => ["contacted", "in_progress", "quoted"].includes(i.status)).length,
+    completed: inquiries.filter((i) => ["won", "lost"].includes(i.status)).length,
+  };
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="min-h-[60vh] flex items-center justify-center">
+          <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      </Layout>
+    );
+  }
+
+  if (!isAdmin) {
+    return null;
+  }
+
+  return (
+    <Layout>
+      <div className="section-padding">
+        <div className="section-container">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+            <div>
+              <h1 className="font-serif text-3xl font-bold text-foreground">Admin Dashboard</h1>
+              <p className="text-muted-foreground mt-1">Manage inquiries and leads</p>
+            </div>
+            <Button variant="outline" onClick={handleSignOut}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Sign Out
+            </Button>
+          </div>
+
+          {/* Stats Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <Card>
+              <CardHeader className="pb-2">
+                <CardDescription>Total Inquiries</CardDescription>
+                <CardTitle className="text-2xl flex items-center gap-2">
+                  <Users className="h-5 w-5 text-muted-foreground" />
+                  {stats.total}
+                </CardTitle>
+              </CardHeader>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardDescription>New</CardDescription>
+                <CardTitle className="text-2xl flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5 text-blue-500" />
+                  {stats.new}
+                </CardTitle>
+              </CardHeader>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardDescription>In Progress</CardDescription>
+                <CardTitle className="text-2xl flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-yellow-500" />
+                  {stats.inProgress}
+                </CardTitle>
+              </CardHeader>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardDescription>Completed</CardDescription>
+                <CardTitle className="text-2xl flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  {stats.completed}
+                </CardTitle>
+              </CardHeader>
+            </Card>
+          </div>
+
+          {/* Filters */}
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search by name, email, or phone..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full sm:w-[180px]">
+                <Filter className="mr-2 h-4 w-4" />
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                {statusOptions.map((status) => (
+                  <SelectItem key={status.value} value={status.value}>
+                    {status.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button variant="outline" onClick={fetchInquiries} disabled={isLoadingData}>
+              <RefreshCw className={`mr-2 h-4 w-4 ${isLoadingData ? "animate-spin" : ""}`} />
+              Refresh
+            </Button>
+          </div>
+
+          {/* Table */}
+          <Card>
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Contact</TableHead>
+                    <TableHead>Services</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {isLoadingData ? (
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-center py-8">
+                        <RefreshCw className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
+                      </TableCell>
+                    </TableRow>
+                  ) : filteredInquiries.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                        No inquiries found
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    filteredInquiries.map((inquiry) => (
+                      <TableRow key={inquiry.id}>
+                        <TableCell className="whitespace-nowrap">
+                          {format(new Date(inquiry.created_at), "MMM d, yyyy")}
+                        </TableCell>
+                        <TableCell className="font-medium">{inquiry.name}</TableCell>
+                        <TableCell>
+                          <div className="flex flex-col gap-1">
+                            <span className="flex items-center gap-1 text-sm">
+                              <Mail className="h-3 w-3" />
+                              {inquiry.email}
+                            </span>
+                            {inquiry.phone && (
+                              <span className="flex items-center gap-1 text-sm text-muted-foreground">
+                                <Phone className="h-3 w-3" />
+                                {inquiry.phone}
+                              </span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1">
+                            {inquiry.services.slice(0, 2).map((service) => (
+                              <Badge key={service} variant="outline" className="text-xs">
+                                {service}
+                              </Badge>
+                            ))}
+                            {inquiry.services.length > 2 && (
+                              <Badge variant="outline" className="text-xs">
+                                +{inquiry.services.length - 2}
+                              </Badge>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>{getStatusBadge(inquiry.status)}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleViewInquiry(inquiry)}
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setDeleteInquiry(inquiry)}
+                              className="text-destructive hover:text-destructive"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* View/Edit Dialog */}
+      <Dialog open={!!selectedInquiry} onOpenChange={() => setSelectedInquiry(null)}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="font-serif">Inquiry Details</DialogTitle>
+            <DialogDescription>
+              Submitted on {selectedInquiry && format(new Date(selectedInquiry.created_at), "MMMM d, yyyy 'at' h:mm a")}
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedInquiry && (
+            <div className="space-y-6">
+              {/* Contact Info */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Name</label>
+                  <p className="font-medium">{selectedInquiry.name}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Email</label>
+                  <p className="font-medium">{selectedInquiry.email}</p>
+                </div>
+                {selectedInquiry.phone && (
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Phone</label>
+                    <p className="font-medium">{selectedInquiry.phone}</p>
+                  </div>
+                )}
+                {selectedInquiry.preferred_contact && (
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Preferred Contact</label>
+                    <p className="font-medium capitalize">{selectedInquiry.preferred_contact}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Services */}
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Services Requested</label>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {selectedInquiry.services.map((service) => (
+                    <Badge key={service} variant="secondary">
+                      {service}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              {/* Project Details */}
+              {selectedInquiry.project_vision && (
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Project Vision</label>
+                  <p className="mt-1 text-foreground">{selectedInquiry.project_vision}</p>
+                </div>
+              )}
+              
+              {selectedInquiry.project_details && (
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Project Details</label>
+                  <p className="mt-1 text-foreground">{selectedInquiry.project_details}</p>
+                </div>
+              )}
+
+              {/* Horse Info */}
+              {(selectedInquiry.horse_name || selectedInquiry.horse_breed || selectedInquiry.horse_age) && (
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Horse Information</label>
+                  <div className="grid grid-cols-3 gap-4 mt-1">
+                    {selectedInquiry.horse_name && (
+                      <div>
+                        <span className="text-xs text-muted-foreground">Name</span>
+                        <p>{selectedInquiry.horse_name}</p>
+                      </div>
+                    )}
+                    {selectedInquiry.horse_breed && (
+                      <div>
+                        <span className="text-xs text-muted-foreground">Breed</span>
+                        <p>{selectedInquiry.horse_breed}</p>
+                      </div>
+                    )}
+                    {selectedInquiry.horse_age && (
+                      <div>
+                        <span className="text-xs text-muted-foreground">Age</span>
+                        <p>{selectedInquiry.horse_age}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Budget & Timeline */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {selectedInquiry.budget_range && (
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Budget Range</label>
+                    <p className="font-medium">{selectedInquiry.budget_range}</p>
+                  </div>
+                )}
+                {selectedInquiry.preferred_start && (
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Preferred Start</label>
+                    <p className="font-medium">{selectedInquiry.preferred_start}</p>
+                  </div>
+                )}
+                {selectedInquiry.experience_level && (
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Experience Level</label>
+                    <p className="font-medium">{selectedInquiry.experience_level}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Status & Notes (Editable) */}
+              <div className="border-t pt-4 space-y-4">
+                <div>
+                  <label className="text-sm font-medium">Status</label>
+                  <Select value={editStatus} onValueChange={setEditStatus}>
+                    <SelectTrigger className="mt-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {statusOptions.map((status) => (
+                        <SelectItem key={status.value} value={status.value}>
+                          {status.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Internal Notes</label>
+                  <Textarea
+                    value={editNotes}
+                    onChange={(e) => setEditNotes(e.target.value)}
+                    placeholder="Add notes about this inquiry..."
+                    className="mt-1"
+                    rows={3}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setSelectedInquiry(null)}>
+              Cancel
+            </Button>
+            <Button onClick={handleUpdateInquiry}>
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation */}
+      <AlertDialog open={!!deleteInquiry} onOpenChange={() => setDeleteInquiry(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Inquiry</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete the inquiry from {deleteInquiry?.name}? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteInquiry} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </Layout>
+  );
+}
