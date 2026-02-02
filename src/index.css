@@ -216,6 +216,41 @@
     @apply -translate-y-0.5 shadow-lg;
   }
 
+  /* Subtle button glow on hover */
+  .btn-glow {
+    @apply transition-all duration-300;
+    box-shadow: 0 0 0 0 transparent;
+  }
+
+  .btn-glow:hover {
+    box-shadow: 0 0 20px -5px hsl(var(--accent) / 0.4),
+                0 4px 12px -2px hsl(var(--primary) / 0.15);
+  }
+
+  .btn-glow:focus-visible {
+    box-shadow: 0 0 0 2px hsl(var(--background)),
+                0 0 0 4px hsl(var(--ring)),
+                0 0 20px -5px hsl(var(--accent) / 0.4);
+  }
+
+  /* Primary button glow - stronger golden glow */
+  .btn-glow-primary:hover {
+    box-shadow: 0 0 25px -5px hsl(var(--accent) / 0.5),
+                0 4px 15px -2px hsl(var(--primary) / 0.2);
+  }
+
+  /* Outline button glow - subtle border enhancement */
+  .btn-glow-outline:hover {
+    box-shadow: 0 0 15px -5px hsl(var(--accent) / 0.3),
+                0 2px 8px -2px hsl(var(--foreground) / 0.1);
+  }
+
+  /* Destructive button glow */
+  .btn-glow-destructive:hover {
+    box-shadow: 0 0 20px -5px hsl(var(--destructive) / 0.4),
+                0 4px 12px -2px hsl(var(--destructive) / 0.2);
+  }
+
   /* Editorial scroll fade */
   .editorial-fade-in {
     @apply opacity-0 translate-y-8 transition-all duration-700 ease-out;
