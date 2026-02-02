@@ -425,6 +425,8 @@ function Lightbox({
   totalCount: number;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
 
   useEffect(() => {
     if (item?.type === "video" && videoRef.current) {
@@ -454,12 +456,41 @@ function Lightbox({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [item, onClose, onPrevious, onNext, hasPrevious, hasNext]);
 
+  // Touch swipe handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = null;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStartX.current === null || touchEndX.current === null) return;
+    
+    const swipeDistance = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50;
+
+    if (swipeDistance > minSwipeDistance && hasNext) {
+      onNext();
+    } else if (swipeDistance < -minSwipeDistance && hasPrevious) {
+      onPrevious();
+    }
+
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
+
   if (!item) return null;
 
   return (
     <div
       className="fixed inset-0 z-50 bg-primary/95 flex items-center justify-center p-4"
       onClick={onClose}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       {/* Close button */}
       <button
