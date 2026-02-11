@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, X, Play, ZoomIn } from "lucide-react";
+import { triggerHaptic } from "@/hooks/useHapticFeedback";
 import { Button } from "@/components/ui/button";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
@@ -502,8 +503,10 @@ function Lightbox({
     const minSwipeDistance = 50;
 
     if (swipeDistance > minSwipeDistance && hasNext) {
+      triggerHaptic("light");
       onNext();
     } else if (swipeDistance < -minSwipeDistance && hasPrevious) {
+      triggerHaptic("light");
       onPrevious();
     }
 
