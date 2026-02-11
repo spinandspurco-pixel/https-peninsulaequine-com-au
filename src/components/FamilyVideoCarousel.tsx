@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Play, Pause, Hammer, Heart, Film, Users, Trophy } from "lucide-react";
+import { triggerHaptic } from "@/hooks/useHapticFeedback";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -165,12 +166,14 @@ export function FamilyVideoCarousel() {
   }, [currentIndex, isAutoPlaying, isPlaying]);
 
   const goToPrevious = () => {
+    triggerHaptic("light");
     setCurrentIndex((prev) => (prev === 0 ? videos.length - 1 : prev - 1));
     setIsPlaying(false);
     setIsAutoPlaying(true);
   };
 
   const goToNext = () => {
+    triggerHaptic("light");
     setCurrentIndex((prev) => (prev === videos.length - 1 ? 0 : prev + 1));
     setIsPlaying(false);
     setIsAutoPlaying(true);
