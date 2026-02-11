@@ -98,11 +98,11 @@ export function FloatingContactButton() {
         {/* Pulse ring animation */}
         <div
           className={cn(
-            "absolute inset-0 rounded-full bg-accent/30",
-            "animate-ping pointer-events-none",
+            "absolute inset-0 rounded-full bg-accent/20",
+            "animate-pulse pointer-events-none",
             isHovered || isModalOpen ? "opacity-0" : "opacity-100"
           )}
-          style={{ animationDuration: "2s" }}
+          style={{ animationDuration: "3s", animationTimingFunction: "cubic-bezier(0.4, 0, 0.6, 1)" }}
         />
       </div>
 
