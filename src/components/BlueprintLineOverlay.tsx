@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface BlueprintLineOverlayProps {
-  variant?: "barn" | "detail" | "dimensions";
+  variant?: "barn" | "detail" | "dimensions" | "front-elevation";
   color?: "light" | "dark";
   className?: string;
 }
@@ -296,6 +296,106 @@ export function BlueprintLineOverlay({
           </text>
           <text x="100" y="90" textAnchor="start" fill={t} fontSize="11" fontFamily="monospace" letterSpacing="3" style={fade(2200)}>
             COLUMN GRID PLAN
+          </text>
+        </>
+      )}
+
+      {variant === "front-elevation" && (
+        <>
+          {/* ── Ground line ── */}
+          <line x1="40" y1="640" x2="1160" y2="640" stroke={s} strokeWidth="1.2" style={draw(0, 1200)} />
+
+          {/* Grade hatching */}
+          {Array.from({ length: 14 }, (_, i) => 40 + i * 80).map((x, i) => (
+            <line key={`gr${i}`} x1={x} y1="640" x2={x + 40} y2="665" stroke={sf} strokeWidth="0.4" style={draw(100 + i * 40, 40)} />
+          ))}
+
+          {/* ── Structural grid – vertical columns ── */}
+          {[140, 340, 540, 740, 940, 1060].map((x, i) => (
+            <g key={`fecol${x}`}>
+              <line x1={x} y1="190" x2={x} y2="640" stroke={s} strokeWidth="0.7" style={draw(200 + i * 100, 500)} />
+              {/* Column base */}
+              <rect x={x - 10} y="630" width="20" height="10" fill="none" stroke={sf} strokeWidth="0.5" style={draw(400 + i * 100, 60)} />
+            </g>
+          ))}
+
+          {/* ── Horizontal grid lines ── */}
+          {[190, 340, 490].map((y, i) => (
+            <line key={`feh${i}`} x1="100" y1={y} x2="1100" y2={y} stroke={sf} strokeWidth="0.35" style={draw(600 + i * 120, 1000)} />
+          ))}
+
+          {/* ── Eave / top plate line ── */}
+          <line x1="100" y1="210" x2="1100" y2="210" stroke={s} strokeWidth="0.9" style={draw(700, 1100)} />
+
+          {/* ── Roof – gable front elevation ── */}
+          <path d="M 100,210 L 600,60 L 1100,210" fill="none" stroke={s} strokeWidth="1" style={draw(900, 1400)} />
+          {/* Inner roof line */}
+          <path d="M 180,210 L 600,95 L 1020,210" fill="none" stroke={sf} strokeWidth="0.4" style={draw(1100, 1200)} />
+          {/* Ridge detail */}
+          <circle cx="600" cy="60" r="5" fill="none" stroke={a} strokeWidth="0.6" style={draw(1300, 35)} />
+          <line x1="600" y1="60" x2="600" y2="210" stroke={s} strokeWidth="0.5" strokeDasharray="6 4" style={draw(1350, 160)} />
+
+          {/* ── Barn doors ── */}
+          <rect x="370" y="400" width="180" height="240" fill="none" stroke={s} strokeWidth="0.8" rx="1" style={draw(1000, 860)} />
+          {/* Door panels */}
+          <line x1="460" y1="400" x2="460" y2="640" stroke={sf} strokeWidth="0.4" style={draw(1200, 240)} />
+          {/* Cross braces on doors */}
+          <line x1="370" y1="400" x2="460" y2="520" stroke={sf} strokeWidth="0.3" style={draw(1300, 200)} />
+          <line x1="460" y1="400" x2="550" y2="520" stroke={sf} strokeWidth="0.3" style={draw(1350, 200)} />
+          {/* Door hardware */}
+          <circle cx="445" cy="520" r="4" fill="none" stroke={a} strokeWidth="0.5" style={draw(1400, 28)} />
+
+          {/* ── Windows ── */}
+          {[680, 860].map((x, i) => (
+            <g key={`win${x}`}>
+              <rect x={x} y="310" width="80" height="100" fill="none" stroke={s} strokeWidth="0.6" style={draw(1100 + i * 150, 360)} />
+              {/* Window muntins */}
+              <line x1={x + 40} y1="310" x2={x + 40} y2="410" stroke={sf} strokeWidth="0.3" style={draw(1250 + i * 150, 100)} />
+              <line x1={x} y1="360" x2={x + 80} y2="360" stroke={sf} strokeWidth="0.3" style={draw(1300 + i * 150, 80)} />
+            </g>
+          ))}
+
+          {/* ── Hay loft opening ── */}
+          <path d="M 520,150 L 600,110 L 680,150 L 680,200 L 520,200 Z" fill="none" stroke={sf} strokeWidth="0.5" style={draw(1500, 400)} />
+
+          {/* ── Grid labels at top ── */}
+          {[140, 340, 540, 740, 940, 1060].map((x, i) => (
+            <g key={`felbl${i}`}>
+              <circle cx={x} cy="175" r="9" fill="none" stroke={s} strokeWidth="0.4" style={draw(1600 + i * 60, 58)} />
+              <text x={x} y="179" textAnchor="middle" fill={t} fontSize="8" fontFamily="monospace" style={fade(2000 + i * 60)}>
+                {String.fromCharCode(65 + i)}
+              </text>
+            </g>
+          ))}
+
+          {/* ── Dimension lines ── */}
+          {/* Width */}
+          <line x1="140" y1="680" x2="1060" y2="680" stroke={s} strokeWidth="0.35"
+            markerStart="url(#ov-arr-l)" markerEnd="url(#ov-arr-r)" style={draw(1800, 1000)} />
+          <text x="600" y="705" textAnchor="middle" fill={t} fontSize="12" fontFamily="monospace" style={fade(2400)}>
+            60'-0"
+          </text>
+
+          {/* Height – eave */}
+          <line x1="1130" y1="210" x2="1130" y2="640" stroke={s} strokeWidth="0.35"
+            markerStart="url(#ov-arr-l)" markerEnd="url(#ov-arr-r)" style={draw(1900, 500)} />
+          <text x="1155" y="430" textAnchor="start" fill={t} fontSize="10" fontFamily="monospace" style={fade(2500)}>
+            14'-0"
+          </text>
+
+          {/* Height – ridge */}
+          <line x1="60" y1="60" x2="60" y2="640" stroke={s} strokeWidth="0.35"
+            markerStart="url(#ov-arr-l)" markerEnd="url(#ov-arr-r)" style={draw(2000, 600)} />
+          <text x="35" y="360" textAnchor="end" fill={t} fontSize="10" fontFamily="monospace" writingMode="vertical-rl" style={fade(2600)}>
+            22'-6"
+          </text>
+
+          {/* ── Title block ── */}
+          <text x="600" y="38" textAnchor="middle" fill={t} fontSize="11" fontFamily="monospace" letterSpacing="4" style={fade(2700)}>
+            FRONT ELEVATION
+          </text>
+          <text x="1100" y="755" textAnchor="end" fill={t} fontSize="9" fontFamily="monospace" style={fade(2900)}>
+            SCALE 1:48
           </text>
         </>
       )}
