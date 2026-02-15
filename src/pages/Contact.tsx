@@ -1,11 +1,14 @@
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
+import { BlueprintBackground } from "@/components/BlueprintBackground";
+import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { PageHeader } from "@/components/PageHeader";
 import { InquiryForm } from "@/components/InquiryForm";
 import { siteConfig } from "@/data/content";
 
 // Background image for header parallax
 import aberdeenInterior from "@/assets/aberdeen-barn-interior.jpg";
+import blueprintFacility from "@/assets/blueprint-facility.png";
 
 function ContactInfo() {
   return (
@@ -88,8 +91,10 @@ export default function Contact() {
         backgroundImage={aberdeenInterior}
       />
 
-      <section className="section-padding">
-        <div className="section-container">
+      <section className="section-padding relative">
+        <BlueprintBackground image={blueprintFacility} opacity={0.04} direction="right-to-left" duration={2000} />
+        <BlueprintLineOverlay variant="dimensions" color="dark" />
+        <div className="section-container relative z-10">
           <div className="grid lg:grid-cols-3 gap-12 lg:gap-16">
             {/* Form - Takes 2 columns */}
             <div className="lg:col-span-2">
