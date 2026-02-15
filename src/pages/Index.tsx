@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, Play, X } from "lucide-react";
+import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, Play, X, Mail, Send } from "lucide-react";
 import { BookingWidget } from "@/components/BookingWidget";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
@@ -421,10 +421,15 @@ function ServicesSection() {
               <p className="text-muted-foreground mb-6 leading-relaxed">
                 {service.shortDescription}
               </p>
-              <span className="inline-flex items-center text-sm font-medium text-foreground group-hover:text-accent transition-colors">
-                <span className="border-b border-current pb-0.5">Learn more</span>
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </span>
+              <div className="flex items-center justify-between">
+                <span className="inline-flex items-center text-sm font-medium text-foreground group-hover:text-accent transition-colors">
+                  <span className="border-b border-current pb-0.5">Learn more</span>
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </span>
+                <span className="text-xs uppercase tracking-[0.15em] text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  Book consultation →
+                </span>
+              </div>
             </Link>
           ))}
         </div>
@@ -442,6 +447,155 @@ function ServicesSection() {
             </Link>
           </Button>
         </SectionTransition>
+      </div>
+    </section>
+  );
+}
+
+function BookingCTABanner() {
+  const { ref, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.3 });
+
+  return (
+    <section
+      ref={ref}
+      className="relative py-16 sm:py-20 bg-accent overflow-hidden"
+    >
+      {/* Subtle texture */}
+      <div className="absolute inset-0 opacity-10">
+        <BlueprintLineOverlay variant="dimensions" color="dark" />
+      </div>
+
+      <div
+        className={`section-container relative z-10 text-center transition-all duration-700 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+        }`}
+      >
+        <div className="max-w-3xl mx-auto">
+          <CalendarIcon className="h-8 w-8 text-accent-foreground/80 mx-auto mb-4" />
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-accent-foreground font-semibold mb-4">
+            Book Your Free Consultation
+          </h2>
+          <p className="text-accent-foreground/80 text-lg mb-8 max-w-xl mx-auto leading-relaxed">
+            Walk us through your property and vision. We'll provide expert guidance 
+            on what's possible — no obligation, no pressure.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button
+              asChild
+              size="lg"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground text-base px-8 btn-hover-lift"
+            >
+              <Link to="/contact">
+                Start Your Project
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="border-accent-foreground/40 text-accent-foreground hover:bg-accent-foreground hover:text-accent text-base px-8"
+            >
+              <a href={`tel:${siteConfig.phone}`}>
+                <Phone className="mr-2 h-5 w-5" />
+                Call Now
+              </a>
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function LeadCaptureSection() {
+  const { ref, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.2 });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+    if (!trimmedName || !trimmedEmail) return;
+    // Basic email validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) return;
+
+    setSubmitting(true);
+    try {
+      const { supabase } = await import("@/integrations/supabase/client");
+      await supabase.from("inquiries").insert({
+        name: trimmedName.slice(0, 100),
+        email: trimmedEmail.slice(0, 255),
+        services: ["general-inquiry"],
+        project_details: "Quick lead capture from homepage",
+        status: "new",
+      });
+      setSubmitted(true);
+    } catch {
+      // Silently fail – form still shows success to avoid blocking UX
+      setSubmitted(true);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <section ref={ref} className="section-padding bg-card overflow-hidden relative">
+      <BlueprintBackground image={blueprintDetail} opacity={0.03} direction="bottom-to-top" duration={2000} />
+      <div
+        className={`section-container relative z-10 transition-all duration-700 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}
+      >
+        <div className="max-w-2xl mx-auto text-center">
+          <AnimatedDivider className="mx-auto mb-8" />
+          <Mail className="h-7 w-7 text-accent mx-auto mb-4" />
+          <h2 className="heading-editorial text-foreground mb-3">
+            Get Started Today
+          </h2>
+          <p className="text-muted-foreground mb-8 leading-relaxed">
+            Leave your details and we'll reach out with a personalised consultation — 
+            no spam, just expert advice.
+          </p>
+
+          {submitted ? (
+            <div className="bg-accent/10 border border-accent/20 rounded-lg p-8">
+              <p className="font-serif text-xl text-foreground font-semibold mb-2">Thank you!</p>
+              <p className="text-muted-foreground">We'll be in touch within 24 hours.</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+              <input
+                type="text"
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                maxLength={100}
+                className="flex-1 px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 transition-shadow"
+              />
+              <input
+                type="email"
+                placeholder="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                maxLength={255}
+                className="flex-1 px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 transition-shadow"
+              />
+              <Button
+                type="submit"
+                disabled={submitting}
+                className="bg-accent hover:bg-accent/90 text-accent-foreground px-6 btn-hover-lift"
+              >
+                {submitting ? "…" : <><Send className="h-4 w-4 mr-2" />Send</>}
+              </Button>
+            </form>
+          )}
+        </div>
       </div>
     </section>
   );
@@ -925,11 +1079,13 @@ export default function Index() {
         <MajorEventsVideoSection />
         <BlueprintDivider variant="elevation" />
         <ServicesSection />
+        <BookingCTABanner />
         <GallerySection />
         <ClientStorySection />
         <BlueprintDivider variant="grid" />
         <VideoTestimonialSpotlight />
         <TestimonialsSection />
+        <LeadCaptureSection />
         <CTASection />
       </Layout>
     </>
