@@ -1,5 +1,6 @@
 import { useParallax } from "@/hooks/useParallax";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
+import logoPeMark from "@/assets/logo-pe-mark.png";
 
 interface PageHeaderProps {
   title: string;
@@ -47,12 +48,13 @@ export function PageHeader({ title, description, backgroundImage }: PageHeaderPr
       
       <div className="section-container relative z-10">
         <div className="max-w-3xl">
-          <div 
-            className="w-16 h-0.5 bg-accent mb-6 transition-all duration-700"
-            style={{ 
-              transform: `translateX(${offset * -0.1}px)`,
-            }}
-          />
+          <div className="flex items-center gap-4 mb-6">
+            <img src={logoPeMark} alt="" className="w-10 h-10 sm:w-12 sm:h-12 object-contain drop-shadow-[0_2px_12px_rgba(255,255,255,0.15)]" />
+            <div 
+              className="w-12 h-0.5 bg-accent transition-all duration-700"
+              style={{ transform: `translateX(${offset * -0.1}px)` }}
+            />
+          </div>
           <h1 
             className="heading-display mb-6 transition-all duration-700"
             style={{ 

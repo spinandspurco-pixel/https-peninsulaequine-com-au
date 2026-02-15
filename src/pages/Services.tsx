@@ -32,6 +32,7 @@ import qldFacilityCourtyard from "@/assets/qld-facility-courtyard.jpg";
 import mainRidgeCiroWoodwork from "@/assets/main-ridge-ciro-woodwork-1.jpg";
 import blueprintElevation from "@/assets/blueprint-elevation.png";
 import blueprintFacility from "@/assets/blueprint-facility.png";
+import logoPeMark from "@/assets/logo-pe-mark.png";
 
 // Map service IDs to their images
 const serviceImages: Record<string, string> = {
@@ -67,7 +68,10 @@ function PageHeader({ title, description }: { title: string; description: string
       />
       <div className="section-container relative z-10">
         <div className="max-w-3xl">
-          <div className="w-16 h-0.5 bg-accent mb-6" />
+          <div className="flex items-center gap-4 mb-6">
+            <img src={logoPeMark} alt="" className="w-10 h-10 sm:w-12 sm:h-12 object-contain drop-shadow-[0_2px_12px_rgba(255,255,255,0.15)]" />
+            <div className="w-12 h-0.5 bg-accent" />
+          </div>
           <h1 className="heading-display mb-6">{title}</h1>
           <p className="text-lg text-primary-foreground/80">{description}</p>
         </div>

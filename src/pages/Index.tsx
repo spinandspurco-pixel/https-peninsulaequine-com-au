@@ -144,16 +144,10 @@ function HeroSection() {
         }}
       >
         <div className="divider mx-auto mb-8 bg-accent/80" />
-        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white tracking-[0.15em] uppercase font-normal text-shadow-editorial mb-6">
-          Peninsula Equine
-        </h1>
-        <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mb-4">
-          Facility Construction • Training • Excellence
-        </p>
         
-        {/* P.E Logo Mark */}
-        <div className="mt-12 mb-16">
-          <div className="w-28 h-28 sm:w-36 sm:h-36 mx-auto transition-transform duration-500 hover:scale-105">
+        {/* P.E Logo Mark as primary hero element */}
+        <div className="mb-8">
+          <div className="w-32 h-32 sm:w-44 sm:h-44 md:w-52 md:h-52 mx-auto transition-transform duration-500 hover:scale-105">
             <img
               src={logoPeMark}
               alt="Peninsula Equine"
@@ -161,6 +155,13 @@ function HeroSection() {
             />
           </div>
         </div>
+
+        <p className="font-serif text-xl sm:text-2xl md:text-3xl text-white tracking-[0.12em] uppercase font-normal text-shadow-editorial mb-4">
+          Peninsula Equine
+        </p>
+        <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mb-16">
+          Facility Construction • Training • Excellence
+        </p>
       </div>
 
       {/* Scroll indicator with fade on scroll */}
