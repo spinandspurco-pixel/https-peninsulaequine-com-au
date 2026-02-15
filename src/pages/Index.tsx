@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Phone, ChevronDown, CalendarIcon } from "lucide-react";
+import { BookingWidget } from "@/components/BookingWidget";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { MajorEventsSection } from "@/components/MajorEventsSection";
@@ -176,16 +177,10 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
             <p className="font-serif text-xl sm:text-2xl md:text-3xl text-white tracking-[0.12em] uppercase font-normal text-shadow-editorial mb-4">
               Peninsula Equine
             </p>
-            <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mb-8">
+            <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mb-2">
               Facility Construction • Training • Excellence
             </p>
-            <Link
-              to="/book-lesson"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent hover:bg-accent/90 text-accent-foreground font-medium text-sm tracking-wider uppercase transition-all duration-300 hover:scale-105 hover:shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
-            >
-              <CalendarIcon className="h-4 w-4" />
-              Book a Lesson
-            </Link>
+            <BookingWidget variant="hero" />
           </>
         )}
 

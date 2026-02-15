@@ -9,6 +9,7 @@ import { Layout } from "@/components/layout/Layout";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { SwipeIndicator } from "@/components/SwipeIndicator";
 import { services, lessonInfo, siteConfig } from "@/data/content";
+import { BookingWidget } from "@/components/BookingWidget";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
 import { usePinchZoom } from "@/hooks/usePinchZoom";
@@ -640,12 +641,7 @@ function LessonsSection() {
           <div className={`transition-all duration-500 delay-300 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}>
-            <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
-              <Link to="/contact">
-                Inquire About Lessons
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+            <BookingWidget variant="card" className="max-w-md mx-auto" />
           </div>
         </div>
       </div>
