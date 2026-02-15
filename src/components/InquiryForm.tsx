@@ -121,25 +121,34 @@ const BUDGET_RANGES = [
   { value: "not-sure", label: "Not sure yet" },
 ];
 
-// Confetti particle component
+// Horseshoe confetti particle component
 function ConfettiParticle({ delay, color, size }: { delay: number; color: string; size: 'sm' | 'md' | 'lg' }) {
-  const sizeClasses = {
-    sm: 'w-1.5 h-1.5',
-    md: 'w-2 h-2',
-    lg: 'w-2.5 h-2.5',
-  };
+  const sizeMap = { sm: 14, md: 18, lg: 22 };
+  const px = sizeMap[size];
   
   return (
     <div
-      className={`absolute ${sizeClasses[size]} rounded-full animate-confetti`}
+      className="absolute animate-confetti"
       style={{
-        backgroundColor: color,
         left: `${10 + Math.random() * 80}%`,
         animationDelay: `${delay}ms`,
         animationDuration: `${1200 + Math.random() * 800}ms`,
         opacity: 0.85,
       }}
-    />
+    >
+      <svg
+        width={px}
+        height={px}
+        viewBox="0 0 24 24"
+        fill="none"
+        style={{ transform: `rotate(${Math.random() * 360}deg)` }}
+      >
+        <path
+          d="M5 2C3.3 2 2 3.8 2 6c0 2.5 1 4.5 2 6l1.5 2.5c.3.5.5 1 .5 1.5v2a1 1 0 0 0 2 0v-2.5L7 14l-1-2C4.8 10.2 4 8.2 4 6c0-1.5.6-2 1-2s1 .5 1 2v1h2V6c0-2.2-1.3-4-3-4zm14 0c-1.7 0-3 1.8-3 4v1h2V6c0-1.5.6-2 1-2s1 .5 1 2c0 2.2-.8 4.2-2 6l-1 2-1 1.5V16a1 1 0 0 0 2 0v-2c0-.5.2-1 .5-1.5L20 12c1-1.5 2-3.5 2-6 0-2.2-1.3-4-3-4z"
+          fill={color}
+        />
+      </svg>
+    </div>
   );
 }
 
