@@ -3,7 +3,7 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface BlueprintDividerProps {
   className?: string;
-  variant?: "structural" | "elevation" | "grid";
+  variant?: "structural" | "elevation" | "grid" | "floorplan";
 }
 
 /**
@@ -295,6 +295,77 @@ export function BlueprintDivider({
             </text>
             <text x="1520" y="12" textAnchor="end" fill={text} fontSize="6" fontFamily="monospace" style={fade(2100)}>
               SCALE 1:200
+            </text>
+          </>
+        )}
+
+        {variant === "floorplan" && (
+          <>
+            {/* Outer wall outline */}
+            <rect x="80" y="15" width="1440" height="90" fill="none" stroke={stroke} strokeWidth="0.9" rx="1" style={draw(0, 3200)} />
+            {/* Inner wall offset */}
+            <rect x="95" y="22" width="1410" height="76" fill="none" stroke={strokeFaint} strokeWidth="0.35" rx="1" style={draw(200, 3100)} />
+
+            {/* Room partitions */}
+            {[360, 640, 960, 1240].map((x, i) => (
+              <g key={`wall${x}`}>
+                <line x1={x} y1="15" x2={x} y2="105" stroke={stroke} strokeWidth="0.6" style={draw(400 + i * 120, 100)} />
+                {/* Door swing arc */}
+                <path
+                  d={`M ${x + 2},70 A 18,18 0 0,1 ${x + 20},52`}
+                  fill="none" stroke={accent} strokeWidth="0.5" style={draw(700 + i * 120, 30)}
+                />
+              </g>
+            ))}
+
+            {/* Room labels */}
+            {[
+              { x: 220, label: "TACK" },
+              { x: 500, label: "STALL 1" },
+              { x: 800, label: "STALL 2" },
+              { x: 1100, label: "WASH" },
+              { x: 1380, label: "FEED" },
+            ].map((room, i) => (
+              <text key={room.label} x={room.x} y="65" textAnchor="middle" fill={text} fontSize="7" fontFamily="monospace" letterSpacing="1.5" style={fade(1200 + i * 100)}>
+                {room.label}
+              </text>
+            ))}
+
+            {/* Window marks on top wall */}
+            {[440, 560, 760, 880, 1060, 1160].map((x, i) => (
+              <g key={`win${x}`}>
+                <line x1={x} y1="13" x2={x} y2="18" stroke={strokeFaint} strokeWidth="0.4" style={draw(600 + i * 60, 8)} />
+                <line x1={x + 20} y1="13" x2={x + 20} y2="18" stroke={strokeFaint} strokeWidth="0.4" style={draw(620 + i * 60, 8)} />
+                <line x1={x} y1="15" x2={x + 20} y2="15" stroke={accent} strokeWidth="0.3" style={draw(640 + i * 60, 22)} />
+              </g>
+            ))}
+
+            {/* Overall dimension arrow */}
+            <line x1="80" y1="112" x2="1520" y2="112" stroke={stroke} strokeWidth="0.35"
+              markerStart="url(#arrow-l)" markerEnd="url(#arrow-r)" style={draw(1600, 1500)} />
+            <text x="800" y="120" textAnchor="middle" fill={text} fontSize="7" fontFamily="monospace" style={fade(2000)}>
+              45'-0" OVERALL
+            </text>
+
+            {/* Bay dimensions */}
+            {[
+              { x1: 80, x2: 360, label: "8'-6\"" },
+              { x1: 360, x2: 640, label: "8'-6\"" },
+              { x1: 640, x2: 960, label: "9'-8\"" },
+              { x1: 960, x2: 1240, label: "8'-6\"" },
+              { x1: 1240, x2: 1520, label: "8'-6\"" },
+            ].map((dim, i) => (
+              <text key={`dim${i}`} x={(dim.x1 + dim.x2) / 2} y="8" textAnchor="middle" fill={text} fontSize="5.5" fontFamily="monospace" style={fade(1800 + i * 80)}>
+                {dim.label}
+              </text>
+            ))}
+
+            {/* Drawing title */}
+            <text x="80" y="8" textAnchor="start" fill={text} fontSize="6" fontFamily="monospace" letterSpacing="2" style={fade(2200)}>
+              FLOOR PLAN
+            </text>
+            <text x="1520" y="120" textAnchor="end" fill={text} fontSize="5.5" fontFamily="monospace" style={fade(2300)}>
+              DWG-FP01
             </text>
           </>
         )}
