@@ -8,6 +8,7 @@ import logoImage from "@/assets/logo-pe-mark.png";
 const navigation = [
   { name: "Home", href: "/" },
   { name: "Services", href: "/services" },
+  { name: "Boarding", href: "/boarding" },
   { name: "About", href: "/about" },
   { name: "Gallery", href: "/gallery" },
   { name: "Testimonials", href: "/testimonials" },
