@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useCelebrationSound } from "@/hooks/useCelebrationSound";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -80,8 +81,17 @@ const inquirySchema = z.object({
   horseBreed: z.string().max(100).optional(),
   numberOfHorses: z.string().max(20).optional(),
   
-  // Step 3: Goals
+  // Step 3: Goals (with conditional fields)
   goals: z.string().max(1000, "Please keep your goals under 1000 characters"),
+  arenaDimensions: z.string().max(100).optional(),
+  arenaFootingPreference: z.string().max(100).optional(),
+  arenaCovered: z.string().optional(),
+  barnStallCount: z.string().max(20).optional(),
+  barnFeatures: z.array(z.string()).optional(),
+  fenceLength: z.string().max(100).optional(),
+  fenceMaterial: z.string().optional(),
+  propertyAcreage: z.string().max(50).optional(),
+  existingStructures: z.string().max(500).optional(),
   
   // Step 4: Experience & Budget
   experienceLevel: z.string().min(1, "Please select your experience level"),
@@ -119,6 +129,32 @@ const BUDGET_RANGES = [
   { value: "100k-250k", label: "$100,000 - $250,000" },
   { value: "250k-plus", label: "$250,000+" },
   { value: "not-sure", label: "Not sure yet" },
+];
+
+// Conditional field options
+const ARENA_FOOTING_OPTIONS = [
+  { value: "sand", label: "Sand" },
+  { value: "fiber-sand", label: "Fiber-Sand Mix" },
+  { value: "rubber", label: "Rubber/Synthetic" },
+  { value: "not-sure", label: "Not sure – advise me" },
+];
+
+const BARN_FEATURE_OPTIONS = [
+  { value: "wash-rack", label: "Wash Rack" },
+  { value: "tack-room", label: "Tack Room" },
+  { value: "feed-room", label: "Feed/Hay Storage" },
+  { value: "office", label: "Office" },
+  { value: "bathroom", label: "Bathroom" },
+  { value: "loft", label: "Loft/Hay Loft" },
+];
+
+const FENCE_MATERIAL_OPTIONS = [
+  { value: "wood-post-rail", label: "Wood Post & Rail" },
+  { value: "pipe", label: "Pipe Fencing" },
+  { value: "no-climb", label: "No-Climb Wire" },
+  { value: "flex", label: "Flex Fencing" },
+  { value: "electric", label: "Electric" },
+  { value: "not-sure", label: "Not sure – advise me" },
 ];
 
 // Horseshoe confetti particle component
@@ -300,18 +336,31 @@ function StepIndicator({ currentStep }: { currentStep: number }) {
 
 export function InquiryForm() {
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   
+  // Read pre-selected services from URL params (e.g., ?services=arena-construction,fencing)
+  const preSelectedServices = searchParams.get("services")?.split(",").filter(Boolean) || [];
+
   const [formData, setFormData] = useState<Partial<InquiryFormData>>({
-    interestedServices: [],
+    interestedServices: preSelectedServices,
     horseName: "",
     horseAge: "",
     horseBreed: "",
     numberOfHorses: "",
     goals: "",
+    arenaDimensions: "",
+    arenaFootingPreference: "",
+    arenaCovered: "",
+    barnStallCount: "",
+    barnFeatures: [],
+    fenceLength: "",
+    fenceMaterial: "",
+    propertyAcreage: "",
+    existingStructures: "",
     experienceLevel: "",
     budgetRange: "",
     name: "",
@@ -320,6 +369,14 @@ export function InquiryForm() {
     preferredDate: undefined,
     additionalNotes: "",
   });
+
+  // Auto-advance past step 1 if services were pre-selected
+  useEffect(() => {
+    if (preSelectedServices.length > 0) {
+      setCurrentStep(2);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const updateField = <K extends keyof InquiryFormData>(
     field: K,
@@ -406,6 +463,19 @@ export function InquiryForm() {
     setIsSubmitting(true);
 
     try {
+      // Build conditional project details string from service-specific fields
+      const detailParts: string[] = [];
+      if (formData.arenaDimensions) detailParts.push(`Arena dimensions: ${formData.arenaDimensions}`);
+      if (formData.arenaCovered) detailParts.push(`Arena type: ${formData.arenaCovered}`);
+      if (formData.arenaFootingPreference) detailParts.push(`Footing: ${formData.arenaFootingPreference}`);
+      if (formData.barnStallCount) detailParts.push(`Stalls: ${formData.barnStallCount}`);
+      if (formData.barnFeatures?.length) detailParts.push(`Barn features: ${formData.barnFeatures.join(", ")}`);
+      if (formData.fenceLength) detailParts.push(`Fence length: ${formData.fenceLength}`);
+      if (formData.fenceMaterial) detailParts.push(`Fence material: ${formData.fenceMaterial}`);
+      if (formData.propertyAcreage) detailParts.push(`Acreage: ${formData.propertyAcreage}`);
+      if (formData.existingStructures) detailParts.push(`Existing structures: ${formData.existingStructures}`);
+      const combinedDetails = [detailParts.join("; "), formData.additionalNotes?.trim()].filter(Boolean).join("\n\n");
+
       const { error } = await supabase.from("inquiries").insert({
         name: formData.name?.trim() || "",
         email: formData.email?.trim() || "",
@@ -416,7 +486,7 @@ export function InquiryForm() {
         horse_age: formData.horseAge?.trim() || null,
         horse_breed: formData.horseBreed?.trim() || null,
         project_vision: formData.goals?.trim() || null,
-        project_details: formData.additionalNotes?.trim() || null,
+        project_details: combinedDetails || null,
         experience_level: formData.experienceLevel || null,
         budget_range: formData.budgetRange || null,
         preferred_start: formData.preferredDate 
@@ -494,6 +564,15 @@ export function InquiryForm() {
               horseBreed: "",
               numberOfHorses: "",
               goals: "",
+              arenaDimensions: "",
+              arenaFootingPreference: "",
+              arenaCovered: "",
+              barnStallCount: "",
+              barnFeatures: [],
+              fenceLength: "",
+              fenceMaterial: "",
+              propertyAcreage: "",
+              existingStructures: "",
               experienceLevel: "",
               budgetRange: "",
               name: "",
@@ -639,39 +718,197 @@ export function InquiryForm() {
           </div>
         )}
 
-        {/* Step 3: Goals */}
+        {/* Step 3: Goals + Conditional Fields */}
         {currentStep === 3 && (
           <div className="animate-fade-in">
             <h3 className="font-serif text-xl font-semibold text-foreground mb-2">
-              What are your goals for this project?
+              Project details & goals
             </h3>
             <p className="text-muted-foreground mb-6">
-              Describe what you hope to achieve with your new facility.
+              Tell us about your vision. Fields below adapt to your selected services.
             </p>
             
-            <div className="space-y-2">
-              <Label htmlFor="goals" className="text-base sm:text-sm">Project Goals *</Label>
-              <Textarea
-                id="goals"
-                value={formData.goals || ""}
-                onChange={(e) => updateField("goals", e.target.value)}
-                placeholder="Tell us about your vision... Are you building a training facility? Want to improve your current arena footing? Need better turnout space for your horses?"
-                rows={6}
-                maxLength={1000}
-                className={cn(
-                  "text-base sm:text-sm min-h-[150px]",
-                  errors.goals ? "border-destructive" : ""
-                )}
-              />
-              <div className="flex justify-between text-sm">
-                {errors.goals ? (
-                  <p className="text-destructive">{errors.goals}</p>
-                ) : (
-                  <span />
-                )}
-                <span className="text-muted-foreground">
-                  {formData.goals?.length || 0}/1000
-                </span>
+            <div className="space-y-6">
+              {/* Arena-specific fields */}
+              {formData.interestedServices?.includes("arena-construction") && (
+                <div className="p-4 rounded-lg border border-accent/20 bg-accent/5 space-y-4">
+                  <p className="text-sm font-medium text-accent">Arena Details</p>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-base sm:text-sm">Desired Dimensions</Label>
+                      <Input
+                        value={formData.arenaDimensions || ""}
+                        onChange={(e) => updateField("arenaDimensions", e.target.value)}
+                        placeholder="e.g., 60m × 20m, 200' × 100'"
+                        maxLength={100}
+                        className="h-12 sm:h-10 text-base sm:text-sm"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-base sm:text-sm">Covered or Open?</Label>
+                      <Select value={formData.arenaCovered} onValueChange={(v) => updateField("arenaCovered", v)}>
+                        <SelectTrigger className="h-12 sm:h-10 text-base sm:text-sm">
+                          <SelectValue placeholder="Select..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="covered">Covered Arena</SelectItem>
+                          <SelectItem value="open">Open Arena</SelectItem>
+                          <SelectItem value="not-sure">Not sure yet</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-base sm:text-sm">Footing Preference</Label>
+                    <Select value={formData.arenaFootingPreference} onValueChange={(v) => updateField("arenaFootingPreference", v)}>
+                      <SelectTrigger className="h-12 sm:h-10 text-base sm:text-sm">
+                        <SelectValue placeholder="Select footing type..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ARENA_FOOTING_OPTIONS.map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              )}
+
+              {/* Barn-specific fields */}
+              {formData.interestedServices?.includes("barn-construction") && (
+                <div className="p-4 rounded-lg border border-accent/20 bg-accent/5 space-y-4">
+                  <p className="text-sm font-medium text-accent">Barn Details</p>
+                  <div className="space-y-2">
+                    <Label className="text-base sm:text-sm">Number of Stalls</Label>
+                    <Input
+                      value={formData.barnStallCount || ""}
+                      onChange={(e) => updateField("barnStallCount", e.target.value)}
+                      placeholder="e.g., 6, 12, 20"
+                      maxLength={20}
+                      className="h-12 sm:h-10 text-base sm:text-sm"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-base sm:text-sm">Desired Features</Label>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      {BARN_FEATURE_OPTIONS.map((feat) => {
+                        const isChecked = formData.barnFeatures?.includes(feat.value);
+                        return (
+                          <button
+                            key={feat.value}
+                            type="button"
+                            onClick={() => {
+                              const current = formData.barnFeatures || [];
+                              const updated = isChecked
+                                ? current.filter((f) => f !== feat.value)
+                                : [...current, feat.value];
+                              updateField("barnFeatures", updated);
+                            }}
+                            className={cn(
+                              "px-3 py-2 rounded-md border text-sm transition-all active:scale-[0.98]",
+                              isChecked
+                                ? "border-accent bg-accent/10 text-foreground"
+                                : "border-border text-muted-foreground hover:border-accent/50"
+                            )}
+                          >
+                            {isChecked && <Check className="w-3 h-3 inline mr-1" />}
+                            {feat.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Fencing-specific fields */}
+              {formData.interestedServices?.includes("fencing") && (
+                <div className="p-4 rounded-lg border border-accent/20 bg-accent/5 space-y-4">
+                  <p className="text-sm font-medium text-accent">Fencing Details</p>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-base sm:text-sm">Approx. Length</Label>
+                      <Input
+                        value={formData.fenceLength || ""}
+                        onChange={(e) => updateField("fenceLength", e.target.value)}
+                        placeholder="e.g., 500m, 1500 feet"
+                        maxLength={100}
+                        className="h-12 sm:h-10 text-base sm:text-sm"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-base sm:text-sm">Preferred Material</Label>
+                      <Select value={formData.fenceMaterial} onValueChange={(v) => updateField("fenceMaterial", v)}>
+                        <SelectTrigger className="h-12 sm:h-10 text-base sm:text-sm">
+                          <SelectValue placeholder="Select material..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {FENCE_MATERIAL_OPTIONS.map((opt) => (
+                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Infrastructure / Renovations fields */}
+              {(formData.interestedServices?.includes("infrastructure") || formData.interestedServices?.includes("renovations")) && (
+                <div className="p-4 rounded-lg border border-accent/20 bg-accent/5 space-y-4">
+                  <p className="text-sm font-medium text-accent">
+                    {formData.interestedServices?.includes("infrastructure") ? "Site Details" : "Renovation Details"}
+                  </p>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-base sm:text-sm">Property Acreage</Label>
+                      <Input
+                        value={formData.propertyAcreage || ""}
+                        onChange={(e) => updateField("propertyAcreage", e.target.value)}
+                        placeholder="e.g., 5 acres, 20 hectares"
+                        maxLength={50}
+                        className="h-12 sm:h-10 text-base sm:text-sm"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-base sm:text-sm">Existing Structures</Label>
+                      <Input
+                        value={formData.existingStructures || ""}
+                        onChange={(e) => updateField("existingStructures", e.target.value)}
+                        placeholder="e.g., Old barn, partial arena"
+                        maxLength={500}
+                        className="h-12 sm:h-10 text-base sm:text-sm"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* General goals field (always shown) */}
+              <div className="space-y-2">
+                <Label htmlFor="goals" className="text-base sm:text-sm">Project Goals *</Label>
+                <Textarea
+                  id="goals"
+                  value={formData.goals || ""}
+                  onChange={(e) => updateField("goals", e.target.value)}
+                  placeholder="Tell us about your vision... Are you building a training facility? Want to improve your current arena footing? Need better turnout space for your horses?"
+                  rows={4}
+                  maxLength={1000}
+                  className={cn(
+                    "text-base sm:text-sm min-h-[120px]",
+                    errors.goals ? "border-destructive" : ""
+                  )}
+                />
+                <div className="flex justify-between text-sm">
+                  {errors.goals ? (
+                    <p className="text-destructive">{errors.goals}</p>
+                  ) : (
+                    <span />
+                  )}
+                  <span className="text-muted-foreground">
+                    {formData.goals?.length || 0}/1000
+                  </span>
+                </div>
               </div>
             </div>
           </div>
