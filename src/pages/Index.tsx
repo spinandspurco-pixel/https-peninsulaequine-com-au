@@ -22,6 +22,9 @@ import spurDetail from "@/assets/spur-detail.png";
 import stoneworkBW from "@/assets/aberdeen-stonework-bw.jpg";
 import logoPeMark from "@/assets/logo-pe-mark.png";
 import blueprintFacility from "@/assets/blueprint-facility.png";
+import blueprintBarn from "@/assets/blueprint-barn.png";
+import blueprintDetail from "@/assets/blueprint-detail.png";
+import { BlueprintDivider } from "@/components/BlueprintDivider";
 
 // Import videos for hero rotation
 import slowMo1 from "@/assets/videos/slow-mo-1.mp4";
@@ -255,8 +258,10 @@ function MissionSection() {
   const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation<HTMLDivElement>();
 
   return (
-    <section className="section-padding bg-card overflow-hidden">
-      <div className="section-container">
+    <section className="section-padding bg-card overflow-hidden relative">
+      <BlueprintBackground image={blueprintBarn} opacity={0.04} direction="right-to-left" duration={1800} />
+      <BlueprintLineOverlay variant="detail" color="dark" />
+      <div className="section-container relative z-10">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
           {/* Text Content */}
           <div className="lg:col-span-5">
@@ -485,8 +490,9 @@ function TestimonialsSection() {
   const featured = featuredTestimonials[0];
 
   return (
-    <section className="section-padding bg-card overflow-hidden">
-      <div className="section-container">
+    <section className="section-padding bg-card overflow-hidden relative">
+      <BlueprintBackground image={blueprintDetail} opacity={0.035} direction="bottom-to-top" duration={1600} />
+      <div className="section-container relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <AnimatedDivider className="mx-auto mb-8" />
           
@@ -558,11 +564,14 @@ export default function Index() {
     <Layout>
       <HeroSection />
       <IntroSection />
+      <BlueprintDivider variant="structural" />
       <MissionSection />
       <MajorEventsSection />
       <MajorEventsVideoSection />
+      <BlueprintDivider variant="elevation" />
       <ServicesSection />
       <GallerySection />
+      <BlueprintDivider variant="grid" />
       <TestimonialsSection />
       <CTASection />
     </Layout>

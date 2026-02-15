@@ -14,6 +14,8 @@ import ciroWithHorse from "@/assets/ciro-with-horse.png";
 import ciroWide from "@/assets/ciro-wide.png";
 import horseAction from "@/assets/horse-action.png";
 import blueprintDetail from "@/assets/blueprint-detail.png";
+import blueprintBarn from "@/assets/blueprint-barn.png";
+import { BlueprintDivider } from "@/components/BlueprintDivider";
 
 // Import join-up videos
 import ciroJoinUp1 from "@/assets/videos/ciro-bareback-join-up.mp4";
@@ -102,8 +104,9 @@ function ValuesSection() {
   });
 
   return (
-    <section className="section-padding bg-card">
-      <div className="section-container">
+    <section className="section-padding bg-card relative">
+      <BlueprintBackground image={blueprintBarn} opacity={0.035} direction="left-to-right" duration={2000} />
+      <div className="section-container relative z-10">
         <div 
           ref={headerRef}
           className={`text-center max-w-2xl mx-auto mb-16 transition-all duration-700 ${
@@ -366,10 +369,12 @@ export default function About() {
     <Layout>
       <PageHeader />
       <CiroSection />
+      <BlueprintDivider variant="elevation" />
       <NaturalHorsemanshipSection />
       <ValuesSection />
       <FamilySection />
       <ImageBreak />
+      <BlueprintDivider variant="structural" />
       <StorySection />
       <CTASection />
     </Layout>
