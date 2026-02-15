@@ -2,6 +2,7 @@ import { useParallax } from "@/hooks/useParallax";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
+import { siteConfig } from "@/data/content";
 import logoPeMark from "@/assets/logo-pe-mark.png";
 import blueprintElevation from "@/assets/blueprint-elevation.png";
 import blueprintFacility from "@/assets/blueprint-facility.png";
@@ -57,14 +58,18 @@ export function PageHeader({ title, description, backgroundImage, dividerVariant
       )}
       
       <div className="section-container relative z-10">
-        <div className="max-w-3xl">
-          <div className="flex items-center gap-4 mb-6">
-            <img src={logoPeMark} alt="" className="w-10 h-10 sm:w-12 sm:h-12 object-contain drop-shadow-[0_2px_12px_rgba(255,255,255,0.15)]" />
-            <div 
-              className="w-12 h-0.5 bg-accent transition-all duration-700"
-              style={{ transform: `translateX(${offset * -0.1}px)` }}
+        <div className="max-w-3xl mx-auto text-center">
+          {/* Primary logo visual */}
+          <div className="mb-6">
+            <img 
+              src={logoPeMark} 
+              alt="Peninsula Equine" 
+              className="w-20 h-20 sm:w-24 sm:h-24 mx-auto object-contain drop-shadow-[0_2px_20px_rgba(255,255,255,0.2)]"
             />
           </div>
+          <p className="text-primary-foreground/50 uppercase tracking-[0.2em] text-xs sm:text-sm mb-6">
+            {siteConfig.tagline}
+          </p>
           <h1 
             className="heading-display mb-6 transition-all duration-700"
             style={{ 
