@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users } from "lucide-react";
+import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, Play, X } from "lucide-react";
 import { BookingWidget } from "@/components/BookingWidget";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
@@ -34,6 +34,7 @@ import slowMo1 from "@/assets/videos/slow-mo-1.mp4";
 import slowMo2 from "@/assets/videos/slow-mo-2.mp4";
 import slowMo3 from "@/assets/videos/slow-mo-3.mp4";
 import ciroJoinUp from "@/assets/videos/ciro-bareback-join-up.mp4";
+import ciroJoinUp2 from "@/assets/videos/ciro-bareback-join-up-2.mp4";
 
 // Featured services for homepage
 const featuredServices = services.slice(0, 4);
@@ -618,6 +619,149 @@ function ClientStorySection() {
   );
 }
 
+function VideoTestimonialSpotlight() {
+  const [lightboxVideo, setLightboxVideo] = useState<string | null>(null);
+  const lightboxRef = useRef<HTMLVideoElement>(null);
+  const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
+
+  const spotlights = [
+    {
+      video: ciroJoinUp,
+      testimonial: testimonials[0],
+      caption: "Arena built for Sarah Mitchell, Woodside",
+    },
+    {
+      video: ciroJoinUp2,
+      testimonial: testimonials[3],
+      caption: "Private estate project, Los Altos Hills",
+    },
+  ];
+
+  // Close lightbox on Escape
+  useEffect(() => {
+    if (!lightboxVideo) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setLightboxVideo(null); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [lightboxVideo]);
+
+  // Auto-play lightbox video
+  useEffect(() => {
+    if (lightboxVideo && lightboxRef.current) {
+      lightboxRef.current.play().catch(() => {});
+    }
+  }, [lightboxVideo]);
+
+  return (
+    <>
+      <section ref={sectionRef} className="section-padding bg-primary text-primary-foreground overflow-hidden relative">
+        <BlueprintBackground image={blueprintBarn} opacity={0.04} direction="right-to-left" duration={2000} parallaxSpeed={0.06} />
+        <BlueprintLineOverlay variant="barn" color="light" />
+
+        <div className="section-container relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <AnimatedDivider className="mx-auto mb-8 bg-accent" />
+            <SectionTransition variant="fade-up" delay={100}>
+              <p className="text-primary-foreground/60 uppercase tracking-[0.2em] text-sm mb-4">
+                Client Spotlights
+              </p>
+            </SectionTransition>
+            <SectionTransition variant="blur-in" delay={200}>
+              <h2 className="heading-editorial mb-4">
+                See the Results
+              </h2>
+            </SectionTransition>
+            <SectionTransition variant="fade-up" delay={300}>
+              <p className="text-primary-foreground/70">
+                Hear from the people who trust us with their equine facilities.
+              </p>
+            </SectionTransition>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+            {spotlights.map((spot, i) => (
+              <div
+                key={i}
+                className={`group transition-all duration-700 ${
+                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                }`}
+                style={{ transitionDelay: `${i * 150}ms` }}
+              >
+                {/* Video thumbnail with play overlay */}
+                <button
+                  onClick={() => setLightboxVideo(spot.video)}
+                  className="relative w-full aspect-video rounded-lg overflow-hidden bg-primary-foreground/10 mb-5 cursor-pointer group/thumb"
+                  aria-label={`Play video: ${spot.caption}`}
+                >
+                  <video
+                    src={spot.video}
+                    muted
+                    playsInline
+                    preload="metadata"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover/thumb:scale-105"
+                  />
+                  {/* Play button overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center bg-primary/30 group-hover/thumb:bg-primary/20 transition-colors duration-300">
+                    <div className="w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center shadow-lg transition-transform duration-300 group-hover/thumb:scale-110">
+                      <Play className="w-7 h-7 text-accent-foreground ml-1" fill="currentColor" />
+                    </div>
+                  </div>
+                  <p className="absolute bottom-3 left-3 text-xs text-primary-foreground/80 bg-primary/60 backdrop-blur-sm px-2 py-1 rounded">
+                    {spot.caption}
+                  </p>
+                </button>
+
+                {/* Quote */}
+                <div className="flex gap-1 mb-3">
+                  {[...Array(spot.testimonial.rating)].map((_, j) => (
+                    <svg key={j} className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <blockquote className="font-serif text-lg text-primary-foreground/90 italic leading-relaxed mb-3">
+                  "{spot.testimonial.quote.slice(0, 120)}…"
+                </blockquote>
+                <p className="font-serif font-semibold text-primary-foreground text-sm">{spot.testimonial.name}</p>
+                <p className="text-primary-foreground/60 text-xs">{spot.testimonial.role}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Video Lightbox */}
+      {lightboxVideo && (
+        <div
+          className="fixed inset-0 z-[9999] bg-primary/95 flex items-center justify-center p-4 animate-fade-in"
+          onClick={() => setLightboxVideo(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Video lightbox"
+        >
+          <button
+            className="absolute top-6 right-6 text-primary-foreground/80 hover:text-primary-foreground z-10"
+            onClick={() => setLightboxVideo(null)}
+            aria-label="Close video (Escape)"
+          >
+            <X className="h-8 w-8" />
+          </button>
+          <div className="max-w-4xl w-full" onClick={(e) => e.stopPropagation()}>
+            <video
+              ref={lightboxRef}
+              src={lightboxVideo}
+              controls
+              autoPlay
+              playsInline
+              className="w-full rounded-lg shadow-2xl"
+            />
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 function TestimonialsSection() {
   const featured = featuredTestimonials[0];
 
@@ -784,6 +928,7 @@ export default function Index() {
         <GallerySection />
         <ClientStorySection />
         <BlueprintDivider variant="grid" />
+        <VideoTestimonialSpotlight />
         <TestimonialsSection />
         <CTASection />
       </Layout>
