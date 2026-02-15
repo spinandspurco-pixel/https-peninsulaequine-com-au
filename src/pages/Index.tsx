@@ -41,10 +41,11 @@ const featuredTestimonials = testimonials.slice(0, 3);
 // Hero videos for rotation
 const heroVideos = [slowMo1, ciroJoinUp, slowMo2, slowMo3];
 
-function HeroSection() {
+function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [bannerLoaded, setBannerLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -145,23 +146,47 @@ function HeroSection() {
       >
         <div className="divider mx-auto mb-8 bg-accent/80" />
         
-        {/* P.E Logo Mark as primary hero element */}
-        <div className="mb-8">
-          <div className="w-32 h-32 sm:w-44 sm:h-44 md:w-52 md:h-52 mx-auto transition-transform duration-500 hover:scale-105">
+        {variant === "banner" ? (
+          /* PE Banner variant — loads async, fades in without blocking */
+          <div className="mb-8">
             <img
-              src={logoPeMark}
-              alt="Peninsula Equine"
-              className="w-full h-full object-contain drop-shadow-[0_2px_20px_rgba(255,255,255,0.2)]"
+              src={peBanner}
+              alt="Peninsula Equine — From Dirt to Dynasty"
+              loading="eager"
+              decoding="async"
+              onLoad={() => setBannerLoaded(true)}
+              className={`w-[280px] sm:w-[400px] md:w-[520px] lg:w-[600px] mx-auto h-auto object-contain drop-shadow-[0_4px_30px_rgba(0,0,0,0.3)] transition-all duration-700 ${
+                bannerLoaded ? "opacity-100 scale-100" : "opacity-0 scale-95"
+              }`}
             />
           </div>
-        </div>
+        ) : (
+          /* Default logo mark variant */
+          <>
+            <div className="mb-8">
+              <div className="w-32 h-32 sm:w-44 sm:h-44 md:w-52 md:h-52 mx-auto transition-transform duration-500 hover:scale-105">
+                <img
+                  src={logoPeMark}
+                  alt="Peninsula Equine"
+                  className="w-full h-full object-contain drop-shadow-[0_2px_20px_rgba(255,255,255,0.2)]"
+                />
+              </div>
+            </div>
 
-        <p className="font-serif text-xl sm:text-2xl md:text-3xl text-white tracking-[0.12em] uppercase font-normal text-shadow-editorial mb-4">
-          Peninsula Equine
-        </p>
-        <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mb-16">
-          Facility Construction • Training • Excellence
-        </p>
+            <p className="font-serif text-xl sm:text-2xl md:text-3xl text-white tracking-[0.12em] uppercase font-normal text-shadow-editorial mb-4">
+              Peninsula Equine
+            </p>
+            <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mb-16">
+              Facility Construction • Training • Excellence
+            </p>
+          </>
+        )}
+
+        {variant === "banner" && (
+          <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mt-4 mb-16">
+            Facility Construction • Training • Excellence
+          </p>
+        )}
       </div>
 
       {/* Scroll indicator with fade on scroll */}
