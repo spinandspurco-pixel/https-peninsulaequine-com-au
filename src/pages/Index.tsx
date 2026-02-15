@@ -21,10 +21,12 @@ import ciroWide from "@/assets/ciro-wide.png";
 import spurDetail from "@/assets/spur-detail.png";
 import stoneworkBW from "@/assets/aberdeen-stonework-bw.jpg";
 import logoPeMark from "@/assets/logo-pe-mark.png";
+import peBanner from "@/assets/pe-banner.png";
 import blueprintFacility from "@/assets/blueprint-facility.png";
 import blueprintBarn from "@/assets/blueprint-barn.png";
 import blueprintDetail from "@/assets/blueprint-detail.png";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
+import { LoadingSplash } from "@/components/LoadingSplash";
 
 // Import videos for hero rotation
 import slowMo1 from "@/assets/videos/slow-mo-1.mp4";
@@ -559,21 +561,58 @@ function CTASection() {
   );
 }
 
-export default function Index() {
+function BannerDivider() {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.3 });
+  
   return (
-    <Layout>
-      <HeroSection />
-      <IntroSection />
-      <BlueprintDivider variant="structural" />
-      <MissionSection />
-      <MajorEventsSection />
-      <MajorEventsVideoSection />
-      <BlueprintDivider variant="elevation" />
-      <ServicesSection />
-      <GallerySection />
-      <BlueprintDivider variant="grid" />
-      <TestimonialsSection />
-      <CTASection />
-    </Layout>
+    <section
+      ref={ref}
+      className="relative py-16 sm:py-24 overflow-hidden bg-primary"
+      aria-label="From Dirt to Dynasty"
+    >
+      {/* Dark vignette */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsl(var(--primary)/0.7)_100%)]" />
+      
+      <div
+        className="relative z-10 flex justify-center px-4"
+        style={{
+          opacity: isVisible ? 1 : 0,
+          transform: isVisible ? "translateY(0) scale(1)" : "translateY(12px) scale(0.97)",
+          transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
+        }}
+      >
+        <img
+          src={peBanner}
+          alt="Peninsula Equine — From Dirt to Dynasty"
+          className="w-[260px] sm:w-[380px] md:w-[480px] lg:w-[560px] h-auto object-contain drop-shadow-[0_4px_30px_rgba(0,0,0,0.25)]"
+          loading="lazy"
+        />
+      </div>
+    </section>
+  );
+}
+
+export default function Index() {
+  const [splashDone, setSplashDone] = useState(false);
+
+  return (
+    <>
+      {!splashDone && <LoadingSplash minDuration={2400} onComplete={() => setSplashDone(true)} />}
+      <Layout>
+        <HeroSection />
+        <BannerDivider />
+        <IntroSection />
+        <BlueprintDivider variant="structural" />
+        <MissionSection />
+        <MajorEventsSection />
+        <MajorEventsVideoSection />
+        <BlueprintDivider variant="elevation" />
+        <ServicesSection />
+        <GallerySection />
+        <BlueprintDivider variant="grid" />
+        <TestimonialsSection />
+        <CTASection />
+      </Layout>
+    </>
   );
 }
