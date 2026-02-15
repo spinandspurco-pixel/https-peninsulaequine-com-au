@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface BlueprintLineOverlayProps {
@@ -39,6 +39,30 @@ export function BlueprintLineOverlay({
     return () => observer.disconnect();
   }, [prefersReducedMotion]);
 
+  // Scroll-based parallax for depth
+  const [driftY, setDriftY] = useState(0);
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          if (ref.current) {
+            const rect = ref.current.getBoundingClientRect();
+            const vh = window.innerHeight;
+            const offset = ((rect.top + rect.height / 2) - vh / 2) * 0.04;
+            setDriftY(offset);
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [prefersReducedMotion]);
+
   const s = color === "light"
     ? "hsl(42 30% 92% / 0.12)"
     : "hsl(30 15% 18% / 0.07)";
@@ -75,6 +99,10 @@ export function BlueprintLineOverlay({
       viewBox="0 0 1200 800"
       preserveAspectRatio="none"
       aria-hidden="true"
+      style={{
+        transform: prefersReducedMotion ? "none" : `translateY(${driftY}px)`,
+        transition: "transform 0.2s ease-out",
+      }}
     >
       <defs>
         <marker id="ov-arr-r" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">

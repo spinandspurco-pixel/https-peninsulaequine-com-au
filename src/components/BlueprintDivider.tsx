@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface BlueprintDividerProps {
@@ -17,6 +17,8 @@ export function BlueprintDivider({
 }: BlueprintDividerProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [mouseX, setMouseX] = useState(0.5); // normalised 0-1
+  const [scrollProgress, setScrollProgress] = useState(0);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -42,6 +44,36 @@ export function BlueprintDivider({
     return () => observer.disconnect();
   }, [prefersReducedMotion]);
 
+  // Mouse tracking for glow spotlight
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (prefersReducedMotion) return;
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    setMouseX((e.clientX - rect.left) / rect.width);
+  }, [prefersReducedMotion]);
+
+  // Scroll-based parallax drift
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          if (ref.current) {
+            const rect = ref.current.getBoundingClientRect();
+            const vh = window.innerHeight;
+            const progress = 1 - (rect.top / vh);
+            setScrollProgress(Math.max(0, Math.min(1, progress)));
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [prefersReducedMotion]);
+
   const stroke = "hsl(30 15% 45% / 0.18)";
   const strokeFaint = "hsl(30 15% 45% / 0.10)";
   const text = "hsl(30 15% 45% / 0.25)";
@@ -63,16 +95,44 @@ export function BlueprintDivider({
       : `opacity 0.7s ease-out ${delay}ms, transform 0.7s ease-out ${delay}ms`,
   });
 
+  // Parallax horizontal drift based on scroll
+  const driftX = prefersReducedMotion ? 0 : (scrollProgress - 0.5) * 12;
+
   return (
     <div
       ref={ref}
-      className={`relative w-full h-20 sm:h-28 md:h-32 overflow-hidden ${className}`}
+      className={`relative w-full h-20 sm:h-28 md:h-32 overflow-hidden group ${className}`}
       aria-hidden="true"
+      onMouseMove={handleMouseMove}
     >
+      {/* Mouse-tracking spotlight glow */}
+      {!prefersReducedMotion && (
+        <div
+          className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          style={{
+            background: `radial-gradient(circle 200px at ${mouseX * 100}% 50%, hsl(42 60% 50% / 0.06), transparent 70%)`,
+          }}
+        />
+      )}
+
+      {/* Animated scan line */}
+      {!prefersReducedMotion && isVisible && (
+        <div
+          className="absolute top-0 h-full w-[2px] pointer-events-none animate-blueprint-scan"
+          style={{
+            background: "linear-gradient(to bottom, transparent, hsl(42 60% 50% / 0.12), transparent)",
+          }}
+        />
+      )}
+
       <svg
         className="absolute inset-0 w-full h-full"
         viewBox="0 0 1600 120"
         preserveAspectRatio="none"
+        style={{
+          transform: prefersReducedMotion ? "none" : `translateX(${driftX}px)`,
+          transition: "transform 0.3s ease-out",
+        }}
       >
         {/* Shared: arrowhead markers */}
         <defs>
