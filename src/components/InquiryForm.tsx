@@ -12,6 +12,7 @@ import {
   CalendarIcon,
   Check
 } from "lucide-react";
+import { FileUploadZone, type UploadedFile } from "@/components/FileUploadZone";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -341,7 +342,7 @@ export function InquiryForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  
+  const [attachments, setAttachments] = useState<UploadedFile[]>([]);
   // Read pre-selected services from URL params (e.g., ?services=arena-construction,fencing)
   const preSelectedServices = searchParams.get("services")?.split(",").filter(Boolean) || [];
 
@@ -492,6 +493,7 @@ export function InquiryForm() {
         preferred_start: formData.preferredDate 
           ? format(formData.preferredDate, "yyyy-MM-dd") 
           : null,
+        attachment_urls: attachments.map((a) => a.url),
       });
 
       if (error) throw error;
@@ -581,6 +583,7 @@ export function InquiryForm() {
               preferredDate: undefined,
               additionalNotes: "",
             });
+            setAttachments([]);
           }}
           variant="outline"
         >
@@ -909,6 +912,15 @@ export function InquiryForm() {
                     {formData.goals?.length || 0}/1000
                   </span>
                 </div>
+              </div>
+
+              {/* File upload zone */}
+              <div className="space-y-2">
+                <Label className="text-base sm:text-sm">Attachments (optional)</Label>
+                <p className="text-xs text-muted-foreground mb-2">
+                  Upload site photos, sketches, inspiration images, or PDFs to help us understand your project.
+                </p>
+                <FileUploadZone files={attachments} onFilesChange={setAttachments} />
               </div>
             </div>
           </div>
