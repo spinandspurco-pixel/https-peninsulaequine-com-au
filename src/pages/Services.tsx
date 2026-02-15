@@ -634,6 +634,80 @@ function LessonsSection() {
   );
 }
 
+function PricingGridSection() {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>();
+  const { containerRef, visibleItems } = useStaggeredAnimation(services.length);
+
+  return (
+    <section className="section-padding bg-card relative overflow-hidden">
+      <BlueprintBackground image={blueprintFacility} opacity={0.03} direction="bottom-to-top" duration={2400} parallaxSpeed={0.08} />
+      <BlueprintLineOverlay variant="dimensions" color="dark" />
+
+      <div className="section-container relative z-10">
+        <div
+          ref={headerRef}
+          className={`text-center max-w-3xl mx-auto mb-12 transition-all duration-700 ${
+            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
+          <div className={`w-16 h-0.5 bg-accent mx-auto mb-6 transition-all duration-500 delay-100 ${
+            headerVisible ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"
+          }`} />
+          <h2 className="heading-section text-foreground mb-4">Investment Guide</h2>
+          <p className="text-muted-foreground">
+            Every project is custom-quoted after an on-site consultation. Below are starting points to help you plan your budget.
+          </p>
+        </div>
+
+        <div ref={containerRef} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {services.map((service, index) => (
+            <div
+              key={service.id}
+              className={`group relative rounded-xl border border-border bg-background p-6 card-hover-glow transition-all duration-700 ${
+                visibleItems[index] ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              }`}
+            >
+              <div className="mb-4">
+                <h3 className="font-serif text-lg font-semibold text-foreground mb-1 transition-colors duration-300 group-hover:text-accent">
+                  {service.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {service.shortDescription}
+                </p>
+              </div>
+
+              <div className="mb-6">
+                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">Starting at</p>
+                <p className="font-serif text-3xl font-bold text-accent">{service.startingPrice}</p>
+              </div>
+
+              <ul className="space-y-2 mb-6">
+                {service.features.slice(0, 3).map((feature, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-foreground/80">
+                    <CheckCircle className="h-4 w-4 text-accent mt-0.5 shrink-0" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                <Link to={`/contact?service=${service.id}`}>
+                  Get a Quote
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+          ))}
+        </div>
+
+        <p className="text-center text-xs text-muted-foreground mt-8">
+          All pricing is indicative. Final quotes are provided after a free on-site consultation.
+        </p>
+      </div>
+    </section>
+  );
+}
+
 function CTASection() {
   return (
     <ParallaxCTA
@@ -660,6 +734,8 @@ export default function Services() {
           <ServiceCard key={service.id} service={service} index={index} />
         ))}
       </section>
+
+      <PricingGridSection />
 
       <ConstructionProcessSection />
 
