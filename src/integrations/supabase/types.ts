@@ -91,6 +91,7 @@ export type Database = {
       }
       inquiries: {
         Row: {
+          attachment_urls: string[] | null
           budget_range: string | null
           created_at: string
           email: string
@@ -111,6 +112,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          attachment_urls?: string[] | null
           budget_range?: string | null
           created_at?: string
           email: string
@@ -131,6 +133,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          attachment_urls?: string[] | null
           budget_range?: string | null
           created_at?: string
           email?: string
