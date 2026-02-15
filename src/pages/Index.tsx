@@ -609,12 +609,47 @@ function BannerDivider() {
   );
 }
 
+function FloatingBannerWatermark({ visible }: { visible: boolean }) {
+  const [show, setShow] = useState(true);
+
+  useEffect(() => {
+    if (!visible) return;
+    // Linger for 3s after splash completes, then fade out
+    const timer = setTimeout(() => setShow(false), 3000);
+    return () => clearTimeout(timer);
+  }, [visible]);
+
+  if (!visible || !show) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] pointer-events-none flex items-center justify-center"
+      style={{
+        opacity: show ? 0.07 : 0,
+        transition: "opacity 1.5s ease-out",
+      }}
+    >
+      <img
+        src={peBanner}
+        alt=""
+        aria-hidden="true"
+        className="w-[70vw] max-w-[700px] h-auto object-contain select-none"
+        style={{
+          filter: "grayscale(0.3) brightness(1.4)",
+          animation: "fade-out 1.5s ease-out 2.8s forwards",
+        }}
+      />
+    </div>
+  );
+}
+
 export default function Index() {
   const [splashDone, setSplashDone] = useState(false);
 
   return (
     <>
       {!splashDone && <LoadingSplash minDuration={2400} onComplete={() => setSplashDone(true)} />}
+      <FloatingBannerWatermark visible={splashDone} />
       <Layout>
         <HeroSection />
         <BannerDivider />
