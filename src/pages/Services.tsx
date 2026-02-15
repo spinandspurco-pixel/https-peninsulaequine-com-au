@@ -364,12 +364,20 @@ function ConstructionLightbox({
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-roledescription="Image lightbox"
+      aria-label={`${step.title} — Step ${currentIndex + 1} of ${total}`}
       className="fixed inset-0 z-50 bg-primary/95 flex items-center justify-center p-4"
       onClick={onClose}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
+      {/* Live region for screen reader announcements */}
+      <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+        Step {currentIndex + 1} of {total}: {step.title} — {step.description}
+      </div>
       {/* Swipe indicator for first-time users */}
       <SwipeIndicator show={!!step && total > 1} />
 

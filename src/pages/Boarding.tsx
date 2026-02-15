@@ -25,14 +25,14 @@ import blueprintElevation from "@/assets/blueprint-elevation.png";
 // ── Data ──────────────────────────────────────────────
 
 const AMENITIES = [
-  { image: aberdeenStalls, title: "Spacious Stalls", description: "Oversized stalls with rubber matting and premium bedding" },
-  { image: aberdeenAisle, title: "Wide Aisles", description: "Well-lit, clean aisles for safe horse handling" },
-  { image: aberdeenBarnInterior, title: "Barn Interior", description: "Natural ventilation and abundant natural light" },
-  { image: aberdeenStallsDetail, title: "Stall Details", description: "Heavy-duty hardware and quality timber finishes" },
-  { image: qldFacilityCourtyard, title: "Courtyard Area", description: "Covered wash bays and grooming areas" },
-  { image: aberdeenDeck, title: "Viewing Deck", description: "Elevated viewing for owners and visitors" },
-  { image: qldFacilityExterior1, title: "Paddock Turnout", description: "Safe, well-fenced individual and group paddocks" },
-  { image: aberdeenExterior, title: "Facility Grounds", description: "Landscaped grounds with secure perimeter fencing" },
+  { image: aberdeenStalls, title: "Spacious Stalls", description: "Oversized stalls with rubber matting and premium bedding", alt: "Interior view of oversized horse stalls with rubber matting, premium timber partitions, and ample natural light" },
+  { image: aberdeenAisle, title: "Wide Aisles", description: "Well-lit, clean aisles for safe horse handling", alt: "Clean, wide barn aisle with natural stone flooring and bright overhead lighting for safe horse handling" },
+  { image: aberdeenBarnInterior, title: "Barn Interior", description: "Natural ventilation and abundant natural light", alt: "Spacious barn interior showing high ceilings with natural ventilation, chandeliers, and stained timber finishes" },
+  { image: aberdeenStallsDetail, title: "Stall Details", description: "Heavy-duty hardware and quality timber finishes", alt: "Close-up of heavy-duty stall door hardware, sliding gate mechanism, and hand-finished timber detailing" },
+  { image: qldFacilityCourtyard, title: "Courtyard Area", description: "Covered wash bays and grooming areas", alt: "Covered courtyard area featuring wash bays and grooming stations surrounded by landscaped grounds" },
+  { image: aberdeenDeck, title: "Viewing Deck", description: "Elevated viewing for owners and visitors", alt: "Elevated timber viewing deck overlooking paddocks and arena, designed for owners and visitors" },
+  { image: qldFacilityExterior1, title: "Paddock Turnout", description: "Safe, well-fenced individual and group paddocks", alt: "Panoramic view of well-fenced individual and group paddocks with safe post-and-rail boundaries" },
+  { image: aberdeenExterior, title: "Facility Grounds", description: "Landscaped grounds with secure perimeter fencing", alt: "Exterior view of the completed facility showing landscaped grounds and secure perimeter fencing" },
 ];
 
 const CARE_STANDARDS = [
@@ -138,13 +138,19 @@ function AmenitiesGallery() {
               }`}
             >
               <div className="aspect-[4/3] overflow-hidden relative">
+                {/* Skeleton placeholder */}
+                <div className="absolute inset-0 bg-muted animate-pulse" aria-hidden="true" />
                 <img
                   src={item.image}
-                  alt={item.title}
-                  className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-110"
+                  alt={item.alt}
+                  className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-110 relative z-[1]"
                   loading="lazy"
+                  onLoad={(e) => {
+                    const skeleton = (e.currentTarget.parentElement?.querySelector('.animate-pulse') as HTMLElement);
+                    if (skeleton) skeleton.style.display = 'none';
+                  }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-[2]" />
               </div>
               <div className="p-4 bg-background">
                 <h3 className="font-serif text-sm font-semibold text-foreground mb-1 transition-colors duration-300 group-hover:text-accent">
