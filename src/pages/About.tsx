@@ -1,13 +1,15 @@
+import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Play, Pause, Quote, Star } from "lucide-react";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { FamilyVideoCarousel } from "@/components/FamilyVideoCarousel";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
-import { aboutCiro } from "@/data/content";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { SectionTransition } from "@/components/SectionTransition";
+import { aboutCiro, testimonials } from "@/data/content";
+import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
 
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
@@ -23,6 +25,23 @@ import { BlueprintDivider } from "@/components/BlueprintDivider";
 // Import join-up videos
 import ciroJoinUp1 from "@/assets/videos/ciro-bareback-join-up.mp4";
 import ciroJoinUp2 from "@/assets/videos/ciro-bareback-join-up-2.mp4";
+
+// Video testimonials data — pairs testimonial quotes with related project footage
+const VIDEO_TESTIMONIALS = [
+  {
+    testimonial: testimonials[0], // Sarah Mitchell
+    video: ciroJoinUp1,
+    poster: undefined as string | undefined,
+  },
+  {
+    testimonial: testimonials[3], // Tom & Linda Hartley
+    video: ciroJoinUp2,
+    poster: undefined as string | undefined,
+  },
+];
+
+// Featured written testimonials (the rest)
+const FEATURED_WRITTEN = [testimonials[1], testimonials[2], testimonials[4], testimonials[5]];
 
 function PageHeader() {
   const { ref: parallaxRef, offset } = useParallax<HTMLElement>({ speed: 0.3 });
@@ -366,6 +385,141 @@ function FamilySection() {
   );
 }
 
+function VideoTestimonialCard({ item, index }: { item: typeof VIDEO_TESTIMONIALS[0]; index: number }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    if (isPlaying) {
+      videoRef.current.pause();
+    } else {
+      videoRef.current.play().catch(() => {});
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  return (
+    <div className="group rounded-xl overflow-hidden border border-border bg-card card-hover-glow">
+      {/* Video */}
+      <div className="relative aspect-video bg-muted cursor-pointer" onClick={togglePlay}>
+        <video
+          ref={videoRef}
+          className="w-full h-full object-cover"
+          muted
+          playsInline
+          preload="metadata"
+          loop
+          onEnded={() => setIsPlaying(false)}
+        >
+          <source src={item.video} type="video/mp4" />
+        </video>
+        {/* Play/pause overlay */}
+        <div className={`absolute inset-0 flex items-center justify-center bg-primary/30 transition-opacity duration-300 ${
+          isPlaying ? "opacity-0 hover:opacity-100" : "opacity-100"
+        }`}>
+          <div className="w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center shadow-lg transition-transform duration-300 group-hover:scale-110">
+            {isPlaying ? (
+              <Pause className="h-6 w-6 text-accent-foreground" />
+            ) : (
+              <Play className="h-6 w-6 text-accent-foreground ml-1" />
+            )}
+          </div>
+        </div>
+      </div>
+      {/* Quote card */}
+      <div className="p-6">
+        <Quote className="h-5 w-5 text-accent/40 mb-3" />
+        <p className="text-foreground text-sm leading-relaxed italic mb-4 line-clamp-3">
+          "{item.testimonial.quote}"
+        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="font-serif font-semibold text-foreground text-sm">{item.testimonial.name}</p>
+            <p className="text-xs text-muted-foreground">{item.testimonial.role}</p>
+          </div>
+          <div className="flex gap-0.5">
+            {Array.from({ length: item.testimonial.rating }).map((_, i) => (
+              <Star key={i} className="h-3.5 w-3.5 fill-accent text-accent" />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TestimonialsGallerySection() {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>();
+  const { containerRef, visibleItems } = useStaggeredAnimation(FEATURED_WRITTEN.length);
+
+  return (
+    <section className="section-padding bg-background relative overflow-hidden">
+      <BlueprintBackground image={blueprintDetail} opacity={0.02} direction="left-to-right" duration={2200} parallaxSpeed={0.06} />
+      <div className="section-container relative z-10">
+        {/* Header */}
+        <div
+          ref={headerRef}
+          className={`text-center max-w-3xl mx-auto mb-14 transition-all duration-700 ${
+            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
+          <div className={`w-16 h-0.5 bg-accent mx-auto mb-6 transition-all duration-500 delay-100 ${
+            headerVisible ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"
+          }`} />
+          <h2 className="heading-section text-foreground mb-4">What Our Clients Say</h2>
+          <p className="text-muted-foreground">
+            Hear directly from horse owners, trainers, and facility managers who've trusted us with their projects.
+          </p>
+        </div>
+
+        {/* Video testimonials row */}
+        <div className="grid md:grid-cols-2 gap-6 lg:gap-8 mb-12">
+          {VIDEO_TESTIMONIALS.map((item, index) => (
+            <SectionTransition key={item.testimonial.id} variant="fade-up" delay={index * 150}>
+              <VideoTestimonialCard item={item} index={index} />
+            </SectionTransition>
+          ))}
+        </div>
+
+        {/* Written testimonials grid */}
+        <div ref={containerRef} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {FEATURED_WRITTEN.map((t, index) => (
+            <div
+              key={t.id}
+              className={`group p-5 rounded-xl border border-border bg-card card-hover-glow transition-all duration-600 ${
+                visibleItems[index] ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+              }`}
+            >
+              <Quote className="h-4 w-4 text-accent/30 mb-3" />
+              <p className="text-sm text-foreground/80 italic leading-relaxed mb-4 line-clamp-4">
+                "{t.quote}"
+              </p>
+              <div className="flex items-center gap-1 mb-2">
+                {Array.from({ length: t.rating }).map((_, i) => (
+                  <Star key={i} className="h-3 w-3 fill-accent text-accent" />
+                ))}
+              </div>
+              <p className="font-serif font-semibold text-foreground text-sm">{t.name}</p>
+              <p className="text-xs text-muted-foreground">{t.role}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* View all link */}
+        <div className="text-center mt-10">
+          <Button asChild variant="outline" className="border-accent/30 text-accent hover:bg-accent/10">
+            <Link to="/testimonials">
+              View All Testimonials
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function CTASection() {
   return (
     <ParallaxCTA
@@ -387,6 +541,7 @@ export default function About() {
       <BlueprintDivider variant="elevation" />
       <NaturalHorsemanshipSection />
       <ValuesSection />
+      <TestimonialsGallerySection />
       <FamilySection />
       <ImageBreak />
       <BlueprintDivider variant="structural" />
