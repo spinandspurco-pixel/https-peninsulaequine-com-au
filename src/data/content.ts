@@ -38,6 +38,7 @@ export const services = [
       "All-weather surface options",
     ],
     icon: "arena",
+    startingPrice: "$25,000",
   },
   {
     id: "barn-construction",
@@ -52,6 +53,7 @@ export const services = [
       "Fireproof materials and safety features",
     ],
     icon: "barn",
+    startingPrice: "$40,000",
   },
   {
     id: "fencing",
@@ -66,6 +68,7 @@ export const services = [
       "Custom gate and entry designs",
     ],
     icon: "fence",
+    startingPrice: "$5,000",
   },
   {
     id: "infrastructure",
@@ -80,6 +83,7 @@ export const services = [
       "Electrical infrastructure",
     ],
     icon: "infrastructure",
+    startingPrice: "$15,000",
   },
   {
     id: "round-pens",
@@ -94,6 +98,7 @@ export const services = [
       "Shade structure options",
     ],
     icon: "roundpen",
+    startingPrice: "$8,000",
   },
   {
     id: "renovations",
@@ -108,6 +113,7 @@ export const services = [
       "Code compliance updates",
     ],
     icon: "renovation",
+    startingPrice: "$3,000",
   },
 ];
 
