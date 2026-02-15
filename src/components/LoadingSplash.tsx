@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import peBanner from "@/assets/pe-banner.png";
+import blueprintFacility from "@/assets/blueprint-facility.png";
 
 interface LoadingSplashProps {
   /** Minimum display time in ms */
@@ -8,18 +9,15 @@ interface LoadingSplashProps {
 }
 
 /**
- * Cinematic loading splash screen featuring the PE Banner.
- * Fades in, holds, then lifts away like a curtain.
+ * Cinematic loading splash screen featuring the PE Banner
+ * with animated blueprint watermark background.
  */
 export function LoadingSplash({ minDuration = 2200, onComplete }: LoadingSplashProps) {
   const [phase, setPhase] = useState<"enter" | "hold" | "exit" | "done">("enter");
 
   useEffect(() => {
-    // Enter → Hold
     const enterTimer = setTimeout(() => setPhase("hold"), 300);
-    // Hold → Exit
     const holdTimer = setTimeout(() => setPhase("exit"), minDuration - 600);
-    // Exit → Done
     const exitTimer = setTimeout(() => {
       setPhase("done");
       onComplete?.();
@@ -32,7 +30,6 @@ export function LoadingSplash({ minDuration = 2200, onComplete }: LoadingSplashP
     };
   }, [minDuration, onComplete]);
 
-  // Check reduced motion
   const prefersReduced =
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -51,8 +48,24 @@ export function LoadingSplash({ minDuration = 2200, onComplete }: LoadingSplashP
         pointerEvents: phase === "exit" ? "none" : "auto",
       }}
     >
+      {/* Blueprint watermark background */}
+      <div
+        className="absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage: `url(${blueprintFacility})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          transform: phase === "hold" ? "scale(1.02)" : "scale(1)",
+          transition: prefersReduced ? "none" : `transform ${minDuration}ms ease-out`,
+        }}
+      />
+
       {/* Subtle radial vignette */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,hsl(var(--primary)/0.6)_100%)]" />
+
+      {/* Decorative accent lines */}
+      <div className="absolute inset-x-0 top-1/3 h-px bg-gradient-to-r from-transparent via-accent/15 to-transparent" />
+      <div className="absolute inset-x-0 bottom-1/3 h-px bg-gradient-to-r from-transparent via-accent/15 to-transparent" />
 
       <div
         className="relative z-10 flex flex-col items-center gap-6 px-8"

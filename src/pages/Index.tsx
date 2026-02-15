@@ -571,12 +571,20 @@ function BannerDivider() {
   return (
     <section
       ref={ref}
-      className="relative py-16 sm:py-24 overflow-hidden bg-primary"
+      className="relative py-20 sm:py-28 overflow-hidden bg-primary"
       aria-label="From Dirt to Dynasty"
     >
+      {/* Blueprint background layer */}
+      <BlueprintBackground image={blueprintFacility} opacity={0.05} direction="left-to-right" duration={2200} parallaxSpeed={0.04} />
+      <BlueprintLineOverlay variant="barn" color="light" />
+
       {/* Dark vignette */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsl(var(--primary)/0.7)_100%)]" />
       
+      {/* Decorative lines */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
+
       <div
         className="relative z-10 flex justify-center px-4"
         style={{
