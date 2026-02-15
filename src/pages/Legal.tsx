@@ -6,11 +6,13 @@ function PageHeader({ title }: { title: string }) {
   return (
     <section className="pt-32 pb-16 bg-primary text-primary-foreground">
       <div className="section-container">
-        <div className="max-w-3xl">
-          <div className="flex items-center gap-4 mb-6">
-            <img src={logoPeMark} alt="" className="w-10 h-10 sm:w-12 sm:h-12 object-contain drop-shadow-[0_2px_12px_rgba(255,255,255,0.15)]" />
-            <div className="w-12 h-0.5 bg-accent" />
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="mb-6">
+            <img src={logoPeMark} alt="Peninsula Equine" className="w-20 h-20 sm:w-24 sm:h-24 mx-auto object-contain drop-shadow-[0_2px_20px_rgba(255,255,255,0.2)]" />
           </div>
+          <p className="text-primary-foreground/50 uppercase tracking-[0.2em] text-xs sm:text-sm mb-6">
+            Crafting World-Class Equine Facilities
+          </p>
           <h1 className="heading-display">{title}</h1>
         </div>
       </div>
