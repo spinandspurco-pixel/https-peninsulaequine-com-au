@@ -1,4 +1,5 @@
 import { useParallax } from "@/hooks/useParallax";
+import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 
 interface PageHeaderProps {
   title: string;
@@ -12,8 +13,11 @@ export function PageHeader({ title, description, backgroundImage }: PageHeaderPr
   return (
     <section 
       ref={parallaxRef} 
-      className="relative pt-32 pb-16 bg-primary text-primary-foreground overflow-hidden"
+      className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden"
     >
+      {/* Animated blueprint line overlay */}
+      <BlueprintLineOverlay variant="dimensions" color="light" />
+
       {/* Parallax decorative background */}
       {backgroundImage && (
         <div 

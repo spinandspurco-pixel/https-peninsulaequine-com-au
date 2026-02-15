@@ -15,6 +15,8 @@ import ciroWide from "@/assets/ciro-wide.png";
 import horseAction from "@/assets/horse-action.png";
 import blueprintDetail from "@/assets/blueprint-detail.png";
 import blueprintBarn from "@/assets/blueprint-barn.png";
+import blueprintElevation from "@/assets/blueprint-elevation.png";
+import blueprintFacility from "@/assets/blueprint-facility.png";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
 
 // Import join-up videos
@@ -25,7 +27,11 @@ function PageHeader() {
   const { ref: parallaxRef, offset } = useParallax<HTMLElement>({ speed: 0.3 });
 
   return (
-    <section ref={parallaxRef} className="relative pt-32 pb-16 bg-primary text-primary-foreground overflow-hidden">
+    <section ref={parallaxRef} className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
+      {/* Blueprint layers */}
+      <BlueprintBackground image={blueprintElevation} opacity={0.07} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
+      <BlueprintBackground image={blueprintFacility} opacity={0.03} direction="right-to-left" duration={2400} parallaxSpeed={0.1} className="scale-105" />
+      <BlueprintLineOverlay variant="barn" color="light" />
       {/* Parallax background layer */}
       <div 
         className="absolute inset-0 opacity-10 will-change-transform"
@@ -46,6 +52,7 @@ function PageHeader() {
           </p>
         </div>
       </div>
+      <BlueprintDivider variant="grid" className="absolute bottom-0 left-0 right-0 h-12 sm:h-16" />
     </section>
   );
 }
@@ -55,7 +62,8 @@ function CiroSection() {
   const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation<HTMLDivElement>();
 
   return (
-    <section className="section-padding">
+    <section className="section-padding relative overflow-hidden">
+      <BlueprintLineOverlay variant="detail" color="dark" />
       <div className="section-container">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Image */}
@@ -159,7 +167,8 @@ function NaturalHorsemanshipSection() {
   ];
 
   return (
-    <section className="section-padding bg-background">
+    <section className="section-padding bg-background relative overflow-hidden">
+      <BlueprintBackground image={blueprintDetail} opacity={0.025} direction="bottom-to-top" duration={1800} parallaxSpeed={0.07} />
       <div className="section-container">
         <div 
           ref={headerRef}
