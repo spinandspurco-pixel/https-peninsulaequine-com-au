@@ -110,9 +110,18 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
         <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-foreground mb-4 transition-colors duration-300 group-hover:text-accent">
           {service.title}
         </h2>
-        <p className="text-muted-foreground mb-6 transition-colors duration-300 group-hover:text-foreground/80">
+        <p className="text-muted-foreground mb-4 transition-colors duration-300 group-hover:text-foreground/80">
           {service.description}
         </p>
+
+        {/* Dynamic pricing snippet */}
+        {service.startingPrice && (
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent/10 border border-accent/20 mb-6">
+            <span className="text-sm text-muted-foreground">Starting at</span>
+            <span className="text-lg font-semibold text-accent">{service.startingPrice}</span>
+          </div>
+        )}
+
         <ul className="space-y-3 mb-8">
           {service.features.map((feature, i) => (
             <li 
@@ -129,17 +138,19 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
         </ul>
         <div className="flex flex-wrap gap-3">
           <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-            <Link to="/contact">
-              Request a Quote
+            <Link to={`/contact?services=${service.id}`}>
+              Quick Book
               <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </Button>
           <Button 
             variant="outline" 
             className="border-accent/30 text-accent hover:bg-accent/10 transition-all duration-300"
-            onClick={() => document.getElementById('construction-process')?.scrollIntoView({ behavior: 'smooth' })}
+            asChild
           >
-            See Our Process
+            <Link to="/contact">
+              Request a Quote
+            </Link>
           </Button>
         </div>
       </div>
