@@ -5,6 +5,7 @@ import { SEOSchema } from "@/components/SEOSchema";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { FloatingContactButton } from "@/components/FloatingContactButton";
 import { PageTransition } from "@/components/PageTransition";
+import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import blueprintFacility from "@/assets/blueprint-facility.png";
 
 interface LayoutProps {
@@ -24,6 +25,10 @@ export function Layout({ children }: LayoutProps) {
           backgroundRepeat: "no-repeat",
         }}
       />
+      {/* Site-wide scroll-revealing blueprint line animation */}
+      <div className="fixed inset-0 pointer-events-none z-0 opacity-[0.04]">
+        <BlueprintLineOverlay variant="dimensions" color="dark" />
+      </div>
       <SEOSchema />
       <Header />
       <PageTransition>
