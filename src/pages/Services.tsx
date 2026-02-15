@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
+import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
+import { BlueprintDivider } from "@/components/BlueprintDivider";
 import { ArrowRight, ArrowUp, CheckCircle, X, ZoomIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
@@ -29,6 +31,7 @@ import qldFacilityConstruction from "@/assets/qld-facility-construction.jpg";
 import qldFacilityCourtyard from "@/assets/qld-facility-courtyard.jpg";
 import mainRidgeCiroWoodwork from "@/assets/main-ridge-ciro-woodwork-1.jpg";
 import blueprintElevation from "@/assets/blueprint-elevation.png";
+import blueprintFacility from "@/assets/blueprint-facility.png";
 
 // Map service IDs to their images
 const serviceImages: Record<string, string> = {
@@ -45,10 +48,14 @@ function PageHeader({ title, description }: { title: string; description: string
   const { ref: parallaxRef, offset } = useParallax<HTMLElement>({ speed: 0.3 });
 
   return (
-    <section ref={parallaxRef} className="relative pt-32 pb-16 bg-primary text-primary-foreground overflow-hidden">
-      {/* Blueprint elevation background */}
-      <BlueprintBackground image={blueprintElevation} opacity={0.08} direction="left-to-right" duration={2000} />
-      {/* Parallax decorative element */}
+    <section ref={parallaxRef} className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
+      {/* Layer 1: Elevation blueprint – slow reveal left-to-right */}
+      <BlueprintBackground image={blueprintElevation} opacity={0.08} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
+      {/* Layer 2: Facility plan – opposite direction, deeper parallax */}
+      <BlueprintBackground image={blueprintFacility} opacity={0.035} direction="right-to-left" duration={2400} parallaxSpeed={0.1} className="scale-105" />
+      {/* Layer 3: SVG architectural line overlay */}
+      <BlueprintLineOverlay variant="dimensions" color="light" />
+      {/* Parallax decorative photo element */}
       <div 
         className="absolute right-0 top-0 w-1/3 h-full opacity-5 will-change-transform"
         style={{ 
@@ -65,6 +72,8 @@ function PageHeader({ title, description }: { title: string; description: string
           <p className="text-lg text-primary-foreground/80">{description}</p>
         </div>
       </div>
+      {/* Architectural divider at the bottom edge */}
+      <BlueprintDivider variant="elevation" className="absolute bottom-0 left-0 right-0 h-12 sm:h-16" />
     </section>
   );
 }
