@@ -4,6 +4,8 @@ import { ArrowRight, Phone, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { MajorEventsSection } from "@/components/MajorEventsSection";
+import { BlueprintBackground } from "@/components/BlueprintBackground";
+import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { MajorEventsVideoSection } from "@/components/MajorEventsVideoSection";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { SectionTransition, AnimatedDivider, StaggeredTransition } from "@/components/SectionTransition";
@@ -18,6 +20,8 @@ import hatDetail from "@/assets/hat-detail.png";
 import ciroWide from "@/assets/ciro-wide.png";
 import spurDetail from "@/assets/spur-detail.png";
 import stoneworkBW from "@/assets/aberdeen-stonework-bw.jpg";
+import logoPeMark from "@/assets/logo-pe-mark.png";
+import blueprintFacility from "@/assets/blueprint-facility.png";
 
 // Import videos for hero rotation
 import slowMo1 from "@/assets/videos/slow-mo-1.mp4";
@@ -142,12 +146,14 @@ function HeroSection() {
           Facility Construction • Training • Excellence
         </p>
         
-        {/* Circular Logo Mark */}
+        {/* P.E Logo Mark */}
         <div className="mt-12 mb-16">
-          <div className="w-28 h-28 sm:w-36 sm:h-36 mx-auto rounded-full border border-white/30 flex items-center justify-center backdrop-blur-sm transition-transform duration-500 hover:scale-105 hover:border-white/50">
-            <div className="text-center">
-              <span className="font-serif text-white text-3xl sm:text-4xl tracking-wider">PE</span>
-            </div>
+          <div className="w-28 h-28 sm:w-36 sm:h-36 mx-auto transition-transform duration-500 hover:scale-105">
+            <img
+              src={logoPeMark}
+              alt="Peninsula Equine"
+              className="w-full h-full object-contain drop-shadow-[0_2px_20px_rgba(255,255,255,0.2)]"
+            />
           </div>
         </div>
       </div>
@@ -329,8 +335,10 @@ function ServicesSection() {
   const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
 
   return (
-    <section className="section-padding bg-background overflow-hidden">
-      <div className="section-container">
+    <section className="section-padding bg-background overflow-hidden relative">
+      <BlueprintBackground image={blueprintFacility} opacity={0.06} />
+      <BlueprintLineOverlay variant="barn" color="dark" />
+      <div className="section-container relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-20">
           <AnimatedDivider className="mx-auto mb-8" />
           

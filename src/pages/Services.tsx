@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { ArrowRight, ArrowUp, CheckCircle, X, ZoomIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
@@ -27,6 +28,7 @@ import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
 import qldFacilityConstruction from "@/assets/qld-facility-construction.jpg";
 import qldFacilityCourtyard from "@/assets/qld-facility-courtyard.jpg";
 import mainRidgeCiroWoodwork from "@/assets/main-ridge-ciro-woodwork-1.jpg";
+import blueprintElevation from "@/assets/blueprint-elevation.png";
 
 // Map service IDs to their images
 const serviceImages: Record<string, string> = {
@@ -44,6 +46,8 @@ function PageHeader({ title, description }: { title: string; description: string
 
   return (
     <section ref={parallaxRef} className="relative pt-32 pb-16 bg-primary text-primary-foreground overflow-hidden">
+      {/* Blueprint elevation background */}
+      <BlueprintBackground image={blueprintElevation} opacity={0.08} direction="left-to-right" duration={2000} />
       {/* Parallax decorative element */}
       <div 
         className="absolute right-0 top-0 w-1/3 h-full opacity-5 will-change-transform"

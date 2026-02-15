@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { BlueprintBackground } from "@/components/BlueprintBackground";
+import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { FamilyVideoCarousel } from "@/components/FamilyVideoCarousel";
@@ -11,6 +13,7 @@ import { useParallax } from "@/hooks/useParallax";
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
 import ciroWide from "@/assets/ciro-wide.png";
 import horseAction from "@/assets/horse-action.png";
+import blueprintDetail from "@/assets/blueprint-detail.png";
 
 // Import join-up videos
 import ciroJoinUp1 from "@/assets/videos/ciro-bareback-join-up.mp4";
@@ -258,8 +261,10 @@ function StorySection() {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>();
 
   return (
-    <section className="section-padding">
-      <div className="section-container">
+    <section className="section-padding relative">
+      <BlueprintBackground image={blueprintDetail} opacity={0.05} direction="right-to-left" />
+      <BlueprintLineOverlay variant="detail" color="dark" />
+      <div className="section-container relative z-10">
         <div 
           ref={ref}
           className={`max-w-3xl mx-auto transition-all duration-700 ${
