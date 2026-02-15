@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Instagram, Facebook } from "lucide-react";
 import { siteConfig } from "@/data/content";
+import logoPeMark from "@/assets/logo-pe-mark.png";
 
 const footerLinks = {
   services: [
@@ -28,7 +29,12 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           {/* Brand Column */}
           <div className="lg:col-span-1">
-            <Link to="/" className="inline-block mb-6">
+            <Link to="/" className="inline-flex items-center gap-3 mb-6 group">
+              <img 
+                src={logoPeMark} 
+                alt="Peninsula Equine" 
+                className="h-10 w-10 object-contain transition-transform duration-300 group-hover:scale-105"
+              />
               <span className="font-serif text-2xl font-semibold">
                 Peninsula<span className="text-accent">Equine</span>
               </span>
