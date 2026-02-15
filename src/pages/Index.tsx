@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Phone, ChevronDown, CalendarIcon } from "lucide-react";
+import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users } from "lucide-react";
 import { BookingWidget } from "@/components/BookingWidget";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
@@ -524,6 +524,100 @@ function GallerySection() {
   );
 }
 
+function ClientStorySection() {
+  const { ref: metricsRef, isVisible: metricsVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
+
+  const metrics = [
+    { icon: TrendingUp, value: "40%", label: "Property Value Increase", detail: "Post-construction appraisal" },
+    { icon: Clock, value: "6 Weeks", label: "Ahead of Schedule", detail: "Completed early despite weather" },
+    { icon: Award, value: "12", label: "Stalls Built", detail: "Custom ventilation per stall" },
+    { icon: Users, value: "5 Years", label: "Zero Repairs", detail: "Built to last decades" },
+  ];
+
+  return (
+    <section className="section-padding bg-card overflow-hidden relative">
+      <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="right-to-left" duration={2000} />
+      <BlueprintLineOverlay variant="detail" color="dark" />
+      <div className="section-container relative z-10">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
+          {/* Story content */}
+          <div>
+            <AnimatedDivider className="mb-8" />
+            
+            <SectionTransition variant="fade-right" delay={100}>
+              <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-4">
+                Featured Client Story
+              </p>
+            </SectionTransition>
+            
+            <SectionTransition variant="fade-right" delay={200}>
+              <h2 className="heading-editorial text-foreground mb-6">
+                Mitchell Ranch,<br />
+                <span className="text-accent">Woodside</span>
+              </h2>
+            </SectionTransition>
+
+            <SectionTransition variant="blur-in" delay={300} duration={800}>
+              <blockquote className="text-lg text-foreground font-serif italic leading-relaxed mb-6 border-l-2 border-accent pl-6">
+                "Ciro built our entire 12-stall barn and covered arena. His attention to detail 
+                and understanding of what horses need is unmatched. Five years later, everything 
+                still looks and functions like new."
+              </blockquote>
+            </SectionTransition>
+
+            <SectionTransition variant="fade-up" delay={400}>
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                What began as a simple arena project evolved into a complete facility transformation. 
+                Ciro's horseman's eye identified drainage issues, ventilation improvements, and layout 
+                optimizations that a standard contractor would have missed entirely.
+              </p>
+            </SectionTransition>
+
+            <SectionTransition variant="fade-up" delay={500}>
+              <p className="font-serif font-semibold text-foreground">Sarah Mitchell</p>
+              <p className="text-muted-foreground text-sm">Ranch Owner, Woodside</p>
+            </SectionTransition>
+          </div>
+
+          {/* Success metrics grid */}
+          <div ref={metricsRef} className="grid grid-cols-2 gap-px bg-border">
+            {metrics.map((metric, index) => (
+              <div
+                key={metric.label}
+                className={`bg-background p-8 lg:p-10 flex flex-col transition-all duration-700 ease-out ${
+                  metricsVisible
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-6"
+                }`}
+                style={{ transitionDelay: `${index * 120}ms` }}
+              >
+                <metric.icon className="h-5 w-5 text-accent mb-4" />
+                <span className="font-serif text-3xl lg:text-4xl text-foreground font-semibold mb-1">
+                  {metric.value}
+                </span>
+                <span className="text-sm font-medium text-foreground mb-1">{metric.label}</span>
+                <span className="text-xs text-muted-foreground">{metric.detail}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <SectionTransition variant="fade-up" delay={600} className="text-center mt-16">
+          <Link
+            to="/testimonials"
+            className="inline-flex items-center text-foreground font-medium hover:text-accent transition-colors group"
+          >
+            <span className="border-b border-foreground group-hover:border-accent transition-colors pb-1">
+              More client stories
+            </span>
+            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </SectionTransition>
+      </div>
+    </section>
+  );
+}
+
 function TestimonialsSection() {
   const featured = featuredTestimonials[0];
 
@@ -688,6 +782,7 @@ export default function Index() {
         <BlueprintDivider variant="elevation" />
         <ServicesSection />
         <GallerySection />
+        <ClientStorySection />
         <BlueprintDivider variant="grid" />
         <TestimonialsSection />
         <CTASection />
