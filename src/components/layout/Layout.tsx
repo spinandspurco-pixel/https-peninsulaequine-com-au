@@ -5,6 +5,7 @@ import { SEOSchema } from "@/components/SEOSchema";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { FloatingContactButton } from "@/components/FloatingContactButton";
 import { PageTransition } from "@/components/PageTransition";
+import { ContrastChecker } from "@/components/ContrastChecker";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import blueprintFacility from "@/assets/blueprint-facility.png";
 
@@ -37,6 +38,7 @@ export function Layout({ children }: LayoutProps) {
       <Footer />
       <ScrollToTop />
       <FloatingContactButton />
+      <ContrastChecker />
     </div>
   );
 }
