@@ -4,7 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
+import { BlueprintBackground } from "@/components/BlueprintBackground";
+import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { testimonials, siteConfig } from "@/data/content";
+import blueprintBarn from "@/assets/blueprint-barn.png";
 
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
 
@@ -33,7 +36,9 @@ export default function Testimonials() {
         description="Don't just take our word for it. Here's what our clients have to say about working with Peninsula Equine."
       />
 
-      <section className="section-padding">
+      <section className="section-padding relative overflow-hidden">
+        <BlueprintBackground image={blueprintBarn} opacity={0.025} direction="right-to-left" duration={2000} parallaxSpeed={0.05} />
+        <BlueprintLineOverlay variant="barn" color="dark" />
         <div className="section-container">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial) => (

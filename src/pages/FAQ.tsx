@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
+import { BlueprintBackground } from "@/components/BlueprintBackground";
+import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { faqs, siteConfig } from "@/data/content";
 import { useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import {
@@ -12,6 +14,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import blueprintDetail from "@/assets/blueprint-detail.png";
 
 import horseAction from "@/assets/horse-action.png";
 
@@ -27,7 +30,9 @@ export default function FAQ() {
         description="Got questions? We've got answers. If you don't find what you're looking for, don't hesitate to reach out."
       />
 
-      <section className="section-padding">
+      <section className="section-padding relative overflow-hidden">
+        <BlueprintBackground image={blueprintDetail} opacity={0.025} direction="bottom-to-top" duration={1800} parallaxSpeed={0.06} />
+        <BlueprintLineOverlay variant="detail" color="dark" />
         <div className="section-container max-w-3xl">
           <Accordion 
             type="single" 

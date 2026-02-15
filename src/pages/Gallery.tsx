@@ -9,6 +9,11 @@ import { usePinchZoom } from "@/hooks/usePinchZoom";
 import { SwipeIndicator } from "@/components/SwipeIndicator";
 import { Layout } from "@/components/layout/Layout";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
+import { BlueprintBackground } from "@/components/BlueprintBackground";
+import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
+import { BlueprintDivider } from "@/components/BlueprintDivider";
+import blueprintElevation from "@/assets/blueprint-elevation.png";
+import logoPeMark from "@/assets/logo-pe-mark.png";
 
 // Main Ridge images
 import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
@@ -182,7 +187,10 @@ function PageHeader() {
   const { ref: parallaxRef, offset } = useParallax<HTMLElement>({ speed: 0.3 });
 
   return (
-    <section ref={parallaxRef} className="relative pt-32 pb-16 bg-primary text-primary-foreground overflow-hidden">
+    <section ref={parallaxRef} className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
+      {/* Blueprint layers */}
+      <BlueprintBackground image={blueprintElevation} opacity={0.06} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
+      <BlueprintLineOverlay variant="dimensions" color="light" />
       {/* Parallax background collage */}
       <div 
         className="absolute inset-0 opacity-10 will-change-transform"
@@ -195,7 +203,10 @@ function PageHeader() {
       />
       <div className="section-container relative z-10">
         <div className="max-w-3xl">
-          <div className="w-16 h-0.5 bg-accent mb-6" />
+          <div className="flex items-center gap-4 mb-6">
+            <img src={logoPeMark} alt="" className="w-10 h-10 sm:w-12 sm:h-12 object-contain drop-shadow-[0_2px_12px_rgba(255,255,255,0.15)]" />
+            <div className="w-12 h-0.5 bg-accent" />
+          </div>
           <h1 className="heading-display mb-6">Our Work</h1>
           <p className="text-lg text-primary-foreground/80">
             Explore our portfolio of premium equine facilities, from luxurious barns 
@@ -203,6 +214,7 @@ function PageHeader() {
           </p>
         </div>
       </div>
+      <BlueprintDivider variant="structural" className="absolute bottom-0 left-0 right-0 h-12 sm:h-16" />
     </section>
   );
 }
