@@ -772,7 +772,7 @@ export default function Index() {
       {!splashDone && <LoadingSplash minDuration={2400} onComplete={() => setSplashDone(true)} />}
       <FloatingBannerWatermark visible={splashDone} />
       <Layout>
-        <HeroSection />
+        <HeroSection variant="banner" />
         <BannerDivider />
         <IntroSection />
         <BlueprintDivider variant="floorplan" />
