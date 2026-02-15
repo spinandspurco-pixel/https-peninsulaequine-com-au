@@ -654,7 +654,7 @@ export default function Index() {
         <HeroSection />
         <BannerDivider />
         <IntroSection />
-        <BlueprintDivider variant="structural" />
+        <BlueprintDivider variant="floorplan" />
         <MissionSection />
         <MajorEventsSection />
         <MajorEventsVideoSection />
