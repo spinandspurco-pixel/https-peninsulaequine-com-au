@@ -511,3 +511,32 @@
 .animate-swipe-hand {
   animation: swipe-hand 2s ease-in-out infinite;
 }
+
+/* Blueprint scan line that sweeps left-to-right */
+@keyframes blueprint-scan {
+  0% {
+    left: -2px;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+.animate-blueprint-scan {
+  animation: blueprint-scan 3s ease-in-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-blueprint-scan {
+    animation: none;
+    display: none;
+  }
+}
