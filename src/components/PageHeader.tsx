@@ -1,14 +1,20 @@
 import { useParallax } from "@/hooks/useParallax";
+import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
+import { BlueprintDivider } from "@/components/BlueprintDivider";
 import logoPeMark from "@/assets/logo-pe-mark.png";
+import blueprintElevation from "@/assets/blueprint-elevation.png";
+import blueprintFacility from "@/assets/blueprint-facility.png";
 
 interface PageHeaderProps {
   title: string;
   description: string;
   backgroundImage?: string;
+  /** BlueprintDivider variant for the bottom edge. Defaults to "elevation". */
+  dividerVariant?: "elevation" | "floorplan" | "grid";
 }
 
-export function PageHeader({ title, description, backgroundImage }: PageHeaderProps) {
+export function PageHeader({ title, description, backgroundImage, dividerVariant = "elevation" }: PageHeaderProps) {
   const { ref: parallaxRef, offset } = useParallax<HTMLElement>({ speed: 0.3 });
 
   return (
@@ -16,10 +22,14 @@ export function PageHeader({ title, description, backgroundImage }: PageHeaderPr
       ref={parallaxRef} 
       className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden"
     >
-      {/* Animated blueprint line overlay */}
+      {/* Layer 1: Elevation blueprint – slow reveal */}
+      <BlueprintBackground image={blueprintElevation} opacity={0.07} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
+      {/* Layer 2: Facility plan – opposite direction for depth */}
+      <BlueprintBackground image={blueprintFacility} opacity={0.03} direction="right-to-left" duration={2400} parallaxSpeed={0.1} className="scale-105" />
+      {/* Layer 3: SVG architectural line overlay */}
       <BlueprintLineOverlay variant="dimensions" color="light" />
 
-      {/* Parallax decorative background */}
+      {/* Parallax decorative background image */}
       {backgroundImage && (
         <div 
           className="absolute inset-0 opacity-10 will-change-transform"
@@ -73,6 +83,9 @@ export function PageHeader({ title, description, backgroundImage }: PageHeaderPr
           </p>
         </div>
       </div>
+
+      {/* Architectural divider at the bottom edge */}
+      <BlueprintDivider variant={dividerVariant} className="absolute bottom-0 left-0 right-0 h-12 sm:h-16" />
     </section>
   );
 }
