@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useCelebrationSound } from "@/hooks/useCelebrationSound";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
@@ -189,16 +190,18 @@ function StepIndicator({ currentStep }: { currentStep: number }) {
   const progressPercentage = ((currentStep - 1) / (STEPS.length - 1)) * 100;
   const [showConfetti, setShowConfetti] = useState(false);
   const [prevStep, setPrevStep] = useState(currentStep);
+  const { playCelebration } = useCelebrationSound();
 
-  // Trigger confetti when reaching the final step
+  // Trigger confetti and sound when reaching the final step
   useEffect(() => {
     if (currentStep === STEPS.length && prevStep < STEPS.length) {
       setShowConfetti(true);
+      playCelebration();
       const timer = setTimeout(() => setShowConfetti(false), 2000);
       return () => clearTimeout(timer);
     }
     setPrevStep(currentStep);
-  }, [currentStep, prevStep]);
+  }, [currentStep, prevStep, playCelebration]);
 
   return (
     <div className="mb-8 relative">
