@@ -322,7 +322,9 @@ function FamilySection() {
   const { ref: carouselRef, isVisible: carouselVisible } = useScrollAnimation<HTMLDivElement>();
 
   return (
-    <section className="section-padding bg-card">
+    <section className="section-padding bg-card relative overflow-hidden">
+      <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
+      <BlueprintLineOverlay variant="barn" color="dark" />
       <div className="section-container">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Content */}
