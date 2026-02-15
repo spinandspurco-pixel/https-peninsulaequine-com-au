@@ -98,7 +98,7 @@ export function FloatingContactButton() {
         {/* Pulse ring animation */}
         <div
           className={cn(
-            "absolute inset-0 rounded-full bg-accent/20",
+            "absolute inset-0 rounded-full bg-accent/30",
             "animate-pulse pointer-events-none",
             isHovered || isModalOpen ? "opacity-0" : "opacity-100"
           )}
