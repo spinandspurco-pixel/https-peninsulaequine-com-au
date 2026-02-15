@@ -184,9 +184,13 @@ function IntroSection() {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <section id="intro" className="bg-background">
+    <section id="intro" className="bg-background relative overflow-hidden">
+      {/* Blueprint background reveal */}
+      <BlueprintBackground image={blueprintDetail} opacity={0.03} direction="bottom-to-top" duration={2000} parallaxSpeed={0.06} />
+      <BlueprintLineOverlay variant="detail" color="dark" />
+
       {/* Location tagline */}
-      <div className="section-padding border-b border-border">
+      <div className="section-padding border-b border-border relative z-10">
         <div className="section-container">
           <div className="max-w-4xl mx-auto text-center">
             <SectionTransition variant="fade-up" duration={600}>
