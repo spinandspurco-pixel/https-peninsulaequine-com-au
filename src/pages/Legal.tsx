@@ -1,12 +1,16 @@
 import { Layout } from "@/components/layout/Layout";
 import { siteConfig } from "@/data/content";
+import logoPeMark from "@/assets/logo-pe-mark.png";
 
 function PageHeader({ title }: { title: string }) {
   return (
     <section className="pt-32 pb-16 bg-primary text-primary-foreground">
       <div className="section-container">
         <div className="max-w-3xl">
-          <div className="w-16 h-0.5 bg-accent mb-6" />
+          <div className="flex items-center gap-4 mb-6">
+            <img src={logoPeMark} alt="" className="w-10 h-10 sm:w-12 sm:h-12 object-contain drop-shadow-[0_2px_12px_rgba(255,255,255,0.15)]" />
+            <div className="w-12 h-0.5 bg-accent" />
+          </div>
           <h1 className="heading-display">{title}</h1>
         </div>
       </div>
