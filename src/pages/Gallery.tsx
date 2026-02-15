@@ -530,12 +530,21 @@ function Lightbox({
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-roledescription="Image lightbox"
+      aria-label={`${item.alt} — ${currentIndex + 1} of ${totalCount}`}
       className="fixed inset-0 z-50 bg-primary/95 flex items-center justify-center p-4"
       onClick={onClose}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
+      {/* Live region for screen reader navigation announcements */}
+      <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+        Showing {item.type === "video" ? "video" : "image"} {currentIndex + 1} of {totalCount}: {item.alt}
+      </div>
+
       {/* Swipe indicator for first-time users */}
       <SwipeIndicator show={!!item && totalCount > 1} />
 
@@ -543,7 +552,7 @@ function Lightbox({
       <button
         className="absolute top-6 right-6 text-primary-foreground/80 hover:text-primary-foreground z-10 transition-colors"
         onClick={onClose}
-        aria-label="Close lightbox"
+        aria-label="Close lightbox (Escape)"
       >
         <X className="h-8 w-8" />
       </button>
@@ -556,7 +565,7 @@ function Lightbox({
             e.stopPropagation();
             onPrevious();
           }}
-          aria-label="Previous image"
+          aria-label={`Previous ${item?.type === "video" ? "video" : "image"} (Left Arrow)`}
         >
           <svg className="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -572,7 +581,7 @@ function Lightbox({
             e.stopPropagation();
             onNext();
           }}
-          aria-label="Next image"
+          aria-label={`Next ${item?.type === "video" ? "video" : "image"} (Right Arrow)`}
         >
           <svg className="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -810,12 +819,19 @@ function GalleryGrid({
                 : "opacity-0 translate-y-4 scale-95"
             }`}
             style={{ transitionDelay: `${index * 30}ms` }}
+            aria-label={`View ${item.alt}`}
           >
+            {/* Skeleton placeholder */}
+            <div className="absolute inset-0 bg-muted animate-pulse" aria-hidden="true" />
             <img
               src={item.src}
               alt={item.alt}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 relative z-[1]"
               loading="lazy"
+              onLoad={(e) => {
+                const skeleton = (e.currentTarget.parentElement?.querySelector('.animate-pulse') as HTMLElement);
+                if (skeleton) skeleton.style.display = 'none';
+              }}
             />
           </button>
         )
