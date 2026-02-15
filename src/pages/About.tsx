@@ -17,6 +17,7 @@ import blueprintDetail from "@/assets/blueprint-detail.png";
 import blueprintBarn from "@/assets/blueprint-barn.png";
 import blueprintElevation from "@/assets/blueprint-elevation.png";
 import blueprintFacility from "@/assets/blueprint-facility.png";
+import logoPeMark from "@/assets/logo-pe-mark.png";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
 
 // Import join-up videos
@@ -44,7 +45,10 @@ function PageHeader() {
       />
       <div className="section-container relative z-10">
         <div className="max-w-3xl">
-          <div className="w-16 h-0.5 bg-accent mb-6" />
+          <div className="flex items-center gap-4 mb-6">
+            <img src={logoPeMark} alt="" className="w-10 h-10 sm:w-12 sm:h-12 object-contain drop-shadow-[0_2px_12px_rgba(255,255,255,0.15)]" />
+            <div className="w-12 h-0.5 bg-accent" />
+          </div>
           <h1 className="heading-display mb-6">About Peninsula Equine</h1>
           <p className="text-lg text-primary-foreground/80">
             Building world-class equine facilities with the insight that only comes 
