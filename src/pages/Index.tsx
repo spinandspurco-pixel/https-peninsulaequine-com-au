@@ -343,7 +343,11 @@ function ServicesSection() {
 
   return (
     <section className="section-padding bg-background overflow-hidden relative">
-      <BlueprintBackground image={blueprintFacility} opacity={0.06} />
+      {/* Layer 1: Full facility plan – slow drift up */}
+      <BlueprintBackground image={blueprintFacility} opacity={0.05} parallaxSpeed={0.06} />
+      {/* Layer 2: Barn detail – opposite drift for depth separation */}
+      <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="right-to-left" parallaxSpeed={0.12} duration={2000} className="scale-110" />
+      {/* Layer 3: Architectural line overlay at medium depth */}
       <BlueprintLineOverlay variant="barn" color="dark" />
       <div className="section-container relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-20">
