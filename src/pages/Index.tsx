@@ -9,8 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/layout/Layout";
 import { MajorEventsSection } from "@/components/MajorEventsSection";
-import { BlueprintBackground } from "@/components/BlueprintBackground";
-import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
+// BlueprintBackground & BlueprintLineOverlay removed — PE banner is the sole brand background
 import {
   Dialog,
   DialogContent,
@@ -28,22 +27,13 @@ import { siteConfig, services, testimonials, aboutCiro } from "@/data/content";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
 // Import images
-// heroSunset removed — PE banner is now the hero background
-
 import hatDetail from "@/assets/hat-detail.png";
 import ciroWide from "@/assets/ciro-wide.png";
 import spurDetail from "@/assets/spur-detail.png";
 import stoneworkBW from "@/assets/aberdeen-stonework-bw.jpg";
-import logoPeMark from "@/assets/logo-pe-mark.png";
 import peBanner from "@/assets/pe-banner.png";
-import blueprintFacility from "@/assets/blueprint-facility.png";
-import blueprintBarn from "@/assets/blueprint-barn.png";
-import blueprintDetail from "@/assets/blueprint-detail.png";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
 import { LoadingSplash } from "@/components/LoadingSplash";
-
-// Blueprint images for hero
-import blueprintElevation from "@/assets/blueprint-elevation.png";
 
 // Featured services for homepage
 const featuredServices = services.slice(0, 4);
@@ -132,8 +122,6 @@ function IntroSection() {
 
   return (
     <section id="intro" className="bg-background relative overflow-hidden">
-      <BlueprintBackground image={blueprintFacility} opacity={0.04} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
-
       {/* Location tagline */}
       <div className="section-padding border-b border-border relative z-10">
         <div className="section-container">
@@ -161,77 +149,40 @@ function IntroSection() {
         </div>
       </div>
 
-      {/* Cinematic Blueprint Reveal Panel */}
+      {/* Brand banner panel — PE banner as sole background */}
       <div 
         ref={(node) => {
           (imageRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
           (parallaxRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
         }}
-        className="relative h-[55vh] min-h-[400px] overflow-hidden"
+        className="relative h-[45vh] min-h-[350px] overflow-hidden"
         style={{
-          clipPath: imageVisible ? "inset(0 0 0 0)" : "inset(8% 4% 8% 4%)",
           opacity: imageVisible ? 1 : 0,
-          transition: "opacity 0.8s ease-out, clip-path 1.2s cubic-bezier(0.22,0.61,0.36,1)"
+          transition: "opacity 1s ease-out"
         }}
       >
         <div className="absolute inset-0 bg-primary" />
-
-        {/* Phase 1: Blueprint image layers sweep in */}
-        <div
-          className="absolute inset-0"
-          style={{
-            opacity: phase >= 1 ? 1 : 0,
-            transition: "opacity 1.2s ease-out",
-          }}
-        >
-          <BlueprintBackground image={blueprintFacility} opacity={0.12} direction="left-to-right" duration={1400} parallaxSpeed={0.04} />
-        </div>
-
-        {/* Phase 2: Architectural line overlays draw on */}
-        <div
-          className="absolute inset-0"
-          style={{
-            opacity: phase >= 2 ? 1 : 0,
-            transition: "opacity 0.8s ease-out 0.2s",
-          }}
-        >
-          <BlueprintLineOverlay variant="barn" color="light" />
-        </div>
-
-        {/* Phase 3: Centered PE logo watermark pulses in */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <img 
-            src={logoPeMark} 
-            alt="" 
+          <img
+            src={peBanner}
+            alt=""
             aria-hidden="true"
-            className="w-36 h-36 sm:w-48 sm:h-48 md:w-56 md:h-56 object-contain select-none"
-            style={{
-              opacity: phase >= 3 ? 0.25 : 0,
-              transform: phase >= 3 ? "scale(1)" : "scale(0.7)",
-              filter: "brightness(1.5) drop-shadow(0 0 40px hsl(var(--accent) / 0.15))",
-              transition: "opacity 1s ease-out, transform 1.2s cubic-bezier(0.22,0.61,0.36,1)",
-            }}
+            className="w-full h-full object-contain max-w-[75vw] max-h-[60%] opacity-[0.12]"
+            style={{ filter: "brightness(1.3)" }}
           />
         </div>
-
-        {/* Tagline text */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,hsl(var(--primary))_90%)] pointer-events-none" />
         <div 
           className="absolute bottom-8 left-0 right-0 text-center"
           style={{
-            opacity: phase >= 3 ? 1 : 0,
-            transform: phase >= 3 ? "translateY(0)" : "translateY(12px)",
-            transition: "opacity 0.8s ease-out 0.3s, transform 0.8s ease-out 0.3s",
+            opacity: imageVisible ? 1 : 0,
+            transition: "opacity 0.8s ease-out 0.5s",
           }}
         >
           <p className="text-primary-foreground/40 text-xs sm:text-sm tracking-[0.3em] uppercase font-medium">
             From Dirt to Dynasty
           </p>
         </div>
-
-        {/* Gradient edges */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-transparent to-background/30 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-primary/20 pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,hsl(var(--primary)/0.5)_100%)] pointer-events-none" />
       </div>
     </section>
   );
@@ -242,7 +193,7 @@ function MissionSection() {
 
   return (
     <section className="section-padding bg-card overflow-hidden relative">
-      <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="right-to-left" duration={1800} />
+      {/* clean — no extra watermarks */}
       <div className="section-container relative z-10">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
           {/* Text Content */}
@@ -323,7 +274,7 @@ function ServicesSection() {
 
   return (
     <section className="section-padding bg-background overflow-hidden relative">
-      <BlueprintBackground image={blueprintFacility} opacity={0.04} parallaxSpeed={0.06} />
+      {/* clean */}
       <div className="section-container relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-20">
           <AnimatedDivider className="mx-auto mb-8" />
@@ -624,7 +575,7 @@ function LeadCaptureSection({ submitted, onSubmitted }: { submitted: boolean; on
 
   return (
     <section id="lead-capture" ref={ref} className="section-padding bg-card overflow-hidden relative">
-      <BlueprintBackground image={blueprintBarn} opacity={0.025} direction="bottom-to-top" duration={2000} />
+      {/* clean */}
       <div
         className={`section-container relative z-10 transition-all duration-700 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
@@ -886,7 +837,7 @@ function ClientStorySection() {
 
   return (
     <section ref={sectionRef} className="section-padding bg-card overflow-hidden relative">
-      <BlueprintBackground image={blueprintBarn} opacity={0.025} direction="right-to-left" duration={2000} />
+      {/* clean */}
       <div className="section-container relative z-10">
         <AnimatedDivider className="mb-8" />
         <SectionTransition variant="fade-up">
@@ -1148,7 +1099,7 @@ function TestimonialServiceCarousel() {
 
   return (
     <section ref={ref} className="section-padding bg-background relative overflow-hidden">
-      <BlueprintBackground image={blueprintFacility} opacity={0.025} direction="left-to-right" duration={2000} />
+      {/* clean */}
       <div className="section-container relative z-10">
         <div className={`text-center max-w-3xl mx-auto mb-12 transition-all duration-700 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
@@ -1230,7 +1181,7 @@ function TestimonialsGallery() {
 
   return (
     <section className="section-padding bg-card overflow-hidden relative">
-      <BlueprintBackground image={blueprintBarn} opacity={0.025} direction="bottom-to-top" duration={1600} />
+      {/* clean */}
       <div className="section-container relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <AnimatedDivider className="mx-auto mb-8" />
@@ -1382,7 +1333,7 @@ function HomeFAQSection() {
 
   return (
     <section className="section-padding bg-card relative overflow-hidden">
-      <BlueprintBackground image={blueprintBarn} opacity={0.025} direction="bottom-to-top" duration={1800} />
+      {/* clean */}
       <div className="section-container relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-14">
           <AnimatedDivider className="mx-auto mb-8" />
