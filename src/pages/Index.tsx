@@ -549,7 +549,7 @@ function ServicesOverviewSection() {
             return (
               <Link
                 key={service.id}
-                to={`/services#${service.id}`}
+                to={`/services/${service.id}`}
                 className={`group relative flex flex-col rounded-xl bg-primary-foreground/[0.06] border border-primary-foreground/10 hover:border-accent/50 hover:bg-primary-foreground/[0.1] p-6 sm:p-7 transition-all duration-700 ease-out ${
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
                 }`}
@@ -592,7 +592,7 @@ function ServicesOverviewSection() {
                     className="flex-1 border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 text-xs tracking-wider uppercase"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <Link to={`/services#${service.id}`}>
+                    <Link to={`/services/${service.id}`}>
                       Learn More
                       <ArrowRight className="ml-1 h-3 w-3" />
                     </Link>
@@ -678,7 +678,7 @@ function ServicesSection() {
                 {service.shortDescription}
               </p>
               <Link
-                to={`/services#${service.id}`}
+                to={`/services/${service.id}`}
                 className="inline-flex items-center text-sm font-medium text-foreground hover:text-accent transition-colors group/link"
               >
                 <span className="border-b border-current pb-0.5">Learn More</span>

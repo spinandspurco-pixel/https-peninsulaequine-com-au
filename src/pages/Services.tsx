@@ -1482,7 +1482,7 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                       </p>
                       <div className="mt-4">
                         <Button
-                          onClick={() => navigate(`/contact?services=${service.id}`)}
+                          onClick={() => navigate(`/services/${service.id}`)}
                           className="w-full bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
                           size="sm"
                         >
