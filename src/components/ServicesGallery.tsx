@@ -3,12 +3,28 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { services as hardcodedServices } from "@/data/content";
-import { CheckCircle, ArrowRight, Send, Filter, CalendarIcon } from "lucide-react";
+import { CheckCircle, ArrowRight, Send, Filter, CalendarIcon, Layers } from "lucide-react";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
+
+const PRICING_TIERS = [
+  { label: "Basic", multiplier: 1, description: "Essential scope, standard materials" },
+  { label: "Standard", multiplier: 1.45, description: "Full spec, premium finishes" },
+  { label: "Premium", multiplier: 2.1, description: "Turnkey build, architect-grade" },
+] as const;
+
+function parsePriceToNumber(price: string): number | null {
+  const match = price.replace(/,/g, "").match(/\d+/);
+  return match ? parseInt(match[0], 10) : null;
+}
+
+function formatPrice(n: number): string {
+  return "$" + n.toLocaleString("en-AU");
+}
 
 // Images mapped by slug
 import equitanaArena from "@/assets/equitana-arena-1.jpg";
@@ -241,10 +257,48 @@ function ServiceGalleryCard({
         <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
 
         {/* Price badge overlay */}
-        <div className="absolute bottom-3 left-4">
+        <div className="absolute bottom-3 left-4 flex items-center gap-2">
           <Badge className="bg-accent text-accent-foreground text-sm font-semibold px-3 py-1 shadow-lg">
             From {service.startingPrice}
           </Badge>
+          <HoverCard openDelay={150} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <button
+                className="w-7 h-7 rounded-full bg-background/80 backdrop-blur flex items-center justify-center border border-border shadow hover:bg-accent/20 transition-colors"
+                aria-label="View pricing tiers"
+              >
+                <Layers className="h-3.5 w-3.5 text-accent" />
+              </button>
+            </HoverCardTrigger>
+            <HoverCardContent side="top" className="w-56 p-3" align="start">
+              <p className="text-xs font-bold text-foreground mb-2 uppercase tracking-wider">Pricing Tiers</p>
+              <div className="space-y-2">
+                {PRICING_TIERS.map((tier) => {
+                  const base = parsePriceToNumber(service.startingPrice);
+                  const price = base ? formatPrice(Math.round(base * tier.multiplier)) : "Quote";
+                  return (
+                    <div key={tier.label} className="flex items-center justify-between gap-2">
+                      <div>
+                        <span className="text-sm font-semibold text-foreground">{tier.label}</span>
+                        <p className="text-[10px] text-muted-foreground leading-tight">{tier.description}</p>
+                      </div>
+                      <span className="text-sm font-bold text-accent whitespace-nowrap">{price}</span>
+                    </div>
+                  );
+                })}
+              </div>
+              <Button
+                size="sm"
+                className="w-full mt-3 bg-accent hover:bg-accent/90 text-accent-foreground text-xs h-7"
+                onClick={() => {
+                  trackCtaClick("pricing_tier_cta", { source: "services_gallery", service: service.id });
+                  onQuoteClick(service.id);
+                }}
+              >
+                Get Custom Quote
+              </Button>
+            </HoverCardContent>
+          </HoverCard>
         </div>
       </div>
 
