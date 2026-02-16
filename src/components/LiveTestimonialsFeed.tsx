@@ -2,29 +2,11 @@ import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Star, Quote, ChevronLeft, ChevronRight, Filter, Pause, Play } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { testimonials as staticTestimonials, services } from "@/data/content";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { fetchMergedTestimonials, SERVICE_FILTERS, type TestimonialItem } from "@/lib/testimonials";
 
-interface FeedItem {
-  id: string;
-  name: string;
-  role: string;
-  quote: string;
-  rating: number;
-  serviceTags: string[];
-}
-
-const SERVICE_CHIPS = services.slice(0, 6).map((s) => ({ id: s.id, label: s.title }));
-
-function inferTags(role: string): string[] {
-  const l = role.toLowerCase();
-  if (l.includes("dressage") || l.includes("trainer") || l.includes("jumping")) return ["arena-construction"];
-  if (l.includes("ranch") || l.includes("estate")) return ["barn-construction", "full-facility"];
-  if (l.includes("breeding") || l.includes("farm")) return ["fencing", "infrastructure"];
-  return [];
-}
+const SERVICE_CHIPS = SERVICE_FILTERS.slice(0, 6);
 
 export function LiveTestimonialsFeed() {
   const [activeFilter, setActiveFilter] = useState("");
@@ -32,39 +14,9 @@ export function LiveTestimonialsFeed() {
   const [paused, setPaused] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const { data: items = [] } = useQuery<FeedItem[]>({
+  const { data: items = [] } = useQuery<TestimonialItem[]>({
     queryKey: ["live-testimonials-feed"],
-    queryFn: async () => {
-      const staticItems: FeedItem[] = staticTestimonials.map((t) => ({
-        id: `s-${t.id}`,
-        name: t.name,
-        role: t.role,
-        quote: t.quote,
-        rating: t.rating,
-        serviceTags: inferTags(t.role),
-      }));
-
-      const { data } = await supabase
-        .from("managed_testimonials")
-        .select("id, client_name, client_role, quote, rating, service_tags")
-        .eq("active", true)
-        .order("sort_order", { ascending: true });
-
-      if (data && data.length > 0) {
-        const dbItems: FeedItem[] = data.map((t) => ({
-          id: t.id,
-          name: t.client_name,
-          role: t.client_role ?? "",
-          quote: t.quote,
-          rating: t.rating,
-          serviceTags: (t.service_tags as string[]) ?? [],
-        }));
-        const dbKeys = new Set(dbItems.map((d) => `${d.name}::${d.quote.slice(0, 40)}`));
-        const unique = staticItems.filter((s) => !dbKeys.has(`${s.name}::${s.quote.slice(0, 40)}`));
-        return [...dbItems, ...unique];
-      }
-      return staticItems;
-    },
+    queryFn: fetchMergedTestimonials,
     staleTime: 60_000,
   });
 
