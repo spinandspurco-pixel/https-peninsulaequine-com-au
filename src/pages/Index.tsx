@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef, FormEvent } from "react";
+import { useState, useEffect, useRef, FormEvent, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, X, Mail, Send, MessageSquare, Star, ShieldCheck, Flame, Loader2, CheckCircle } from "lucide-react";
+import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, X, Mail, Send, MessageSquare, Star, ShieldCheck, Flame, Loader2, CheckCircle, ZoomIn, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useABTest } from "@/hooks/useABTest";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,12 @@ import ciroWide from "@/assets/ciro-wide.png";
 import spurDetail from "@/assets/spur-detail.png";
 import stoneworkBW from "@/assets/aberdeen-stonework-bw.jpg";
 import peBanner from "@/assets/pe-banner.png";
+import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
+import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
+import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
+import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
+import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
+import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
 import { LoadingSplash } from "@/components/LoadingSplash";
 
@@ -625,75 +632,216 @@ function LeadCaptureSection({ submitted, onSubmitted }: { submitted: boolean; on
 }
 
 function GallerySection() {
-  const { ref: imagesRef, isVisible: imagesVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
+  const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+  const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
 
   const images = [
-    { src: hatDetail, alt: "Craftsmanship details" },
-    { src: stoneworkBW, alt: "Stone and wood craftsmanship" },
-    { src: ciroWide, alt: "Ciro with horse" },
+    { src: aberdeenBarnInterior, alt: "Aberdeen Farm — luxury barn interior" },
+    { src: mainRidgeInterior, alt: "Main Ridge — open barn with natural light" },
+    { src: mainRidgeBrickwork, alt: "Main Ridge — custom brickwork detail" },
+    { src: qldCourtyard, alt: "Queensland Facility — courtyard" },
+    { src: aberdeenStonework, alt: "Aberdeen Farm — stonework masonry" },
+    { src: equitanaArena1, alt: "Equitana Melbourne — competition arena" },
   ];
 
-  return (
-    <section className="bg-primary text-primary-foreground overflow-hidden">
-      <div 
-        ref={imagesRef}
-        className="grid grid-cols-3 h-[40vh] min-h-[300px]"
-      >
-        {images.map((image, index) => (
-          <div 
-            key={index} 
-            className={`overflow-hidden bg-muted/20 transition-all duration-1000 ease-out ${
-              imagesVisible 
-                ? "opacity-100 [clip-path:inset(0_0_0_0)]" 
-                : "opacity-0 [clip-path:inset(100%_0_0_0)]"
-            }`}
-            style={{ transitionDelay: `${index * 200}ms` }}
-          >
-            <img
-              src={image.src}
-              alt={image.alt}
-              loading="lazy"
-              decoding="async"
-              className={`w-full h-full object-cover hover:scale-105 transition-all duration-1000 ${
-                imagesVisible ? "scale-100" : "scale-110"
-              }`}
-            />
-          </div>
-        ))}
-      </div>
+  const closeLightbox = useCallback(() => setLightboxIdx(null), []);
+  const goPrev = useCallback(() => setLightboxIdx((i) => (i !== null ? (i - 1 + images.length) % images.length : null)), [images.length]);
+  const goNext = useCallback(() => setLightboxIdx((i) => (i !== null ? (i + 1) % images.length : null)), [images.length]);
 
-      <div className="section-padding">
+  // Keyboard nav
+  useEffect(() => {
+    if (lightboxIdx === null) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") goPrev();
+      if (e.key === "ArrowRight") goNext();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [lightboxIdx, closeLightbox, goPrev, goNext]);
+
+  return (
+    <>
+      <section className="section-padding bg-primary text-primary-foreground overflow-hidden">
         <div className="section-container">
-          <div className="max-w-3xl mx-auto text-center">
+          <div className="text-center max-w-3xl mx-auto mb-14">
             <AnimatedDivider className="mx-auto mb-8 bg-accent" />
-            
-            <SectionTransition variant="blur-in" delay={100}>
-              <h2 className="heading-editorial mb-6">
-                Craftsmanship in Every Detail
-              </h2>
+            <SectionTransition variant="fade-up">
+              <p className="text-primary-foreground/50 uppercase tracking-[0.2em] text-sm mb-4">Portfolio</p>
             </SectionTransition>
-            
+            <SectionTransition variant="blur-in" delay={100}>
+              <h2 className="heading-editorial mb-6">Craftsmanship in Every Detail</h2>
+            </SectionTransition>
             <SectionTransition variant="fade-up" delay={200}>
-              <p className="text-primary-foreground/70 mb-10 leading-relaxed">
-                We invite you to explore our portfolio of completed projects, showcasing 
-                the artistry and precision that defines Peninsula Equine.
+              <p className="text-primary-foreground/70 leading-relaxed">
+                Explore our completed projects — arenas, barns, and bespoke stonework built to last generations.
               </p>
             </SectionTransition>
-            
-            <SectionTransition variant="scale-up" delay={300}>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-              >
-                <Link to="/gallery">
-                  View Gallery
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </SectionTransition>
           </div>
+
+          {/* Responsive grid */}
+          <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">
+            {images.map((img, i) => (
+              <button
+                key={i}
+                onClick={() => setLightboxIdx(i)}
+                className={`group relative aspect-[4/3] overflow-hidden rounded-lg bg-muted/20 cursor-pointer transition-all duration-700 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                  gridVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                }`}
+                style={{ transitionDelay: `${i * 100}ms` }}
+                aria-label={`View: ${img.alt}`}
+              >
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/40 transition-colors duration-300 flex items-center justify-center">
+                  <ZoomIn className="h-6 w-6 text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </div>
+              </button>
+            ))}
+          </div>
+
+          <SectionTransition variant="fade-up" delay={400} className="text-center mt-12">
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+            >
+              <Link to="/gallery">
+                View Full Gallery
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </SectionTransition>
+        </div>
+      </section>
+
+      {/* Lightbox */}
+      {lightboxIdx !== null && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm"
+          onClick={closeLightbox}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Image lightbox"
+        >
+          <button
+            onClick={closeLightbox}
+            className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+            aria-label="Close lightbox"
+          >
+            <X className="h-5 w-5" />
+          </button>
+
+          <button
+            onClick={(e) => { e.stopPropagation(); goPrev(); }}
+            className="absolute left-4 z-10 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+            aria-label="Previous image"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+
+          <button
+            onClick={(e) => { e.stopPropagation(); goNext(); }}
+            className="absolute right-4 z-10 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+            aria-label="Next image"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+
+          <div className="max-w-5xl max-h-[85vh] px-4" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={images[lightboxIdx].src}
+              alt={images[lightboxIdx].alt}
+              className="w-full h-full object-contain rounded-lg"
+            />
+            <p className="text-white/70 text-sm text-center mt-4">
+              {images[lightboxIdx].alt}
+              <span className="text-white/40 ml-3">{lightboxIdx + 1} / {images.length}</span>
+            </p>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function UpcomingEventsStrip() {
+  const { data: events = [], isLoading } = useQuery({
+    queryKey: ["homepage-upcoming-events"],
+    queryFn: async () => {
+      const today = new Date().toISOString().split("T")[0];
+      const { data, error } = await supabase
+        .from("managed_events")
+        .select("id, title, event_date, event_time, location")
+        .eq("active", true)
+        .gte("event_date", today)
+        .order("event_date")
+        .limit(4);
+      if (error) throw error;
+      return data || [];
+    },
+    staleTime: 120_000,
+  });
+
+  if (isLoading || events.length === 0) return null;
+
+  return (
+    <section className="py-10 sm:py-12 bg-card border-y border-border">
+      <div className="section-container">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-1">Upcoming</p>
+            <h3 className="font-serif text-2xl text-foreground">Events & Clinics</h3>
+          </div>
+          <Button asChild variant="outline" size="sm" className="w-fit">
+            <Link to="/events">
+              View All Events <ArrowRight className="ml-2 h-3.5 w-3.5" />
+            </Link>
+          </Button>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {events.map((event) => (
+            <Link
+              key={event.id}
+              to="/events"
+              className="group rounded-lg border border-border bg-background p-5 hover:border-accent/40 hover:shadow-md transition-all duration-300"
+            >
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/10 flex flex-col items-center justify-center">
+                  <span className="text-accent text-lg font-bold leading-none">
+                    {new Date(event.event_date + "T00:00:00").getDate()}
+                  </span>
+                  <span className="text-accent text-[10px] uppercase tracking-wider">
+                    {new Date(event.event_date + "T00:00:00").toLocaleDateString("en-AU", { month: "short" })}
+                  </span>
+                </div>
+                <div className="min-w-0">
+                  <h4 className="font-serif text-sm font-semibold text-foreground group-hover:text-accent transition-colors truncate">
+                    {event.title}
+                  </h4>
+                  {event.location && (
+                    <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1 truncate">
+                      <MapPin className="h-3 w-3 flex-shrink-0" />
+                      {event.location}
+                    </p>
+                  )}
+                  {event.event_time && (
+                    <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
+                      <Clock className="h-3 w-3 flex-shrink-0" />
+                      {event.event_time}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </section>
@@ -1447,6 +1595,7 @@ export default function Index() {
         <ServicesSection />
         <BookingCTABanner />
         <GallerySection />
+        <UpcomingEventsStrip />
         <ClientStorySection />
         <TestimonialServiceCarousel />
         <TestimonialsGallery />
