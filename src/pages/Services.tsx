@@ -18,6 +18,7 @@ import { BookingWidget } from "@/components/BookingWidget";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
 import { usePinchZoom } from "@/hooks/usePinchZoom";
+import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { StickySubpageCTA } from "@/components/StickySubpageCTA";
 
 // Main Ridge construction process images
@@ -275,7 +276,10 @@ function ServiceCard({ service, index, onQuoteClick }: { service: typeof service
             Quick Book
           </Button>
           <Button 
-            onClick={() => navigate(`/contact?services=${service.id}`)}
+            onClick={() => {
+              trackCtaClick("get_a_quote", { source: "service_detail", service: service.id });
+              navigate(`/contact?services=${service.id}`);
+            }}
             variant="outline"
             className="border-accent/30 text-accent hover:bg-accent/10 transition-all duration-300"
           >
@@ -1298,7 +1302,10 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                       )}
                       <div className="flex gap-2">
                         <Button
-                          onClick={() => navigate(`/contact?services=${service.id}`)}
+                          onClick={() => {
+                            trackCtaClick("get_a_quote", { source: "service_card", service: service.id });
+                            navigate(`/contact?services=${service.id}`);
+                          }}
                           className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground shadow-md"
                           size="sm"
                         >
@@ -1315,7 +1322,10 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                           <BarChart3 className="h-3.5 w-3.5" />
                         </Button>
                         <Button
-                          onClick={() => onQuoteClick(service.id)}
+                          onClick={() => {
+                            trackCtaClick("quick_quote", { source: "service_card", service: service.id });
+                            onQuoteClick(service.id);
+                          }}
                           variant="outline"
                           size="sm"
                           className="border-accent/30 text-accent hover:bg-accent/10 shrink-0"

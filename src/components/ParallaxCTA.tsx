@@ -3,6 +3,7 @@ import { ArrowRight, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
+import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { siteConfig } from "@/data/content";
 
 interface ParallaxCTAProps {
@@ -87,6 +88,7 @@ export function ParallaxCTA({
               asChild
               size="lg"
               className="bg-accent hover:bg-accent/90 text-accent-foreground btn-hover-lift text-base px-8"
+              onClick={() => trackCtaClick("get_a_quote", { source: "parallax_cta", label: primaryButtonText })}
             >
               <Link to={primaryButtonLink}>
                 {primaryButtonText}
