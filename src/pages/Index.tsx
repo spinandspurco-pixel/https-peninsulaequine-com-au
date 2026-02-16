@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, X, Mail, Send } from "lucide-react";
+import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, X, Mail, Send, MessageSquare } from "lucide-react";
 import { BookingWidget } from "@/components/BookingWidget";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
@@ -35,10 +35,66 @@ import blueprintElevation from "@/assets/blueprint-elevation.png";
 // Featured services for homepage
 const featuredServices = services.slice(0, 4);
 
+function HeroCTAToggle({ heroMode, setHeroMode }: { heroMode: "book" | "consult"; setHeroMode: (m: "book" | "consult") => void }) {
+  return (
+    <div className="flex flex-col items-center gap-4 mt-2">
+      {/* Toggle pills */}
+      <div className="inline-flex rounded-full border border-white/20 bg-white/10 backdrop-blur-sm p-1">
+        <button
+          onClick={() => setHeroMode("book")}
+          className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+            heroMode === "book"
+              ? "bg-accent text-accent-foreground shadow-md"
+              : "text-white/80 hover:text-white"
+          }`}
+        >
+          <CalendarIcon className="inline h-4 w-4 mr-1.5 -mt-0.5" />
+          Book a Lesson
+        </button>
+        <button
+          onClick={() => setHeroMode("consult")}
+          className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+            heroMode === "consult"
+              ? "bg-accent text-accent-foreground shadow-md"
+              : "text-white/80 hover:text-white"
+          }`}
+        >
+          <MessageSquare className="inline h-4 w-4 mr-1.5 -mt-0.5" />
+          Request a Consult
+        </button>
+      </div>
+
+      {/* Conditional content */}
+      <div className="w-full max-w-lg mx-auto transition-all duration-300">
+        {heroMode === "book" ? (
+          <BookingWidget variant="hero" />
+        ) : (
+          <div className="flex flex-col items-center gap-3">
+            <p className="text-white/70 text-sm text-center max-w-sm">
+              Tell us about your project — we'll get back to you within 1–2 business days.
+            </p>
+            <Button
+              asChild
+              size="lg"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium tracking-wide shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+            >
+              <Link to="/contact">
+                <MessageSquare className="mr-2 h-5 w-5" />
+                Start a Consultation
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
   const [scrollY, setScrollY] = useState(0);
   const [bannerLoaded, setBannerLoaded] = useState(false);
+  const [heroMode, setHeroMode] = useState<"book" | "consult">("book");
   const sectionRef = useRef<HTMLDivElement>(null);
 
   // Track scroll position for parallax
@@ -137,19 +193,7 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
             <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mb-6">
               Facility Construction • Training • Excellence
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <BookingWidget variant="hero" />
-              <Button
-                asChild
-                size="lg"
-                className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium tracking-wide shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
-              >
-                <Link to="/book-lesson">
-                  <CalendarIcon className="mr-2 h-5 w-5" />
-                  Book a Lesson
-                </Link>
-              </Button>
-            </div>
+            <HeroCTAToggle heroMode={heroMode} setHeroMode={setHeroMode} />
           </>
         )}
 
@@ -158,17 +202,7 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
             <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mb-6">
               Facility Construction • Training • Excellence
             </p>
-            <BookingWidget variant="hero" />
-            <Button
-              asChild
-              size="lg"
-              className="mt-4 bg-accent hover:bg-accent/90 text-accent-foreground font-medium tracking-wide shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
-            >
-              <Link to="/book-lesson">
-                <CalendarIcon className="mr-2 h-5 w-5" />
-                Book a Lesson
-              </Link>
-            </Button>
+            <HeroCTAToggle heroMode={heroMode} setHeroMode={setHeroMode} />
           </div>
         )}
       </div>
