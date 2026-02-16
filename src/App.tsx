@@ -27,6 +27,7 @@ import ProductDetail from "./pages/ProductDetail";
 import Forge from "./pages/Forge";
 import Events from "./pages/Events";
 import BookingsDashboard from "./pages/BookingsDashboard";
+import StudentSpotlight from "./pages/StudentSpotlight";
 import { useCartSync } from "./hooks/useCartSync";
 
 const queryClient = new QueryClient();
@@ -64,6 +65,7 @@ function AppContent() {
           <Route path="/events" element={<Events />} />
           <Route path="/events" element={<Events />} />
           <Route path="/bookings" element={<BookingsDashboard />} />
+          <Route path="/student-spotlight" element={<StudentSpotlight />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
