@@ -212,6 +212,8 @@ export const testimonials = [
     role: "Ranch Owner, Woodside",
     quote: "Ciro built our entire 12-stall barn and covered arena. His attention to detail and understanding of what horses need is unmatched. Five years later, everything still looks and functions like new.",
     rating: 5,
+    mediaType: "image" as const,
+    mediaKey: "sarah",
   },
   {
     id: 2,
@@ -219,6 +221,8 @@ export const testimonials = [
     role: "Dressage Trainer, Atherton",
     quote: "The arena Ciro built for us has the best footing I've ever worked on. He took the time to understand our discipline and designed a surface that performs perfectly for dressage work.",
     rating: 5,
+    mediaType: "video" as const,
+    mediaKey: "robert",
   },
   {
     id: 3,
@@ -226,6 +230,8 @@ export const testimonials = [
     role: "Breeding Farm Manager, Half Moon Bay",
     quote: "From paddock fencing to our new mare barn, Peninsula Equine handled every project professionally and on time. Ciro's personal involvement makes all the difference.",
     rating: 5,
+    mediaType: "image" as const,
+    mediaKey: "elena",
   },
   {
     id: 4,
@@ -240,6 +246,8 @@ export const testimonials = [
     role: "Equine Veterinarian",
     quote: "I recommend Peninsula Equine to all my clients building new facilities. The ventilation, safety features, and overall design always prioritize horse health.",
     rating: 5,
+    mediaType: "image" as const,
+    mediaKey: "amanda",
   },
   {
     id: 6,
