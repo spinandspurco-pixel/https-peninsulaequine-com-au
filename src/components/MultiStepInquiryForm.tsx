@@ -259,15 +259,27 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
   const experienceLabel = EXPERIENCE_LEVELS.find((e) => e.id === experience)?.label;
 
   if (submitted) {
+    const scheduleParams = new URLSearchParams({
+      ...(selectedServices.length ? { services: selectedServices.join(",") } : {}),
+      ...(name.trim() ? { name: name.trim() } : {}),
+      ...(email.trim() ? { email: email.trim() } : {}),
+    });
     return (
       <div className={cn("rounded-2xl border border-border bg-card p-8 sm:p-12 text-center", className)}>
         <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6">
           <CheckCircle className="h-8 w-8 text-accent" />
         </div>
         <h3 className="font-serif text-2xl font-semibold text-foreground mb-2">Thank You!</h3>
-        <p className="text-muted-foreground max-w-sm mx-auto">
+        <p className="text-muted-foreground max-w-sm mx-auto mb-6">
           Your inquiry has been received. We'll get back to you within 1–2 business days.
         </p>
+        <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
+          <a href={`/schedule?${scheduleParams.toString()}`}>
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            Book Your Consultation Now
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </a>
+        </Button>
       </div>
     );
   }
