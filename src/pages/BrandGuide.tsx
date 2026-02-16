@@ -1,7 +1,8 @@
 import { Layout } from "@/components/layout/Layout";
-import { Download, Check, X as XIcon, Copy, Package, FileImage, Palette, Type } from "lucide-react";
+import { Download, Check, X as XIcon, Copy, Package, FileImage, Palette, Type, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { QuickContactModal } from "@/components/QuickContactModal";
 import { toast } from "sonner";
 import logoPeMark from "@/assets/logo-pe-mark.png";
 import logoPe from "@/assets/logo-pe.png";
@@ -212,6 +213,7 @@ const assetCategories = [...new Set(brandAssets.map((a) => a.category))];
 export default function BrandGuide() {
   const [downloadingAll, setDownloadingAll] = useState(false);
   const [downloadedAssets, setDownloadedAssets] = useState<Set<string>>(new Set());
+  const [contactOpen, setContactOpen] = useState(false);
   return (
     <Layout>
       {/* Hero */}
@@ -472,6 +474,26 @@ export default function BrandGuide() {
           </div>
         </div>
       </section>
+
+      {/* Contact CTA */}
+      <section className="py-16 bg-secondary/30">
+        <div className="section-container text-center max-w-xl mx-auto space-y-4">
+          <h2 className="font-serif text-2xl font-semibold text-foreground">Need Brand Assets or Have Questions?</h2>
+          <p className="text-muted-foreground text-sm">
+            Get in touch for custom asset formats, co-branding guidelines, or any brand-related inquiries.
+          </p>
+          <Button
+            size="lg"
+            className="gap-2 bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.1em] text-sm px-8"
+            onClick={() => setContactOpen(true)}
+          >
+            <MessageCircle className="h-4 w-4" />
+            Contact Us
+          </Button>
+        </div>
+      </section>
+
+      <QuickContactModal open={contactOpen} onOpenChange={setContactOpen} />
     </Layout>
   );
 }
