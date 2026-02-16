@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import blueprintElevation from "@/assets/blueprint-elevation.png";
@@ -30,7 +30,8 @@ const directions: Record<string, "left-to-right" | "right-to-left" | "bottom-to-
 
 /**
  * Unified blueprint overlay system for all Gallery page sections.
- * Provides consistent layering: blueprint image → gallery line overlay → gradient → content.
+ * Gradient overlay auto-resizes via CSS custom properties resolved at paint time,
+ * so it adapts instantly to any viewport change without JS resize listeners.
  */
 export function GalleryBlueprintOverlay({
   layer = "elevation",
@@ -39,7 +40,8 @@ export function GalleryBlueprintOverlay({
   children,
   className = "",
 }: GalleryBlueprintOverlayProps) {
-  const bgVar = bg === "card" ? "card" : "background";
+  /* CSS variable name that resolves to the section's background HSL value */
+  const hslVar = bg === "card" ? "var(--card)" : "var(--background)";
 
   return (
     <section className={`relative overflow-hidden ${className}`}>
@@ -53,9 +55,13 @@ export function GalleryBlueprintOverlay({
       />
       {/* Layer 2: Gallery viewfinder SVG line overlay */}
       <BlueprintLineOverlay variant="gallery" color={lineColor} />
-      {/* Layer 3: Gradient to blend into section bg */}
+      {/* Layer 3: Gradient lightening overlay — uses live CSS vars so it
+          auto-adapts when viewport changes trigger theme / layout shifts */}
       <div
-        className={`absolute inset-0 pointer-events-none z-[1] bg-gradient-to-b from-${bgVar}/60 via-${bgVar}/90 to-${bgVar}`}
+        className="absolute inset-0 pointer-events-none z-[1]"
+        style={{
+          background: `linear-gradient(to bottom, hsl(${hslVar} / 0.6), hsl(${hslVar} / 0.9), hsl(${hslVar}))`,
+        }}
       />
       {/* Layer 4: Content */}
       <div className="relative z-[2]">{children}</div>
