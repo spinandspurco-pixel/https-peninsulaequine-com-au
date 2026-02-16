@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { CalendarIcon, Clock, CheckCircle, ArrowRight, Send, Star, Award, Target, ChevronDown, ExternalLink, Quote, Users, Sparkles, Play, Printer, CircleDot } from "lucide-react";
+import { CalendarIcon, Clock, CheckCircle, ArrowRight, Send, Star, Award, Target, ChevronDown, ExternalLink, Quote, Users, Sparkles, Play, Printer, CircleDot, Mail, Phone, MapPin, User, Edit2 } from "lucide-react";
 import { z } from "zod";
 import { format } from "date-fns";
 import Autoplay from "embla-carousel-autoplay";
@@ -481,6 +481,7 @@ function BookingForm() {
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
   const [step, setStep] = useState<1 | 2>(1);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -495,8 +496,13 @@ function BookingForm() {
 
   const prefilledSlotType = searchParams.get("slot") === "clinic" ? "clinic" : "lesson";
 
+  // Auto-fill from URL params (e.g. from inline booking or inquiry forms)
+  const prefilledName = searchParams.get("name") || "";
+  const prefilledEmail = searchParams.get("email") || "";
+  const prefilledPhone = searchParams.get("phone") || "";
+
   const [formData, setFormData] = useState<Partial<BookingFormData>>({
-    name: "", email: "", phone: "", horseName: "", experienceLevel: initialLevel,
+    name: prefilledName, email: prefilledEmail, phone: prefilledPhone, horseName: "", experienceLevel: initialLevel,
     lessonGoals: "", preferredDay: "", preferredDate: validPrefilledDate, additionalNotes: "",
     timezone: getDetectedTimezone(), slotType: prefilledSlotType as "lesson" | "clinic",
   });
@@ -526,8 +532,13 @@ function BookingForm() {
 
   const goToStep2 = () => { if (validateStep(1)) setStep(2); };
 
-  const handleSubmit = async () => {
+  /** Opens the confirmation modal instead of submitting directly */
+  const handleReviewSubmit = () => {
     if (!validateStep(2)) return;
+    setShowConfirm(true);
+  };
+
+  const handleConfirmAndSubmit = async () => {
     setIsSubmitting(true);
     try {
       const { error } = await supabase.from("inquiries").insert({
@@ -544,7 +555,6 @@ function BookingForm() {
       });
       if (error) throw error;
 
-      // Send inquiry notification
       supabase.functions.invoke("send-inquiry-notification", {
         body: {
           name: formData.name?.trim(), email: formData.email?.trim(), phone: formData.phone?.trim(),
@@ -554,7 +564,6 @@ function BookingForm() {
         },
       }).catch(() => {});
 
-      // Send booking confirmation with calendar invite
       supabase.functions.invoke("send-booking-confirmation", {
         body: {
           clientName: formData.name?.trim(),
@@ -568,6 +577,7 @@ function BookingForm() {
         },
       }).catch(() => {});
 
+      setShowConfirm(false);
       setIsSubmitted(true);
       toast({ title: "Lesson inquiry sent!", description: "We'll be in touch to confirm your booking." });
     } catch {
@@ -576,6 +586,8 @@ function BookingForm() {
       setIsSubmitting(false);
     }
   };
+
+  const selectedProgram = PROGRAM_LEVELS.find((l) => l.value === formData.experienceLevel);
 
   if (isSubmitted) {
     return (
@@ -766,10 +778,125 @@ function BookingForm() {
             <Button variant="outline" onClick={() => setStep(1)} className="flex-1">
               Back
             </Button>
-            <Button onClick={handleSubmit} disabled={isSubmitting} className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground">
-              {isSubmitting ? "Sending..." : "Book Lesson"}
-              {!isSubmitting && <Send className="ml-2 h-4 w-4" />}
+            <Button onClick={handleReviewSubmit} disabled={isSubmitting} className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground">
+              Review & Book
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Confirmation Modal ──────────────────────────── */}
+      {showConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => !isSubmitting && setShowConfirm(false)}>
+          <div
+            className="bg-card border border-border rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto animate-scale-in"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="bg-primary px-6 py-5 rounded-t-2xl">
+              <h3 className="font-serif text-xl font-semibold text-primary-foreground">Confirm Your Booking</h3>
+              <p className="text-sm text-primary-foreground/70 mt-1">Please review your details before submitting.</p>
+            </div>
+
+            <div className="p-6 space-y-5">
+              {/* Lesson Details */}
+              <div className="rounded-lg border border-border bg-background p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Lesson</span>
+                  <button onClick={() => { setShowConfirm(false); setStep(1); }} className="text-xs text-accent hover:underline flex items-center gap-1">
+                    <Edit2 className="h-3 w-3" /> Edit
+                  </button>
+                </div>
+                {selectedProgram && (
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
+                      <selectedProgram.icon className="h-5 w-5 text-accent" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground">{selectedProgram.label}</p>
+                      <p className="text-xs text-muted-foreground">{selectedProgram.price} · {selectedProgram.duration}</p>
+                    </div>
+                  </div>
+                )}
+                <div className="grid grid-cols-2 gap-3 pt-2 border-t border-border">
+                  <div className="flex items-center gap-2 text-sm">
+                    <CalendarIcon className="h-4 w-4 text-accent shrink-0" />
+                    <span className="text-foreground">
+                      {formData.preferredDate ? format(formData.preferredDate, "EEE, MMM d") : "No date selected"}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Clock className="h-4 w-4 text-accent shrink-0" />
+                    <span className="text-foreground capitalize">{formData.preferredDay || "—"}</span>
+                  </div>
+                  {formData.horseName?.trim() && (
+                    <div className="flex items-center gap-2 text-sm col-span-2">
+                      <Star className="h-4 w-4 text-accent shrink-0" />
+                      <span className="text-foreground">{formData.horseName}</span>
+                    </div>
+                  )}
+                </div>
+                {formData.lessonGoals?.trim() && (
+                  <div className="pt-2 border-t border-border">
+                    <p className="text-xs text-muted-foreground mb-1">Goals</p>
+                    <p className="text-sm text-foreground leading-relaxed line-clamp-3">{formData.lessonGoals}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Contact Details */}
+              <div className="rounded-lg border border-border bg-background p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Your Details</span>
+                  <button onClick={() => { setShowConfirm(false); setStep(2); }} className="text-xs text-accent hover:underline flex items-center gap-1">
+                    <Edit2 className="h-3 w-3" /> Edit
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm">
+                    <User className="h-4 w-4 text-accent shrink-0" />
+                    <span className="text-foreground">{formData.name}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Mail className="h-4 w-4 text-accent shrink-0" />
+                    <span className="text-foreground">{formData.email}</span>
+                  </div>
+                  {formData.phone?.trim() && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <Phone className="h-4 w-4 text-accent shrink-0" />
+                      <span className="text-foreground">{formData.phone}</span>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-2 text-sm">
+                    <MapPin className="h-4 w-4 text-accent shrink-0" />
+                    <span className="text-foreground">{TIMEZONE_OPTIONS.find(t => t.value === formData.timezone)?.label || formData.timezone}</span>
+                  </div>
+                </div>
+              </div>
+
+              {formData.additionalNotes?.trim() && (
+                <div className="rounded-lg border border-border bg-background p-4">
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-2">Additional Notes</p>
+                  <p className="text-sm text-foreground leading-relaxed">{formData.additionalNotes}</p>
+                </div>
+              )}
+
+              {/* Actions */}
+              <div className="flex gap-3 pt-2">
+                <Button variant="outline" onClick={() => setShowConfirm(false)} disabled={isSubmitting} className="flex-1">
+                  Go Back
+                </Button>
+                <Button onClick={handleConfirmAndSubmit} disabled={isSubmitting} className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground">
+                  {isSubmitting ? "Sending..." : "Confirm & Book"}
+                  {!isSubmitting && <Send className="ml-2 h-4 w-4" />}
+                </Button>
+              </div>
+
+              <p className="text-[11px] text-muted-foreground text-center">
+                You'll receive a confirmation email once your session is confirmed.
+              </p>
+            </div>
           </div>
         </div>
       )}
