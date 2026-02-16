@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { SwipeIndicator } from "@/components/SwipeIndicator";
+import { QuickQuoteModal } from "@/components/QuickQuoteModal";
 import { services, lessonInfo, siteConfig } from "@/data/content";
 import { BookingWidget } from "@/components/BookingWidget";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
@@ -87,7 +88,7 @@ function PageHeader({ title, description }: { title: string; description: string
   );
 }
 
-function ServiceCard({ service, index }: { service: typeof services[0]; index: number }) {
+function ServiceCard({ service, index, onQuoteClick }: { service: typeof services[0]; index: number; onQuoteClick: (serviceId: string) => void }) {
   const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation<HTMLDivElement>();
   const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
 
@@ -142,11 +143,12 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
           ))}
         </ul>
         <div className="flex flex-wrap gap-3">
-          <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-            <Link to={`/contact?services=${service.id}`}>
-              Get a Quote
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
+          <Button 
+            onClick={() => onQuoteClick(service.id)}
+            className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
+          >
+            Get a Quote
+            <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Button>
           <Button 
             variant="outline" 
@@ -659,7 +661,7 @@ function LessonsSection() {
   );
 }
 
-function PricingGridSection() {
+function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string) => void }) {
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>();
   const { containerRef, visibleItems } = useStaggeredAnimation(services.length);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -771,15 +773,16 @@ function PricingGridSection() {
                   <div className={`mt-4 transition-all duration-300 ${
                     isHovered ? "opacity-100 translate-y-0" : "opacity-70 translate-y-0"
                   }`}>
-                    <Button asChild className={`w-full transition-all duration-300 ${
-                      isHovered
-                        ? "bg-accent hover:bg-accent/90 text-accent-foreground shadow-md"
-                        : "bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
-                    }`}>
-                      <Link to={`/contact?services=${service.id}`}>
-                        {isHovered ? "Get a Quote" : service.startingPrice ? "Learn More" : "Get a Quote"}
-                        <ArrowRight className={`ml-2 h-4 w-4 transition-transform duration-300 ${isHovered ? "translate-x-1" : ""}`} />
-                      </Link>
+                    <Button 
+                      onClick={() => onQuoteClick(service.id)}
+                      className={`w-full transition-all duration-300 ${
+                        isHovered
+                          ? "bg-accent hover:bg-accent/90 text-accent-foreground shadow-md"
+                          : "bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
+                      }`}
+                    >
+                      {isHovered ? "Get a Quote" : service.startingPrice ? "Learn More" : "Get a Quote"}
+                      <ArrowRight className={`ml-2 h-4 w-4 transition-transform duration-300 ${isHovered ? "translate-x-1" : ""}`} />
                     </Button>
                   </div>
                 </div>
@@ -810,6 +813,9 @@ function CTASection() {
 }
 
 export default function Services() {
+  const [quoteServiceId, setQuoteServiceId] = useState<string | null>(null);
+  const activeService = services.find((s) => s.id === quoteServiceId);
+
   return (
     <Layout>
       <PageHeader
@@ -819,17 +825,26 @@ export default function Services() {
 
       <section id="services-list" className="section-container scroll-mt-24">
         {services.map((service, index) => (
-          <ServiceCard key={service.id} service={service} index={index} />
+          <ServiceCard key={service.id} service={service} index={index} onQuoteClick={setQuoteServiceId} />
         ))}
       </section>
 
-      <PricingGridSection />
+      <PricingGridSection onQuoteClick={setQuoteServiceId} />
 
       <ConstructionProcessSection />
 
       <LessonsSection />
 
       <CTASection />
+
+      {/* Quick Quote Modal */}
+      <QuickQuoteModal
+        open={!!quoteServiceId}
+        onOpenChange={(open) => { if (!open) setQuoteServiceId(null); }}
+        serviceId={quoteServiceId || ""}
+        serviceTitle={activeService?.title || ""}
+        startingPrice={activeService?.startingPrice}
+      />
     </Layout>
   );
 }
