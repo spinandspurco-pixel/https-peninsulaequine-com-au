@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ABTestStatsPanel } from "@/components/ABTestStatsPanel";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Layout } from "@/components/layout/Layout";
@@ -400,6 +400,43 @@ export default function Admin() {
                 </CardTitle>
               </CardHeader>
             </Card>
+          </div>
+
+          {/* Content Management Quick Links */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <Link to="/admin/services">
+              <Card className="hover:border-accent/40 transition-colors cursor-pointer group">
+                <CardHeader className="pb-2">
+                  <CardDescription>Content</CardDescription>
+                  <CardTitle className="text-lg flex items-center gap-2 group-hover:text-accent transition-colors">
+                    <Settings className="h-5 w-5" />
+                    Manage Services
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+            </Link>
+            <Link to="/admin/testimonials">
+              <Card className="hover:border-accent/40 transition-colors cursor-pointer group">
+                <CardHeader className="pb-2">
+                  <CardDescription>Content</CardDescription>
+                  <CardTitle className="text-lg flex items-center gap-2 group-hover:text-accent transition-colors">
+                    <MessageSquare className="h-5 w-5" />
+                    Manage Testimonials
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+            </Link>
+            <Link to="/admin/events">
+              <Card className="hover:border-accent/40 transition-colors cursor-pointer group">
+                <CardHeader className="pb-2">
+                  <CardDescription>Content</CardDescription>
+                  <CardTitle className="text-lg flex items-center gap-2 group-hover:text-accent transition-colors">
+                    <Calendar className="h-5 w-5" />
+                    Manage Events
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+            </Link>
           </div>
 
           {/* A/B Test Stats */}

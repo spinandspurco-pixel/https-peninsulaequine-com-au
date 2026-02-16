@@ -313,6 +313,138 @@ export type Database = {
         }
         Relationships: []
       }
+      managed_events: {
+        Row: {
+          active: boolean
+          capacity: number | null
+          created_at: string
+          description: string | null
+          event_date: string
+          event_time: string | null
+          id: string
+          image_url: string | null
+          location: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          capacity?: number | null
+          created_at?: string
+          description?: string | null
+          event_date: string
+          event_time?: string | null
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          capacity?: number | null
+          created_at?: string
+          description?: string | null
+          event_date?: string
+          event_time?: string | null
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      managed_services: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string | null
+          features: string[]
+          icon: string | null
+          id: string
+          image_url: string | null
+          short_description: string | null
+          slug: string
+          sort_order: number
+          starting_price: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          features?: string[]
+          icon?: string | null
+          id?: string
+          image_url?: string | null
+          short_description?: string | null
+          slug: string
+          sort_order?: number
+          starting_price?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          features?: string[]
+          icon?: string | null
+          id?: string
+          image_url?: string | null
+          short_description?: string | null
+          slug?: string
+          sort_order?: number
+          starting_price?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      managed_testimonials: {
+        Row: {
+          active: boolean
+          client_name: string
+          client_role: string | null
+          created_at: string
+          id: string
+          media_type: string | null
+          media_url: string | null
+          quote: string
+          rating: number
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          client_name: string
+          client_role?: string | null
+          created_at?: string
+          id?: string
+          media_type?: string | null
+          media_url?: string | null
+          quote: string
+          rating?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          client_name?: string
+          client_role?: string | null
+          created_at?: string
+          id?: string
+          media_type?: string | null
+          media_url?: string | null
+          quote?: string
+          rating?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

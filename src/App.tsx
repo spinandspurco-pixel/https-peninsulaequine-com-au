@@ -15,6 +15,9 @@ import { Privacy, Terms } from "./pages/Legal";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
+import AdminServices from "./pages/AdminServices";
+import AdminTestimonials from "./pages/AdminTestimonials";
+import AdminEvents from "./pages/AdminEvents";
 import HQ from "./pages/HQ";
 import EmployeeDashboard from "./pages/EmployeeDashboard";
 import BookLesson from "./pages/BookLesson";
@@ -48,6 +51,9 @@ function AppContent() {
           <Route path="/login" element={<Login />} />
           <Route path="/hq" element={<HQ />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/services" element={<AdminServices />} />
+          <Route path="/admin/testimonials" element={<AdminTestimonials />} />
+          <Route path="/admin/events" element={<AdminEvents />} />
           <Route path="/employee" element={<EmployeeDashboard />} />
           <Route path="/book-lesson" element={<BookLesson />} />
           <Route path="/brand" element={<BrandGuide />} />
