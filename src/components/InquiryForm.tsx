@@ -672,21 +672,86 @@ export function InquiryForm() {
     }
   };
 
+  const isClinicInquiry = formData.interestedServices?.includes("clinics-events");
+
   if (isSubmitted) {
     return (
-      <div className="text-center py-12">
+      <div className="text-center py-12 animate-fade-in">
         <div className="w-20 h-20 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6">
           <CheckCircle className="h-10 w-10 text-accent" />
         </div>
         <h3 className="font-serif text-2xl font-semibold text-foreground mb-4">
-          Thank You for Your Inquiry!
+          {isClinicInquiry ? "Event Inquiry Received!" : "Thank You for Your Inquiry!"}
         </h3>
         <p className="text-muted-foreground mb-2 max-w-md mx-auto">
           We've received your project details and will review them carefully.
         </p>
-        <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+        <p className="text-muted-foreground mb-6 max-w-md mx-auto">
           Expect to hear from us within 1-2 business days.
         </p>
+
+        {/* Clinic/Event-specific summary & next steps */}
+        {isClinicInquiry && (
+          <div className="max-w-lg mx-auto text-left mb-8 space-y-4">
+            {/* Flow Summary */}
+            <div className="rounded-xl border border-accent/20 bg-accent/5 p-5 space-y-3">
+              <h4 className="font-serif text-lg font-semibold text-foreground">Your Event Summary</h4>
+              <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                {formData.eventType && (
+                  <>
+                    <span className="text-muted-foreground">Event Type</span>
+                    <span className="text-foreground font-medium capitalize">{formData.eventType.replace("-", " ")}</span>
+                  </>
+                )}
+                {formData.eventCapacity && (
+                  <>
+                    <span className="text-muted-foreground">Capacity</span>
+                    <span className="text-foreground font-medium">{formData.eventCapacity}</span>
+                  </>
+                )}
+                {formData.eventFrequency && (
+                  <>
+                    <span className="text-muted-foreground">Frequency</span>
+                    <span className="text-foreground font-medium capitalize">{formData.eventFrequency.replace("-", " ")}</span>
+                  </>
+                )}
+                {formData.eventAmenities && formData.eventAmenities.length > 0 && (
+                  <>
+                    <span className="text-muted-foreground">Amenities</span>
+                    <span className="text-foreground font-medium">{formData.eventAmenities.length} selected</span>
+                  </>
+                )}
+                {formData.eventRsvpInterest && formData.eventExpectedAttendees && (
+                  <>
+                    <span className="text-muted-foreground">Your Group</span>
+                    <span className="text-foreground font-medium">{formData.eventExpectedAttendees}</span>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Next Steps */}
+            <div className="rounded-xl border border-border bg-card p-5">
+              <h4 className="font-serif text-lg font-semibold text-foreground mb-3">What Happens Next</h4>
+              <ol className="space-y-3 text-sm">
+                {[
+                  { step: "1", text: "Our team reviews your event requirements and venue needs" },
+                  { step: "2", text: "We'll schedule a site consultation to discuss layout and logistics" },
+                  { step: "3", text: "You'll receive a detailed proposal with pricing and timeline" },
+                  { step: "4", text: "Once approved, we begin planning and construction" },
+                ].map((item) => (
+                  <li key={item.step} className="flex items-start gap-3">
+                    <span className="w-6 h-6 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                      {item.step}
+                    </span>
+                    <span className="text-muted-foreground">{item.text}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        )}
+
         <Button
           onClick={() => {
             setIsSubmitted(false);
@@ -718,6 +783,8 @@ export function InquiryForm() {
               eventCapacity: "",
               eventFrequency: "",
               eventAmenities: [],
+              eventRsvpInterest: false,
+              eventExpectedAttendees: "",
               experienceLevel: "",
               budgetRange: "",
               name: "",
