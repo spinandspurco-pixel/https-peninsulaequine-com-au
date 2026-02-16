@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Play, Pause, Quote, Star } from "lucide-react";
+import { PageHeader } from "@/components/PageHeader";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { Button } from "@/components/ui/button";
@@ -43,44 +44,7 @@ const VIDEO_TESTIMONIALS = [
 // Featured written testimonials (the rest)
 const FEATURED_WRITTEN = [testimonials[1], testimonials[2], testimonials[4], testimonials[5]];
 
-function PageHeader() {
-  const { ref: parallaxRef, offset } = useParallax<HTMLElement>({ speed: 0.3 });
-
-  return (
-    <section ref={parallaxRef} className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
-      {/* Blueprint layers */}
-      <BlueprintBackground image={blueprintElevation} opacity={0.07} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
-      <BlueprintBackground image={blueprintFacility} opacity={0.03} direction="right-to-left" duration={2400} parallaxSpeed={0.1} className="scale-105" />
-      <BlueprintLineOverlay variant="about-elevation" color="light" />
-      {/* Parallax background layer */}
-      <div 
-        className="absolute inset-0 opacity-10 will-change-transform"
-        style={{ 
-          transform: `translateY(${offset * 0.6}px)`,
-          backgroundImage: `url(${ciroWithHorse})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      />
-      <div className="section-container relative z-10">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="mb-6">
-            <img src={logoPeMark} alt="Peninsula Equine" className="w-20 h-20 sm:w-24 sm:h-24 mx-auto object-contain drop-shadow-[0_2px_20px_rgba(255,255,255,0.2)]" />
-          </div>
-          <p className="text-primary-foreground/50 uppercase tracking-[0.2em] text-xs sm:text-sm mb-6">
-            Crafting World-Class Equine Facilities
-          </p>
-          <h1 className="heading-display mb-6">About Peninsula Equine</h1>
-          <p className="text-lg text-primary-foreground/80">
-            Building world-class equine facilities with the insight that only comes 
-            from a lifetime of horsemanship.
-          </p>
-        </div>
-      </div>
-      <BlueprintDivider variant="grid" className="absolute bottom-0 left-0 right-0 h-12 sm:h-16" />
-    </section>
-  );
-}
+// About page uses the shared PageHeader component
 
 function CiroSection() {
   const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation<HTMLDivElement>();
@@ -545,7 +509,12 @@ function CTASection() {
 export default function About() {
   return (
     <Layout>
-      <PageHeader />
+      <PageHeader
+        title="About Peninsula Equine"
+        description="Building world-class equine facilities with the insight that only comes from a lifetime of horsemanship."
+        backgroundImage={ciroWithHorse}
+        dividerVariant="grid"
+      />
       <CiroSection />
       <BlueprintDivider variant="elevation" />
       <NaturalHorsemanshipSection />

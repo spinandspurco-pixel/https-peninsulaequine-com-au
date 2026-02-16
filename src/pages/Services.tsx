@@ -36,6 +36,7 @@ import qldFacilityCourtyard from "@/assets/qld-facility-courtyard.jpg";
 import mainRidgeCiroWoodwork from "@/assets/main-ridge-ciro-woodwork-1.jpg";
 import blueprintElevation from "@/assets/blueprint-elevation.png";
 import blueprintFacility from "@/assets/blueprint-facility.png";
+import blueprintBarn from "@/assets/blueprint-barn.png";
 import logoPeMark from "@/assets/logo-pe-mark.png";
 
 // Map service IDs to their images
@@ -57,11 +58,23 @@ function PageHeader({ title, description }: { title: string; description: string
   return (
     <section ref={parallaxRef} className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
       {/* Layer 1: Elevation blueprint – slow reveal left-to-right */}
-      <BlueprintBackground image={blueprintElevation} opacity={0.08} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
-      {/* Layer 2: Facility plan – opposite direction, deeper parallax */}
+      <BlueprintBackground image={blueprintElevation} opacity={0.07} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
       <BlueprintBackground image={blueprintFacility} opacity={0.035} direction="right-to-left" duration={2400} parallaxSpeed={0.1} className="scale-105" />
-      {/* Layer 3: SVG architectural line overlay */}
+      <BlueprintBackground image={blueprintBarn} opacity={0.025} direction="bottom-to-top" duration={2800} parallaxSpeed={0.06} />
       <BlueprintLineOverlay variant="dimensions" color="light" />
+
+      {/* Gradient overlays for depth */}
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/0 via-primary/30 to-primary/70 pointer-events-none z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/40 via-transparent to-primary/40 pointer-events-none z-[1]" />
+
+      {/* PE logo watermark */}
+      <div
+        className="absolute inset-0 flex items-center justify-center pointer-events-none z-[2]"
+        style={{ opacity: 0.04, transform: `translateY(${offset * 0.15}px)` }}
+      >
+        <img src={logoPeMark} alt="" aria-hidden="true" className="w-[50vw] max-w-[400px] h-auto object-contain select-none" style={{ filter: "grayscale(0.5) brightness(1.4)" }} />
+      </div>
+
       {/* Parallax decorative photo element */}
       <div 
         className="absolute right-0 top-0 w-1/3 h-full opacity-5 will-change-transform"
