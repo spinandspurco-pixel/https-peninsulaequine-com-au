@@ -210,6 +210,19 @@ export default function Testimonials() {
 
   useEffect(() => {
     async function load() {
+      // Build static baseline
+      const staticItems: TestimonialItem[] = staticTestimonials.map((t) => ({
+        id: `static-${t.id}`,
+        name: t.name,
+        role: t.role,
+        quote: t.quote,
+        rating: t.rating,
+        mediaType: t.mediaType ?? null,
+        mediaUrl: null,
+        serviceTags: inferServiceTags(t.role),
+      }));
+
+      // Fetch DB records
       const { data } = await supabase
         .from("managed_testimonials")
         .select("*")
@@ -217,31 +230,25 @@ export default function Testimonials() {
         .order("sort_order", { ascending: true });
 
       if (data && data.length > 0) {
-        setTestimonials(
-          data.map((t: any) => ({
-            id: t.id,
-            name: t.client_name,
-            role: t.client_role ?? "",
-            quote: t.quote,
-            rating: t.rating,
-            mediaType: (t.media_type as "image" | "video" | null) ?? null,
-            mediaUrl: t.media_url ?? null,
-            serviceTags: (t.service_tags as string[]) ?? [],
-          }))
+        const dbItems: TestimonialItem[] = data.map((t: any) => ({
+          id: t.id,
+          name: t.client_name,
+          role: t.client_role ?? "",
+          quote: t.quote,
+          rating: t.rating,
+          mediaType: (t.media_type as "image" | "video" | null) ?? null,
+          mediaUrl: t.media_url ?? null,
+          serviceTags: (t.service_tags as string[]) ?? [],
+        }));
+
+        // Merge: DB records first, then static ones whose name+quote combo isn't already in DB
+        const dbKeys = new Set(dbItems.map((d) => `${d.name}::${d.quote.slice(0, 40)}`));
+        const uniqueStatic = staticItems.filter(
+          (s) => !dbKeys.has(`${s.name}::${s.quote.slice(0, 40)}`)
         );
+        setTestimonials([...dbItems, ...uniqueStatic]);
       } else {
-        setTestimonials(
-          staticTestimonials.map((t) => ({
-            id: String(t.id),
-            name: t.name,
-            role: t.role,
-            quote: t.quote,
-            rating: t.rating,
-            mediaType: t.mediaType ?? null,
-            mediaUrl: null,
-            serviceTags: inferServiceTags(t.role),
-          }))
-        );
+        setTestimonials(staticItems);
       }
       setLoading(false);
     }
