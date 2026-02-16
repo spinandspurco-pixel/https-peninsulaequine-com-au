@@ -956,6 +956,8 @@ export default function Services() {
 
       <ServicesGallery onQuoteClick={setQuoteServiceId} />
 
+      <PricingGridSection onQuoteClick={setQuoteServiceId} />
+
       <ConstructionProcessSection />
 
       <LessonsSection />
