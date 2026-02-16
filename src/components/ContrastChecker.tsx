@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Eye, EyeOff, Check, X, AlertTriangle, Paintbrush, Wand2, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, Check, X, AlertTriangle, Paintbrush, Wand2, ArrowRight, ClipboardCopy, FileText } from "lucide-react";
 
 /**
  * Dev-only accessibility contrast checker + branding audit.
@@ -293,34 +293,85 @@ function hslStr(h: number, s: number, l: number): string {
 }
 
 /** Check pairs of CSS tokens and suggest lightness adjustments for WCAG AA */
+
+type TokenPairDef = { fg: string; bg: string; fgLabel: string; bgLabel: string; zone: "header" | "footer" | "core" };
+
+const TOKEN_PAIRS: TokenPairDef[] = [
+  // Core design system
+  { fg: "--foreground", bg: "--background", fgLabel: "Body text", bgLabel: "Background", zone: "core" },
+  { fg: "--card-foreground", bg: "--card", fgLabel: "Card text", bgLabel: "Card bg", zone: "core" },
+  { fg: "--muted-foreground", bg: "--background", fgLabel: "Muted text", bgLabel: "Background", zone: "core" },
+  { fg: "--muted-foreground", bg: "--card", fgLabel: "Muted text", bgLabel: "Card bg", zone: "core" },
+  { fg: "--accent-foreground", bg: "--accent", fgLabel: "Accent button text", bgLabel: "Accent bg", zone: "core" },
+  { fg: "--primary-foreground", bg: "--primary", fgLabel: "Primary btn text", bgLabel: "Primary bg", zone: "core" },
+  { fg: "--popover-foreground", bg: "--popover", fgLabel: "Popover text", bgLabel: "Popover bg", zone: "core" },
+  { fg: "--destructive-foreground", bg: "--destructive", fgLabel: "Destructive text", bgLabel: "Destructive bg", zone: "core" },
+  // Header color system
+  { fg: "--header-foreground", bg: "--header-bg", fgLabel: "Header text", bgLabel: "Header bg", zone: "header" },
+  { fg: "--header-scrolled-foreground", bg: "--header-scrolled-bg", fgLabel: "Header scrolled text", bgLabel: "Header scrolled bg", zone: "header" },
+  { fg: "--header-active", bg: "--header-bg", fgLabel: "Header active link", bgLabel: "Header bg", zone: "header" },
+  { fg: "--header-active", bg: "--header-scrolled-bg", fgLabel: "Header active (scrolled)", bgLabel: "Header scrolled bg", zone: "header" },
+  // Footer color system
+  { fg: "--footer-foreground", bg: "--footer-bg", fgLabel: "Footer text", bgLabel: "Footer bg", zone: "footer" },
+  { fg: "--footer-muted", bg: "--footer-bg", fgLabel: "Footer muted text", bgLabel: "Footer bg", zone: "footer" },
+  { fg: "--footer-hover", bg: "--footer-bg", fgLabel: "Footer hover/link", bgLabel: "Footer bg", zone: "footer" },
+];
+
+type ReportEntry = {
+  zone: "header" | "footer" | "core";
+  label: string;
+  fgToken: string;
+  bgToken: string;
+  fgHsl: string;
+  bgHsl: string;
+  ratio: number;
+  level: WCAGLevel;
+  pass: boolean;
+};
+
+function generateReport(): ReportEntry[] {
+  const root = document.documentElement;
+  const style = getComputedStyle(root);
+  return TOKEN_PAIRS.map((pair) => {
+    const fgVal = style.getPropertyValue(pair.fg).trim();
+    const bgVal = style.getPropertyValue(pair.bg).trim();
+    const fgHsl = parseHSL(fgVal);
+    const bgHsl = parseHSL(bgVal);
+    if (!fgHsl || !bgHsl) {
+      return { zone: pair.zone, label: `${pair.fgLabel} on ${pair.bgLabel}`, fgToken: pair.fg, bgToken: pair.bg, fgHsl: fgVal || "—", bgHsl: bgVal || "—", ratio: 0, level: "FAIL" as WCAGLevel, pass: false };
+    }
+    const fgRgb = hslToRgb(...fgHsl);
+    const bgRgb = hslToRgb(...bgHsl);
+    const ratio = Math.round(contrastRatio(fgRgb, bgRgb) * 100) / 100;
+    const level = wcagLevel(ratio, false);
+    return { zone: pair.zone, label: `${pair.fgLabel} on ${pair.bgLabel}`, fgToken: pair.fg, bgToken: pair.bg, fgHsl: fgVal, bgHsl: bgVal, ratio, level, pass: level !== "FAIL" };
+  });
+}
+
+function reportToText(entries: ReportEntry[]): string {
+  const now = new Date().toISOString();
+  const headerEntries = entries.filter((e) => e.zone === "header");
+  const footerEntries = entries.filter((e) => e.zone === "footer");
+  const coreEntries = entries.filter((e) => e.zone === "core");
+  const allPass = entries.every((e) => e.pass);
+
+  const formatSection = (title: string, items: ReportEntry[]) => {
+    if (items.length === 0) return "";
+    const lines = items.map((e) => `  ${e.pass ? "✅" : "❌"} ${e.label} — ${e.ratio}:1 (${e.level})`);
+    const sectionPass = items.every((e) => e.pass);
+    return `\n── ${title} ${sectionPass ? "PASS ✅" : "FAIL ❌"} ──\n${lines.join("\n")}`;
+  };
+
+  return `CONTRAST AUDIT REPORT\nGenerated: ${now}\nOverall: ${allPass ? "PASS ✅" : "FAIL ❌"} (${entries.filter((e) => e.pass).length}/${entries.length} pairs pass AA)\n${formatSection("HEADER", headerEntries)}${formatSection("FOOTER", footerEntries)}${formatSection("CORE", coreEntries)}\n`;
+}
+
 function computeTokenFixes(): TokenFix[] {
   const root = document.documentElement;
   const style = getComputedStyle(root);
 
-  const pairs: { fg: string; bg: string; fgLabel: string; bgLabel: string }[] = [
-    // Core design system
-    { fg: "--foreground", bg: "--background", fgLabel: "Body text", bgLabel: "Background" },
-    { fg: "--card-foreground", bg: "--card", fgLabel: "Card text", bgLabel: "Card bg" },
-    { fg: "--muted-foreground", bg: "--background", fgLabel: "Muted text", bgLabel: "Background" },
-    { fg: "--muted-foreground", bg: "--card", fgLabel: "Muted text", bgLabel: "Card bg" },
-    { fg: "--accent-foreground", bg: "--accent", fgLabel: "Accent button text", bgLabel: "Accent bg" },
-    { fg: "--primary-foreground", bg: "--primary", fgLabel: "Primary btn text", bgLabel: "Primary bg" },
-    { fg: "--popover-foreground", bg: "--popover", fgLabel: "Popover text", bgLabel: "Popover bg" },
-    { fg: "--destructive-foreground", bg: "--destructive", fgLabel: "Destructive text", bgLabel: "Destructive bg" },
-    // Header color system
-    { fg: "--header-foreground", bg: "--header-bg", fgLabel: "Header text", bgLabel: "Header bg" },
-    { fg: "--header-scrolled-foreground", bg: "--header-scrolled-bg", fgLabel: "Header scrolled text", bgLabel: "Header scrolled bg" },
-    { fg: "--header-active", bg: "--header-bg", fgLabel: "Header active link", bgLabel: "Header bg" },
-    { fg: "--header-active", bg: "--header-scrolled-bg", fgLabel: "Header active (scrolled)", bgLabel: "Header scrolled bg" },
-    // Footer color system
-    { fg: "--footer-foreground", bg: "--footer-bg", fgLabel: "Footer text", bgLabel: "Footer bg" },
-    { fg: "--footer-muted", bg: "--footer-bg", fgLabel: "Footer muted text", bgLabel: "Footer bg" },
-    { fg: "--footer-hover", bg: "--footer-bg", fgLabel: "Footer hover/link", bgLabel: "Footer bg" },
-  ];
-
   const fixes: TokenFix[] = [];
 
-  pairs.forEach(({ fg, bg, fgLabel, bgLabel }) => {
+  TOKEN_PAIRS.forEach(({ fg, bg, fgLabel, bgLabel }) => {
     const fgVal = style.getPropertyValue(fg).trim();
     const bgVal = style.getPropertyValue(bg).trim();
     const fgHsl = parseHSL(fgVal);
@@ -331,9 +382,8 @@ function computeTokenFixes(): TokenFix[] {
     const bgRgb = hslToRgb(...bgHsl);
     const ratio = contrastRatio(fgRgb, bgRgb);
 
-    if (ratio >= 4.5) return; // Already passes AA
+    if (ratio >= 4.5) return;
 
-    // Determine direction: lighten fg if bg is dark, darken fg if bg is light
     const bgLum = relativeLuminance(bgRgb);
     let newL = fgHsl[2];
     const step = bgLum < 0.5 ? 2 : -2;
@@ -351,7 +401,7 @@ function computeTokenFixes(): TokenFix[] {
     const adjustedRgb = hslToRgb(fgHsl[0], fgHsl[1], newL);
     const afterRatio = contrastRatio(adjustedRgb, bgRgb);
 
-    if (afterRatio <= ratio) return; // No improvement
+    if (afterRatio <= ratio) return;
 
     fixes.push({
       token: fg,
@@ -369,7 +419,7 @@ function computeTokenFixes(): TokenFix[] {
 
 // ── Component ────────────────────────────────────────
 
-type Tab = "contrast" | "brand" | "fix";
+type Tab = "contrast" | "brand" | "fix" | "report";
 
 export function ContrastChecker() {
   const [isOpen, setIsOpen] = useState(false);
@@ -377,6 +427,8 @@ export function ContrastChecker() {
   const [results, setResults] = useState<ContrastResult[]>([]);
   const [brandChecks, setBrandChecks] = useState<BrandCheck[]>([]);
   const [tokenFixes, setTokenFixes] = useState<TokenFix[]>([]);
+  const [reportEntries, setReportEntries] = useState<ReportEntry[]>([]);
+  const [copied, setCopied] = useState(false);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -384,6 +436,8 @@ export function ContrastChecker() {
     setResults(scanElements());
     setBrandChecks(runBrandAudit());
     setTokenFixes(computeTokenFixes());
+    setReportEntries(generateReport());
+    setCopied(false);
   }, []);
 
   useEffect(() => {
@@ -495,6 +549,22 @@ export function ContrastChecker() {
                   </span>
                 )}
               </button>
+              <button
+                onClick={() => setTab("report")}
+                className={`flex-1 py-3 text-xs font-semibold uppercase tracking-wider transition-colors ${
+                  tab === "report"
+                    ? "text-accent border-b-2 border-accent"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <FileText className="w-3.5 h-3.5 inline mr-1 -mt-0.5" />
+                Report
+                {reportEntries.some((e) => !e.pass) && (
+                  <span className="ml-1 bg-red-600 text-white text-[9px] px-1 py-0.5 rounded-full">
+                    {reportEntries.filter((e) => !e.pass).length}
+                  </span>
+                )}
+              </button>
             </div>
             {/* Sub-header stats */}
             <div className="px-4 py-2 flex items-center justify-between">
@@ -512,6 +582,15 @@ export function ContrastChecker() {
                   <div className="flex gap-3 text-xs">
                     <span className="text-green-600 font-medium">{brandSummary.pass} pass</span>
                     {brandSummary.fail > 0 && <span className="text-red-600 font-medium">{brandSummary.fail} fail</span>}
+                  </div>
+                </>
+              ) : tab === "report" ? (
+                <>
+                  <span className="text-xs text-muted-foreground">{reportEntries.length} token pairs</span>
+                  <div className="flex gap-3 text-xs">
+                    <span className={`font-medium ${reportEntries.every((e) => e.pass) ? "text-green-600" : "text-red-600"}`}>
+                      {reportEntries.every((e) => e.pass) ? "ALL PASS" : `${reportEntries.filter((e) => !e.pass).length} FAIL`}
+                    </span>
                   </div>
                 </>
               ) : (
@@ -681,6 +760,74 @@ export function ContrastChecker() {
             </div>
           )}
 
+          {/* Report tab */}
+          {tab === "report" && (
+            <div className="p-2 space-y-3">
+              {/* Copy button */}
+              <div className="px-2 pt-1">
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(reportToText(reportEntries));
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }}
+                  className="w-full text-xs font-medium py-2 px-3 rounded-lg border border-accent/30 text-accent hover:bg-accent/10 transition-colors flex items-center justify-center gap-1.5"
+                >
+                  <ClipboardCopy className="w-3.5 h-3.5" />
+                  {copied ? "Copied to clipboard!" : "Copy Report to Clipboard"}
+                </button>
+              </div>
+
+              {/* Overall verdict */}
+              <div className={`mx-2 rounded-lg p-3 text-center ${reportEntries.every((e) => e.pass) ? "bg-green-600/10 border border-green-600/30" : "bg-red-600/10 border border-red-600/30"}`}>
+                <p className={`text-sm font-bold ${reportEntries.every((e) => e.pass) ? "text-green-600" : "text-red-600"}`}>
+                  {reportEntries.every((e) => e.pass) ? "✅ ALL PAIRS PASS AA" : "❌ CONTRAST FAILURES DETECTED"}
+                </p>
+                <p className="text-[10px] text-muted-foreground mt-1">
+                  {reportEntries.filter((e) => e.pass).length}/{reportEntries.length} token pairs meet WCAG AA 4.5:1
+                </p>
+              </div>
+
+              {/* Sections */}
+              {(["header", "footer", "core"] as const).map((zone) => {
+                const items = reportEntries.filter((e) => e.zone === zone);
+                if (items.length === 0) return null;
+                const sectionPass = items.every((e) => e.pass);
+                return (
+                  <div key={zone} className="mx-2">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <p className="text-[11px] font-bold uppercase tracking-wider text-foreground">
+                        {zone === "core" ? "Core Tokens" : `${zone.charAt(0).toUpperCase() + zone.slice(1)} Tokens`}
+                      </p>
+                      <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${sectionPass ? "bg-green-600 text-white" : "bg-red-600 text-white"}`}>
+                        {sectionPass ? "PASS" : "FAIL"}
+                      </span>
+                    </div>
+                    <div className="space-y-0.5">
+                      {items.map((entry, i) => (
+                        <div key={i} className="flex items-center gap-2 rounded-md p-2 hover:bg-card transition-colors">
+                          <span className={`shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded ${entry.pass ? "bg-green-600 text-white" : "bg-red-600 text-white"}`}>
+                            {entry.level}
+                          </span>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-[11px] text-foreground font-medium truncate">{entry.label}</p>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <div className="flex items-center gap-1">
+                                <div className="w-3 h-3 rounded-sm border border-border" style={{ backgroundColor: `hsl(${entry.fgHsl})` }} />
+                                <div className="w-3 h-3 rounded-sm border border-border" style={{ backgroundColor: `hsl(${entry.bgHsl})` }} />
+                              </div>
+                              <span className="text-[10px] text-muted-foreground font-mono">{entry.ratio}:1</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
           {/* Footer */}
           <div className="sticky bottom-0 bg-background border-t border-border p-3">
             <div className="flex items-start gap-2 text-[10px] text-muted-foreground">
@@ -690,6 +837,8 @@ export function ContrastChecker() {
                   ? "WCAG 2.1 AA requires 4.5:1 for normal text, 3:1 for large text (≥18pt bold or ≥24pt). AAA requires 7:1 / 4.5:1."
                   : tab === "brand"
                   ? `Brand audit checks for rope-mark logo presence, consistent "${CANONICAL_ALT}" alt text, and Playfair Display in headings.`
+                  : tab === "report"
+                  ? "Report shows pass/fail status for all header, footer, and core token pairs. Copy to clipboard to share or archive."
                   : "Auto-adjuster modifies CSS custom properties in real-time. Changes are session-only — copy adjusted HSL values to index.css to persist."}
               </span>
             </div>
