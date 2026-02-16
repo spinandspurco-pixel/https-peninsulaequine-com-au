@@ -84,7 +84,7 @@ function ContactInfo() {
       {/* Map placeholder */}
       <div className="aspect-video bg-secondary rounded-lg overflow-hidden">
         <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-          <MapPin className="h-8 w-8 mr-2" />
+          <MapPin className="h-6 w-6 mr-2" />
           <span>Map Coming Soon</span>
         </div>
       </div>
@@ -161,7 +161,7 @@ function QuickInquiryBlock() {
             <div>
               {sent ? (
                 <div className="flex flex-col items-center justify-center py-8 text-center rounded-xl bg-primary-foreground/[0.06] border border-primary-foreground/10 px-6">
-                  <CheckCircle className="h-10 w-10 text-accent mb-3" />
+                  <CheckCircle className="h-8 w-8 text-accent mb-3" />
                   <p className="font-serif text-xl font-semibold mb-1">Message Sent!</p>
                   <p className="text-primary-foreground/60 text-sm mb-4">Check your inbox — we've sent a confirmation with next steps.</p>
                   <Link
