@@ -20,12 +20,14 @@ const navigation = [
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [logoLoaded, setLogoLoaded] = useState(false);
+  const [logoPhase, setLogoPhase] = useState(0); // 0=hidden, 1=spin-in, 2=glow, 3=settled
   const location = useLocation();
 
   useEffect(() => {
-    const t = setTimeout(() => setLogoLoaded(true), 400);
-    return () => clearTimeout(t);
+    const t1 = setTimeout(() => setLogoPhase(1), 200);   // spin in
+    const t2 = setTimeout(() => setLogoPhase(2), 900);    // glow pulse
+    const t3 = setTimeout(() => setLogoPhase(3), 1600);   // settled
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, []);
 
   useEffect(() => {
@@ -60,17 +62,35 @@ export function Header() {
                 "w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12"
               )}
             >
+              {/* Glow ring — phase 2 */}
+              <span
+                className={cn(
+                  "absolute inset-0 rounded-full transition-all duration-700 pointer-events-none",
+                  logoPhase === 2
+                    ? "opacity-100 scale-125"
+                    : "opacity-0 scale-100"
+                )}
+                style={{
+                  boxShadow: logoPhase === 2
+                    ? "0 0 18px 4px hsl(var(--header-active) / 0.5), 0 0 40px 8px hsl(var(--header-active) / 0.2)"
+                    : "none",
+                }}
+              />
               <img 
                 src={logoImage} 
                 alt="Peninsula Equine" 
                 width={48}
                 height={48}
                 className={cn(
-                  "w-full h-full object-contain transition-all duration-700 group-hover:scale-105",
+                  "w-full h-full object-contain group-hover:scale-105",
                   isScrolled ? "" : "brightness-0 invert",
-                  logoLoaded
-                    ? "opacity-100 scale-100 rotate-0"
-                    : "opacity-0 scale-75 -rotate-[15deg]"
+                  logoPhase === 0
+                    ? "opacity-0 scale-50 -rotate-180 transition-none"
+                    : logoPhase === 1
+                    ? "opacity-100 scale-110 rotate-[15deg] transition-all duration-700 ease-out"
+                    : logoPhase === 2
+                    ? "opacity-100 scale-105 rotate-0 transition-all duration-500 ease-out"
+                    : "opacity-100 scale-100 rotate-0 transition-all duration-500 ease-out"
                 )}
               />
               {/* Accent bar — scales with logo */}
@@ -80,13 +100,14 @@ export function Header() {
                   isScrolled
                     ? "h-4 sm:h-5 md:h-6 bg-[hsl(var(--header-active))]"
                     : "h-5 sm:h-6 md:h-7 bg-[hsl(var(--header-active))]/80",
-                  logoLoaded ? "opacity-100 scale-y-100" : "opacity-0 scale-y-0"
+                  logoPhase >= 2 ? "opacity-100 scale-y-100" : "opacity-0 scale-y-0"
                 )}
               />
             </div>
             <span className={cn(
-              "hidden sm:block font-serif text-base md:text-lg tracking-[0.1em] uppercase transition-colors pl-0.5 sm:pl-1 truncate",
-              isScrolled ? "text-[hsl(var(--header-scrolled-foreground))]" : "text-[hsl(var(--header-foreground))]"
+              "hidden sm:block font-serif text-base md:text-lg tracking-[0.1em] uppercase pl-0.5 sm:pl-1 truncate transition-all duration-500",
+              isScrolled ? "text-[hsl(var(--header-scrolled-foreground))]" : "text-[hsl(var(--header-foreground))]",
+              logoPhase >= 3 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"
             )}>
               Peninsula<span className="text-[hsl(var(--header-active))]">Equine</span>
             </span>
