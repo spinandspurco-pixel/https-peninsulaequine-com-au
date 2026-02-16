@@ -115,6 +115,95 @@ function HeroSection() {
   );
 }
 
+function HeroContactStrip() {
+  const [message, setMessage] = useState("");
+  const [email, setEmail] = useState("");
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const { toast } = useToast();
+
+  const handleQuickInquiry = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimEmail = email.trim();
+    const trimMsg = message.trim();
+    if (!trimEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimEmail)) return;
+    if (!trimMsg) return;
+
+    setSending(true);
+    try {
+      await supabase.from("inquiries").insert({
+        name: "Quick Inquiry",
+        email: trimEmail.slice(0, 255),
+        services: ["general-inquiry"],
+        notes: trimMsg.slice(0, 500),
+        status: "new",
+      });
+      setSent(true);
+      toast({ title: "Sent!", description: "We'll reply within 1–2 business days." });
+    } catch {
+      toast({ title: "Error", description: "Please try again.", variant: "destructive" });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <section className="relative bg-accent text-accent-foreground">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5">
+        {sent ? (
+          <div className="flex items-center justify-center gap-3 py-1">
+            <CheckCircle className="h-5 w-5" />
+            <p className="text-sm font-medium">Thank you — we'll be in touch shortly!</p>
+          </div>
+        ) : (
+          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+            <a
+              href={`tel:${siteConfig.phone}`}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-all duration-300 hover:scale-105 shadow-lg whitespace-nowrap flex-shrink-0"
+            >
+              <Phone className="h-4 w-4" />
+              Call Now
+            </a>
+
+            <span className="hidden sm:block text-accent-foreground/40 text-sm">or</span>
+
+            <form onSubmit={handleQuickInquiry} className="flex flex-1 w-full items-center gap-2">
+              <input
+                type="email"
+                placeholder="Your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                maxLength={255}
+                required
+                className="flex-shrink-0 w-36 sm:w-44 rounded-full bg-accent-foreground/10 border border-accent-foreground/20 px-3.5 py-2 text-sm text-accent-foreground placeholder:text-accent-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                aria-label="Email address"
+              />
+              <input
+                type="text"
+                placeholder="Quick question…"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                maxLength={500}
+                required
+                className="flex-1 min-w-0 rounded-full bg-accent-foreground/10 border border-accent-foreground/20 px-3.5 py-2 text-sm text-accent-foreground placeholder:text-accent-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                aria-label="Your question"
+              />
+              <button
+                type="submit"
+                disabled={sending}
+                className="flex-shrink-0 w-9 h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-all duration-300 hover:scale-110 disabled:opacity-60"
+                aria-label="Send inquiry"
+              >
+                {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+              </button>
+            </form>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 function IntroSection() {
   const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
   const { ref: parallaxRef } = useParallax<HTMLDivElement>({ speed: 0.25 });
@@ -1586,6 +1675,7 @@ export default function Index() {
           />
         )}
         <HeroSection />
+        <HeroContactStrip />
         <IntroSection />
         <BlueprintDivider variant="floorplan" />
         <ServicesTeaserStrip />
