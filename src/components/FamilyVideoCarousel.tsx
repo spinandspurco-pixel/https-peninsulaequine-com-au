@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Play, Pause, Hammer, Heart, Film, Users, Trophy } from "lucide-react";
+import { ChevronLeft, ChevronRight, Play, Pause, Hammer, Users, Trophy } from "lucide-react";
 import { triggerHaptic } from "@/hooks/useHapticFeedback";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,11 +9,6 @@ import familyPeCaps from "@/assets/videos/family-pe-caps.mp4";
 import chickenCoopBuild from "@/assets/videos/chicken-coop-build.mp4";
 import mainRidgeWoodwork1 from "@/assets/videos/main-ridge-woodwork-1.mp4";
 import mainRidgeWoodwork2 from "@/assets/videos/main-ridge-woodwork-2.mp4";
-import ciroJoinUp from "@/assets/videos/ciro-bareback-join-up.mp4";
-import ciroJoinUp2 from "@/assets/videos/ciro-bareback-join-up-2.mp4";
-import slowMo1 from "@/assets/videos/slow-mo-1.mp4";
-import slowMo2 from "@/assets/videos/slow-mo-2.mp4";
-import slowMo3 from "@/assets/videos/slow-mo-3.mp4";
 // Major events videos
 import arenaPrepVideo from "@/assets/videos/arena-prep.mov";
 import equitanaArenaVideo from "@/assets/videos/equitana-arena.mov";
@@ -21,7 +16,7 @@ import caulfield1 from "@/assets/videos/caulfield-1.mov";
 import caulfield2 from "@/assets/videos/caulfield-2.mov";
 import caulfield3 from "@/assets/videos/caulfield-3.mov";
 
-type VideoCategory = "family" | "craftsmanship" | "horsemanship" | "cinematic" | "events";
+type VideoCategory = "family" | "craftsmanship" | "events";
 
 interface VideoItem {
   src: string;
@@ -33,8 +28,6 @@ interface VideoItem {
 const categoryConfig: Record<VideoCategory, { label: string; icon: React.ReactNode; variant: "default" | "secondary" | "outline" }> = {
   family: { label: "Family", icon: <Users className="h-3 w-3" />, variant: "secondary" },
   craftsmanship: { label: "Craftsmanship", icon: <Hammer className="h-3 w-3" />, variant: "default" },
-  horsemanship: { label: "Horsemanship", icon: <Heart className="h-3 w-3" />, variant: "default" },
-  cinematic: { label: "Slow Motion", icon: <Film className="h-3 w-3" />, variant: "outline" },
   events: { label: "Major Events", icon: <Trophy className="h-3 w-3" />, variant: "default" },
 };
 
@@ -64,12 +57,6 @@ const videos: VideoItem[] = [
     category: "events",
   },
   {
-    src: ciroJoinUp,
-    title: "Join-Up Session",
-    description: "Ciro connecting with horses through natural horsemanship",
-    category: "horsemanship",
-  },
-  {
     src: arenaPrepVideo,
     title: "Arena Surface Work",
     description: "Precision grading for competition-ready footing",
@@ -88,34 +75,10 @@ const videos: VideoItem[] = [
     category: "events",
   },
   {
-    src: ciroJoinUp2,
-    title: "Bareback Connection",
-    description: "Building trust and partnership in the round pen",
-    category: "horsemanship",
-  },
-  {
-    src: slowMo1,
-    title: "Poetry in Motion",
-    description: "The beauty of horse movement captured in slow motion",
-    category: "cinematic",
-  },
-  {
     src: caulfield3,
     title: "Melbourne Cup Day 3",
     description: "Final touches for world-class racing surfaces",
     category: "events",
-  },
-  {
-    src: slowMo2,
-    title: "Graceful Strides",
-    description: "Every movement tells a story",
-    category: "cinematic",
-  },
-  {
-    src: slowMo3,
-    title: "Equine Elegance",
-    description: "Celebrating the majesty of horses",
-    category: "cinematic",
   },
   {
     src: chickenCoopBuild,

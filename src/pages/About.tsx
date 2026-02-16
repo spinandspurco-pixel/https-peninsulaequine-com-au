@@ -24,20 +24,19 @@ import blueprintFacility from "@/assets/blueprint-facility.png";
 import logoPeMark from "@/assets/logo-pe-mark.png";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
 
-// Import join-up videos
-import ciroJoinUp1 from "@/assets/videos/ciro-bareback-join-up.mp4";
-import ciroJoinUp2 from "@/assets/videos/ciro-bareback-join-up-2.mp4";
+import mainRidgeWoodwork1 from "@/assets/videos/main-ridge-woodwork-1.mp4";
+import mainRidgeWoodwork2 from "@/assets/videos/main-ridge-woodwork-2.mp4";
 
 // Video testimonials data — pairs testimonial quotes with related project footage
 const VIDEO_TESTIMONIALS = [
   {
     testimonial: testimonials[0], // Sarah Mitchell
-    video: ciroJoinUp1,
+    video: mainRidgeWoodwork1,
     poster: undefined as string | undefined,
   },
   {
     testimonial: testimonials[3], // Tom & Linda Hartley
-    video: ciroJoinUp2,
+    video: mainRidgeWoodwork2,
     poster: undefined as string | undefined,
   },
 ];
@@ -152,8 +151,8 @@ function NaturalHorsemanshipSection() {
   const { ref: quoteRef, isVisible: quoteVisible } = useScrollAnimation<HTMLQuoteElement>();
 
   const videos = [
-    { src: ciroJoinUp1, title: "Join-Up Session" },
-    { src: ciroJoinUp2, title: "Bareback Connection" },
+    { src: mainRidgeWoodwork1, title: "Timber Craftsmanship" },
+    { src: mainRidgeWoodwork2, title: "Precision Woodwork" },
   ];
 
   return (
@@ -168,12 +167,12 @@ function NaturalHorsemanshipSection() {
         >
           <div className="w-16 h-0.5 bg-accent mx-auto mb-6" />
           <h2 className="heading-section text-foreground mb-4">
-            Natural Horsemanship
+            The Craft Behind the Build
           </h2>
           <p className="text-muted-foreground text-lg">
-            Before Ciro picks up a hammer, he picks up a halter. His deep understanding 
-            of horse behavior and natural horsemanship principles directly informs 
-            every facility he builds.
+            Every facility is built with traditional craftsmanship and a horseman's intuition. 
+            Ciro's hands-on approach ensures every timber joint, every stone, and every detail 
+            is built to last generations.
           </p>
         </div>
 

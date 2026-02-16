@@ -21,7 +21,7 @@ import {
   testimonialServiceMap,
 } from "./gallery/galleryData";
 import { GalleryLightbox } from "./gallery/GalleryLightbox";
-import { FeaturedVideoSection } from "./gallery/FeaturedVideoSection";
+
 import { VideoGallerySection } from "./gallery/VideoGallerySection";
 import { GalleryGrid } from "./gallery/GalleryGrid";
 import { GalleryFilters } from "./gallery/GalleryFilters";
@@ -44,9 +44,9 @@ export default function Gallery() {
 
   const filteredItems = useMemo(() => {
     let items: GalleryItem[] =
-      activeProject === "all" ? galleryItems
-        : activeProject === "videos" ? videoGalleryItems
-        : galleryItems.filter((item) => item.project === activeProject);
+      activeProject === "all" ? [...galleryItems, ...videoGalleryItems]
+        : galleryItems.filter((item) => item.project === activeProject)
+          .concat(videoGalleryItems.filter((item) => item.project === activeProject));
 
     if (activeService !== "all") items = items.filter((item) => item.service === activeService);
     if (activeLocation !== "all") items = items.filter((item) => item.location === activeLocation);
@@ -133,7 +133,7 @@ export default function Gallery() {
         dividerVariant="structural"
       />
 
-      <FeaturedVideoSection onVideoClick={setLightboxItem} />
+      
       <VideoGallerySection onVideoClick={setLightboxItem} />
 
       {/* Photo Gallery Section */}
