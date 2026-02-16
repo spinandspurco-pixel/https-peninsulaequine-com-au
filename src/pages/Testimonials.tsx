@@ -7,32 +7,8 @@ import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { SectionTransition, AnimatedDivider } from "@/components/SectionTransition";
-import { supabase } from "@/integrations/supabase/client";
-import { testimonials as staticTestimonials, services } from "@/data/content";
+import { fetchMergedTestimonials, SERVICE_FILTERS, type TestimonialItem } from "@/lib/testimonials";
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
-
-interface TestimonialItem {
-  id: string;
-  name: string;
-  role: string;
-  quote: string;
-  rating: number;
-  mediaType?: "image" | "video" | null;
-  mediaUrl?: string | null;
-  serviceTags: string[];
-}
-
-const SERVICE_FILTERS = services.map((s) => ({ id: s.id, label: s.title }));
-
-// Map static testimonial roles to service IDs for fallback filtering
-function inferServiceTags(role: string): string[] {
-  const lower = role.toLowerCase();
-  if (lower.includes("dressage") || lower.includes("trainer") || lower.includes("jumping")) return ["arena-construction"];
-  if (lower.includes("ranch") || lower.includes("estate")) return ["barn-construction", "full-facility"];
-  if (lower.includes("breeding") || lower.includes("farm")) return ["fencing", "infrastructure"];
-  if (lower.includes("vet")) return ["barn-construction"];
-  return [];
-}
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -209,50 +185,10 @@ export default function Testimonials() {
   };
 
   useEffect(() => {
-    async function load() {
-      // Build static baseline
-      const staticItems: TestimonialItem[] = staticTestimonials.map((t) => ({
-        id: `static-${t.id}`,
-        name: t.name,
-        role: t.role,
-        quote: t.quote,
-        rating: t.rating,
-        mediaType: t.mediaType ?? null,
-        mediaUrl: null,
-        serviceTags: inferServiceTags(t.role),
-      }));
-
-      // Fetch DB records
-      const { data } = await supabase
-        .from("managed_testimonials")
-        .select("*")
-        .eq("active", true)
-        .order("sort_order", { ascending: true });
-
-      if (data && data.length > 0) {
-        const dbItems: TestimonialItem[] = data.map((t: any) => ({
-          id: t.id,
-          name: t.client_name,
-          role: t.client_role ?? "",
-          quote: t.quote,
-          rating: t.rating,
-          mediaType: (t.media_type as "image" | "video" | null) ?? null,
-          mediaUrl: t.media_url ?? null,
-          serviceTags: (t.service_tags as string[]) ?? [],
-        }));
-
-        // Merge: DB records first, then static ones whose name+quote combo isn't already in DB
-        const dbKeys = new Set(dbItems.map((d) => `${d.name}::${d.quote.slice(0, 40)}`));
-        const uniqueStatic = staticItems.filter(
-          (s) => !dbKeys.has(`${s.name}::${s.quote.slice(0, 40)}`)
-        );
-        setTestimonials([...dbItems, ...uniqueStatic]);
-      } else {
-        setTestimonials(staticItems);
-      }
+    fetchMergedTestimonials().then((items) => {
+      setTestimonials(items);
       setLoading(false);
-    }
-    load();
+    });
   }, []);
 
   const filtered = useMemo(() => {
