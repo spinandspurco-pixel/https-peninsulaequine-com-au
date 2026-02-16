@@ -9,6 +9,7 @@ import { ArrowRight, ArrowUp, CheckCircle, X, ZoomIn, CalendarIcon, Images, Chev
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
+import { DepositPaymentPolicy } from "@/components/DepositPaymentPolicy";
 import { SwipeIndicator } from "@/components/SwipeIndicator";
 import { QuickQuoteModal } from "@/components/QuickQuoteModal";
 import { QuoteCalculator } from "@/components/QuoteCalculator";
@@ -1699,6 +1700,8 @@ export default function Services() {
       <ConstructionProcessSection />
 
       <LessonsSection />
+
+      <DepositPaymentPolicy ctaHref="/contact" ctaLabel="Get a Free Quote" />
 
       <CTASection />
 
