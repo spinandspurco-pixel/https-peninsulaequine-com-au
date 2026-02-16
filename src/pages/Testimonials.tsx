@@ -47,6 +47,14 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
+function isDirectVideo(url: string): boolean {
+  return /\.(mp4|mov|webm|ogg)(\?.*)?$/i.test(url);
+}
+
+function isEmbeddable(url: string): boolean {
+  return /youtube\.com|youtu\.be|vimeo\.com/i.test(url);
+}
+
 function VideoEmbed({ url }: { url: string }) {
   const [playing, setPlaying] = useState(false);
 
@@ -58,6 +66,25 @@ function VideoEmbed({ url }: { url: string }) {
     return raw;
   };
 
+  // Direct video files render as native <video>
+  if (isDirectVideo(url)) {
+    return (
+      <div className="w-full aspect-video rounded-lg overflow-hidden border border-border bg-black">
+        <video
+          src={url}
+          controls
+          preload="metadata"
+          playsInline
+          className="w-full h-full object-contain"
+          poster=""
+        >
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    );
+  }
+
+  // Embeddable URLs (YouTube / Vimeo) — click-to-play
   if (!playing) {
     return (
       <button
