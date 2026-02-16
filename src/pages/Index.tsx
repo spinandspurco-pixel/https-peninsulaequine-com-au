@@ -90,9 +90,19 @@ function HeroSection() {
           <span className="text-accent">Equine</span>
         </h1>
 
-        <p className="font-sans text-xs sm:text-sm tracking-[0.4em] uppercase text-primary-foreground/50 mb-12">
+        <p className="font-sans text-xs sm:text-sm tracking-[0.4em] uppercase text-primary-foreground/50 mb-6">
           From Dirt to Dynasty
         </p>
+
+        <a
+          href={`tel:${siteConfig.phone}`}
+          className="inline-flex items-center gap-2 text-accent hover:text-accent/80 transition-colors mb-10 group"
+        >
+          <Phone className="h-4 w-4" />
+          <span className="font-sans text-sm sm:text-base tracking-[0.1em] font-medium group-hover:underline underline-offset-4">
+            {siteConfig.phone}
+          </span>
+        </a>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           {/* A/B tested primary CTA */}
