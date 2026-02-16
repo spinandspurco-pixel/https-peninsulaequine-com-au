@@ -914,7 +914,7 @@ export default function Gallery() {
   const [activeLocation, setActiveLocation] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [lightboxItem, setLightboxItem] = useState<GalleryItem | null>(null);
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Convert allVideos to GalleryItem format for filtering
@@ -1039,23 +1039,23 @@ export default function Gallery() {
       <GalleryBlueprintOverlay layer="elevation" bg="background" className="section-padding">
         <div className="section-container">
           {/* Search & Filter Bar */}
-          <div className="mb-8 space-y-4" role="search" aria-label="Gallery search and filters">
+          <div className="mb-8 space-y-5" role="search" aria-label="Gallery search and filters">
             {/* Search input */}
-            <div className="relative max-w-md mx-auto">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" aria-hidden="true" />
+            <div className="relative max-w-lg mx-auto">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" aria-hidden="true" />
               <input
                 ref={searchInputRef}
                 type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search gallery… (press / to focus)"
-                className="w-full pl-10 pr-10 py-2.5 rounded-full border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all"
+                placeholder="Search by project, service, or location… (press /)"
+                className="w-full pl-11 pr-10 py-3 rounded-full border border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all shadow-sm"
                 aria-label="Search gallery by keyword"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                   aria-label="Clear search"
                 >
                   <X className="h-4 w-4" />
@@ -1063,88 +1063,61 @@ export default function Gallery() {
               )}
             </div>
 
-            {/* Filter toggle */}
-            <div className="flex justify-center">
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className={`text-xs uppercase tracking-wider transition-colors ${
-                  showFilters || activeFilterCount > 0
-                    ? "text-accent"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                aria-expanded={showFilters}
-                aria-controls="gallery-filters"
-              >
-                Filters{activeFilterCount > 0 && ` (${activeFilterCount})`}
-                <span className="ml-1">{showFilters ? "▲" : "▼"}</span>
-              </button>
-            </div>
-
-            {/* Collapsible filter groups */}
-            <div
-              id="gallery-filters"
-              className={`space-y-4 overflow-hidden transition-all duration-300 ${
-                showFilters ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
-              }`}
-              role="group"
-              aria-label="Filter options"
-            >
-              {/* Service filter */}
-              <div>
-                <p className="text-[10px] uppercase tracking-widest text-muted-foreground text-center mb-2">By Service</p>
-                <div className="flex flex-wrap gap-2 justify-center" role="radiogroup" aria-label="Filter by service type">
-                  {serviceFilters.map((s) => (
-                    <button
-                      key={s.id}
-                      onClick={() => setActiveService(s.id)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                        activeService === s.id
-                          ? "bg-accent text-accent-foreground shadow-sm"
-                          : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                      }`}
-                      role="radio"
-                      aria-checked={activeService === s.id}
-                    >
-                      {s.name}
-                    </button>
-                  ))}
-                </div>
+            {/* Inline filter row */}
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+              {/* Service pills */}
+              <div className="flex flex-wrap gap-1.5 items-center" role="radiogroup" aria-label="Filter by service type">
+                <span className="text-[10px] uppercase tracking-widest text-muted-foreground mr-1 hidden sm:inline">Service</span>
+                {serviceFilters.map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => setActiveService(s.id)}
+                    className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                      activeService === s.id
+                        ? "bg-accent text-accent-foreground shadow-sm"
+                        : "bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
+                    }`}
+                    role="radio"
+                    aria-checked={activeService === s.id}
+                  >
+                    {s.name}
+                  </button>
+                ))}
               </div>
 
-              {/* Location filter */}
-              <div>
-                <p className="text-[10px] uppercase tracking-widest text-muted-foreground text-center mb-2">By Location</p>
-                <div className="flex flex-wrap gap-2 justify-center" role="radiogroup" aria-label="Filter by location">
-                  {locationFilters.map((l) => (
-                    <button
-                      key={l.id}
-                      onClick={() => setActiveLocation(l.id)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                        activeLocation === l.id
-                          ? "bg-accent text-accent-foreground shadow-sm"
-                          : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                      }`}
-                      role="radio"
-                      aria-checked={activeLocation === l.id}
-                    >
-                      {l.name}
-                    </button>
-                  ))}
-                </div>
+              <span className="hidden sm:block w-px h-5 bg-border" aria-hidden="true" />
+
+              {/* Location pills */}
+              <div className="flex flex-wrap gap-1.5 items-center" role="radiogroup" aria-label="Filter by location">
+                <span className="text-[10px] uppercase tracking-widest text-muted-foreground mr-1 hidden sm:inline">Location</span>
+                {locationFilters.map((l) => (
+                  <button
+                    key={l.id}
+                    onClick={() => setActiveLocation(l.id)}
+                    className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                      activeLocation === l.id
+                        ? "bg-accent text-accent-foreground shadow-sm"
+                        : "bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
+                    }`}
+                    role="radio"
+                    aria-checked={activeLocation === l.id}
+                  >
+                    {l.name}
+                  </button>
+                ))}
               </div>
 
               {/* Clear all */}
               {activeFilterCount > 0 && (
-                <div className="text-center">
-                  <button
-                    onClick={clearAllFilters}
-                    className="text-xs text-accent hover:text-accent/80 underline underline-offset-2 transition-colors"
-                  >
-                    Clear all filters
-                  </button>
-                </div>
+                <button
+                  onClick={clearAllFilters}
+                  className="text-xs text-accent hover:text-accent/80 underline underline-offset-2 transition-colors"
+                >
+                  Clear all
+                </button>
               )}
             </div>
+
           </div>
 
           {/* Project Filter Tabs */}
