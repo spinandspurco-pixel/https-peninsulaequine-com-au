@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Hand } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const STORAGE_KEY = "lightbox-swipe-hint-shown";
@@ -69,13 +69,7 @@ export function SwipeIndicator({ show, onDismiss }: SwipeIndicatorProps) {
         {/* Hand/touch indicator */}
         <div className="relative">
           <div className="w-16 h-16 rounded-full bg-accent/20 border-2 border-accent/40 flex items-center justify-center animate-swipe-hand">
-            <svg
-              viewBox="0 0 24 24"
-              className="w-8 h-8 text-primary-foreground"
-              fill="currentColor"
-            >
-              <path d="M9.75 5.25a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm-.5 2.5v9.75a.75.75 0 0 1-1.5 0V11.5l-1.22 1.72a.75.75 0 0 1-1.23-.86l2.25-3.18a.75.75 0 0 1 .2-.2V7.75a.75.75 0 0 1 1.5 0Zm5.5-2.5a1.5 1.5 0 1 0 3 0 1.5 1.5 0 0 0-3 0Zm.5 2.5v9.75a.75.75 0 0 0 1.5 0V11.5l1.22 1.72a.75.75 0 0 0 1.23-.86l-2.25-3.18a.75.75 0 0 0-.2-.2V7.75a.75.75 0 0 0-1.5 0Z" />
-            </svg>
+            <Hand className="w-8 h-8 text-primary-foreground" strokeWidth={1.5} />
           </div>
           {/* Touch ripple */}
           <div className="absolute inset-0 rounded-full border-2 border-accent/50 animate-ping" />

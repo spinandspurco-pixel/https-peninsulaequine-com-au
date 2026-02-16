@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { X, Play, ZoomIn, Download } from "lucide-react";
+import { X, Play, ZoomIn, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { triggerHaptic } from "@/hooks/useHapticFeedback";
 import { usePinchZoom } from "@/hooks/usePinchZoom";
 import { SwipeIndicator } from "@/components/SwipeIndicator";
@@ -198,7 +198,7 @@ export function GalleryLightbox({
         onClick={(e) => e.stopPropagation()}
         aria-label={`Download high-res ${item.type === "video" ? "video" : "image"}`}
       >
-        <Download className="h-7 w-7" />
+        <Download className="h-6 w-6" />
       </a>
 
       {/* Close */}
@@ -209,7 +209,7 @@ export function GalleryLightbox({
         onClick={onClose}
         aria-label="Close lightbox (Escape)"
       >
-        <X className="h-8 w-8" />
+        <X className="h-6 w-6" />
       </button>
 
       {/* Previous */}
@@ -219,9 +219,7 @@ export function GalleryLightbox({
           onClick={(e) => { e.stopPropagation(); onPrevious(); }}
           aria-label={`Previous ${item.type === "video" ? "video" : "image"} (Left Arrow)`}
         >
-          <svg className="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
+          <ChevronLeft className="h-8 w-8" strokeWidth={1.5} />
         </button>
       )}
 
@@ -232,9 +230,7 @@ export function GalleryLightbox({
           onClick={(e) => { e.stopPropagation(); onNext(); }}
           aria-label={`Next ${item.type === "video" ? "video" : "image"} (Right Arrow)`}
         >
-          <svg className="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+          <ChevronRight className="h-8 w-8" strokeWidth={1.5} />
         </button>
       )}
 
