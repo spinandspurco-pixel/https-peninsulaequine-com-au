@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CalendarIcon, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
@@ -29,6 +29,51 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
+function HeroCTABlock() {
+  const avgRating = (testimonials.reduce((sum, t) => sum + t.rating, 0) / testimonials.length).toFixed(1);
+
+  return (
+    <section className="relative py-12 sm:py-16 bg-primary text-primary-foreground overflow-hidden">
+      {/* Subtle blueprint texture */}
+      <BlueprintBackground image={blueprintFacility} opacity={0.03} direction="left-to-right" duration={2400} parallaxSpeed={0.06} />
+      <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary pointer-events-none" />
+
+      <div className="section-container relative z-10">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
+          {/* Social proof stats */}
+          <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
+            <div className="flex items-center gap-3">
+              <div className="flex -space-x-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 text-accent fill-accent" />
+                ))}
+              </div>
+              <span className="text-2xl font-bold text-accent">{avgRating}</span>
+            </div>
+            <div className="h-8 w-px bg-primary-foreground/20 hidden sm:block" />
+            <p className="text-sm sm:text-base text-primary-foreground/80 text-center sm:text-left max-w-xs">
+              Trusted by <span className="font-semibold text-primary-foreground">{testimonials.length}+ clients</span> across the Mornington Peninsula
+            </p>
+          </div>
+
+          {/* CTA button */}
+          <Button
+            asChild
+            size="lg"
+            className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium tracking-wide shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:scale-105 whitespace-nowrap"
+          >
+            <Link to="/book-lesson">
+              <CalendarIcon className="mr-2 h-5 w-5" />
+              Book a Lesson
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Testimonials() {
   return (
     <Layout>
@@ -37,6 +82,8 @@ export default function Testimonials() {
         description="Don't just take our word for it. Here's what our clients have to say about working with Peninsula Equine."
       />
 
+      {/* Conversion CTA block */}
+      <HeroCTABlock />
       <section className="section-padding relative overflow-hidden">
         <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="right-to-left" duration={2000} parallaxSpeed={0.05} />
         <BlueprintBackground image={blueprintFacility} opacity={0.02} direction="left-to-right" duration={3000} parallaxSpeed={0.08} className="scale-105" />
