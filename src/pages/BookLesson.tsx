@@ -681,10 +681,17 @@ function TrainerProfileSection() {
   );
 }
 
-// ── Glenn's Testimonials ──────────────────────────────
+// ── Student Success & Testimonials ──────────────────────────────
+
+const STUDENT_PROGRESS = [
+  { label: "Riders Trained", value: "200+", icon: Users },
+  { label: "Years Teaching", value: "25+", icon: Award },
+  { label: "Avg. Rating", value: "5.0", icon: Star },
+];
 
 function TrainerTestimonialsSection() {
   const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+  const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
 
   return (
     <section className="section-padding bg-card overflow-hidden relative">
@@ -694,21 +701,42 @@ function TrainerTestimonialsSection() {
           <AnimatedDivider className="mx-auto mb-8" />
           <SectionTransition variant="fade-up" delay={100}>
             <p className="text-muted-foreground uppercase tracking-[0.2em] text-sm mb-4">
-              What Riders Say About Glenn
+              Student Success Stories
             </p>
           </SectionTransition>
           <SectionTransition variant="scale-up" delay={200}>
             <h2 className="heading-section text-foreground mb-4">
-              Rider Testimonials
+              Real Progress, Real Riders
             </h2>
           </SectionTransition>
           <SectionTransition variant="fade-up" delay={300}>
             <p className="text-muted-foreground leading-relaxed">
-              From first-time riders to seasoned competitors, Glenn's students share their experiences.
+              Every rider has a different starting point — but Glenn's students consistently achieve breakthroughs they didn't think were possible.
             </p>
           </SectionTransition>
         </div>
 
+        {/* Stats row */}
+        <div
+          ref={statsRef}
+          className="grid grid-cols-3 gap-4 max-w-lg mx-auto mb-12"
+        >
+          {STUDENT_PROGRESS.map((stat, i) => (
+            <div
+              key={stat.label}
+              className={`flex flex-col items-center gap-1.5 p-4 rounded-xl border border-border bg-background transition-all duration-700 ${
+                statsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+              }`}
+              style={{ transitionDelay: `${i * 100}ms` }}
+            >
+              <stat.icon className="h-5 w-5 text-accent" />
+              <span className="font-serif text-2xl font-bold text-foreground">{stat.value}</span>
+              <span className="text-[11px] text-muted-foreground text-center leading-tight">{stat.label}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Testimonial cards */}
         <div ref={gridRef} className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {glennBrowitt.testimonials.map((testimonial, index) => (
             <div
@@ -718,8 +746,14 @@ function TrainerTestimonialsSection() {
               }`}
               style={{ transitionDelay: `${index * 120}ms` }}
             >
+              {/* Progress badge */}
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-semibold uppercase tracking-wider mb-4">
+                <CheckCircle className="h-3 w-3" />
+                {testimonial.role}
+              </div>
+
               {/* Quote icon */}
-              <Quote className="h-8 w-8 text-accent/20 mb-4" />
+              <Quote className="h-8 w-8 text-accent/20 mb-3" />
 
               {/* Stars */}
               <div className="flex gap-1 mb-4">
@@ -741,12 +775,27 @@ function TrainerTestimonialsSection() {
               </blockquote>
 
               {/* Attribution */}
-              <div className="pt-4 border-t border-border">
-                <p className="font-serif font-semibold text-foreground">{testimonial.name}</p>
-                <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+              <div className="pt-4 border-t border-border flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-accent/10 flex items-center justify-center text-accent font-serif font-bold text-sm">
+                  {testimonial.name.charAt(0)}
+                </div>
+                <div>
+                  <p className="font-serif font-semibold text-foreground text-sm">{testimonial.name}</p>
+                  <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+                </div>
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Bottom CTA */}
+        <div className="text-center mt-10">
+          <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
+            <a href="#book">
+              Start Your Journey
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </a>
+          </Button>
         </div>
       </div>
     </section>
