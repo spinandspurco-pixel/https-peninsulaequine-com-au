@@ -47,6 +47,7 @@ const DRAFT_KEY = "pe_inquiry_draft";
 interface DraftState {
   step: number;
   selectedServices: string[];
+  preferredService: string;
   name: string;
   email: string;
   phone: string;
@@ -101,6 +102,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
   const [selectedServices, setSelectedServices] = useState<string[]>(
     initialServices.length > 0 ? initialServices : hasDraft ? existingDraft!.selectedServices : []
   );
+  const [preferredService, setPreferredService] = useState(hasDraft ? existingDraft!.preferredService || "" : initialServices[0] || "");
   const [name, setName] = useState(preName || (hasDraft ? existingDraft!.name : ""));
   const [email, setEmail] = useState(preEmail || (hasDraft ? existingDraft!.email : ""));
   const [phone, setPhone] = useState(prePhone || (hasDraft ? existingDraft!.phone : ""));
@@ -119,6 +121,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
     const draft: DraftState = {
       step,
       selectedServices,
+      preferredService,
       name,
       email,
       phone,
@@ -129,7 +132,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
     };
     localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
     setLastSaved(new Date());
-  }, [step, selectedServices, name, email, phone, experience, budget, message, submitted]);
+  }, [step, selectedServices, preferredService, name, email, phone, experience, budget, message, submitted]);
 
   // Debounced auto-save
   useEffect(() => {
@@ -142,6 +145,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
     clearDraft();
     setStep(1);
     setSelectedServices([]);
+    setPreferredService("");
     setName("");
     setEmail("");
     setPhone("");
@@ -201,6 +205,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
         email: email.trim().slice(0, 255),
         phone: phone.trim().slice(0, 30) || null,
         services: selectedServices,
+        preferred_service: preferredService || null,
         experience_level: experience || null,
         budget_range: budget || null,
         project_details: message.trim().slice(0, 1000) || null,
@@ -349,6 +354,36 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
               ))}
             </div>
             {errors.services && <p className="text-destructive text-xs">{errors.services}</p>}
+
+            {/* Preferred service qualifier */}
+            {selectedServices.length > 1 && (
+              <div>
+                <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-2 block">
+                  Primary Interest
+                </label>
+                <p className="text-xs text-muted-foreground mb-2">Which service is your top priority?</p>
+                <div className="flex flex-wrap gap-2">
+                  {selectedServices.map((id) => {
+                    const label = SERVICE_OPTIONS.find((s) => s.id === id)?.label || id;
+                    return (
+                      <button
+                        key={id}
+                        type="button"
+                        onClick={() => setPreferredService(id)}
+                        className={cn(
+                          "px-4 py-2 rounded-full text-sm font-medium border transition-all",
+                          preferredService === id
+                            ? "bg-accent/10 border-accent text-foreground ring-1 ring-accent/30"
+                            : "bg-background border-border text-muted-foreground hover:border-accent/40"
+                        )}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
