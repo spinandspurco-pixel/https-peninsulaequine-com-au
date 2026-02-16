@@ -144,7 +144,7 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
         <div className="flex flex-wrap gap-3">
           <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
             <Link to={`/contact?services=${service.id}`}>
-              Quick Book
+              Get a Quote
               <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </Button>
@@ -154,7 +154,7 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
             asChild
           >
             <Link to="/contact">
-              Request a Quote
+              Learn More
             </Link>
           </Button>
         </div>
