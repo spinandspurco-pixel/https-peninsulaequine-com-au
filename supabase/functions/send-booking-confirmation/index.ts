@@ -166,6 +166,11 @@ Deno.serve(async (req) => {
             <p style="margin: 0; font-size: 14px; color: #555;">Peninsula Equine, Mornington Peninsula, VIC</p>
           </div>
 
+          <div style="text-align: center; margin: 24px 0;">
+            <p style="margin: 0 0 8px; font-size: 14px; color: #555;">Want to schedule a follow-up consultation?</p>
+            <a href="https://peninsulaequine.lovable.app/schedule" style="background: #c9a227; color: white; padding: 12px 28px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600; font-size: 14px;">📅 Schedule a Follow-Up</a>
+          </div>
+
           <p style="font-size: 14px;">Need to reschedule? Contact us at <a href="mailto:ciro@peninsulaequine.com" style="color: #c9a227;">ciro@peninsulaequine.com</a> or call <a href="tel:+15551234567" style="color: #c9a227;">(555) 123-4567</a>.</p>
 
           <p style="margin-top: 24px;">See you soon!<br/><strong>— Ciro & The Peninsula Equine Team</strong></p>
