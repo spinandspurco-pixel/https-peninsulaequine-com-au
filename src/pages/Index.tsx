@@ -12,6 +12,12 @@ import { Layout } from "@/components/layout/Layout";
 import { MajorEventsSection } from "@/components/MajorEventsSection";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { BookingLandingSection } from "@/components/BookingLandingSection";
@@ -985,6 +991,7 @@ function ClientStorySection() {
   const { ref: sectionRef, isVisible: sectionVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
   const [activeFilter, setActiveFilter] = useState("all");
   const [activeIndex, setActiveIndex] = useState(0);
+  const [modalStory, setModalStory] = useState<typeof stories[number] | null>(null);
 
   const stories = [
     {
@@ -997,6 +1004,13 @@ function ClientStorySection() {
       location: "Woodside",
       quote: "Ciro built our entire 12-stall barn and covered arena. His attention to detail and understanding of what horses need is unmatched. Five years later, everything still looks and functions like new.",
       story: "What began as a simple arena project evolved into a complete facility transformation. Ciro's horseman's eye identified drainage issues, ventilation improvements, and layout optimizations that a standard contractor would have missed entirely.",
+      caseStudy: {
+        challenge: "Sarah's existing barn had poor ventilation, outdated stall configurations, and drainage problems that led to standing water after heavy rains. The property needed a complete overhaul to support her growing lesson program.",
+        approach: "We began with a full site assessment, mapping drainage patterns and prevailing winds. The barn was designed with a centre-aisle layout featuring cross-ventilation, oversized stalls with rubber-mat flooring, and an integrated wash rack. A covered arena was added adjacent to the barn for seamless workflow.",
+        materials: ["Treated hardwood timber frame", "Colorbond roofing with insulated panels", "Rubber-mat stall flooring", "Fibre-sand arena footing", "Integrated stormwater management"],
+        timeline: "Completed in 10 weeks — 6 weeks ahead of the original 16-week estimate, despite two weeks of rain delays.",
+        outcome: "Sarah's property value increased 40% on reappraisal. The barn has required zero structural repairs in five years. Her lesson bookings doubled within six months of completion.",
+      },
       metrics: [
         { icon: TrendingUp, value: "40%", label: "Property Value Increase" },
         { icon: Clock, value: "6 Weeks", label: "Ahead of Schedule" },
@@ -1014,6 +1028,13 @@ function ClientStorySection() {
       location: "Mornington",
       quote: "The arena footing is perfection — consistent drainage even in the heaviest winter rains. My horses move better, and my clients notice the difference immediately.",
       story: "James needed a competition-grade arena that could handle year-round training. We engineered a multi-layer base with a fibre-sand surface and integrated sub-surface drainage across 60×20m.",
+      caseStudy: {
+        challenge: "James's existing sand arena turned to mud in winter and dust in summer. Uneven footing was causing recurring lameness issues in his top dressage horses, and clients were leaving for better-equipped facilities.",
+        approach: "We excavated to 400mm depth, installed agricultural drainage at 3m centres, then built up a laser-levelled crushed rock base, geotextile membrane, and 100mm fibre-sand riding surface. Dust suppression was integrated via a perimeter irrigation ring.",
+        materials: ["Crushed rock base (200mm)", "Geotextile separation membrane", "Premium fibre-sand footing (100mm)", "Ag-pipe sub-surface drainage", "Automated dust-suppression irrigation"],
+        timeline: "8-week build including 2 weeks of curing time for optimal footing compaction.",
+        outcome: "Zero ponding events in three winters. James's client base grew by 40% and he now hosts regional dressage competitions on-site.",
+      },
       metrics: [
         { icon: TrendingUp, value: "60×20m", label: "Arena Dimensions" },
         { icon: Clock, value: "8 Weeks", label: "Build Time" },
@@ -1031,6 +1052,13 @@ function ClientStorySection() {
       location: "Red Hill",
       quote: "We replaced 2km of old wire fencing with post-and-rail. The paddocks look incredible and I finally feel safe turning the horses out. Not a single escape in three years.",
       story: "Lisa's property had aging wire fencing that posed safety risks. We designed and installed 2km of treated timber post-and-rail with electric backup, plus six new paddock gates.",
+      caseStudy: {
+        challenge: "Old wire fencing was rusting and sagging. Two horses had been injured on exposed wire ends, and the property's single large paddock offered no way to separate horses for feeding, turnout, or quarantine.",
+        approach: "We surveyed the full perimeter and internal divisions, then designed six paddocks of varying sizes with shared water troughs and double-gate laneways. All fencing is 3-rail treated pine with electric tape on the top rail as a psychological barrier.",
+        materials: ["CCA-treated pine posts (125mm)", "Hardwood rails (75×50mm)", "Galvanised electric tape", "Heavy-duty spring gates", "Concrete post footings at gate points"],
+        timeline: "4 weeks including clearing, post-hole boring, and electric tape installation.",
+        outcome: "Zero horse escapes in three years. Lisa can now manage individual feeding plans and safely quarantine new arrivals. Property insurance premium dropped 15%.",
+      },
       metrics: [
         { icon: TrendingUp, value: "2km", label: "Fencing Installed" },
         { icon: Clock, value: "4 Weeks", label: "Completion Time" },
@@ -1048,6 +1076,13 @@ function ClientStorySection() {
       location: "Balnarring",
       quote: "From masterplan to final coat of paint, Peninsula Equine delivered a facility that rivals anything in the state. The clinics we host now are always fully booked.",
       story: "A greenfield 10-acre site transformed into a complete equestrian venue: two arenas, a 20-stall barn, amenities block, and truck-and-float parking for events.",
+      caseStudy: {
+        challenge: "Mark purchased raw farmland and needed a complete equestrian facility designed from scratch — arenas, stabling, amenities, and event infrastructure — all within a 5-month window to open for the spring clinic season.",
+        approach: "We produced a full masterplan covering grading, drainage, road access, and building placement. Construction was staged: earthworks and drainage first, then the barn and amenities block in parallel with arena construction. Truck-and-float parking was graded last to serve as a staging area during the build.",
+        materials: ["Steel-frame barn with Colorbond cladding", "Concrete amenities block", "Dual fibre-sand arenas (60×20m + 40×20m)", "Gravel access roads", "Stormwater retention basin"],
+        timeline: "5 months from first cut to final inspection. Opened on schedule for the October clinic season.",
+        outcome: "Every clinic since opening has been fully booked. The facility now hosts 4 major events per year and generates revenue from stall rentals, arena hire, and amenities access.",
+      },
       metrics: [
         { icon: TrendingUp, value: "10 Acres", label: "Site Developed" },
         { icon: Clock, value: "5 Months", label: "Total Build" },
@@ -1140,7 +1175,14 @@ function ClientStorySection() {
               </p>
 
               <p className="font-serif font-semibold text-foreground">{current.client}</p>
-              <p className="text-muted-foreground text-sm">{current.role}</p>
+              <p className="text-muted-foreground text-sm mb-4">{current.role}</p>
+              <button
+                onClick={() => setModalStory(current)}
+                className="inline-flex items-center gap-2 text-sm font-medium text-accent hover:text-accent/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-md px-1 py-0.5"
+              >
+                Read Full Case Study
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
             </div>
 
             {/* Right: Outcome metrics */}
@@ -1206,6 +1248,92 @@ function ClientStorySection() {
           </Link>
         </SectionTransition>
       </div>
+
+      {/* Case Study Modal */}
+      <Dialog open={!!modalStory} onOpenChange={(open) => !open && setModalStory(null)}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+          {modalStory && (
+            <>
+              <DialogHeader>
+                <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-1">
+                  {modalStory.serviceLabel} — Case Study
+                </p>
+                <DialogTitle className="font-serif text-2xl">
+                  {modalStory.title}, {modalStory.location}
+                </DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-6 mt-4">
+                {/* Quote */}
+                <blockquote className="text-foreground font-serif italic leading-relaxed border-l-2 border-accent pl-5">
+                  "{modalStory.quote}"
+                </blockquote>
+                <p className="text-sm text-muted-foreground">
+                  — <span className="font-semibold text-foreground">{modalStory.client}</span>, {modalStory.role}
+                </p>
+
+                {/* Challenge */}
+                <div>
+                  <h4 className="font-serif font-semibold text-foreground mb-2">The Challenge</h4>
+                  <p className="text-muted-foreground leading-relaxed">{modalStory.caseStudy.challenge}</p>
+                </div>
+
+                {/* Approach */}
+                <div>
+                  <h4 className="font-serif font-semibold text-foreground mb-2">Our Approach</h4>
+                  <p className="text-muted-foreground leading-relaxed">{modalStory.caseStudy.approach}</p>
+                </div>
+
+                {/* Materials */}
+                <div>
+                  <h4 className="font-serif font-semibold text-foreground mb-2">Key Materials & Systems</h4>
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {modalStory.caseStudy.materials.map((m) => (
+                      <li key={m} className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <Award className="h-3.5 w-3.5 text-accent mt-0.5 shrink-0" aria-hidden="true" />
+                        {m}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Timeline */}
+                <div>
+                  <h4 className="font-serif font-semibold text-foreground mb-2">Timeline</h4>
+                  <p className="text-muted-foreground leading-relaxed">{modalStory.caseStudy.timeline}</p>
+                </div>
+
+                {/* Outcome */}
+                <div>
+                  <h4 className="font-serif font-semibold text-foreground mb-2">The Outcome</h4>
+                  <p className="text-muted-foreground leading-relaxed">{modalStory.caseStudy.outcome}</p>
+                </div>
+
+                {/* Metrics grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-border">
+                  {modalStory.metrics.map((metric) => (
+                    <div key={metric.label} className="text-center">
+                      <metric.icon className="h-4 w-4 text-accent mx-auto mb-2" aria-hidden="true" />
+                      <p className="font-serif text-xl font-semibold text-foreground">{metric.value}</p>
+                      <p className="text-xs text-muted-foreground">{metric.label}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* CTA */}
+                <div className="text-center pt-2">
+                  <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
+                    <Link to="/contact" onClick={() => setModalStory(null)}>
+                      Start Your Project
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }
