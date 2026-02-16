@@ -1792,7 +1792,11 @@ function HomeFAQSection() {
     { q: "Can I see examples of your previous work?", a: "Absolutely. Visit our Gallery page for completed projects, or ask us for references from clients in your area.", cat: "general" },
     { q: "How do I book a lesson or clinic?", a: "Use our Book a Lesson page or call us directly. We offer trial lessons for new riders and flexible scheduling for regular students.", cat: "booking" },
     { q: "What's included in a consultation?", a: "A free on-site visit where we assess your property, discuss your goals, and outline scope, timeline, and budget. No obligation.", cat: "booking" },
-    { q: "Can I reschedule or cancel a booking?", a: "Yes — we ask for at least 48 hours' notice for cancellations. Rescheduling is free and easy via phone or email.", cat: "booking" },
+    { q: "Can I reschedule or cancel a booking?", a: "Yes \u2014 we ask for at least 48 hours\u2019 notice for cancellations. Rescheduling is free and easy via phone or email.", cat: "booking" },
+    { q: "What payment methods do you accept?", a: "We accept bank transfer, credit/debit card, and cash on site. For larger construction projects, we offer staged payment plans aligned with build milestones.", cat: "booking" },
+    { q: "Is a deposit required to secure a booking?", a: "Yes \u2014 a 20% deposit is required for construction projects upon accepting the quote. Lesson bookings are paid at the time of booking or on the day.", cat: "booking" },
+    { q: "What is your cancellation and refund policy?", a: "Lessons cancelled with less than 48 hours\u2019 notice may incur a cancellation fee. Construction deposits are non-refundable once materials have been ordered. Full policy details are provided with your quote.", cat: "booking" },
+    { q: "Do you have insurance and safety policies?", a: "Absolutely. We hold comprehensive public liability and professional indemnity insurance. All riders must sign a waiver before lessons, and helmets are mandatory on site.", cat: "general" },
   ];
 
   const tabs = [
