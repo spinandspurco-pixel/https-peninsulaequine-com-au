@@ -20,6 +20,15 @@ const cardVariants = cva(
         /** Feature card — accent border top */
         feature:
           "shadow-sm border-t-2 border-t-accent hover:shadow-lg hover:-translate-y-0.5",
+        /** Inset panel — recessed surface inside another card */
+        inset:
+          "shadow-none bg-background border-border",
+        /** Dark surface — for navy-bg sections */
+        dark:
+          "shadow-none bg-primary-foreground/[0.04] border-primary-foreground/10 text-primary-foreground",
+        /** Interactive — lift + subtle gold glow on hover */
+        interactive:
+          "shadow-sm hover:-translate-y-1 hover:shadow-[0_0_20px_-8px_hsl(var(--accent)/0.2),0_10px_25px_-10px_hsl(var(--primary)/0.15)] hover:border-accent/30 cursor-pointer",
       },
     },
     defaultVariants: {

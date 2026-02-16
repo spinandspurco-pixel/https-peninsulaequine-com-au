@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, ChevronDown, Star, Hammer, Ruler, CheckCircle } from "lucide-react";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { MultiStepInquiryForm } from "@/components/MultiStepInquiryForm";
@@ -281,9 +282,12 @@ function TestimonialStrip() {
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}>
           {topQuotes.map((t, i) => (
-            <div
+            <Card
               key={t.id}
-              className="p-7 rounded-lg bg-background border border-border hover:border-accent/50 transition-all duration-500"
+              variant="interactive"
+              className={`p-7 transition-all duration-500 ${
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              }`}
               style={{ transitionDelay: `${i * 100}ms` }}
             >
               <div className="flex gap-0.5 mb-4">
@@ -298,7 +302,7 @@ function TestimonialStrip() {
                 <p className="font-serif font-semibold text-foreground text-sm">{t.name}</p>
                 <p className="text-xs text-muted-foreground">{t.role}</p>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
 
