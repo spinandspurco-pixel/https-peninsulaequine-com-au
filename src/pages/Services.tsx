@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
-import { ArrowRight, ArrowUp, CheckCircle, X, ZoomIn } from "lucide-react";
+import { ArrowRight, ArrowUp, CheckCircle, X, ZoomIn, CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
@@ -642,10 +642,16 @@ function LessonsSection() {
           }`}>
             {lessonInfo.contact}
           </p>
-          <div className={`transition-all duration-500 delay-300 ${
+          <div className={`flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-500 delay-300 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}>
-            <BookingWidget variant="card" className="max-w-md mx-auto" />
+            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+              <Link to="/book-lesson">
+                <CalendarIcon className="mr-2 h-5 w-5" />
+                Book a Lesson
+              </Link>
+            </Button>
+            <BookingWidget variant="card" className="max-w-md" />
           </div>
         </div>
       </div>
