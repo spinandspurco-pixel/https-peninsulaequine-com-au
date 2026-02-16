@@ -93,6 +93,15 @@ const inquirySchema = z.object({
   fenceMaterial: z.string().optional(),
   propertyAcreage: z.string().max(50).optional(),
   existingStructures: z.string().max(500).optional(),
+  // Facility Design & Build
+  facilityTotalAcreage: z.string().max(50).optional(),
+  facilityComponents: z.array(z.string()).optional(),
+  facilityTimeline: z.string().optional(),
+  // Clinics & Events
+  eventType: z.string().optional(),
+  eventCapacity: z.string().max(50).optional(),
+  eventFrequency: z.string().optional(),
+  eventAmenities: z.array(z.string()).optional(),
   
   // Step 4: Experience & Budget
   experienceLevel: z.string().min(1, "Please select your experience level"),
@@ -147,6 +156,53 @@ const BARN_FEATURE_OPTIONS = [
   { value: "office", label: "Office" },
   { value: "bathroom", label: "Bathroom" },
   { value: "loft", label: "Loft/Hay Loft" },
+];
+
+// Facility component options
+const FACILITY_COMPONENT_OPTIONS = [
+  { value: "arena", label: "Arena" },
+  { value: "barn", label: "Barn / Stables" },
+  { value: "paddocks", label: "Paddocks / Turnout" },
+  { value: "round-pen", label: "Round Pen" },
+  { value: "wash-bay", label: "Wash Bay" },
+  { value: "hay-shed", label: "Hay / Feed Shed" },
+  { value: "tack-room", label: "Tack Room" },
+  { value: "office", label: "Office / Amenities" },
+  { value: "parking", label: "Truck & Float Parking" },
+];
+
+const FACILITY_TIMELINE_OPTIONS = [
+  { value: "3-6-months", label: "3–6 months" },
+  { value: "6-12-months", label: "6–12 months" },
+  { value: "12-plus", label: "12+ months" },
+  { value: "flexible", label: "Flexible / planning stage" },
+];
+
+// Event type options
+const EVENT_TYPE_OPTIONS = [
+  { value: "clinic", label: "Training Clinic" },
+  { value: "competition", label: "Competition / Show" },
+  { value: "multi-day", label: "Multi-Day Event" },
+  { value: "expo", label: "Equine Expo / Trade Show" },
+  { value: "other", label: "Other" },
+];
+
+const EVENT_FREQUENCY_OPTIONS = [
+  { value: "one-off", label: "One-off build" },
+  { value: "monthly", label: "Monthly events" },
+  { value: "seasonal", label: "Seasonal (a few per year)" },
+  { value: "weekly", label: "Weekly use" },
+];
+
+const EVENT_AMENITY_OPTIONS = [
+  { value: "spectator-seating", label: "Spectator Seating" },
+  { value: "pa-system", label: "PA / Sound System" },
+  { value: "lighting", label: "Arena Lighting" },
+  { value: "warm-up-ring", label: "Warm-Up Ring" },
+  { value: "temp-stabling", label: "Temporary Stabling" },
+  { value: "food-vendor", label: "Food / Vendor Area" },
+  { value: "parking", label: "Parking / Truck Access" },
+  { value: "scoring", label: "Scoring / Judges Box" },
 ];
 
 const FENCE_MATERIAL_OPTIONS = [
@@ -362,6 +418,13 @@ export function InquiryForm() {
     fenceMaterial: "",
     propertyAcreage: "",
     existingStructures: "",
+    facilityTotalAcreage: "",
+    facilityComponents: [],
+    facilityTimeline: "",
+    eventType: "",
+    eventCapacity: "",
+    eventFrequency: "",
+    eventAmenities: [],
     experienceLevel: "",
     budgetRange: "",
     name: "",
@@ -475,6 +538,13 @@ export function InquiryForm() {
       if (formData.fenceMaterial) detailParts.push(`Fence material: ${formData.fenceMaterial}`);
       if (formData.propertyAcreage) detailParts.push(`Acreage: ${formData.propertyAcreage}`);
       if (formData.existingStructures) detailParts.push(`Existing structures: ${formData.existingStructures}`);
+      if (formData.facilityTotalAcreage) detailParts.push(`Facility acreage: ${formData.facilityTotalAcreage}`);
+      if (formData.facilityTimeline) detailParts.push(`Timeline: ${formData.facilityTimeline}`);
+      if (formData.facilityComponents?.length) detailParts.push(`Facility components: ${formData.facilityComponents.join(", ")}`);
+      if (formData.eventType) detailParts.push(`Event type: ${formData.eventType}`);
+      if (formData.eventCapacity) detailParts.push(`Event capacity: ${formData.eventCapacity}`);
+      if (formData.eventFrequency) detailParts.push(`Event frequency: ${formData.eventFrequency}`);
+      if (formData.eventAmenities?.length) detailParts.push(`Event amenities: ${formData.eventAmenities.join(", ")}`);
       const combinedDetails = [detailParts.join("; "), formData.additionalNotes?.trim()].filter(Boolean).join("\n\n");
 
       const { error } = await supabase.from("inquiries").insert({
@@ -575,6 +645,13 @@ export function InquiryForm() {
               fenceMaterial: "",
               propertyAcreage: "",
               existingStructures: "",
+              facilityTotalAcreage: "",
+              facilityComponents: [],
+              facilityTimeline: "",
+              eventType: "",
+              eventCapacity: "",
+              eventFrequency: "",
+              eventAmenities: [],
               experienceLevel: "",
               budgetRange: "",
               name: "",
@@ -887,7 +964,143 @@ export function InquiryForm() {
                 </div>
               )}
 
-              {/* General goals field (always shown) */}
+              {/* Full Facility Design & Build fields */}
+              {formData.interestedServices?.includes("full-facility") && (
+                <div className="p-4 rounded-lg border border-accent/20 bg-accent/5 space-y-4">
+                  <p className="text-sm font-medium text-accent">Facility Design Details</p>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-base sm:text-sm">Total Property Acreage</Label>
+                      <Input
+                        value={formData.facilityTotalAcreage || ""}
+                        onChange={(e) => updateField("facilityTotalAcreage", e.target.value)}
+                        placeholder="e.g., 10 acres, 40 hectares"
+                        maxLength={50}
+                        className="h-12 sm:h-10 text-base sm:text-sm"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-base sm:text-sm">Desired Timeline</Label>
+                      <Select value={formData.facilityTimeline} onValueChange={(v) => updateField("facilityTimeline", v)}>
+                        <SelectTrigger className="h-12 sm:h-10 text-base sm:text-sm">
+                          <SelectValue placeholder="Select timeline..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {FACILITY_TIMELINE_OPTIONS.map((opt) => (
+                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-base sm:text-sm">Components Needed</Label>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      {FACILITY_COMPONENT_OPTIONS.map((comp) => {
+                        const isChecked = formData.facilityComponents?.includes(comp.value);
+                        return (
+                          <button
+                            key={comp.value}
+                            type="button"
+                            onClick={() => {
+                              const current = formData.facilityComponents || [];
+                              const updated = isChecked
+                                ? current.filter((c) => c !== comp.value)
+                                : [...current, comp.value];
+                              updateField("facilityComponents", updated);
+                            }}
+                            className={cn(
+                              "px-3 py-2 rounded-md border text-sm transition-all active:scale-[0.98]",
+                              isChecked
+                                ? "border-accent bg-accent/10 text-foreground"
+                                : "border-border text-muted-foreground hover:border-accent/50"
+                            )}
+                          >
+                            {isChecked && <Check className="w-3 h-3 inline mr-1" />}
+                            {comp.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Clinics & Events fields */}
+              {formData.interestedServices?.includes("clinics-events") && (
+                <div className="p-4 rounded-lg border border-accent/20 bg-accent/5 space-y-4">
+                  <p className="text-sm font-medium text-accent">Clinic & Event Details</p>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-base sm:text-sm">Event Type</Label>
+                      <Select value={formData.eventType} onValueChange={(v) => updateField("eventType", v)}>
+                        <SelectTrigger className="h-12 sm:h-10 text-base sm:text-sm">
+                          <SelectValue placeholder="Select event type..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {EVENT_TYPE_OPTIONS.map((opt) => (
+                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-base sm:text-sm">Expected Capacity</Label>
+                      <Input
+                        value={formData.eventCapacity || ""}
+                        onChange={(e) => updateField("eventCapacity", e.target.value)}
+                        placeholder="e.g., 50 riders, 200 spectators"
+                        maxLength={50}
+                        className="h-12 sm:h-10 text-base sm:text-sm"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-base sm:text-sm">Event Frequency</Label>
+                    <Select value={formData.eventFrequency} onValueChange={(v) => updateField("eventFrequency", v)}>
+                      <SelectTrigger className="h-12 sm:h-10 text-base sm:text-sm">
+                        <SelectValue placeholder="How often will events run?" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {EVENT_FREQUENCY_OPTIONS.map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-base sm:text-sm">Required Amenities</Label>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      {EVENT_AMENITY_OPTIONS.map((amenity) => {
+                        const isChecked = formData.eventAmenities?.includes(amenity.value);
+                        return (
+                          <button
+                            key={amenity.value}
+                            type="button"
+                            onClick={() => {
+                              const current = formData.eventAmenities || [];
+                              const updated = isChecked
+                                ? current.filter((a) => a !== amenity.value)
+                                : [...current, amenity.value];
+                              updateField("eventAmenities", updated);
+                            }}
+                            className={cn(
+                              "px-3 py-2 rounded-md border text-sm transition-all active:scale-[0.98]",
+                              isChecked
+                                ? "border-accent bg-accent/10 text-foreground"
+                                : "border-border text-muted-foreground hover:border-accent/50"
+                            )}
+                          >
+                            {isChecked && <Check className="w-3 h-3 inline mr-1" />}
+                            {amenity.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-2">
                 <Label htmlFor="goals" className="text-base sm:text-sm">Project Goals *</Label>
                 <Textarea

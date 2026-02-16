@@ -115,6 +115,36 @@ export const services = [
     icon: "renovation",
     startingPrice: "$3,000",
   },
+  {
+    id: "full-facility",
+    title: "Full Facility Design & Build",
+    shortDescription: "Complete equine property design from concept to keys in hand.",
+    description: "End-to-end facility planning and construction. We coordinate every trade—from initial site survey through barn, arena, paddocks, and landscaping—delivering a turnkey equine property.",
+    features: [
+      "Master site planning & 3-D concept renders",
+      "All permits, engineering & council liaison",
+      "Coordinated multi-trade construction",
+      "Arena, barn, fencing & infrastructure in one contract",
+      "Project management & progress reporting",
+    ],
+    icon: "facility",
+    startingPrice: "$150,000",
+  },
+  {
+    id: "clinics-events",
+    title: "Clinics & Event Facilities",
+    shortDescription: "Purpose-built spaces for clinics, competitions, and equestrian events.",
+    description: "Design and build venues that host everything from weekend clinics to multi-day competitions. We handle spectator amenities, warm-up areas, and all the infrastructure an event demands.",
+    features: [
+      "Competition-grade arena builds",
+      "Warm-up rings & holding yards",
+      "Spectator seating & amenities",
+      "Temporary & permanent stabling",
+      "PA, lighting & scoring infrastructure",
+    ],
+    icon: "event",
+    startingPrice: "$50,000",
+  },
 ];
 
 export const lessonInfo = {

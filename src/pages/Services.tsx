@@ -43,6 +43,8 @@ const serviceImages: Record<string, string> = {
   "infrastructure": qldFacilityConstruction,
   "round-pens": qldFacilityCourtyard,
   "renovations": mainRidgeCiroWoodwork,
+  "full-facility": qldFacilityConstruction,
+  "clinics-events": equitanaArena,
 };
 
 // Page header component with parallax
