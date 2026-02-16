@@ -38,6 +38,13 @@ const PROGRAM_LEVELS = [
     tagline: "Build confidence from the ground up",
     description: "Perfect for newcomers or riders returning after a break. Focus on seat, balance, and building a trusting relationship with your horse.",
     topics: ["Mounting & dismounting safely", "Walk & rising trot fundamentals", "Groundwork & horse handling", "Basic arena etiquette"],
+    price: "$95",
+    pricePer: "per session",
+    duration: "45 min",
+    frequency: "Weekly recommended",
+    bestFor: "Beginners & returners",
+    availability: "Open",
+    featured: false,
   },
   {
     value: "intermediate",
@@ -46,6 +53,13 @@ const PROGRAM_LEVELS = [
     tagline: "Refine your skills, deepen your partnership",
     description: "For riders comfortable at walk, trot, and canter who are ready to develop more refined aids, lateral work, and jumping basics.",
     topics: ["Canter transitions & lead changes", "Introduction to lateral movements", "Pole work & ground lines", "Developing an independent seat"],
+    price: "$120",
+    pricePer: "per session",
+    duration: "60 min",
+    frequency: "Weekly or fortnightly",
+    bestFor: "Confident walk/trot/canter",
+    availability: "Open",
+    featured: true,
   },
   {
     value: "advanced",
@@ -54,6 +68,13 @@ const PROGRAM_LEVELS = [
     tagline: "Precision training for serious riders",
     description: "Tailored sessions for experienced riders working on competition preparation, advanced dressage movements, or complex jumping courses.",
     topics: ["Collection & extension", "Advanced lateral work", "Course building & show prep", "Rider biomechanics analysis"],
+    price: "$150",
+    pricePer: "per session",
+    duration: "60 min",
+    frequency: "As needed",
+    bestFor: "Competitors & advanced riders",
+    availability: "Limited spots",
+    featured: false,
   },
 ];
 
@@ -134,9 +155,9 @@ function ProgramLevelsSection() {
           <div className={`w-16 h-0.5 bg-accent mx-auto mb-6 transition-all duration-500 delay-100 ${
             headerVisible ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"
           }`} />
-          <h2 className="heading-section text-foreground mb-4">Program Levels</h2>
+          <h2 className="heading-section text-foreground mb-4">Program Levels & Pricing</h2>
           <p className="text-muted-foreground">
-            Our structured programs meet you where you are and take you where you want to go.
+            Compare our three training paths to find the right fit. All sessions are private, one-on-one with Glenn.
           </p>
         </div>
 
@@ -144,19 +165,62 @@ function ProgramLevelsSection() {
           {PROGRAM_LEVELS.map((level, index) => (
             <div
               key={level.value}
-              className={`group relative rounded-xl border border-border bg-background p-6 sm:p-8 card-hover-glow transition-all duration-700 ${
-                visibleItems[index] ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-              }`}
+              className={cn(
+                "group relative rounded-xl border bg-background p-6 sm:p-8 transition-all duration-700 flex flex-col",
+                visibleItems[index] ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
+                level.featured
+                  ? "border-accent shadow-[0_8px_30px_-8px_hsl(var(--accent)/0.25)] ring-1 ring-accent/20"
+                  : "border-border card-hover-glow"
+              )}
             >
+              {/* Featured badge */}
+              {level.featured && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-accent text-accent-foreground text-[10px] font-semibold uppercase tracking-widest">
+                    <Sparkles className="h-3 w-3" />
+                    Most Popular
+                  </span>
+                </div>
+              )}
+
+              {/* Icon + title */}
               <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mb-5 transition-all duration-300 group-hover:bg-accent/20 group-hover:scale-110">
                 <level.icon className="h-6 w-6 text-accent" />
               </div>
               <h3 className="font-serif text-xl font-semibold text-foreground mb-1 transition-colors duration-300 group-hover:text-accent">
                 {level.label}
               </h3>
-              <p className="text-sm text-accent font-medium mb-3">{level.tagline}</p>
+              <p className="text-sm text-accent font-medium mb-4">{level.tagline}</p>
+
+              {/* Price block */}
+              <div className="mb-5 pb-5 border-b border-border">
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-serif text-3xl font-bold text-foreground">{level.price}</span>
+                  <span className="text-sm text-muted-foreground">{level.pricePer}</span>
+                </div>
+                <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3">
+                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <Clock className="h-3.5 w-3.5 text-accent" />
+                    {level.duration}
+                  </span>
+                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <CalendarIcon className="h-3.5 w-3.5 text-accent" />
+                    {level.frequency}
+                  </span>
+                </div>
+              </div>
+
+              {/* Best for */}
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent/5 border border-accent/10 mb-5 self-start">
+                <Users className="h-3.5 w-3.5 text-accent" />
+                <span className="text-xs font-medium text-foreground">{level.bestFor}</span>
+              </div>
+
+              {/* Description */}
               <p className="text-sm text-muted-foreground mb-5 leading-relaxed">{level.description}</p>
-              <ul className="space-y-2 mb-6">
+
+              {/* Topics */}
+              <ul className="space-y-2 mb-6 flex-1">
                 {level.topics.map((topic, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-foreground/80">
                     <CheckCircle className="h-4 w-4 text-accent mt-0.5 shrink-0" />
@@ -164,18 +228,39 @@ function ProgramLevelsSection() {
                   </li>
                 ))}
               </ul>
-              <Button
-                asChild
-                className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
-              >
-                <a href="#book">
-                  Book {level.label} Lesson
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </a>
-              </Button>
+
+              {/* Availability + CTA */}
+              <div className="mt-auto space-y-3">
+                <div className="flex items-center gap-2">
+                  <span className={cn(
+                    "w-2 h-2 rounded-full",
+                    level.availability === "Open" ? "bg-green-500" : "bg-amber-500"
+                  )} />
+                  <span className="text-xs text-muted-foreground">{level.availability}</span>
+                </div>
+                <Button
+                  asChild
+                  className={cn(
+                    "w-full",
+                    level.featured
+                      ? "bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm"
+                      : "bg-accent hover:bg-accent/90 text-accent-foreground"
+                  )}
+                >
+                  <a href="#book">
+                    Book {level.label} Lesson
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </a>
+                </Button>
+              </div>
             </div>
           ))}
         </div>
+
+        {/* Comparison note */}
+        <p className="text-center text-xs text-muted-foreground mt-8 max-w-xl mx-auto">
+          Not sure which level is right for you? Your first session doubles as an assessment — Glenn will recommend the best path forward.
+        </p>
       </div>
     </section>
   );
