@@ -9,6 +9,7 @@ import { ContrastChecker } from "@/components/ContrastChecker";
 import { ContrastWarningOverlay } from "@/components/ContrastWarningOverlay";
 import { FloatingPEWatermark } from "@/components/FloatingPEWatermark";
 import { ParallaxDepthToggle } from "@/components/ParallaxDepthToggle";
+import { StickySubpageCTA } from "@/components/StickySubpageCTA";
 
 interface LayoutProps {
   children: ReactNode;
@@ -25,6 +26,7 @@ export function Layout({ children }: LayoutProps) {
       <Footer />
       <ScrollToTop />
       <FloatingContactButton />
+      <StickySubpageCTA showAfter={400} ctaLabel="Get a Free Quote" ctaHref="/contact" />
       <FloatingPEWatermark />
       <ParallaxDepthToggle />
       <ContrastChecker />
