@@ -20,7 +20,7 @@ export const siteConfig = {
   },
   social: {
     instagram: "https://instagram.com/peninsulaequine",
-    facebook: "https://facebook.com/peninsulaequine",
+    facebook: "https://www.facebook.com/PeninsulaEquineConstructions/",
   },
 };
 
@@ -380,9 +380,10 @@ export const aboutCiro = {
   name: "Ciro",
   title: "Founder & Master Builder",
   bio: [
-    "Ciro doesn't just build equine facilities—he lives the equestrian lifestyle. As an accomplished horseman himself, he brings a unique perspective to every project: the understanding of what horses and their owners truly need.",
-    "With decades of experience in construction and a lifetime of horsemanship, Ciro founded Peninsula Equine to bridge the gap between generic contractors and the specialized demands of equine properties. Every arena, barn, and fence he builds reflects his commitment to quality and his deep respect for the horse.",
-    "When he's not on a job site, you'll find Ciro in the saddle, working with horses the same way he approaches construction—with patience, expertise, and an eye for the details that matter.",
+    "Before Ciro ever picked up a spirit level, he was already reading a horse's body language across a round pen. Raised around livestock and heavy machinery in equal measure, he grew up understanding that the best structures aren't designed on a screen—they're born from watching how animals move, breathe, and rest. That instinct, honed over decades both in the saddle and on the tools, is what sets Peninsula Equine apart from every other contractor in the industry.",
+    "Ciro is a practitioner of natural horsemanship—a discipline that demands patience, timing, and an ability to listen before you act. Those same qualities define his approach to construction. He doesn't arrive on site with a one-size-fits-all plan. He walks the land, studies the drainage, feels the prevailing wind, and watches the horses already on the property before a single post goes in the ground. It's an approach that produces facilities which work with nature rather than against it.",
+    "His portfolio speaks to the breadth of his craft: hand-laid stonework stables at Aberdeen Farm, precision timber joinery at Main Ridge, full-scale competition infrastructure for Equitana Queensland, and arena preparation for Melbourne Racing Club's Ranch Roundup at Caulfield. Whether it's a bespoke four-stall barn on a private property or a multi-arena event complex, Ciro brings the same uncompromising standard—because he knows that the details a horse notices are rarely the ones a contractor thinks about.",
+    "Away from the job site, you'll find him bareback in the round pen, working a young horse through join-up, or teaching his own children the same quiet confidence with animals that his family passed down to him. Peninsula Equine is, at its core, a family operation—built on the belief that the person who designs your facility should be the same person who'd trust their own horse to live in it.",
   ],
   values: [
     {
