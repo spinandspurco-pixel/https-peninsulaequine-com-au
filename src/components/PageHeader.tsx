@@ -1,11 +1,10 @@
 import { ReactNode } from "react";
 import { useParallax } from "@/hooks/useParallax";
-import { BlueprintBackground } from "@/components/BlueprintBackground";
-import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
+import { AnimatedBlueprintBg } from "@/components/AnimatedBlueprintBg";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
 import { siteConfig } from "@/data/content";
-import logoPeMark from "@/assets/logo-pe-mark.png";
-import blueprintElevation from "@/assets/blueprint-elevation.png";
+import logoPeMark from "@/assets/pe-logo-new.png";
+import peBanner from "@/assets/pe-banner-2.png";
 
 interface PageHeaderProps {
   title: string;
@@ -25,13 +24,11 @@ export function PageHeader({ title, description, backgroundImage, dividerVariant
       ref={parallaxRef} 
       className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden"
     >
-      {/* Single blueprint layer */}
-      <BlueprintBackground image={blueprintElevation} opacity={0.05} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
-      <BlueprintLineOverlay variant="dimensions" color="light" />
+      {/* Animated blueprint overlay */}
+      <AnimatedBlueprintBg image={peBanner} imageOpacity={0.06} variant="section-b" showLines />
 
       {/* Gradient overlays for depth */}
       <div className="absolute inset-0 bg-gradient-to-b from-primary/0 via-primary/30 to-primary/70 pointer-events-none z-[1]" />
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/40 via-transparent to-primary/40 pointer-events-none z-[1]" />
 
       {/* PE logo watermark – large, centered, ultra-subtle */}
       <div
