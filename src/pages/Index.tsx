@@ -756,57 +756,187 @@ function ServicesSection() {
 
 function BookingCTABanner() {
   const { ref, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.3 });
+  const [modalOpen, setModalOpen] = useState(false);
 
   return (
-    <section
-      ref={ref}
-      className="relative py-16 sm:py-20 bg-accent overflow-hidden"
-    >
-      {/* Subtle texture */}
-      <div className="absolute inset-0 opacity-10">
-        <BlueprintLineOverlay variant="dimensions" color="dark" />
-      </div>
-
-      <div
-        className={`section-container relative z-10 text-center transition-all duration-700 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-        }`}
+    <>
+      <section
+        ref={ref}
+        className="relative py-16 sm:py-20 bg-accent overflow-hidden"
       >
-        <div className="max-w-3xl mx-auto">
-          <CalendarIcon className="h-8 w-8 text-accent-foreground/80 mx-auto mb-4" />
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-accent-foreground font-semibold mb-4">
-            Book Your Free Consultation
-          </h2>
-          <p className="text-accent-foreground/80 text-lg mb-8 max-w-xl mx-auto leading-relaxed">
-            Walk us through your property and vision. We'll provide expert guidance 
-            on what's possible — no obligation, no pressure.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              asChild
-              size="lg"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground text-base px-8 btn-hover-lift"
-            >
-              <Link to="/contact">
+        {/* Subtle texture */}
+        <div className="absolute inset-0 opacity-10">
+          <BlueprintLineOverlay variant="dimensions" color="dark" />
+        </div>
+
+        <div
+          className={`section-container relative z-10 text-center transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+          }`}
+        >
+          <div className="max-w-3xl mx-auto">
+            <CalendarIcon className="h-8 w-8 text-accent-foreground/80 mx-auto mb-4" />
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-accent-foreground font-semibold mb-4">
+              Book Your Free Consultation
+            </h2>
+            <p className="text-accent-foreground/80 text-lg mb-8 max-w-xl mx-auto leading-relaxed">
+              Walk us through your property and vision. We'll provide expert guidance 
+              on what's possible — no obligation, no pressure.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                size="lg"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground text-base px-8 btn-hover-lift"
+                onClick={() => setModalOpen(true)}
+              >
                 Start Your Project
                 <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="border-accent-foreground/40 text-accent-foreground hover:bg-accent-foreground hover:text-accent text-base px-8"
-            >
-              <a href={`tel:${siteConfig.phone}`}>
-                <Phone className="mr-2 h-5 w-5" />
-                Call Now
-              </a>
-            </Button>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="border-accent-foreground/40 text-accent-foreground hover:bg-accent-foreground hover:text-accent text-base px-8"
+              >
+                <a href={`tel:${siteConfig.phone}`}>
+                  <Phone className="mr-2 h-5 w-5" />
+                  Call Now
+                </a>
+              </Button>
+            </div>
           </div>
         </div>
+      </section>
+
+      {/* Booking Form Modal */}
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto p-0">
+          <DialogHeader className="px-6 pt-6 pb-0">
+            <DialogTitle className="font-serif text-2xl">Book a Consultation</DialogTitle>
+          </DialogHeader>
+          <div className="px-6 pb-6">
+            <BookingModalForm onSuccess={() => setModalOpen(false)} />
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
+
+function BookingModalForm({ onSuccess }: { onSuccess: () => void }) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [service, setService] = useState("");
+  const [notes, setNotes] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const { toast } = useToast();
+
+  const isValid = name.trim().length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) && service;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isValid) return;
+    setSubmitting(true);
+
+    try {
+      const { error } = await supabase.from("inquiries").insert({
+        name: name.trim().slice(0, 100),
+        email: email.trim().slice(0, 255),
+        phone: phone.trim().slice(0, 30) || null,
+        services: [service],
+        project_details: notes.trim().slice(0, 1000) || "Consultation request from homepage CTA",
+        status: "new",
+      });
+
+      if (error) throw error;
+
+      supabase.functions.invoke("send-inquiry-notification", {
+        body: {
+          name: name.trim(),
+          email: email.trim(),
+          services: [service],
+          goals: notes.trim() || "Consultation request",
+        },
+      }).catch(() => {});
+
+      setSubmitted(true);
+      toast({ title: "Request submitted!", description: "We'll be in touch within 24 hours." });
+      setTimeout(onSuccess, 2000);
+    } catch {
+      toast({ title: "Something went wrong", description: "Please try again or call us directly.", variant: "destructive" });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (submitted) {
+    return (
+      <div className="py-10 text-center">
+        <CheckCircle className="h-12 w-12 text-accent mx-auto mb-4" />
+        <h3 className="font-serif text-xl font-semibold text-foreground mb-2">You're All Set!</h3>
+        <p className="text-muted-foreground text-sm">We'll confirm your consultation within 24 hours.</p>
       </div>
-    </section>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4 pt-4">
+      <div className="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-1.5 block">Name *</label>
+          <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Full name" maxLength={100} />
+        </div>
+        <div>
+          <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-1.5 block">Email *</label>
+          <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" maxLength={255} />
+        </div>
+      </div>
+
+      <div>
+        <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-1.5 block">Phone</label>
+        <Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Optional" maxLength={30} />
+      </div>
+
+      <div>
+        <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-1.5 block">Service of Interest *</label>
+        <div className="grid grid-cols-2 gap-2">
+          {services.slice(0, 6).map((s) => (
+            <button
+              key={s.id}
+              type="button"
+              onClick={() => setService(s.id)}
+              className={`px-3 py-2 rounded-lg text-xs font-medium border transition-all text-left ${
+                service === s.id
+                  ? "bg-accent/10 border-accent ring-1 ring-accent/20 text-foreground"
+                  : "bg-background border-border text-muted-foreground hover:border-accent/30"
+              }`}
+            >
+              {s.title}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-1.5 block">Notes</label>
+        <Input value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Tell us about your project" maxLength={1000} />
+      </div>
+
+      <Button
+        type="submit"
+        size="lg"
+        disabled={!isValid || submitting}
+        className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
+      >
+        {submitting ? (
+          <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Submitting…</>
+        ) : (
+          <>Submit Request<ArrowRight className="ml-2 h-4 w-4" /></>
+        )}
+      </Button>
+    </form>
   );
 }
 
