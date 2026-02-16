@@ -476,7 +476,7 @@ function ConstructionLightbox({
       <div className="max-w-5xl w-full" onClick={(e) => e.stopPropagation()}>
         <div 
           ref={pinchZoom.containerRef}
-          className="relative overflow-hidden touch-none"
+          className={`relative overflow-hidden touch-none ${pinchZoom.isZoomed ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in"}`}
           {...pinchZoom.handlers}
           onTouchEnd={(e) => {
             pinchZoom.handlers.onTouchEnd(e);
@@ -492,7 +492,7 @@ function ConstructionLightbox({
           <img
             src={displayedImage || step.image}
             alt={step.title}
-            className={`max-w-full max-h-[75vh] object-contain rounded-lg mx-auto transition-all duration-150 ease-in-out ${
+            className={`max-w-full max-h-[75vh] object-contain rounded-lg mx-auto transition-all duration-150 ease-in-out select-none ${
               isImageLoaded && !isTransitioning ? "opacity-100 scale-100" : "opacity-0 scale-[0.98]"
             }`}
             style={{ transform: pinchZoom.transform }}
@@ -506,11 +506,16 @@ function ConstructionLightbox({
               {Math.round(pinchZoom.scale * 100)}%
             </div>
           )}
-          {/* Zoom hint for mobile */}
+          {/* Zoom hint */}
           {!pinchZoom.isZoomed && isImageLoaded && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-primary/60 text-primary-foreground/70 text-xs px-3 py-1.5 rounded-full sm:hidden">
-              Pinch to zoom • Double-tap to zoom
-            </div>
+            <>
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-primary/60 text-primary-foreground/70 text-xs px-3 py-1.5 rounded-full sm:hidden">
+                Pinch to zoom • Double-tap to zoom
+              </div>
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-primary/60 text-primary-foreground/70 text-xs px-3 py-1.5 rounded-full hidden sm:block">
+                Scroll to zoom • Double-click to zoom • Drag to pan
+              </div>
+            </>
           )}
         </div>
         
