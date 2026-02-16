@@ -34,7 +34,7 @@ import blueprintElevation from "@/assets/blueprint-elevation.png";
 
 // Featured services for homepage
 const featuredServices = services.slice(0, 4);
-const featuredTestimonials = testimonials.slice(0, 3);
+
 
 function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
   const [scrollY, setScrollY] = useState(0);
@@ -750,60 +750,89 @@ function ClientStorySection() {
 
 
 
-function TestimonialsSection() {
-  const featured = featuredTestimonials[0];
+function TestimonialsGallery() {
+  const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
 
   return (
     <section className="section-padding bg-card overflow-hidden relative">
       <BlueprintBackground image={blueprintDetail} opacity={0.035} direction="bottom-to-top" duration={1600} />
+      <BlueprintLineOverlay variant="detail" color="dark" />
       <div className="section-container relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="text-center max-w-3xl mx-auto mb-16">
           <AnimatedDivider className="mx-auto mb-8" />
           
-          {/* Stars with staggered animation */}
-          <SectionTransition variant="scale-up" delay={100}>
-            <div className="flex gap-1 justify-center mb-8">
-              {[...Array(featured.rating)].map((_, i) => (
-                <svg
-                  key={i}
-                  className="w-5 h-5 text-accent animate-[scale-in_0.3s_ease-out_forwards]"
-                  style={{ animationDelay: `${200 + i * 80}ms`, opacity: 0 }}
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
-            </div>
-          </SectionTransition>
-
-          <SectionTransition variant="blur-in" delay={300} duration={900}>
-            <blockquote className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground leading-relaxed mb-8">
-              "{featured.quote}"
-            </blockquote>
+          <SectionTransition variant="fade-up" delay={100}>
+            <p className="text-muted-foreground uppercase tracking-[0.2em] text-sm mb-4">
+              Client Success Stories
+            </p>
           </SectionTransition>
           
-          <SectionTransition variant="fade-up" delay={500}>
-            <div>
-              <p className="font-serif font-semibold text-foreground text-lg">{featured.name}</p>
-              <p className="text-muted-foreground">{featured.role}</p>
-            </div>
+          <SectionTransition variant="scale-up" delay={200}>
+            <h2 className="heading-section text-foreground mb-4">
+              What Our Clients Say
+            </h2>
           </SectionTransition>
 
-          <SectionTransition variant="fade-up" delay={600}>
-            <div className="mt-12">
-              <Link 
-                to="/testimonials" 
-                className="inline-flex items-center text-foreground font-medium hover:text-accent transition-colors group"
-              >
-                <span className="border-b border-foreground group-hover:border-accent transition-colors pb-1">
-                  Read more reviews
-                </span>
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
+          <SectionTransition variant="fade-up" delay={300}>
+            <p className="text-muted-foreground leading-relaxed">
+              Every project tells a story. Here are a few from the owners and trainers 
+              who trusted us with their vision.
+            </p>
           </SectionTransition>
         </div>
+
+        <div ref={gridRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {testimonials.slice(0, 6).map((testimonial, index) => (
+            <div
+              key={testimonial.id}
+              className={`group p-8 rounded-lg bg-background border border-border hover:border-accent/50 transition-all duration-700 ease-out hover:shadow-lg hover:-translate-y-1 ${
+                gridVisible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-8"
+              }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
+            >
+              {/* Star rating */}
+              <div className="flex gap-1 mb-5">
+                {[...Array(testimonial.rating)].map((_, i) => (
+                  <svg
+                    key={i}
+                    className="w-4 h-4 text-accent"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+
+              {/* Quote */}
+              <blockquote className="text-foreground leading-relaxed mb-6 line-clamp-5 group-hover:line-clamp-none transition-all">
+                "{testimonial.quote}"
+              </blockquote>
+
+              {/* Attribution */}
+              <div className="pt-5 border-t border-border">
+                <p className="font-serif font-semibold text-foreground">{testimonial.name}</p>
+                <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <SectionTransition variant="fade-up" delay={600} className="text-center mt-12">
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="border-foreground text-foreground hover:bg-foreground hover:text-background"
+          >
+            <Link to="/testimonials">
+              Read All Reviews
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </SectionTransition>
       </div>
     </section>
   );
@@ -915,7 +944,7 @@ export default function Index() {
         <GallerySection />
         <ClientStorySection />
         <BlueprintDivider variant="grid" />
-        <TestimonialsSection />
+        <TestimonialsGallery />
         <LeadCaptureSection />
         <CTASection />
       </Layout>
