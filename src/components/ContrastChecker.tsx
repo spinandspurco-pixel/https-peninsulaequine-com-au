@@ -298,6 +298,7 @@ function computeTokenFixes(): TokenFix[] {
   const style = getComputedStyle(root);
 
   const pairs: { fg: string; bg: string; fgLabel: string; bgLabel: string }[] = [
+    // Core design system
     { fg: "--foreground", bg: "--background", fgLabel: "Body text", bgLabel: "Background" },
     { fg: "--card-foreground", bg: "--card", fgLabel: "Card text", bgLabel: "Card bg" },
     { fg: "--muted-foreground", bg: "--background", fgLabel: "Muted text", bgLabel: "Background" },
@@ -306,6 +307,15 @@ function computeTokenFixes(): TokenFix[] {
     { fg: "--primary-foreground", bg: "--primary", fgLabel: "Primary btn text", bgLabel: "Primary bg" },
     { fg: "--popover-foreground", bg: "--popover", fgLabel: "Popover text", bgLabel: "Popover bg" },
     { fg: "--destructive-foreground", bg: "--destructive", fgLabel: "Destructive text", bgLabel: "Destructive bg" },
+    // Header color system
+    { fg: "--header-foreground", bg: "--header-bg", fgLabel: "Header text", bgLabel: "Header bg" },
+    { fg: "--header-scrolled-foreground", bg: "--header-scrolled-bg", fgLabel: "Header scrolled text", bgLabel: "Header scrolled bg" },
+    { fg: "--header-active", bg: "--header-bg", fgLabel: "Header active link", bgLabel: "Header bg" },
+    { fg: "--header-active", bg: "--header-scrolled-bg", fgLabel: "Header active (scrolled)", bgLabel: "Header scrolled bg" },
+    // Footer color system
+    { fg: "--footer-foreground", bg: "--footer-bg", fgLabel: "Footer text", bgLabel: "Footer bg" },
+    { fg: "--footer-muted", bg: "--footer-bg", fgLabel: "Footer muted text", bgLabel: "Footer bg" },
+    { fg: "--footer-hover", bg: "--footer-bg", fgLabel: "Footer hover/link", bgLabel: "Footer bg" },
   ];
 
   const fixes: TokenFix[] = [];
