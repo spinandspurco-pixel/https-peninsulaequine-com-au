@@ -11,6 +11,7 @@ import { Layout } from "@/components/layout/Layout";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { PageHeader } from "@/components/PageHeader";
 import { GalleryBlueprintOverlay } from "@/components/GalleryBlueprintOverlay";
+import { GalleryTourForm } from "@/components/GalleryTourForm";
 import logoPeMark from "@/assets/logo-pe-mark.png";
 
 // Main Ridge images
@@ -1274,6 +1275,13 @@ export default function Gallery() {
           )}
         </div>
       </GalleryBlueprintOverlay>
+
+      {/* Gallery Tour Lead Form */}
+      <section className="section-padding bg-card border-y border-border">
+        <div className="section-container">
+          <GalleryTourForm />
+        </div>
+      </section>
 
       {/* CTA with Parallax */}
       <ParallaxCTA
