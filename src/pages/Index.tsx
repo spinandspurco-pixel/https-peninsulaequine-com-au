@@ -1797,6 +1797,9 @@ function HomeFAQSection() {
     { q: "Is a deposit required to secure a booking?", a: "Yes \u2014 a 20% deposit is required for construction projects upon accepting the quote. Lesson bookings are paid at the time of booking or on the day.", cat: "booking" },
     { q: "What is your cancellation and refund policy?", a: "Lessons cancelled with less than 48 hours\u2019 notice may incur a cancellation fee. Construction deposits are non-refundable once materials have been ordered. Full policy details are provided with your quote.", cat: "booking" },
     { q: "Do you have insurance and safety policies?", a: "Absolutely. We hold comprehensive public liability and professional indemnity insurance. All riders must sign a waiver before lessons, and helmets are mandatory on site.", cat: "general" },
+    { q: "Do you offer lesson packages or bulk discounts?", a: "Yes — we offer 5-lesson and 10-lesson packages at discounted rates. Packages are valid for 3 months from purchase and can be shared between family members.", cat: "booking" },
+    { q: "What are the payment terms for construction projects?", a: "Construction projects follow a staged payment schedule: 20% deposit on acceptance, progress payments at key milestones, and the balance on completion. We provide a clear schedule upfront so there are no surprises.", cat: "booking" },
+    { q: "Are group lessons or group rates available?", a: "Absolutely. We run group lessons for up to 4 riders at a reduced per-person rate. Group clinics and birthday party packages are also available — contact us for custom pricing.", cat: "booking" },
   ];
 
   const tabs = [
