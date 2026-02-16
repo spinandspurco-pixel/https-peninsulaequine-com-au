@@ -877,6 +877,8 @@ function VideoGridItem({
   );
 }
 
+const ITEMS_PER_PAGE = 20;
+
 function GalleryGrid({
   items,
   onItemClick,
@@ -889,72 +891,106 @@ function GalleryGrid({
     rootMargin: "50px",
   });
   const [visibleItems, setVisibleItems] = useState<Set<number>>(new Set());
+  const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
+  // Infinite scroll observer
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && displayCount < items.length) {
+          setDisplayCount((prev) => Math.min(prev + ITEMS_PER_PAGE, items.length));
+        }
+      },
+      { rootMargin: "400px" }
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [displayCount, items.length]);
+
+  // Reset when items change (filter change)
+  useEffect(() => {
+    setDisplayCount(ITEMS_PER_PAGE);
+    setVisibleItems(new Set());
+  }, [items]);
+
+  // Staggered reveal
   useEffect(() => {
     if (isVisible) {
-      items.forEach((_, index) => {
+      const displayed = items.slice(0, displayCount);
+      displayed.forEach((_, index) => {
         setTimeout(() => {
           setVisibleItems((prev) => new Set(prev).add(index));
         }, index * 50);
       });
     }
-  }, [isVisible, items.length]);
+  }, [isVisible, displayCount, items]);
 
-  useEffect(() => {
-    setVisibleItems(new Set());
-  }, [items]);
+  const displayedItems = items.slice(0, displayCount);
 
   return (
-    <div 
-      ref={ref}
-      className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
-    >
-      {items.map((item, index) => (
-        item.type === "video" ? (
-          <VideoGridItem
-            key={item.id}
-            item={item}
-            onClick={() => onItemClick(item)}
-            isVisible={visibleItems.has(index)}
-            delay={index * 30}
-          />
-        ) : (
-          <button
-            key={item.id}
-            onClick={() => onItemClick(item)}
-            className={`group aspect-square overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative transition-all duration-500 ${
-              visibleItems.has(index)
-                ? "opacity-100 translate-y-0 scale-100"
-                : "opacity-0 translate-y-4 scale-95"
-            }`}
-            style={{ transitionDelay: `${index * 30}ms` }}
-            aria-label={`View ${item.alt}`}
-          >
-            {/* Skeleton placeholder */}
-            <div className="absolute inset-0 bg-muted animate-pulse" aria-hidden="true" />
-            <img
-              src={item.src}
-              alt={item.alt}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 relative z-[1]"
-              loading="lazy"
-              onLoad={(e) => {
-                const skeleton = (e.currentTarget.parentElement?.querySelector('.animate-pulse') as HTMLElement);
-                if (skeleton) skeleton.style.display = 'none';
-              }}
-            />
-            {/* Auto-caption overlay */}
-            <div className="absolute bottom-0 inset-x-0 z-[2] bg-gradient-to-t from-primary/80 via-primary/40 to-transparent p-3 pt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <p className="text-primary-foreground text-xs leading-snug line-clamp-2">
-                {item.alt.includes(" - ") ? item.alt.split(" - ").slice(1).join(" - ") : item.alt}
-              </p>
-              <p className="text-primary-foreground/60 text-[10px] uppercase tracking-wider mt-1">
-                {item.alt.includes(" - ") ? item.alt.split(" - ")[0] : "Peninsula Equine"}
-              </p>
+    <>
+      <div
+        ref={ref}
+        className="columns-2 sm:columns-3 lg:columns-4 gap-3 sm:gap-4 [column-fill:_balance]"
+      >
+        {displayedItems.map((item, index) =>
+          item.type === "video" ? (
+            <div key={item.id} className="break-inside-avoid mb-3 sm:mb-4">
+              <VideoGridItem
+                item={item}
+                onClick={() => onItemClick(item)}
+                isVisible={visibleItems.has(index)}
+                delay={Math.min(index, 12) * 30}
+              />
             </div>
-          </button>
-        )
-      ))}
-    </div>
+          ) : (
+            <button
+              key={item.id}
+              onClick={() => onItemClick(item)}
+              className={`group w-full overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative transition-all duration-500 break-inside-avoid mb-3 sm:mb-4 block ${
+                visibleItems.has(index)
+                  ? "opacity-100 translate-y-0 scale-100"
+                  : "opacity-0 translate-y-4 scale-95"
+              }`}
+              style={{ transitionDelay: `${Math.min(index, 12) * 30}ms` }}
+              aria-label={`View ${item.alt}`}
+            >
+              {/* Skeleton placeholder */}
+              <div className="absolute inset-0 bg-muted animate-pulse" aria-hidden="true" />
+              <img
+                src={item.src}
+                alt={item.alt}
+                className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105 relative z-[1]"
+                loading="lazy"
+                onLoad={(e) => {
+                  const skeleton = (e.currentTarget.parentElement?.querySelector('.animate-pulse') as HTMLElement);
+                  if (skeleton) skeleton.style.display = 'none';
+                }}
+              />
+              {/* Auto-caption overlay */}
+              <div className="absolute bottom-0 inset-x-0 z-[2] bg-gradient-to-t from-primary/80 via-primary/40 to-transparent p-3 pt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <p className="text-primary-foreground text-xs leading-snug line-clamp-2">
+                  {item.alt.includes(" - ") ? item.alt.split(" - ").slice(1).join(" - ") : item.alt}
+                </p>
+                <p className="text-primary-foreground/60 text-[10px] uppercase tracking-wider mt-1">
+                  {item.alt.includes(" - ") ? item.alt.split(" - ")[0] : "Peninsula Equine"}
+                </p>
+              </div>
+            </button>
+          )
+        )}
+      </div>
+      {/* Infinite scroll sentinel */}
+      {displayCount < items.length && (
+        <div ref={sentinelRef} className="flex justify-center py-8">
+          <div className="w-8 h-8 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
+        </div>
+      )}
+    </>
   );
 }
 
