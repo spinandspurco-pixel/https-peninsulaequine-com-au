@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { CalendarIcon, ArrowRight, Sparkles, ChevronDown } from "lucide-react";
 import { format, addDays, nextThursday, nextFriday, isThursday, isFriday } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 
@@ -17,19 +19,31 @@ function getQuickDates(): { label: string; date: Date }[] {
   const today = new Date();
   const dates: { label: string; date: Date }[] = [];
 
-  // Next Thursday
   const thu = isThursday(today) ? addDays(today, 7) : nextThursday(today);
   dates.push({ label: `Thu ${format(thu, "MMM d")}`, date: thu });
 
-  // Next Friday
   const fri = isFriday(today) ? addDays(today, 7) : nextFriday(today);
   dates.push({ label: `Fri ${format(fri, "MMM d")}`, date: fri });
 
-  // Following week Thursday
   const thu2 = addDays(thu, 7);
   dates.push({ label: `Thu ${format(thu2, "MMM d")}`, date: thu2 });
 
   return dates;
+}
+
+type AvailabilityStatus = "available" | "limited" | "full" | "unknown";
+
+function getAvailabilityBadge(status: AvailabilityStatus) {
+  switch (status) {
+    case "available":
+      return { dot: "bg-green-400", text: "Open" };
+    case "limited":
+      return { dot: "bg-amber-400", text: "Limited" };
+    case "full":
+      return { dot: "bg-red-400", text: "Full" };
+    default:
+      return null;
+  }
 }
 
 export function StickyHeroCTA({
@@ -43,6 +57,49 @@ export function StickyHeroCTA({
   const [calOpen, setCalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>();
   const quickDates = getQuickDates();
+
+  // Fetch slot availability for quick dates
+  const dateStrings = useMemo(() => quickDates.map((qd) => format(qd.date, "yyyy-MM-dd")), []);
+
+  const { data: slotData } = useQuery({
+    queryKey: ["hero-slot-availability", dateStrings],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("lesson_slots")
+        .select("slot_date, max_bookings, current_bookings")
+        .in("slot_date", dateStrings);
+      return data || [];
+    },
+    staleTime: 60_000,
+  });
+
+  const availabilityMap = useMemo(() => {
+    const map: Record<string, AvailabilityStatus> = {};
+    dateStrings.forEach((d) => {
+      map[d] = "available"; // default: open if no slots configured
+    });
+    if (slotData) {
+      // Group by date
+      const byDate: Record<string, { max: number; current: number }[]> = {};
+      slotData.forEach((s) => {
+        if (!byDate[s.slot_date]) byDate[s.slot_date] = [];
+        byDate[s.slot_date].push({ max: s.max_bookings, current: s.current_bookings });
+      });
+      Object.entries(byDate).forEach(([date, slots]) => {
+        const totalMax = slots.reduce((a, s) => a + s.max, 0);
+        const totalCurrent = slots.reduce((a, s) => a + s.current, 0);
+        const remaining = totalMax - totalCurrent;
+        if (remaining <= 0) {
+          map[date] = "full";
+        } else if (remaining <= Math.ceil(totalMax * 0.3)) {
+          map[date] = "limited";
+        } else {
+          map[date] = "available";
+        }
+      });
+    }
+    return map;
+  }, [slotData, dateStrings]);
 
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > showAfter);
@@ -118,24 +175,39 @@ export function StickyHeroCTA({
             </div>
           </div>
 
-          {/* Quick date pills (desktop) + CTA */}
+          {/* Quick date pills with availability badges (desktop) + CTA */}
           <div className="flex items-center gap-2">
-            {/* Quick-select date pills — hidden on mobile */}
             <div className="hidden md:flex items-center gap-1.5">
-              {quickDates.map((qd) => (
-                <button
-                  key={qd.label}
-                  onClick={() => handleQuickSelect(qd.date)}
-                  className={cn(
-                    "px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 border",
-                    selectedDate && format(selectedDate, "yyyy-MM-dd") === format(qd.date, "yyyy-MM-dd")
-                      ? "bg-accent text-accent-foreground border-accent"
-                      : "bg-primary-foreground/5 text-primary-foreground/70 border-primary-foreground/10 hover:bg-primary-foreground/10 hover:text-primary-foreground"
-                  )}
-                >
-                  {qd.label}
-                </button>
-              ))}
+              {quickDates.map((qd) => {
+                const dateKey = format(qd.date, "yyyy-MM-dd");
+                const status = availabilityMap[dateKey] || "unknown";
+                const badge = getAvailabilityBadge(status);
+                const isFull = status === "full";
+
+                return (
+                  <button
+                    key={qd.label}
+                    onClick={() => !isFull && handleQuickSelect(qd.date)}
+                    disabled={isFull}
+                    className={cn(
+                      "px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 border flex items-center gap-1.5",
+                      isFull
+                        ? "opacity-50 cursor-not-allowed bg-primary-foreground/5 text-primary-foreground/40 border-primary-foreground/10"
+                        : selectedDate && format(selectedDate, "yyyy-MM-dd") === dateKey
+                          ? "bg-accent text-accent-foreground border-accent"
+                          : "bg-primary-foreground/5 text-primary-foreground/70 border-primary-foreground/10 hover:bg-primary-foreground/10 hover:text-primary-foreground"
+                    )}
+                  >
+                    {badge && (
+                      <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", badge.dot)} />
+                    )}
+                    <span>{qd.label}</span>
+                    {badge && (
+                      <span className="text-[9px] opacity-70">{badge.text}</span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
 
             {/* Calendar dropdown toggle */}
@@ -153,7 +225,6 @@ export function StickyHeroCTA({
                 <ChevronDown className={cn("h-3 w-3 transition-transform duration-200", calOpen && "rotate-180")} />
               </button>
 
-              {/* Calendar dropdown */}
               {calOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setCalOpen(false)} />
