@@ -15,7 +15,7 @@ import { BookingWidget } from "@/components/BookingWidget";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
 import { usePinchZoom } from "@/hooks/usePinchZoom";
-import { StickyHeroCTA } from "@/components/StickyHeroCTA";
+import { StickySubpageCTA } from "@/components/StickySubpageCTA";
 
 // Main Ridge construction process images
 import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
@@ -870,21 +870,17 @@ export default function Services() {
   const [quoteServiceId, setQuoteServiceId] = useState<string | null>(null);
   const activeService = services.find((s) => s.id === quoteServiceId);
 
-  // Deterministic "live" progress seeded by current month (simulates monthly capacity fill)
-  const liveProgress = useMemo(() => {
-    const day = new Date().getDate();
-    // Ramps from ~40 early-month to ~85 late-month
-    return Math.min(95, Math.round(38 + (day / 31) * 50));
-  }, []);
+
+
 
   const scrollToBooking = () =>
     document.getElementById("booking")?.scrollIntoView({ behavior: "smooth" });
 
   return (
     <Layout>
-      <StickyHeroCTA
-        progress={liveProgress}
-        progressLabel="spots filled"
+      <StickySubpageCTA
+        ctaLabel="Book a Consultation"
+        ctaIcon={<CalendarIcon className="h-4 w-4" />}
         onCtaClick={scrollToBooking}
       />
       <PageHeader
