@@ -130,6 +130,23 @@ const serviceGalleryImages: Record<string, { src: string; caption: string }[]> =
 // Page header component with parallax
 function PageHeader({ title, description }: { title: string; description: string }) {
   const { ref: parallaxRef, offset } = useParallax<HTMLElement>({ speed: 0.3 });
+  const navigate = useNavigate();
+
+  const handleServiceCTA = (serviceId: string) => {
+    // Scroll to the service card first
+    const el = document.getElementById(serviceId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+      // After scroll completes, highlight the card briefly
+      el.classList.add('ring-2', 'ring-accent/40', 'rounded-xl');
+      setTimeout(() => el.classList.remove('ring-2', 'ring-accent/40', 'rounded-xl'), 2000);
+    }
+  };
+
+  const handleServiceBook = (serviceId: string) => {
+    trackCtaClick("hero_service_book", { source: "services_hero", service: serviceId });
+    navigate(`/contact?services=${serviceId}`);
+  };
 
   return (
     <section ref={parallaxRef} className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
@@ -172,29 +189,45 @@ function PageHeader({ title, description }: { title: string; description: string
           <h1 className="heading-display mb-6">{title}</h1>
           <p className="text-lg text-primary-foreground/80 mb-8">{description}</p>
           
-          {/* Service-specific hero CTAs */}
+          {/* Service-specific hero CTAs with dual action */}
           <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
             {services.slice(0, 4).map((service) => (
-              <button
-                key={service.id}
-                onClick={() => document.getElementById(service.id)?.scrollIntoView({ behavior: 'smooth' })}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs sm:text-sm font-medium tracking-wide bg-primary-foreground/10 text-primary-foreground/90 border border-primary-foreground/15 hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all duration-300 hover:scale-105"
-              >
-                {service.title}
-                <ArrowRight className="h-3 w-3" />
-              </button>
+              <div key={service.id} className="group/cta relative inline-flex">
+                <button
+                  onClick={() => handleServiceCTA(service.id)}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-l-full text-xs sm:text-sm font-medium tracking-wide bg-primary-foreground/10 text-primary-foreground/90 border border-r-0 border-primary-foreground/15 hover:bg-primary-foreground/20 transition-all duration-300"
+                >
+                  {service.title}
+                  <ArrowRight className="h-3 w-3" />
+                </button>
+                <button
+                  onClick={() => handleServiceBook(service.id)}
+                  className="inline-flex items-center gap-1 px-3 py-2 rounded-r-full text-xs font-medium bg-accent/80 text-accent-foreground border border-accent/60 hover:bg-accent transition-all duration-300"
+                  title={`Book ${service.title}`}
+                >
+                  <CalendarIcon className="h-3 w-3" />
+                </button>
+              </div>
             ))}
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
             {services.slice(4).map((service) => (
-              <button
-                key={service.id}
-                onClick={() => document.getElementById(service.id)?.scrollIntoView({ behavior: 'smooth' })}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs sm:text-sm font-medium tracking-wide bg-primary-foreground/10 text-primary-foreground/90 border border-primary-foreground/15 hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all duration-300 hover:scale-105"
-              >
-                {service.title}
-                <ArrowRight className="h-3 w-3" />
-              </button>
+              <div key={service.id} className="group/cta relative inline-flex">
+                <button
+                  onClick={() => handleServiceCTA(service.id)}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-l-full text-xs sm:text-sm font-medium tracking-wide bg-primary-foreground/10 text-primary-foreground/90 border border-r-0 border-primary-foreground/15 hover:bg-primary-foreground/20 transition-all duration-300"
+                >
+                  {service.title}
+                  <ArrowRight className="h-3 w-3" />
+                </button>
+                <button
+                  onClick={() => handleServiceBook(service.id)}
+                  className="inline-flex items-center gap-1 px-3 py-2 rounded-r-full text-xs font-medium bg-accent/80 text-accent-foreground border border-accent/60 hover:bg-accent transition-all duration-300"
+                  title={`Book ${service.title}`}
+                >
+                  <CalendarIcon className="h-3 w-3" />
+                </button>
+              </div>
             ))}
           </div>
 
