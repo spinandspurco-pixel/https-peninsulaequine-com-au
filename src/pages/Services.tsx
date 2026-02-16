@@ -10,6 +10,7 @@ import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { BlueprintScene } from "@/components/BlueprintScene";
 import { QuickQuoteModal } from "@/components/QuickQuoteModal";
 import { QuoteCalculator } from "@/components/QuoteCalculator";
+import { ServiceDetailSections } from "@/components/ServiceDetailSections";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { services, siteConfig } from "@/data/content";
@@ -228,6 +229,9 @@ export default function Services() {
           </div>
         </div>
       </section>
+
+      {/* Service Detail Sections */}
+      <ServiceDetailSections />
 
       {/* Quote Calculator */}
       <section className="section-padding bg-card">
