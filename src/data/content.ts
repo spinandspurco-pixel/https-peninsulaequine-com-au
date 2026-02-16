@@ -5,7 +5,7 @@ export const siteConfig = {
   name: "Peninsula Equine",
   tagline: "Crafting World-Class Equine Facilities",
   description: "Expert equine facility construction by a horseman who understands what your horses need. Premium arenas, barns, and infrastructure built to the highest standards.",
-  phone: "0493 555 923",
+  phone: "0418 585 489",
   email: "info@peninsulaequine.com.au",
   address: {
     street: "1234 Ranch Road",
