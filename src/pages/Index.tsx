@@ -1780,36 +1780,37 @@ function ForgeHeroBanner() {
 }
 
 function HomeFAQSection() {
-  const faqs = [
-    {
-      q: "How much does an arena or barn project cost?",
-      a: "Every property is different, so we provide tailored quotes after a free on-site consultation. Typical arena projects start from $25k and barn builds from $50k depending on size, materials, and site conditions.",
-    },
-    {
-      q: "Do you work outside the Mornington Peninsula?",
-      a: "Yes — while we're based on the Peninsula, we regularly take on projects across Victoria and have completed builds interstate. Travel fees may apply for remote sites.",
-    },
-    {
-      q: "How long does a typical build take?",
-      a: "Arenas generally take 2–4 weeks, barns 6–12 weeks, and full facility builds 3–6 months. We'll give you a clear timeline during the consultation.",
-    },
-    {
-      q: "What makes Peninsula Equine different from a regular builder?",
-      a: "Ciro is both a builder and a horseman. He understands how horses move, where water drains, and what keeps a facility running for decades — things a standard contractor simply won't consider.",
-    },
-    {
-      q: "Do I need council permits for equine construction?",
-      a: "It depends on your local council and the scope of the project. We'll guide you through the permit process and handle applications where required.",
-    },
-    {
-      q: "Can I see examples of your previous work?",
-      a: "Absolutely. Visit our Gallery page for completed projects, or ask us for references from clients in your area.",
-    },
+  const [activeTab, setActiveTab] = useState("all");
+  const [search, setSearch] = useState("");
+
+  const faqs: { q: string; a: string; cat: string }[] = [
+    { q: "How much does an arena or barn project cost?", a: "Every property is different, so we provide tailored quotes after a free on-site consultation. Typical arena projects start from $25k and barn builds from $50k depending on size, materials, and site conditions.", cat: "services" },
+    { q: "Do you work outside the Mornington Peninsula?", a: "Yes — while we're based on the Peninsula, we regularly take on projects across Victoria and have completed builds interstate. Travel fees may apply for remote sites.", cat: "general" },
+    { q: "How long does a typical build take?", a: "Arenas generally take 2–4 weeks, barns 6–12 weeks, and full facility builds 3–6 months. We'll give you a clear timeline during the consultation.", cat: "services" },
+    { q: "What makes Peninsula Equine different from a regular builder?", a: "Ciro is both a builder and a horseman. He understands how horses move, where water drains, and what keeps a facility running for decades — things a standard contractor simply won't consider.", cat: "general" },
+    { q: "Do I need council permits for equine construction?", a: "It depends on your local council and the scope of the project. We'll guide you through the permit process and handle applications where required.", cat: "services" },
+    { q: "Can I see examples of your previous work?", a: "Absolutely. Visit our Gallery page for completed projects, or ask us for references from clients in your area.", cat: "general" },
+    { q: "How do I book a lesson or clinic?", a: "Use our Book a Lesson page or call us directly. We offer trial lessons for new riders and flexible scheduling for regular students.", cat: "booking" },
+    { q: "What's included in a consultation?", a: "A free on-site visit where we assess your property, discuss your goals, and outline scope, timeline, and budget. No obligation.", cat: "booking" },
+    { q: "Can I reschedule or cancel a booking?", a: "Yes — we ask for at least 48 hours' notice for cancellations. Rescheduling is free and easy via phone or email.", cat: "booking" },
   ];
+
+  const tabs = [
+    { id: "all", label: "All" },
+    { id: "general", label: "General" },
+    { id: "services", label: "Services" },
+    { id: "booking", label: "Booking" },
+  ];
+
+  const trimmedSearch = search.trim().toLowerCase();
+  const filtered = faqs.filter((faq) => {
+    const matchesTab = activeTab === "all" || faq.cat === activeTab;
+    const matchesSearch = !trimmedSearch || faq.q.toLowerCase().includes(trimmedSearch) || faq.a.toLowerCase().includes(trimmedSearch);
+    return matchesTab && matchesSearch;
+  });
 
   return (
     <section className="section-padding bg-card relative overflow-hidden">
-      {/* clean */}
       <div className="section-container relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-14">
           <AnimatedDivider className="mx-auto mb-8" />
@@ -1826,23 +1827,60 @@ function HomeFAQSection() {
         </div>
 
         <div className="max-w-3xl mx-auto">
+          {/* Search + Category Tabs */}
+          <SectionTransition variant="fade-up" delay={150}>
+            <div className="mb-6">
+              <div className="relative mb-4">
+                <MessageSquare className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder="Search questions…"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  maxLength={100}
+                  className="w-full rounded-lg border border-border bg-background pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/40"
+                  aria-label="Search FAQs"
+                />
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`px-4 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase transition-all duration-200 border ${
+                      activeTab === tab.id
+                        ? "bg-accent text-accent-foreground border-accent"
+                        : "bg-background text-muted-foreground border-border hover:border-accent/40 hover:text-foreground"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </SectionTransition>
+
           <SectionTransition variant="fade-up" delay={200}>
-            <Accordion type="single" collapsible className="space-y-3">
-              {faqs.map((faq, i) => (
-                <AccordionItem
-                  key={i}
-                  value={`faq-${i}`}
-                  className="border border-border rounded-lg px-6 bg-background data-[state=open]:border-accent/30"
-                >
-                  <AccordionTrigger className="text-left font-serif text-base sm:text-lg text-foreground hover:text-accent py-5 [&[data-state=open]>svg]:rotate-180">
-                    {faq.q}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground leading-relaxed pb-5">
-                    {faq.a}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+            {filtered.length === 0 ? (
+              <p className="text-center text-muted-foreground py-8 text-sm">No matching questions found. Try a different search or category.</p>
+            ) : (
+              <Accordion type="single" collapsible className="space-y-3">
+                {filtered.map((faq, i) => (
+                  <AccordionItem
+                    key={`${faq.cat}-${i}`}
+                    value={`faq-${faq.cat}-${i}`}
+                    className="border border-border rounded-lg px-6 bg-background data-[state=open]:border-accent/30"
+                  >
+                    <AccordionTrigger className="text-left font-serif text-base sm:text-lg text-foreground hover:text-accent py-5 [&[data-state=open]>svg]:rotate-180">
+                      {faq.q}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground leading-relaxed pb-5">
+                      {faq.a}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            )}
           </SectionTransition>
 
           <SectionTransition variant="fade-up" delay={300} className="text-center mt-10">
