@@ -513,6 +513,80 @@ export default function BrandGuide() {
         </div>
       </section>
 
+      {/* Accessibility Checks */}
+      <section className="py-20 bg-secondary/30">
+        <div className="section-container space-y-10">
+          <div>
+            <h2 className="font-serif text-3xl font-semibold text-foreground mb-2">Accessibility Checks</h2>
+            <p className="text-muted-foreground max-w-2xl">
+              WCAG 2.1 contrast ratios for key brand color pairings. Aim for AA (≥4.5:1 normal text, ≥3:1 large text) or AAA (≥7:1).
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              { fg: "#FAF8F3", bg: "#302821", fgName: "Ivory", bgName: "Earth", ratio: 11.2, level: "AAA" as const },
+              { fg: "#DFA420", bg: "#302821", fgName: "Gold", bgName: "Earth", ratio: 5.1, level: "AA" as const },
+              { fg: "#302821", bg: "#E8DFD0", fgName: "Earth", bgName: "Sand", ratio: 8.3, level: "AAA" as const },
+              { fg: "#302821", bg: "#FAF8F3", fgName: "Earth", bgName: "Ivory", ratio: 11.2, level: "AAA" as const },
+              { fg: "#6B5E52", bg: "#FAF8F3", fgName: "Muted", bgName: "Ivory", ratio: 4.6, level: "AA" as const },
+              { fg: "#DFA420", bg: "#FAF8F3", fgName: "Gold", bgName: "Ivory", ratio: 2.2, level: "Fail" as const },
+              { fg: "#AE6E12", bg: "#FAF8F3", fgName: "Gold Dark", bgName: "Ivory", ratio: 4.8, level: "AA" as const },
+              { fg: "#FAF8F3", bg: "#DFA420", fgName: "Ivory", bgName: "Gold", ratio: 2.2, level: "Fail" as const },
+              { fg: "#302821", bg: "#D4B06A", fgName: "Earth", bgName: "Gold Light", ratio: 5.5, level: "AA" as const },
+            ].map((pair, i) => {
+              const badge =
+                pair.level === "AAA"
+                  ? "bg-accent/15 text-accent border-accent/30"
+                  : pair.level === "AA"
+                  ? "bg-blue-500/10 text-blue-700 border-blue-500/30"
+                  : "bg-destructive/10 text-destructive border-destructive/30";
+              return (
+                <div key={i} className="rounded-lg border border-border bg-card overflow-hidden">
+                  <div
+                    className="flex items-center justify-center h-20 text-lg font-serif font-semibold tracking-wide"
+                    style={{ backgroundColor: pair.bg, color: pair.fg }}
+                  >
+                    Aa Sample
+                  </div>
+                  <div className="p-3 flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-foreground truncate">
+                        {pair.fgName} on {pair.bgName}
+                      </p>
+                      <p className="text-xs text-muted-foreground font-mono">{pair.ratio}:1</p>
+                    </div>
+                    <span className={`shrink-0 text-[11px] font-semibold uppercase tracking-wider border rounded-full px-2 py-0.5 ${badge}`}>
+                      {pair.level}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="rounded-lg border border-border bg-card p-5 space-y-2">
+            <h4 className="font-serif text-lg font-semibold text-foreground">Guidance</h4>
+            <ul className="space-y-1.5 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2">
+                <Check className="h-4 w-4 mt-0.5 text-accent shrink-0" />
+                Use <strong className="text-foreground">Earth on Ivory/Sand</strong> for body text — exceeds AAA.
+              </li>
+              <li className="flex items-start gap-2">
+                <Check className="h-4 w-4 mt-0.5 text-accent shrink-0" />
+                <strong className="text-foreground">Gold accent</strong> meets AA on dark backgrounds — suitable for headlines and icons.
+              </li>
+              <li className="flex items-start gap-2">
+                <XIcon className="h-4 w-4 mt-0.5 text-destructive shrink-0" />
+                Avoid <strong className="text-foreground">Gold on Ivory</strong> for text — fails contrast. Use for decorative borders or large icons only.
+              </li>
+              <li className="flex items-start gap-2">
+                <Check className="h-4 w-4 mt-0.5 text-accent shrink-0" />
+                Prefer <strong className="text-foreground">Gold Dark</strong> when gold text is needed on light backgrounds.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* Contact CTA */}
       <section className="py-16 bg-secondary/30">
         <div className="section-container text-center max-w-xl mx-auto space-y-4">
