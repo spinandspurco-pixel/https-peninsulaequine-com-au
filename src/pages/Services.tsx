@@ -1291,14 +1291,41 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                     className="absolute inset-0 rounded-xl border border-accent bg-background overflow-hidden flex flex-col shadow-[0_8px_30px_-8px_hsl(var(--accent)/0.35)]"
                     style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
                   >
-                    {/* Accent header bar */}
-                    <div className="px-5 pt-4 pb-2 border-b border-accent/20 bg-accent/5">
-                      <h3 className="font-serif text-lg font-semibold text-accent mb-0.5">
+                    {/* Accent header bar with tiers */}
+                    <div className="px-5 pt-4 pb-3 border-b border-accent/20 bg-accent/5">
+                      <h3 className="font-serif text-lg font-semibold text-accent mb-2">
                         {service.title}
                       </h3>
-                      <p className="font-serif text-2xl font-bold text-foreground">
-                        {service.startingPrice}
-                      </p>
+                      <div className="flex gap-1.5">
+                        {[
+                          { label: "Basic", suffix: "" },
+                          { label: "Standard", suffix: "+" },
+                          { label: "Premium", suffix: "++" },
+                        ].map((tier) => {
+                          const baseNum = parseInt(service.startingPrice.replace(/[^0-9]/g, ""), 10) || 0;
+                          const multiplier = tier.label === "Basic" ? 1 : tier.label === "Standard" ? 1.8 : 3;
+                          const price = `$${Math.round(baseNum * multiplier).toLocaleString()}`;
+                          return (
+                            <div
+                              key={tier.label}
+                              className={`flex-1 text-center rounded-md py-1.5 px-1 border transition-colors ${
+                                tier.label === "Standard"
+                                  ? "bg-accent/15 border-accent/40"
+                                  : "bg-background border-border"
+                              }`}
+                            >
+                              <p className="text-[9px] uppercase tracking-wider text-muted-foreground leading-none mb-0.5">
+                                {tier.label}
+                              </p>
+                              <p className={`font-serif text-sm font-bold leading-tight ${
+                                tier.label === "Standard" ? "text-accent" : "text-foreground"
+                              }`}>
+                                {price}{tier.suffix}
+                              </p>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
 
                     {/* Features */}
