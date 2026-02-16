@@ -29,6 +29,7 @@ import Events from "./pages/Events";
 import BookingsDashboard from "./pages/BookingsDashboard";
 import StudentSpotlight from "./pages/StudentSpotlight";
 import RoundPens from "./pages/RoundPens";
+import Schedule from "./pages/Schedule";
 import { useCartSync } from "./hooks/useCartSync";
 
 const queryClient = new QueryClient();
@@ -68,6 +69,7 @@ function AppContent() {
           <Route path="/events" element={<Events />} />
           <Route path="/bookings" element={<BookingsDashboard />} />
           <Route path="/student-spotlight" element={<StudentSpotlight />} />
+          <Route path="/schedule" element={<Schedule />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
