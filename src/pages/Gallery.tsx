@@ -925,30 +925,33 @@ function LazyGalleryImage({
     <button
       ref={itemRef}
       onClick={onClick}
-      className="group w-full overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative break-inside-avoid mb-3 sm:mb-4 block transition-opacity duration-500"
-      style={{ opacity: loaded ? 1 : 0.4 }}
+      className={`group w-full overflow-hidden rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative break-inside-avoid mb-4 sm:mb-5 block transition-all duration-700 ease-out ${
+        loaded ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.97]"
+      }`}
       aria-label={`View ${item.alt}`}
     >
       {/* Skeleton placeholder */}
       {!loaded && (
-        <div className="aspect-[4/3] bg-muted animate-pulse" aria-hidden="true" />
+        <div className="aspect-[4/3] bg-muted animate-pulse rounded-xl" aria-hidden="true" />
       )}
       {isInView && (
         <img
           src={item.src}
           alt={item.alt}
-          className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105 relative z-[1]"
+          className="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04] relative z-[1]"
           loading="lazy"
           decoding="async"
           onLoad={() => setLoaded(true)}
         />
       )}
-      {/* Auto-caption overlay */}
-      <div className="absolute bottom-0 inset-x-0 z-[2] bg-gradient-to-t from-primary/80 via-primary/40 to-transparent p-3 pt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <p className="text-primary-foreground text-xs leading-snug line-clamp-2">
+      {/* Refined hover overlay with editorial styling */}
+      <div className="absolute inset-0 z-[2] bg-gradient-to-t from-primary/90 via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
+      <div className="absolute bottom-0 inset-x-0 z-[3] p-4 pt-10 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+        <div className="w-6 h-px bg-accent mb-2" />
+        <p className="text-primary-foreground text-sm font-serif leading-snug line-clamp-2">
           {item.alt.includes(" - ") ? item.alt.split(" - ").slice(1).join(" - ") : item.alt}
         </p>
-        <p className="text-primary-foreground/60 text-[10px] uppercase tracking-wider mt-1">
+        <p className="text-primary-foreground/50 text-[10px] uppercase tracking-[0.2em] mt-1.5">
           {item.alt.includes(" - ") ? item.alt.split(" - ")[0] : "Peninsula Equine"}
         </p>
       </div>
@@ -1088,7 +1091,7 @@ function GalleryGrid({
 
   return (
     <>
-      <div className="columns-2 sm:columns-3 lg:columns-4 gap-3 sm:gap-4 [column-fill:_balance]">
+      <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 sm:gap-5 [column-fill:_balance]">
         {displayedItems.map((item) =>
           item.type === "video" ? (
             <LazyVideoGridItem
