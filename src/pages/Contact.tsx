@@ -91,6 +91,7 @@ export default function Contact() {
         title="Start Your Project"
         description="Tell us about your vision and we'll help you bring it to life. Complete our inquiry form to get started."
         backgroundImage={aberdeenInterior}
+        dividerVariant="contact"
       />
 
       <section className="section-padding relative overflow-hidden">

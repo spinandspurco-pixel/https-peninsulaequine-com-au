@@ -3,7 +3,7 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface BlueprintDividerProps {
   className?: string;
-  variant?: "structural" | "elevation" | "grid" | "floorplan";
+  variant?: "structural" | "elevation" | "grid" | "floorplan" | "contact";
 }
 
 /**
@@ -366,6 +366,72 @@ export function BlueprintDivider({
             </text>
             <text x="1520" y="120" textAnchor="end" fill={text} fontSize="5.5" fontFamily="monospace" style={fade(2300)}>
               DWG-FP01
+            </text>
+          </>
+        )}
+
+        {variant === "contact" && (
+          <>
+            {/* Central double line — like a section cut through a wall */}
+            <line x1="0" y1="55" x2="1600" y2="55" stroke={stroke} strokeWidth="0.7" style={draw(0)} />
+            <line x1="0" y1="65" x2="1600" y2="65" stroke={stroke} strokeWidth="0.7" style={draw(80)} />
+            {/* Fill hatching between the double lines */}
+            {Array.from({ length: 40 }, (_, i) => i * 40).map((x, i) => (
+              <line key={`ch${i}`} x1={x} y1="55" x2={x + 10} y2="65" stroke={strokeFaint} strokeWidth="0.3" style={draw(150 + i * 20, 15)} />
+            ))}
+
+            {/* Connection nodes — representing contact channels */}
+            {[240, 560, 880, 1200].map((x, i) => (
+              <g key={`cn${i}`}>
+                {/* Vertical stub */}
+                <line x1={x} y1="30" x2={x} y2="90" stroke={stroke} strokeWidth="0.5" style={draw(300 + i * 120, 70)} />
+                {/* Node circle */}
+                <circle cx={x} cy="30" r="8" fill="none" stroke={accent} strokeWidth="0.5" style={draw(500 + i * 120, 55)} />
+                {/* Inner dot */}
+                <circle cx={x} cy="30" r="2.5" fill="none" stroke={stroke} strokeWidth="0.4" style={draw(600 + i * 120, 18)} />
+                {/* Bottom serif */}
+                <line x1={x - 6} y1="90" x2={x + 6} y2="90" stroke={strokeFaint} strokeWidth="0.4" style={draw(550 + i * 120, 14)} />
+              </g>
+            ))}
+
+            {/* Connection labels */}
+            {[
+              { x: 240, label: "PHONE" },
+              { x: 560, label: "EMAIL" },
+              { x: 880, label: "VISIT" },
+              { x: 1200, label: "CONSULT" },
+            ].map((item, i) => (
+              <text key={item.label} x={item.x} y="18" textAnchor="middle" fill={text} fontSize="5.5" fontFamily="monospace" letterSpacing="1.5" style={fade(1200 + i * 100)}>
+                {item.label}
+              </text>
+            ))}
+
+            {/* Linking arcs between nodes */}
+            {[
+              { x1: 248, x2: 552 },
+              { x1: 568, x2: 872 },
+              { x1: 888, x2: 1192 },
+            ].map((arc, i) => (
+              <path key={`arc${i}`}
+                d={`M ${arc.x1},30 Q ${(arc.x1 + arc.x2) / 2},6 ${arc.x2},30`}
+                fill="none" stroke={strokeFaint} strokeWidth="0.3" strokeDasharray="4 3"
+                style={draw(900 + i * 150, 300)}
+              />
+            ))}
+
+            {/* Dimension arrow spanning all nodes */}
+            <line x1="240" y1="105" x2="1200" y2="105" stroke={stroke} strokeWidth="0.3"
+              markerStart="url(#arrow-l)" markerEnd="url(#arrow-r)" style={draw(1400, 1000)} />
+            <text x="720" y="116" textAnchor="middle" fill={text} fontSize="7" fontFamily="monospace" style={fade(1900)}>
+              ALL CHANNELS OPEN
+            </text>
+
+            {/* Title block */}
+            <text x="80" y="10" textAnchor="start" fill={text} fontSize="6" fontFamily="monospace" letterSpacing="2" style={fade(2000)}>
+              CONTACT ALIGNMENT
+            </text>
+            <text x="1520" y="116" textAnchor="end" fill={text} fontSize="5.5" fontFamily="monospace" style={fade(2100)}>
+              DWG-C01
             </text>
           </>
         )}
