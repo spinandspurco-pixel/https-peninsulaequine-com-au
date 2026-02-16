@@ -521,6 +521,28 @@
     opacity: 1 !important;
     transform: none !important;
   }
+
+  /* Blueprint SVG overlays: show as static texture, no draw animation */
+  svg[aria-hidden="true"] path,
+  svg[aria-hidden="true"] line,
+  svg[aria-hidden="true"] rect,
+  svg[aria-hidden="true"] circle,
+  svg[aria-hidden="true"] ellipse {
+    stroke-dashoffset: 0 !important;
+    transition: none !important;
+  }
+
+  svg[aria-hidden="true"] text {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* Disable parallax drift on blueprint overlays */
+  svg[aria-hidden="true"] {
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 /* Confetti celebration animation */
