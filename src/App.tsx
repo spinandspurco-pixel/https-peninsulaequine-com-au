@@ -22,6 +22,7 @@ import BrandGuide from "./pages/BrandGuide";
 import Shop from "./pages/Shop";
 import ProductDetail from "./pages/ProductDetail";
 import Events from "./pages/Events";
+import BookingsDashboard from "./pages/BookingsDashboard";
 import { useCartSync } from "./hooks/useCartSync";
 
 const queryClient = new QueryClient();
@@ -53,6 +54,7 @@ function AppContent() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/shop/:handle" element={<ProductDetail />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/bookings" element={<BookingsDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

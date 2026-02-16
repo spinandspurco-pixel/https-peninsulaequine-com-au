@@ -47,6 +47,71 @@ export type Database = {
         }
         Relationships: []
       }
+      bookings: {
+        Row: {
+          assigned_to: string | null
+          booking_date: string
+          booking_time: string | null
+          client_email: string
+          client_name: string
+          client_phone: string | null
+          created_at: string
+          duration_minutes: number | null
+          id: string
+          inquiry_id: string | null
+          notes: string | null
+          reminder_at: string | null
+          reminder_sent: boolean
+          service_type: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          booking_date: string
+          booking_time?: string | null
+          client_email: string
+          client_name: string
+          client_phone?: string | null
+          created_at?: string
+          duration_minutes?: number | null
+          id?: string
+          inquiry_id?: string | null
+          notes?: string | null
+          reminder_at?: string | null
+          reminder_sent?: boolean
+          service_type: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          booking_date?: string
+          booking_time?: string | null
+          client_email?: string
+          client_name?: string
+          client_phone?: string | null
+          created_at?: string
+          duration_minutes?: number | null
+          id?: string
+          inquiry_id?: string | null
+          notes?: string | null
+          reminder_at?: string | null
+          reminder_sent?: boolean
+          service_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_inquiry_id_fkey"
+            columns: ["inquiry_id"]
+            isOneToOne: false
+            referencedRelation: "inquiries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       employee_tasks: {
         Row: {
           assigned_to: string | null
