@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { format, parseISO, isBefore, startOfDay } from "date-fns";
+import { format, parseISO, isBefore, startOfDay, isSameDay } from "date-fns";
 import {
   ArrowRight,
   CalendarIcon,
@@ -23,8 +23,12 @@ import { EventGuestList } from "@/components/events/EventGuestList";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { StickySubpageCTA } from "@/components/StickySubpageCTA";
+import { useToast } from "@/hooks/use-toast";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
 import { glennBrowitt, lessonInfo, siteConfig } from "@/data/content";
@@ -467,6 +471,353 @@ function UpcomingClinics() {
   );
 }
 
+// ── Inline Booking Flow ──────────────────────────────
+
+type LessonSlot = {
+  id: string;
+  slot_date: string;
+  start_time: string;
+  end_time: string;
+  max_bookings: number;
+  current_bookings: number;
+  slot_type: string;
+};
+
+function InlineBookingFlow() {
+  const { toast } = useToast();
+  const [selectedProgram, setSelectedProgram] = useState(PROGRAMS[1].value);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [selectedSlot, setSelectedSlot] = useState<LessonSlot | null>(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const program = PROGRAMS.find((p) => p.value === selectedProgram) || PROGRAMS[1];
+
+  // Fetch available lesson slots
+  const today = new Date().toISOString().split("T")[0];
+  const { data: slots = [] } = useQuery<LessonSlot[]>({
+    queryKey: ["lesson-slots-calendar"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("lesson_slots")
+        .select("id, slot_date, start_time, end_time, max_bookings, current_bookings, slot_type")
+        .gte("slot_date", today)
+        .order("slot_date")
+        .order("start_time");
+      return (data as LessonSlot[]) || [];
+    },
+    staleTime: 30_000,
+  });
+
+  // Dates that have available slots
+  const availableDates = useMemo(() => {
+    const dates = new Set<string>();
+    slots.forEach((s) => {
+      if (s.current_bookings < s.max_bookings) dates.add(s.slot_date);
+    });
+    return dates;
+  }, [slots]);
+
+  // Slots for the selected date
+  const daySlots = useMemo(() => {
+    if (!selectedDate) return [];
+    return slots.filter(
+      (s) =>
+        isSameDay(parseISO(s.slot_date), selectedDate) &&
+        s.current_bookings < s.max_bookings
+    );
+  }, [slots, selectedDate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimName = name.trim();
+    const trimEmail = email.trim();
+    if (!trimName || !trimEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimEmail)) {
+      toast({ title: "Please fill in your name and a valid email.", variant: "destructive" });
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await supabase.from("inquiries").insert({
+        name: trimName.slice(0, 100),
+        email: trimEmail.slice(0, 255),
+        phone: phone.trim().slice(0, 30) || null,
+        services: [program.value],
+        project_vision: `Lesson booking: ${program.label} (${program.price}/${program.pricePer})${
+          selectedDate ? ` — Preferred date: ${format(selectedDate, "EEE d MMM yyyy")}` : ""
+        }${selectedSlot ? ` at ${selectedSlot.start_time}–${selectedSlot.end_time}` : ""}`,
+        status: "new",
+      });
+      setSubmitted(true);
+      toast({ title: "Booking request sent!", description: "We'll confirm your lesson within 24 hours." });
+    } catch {
+      toast({ title: "Something went wrong", description: "Please try again.", variant: "destructive" });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (submitted) {
+    return (
+      <section id="book-inline" className="section-padding bg-card border-y border-border">
+        <div className="section-container max-w-2xl text-center">
+          <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6">
+            <CheckCircle className="h-8 w-8 text-accent" />
+          </div>
+          <h2 className="font-serif text-2xl font-semibold text-foreground mb-3">Request Received!</h2>
+          <p className="text-muted-foreground mb-2">
+            We'll confirm your <strong>{program.label}</strong> lesson within 24 hours.
+          </p>
+          {selectedDate && (
+            <p className="text-sm text-muted-foreground">
+              Preferred: {format(selectedDate, "EEEE d MMMM yyyy")}
+              {selectedSlot && ` at ${selectedSlot.start_time}`}
+            </p>
+          )}
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section id="book-inline" className="section-padding bg-card border-y border-border">
+      <div className="section-container">
+        <div className="text-center mb-10">
+          <p className="text-xs uppercase tracking-[0.25em] text-accent font-medium mb-3">
+            Book Now
+          </p>
+          <h2 className="font-serif text-3xl font-semibold text-foreground mb-3">
+            Reserve Your Lesson
+          </h2>
+          <p className="text-muted-foreground max-w-xl mx-auto">
+            Choose your program, pick a date, and we'll confirm your spot within 24 hours.
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          {/* Left: program selector + calendar */}
+          <div className="space-y-6">
+            {/* Program selector */}
+            <div>
+              <Label className="text-sm font-medium text-foreground mb-3 block">Select Program</Label>
+              <div className="grid grid-cols-3 gap-2">
+                {PROGRAMS.map((p) => (
+                  <button
+                    key={p.value}
+                    onClick={() => setSelectedProgram(p.value)}
+                    className={cn(
+                      "rounded-lg border p-3 text-center transition-all",
+                      selectedProgram === p.value
+                        ? "border-accent bg-accent/5 ring-1 ring-accent/30"
+                        : "border-border hover:border-accent/30"
+                    )}
+                  >
+                    <p.icon className={cn("h-5 w-5 mx-auto mb-1", selectedProgram === p.value ? "text-accent" : "text-muted-foreground")} />
+                    <p className="text-xs font-medium text-foreground">{p.label}</p>
+                    <p className="text-[11px] text-muted-foreground">{p.duration}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Inline price quote */}
+            <div className="rounded-xl border border-accent/20 bg-accent/5 p-5">
+              <div className="flex items-baseline justify-between mb-2">
+                <h3 className="font-serif text-lg font-semibold text-foreground">{program.label} Lesson</h3>
+                <div className="text-right">
+                  <span className="text-2xl font-serif font-bold text-accent">{program.price}</span>
+                  <span className="text-xs text-muted-foreground ml-1">/ {program.pricePer}</span>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-background border border-border">
+                  <Clock className="h-3 w-3" /> {program.duration}
+                </span>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-background border border-border">
+                  <Users className="h-3 w-3" /> {program.bestFor}
+                </span>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-background border border-border">
+                  <CalendarIcon className="h-3 w-3" /> {program.frequency}
+                </span>
+              </div>
+            </div>
+
+            {/* Calendar */}
+            <div>
+              <Label className="text-sm font-medium text-foreground mb-3 block">Choose a Date</Label>
+              <div className="rounded-xl border border-border bg-background p-3 inline-block">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={(d) => {
+                    setSelectedDate(d);
+                    setSelectedSlot(null);
+                  }}
+                  disabled={(date) => {
+                    if (isBefore(date, startOfDay(new Date()))) return true;
+                    const key = format(date, "yyyy-MM-dd");
+                    return !availableDates.has(key);
+                  }}
+                  className="pointer-events-auto"
+                  modifiers={{
+                    available: (date) => availableDates.has(format(date, "yyyy-MM-dd")),
+                  }}
+                  modifiersClassNames={{
+                    available: "font-bold text-accent",
+                  }}
+                />
+              </div>
+              {availableDates.size === 0 && (
+                <p className="text-xs text-muted-foreground mt-2">
+                  No slots published yet — submit your details and we'll schedule you in.
+                </p>
+              )}
+            </div>
+
+            {/* Time slots for selected date */}
+            {selectedDate && daySlots.length > 0 && (
+              <div>
+                <Label className="text-sm font-medium text-foreground mb-2 block">
+                  Available Times — {format(selectedDate, "EEE d MMM")}
+                </Label>
+                <div className="flex flex-wrap gap-2">
+                  {daySlots.map((s) => (
+                    <button
+                      key={s.id}
+                      onClick={() => setSelectedSlot(s)}
+                      className={cn(
+                        "px-4 py-2 rounded-lg border text-sm transition-all",
+                        selectedSlot?.id === s.id
+                          ? "border-accent bg-accent/10 text-accent font-medium"
+                          : "border-border text-foreground hover:border-accent/40"
+                      )}
+                    >
+                      {s.start_time.slice(0, 5)} – {s.end_time.slice(0, 5)}
+                      <span className="text-[10px] text-muted-foreground ml-2">
+                        {s.max_bookings - s.current_bookings} left
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Right: lead capture form */}
+          <div>
+            <form onSubmit={handleSubmit} className="rounded-xl border border-border bg-background p-6 sm:p-8 space-y-5 sticky top-28">
+              <h3 className="font-serif text-xl font-semibold text-foreground">Your Details</h3>
+              <p className="text-sm text-muted-foreground">
+                Fill in your info and we'll confirm your{" "}
+                <span className="font-medium text-foreground">{program.label}</span> lesson
+                {selectedDate && (
+                  <> on <span className="font-medium text-foreground">{format(selectedDate, "EEE d MMM")}</span></>
+                )}
+                {selectedSlot && (
+                  <> at <span className="font-medium text-foreground">{selectedSlot.start_time.slice(0, 5)}</span></>
+                )}
+                .
+              </p>
+
+              <div className="space-y-2">
+                <Label htmlFor="book-name">Name *</Label>
+                <Input
+                  id="book-name"
+                  placeholder="Your name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  maxLength={100}
+                  required
+                  className="input-glow"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="book-email">Email *</Label>
+                <Input
+                  id="book-email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  maxLength={255}
+                  required
+                  className="input-glow"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="book-phone">Phone (optional)</Label>
+                <Input
+                  id="book-phone"
+                  type="tel"
+                  placeholder="0400 000 000"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  maxLength={30}
+                  className="input-glow"
+                />
+              </div>
+
+              {/* Summary */}
+              <div className="rounded-lg bg-muted/50 p-4 space-y-1 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Program</span>
+                  <span className="font-medium text-foreground">{program.label}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Duration</span>
+                  <span className="font-medium text-foreground">{program.duration}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Price</span>
+                  <span className="font-medium text-accent">{program.price}</span>
+                </div>
+                {selectedDate && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Date</span>
+                    <span className="font-medium text-foreground">{format(selectedDate, "EEE d MMM yyyy")}</span>
+                  </div>
+                )}
+                {selectedSlot && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Time</span>
+                    <span className="font-medium text-foreground">{selectedSlot.start_time.slice(0, 5)} – {selectedSlot.end_time.slice(0, 5)}</span>
+                  </div>
+                )}
+              </div>
+
+              <Button
+                type="submit"
+                disabled={submitting}
+                className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
+                size="lg"
+              >
+                {submitting ? (
+                  "Sending..."
+                ) : (
+                  <>
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    Request Lesson — {program.price}
+                  </>
+                )}
+              </Button>
+
+              <p className="text-[11px] text-muted-foreground text-center">
+                No payment required now. We'll confirm availability and contact you.
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── Page ─────────────────────────────────────────────
 
 export default function Lessons() {
@@ -515,6 +866,9 @@ export default function Lessons() {
           </p>
         </div>
       </section>
+
+      {/* Inline booking flow */}
+      <InlineBookingFlow />
 
       {/* Trainer spotlight */}
       <section ref={trainerRef} className="section-padding bg-background overflow-hidden">
