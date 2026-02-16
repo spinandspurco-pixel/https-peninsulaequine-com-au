@@ -12,6 +12,7 @@ import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { BookingLandingSection } from "@/components/BookingLandingSection";
+import { LeadMagnetPopup } from "@/components/LeadMagnetPopup";
 import { StickyHeroCTA } from "@/components/StickyHeroCTA";
 import { SectionTransition, AnimatedDivider, StaggeredTransition } from "@/components/SectionTransition";
 import { siteConfig, services, testimonials, aboutCiro } from "@/data/content";
@@ -1236,6 +1237,7 @@ export default function Index() {
   return (
     <>
       {!splashDone && <LoadingSplash minDuration={2400} onComplete={() => setSplashDone(true)} />}
+      {splashDone && <LeadMagnetPopup />}
       <Layout>
         {/* Sticky CTA — auto-hides after lead form submission */}
         {!leadSubmitted && (
