@@ -1,76 +1,149 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, CalendarIcon, Star } from "lucide-react";
+import { ArrowRight, Star, Play, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
-import { BlueprintBackground } from "@/components/BlueprintBackground";
-import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
-import { TestimonialLightbox, TestimonialMediaBadge } from "@/components/TestimonialLightbox";
-import { testimonials } from "@/data/content";
-import blueprintBarn from "@/assets/blueprint-barn.png";
-import blueprintFacility from "@/assets/blueprint-facility.png";
+import { SectionTransition, AnimatedDivider } from "@/components/SectionTransition";
+import { supabase } from "@/integrations/supabase/client";
+import { testimonials as staticTestimonials } from "@/data/content";
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
 
-// Media assets mapped by testimonial mediaKey
-import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
-import qldFacilityCourtyard from "@/assets/qld-facility-courtyard.jpg";
-import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
-
-const testimonialMedia: Record<string, { type: "image" | "video"; src: string }> = {
-  sarah: { type: "image", src: aberdeenBarnInterior },
-  robert: { type: "video", src: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
-  elena: { type: "image", src: qldFacilityCourtyard },
-  amanda: { type: "image", src: mainRidgeInterior },
-};
+interface TestimonialItem {
+  id: string;
+  name: string;
+  role: string;
+  quote: string;
+  rating: number;
+  mediaType?: "image" | "video" | null;
+  mediaUrl?: string | null;
+}
 
 function StarRating({ rating }: { rating: number }) {
   return (
-    <div className="flex gap-1">
-      {[...Array(rating)].map((_, i) => (
-        <svg key={i} className="w-5 h-5 text-accent" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-        </svg>
+    <div className="flex gap-0.5">
+      {[...Array(5)].map((_, i) => (
+        <Star
+          key={i}
+          className={`w-4 h-4 ${i < rating ? "text-accent fill-accent" : "text-muted-foreground/30"}`}
+        />
       ))}
     </div>
   );
 }
 
-function HeroCTABlock() {
-  const avgRating = (testimonials.reduce((sum, t) => sum + t.rating, 0) / testimonials.length).toFixed(1);
+function VideoEmbed({ url }: { url: string }) {
+  const [playing, setPlaying] = useState(false);
+
+  // Convert YouTube URLs to embed format
+  const getEmbedUrl = (raw: string): string => {
+    const ytMatch = raw.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+    if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1`;
+    const vimeoMatch = raw.match(/vimeo\.com\/(\d+)/);
+    if (vimeoMatch) return `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1`;
+    return raw;
+  };
+
+  if (!playing) {
+    return (
+      <button
+        onClick={() => setPlaying(true)}
+        className="relative w-full aspect-video rounded-lg bg-muted/50 border border-border flex items-center justify-center group hover:border-accent/40 transition-colors overflow-hidden"
+        aria-label="Play video testimonial"
+      >
+        <div className="w-14 h-14 rounded-full bg-accent/90 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+          <Play className="h-6 w-6 text-accent-foreground ml-0.5" />
+        </div>
+        <span className="absolute bottom-3 left-3 text-xs text-muted-foreground bg-background/80 backdrop-blur-sm rounded px-2 py-1">
+          Watch video
+        </span>
+      </button>
+    );
+  }
 
   return (
-    <section className="relative py-12 sm:py-16 bg-primary text-primary-foreground overflow-hidden">
-      <BlueprintBackground image={blueprintFacility} opacity={0.03} direction="left-to-right" duration={2400} parallaxSpeed={0.06} />
-      <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/95 to-primary pointer-events-none" />
-      <div className="section-container relative z-10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
-          <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
-            <div className="flex items-center gap-3">
-              <div className="flex -space-x-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 text-accent fill-accent" />
-                ))}
-              </div>
-              <span className="text-2xl font-bold text-accent">{avgRating}</span>
-            </div>
-            <div className="h-8 w-px bg-primary-foreground/20 hidden sm:block" />
-            <p className="text-sm sm:text-base text-primary-foreground/80 text-center sm:text-left max-w-xs">
-              Trusted by <span className="font-semibold text-primary-foreground">{testimonials.length}+ clients</span> across the Mornington Peninsula
-            </p>
+    <div className="w-full aspect-video rounded-lg overflow-hidden border border-border">
+      <iframe
+        src={getEmbedUrl(url)}
+        title="Video testimonial"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        className="w-full h-full"
+      />
+    </div>
+  );
+}
+
+function TestimonialCard({ testimonial, index }: { testimonial: TestimonialItem; index: number }) {
+  const hasVideo = testimonial.mediaType === "video" && testimonial.mediaUrl;
+  const hasImage = testimonial.mediaType === "image" && testimonial.mediaUrl;
+
+  return (
+    <SectionTransition variant="fade-up" delay={index * 80}>
+      <article className="rounded-xl border border-border bg-card p-6 sm:p-8 flex flex-col h-full hover:border-accent/30 transition-colors">
+        {/* Media */}
+        {hasVideo && <div className="mb-6"><VideoEmbed url={testimonial.mediaUrl!} /></div>}
+        {hasImage && (
+          <div className="mb-6 rounded-lg overflow-hidden aspect-video">
+            <img
+              src={testimonial.mediaUrl!}
+              alt={`Project by ${testimonial.name}`}
+              loading="lazy"
+              className="w-full h-full object-cover"
+            />
           </div>
-          <Button
-            asChild
-            size="lg"
-            className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium tracking-wide shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:scale-105 whitespace-nowrap"
-          >
-            <Link to="/book-lesson">
-              <CalendarIcon className="mr-2 h-5 w-5" />
-              Book a Lesson
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+        )}
+
+        {/* Rating */}
+        <StarRating rating={testimonial.rating} />
+
+        {/* Quote */}
+        <div className="relative mt-4 flex-1">
+          <Quote className="absolute -top-1 -left-1 h-6 w-6 text-accent/15" />
+          <blockquote className="text-foreground leading-relaxed pl-4">
+            "{testimonial.quote}"
+          </blockquote>
+        </div>
+
+        {/* Attribution */}
+        <div className="mt-6 pt-5 border-t border-border">
+          <p className="font-serif font-semibold text-foreground">{testimonial.name}</p>
+          {testimonial.role && (
+            <p className="text-sm text-muted-foreground mt-0.5">{testimonial.role}</p>
+          )}
+        </div>
+      </article>
+    </SectionTransition>
+  );
+}
+
+function StatsBar({ testimonials }: { testimonials: TestimonialItem[] }) {
+  const avgRating = testimonials.length
+    ? (testimonials.reduce((s, t) => s + t.rating, 0) / testimonials.length).toFixed(1)
+    : "5.0";
+  const videoCount = testimonials.filter((t) => t.mediaType === "video").length;
+
+  return (
+    <section className="py-10 sm:py-12 bg-primary text-primary-foreground">
+      <div className="section-container">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12">
+          <div className="flex items-center gap-3">
+            <div className="flex">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="h-5 w-5 text-accent fill-accent" />
+              ))}
+            </div>
+            <span className="text-2xl font-bold text-accent">{avgRating}</span>
+            <span className="text-primary-foreground/60 text-sm">avg rating</span>
+          </div>
+          <div className="h-6 w-px bg-primary-foreground/20 hidden sm:block" />
+          <p className="text-sm text-primary-foreground/70">
+            <span className="font-semibold text-primary-foreground">{testimonials.length}</span> client reviews
+            {videoCount > 0 && (
+              <> · <span className="font-semibold text-primary-foreground">{videoCount}</span> video testimonials</>
+            )}
+          </p>
         </div>
       </div>
     </section>
@@ -78,95 +151,102 @@ function HeroCTABlock() {
 }
 
 export default function Testimonials() {
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [testimonials, setTestimonials] = useState<TestimonialItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Build flat media list from testimonials that have a mediaKey
-  const mediaItems = useMemo(() => {
-    return testimonials
-      .filter((t) => t.mediaKey && testimonialMedia[t.mediaKey])
-      .map((t) => {
-        const media = testimonialMedia[t.mediaKey!];
-        return {
-          type: media.type,
-          src: media.src,
-          caption: `${t.name} — ${t.role}`,
-        };
-      });
-  }, []);
+  useEffect(() => {
+    async function load() {
+      const { data } = await supabase
+        .from("managed_testimonials")
+        .select("*")
+        .eq("active", true)
+        .order("sort_order", { ascending: true });
 
-  // Map testimonial id → index in mediaItems
-  const mediaIndexMap = useMemo(() => {
-    const map = new Map<number, number>();
-    let idx = 0;
-    testimonials.forEach((t) => {
-      if (t.mediaKey && testimonialMedia[t.mediaKey]) {
-        map.set(t.id, idx);
-        idx++;
+      if (data && data.length > 0) {
+        setTestimonials(
+          data.map((t) => ({
+            id: t.id,
+            name: t.client_name,
+            role: t.client_role ?? "",
+            quote: t.quote,
+            rating: t.rating,
+            mediaType: (t.media_type as "image" | "video" | null) ?? null,
+            mediaUrl: t.media_url ?? null,
+          }))
+        );
+      } else {
+        // Fallback to static testimonials
+        setTestimonials(
+          staticTestimonials.map((t) => ({
+            id: String(t.id),
+            name: t.name,
+            role: t.role,
+            quote: t.quote,
+            rating: t.rating,
+            mediaType: t.mediaType ?? null,
+            mediaUrl: null,
+          }))
+        );
       }
-    });
-    return map;
+      setLoading(false);
+    }
+    load();
   }, []);
-
-  const openLightbox = (testimonialId: number) => {
-    const idx = mediaIndexMap.get(testimonialId);
-    if (idx !== undefined) setLightboxIndex(idx);
-  };
 
   return (
     <Layout>
       <PageHeader
         title="Testimonials"
-        description="Don't just take our word for it. Here's what our clients have to say about working with Peninsula Equine."
+        description="Don't just take our word for it — hear from clients who've trusted Peninsula Equine with their facilities."
       />
 
-      <HeroCTABlock />
+      <StatsBar testimonials={testimonials} />
 
-      <section className="section-padding relative overflow-hidden">
-        <BlueprintBackground image={blueprintBarn} opacity={0.025} direction="right-to-left" duration={2000} parallaxSpeed={0.05} />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/90 to-background pointer-events-none z-[1]" />
+      <section className="section-padding bg-background">
+        <div className="section-container">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <AnimatedDivider className="mx-auto mb-8" />
+            <SectionTransition variant="fade-up">
+              <h2 className="heading-section text-foreground">Client Stories</h2>
+            </SectionTransition>
+          </div>
 
-        <div className="section-container relative z-[2]">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testimonials.map((testimonial) => {
-              const media = testimonial.mediaKey ? testimonialMedia[testimonial.mediaKey] : null;
-
-              return (
-                <div
-                  key={testimonial.id}
-                  className="p-8 rounded-lg bg-card border border-border hover:border-accent/50 transition-colors flex flex-col"
-                >
-                  <StarRating rating={testimonial.rating} />
-                  <blockquote className="mt-6 text-foreground leading-relaxed flex-1">
-                    "{testimonial.quote}"
-                  </blockquote>
-
-                  {media && (
-                    <TestimonialMediaBadge
-                      type={media.type}
-                      src={media.src}
-                      onClick={() => openLightbox(testimonial.id)}
-                    />
-                  )}
-
-                  <div className="mt-6 pt-6 border-t border-border">
-                    <p className="font-serif font-semibold text-foreground">{testimonial.name}</p>
-                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+          {loading ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="rounded-xl border border-border bg-card p-8 animate-pulse">
+                  <div className="h-4 bg-muted rounded w-24 mb-6" />
+                  <div className="space-y-2">
+                    <div className="h-3 bg-muted rounded w-full" />
+                    <div className="h-3 bg-muted rounded w-5/6" />
+                    <div className="h-3 bg-muted rounded w-4/6" />
+                  </div>
+                  <div className="mt-8 pt-5 border-t border-border">
+                    <div className="h-4 bg-muted rounded w-32" />
                   </div>
                 </div>
-              );
-            })}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {testimonials.map((t, i) => (
+                <TestimonialCard key={t.id} testimonial={t} index={i} />
+              ))}
+            </div>
+          )}
+
+          {/* CTA below testimonials */}
+          <SectionTransition variant="fade-up" delay={300} className="text-center mt-16">
+            <p className="text-muted-foreground mb-4">Ready to become our next success story?</p>
+            <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
+              <Link to="/contact">
+                Get a Free Quote
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </SectionTransition>
         </div>
       </section>
-
-      {/* Lightbox */}
-      {lightboxIndex !== null && (
-        <TestimonialLightbox
-          items={mediaItems}
-          initialIndex={lightboxIndex}
-          onClose={() => setLightboxIndex(null)}
-        />
-      )}
 
       <ParallaxCTA
         title="Join Our Satisfied Clients"
