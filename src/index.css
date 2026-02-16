@@ -226,30 +226,36 @@
 }
 
 @layer components {
-  /* ── Layout tokens ─────────────────────────────────── */
+  /* ═══════════════════════════════════════════════════════
+     LAYOUT TOKENS
+     ═══════════════════════════════════════════════════════ */
   .section-container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-container-narrow {
+    @apply max-w-3xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
   .section-container-wide {
     @apply max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8;
   }
 
-  /* Spacing scale: consistent section rhythm */
-  .section-padding {
-    @apply py-16 sm:py-24 lg:py-32;
-  }
+  /* ── Section vertical rhythm ───────────────────────── */
+  .section-padding     { @apply py-section sm:py-section-md lg:py-section-lg; }
+  .section-padding-sm  { @apply py-section-sm sm:py-section lg:py-section-md; }
+  .section-padding-lg  { @apply py-section-md sm:py-section-lg lg:py-section-xl; }
 
-  .section-padding-sm {
-    @apply py-10 sm:py-16 lg:py-20;
-  }
+  /* ── Content gap scale — vertical rhythm inside sections */
+  .stack-xs  { @apply space-y-2; }               /* 8px  — tight UI groups */
+  .stack-sm  { @apply space-y-4; }               /* 16px — form fields, list items */
+  .stack     { @apply space-y-6; }               /* 24px — default content stack */
+  .stack-md  { @apply space-y-8 sm:space-y-10; } /* 32-40px — subsections */
+  .stack-lg  { @apply space-y-12 sm:space-y-16; }/* 48-64px — section intro blocks */
 
-  .section-padding-lg {
-    @apply py-24 sm:py-32 lg:py-44;
-  }
-
-  /* ── Typography utility classes ────────────────────── */
-  /* Line-heights are baked into the fontSize tokens in tailwind.config.ts */
+  /* ═══════════════════════════════════════════════════════
+     TYPOGRAPHY UTILITIES
+     ═══════════════════════════════════════════════════════ */
   .heading-display {
     font-family: var(--font-serif);
     @apply text-4xl sm:text-5xl lg:text-7xl font-semibold tracking-tight;
@@ -278,28 +284,45 @@
     @apply text-base leading-relaxed text-muted-foreground;
   }
 
-  .text-gold {
-    color: hsl(var(--accent));
+  .text-gold  { color: hsl(var(--accent)); }
+  .bg-gold    { background-color: hsl(var(--accent)); }
+  .border-gold { border-color: hsl(var(--accent)); }
+
+  /* ═══════════════════════════════════════════════════════
+     DIVIDERS
+     ═══════════════════════════════════════════════════════ */
+  .divider          { @apply w-20 h-px bg-accent; }
+  .divider-vertical { @apply w-px h-20 bg-accent; }
+
+  /* ═══════════════════════════════════════════════════════
+     CARD / SURFACE SYSTEM
+     Prefer <Card variant="…"> from ui/card.tsx.
+     These utilities are for ad-hoc containers.
+     ═══════════════════════════════════════════════════════ */
+
+  /* Default card surface — cream on light, dark slate on dark */
+  .surface-card {
+    @apply rounded-lg border border-border bg-card text-card-foreground;
   }
 
-  .bg-gold {
-    background-color: hsl(var(--accent));
+  /* Inset panel — slightly recessed within a card */
+  .surface-inset {
+    @apply rounded-lg border border-border bg-background p-4;
   }
 
-  .border-gold {
-    border-color: hsl(var(--accent));
+  /* Dark surface — for sections with navy bg */
+  .surface-dark {
+    @apply rounded-lg border border-primary-foreground/10 bg-primary-foreground/[0.04] text-primary-foreground;
   }
 
-  /* ── Dividers ──────────────────────────────────────── */
-  .divider {
-    @apply w-20 h-px bg-accent;
+  /* Stat / metric pill */
+  .surface-badge {
+    @apply inline-flex items-center rounded-full border border-border bg-background px-3 py-1 text-xs font-medium;
   }
 
-  .divider-vertical {
-    @apply w-px h-20 bg-accent;
-  }
-
-  /* Image overlay gradient — navy */
+  /* ═══════════════════════════════════════════════════════
+     IMAGE OVERLAYS
+     ═══════════════════════════════════════════════════════ */
   .image-overlay {
     background: linear-gradient(
       to top,
@@ -317,131 +340,108 @@
     );
   }
 
-  /* Editorial text overlay */
   .text-shadow-editorial {
     text-shadow: 0 2px 40px hsl(228 20% 7% / 0.4);
   }
 
-  /* Button hover effects */
+  /* ═══════════════════════════════════════════════════════
+     INTERACTIVE EFFECTS
+     ═══════════════════════════════════════════════════════ */
+
+  /* Button lift */
   .btn-hover-lift {
     @apply transition-all duration-300;
   }
-  
   .btn-hover-lift:hover {
     @apply -translate-y-0.5 shadow-lg;
   }
 
-  /* Subtle button glow on hover */
+  /* Universal glow — buttons & interactive elements */
   .btn-glow {
-    @apply transition-all duration-300;
-    box-shadow: 0 0 0 0 transparent;
+    @apply relative overflow-hidden transition-all duration-300;
+    box-shadow: 0 0 0 0 hsl(var(--accent) / 0);
   }
-
   .btn-glow:hover {
-    box-shadow: 0 0 20px -5px hsl(var(--accent) / 0.4),
-                0 4px 12px -2px hsl(var(--primary) / 0.15);
+    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.5),
+                0 0 20px -5px hsl(var(--accent) / 0.4),
+                0 4px 12px -4px hsl(var(--primary) / 0.2);
   }
-
+  .btn-glow:active {
+    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.6),
+                0 0 10px -3px hsl(var(--accent) / 0.3);
+  }
   .btn-glow:focus-visible {
     box-shadow: 0 0 0 2px hsl(var(--background)),
                 0 0 0 4px hsl(var(--ring)),
                 0 0 20px -5px hsl(var(--accent) / 0.4);
   }
 
-  /* Primary button glow - stronger golden glow */
+  /* Variant glow strengths */
   .btn-glow-primary:hover {
     box-shadow: 0 0 25px -5px hsl(var(--accent) / 0.5),
                 0 4px 15px -2px hsl(var(--primary) / 0.2);
   }
-
-  /* Outline button glow - subtle border enhancement */
   .btn-glow-outline:hover {
     box-shadow: 0 0 15px -5px hsl(var(--accent) / 0.3),
                 0 2px 8px -2px hsl(var(--foreground) / 0.1);
   }
-
-  /* Destructive button glow */
   .btn-glow-destructive:hover {
     box-shadow: 0 0 20px -5px hsl(var(--destructive) / 0.4),
                 0 4px 12px -2px hsl(var(--destructive) / 0.2);
   }
 
-  /* Card hover effects with glow */
+  /* Card hover glow */
   .card-hover-glow {
     @apply transition-all duration-500;
     box-shadow: 0 1px 3px 0 hsl(var(--foreground) / 0.05),
                 0 1px 2px -1px hsl(var(--foreground) / 0.05);
   }
-
   .card-hover-glow:hover {
     box-shadow: 0 0 30px -10px hsl(var(--accent) / 0.25),
                 0 20px 40px -15px hsl(var(--primary) / 0.15),
                 0 0 0 1px hsl(var(--accent) / 0.1);
   }
 
-  /* Image card with glow */
+  /* Image card glow */
   .image-card-glow {
     @apply transition-all duration-500;
   }
-
   .image-card-glow:hover {
     box-shadow: 0 0 25px -8px hsl(var(--accent) / 0.3),
                 0 15px 30px -10px hsl(var(--primary) / 0.2);
   }
 
-  /* Interactive card lift and glow */
+  /* Interactive card lift + glow */
   .card-interactive {
     @apply transition-all duration-300;
   }
-
   .card-interactive:hover {
     @apply -translate-y-1;
     box-shadow: 0 0 20px -8px hsl(var(--accent) / 0.2),
                 0 10px 25px -10px hsl(var(--primary) / 0.15);
   }
-
   .card-interactive:active {
     @apply -translate-y-0.5;
   }
 
-  /* Subtle border glow for interactive elements */
+  /* Border glow */
   .border-glow {
     @apply relative transition-all duration-300;
   }
-
   .border-glow::before {
     content: '';
     @apply absolute inset-0 rounded-[inherit] opacity-0 transition-opacity duration-300 pointer-events-none;
     box-shadow: 0 0 0 1px hsl(var(--accent) / 0.4),
                 0 0 15px -3px hsl(var(--accent) / 0.3);
   }
-
   .border-glow:hover::before {
     @apply opacity-100;
   }
 
-  /* Button border glow */
-  .btn-glow {
-    @apply relative overflow-hidden transition-all duration-300;
-    box-shadow: 0 0 0 0 hsl(var(--accent) / 0);
-  }
-
-  .btn-glow:hover {
-    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.5),
-                0 0 20px -5px hsl(var(--accent) / 0.4),
-                0 4px 12px -4px hsl(var(--primary) / 0.2);
-  }
-
-  .btn-glow:active {
-    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.6),
-                0 0 10px -3px hsl(var(--accent) / 0.3);
-  }
-
-  /* Input field focus glow */
+  /* Input focus glow */
   .input-glow {
     @apply transition-all duration-300;
   }
-
   .input-glow:focus {
     box-shadow: 0 0 0 2px hsl(var(--accent) / 0.2),
                 0 0 15px -5px hsl(var(--accent) / 0.25);
@@ -451,60 +451,53 @@
   .link-glow {
     @apply relative transition-all duration-300;
   }
-
   .link-glow::after {
     content: '';
     @apply absolute bottom-0 left-0 w-full h-0.5 bg-accent scale-x-0 origin-right transition-transform duration-300;
     box-shadow: 0 0 8px 0 hsl(var(--accent) / 0.5);
   }
-
   .link-glow:hover::after {
     @apply scale-x-100 origin-left;
   }
 
-  /* Thumbnail/icon glow */
+  /* Icon glow */
   .icon-glow {
     @apply transition-all duration-300;
   }
-
   .icon-glow:hover {
     filter: drop-shadow(0 0 6px hsl(var(--accent) / 0.4));
   }
 
-  /* Editorial scroll fade */
+  /* ═══════════════════════════════════════════════════════
+     ANIMATION UTILITIES
+     ═══════════════════════════════════════════════════════ */
   .editorial-fade-in {
     @apply opacity-0 translate-y-8 transition-all duration-700 ease-out;
   }
-
   .editorial-fade-in.visible {
     @apply opacity-100 translate-y-0;
   }
 
-  /* Section transition animations */
   .section-transition {
     @apply transition-all duration-700 ease-out;
   }
 
-  /* Mask reveal animation for images */
   .mask-reveal {
     clip-path: inset(100% 0 0 0);
     @apply transition-all duration-1000 ease-out;
   }
-
   .mask-reveal.visible {
     clip-path: inset(0 0 0 0);
   }
 
-  /* Horizontal line grow animation */
   .line-grow {
     @apply transition-all duration-700 ease-out origin-left scale-x-0;
   }
-
   .line-grow.visible {
     @apply scale-x-100;
   }
 
-  /* Stagger animation delays */
+  /* Stagger delays */
   .stagger-1 { transition-delay: 100ms; }
   .stagger-2 { transition-delay: 200ms; }
   .stagger-3 { transition-delay: 300ms; }
