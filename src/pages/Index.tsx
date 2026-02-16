@@ -1,10 +1,13 @@
-import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, X, Mail, Send, MessageSquare, Star, ShieldCheck, Flame } from "lucide-react";
+import { useState, useEffect, useRef, FormEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, X, Mail, Send, MessageSquare, Star, ShieldCheck, Flame, Loader2, CheckCircle } from "lucide-react";
 import { HeroLeadForm } from "@/components/HeroLeadForm";
 import { useABTest } from "@/hooks/useABTest";
 import { BookingWidget } from "@/components/BookingWidget";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/layout/Layout";
 import { MajorEventsSection } from "@/components/MajorEventsSection";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
@@ -41,6 +44,122 @@ import blueprintElevation from "@/assets/blueprint-elevation.png";
 // Featured services for homepage
 const featuredServices = services.slice(0, 4);
 
+function HeroLessonMiniForm({ trackClick, variant }: { trackClick: (meta: Record<string, string>) => void; variant: string }) {
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [preferredDate, setPreferredDate] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const { toast } = useToast();
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !email.trim()) return;
+
+    setSubmitting(true);
+    trackClick({ action: "submit", target: "hero_lesson_mini_form" });
+
+    try {
+      const { error } = await supabase.from("inquiries").insert({
+        name: name.trim(),
+        email: email.trim(),
+        services: ["lessons"],
+        preferred_start: preferredDate || null,
+        project_vision: "Quick lesson inquiry from homepage hero",
+        status: "new",
+      });
+
+      if (error) throw error;
+
+      // Also trigger email notification
+      try {
+        await supabase.functions.invoke("send-inquiry-notification", {
+          body: { name: name.trim(), email: email.trim(), services: ["lessons"], preferredDate },
+        });
+      } catch {
+        // Non-critical — inquiry saved
+      }
+
+      setSubmitted(true);
+      toast({ title: "Inquiry sent!", description: "We'll be in touch shortly." });
+
+      // Redirect to full booking page after brief pause
+      setTimeout(() => navigate(`/book-lesson${preferredDate ? `?date=${preferredDate}` : ""}`), 1500);
+    } catch {
+      toast({ title: "Something went wrong", description: "Please try again or call us directly.", variant: "destructive" });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (submitted) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-3 p-6 rounded-xl bg-hero-glass backdrop-blur-md border border-hero-glass-border text-center">
+        <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
+          <CheckCircle className="h-6 w-6 text-accent" />
+        </div>
+        <p className="font-serif text-lg text-hero-text font-semibold">You're In!</p>
+        <p className="text-hero-text-muted text-sm">Taking you to the full booking page…</p>
+      </div>
+    );
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-3 p-5 rounded-xl bg-hero-glass backdrop-blur-md border border-hero-glass-border"
+    >
+      <h3 className="font-serif text-base text-hero-text font-semibold text-center">
+        Quick Lesson Inquiry
+      </h3>
+
+      <Input
+        type="text"
+        placeholder="Your name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+        maxLength={100}
+        aria-label="Your name"
+        className="bg-white/10 border-hero-glass-border text-hero-text placeholder:text-hero-text-muted/60 focus-visible:ring-accent"
+      />
+      <Input
+        type="email"
+        placeholder="Email address"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+        maxLength={255}
+        aria-label="Email address"
+        className="bg-white/10 border-hero-glass-border text-hero-text placeholder:text-hero-text-muted/60 focus-visible:ring-accent"
+      />
+      <Input
+        type="date"
+        value={preferredDate}
+        onChange={(e) => setPreferredDate(e.target.value)}
+        aria-label="Preferred lesson date (optional)"
+        className="bg-white/10 border-hero-glass-border text-hero-text placeholder:text-hero-text-muted/60 focus-visible:ring-accent"
+      />
+      <p className="text-[11px] text-hero-text-muted/70 text-center -mt-1">Preferred date is optional</p>
+
+      <Button
+        type="submit"
+        disabled={submitting || !name.trim() || !email.trim()}
+        aria-label="Submit lesson inquiry"
+        className="w-full bg-accent text-accent-foreground hover:bg-accent/90 rounded-full font-semibold focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+      >
+        {submitting ? (
+          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+        ) : (
+          <Send className="h-4 w-4 mr-2" />
+        )}
+        {submitting ? "Sending…" : "Send & Book"}
+      </Button>
+    </form>
+  );
+}
+
 function HeroCTAToggle({ heroMode, setHeroMode }: { heroMode: "book" | "consult"; setHeroMode: (m: "book" | "consult") => void }) {
   const { variant, trackClick } = useABTest({
     testName: "hero_cta_2026",
@@ -75,52 +194,8 @@ function HeroCTAToggle({ heroMode, setHeroMode }: { heroMode: "book" | "consult"
     <div className="flex flex-col items-center gap-4 mt-2 w-full max-w-3xl mx-auto">
       {/* Side-by-side: Book a Lesson CTA + Booking Widget */}
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-        {/* Left: Book a Lesson card */}
-        <div className="flex flex-col items-center gap-4 p-6 rounded-xl bg-hero-glass backdrop-blur-md border border-hero-glass-border">
-          <CalendarIcon className="h-8 w-8 text-accent" aria-hidden="true" />
-          <h3 className="font-serif text-lg text-hero-text font-semibold text-center">
-            Ready to Ride?
-          </h3>
-          <p className="text-hero-text-muted text-sm text-center">
-            {variant === "social_proof"
-              ? "Join 200+ happy riders on the Peninsula."
-              : variant === "urgency"
-              ? "Limited spots — book before the season fills."
-              : "From first-timers to advanced riders, start your journey."}
-          </p>
-
-          {/* Social proof badge */}
-          {variant === "social_proof" && (
-            <div className="flex items-center gap-2 text-hero-text-muted text-xs">
-              <div className="flex -space-x-1">
-                {[...Array(4)].map((_, i) => (
-                  <div key={i} className="w-5 h-5 rounded-full bg-accent/40 border border-hero-glass-border flex items-center justify-center text-[8px] text-hero-text font-bold">
-                    {String.fromCharCode(65 + i)}
-                  </div>
-                ))}
-              </div>
-              <span className="flex items-center gap-1"><Star className="h-3 w-3 text-accent" /> 4.9/5</span>
-            </div>
-          )}
-
-          {/* Urgency badge */}
-          {variant === "urgency" && (
-            <div className="flex items-center gap-1.5 text-accent text-xs font-medium animate-pulse">
-              <ShieldCheck className="h-3.5 w-3.5" />
-              Only 3 spots left this month
-            </div>
-          )}
-
-          <Link
-            to="/book-lesson"
-            onClick={() => trackClick({ action: "click", target: "book_lesson_hero" })}
-            aria-label="Book a lesson — go to lesson booking page"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent text-accent-foreground font-semibold text-sm shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
-          >
-            {copy.bookLabel}
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
-        </div>
+        {/* Left: Mini Lesson Inquiry Form */}
+        <HeroLessonMiniForm trackClick={trackClick} variant={variant} />
 
         {/* Right: Inline Booking Widget */}
         <div className="rounded-xl bg-hero-glass backdrop-blur-md border border-hero-glass-border p-4">
