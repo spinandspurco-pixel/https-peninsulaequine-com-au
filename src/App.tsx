@@ -28,6 +28,7 @@ import Shop from "./pages/Shop";
 import ProductDetail from "./pages/ProductDetail";
 import Forge from "./pages/Forge";
 import Events from "./pages/Events";
+import Process from "./pages/Process";
 import BookingsDashboard from "./pages/BookingsDashboard";
 import StudentSpotlight from "./pages/StudentSpotlight";
 import RoundPens from "./pages/RoundPens";
@@ -73,7 +74,7 @@ function AppContent() {
           <Route path="/shop/:handle" element={<ProductDetail />} />
           <Route path="/forge" element={<Forge />} />
           <Route path="/events" element={<Events />} />
-          <Route path="/events" element={<Events />} />
+          <Route path="/process" element={<Process />} />
           <Route path="/bookings" element={<BookingsDashboard />} />
           <Route path="/student-spotlight" element={<StudentSpotlight />} />
           <Route path="/schedule" element={<Schedule />} />
