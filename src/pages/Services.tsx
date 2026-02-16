@@ -9,6 +9,7 @@ import { Layout } from "@/components/layout/Layout";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { SwipeIndicator } from "@/components/SwipeIndicator";
 import { QuickQuoteModal } from "@/components/QuickQuoteModal";
+import { QuoteCalculator } from "@/components/QuoteCalculator";
 import { services, lessonInfo, siteConfig } from "@/data/content";
 import { BookingWidget } from "@/components/BookingWidget";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
@@ -844,6 +845,9 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
         <p className="text-center text-xs text-muted-foreground mt-8">
           All pricing is indicative. Final quotes are provided after a free on-site consultation.
         </p>
+
+        {/* Interactive Quote Calculator */}
+        <QuoteCalculator />
       </div>
     </section>
   );
