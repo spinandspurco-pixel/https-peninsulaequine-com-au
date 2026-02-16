@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ABTestStatsPanel } from "@/components/ABTestStatsPanel";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -399,6 +400,11 @@ export default function Admin() {
                 </CardTitle>
               </CardHeader>
             </Card>
+          </div>
+
+          {/* A/B Test Stats */}
+          <div className="mb-8">
+            <ABTestStatsPanel />
           </div>
 
           {/* CRM Integration Settings */}
