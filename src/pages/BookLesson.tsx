@@ -466,9 +466,14 @@ function BookingForm() {
   const validLevels = PROGRAM_LEVELS.map((l) => l.value);
   const initialLevel = validLevels.includes(prefilledLevel) ? prefilledLevel : "";
 
+  // Pre-fill preferred date from URL param (e.g. ?date=2026-03-15)
+  const prefilledDateStr = searchParams.get("date");
+  const prefilledDate = prefilledDateStr ? new Date(prefilledDateStr) : undefined;
+  const validPrefilledDate = prefilledDate && !isNaN(prefilledDate.getTime()) && prefilledDate >= new Date() ? prefilledDate : undefined;
+
   const [formData, setFormData] = useState<Partial<BookingFormData>>({
     name: "", email: "", phone: "", horseName: "", experienceLevel: initialLevel,
-    lessonGoals: "", preferredDay: "", preferredDate: undefined, additionalNotes: "",
+    lessonGoals: "", preferredDay: "", preferredDate: validPrefilledDate, additionalNotes: "",
   });
 
   const updateField = <K extends keyof BookingFormData>(field: K, value: BookingFormData[K]) => {
