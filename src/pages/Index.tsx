@@ -1403,6 +1403,7 @@ const SERVICE_TESTIMONIALS = [
     serviceId: "barn-stable",
     stat: "12-Stall Barn + Covered Arena",
     highlight: "5 years later, still looks and functions like new",
+    videoSrc: null as string | null,
   },
   {
     testimonial: testimonials[1],
@@ -1410,6 +1411,7 @@ const SERVICE_TESTIMONIALS = [
     serviceId: "arena-construction",
     stat: "Best Footing for Dressage",
     highlight: "Surface designed specifically for discipline requirements",
+    videoSrc: "/assets/videos/slow-mo-1.mp4" as string | null,
   },
   {
     testimonial: testimonials[2],
@@ -1417,6 +1419,7 @@ const SERVICE_TESTIMONIALS = [
     serviceId: "fencing",
     stat: "Paddocks + Mare Barn",
     highlight: "Every project handled professionally and on time",
+    videoSrc: null as string | null,
   },
   {
     testimonial: testimonials[3],
@@ -1424,6 +1427,7 @@ const SERVICE_TESTIMONIALS = [
     serviceId: "full-facility",
     stat: "Chose Ciro Over 6 Contractors",
     highlight: "Knowledge of horses convinced them immediately",
+    videoSrc: "/assets/videos/slow-mo-2.mp4" as string | null,
   },
 ];
 
@@ -1470,21 +1474,36 @@ function TestimonialServiceCarousel() {
         }`}>
           <div className="rounded-xl border border-border bg-card overflow-hidden">
             <div className="grid md:grid-cols-5">
-              <div className="md:col-span-2 p-6 sm:p-8 bg-accent/5 border-b md:border-b-0 md:border-r border-border flex flex-col justify-center">
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-semibold uppercase tracking-wider mb-4 self-start">
-                  <ShieldCheck className="h-3 w-3" />
-                  {current.serviceTitle}
+              <div className="md:col-span-2 bg-accent/5 border-b md:border-b-0 md:border-r border-border flex flex-col">
+                {current.videoSrc && (
+                  <div className="aspect-video w-full overflow-hidden">
+                    <video
+                      key={current.videoSrc}
+                      src={current.videoSrc}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                <div className="p-6 sm:p-8 flex flex-col justify-center flex-1">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-semibold uppercase tracking-wider mb-4 self-start">
+                    <ShieldCheck className="h-3 w-3" />
+                    {current.serviceTitle}
+                  </div>
+                  <p className="font-serif text-2xl font-bold text-foreground mb-2">{current.stat}</p>
+                  <p className="text-sm text-muted-foreground mb-6">{current.highlight}</p>
+                  <Button
+                    onClick={() => navigate(`/contact?services=${current.serviceId}`)}
+                    size="sm"
+                    className="bg-accent hover:bg-accent/90 text-accent-foreground self-start"
+                  >
+                    Get a Quote
+                    <ArrowRight className="ml-2 h-3.5 w-3.5" />
+                  </Button>
                 </div>
-                <p className="font-serif text-2xl font-bold text-foreground mb-2">{current.stat}</p>
-                <p className="text-sm text-muted-foreground mb-6">{current.highlight}</p>
-                <Button
-                  onClick={() => navigate(`/contact?services=${current.serviceId}`)}
-                  size="sm"
-                  className="bg-accent hover:bg-accent/90 text-accent-foreground self-start"
-                >
-                  Get a Quote
-                  <ArrowRight className="ml-2 h-3.5 w-3.5" />
-                </Button>
               </div>
 
               <div className="md:col-span-3 p-6 sm:p-8 flex flex-col justify-center">
