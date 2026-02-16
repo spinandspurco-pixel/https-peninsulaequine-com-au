@@ -1,4 +1,10 @@
-import { Phone, Mail, MapPin, Clock } from "lucide-react";
+import { useState } from "react";
+import { Phone, Mail, MapPin, Clock, Send, CheckCircle, Loader2, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/layout/Layout";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
@@ -85,6 +91,124 @@ function ContactInfo() {
   );
 }
 
+function QuickInquiryBlock() {
+  const { toast } = useToast();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  const isValid = name.trim().length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) && message.trim().length >= 3;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isValid) return;
+    setSending(true);
+    try {
+      const { error } = await supabase.from("inquiries").insert({
+        name: name.trim().slice(0, 100),
+        email: email.trim().slice(0, 255),
+        services: ["quick-inquiry"],
+        notes: message.trim().slice(0, 500),
+        status: "new",
+      });
+      if (error) throw error;
+
+      supabase.functions.invoke("send-inquiry-notification", {
+        body: { name: name.trim(), email: email.trim(), services: ["quick-inquiry"], goals: message.trim() },
+      }).catch(() => {});
+
+      setSent(true);
+      toast({ title: "Message sent!", description: "We'll get back to you within 1–2 business days." });
+    } catch {
+      toast({ title: "Something went wrong", description: "Please try again or call us.", variant: "destructive" });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <section className="bg-primary text-primary-foreground py-12 sm:py-16">
+      <div className="section-container">
+        <div className="max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+            <div>
+              <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-3">Quick Inquiry</p>
+              <h2 className="font-serif text-2xl sm:text-3xl mb-4">Have a Quick Question?</h2>
+              <p className="text-primary-foreground/60 leading-relaxed mb-6">
+                Drop us a message and we'll respond within 24 hours. For detailed project inquiries, use our full form below.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <a
+                  href={`tel:${siteConfig.phone}`}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent text-accent-foreground text-sm font-semibold hover:bg-accent/90 transition-all hover:scale-105"
+                >
+                  <Phone className="h-4 w-4" />
+                  Call Now
+                </a>
+                <a
+                  href={`mailto:${siteConfig.email}`}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary-foreground/20 text-primary-foreground text-sm font-medium hover:bg-primary-foreground/10 transition-all"
+                >
+                  <Mail className="h-4 w-4" />
+                  Email Us
+                </a>
+              </div>
+            </div>
+
+            <div>
+              {sent ? (
+                <div className="flex flex-col items-center justify-center py-10 text-center rounded-xl bg-primary-foreground/[0.06] border border-primary-foreground/10">
+                  <CheckCircle className="h-10 w-10 text-accent mb-3" />
+                  <p className="font-serif text-xl font-semibold mb-1">Message Sent!</p>
+                  <p className="text-primary-foreground/60 text-sm">We'll be in touch shortly.</p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-3 rounded-xl bg-primary-foreground/[0.06] border border-primary-foreground/10 p-6">
+                  <Input
+                    placeholder="Your name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    maxLength={100}
+                    className="bg-primary-foreground/10 border-primary-foreground/15 text-primary-foreground placeholder:text-primary-foreground/40"
+                  />
+                  <Input
+                    type="email"
+                    placeholder="Email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    maxLength={255}
+                    className="bg-primary-foreground/10 border-primary-foreground/15 text-primary-foreground placeholder:text-primary-foreground/40"
+                  />
+                  <Input
+                    placeholder="Your question or message…"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    maxLength={500}
+                    className="bg-primary-foreground/10 border-primary-foreground/15 text-primary-foreground placeholder:text-primary-foreground/40"
+                  />
+                  <Button
+                    type="submit"
+                    disabled={!isValid || sending}
+                    className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
+                  >
+                    {sending ? (
+                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Sending…</>
+                    ) : (
+                      <><Send className="mr-2 h-4 w-4" />Send Quick Inquiry</>
+                    )}
+                  </Button>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Contact() {
   return (
     <Layout>
@@ -99,6 +223,8 @@ export default function Contact() {
         backgroundImage={aberdeenInterior}
         dividerVariant="contact"
       />
+
+      <QuickInquiryBlock />
 
       <section className="section-padding relative overflow-hidden">
         <BlueprintBackground image={blueprintFacility} opacity={0.03} direction="right-to-left" duration={2000} parallaxSpeed={0.06} />
