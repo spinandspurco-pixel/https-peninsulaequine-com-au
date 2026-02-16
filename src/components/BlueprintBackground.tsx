@@ -9,6 +9,8 @@ interface BlueprintBackgroundProps {
   duration?: number;
   /** Parallax speed: 0 = static, 0.1 = subtle, 0.3 = noticeable */
   parallaxSpeed?: number;
+  /** Accessible label describing the blueprint layer for screen readers */
+  label?: string;
 }
 
 export function BlueprintBackground({
@@ -18,6 +20,7 @@ export function BlueprintBackground({
   direction = "left-to-right",
   duration = 1500,
   parallaxSpeed = 0.08,
+  label,
 }: BlueprintBackgroundProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [isRevealed, setIsRevealed] = useState(false);
@@ -84,10 +87,12 @@ export function BlueprintBackground({
       ref={ref}
       className={`absolute inset-0 pointer-events-none overflow-hidden ${className}`}
       aria-hidden="true"
+      role="presentation"
     >
       <img
         src={image}
-        alt=""
+        alt={label ?? "Decorative blueprint background layer"}
+        role="presentation"
         loading="lazy"
         decoding="async"
         className="w-full h-full object-cover"
