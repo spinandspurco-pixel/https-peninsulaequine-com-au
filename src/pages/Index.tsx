@@ -134,17 +134,41 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
             <p className="font-serif text-xl sm:text-2xl md:text-3xl text-white tracking-[0.12em] uppercase font-normal text-shadow-editorial mb-4">
               Peninsula Equine
             </p>
-            <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mb-2">
+            <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mb-6">
               Facility Construction • Training • Excellence
             </p>
-            <BookingWidget variant="hero" />
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <BookingWidget variant="hero" />
+              <Button
+                asChild
+                size="lg"
+                className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium tracking-wide shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+              >
+                <Link to="/book-lesson">
+                  <CalendarIcon className="mr-2 h-5 w-5" />
+                  Book a Lesson
+                </Link>
+              </Button>
+            </div>
           </>
         )}
 
         {variant === "banner" && (
-          <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mt-4 mb-16">
-            Facility Construction • Training • Excellence
-          </p>
+          <div className="mt-4 mb-16">
+            <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mb-6">
+              Facility Construction • Training • Excellence
+            </p>
+            <Button
+              asChild
+              size="lg"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium tracking-wide shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+            >
+              <Link to="/book-lesson">
+                <CalendarIcon className="mr-2 h-5 w-5" />
+                Book a Lesson
+              </Link>
+            </Button>
+          </div>
         )}
       </div>
 
