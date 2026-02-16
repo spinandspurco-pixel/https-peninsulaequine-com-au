@@ -982,90 +982,225 @@ function GallerySection() {
 }
 
 function ClientStorySection() {
-  const { ref: metricsRef, isVisible: metricsVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
+  const { ref: sectionRef, isVisible: sectionVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
+  const [activeFilter, setActiveFilter] = useState("all");
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  const metrics = [
-    { icon: TrendingUp, value: "40%", label: "Property Value Increase", detail: "Post-construction appraisal" },
-    { icon: Clock, value: "6 Weeks", label: "Ahead of Schedule", detail: "Completed early despite weather" },
-    { icon: Award, value: "12", label: "Stalls Built", detail: "Custom ventilation per stall" },
-    { icon: Users, value: "5 Years", label: "Zero Repairs", detail: "Built to last decades" },
+  const stories = [
+    {
+      id: "mitchell",
+      client: "Sarah Mitchell",
+      role: "Ranch Owner, Woodside",
+      service: "barn-construction",
+      serviceLabel: "Barn & Stable",
+      title: "Mitchell Ranch",
+      location: "Woodside",
+      quote: "Ciro built our entire 12-stall barn and covered arena. His attention to detail and understanding of what horses need is unmatched. Five years later, everything still looks and functions like new.",
+      story: "What began as a simple arena project evolved into a complete facility transformation. Ciro's horseman's eye identified drainage issues, ventilation improvements, and layout optimizations that a standard contractor would have missed entirely.",
+      metrics: [
+        { icon: TrendingUp, value: "40%", label: "Property Value Increase" },
+        { icon: Clock, value: "6 Weeks", label: "Ahead of Schedule" },
+        { icon: Award, value: "12", label: "Stalls Built" },
+        { icon: Users, value: "5 Years", label: "Zero Repairs" },
+      ],
+    },
+    {
+      id: "chen",
+      client: "James Chen",
+      role: "Dressage Trainer, Mornington",
+      service: "arena-construction",
+      serviceLabel: "Arena",
+      title: "Chen Equestrian Centre",
+      location: "Mornington",
+      quote: "The arena footing is perfection — consistent drainage even in the heaviest winter rains. My horses move better, and my clients notice the difference immediately.",
+      story: "James needed a competition-grade arena that could handle year-round training. We engineered a multi-layer base with a fibre-sand surface and integrated sub-surface drainage across 60×20m.",
+      metrics: [
+        { icon: TrendingUp, value: "60×20m", label: "Arena Dimensions" },
+        { icon: Clock, value: "8 Weeks", label: "Build Time" },
+        { icon: Award, value: "100%", label: "Drainage Efficiency" },
+        { icon: Users, value: "30+", label: "Weekly Riders" },
+      ],
+    },
+    {
+      id: "park",
+      client: "Lisa Park",
+      role: "Eventing Competitor, Red Hill",
+      service: "fencing",
+      serviceLabel: "Fencing & Paddocks",
+      title: "Redhill Farm",
+      location: "Red Hill",
+      quote: "We replaced 2km of old wire fencing with post-and-rail. The paddocks look incredible and I finally feel safe turning the horses out. Not a single escape in three years.",
+      story: "Lisa's property had aging wire fencing that posed safety risks. We designed and installed 2km of treated timber post-and-rail with electric backup, plus six new paddock gates.",
+      metrics: [
+        { icon: TrendingUp, value: "2km", label: "Fencing Installed" },
+        { icon: Clock, value: "4 Weeks", label: "Completion Time" },
+        { icon: Award, value: "0", label: "Escapes Since" },
+        { icon: Users, value: "6", label: "Paddocks Created" },
+      ],
+    },
+    {
+      id: "taylor",
+      client: "Mark Taylor",
+      role: "Facility Manager, Balnarring",
+      service: "facility-design",
+      serviceLabel: "Full Facility",
+      title: "Balnarring Equine Park",
+      location: "Balnarring",
+      quote: "From masterplan to final coat of paint, Peninsula Equine delivered a facility that rivals anything in the state. The clinics we host now are always fully booked.",
+      story: "A greenfield 10-acre site transformed into a complete equestrian venue: two arenas, a 20-stall barn, amenities block, and truck-and-float parking for events.",
+      metrics: [
+        { icon: TrendingUp, value: "10 Acres", label: "Site Developed" },
+        { icon: Clock, value: "5 Months", label: "Total Build" },
+        { icon: Award, value: "20", label: "Stalls + 2 Arenas" },
+        { icon: Users, value: "100%", label: "Clinic Occupancy" },
+      ],
+    },
   ];
 
+  const filters = [
+    { value: "all", label: "All Projects" },
+    { value: "arena-construction", label: "Arenas" },
+    { value: "barn-construction", label: "Barns" },
+    { value: "fencing", label: "Fencing" },
+    { value: "facility-design", label: "Full Facility" },
+  ];
+
+  const filteredStories = activeFilter === "all"
+    ? stories
+    : stories.filter((s) => s.service === activeFilter);
+
+  // Reset index when filter changes
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [activeFilter]);
+
+  const current = filteredStories[activeIndex] || filteredStories[0];
+  if (!current) return null;
+
+  const goPrev = () => setActiveIndex((i) => (i - 1 + filteredStories.length) % filteredStories.length);
+  const goNext = () => setActiveIndex((i) => (i + 1) % filteredStories.length);
+
   return (
-    <section className="section-padding bg-card overflow-hidden relative">
+    <section ref={sectionRef} className="section-padding bg-card overflow-hidden relative">
       <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="right-to-left" duration={2000} />
       <BlueprintLineOverlay variant="detail" color="dark" />
       <div className="section-container relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
-          {/* Story content */}
-          <div>
-            <AnimatedDivider className="mb-8" />
-            
-            <SectionTransition variant="fade-right" delay={100}>
-              <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-4">
-                Featured Client Story
-              </p>
-            </SectionTransition>
-            
-            <SectionTransition variant="fade-right" delay={200}>
-              <h2 className="heading-editorial text-foreground mb-6">
-                Mitchell Ranch,<br />
-                <span className="text-accent">Woodside</span>
-              </h2>
-            </SectionTransition>
+        {/* Header */}
+        <AnimatedDivider className="mb-8" />
+        <SectionTransition variant="fade-up">
+          <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-4 text-center">
+            Client Success Stories
+          </p>
+          <h2 className="heading-section text-foreground text-center mb-8">
+            Real Results, Real Horsemen
+          </h2>
+        </SectionTransition>
 
-            <SectionTransition variant="blur-in" delay={300} duration={800}>
-              <blockquote className="text-lg text-foreground font-serif italic leading-relaxed mb-6 border-l-2 border-accent pl-6">
-                "Ciro built our entire 12-stall barn and covered arena. His attention to detail 
-                and understanding of what horses need is unmatched. Five years later, everything 
-                still looks and functions like new."
-              </blockquote>
-            </SectionTransition>
-
-            <SectionTransition variant="fade-up" delay={400}>
-              <p className="text-muted-foreground leading-relaxed mb-6">
-                What began as a simple arena project evolved into a complete facility transformation. 
-                Ciro's horseman's eye identified drainage issues, ventilation improvements, and layout 
-                optimizations that a standard contractor would have missed entirely.
-              </p>
-            </SectionTransition>
-
-            <SectionTransition variant="fade-up" delay={500}>
-              <p className="font-serif font-semibold text-foreground">Sarah Mitchell</p>
-              <p className="text-muted-foreground text-sm">Ranch Owner, Woodside</p>
-            </SectionTransition>
-          </div>
-
-          {/* Success metrics grid */}
-          <div ref={metricsRef} className="grid grid-cols-2 gap-px bg-border">
-            {metrics.map((metric, index) => (
-              <div
-                key={metric.label}
-                className={`bg-background p-8 lg:p-10 flex flex-col transition-all duration-700 ease-out ${
-                  metricsVisible
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-6"
-                }`}
-                style={{ transitionDelay: `${index * 120}ms` }}
-              >
-                <metric.icon className="h-5 w-5 text-accent mb-4" />
-                <span className="font-serif text-3xl lg:text-4xl text-foreground font-semibold mb-1">
-                  {metric.value}
-                </span>
-                <span className="text-sm font-medium text-foreground mb-1">{metric.label}</span>
-                <span className="text-xs text-muted-foreground">{metric.detail}</span>
-              </div>
-            ))}
-          </div>
+        {/* Service filter tabs */}
+        <div className="flex flex-wrap justify-center gap-2 mb-10">
+          {filters.map((f) => (
+            <button
+              key={f.value}
+              onClick={() => setActiveFilter(f.value)}
+              aria-pressed={activeFilter === f.value}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
+                activeFilter === f.value
+                  ? "bg-accent text-accent-foreground shadow-md"
+                  : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
         </div>
 
-        <SectionTransition variant="fade-up" delay={600} className="text-center mt-16">
+        {/* Story carousel card */}
+        <div
+          className={`transition-all duration-700 ease-out ${
+            sectionVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* Left: Story */}
+            <div key={current.id} className="animate-fade-in">
+              <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-3">
+                {current.serviceLabel}
+              </p>
+              <h3 className="heading-editorial text-foreground mb-2">
+                {current.title},{" "}
+                <span className="text-accent">{current.location}</span>
+              </h3>
+
+              <blockquote className="text-lg text-foreground font-serif italic leading-relaxed mb-5 border-l-2 border-accent pl-6">
+                "{current.quote}"
+              </blockquote>
+
+              <p className="text-muted-foreground leading-relaxed mb-5">
+                {current.story}
+              </p>
+
+              <p className="font-serif font-semibold text-foreground">{current.client}</p>
+              <p className="text-muted-foreground text-sm">{current.role}</p>
+            </div>
+
+            {/* Right: Outcome metrics */}
+            <div className="grid grid-cols-2 gap-px bg-border" key={`metrics-${current.id}`}>
+              {current.metrics.map((metric, index) => (
+                <div
+                  key={metric.label}
+                  className="bg-background p-8 lg:p-10 flex flex-col animate-fade-in"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <metric.icon className="h-5 w-5 text-accent mb-4" aria-hidden="true" />
+                  <span className="font-serif text-3xl lg:text-4xl text-foreground font-semibold mb-1">
+                    {metric.value}
+                  </span>
+                  <span className="text-sm font-medium text-foreground">{metric.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Carousel navigation */}
+          {filteredStories.length > 1 && (
+            <div className="flex items-center justify-center gap-4 mt-10">
+              <button
+                onClick={goPrev}
+                aria-label="Previous story"
+                className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              >
+                <ArrowRight className="h-4 w-4 rotate-180" />
+              </button>
+              <div className="flex gap-2">
+                {filteredStories.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveIndex(i)}
+                    aria-label={`Go to story ${i + 1}`}
+                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                      i === activeIndex ? "bg-accent scale-125" : "bg-border hover:bg-muted-foreground"
+                    }`}
+                  />
+                ))}
+              </div>
+              <button
+                onClick={goNext}
+                aria-label="Next story"
+                className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              >
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
+          )}
+        </div>
+
+        <SectionTransition variant="fade-up" delay={400} className="text-center mt-14">
           <Link
             to="/testimonials"
             className="inline-flex items-center text-foreground font-medium hover:text-accent transition-colors group"
           >
             <span className="border-b border-foreground group-hover:border-accent transition-colors pb-1">
-              More client stories
+              Read all client stories
             </span>
             <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
           </Link>
