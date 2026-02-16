@@ -158,10 +158,11 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
             <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mb-6">
               Facility Construction • Training • Excellence
             </p>
+            <BookingWidget variant="hero" />
             <Button
               asChild
               size="lg"
-              className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium tracking-wide shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+              className="mt-4 bg-accent hover:bg-accent/90 text-accent-foreground font-medium tracking-wide shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
             >
               <Link to="/book-lesson">
                 <CalendarIcon className="mr-2 h-5 w-5" />
