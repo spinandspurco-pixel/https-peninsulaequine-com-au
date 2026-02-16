@@ -12,6 +12,8 @@ import { Layout } from "@/components/layout/Layout";
 import { MajorEventsSection } from "@/components/MajorEventsSection";
 // BlueprintBackground & BlueprintLineOverlay removed — PE banner is the sole brand background
 import { MultiStepInquiryForm } from "@/components/MultiStepInquiryForm";
+import { BookingWidget } from "@/components/BookingWidget";
+import { HeroBookingProgress } from "@/components/HeroBookingProgress";
 import {
   Dialog,
   DialogContent,
@@ -175,6 +177,12 @@ function HeroSection() {
             </Link>
           </Button>
         </div>
+
+        {/* Inline booking widget */}
+        <BookingWidget variant="hero" className="mt-8" />
+
+        {/* Booking capacity bar */}
+        <HeroBookingProgress className="mt-6" />
       </div>
 
       {/* Scroll indicator */}
