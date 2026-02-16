@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,13 @@ const navigation = [
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [logoLoaded, setLogoLoaded] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    const t = setTimeout(() => setLogoLoaded(true), 400);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,8 +55,11 @@ export function Header() {
               src={logoImage} 
               alt="Peninsula Equine" 
               className={cn(
-                "h-10 w-10 sm:h-12 sm:w-12 transition-all duration-300 group-hover:scale-105",
-                isScrolled ? "" : "brightness-0 invert"
+                "h-10 w-10 sm:h-12 sm:w-12 transition-all duration-700 group-hover:scale-105",
+                isScrolled ? "" : "brightness-0 invert",
+                logoLoaded
+                  ? "opacity-100 scale-100 rotate-0"
+                  : "opacity-0 scale-75 -rotate-[15deg]"
               )}
             />
             <span className={cn(
