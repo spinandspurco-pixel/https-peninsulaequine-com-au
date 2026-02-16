@@ -14,7 +14,7 @@ export function LiveTestimonialsFeed() {
   const [paused, setPaused] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const { data: items = [] } = useQuery<TestimonialItem[]>({
+  const { data: items = [], isLoading } = useQuery<TestimonialItem[]>({
     queryKey: ["live-testimonials-feed"],
     queryFn: fetchMergedTestimonials,
     staleTime: 60_000,
@@ -47,7 +47,35 @@ export function LiveTestimonialsFeed() {
     };
   }, [paused, next, filtered.length]);
 
-  if (items.length === 0) return null;
+  if (!isLoading && items.length === 0) return null;
+
+  // Skeleton while loading
+  if (isLoading) {
+    return (
+      <section className="section-padding bg-card border-y border-border overflow-hidden">
+        <div className="section-container">
+          <div className="text-center mb-8">
+            <div className="h-3 w-24 bg-muted rounded mx-auto mb-3 animate-pulse" />
+            <div className="h-7 w-56 bg-muted rounded mx-auto animate-pulse" />
+          </div>
+          <div className="max-w-2xl mx-auto rounded-xl border border-border bg-background p-8 sm:p-10">
+            <div className="flex justify-center gap-1 mb-5">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="w-4 h-4 bg-muted rounded animate-pulse" />
+              ))}
+            </div>
+            <div className="space-y-3 mb-6">
+              <div className="h-4 bg-muted rounded w-full animate-pulse" />
+              <div className="h-4 bg-muted rounded w-5/6 mx-auto animate-pulse" />
+              <div className="h-4 bg-muted rounded w-4/6 mx-auto animate-pulse" />
+            </div>
+            <div className="h-4 bg-muted rounded w-32 mx-auto animate-pulse" />
+            <div className="h-3 bg-muted rounded w-24 mx-auto mt-2 animate-pulse" />
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   const visible = filtered.length > 0 ? filtered[currentIndex % filtered.length] : null;
 
