@@ -17,13 +17,56 @@ export default {
         serif: ["'Cinzel'", "'Trajan Pro'", "'Times New Roman'", "serif"],
         sans: ["'Source Sans 3'", "sans-serif"],
       },
+      /* ── Typographic scale ────────────────────────────── */
+      fontSize: {
+        /* label / micro — monospace callouts, spec labels */
+        "2xs":    ["0.625rem",  { lineHeight: "1rem" }],        /* 10px */
+        /* caption — badges, metadata */
+        xs:       ["0.75rem",   { lineHeight: "1rem" }],        /* 12px */
+        /* body-sm — secondary text */
+        sm:       ["0.875rem",  { lineHeight: "1.375rem" }],    /* 14px */
+        /* body — default */
+        base:     ["1rem",      { lineHeight: "1.625rem" }],    /* 16px */
+        /* body-lg — intro paragraphs */
+        lg:       ["1.125rem",  { lineHeight: "1.75rem" }],     /* 18px */
+        /* heading-card */
+        xl:       ["1.25rem",   { lineHeight: "1.75rem" }],     /* 20px */
+        "2xl":    ["1.5rem",    { lineHeight: "2rem" }],        /* 24px */
+        /* heading-editorial */
+        "3xl":    ["1.875rem",  { lineHeight: "2.25rem" }],     /* 30px */
+        /* heading-section */
+        "4xl":    ["2.25rem",   { lineHeight: "2.5rem" }],      /* 36px */
+        "5xl":    ["3rem",      { lineHeight: "1.15" }],        /* 48px */
+        /* heading-display */
+        "6xl":    ["3.75rem",   { lineHeight: "1.1" }],         /* 60px */
+        "7xl":    ["4.5rem",    { lineHeight: "1.05" }],        /* 72px */
+      },
+      /* ── Spacing scale ────────────────────────────────── */
       spacing: {
-        /* Design-system spacing tokens */
-        "section-sm": "2.5rem",   /* 40px */
-        "section":    "4rem",     /* 64px */
-        "section-md": "6rem",     /* 96px */
-        "section-lg": "8rem",     /* 128px */
-        "section-xl": "11rem",    /* 176px */
+        /* Micro gaps */
+        "0.5":       "0.125rem",    /* 2px  */
+        "1":         "0.25rem",     /* 4px  */
+        "1.5":       "0.375rem",    /* 6px  */
+        "2":         "0.5rem",      /* 8px  — base unit */
+        "3":         "0.75rem",     /* 12px */
+        "4":         "1rem",        /* 16px */
+        "5":         "1.25rem",     /* 20px */
+        "6":         "1.5rem",      /* 24px */
+        "8":         "2rem",        /* 32px */
+        "10":        "2.5rem",      /* 40px */
+        "12":        "3rem",        /* 48px */
+        "16":        "4rem",        /* 64px */
+        "20":        "5rem",        /* 80px */
+        "24":        "6rem",        /* 96px */
+        "32":        "8rem",        /* 128px */
+        "40":        "10rem",       /* 160px */
+        "44":        "11rem",       /* 176px */
+        /* Named section tokens — use in py-section-* */
+        "section-sm": "2.5rem",     /* 40px  — compact sections */
+        "section":    "4rem",       /* 64px  — default section gap */
+        "section-md": "6rem",       /* 96px  — standard sections */
+        "section-lg": "8rem",       /* 128px — hero-adjacent */
+        "section-xl": "11rem",      /* 176px — dramatic breathing room */
       },
       colors: {
         border: "hsl(var(--border))",

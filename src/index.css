@@ -186,15 +186,28 @@
   }
 
   /* ── Typography Scale ──────────────────────────────── */
+  /*
+   * Responsive type ramp — uses Tailwind fontSize tokens
+   * from tailwind.config.ts. Headings use Cinzel serif,
+   * body uses Source Sans 3.
+   *
+   * Scale (mobile → sm → lg):
+   *   h1: 36 → 48 → 60px   (.heading-display)
+   *   h2: 30 → 36 → 48px   (.heading-section)
+   *   h3: 24 → 30px         (.heading-editorial)
+   *   h4: 20 → 24px         (.heading-card)
+   *   body: 16px / body-lg: 18px / caption: 12px
+   *   overline: 12→14px, uppercase, spaced
+   */
   h1, h2, h3, h4 {
     font-family: var(--font-serif);
     @apply tracking-tight text-foreground;
   }
 
-  h1 { @apply text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1]; }
-  h2 { @apply text-3xl sm:text-4xl lg:text-5xl font-medium leading-[1.15]; }
-  h3 { @apply text-2xl sm:text-3xl font-medium leading-[1.2]; }
-  h4 { @apply text-xl sm:text-2xl font-normal leading-[1.25]; }
+  h1 { @apply text-4xl sm:text-5xl lg:text-6xl font-semibold; }
+  h2 { @apply text-3xl sm:text-4xl lg:text-5xl font-medium; }
+  h3 { @apply text-2xl sm:text-3xl font-medium; }
+  h4 { @apply text-xl sm:text-2xl font-normal; }
 
   p { @apply text-base leading-relaxed; }
 
@@ -204,6 +217,11 @@
 
   .text-overline {
     @apply text-xs sm:text-sm font-sans font-medium uppercase tracking-[0.25em] text-muted-foreground;
+  }
+
+  /* ── Spec-label micro type ─────────────────────────── */
+  .text-spec {
+    @apply font-mono text-2xs tracking-[0.25em] uppercase text-muted-foreground/40;
   }
 }
 
@@ -231,28 +249,29 @@
   }
 
   /* ── Typography utility classes ────────────────────── */
+  /* Line-heights are baked into the fontSize tokens in tailwind.config.ts */
   .heading-display {
     font-family: var(--font-serif);
-    @apply text-4xl sm:text-5xl lg:text-7xl font-semibold tracking-tight leading-[1.1];
+    @apply text-4xl sm:text-5xl lg:text-7xl font-semibold tracking-tight;
   }
 
   .heading-section {
     font-family: var(--font-serif);
-    @apply text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight leading-[1.15];
+    @apply text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight;
   }
 
   .heading-editorial {
     font-family: var(--font-serif);
-    @apply text-2xl sm:text-3xl lg:text-4xl font-normal tracking-tight leading-[1.2];
+    @apply text-2xl sm:text-3xl lg:text-4xl font-normal tracking-tight;
   }
 
   .heading-card {
     font-family: var(--font-serif);
-    @apply text-xl sm:text-2xl font-medium tracking-tight leading-[1.25];
+    @apply text-xl sm:text-2xl font-medium tracking-tight;
   }
 
   .text-body-lg {
-    @apply text-lg leading-relaxed text-muted-foreground;
+    @apply text-lg text-muted-foreground;
   }
 
   .text-body {
