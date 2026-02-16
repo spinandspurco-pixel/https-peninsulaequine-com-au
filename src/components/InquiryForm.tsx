@@ -483,10 +483,11 @@ export function InquiryForm() {
     additionalNotes: "",
   });
 
-  // Auto-advance to step 2 (horse details) if services were pre-selected via URL
+  // Auto-advance to the Goals step (step 3) if services were pre-selected via URL,
+  // so users land directly on the service-specific fields (arena dims, barn stalls, etc.)
   useEffect(() => {
     if (preSelectedServices.length > 0) {
-      setCurrentStep(2);
+      setCurrentStep(3);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
