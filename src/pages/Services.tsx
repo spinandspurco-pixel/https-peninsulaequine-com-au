@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
-import { ArrowRight, ArrowUp, CheckCircle, X, ZoomIn, CalendarIcon } from "lucide-react";
+import { ArrowRight, ArrowUp, CheckCircle, X, ZoomIn, CalendarIcon, Images, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
@@ -32,17 +32,33 @@ import mainRidgeTrenchUtilities from "@/assets/main-ridge-trench-utilities.jpg";
 
 // Service card images
 import equitanaArena from "@/assets/equitana-arena-1.jpg";
+import equitanaArena2 from "@/assets/equitana-arena-2.jpg";
+import equitanaArena3 from "@/assets/equitana-arena-3.jpg";
+import equitanaArena4 from "@/assets/equitana-arena-4.jpg";
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
 import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
+import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
+import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
+import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
+import aberdeenAisle from "@/assets/aberdeen-aisle.jpg";
 import qldFacilityConstruction from "@/assets/qld-facility-construction.jpg";
 import qldFacilityCourtyard from "@/assets/qld-facility-courtyard.jpg";
+import qldFacilityExterior1 from "@/assets/qld-facility-exterior-1.jpg";
+import qldFacilityExterior2 from "@/assets/qld-facility-exterior-2.jpg";
+import qldFacilityAerial1 from "@/assets/qld-facility-aerial-1.jpg";
+import qldFacilityStalls from "@/assets/qld-facility-stalls.jpg";
 import mainRidgeCiroWoodwork from "@/assets/main-ridge-ciro-woodwork-1.jpg";
+import mainRidgeCiroWoodwork2 from "@/assets/main-ridge-ciro-woodwork-2.jpg";
+import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
+import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
+import arenaSandPrep1 from "@/assets/arena-sand-prep-1.jpg";
+import arenaSandPrep2 from "@/assets/arena-sand-prep-2.jpg";
 import blueprintElevation from "@/assets/blueprint-elevation.png";
 import blueprintFacility from "@/assets/blueprint-facility.png";
 import blueprintBarn from "@/assets/blueprint-barn.png";
 import logoPeMark from "@/assets/logo-pe-mark.png";
 
-// Map service IDs to their images
+// Map service IDs to their primary images
 const serviceImages: Record<string, string> = {
   "arena-construction": equitanaArena,
   "barn-construction": aberdeenBarnInterior,
@@ -52,6 +68,60 @@ const serviceImages: Record<string, string> = {
   "renovations": mainRidgeCiroWoodwork,
   "full-facility": qldFacilityConstruction,
   "clinics-events": equitanaArena,
+};
+
+// Map service IDs to gallery image sets
+const serviceGalleryImages: Record<string, { src: string; caption: string }[]> = {
+  "arena-construction": [
+    { src: equitanaArena, caption: "Competition-grade arena" },
+    { src: equitanaArena2, caption: "Professional footing installation" },
+    { src: equitanaArena3, caption: "Arena drainage system" },
+    { src: equitanaArena4, caption: "Finished arena surface" },
+    { src: arenaSandPrep1, caption: "Base preparation" },
+    { src: arenaSandPrep2, caption: "Sand footing grading" },
+  ],
+  "barn-construction": [
+    { src: aberdeenBarnInterior, caption: "Custom barn interior" },
+    { src: aberdeenAisle, caption: "Barn aisle design" },
+    { src: aberdeenStonework, caption: "Stone detail work" },
+    { src: aberdeenExterior, caption: "Barn exterior" },
+    { src: aberdeenStallsDetail, caption: "Stall fitout detail" },
+  ],
+  "fencing": [
+    { src: aberdeenStalls, caption: "Post and rail fencing" },
+    { src: qldFacilityExterior1, caption: "Paddock perimeter fencing" },
+    { src: qldFacilityExterior2, caption: "Gate and entry design" },
+  ],
+  "infrastructure": [
+    { src: qldFacilityConstruction, caption: "Site development" },
+    { src: qldFacilityAerial1, caption: "Aerial view of facility" },
+    { src: qldFacilityExterior1, caption: "Access roads" },
+    { src: mainRidgeBrickwork, caption: "Drainage infrastructure" },
+  ],
+  "round-pens": [
+    { src: qldFacilityCourtyard, caption: "Round pen setup" },
+    { src: arenaSandPrep1, caption: "Footing preparation" },
+    { src: qldFacilityStalls, caption: "Adjacent paddock layout" },
+  ],
+  "renovations": [
+    { src: mainRidgeCiroWoodwork, caption: "Custom woodwork restoration" },
+    { src: mainRidgeCiroWoodwork2, caption: "Timber detail" },
+    { src: mainRidgeInterior, caption: "Renovated interior" },
+    { src: mainRidgeBrickwork, caption: "Structural repair" },
+  ],
+  "full-facility": [
+    { src: qldFacilityConstruction, caption: "Full facility build" },
+    { src: qldFacilityAerial1, caption: "Master site layout" },
+    { src: qldFacilityExterior2, caption: "Completed exterior" },
+    { src: qldFacilityStalls, caption: "Stabling wing" },
+    { src: qldFacilityCourtyard, caption: "Courtyard & paddocks" },
+  ],
+  "clinics-events": [
+    { src: equitanaArena, caption: "Competition arena" },
+    { src: equitanaArena2, caption: "Warm-up area" },
+    { src: equitanaArena3, caption: "Spectator amenities" },
+    { src: equitanaArena4, caption: "Event lighting" },
+  ],
 };
 
 // Page header component with parallax
@@ -741,9 +811,115 @@ function LessonsSection() {
   );
 }
 
+function ServiceDemoGallery({
+  serviceId,
+  serviceTitle,
+  onClose,
+}: {
+  serviceId: string;
+  serviceTitle: string;
+  onClose: () => void;
+}) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const images = serviceGalleryImages[serviceId] || [];
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight") setCurrentIndex((p) => (p + 1) % images.length);
+      if (e.key === "ArrowLeft") setCurrentIndex((p) => (p - 1 + images.length) % images.length);
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [images.length, onClose]);
+
+  if (!images.length) return null;
+
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-primary/95 backdrop-blur-sm" onClick={onClose}>
+      <div className="relative w-full max-w-4xl mx-4" onClick={(e) => e.stopPropagation()}>
+        {/* Close */}
+        <button onClick={onClose} className="absolute -top-12 right-0 text-primary-foreground/70 hover:text-primary-foreground transition-colors" aria-label="Close gallery">
+          <X className="h-6 w-6" />
+        </button>
+
+        {/* Title */}
+        <div className="text-center mb-4">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-accent mb-1">Gallery</p>
+          <h3 className="font-serif text-xl text-primary-foreground">{serviceTitle}</h3>
+        </div>
+
+        {/* Main image */}
+        <div className="relative aspect-[16/10] rounded-lg overflow-hidden bg-primary/50">
+          <img
+            src={images[currentIndex].src}
+            alt={images[currentIndex].caption}
+            className="w-full h-full object-cover transition-opacity duration-300"
+          />
+          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-primary/80 to-transparent p-4">
+            <p className="text-sm text-primary-foreground/90">{images[currentIndex].caption}</p>
+            <p className="text-xs text-primary-foreground/50 mt-1">{currentIndex + 1} / {images.length}</p>
+          </div>
+
+          {/* Nav arrows */}
+          {images.length > 1 && (
+            <>
+              <button
+                onClick={() => setCurrentIndex((p) => (p - 1 + images.length) % images.length)}
+                className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-primary/60 text-primary-foreground/80 hover:bg-primary/80 flex items-center justify-center transition-colors"
+                aria-label="Previous"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                onClick={() => setCurrentIndex((p) => (p + 1) % images.length)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-primary/60 text-primary-foreground/80 hover:bg-primary/80 flex items-center justify-center transition-colors"
+                aria-label="Next"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </>
+          )}
+        </div>
+
+        {/* Thumbnails */}
+        {images.length > 1 && (
+          <div className="flex gap-2 mt-3 justify-center overflow-x-auto pb-2">
+            {images.map((img, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentIndex(i)}
+                className={`shrink-0 w-14 h-14 rounded-md overflow-hidden transition-all duration-300 ${
+                  i === currentIndex
+                    ? "ring-2 ring-accent ring-offset-2 ring-offset-primary scale-105"
+                    : "opacity-50 hover:opacity-100"
+                }`}
+              >
+                <img src={img.src} alt={img.caption} className="w-full h-full object-cover" />
+              </button>
+            ))}
+          </div>
+        )}
+
+        <p className="text-primary-foreground/40 text-xs mt-3 text-center">
+          <span className="hidden sm:inline">← → to navigate • Esc to close</span>
+          <span className="sm:hidden">Swipe to navigate • Tap outside to close</span>
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string) => void }) {
   const navigate = useNavigate();
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>();
+  const [galleryServiceId, setGalleryServiceId] = useState<string | null>(null);
+  const [galleryServiceTitle, setGalleryServiceTitle] = useState("");
 
   // Fetch dynamic services from database, fall back to hardcoded
   const { data: dbServices } = useQuery({
@@ -778,6 +954,11 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
   const { containerRef, visibleItems } = useStaggeredAnimation(displayServices.length);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
+  const openGallery = (serviceId: string, title: string) => {
+    setGalleryServiceId(serviceId);
+    setGalleryServiceTitle(title);
+  };
+
   return (
     <section className="section-padding bg-card relative overflow-hidden">
       <BlueprintBackground image={blueprintFacility} opacity={0.03} direction="bottom-to-top" duration={2400} parallaxSpeed={0.08} />
@@ -802,6 +983,7 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
         <div ref={containerRef} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" style={{ perspective: "1200px" }}>
           {displayServices.map((service, index) => {
             const isFlipped = hoveredId === service.id;
+            const galleryCount = (serviceGalleryImages[service.id] || []).length;
 
             return (
               <div
@@ -809,7 +991,7 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                 className={`relative transition-all duration-700 ${
                   visibleItems[index] ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
                 }`}
-                style={{ height: "380px" }}
+                style={{ height: "400px" }}
                 onMouseEnter={() => setHoveredId(service.id)}
                 onMouseLeave={() => setHoveredId(null)}
               >
@@ -840,6 +1022,16 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                           {service.startingPrice}
                         </p>
                       </div>
+                      {/* Gallery badge */}
+                      {galleryCount > 0 && (
+                        <button
+                          onClick={() => openGallery(service.id, service.title)}
+                          className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full bg-primary/60 text-primary-foreground/80 text-[10px] hover:bg-primary/80 transition-colors backdrop-blur-sm"
+                        >
+                          <Images className="h-3 w-3" />
+                          {galleryCount}
+                        </button>
+                      )}
                     </div>
 
                     {/* Content */}
@@ -869,7 +1061,7 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                     style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
                   >
                     {/* Accent header bar */}
-                    <div className="px-5 pt-5 pb-3 border-b border-accent/20 bg-accent/5">
+                    <div className="px-5 pt-4 pb-2 border-b border-accent/20 bg-accent/5">
                       <h3 className="font-serif text-lg font-semibold text-accent mb-0.5">
                         {service.title}
                       </h3>
@@ -900,24 +1092,37 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                       </ul>
                     </div>
 
-                    {/* Dynamic CTAs */}
-                    <div className="p-4 pt-0 flex gap-2 shrink-0">
-                      <Button
-                        onClick={() => navigate(`/contact?services=${service.id}`)}
-                        className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground shadow-md"
-                        size="sm"
-                      >
-                        Get a Quote
-                        <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        onClick={() => onQuoteClick(service.id)}
-                        variant="outline"
-                        size="sm"
-                        className="border-accent/30 text-accent hover:bg-accent/10 shrink-0"
-                      >
-                        Quick Quote
-                      </Button>
+                    {/* Dynamic CTAs with gallery link */}
+                    <div className="p-4 pt-0 space-y-2 shrink-0">
+                      {galleryCount > 0 && (
+                        <Button
+                          onClick={() => openGallery(service.id, service.title)}
+                          variant="outline"
+                          size="sm"
+                          className="w-full border-accent/20 text-accent hover:bg-accent/10"
+                        >
+                          <Images className="mr-1.5 h-3.5 w-3.5" />
+                          View Gallery ({galleryCount} photos)
+                        </Button>
+                      )}
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={() => navigate(`/contact?services=${service.id}`)}
+                          className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground shadow-md"
+                          size="sm"
+                        >
+                          Get a Quote
+                          <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                        </Button>
+                        <Button
+                          onClick={() => onQuoteClick(service.id)}
+                          variant="outline"
+                          size="sm"
+                          className="border-accent/30 text-accent hover:bg-accent/10 shrink-0"
+                        >
+                          Quick Quote
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -925,6 +1130,15 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
             );
           })}
         </div>
+
+        {/* Service Demo Gallery Lightbox */}
+        {galleryServiceId && (
+          <ServiceDemoGallery
+            serviceId={galleryServiceId}
+            serviceTitle={galleryServiceTitle}
+            onClose={() => setGalleryServiceId(null)}
+          />
+        )}
 
         <p className="text-center text-xs text-muted-foreground mt-8">
           All pricing is indicative. Final quotes are provided after a free on-site consultation.
