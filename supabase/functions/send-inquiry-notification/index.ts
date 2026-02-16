@@ -252,12 +252,21 @@ const handler = async (req: Request): Promise<Response> => {
       </html>
     `;
 
+    // Determine recipients — add Glenn for lesson/clinic inquiries
+    const notifyRecipients: string[] = [NOTIFICATION_EMAIL];
+    const lessonServices = ["riding-lessons", "clinics-events"];
+    const isLessonInquiry = inquiry.services?.some((s: string) => lessonServices.includes(s));
+    const trainerEmail = "glenn@peninsulaequine.com.au";
+    if (isLessonInquiry && !notifyRecipients.includes(trainerEmail)) {
+      notifyRecipients.push(trainerEmail);
+    }
+
     // Send both emails in parallel
     const [notificationResponse, confirmationResponse] = await Promise.all([
-      // Send the notification email to the business
+      // Send the notification email to the business + trainer
       resend.emails.send({
         from: FROM_EMAIL,
-        to: [NOTIFICATION_EMAIL],
+        to: notifyRecipients,
         subject: `New Project Inquiry from ${inquiry.name}`,
         html: emailHtml,
         reply_to: inquiry.email,

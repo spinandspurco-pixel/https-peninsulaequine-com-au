@@ -115,7 +115,7 @@ Deno.serve(async (req) => {
       location: "Peninsula Equine, Mornington Peninsula, VIC",
       dtStart,
       dtEnd,
-      organizer: "ciro@peninsulaequine.com",
+      organizer: "info@peninsulaequine.com.au",
       attendee: body.clientEmail,
     });
 
@@ -171,7 +171,7 @@ Deno.serve(async (req) => {
             <a href="https://peninsulaequine.lovable.app/schedule" style="background: #c9a227; color: white; padding: 12px 28px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600; font-size: 14px;">📅 Schedule a Follow-Up</a>
           </div>
 
-          <p style="font-size: 14px;">Need to reschedule? Contact us at <a href="mailto:ciro@peninsulaequine.com" style="color: #c9a227;">ciro@peninsulaequine.com</a> or call <a href="tel:+15551234567" style="color: #c9a227;">(555) 123-4567</a>.</p>
+          <p style="font-size: 14px;">Need to reschedule? Contact us at <a href="mailto:info@peninsulaequine.com.au" style="color: #c9a227;">info@peninsulaequine.com.au</a> or call <a href="tel:+61418585489" style="color: #c9a227;">0418 585 489</a>.</p>
 
           <p style="margin-top: 24px;">See you soon!<br/><strong>— Ciro & The Peninsula Equine Team</strong></p>
         </div>
@@ -209,8 +209,18 @@ Deno.serve(async (req) => {
       throw new Error(`Email send failed: ${errText}`);
     }
 
-    // Notify staff
-    if (notificationEmail) {
+    // Notify staff — admin + Glenn for lesson bookings
+    const staffRecipients: string[] = [];
+    if (notificationEmail) staffRecipients.push(notificationEmail);
+    
+    const lessonTypes = ["riding-lessons", "lesson", "clinic", "clinics-events"];
+    const isLessonBooking = lessonTypes.includes(body.serviceType);
+    const trainerEmail = "glenn@peninsulaequine.com.au";
+    if (isLessonBooking && !staffRecipients.includes(trainerEmail)) {
+      staffRecipients.push(trainerEmail);
+    }
+
+    if (staffRecipients.length > 0) {
       await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
@@ -219,7 +229,7 @@ Deno.serve(async (req) => {
         },
         body: JSON.stringify({
           from: fromEmail,
-          to: [notificationEmail],
+          to: staffRecipients,
           subject: `New Booking: ${body.clientName} — ${body.serviceType} on ${readableDate}`,
           html: `
             <div style="font-family: sans-serif; max-width: 500px;">
