@@ -75,6 +75,7 @@ interface Inquiry {
   email: string;
   phone: string | null;
   services: string[];
+  preferred_service: string | null;
   project_details: string | null;
   project_vision: string | null;
   budget_range: string | null;
@@ -86,7 +87,16 @@ interface Inquiry {
   experience_level: string | null;
   status: string;
   notes: string | null;
+  lead_tier: string | null;
+  lead_tags: string[] | null;
 }
+
+const TIER_COLORS: Record<string, string> = {
+  premium: "bg-amber-500 text-white",
+  high: "bg-accent text-accent-foreground",
+  standard: "bg-muted text-muted-foreground",
+  starter: "bg-muted text-muted-foreground",
+};
 
 const statusOptions = [
   { value: "new", label: "New", color: "bg-blue-500" },
@@ -562,6 +572,7 @@ export default function Admin() {
                     <TableHead>Name</TableHead>
                     <TableHead>Contact</TableHead>
                     <TableHead>Services</TableHead>
+                    <TableHead>Tier</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -569,13 +580,13 @@ export default function Admin() {
                 <TableBody>
                   {isLoadingData ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8">
+                      <TableCell colSpan={7} className="text-center py-8">
                         <RefreshCw className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
                       </TableCell>
                     </TableRow>
                   ) : filteredInquiries.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                         No inquiries found
                       </TableCell>
                     </TableRow>
@@ -613,6 +624,20 @@ export default function Admin() {
                               </Badge>
                             )}
                           </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="secondary" className={TIER_COLORS[inquiry.lead_tier || "standard"] || TIER_COLORS.standard}>
+                            {(inquiry.lead_tier || "standard").charAt(0).toUpperCase() + (inquiry.lead_tier || "standard").slice(1)}
+                          </Badge>
+                          {inquiry.lead_tags && inquiry.lead_tags.length > 0 && (
+                            <div className="flex flex-wrap gap-0.5 mt-1">
+                              {inquiry.lead_tags.slice(0, 2).map((tag) => (
+                                <span key={tag} className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                         </TableCell>
                         <TableCell>{getStatusBadge(inquiry.status)}</TableCell>
                         <TableCell className="text-right">

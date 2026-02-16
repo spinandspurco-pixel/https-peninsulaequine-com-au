@@ -234,6 +234,8 @@ export type Database = {
           horse_breed: string | null
           horse_name: string | null
           id: string
+          lead_tags: string[] | null
+          lead_tier: string | null
           name: string
           notes: string | null
           phone: string | null
@@ -256,6 +258,8 @@ export type Database = {
           horse_breed?: string | null
           horse_name?: string | null
           id?: string
+          lead_tags?: string[] | null
+          lead_tier?: string | null
           name: string
           notes?: string | null
           phone?: string | null
@@ -278,6 +282,8 @@ export type Database = {
           horse_breed?: string | null
           horse_name?: string | null
           id?: string
+          lead_tags?: string[] | null
+          lead_tier?: string | null
           name?: string
           notes?: string | null
           phone?: string | null
