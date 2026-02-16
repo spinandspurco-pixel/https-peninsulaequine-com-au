@@ -48,6 +48,7 @@ import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
 import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
 import { LoadingSplash } from "@/components/LoadingSplash";
+import { SampleEstimateCTA } from "@/components/SampleEstimateCTA";
 
 // Featured services for homepage
 const featuredServices = services.slice(0, 6);
@@ -2401,6 +2402,7 @@ export default function Index() {
         <ForgeHeroBanner />
         <LeadCaptureSection submitted={leadSubmitted} onSubmitted={() => setLeadSubmitted(true)} />
         <HomeFAQSection />
+        <SampleEstimateCTA onGetQuote={() => document.getElementById('free-quote')?.scrollIntoView({ behavior: 'smooth' })} />
         <InquiryFormSection />
         <CTASection />
       </Layout>
