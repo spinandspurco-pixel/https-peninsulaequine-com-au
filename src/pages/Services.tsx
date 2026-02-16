@@ -28,6 +28,7 @@ import { InlineBookingForm } from "@/components/InlineBookingForm";
 import { LiveBookingCapacity } from "@/components/LiveBookingCapacity";
 import { LessonAvailabilityCalendar } from "@/components/LessonAvailabilityCalendar";
 import { RequestLessonInquiry } from "@/components/RequestLessonInquiry";
+import { PricingDownloadCTA } from "@/components/PricingDownloadCTA";
 
 // Main Ridge construction process images
 import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
@@ -1731,6 +1732,8 @@ export default function Services() {
       <LessonsSection />
 
       <RequestLessonInquiry />
+
+      <PricingDownloadCTA />
 
       <DepositPaymentPolicy ctaHref="/contact" ctaLabel="Get a Free Quote" />
 
