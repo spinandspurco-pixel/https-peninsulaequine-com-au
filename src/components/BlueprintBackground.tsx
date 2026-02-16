@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface BlueprintBackgroundProps {
@@ -23,8 +23,8 @@ export function BlueprintBackground({
   label,
 }: BlueprintBackgroundProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
   const [isRevealed, setIsRevealed] = useState(false);
-  const [parallaxY, setParallaxY] = useState(0);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export function BlueprintBackground({
     return () => observer.disconnect();
   }, [prefersReducedMotion]);
 
-  // Parallax scroll tracking
+  // Parallax — write directly to DOM via ref (no state, no re-render)
   useEffect(() => {
     if (prefersReducedMotion || parallaxSpeed === 0) return;
 
@@ -58,12 +58,12 @@ export function BlueprintBackground({
     const onScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          if (ref.current) {
+          if (ref.current && imgRef.current) {
             const rect = ref.current.getBoundingClientRect();
             const vh = window.innerHeight;
             const center = rect.top + rect.height / 2;
             const offset = (center - vh / 2) * parallaxSpeed;
-            setParallaxY(offset);
+            imgRef.current.style.transform = `translateY(${offset}px) scale(1.05)`;
           }
           ticking = false;
         });
@@ -90,6 +90,7 @@ export function BlueprintBackground({
       role="presentation"
     >
       <img
+        ref={imgRef}
         src={image}
         alt={label ?? "Decorative blueprint background layer"}
         role="presentation"
@@ -99,13 +100,11 @@ export function BlueprintBackground({
         style={{
           opacity: isRevealed ? opacity : 0,
           clipPath: isRevealed ? "inset(0 0 0 0)" : clipPathHidden,
-          transform: prefersReducedMotion
-            ? "scale(1.05)"
-            : `translateY(${parallaxY}px) scale(1.05)`,
+          transform: prefersReducedMotion ? "scale(1.05)" : "scale(1.05)",
           transition: prefersReducedMotion
             ? "none"
             : `clip-path ${duration}ms ease-out, opacity ${duration * 0.6}ms ease-out`,
-          willChange: isRevealed ? "auto" : "clip-path",
+          willChange: isRevealed ? "auto" : "clip-path, transform",
         }}
       />
     </div>

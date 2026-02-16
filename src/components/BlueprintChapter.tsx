@@ -150,6 +150,7 @@ export function BlueprintChapter({
     }
 
     let ticking = false;
+    let lastProgress = 0;
     const onScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
@@ -157,7 +158,12 @@ export function BlueprintChapter({
             const rect = ref.current.getBoundingClientRect();
             const vh = window.innerHeight;
             const raw = 1 - rect.top / (vh * 0.85);
-            setProgress(Math.max(0, Math.min(1, raw)));
+            const clamped = Math.max(0, Math.min(1, raw));
+            // Only update state if progress changed meaningfully (>1%)
+            if (Math.abs(clamped - lastProgress) > 0.01) {
+              lastProgress = clamped;
+              setProgress(clamped);
+            }
           }
           ticking = false;
         });

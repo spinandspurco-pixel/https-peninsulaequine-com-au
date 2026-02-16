@@ -30,8 +30,10 @@ export function BlueprintLineOverlay({
   const ref = useRef<SVGSVGElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
-  // ── Scroll-linked progress (0 → 1) ────────────────────
+  // ── Scroll-linked progress (0 → 1) + parallax drift ──
+  // Merged into a single scroll listener to halve layout thrash.
   const [progress, setProgress] = useState(prefersReducedMotion ? 1 : 0);
+  const driftRef = useRef(0);
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -40,47 +42,36 @@ export function BlueprintLineOverlay({
     }
 
     let ticking = false;
+    let lastProgress = 0;
     const onScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
           if (ref.current) {
             const rect = ref.current.getBoundingClientRect();
             const vh = window.innerHeight;
-            // Start drawing when bottom edge enters viewport,
-            // fully drawn by the time the top is ~30% up the viewport.
+
+            // Progress: draw-on as section enters viewport
             const raw = 1 - rect.top / (vh * 0.85);
-            setProgress(Math.max(0, Math.min(1, raw)));
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
+            const clamped = Math.max(0, Math.min(1, raw));
+            // Only update state if progress changed meaningfully (>1%)
+            if (Math.abs(clamped - lastProgress) > 0.01) {
+              lastProgress = clamped;
+              setProgress(clamped);
+            }
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll(); // initial check
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [prefersReducedMotion]);
-
-  // ── Parallax drift ─────────────────────────────────────
-  const [driftY, setDriftY] = useState(0);
-  useEffect(() => {
-    if (prefersReducedMotion) return;
-    let ticking = false;
-    const onScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          if (ref.current) {
-            const rect = ref.current.getBoundingClientRect();
-            const vh = window.innerHeight;
+            // Drift: write directly to DOM transform (no state, no re-render)
             const offset = ((rect.top + rect.height / 2) - vh / 2) * 0.04;
-            setDriftY(offset);
+            driftRef.current = offset;
+            if (ref.current) {
+              ref.current.style.transform = `translateY(${offset}px)`;
+            }
           }
           ticking = false;
         });
         ticking = true;
       }
     };
+
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
@@ -135,8 +126,8 @@ export function BlueprintLineOverlay({
       preserveAspectRatio="none"
       aria-hidden="true"
       style={{
-        transform: prefersReducedMotion ? "none" : `translateY(${driftY}px)`,
-        transition: "transform 0.2s ease-out",
+        transform: prefersReducedMotion ? "none" : undefined,
+        willChange: prefersReducedMotion ? "auto" : "transform",
       }}
     >
       <defs>
