@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { StickySubpageCTA } from "@/components/StickySubpageCTA";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { LessonPricingCalculator } from "@/components/LessonPricingCalculator";
 import { cn } from "@/lib/utils";
 
 // ── Package Data ─────────────────────────────────────
@@ -308,6 +309,7 @@ export default function Pricing() {
       <SingleLessons />
       <BulkPackages />
       <ClinicPricing />
+      <LessonPricingCalculator />
       <GroupRatesTeaser />
       <PricingCTA />
       <StickySubpageCTA
