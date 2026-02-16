@@ -292,9 +292,7 @@ function HeroSection({ variant = "banner" }: { variant?: "logo" | "banner" }) {
           transition: "opacity 1.2s ease-out",
         }}
       >
-        <BlueprintBackground image={blueprintFacility} opacity={0.08} direction="left-to-right" duration={2500} parallaxSpeed={0.04} />
-        <BlueprintBackground image={blueprintElevation} opacity={0.05} direction="right-to-left" duration={3000} parallaxSpeed={0.08} className="scale-110" />
-        <BlueprintBackground image={blueprintBarn} opacity={0.04} direction="bottom-to-top" duration={2800} parallaxSpeed={0.06} />
+        <BlueprintBackground image={blueprintFacility} opacity={0.06} direction="left-to-right" duration={2500} parallaxSpeed={0.04} />
       </div>
 
       {/* Blueprint line overlays — phase 1 draw-on */}
@@ -305,7 +303,6 @@ function HeroSection({ variant = "banner" }: { variant?: "logo" | "banner" }) {
         }}
       >
         <BlueprintLineOverlay variant="dimensions" color="light" />
-        <BlueprintLineOverlay variant="barn" color="light" />
       </div>
 
       {/* Gradient overlay */}
@@ -459,12 +456,9 @@ function IntroSection() {
 
   return (
     <section id="intro" className="bg-background relative overflow-hidden">
-      {/* Multi-layer blueprint reveal */}
-      <BlueprintBackground image={blueprintFacility} opacity={0.06} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
-      <BlueprintBackground image={blueprintDetail} opacity={0.04} direction="bottom-to-top" duration={2400} parallaxSpeed={0.08} className="scale-105" />
-      <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="right-to-left" duration={2800} parallaxSpeed={0.1} />
+      {/* Subtle blueprint layer */}
+      <BlueprintBackground image={blueprintFacility} opacity={0.04} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
       <BlueprintLineOverlay variant="dimensions" color="dark" />
-      <BlueprintLineOverlay variant="detail" color="dark" />
 
       {/* Location tagline */}
       <div className="section-padding border-b border-border relative z-10">
@@ -517,8 +511,7 @@ function IntroSection() {
             transition: "opacity 1.2s ease-out",
           }}
         >
-          <BlueprintBackground image={blueprintFacility} opacity={0.18} direction="left-to-right" duration={1400} parallaxSpeed={0.04} />
-          <BlueprintBackground image={blueprintElevation} opacity={0.12} direction="right-to-left" duration={1800} parallaxSpeed={0.08} className="scale-110" />
+          <BlueprintBackground image={blueprintFacility} opacity={0.12} direction="left-to-right" duration={1400} parallaxSpeed={0.04} />
         </div>
 
         {/* Phase 2: Architectural line overlays draw on */}
@@ -530,19 +523,8 @@ function IntroSection() {
           }}
         >
           <BlueprintLineOverlay variant="barn" color="light" />
-          <BlueprintLineOverlay variant="front-elevation" color="light" />
         </div>
 
-        {/* Phase 2: Secondary blueprint layer for depth */}
-        <div
-          className="absolute inset-0"
-          style={{
-            opacity: phase >= 2 ? 0.5 : 0,
-            transition: "opacity 1s ease-out 0.4s",
-          }}
-        >
-          <BlueprintLineOverlay variant="dimensions" color="light" />
-        </div>
 
         {/* Phase 3: Centered PE logo watermark pulses in */}
         <div className="absolute inset-0 flex items-center justify-center">
@@ -590,8 +572,7 @@ function MissionSection() {
 
   return (
     <section className="section-padding bg-card overflow-hidden relative">
-      <BlueprintBackground image={blueprintBarn} opacity={0.04} direction="right-to-left" duration={1800} />
-      <BlueprintLineOverlay variant="detail" color="dark" />
+      <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="right-to-left" duration={1800} />
       <div className="section-container relative z-10">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
           {/* Text Content */}
@@ -672,12 +653,8 @@ function ServicesSection() {
 
   return (
     <section className="section-padding bg-background overflow-hidden relative">
-      {/* Layer 1: Full facility plan – slow drift up */}
-      <BlueprintBackground image={blueprintFacility} opacity={0.05} parallaxSpeed={0.06} />
-      {/* Layer 2: Barn detail – opposite drift for depth separation */}
-      <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="right-to-left" parallaxSpeed={0.12} duration={2000} className="scale-110" />
-      {/* Layer 3: Architectural line overlay at medium depth */}
-      <BlueprintLineOverlay variant="barn" color="dark" />
+      {/* Single blueprint layer */}
+      <BlueprintBackground image={blueprintFacility} opacity={0.04} parallaxSpeed={0.06} />
       <div className="section-container relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-20">
           <AnimatedDivider className="mx-auto mb-8" />
@@ -764,10 +741,6 @@ function BookingCTABanner() {
         ref={ref}
         className="relative py-16 sm:py-20 bg-accent overflow-hidden"
       >
-        {/* Subtle texture */}
-        <div className="absolute inset-0 opacity-10">
-          <BlueprintLineOverlay variant="dimensions" color="dark" />
-        </div>
 
         <div
           className={`section-container relative z-10 text-center transition-all duration-700 ${
@@ -986,7 +959,7 @@ function LeadCaptureSection({ submitted, onSubmitted }: { submitted: boolean; on
 
   return (
     <section id="lead-capture" ref={ref} className="section-padding bg-card overflow-hidden relative">
-      <BlueprintBackground image={blueprintDetail} opacity={0.03} direction="bottom-to-top" duration={2000} />
+      <BlueprintBackground image={blueprintBarn} opacity={0.025} direction="bottom-to-top" duration={2000} />
       <div
         className={`section-container relative z-10 transition-all duration-700 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
@@ -1251,8 +1224,7 @@ function ClientStorySection() {
 
   return (
     <section ref={sectionRef} className="section-padding bg-card overflow-hidden relative">
-      <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="right-to-left" duration={2000} />
-      <BlueprintLineOverlay variant="detail" color="dark" />
+      <BlueprintBackground image={blueprintBarn} opacity={0.025} direction="right-to-left" duration={2000} />
       <div className="section-container relative z-10">
         {/* Header */}
         <AnimatedDivider className="mb-8" />
@@ -1531,7 +1503,7 @@ function TestimonialServiceCarousel() {
 
   return (
     <section ref={ref} className="section-padding bg-background relative overflow-hidden">
-      <BlueprintBackground image={blueprintFacility} opacity={0.03} direction="left-to-right" duration={2000} />
+      <BlueprintBackground image={blueprintFacility} opacity={0.025} direction="left-to-right" duration={2000} />
       <div className="section-container relative z-10">
         <div className={`text-center max-w-3xl mx-auto mb-12 transition-all duration-700 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
@@ -1618,8 +1590,7 @@ function TestimonialsGallery() {
 
   return (
     <section className="section-padding bg-card overflow-hidden relative">
-      <BlueprintBackground image={blueprintDetail} opacity={0.035} direction="bottom-to-top" duration={1600} />
-      <BlueprintLineOverlay variant="detail" color="dark" />
+      <BlueprintBackground image={blueprintBarn} opacity={0.025} direction="bottom-to-top" duration={1600} />
       <div className="section-container relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <AnimatedDivider className="mx-auto mb-8" />
@@ -1881,8 +1852,7 @@ function BannerDivider() {
       aria-label="From Dirt to Dynasty"
     >
       {/* Blueprint background layer */}
-      <BlueprintBackground image={blueprintFacility} opacity={0.05} direction="left-to-right" duration={2200} parallaxSpeed={0.04} />
-      <BlueprintLineOverlay variant="barn" color="light" />
+      <BlueprintBackground image={blueprintFacility} opacity={0.04} direction="left-to-right" duration={2200} parallaxSpeed={0.04} />
 
       {/* Dark vignette */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsl(var(--primary)/0.7)_100%)]" />

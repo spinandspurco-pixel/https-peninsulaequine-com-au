@@ -174,8 +174,7 @@ function CareStandardsSection() {
 
   return (
     <section className="section-padding bg-background relative overflow-hidden">
-      <BlueprintBackground image={blueprintFacility} opacity={0.03} direction="left-to-right" duration={2400} parallaxSpeed={0.06} />
-      <BlueprintLineOverlay variant="dimensions" color="dark" />
+      <BlueprintBackground image={blueprintFacility} opacity={0.025} direction="left-to-right" duration={2400} parallaxSpeed={0.06} />
 
       <div className="section-container relative z-10">
         <div

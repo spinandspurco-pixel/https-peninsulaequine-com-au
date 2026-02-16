@@ -8,9 +8,7 @@ import { PageTransition } from "@/components/PageTransition";
 import { ContrastChecker } from "@/components/ContrastChecker";
 import { ContrastWarningOverlay } from "@/components/ContrastWarningOverlay";
 import { FloatingPEWatermark } from "@/components/FloatingPEWatermark";
-import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { ParallaxDepthToggle } from "@/components/ParallaxDepthToggle";
-import blueprintFacility from "@/assets/blueprint-facility.png";
 
 interface LayoutProps {
   children: ReactNode;
@@ -19,20 +17,6 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen flex flex-col relative">
-      {/* Site-wide subtle blueprint watermark */}
-      <div
-        className="fixed inset-0 pointer-events-none z-0 opacity-[0.015]"
-        style={{
-          backgroundImage: `url(${blueprintFacility})`,
-          backgroundSize: "120% auto",
-          backgroundPosition: "center top",
-          backgroundRepeat: "no-repeat",
-        }}
-      />
-      {/* Site-wide scroll-revealing blueprint line animation */}
-      <div className="fixed inset-0 pointer-events-none z-0 opacity-[0.04]">
-        <BlueprintLineOverlay variant="dimensions" color="dark" />
-      </div>
       <SEOSchema />
       <Header />
       <PageTransition>

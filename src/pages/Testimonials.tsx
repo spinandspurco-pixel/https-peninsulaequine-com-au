@@ -122,9 +122,7 @@ export default function Testimonials() {
       <HeroCTABlock />
 
       <section className="section-padding relative overflow-hidden">
-        <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="right-to-left" duration={2000} parallaxSpeed={0.05} />
-        <BlueprintBackground image={blueprintFacility} opacity={0.02} direction="left-to-right" duration={3000} parallaxSpeed={0.08} className="scale-105" />
-        <BlueprintLineOverlay variant="barn" color="dark" />
+        <BlueprintBackground image={blueprintBarn} opacity={0.025} direction="right-to-left" duration={2000} parallaxSpeed={0.05} />
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/90 to-background pointer-events-none z-[1]" />
 
         <div className="section-container relative z-[2]">

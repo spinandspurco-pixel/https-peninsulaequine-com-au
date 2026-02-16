@@ -150,10 +150,8 @@ function PageHeader({ title, description }: { title: string; description: string
 
   return (
     <section ref={parallaxRef} className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
-      {/* Layer 1: Elevation blueprint – slow reveal left-to-right */}
-      <BlueprintBackground image={blueprintElevation} opacity={0.07} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
-      <BlueprintBackground image={blueprintFacility} opacity={0.035} direction="right-to-left" duration={2400} parallaxSpeed={0.1} className="scale-105" />
-      <BlueprintBackground image={blueprintBarn} opacity={0.025} direction="bottom-to-top" duration={2800} parallaxSpeed={0.06} />
+      {/* Single blueprint layer */}
+      <BlueprintBackground image={blueprintElevation} opacity={0.05} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
       <BlueprintLineOverlay variant="dimensions" color="light" />
 
       {/* Gradient overlays for depth */}
