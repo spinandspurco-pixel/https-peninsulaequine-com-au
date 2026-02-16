@@ -827,6 +827,146 @@ function TrainerProfileSection() {
 
 // ── Student Success & Testimonials ──────────────────────────────
 
+// ── Weekly Progress Tracker ────────────────────────────
+
+const WEEKLY_MILESTONES = [
+  {
+    week: 1,
+    title: "First Steps",
+    foundation: "Safety, mounting, basic seat position",
+    development: "Assess current level, set goals",
+    performance: "Biomechanics analysis & baseline",
+  },
+  {
+    week: 2,
+    title: "Building Rhythm",
+    foundation: "Walk rhythm, steering & stopping",
+    development: "Trot refinement, rein contact",
+    performance: "Advanced flatwork drills",
+  },
+  {
+    week: 4,
+    title: "Growing Confidence",
+    foundation: "Rising trot introduction, groundwork",
+    development: "Canter transitions, lateral intro",
+    performance: "Collected & extended gaits",
+  },
+  {
+    week: 8,
+    title: "Milestone Check-in",
+    foundation: "Walk/trot confidence, arena etiquette",
+    development: "Jumping basics, course patterns",
+    performance: "Competition-ready sequences",
+  },
+  {
+    week: 12,
+    title: "Level Up",
+    foundation: "Ready for Development path",
+    development: "Ready for Performance path",
+    performance: "Show prep & competition entry",
+  },
+];
+
+function ProgressTrackerSection() {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>();
+  const { containerRef, visibleItems } = useStaggeredAnimation(WEEKLY_MILESTONES.length);
+  const [activePath, setActivePath] = useState<"foundation" | "development" | "performance">("foundation");
+
+  const pathConfig = {
+    foundation: { label: "Foundation", price: "$95/session" },
+    development: { label: "Development", price: "$120/session" },
+    performance: { label: "Performance", price: "$150/session" },
+  };
+
+  return (
+    <section className="section-padding bg-background relative overflow-hidden">
+      <BlueprintBackground image={blueprintDetail} opacity={0.03} direction="left-to-right" duration={2000} />
+      <div className="section-container relative z-10">
+        <div
+          ref={headerRef}
+          className={`text-center max-w-3xl mx-auto mb-10 transition-all duration-700 ${
+            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
+          <div className={`w-16 h-0.5 bg-accent mx-auto mb-6 transition-all duration-500 delay-100 ${
+            headerVisible ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"
+          }`} />
+          <h2 className="heading-section text-foreground mb-3">Your Weekly Journey</h2>
+          <p className="text-muted-foreground text-sm">
+            Track your progress from first ride to mastery. Each path follows a structured milestone roadmap.
+          </p>
+        </div>
+
+        {/* Path selector */}
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
+          {(Object.keys(pathConfig) as Array<keyof typeof pathConfig>).map((path) => (
+            <button
+              key={path}
+              onClick={() => setActivePath(path)}
+              className={cn(
+                "px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-300",
+                activePath === path
+                  ? "bg-accent text-accent-foreground shadow-sm"
+                  : "bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
+              )}
+            >
+              {pathConfig[path].label}
+              <span className="ml-1.5 opacity-70">{pathConfig[path].price}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Timeline */}
+        <div ref={containerRef} className="relative max-w-2xl mx-auto">
+          {/* Vertical line */}
+          <div className="absolute left-6 top-0 bottom-0 w-px bg-border" />
+
+          <div className="space-y-6">
+            {WEEKLY_MILESTONES.map((milestone, index) => (
+              <div
+                key={milestone.week}
+                className={`relative pl-16 transition-all duration-700 ${
+                  visibleItems[index] ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
+                }`}
+              >
+                {/* Node */}
+                <div className="absolute left-4 top-1 w-5 h-5 rounded-full border-2 border-accent bg-background flex items-center justify-center">
+                  <div className="w-2 h-2 rounded-full bg-accent" />
+                </div>
+
+                {/* Card */}
+                <div className="rounded-xl border border-border bg-card p-5 hover:border-accent/30 hover:shadow-md transition-all duration-300">
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-accent/10 text-accent text-[10px] font-bold uppercase tracking-wider">
+                      Week {milestone.week}
+                    </span>
+                    <h3 className="font-serif font-semibold text-foreground">{milestone.title}</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {milestone[activePath]}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Bottom CTA */}
+          <div className="pl-16 mt-8">
+            <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
+              <Link to={`/book-lesson?type=${activePath === "foundation" ? "beginner" : activePath === "development" ? "intermediate" : "advanced"}`}>
+                Start {pathConfig[activePath].label} Path
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── Student Progress & Testimonials ───────────────────
+
 const STUDENT_PROGRESS = [
   { label: "Riders Trained", value: "200+", icon: Users },
   { label: "Years Teaching", value: "25+", icon: Award },
@@ -1044,6 +1184,9 @@ export default function BookLesson() {
 
       {/* Program Levels */}
       <ProgramLevelsSection />
+
+      {/* Weekly Progress Tracker */}
+      <ProgressTrackerSection />
 
       {/* Availability Calendar */}
       <section className="section-padding bg-background relative overflow-hidden">
