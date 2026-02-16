@@ -15,16 +15,16 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { user, isAdmin, isEmployee, loading, signIn } = useAuth();
+  const { user, isAdmin, isEmployee, isTrainer, loading, signIn } = useAuth();
   const navigate = useNavigate();
 
   // Redirect if already logged in
   useEffect(() => {
     if (!loading && user) {
       if (isAdmin) navigate("/admin");
-      else if (isEmployee) navigate("/employee");
+      else if (isEmployee || isTrainer) navigate("/employee");
     }
-  }, [user, isAdmin, isEmployee, loading, navigate]);
+  }, [user, isAdmin, isEmployee, isTrainer, loading, navigate]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();

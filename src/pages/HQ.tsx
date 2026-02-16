@@ -18,15 +18,15 @@ export default function HQ() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [activeRole, setActiveRole] = useState<"admin" | "employee">("admin");
-  const { user, isAdmin, isEmployee, loading } = useAuth();
+  const { user, isAdmin, isEmployee, isTrainer, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!loading && user) {
       if (isAdmin) navigate("/admin");
-      else if (isEmployee) navigate("/employee");
+      else if (isEmployee || isTrainer) navigate("/employee");
     }
-  }, [user, isAdmin, isEmployee, loading, navigate]);
+  }, [user, isAdmin, isEmployee, isTrainer, loading, navigate]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +48,7 @@ export default function HQ() {
         .from("user_roles")
         .select("role")
         .eq("user_id", data.user.id)
-        .in("role", ["admin", "employee"])
+        .in("role", ["admin", "employee", "trainer"])
         .maybeSingle();
 
       if (!roleData) {

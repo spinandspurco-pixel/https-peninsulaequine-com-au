@@ -8,6 +8,7 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isEmployee, setIsEmployee] = useState(false);
+  const [isTrainer, setIsTrainer] = useState(false);
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -17,28 +18,19 @@ export function useAuth() {
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Check admin role
-          const { data: adminData } = await supabase
+          const { data: roles } = await supabase
             .from("user_roles")
             .select("role")
-            .eq("user_id", session.user.id)
-            .eq("role", "admin")
-            .maybeSingle();
+            .eq("user_id", session.user.id);
           
-          setIsAdmin(!!adminData);
-
-          // Check employee role
-          const { data: employeeData } = await supabase
-            .from("user_roles")
-            .select("role")
-            .eq("user_id", session.user.id)
-            .eq("role", "employee")
-            .maybeSingle();
-          
-          setIsEmployee(!!employeeData);
+          const roleList = roles?.map(r => r.role) || [];
+          setIsAdmin(roleList.includes("admin"));
+          setIsEmployee(roleList.includes("employee"));
+          setIsTrainer(roleList.includes("trainer"));
         } else {
           setIsAdmin(false);
           setIsEmployee(false);
+          setIsTrainer(false);
         }
         
         setLoading(false);
@@ -51,24 +43,17 @@ export function useAuth() {
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        Promise.all([
-          supabase
-            .from("user_roles")
-            .select("role")
-            .eq("user_id", session.user.id)
-            .eq("role", "admin")
-            .maybeSingle(),
-          supabase
-            .from("user_roles")
-            .select("role")
-            .eq("user_id", session.user.id)
-            .eq("role", "employee")
-            .maybeSingle(),
-        ]).then(([adminResult, employeeResult]) => {
-          setIsAdmin(!!adminResult.data);
-          setIsEmployee(!!employeeResult.data);
-          setLoading(false);
-        });
+        supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", session.user.id)
+          .then(({ data: roles }) => {
+            const roleList = roles?.map(r => r.role) || [];
+            setIsAdmin(roleList.includes("admin"));
+            setIsEmployee(roleList.includes("employee"));
+            setIsTrainer(roleList.includes("trainer"));
+            setLoading(false);
+          });
       } else {
         setLoading(false);
       }
@@ -107,6 +92,7 @@ export function useAuth() {
     loading,
     isAdmin,
     isEmployee,
+    isTrainer,
     signIn,
     signUp,
     signOut,
