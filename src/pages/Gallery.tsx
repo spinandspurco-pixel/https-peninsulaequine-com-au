@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, X, Play, ZoomIn } from "lucide-react";
 import { triggerHaptic } from "@/hooks/useHapticFeedback";
@@ -472,6 +472,8 @@ function Lightbox({
   const touchEndX = useRef<number | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [isZooming, setIsZooming] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef<{ x: number; y: number } | null>(null);
 
   // Pinch-to-zoom for images
   const pinchZoom = usePinchZoom({
@@ -549,6 +551,45 @@ function Lightbox({
     touchEndX.current = null;
   };
 
+  // Desktop mouse drag-to-pan when zoomed
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    if (!pinchZoom.isZoomed) return;
+    e.preventDefault();
+    setIsDragging(true);
+    dragStart.current = { x: e.clientX - pinchZoom.translateX, y: e.clientY - pinchZoom.translateY };
+  }, [pinchZoom.isZoomed, pinchZoom.translateX, pinchZoom.translateY]);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isDragging || !dragStart.current) return;
+    e.preventDefault();
+    const newX = e.clientX - dragStart.current.x;
+    const newY = e.clientY - dragStart.current.y;
+    pinchZoom.setTranslate(newX, newY);
+  }, [isDragging, pinchZoom]);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+    dragStart.current = null;
+  }, []);
+
+  // Double-click to zoom on desktop
+  const handleDoubleClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (pinchZoom.isZoomed) {
+      pinchZoom.reset();
+    } else {
+      const rect = pinchZoom.containerRef.current?.getBoundingClientRect();
+      if (rect) {
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        pinchZoom.zoomTo(2, centerX - e.clientX, centerY - e.clientY);
+      } else {
+        pinchZoom.zoomTo(2, 0, 0);
+      }
+    }
+  }, [pinchZoom]);
+
   if (!item) return null;
 
   return (
@@ -625,12 +666,17 @@ function Lightbox({
         ) : (
           <div 
             ref={pinchZoom.containerRef}
-            className="relative overflow-hidden touch-none"
+            className={`relative overflow-hidden touch-none ${pinchZoom.isZoomed ? 'cursor-grab' : ''} ${isDragging ? 'cursor-grabbing' : ''}`}
             {...pinchZoom.handlers}
             onTouchEnd={(e) => {
               pinchZoom.handlers.onTouchEnd(e);
               pinchZoom.handleDoubleTap(e);
             }}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+            onDoubleClick={handleDoubleClick}
           >
             {/* Loading spinner */}
             {isImageLoading && (
@@ -641,7 +687,7 @@ function Lightbox({
             <img
               src={item.src}
               alt={item.alt}
-              className={`max-w-full max-h-[85vh] object-contain rounded-lg mx-auto transition-all duration-200 ${
+              className={`max-w-full max-h-[85vh] object-contain rounded-lg mx-auto transition-all duration-200 select-none ${
                 isImageLoading ? "opacity-0" : "opacity-100"
               }`}
               style={{ transform: pinchZoom.transform }}
@@ -655,11 +701,16 @@ function Lightbox({
                 {Math.round(pinchZoom.scale * 100)}%
               </div>
             )}
-            {/* Zoom hint for mobile */}
+            {/* Zoom hint */}
             {!pinchZoom.isZoomed && !isImageLoading && (
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-primary/60 text-primary-foreground/70 text-xs px-3 py-1.5 rounded-full sm:hidden">
-                Pinch to zoom • Double-tap to zoom
-              </div>
+              <>
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-primary/60 text-primary-foreground/70 text-xs px-3 py-1.5 rounded-full sm:hidden">
+                  Pinch to zoom • Double-tap to zoom
+                </div>
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-primary/60 text-primary-foreground/70 text-xs px-3 py-1.5 rounded-full hidden sm:block">
+                  Double-click to zoom • Drag to pan
+                </div>
+              </>
             )}
           </div>
         )}
