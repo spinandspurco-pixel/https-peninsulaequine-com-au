@@ -11,6 +11,7 @@ import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 
 import { ParallaxCTA } from "@/components/ParallaxCTA";
+import { StickyHeroCTA } from "@/components/StickyHeroCTA";
 import { SectionTransition, AnimatedDivider, StaggeredTransition } from "@/components/SectionTransition";
 import { siteConfig, services, testimonials, aboutCiro } from "@/data/content";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -705,11 +706,10 @@ function BookingCTABanner() {
   );
 }
 
-function LeadCaptureSection() {
+function LeadCaptureSection({ submitted, onSubmitted }: { submitted: boolean; onSubmitted: () => void }) {
   const { ref, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.2 });
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -741,17 +741,17 @@ function LeadCaptureSection() {
         },
       }).catch(() => {});
 
-      setSubmitted(true);
+      onSubmitted();
     } catch {
       // Silently fail – form still shows success to avoid blocking UX
-      setSubmitted(true);
+      onSubmitted();
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <section ref={ref} className="section-padding bg-card overflow-hidden relative">
+    <section id="lead-capture" ref={ref} className="section-padding bg-card overflow-hidden relative">
       <BlueprintBackground image={blueprintDetail} opacity={0.03} direction="bottom-to-top" duration={2000} />
       <div
         className={`section-container relative z-10 transition-all duration-700 ${
@@ -1226,11 +1226,25 @@ function FloatingBannerWatermark({ visible }: { visible: boolean }) {
 
 export default function Index() {
   const [splashDone, setSplashDone] = useState(false);
+  const [leadSubmitted, setLeadSubmitted] = useState(false);
+
+  const scrollToLead = () => {
+    document.getElementById("lead-capture")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <>
       {!splashDone && <LoadingSplash minDuration={2400} onComplete={() => setSplashDone(true)} />}
       <Layout>
+        {/* Sticky CTA — auto-hides after lead form submission */}
+        {!leadSubmitted && (
+          <StickyHeroCTA
+            showAfter={600}
+            onCtaClick={scrollToLead}
+            progress={72}
+            progressLabel="spots filled"
+          />
+        )}
         <HeroSection variant="banner" />
         <HeroBannerCTAStrip />
         <BannerDivider />
@@ -1245,7 +1259,7 @@ export default function Index() {
         <ClientStorySection />
         <BlueprintDivider variant="grid" />
         <TestimonialsGallery />
-        <LeadCaptureSection />
+        <LeadCaptureSection submitted={leadSubmitted} onSubmitted={() => setLeadSubmitted(true)} />
         <CTASection />
       </Layout>
     </>
