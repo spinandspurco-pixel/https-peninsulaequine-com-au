@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Search, X, ArrowRight, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
+import { PolicyDownloadCenter } from "@/components/PolicyDownloadCenter";
 import { PageHeader } from "@/components/PageHeader";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
@@ -245,6 +246,12 @@ export default function FAQ() {
               Showing {filtered.length} of {faqs.length} questions
             </p>
           )}
+        </div>
+      </section>
+
+      <section className="section-padding bg-card border-y border-border">
+        <div className="section-container max-w-3xl">
+          <PolicyDownloadCenter />
         </div>
       </section>
 
