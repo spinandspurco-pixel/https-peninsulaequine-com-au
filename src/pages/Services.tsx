@@ -80,13 +80,40 @@ function PageHeader({ title, description }: { title: string; description: string
             Crafting World-Class Equine Facilities
           </p>
           <h1 className="heading-display mb-6">{title}</h1>
-          <p className="text-lg text-primary-foreground/80">{description}</p>
+          <p className="text-lg text-primary-foreground/80 mb-8">{description}</p>
+          
+          {/* Service-specific hero CTAs */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
+            {services.slice(0, 4).map((service) => (
+              <button
+                key={service.id}
+                onClick={() => document.getElementById(service.id)?.scrollIntoView({ behavior: 'smooth' })}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs sm:text-sm font-medium tracking-wide bg-primary-foreground/10 text-primary-foreground/90 border border-primary-foreground/15 hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all duration-300 hover:scale-105"
+              >
+                {service.title}
+                <ArrowRight className="h-3 w-3" />
+              </button>
+            ))}
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
+            {services.slice(4).map((service) => (
+              <button
+                key={service.id}
+                onClick={() => document.getElementById(service.id)?.scrollIntoView({ behavior: 'smooth' })}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs sm:text-sm font-medium tracking-wide bg-primary-foreground/10 text-primary-foreground/90 border border-primary-foreground/15 hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all duration-300 hover:scale-105"
+              >
+                {service.title}
+                <ArrowRight className="h-3 w-3" />
+              </button>
+            ))}
+          </div>
+
           <button
             onClick={() => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })}
-            className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium text-sm tracking-wider uppercase bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 hover:scale-105 hover:shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium text-sm tracking-wider uppercase bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 hover:scale-105 hover:shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
           >
             <CalendarIcon className="h-4 w-4" />
-            Book a Lesson or Consultation
+            Book a Consultation
             <ArrowRight className="h-4 w-4" />
           </button>
         </div>
