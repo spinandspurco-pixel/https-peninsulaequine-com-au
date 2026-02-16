@@ -145,6 +145,17 @@ function HeroSection() {
           )}
           <Button
             asChild
+            variant="outline"
+            size="lg"
+            className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 text-sm px-8 tracking-[0.15em] uppercase font-sans"
+          >
+            <Link to="/events" onClick={() => trackClick({ cta: "events", variant })}>
+              <Users className="mr-2 h-4 w-4" />
+              Events &amp; Clinics
+            </Link>
+          </Button>
+          <Button
+            asChild
             variant="ghost"
             size="lg"
             className="text-primary-foreground/60 hover:text-primary-foreground hover:bg-primary-foreground/10 text-sm px-8 tracking-[0.15em] uppercase font-sans"
