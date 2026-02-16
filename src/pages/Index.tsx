@@ -72,62 +72,75 @@ function HeroCTAToggle({ heroMode, setHeroMode }: { heroMode: "book" | "consult"
   const copy = ctaCopy[variant as keyof typeof ctaCopy] || ctaCopy.control;
 
   return (
-    <div className="flex flex-col items-center gap-4 mt-2">
-      {/* Toggle pills */}
-      <div className="inline-flex rounded-full border border-hero-glass-border bg-hero-glass backdrop-blur-sm p-1">
-        <button
-          onClick={() => { setHeroMode("book"); trackClick({ action: "toggle", target: "book" }); }}
-          className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary ${
-            heroMode === "book"
-              ? "bg-accent text-accent-foreground shadow-md"
-              : "text-hero-text-muted hover:text-hero-text"
-          }`}
-        >
-          <CalendarIcon className="inline h-4 w-4 mr-1.5 -mt-0.5" />
-          {copy.bookLabel}
-        </button>
-        <button
-          onClick={() => { setHeroMode("consult"); trackClick({ action: "toggle", target: "consult" }); }}
-          className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary ${
-            heroMode === "consult"
-              ? "bg-accent text-accent-foreground shadow-md"
-              : "text-hero-text-muted hover:text-hero-text"
-          }`}
-        >
-          <MessageSquare className="inline h-4 w-4 mr-1.5 -mt-0.5" />
-          {copy.consultLabel}
-        </button>
-      </div>
+    <div className="flex flex-col items-center gap-4 mt-2 w-full max-w-3xl mx-auto">
+      {/* Side-by-side: Book a Lesson CTA + Booking Widget */}
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+        {/* Left: Book a Lesson card */}
+        <div className="flex flex-col items-center gap-4 p-6 rounded-xl bg-hero-glass backdrop-blur-md border border-hero-glass-border">
+          <CalendarIcon className="h-8 w-8 text-accent" />
+          <h3 className="font-serif text-lg text-hero-text font-semibold text-center">
+            Ready to Ride?
+          </h3>
+          <p className="text-hero-text-muted text-sm text-center">
+            {variant === "social_proof"
+              ? "Join 200+ happy riders on the Peninsula."
+              : variant === "urgency"
+              ? "Limited spots — book before the season fills."
+              : "From first-timers to advanced riders, start your journey."}
+          </p>
 
-      {/* Social proof badge for that variant */}
-      {variant === "social_proof" && (
-        <div className="flex items-center gap-2 text-hero-text-muted text-xs">
-          <div className="flex -space-x-1">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="w-5 h-5 rounded-full bg-accent/40 border border-hero-glass-border flex items-center justify-center text-[8px] text-hero-text font-bold">
-                {String.fromCharCode(65 + i)}
+          {/* Social proof badge */}
+          {variant === "social_proof" && (
+            <div className="flex items-center gap-2 text-hero-text-muted text-xs">
+              <div className="flex -space-x-1">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="w-5 h-5 rounded-full bg-accent/40 border border-hero-glass-border flex items-center justify-center text-[8px] text-hero-text font-bold">
+                    {String.fromCharCode(65 + i)}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <span className="flex items-center gap-1"><Star className="h-3 w-3 text-accent" /> 4.9/5 from 200+ riders</span>
-        </div>
-      )}
+              <span className="flex items-center gap-1"><Star className="h-3 w-3 text-accent" /> 4.9/5</span>
+            </div>
+          )}
 
-      {/* Urgency badge */}
-      {variant === "urgency" && (
-        <div className="flex items-center gap-1.5 text-accent text-xs font-medium animate-pulse">
-          <ShieldCheck className="h-3.5 w-3.5" />
-          Only 3 consultation spots left this month
-        </div>
-      )}
+          {/* Urgency badge */}
+          {variant === "urgency" && (
+            <div className="flex items-center gap-1.5 text-accent text-xs font-medium animate-pulse">
+              <ShieldCheck className="h-3.5 w-3.5" />
+              Only 3 spots left this month
+            </div>
+          )}
 
-      <div className="w-full max-w-lg mx-auto transition-all duration-300">
-        {heroMode === "book" ? (
+          <Link
+            to="/book-lesson"
+            onClick={() => trackClick({ action: "click", target: "book_lesson_hero" })}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent text-accent-foreground font-semibold text-sm shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          >
+            {copy.bookLabel}
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        {/* Right: Inline Booking Widget */}
+        <div className="rounded-xl bg-hero-glass backdrop-blur-md border border-hero-glass-border p-4">
           <BookingWidget variant="hero" />
-        ) : (
-          <HeroLeadForm />
-        )}
+        </div>
       </div>
+
+      {/* Consult toggle below */}
+      <button
+        onClick={() => { setHeroMode(heroMode === "consult" ? "book" : "consult"); trackClick({ action: "toggle", target: "consult" }); }}
+        className="inline-flex items-center gap-2 text-hero-text-muted hover:text-hero-text text-sm transition-colors"
+      >
+        <MessageSquare className="h-4 w-4" />
+        {heroMode === "consult" ? "Hide consultation form" : copy.consultLabel}
+      </button>
+
+      {heroMode === "consult" && (
+        <div className="w-full max-w-lg mx-auto transition-all duration-300 animate-fade-in">
+          <HeroLeadForm />
+        </div>
+      )}
     </div>
   );
 }
@@ -325,17 +338,6 @@ function HeroSection({ variant = "banner" }: { variant?: "logo" | "banner" }) {
           <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-hero-text-muted mb-6">
             Facility Construction • Training • Excellence
           </p>
-
-          {/* Dedicated Book a Lesson CTA */}
-          <Link
-            to="/book-lesson"
-            className="inline-flex items-center gap-2 px-8 py-3.5 mb-6 rounded-full bg-accent text-accent-foreground font-semibold text-base shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
-          >
-            <CalendarIcon className="h-5 w-5" />
-            Book a Lesson
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-
           <HeroCTAToggle heroMode={heroMode} setHeroMode={setHeroMode} />
         </div>
       </div>
