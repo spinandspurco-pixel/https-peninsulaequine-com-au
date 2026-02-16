@@ -764,8 +764,16 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                 onMouseEnter={() => setHoveredId(service.id)}
                 onMouseLeave={() => setHoveredId(null)}
               >
+                {/* Upfront pricing header */}
+                <div className="relative px-6 pt-6 pb-4 border-b border-border/60">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1">Starting at</p>
+                  <p className={`font-serif text-3xl font-bold transition-colors duration-300 ${isHovered ? "text-accent" : "text-foreground"}`}>
+                    {service.startingPrice}
+                  </p>
+                </div>
+
                 {/* Service image peek */}
-                <div className="relative h-36 overflow-hidden">
+                <div className="relative h-32 overflow-hidden">
                   <img
                     src={serviceImages[service.id]}
                     alt={service.title}
@@ -774,22 +782,6 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                     }`}
                     loading="lazy"
                   />
-                  {/* Price badge overlay */}
-                  <div className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${
-                    isHovered ? "opacity-100" : "opacity-0"
-                  }`}>
-                    <div className="text-center">
-                      <p className="text-primary-foreground/70 text-xs uppercase tracking-wider mb-1">Starting at</p>
-                      <p className="font-serif text-4xl font-bold text-primary-foreground drop-shadow-lg">{service.startingPrice}</p>
-                    </div>
-                  </div>
-                  {/* Default price (bottom corner) */}
-                  <div className={`absolute bottom-3 right-3 bg-primary/80 backdrop-blur-sm rounded-lg px-3 py-1.5 transition-all duration-500 ${
-                    isHovered ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"
-                  }`}>
-                    <p className="text-primary-foreground text-xs">From</p>
-                    <p className="font-serif text-lg font-bold text-accent">{service.startingPrice}</p>
-                  </div>
                 </div>
 
                 {/* Content area */}
@@ -845,7 +837,7 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                           : "bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
                       }`}
                     >
-                      {isHovered ? "Get a Quote" : service.startingPrice ? "Learn More" : "Get a Quote"}
+                      {isHovered ? "Get a Quote" : "Learn More"}
                       <ArrowRight className={`ml-2 h-4 w-4 transition-transform duration-300 ${isHovered ? "translate-x-1" : ""}`} />
                     </Button>
                   </div>
