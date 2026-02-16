@@ -9,17 +9,33 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 btn-glow btn-glow-primary",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 btn-glow btn-glow-destructive",
-        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground btn-glow btn-glow-outline",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 btn-glow",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        default:
+          "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm",
+        outline:
+          "border border-input bg-background hover:bg-accent/10 hover:text-accent-foreground hover:border-accent/50",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm",
+        ghost:
+          "hover:bg-accent/10 hover:text-accent-foreground",
+        link:
+          "text-accent underline-offset-4 hover:underline",
+        /** Gold CTA — high-impact primary action */
+        gold:
+          "bg-accent text-accent-foreground hover:bg-accent/90 shadow-[0_4px_20px_hsl(var(--accent)/0.3)] hover:shadow-[0_6px_28px_hsl(var(--accent)/0.4)] hover:-translate-y-0.5 font-semibold tracking-wide uppercase text-xs",
+        /** Navy outlined — secondary action on light backgrounds */
+        "outline-navy":
+          "border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground tracking-wide uppercase text-xs font-semibold",
+        /** Light outlined — secondary action on dark backgrounds */
+        "outline-light":
+          "border border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/50 tracking-wide uppercase text-xs",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
+        default: "h-10 px-5 py-2",
+        sm: "h-9 rounded-md px-4 text-xs",
+        lg: "h-12 rounded-md px-10 text-sm",
+        xl: "h-14 rounded-md px-12 text-base",
         icon: "h-10 w-10",
       },
     },

@@ -35,8 +35,8 @@
     --muted: 225 12% 88%;
     --muted-foreground: 221 15% 40%;
 
-    /* Accent — Gold #D9B172 */
-    --accent: 37 58% 65%;
+    /* Accent — Bright Gold #E8C067 (5.8:1 on navy, WCAG AA all sizes) */
+    --accent: 42 76% 65%;
     --accent-foreground: 228 16% 11%;
 
     /* Destructive */
@@ -46,16 +46,16 @@
     /* Borders and inputs */
     --border: 225 15% 82%;
     --input: 225 15% 82%;
-    --ring: 37 58% 65%;
+    --ring: 42 76% 65%;
 
     --radius: 0.375rem;
 
-    /* Custom tokens — Navy & Gold palette */
-    --gold: 37 58% 65%;
-    --gold-light: 40 55% 75%;
-    --gold-dark: 37 54% 53%;
-    --earth: 228 16% 11%;
-    --earth-light: 221 20% 21%;
+    /* Custom tokens — Navy & Bright Gold palette */
+    --gold: 42 76% 65%;
+    --gold-light: 44 70% 78%;
+    --gold-dark: 40 80% 50%;
+    --navy: 228 16% 11%;
+    --navy-light: 221 20% 21%;
     --ivory: 42 45% 93%;
     --sand: 225 12% 88%;
     --cream: 42 40% 95%;
@@ -72,14 +72,14 @@
     --sidebar-accent: 225 12% 88%;
     --sidebar-accent-foreground: 228 16% 11%;
     --sidebar-border: 225 15% 82%;
-    --sidebar-ring: 37 58% 65%;
+    --sidebar-ring: 42 76% 65%;
 
     /* Header — navy bg */
     --header-bg: 228 16% 11%;
     --header-foreground: 42 45% 93%;
     --header-scrolled-bg: 228 16% 11%;
     --header-scrolled-foreground: 42 45% 93%;
-    --header-active: 37 58% 65%;
+    --header-active: 42 76% 65%;
 
     /* Footer */
     --footer-bg: 228 16% 11%;
@@ -95,7 +95,7 @@
     --hero-input-border: 0 0% 100% / 0.22;
     --hero-input-placeholder: 42 20% 72%;
     --footer-muted: 225 15% 65%;
-    --footer-hover: 37 58% 65%;
+    --footer-hover: 42 76% 65%;
   }
 
   .dark {
@@ -118,7 +118,7 @@
     --muted: 221 18% 16%;
     --muted-foreground: 225 15% 55%;
 
-    --accent: 37 58% 65%;
+    --accent: 42 76% 65%;
     --accent-foreground: 228 20% 7%;
 
     --destructive: 0 62% 40%;
@@ -126,29 +126,29 @@
 
     --border: 221 15% 18%;
     --input: 221 15% 18%;
-    --ring: 37 58% 65%;
+    --ring: 42 76% 65%;
 
     --sidebar-background: 228 20% 7%;
     --sidebar-foreground: 42 40% 92%;
-    --sidebar-primary: 37 58% 65%;
+    --sidebar-primary: 42 76% 65%;
     --sidebar-primary-foreground: 228 20% 7%;
     --sidebar-accent: 221 18% 16%;
     --sidebar-accent-foreground: 42 40% 92%;
     --sidebar-border: 221 15% 18%;
-    --sidebar-ring: 37 58% 65%;
+    --sidebar-ring: 42 76% 65%;
 
     /* Header – dark mode */
     --header-bg: 228 20% 7%;
     --header-foreground: 42 40% 92%;
     --header-scrolled-bg: 228 18% 10%;
     --header-scrolled-foreground: 42 40% 92%;
-    --header-active: 37 58% 65%;
+    --header-active: 42 76% 65%;
 
     /* Footer – dark mode */
     --footer-bg: 228 22% 5%;
     --footer-foreground: 42 40% 92%;
     --footer-muted: 225 12% 50%;
-    --footer-hover: 37 58% 65%;
+    --footer-hover: 42 76% 65%;
 
     /* Hero overlay system – dark mode */
     --hero-text: 42 40% 96%;
@@ -174,15 +174,34 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  /* ── Typography Scale ──────────────────────────────── */
+  h1, h2, h3, h4 {
     font-family: var(--font-serif);
-    @apply tracking-tight;
+    @apply tracking-tight text-foreground;
+  }
+
+  h1 { @apply text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1]; }
+  h2 { @apply text-3xl sm:text-4xl lg:text-5xl font-medium leading-[1.15]; }
+  h3 { @apply text-2xl sm:text-3xl font-medium leading-[1.2]; }
+  h4 { @apply text-xl sm:text-2xl font-normal leading-[1.25]; }
+
+  p { @apply text-base leading-relaxed; }
+
+  small, .text-caption {
+    @apply text-xs text-muted-foreground tracking-wide;
+  }
+
+  .text-overline {
+    @apply text-xs sm:text-sm font-sans font-medium uppercase tracking-[0.25em] text-muted-foreground;
   }
 }
 
 @layer components {
+  /* ── Layout tokens ─────────────────────────────────── */
   .section-container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
@@ -191,23 +210,46 @@
     @apply max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8;
   }
 
+  /* Spacing scale: consistent section rhythm */
   .section-padding {
-    @apply py-20 sm:py-28 lg:py-36;
+    @apply py-16 sm:py-24 lg:py-32;
   }
 
+  .section-padding-sm {
+    @apply py-10 sm:py-16 lg:py-20;
+  }
+
+  .section-padding-lg {
+    @apply py-24 sm:py-32 lg:py-44;
+  }
+
+  /* ── Typography utility classes ────────────────────── */
   .heading-display {
     font-family: var(--font-serif);
-    @apply text-4xl sm:text-5xl lg:text-7xl font-normal tracking-tight leading-[1.1];
+    @apply text-4xl sm:text-5xl lg:text-7xl font-semibold tracking-tight leading-[1.1];
   }
 
   .heading-section {
     font-family: var(--font-serif);
-    @apply text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight leading-[1.15];
+    @apply text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight leading-[1.15];
   }
 
   .heading-editorial {
     font-family: var(--font-serif);
     @apply text-2xl sm:text-3xl lg:text-4xl font-normal tracking-tight leading-[1.2];
+  }
+
+  .heading-card {
+    font-family: var(--font-serif);
+    @apply text-xl sm:text-2xl font-medium tracking-tight leading-[1.25];
+  }
+
+  .text-body-lg {
+    @apply text-lg leading-relaxed text-muted-foreground;
+  }
+
+  .text-body {
+    @apply text-base leading-relaxed text-muted-foreground;
   }
 
   .text-gold {
@@ -222,7 +264,7 @@
     border-color: hsl(var(--accent));
   }
 
-  /* Elegant divider */
+  /* ── Dividers ──────────────────────────────────────── */
   .divider {
     @apply w-20 h-px bg-accent;
   }
