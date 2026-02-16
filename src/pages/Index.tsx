@@ -1339,6 +1339,145 @@ function ClientStorySection() {
 }
 
 
+// ── Testimonial-Led Service Highlights ────────────────
+
+const SERVICE_TESTIMONIALS = [
+  {
+    testimonial: testimonials[0], // Sarah Mitchell – Ranch Owner
+    serviceTitle: "Barn & Stable Construction",
+    serviceId: "barn-stable",
+    stat: "12-Stall Barn + Covered Arena",
+    highlight: "5 years later, still looks and functions like new",
+  },
+  {
+    testimonial: testimonials[1], // Robert Chen – Dressage Trainer
+    serviceTitle: "Arena Construction",
+    serviceId: "arena-construction",
+    stat: "Best Footing for Dressage",
+    highlight: "Surface designed specifically for discipline requirements",
+  },
+  {
+    testimonial: testimonials[2], // Elena Rodriguez – Breeding Farm
+    serviceTitle: "Fencing & Paddock Systems",
+    serviceId: "fencing",
+    stat: "Paddocks + Mare Barn",
+    highlight: "Every project handled professionally and on time",
+  },
+  {
+    testimonial: testimonials[3], // Tom & Linda Hartley
+    serviceTitle: "Full Facility Design",
+    serviceId: "full-facility",
+    stat: "Chose Ciro Over 6 Contractors",
+    highlight: "Knowledge of horses convinced them immediately",
+  },
+];
+
+function TestimonialServiceCarousel() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const { ref, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.15 });
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % SERVICE_TESTIMONIALS.length);
+    }, 6000);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, []);
+
+  const goTo = (i: number) => {
+    setActiveIndex(i);
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % SERVICE_TESTIMONIALS.length);
+    }, 6000);
+  };
+
+  const current = SERVICE_TESTIMONIALS[activeIndex];
+
+  return (
+    <section ref={ref} className="section-padding bg-background relative overflow-hidden">
+      <BlueprintBackground image={blueprintFacility} opacity={0.03} direction="left-to-right" duration={2000} />
+      <div className="section-container relative z-10">
+        <div className={`text-center max-w-3xl mx-auto mb-12 transition-all duration-700 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}>
+          <AnimatedDivider className="mx-auto mb-8" />
+          <p className="text-muted-foreground uppercase tracking-[0.2em] text-sm mb-4">Proven Results</p>
+          <h2 className="heading-section text-foreground mb-4">Our Work, Their Words</h2>
+          <p className="text-muted-foreground leading-relaxed">
+            Every service we deliver is backed by real client outcomes. See how our expertise translates to lasting satisfaction.
+          </p>
+        </div>
+
+        <div className={`max-w-4xl mx-auto transition-all duration-700 delay-200 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}>
+          {/* Card */}
+          <div className="rounded-xl border border-border bg-card overflow-hidden">
+            <div className="grid md:grid-cols-5">
+              {/* Left: Service highlight */}
+              <div className="md:col-span-2 p-6 sm:p-8 bg-accent/5 border-b md:border-b-0 md:border-r border-border flex flex-col justify-center">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-semibold uppercase tracking-wider mb-4 self-start">
+                  <ShieldCheck className="h-3 w-3" />
+                  {current.serviceTitle}
+                </div>
+                <p className="font-serif text-2xl font-bold text-foreground mb-2">{current.stat}</p>
+                <p className="text-sm text-muted-foreground mb-6">{current.highlight}</p>
+                <Button
+                  onClick={() => navigate(`/contact?services=${current.serviceId}`)}
+                  size="sm"
+                  className="bg-accent hover:bg-accent/90 text-accent-foreground self-start"
+                >
+                  Get a Quote
+                  <ArrowRight className="ml-2 h-3.5 w-3.5" />
+                </Button>
+              </div>
+
+              {/* Right: Testimonial */}
+              <div className="md:col-span-3 p-6 sm:p-8 flex flex-col justify-center">
+                <div className="flex gap-1 mb-4">
+                  {[...Array(current.testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 text-accent fill-accent" />
+                  ))}
+                </div>
+                <blockquote className="text-foreground leading-relaxed mb-6 font-serif italic text-lg">
+                  "{current.testimonial.quote}"
+                </blockquote>
+                <div className="pt-4 border-t border-border flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-serif font-bold">
+                    {current.testimonial.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="font-serif font-semibold text-foreground">{current.testimonial.name}</p>
+                    <p className="text-xs text-muted-foreground">{current.testimonial.role}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Dots */}
+          <div className="flex items-center justify-center gap-2 mt-6">
+            {SERVICE_TESTIMONIALS.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i)}
+                className={`transition-all duration-300 rounded-full ${
+                  i === activeIndex
+                    ? "w-8 h-2 bg-accent"
+                    : "w-2 h-2 bg-border hover:bg-accent/40"
+                }`}
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
 function TestimonialsGallery() {
   const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
@@ -1708,6 +1847,7 @@ export default function Index() {
         <GallerySection />
         <ClientStorySection />
         <BlueprintDivider variant="grid" />
+        <TestimonialServiceCarousel />
         <TestimonialsGallery />
         <ForgeHeroBanner />
         <LeadCaptureSection submitted={leadSubmitted} onSubmitted={() => setLeadSubmitted(true)} />
