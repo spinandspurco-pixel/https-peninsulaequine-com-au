@@ -441,8 +441,11 @@ export function InquiryForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [attachments, setAttachments] = useState<UploadedFile[]>([]);
-  // Read pre-selected services from URL params (e.g., ?services=arena-construction,fencing)
-  const preSelectedServices = searchParams.get("services")?.split(",").filter(Boolean) || [];
+  // Read pre-selected services from URL params (e.g., ?services=arena-construction,fencing or ?service=arena-construction)
+  const preSelectedServices = (
+    searchParams.get("services")?.split(",").filter(Boolean) ||
+    (searchParams.get("service") ? [searchParams.get("service")!] : [])
+  );
 
   // Track lead source from URL params (e.g., ?ref=service-card, ?ref=hero-cta)
   const leadSource = searchParams.get("ref") || (preSelectedServices.length > 0 ? "direct-link" : "organic");
