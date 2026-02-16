@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import logoImage from "@/assets/logo-pe-mark.png";
+import { CartDrawer } from "@/components/CartDrawer";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -11,7 +12,7 @@ const navigation = [
   { name: "Boarding", href: "/boarding" },
   { name: "About", href: "/about" },
   { name: "Gallery", href: "/gallery" },
-  { name: "Testimonials", href: "/testimonials" },
+  { name: "The Forge", href: "/shop" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -90,8 +91,9 @@ export function Header() {
             ))}
           </div>
 
-          {/* CTA Button - Right */}
-          <div className="hidden lg:flex items-center">
+          {/* CTA + Cart - Right */}
+          <div className="hidden lg:flex items-center gap-3">
+            <CartDrawer />
             <Button 
               asChild 
               className={cn(
