@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
-import { ArrowRight, ArrowUp, CheckCircle, X, ZoomIn, CalendarIcon, Images, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ArrowUp, CheckCircle, X, ZoomIn, CalendarIcon, Images, ChevronLeft, ChevronRight, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
@@ -915,6 +915,141 @@ function ServiceDemoGallery({
   );
 }
 
+function PricingComparisonModal({
+  focusedServiceId,
+  allServices,
+  onClose,
+  onQuoteClick,
+}: {
+  focusedServiceId: string | null;
+  allServices: { id: string; title: string; shortDescription: string; features: string[]; startingPrice: string }[];
+  onClose: () => void;
+  onQuoteClick: (id: string) => void;
+}) {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [onClose]);
+
+  // Collect all unique features across all services
+  const allFeatureLabels = useMemo(() => {
+    const set = new Set<string>();
+    allServices.forEach((s) => s.features.forEach((f) => set.add(f)));
+    return Array.from(set);
+  }, [allServices]);
+
+  // Reorder: focused service first
+  const ordered = useMemo(() => {
+    if (!focusedServiceId) return allServices;
+    const focused = allServices.find((s) => s.id === focusedServiceId);
+    if (!focused) return allServices;
+    return [focused, ...allServices.filter((s) => s.id !== focusedServiceId)];
+  }, [allServices, focusedServiceId]);
+
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-primary/90 backdrop-blur-sm" onClick={onClose}>
+      <div
+        className="relative bg-background rounded-2xl border border-border shadow-2xl w-full max-w-5xl mx-4 max-h-[85vh] flex flex-col overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border shrink-0">
+          <div>
+            <h2 className="font-serif text-xl font-semibold text-foreground">Compare Services</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">Side-by-side feature & pricing comparison</p>
+          </div>
+          <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors" aria-label="Close">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* Scrollable table */}
+        <div className="overflow-auto flex-1">
+          <table className="w-full text-sm">
+            <thead className="sticky top-0 z-10 bg-card">
+              <tr>
+                <th className="text-left px-4 py-3 text-xs uppercase tracking-widest text-muted-foreground font-medium border-b border-border w-48 shrink-0">
+                  Feature
+                </th>
+                {ordered.map((service) => (
+                  <th
+                    key={service.id}
+                    className={`text-center px-3 py-3 border-b min-w-[140px] ${
+                      service.id === focusedServiceId
+                        ? "border-accent bg-accent/5 border-b-2"
+                        : "border-border"
+                    }`}
+                  >
+                    <p className={`font-serif font-semibold text-sm ${service.id === focusedServiceId ? "text-accent" : "text-foreground"}`}>
+                      {service.title}
+                    </p>
+                    <p className={`font-serif text-lg font-bold mt-1 ${service.id === focusedServiceId ? "text-accent" : "text-foreground"}`}>
+                      {service.startingPrice}
+                    </p>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {allFeatureLabels.map((feature, fi) => (
+                <tr key={fi} className={fi % 2 === 0 ? "bg-background" : "bg-muted/30"}>
+                  <td className="px-4 py-2.5 text-foreground/80 border-r border-border/50 font-medium text-xs">
+                    {feature}
+                  </td>
+                  {ordered.map((service) => {
+                    const has = service.features.includes(feature);
+                    return (
+                      <td
+                        key={service.id}
+                        className={`text-center px-3 py-2.5 ${
+                          service.id === focusedServiceId ? "bg-accent/5" : ""
+                        }`}
+                      >
+                        {has ? (
+                          <CheckCircle className="h-4 w-4 text-accent mx-auto" />
+                        ) : (
+                          <span className="text-muted-foreground/30">—</span>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* CTA row */}
+        <div className="flex items-center gap-3 px-6 py-4 border-t border-border bg-card shrink-0 overflow-x-auto">
+          {ordered.map((service) => (
+            <div key={service.id} className="flex gap-2 shrink-0">
+              <Button
+                onClick={() => { onClose(); navigate(`/contact?services=${service.id}`); }}
+                size="sm"
+                className={service.id === focusedServiceId
+                  ? "bg-accent hover:bg-accent/90 text-accent-foreground shadow-md"
+                  : "bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
+                }
+              >
+                {service.title}
+                <ArrowRight className="ml-1 h-3 w-3" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string) => void }) {
   const navigate = useNavigate();
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>();
@@ -953,6 +1088,7 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
 
   const { containerRef, visibleItems } = useStaggeredAnimation(displayServices.length);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [compareServiceId, setCompareServiceId] = useState<string | null>(null);
 
   const openGallery = (serviceId: string, title: string) => {
     setGalleryServiceId(serviceId);
@@ -1115,6 +1251,15 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                           <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                         </Button>
                         <Button
+                          onClick={() => setCompareServiceId(service.id)}
+                          variant="outline"
+                          size="sm"
+                          className="border-accent/30 text-accent hover:bg-accent/10 shrink-0"
+                          title="Compare with other services"
+                        >
+                          <BarChart3 className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button
                           onClick={() => onQuoteClick(service.id)}
                           variant="outline"
                           size="sm"
@@ -1140,9 +1285,31 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
           />
         )}
 
-        <p className="text-center text-xs text-muted-foreground mt-8">
-          All pricing is indicative. Final quotes are provided after a free on-site consultation.
-        </p>
+        {/* Pricing Comparison Modal */}
+        {compareServiceId !== null && (
+          <PricingComparisonModal
+            focusedServiceId={compareServiceId}
+            allServices={displayServices}
+            onClose={() => setCompareServiceId(null)}
+            onQuoteClick={onQuoteClick}
+          />
+        )}
+
+        {/* Compare all + disclaimer */}
+        <div className="flex flex-col items-center gap-3 mt-8">
+          <Button
+            onClick={() => setCompareServiceId(displayServices[0]?.id || null)}
+            variant="outline"
+            size="sm"
+            className="border-accent/30 text-accent hover:bg-accent/10"
+          >
+            <BarChart3 className="mr-1.5 h-3.5 w-3.5" />
+            Compare All Services
+          </Button>
+          <p className="text-xs text-muted-foreground">
+            All pricing is indicative. Final quotes are provided after a free on-site consultation.
+          </p>
+        </div>
 
         {/* Interactive Quote Calculator */}
         <QuoteCalculator />
