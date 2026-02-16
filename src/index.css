@@ -84,6 +84,16 @@
     /* Footer */
     --footer-bg: 30 20% 15%;
     --footer-foreground: 45 40% 97%;
+
+    /* Hero overlay system – WCAG AA contrast against dark overlays */
+    --hero-text: 45 40% 98%;
+    --hero-text-muted: 42 30% 82%;
+    --hero-glass-bg: 0 0% 100% / 0.12;
+    --hero-glass-border: 0 0% 100% / 0.18;
+    --hero-glass-bg-active: 0 0% 100% / 0.22;
+    --hero-input-bg: 0 0% 100% / 0.14;
+    --hero-input-border: 0 0% 100% / 0.22;
+    --hero-input-placeholder: 42 20% 72%;
     --footer-muted: 45 20% 70%;
     --footer-hover: 35 75% 50%;
   }
@@ -138,6 +148,16 @@
     --footer-foreground: 42 30% 92%;
     --footer-muted: 42 15% 55%;
     --footer-hover: 38 70% 55%;
+
+    /* Hero overlay system – dark mode */
+    --hero-text: 42 30% 96%;
+    --hero-text-muted: 42 20% 78%;
+    --hero-glass-bg: 0 0% 100% / 0.1;
+    --hero-glass-border: 0 0% 100% / 0.15;
+    --hero-glass-bg-active: 0 0% 100% / 0.2;
+    --hero-input-bg: 0 0% 100% / 0.12;
+    --hero-input-border: 0 0% 100% / 0.2;
+    --hero-input-placeholder: 42 15% 65%;
   }
 }
 
