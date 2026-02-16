@@ -325,6 +325,17 @@ function HeroSection({ variant = "banner" }: { variant?: "logo" | "banner" }) {
           <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-hero-text-muted mb-6">
             Facility Construction • Training • Excellence
           </p>
+
+          {/* Dedicated Book a Lesson CTA */}
+          <Link
+            to="/book-lesson"
+            className="inline-flex items-center gap-2 px-8 py-3.5 mb-6 rounded-full bg-accent text-accent-foreground font-semibold text-base shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+          >
+            <CalendarIcon className="h-5 w-5" />
+            Book a Lesson
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+
           <HeroCTAToggle heroMode={heroMode} setHeroMode={setHeroMode} />
         </div>
       </div>
