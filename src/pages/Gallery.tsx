@@ -13,6 +13,8 @@ import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
 import blueprintElevation from "@/assets/blueprint-elevation.png";
+import blueprintFacility from "@/assets/blueprint-facility.png";
+import blueprintBarn from "@/assets/blueprint-barn.png";
 import logoPeMark from "@/assets/logo-pe-mark.png";
 
 // Main Ridge images
@@ -188,9 +190,16 @@ function PageHeader() {
 
   return (
     <section ref={parallaxRef} className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
-      {/* Blueprint layers */}
-      <BlueprintBackground image={blueprintElevation} opacity={0.06} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
+      {/* Multi-layer blueprint reveal */}
+      <BlueprintBackground image={blueprintElevation} opacity={0.07} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
+      <BlueprintBackground image={blueprintFacility} opacity={0.04} direction="right-to-left" duration={2800} parallaxSpeed={0.1} className="scale-110" />
+      <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="bottom-to-top" duration={3200} parallaxSpeed={0.06} />
       <BlueprintLineOverlay variant="dimensions" color="light" />
+
+      {/* Lightening gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/0 via-primary/30 to-primary/70 pointer-events-none z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/50 via-transparent to-primary/50 pointer-events-none z-[1]" />
+
       {/* Parallax background collage */}
       <div 
         className="absolute inset-0 opacity-10 will-change-transform"
@@ -247,9 +256,15 @@ function FeaturedVideoSection({ onVideoClick }: { onVideoClick: (item: GalleryIt
   return (
     <section 
       ref={ref}
-      className="py-16 bg-card"
+      className="relative py-16 bg-card overflow-hidden"
     >
-      <div className="section-container">
+      {/* Blueprint underlay */}
+      <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="right-to-left" duration={3000} parallaxSpeed={0.04} />
+      <BlueprintLineOverlay variant="detail" color="dark" />
+      {/* Lightening overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-card/60 via-card/90 to-card pointer-events-none z-[1]" />
+
+      <div className="section-container relative z-[2]">
         <div className="text-center mb-10">
           <span className="text-accent text-sm font-medium tracking-wider uppercase">Featured</span>
           <h2 className="font-serif text-3xl md:text-4xl text-foreground mt-2">
@@ -334,8 +349,14 @@ function VideoGallerySection({ onVideoClick }: { onVideoClick: (item: GalleryIte
   }, [gridVisible]);
 
   return (
-    <section className="py-20 bg-background">
-      <div className="section-container">
+    <section className="relative py-20 bg-background overflow-hidden">
+      {/* Blueprint underlay */}
+      <BlueprintBackground image={blueprintFacility} opacity={0.025} direction="left-to-right" duration={3500} parallaxSpeed={0.05} />
+      <BlueprintLineOverlay variant="dimensions" color="dark" />
+      {/* Lightening overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/60 pointer-events-none z-[1]" />
+
+      <div className="section-container relative z-[2]">
         {/* Header */}
         <div
           ref={headerRef}
@@ -910,8 +931,14 @@ export default function Gallery() {
       <VideoGallerySection onVideoClick={setLightboxItem} />
 
       {/* Photo Gallery Section */}
-      <section className="section-padding">
-        <div className="section-container">
+      <section className="relative section-padding overflow-hidden">
+        {/* Blueprint underlay */}
+        <BlueprintBackground image={blueprintElevation} opacity={0.02} direction="bottom-to-top" duration={4000} parallaxSpeed={0.03} />
+        <BlueprintLineOverlay variant="barn" color="dark" />
+        {/* Lightening overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/95 to-background pointer-events-none z-[1]" />
+
+        <div className="section-container relative z-[2]">
           {/* Project Filter Tabs */}
           <div className="flex flex-wrap gap-2 mb-12 justify-center">
             {projects.map((project) => (
