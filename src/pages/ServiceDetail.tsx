@@ -148,7 +148,7 @@ export default function ServiceDetail() {
         </div>
       </section>
 
-      {/* FAQs */}
+      {/* FAQs with inline inquiry CTA */}
       {faqs.length > 0 && (
         <section className="section-padding bg-background">
           <div className="section-container max-w-3xl">
@@ -175,6 +175,29 @@ export default function ServiceDetail() {
                 </AccordionItem>
               ))}
             </Accordion>
+
+            {/* Quick inquiry CTA below FAQ */}
+            <div className="mt-10 rounded-xl border border-accent/20 bg-accent/5 p-6 sm:p-8 text-center">
+              <p className="font-serif text-lg font-semibold text-foreground mb-2">
+                Still have questions about {service.title.toLowerCase()}?
+              </p>
+              <p className="text-sm text-muted-foreground mb-5">
+                Send us a quick message and we'll get back to you within 1–2 business days.
+              </p>
+              <div className="flex flex-wrap justify-center gap-3">
+                <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
+                  <Link to={`/contact?services=${service.id}&ref=faq`}>
+                    Ask a Question <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <a href={`tel:${siteConfig.phone}`}>
+                    <Phone className="mr-2 h-4 w-4" />
+                    Call Us
+                  </a>
+                </Button>
+              </div>
+            </div>
           </div>
         </section>
       )}
