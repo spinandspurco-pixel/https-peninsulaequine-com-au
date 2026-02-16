@@ -24,18 +24,31 @@ const footerLinks = {
 };
 
 export function Footer() {
-  const [logoVisible, setLogoVisible] = useState(false);
+  const [logoPhase, setLogoPhase] = useState(0); // 0=hidden, 1=spin-in, 2=glow, 3=settled
   const logoRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = logoRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setLogoVisible(true); observer.disconnect(); } },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          const t1 = setTimeout(() => setLogoPhase(1), 100);
+          const t2 = setTimeout(() => setLogoPhase(2), 800);
+          const t3 = setTimeout(() => setLogoPhase(3), 1500);
+          observer.disconnect();
+          // cleanup captured in component unmount
+          (el as any).__logoTimers = [t1, t2, t3];
+        }
+      },
       { threshold: 0.3 }
     );
     observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      const timers = (el as any).__logoTimers;
+      if (timers) timers.forEach(clearTimeout);
+    };
   }, []);
 
   return (
@@ -46,16 +59,35 @@ export function Footer() {
           <div className="lg:col-span-1">
             <div ref={logoRef}>
             <Link to="/" className="inline-flex items-center gap-3 mb-6 group">
-              <img 
-                src={logoPeMark} 
-                alt="Peninsula Equine" 
-                className={`h-10 w-10 object-contain transition-all duration-700 group-hover:scale-105 ${
-                  logoVisible
-                    ? "opacity-100 scale-100 rotate-0"
-                    : "opacity-0 scale-75 -rotate-[15deg]"
-                }`}
-              />
-              <span className="font-serif text-2xl font-semibold text-[hsl(var(--footer-foreground))]">
+              <div className="relative h-10 w-10 flex-shrink-0">
+                {/* Glow ring — phase 2 */}
+                <span
+                  className={`absolute inset-0 rounded-full transition-all duration-700 pointer-events-none ${
+                    logoPhase === 2 ? "opacity-100 scale-125" : "opacity-0 scale-100"
+                  }`}
+                  style={{
+                    boxShadow: logoPhase === 2
+                      ? "0 0 18px 4px hsl(var(--footer-hover) / 0.5), 0 0 40px 8px hsl(var(--footer-hover) / 0.2)"
+                      : "none",
+                  }}
+                />
+                <img 
+                  src={logoPeMark} 
+                  alt="Peninsula Equine" 
+                  className={`h-10 w-10 object-contain group-hover:scale-105 ${
+                    logoPhase === 0
+                      ? "opacity-0 scale-50 -rotate-180"
+                      : logoPhase === 1
+                      ? "opacity-100 scale-110 rotate-[15deg] transition-all duration-700 ease-out"
+                      : logoPhase === 2
+                      ? "opacity-100 scale-105 rotate-0 transition-all duration-500 ease-out"
+                      : "opacity-100 scale-100 rotate-0 transition-all duration-500 ease-out"
+                  }`}
+                />
+              </div>
+              <span className={`font-serif text-2xl font-semibold text-[hsl(var(--footer-foreground))] transition-all duration-500 ${
+                logoPhase >= 3 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"
+              }`}>
                 Peninsula<span className="text-[hsl(var(--footer-hover))]">Equine</span>
               </span>
             </Link>
