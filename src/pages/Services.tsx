@@ -1086,14 +1086,35 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
     return services;
   }, [dbServices]);
 
-  const { containerRef, visibleItems } = useStaggeredAnimation(displayServices.length);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [compareServiceId, setCompareServiceId] = useState<string | null>(null);
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
   const openGallery = (serviceId: string, title: string) => {
     setGalleryServiceId(serviceId);
     setGalleryServiceTitle(title);
   };
+
+  const filteredServices = useMemo(() => {
+    if (!activeFilter) return displayServices;
+    return displayServices.filter((s) => s.id === activeFilter);
+  }, [displayServices, activeFilter]);
+
+  const { containerRef, visibleItems } = useStaggeredAnimation(filteredServices.length);
+
+  // Compute price range from filtered services
+  const priceRange = useMemo(() => {
+    const prices = filteredServices
+      .map((s) => {
+        const match = s.startingPrice.replace(/[^0-9]/g, "");
+        return match ? parseInt(match, 10) : null;
+      })
+      .filter((p): p is number => p !== null)
+      .sort((a, b) => a - b);
+    if (!prices.length) return null;
+    if (prices.length === 1) return `From $${prices[0].toLocaleString()}`;
+    return `$${prices[0].toLocaleString()} – $${prices[prices.length - 1].toLocaleString()}`;
+  }, [filteredServices]);
 
   return (
     <section className="section-padding bg-card relative overflow-hidden">
@@ -1103,21 +1124,55 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
       <div className="section-container relative z-10">
         <div
           ref={headerRef}
-          className={`text-center max-w-3xl mx-auto mb-12 transition-all duration-700 ${
+          className={`text-center max-w-3xl mx-auto mb-8 transition-all duration-700 ${
             headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
           <div className={`w-16 h-0.5 bg-accent mx-auto mb-6 transition-all duration-500 delay-100 ${
             headerVisible ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"
           }`} />
-          <h2 className="heading-section text-foreground mb-4">Investment Guide</h2>
-          <p className="text-muted-foreground">
+          <h2 className="heading-section text-foreground mb-2">Investment Guide</h2>
+          {priceRange && (
+            <p className="font-serif text-xl text-accent font-semibold mb-2 transition-all duration-300">
+              {priceRange}
+            </p>
+          )}
+          <p className="text-muted-foreground text-sm">
             Every project is custom-quoted after an on-site consultation. Below are starting points to help you plan your budget.
           </p>
         </div>
 
+        {/* Quick-filter chips */}
+        <div className={`flex flex-wrap items-center justify-center gap-2 mb-8 transition-all duration-500 delay-200 ${
+          headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+        }`}>
+          <button
+            onClick={() => setActiveFilter(null)}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all duration-300 ${
+              activeFilter === null
+                ? "bg-accent text-accent-foreground shadow-sm"
+                : "bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
+            }`}
+          >
+            All Services
+          </button>
+          {displayServices.map((s) => (
+            <button
+              key={s.id}
+              onClick={() => setActiveFilter(activeFilter === s.id ? null : s.id)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all duration-300 ${
+                activeFilter === s.id
+                  ? "bg-accent text-accent-foreground shadow-sm"
+                  : "bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
+              }`}
+            >
+              {s.title}
+            </button>
+          ))}
+        </div>
+
         <div ref={containerRef} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" style={{ perspective: "1200px" }}>
-          {displayServices.map((service, index) => {
+          {filteredServices.map((service, index) => {
             const isFlipped = hoveredId === service.id;
             const galleryCount = (serviceGalleryImages[service.id] || []).length;
 
