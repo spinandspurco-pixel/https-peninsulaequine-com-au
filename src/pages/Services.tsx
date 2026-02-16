@@ -663,6 +663,11 @@ function LessonsSection() {
                 Book a Lesson
               </Link>
             </Button>
+            <Button asChild size="lg" variant="outline" className="border-accent/30 text-accent hover:bg-accent/10">
+              <Link to="/contact?services=clinics-events">
+                Plan a Clinic or Event
+              </Link>
+            </Button>
             <BookingWidget variant="card" className="max-w-md" />
           </div>
         </div>
