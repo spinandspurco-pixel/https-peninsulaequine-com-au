@@ -80,14 +80,12 @@ function HeroSection() {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Button
-            asChild
             size="lg"
+            onClick={() => document.getElementById('free-quote')?.scrollIntoView({ behavior: 'smooth' })}
             className="bg-accent text-accent-foreground hover:bg-accent/90 text-sm px-10 tracking-[0.15em] uppercase font-sans font-medium shadow-[0_4px_20px_hsl(var(--accent)/0.35)] hover:shadow-[0_6px_28px_hsl(var(--accent)/0.5)] hover:scale-105"
           >
-            <Link to="/contact">
-              Get a Free Quote
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
+            Get a Free Quote
+            <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
           <Button
             asChild
@@ -1725,14 +1723,15 @@ function HomeFAQSection() {
 
 function InquiryFormSection() {
   return (
-    <section className="section-padding bg-background">
+    <section id="free-quote" className="section-padding bg-background">
       <div className="section-container">
         <div className="max-w-2xl mx-auto">
           <SectionTransition variant="fade-up">
             <div className="text-center mb-10">
               <AnimatedDivider className="mx-auto mb-8" />
-              <p className="text-muted-foreground uppercase tracking-[0.2em] text-sm mb-4">Start Your Project</p>
-              <h2 className="heading-section text-foreground">Get in Touch</h2>
+              <p className="text-muted-foreground uppercase tracking-[0.2em] text-sm mb-4">No Obligation</p>
+              <h2 className="heading-section text-foreground">Get a Free Quote</h2>
+              <p className="text-muted-foreground mt-3 text-base">Tell us about your project and we'll prepare a custom estimate — no strings attached.</p>
             </div>
           </SectionTransition>
           <SectionTransition variant="fade-up" delay={150}>
