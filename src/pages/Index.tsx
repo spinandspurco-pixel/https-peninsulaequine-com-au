@@ -17,6 +17,8 @@ import stoneworkBW from "@/assets/aberdeen-stonework-bw.jpg";
 import peBanner from "@/assets/pe-banner-2.png";
 import peLogo from "@/assets/pe-logo-new.png";
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
+import blueprintHorseBarn from "@/assets/blueprint-horse-barn.png";
+import blueprintDoorDetail from "@/assets/blueprint-door-detail.png";
 import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
 import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
 import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
@@ -103,7 +105,7 @@ function IntroSection() {
   return (
     <section id="intro" className="bg-background relative">
       {/* Animated blueprint bg for intro */}
-      <AnimatedBlueprintBg image={peBanner} imageOpacity={0.04} variant="section-a" showLines />
+      <AnimatedBlueprintBg image={blueprintHorseBarn} imageOpacity={0.05} variant="section-a" showLines />
       <div className="section-padding">
         <div className="section-container">
           <div className="max-w-4xl mx-auto text-center">
@@ -161,7 +163,7 @@ function ServicesPreviewSection() {
 
   return (
     <section className="section-padding bg-primary text-primary-foreground overflow-hidden relative">
-      <AnimatedBlueprintBg image={peBanner} imageOpacity={0.06} variant="section-b" showLines />
+      <AnimatedBlueprintBg image={blueprintDoorDetail} imageOpacity={0.07} variant="section-b" showLines />
       <div className="section-container">
         <div className="text-center max-w-3xl mx-auto mb-14">
           <AnimatedDivider className="mx-auto mb-8 bg-accent" />
