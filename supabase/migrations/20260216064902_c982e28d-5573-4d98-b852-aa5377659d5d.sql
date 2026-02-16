@@ -1,0 +1,1 @@
+ALTER TABLE public.inquiries ADD COLUMN preferred_service text DEFAULT NULL;

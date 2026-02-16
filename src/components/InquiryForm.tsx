@@ -75,6 +75,7 @@ function useSwipeGesture(onSwipeLeft: () => void, onSwipeRight: () => void) {
 const inquirySchema = z.object({
   // Step 1: Services
   interestedServices: z.array(z.string()).min(1, "Please select at least one service"),
+  preferredService: z.string().optional(),
   
   // Step 2: Horse Details
   horseName: z.string().max(100).optional(),
@@ -457,6 +458,7 @@ export function InquiryForm() {
 
   const [formData, setFormData] = useState<Partial<InquiryFormData>>({
     interestedServices: preSelectedServices,
+    preferredService: preSelectedServices.length === 1 ? preSelectedServices[0] : "",
     horseName: "",
     horseAge: "",
     horseBreed: "",
@@ -625,6 +627,7 @@ export function InquiryForm() {
         phone: formData.phone?.trim() || null,
         preferred_contact: "email",
         services: formData.interestedServices || [],
+        preferred_service: formData.preferredService?.trim() || null,
         horse_name: formData.horseName?.trim() || null,
         horse_age: formData.horseAge?.trim() || null,
         horse_breed: formData.horseBreed?.trim() || null,
@@ -907,6 +910,36 @@ export function InquiryForm() {
             
             {errors.interestedServices && (
               <p className="text-destructive text-sm mt-4">{errors.interestedServices}</p>
+            )}
+
+            {/* Preferred service qualifier */}
+            {(formData.interestedServices?.length || 0) > 1 && (
+              <div className="mt-5 p-4 rounded-lg border border-border bg-muted/30">
+                <Label className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-2 block">
+                  Primary Interest
+                </Label>
+                <p className="text-xs text-muted-foreground mb-3">Which service is your top priority?</p>
+                <div className="flex flex-wrap gap-2">
+                  {formData.interestedServices!.map((id) => {
+                    const svc = services.find((s) => s.id === id);
+                    return (
+                      <button
+                        key={id}
+                        type="button"
+                        onClick={() => updateField("preferredService", id)}
+                        className={cn(
+                          "px-4 py-2 rounded-full text-sm font-medium border transition-all",
+                          formData.preferredService === id
+                            ? "bg-accent/10 border-accent text-foreground ring-1 ring-accent/30"
+                            : "bg-background border-border text-muted-foreground hover:border-accent/40"
+                        )}
+                      >
+                        {svc?.title || id}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             )}
           </div>
         )}

@@ -238,6 +238,7 @@ export type Database = {
           notes: string | null
           phone: string | null
           preferred_contact: string | null
+          preferred_service: string | null
           preferred_start: string | null
           project_details: string | null
           project_vision: string | null
@@ -259,6 +260,7 @@ export type Database = {
           notes?: string | null
           phone?: string | null
           preferred_contact?: string | null
+          preferred_service?: string | null
           preferred_start?: string | null
           project_details?: string | null
           project_vision?: string | null
@@ -280,6 +282,7 @@ export type Database = {
           notes?: string | null
           phone?: string | null
           preferred_contact?: string | null
+          preferred_service?: string | null
           preferred_start?: string | null
           project_details?: string | null
           project_vision?: string | null
