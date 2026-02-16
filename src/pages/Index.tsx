@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, X, Mail, Send, MessageSquare, Star, ShieldCheck } from "lucide-react";
+import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, X, Mail, Send, MessageSquare, Star, ShieldCheck, Flame } from "lucide-react";
 import { HeroLeadForm } from "@/components/HeroLeadForm";
 import { useABTest } from "@/hooks/useABTest";
 import { BookingWidget } from "@/components/BookingWidget";
@@ -1074,6 +1074,56 @@ function TestimonialsGallery() {
   );
 }
 
+function ForgeHeroBanner() {
+  const { ref, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.15 });
+  return (
+    <section ref={ref} className="relative py-20 md:py-28 bg-primary text-primary-foreground overflow-hidden">
+      {/* Diagonal hatch overlay */}
+      <div className="absolute inset-0 opacity-[0.04]" style={{
+        backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 18px, currentColor 18px, currentColor 19px)",
+      }} />
+      {/* Horizontal blueprint lines */}
+      <div className="absolute inset-0 opacity-[0.03]" style={{
+        backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 60px, currentColor 60px, currentColor 61px)",
+      }} />
+
+      <div className={`section-container relative z-10 text-center max-w-3xl mx-auto transition-all duration-700 ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      }`}>
+        <div className="flex items-center justify-center gap-3 mb-2">
+          <span className="h-px w-8 bg-accent/50" />
+          <Flame className="h-5 w-5 text-accent" />
+          <span className="text-accent text-xs font-medium uppercase tracking-[0.2em]">The Forge at P.E.</span>
+          <Flame className="h-5 w-5 text-accent" />
+          <span className="h-px w-8 bg-accent/50" />
+        </div>
+
+        <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl mb-4 leading-[1.1]">
+          We Don't Just Build Barns.{" "}
+          <span className="text-accent">We Bend Steel to Your Will.</span>
+        </h2>
+
+        <p className="text-primary-foreground/70 text-lg md:text-xl mb-10 max-w-xl mx-auto font-light">
+          Custom gates, panels, fixtures & decorative metalwork — forged by horsemen who know the difference between a paddock latch and a fashion statement.
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-wider px-8">
+            <Link to="/shop">
+              View Catalog <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary uppercase tracking-wider px-8">
+            <Link to="/contact">
+              Request a Quote
+            </Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function CTASection() {
   return (
     <ParallaxCTA
@@ -1265,6 +1315,7 @@ export default function Index() {
         <ClientStorySection />
         <BlueprintDivider variant="grid" />
         <TestimonialsGallery />
+        <ForgeHeroBanner />
         <LeadCaptureSection submitted={leadSubmitted} onSubmitted={() => setLeadSubmitted(true)} />
         <CTASection />
       </Layout>
