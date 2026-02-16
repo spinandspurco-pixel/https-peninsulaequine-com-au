@@ -21,6 +21,7 @@ import { usePinchZoom } from "@/hooks/usePinchZoom";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { StickySubpageCTA } from "@/components/StickySubpageCTA";
 import { InlineBookingForm } from "@/components/InlineBookingForm";
+import { LiveBookingCapacity } from "@/components/LiveBookingCapacity";
 
 // Main Ridge construction process images
 import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
@@ -796,11 +797,12 @@ function LessonsSection() {
           </p>
         </div>
 
-        {/* Inline booking form with calendar */}
-        <div className={`max-w-3xl mx-auto transition-all duration-700 delay-300 ${
+        {/* Inline booking form + live capacity */}
+        <div className={`max-w-4xl mx-auto grid md:grid-cols-[1fr_260px] gap-6 transition-all duration-700 delay-300 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}>
           <InlineBookingForm />
+          <LiveBookingCapacity className="h-fit md:sticky md:top-28" />
         </div>
 
         {/* Secondary CTAs */}
