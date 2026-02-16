@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { StickySubpageCTA } from "@/components/StickySubpageCTA";
+import { ServicePricingCalculator } from "@/components/ServicePricingCalculator";
 import { services, siteConfig } from "@/data/content";
 import { servicePricingTiers, serviceFaqs } from "@/data/servicePricingFaq";
 import { cn } from "@/lib/utils";
@@ -139,6 +140,13 @@ export default function ServiceDetail() {
           </div>
         </section>
       )}
+
+      {/* Pricing calculator */}
+      <section className="section-padding bg-background">
+        <div className="section-container">
+          <ServicePricingCalculator serviceId={service.id} />
+        </div>
+      </section>
 
       {/* FAQs */}
       {faqs.length > 0 && (
