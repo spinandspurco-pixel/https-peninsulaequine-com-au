@@ -358,11 +358,14 @@ export type Database = {
           capacity: number | null
           created_at: string
           description: string | null
+          early_bird_deadline: string | null
+          early_bird_price: string | null
           event_date: string
           event_time: string | null
           id: string
           image_url: string | null
           location: string | null
+          price: string | null
           title: string
           updated_at: string
         }
@@ -371,11 +374,14 @@ export type Database = {
           capacity?: number | null
           created_at?: string
           description?: string | null
+          early_bird_deadline?: string | null
+          early_bird_price?: string | null
           event_date: string
           event_time?: string | null
           id?: string
           image_url?: string | null
           location?: string | null
+          price?: string | null
           title: string
           updated_at?: string
         }
@@ -384,11 +390,14 @@ export type Database = {
           capacity?: number | null
           created_at?: string
           description?: string | null
+          early_bird_deadline?: string | null
+          early_bird_price?: string | null
           event_date?: string
           event_time?: string | null
           id?: string
           image_url?: string | null
           location?: string | null
+          price?: string | null
           title?: string
           updated_at?: string
         }

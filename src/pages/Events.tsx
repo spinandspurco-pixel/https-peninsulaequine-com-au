@@ -1,10 +1,14 @@
 import { useState, useMemo, useCallback } from "react";
-import { Calendar, CalendarPlus, Clock, MapPin, Users, ExternalLink } from "lucide-react";
+import { Calendar as CalendarIcon, CalendarPlus, Clock, MapPin, Users, ExternalLink, Tag, Zap } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { format, isBefore, startOfDay, isSameMonth, parseISO } from "date-fns";
+import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Calendar } from "@/components/ui/calendar";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
 import { EventRSVPForm } from "@/components/events/EventRSVPForm";
@@ -14,85 +18,73 @@ import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
 import equitanaArena5 from "@/assets/equitana-arena-5.jpg";
 import caulfieldEvent from "@/assets/caulfield-event.jpg";
 
-// ── Upcoming events data ──
-const upcomingEvents = [
-  {
-    id: "equitana-2026",
-    title: "Equitana Melbourne 2026",
-    date: "2026-11-12",
-    endDate: "2026-11-15",
-    time: "8:00 AM – 6:00 PM",
-    location: "Melbourne Showgrounds",
-    description:
-      "Join us at Australia's premier equine expo. Peninsula Equine returns as exclusive arena preparation partner — come see competition-grade arena surfaces built in real time.",
-    image: equitanaArena1,
-    badge: "Exclusive Partner",
-    spots: 200,
-  },
-  {
-    id: "ranch-roundup-2026",
-    title: "Ranch Roundup — Caulfield",
-    date: "2026-03-21",
-    endDate: "2026-03-22",
-    time: "9:00 AM – 4:00 PM",
-    location: "Caulfield Racecourse, Melbourne",
-    description:
-      "A weekend of Western and ranch-style riding events with arena demos, horsemanship clinics, and live construction showcases by Ciro.",
-    image: caulfieldEvent,
-    badge: "Official Contractor",
-    spots: 80,
-  },
-  {
-    id: "open-day-2026",
-    title: "PE Open Day & Facility Tour",
-    date: "2026-05-10",
-    endDate: "2026-05-10",
-    time: "10:00 AM – 3:00 PM",
-    location: "Peninsula Equine HQ, Mornington Peninsula",
-    description:
-      "Walk through our workshops, see construction methods up close, meet the team, and enjoy a family-friendly day at the yard.",
-    image: equitanaArena5,
-    badge: "Free Entry",
-    spots: 60,
-  },
-];
+// Fallback images by keyword
+const fallbackImages: Record<string, string> = {
+  equitana: equitanaArena1,
+  caulfield: caulfieldEvent,
+  default: equitanaArena5,
+};
+
+function getEventImage(title: string, imageUrl?: string | null) {
+  if (imageUrl) return imageUrl;
+  const lower = title.toLowerCase();
+  for (const [key, img] of Object.entries(fallbackImages)) {
+    if (key !== "default" && lower.includes(key)) return img;
+  }
+  return fallbackImages.default;
+}
+
+type DBEvent = {
+  id: string;
+  title: string;
+  description: string | null;
+  event_date: string;
+  event_time: string | null;
+  location: string | null;
+  capacity: number | null;
+  image_url: string | null;
+  price: string | null;
+  early_bird_price: string | null;
+  early_bird_deadline: string | null;
+  active: boolean;
+};
 
 // ── Calendar helpers ──
 function toICSDate(d: string) {
   return d.replace(/-/g, "") + "T080000Z";
 }
 
-function generateICS(event: (typeof upcomingEvents)[0]) {
+function generateICS(event: DBEvent) {
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
     "PRODID:-//Peninsula Equine//Events//EN",
     "BEGIN:VEVENT",
-    `DTSTART:${toICSDate(event.date)}`,
-    `DTEND:${toICSDate(event.endDate)}`,
+    `DTSTART:${toICSDate(event.event_date)}`,
+    `DTEND:${toICSDate(event.event_date)}`,
     `SUMMARY:${event.title}`,
-    `DESCRIPTION:${event.description.slice(0, 200)}`,
-    `LOCATION:${event.location}`,
+    `DESCRIPTION:${(event.description || "").slice(0, 200)}`,
+    `LOCATION:${event.location || ""}`,
     "END:VEVENT",
     "END:VCALENDAR",
   ];
   return lines.join("\r\n");
 }
 
-function downloadICS(event: (typeof upcomingEvents)[0]) {
+function downloadICS(event: DBEvent) {
   const blob = new Blob([generateICS(event)], { type: "text/calendar;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `${event.id}.ics`;
+  a.download = `${event.title.replace(/\s+/g, "-").toLowerCase()}.ics`;
   a.click();
   URL.revokeObjectURL(url);
 }
 
-function googleCalendarUrl(event: (typeof upcomingEvents)[0]) {
-  const start = event.date.replace(/-/g, "") + "T080000Z";
-  const end = event.endDate.replace(/-/g, "") + "T180000Z";
-  return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${start}/${end}&details=${encodeURIComponent(event.description.slice(0, 200))}&location=${encodeURIComponent(event.location)}`;
+function googleCalendarUrl(event: DBEvent) {
+  const start = event.event_date.replace(/-/g, "") + "T080000Z";
+  const end = event.event_date.replace(/-/g, "") + "T180000Z";
+  return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${start}/${end}&details=${encodeURIComponent((event.description || "").slice(0, 200))}&location=${encodeURIComponent(event.location || "")}`;
 }
 
 function formatDate(d: string) {
@@ -104,10 +96,50 @@ function formatDate(d: string) {
   });
 }
 
+function isEarlyBird(deadline: string | null): boolean {
+  if (!deadline) return false;
+  return isBefore(startOfDay(new Date()), startOfDay(parseISO(deadline)));
+}
+
+// ── Pricing badge ──
+function PricingBadge({ event }: { event: DBEvent }) {
+  if (!event.price || event.price === "Free") {
+    return (
+      <Badge className="bg-accent/10 text-accent border-accent/30 text-xs">
+        Free Entry
+      </Badge>
+    );
+  }
+
+  const earlyBirdActive = isEarlyBird(event.early_bird_deadline);
+
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      {earlyBirdActive && event.early_bird_price ? (
+        <>
+          <Badge className="bg-accent text-accent-foreground text-xs inline-flex items-center gap-1">
+            <Zap className="h-3 w-3" />
+            Early Bird: {event.early_bird_price}
+          </Badge>
+          <span className="text-xs text-muted-foreground line-through">{event.price}</span>
+          <span className="text-[10px] text-muted-foreground">
+            until {format(parseISO(event.early_bird_deadline!), "MMM d")}
+          </span>
+        </>
+      ) : (
+        <Badge variant="outline" className="text-xs inline-flex items-center gap-1">
+          <Tag className="h-3 w-3" />
+          {event.price}
+        </Badge>
+      )}
+    </div>
+  );
+}
+
 // ── Event card ──
-function EventRSVPCard({ event, index }: { event: (typeof upcomingEvents)[0]; index: number }) {
+function EventRSVPCard({ event, index }: { event: DBEvent; index: number }) {
   const [showRSVP, setShowRSVP] = useState(false);
-  const [remainingSpots, setRemainingSpots] = useState(event.spots);
+  const [remainingSpots, setRemainingSpots] = useState(event.capacity || 100);
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
 
   const handleSpotsChange = useCallback((remaining: number) => {
@@ -126,8 +158,20 @@ function EventRSVPCard({ event, index }: { event: (typeof upcomingEvents)[0]; in
       <Card className="overflow-hidden border-border/60 hover:shadow-xl hover:shadow-accent/5 transition-shadow duration-500">
         {/* Image */}
         <div className="relative aspect-[16/7] overflow-hidden">
-          <img src={event.image} alt={event.title} className="w-full h-full object-cover" />
-          <Badge className="absolute top-4 left-4 uppercase tracking-wider text-xs">{event.badge}</Badge>
+          <img
+            src={getEventImage(event.title, event.image_url)}
+            alt={event.title}
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+          {isEarlyBird(event.early_bird_deadline) && (
+            <div className="absolute top-4 left-4">
+              <Badge className="bg-accent text-accent-foreground uppercase tracking-wider text-xs inline-flex items-center gap-1">
+                <Zap className="h-3 w-3" />
+                Early Bird
+              </Badge>
+            </div>
+          )}
         </div>
 
         <CardContent className="p-6 sm:p-8 space-y-5">
@@ -135,30 +179,40 @@ function EventRSVPCard({ event, index }: { event: (typeof upcomingEvents)[0]; in
 
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
             <span className="inline-flex items-center gap-1.5">
-              <Calendar className="h-4 w-4 text-accent" />
-              {formatDate(event.date)}
-              {event.date !== event.endDate && ` – ${formatDate(event.endDate)}`}
+              <CalendarIcon className="h-4 w-4 text-accent" />
+              {formatDate(event.event_date)}
             </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Clock className="h-4 w-4 text-accent" />
-              {event.time}
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <MapPin className="h-4 w-4 text-accent" />
-              {event.location}
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Users className="h-4 w-4 text-accent" />
-              {event.spots} spots
-            </span>
+            {event.event_time && (
+              <span className="inline-flex items-center gap-1.5">
+                <Clock className="h-4 w-4 text-accent" />
+                {event.event_time}
+              </span>
+            )}
+            {event.location && (
+              <span className="inline-flex items-center gap-1.5">
+                <MapPin className="h-4 w-4 text-accent" />
+                {event.location}
+              </span>
+            )}
+            {event.capacity && (
+              <span className="inline-flex items-center gap-1.5">
+                <Users className="h-4 w-4 text-accent" />
+                {event.capacity} spots
+              </span>
+            )}
           </div>
 
-          <p className="text-muted-foreground leading-relaxed">{event.description}</p>
+          {/* Pricing */}
+          <PricingBadge event={event} />
+
+          {event.description && (
+            <p className="text-muted-foreground leading-relaxed">{event.description}</p>
+          )}
 
           {/* Live guest list & capacity */}
           <EventGuestList
             eventId={event.id}
-            totalSpots={event.spots}
+            totalSpots={event.capacity || 100}
             onSpotsChange={handleSpotsChange}
           />
 
@@ -201,12 +255,81 @@ function EventRSVPCard({ event, index }: { event: (typeof upcomingEvents)[0]; in
   );
 }
 
+// ── Mini event calendar sidebar ──
+function EventCalendarSidebar({
+  events,
+  selectedDate,
+  onSelectDate,
+}: {
+  events: DBEvent[];
+  selectedDate: Date | undefined;
+  onSelectDate: (d: Date | undefined) => void;
+}) {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+
+  const eventDates = useMemo(
+    () => new Set(events.map((e) => e.event_date)),
+    [events]
+  );
+
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "rounded-xl border border-border bg-card p-4 transition-all duration-700",
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      )}
+    >
+      <h3 className="font-serif text-lg font-semibold text-foreground mb-4 text-center">
+        Events Calendar
+      </h3>
+      <Calendar
+        mode="single"
+        selected={selectedDate}
+        onSelect={onSelectDate}
+        modifiers={{
+          event: (date) => eventDates.has(format(date, "yyyy-MM-dd")),
+        }}
+        modifiersClassNames={{
+          event:
+            "!bg-accent/15 !text-accent font-semibold hover:!bg-accent/25 relative after:absolute after:bottom-0.5 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:rounded-full after:bg-accent",
+        }}
+        className={cn("p-3 pointer-events-auto")}
+      />
+      <p className="text-[10px] text-muted-foreground text-center mt-2">
+        Gold dates have upcoming events
+      </p>
+    </div>
+  );
+}
+
 // ── Page ──
 export default function Events() {
-  const sorted = useMemo(
-    () => [...upcomingEvents].sort((a, b) => a.date.localeCompare(b.date)),
-    []
-  );
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+
+  const { data: dbEvents = [], isLoading } = useQuery<DBEvent[]>({
+    queryKey: ["managed-events"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("managed_events")
+        .select("*")
+        .eq("active", true)
+        .order("event_date");
+      if (error) throw error;
+      // Cast needed: new columns (price, early_bird_price, early_bird_deadline) not yet in generated types
+      return (data as unknown as DBEvent[]) || [];
+    },
+    staleTime: 60_000,
+  });
+
+  const events = dbEvents;
+
+  // Filter by selected calendar date
+  const displayEvents = useMemo(() => {
+    if (!selectedDate) return events;
+    const dateStr = format(selectedDate, "yyyy-MM-dd");
+    return events.filter((e) => e.event_date === dateStr);
+  }, [events, selectedDate]);
 
   return (
     <Layout>
@@ -216,11 +339,57 @@ export default function Events() {
       />
 
       <section className="section-padding bg-background">
-        <div className="section-container max-w-4xl">
-          <div className="space-y-12">
-            {sorted.map((event, i) => (
-              <EventRSVPCard key={event.id} event={event} index={i} />
-            ))}
+        <div className="section-container">
+          <div className="grid lg:grid-cols-[1fr_300px] gap-8 items-start">
+            {/* Event cards */}
+            <div className="space-y-12">
+              {isLoading ? (
+                <div className="text-center py-16">
+                  <div className="h-8 w-8 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                  <p className="text-sm text-muted-foreground">Loading events…</p>
+                </div>
+              ) : displayEvents.length === 0 && selectedDate ? (
+                <div className="text-center py-16">
+                  <CalendarIcon className="h-10 w-10 text-muted-foreground mx-auto mb-4" />
+                  <p className="font-serif text-lg text-foreground mb-1">No events on this date</p>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Try selecting a highlighted date on the calendar.
+                  </p>
+                  <Button variant="outline" onClick={() => setSelectedDate(undefined)}>
+                    Show All Events
+                  </Button>
+                </div>
+              ) : displayEvents.length === 0 ? (
+                <div className="text-center py-16">
+                  <CalendarIcon className="h-10 w-10 text-muted-foreground mx-auto mb-4" />
+                  <p className="font-serif text-lg text-foreground">No upcoming events</p>
+                  <p className="text-sm text-muted-foreground">Check back soon for new events.</p>
+                </div>
+              ) : (
+                displayEvents.map((event, i) => (
+                  <EventRSVPCard key={event.id} event={event} index={i} />
+                ))
+              )}
+            </div>
+
+            {/* Sidebar calendar */}
+            <div className="hidden lg:block sticky top-24">
+              <EventCalendarSidebar
+                events={events}
+                selectedDate={selectedDate}
+                onSelectDate={setSelectedDate}
+              />
+              {selectedDate && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full mt-2 text-xs text-muted-foreground"
+                  onClick={() => setSelectedDate(undefined)}
+                >
+                  Clear filter — show all events
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </section>
