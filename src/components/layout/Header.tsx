@@ -10,12 +10,10 @@ import { siteConfig } from "@/data/content";
 
 const navigation = [
   { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
   { name: "Services", href: "/services" },
   { name: "Portfolio", href: "/gallery" },
-  { name: "Process", href: "/process" },
-  { name: "Testimonials", href: "/testimonials" },
-  { name: "Events", href: "/events" },
+  { name: "Lessons", href: "/lessons" },
+  { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];
 

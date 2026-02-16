@@ -12,10 +12,10 @@ const footerLinks = {
   ],
   company: [
     { name: "About Ciro", href: "/about" },
-    { name: "Our Process", href: "/process" },
     { name: "Portfolio", href: "/gallery" },
-    { name: "Testimonials", href: "/testimonials" },
+    { name: "Lessons", href: "/lessons" },
     { name: "Events", href: "/events" },
+    { name: "Testimonials", href: "/testimonials" },
     { name: "FAQ", href: "/faq" },
   ],
   legal: [
