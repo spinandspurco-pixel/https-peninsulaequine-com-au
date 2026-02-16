@@ -433,6 +433,8 @@ function Lightbox({
   const [isZooming, setIsZooming] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const dragStart = useRef<{ x: number; y: number } | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   // Pinch-to-zoom for images
   const pinchZoom = usePinchZoom({
@@ -447,25 +449,49 @@ function Lightbox({
     pinchZoom.reset();
   }, [item?.id]);
 
-  // Lock body scroll when lightbox is open
+  // Lock body scroll, auto-focus, and focus trap
   useEffect(() => {
-    if (item) {
-      document.body.style.overflow = 'hidden';
-      return () => { document.body.style.overflow = ''; };
-    }
+    if (!item) return;
+    document.body.style.overflow = 'hidden';
+    closeButtonRef.current?.focus();
+
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const focusable = dialog.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleTab);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener("keydown", handleTab);
+    };
   }, [item]);
 
   useEffect(() => {
     if (item?.type === "video" && videoRef.current) {
       videoRef.current.play();
     }
-    // Reset loading state when item changes
     if (item?.type === "image") {
       setIsImageLoading(true);
     }
   }, [item]);
 
-  // Keyboard navigation
+  // Keyboard navigation (arrows, Home, End, Escape)
   useEffect(() => {
     if (!item) return;
 
@@ -480,12 +506,20 @@ function Lightbox({
         case "ArrowRight":
           if (hasNext) onNext();
           break;
+        case "Home":
+          e.preventDefault();
+          onNavigateTo(0);
+          break;
+        case "End":
+          e.preventDefault();
+          onNavigateTo(totalCount - 1);
+          break;
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [item, onClose, onPrevious, onNext, hasPrevious, hasNext]);
+  }, [item, onClose, onPrevious, onNext, hasPrevious, hasNext, onNavigateTo, totalCount]);
 
   // Touch swipe handlers (only when not zoomed)
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -561,6 +595,7 @@ function Lightbox({
 
   return (
     <div
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-roledescription="Image lightbox"
@@ -571,6 +606,19 @@ function Lightbox({
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
+      {/* Skip links for keyboard users */}
+      <nav aria-label="Lightbox skip links" className="sr-only focus-within:not-sr-only focus-within:absolute focus-within:top-2 focus-within:left-2 focus-within:z-20 focus-within:flex focus-within:flex-col focus-within:gap-1">
+        <a href="#lightbox-close" className="bg-accent text-accent-foreground px-3 py-1.5 rounded text-sm font-medium focus:outline-none focus:ring-2 focus:ring-ring">
+          Skip to close button
+        </a>
+        <a href="#lightbox-media" className="bg-accent text-accent-foreground px-3 py-1.5 rounded text-sm font-medium focus:outline-none focus:ring-2 focus:ring-ring">
+          Skip to media content
+        </a>
+        <a href="#lightbox-thumbnails" className="bg-accent text-accent-foreground px-3 py-1.5 rounded text-sm font-medium focus:outline-none focus:ring-2 focus:ring-ring">
+          Skip to thumbnail navigation
+        </a>
+      </nav>
+
       {/* Live region for screen reader navigation announcements */}
       <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
         Showing {item.type === "video" ? "video" : "image"} {currentIndex + 1} of {totalCount}: {item.alt}
@@ -581,7 +629,9 @@ function Lightbox({
 
       {/* Close button */}
       <button
-        className="absolute top-6 right-6 text-primary-foreground/80 hover:text-primary-foreground z-10 transition-colors"
+        ref={closeButtonRef}
+        id="lightbox-close"
+        className="absolute top-6 right-6 text-primary-foreground/80 hover:text-primary-foreground z-10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary rounded-full p-1"
         onClick={onClose}
         aria-label="Close lightbox (Escape)"
       >
@@ -591,7 +641,7 @@ function Lightbox({
       {/* Previous button */}
       {hasPrevious && (
         <button
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-primary-foreground/60 hover:text-primary-foreground z-10 p-2 transition-colors"
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-primary-foreground/60 hover:text-primary-foreground z-10 p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-full"
           onClick={(e) => {
             e.stopPropagation();
             onPrevious();
@@ -607,7 +657,7 @@ function Lightbox({
       {/* Next button */}
       {hasNext && (
         <button
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-primary-foreground/60 hover:text-primary-foreground z-10 p-2 transition-colors"
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-primary-foreground/60 hover:text-primary-foreground z-10 p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-full"
           onClick={(e) => {
             e.stopPropagation();
             onNext();
@@ -620,7 +670,7 @@ function Lightbox({
         </button>
       )}
 
-      <div className="max-w-5xl w-full" onClick={(e) => e.stopPropagation()}>
+      <div id="lightbox-media" className="max-w-5xl w-full" onClick={(e) => e.stopPropagation()}>
         {item.type === "video" ? (
           <video
             ref={videoRef}
@@ -698,7 +748,7 @@ function Lightbox({
         </div>
 
         {/* Thumbnail strip */}
-        <div className="mt-6 px-4">
+        <div id="lightbox-thumbnails" className="mt-6 px-4" role="navigation" aria-label="Image thumbnails">
           <div className="flex justify-center gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-accent/30 scrollbar-track-transparent">
             {allItems.map((thumbItem, index) => (
               <button
@@ -732,7 +782,7 @@ function Lightbox({
 
         {/* Navigation hint */}
         <p className="text-primary-foreground/40 text-xs mt-4 text-center">
-          <span className="hidden sm:inline">Use ← → to navigate · Esc to close</span>
+          <span className="hidden sm:inline">← → navigate · Home/End first/last · Esc close</span>
           <span className="sm:hidden">Swipe to navigate · Tap outside to close</span>
         </p>
       </div>
