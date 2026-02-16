@@ -1784,29 +1784,29 @@ function HomeFAQSection() {
   const [search, setSearch] = useState("");
 
   const faqs: { q: string; a: string; cat: string }[] = [
-    { q: "How much does an arena or barn project cost?", a: "Every property is different, so we provide tailored quotes after a free on-site consultation. Typical arena projects start from $25k and barn builds from $50k depending on size, materials, and site conditions.", cat: "services" },
-    { q: "Do you work outside the Mornington Peninsula?", a: "Yes — while we're based on the Peninsula, we regularly take on projects across Victoria and have completed builds interstate. Travel fees may apply for remote sites.", cat: "general" },
-    { q: "How long does a typical build take?", a: "Arenas generally take 2–4 weeks, barns 6–12 weeks, and full facility builds 3–6 months. We'll give you a clear timeline during the consultation.", cat: "services" },
-    { q: "What makes Peninsula Equine different from a regular builder?", a: "Ciro is both a builder and a horseman. He understands how horses move, where water drains, and what keeps a facility running for decades — things a standard contractor simply won't consider.", cat: "general" },
-    { q: "Do I need council permits for equine construction?", a: "It depends on your local council and the scope of the project. We'll guide you through the permit process and handle applications where required.", cat: "services" },
+    { q: "How much does an arena or barn project cost?", a: "Every property is different, so we provide tailored quotes after a free on-site consultation. Typical arena projects start from $25k and barn builds from $50k depending on size, materials, and site conditions.", cat: "pricing" },
+    { q: "Do you work outside the Mornington Peninsula?", a: "Yes \u2014 while we\u2019re based on the Peninsula, we regularly take on projects across Victoria and have completed builds interstate. Travel fees may apply for remote sites.", cat: "general" },
+    { q: "How long does a typical build take?", a: "Arenas generally take 2\u20134 weeks, barns 6\u201312 weeks, and full facility builds 3\u20136 months. We\u2019ll give you a clear timeline during the consultation.", cat: "general" },
+    { q: "What makes Peninsula Equine different from a regular builder?", a: "Ciro is both a builder and a horseman. He understands how horses move, where water drains, and what keeps a facility running for decades \u2014 things a standard contractor simply won\u2019t consider.", cat: "general" },
+    { q: "Do I need council permits for equine construction?", a: "It depends on your local council and the scope of the project. We\u2019ll guide you through the permit process and handle applications where required.", cat: "general" },
     { q: "Can I see examples of your previous work?", a: "Absolutely. Visit our Gallery page for completed projects, or ask us for references from clients in your area.", cat: "general" },
-    { q: "How do I book a lesson or clinic?", a: "Use our Book a Lesson page or call us directly. We offer trial lessons for new riders and flexible scheduling for regular students.", cat: "booking" },
-    { q: "What's included in a consultation?", a: "A free on-site visit where we assess your property, discuss your goals, and outline scope, timeline, and budget. No obligation.", cat: "booking" },
-    { q: "Can I reschedule or cancel a booking?", a: "Yes \u2014 we ask for at least 48 hours\u2019 notice for cancellations. Rescheduling is free and easy via phone or email.", cat: "booking" },
-    { q: "What payment methods do you accept?", a: "We accept bank transfer, credit/debit card, and cash on site. For larger construction projects, we offer staged payment plans aligned with build milestones.", cat: "booking" },
-    { q: "Is a deposit required to secure a booking?", a: "Yes \u2014 a 20% deposit is required for construction projects upon accepting the quote. Lesson bookings are paid at the time of booking or on the day.", cat: "booking" },
-    { q: "What is your cancellation and refund policy?", a: "Lessons cancelled with less than 48 hours\u2019 notice may incur a cancellation fee. Construction deposits are non-refundable once materials have been ordered. Full policy details are provided with your quote.", cat: "booking" },
+    { q: "How do I book a lesson or clinic?", a: "Use our Book a Lesson page or call us directly. We offer trial lessons for new riders and flexible scheduling for regular students.", cat: "lessons" },
+    { q: "What\u2019s included in a consultation?", a: "A free on-site visit where we assess your property, discuss your goals, and outline scope, timeline, and budget. No obligation.", cat: "general" },
+    { q: "Can I reschedule or cancel a booking?", a: "Yes \u2014 we ask for at least 48 hours\u2019 notice for cancellations. Rescheduling is free and easy via phone or email.", cat: "lessons" },
+    { q: "What payment methods do you accept?", a: "We accept bank transfer, credit/debit card, and cash on site. For larger construction projects, we offer staged payment plans aligned with build milestones.", cat: "pricing" },
+    { q: "Is a deposit required to secure a booking?", a: "Yes \u2014 a 20% deposit is required for construction projects upon accepting the quote. Lesson bookings are paid at the time of booking or on the day.", cat: "pricing" },
+    { q: "What is your cancellation and refund policy?", a: "Lessons cancelled with less than 48 hours\u2019 notice may incur a cancellation fee. Construction deposits are non-refundable once materials have been ordered. Full policy details are provided with your quote.", cat: "pricing" },
     { q: "Do you have insurance and safety policies?", a: "Absolutely. We hold comprehensive public liability and professional indemnity insurance. All riders must sign a waiver before lessons, and helmets are mandatory on site.", cat: "general" },
-    { q: "Do you offer lesson packages or bulk discounts?", a: "Yes — we offer 5-lesson and 10-lesson packages at discounted rates. Packages are valid for 3 months from purchase and can be shared between family members.", cat: "booking" },
-    { q: "What are the payment terms for construction projects?", a: "Construction projects follow a staged payment schedule: 20% deposit on acceptance, progress payments at key milestones, and the balance on completion. We provide a clear schedule upfront so there are no surprises.", cat: "booking" },
-    { q: "Are group lessons or group rates available?", a: "Absolutely. We run group lessons for up to 4 riders at a reduced per-person rate. Group clinics and birthday party packages are also available — contact us for custom pricing.", cat: "booking" },
+    { q: "Do you offer lesson packages or bulk discounts?", a: "Yes \u2014 we offer 5-lesson and 10-lesson packages at discounted rates. Packages are valid for 3 months from purchase and can be shared between family members.", cat: "pricing" },
+    { q: "What are the payment terms for construction projects?", a: "Construction projects follow a staged payment schedule: 20% deposit on acceptance, progress payments at key milestones, and the balance on completion. We provide a clear schedule upfront so there are no surprises.", cat: "pricing" },
+    { q: "Are group lessons or group rates available?", a: "Absolutely. We run group lessons for up to 4 riders at a reduced per-person rate. Group clinics and birthday party packages are also available \u2014 contact us for custom pricing.", cat: "lessons" },
   ];
 
   const tabs = [
     { id: "all", label: "All" },
+    { id: "lessons", label: "Lessons" },
+    { id: "pricing", label: "Pricing" },
     { id: "general", label: "General" },
-    { id: "services", label: "Services" },
-    { id: "booking", label: "Booking" },
   ];
 
   const trimmedSearch = search.trim().toLowerCase();
