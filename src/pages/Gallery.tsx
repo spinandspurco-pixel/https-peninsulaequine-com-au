@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, X, Play, ZoomIn } from "lucide-react";
+import { ArrowRight, X, Play, ZoomIn, Search } from "lucide-react";
 import { triggerHaptic } from "@/hooks/useHapticFeedback";
 import { Button } from "@/components/ui/button";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -97,6 +97,8 @@ type GalleryItem = {
   project: string;
   type: "image" | "video";
   thumbnail?: string;
+  service?: string;
+  location?: string;
 };
 
 const projects = [
@@ -109,80 +111,96 @@ const projects = [
   { id: "videos", name: "Videos" },
 ];
 
+const serviceFilters = [
+  { id: "all", name: "All Services" },
+  { id: "arena", name: "Arenas" },
+  { id: "barn", name: "Barns & Stables" },
+  { id: "stonework", name: "Stonework" },
+  { id: "woodwork", name: "Woodwork" },
+  { id: "infrastructure", name: "Infrastructure" },
+  { id: "events", name: "Events" },
+];
+
+const locationFilters = [
+  { id: "all", name: "All Locations" },
+  { id: "victoria", name: "Victoria" },
+  { id: "queensland", name: "Queensland" },
+];
+
 // All videos for dedicated sections (used in FeaturedVideoSection and VideoGallerySection)
 const allVideos = [
-  { id: 100, src: slowMo1, alt: "Graceful Movement", description: "Capturing natural horsemanship and the elegance of equine motion in slow motion", project: "videos" as const, type: "video" as const, thumbnail: mainRidgeInterior },
-  { id: 101, src: slowMo2, alt: "Power & Precision", description: "Every stride tells a story - showcasing the athleticism and grace of trained horses", project: "videos" as const, type: "video" as const, thumbnail: mainRidgeTimber },
-  { id: 102, src: slowMo3, alt: "Natural Beauty", description: "The artistry of horse training captured in stunning slow motion cinematography", project: "videos" as const, type: "video" as const, thumbnail: mainRidgeBrickwork },
-  { id: 103, src: mainRidgeWoodwork1, alt: "Main Ridge Timber Craftsmanship", description: "Ciro hand-crafting timber posts using traditional woodworking techniques at Main Ridge", project: "main-ridge" as const, type: "video" as const, thumbnail: mainRidgeCiroWoodwork1 },
-  { id: 104, src: mainRidgeWoodwork2, alt: "Main Ridge Woodworking Detail", description: "Precision hand-finishing of barn timber - attention to detail that lasts decades", project: "main-ridge" as const, type: "video" as const, thumbnail: mainRidgeCiroWoodwork2 },
-  { id: 105, src: caulfieldVideo1, alt: "Melbourne Cup Arena Prep - Day 1", description: "Professional arena surface preparation at Caulfield Racecourse for the Melbourne Cup carnival", project: "caulfield" as const, type: "video" as const, thumbnail: caulfieldEvent },
-  { id: 106, src: caulfieldVideo2, alt: "Melbourne Cup Surface Work - Day 2", description: "Precision grading and sand management for race-day perfection at world-class Caulfield", project: "caulfield" as const, type: "video" as const, thumbnail: arenaSandPrep1 },
-  { id: 107, src: caulfieldVideo3, alt: "Melbourne Cup Final Touches - Day 3", description: "Final surface finishing ensuring competition-ready footing for thoroughbred racing", project: "caulfield" as const, type: "video" as const, thumbnail: arenaSandPrep2 },
-  { id: 108, src: equitanaArenaVideo, alt: "Equitana Arena Setup", description: "Competition arena preparation at Equitana Melbourne - Australia's biggest equine event", project: "equitana" as const, type: "video" as const, thumbnail: equitanaArena1 },
+  { id: 100, src: slowMo1, alt: "Graceful Movement", description: "Capturing natural horsemanship and the elegance of equine motion in slow motion", project: "videos" as const, type: "video" as const, thumbnail: mainRidgeInterior, service: "events", location: "victoria" },
+  { id: 101, src: slowMo2, alt: "Power & Precision", description: "Every stride tells a story - showcasing the athleticism and grace of trained horses", project: "videos" as const, type: "video" as const, thumbnail: mainRidgeTimber, service: "events", location: "victoria" },
+  { id: 102, src: slowMo3, alt: "Natural Beauty", description: "The artistry of horse training captured in stunning slow motion cinematography", project: "videos" as const, type: "video" as const, thumbnail: mainRidgeBrickwork, service: "events", location: "victoria" },
+  { id: 103, src: mainRidgeWoodwork1, alt: "Main Ridge Timber Craftsmanship", description: "Ciro hand-crafting timber posts using traditional woodworking techniques at Main Ridge", project: "main-ridge" as const, type: "video" as const, thumbnail: mainRidgeCiroWoodwork1, service: "woodwork", location: "victoria" },
+  { id: 104, src: mainRidgeWoodwork2, alt: "Main Ridge Woodworking Detail", description: "Precision hand-finishing of barn timber - attention to detail that lasts decades", project: "main-ridge" as const, type: "video" as const, thumbnail: mainRidgeCiroWoodwork2, service: "woodwork", location: "victoria" },
+  { id: 105, src: caulfieldVideo1, alt: "Melbourne Cup Arena Prep - Day 1", description: "Professional arena surface preparation at Caulfield Racecourse for the Melbourne Cup carnival", project: "caulfield" as const, type: "video" as const, thumbnail: caulfieldEvent, service: "events", location: "victoria" },
+  { id: 106, src: caulfieldVideo2, alt: "Melbourne Cup Surface Work - Day 2", description: "Precision grading and sand management for race-day perfection at world-class Caulfield", project: "caulfield" as const, type: "video" as const, thumbnail: arenaSandPrep1, service: "events", location: "victoria" },
+  { id: 107, src: caulfieldVideo3, alt: "Melbourne Cup Final Touches - Day 3", description: "Final surface finishing ensuring competition-ready footing for thoroughbred racing", project: "caulfield" as const, type: "video" as const, thumbnail: arenaSandPrep2, service: "events", location: "victoria" },
+  { id: 108, src: equitanaArenaVideo, alt: "Equitana Arena Setup", description: "Competition arena preparation at Equitana Melbourne - Australia's biggest equine event", project: "equitana" as const, type: "video" as const, thumbnail: equitanaArena1, service: "events", location: "victoria" },
 ];
 
 // Gallery items for photo grid (videos are in dedicated sections above)
 const galleryItems: GalleryItem[] = [
   // Main Ridge images
-  { id: 1, src: mainRidgeBrickwork, alt: "Main Ridge - Custom brickwork detail showing reclaimed brick construction", project: "main-ridge", type: "image" },
-  { id: 2, src: mainRidgeInterior, alt: "Main Ridge - Open barn interior with natural lighting and timber framing", project: "main-ridge", type: "image" },
-  { id: 3, src: mainRidgeTimber, alt: "Main Ridge - Timber beam installation with precision joinery", project: "main-ridge", type: "image" },
-  { id: 4, src: mainRidgeWorker, alt: "Main Ridge - Ciro on-site overseeing timber construction", project: "main-ridge", type: "image" },
-  { id: 5, src: mainRidgeCiroWoodwork1, alt: "Main Ridge - Hand-shaping timber posts with traditional tools", project: "main-ridge", type: "image" },
-  { id: 6, src: mainRidgeCiroWoodwork2, alt: "Main Ridge - Detailed woodworking on barn structural elements", project: "main-ridge", type: "image" },
-  { id: 7, src: mainRidgeCiroWoodwork3, alt: "Main Ridge - Timber finishing and quality inspection", project: "main-ridge", type: "image" },
-  { id: 8, src: mainRidgeCiroWoodwork4, alt: "Main Ridge - Hand-crafted timber beam ready for installation", project: "main-ridge", type: "image" },
+  { id: 1, src: mainRidgeBrickwork, alt: "Main Ridge - Custom brickwork detail showing reclaimed brick construction", project: "main-ridge", type: "image", service: "stonework", location: "victoria" },
+  { id: 2, src: mainRidgeInterior, alt: "Main Ridge - Open barn interior with natural lighting and timber framing", project: "main-ridge", type: "image", service: "barn", location: "victoria" },
+  { id: 3, src: mainRidgeTimber, alt: "Main Ridge - Timber beam installation with precision joinery", project: "main-ridge", type: "image", service: "woodwork", location: "victoria" },
+  { id: 4, src: mainRidgeWorker, alt: "Main Ridge - Ciro on-site overseeing timber construction", project: "main-ridge", type: "image", service: "woodwork", location: "victoria" },
+  { id: 5, src: mainRidgeCiroWoodwork1, alt: "Main Ridge - Hand-shaping timber posts with traditional tools", project: "main-ridge", type: "image", service: "woodwork", location: "victoria" },
+  { id: 6, src: mainRidgeCiroWoodwork2, alt: "Main Ridge - Detailed woodworking on barn structural elements", project: "main-ridge", type: "image", service: "woodwork", location: "victoria" },
+  { id: 7, src: mainRidgeCiroWoodwork3, alt: "Main Ridge - Timber finishing and quality inspection", project: "main-ridge", type: "image", service: "woodwork", location: "victoria" },
+  { id: 8, src: mainRidgeCiroWoodwork4, alt: "Main Ridge - Hand-crafted timber beam ready for installation", project: "main-ridge", type: "image", service: "woodwork", location: "victoria" },
 
   // Aberdeen Farm
-  { id: 10, src: aberdeenBarnInterior, alt: "Aberdeen Farm - Luxury barn interior with chandeliers and stained timber", project: "aberdeen", type: "image" },
-  { id: 11, src: aberdeenStalls, alt: "Aberdeen Farm - Custom-built stalls with sliding gates and premium finishes", project: "aberdeen", type: "image" },
-  { id: 12, src: aberdeenStallsDetail, alt: "Aberdeen Farm - Stall door hardware and ironwork detail", project: "aberdeen", type: "image" },
-  { id: 13, src: aberdeenAisle, alt: "Aberdeen Farm - Barn aisle with natural stone flooring", project: "aberdeen", type: "image" },
-  { id: 14, src: aberdeenMural, alt: "Aberdeen Farm - Hand-painted decorative mural on barn wall", project: "aberdeen", type: "image" },
-  { id: 15, src: aberdeenMural2, alt: "Aberdeen Farm - Equestrian mural artwork detail", project: "aberdeen", type: "image" },
-  { id: 16, src: aberdeenStonework, alt: "Aberdeen Farm - Natural stonework masonry on exterior walls", project: "aberdeen", type: "image" },
-  { id: 17, src: aberdeenStoneworkColor, alt: "Aberdeen Farm - Multi-colored stonework facade detail", project: "aberdeen", type: "image" },
-  { id: 18, src: aberdeenStoneworkBw, alt: "Aberdeen Farm - Architectural stone column construction", project: "aberdeen", type: "image" },
-  { id: 19, src: aberdeenInteriorStonework, alt: "Aberdeen Farm - Interior stone wall feature with lighting", project: "aberdeen", type: "image" },
-  { id: 20, src: aberdeenDeck, alt: "Aberdeen Farm - Timber deck construction overlooking property", project: "aberdeen", type: "image" },
-  { id: 21, src: aberdeenExterior, alt: "Aberdeen Farm - Complete exterior view of finished barn", project: "aberdeen", type: "image" },
+  { id: 10, src: aberdeenBarnInterior, alt: "Aberdeen Farm - Luxury barn interior with chandeliers and stained timber", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
+  { id: 11, src: aberdeenStalls, alt: "Aberdeen Farm - Custom-built stalls with sliding gates and premium finishes", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
+  { id: 12, src: aberdeenStallsDetail, alt: "Aberdeen Farm - Stall door hardware and ironwork detail", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
+  { id: 13, src: aberdeenAisle, alt: "Aberdeen Farm - Barn aisle with natural stone flooring", project: "aberdeen", type: "image", service: "stonework", location: "victoria" },
+  { id: 14, src: aberdeenMural, alt: "Aberdeen Farm - Hand-painted decorative mural on barn wall", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
+  { id: 15, src: aberdeenMural2, alt: "Aberdeen Farm - Equestrian mural artwork detail", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
+  { id: 16, src: aberdeenStonework, alt: "Aberdeen Farm - Natural stonework masonry on exterior walls", project: "aberdeen", type: "image", service: "stonework", location: "victoria" },
+  { id: 17, src: aberdeenStoneworkColor, alt: "Aberdeen Farm - Multi-colored stonework facade detail", project: "aberdeen", type: "image", service: "stonework", location: "victoria" },
+  { id: 18, src: aberdeenStoneworkBw, alt: "Aberdeen Farm - Architectural stone column construction", project: "aberdeen", type: "image", service: "stonework", location: "victoria" },
+  { id: 19, src: aberdeenInteriorStonework, alt: "Aberdeen Farm - Interior stone wall feature with lighting", project: "aberdeen", type: "image", service: "stonework", location: "victoria" },
+  { id: 20, src: aberdeenDeck, alt: "Aberdeen Farm - Timber deck construction overlooking property", project: "aberdeen", type: "image", service: "woodwork", location: "victoria" },
+  { id: 21, src: aberdeenExterior, alt: "Aberdeen Farm - Complete exterior view of finished barn", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
 
   // Queensland Facility
-  { id: 30, src: qldAerial1, alt: "Queensland Facility - Aerial view showing full property layout and arena", project: "queensland", type: "image" },
-  { id: 31, src: qldAerial2, alt: "Queensland Facility - Drone perspective of barn complex and paddocks", project: "queensland", type: "image" },
-  { id: 32, src: qldExterior1, alt: "Queensland Facility - Main barn exterior with covered walkways", project: "queensland", type: "image" },
-  { id: 33, src: qldExterior2, alt: "Queensland Facility - Barn entrance with tropical landscaping", project: "queensland", type: "image" },
-  { id: 34, src: qldExterior3, alt: "Queensland Facility - Multi-building layout with connecting paths", project: "queensland", type: "image" },
-  { id: 35, src: qldCourtyard, alt: "Queensland Facility - Central courtyard with water features", project: "queensland", type: "image" },
-  { id: 36, src: qldStalls, alt: "Queensland Facility - Climate-controlled stall interior", project: "queensland", type: "image" },
-  { id: 37, src: qldConstruction, alt: "Queensland Facility - Construction phase showing steel frame erection", project: "queensland", type: "image" },
+  { id: 30, src: qldAerial1, alt: "Queensland Facility - Aerial view showing full property layout and arena", project: "queensland", type: "image", service: "infrastructure", location: "queensland" },
+  { id: 31, src: qldAerial2, alt: "Queensland Facility - Drone perspective of barn complex and paddocks", project: "queensland", type: "image", service: "infrastructure", location: "queensland" },
+  { id: 32, src: qldExterior1, alt: "Queensland Facility - Main barn exterior with covered walkways", project: "queensland", type: "image", service: "barn", location: "queensland" },
+  { id: 33, src: qldExterior2, alt: "Queensland Facility - Barn entrance with tropical landscaping", project: "queensland", type: "image", service: "barn", location: "queensland" },
+  { id: 34, src: qldExterior3, alt: "Queensland Facility - Multi-building layout with connecting paths", project: "queensland", type: "image", service: "infrastructure", location: "queensland" },
+  { id: 35, src: qldCourtyard, alt: "Queensland Facility - Central courtyard with water features", project: "queensland", type: "image", service: "infrastructure", location: "queensland" },
+  { id: 36, src: qldStalls, alt: "Queensland Facility - Climate-controlled stall interior", project: "queensland", type: "image", service: "barn", location: "queensland" },
+  { id: 37, src: qldConstruction, alt: "Queensland Facility - Construction phase showing steel frame erection", project: "queensland", type: "image", service: "infrastructure", location: "queensland" },
 
   // Equitana Melbourne
-  { id: 40, src: equitanaArena1, alt: "Equitana Melbourne - Main competition arena during event setup", project: "equitana", type: "image" },
-  { id: 41, src: equitanaArena2, alt: "Equitana Melbourne - Arena surface grading and leveling", project: "equitana", type: "image" },
-  { id: 42, src: equitanaArena3, alt: "Equitana Melbourne - Competition arena with spectator seating", project: "equitana", type: "image" },
-  { id: 43, src: equitanaArena4, alt: "Equitana Melbourne - Sand footing preparation detail", project: "equitana", type: "image" },
-  { id: 44, src: equitanaArena5, alt: "Equitana Melbourne - Arena maintenance equipment at work", project: "equitana", type: "image" },
-  { id: 45, src: equitanaArena6, alt: "Equitana Melbourne - Wide shot of completed competition arena", project: "equitana", type: "image" },
-  { id: 46, src: equitanaEquipment, alt: "Equitana Melbourne - Professional arena grooming equipment", project: "equitana", type: "image" },
-  { id: 47, src: equitanaTractors, alt: "Equitana Melbourne - Tractor team preparing arena surface", project: "equitana", type: "image" },
+  { id: 40, src: equitanaArena1, alt: "Equitana Melbourne - Main competition arena during event setup", project: "equitana", type: "image", service: "arena", location: "victoria" },
+  { id: 41, src: equitanaArena2, alt: "Equitana Melbourne - Arena surface grading and leveling", project: "equitana", type: "image", service: "arena", location: "victoria" },
+  { id: 42, src: equitanaArena3, alt: "Equitana Melbourne - Competition arena with spectator seating", project: "equitana", type: "image", service: "arena", location: "victoria" },
+  { id: 43, src: equitanaArena4, alt: "Equitana Melbourne - Sand footing preparation detail", project: "equitana", type: "image", service: "arena", location: "victoria" },
+  { id: 44, src: equitanaArena5, alt: "Equitana Melbourne - Arena maintenance equipment at work", project: "equitana", type: "image", service: "arena", location: "victoria" },
+  { id: 45, src: equitanaArena6, alt: "Equitana Melbourne - Wide shot of completed competition arena", project: "equitana", type: "image", service: "arena", location: "victoria" },
+  { id: 46, src: equitanaEquipment, alt: "Equitana Melbourne - Professional arena grooming equipment", project: "equitana", type: "image", service: "events", location: "victoria" },
+  { id: 47, src: equitanaTractors, alt: "Equitana Melbourne - Tractor team preparing arena surface", project: "equitana", type: "image", service: "events", location: "victoria" },
 
   // Melbourne Cup / Caulfield
-  { id: 50, src: caulfieldEvent, alt: "Melbourne Cup - Caulfield Racecourse arena ready for racing", project: "caulfield", type: "image" },
-  { id: 51, src: arenaSandPrep1, alt: "Melbourne Cup - Sand distribution and base preparation", project: "caulfield", type: "image" },
-  { id: 52, src: arenaSandPrep2, alt: "Melbourne Cup - Precision grading for optimal drainage", project: "caulfield", type: "image" },
-  { id: 53, src: arenaSandPrep3, alt: "Melbourne Cup - Finished competition-grade surface", project: "caulfield", type: "image" },
+  { id: 50, src: caulfieldEvent, alt: "Melbourne Cup - Caulfield Racecourse arena ready for racing", project: "caulfield", type: "image", service: "events", location: "victoria" },
+  { id: 51, src: arenaSandPrep1, alt: "Melbourne Cup - Sand distribution and base preparation", project: "caulfield", type: "image", service: "arena", location: "victoria" },
+  { id: 52, src: arenaSandPrep2, alt: "Melbourne Cup - Precision grading for optimal drainage", project: "caulfield", type: "image", service: "arena", location: "victoria" },
+  { id: 53, src: arenaSandPrep3, alt: "Melbourne Cup - Finished competition-grade surface", project: "caulfield", type: "image", service: "arena", location: "victoria" },
 
   // Main Ridge Construction Process
-  { id: 60, src: mainRidgeTimberPosts, alt: "Main Ridge - Timber post installation with concrete footings", project: "main-ridge", type: "image" },
-  { id: 61, src: mainRidgeBarnFrame, alt: "Main Ridge - Complete barn timber frame structure", project: "main-ridge", type: "image" },
-  { id: 62, src: mainRidgeCraneLift, alt: "Main Ridge - Crane lifting large timber frame into position", project: "main-ridge", type: "image" },
-  { id: 63, src: mainRidgeFrameTrench, alt: "Main Ridge - Foundation trench with frame assembly", project: "main-ridge", type: "image" },
-  { id: 64, src: mainRidgeRebarFoundation, alt: "Main Ridge - Reinforced steel rebar for concrete foundation", project: "main-ridge", type: "image" },
-  { id: 65, src: mainRidgePostDepth, alt: "Main Ridge - Post hole depth measurement for stability", project: "main-ridge", type: "image" },
-  { id: 66, src: mainRidgeTrenchUtilities, alt: "Main Ridge - Underground utility trench excavation", project: "main-ridge", type: "image" },
-  { id: 67, src: mainRidgeArenaGrading, alt: "Main Ridge - Arena surface grading and leveling", project: "main-ridge", type: "image" },
+  { id: 60, src: mainRidgeTimberPosts, alt: "Main Ridge - Timber post installation with concrete footings", project: "main-ridge", type: "image", service: "infrastructure", location: "victoria" },
+  { id: 61, src: mainRidgeBarnFrame, alt: "Main Ridge - Complete barn timber frame structure", project: "main-ridge", type: "image", service: "barn", location: "victoria" },
+  { id: 62, src: mainRidgeCraneLift, alt: "Main Ridge - Crane lifting large timber frame into position", project: "main-ridge", type: "image", service: "infrastructure", location: "victoria" },
+  { id: 63, src: mainRidgeFrameTrench, alt: "Main Ridge - Foundation trench with frame assembly", project: "main-ridge", type: "image", service: "infrastructure", location: "victoria" },
+  { id: 64, src: mainRidgeRebarFoundation, alt: "Main Ridge - Reinforced steel rebar for concrete foundation", project: "main-ridge", type: "image", service: "infrastructure", location: "victoria" },
+  { id: 65, src: mainRidgePostDepth, alt: "Main Ridge - Post hole depth measurement for stability", project: "main-ridge", type: "image", service: "infrastructure", location: "victoria" },
+  { id: 66, src: mainRidgeTrenchUtilities, alt: "Main Ridge - Underground utility trench excavation", project: "main-ridge", type: "image", service: "infrastructure", location: "victoria" },
+  { id: 67, src: mainRidgeArenaGrading, alt: "Main Ridge - Arena surface grading and leveling", project: "main-ridge", type: "image", service: "arena", location: "victoria" },
 ];
 
 function PageHeader() {
@@ -942,7 +960,12 @@ function GalleryGrid({
 
 export default function Gallery() {
   const [activeProject, setActiveProject] = useState("all");
+  const [activeService, setActiveService] = useState("all");
+  const [activeLocation, setActiveLocation] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [lightboxItem, setLightboxItem] = useState<GalleryItem | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Convert allVideos to GalleryItem format for filtering
   const videoGalleryItems: GalleryItem[] = allVideos.map((v) => ({
@@ -952,16 +975,64 @@ export default function Gallery() {
     project: v.project,
     type: v.type,
     thumbnail: v.thumbnail,
+    service: v.service,
+    location: v.location,
   }));
 
-  // Videos only appear in the grid when "Videos" filter is selected
-  // Otherwise, photos only - videos have their own dedicated sections (featured slider, video collection)
-  const filteredItems =
-    activeProject === "all"
-      ? galleryItems
-      : activeProject === "videos"
-      ? videoGalleryItems
-      : galleryItems.filter((item) => item.project === activeProject);
+  // Filtered items with search, service, location
+  const filteredItems = useMemo(() => {
+    let items: GalleryItem[] =
+      activeProject === "all"
+        ? galleryItems
+        : activeProject === "videos"
+        ? videoGalleryItems
+        : galleryItems.filter((item) => item.project === activeProject);
+
+    if (activeService !== "all") {
+      items = items.filter((item) => item.service === activeService);
+    }
+
+    if (activeLocation !== "all") {
+      items = items.filter((item) => item.location === activeLocation);
+    }
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      items = items.filter(
+        (item) =>
+          item.alt.toLowerCase().includes(q) ||
+          item.project.toLowerCase().includes(q) ||
+          (item.service && item.service.toLowerCase().includes(q)) ||
+          (item.location && item.location.toLowerCase().includes(q))
+      );
+    }
+
+    return items;
+  }, [activeProject, activeService, activeLocation, searchQuery, videoGalleryItems]);
+
+  const activeFilterCount =
+    (activeService !== "all" ? 1 : 0) +
+    (activeLocation !== "all" ? 1 : 0) +
+    (searchQuery.trim() ? 1 : 0);
+
+  const clearAllFilters = () => {
+    setActiveProject("all");
+    setActiveService("all");
+    setActiveLocation("all");
+    setSearchQuery("");
+  };
+
+  // Keyboard shortcut: "/" to focus search
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "/" && !e.ctrlKey && !e.metaKey && document.activeElement?.tagName !== "INPUT") {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
 
   // Combine all navigable items (gallery items + videos from allVideos)
   const allNavigableItems: GalleryItem[] = [
@@ -973,6 +1044,8 @@ export default function Gallery() {
       project: v.project,
       type: v.type,
       thumbnail: v.thumbnail,
+      service: v.service,
+      location: v.location,
     })),
   ];
 
@@ -1016,8 +1089,117 @@ export default function Gallery() {
         <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/95 to-background pointer-events-none z-[1]" />
 
         <div className="section-container relative z-[2]">
+          {/* Search & Filter Bar */}
+          <div className="mb-8 space-y-4" role="search" aria-label="Gallery search and filters">
+            {/* Search input */}
+            <div className="relative max-w-md mx-auto">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" aria-hidden="true" />
+              <input
+                ref={searchInputRef}
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search gallery… (press / to focus)"
+                className="w-full pl-10 pr-10 py-2.5 rounded-full border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all"
+                aria-label="Search gallery by keyword"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="Clear search"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+
+            {/* Filter toggle */}
+            <div className="flex justify-center">
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className={`text-xs uppercase tracking-wider transition-colors ${
+                  showFilters || activeFilterCount > 0
+                    ? "text-accent"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                aria-expanded={showFilters}
+                aria-controls="gallery-filters"
+              >
+                Filters{activeFilterCount > 0 && ` (${activeFilterCount})`}
+                <span className="ml-1">{showFilters ? "▲" : "▼"}</span>
+              </button>
+            </div>
+
+            {/* Collapsible filter groups */}
+            <div
+              id="gallery-filters"
+              className={`space-y-4 overflow-hidden transition-all duration-300 ${
+                showFilters ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+              }`}
+              role="group"
+              aria-label="Filter options"
+            >
+              {/* Service filter */}
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground text-center mb-2">By Service</p>
+                <div className="flex flex-wrap gap-2 justify-center" role="radiogroup" aria-label="Filter by service type">
+                  {serviceFilters.map((s) => (
+                    <button
+                      key={s.id}
+                      onClick={() => setActiveService(s.id)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                        activeService === s.id
+                          ? "bg-accent text-accent-foreground shadow-sm"
+                          : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                      }`}
+                      role="radio"
+                      aria-checked={activeService === s.id}
+                    >
+                      {s.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Location filter */}
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground text-center mb-2">By Location</p>
+                <div className="flex flex-wrap gap-2 justify-center" role="radiogroup" aria-label="Filter by location">
+                  {locationFilters.map((l) => (
+                    <button
+                      key={l.id}
+                      onClick={() => setActiveLocation(l.id)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                        activeLocation === l.id
+                          ? "bg-accent text-accent-foreground shadow-sm"
+                          : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                      }`}
+                      role="radio"
+                      aria-checked={activeLocation === l.id}
+                    >
+                      {l.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Clear all */}
+              {activeFilterCount > 0 && (
+                <div className="text-center">
+                  <button
+                    onClick={clearAllFilters}
+                    className="text-xs text-accent hover:text-accent/80 underline underline-offset-2 transition-colors"
+                  >
+                    Clear all filters
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Project Filter Tabs */}
-          <div className="flex flex-wrap gap-2 mb-12 justify-center">
+          <div className="flex flex-wrap gap-2 mb-12 justify-center" role="tablist" aria-label="Filter by project">
             {projects.map((project) => (
               <button
                 key={project.id}
@@ -1027,35 +1209,48 @@ export default function Gallery() {
                     ? "bg-accent text-accent-foreground"
                     : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                 }`}
+                role="tab"
+                aria-selected={activeProject === project.id}
               >
                 {project.name}
               </button>
             ))}
           </div>
 
-          {/* Project Title */}
-          {activeProject !== "all" && (
-            <div className="text-center mb-8">
+          {/* Project Title & Count */}
+          <div className="text-center mb-8">
+            {activeProject !== "all" && (
               <h2 className="font-serif text-2xl text-foreground">{currentProjectName}</h2>
-              <p className="text-muted-foreground text-sm mt-1">
-                {imageCount > 0 && `${imageCount} photo${imageCount !== 1 ? "s" : ""}`}
-                {imageCount > 0 && videoCount > 0 && " · "}
-                {videoCount > 0 && `${videoCount} video${videoCount !== 1 ? "s" : ""}`}
-              </p>
-            </div>
-          )}
+            )}
+            <p className="text-muted-foreground text-sm mt-1" aria-live="polite">
+              {filteredItems.length === 0
+                ? "No results found"
+                : <>
+                    {imageCount > 0 && `${imageCount} photo${imageCount !== 1 ? "s" : ""}`}
+                    {imageCount > 0 && videoCount > 0 && " · "}
+                    {videoCount > 0 && `${videoCount} video${videoCount !== 1 ? "s" : ""}`}
+                  </>
+              }
+            </p>
+          </div>
 
           {/* Gallery Grid */}
           <GalleryGrid 
             items={filteredItems} 
             onItemClick={setLightboxItem}
-            key={activeProject}
+            key={`${activeProject}-${activeService}-${activeLocation}-${searchQuery}`}
           />
 
           {/* Empty State */}
           {filteredItems.length === 0 && (
             <div className="text-center py-16">
-              <p className="text-muted-foreground">No media in this category yet.</p>
+              <p className="text-muted-foreground mb-4">No media matches your filters.</p>
+              <button
+                onClick={clearAllFilters}
+                className="text-accent hover:text-accent/80 text-sm underline underline-offset-2"
+              >
+                Clear all filters
+              </button>
             </div>
           )}
         </div>
