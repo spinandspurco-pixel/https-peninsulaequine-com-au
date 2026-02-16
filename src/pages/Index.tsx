@@ -15,6 +15,7 @@ import { BookingLandingSection } from "@/components/BookingLandingSection";
 import { LeadMagnetPopup } from "@/components/LeadMagnetPopup";
 import { StickyHeroCTA } from "@/components/StickyHeroCTA";
 import { SectionTransition, AnimatedDivider, StaggeredTransition } from "@/components/SectionTransition";
+import { ServicesTeaserStrip } from "@/components/ServicesTeaserStrip";
 import { siteConfig, services, testimonials, aboutCiro } from "@/data/content";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
@@ -1253,6 +1254,7 @@ export default function Index() {
         <BannerDivider />
         <IntroSection />
         <BlueprintDivider variant="floorplan" />
+        <ServicesTeaserStrip />
         <MissionSection />
         <MajorEventsSection />
         <BlueprintDivider variant="elevation" />
