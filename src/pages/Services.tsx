@@ -22,6 +22,7 @@ import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { StickySubpageCTA } from "@/components/StickySubpageCTA";
 import { InlineBookingForm } from "@/components/InlineBookingForm";
 import { LiveBookingCapacity } from "@/components/LiveBookingCapacity";
+import { LessonAvailabilityCalendar } from "@/components/LessonAvailabilityCalendar";
 
 // Main Ridge construction process images
 import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
@@ -845,6 +846,20 @@ function LessonsSection() {
               Plan a Clinic or Event
             </Link>
           </Button>
+        </div>
+
+        {/* Availability calendar */}
+        <div className={`mt-14 transition-all duration-700 delay-500 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}>
+          <div className="text-center mb-8">
+            <p className="text-muted-foreground uppercase tracking-[0.2em] text-xs mb-2">Live Availability</p>
+            <h3 className="font-serif text-2xl text-foreground">Pick a Date &amp; Time</h3>
+            <p className="text-muted-foreground text-sm mt-2 max-w-lg mx-auto">
+              Browse available lesson and clinic slots below. Select a date to see open times, then book directly.
+            </p>
+          </div>
+          <LessonAvailabilityCalendar />
         </div>
       </div>
     </section>
