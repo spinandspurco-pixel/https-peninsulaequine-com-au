@@ -1,16 +1,25 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { format, parseISO, isBefore, startOfDay } from "date-fns";
 import {
   ArrowRight,
   CalendarIcon,
+  CalendarPlus,
   CheckCircle,
   Clock,
+  MapPin,
   Star,
   Target,
   Award,
   Users,
   Quote,
   ExternalLink,
+  Zap,
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { EventRSVPForm } from "@/components/events/EventRSVPForm";
+import { EventGuestList } from "@/components/events/EventGuestList";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -234,6 +243,230 @@ function ProgramCard({
   );
 }
 
+// ── Calendar helpers ──
+function toICSDate(d: string, time?: string | null) {
+  const datePart = d.replace(/-/g, "");
+  if (time) {
+    const timePart = time.replace(/:/g, "").slice(0, 6).padEnd(6, "0");
+    return `${datePart}T${timePart}`;
+  }
+  return `${datePart}T080000`;
+}
+
+function clinicGoogleCalendarUrl(title: string, date: string, time?: string | null, location?: string | null, description?: string | null) {
+  const start = toICSDate(date, time) + "Z";
+  const startHour = time ? parseInt(time.split(":")[0], 10) : 8;
+  const endDate = date.replace(/-/g, "");
+  const end = `${endDate}T${String(startHour + 2).padStart(2, "0")}0000Z`;
+  return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent((description || "").slice(0, 200))}&location=${encodeURIComponent(location || "")}`;
+}
+
+function clinicDownloadICS(title: string, date: string, time?: string | null, location?: string | null, description?: string | null) {
+  const dtStart = toICSDate(date, time);
+  const startHour = time ? parseInt(time.split(":")[0], 10) : 8;
+  const endDate = date.replace(/-/g, "");
+  const dtEnd = `${endDate}T${String(startHour + 2).padStart(2, "0")}0000`;
+  const lines = [
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Peninsula Equine//Events//EN",
+    "BEGIN:VEVENT", `DTSTART:${dtStart}`, `DTEND:${dtEnd}`,
+    `SUMMARY:${title}`, `DESCRIPTION:${(description || "").slice(0, 200).replace(/\n/g, "\\n")}`,
+    `LOCATION:${location || ""}`, "STATUS:CONFIRMED", "END:VEVENT", "END:VCALENDAR",
+  ];
+  const blob = new Blob([lines.join("\r\n")], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${title.replace(/\s+/g, "-").toLowerCase()}.ics`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── Upcoming Clinics Section ─────────────────────────
+
+type ClinicEvent = {
+  id: string;
+  title: string;
+  description: string | null;
+  event_date: string;
+  event_time: string | null;
+  location: string | null;
+  capacity: number | null;
+  price: string | null;
+  early_bird_price: string | null;
+  early_bird_deadline: string | null;
+};
+
+function ClinicCard({ event }: { event: ClinicEvent }) {
+  const [showRSVP, setShowRSVP] = useState(false);
+  const [remainingSpots, setRemainingSpots] = useState(event.capacity || 100);
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
+
+  const earlyBirdActive = event.early_bird_deadline && isBefore(startOfDay(new Date()), startOfDay(parseISO(event.early_bird_deadline)));
+
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "rounded-xl border border-border bg-card overflow-hidden transition-all duration-600",
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      )}
+    >
+      <div className="p-6 space-y-4">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h3 className="font-serif text-xl font-semibold text-foreground">{event.title}</h3>
+            <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-sm text-muted-foreground">
+              <span className="inline-flex items-center gap-1">
+                <CalendarIcon className="h-3.5 w-3.5 text-accent" />
+                {format(parseISO(event.event_date), "EEE d MMM yyyy")}
+              </span>
+              {event.event_time && (
+                <span className="inline-flex items-center gap-1">
+                  <Clock className="h-3.5 w-3.5 text-accent" />
+                  {event.event_time}
+                </span>
+              )}
+              {event.location && (
+                <span className="inline-flex items-center gap-1">
+                  <MapPin className="h-3.5 w-3.5 text-accent" />
+                  {event.location}
+                </span>
+              )}
+            </div>
+          </div>
+          {/* Pricing */}
+          <div className="text-right flex-shrink-0">
+            {earlyBirdActive && event.early_bird_price ? (
+              <div className="space-y-0.5">
+                <span className="inline-flex items-center gap-1 text-xs font-semibold text-accent bg-accent/10 px-2 py-0.5 rounded">
+                  <Zap className="h-3 w-3" /> {event.early_bird_price}
+                </span>
+                <p className="text-xs text-muted-foreground line-through">{event.price}</p>
+              </div>
+            ) : event.price ? (
+              <span className="text-sm font-semibold text-foreground">{event.price}</span>
+            ) : (
+              <span className="text-xs text-accent font-medium">Free</span>
+            )}
+          </div>
+        </div>
+
+        {event.description && (
+          <p className="text-sm text-muted-foreground leading-relaxed">{event.description}</p>
+        )}
+
+        {/* Guest list / capacity */}
+        <EventGuestList
+          eventId={event.id}
+          totalSpots={event.capacity || 100}
+          onSpotsChange={(r) => setRemainingSpots(r)}
+        />
+
+        {/* Calendar sync */}
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => clinicDownloadICS(event.title, event.event_date, event.event_time, event.location, event.description)}
+            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-accent transition-colors"
+          >
+            <CalendarPlus className="h-3.5 w-3.5" /> .ics
+          </button>
+          <a
+            href={clinicGoogleCalendarUrl(event.title, event.event_date, event.event_time, event.location, event.description)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-accent transition-colors"
+          >
+            <ExternalLink className="h-3.5 w-3.5" /> Google Cal
+          </a>
+        </div>
+
+        {/* RSVP */}
+        {!showRSVP ? (
+          <button
+            onClick={() => setShowRSVP(true)}
+            className={cn(
+              "w-full py-2.5 rounded-lg text-sm font-medium transition-colors",
+              remainingSpots <= 0
+                ? "bg-muted text-muted-foreground hover:bg-muted/80"
+                : "bg-accent text-accent-foreground hover:bg-accent/90"
+            )}
+          >
+            {remainingSpots <= 0 ? "Join Waitlist" : "RSVP Now"}
+          </button>
+        ) : (
+          <div className="border-t border-border pt-4">
+            <EventRSVPForm
+              eventId={event.id}
+              eventTitle={event.title}
+              remainingSpots={remainingSpots}
+              eventDate={event.event_date}
+              eventTime={event.event_time}
+              eventLocation={event.location}
+              eventDescription={event.description}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function UpcomingClinics() {
+  const today = new Date().toISOString().split("T")[0];
+
+  const { data: events = [], isLoading } = useQuery<ClinicEvent[]>({
+    queryKey: ["lessons-upcoming-clinics"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("managed_events")
+        .select("id, title, description, event_date, event_time, location, capacity, price, early_bird_price, early_bird_deadline")
+        .eq("active", true)
+        .gte("event_date", today)
+        .order("event_date")
+        .limit(4);
+      if (error) throw error;
+      return (data as unknown as ClinicEvent[]) || [];
+    },
+    staleTime: 60_000,
+  });
+
+  if (isLoading) return null;
+  if (events.length === 0) return null;
+
+  return (
+    <section className="section-padding bg-muted/30">
+      <div className="section-container">
+        <div className="text-center mb-10">
+          <p className="text-xs uppercase tracking-[0.25em] text-accent font-medium mb-3">
+            Clinics & Events
+          </p>
+          <h2 className="font-serif text-3xl font-semibold text-foreground mb-3">
+            Upcoming Clinics
+          </h2>
+          <p className="text-muted-foreground max-w-xl mx-auto">
+            Intensive group sessions and special events to accelerate your riding. RSVP below or sync to your calendar.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          {events.map((event) => (
+            <ClinicCard key={event.id} event={event} />
+          ))}
+        </div>
+
+        <div className="text-center mt-8">
+          <Link
+            to="/events"
+            className="inline-flex items-center gap-2 text-sm font-medium text-accent hover:text-accent/80 transition-colors"
+          >
+            View all events <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── Page ─────────────────────────────────────────────
 
 export default function Lessons() {
@@ -423,6 +656,9 @@ export default function Lessons() {
           </Accordion>
         </div>
       </section>
+
+      {/* Upcoming Clinics & Events */}
+      <UpcomingClinics />
 
       {/* Bottom CTA */}
       <section className="section-padding bg-primary text-primary-foreground">
