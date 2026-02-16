@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
@@ -14,6 +14,7 @@ import { BookingWidget } from "@/components/BookingWidget";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
 import { usePinchZoom } from "@/hooks/usePinchZoom";
+import { StickyHeroCTA } from "@/components/StickyHeroCTA";
 
 // Main Ridge construction process images
 import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
@@ -824,8 +825,23 @@ export default function Services() {
   const [quoteServiceId, setQuoteServiceId] = useState<string | null>(null);
   const activeService = services.find((s) => s.id === quoteServiceId);
 
+  // Deterministic "live" progress seeded by current month (simulates monthly capacity fill)
+  const liveProgress = useMemo(() => {
+    const day = new Date().getDate();
+    // Ramps from ~40 early-month to ~85 late-month
+    return Math.min(95, Math.round(38 + (day / 31) * 50));
+  }, []);
+
+  const scrollToBooking = () =>
+    document.getElementById("booking")?.scrollIntoView({ behavior: "smooth" });
+
   return (
     <Layout>
+      <StickyHeroCTA
+        progress={liveProgress}
+        progressLabel="spots filled"
+        onCtaClick={scrollToBooking}
+      />
       <PageHeader
         title="Our Services"
         description="From custom arenas to complete barn construction, we deliver equine facilities built to last. Every project reflects our commitment to quality and our understanding of what horses—and their owners—truly need."
