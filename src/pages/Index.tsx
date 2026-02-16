@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { MultiStepInquiryForm } from "@/components/MultiStepInquiryForm";
 import { SectionTransition, AnimatedDivider } from "@/components/SectionTransition";
+import { BlueprintChapter } from "@/components/BlueprintChapter";
+import { RopeDivider } from "@/components/RopeDivider";
 import { siteConfig, services, testimonials } from "@/data/content";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
@@ -81,15 +83,23 @@ function HeroSection() {
   );
 }
 
-/* ─── 2. About Teaser ─────────────────────────────── */
+/* ─── 2. About Teaser — Chapter 01 ────────────────── */
 function AboutTeaser() {
   const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation<HTMLDivElement>();
 
   return (
-    <section id="about-teaser" className="bg-background relative">
-      <BlueprintScene preset="intro" />
-      <div className="section-padding">
-        <div className="section-container">
+    <>
+      <BlueprintChapter
+        chapter="01"
+        chapterTitle="The Horseman"
+        scenePreset="intro"
+        bg="bg-background"
+        specLabels={[
+          { text: "EST. MORNINGTON PENINSULA", position: "bottom-left" },
+        ]}
+        className="section-padding"
+      >
+        <div id="about-teaser" className="section-container">
           <div className="max-w-3xl mx-auto text-center">
             <SectionTransition variant="fade-up" duration={600}>
               <p className="text-muted-foreground uppercase tracking-[0.25em] text-sm mb-6">
@@ -115,7 +125,7 @@ function AboutTeaser() {
             </SectionTransition>
           </div>
         </div>
-      </div>
+      </BlueprintChapter>
 
       {/* Image break */}
       <div
@@ -131,17 +141,26 @@ function AboutTeaser() {
         />
         <div className="absolute inset-0 bg-primary/40" />
       </div>
-    </section>
+    </>
   );
 }
 
-/* ─── 3. Services Strip ───────────────────────────── */
+/* ─── 3. Services Strip — Chapter 02 ─────────────── */
 function ServicesStrip() {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
 
   return (
-    <section className="section-padding bg-primary text-primary-foreground overflow-hidden relative">
-      <BlueprintScene preset="services" />
+    <BlueprintChapter
+      chapter="02"
+      chapterTitle="What We Build"
+      scenePreset="services"
+      bg="bg-primary"
+      textColor="text-primary-foreground"
+      specLabels={[
+        { text: "DWG-SV01 · SERVICES", position: "bottom-right" },
+      ]}
+      className="section-padding overflow-hidden"
+    >
       <div className="section-container">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <AnimatedDivider className="mx-auto mb-8 bg-accent" />
@@ -190,11 +209,11 @@ function ServicesStrip() {
           </Button>
         </SectionTransition>
       </div>
-    </section>
+    </BlueprintChapter>
   );
 }
 
-/* ─── 4. Gallery Teaser ───────────────────────────── */
+/* ─── 4. Gallery Teaser — Chapter 03 ─────────────── */
 function GalleryTeaser() {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
 
@@ -205,7 +224,16 @@ function GalleryTeaser() {
   ];
 
   return (
-    <section className="section-padding bg-background overflow-hidden">
+    <BlueprintChapter
+      chapter="03"
+      chapterTitle="Portfolio"
+      scenePreset="gallery"
+      bg="bg-background"
+      specLabels={[
+        { text: "SCALE 1:100 · PORTFOLIO", position: "top-right" },
+      ]}
+      className="section-padding overflow-hidden"
+    >
       <div className="section-container">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <AnimatedDivider className="mx-auto mb-8" />
@@ -243,62 +271,13 @@ function GalleryTeaser() {
           </Button>
         </SectionTransition>
       </div>
-    </section>
+    </BlueprintChapter>
   );
 }
 
-/* ─── 5. Testimonial Strip ────────────────────────── */
-function TestimonialStrip() {
-  const { ref, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.15 });
+/* ── Rope divider between gallery and process ──────── */
 
-  return (
-    <section ref={ref} className="section-padding bg-card overflow-hidden">
-      <div className="section-container">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <AnimatedDivider className="mx-auto mb-8" />
-          <SectionTransition variant="blur-in">
-            <h2 className="heading-editorial mb-4">What Our Clients Say</h2>
-          </SectionTransition>
-        </div>
-
-        <div className={`grid md:grid-cols-3 gap-6 transition-all duration-700 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}>
-          {topQuotes.map((t, i) => (
-            <div
-              key={t.id}
-              className="p-7 rounded-lg bg-background border border-border hover:border-accent/50 transition-all duration-500"
-              style={{ transitionDelay: `${i * 100}ms` }}
-            >
-              <div className="flex gap-0.5 mb-4">
-                {[...Array(t.rating)].map((_, j) => (
-                  <Star key={j} className="w-4 h-4 text-accent fill-accent" />
-                ))}
-              </div>
-              <blockquote className="text-foreground leading-relaxed mb-5 font-serif italic text-sm">
-                "{t.quote.length > 120 ? t.quote.slice(0, 120) + "…" : t.quote}"
-              </blockquote>
-              <div className="pt-4 border-t border-border">
-                <p className="font-serif font-semibold text-foreground text-sm">{t.name}</p>
-                <p className="text-xs text-muted-foreground">{t.role}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <SectionTransition variant="fade-up" delay={300} className="text-center mt-10">
-          <Button asChild variant="outline" size="lg">
-            <Link to="/testimonials">
-              Read All Reviews <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-        </SectionTransition>
-      </div>
-    </section>
-  );
-}
-
-/* ─── 6. Process Teaser ───────────────────────────── */
+/* ─── 5. Process Teaser — Chapter 04 ─────────────── */
 function ProcessTeaser() {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
 
@@ -309,8 +288,17 @@ function ProcessTeaser() {
   ];
 
   return (
-    <section className="section-padding bg-primary text-primary-foreground relative overflow-hidden">
-      <BlueprintScene preset="services" />
+    <BlueprintChapter
+      chapter="04"
+      chapterTitle="The Process"
+      scenePreset="services"
+      bg="bg-primary"
+      textColor="text-primary-foreground"
+      specLabels={[
+        { text: "8 PHASES · FROM DIRT TO DYNASTY", position: "bottom-left" },
+      ]}
+      className="section-padding overflow-hidden"
+    >
       <div className="section-container relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <AnimatedDivider className="mx-auto mb-8 bg-accent" />
@@ -359,14 +347,83 @@ function ProcessTeaser() {
           </Button>
         </SectionTransition>
       </div>
-    </section>
+    </BlueprintChapter>
   );
 }
 
-/* ─── 7. Events Teaser ────────────────────────────── */
+/* ─── 6. Testimonial Strip — Chapter 05 ──────────── */
+function TestimonialStrip() {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
+
+  return (
+    <BlueprintChapter
+      chapter="05"
+      chapterTitle="Testimonials"
+      scenePreset="barn"
+      bg="bg-card"
+      specLabels={[
+        { text: "CLIENT REVIEWS", position: "top-right" },
+      ]}
+      className="section-padding overflow-hidden"
+    >
+      <div ref={ref} className="section-container">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <AnimatedDivider className="mx-auto mb-8" />
+          <SectionTransition variant="blur-in">
+            <h2 className="heading-editorial mb-4">What Our Clients Say</h2>
+          </SectionTransition>
+        </div>
+
+        <div className={`grid md:grid-cols-3 gap-6 transition-all duration-700 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}>
+          {topQuotes.map((t, i) => (
+            <div
+              key={t.id}
+              className="p-7 rounded-lg bg-background border border-border hover:border-accent/50 transition-all duration-500"
+              style={{ transitionDelay: `${i * 100}ms` }}
+            >
+              <div className="flex gap-0.5 mb-4">
+                {[...Array(t.rating)].map((_, j) => (
+                  <Star key={j} className="w-4 h-4 text-accent fill-accent" />
+                ))}
+              </div>
+              <blockquote className="text-foreground leading-relaxed mb-5 font-serif italic text-sm">
+                "{t.quote.length > 120 ? t.quote.slice(0, 120) + "…" : t.quote}"
+              </blockquote>
+              <div className="pt-4 border-t border-border">
+                <p className="font-serif font-semibold text-foreground text-sm">{t.name}</p>
+                <p className="text-xs text-muted-foreground">{t.role}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <SectionTransition variant="fade-up" delay={300} className="text-center mt-10">
+          <Button asChild variant="outline" size="lg">
+            <Link to="/testimonials">
+              Read All Reviews <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </SectionTransition>
+      </div>
+    </BlueprintChapter>
+  );
+}
+
+/* ─── 7. Events Teaser — Chapter 06 ──────────────── */
 function EventsTeaser() {
   return (
-    <section className="py-16 sm:py-20 bg-card">
+    <BlueprintChapter
+      chapter="06"
+      chapterTitle="Events"
+      scenePreset="facility"
+      bg="bg-background"
+      specLabels={[
+        { text: "CLINICS · OPEN DAYS · EXPOS", position: "bottom-right" },
+      ]}
+      className="py-16 sm:py-20"
+    >
       <div className="section-container text-center">
         <SectionTransition variant="fade-up">
           <p className="text-muted-foreground uppercase tracking-[0.2em] text-sm mb-4">Don't Miss Out</p>
@@ -384,15 +441,23 @@ function EventsTeaser() {
           </Button>
         </SectionTransition>
       </div>
-    </section>
+    </BlueprintChapter>
   );
 }
 
 /* ─── 8. Quote CTA ────────────────────────────────── */
 function InquiryFormSection() {
   return (
-    <section id="free-quote" className="section-padding bg-background">
-      <div className="section-container">
+    <BlueprintChapter
+      chapterTitle="Get Started"
+      scenePreset="intro"
+      bg="bg-background"
+      specLabels={[
+        { text: "NO OBLIGATION · FREE ESTIMATE", position: "top-left" },
+      ]}
+      className="section-padding"
+    >
+      <div id="free-quote" className="section-container">
         <div className="max-w-2xl mx-auto">
           <SectionTransition variant="fade-up">
             <div className="text-center mb-10">
@@ -407,7 +472,7 @@ function InquiryFormSection() {
           </SectionTransition>
         </div>
       </div>
-    </section>
+    </BlueprintChapter>
   );
 }
 
@@ -418,8 +483,10 @@ export default function Index() {
       <HeroSection />
       <AboutTeaser />
       <ServicesStrip />
+      <RopeDivider variant="gold" className="bg-background py-2" />
       <GalleryTeaser />
       <ProcessTeaser />
+      <RopeDivider variant="muted" className="bg-card py-2" />
       <TestimonialStrip />
       <EventsTeaser />
       <InquiryFormSection />
