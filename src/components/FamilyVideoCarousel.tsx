@@ -26,9 +26,9 @@ interface VideoItem {
 }
 
 const categoryConfig: Record<VideoCategory, { label: string; icon: React.ReactNode; variant: "default" | "secondary" | "outline" }> = {
-  family: { label: "Family", icon: <Users className="h-3 w-3" />, variant: "secondary" },
-  craftsmanship: { label: "Craftsmanship", icon: <Hammer className="h-3 w-3" />, variant: "default" },
-  events: { label: "Major Events", icon: <Trophy className="h-3 w-3" />, variant: "default" },
+  family: { label: "Family", icon: <Users className="h-3.5 w-3.5" />, variant: "secondary" },
+  craftsmanship: { label: "Craftsmanship", icon: <Hammer className="h-3.5 w-3.5" />, variant: "default" },
+  events: { label: "Major Events", icon: <Trophy className="h-3.5 w-3.5" />, variant: "default" },
 };
 
 const videos: VideoItem[] = [

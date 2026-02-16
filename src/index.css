@@ -171,6 +171,13 @@
     scroll-behavior: smooth;
   }
 
+  /* ── Global Lucide icon defaults ───────────────────── */
+  /* Consistent stroke rendering + smooth hover transitions */
+  svg.lucide {
+    stroke-width: 2;
+    @apply transition-transform duration-200 ease-out;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);

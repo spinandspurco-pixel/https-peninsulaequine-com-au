@@ -287,7 +287,7 @@ function GalleryPreviewSection() {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/40 transition-colors duration-300 flex items-center justify-center">
-                  <ZoomIn className="h-6 w-6 text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <ZoomIn className="h-5 w-5 text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
               </button>
             ))}
@@ -384,7 +384,7 @@ function TestimonialHighlight() {
             <span className="border-b border-muted-foreground/40 group-hover:border-accent transition-colors pb-0.5">
               Read all reviews
             </span>
-            <ArrowRight className="ml-1.5 h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </SectionTransition>
       </div>
