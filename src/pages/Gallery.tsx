@@ -10,12 +10,7 @@ import { SwipeIndicator } from "@/components/SwipeIndicator";
 import { Layout } from "@/components/layout/Layout";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { PageHeader } from "@/components/PageHeader";
-import { BlueprintBackground } from "@/components/BlueprintBackground";
-import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
-import { BlueprintDivider } from "@/components/BlueprintDivider";
-import blueprintElevation from "@/assets/blueprint-elevation.png";
-import blueprintFacility from "@/assets/blueprint-facility.png";
-import blueprintBarn from "@/assets/blueprint-barn.png";
+import { GalleryBlueprintOverlay } from "@/components/GalleryBlueprintOverlay";
 import logoPeMark from "@/assets/logo-pe-mark.png";
 
 // Main Ridge images
@@ -230,17 +225,9 @@ function FeaturedVideoSection({ onVideoClick }: { onVideoClick: (item: GalleryIt
   };
 
   return (
-    <section 
-      ref={ref}
-      className="relative py-16 bg-card overflow-hidden"
-    >
-      {/* Blueprint underlay */}
-      <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="right-to-left" duration={3000} parallaxSpeed={0.04} />
-      <BlueprintLineOverlay variant="detail" color="dark" />
-      {/* Lightening overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-card/60 via-card/90 to-card pointer-events-none z-[1]" />
-
-      <div className="section-container relative z-[2]">
+    <GalleryBlueprintOverlay layer="barn" bg="card" className="py-16 bg-card">
+      <div ref={ref as React.RefObject<HTMLDivElement>} />
+      <div className="section-container">
         <div className="text-center mb-10">
           <span className="text-accent text-sm font-medium tracking-wider uppercase">Featured</span>
           <h2 className="font-serif text-3xl md:text-4xl text-foreground mt-2">
@@ -300,7 +287,7 @@ function FeaturedVideoSection({ onVideoClick }: { onVideoClick: (item: GalleryIt
           ))}
         </div>
       </div>
-    </section>
+    </GalleryBlueprintOverlay>
   );
 }
 
@@ -326,14 +313,8 @@ function VideoGallerySection({ onVideoClick }: { onVideoClick: (item: GalleryIte
   }, [gridVisible]);
 
   return (
-    <section className="relative py-20 bg-background overflow-hidden">
-      {/* Blueprint underlay */}
-      <BlueprintBackground image={blueprintFacility} opacity={0.025} direction="left-to-right" duration={3500} parallaxSpeed={0.05} />
-      <BlueprintLineOverlay variant="dimensions" color="dark" />
-      {/* Lightening overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/60 pointer-events-none z-[1]" />
-
-      <div className="section-container relative z-[2]">
+    <GalleryBlueprintOverlay layer="facility" bg="background" className="py-20 bg-background">
+      <div className="section-container">
         {/* Header */}
         <div
           ref={headerRef}
@@ -418,7 +399,7 @@ function VideoGallerySection({ onVideoClick }: { onVideoClick: (item: GalleryIte
           ))}
         </div>
       </div>
-    </section>
+    </GalleryBlueprintOverlay>
   );
 }
 
@@ -1055,14 +1036,8 @@ export default function Gallery() {
       <VideoGallerySection onVideoClick={setLightboxItem} />
 
       {/* Photo Gallery Section */}
-      <section className="relative section-padding overflow-hidden">
-        {/* Blueprint underlay */}
-        <BlueprintBackground image={blueprintElevation} opacity={0.02} direction="bottom-to-top" duration={4000} parallaxSpeed={0.03} />
-        <BlueprintLineOverlay variant="barn" color="dark" />
-        {/* Lightening overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/95 to-background pointer-events-none z-[1]" />
-
-        <div className="section-container relative z-[2]">
+      <GalleryBlueprintOverlay layer="elevation" bg="background" className="section-padding">
+        <div className="section-container">
           {/* Search & Filter Bar */}
           <div className="mb-8 space-y-4" role="search" aria-label="Gallery search and filters">
             {/* Search input */}
@@ -1228,7 +1203,7 @@ export default function Gallery() {
             </div>
           )}
         </div>
-      </section>
+      </GalleryBlueprintOverlay>
 
       {/* CTA with Parallax */}
       <ParallaxCTA
