@@ -48,163 +48,69 @@ import blueprintElevation from "@/assets/blueprint-elevation.png";
 const featuredServices = services.slice(0, 4);
 
 function HeroSection() {
-  const [scrollY, setScrollY] = useState(0);
-  const [heroPhase, setHeroPhase] = useState(0); // 0=hidden, 1=background, 2=title, 3=cta
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const prefersReducedMotion = useReducedMotion();
-
-  // Phased entrance – skip delays when reduced motion is preferred
-  useEffect(() => {
-    if (prefersReducedMotion) {
-      setHeroPhase(3);
-      return;
-    }
-    const t1 = setTimeout(() => setHeroPhase(1), 400);
-    const t2 = setTimeout(() => setHeroPhase(2), 1200);
-    const t3 = setTimeout(() => setHeroPhase(3), 2000);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
-  }, [prefersReducedMotion]);
-
-  useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          setScrollY(window.scrollY);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const parallaxOffset = scrollY * 0.4;
-  const contentOffset = scrollY * 0.15;
-  const overlayOpacity = Math.min(scrollY / 800, 0.5);
-
   return (
-    <section 
-      ref={sectionRef} 
-      className="relative h-screen flex items-center justify-center overflow-hidden bg-primary"
-    >
-      {/* PE Banner as full background — the hero IS the brand */}
-      <div 
-        className="absolute inset-0 flex items-center justify-center will-change-transform"
-        style={{ 
-          transform: `translateY(${parallaxOffset * 0.3}px)`,
-        }}
-      >
+    <section className="relative h-screen flex items-center justify-center overflow-hidden bg-primary">
+      {/* PE Banner — full-bleed background */}
+      <div className="absolute inset-0 flex items-center justify-center">
         <img
           src={peBanner}
           alt=""
           aria-hidden="true"
           loading="eager"
-          className="w-full h-full object-contain max-w-[85vw] max-h-[70vh]"
-          style={{
-            opacity: heroPhase >= 1 ? 0.08 : 0,
-            filter: "brightness(1.3)",
-            transition: prefersReducedMotion ? "none" : "opacity 2s cubic-bezier(0.22,0.61,0.36,1)",
-          }}
+          className="w-full h-full object-contain max-w-[85vw] max-h-[70vh] opacity-[0.08]"
+          style={{ filter: "brightness(1.3)" }}
         />
-      </div>
-
-      {/* Blueprint overlay — subtle architectural texture */}
-      <div
-        style={{
-          opacity: heroPhase >= 1 ? 1 : 0,
-          transition: prefersReducedMotion ? "none" : "opacity 2s cubic-bezier(0.22,0.61,0.36,1) 0.3s",
-        }}
-      >
-        <BlueprintBackground image={blueprintFacility} opacity={0.04} direction="left-to-right" duration={3000} parallaxSpeed={0.03} />
       </div>
 
       {/* Soft vignette */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsl(var(--primary))_85%)]" />
 
-      {/* Centered Content */}
-      <div 
-        className="relative z-10 text-center px-6 will-change-transform"
-        style={{ 
-          transform: `translateY(${-contentOffset}px)`,
-          opacity: Math.max(1 - scrollY / 600, 0)
-        }}
-      >
-        {/* Thin accent line */}
-        <div
-          className="w-16 h-px mx-auto mb-10 bg-accent"
-          style={{
-            opacity: heroPhase >= 2 ? 1 : 0,
-            transform: heroPhase >= 2 ? "scaleX(1)" : "scaleX(0)",
-            transition: prefersReducedMotion ? "none" : "opacity 0.8s ease-out, transform 1.2s cubic-bezier(0.22,0.61,0.36,1)",
-          }}
-        />
+      {/* Content */}
+      <div className="relative z-10 text-center px-6">
+        <div className="w-16 h-px mx-auto mb-10 bg-accent" />
 
-        {/* Brand name — clean serif type */}
-        <div
-          style={{
-            opacity: heroPhase >= 2 ? 1 : 0,
-            transform: heroPhase >= 2 ? "translateY(0)" : "translateY(30px)",
-            transition: prefersReducedMotion ? "none" : "opacity 1.2s cubic-bezier(0.22,0.61,0.36,1) 0.1s, transform 1.4s cubic-bezier(0.22,0.61,0.36,1) 0.1s",
-          }}
-        >
-          <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-normal tracking-tight text-primary-foreground leading-[1.05] mb-4">
-            Peninsula
-            <br />
-            <span className="text-accent">Equine</span>
-          </h1>
-        </div>
+        <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-normal tracking-tight text-primary-foreground leading-[1.05] mb-4">
+          Peninsula
+          <br />
+          <span className="text-accent">Equine</span>
+        </h1>
 
-        {/* Tagline */}
-        <div
-          style={{
-            opacity: heroPhase >= 3 ? 1 : 0,
-            transform: heroPhase >= 3 ? "translateY(0)" : "translateY(16px)",
-            transition: prefersReducedMotion ? "none" : "opacity 1s cubic-bezier(0.22,0.61,0.36,1), transform 1.2s cubic-bezier(0.22,0.61,0.36,1)",
-          }}
-        >
-          <p className="font-sans text-xs sm:text-sm tracking-[0.4em] uppercase text-primary-foreground/50 mb-12">
-            From Dirt to Dynasty
-          </p>
+        <p className="font-sans text-xs sm:text-sm tracking-[0.4em] uppercase text-primary-foreground/50 mb-12">
+          From Dirt to Dynasty
+        </p>
 
-          {/* Minimal CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button
-              asChild
-              size="lg"
-              className="bg-accent text-accent-foreground hover:bg-accent/90 text-sm px-10 tracking-[0.15em] uppercase font-sans font-medium"
-            >
-              <Link to="/services">
-                Our Work
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 text-sm px-10 tracking-[0.15em] uppercase font-sans"
-            >
-              <Link to="/contact">
-                Get in Touch
-              </Link>
-            </Button>
-          </div>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Button
+            asChild
+            size="lg"
+            className="bg-accent text-accent-foreground hover:bg-accent/90 text-sm px-10 tracking-[0.15em] uppercase font-sans font-medium"
+          >
+            <Link to="/services">
+              Our Work
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 text-sm px-10 tracking-[0.15em] uppercase font-sans"
+          >
+            <Link to="/contact">
+              Get in Touch
+            </Link>
+          </Button>
         </div>
       </div>
 
       {/* Scroll indicator */}
-      <button 
+      <button
         onClick={() => document.getElementById('intro')?.scrollIntoView({ behavior: 'smooth' })}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-primary-foreground/40 hover:text-primary-foreground/70 transition-colors cursor-pointer"
-        style={{ 
-          opacity: Math.max(1 - scrollY / 200, 0),
-        }}
         aria-label="Scroll to content"
       >
         <span className="text-[10px] tracking-[0.3em] uppercase font-sans">Scroll</span>
-        <ChevronDown className="h-4 w-4 animate-bounce" />
+        <ChevronDown className="h-4 w-4" />
       </button>
     </section>
   );
