@@ -1,15 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Loader2, ShoppingCart, Flame } from "lucide-react";
+import { Loader2, ShoppingCart, Flame, Search, X, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { storefrontApiRequest, STOREFRONT_PRODUCTS_QUERY, ShopifyProduct } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
 
+const categories = [
+  { id: "all", label: "All Products" },
+  { id: "Custom Gates & Panels", label: "Gates & Panels" },
+  { id: "Steel Fixtures", label: "Steel Fixtures" },
+  { id: "Decorative Metalwork", label: "Decorative Metalwork" },
+  { id: "Structural Steel", label: "Structural Steel" },
+];
+
 export default function Shop() {
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const addItem = useCartStore(state => state.addItem);
   const isCartLoading = useCartStore(state => state.isLoading);
 
@@ -26,6 +36,41 @@ export default function Shop() {
     }
     fetchProducts();
   }, []);
+
+  const filteredProducts = useMemo(() => {
+    let items = products;
+    if (activeCategory !== "all") {
+      items = items.filter((p) => {
+        // Match by product_type via tags (Storefront API exposes tags)
+        // We'll match against title/description/tags keywords
+        const title = p.node.title.toLowerCase();
+        const desc = p.node.description.toLowerCase();
+        const cat = activeCategory.toLowerCase();
+        if (cat.includes("gate") || cat.includes("panel")) {
+          return title.includes("gate") || title.includes("panel") || desc.includes("gate") || desc.includes("panel");
+        }
+        if (cat.includes("fixture")) {
+          return title.includes("tie-up") || title.includes("saddle") || title.includes("rack") || title.includes("fixture") || desc.includes("fixture");
+        }
+        if (cat.includes("decorative")) {
+          return title.includes("sign") || title.includes("ornamental") || title.includes("bracket") || desc.includes("decorative") || desc.includes("ornamental");
+        }
+        if (cat.includes("structural")) {
+          return title.includes("structural") || title.includes("beam") || title.includes("fencing") || title.includes("arena perimeter") || desc.includes("structural");
+        }
+        return true;
+      });
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      items = items.filter(
+        (p) =>
+          p.node.title.toLowerCase().includes(q) ||
+          p.node.description.toLowerCase().includes(q)
+      );
+    }
+    return items;
+  }, [products, activeCategory, searchQuery]);
 
   const handleAddToCart = async (product: ShopifyProduct) => {
     const variant = product.node.variants.edges[0]?.node;
@@ -64,6 +109,56 @@ export default function Shop() {
         </div>
       </section>
 
+      {/* Search + Category Filters */}
+      <section className="py-8 bg-card border-b border-border">
+        <div className="section-container space-y-5">
+          {/* Search bar */}
+          <div className="relative max-w-lg mx-auto">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search products…"
+              className="w-full pl-11 pr-10 py-3 rounded-full border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all shadow-sm"
+              aria-label="Search products"
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery("")} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label="Clear search">
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+
+          {/* Category chips */}
+          <div className="flex flex-wrap gap-2 justify-center" role="radiogroup" aria-label="Filter by category">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id)}
+                role="radio"
+                aria-checked={activeCategory === cat.id}
+                className={`px-4 py-2 rounded-full text-xs font-medium tracking-wide transition-all ${
+                  activeCategory === cat.id
+                    ? "bg-accent text-accent-foreground shadow-sm"
+                    : "bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Result count */}
+          {!loading && (
+            <p className="text-center text-xs text-muted-foreground" aria-live="polite">
+              {filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""}
+              {activeCategory !== "all" && ` in ${categories.find(c => c.id === activeCategory)?.label}`}
+            </p>
+          )}
+        </div>
+      </section>
+
       {/* Products Grid */}
       <section className="py-16 md:py-24">
         <div className="section-container">
@@ -71,31 +166,44 @@ export default function Shop() {
             <div className="flex items-center justify-center py-24">
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </div>
-          ) : products.length === 0 ? (
+          ) : filteredProducts.length === 0 ? (
             <div className="text-center py-24">
               <Flame className="h-16 w-16 text-muted-foreground mx-auto mb-6" />
-              <h2 className="font-serif text-2xl mb-3">The forge is firing up</h2>
+              <h2 className="font-serif text-2xl mb-3">
+                {products.length === 0 ? "The forge is firing up" : "No matches"}
+              </h2>
               <p className="text-muted-foreground max-w-md mx-auto">
-                No products yet — tell us in the chat what you'd like to sell and we'll get them listed.
+                {products.length === 0
+                  ? "No products yet — tell us in the chat what you'd like to sell and we'll get them listed."
+                  : "Try a different category or search term."}
               </p>
+              {products.length > 0 && (
+                <button
+                  onClick={() => { setActiveCategory("all"); setSearchQuery(""); }}
+                  className="mt-4 text-accent text-sm underline underline-offset-2"
+                >
+                  Clear filters
+                </button>
+              )}
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {products.map((product) => {
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {filteredProducts.map((product) => {
                 const image = product.node.images.edges[0]?.node;
                 const price = product.node.priceRange.minVariantPrice;
                 return (
-                  <div key={product.node.id} className="group border border-border rounded-lg overflow-hidden bg-card hover:shadow-lg transition-shadow duration-300">
-                    <Link to={`/shop/${product.node.handle}`} className="block">
+                  <div key={product.node.id} className="group border border-border rounded-lg overflow-hidden bg-card hover:shadow-lg transition-shadow duration-300 flex flex-col">
+                    <Link to={`/shop/${product.node.handle}`} className="block flex-1">
                       <div className="aspect-square bg-muted overflow-hidden">
                         {image ? (
                           <img
                             src={image.url}
                             alt={image.altText || product.node.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center">
+                          <div className="w-full h-full flex items-center justify-center bg-primary/5">
                             <Flame className="h-12 w-12 text-muted-foreground" />
                           </div>
                         )}
@@ -107,8 +215,8 @@ export default function Shop() {
                         <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
                           {product.node.description}
                         </p>
-                        <p className="font-semibold text-accent">
-                          {price.currencyCode} {parseFloat(price.amount).toFixed(2)}
+                        <p className="font-semibold text-accent text-lg">
+                          From {price.currencyCode} ${parseFloat(price.amount).toLocaleString()}
                         </p>
                       </div>
                     </Link>
@@ -118,7 +226,7 @@ export default function Shop() {
                           e.preventDefault();
                           handleAddToCart(product);
                         }}
-                        className="w-full"
+                        className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
                         disabled={isCartLoading}
                       >
                         {isCartLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><ShoppingCart className="w-4 h-4 mr-2" />Add to Cart</>}
@@ -129,6 +237,29 @@ export default function Shop() {
               })}
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Custom Fabrication CTA */}
+      <section className="py-20 bg-primary text-primary-foreground relative overflow-hidden">
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 20px, currentColor 20px, currentColor 21px)",
+          }} />
+        </div>
+        <div className="section-container relative z-10 text-center max-w-2xl mx-auto">
+          <Flame className="h-10 w-10 text-accent mx-auto mb-6" />
+          <h2 className="font-serif text-3xl md:text-4xl mb-4">
+            Need Something <span className="text-accent">Custom?</span>
+          </h2>
+          <p className="text-primary-foreground/70 mb-8 text-lg">
+            Don't see exactly what you need? Every property is different. Send us your specs and we'll quote a bespoke fabrication — no job too big, no detail too small.
+          </p>
+          <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-wider">
+            <Link to="/contact">
+              Request Custom Quote <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
         </div>
       </section>
     </Layout>
