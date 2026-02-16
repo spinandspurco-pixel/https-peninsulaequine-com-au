@@ -2,17 +2,12 @@ import { ReactNode } from "react";
 import { useParallax } from "@/hooks/useParallax";
 import { BlueprintScene } from "@/components/BlueprintScene";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
-import { siteConfig } from "@/data/content";
-import logoPeMark from "@/assets/pe-logo-new.png";
-
 
 interface PageHeaderProps {
   title: string;
   description: string;
   backgroundImage?: string;
-  /** BlueprintDivider variant for the bottom edge. Defaults to "elevation". */
   dividerVariant?: "elevation" | "floorplan" | "grid" | "contact" | "structural";
-  /** Optional extra content rendered below the description (e.g. service pills) */
   children?: ReactNode;
 }
 
@@ -20,38 +15,21 @@ export function PageHeader({ title, description, backgroundImage, dividerVariant
   const { ref: parallaxRef, offset } = useParallax<HTMLElement>({ speed: 0.3 });
 
   return (
-    <section 
-      ref={parallaxRef} 
-      className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden"
+    <section
+      ref={parallaxRef}
+      className="relative pt-28 sm:pt-32 pb-16 sm:pb-20 bg-primary text-primary-foreground overflow-hidden"
     >
-      {/* Animated blueprint overlay */}
+      {/* Blueprint overlay */}
       <BlueprintScene preset="page-header" />
 
-      {/* Gradient overlays for depth */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/0 via-primary/30 to-primary/70 pointer-events-none z-[1]" />
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-primary/50 to-primary/80 pointer-events-none z-[1]" />
 
-      {/* PE logo watermark – large, centered, ultra-subtle */}
-      <div
-        className="absolute inset-0 flex items-center justify-center pointer-events-none z-[2]"
-        style={{
-          opacity: 0.04,
-          transform: `translateY(${offset * 0.15}px)`,
-        }}
-      >
-        <img
-          src={logoPeMark}
-          alt=""
-          aria-hidden="true"
-          className="w-[50vw] max-w-[400px] h-auto object-contain select-none"
-          style={{ filter: "grayscale(0.5) brightness(1.4)" }}
-        />
-      </div>
-
-      {/* Parallax decorative background image */}
+      {/* Background image */}
       {backgroundImage && (
-        <div 
+        <div
           className="absolute inset-0 opacity-10 will-change-transform"
-          style={{ 
+          style={{
             transform: `translateY(${offset * 0.5}px)`,
             backgroundImage: `url(${backgroundImage})`,
             backgroundSize: 'cover',
@@ -59,28 +37,18 @@ export function PageHeader({ title, description, backgroundImage, dividerVariant
           }}
         />
       )}
-      
+
       <div className="section-container relative z-10">
         <div className="max-w-3xl mx-auto text-center">
-          {/* Primary logo visual */}
-          <div className="mb-6">
-            <img 
-              src={logoPeMark} 
-              alt="Peninsula Equine" 
-              className="w-20 h-20 sm:w-24 sm:h-24 mx-auto object-contain drop-shadow-[0_2px_20px_rgba(255,255,255,0.2)]"
-            />
-          </div>
-          <p className="text-primary-foreground/50 uppercase tracking-[0.2em] text-xs sm:text-sm mb-6">
-            {siteConfig.tagline}
-          </p>
-          <h1 
-            className="heading-display mb-6 transition-all duration-700"
+          <div className="w-12 h-px bg-accent mx-auto mb-6" />
+          <h1
+            className="heading-display mb-5"
             style={{ transform: `translateY(${offset * 0.08}px)` }}
           >
             {title}
           </h1>
-          <p 
-            className="text-lg text-primary-foreground/80 transition-all duration-700"
+          <p
+            className="text-base sm:text-lg text-primary-foreground/70 max-w-2xl mx-auto leading-relaxed"
             style={{ transform: `translateY(${offset * 0.12}px)` }}
           >
             {description}
@@ -89,8 +57,7 @@ export function PageHeader({ title, description, backgroundImage, dividerVariant
         </div>
       </div>
 
-      {/* Architectural divider at the bottom edge */}
-      <BlueprintDivider variant={dividerVariant} className="absolute bottom-0 left-0 right-0 h-12 sm:h-16" />
+      <BlueprintDivider variant={dividerVariant} className="absolute bottom-0 left-0 right-0 h-10 sm:h-14" />
     </section>
   );
 }

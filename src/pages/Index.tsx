@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Phone, ChevronDown, Star } from "lucide-react";
+import { ArrowRight, Phone, ChevronDown, Star, Hammer, Ruler, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { MultiStepInquiryForm } from "@/components/MultiStepInquiryForm";
@@ -298,15 +298,80 @@ function TestimonialStrip() {
   );
 }
 
-/* ─── 6. Events Teaser ────────────────────────────── */
+/* ─── 6. Process Teaser ───────────────────────────── */
+function ProcessTeaser() {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+
+  const steps = [
+    { icon: Ruler, label: "Site Consultation", desc: "Ciro walks your land and reads the terrain" },
+    { icon: Hammer, label: "Design & Build", desc: "Custom plans, not templates" },
+    { icon: CheckCircle, label: "Handover", desc: "A facility you're proud to own" },
+  ];
+
+  return (
+    <section className="section-padding bg-primary text-primary-foreground relative overflow-hidden">
+      <BlueprintScene preset="services" />
+      <div className="section-container relative z-10">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <AnimatedDivider className="mx-auto mb-8 bg-accent" />
+          <SectionTransition variant="fade-up">
+            <p className="text-primary-foreground/50 uppercase tracking-[0.2em] text-sm mb-4">Our Process</p>
+          </SectionTransition>
+          <SectionTransition variant="blur-in" delay={100}>
+            <h2 className="heading-editorial mb-4">From Dirt to Dynasty</h2>
+          </SectionTransition>
+          <SectionTransition variant="fade-up" delay={200}>
+            <p className="text-primary-foreground/60 leading-relaxed">
+              An 8-phase construction journey — from first site visit to final footing.
+            </p>
+          </SectionTransition>
+        </div>
+
+        <div
+          ref={ref}
+          className={`grid sm:grid-cols-3 gap-8 max-w-3xl mx-auto mb-10 transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
+          {steps.map((step, i) => (
+            <div
+              key={i}
+              className="text-center"
+              style={{ transitionDelay: `${i * 120}ms` }}
+            >
+              <div className="w-14 h-14 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-4">
+                <step.icon className="h-6 w-6 text-accent" />
+              </div>
+              <h3 className="font-serif text-lg text-primary-foreground mb-1">{step.label}</h3>
+              <p className="text-sm text-primary-foreground/50">{step.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        <SectionTransition variant="fade-up" delay={300} className="text-center">
+          <Button
+            asChild variant="outline" size="lg"
+            className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary text-sm px-10 tracking-[0.15em] uppercase font-sans"
+          >
+            <Link to="/process">
+              See Full Process <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </SectionTransition>
+      </div>
+    </section>
+  );
+}
+
+/* ─── 7. Events Teaser ────────────────────────────── */
 function EventsTeaser() {
   return (
-    <section className="py-16 sm:py-20 bg-primary text-primary-foreground">
+    <section className="py-16 sm:py-20 bg-card">
       <div className="section-container text-center">
         <SectionTransition variant="fade-up">
-          <p className="text-primary-foreground/50 uppercase tracking-[0.2em] text-sm mb-4">Don't Miss Out</p>
-          <h2 className="heading-editorial mb-4">Upcoming Events &amp; Clinics</h2>
-          <p className="text-primary-foreground/60 max-w-xl mx-auto mb-8">
+          <p className="text-muted-foreground uppercase tracking-[0.2em] text-sm mb-4">Don't Miss Out</p>
+          <h2 className="heading-editorial text-foreground mb-4">Upcoming Events &amp; Clinics</h2>
+          <p className="text-muted-foreground max-w-xl mx-auto mb-8">
             From Equitana expos to local clinics and open days — find your next opportunity.
           </p>
           <Button
@@ -323,7 +388,7 @@ function EventsTeaser() {
   );
 }
 
-/* ─── 7. Quote CTA ────────────────────────────────── */
+/* ─── 8. Quote CTA ────────────────────────────────── */
 function InquiryFormSection() {
   return (
     <section id="free-quote" className="section-padding bg-background">
@@ -354,6 +419,7 @@ export default function Index() {
       <AboutTeaser />
       <ServicesStrip />
       <GalleryTeaser />
+      <ProcessTeaser />
       <TestimonialStrip />
       <EventsTeaser />
       <InquiryFormSection />

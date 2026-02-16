@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,9 +10,11 @@ import { siteConfig } from "@/data/content";
 
 const navigation = [
   { name: "Home", href: "/" },
-  { name: "Services", href: "/services" },
   { name: "About", href: "/about" },
-  { name: "Gallery", href: "/gallery" },
+  { name: "Services", href: "/services" },
+  { name: "Portfolio", href: "/gallery" },
+  { name: "Process", href: "/process" },
+  { name: "Testimonials", href: "/testimonials" },
   { name: "Events", href: "/events" },
   { name: "Contact", href: "/contact" },
 ];
@@ -20,20 +22,10 @@ const navigation = [
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [logoPhase, setLogoPhase] = useState(0); // 0=hidden, 1=spin-in, 2=glow, 3=settled
   const location = useLocation();
 
   useEffect(() => {
-    const t1 = setTimeout(() => setLogoPhase(1), 200);   // spin in
-    const t2 = setTimeout(() => setLogoPhase(2), 900);    // glow pulse
-    const t3 = setTimeout(() => setLogoPhase(3), 1600);   // settled
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -52,80 +44,51 @@ export function Header() {
       )}
     >
       <div className="section-container">
-        <nav className="flex items-center justify-between h-16 sm:h-20 lg:h-24">
-          {/* Logo - Left */}
-          <Link to="/" className="flex items-center gap-2 sm:gap-3 group min-w-0">
-            {/* Logo mark + accent bar — fixed aspect-ratio container prevents layout shift */}
-            <div
-              className={cn(
-                "relative flex-shrink-0 flex items-center",
-                "w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12"
-              )}
-            >
-              {/* Glow ring — phase 2 */}
-              <span
+        <nav className="flex items-center justify-between h-16 sm:h-20">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2.5 group min-w-0">
+            <div className="relative flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10">
+              <img
+                src={logoImage}
+                alt="Peninsula Equine"
+                width={40}
+                height={40}
                 className={cn(
-                  "absolute inset-0 rounded-full transition-all duration-700 pointer-events-none",
-                  logoPhase === 2
-                    ? "opacity-100 scale-125"
-                    : "opacity-0 scale-100"
-                )}
-                style={{
-                  boxShadow: logoPhase === 2
-                    ? "0 0 18px 4px hsl(var(--header-active) / 0.5), 0 0 40px 8px hsl(var(--header-active) / 0.2)"
-                    : "none",
-                }}
-              />
-              <img 
-                src={logoImage} 
-                alt="Peninsula Equine" 
-                width={48}
-                height={48}
-                className={cn(
-                  "w-full h-full object-contain group-hover:scale-105",
-                  isScrolled ? "" : "brightness-0 invert",
-                  logoPhase === 0
-                    ? "opacity-0 scale-50 -rotate-180 transition-none"
-                    : logoPhase === 1
-                    ? "opacity-100 scale-110 rotate-[15deg] transition-all duration-700 ease-out"
-                    : logoPhase === 2
-                    ? "opacity-100 scale-105 rotate-0 transition-all duration-500 ease-out"
-                    : "opacity-100 scale-100 rotate-0 transition-all duration-500 ease-out"
+                  "w-full h-full object-contain transition-transform duration-300 group-hover:scale-105",
+                  isScrolled ? "" : "brightness-0 invert"
                 )}
               />
-              {/* Accent bar — scales with logo */}
+              {/* Accent bar */}
               <span
                 className={cn(
-                  "absolute -right-1.5 sm:-right-2 top-1/2 -translate-y-1/2 w-[2px] sm:w-[3px] rounded-full transition-all duration-500",
+                  "absolute -right-1.5 top-1/2 -translate-y-1/2 w-[2px] rounded-full transition-all duration-300",
                   isScrolled
-                    ? "h-4 sm:h-5 md:h-6 bg-[hsl(var(--header-active))]"
-                    : "h-5 sm:h-6 md:h-7 bg-[hsl(var(--header-active))]/80",
-                  logoPhase >= 2 ? "opacity-100 scale-y-100" : "opacity-0 scale-y-0"
+                    ? "h-4 sm:h-5 bg-[hsl(var(--header-active))]"
+                    : "h-5 sm:h-6 bg-[hsl(var(--header-active))]/80"
                 )}
               />
             </div>
             <span className={cn(
-              "hidden sm:block font-serif text-base md:text-lg tracking-[0.1em] uppercase pl-0.5 sm:pl-1 truncate transition-all duration-500",
-              isScrolled ? "text-[hsl(var(--header-scrolled-foreground))]" : "text-[hsl(var(--header-foreground))]",
-              logoPhase >= 3 ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"
+              "hidden sm:block font-serif text-sm md:text-base tracking-[0.12em] uppercase transition-colors duration-300",
+              isScrolled ? "text-[hsl(var(--header-scrolled-foreground))]" : "text-[hsl(var(--header-foreground))]"
             )}>
               Peninsula<span className="text-[hsl(var(--header-active))]">Equine</span>
             </span>
           </Link>
 
-          {/* Desktop Navigation - Center */}
-          <div className="hidden lg:flex items-center gap-10">
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center gap-8">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  "text-sm uppercase tracking-[0.15em] transition-colors hover:text-[hsl(var(--header-active))]",
+                  "text-xs uppercase tracking-[0.15em] transition-colors duration-200 hover:text-[hsl(var(--header-active))]",
                   location.pathname === item.href
                     ? "text-[hsl(var(--header-active))]"
                     : isScrolled
-                    ? "text-[hsl(var(--header-scrolled-foreground))]"
-                    : "text-[hsl(var(--header-foreground))]/90"
+                    ? "text-[hsl(var(--header-scrolled-foreground))]/80"
+                    : "text-[hsl(var(--header-foreground))]/80"
                 )}
               >
                 {item.name}
@@ -133,20 +96,16 @@ export function Header() {
             ))}
           </div>
 
-          {/* CTA + Cart - Right */}
+          {/* CTA + Cart */}
           <div className="hidden lg:flex items-center gap-3">
             <GlobalSearch />
             <CartDrawer />
-            <Button 
-              asChild 
-              className={cn(
-                "uppercase tracking-[0.1em] text-xs px-6",
-                isScrolled 
-                  ? "bg-[hsl(var(--header-active))] hover:bg-[hsl(var(--header-active))]/90 text-accent-foreground"
-                  : "bg-white/10 backdrop-blur-sm border border-[hsl(var(--header-foreground))]/30 text-[hsl(var(--header-foreground))] hover:bg-[hsl(var(--header-foreground))] hover:text-[hsl(var(--header-bg))]"
-              )}
+            <Button
+              asChild
+              size="sm"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.1em] text-xs px-6"
             >
-              <Link to="/contact">Inquire</Link>
+              <Link to="/contact">Get a Quote</Link>
             </Button>
           </div>
 
@@ -167,38 +126,11 @@ export function Header() {
       {/* Mobile Menu */}
       <div
         className={cn(
-          "lg:hidden bg-background border-b border-border overflow-hidden transition-all duration-300 relative",
+          "lg:hidden bg-background border-b border-border overflow-hidden transition-all duration-300",
           isMobileMenuOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
         )}
       >
-        {/* Blueprint SVG overlay inside mobile menu */}
-        <svg
-          className="absolute inset-0 w-full h-full pointer-events-none"
-          viewBox="0 0 400 600"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          {/* Horizontal grid lines */}
-          {[80, 160, 240, 320, 400].map((y, i) => (
-            <line key={`mh${i}`} x1="10" y1={y} x2="390" y2={y}
-              stroke="hsl(30 15% 18% / 0.04)" strokeWidth="0.5" />
-          ))}
-          {/* Vertical grid lines */}
-          {[40, 120, 200, 280, 360].map((x, i) => (
-            <line key={`mv${i}`} x1={x} y1="10" x2={x} y2="590"
-              stroke="hsl(30 15% 18% / 0.04)" strokeWidth="0.5" />
-          ))}
-          {/* Corner brackets */}
-          <path d="M 15,15 L 15,45 M 15,15 L 45,15" fill="none" stroke="hsl(30 15% 18% / 0.06)" strokeWidth="0.6" />
-          <path d="M 385,15 L 385,45 M 385,15 L 355,15" fill="none" stroke="hsl(30 15% 18% / 0.06)" strokeWidth="0.6" />
-          <path d="M 15,585 L 15,555 M 15,585 L 45,585" fill="none" stroke="hsl(30 15% 18% / 0.06)" strokeWidth="0.6" />
-          <path d="M 385,585 L 385,555 M 385,585 L 355,585" fill="none" stroke="hsl(30 15% 18% / 0.06)" strokeWidth="0.6" />
-          {/* Centre cross */}
-          <line x1="195" y1="290" x2="205" y2="290" stroke="hsl(42 60% 50% / 0.06)" strokeWidth="0.5" />
-          <line x1="200" y1="285" x2="200" y2="295" stroke="hsl(42 60% 50% / 0.06)" strokeWidth="0.5" />
-        </svg>
-
-        <div className="section-container py-6 space-y-1 relative z-10">
+        <div className="section-container py-6 space-y-1">
           {navigation.map((item) => (
             <Link
               key={item.name}
@@ -214,22 +146,21 @@ export function Header() {
             </Link>
           ))}
 
-          {/* Contact quick-access row */}
           <div className="flex items-center gap-4 pt-3 mt-3 border-t border-border text-sm text-muted-foreground">
             <a href={`tel:${siteConfig.phone}`} className="inline-flex items-center gap-1.5 hover:text-accent transition-colors">
-              <Phone className="h-3.5 w-3.5" />
+              <Phone className="h-4 w-4" />
               <span>{siteConfig.phone}</span>
             </a>
             <span className="w-px h-4 bg-border" />
             <a href={`mailto:${siteConfig.email}`} className="inline-flex items-center gap-1.5 hover:text-accent transition-colors truncate">
-              <Mail className="h-3.5 w-3.5 flex-shrink-0" />
+              <Mail className="h-4 w-4 flex-shrink-0" />
               <span className="truncate">{siteConfig.email}</span>
             </a>
           </div>
 
           <div className="pt-4 mt-2">
             <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.1em]">
-              <Link to="/contact">Inquire</Link>
+              <Link to="/contact">Get a Quote</Link>
             </Button>
           </div>
         </div>
