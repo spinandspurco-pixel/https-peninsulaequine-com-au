@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Instagram, Facebook } from "lucide-react";
 import { siteConfig } from "@/data/content";
@@ -23,22 +24,42 @@ const footerLinks = {
 };
 
 export function Footer() {
+  const [logoVisible, setLogoVisible] = useState(false);
+  const logoRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = logoRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setLogoVisible(true); observer.disconnect(); } },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <footer className="bg-[hsl(var(--footer-bg))] text-[hsl(var(--footer-foreground))]">
       <div className="section-container py-16 lg:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           {/* Brand Column */}
           <div className="lg:col-span-1">
+            <div ref={logoRef}>
             <Link to="/" className="inline-flex items-center gap-3 mb-6 group">
               <img 
                 src={logoPeMark} 
                 alt="Peninsula Equine" 
-                className="h-10 w-10 object-contain transition-transform duration-300 group-hover:scale-105"
+                className={`h-10 w-10 object-contain transition-all duration-700 group-hover:scale-105 ${
+                  logoVisible
+                    ? "opacity-100 scale-100 rotate-0"
+                    : "opacity-0 scale-75 -rotate-[15deg]"
+                }`}
               />
               <span className="font-serif text-2xl font-semibold text-[hsl(var(--footer-foreground))]">
                 Peninsula<span className="text-[hsl(var(--footer-hover))]">Equine</span>
               </span>
             </Link>
+            </div>
             <p className="text-[hsl(var(--footer-muted))] mb-6 max-w-xs">
               Expert equine facility construction by a horseman who understands what your horses need.
             </p>
