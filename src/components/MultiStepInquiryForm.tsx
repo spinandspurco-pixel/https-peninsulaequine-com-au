@@ -230,7 +230,11 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
       clearDraft();
       setSubmitted(true);
       toast({ title: "Inquiry sent!", description: "We'll be in touch within 1–2 business days." });
-      navigate("/thank-you");
+      const tyParams = new URLSearchParams();
+      if (selectedServices.length) tyParams.set("services", selectedServices.join(","));
+      if (name.trim()) tyParams.set("name", name.trim());
+      if (email.trim()) tyParams.set("email", email.trim());
+      navigate(`/thank-you?${tyParams.toString()}`);
     } catch {
       toast({ title: "Something went wrong", description: "Please try again or contact us directly.", variant: "destructive" });
     } finally {
