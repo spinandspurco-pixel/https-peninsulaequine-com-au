@@ -6,6 +6,7 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import { FloatingContactButton } from "@/components/FloatingContactButton";
 import { PageTransition } from "@/components/PageTransition";
 import { ContrastChecker } from "@/components/ContrastChecker";
+import { ContrastWarningOverlay } from "@/components/ContrastWarningOverlay";
 import { FloatingPEWatermark } from "@/components/FloatingPEWatermark";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { ParallaxDepthToggle } from "@/components/ParallaxDepthToggle";
@@ -43,6 +44,7 @@ export function Layout({ children }: LayoutProps) {
       <FloatingPEWatermark />
       <ParallaxDepthToggle />
       <ContrastChecker />
+      <ContrastWarningOverlay />
     </div>
   );
 }
