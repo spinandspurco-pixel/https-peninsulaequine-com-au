@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { CalendarIcon, Clock, CheckCircle, ArrowRight, Send, Star, Award, Target, ChevronDown, ExternalLink, Quote, Users, Sparkles } from "lucide-react";
 import { z } from "zod";
@@ -144,7 +144,7 @@ function ProgramLevelsSection() {
   const { containerRef, visibleItems } = useStaggeredAnimation(PROGRAM_LEVELS.length);
 
   return (
-    <section className="section-padding bg-card">
+    <section id="program-levels" className="section-padding bg-card">
       <div className="section-container">
         <div
           ref={headerRef}
@@ -802,6 +802,57 @@ function TrainerTestimonialsSection() {
   );
 }
 
+// ── Sticky Booking CTA ────────────────────────────────
+
+function StickyBookingCTA() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const programSection = document.getElementById("program-levels");
+      const bookSection = document.getElementById("book");
+      if (!programSection || !bookSection) return;
+
+      const programBottom = programSection.getBoundingClientRect().bottom;
+      const bookTop = bookSection.getBoundingClientRect().top;
+
+      // Show when scrolled past program cards, hide when booking form is in view
+      setVisible(programBottom < 0 && bookTop > window.innerHeight * 0.5);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <div
+      className={cn(
+        "fixed bottom-0 inset-x-0 z-50 transition-all duration-300 pointer-events-none",
+        visible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+      )}
+    >
+      <div className="bg-background/95 backdrop-blur-md border-t border-border shadow-[0_-4px_20px_-4px_hsl(var(--foreground)/0.08)] pointer-events-auto">
+        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+          <div className="hidden sm:block">
+            <p className="text-sm font-serif font-semibold text-foreground">Ready to ride?</p>
+            <p className="text-xs text-muted-foreground">Sessions from $95 · Thursdays & Fridays</p>
+          </div>
+          <Button
+            asChild
+            size="lg"
+            className="bg-accent hover:bg-accent/90 text-accent-foreground w-full sm:w-auto"
+          >
+            <a href="#book">
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              Book a Lesson
+            </a>
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Page ──────────────────────────────────────────────
 
 export default function BookLesson() {
@@ -854,6 +905,9 @@ export default function BookLesson() {
           </div>
         </div>
       </section>
+
+      {/* Sticky booking CTA */}
+      <StickyBookingCTA />
     </Layout>
   );
 }
