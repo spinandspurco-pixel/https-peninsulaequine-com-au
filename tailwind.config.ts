@@ -14,8 +14,16 @@ export default {
     },
     extend: {
       fontFamily: {
-        serif: ["'Playfair Display'", "serif"],
+        serif: ["'Cinzel'", "'Trajan Pro'", "'Times New Roman'", "serif"],
         sans: ["'Source Sans 3'", "sans-serif"],
+      },
+      spacing: {
+        /* Design-system spacing tokens */
+        "section-sm": "2.5rem",   /* 40px */
+        "section":    "4rem",     /* 64px */
+        "section-md": "6rem",     /* 96px */
+        "section-lg": "8rem",     /* 128px */
+        "section-xl": "11rem",    /* 176px */
       },
       colors: {
         border: "hsl(var(--border))",
@@ -61,18 +69,18 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        copper: {
-          DEFAULT: "hsl(28 60% 45%)",
-          light: "hsl(28 50% 60%)",
-          dark: "hsl(28 65% 35%)",
+        /* Brand tokens */
+        gold: {
+          DEFAULT: "hsl(var(--gold))",
+          light: "hsl(var(--gold-light))",
+          dark: "hsl(var(--gold-dark))",
         },
-        charcoal: {
-          DEFAULT: "hsl(220 15% 18%)",
-          light: "hsl(220 10% 30%)",
+        navy: {
+          DEFAULT: "hsl(var(--navy))",
+          light: "hsl(var(--navy-light))",
         },
-        linen: "hsl(40 30% 96%)",
-        sand: "hsl(35 25% 88%)",
-        cream: "hsl(40 25% 98%)",
+        ivory: "hsl(var(--ivory))",
+        cream: "hsl(var(--cream))",
         hero: {
           text: "hsl(var(--hero-text))",
           "text-muted": "hsl(var(--hero-text-muted))",
