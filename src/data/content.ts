@@ -19,7 +19,7 @@ export const siteConfig = {
     sunday: "Sun: Closed",
   },
   social: {
-    instagram: "https://instagram.com/peninsulaequine",
+    instagram: "https://www.instagram.com/peninsulaequine",
     facebook: "https://www.facebook.com/PeninsulaEquineConstructions/",
   },
 };
