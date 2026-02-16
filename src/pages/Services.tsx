@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { DepositPaymentPolicy } from "@/components/DepositPaymentPolicy";
+import { InsuranceSafetyCard } from "@/components/InsuranceSafetyCard";
 import { SwipeIndicator } from "@/components/SwipeIndicator";
 import { QuickQuoteModal } from "@/components/QuickQuoteModal";
 import { QuoteCalculator } from "@/components/QuoteCalculator";
@@ -1702,6 +1703,8 @@ export default function Services() {
       <LessonsSection />
 
       <DepositPaymentPolicy ctaHref="/contact" ctaLabel="Get a Free Quote" />
+
+      <InsuranceSafetyCard />
 
       <CTASection />
 
