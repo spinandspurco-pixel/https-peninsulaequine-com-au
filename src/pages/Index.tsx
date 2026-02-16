@@ -192,23 +192,52 @@ function HeroSection() {
 
 function HeroSocialProof() {
   const topQuotes = testimonials.slice(0, 3);
+
+  const getInitials = (name: string) =>
+    name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
+
   return (
     <section className="bg-card border-b border-border">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        <div className="grid sm:grid-cols-3 gap-4 sm:gap-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+        <p className="text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-6">
+          Trusted by Horse Owners Across the Peninsula
+        </p>
+        <div className="grid sm:grid-cols-3 gap-5 sm:gap-6">
           {topQuotes.map((t) => (
-            <div key={t.id} className="flex gap-3 items-start">
-              <div className="flex-shrink-0 mt-0.5">
-                <Star className="h-4 w-4 text-accent fill-accent" />
+            <div
+              key={t.id}
+              className="flex gap-4 items-start rounded-xl bg-background border border-border p-4 sm:p-5 transition-shadow hover:shadow-md"
+            >
+              {/* Avatar thumbnail */}
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/15 flex items-center justify-center">
+                <span className="text-xs font-semibold text-accent tracking-wide">
+                  {getInitials(t.name)}
+                </span>
               </div>
-              <div className="min-w-0">
-                <p className="text-sm text-foreground leading-snug line-clamp-2 italic font-serif">
-                  "{t.quote.length > 100 ? t.quote.slice(0, 100) + "…" : t.quote}"
+              <div className="min-w-0 flex-1">
+                <div className="flex gap-0.5 mb-1.5">
+                  {[...Array(t.rating)].map((_, i) => (
+                    <Star key={i} className="h-3 w-3 text-accent fill-accent" />
+                  ))}
+                </div>
+                <p className="text-sm text-foreground leading-snug line-clamp-3 italic font-serif mb-2">
+                  "{t.quote.length > 120 ? t.quote.slice(0, 120) + "…" : t.quote}"
                 </p>
-                <p className="text-xs text-muted-foreground mt-1.5 font-medium">{t.name}</p>
+                <div>
+                  <p className="text-xs font-medium text-foreground">{t.name}</p>
+                  <p className="text-[11px] text-muted-foreground">{t.role}</p>
+                </div>
               </div>
             </div>
           ))}
+        </div>
+        <div className="text-center mt-6">
+          <Link
+            to="/testimonials"
+            className="text-xs text-accent hover:text-accent/80 underline underline-offset-2 transition-colors tracking-wide uppercase"
+          >
+            Read all testimonials →
+          </Link>
         </div>
       </div>
     </section>
