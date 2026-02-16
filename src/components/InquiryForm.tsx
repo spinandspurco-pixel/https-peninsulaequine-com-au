@@ -421,6 +421,11 @@ export function InquiryForm() {
   // Read pre-selected services from URL params (e.g., ?services=arena-construction,fencing)
   const preSelectedServices = searchParams.get("services")?.split(",").filter(Boolean) || [];
 
+  // Read pre-selected date from URL params (e.g., ?date=2026-03-15)
+  const preSelectedDateStr = searchParams.get("date");
+  const preSelectedDate = preSelectedDateStr ? new Date(preSelectedDateStr) : undefined;
+  const validPreSelectedDate = preSelectedDate && !isNaN(preSelectedDate.getTime()) ? preSelectedDate : undefined;
+
   const [formData, setFormData] = useState<Partial<InquiryFormData>>({
     interestedServices: preSelectedServices,
     horseName: "",
@@ -453,7 +458,7 @@ export function InquiryForm() {
     name: "",
     email: "",
     phone: "",
-    preferredDate: undefined,
+    preferredDate: validPreSelectedDate,
     additionalNotes: "",
   });
 
