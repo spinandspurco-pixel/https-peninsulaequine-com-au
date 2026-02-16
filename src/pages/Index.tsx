@@ -524,18 +524,40 @@ function ServicesSection() {
               <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
                 {service.shortDescription}
               </p>
-              <Link
-                to={`/services#${service.id}`}
-                className="inline-flex items-center text-sm font-medium text-foreground hover:text-accent transition-colors"
-              >
-                <span className="border-b border-current pb-0.5">Learn More</span>
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
+              <div className="flex flex-wrap items-center gap-3">
+                <Button
+                  asChild
+                  size="sm"
+                  className="bg-accent text-accent-foreground hover:bg-accent/90 text-xs tracking-[0.1em] uppercase"
+                >
+                  <Link to={`/contact?service=${service.id}`}>
+                    Get a Quote
+                    <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                  </Link>
+                </Button>
+                <Link
+                  to={`/services#${service.id}`}
+                  className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-accent transition-colors"
+                >
+                  <span className="border-b border-current pb-0.5">Learn More</span>
+                  <ArrowRight className="ml-1.5 h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
             </div>
           ))}
         </div>
 
-        <SectionTransition variant="fade-up" delay={400} className="text-center mt-16">
+        <SectionTransition variant="fade-up" delay={400} className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-16">
+          <Button 
+            asChild 
+            size="lg"
+            className="bg-accent text-accent-foreground hover:bg-accent/90"
+          >
+            <Link to="/contact">
+              Request a Free Quote
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
           <Button 
             asChild 
             variant="outline" 
