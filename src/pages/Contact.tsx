@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { InquiryForm } from "@/components/InquiryForm";
 import { siteConfig } from "@/data/content";
 import { PolicyDownloadCenter } from "@/components/PolicyDownloadCenter";
+import { StickySubpageCTA } from "@/components/StickySubpageCTA";
 
 // Background image for header parallax
 import aberdeenInterior from "@/assets/aberdeen-barn-interior.jpg";
@@ -87,6 +88,11 @@ function ContactInfo() {
 export default function Contact() {
   return (
     <Layout>
+      <StickySubpageCTA
+        ctaLabel="Call Us Now"
+        ctaIcon={<Phone className="h-4 w-4" />}
+        onCtaClick={() => window.location.href = `tel:${siteConfig.phone}`}
+      />
       <PageHeader 
         title="Start Your Project"
         description="Tell us about your vision and we'll help you bring it to life. Complete our inquiry form to get started."
