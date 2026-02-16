@@ -6,6 +6,7 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import { FloatingContactButton } from "@/components/FloatingContactButton";
 import { PageTransition } from "@/components/PageTransition";
 import { ContrastChecker } from "@/components/ContrastChecker";
+import { FloatingPEWatermark } from "@/components/FloatingPEWatermark";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import blueprintFacility from "@/assets/blueprint-facility.png";
 
@@ -38,6 +39,7 @@ export function Layout({ children }: LayoutProps) {
       <Footer />
       <ScrollToTop />
       <FloatingContactButton />
+      <FloatingPEWatermark />
       <ContrastChecker />
     </div>
   );
