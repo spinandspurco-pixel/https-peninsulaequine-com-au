@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ArrowRight, ArrowLeft, CheckCircle, Loader2, User, Mail, Phone, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,6 +49,7 @@ interface MultiStepInquiryFormProps {
 
 export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [name, setName] = useState("");
@@ -131,6 +133,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
 
       setSubmitted(true);
       toast({ title: "Inquiry sent!", description: "We'll be in touch within 1–2 business days." });
+      navigate("/thank-you");
     } catch {
       toast({ title: "Something went wrong", description: "Please try again or contact us directly.", variant: "destructive" });
     } finally {
