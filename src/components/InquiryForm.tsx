@@ -704,23 +704,64 @@ export function InquiryForm() {
           Expect to hear from us within 1-2 business days.
         </p>
 
-        {/* Scheduling CTA */}
-        <div className="rounded-xl border border-border bg-background p-5 max-w-sm mx-auto mb-6">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <CalendarIcon className="h-5 w-5 text-accent" />
-            <span className="font-serif font-semibold text-foreground">Want to Skip the Wait?</span>
-          </div>
-          <p className="text-sm text-muted-foreground mb-3">
-            Book a call or visit on our calendar right now.
-          </p>
-          <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-            <a href="/schedule">
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              Schedule a Call
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </a>
-          </Button>
-        </div>
+        {/* Smart Calendar CTA */}
+        {(() => {
+          const svcIds = formData.interestedServices || [];
+          const primary = svcIds[0] || "";
+          const svc = services.find((s) => s.id === primary);
+          const durations: Record<string, number> = {
+            "riding-lessons": 30, "arena-construction": 60, "barn-construction": 60,
+            "full-facility": 90, "fencing": 45, "round-pens": 45,
+            "infrastructure": 60, "renovations": 45, "clinics-events": 60,
+          };
+          const duration = durations[primary] || 45;
+          const title = svc ? `PE Consultation: ${svc.title}` : "Peninsula Equine Consultation";
+          const details = svcIds.length > 1
+            ? `Services: ${svcIds.map((id) => services.find((s) => s.id === id)?.title || id).join(", ")}`
+            : svc ? `Regarding: ${svc.title}` : "General consultation";
+          const now = new Date();
+          const start = new Date(now);
+          start.setDate(start.getDate() + 3);
+          start.setHours(10, 0, 0, 0);
+          const end = new Date(start);
+          end.setMinutes(end.getMinutes() + duration);
+          const fmt = (d: Date) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+          const calParams = new URLSearchParams({
+            action: "TEMPLATE", text: title,
+            dates: `${fmt(start)}/${fmt(end)}`,
+            details: details + (formData.name ? `\nClient: ${formData.name}` : ""),
+            location: "Peninsula Equine - On-site or Phone",
+          });
+          const calUrl = `https://calendar.google.com/calendar/render?${calParams.toString()}`;
+
+          return (
+            <div className="rounded-xl border border-border bg-background p-5 max-w-sm mx-auto mb-6">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <CalendarIcon className="h-5 w-5 text-accent" />
+                <span className="font-serif font-semibold text-foreground">
+                  Book Your {svc?.title || "Consultation"} Follow-Up
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground mb-3">
+                We've suggested a {duration}-minute slot. Add it to your calendar and we'll confirm.
+              </p>
+              <div className="flex flex-col gap-2">
+                <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+                  <a href={calUrl} target="_blank" rel="noopener noreferrer">
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    Add to Google Calendar
+                  </a>
+                </Button>
+                <Button asChild variant="outline" className="w-full">
+                  <a href={`/schedule?services=${svcIds.join(",")}`}>
+                    Choose a Different Time
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </a>
+                </Button>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Clinic/Event-specific summary & next steps */}
         {isClinicInquiry && (

@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { CheckCircle, ArrowRight, CalendarIcon, Phone, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
-import { siteConfig, testimonials } from "@/data/content";
+import { siteConfig, testimonials, services } from "@/data/content";
 
 const steps = [
   { title: "Inquiry Received", description: "We've logged your details and project requirements." },
@@ -11,9 +11,58 @@ const steps = [
   { title: "Custom Quote", description: "You'll receive a detailed, no-obligation quote tailored to your needs." },
 ];
 
+const SERVICE_DURATIONS: Record<string, number> = {
+  "riding-lessons": 30,
+  "arena-construction": 60,
+  "barn-construction": 60,
+  "full-facility": 90,
+  "fencing": 45,
+  "round-pens": 45,
+  "infrastructure": 60,
+  "renovations": 45,
+  "clinics-events": 60,
+};
+
+function buildCalendarLink(serviceIds: string[], name?: string, email?: string): string {
+  const primary = serviceIds[0] || "";
+  const svc = services.find((s) => s.id === primary);
+  const title = svc ? `PE Consultation: ${svc.title}` : "Peninsula Equine Consultation";
+  const duration = SERVICE_DURATIONS[primary] || 45;
+  const details = serviceIds.length > 1
+    ? `Services of interest: ${serviceIds.map((id) => services.find((s) => s.id === id)?.title || id).join(", ")}`
+    : svc ? `Regarding: ${svc.title}` : "General consultation";
+
+  // Build a Google Calendar link as a suggested follow-up
+  const now = new Date();
+  const start = new Date(now);
+  start.setDate(start.getDate() + 3); // suggest 3 days from now
+  start.setHours(10, 0, 0, 0);
+  const end = new Date(start);
+  end.setMinutes(end.getMinutes() + duration);
+
+  const fmt = (d: Date) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: title,
+    dates: `${fmt(start)}/${fmt(end)}`,
+    details: details + (name ? `\nClient: ${name}` : "") + (email ? `\nEmail: ${email}` : ""),
+    location: "Peninsula Equine - On-site or Phone",
+  });
+
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
+
 const featured = testimonials[0];
 
 export default function ThankYou() {
+  const [searchParams] = useSearchParams();
+  const serviceIds = searchParams.get("services")?.split(",").filter(Boolean) || [];
+  const clientName = searchParams.get("name") || "";
+  const clientEmail = searchParams.get("email") || "";
+  const calendarUrl = serviceIds.length > 0 ? buildCalendarLink(serviceIds, clientName, clientEmail) : null;
+  const primaryService = services.find((s) => s.id === serviceIds[0]);
+  const suggestedDuration = SERVICE_DURATIONS[serviceIds[0]] || 45;
   return (
     <Layout>
       <section className="relative pt-32 pb-20 bg-primary text-primary-foreground">
@@ -67,13 +116,34 @@ export default function ThankYou() {
         </div>
       </section>
 
+      {/* Smart Calendar CTA */}
+      {calendarUrl && (
+        <section className="py-10 bg-accent/5 border-y border-accent/20">
+          <div className="section-container max-w-xl text-center">
+            <CalendarIcon className="h-6 w-6 text-accent mx-auto mb-3" />
+            <h3 className="font-serif text-lg font-semibold text-foreground mb-2">
+              Book Your {primaryService?.title || "Consultation"} Follow-Up
+            </h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              We've prepared a suggested {suggestedDuration}-minute consultation slot. Add it to your calendar and we'll confirm.
+            </p>
+            <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
+              <a href={calendarUrl} target="_blank" rel="noopener noreferrer">
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                Add to Google Calendar
+              </a>
+            </Button>
+          </div>
+        </section>
+      )}
+
       {/* CTAs */}
       <section className="section-padding bg-background">
         <div className="section-container max-w-xl text-center space-y-4">
           <p className="text-muted-foreground text-sm mb-6">In the meantime, you can:</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
-              <Link to="/schedule">
+              <Link to={`/schedule${serviceIds.length ? `?services=${serviceIds.join(",")}` : ""}`}>
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 Schedule a Call
               </Link>
