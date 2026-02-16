@@ -12,7 +12,7 @@ interface PageHeaderProps {
   description: string;
   backgroundImage?: string;
   /** BlueprintDivider variant for the bottom edge. Defaults to "elevation". */
-  dividerVariant?: "elevation" | "floorplan" | "grid";
+  dividerVariant?: "elevation" | "floorplan" | "grid" | "contact";
 }
 
 export function PageHeader({ title, description, backgroundImage, dividerVariant = "elevation" }: PageHeaderProps) {
