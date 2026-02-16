@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface BlueprintLineOverlayProps {
-  variant?: "barn" | "detail" | "dimensions" | "front-elevation" | "about-elevation";
+  variant?: "barn" | "detail" | "dimensions" | "front-elevation" | "about-elevation" | "story-blueprint" | "values-blueprint" | "horsemanship-blueprint";
   color?: "light" | "dark";
   className?: string;
 }
@@ -486,6 +486,145 @@ export function BlueprintLineOverlay({
           <text x="1100" y="740" textAnchor="end" fill={t} fontSize="8" fontFamily="monospace" style={fade(2700)}>
             SCALE 1:60
           </text>
+        </>
+      )}
+
+      {variant === "story-blueprint" && (
+        <>
+          {/* ── Site plan / property survey style ── */}
+          {/* Property boundary */}
+          <path d="M 100,120 L 1100,120 L 1100,680 L 100,680 Z" fill="none" stroke={s} strokeWidth="0.8" style={draw(0, 2600)} />
+          {/* Inner setback */}
+          <path d="M 140,155 L 1060,155 L 1060,645 L 140,645 Z" fill="none" stroke={sf} strokeWidth="0.3" strokeDasharray="8 4" style={draw(300, 2400)} />
+
+          {/* Compass rose */}
+          <line x1="180" y1="200" x2="180" y2="260" stroke={s} strokeWidth="0.6" style={draw(500, 60)} />
+          <line x1="155" y1="230" x2="205" y2="230" stroke={s} strokeWidth="0.6" style={draw(550, 50)} />
+          <text x="180" y="195" textAnchor="middle" fill={t} fontSize="8" fontFamily="monospace" style={fade(1000)}>N</text>
+          <circle cx="180" cy="230" r="18" fill="none" stroke={sf} strokeWidth="0.3" style={draw(600, 120)} />
+
+          {/* Building footprint */}
+          <rect x="400" y="280" width="350" height="220" fill="none" stroke={s} strokeWidth="0.7" style={draw(700, 1200)} />
+          <text x="575" y="396" textAnchor="middle" fill={t} fontSize="9" fontFamily="monospace" style={fade(1600)}>BARN</text>
+          {/* Entry marker */}
+          <line x1="525" y1="500" x2="525" y2="530" stroke={a} strokeWidth="0.5" style={draw(1000, 30)} />
+          <line x1="575" y1="500" x2="575" y2="530" stroke={a} strokeWidth="0.5" style={draw(1050, 30)} />
+
+          {/* Arena outline */}
+          <rect x="200" y="340" width="140" height="200" fill="none" stroke={sf} strokeWidth="0.5" rx="4" style={draw(800, 700)} />
+          <text x="270" y="446" textAnchor="middle" fill={t} fontSize="7" fontFamily="monospace" style={fade(1800)}>ARENA</text>
+
+          {/* Paddock fence lines */}
+          <line x1="800" y1="280" x2="1000" y2="280" stroke={sf} strokeWidth="0.4" strokeDasharray="6 3" style={draw(900, 200)} />
+          <line x1="1000" y1="280" x2="1000" y2="500" stroke={sf} strokeWidth="0.4" strokeDasharray="6 3" style={draw(950, 220)} />
+          <line x1="800" y1="500" x2="1000" y2="500" stroke={sf} strokeWidth="0.4" strokeDasharray="6 3" style={draw(1000, 200)} />
+          <text x="900" y="396" textAnchor="middle" fill={t} fontSize="7" fontFamily="monospace" style={fade(1900)}>PADDOCK</text>
+
+          {/* Access road */}
+          <line x1="550" y1="530" x2="550" y2="680" stroke={sf} strokeWidth="0.5" strokeDasharray="10 5" style={draw(1100, 150)} />
+          <text x="570" y="620" fill={t} fontSize="7" fontFamily="monospace" style={fade(2000)}>ACCESS</text>
+
+          {/* Dimension */}
+          <line x1="400" y1="530" x2="750" y2="530" stroke={s} strokeWidth="0.3" markerStart="url(#ov-arr-l)" markerEnd="url(#ov-arr-r)" style={draw(1300, 400)} />
+          <text x="575" y="550" textAnchor="middle" fill={t} fontSize="10" fontFamily="monospace" style={fade(2100)}>120'-0"</text>
+
+          {/* Title */}
+          <text x="600" y="100" textAnchor="middle" fill={t} fontSize="10" fontFamily="monospace" letterSpacing="4" style={fade(2300)}>SITE PLAN — PENINSULA EQUINE</text>
+          <text x="1060" y="670" textAnchor="end" fill={t} fontSize="8" fontFamily="monospace" style={fade(2500)}>SCALE 1:200</text>
+        </>
+      )}
+
+      {variant === "values-blueprint" && (
+        <>
+          {/* ── Foundation detail / cross-section style ── */}
+          {/* Ground line */}
+          <line x1="60" y1="480" x2="1140" y2="480" stroke={s} strokeWidth="1" style={draw(0, 1100)} />
+          {/* Sub-grade hatching */}
+          {Array.from({ length: 12 }, (_, i) => 60 + i * 90).map((x, i) => (
+            <line key={`vh${i}`} x1={x} y1="480" x2={x + 45} y2="510" stroke={sf} strokeWidth="0.3" style={draw(100 + i * 40, 50)} />
+          ))}
+
+          {/* Four pier footings — one per value */}
+          {[200, 420, 660, 900].map((x, i) => (
+            <g key={`pier${i}`}>
+              {/* Footing pad */}
+              <rect x={x - 50} y="480" width="100" height="35" fill="none" stroke={s} strokeWidth="0.6" style={draw(300 + i * 150, 280)} />
+              {/* Rebar dots */}
+              <circle cx={x - 20} cy="497" r="3" fill="none" stroke={a} strokeWidth="0.4" style={draw(500 + i * 150, 20)} />
+              <circle cx={x + 20} cy="497" r="3" fill="none" stroke={a} strokeWidth="0.4" style={draw(550 + i * 150, 20)} />
+              {/* Pier column */}
+              <rect x={x - 12} y="340" width="24" height="140" fill="none" stroke={s} strokeWidth="0.5" style={draw(600 + i * 150, 380)} />
+              {/* Cap plate */}
+              <rect x={x - 20} y="330" width="40" height="10" fill="none" stroke={sf} strokeWidth="0.4" style={draw(700 + i * 150, 120)} />
+              {/* Label */}
+              <text x={x} y="310" textAnchor="middle" fill={t} fontSize="8" fontFamily="monospace" style={fade(1400 + i * 100)}>
+                P{i + 1}
+              </text>
+            </g>
+          ))}
+
+          {/* Beam across tops */}
+          <line x1="180" y1="330" x2="920" y2="330" stroke={s} strokeWidth="0.7" style={draw(1200, 800)} />
+
+          {/* Detail callout */}
+          <circle cx="900" cy="400" r="25" fill="none" stroke={a} strokeWidth="0.4" style={draw(1500, 160)} />
+          <text x="900" y="404" textAnchor="middle" fill={t} fontSize="8" fontFamily="monospace" style={fade(2000)}>DTL-F1</text>
+
+          {/* Dimension */}
+          <line x1="200" y1="550" x2="900" y2="550" stroke={s} strokeWidth="0.3" markerStart="url(#ov-arr-l)" markerEnd="url(#ov-arr-r)" style={draw(1600, 700)} />
+          <text x="550" y="575" textAnchor="middle" fill={t} fontSize="10" fontFamily="monospace" style={fade(2200)}>48'-0"</text>
+
+          {/* Depth dimension */}
+          <line x1="960" y1="340" x2="960" y2="515" stroke={s} strokeWidth="0.3" markerStart="url(#ov-arr-l)" markerEnd="url(#ov-arr-r)" style={draw(1700, 200)} />
+          <text x="985" y="430" fill={t} fontSize="9" fontFamily="monospace" style={fade(2300)}>6'-0"</text>
+
+          {/* Title */}
+          <text x="550" y="280" textAnchor="middle" fill={t} fontSize="10" fontFamily="monospace" letterSpacing="4" style={fade(2400)}>FOUNDATION SECTION</text>
+          <text x="920" y="590" textAnchor="end" fill={t} fontSize="8" fontFamily="monospace" style={fade(2600)}>SCALE 1:24</text>
+        </>
+      )}
+
+      {variant === "horsemanship-blueprint" && (
+        <>
+          {/* ── Round pen / arena plan view ── */}
+          {/* Outer ring */}
+          <ellipse cx="600" cy="400" rx="380" ry="260" fill="none" stroke={s} strokeWidth="0.8" style={draw(0, 2200)} />
+          {/* Inner riding track */}
+          <ellipse cx="600" cy="400" rx="320" ry="210" fill="none" stroke={sf} strokeWidth="0.4" strokeDasharray="10 6" style={draw(400, 1900)} />
+          {/* Centre mark */}
+          <line x1="590" y1="400" x2="610" y2="400" stroke={a} strokeWidth="0.5" style={draw(700, 20)} />
+          <line x1="600" y1="390" x2="600" y2="410" stroke={a} strokeWidth="0.5" style={draw(750, 20)} />
+          <circle cx="600" cy="400" r="6" fill="none" stroke={a} strokeWidth="0.4" style={draw(800, 40)} />
+
+          {/* Fence post markers around perimeter */}
+          {Array.from({ length: 16 }, (_, i) => {
+            const angle = (i / 16) * Math.PI * 2 - Math.PI / 2;
+            return { x: 600 + 380 * Math.cos(angle), y: 400 + 260 * Math.sin(angle) };
+          }).map((p, i) => (
+            <circle key={`fp${i}`} cx={p.x} cy={p.y} r="3" fill="none" stroke={s} strokeWidth="0.4" style={draw(300 + i * 50, 20)} />
+          ))}
+
+          {/* Gate opening */}
+          <line x1="218" y1="395" x2="218" y2="420" stroke={a} strokeWidth="0.8" style={draw(1000, 25)} />
+          <text x="195" y="415" textAnchor="end" fill={t} fontSize="7" fontFamily="monospace" style={fade(1600)}>GATE</text>
+
+          {/* Radial dimension */}
+          <line x1="600" y1="400" x2="980" y2="400" stroke={s} strokeWidth="0.3" markerEnd="url(#ov-arr-r)" style={draw(1200, 400)} />
+          <text x="790" y="390" textAnchor="middle" fill={t} fontSize="9" fontFamily="monospace" style={fade(2000)}>60'-0" R</text>
+
+          {/* Cross-hair grid lines */}
+          <line x1="600" y1="120" x2="600" y2="680" stroke={sf} strokeWidth="0.2" style={draw(200, 560)} />
+          <line x1="200" y1="400" x2="1000" y2="400" stroke={sf} strokeWidth="0.2" style={draw(250, 800)} />
+
+          {/* Quarter labels */}
+          <text x="600" y="110" textAnchor="middle" fill={t} fontSize="8" fontFamily="monospace" style={fade(1800)}>N</text>
+          <text x="600" y="700" textAnchor="middle" fill={t} fontSize="8" fontFamily="monospace" style={fade(1850)}>S</text>
+          <text x="190" y="404" textAnchor="end" fill={t} fontSize="8" fontFamily="monospace" style={fade(1900)}>W</text>
+          <text x="1010" y="404" textAnchor="start" fill={t} fontSize="8" fontFamily="monospace" style={fade(1950)}>E</text>
+
+          {/* Title */}
+          <text x="600" y="80" textAnchor="middle" fill={t} fontSize="10" fontFamily="monospace" letterSpacing="4" style={fade(2200)}>ROUND PEN — PLAN VIEW</text>
+          <text x="980" y="720" textAnchor="end" fill={t} fontSize="8" fontFamily="monospace" style={fade(2400)}>SCALE 1:48</text>
         </>
       )}
     </svg>
