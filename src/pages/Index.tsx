@@ -1758,6 +1758,190 @@ function CTASection() {
   );
 }
 
+function HomeBookingWidget() {
+  const { ref, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.2 });
+  const { toast } = useToast();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [bookingType, setBookingType] = useState<"lesson" | "clinic">("lesson");
+  const [preferredDate, setPreferredDate] = useState("");
+  const [notes, setNotes] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  // Fetch next available slots
+  const { data: nextSlots = [] } = useQuery({
+    queryKey: ["home-booking-next-slots"],
+    queryFn: async () => {
+      const today = new Date().toISOString().split("T")[0];
+      const { data } = await supabase
+        .from("lesson_slots")
+        .select("slot_date, start_time, end_time, slot_type, max_bookings, current_bookings")
+        .gte("slot_date", today)
+        .order("slot_date")
+        .order("start_time")
+        .limit(6);
+      return (data || []).filter((s) => s.current_bookings < s.max_bookings);
+    },
+    staleTime: 60_000,
+  });
+
+  const isValid = name.trim().length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isValid) return;
+    setSubmitting(true);
+    try {
+      const { error } = await supabase.from("inquiries").insert({
+        name: name.trim().slice(0, 100),
+        email: email.trim().slice(0, 255),
+        phone: phone.trim().slice(0, 30) || null,
+        services: [bookingType === "lesson" ? "riding-lesson" : "clinic-booking"],
+        project_details: `Preferred date: ${preferredDate || "Flexible"}`,
+        notes: notes.trim().slice(0, 500) || null,
+        status: "new",
+      });
+      if (error) throw error;
+
+      supabase.functions.invoke("send-inquiry-notification", {
+        body: { name: name.trim(), email: email.trim(), services: [bookingType], goals: `Booking request — ${bookingType}` },
+      }).catch(() => {});
+
+      setSubmitted(true);
+      toast({ title: "Booking request sent!", description: "We'll confirm your slot within 24 hours." });
+    } catch {
+      toast({ title: "Something went wrong", description: "Please try again or call us.", variant: "destructive" });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <section ref={ref} className="py-14 sm:py-18 bg-card border-y border-border overflow-hidden">
+      <div
+        className={`section-container transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+      >
+        <div className="grid lg:grid-cols-5 gap-8 lg:gap-12 items-start">
+          {/* Left — info */}
+          <div className="lg:col-span-2">
+            <AnimatedDivider className="mb-6" />
+            <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-2">Book Now</p>
+            <h2 className="font-serif text-2xl sm:text-3xl text-foreground mb-4">Schedule a Lesson or Clinic</h2>
+            <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+              Lessons run Thursdays &amp; Fridays with Glenn Browitt. Clinics are scheduled monthly. Reserve your spot — spaces fill fast.
+            </p>
+
+            {nextSlots.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2">Next Available</p>
+                {nextSlots.slice(0, 3).map((slot, i) => {
+                  const d = new Date(slot.slot_date + "T00:00:00");
+                  const day = d.toLocaleDateString("en-AU", { weekday: "short", day: "numeric", month: "short" });
+                  const spotsLeft = slot.max_bookings - slot.current_bookings;
+                  return (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setPreferredDate(slot.slot_date)}
+                      className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg border text-sm transition-all ${
+                        preferredDate === slot.slot_date
+                          ? "border-accent bg-accent/10 text-foreground"
+                          : "border-border bg-background text-muted-foreground hover:border-accent/40"
+                      }`}
+                    >
+                      <span className="flex items-center gap-2">
+                        <CalendarIcon className="h-3.5 w-3.5" />
+                        {day} · {slot.start_time.slice(0, 5)}–{slot.end_time.slice(0, 5)}
+                      </span>
+                      <span className={`text-xs font-medium ${spotsLeft <= 1 ? "text-destructive" : "text-accent"}`}>
+                        {spotsLeft} spot{spotsLeft !== 1 ? "s" : ""} left
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Right — form */}
+          <div className="lg:col-span-3">
+            {submitted ? (
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+                <CheckCircle className="h-12 w-12 text-accent mb-4" />
+                <h3 className="font-serif text-xl text-foreground font-semibold mb-2">You're Booked In!</h3>
+                <p className="text-muted-foreground text-sm">We'll confirm your lesson or clinic within 24 hours.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="bg-background border border-border rounded-xl p-6 sm:p-8 space-y-5">
+                {/* Type toggle */}
+                <div className="flex gap-2">
+                  {(["lesson", "clinic"] as const).map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => setBookingType(t)}
+                      className={`flex-1 py-2.5 rounded-lg text-sm font-medium border transition-all ${
+                        bookingType === t
+                          ? "bg-accent text-accent-foreground border-accent"
+                          : "bg-background text-muted-foreground border-border hover:border-accent/40"
+                      }`}
+                    >
+                      {t === "lesson" ? "🐎 Riding Lesson" : "📋 Clinic Session"}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-1.5 block">Name *</label>
+                    <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Full name" maxLength={100} />
+                  </div>
+                  <div>
+                    <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-1.5 block">Email *</label>
+                    <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" maxLength={255} />
+                  </div>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-1.5 block">Phone</label>
+                    <Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Optional" maxLength={30} />
+                  </div>
+                  <div>
+                    <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-1.5 block">Preferred Date</label>
+                    <Input type="date" value={preferredDate} onChange={(e) => setPreferredDate(e.target.value)} min={new Date().toISOString().split("T")[0]} />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-1.5 block">Notes</label>
+                  <Input value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Experience level, goals, anything we should know" maxLength={500} />
+                </div>
+
+                <Button
+                  type="submit"
+                  size="lg"
+                  disabled={!isValid || submitting}
+                  className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
+                >
+                  {submitting ? (
+                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Submitting…</>
+                  ) : (
+                    <><CalendarIcon className="mr-2 h-4 w-4" />Request Booking</>
+                  )}
+                </Button>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Index() {
   const [splashDone, setSplashDone] = useState(false);
   const [leadSubmitted, setLeadSubmitted] = useState(false);
@@ -1790,6 +1974,7 @@ export default function Index() {
         <BlueprintDivider variant="elevation" />
         <ServicesSection />
         <BookingCTABanner />
+        <HomeBookingWidget />
         <GallerySection />
         <UpcomingEventsStrip />
         <ClientStorySection />
