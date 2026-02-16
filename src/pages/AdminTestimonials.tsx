@@ -18,7 +18,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, Star } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, Star, Pin, ArrowUp, ArrowDown } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 
 type ManagedTestimonial = Tables<"managed_testimonials">;
@@ -38,9 +38,26 @@ export default function AdminTestimonials() {
 
   const fetchData = async () => {
     setIsLoading(true);
-    const { data } = await supabase.from("managed_testimonials").select("*").order("sort_order");
+    const { data } = await supabase.from("managed_testimonials").select("*").order("pinned", { ascending: false }).order("sort_order");
     setItems(data || []);
     setIsLoading(false);
+  };
+
+  const togglePin = async (item: ManagedTestimonial) => {
+    await supabase.from("managed_testimonials").update({ pinned: !(item as any).pinned }).eq("id", item.id);
+    fetchData();
+  };
+
+  const moveItem = async (item: ManagedTestimonial, direction: "up" | "down") => {
+    const idx = items.findIndex((i) => i.id === item.id);
+    const swapIdx = direction === "up" ? idx - 1 : idx + 1;
+    if (swapIdx < 0 || swapIdx >= items.length) return;
+    const other = items[swapIdx];
+    await Promise.all([
+      supabase.from("managed_testimonials").update({ sort_order: other.sort_order }).eq("id", item.id),
+      supabase.from("managed_testimonials").update({ sort_order: item.sort_order }).eq("id", other.id),
+    ]);
+    fetchData();
   };
 
   useEffect(() => { if (isAdmin) fetchData(); }, [isAdmin]);
@@ -107,23 +124,46 @@ export default function AdminTestimonials() {
             <Card><CardContent className="py-12 text-center text-muted-foreground">No testimonials yet.</CardContent></Card>
           ) : (
             <div className="space-y-3">
-              {items.map((t) => (
-                <Card key={t.id} className="group">
+              {items.map((t, idx) => (
+                <Card key={t.id} className={`group ${(t as any).pinned ? "ring-1 ring-accent/30 bg-accent/5" : ""}`}>
                   <CardContent className="flex items-start gap-4 py-4">
+                    {/* Reorder arrows */}
+                    <div className="flex flex-col gap-0.5 shrink-0 pt-1">
+                      <Button variant="ghost" size="icon" className="h-6 w-6" disabled={idx === 0} onClick={() => moveItem(t, "up")}>
+                        <ArrowUp className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-6 w-6" disabled={idx === items.length - 1} onClick={() => moveItem(t, "down")}>
+                        <ArrowDown className="h-3 w-3" />
+                      </Button>
+                    </div>
+
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold text-foreground">{t.client_name}</h3>
                         {t.client_role && <span className="text-xs text-muted-foreground">· {t.client_role}</span>}
                         {!t.active && <Badge variant="secondary" className="text-xs">Draft</Badge>}
+                        {(t as any).pinned && <Badge className="text-[10px] bg-accent text-accent-foreground">Pinned</Badge>}
                       </div>
                       <p className="text-sm text-muted-foreground line-clamp-2 italic">"{t.quote}"</p>
-                      <div className="flex items-center gap-0.5 mt-1">
-                        {Array.from({ length: t.rating }).map((_, i) => (
-                          <Star key={i} className="h-3 w-3 fill-accent text-accent" />
-                        ))}
+                      <div className="flex items-center gap-2 mt-1">
+                        <div className="flex items-center gap-0.5">
+                          {Array.from({ length: t.rating }).map((_, i) => (
+                            <Star key={i} className="h-3 w-3 fill-accent text-accent" />
+                          ))}
+                        </div>
+                        <span className="text-[10px] text-muted-foreground">Order: {t.sort_order}</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => togglePin(t)}
+                        title={(t as any).pinned ? "Unpin" : "Pin to top"}
+                        className={(t as any).pinned ? "text-accent" : ""}
+                      >
+                        <Pin className="h-4 w-4" />
+                      </Button>
                       <Button variant="ghost" size="sm" onClick={() => setEditItem(t)}><Pencil className="h-4 w-4" /></Button>
                       <Button variant="ghost" size="sm" onClick={() => setDeleteItem(t)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                     </div>

@@ -463,6 +463,7 @@ export type Database = {
           id: string
           media_type: string | null
           media_url: string | null
+          pinned: boolean
           quote: string
           rating: number
           service_tags: string[]
@@ -477,6 +478,7 @@ export type Database = {
           id?: string
           media_type?: string | null
           media_url?: string | null
+          pinned?: boolean
           quote: string
           rating?: number
           service_tags?: string[]
@@ -491,6 +493,7 @@ export type Database = {
           id?: string
           media_type?: string | null
           media_url?: string | null
+          pinned?: boolean
           quote?: string
           rating?: number
           service_tags?: string[]

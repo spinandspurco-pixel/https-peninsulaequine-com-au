@@ -7,6 +7,7 @@ export interface TestimonialItem {
   role: string;
   quote: string;
   rating: number;
+  pinned?: boolean;
   mediaType?: "image" | "video" | null;
   mediaUrl?: string | null;
   serviceTags: string[];
@@ -53,8 +54,9 @@ export async function fetchMergedTestimonials(): Promise<TestimonialItem[]> {
   try {
     const { data, error } = await supabase
       .from("managed_testimonials")
-      .select("id, client_name, client_role, quote, rating, media_type, media_url, service_tags")
+      .select("id, client_name, client_role, quote, rating, media_type, media_url, service_tags, pinned")
       .eq("active", true)
+      .order("pinned", { ascending: false })
       .order("sort_order", { ascending: true });
 
     if (error) {
@@ -72,6 +74,7 @@ export async function fetchMergedTestimonials(): Promise<TestimonialItem[]> {
       role: t.client_role ?? "",
       quote: t.quote,
       rating: t.rating,
+      pinned: (t as any).pinned ?? false,
       mediaType: (t.media_type as "image" | "video" | null) ?? null,
       mediaUrl: t.media_url ?? null,
       serviceTags: (t.service_tags as string[]) ?? [],
