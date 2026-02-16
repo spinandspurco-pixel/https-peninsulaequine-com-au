@@ -27,6 +27,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { LeadMagnetPopup } from "@/components/LeadMagnetPopup";
 import { StickyHeroCTA } from "@/components/StickyHeroCTA";
+import { RequestLessonInquiry } from "@/components/RequestLessonInquiry";
 import { SectionTransition, AnimatedDivider } from "@/components/SectionTransition";
 import { ServicesTeaserStrip } from "@/components/ServicesTeaserStrip";
 import { siteConfig, services, testimonials, aboutCiro } from "@/data/content";
@@ -2393,6 +2394,7 @@ export default function Index() {
         <ServicesSection />
         <BookingCTABanner />
         <HomeBookingWidget />
+        <RequestLessonInquiry />
         <GallerySection />
         <UpcomingEventsStrip />
         <ClientStorySection />
