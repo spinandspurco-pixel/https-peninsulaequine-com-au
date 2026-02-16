@@ -47,6 +47,22 @@ import { LoadingSplash } from "@/components/LoadingSplash";
 const featuredServices = services.slice(0, 6);
 
 function HeroSection() {
+  const { variant, trackClick } = useABTest({
+    testName: "hero_cta_pricing_vs_lead",
+    variants: ["pricing", "lead_gen"],
+  });
+
+  const handlePrimaryClick = () => {
+    trackClick({ cta: "primary", variant });
+    if (variant === "pricing") {
+      // Pricing variant scrolls to booking widget
+      document.getElementById('home-booking')?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // Lead gen variant scrolls to free quote
+      document.getElementById('free-quote')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden bg-primary">
       {/* PE Banner — full-bleed background */}
@@ -79,32 +95,61 @@ function HeroSection() {
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Button
-            size="lg"
-            onClick={() => document.getElementById('free-quote')?.scrollIntoView({ behavior: 'smooth' })}
-            className="bg-accent text-accent-foreground hover:bg-accent/90 text-sm px-10 tracking-[0.15em] uppercase font-sans font-medium shadow-[0_4px_20px_hsl(var(--accent)/0.35)] hover:shadow-[0_6px_28px_hsl(var(--accent)/0.5)] hover:scale-105"
-          >
-            Get a Free Quote
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-          <Button
-            asChild
-            variant="outline"
-            size="lg"
-            className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 text-sm px-10 tracking-[0.15em] uppercase font-sans"
-          >
-            <Link to="/book-lesson">
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              Schedule a Lesson
-            </Link>
-          </Button>
+          {/* A/B tested primary CTA */}
+          {variant === "pricing" ? (
+            <>
+              {/* Pricing variant: show starting price + direct book */}
+              <Button
+                size="lg"
+                onClick={handlePrimaryClick}
+                className="bg-accent text-accent-foreground hover:bg-accent/90 text-sm px-10 tracking-[0.15em] uppercase font-sans font-medium shadow-[0_4px_20px_hsl(var(--accent)/0.35)] hover:shadow-[0_6px_28px_hsl(var(--accent)/0.5)] hover:scale-105"
+              >
+                Lessons from $95
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 text-sm px-10 tracking-[0.15em] uppercase font-sans"
+              >
+                <Link to="/book-lesson" onClick={() => trackClick({ cta: "secondary", variant })}>
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  Book Now
+                </Link>
+              </Button>
+            </>
+          ) : (
+            <>
+              {/* Lead gen variant: soft quote CTA */}
+              <Button
+                size="lg"
+                onClick={handlePrimaryClick}
+                className="bg-accent text-accent-foreground hover:bg-accent/90 text-sm px-10 tracking-[0.15em] uppercase font-sans font-medium shadow-[0_4px_20px_hsl(var(--accent)/0.35)] hover:shadow-[0_6px_28px_hsl(var(--accent)/0.5)] hover:scale-105"
+              >
+                Get a Free Quote
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 text-sm px-10 tracking-[0.15em] uppercase font-sans"
+              >
+                <Link to="/book-lesson" onClick={() => trackClick({ cta: "secondary", variant })}>
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  Schedule a Lesson
+                </Link>
+              </Button>
+            </>
+          )}
           <Button
             asChild
             variant="ghost"
             size="lg"
             className="text-primary-foreground/60 hover:text-primary-foreground hover:bg-primary-foreground/10 text-sm px-8 tracking-[0.15em] uppercase font-sans"
           >
-            <Link to="/services">
+            <Link to="/services" onClick={() => trackClick({ cta: "tertiary", variant })}>
               View Our Work
             </Link>
           </Button>
