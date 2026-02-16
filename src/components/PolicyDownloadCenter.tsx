@@ -75,6 +75,60 @@ th{text-align:left;padding:8px 12px;background:#f5f5f0;border-bottom:2px solid #
 </body></html>`;
 }
 
+function generateCancellationHTML(): string {
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Cancellation & Refund Policy — ${siteConfig.name}</title>
+<style>body{font-family:Georgia,serif;max-width:700px;margin:40px auto;padding:0 24px;color:#1a1a1a;line-height:1.7}
+h1{font-size:28px;margin-bottom:4px}h2{font-size:18px;margin-top:32px;border-bottom:1px solid #ddd;padding-bottom:6px}
+.meta{color:#888;font-size:13px;margin-bottom:32px}.footer{margin-top:48px;padding-top:16px;border-top:1px solid #ddd;font-size:12px;color:#999}
+ul{padding-left:20px}li{margin-bottom:6px}
+table{width:100%;border-collapse:collapse;margin:16px 0}th{text-align:left;padding:8px 12px;background:#f5f5f0;border-bottom:2px solid #ddd;font-size:13px;text-transform:uppercase;letter-spacing:0.05em}
+td{padding:8px 12px;border-bottom:1px solid #eee}
+@media print{body{margin:0;padding:20px}}</style></head><body>
+<h1>${siteConfig.name}</h1><p class="meta">Cancellation &amp; Refund Policy · Generated ${new Date().toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})}</p>
+
+<h2>Lesson Cancellations</h2>
+<table><thead><tr><th>Notice Given</th><th>Outcome</th></tr></thead><tbody>
+<tr><td>48+ hours</td><td>Full refund or free reschedule</td></tr>
+<tr><td>24–48 hours</td><td>50% cancellation fee applies</td></tr>
+<tr><td>Less than 24 hours</td><td>Full session fee charged</td></tr>
+<tr><td>No-show</td><td>Full session fee charged</td></tr>
+</tbody></table>
+<p>Weather-related cancellations are handled on a case-by-case basis at the instructor's discretion. If we cancel due to unsafe conditions, you will receive a full credit toward a future session.</p>
+
+<h2>Lesson Packages</h2>
+<ul>
+<li>Lesson packages (5-pack, 10-pack) are valid for 3 months from date of purchase.</li>
+<li>Unused sessions are non-refundable after the 3-month validity period.</li>
+<li>Packages may be transferred between family members with prior notice.</li>
+</ul>
+
+<h2>Construction Project Deposits</h2>
+<ul>
+<li>A 20% deposit is required upon acceptance of the quote to secure your project in our schedule.</li>
+<li>Deposits are <strong>non-refundable</strong> once materials have been ordered or fabrication has commenced.</li>
+<li>If the project is cancelled before materials are ordered, the deposit is refundable minus a 5% administration fee.</li>
+</ul>
+
+<h2>Construction Progress Payments</h2>
+<ul>
+<li>Progress payments are invoiced at agreed milestones as outlined in your Service Agreement.</li>
+<li>Payments are due within 7 days of invoice.</li>
+<li>Late payments may incur a 2% per month late fee.</li>
+<li>Work may be paused if payments are more than 14 days overdue.</li>
+</ul>
+
+<h2>Refund Requests</h2>
+<p>All refund requests must be submitted in writing to <a href="mailto:${siteConfig.email}">${siteConfig.email}</a>. Refunds are processed within 10 business days of approval.</p>
+
+<h2>Disputes</h2>
+<p>If you are unsatisfied with any service, please contact us directly. We are committed to resolving issues promptly and fairly. All disputes are governed by the laws of the State of Victoria, Australia.</p>
+
+<h2>Contact</h2>
+<p>Email: ${siteConfig.email}<br/>Phone: ${siteConfig.phone}</p>
+<div class="footer">${siteConfig.name} · ${siteConfig.address.street}, ${siteConfig.address.city}, ${siteConfig.address.state} ${siteConfig.address.zip} · ${siteConfig.phone}</div>
+</body></html>`;
+}
+
 const POLICY_DOCUMENTS: PolicyDocument[] = [
   {
     id: "privacy",
@@ -89,6 +143,13 @@ const POLICY_DOCUMENTS: PolicyDocument[] = [
     description: "Website usage terms and conditions of engagement.",
     icon: ScrollText,
     generate: generateTermsHTML,
+  },
+  {
+    id: "cancellation",
+    title: "Cancellation & Refund Policy",
+    description: "Lesson cancellation fees, deposit terms, and refund process.",
+    icon: FileText,
+    generate: generateCancellationHTML,
   },
   {
     id: "service-agreement",
