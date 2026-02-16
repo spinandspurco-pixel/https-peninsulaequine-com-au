@@ -63,9 +63,13 @@ import {
   Settings,
   Zap,
   Save,
-  ExternalLink
+  ExternalLink,
+  CalendarDays,
+  BarChart3,
+  UserCog,
 } from "lucide-react";
 import { format } from "date-fns";
+import logoPeMark from "@/assets/logo-pe-mark.png";
 
 interface Inquiry {
   id: string;
@@ -120,6 +124,7 @@ export default function Admin() {
   const { user, isAdmin, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
+  const [bookings, setBookings] = useState<any[]>([]);
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -158,20 +163,20 @@ export default function Admin() {
     }
   }, [isAdmin]);
 
-  // Fetch inquiries
+  // Fetch inquiries + bookings
   const fetchInquiries = async () => {
     setIsLoadingData(true);
-    const { data, error } = await supabase
-      .from("inquiries")
-      .select("*")
-      .order("created_at", { ascending: false });
+    const [inquiryRes, bookingRes] = await Promise.all([
+      supabase.from("inquiries").select("*").order("created_at", { ascending: false }),
+      supabase.from("bookings").select("*").order("booking_date", { ascending: true }).limit(10),
+    ]);
 
-    if (error) {
+    if (inquiryRes.error) {
       toast.error("Failed to load inquiries");
-      console.error(error);
     } else {
-      setInquiries(data || []);
+      setInquiries(inquiryRes.data || []);
     }
+    setBookings(bookingRes.data || []);
     setIsLoadingData(false);
   };
 
@@ -362,9 +367,16 @@ export default function Admin() {
         <div className="section-container">
           {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-            <div>
-              <h1 className="font-serif text-3xl font-bold text-foreground">Admin Dashboard</h1>
-              <p className="text-muted-foreground mt-1">Manage inquiries and leads</p>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <img src={logoPeMark} alt="P.E" className="h-8 w-8 object-contain" />
+              </div>
+              <div>
+                <h1 className="font-serif text-3xl font-bold text-foreground">Admin Dashboard</h1>
+                <p className="text-muted-foreground text-sm mt-0.5">
+                  {user?.email} · {format(new Date(), "EEEE, d MMMM")}
+                </p>
+              </div>
             </div>
             <Button variant="outline" onClick={handleSignOut}>
               <LogOut className="mr-2 h-4 w-4" />
@@ -413,7 +425,7 @@ export default function Admin() {
           </div>
 
           {/* Content Management Quick Links */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <Link to="/admin/services">
               <Card className="hover:border-accent/40 transition-colors cursor-pointer group">
                 <CardHeader className="pb-2">
@@ -447,7 +459,56 @@ export default function Admin() {
                 </CardHeader>
               </Card>
             </Link>
+            <Link to="/bookings">
+              <Card className="hover:border-accent/40 transition-colors cursor-pointer group">
+                <CardHeader className="pb-2">
+                  <CardDescription>Operations</CardDescription>
+                  <CardTitle className="text-lg flex items-center gap-2 group-hover:text-accent transition-colors">
+                    <CalendarDays className="h-5 w-5" />
+                    Bookings Calendar
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+            </Link>
           </div>
+
+          {/* Upcoming Bookings Preview */}
+          {bookings.length > 0 && (
+            <Card className="mb-8">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <CalendarDays className="h-5 w-5 text-accent" />
+                    Upcoming Bookings
+                  </CardTitle>
+                  <Link to="/bookings">
+                    <Button variant="ghost" size="sm" className="text-accent">
+                      View All <ExternalLink className="ml-1 h-3 w-3" />
+                    </Button>
+                  </Link>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {bookings.slice(0, 6).map((booking) => (
+                    <div key={booking.id} className="p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors">
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="font-medium text-sm">{booking.client_name}</p>
+                        <Badge variant="outline" className="text-xs">
+                          {booking.status}
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {format(new Date(booking.booking_date), "MMM d")}
+                        {booking.booking_time && ` · ${booking.booking_time}`}
+                      </p>
+                      <p className="text-xs text-accent mt-0.5">{booking.service_type}</p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* A/B Test Stats */}
           <div className="mb-8">
