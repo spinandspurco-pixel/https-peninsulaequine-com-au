@@ -13,49 +13,58 @@ import spurDetail from "@/assets/spur-detail.png";
 import blueprintFacility from "@/assets/blueprint-facility.png";
 import blueprintBarn from "@/assets/blueprint-barn.png";
 
-/* ── Color palette pulled from design tokens ── */
+import {
+  brandColors,
+  typographyRules,
+  logoRules,
+  usageRules,
+} from "@/data/brand";
+
+/* ── Color palette pulled from brand constants ── */
 const colorGroups = [
   {
     title: "Core Palette",
     colors: [
-      { name: "Earth (Primary)", hsl: "30 20% 15%", hex: "#302821", token: "--primary" },
-      { name: "Ivory (Background)", hsl: "45 40% 97%", hex: "#FAF8F3", token: "--background" },
-      { name: "Gold (Accent)", hsl: "35 75% 50%", hex: "#DFA420", token: "--accent" },
-      { name: "Sand (Secondary)", hsl: "38 30% 88%", hex: "#E8DFD0", token: "--secondary" },
+      { name: "Navy (Primary)", hsl: brandColors.navy.hsl, hex: brandColors.navy.hex, token: brandColors.navy.token },
+      { name: "Ivory (Background)", hsl: brandColors.ivory.hsl, hex: brandColors.ivory.hex, token: brandColors.ivory.token },
+      { name: "Gold (Accent)", hsl: brandColors.gold.hsl, hex: brandColors.gold.hex, token: brandColors.gold.token },
+      { name: "Slate (Secondary)", hsl: brandColors.navyLight.hsl, hex: brandColors.navyLight.hex, token: brandColors.navyLight.token },
     ],
   },
   {
     title: "Supporting Tones",
     colors: [
-      { name: "Cream", hsl: "42 35% 95%", hex: "#F5F0E8", token: "--cream" },
-      { name: "Gold Light", hsl: "40 65% 65%", hex: "#D4B06A", token: "--gold-light" },
-      { name: "Gold Dark", hsl: "30 80% 38%", hex: "#AE6E12", token: "--gold-dark" },
-      { name: "Muted Text", hsl: "30 15% 40%", hex: "#6B5E52", token: "--muted-foreground" },
+      { name: "Cream", hsl: brandColors.cream.hsl, hex: brandColors.cream.hex, token: brandColors.cream.token },
+      { name: "Gold Light", hsl: brandColors.goldLight.hsl, hex: brandColors.goldLight.hex, token: brandColors.goldLight.token },
+      { name: "Gold Dark", hsl: brandColors.goldDark.hsl, hex: brandColors.goldDark.hex, token: brandColors.goldDark.token },
+      { name: "Muted Text", hsl: "221 15% 40%", hex: "#545E70", token: "--muted-foreground" },
     ],
   },
 ];
 
 const typographyItems = [
   {
-    name: "Playfair Display",
-    role: "Headlines & Branding",
-    className: "font-serif",
+    name: typographyRules.serif.family,
+    role: "Headlines & Section Titles",
+    className: typographyRules.serif.tailwindClass,
     sample: "From Dirt to Dynasty",
-    weights: ["400 Regular", "600 Semibold", "700 Bold"],
+    weights: ["400 Regular", "500 Medium", "600 Semibold", "700 Bold"],
+    doNot: typographyRules.serif.doNot,
   },
   {
-    name: "Source Sans 3",
-    role: "Body & UI",
-    className: "font-sans",
+    name: typographyRules.sans.family,
+    role: "Body, UI & Brand Name Text",
+    className: typographyRules.sans.tailwindClass,
     sample: "Expert equine facility construction by a horseman who understands what your horses need.",
     weights: ["300 Light", "400 Regular", "500 Medium", "600 Semibold"],
+    doNot: [],
   },
 ];
 
 const logoAssets = [
-  { name: "P.E Rope Mark", src: logoPeMark, filename: "logo-pe-mark.png", desc: "Primary icon mark — rope circle with serif initials" },
-  { name: "P.E Full Logo", src: logoPe, filename: "logo-pe.png", desc: "Full logo lockup with wordmark" },
-  { name: "P.E Banner", src: peBanner, filename: "pe-banner.png", desc: "Wide banner — 'From Dirt to Dynasty' tagline" },
+  { name: "P.E Rope Mark (Monogram)", src: logoPeMark, filename: "logo-pe-mark.png", desc: logoRules.assets.monogram.description + " — " + logoRules.assets.monogram.use },
+  { name: "P.E Full Logo (Wordmark)", src: logoPe, filename: "logo-pe.png", desc: logoRules.assets.wordmark.description + " — " + logoRules.assets.wordmark.use },
+  { name: "P.E Banner", src: peBanner, filename: "pe-banner.png", desc: logoRules.assets.banner.description + " — " + logoRules.assets.banner.use },
 ];
 
 const brandAssets = [
@@ -69,22 +78,7 @@ const brandAssets = [
   { name: "Blueprint Barn", src: blueprintBarn, filename: "blueprint-barn.png", category: "Blueprint" },
 ];
 
-const usageRules = {
-  do: [
-    "Use the rope-mark logo on dark backgrounds with adequate contrast",
-    "Maintain minimum clear space equal to the height of the 'P' initial",
-    "Use the gold accent (#DFA420) for interactive highlights and CTAs",
-    "Pair Playfair Display headlines with Source Sans 3 body text",
-    "Keep imagery warm-toned and editorially composed",
-  ],
-  dont: [
-    "Stretch, rotate, or distort the logo in any way",
-    "Place the logo on busy or low-contrast backgrounds",
-    "Use more than two typeface families in a single layout",
-    "Replace gold accents with arbitrary bright colors",
-    "Apply drop shadows or outer glows to the logo mark",
-  ],
-};
+// usageRules imported from @/data/brand
 
 function ColorSwatch({ color }: { color: (typeof colorGroups)[0]["colors"][0] }) {
   const [copied, setCopied] = useState<string | null>(null);
@@ -309,6 +303,19 @@ export default function BrandGuide() {
                     <span key={w} className="text-xs bg-secondary text-muted-foreground px-2 py-1 rounded">{w}</span>
                   ))}
                 </div>
+                {t.doNot.length > 0 && (
+                  <div className="mt-2 pt-3 border-t border-border">
+                    <p className="text-xs font-semibold text-destructive/80 uppercase tracking-wider mb-1.5">Do Not</p>
+                    <ul className="space-y-1">
+                      {t.doNot.map((rule, i) => (
+                        <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
+                          <XIcon className="h-3 w-3 mt-0.5 text-destructive shrink-0" />
+                          {rule}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -328,6 +335,49 @@ export default function BrandGuide() {
             {logoAssets.map((a) => (
               <DownloadCard key={a.filename} asset={a} />
             ))}
+          </div>
+
+          {/* Logo Usage Rules */}
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+              <h3 className="font-serif text-xl font-semibold text-foreground">Monogram vs Wordmark</h3>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <img src={logoPeMark} alt="Monogram" className="w-10 h-10 object-contain shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">{logoRules.assets.monogram.description}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Use for: {logoRules.assets.monogram.use}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <img src={logoPe} alt="Wordmark" className="w-16 h-10 object-contain shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">{logoRules.assets.wordmark.description}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Use for: {logoRules.assets.wordmark.use}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+              <h3 className="font-serif text-xl font-semibold text-foreground">Clear Space & Sizing</h3>
+              <p className="text-sm text-muted-foreground">{logoRules.clearSpace}</p>
+              <div className="space-y-2 text-sm">
+                <p className="text-foreground font-medium">Minimum sizes:</p>
+                <p className="text-muted-foreground">Monogram: {logoRules.minSize.monogram.mobile}px mobile / {logoRules.minSize.monogram.desktop}px desktop</p>
+                <p className="text-muted-foreground">Wordmark: {logoRules.minSize.wordmark.mobile}px mobile / {logoRules.minSize.wordmark.desktop}px desktop</p>
+              </div>
+              <div className="pt-3 border-t border-border">
+                <p className="text-xs font-semibold text-destructive/80 uppercase tracking-wider mb-1.5">Prohibitions</p>
+                <ul className="space-y-1">
+                  {logoRules.prohibitions.map((rule, i) => (
+                    <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
+                      <XIcon className="h-3 w-3 mt-0.5 text-destructive shrink-0" />
+                      {rule}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -524,15 +574,15 @@ export default function BrandGuide() {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { fg: "#FAF8F3", bg: "#302821", fgName: "Ivory", bgName: "Earth", ratio: 11.2, level: "AAA" as const },
-              { fg: "#DFA420", bg: "#302821", fgName: "Gold", bgName: "Earth", ratio: 5.1, level: "AA" as const },
-              { fg: "#302821", bg: "#E8DFD0", fgName: "Earth", bgName: "Sand", ratio: 8.3, level: "AAA" as const },
-              { fg: "#302821", bg: "#FAF8F3", fgName: "Earth", bgName: "Ivory", ratio: 11.2, level: "AAA" as const },
-              { fg: "#6B5E52", bg: "#FAF8F3", fgName: "Muted", bgName: "Ivory", ratio: 4.6, level: "AA" as const },
-              { fg: "#DFA420", bg: "#FAF8F3", fgName: "Gold", bgName: "Ivory", ratio: 2.2, level: "Fail" as const },
-              { fg: "#AE6E12", bg: "#FAF8F3", fgName: "Gold Dark", bgName: "Ivory", ratio: 4.8, level: "AA" as const },
-              { fg: "#FAF8F3", bg: "#DFA420", fgName: "Ivory", bgName: "Gold", ratio: 2.2, level: "Fail" as const },
-              { fg: "#302821", bg: "#D4B06A", fgName: "Earth", bgName: "Gold Light", ratio: 5.5, level: "AA" as const },
+              { fg: brandColors.ivory.hex, bg: brandColors.navy.hex, fgName: "Ivory", bgName: "Navy", ratio: 13.8, level: "AAA" as const },
+              { fg: brandColors.gold.hex, bg: brandColors.navy.hex, fgName: "Gold", bgName: "Navy", ratio: 5.8, level: "AA" as const },
+              { fg: brandColors.navy.hex, bg: brandColors.ivory.hex, fgName: "Navy", bgName: "Ivory", ratio: 13.8, level: "AAA" as const },
+              { fg: brandColors.navy.hex, bg: brandColors.cream.hex, fgName: "Navy", bgName: "Cream", ratio: 14.2, level: "AAA" as const },
+              { fg: "#545E70", bg: brandColors.ivory.hex, fgName: "Muted", bgName: "Ivory", ratio: 5.1, level: "AA" as const },
+              { fg: brandColors.gold.hex, bg: brandColors.ivory.hex, fgName: "Gold", bgName: "Ivory", ratio: 2.4, level: "Fail" as const },
+              { fg: brandColors.goldDark.hex, bg: brandColors.ivory.hex, fgName: "Gold Dark", bgName: "Ivory", ratio: 4.6, level: "AA" as const },
+              { fg: brandColors.ivory.hex, bg: brandColors.gold.hex, fgName: "Ivory", bgName: "Gold", ratio: 2.4, level: "Fail" as const },
+              { fg: brandColors.navy.hex, bg: brandColors.goldLight.hex, fgName: "Navy", bgName: "Gold Light", ratio: 8.9, level: "AAA" as const },
             ].map((pair, i) => {
               const badge =
                 pair.level === "AAA"
