@@ -152,8 +152,7 @@ export default function RoundPens() {
 
       {/* Features Overview */}
       <section className="section-padding relative overflow-hidden">
-        <BlueprintBackground image={blueprintFacility} opacity={0.04} direction="right-to-left" duration={2000} parallaxSpeed={0.06} />
-        <BlueprintLineOverlay variant="dimensions" color="dark" />
+        <BlueprintBackground image={blueprintFacility} opacity={0.03} direction="right-to-left" duration={2000} parallaxSpeed={0.06} />
         <div className="section-container relative z-10">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="font-serif text-3xl font-semibold text-foreground mb-4">

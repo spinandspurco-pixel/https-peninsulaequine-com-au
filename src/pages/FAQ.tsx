@@ -41,9 +41,7 @@ export default function FAQ() {
       />
 
       <section className="section-padding relative overflow-hidden">
-        <BlueprintBackground image={blueprintDetail} opacity={0.03} direction="bottom-to-top" duration={1800} parallaxSpeed={0.06} />
-        <BlueprintBackground image={blueprintFacility} opacity={0.02} direction="left-to-right" duration={2800} parallaxSpeed={0.04} className="scale-110" />
-        <BlueprintLineOverlay variant="detail" color="dark" />
+        <BlueprintBackground image={blueprintDetail} opacity={0.025} direction="bottom-to-top" duration={1800} parallaxSpeed={0.06} />
         <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-background/90 to-background pointer-events-none z-[1]" />
 
         <div className="section-container max-w-3xl relative z-[2]">

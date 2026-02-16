@@ -101,9 +101,7 @@ export default function Contact() {
       />
 
       <section className="section-padding relative overflow-hidden">
-        <BlueprintBackground image={blueprintFacility} opacity={0.04} direction="right-to-left" duration={2000} parallaxSpeed={0.06} />
-        <BlueprintBackground image={blueprintDetail} opacity={0.025} direction="bottom-to-top" duration={2400} parallaxSpeed={0.1} className="scale-110" />
-        <BlueprintLineOverlay variant="dimensions" color="dark" />
+        <BlueprintBackground image={blueprintFacility} opacity={0.03} direction="right-to-left" duration={2000} parallaxSpeed={0.06} />
         <div className="section-container relative z-10">
           <div className="grid lg:grid-cols-3 gap-12 lg:gap-16">
             {/* Form - Takes 2 columns */}

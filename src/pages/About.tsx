@@ -52,9 +52,7 @@ function CiroSection() {
 
   return (
     <section className="section-padding relative overflow-hidden">
-      <BlueprintBackground image={blueprintElevation} opacity={0.04} direction="left-to-right" duration={2200} parallaxSpeed={0.05} />
-      <BlueprintBackground image={blueprintDetail} opacity={0.025} direction="bottom-to-top" duration={2600} parallaxSpeed={0.1} className="scale-105" />
-      <BlueprintLineOverlay variant="detail" color="dark" />
+      <BlueprintBackground image={blueprintElevation} opacity={0.03} direction="left-to-right" duration={2200} parallaxSpeed={0.05} />
       <div className="section-container">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Image */}
@@ -104,9 +102,7 @@ function ValuesSection() {
 
   return (
     <section className="section-padding bg-card relative overflow-hidden">
-      <BlueprintBackground image={blueprintBarn} opacity={0.035} direction="left-to-right" duration={2000} />
-      <BlueprintBackground image={blueprintFacility} opacity={0.02} direction="right-to-left" duration={2400} parallaxSpeed={0.08} className="scale-110" />
-      <BlueprintLineOverlay variant="values-blueprint" color="dark" />
+      <BlueprintBackground image={blueprintBarn} opacity={0.025} direction="left-to-right" duration={2000} />
       <div className="section-container relative z-10">
         <div 
           ref={headerRef}
@@ -161,9 +157,7 @@ function NaturalHorsemanshipSection() {
 
   return (
     <section className="section-padding bg-background relative overflow-hidden">
-      <BlueprintBackground image={blueprintDetail} opacity={0.025} direction="bottom-to-top" duration={1800} parallaxSpeed={0.07} />
-      <BlueprintBackground image={blueprintElevation} opacity={0.03} direction="left-to-right" duration={2200} parallaxSpeed={0.04} className="scale-105" />
-      <BlueprintLineOverlay variant="horsemanship-blueprint" color="dark" />
+      <BlueprintBackground image={blueprintElevation} opacity={0.02} direction="bottom-to-top" duration={1800} parallaxSpeed={0.07} />
       <div className="section-container">
         <div 
           ref={headerRef}
@@ -269,9 +263,7 @@ function StorySection() {
 
   return (
     <section className="section-padding relative">
-      <BlueprintBackground image={blueprintDetail} opacity={0.05} direction="right-to-left" />
-      <BlueprintBackground image={blueprintFacility} opacity={0.02} direction="bottom-to-top" duration={2000} parallaxSpeed={0.06} className="scale-110" />
-      <BlueprintLineOverlay variant="story-blueprint" color="dark" />
+      <BlueprintBackground image={blueprintFacility} opacity={0.03} direction="right-to-left" />
       <div className="section-container relative z-10">
         <div 
           ref={ref}
@@ -315,8 +307,7 @@ function FamilySection() {
 
   return (
     <section className="section-padding bg-card relative overflow-hidden">
-      <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
-      <BlueprintLineOverlay variant="barn" color="dark" />
+      <BlueprintBackground image={blueprintBarn} opacity={0.02} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
       <div className="section-container">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Content */}
