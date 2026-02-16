@@ -25,6 +25,15 @@ const EXPERIENCE_LEVELS = [
   { id: "professional", label: "Professional" },
 ];
 
+const BUDGET_RANGES = [
+  { id: "under-5k", label: "Under $5k" },
+  { id: "5k-15k", label: "$5k – $15k" },
+  { id: "15k-50k", label: "$15k – $50k" },
+  { id: "50k-100k", label: "$50k – $100k" },
+  { id: "100k-plus", label: "$100k+" },
+  { id: "not-sure", label: "Not Sure Yet" },
+];
+
 const contactSchema = z.object({
   name: z.string().trim().min(2, "Name must be at least 2 characters").max(100),
   email: z.string().trim().email("Please enter a valid email").max(255),
@@ -45,6 +54,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [experience, setExperience] = useState("");
+  const [budget, setBudget] = useState("");
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -99,6 +109,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
         phone: phone.trim().slice(0, 30) || null,
         services: selectedServices,
         experience_level: experience || null,
+        budget_range: budget || null,
         project_details: message.trim().slice(0, 1000) || null,
         notes: "Multi-step inquiry from homepage",
         status: "new",
@@ -112,6 +123,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
             name: name.trim(),
             email: email.trim(),
             services: selectedServices,
+            budgetRange: budget || undefined,
             goals: message.trim() || "Multi-step homepage inquiry",
           },
         })
@@ -253,6 +265,28 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
                       )}
                     >
                       {lvl.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-2 block">
+                  Budget Range
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {BUDGET_RANGES.map((b) => (
+                    <button
+                      key={b.id}
+                      type="button"
+                      onClick={() => setBudget(b.id)}
+                      className={cn(
+                        "px-4 py-2 rounded-full text-sm font-medium border transition-all",
+                        budget === b.id
+                          ? "bg-accent/10 border-accent text-foreground ring-1 ring-accent/30"
+                          : "bg-background border-border text-muted-foreground hover:border-accent/40"
+                      )}
+                    >
+                      {b.label}
                     </button>
                   ))}
                 </div>
