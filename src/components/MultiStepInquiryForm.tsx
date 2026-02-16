@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowRight, ArrowLeft, CheckCircle, Loader2, User, Mail, Phone, MessageSquare, CalendarIcon, Edit2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,11 +50,21 @@ interface MultiStepInquiryFormProps {
 export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [step, setStep] = useState(1);
-  const [selectedServices, setSelectedServices] = useState<string[]>([]);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [searchParams] = useSearchParams();
+
+  // Auto-fill from URL params
+  const preService = searchParams.get("service") || "";
+  const preServices = searchParams.get("services")?.split(",").filter(Boolean) || [];
+  const initialServices = preService ? [preService] : preServices;
+  const preName = searchParams.get("name") || "";
+  const preEmail = searchParams.get("email") || "";
+  const prePhone = searchParams.get("phone") || "";
+
+  const [step, setStep] = useState(initialServices.length > 0 ? 2 : 1);
+  const [selectedServices, setSelectedServices] = useState<string[]>(initialServices);
+  const [name, setName] = useState(preName);
+  const [email, setEmail] = useState(preEmail);
+  const [phone, setPhone] = useState(prePhone);
   const [experience, setExperience] = useState("");
   const [budget, setBudget] = useState("");
   const [message, setMessage] = useState("");
