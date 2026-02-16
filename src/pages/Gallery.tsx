@@ -630,18 +630,16 @@ function Lightbox({
       {/* Swipe indicator for first-time users */}
       <SwipeIndicator show={!!item && totalCount > 1} />
 
-      {/* Download & Close buttons */}
-      {item.type === "image" && (
-        <a
-          href={item.src}
-          download={`peninsula-equine-${item.id}.jpg`}
-          className="absolute top-6 right-20 text-primary-foreground/60 hover:text-primary-foreground z-10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-full p-1"
-          onClick={(e) => e.stopPropagation()}
-          aria-label="Download image"
-        >
-          <Download className="h-7 w-7" />
-        </a>
-      )}
+      {/* Download button — all media types */}
+      <a
+        href={item.src}
+        download={`peninsula-equine-${item.id}.${item.type === "video" ? "mp4" : "jpg"}`}
+        className="absolute top-6 right-20 text-primary-foreground/60 hover:text-primary-foreground z-10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-full p-1"
+        onClick={(e) => e.stopPropagation()}
+        aria-label={`Download high-res ${item.type === "video" ? "video" : "image"}`}
+      >
+        <Download className="h-7 w-7" />
+      </a>
       <button
         ref={closeButtonRef}
         id="lightbox-close"
