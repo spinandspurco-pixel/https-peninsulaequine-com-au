@@ -41,6 +41,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { 
   LogOut, 
@@ -56,7 +58,11 @@ import {
   Users,
   Clock,
   CheckCircle,
-  Download
+  Download,
+  Settings,
+  Zap,
+  Save,
+  ExternalLink
 } from "lucide-react";
 import { format } from "date-fns";
 
@@ -110,6 +116,10 @@ export default function Admin() {
   const [deleteInquiry, setDeleteInquiry] = useState<Inquiry | null>(null);
   const [editNotes, setEditNotes] = useState("");
   const [editStatus, setEditStatus] = useState("");
+  const [hubspotApiKey, setHubspotApiKey] = useState("");
+  const [hubspotEnabled, setHubspotEnabled] = useState(false);
+  const [isSavingCrm, setIsSavingCrm] = useState(false);
+  const [showCrmSettings, setShowCrmSettings] = useState(false);
 
   // Redirect if not admin
   useEffect(() => {
@@ -117,6 +127,25 @@ export default function Admin() {
       navigate("/login");
     }
   }, [user, isAdmin, loading, navigate]);
+
+  // Fetch CRM settings
+  useEffect(() => {
+    if (isAdmin) {
+      supabase
+        .from("integration_settings")
+        .select("key, value")
+        .in("key", ["hubspot_api_key"])
+        .then(({ data }) => {
+          if (data) {
+            const hubspot = data.find((s) => s.key === "hubspot_api_key");
+            if (hubspot?.value) {
+              setHubspotApiKey(hubspot.value);
+              setHubspotEnabled(true);
+            }
+          }
+        });
+    }
+  }, [isAdmin]);
 
   // Fetch inquiries
   const fetchInquiries = async () => {
@@ -187,6 +216,36 @@ export default function Admin() {
       toast.success("Inquiry deleted");
       setDeleteInquiry(null);
       fetchInquiries();
+    }
+  };
+
+  const handleSaveCrmSettings = async () => {
+    setIsSavingCrm(true);
+    try {
+      if (hubspotEnabled && hubspotApiKey.trim()) {
+        // Upsert the API key
+        const { error } = await supabase
+          .from("integration_settings")
+          .upsert(
+            { key: "hubspot_api_key", value: hubspotApiKey.trim(), description: "HubSpot Private App Access Token" },
+            { onConflict: "key" }
+          );
+        if (error) throw error;
+        toast.success("HubSpot CRM integration saved");
+      } else {
+        // Remove the key
+        await supabase
+          .from("integration_settings")
+          .delete()
+          .eq("key", "hubspot_api_key");
+        setHubspotApiKey("");
+        toast.success("HubSpot CRM integration disabled");
+      }
+    } catch (error) {
+      console.error("Failed to save CRM settings:", error);
+      toast.error("Failed to save CRM settings");
+    } finally {
+      setIsSavingCrm(false);
     }
   };
 
@@ -341,6 +400,75 @@ export default function Admin() {
               </CardHeader>
             </Card>
           </div>
+
+          {/* CRM Integration Settings */}
+          <Card className="mb-8">
+            <CardHeader className="cursor-pointer" onClick={() => setShowCrmSettings(!showCrmSettings)}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Zap className="h-5 w-5 text-accent" />
+                  <div>
+                    <CardTitle className="text-lg">CRM Integration</CardTitle>
+                    <CardDescription>
+                      {hubspotEnabled ? "HubSpot connected — inquiries sync automatically" : "Connect HubSpot to auto-sync leads"}
+                    </CardDescription>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {hubspotEnabled && (
+                    <Badge variant="secondary" className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
+                      Active
+                    </Badge>
+                  )}
+                  <Settings className={`h-4 w-4 text-muted-foreground transition-transform ${showCrmSettings ? "rotate-90" : ""}`} />
+                </div>
+              </div>
+            </CardHeader>
+            {showCrmSettings && (
+              <CardContent className="space-y-4 border-t pt-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label htmlFor="hubspot-toggle" className="font-medium">Enable HubSpot Sync</Label>
+                    <p className="text-sm text-muted-foreground">Automatically create contacts in HubSpot for every new inquiry</p>
+                  </div>
+                  <Switch
+                    id="hubspot-toggle"
+                    checked={hubspotEnabled}
+                    onCheckedChange={setHubspotEnabled}
+                  />
+                </div>
+                {hubspotEnabled && (
+                  <div className="space-y-2">
+                    <Label htmlFor="hubspot-key">HubSpot Private App Access Token</Label>
+                    <Input
+                      id="hubspot-key"
+                      type="password"
+                      placeholder="pat-na1-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                      value={hubspotApiKey}
+                      onChange={(e) => setHubspotApiKey(e.target.value)}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Create a Private App in HubSpot → Settings → Integrations → Private Apps. Required scopes: <code className="text-xs">crm.objects.contacts.write</code>
+                    </p>
+                  </div>
+                )}
+                <div className="flex justify-end gap-2 pt-2">
+                  <Button
+                    size="sm"
+                    onClick={handleSaveCrmSettings}
+                    disabled={isSavingCrm || (hubspotEnabled && !hubspotApiKey.trim())}
+                  >
+                    {isSavingCrm ? (
+                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Save className="h-4 w-4 mr-2" />
+                    )}
+                    Save
+                  </Button>
+                </div>
+              </CardContent>
+            )}
+          </Card>
 
           {/* Filters */}
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
