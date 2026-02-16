@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { services as hardcodedServices } from "@/data/content";
 import { CheckCircle, ArrowRight, Send, Filter } from "lucide-react";
+import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
@@ -292,7 +293,10 @@ function ServiceGalleryCard({
         {/* CTAs */}
         <div className="flex gap-2 mt-auto">
           <Button
-            onClick={() => onQuoteClick(service.id)}
+            onClick={() => {
+              trackCtaClick("service_card_inquiry", { source: "services_gallery", service: service.id });
+              onQuoteClick(service.id);
+            }}
             size="sm"
             className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground"
           >
@@ -300,7 +304,10 @@ function ServiceGalleryCard({
             Quick Inquiry
           </Button>
           <Button
-            onClick={() => navigate(`/contact?services=${service.id}`)}
+            onClick={() => {
+              trackCtaClick("service_card_details", { source: "services_gallery", service: service.id });
+              navigate(`/contact?services=${service.id}&ref=service-card`);
+            }}
             variant="outline"
             size="sm"
             className="border-accent/30 text-accent hover:bg-accent/10"

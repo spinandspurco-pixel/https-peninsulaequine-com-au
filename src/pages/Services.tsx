@@ -145,7 +145,7 @@ function PageHeader({ title, description }: { title: string; description: string
 
   const handleServiceBook = (serviceId: string) => {
     trackCtaClick("hero_service_book", { source: "services_hero", service: serviceId });
-    navigate(`/contact?services=${serviceId}`);
+    navigate(`/contact?services=${serviceId}&ref=hero-cta`);
   };
 
   return (
