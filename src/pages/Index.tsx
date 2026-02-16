@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, X, Mail, Send, MessageSquare, Star, ShieldCheck, Flame, Loader2, CheckCircle } from "lucide-react";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useABTest } from "@/hooks/useABTest";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -51,14 +52,19 @@ function HeroSection() {
   const [bannerLoaded, setBannerLoaded] = useState(false);
   const [heroPhase, setHeroPhase] = useState(0); // 0=hidden, 1=blueprints, 2=banner, 3=cta
   const sectionRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
 
-  // Phased entrance
+  // Phased entrance – skip delays when reduced motion is preferred
   useEffect(() => {
-    const t1 = setTimeout(() => setHeroPhase(1), 300);
-    const t2 = setTimeout(() => setHeroPhase(2), 1000);
-    const t3 = setTimeout(() => setHeroPhase(3), 1800);
+    if (prefersReducedMotion) {
+      setHeroPhase(3);
+      return;
+    }
+    const t1 = setTimeout(() => setHeroPhase(1), 400);
+    const t2 = setTimeout(() => setHeroPhase(2), 1200);
+    const t3 = setTimeout(() => setHeroPhase(3), 2000);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
-  }, []);
+  }, [prefersReducedMotion]);
 
   useEffect(() => {
     let ticking = false;
@@ -104,17 +110,17 @@ function HeroSection() {
       <div
         style={{
           opacity: heroPhase >= 1 ? 1 : 0,
-          transition: "opacity 1.2s ease-out",
+          transition: prefersReducedMotion ? "none" : "opacity 1.6s cubic-bezier(0.22,0.61,0.36,1)",
         }}
       >
-        <BlueprintBackground image={blueprintFacility} opacity={0.06} direction="left-to-right" duration={2500} parallaxSpeed={0.04} />
+        <BlueprintBackground image={blueprintFacility} opacity={0.06} direction="left-to-right" duration={2800} parallaxSpeed={0.04} />
       </div>
 
       {/* Blueprint line overlays — phase 1 draw-on */}
       <div
         style={{
           opacity: heroPhase >= 1 ? 1 : 0,
-          transition: "opacity 1s ease-out 0.4s",
+          transition: prefersReducedMotion ? "none" : "opacity 1.2s cubic-bezier(0.22,0.61,0.36,1) 0.5s",
         }}
       >
         <BlueprintLineOverlay variant="dimensions" color="light" />
@@ -136,7 +142,7 @@ function HeroSection() {
         aria-hidden="true"
         style={{
           opacity: heroPhase >= 1 ? 0.2 : 0,
-          transition: "opacity 1s ease-out 0.6s",
+          transition: prefersReducedMotion ? "none" : "opacity 1.2s cubic-bezier(0.22,0.61,0.36,1) 0.6s",
         }}
       >
         <path d="M 40,40 L 40,120 M 40,40 L 120,40" fill="none" stroke="hsl(45 40% 97%)" strokeWidth="0.8" />
@@ -163,7 +169,7 @@ function HeroSection() {
           style={{
             opacity: heroPhase >= 2 ? 1 : 0,
             transform: heroPhase >= 2 ? "scaleX(1)" : "scaleX(0)",
-            transition: "opacity 0.6s ease-out, transform 0.8s cubic-bezier(0.22,0.61,0.36,1)",
+            transition: prefersReducedMotion ? "none" : "opacity 0.8s ease-out, transform 1s cubic-bezier(0.22,0.61,0.36,1)",
           }}
         />
         
@@ -172,8 +178,8 @@ function HeroSection() {
           className="mb-8"
           style={{
             opacity: heroPhase >= 2 ? 1 : 0,
-            transform: heroPhase >= 2 ? "translateY(0) scale(1)" : "translateY(20px) scale(0.95)",
-            transition: "opacity 0.8s ease-out 0.1s, transform 1s cubic-bezier(0.22,0.61,0.36,1) 0.1s",
+            transform: heroPhase >= 2 ? "translateY(0) scale(1)" : "translateY(24px) scale(0.97)",
+            transition: prefersReducedMotion ? "none" : "opacity 1s cubic-bezier(0.22,0.61,0.36,1) 0.15s, transform 1.2s cubic-bezier(0.22,0.61,0.36,1) 0.15s",
           }}
         >
           <img
@@ -192,8 +198,8 @@ function HeroSection() {
         <div
           style={{
             opacity: heroPhase >= 3 ? 1 : 0,
-            transform: heroPhase >= 3 ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.7s ease-out, transform 0.8s ease-out",
+            transform: heroPhase >= 3 ? "translateY(0)" : "translateY(20px)",
+            transition: prefersReducedMotion ? "none" : "opacity 0.9s cubic-bezier(0.22,0.61,0.36,1), transform 1s cubic-bezier(0.22,0.61,0.36,1)",
           }}
         >
           <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-hero-text-muted mb-10">
