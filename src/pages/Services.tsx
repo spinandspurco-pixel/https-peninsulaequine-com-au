@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
-import { ArrowRight, ArrowUp, CheckCircle, X, ZoomIn, CalendarIcon, Images, ChevronLeft, ChevronRight, BarChart3 } from "lucide-react";
+import { ArrowRight, ArrowUp, CheckCircle, X, ZoomIn, CalendarIcon, Images, ChevronLeft, ChevronRight, BarChart3, ChevronDown, HelpCircle, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
@@ -14,6 +14,8 @@ import { QuickQuoteModal } from "@/components/QuickQuoteModal";
 import { QuoteCalculator } from "@/components/QuoteCalculator";
 import { ServicesGallery } from "@/components/ServicesGallery";
 import { services, lessonInfo, siteConfig } from "@/data/content";
+import { servicePricingTiers, serviceFaqs } from "@/data/servicePricingFaq";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { BookingWidget } from "@/components/BookingWidget";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
@@ -250,99 +252,190 @@ function ServiceCard({ service, index, onQuoteClick }: { service: typeof service
   const navigate = useNavigate();
   const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation<HTMLDivElement>();
   const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
+  const [showDetail, setShowDetail] = useState(false);
 
   const isEven = index % 2 === 0;
+  const tiers = servicePricingTiers[service.id] || [];
+  const faqs = serviceFaqs[service.id] || [];
 
   return (
     <div
       id={service.id}
-      className="group scroll-mt-24 grid lg:grid-cols-2 gap-8 lg:gap-16 items-start py-16 border-b border-border last:border-0"
+      className="group scroll-mt-24 py-16 border-b border-border last:border-0"
     >
-      <div 
-        ref={contentRef}
-        className={`p-6 -m-6 rounded-xl card-hover-glow
-          ${isEven ? "" : "lg:order-2"}
-          ${contentVisible 
-            ? "opacity-100 translate-x-0" 
-            : `opacity-0 ${isEven ? "-translate-x-8" : "translate-x-8"}`
-          }`}
-      >
-        <div className={`w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mb-6 transition-all duration-500 delay-100 group-hover:bg-accent/20 group-hover:scale-110 ${
-          contentVisible ? "opacity-100 scale-100" : "opacity-0 scale-75"
-        }`}>
-          <div className="w-8 h-8 bg-accent rounded transition-transform duration-300 group-hover:rotate-12" />
-        </div>
-        <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-foreground mb-4 transition-colors duration-300 group-hover:text-accent">
-          {service.title}
-        </h2>
-        <p className="text-muted-foreground mb-4 transition-colors duration-300 group-hover:text-foreground/80">
-          {service.description}
-        </p>
-
-        {/* Dynamic pricing snippet */}
-        {service.startingPrice && (
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent/10 border border-accent/20 mb-6">
-            <span className="text-sm text-muted-foreground">Starting at</span>
-            <span className="text-lg font-semibold text-accent">{service.startingPrice}</span>
+      <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+        <div 
+          ref={contentRef}
+          className={`p-6 -m-6 rounded-xl card-hover-glow
+            ${isEven ? "" : "lg:order-2"}
+            ${contentVisible 
+              ? "opacity-100 translate-x-0" 
+              : `opacity-0 ${isEven ? "-translate-x-8" : "translate-x-8"}`
+            }`}
+        >
+          <div className={`w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mb-6 transition-all duration-500 delay-100 group-hover:bg-accent/20 group-hover:scale-110 ${
+            contentVisible ? "opacity-100 scale-100" : "opacity-0 scale-75"
+          }`}>
+            <div className="w-8 h-8 bg-accent rounded transition-transform duration-300 group-hover:rotate-12" />
           </div>
-        )}
+          <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-foreground mb-4 transition-colors duration-300 group-hover:text-accent">
+            {service.title}
+          </h2>
+          <p className="text-muted-foreground mb-4 transition-colors duration-300 group-hover:text-foreground/80">
+            {service.description}
+          </p>
 
-        <ul className="space-y-3 mb-8">
-          {service.features.map((feature, i) => (
-            <li 
-              key={i} 
-              className={`flex items-start gap-3 transition-all duration-500 ${
-                contentVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
-              }`}
-              style={{ transitionDelay: `${200 + i * 75}ms` }}
+          {/* Dynamic pricing snippet */}
+          {service.startingPrice && (
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent/10 border border-accent/20 mb-6">
+              <span className="text-sm text-muted-foreground">Starting at</span>
+              <span className="text-lg font-semibold text-accent">{service.startingPrice}</span>
+            </div>
+          )}
+
+          <ul className="space-y-3 mb-8">
+            {service.features.map((feature, i) => (
+              <li 
+                key={i} 
+                className={`flex items-start gap-3 transition-all duration-500 ${
+                  contentVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
+                }`}
+                style={{ transitionDelay: `${200 + i * 75}ms` }}
+              >
+                <CheckCircle className="h-5 w-5 text-accent mt-0.5 shrink-0 transition-transform duration-300 group-hover:scale-110" />
+                <span className="text-foreground">{feature}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="flex flex-wrap gap-3">
+            <Button 
+              onClick={() => navigate(`/book-lesson?service=${service.id}`)}
+              className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
             >
-              <CheckCircle className="h-5 w-5 text-accent mt-0.5 shrink-0 transition-transform duration-300 group-hover:scale-110" />
-              <span className="text-foreground">{feature}</span>
-            </li>
-          ))}
-        </ul>
-        <div className="flex flex-wrap gap-3">
-          <Button 
-            onClick={() => navigate(`/book-lesson?service=${service.id}`)}
-            className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
-          >
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            Quick Book
-          </Button>
-          <Button 
-            onClick={() => {
-              trackCtaClick("get_a_quote", { source: "service_detail", service: service.id });
-              navigate(`/contact?services=${service.id}`);
-            }}
-            variant="outline"
-            className="border-accent/30 text-accent hover:bg-accent/10 transition-all duration-300"
-          >
-            Get a Quote
-            <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </Button>
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              Quick Book
+            </Button>
+            <Button 
+              onClick={() => {
+                trackCtaClick("get_a_quote", { source: "service_detail", service: service.id });
+                navigate(`/contact?services=${service.id}`);
+              }}
+              variant="outline"
+              className="border-accent/30 text-accent hover:bg-accent/10 transition-all duration-300"
+            >
+              Get a Quote
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </Button>
+            {(tiers.length > 0 || faqs.length > 0) && (
+              <Button
+                variant="ghost"
+                onClick={() => setShowDetail(!showDetail)}
+                className="text-muted-foreground hover:text-foreground transition-all duration-300"
+              >
+                {showDetail ? "Hide Details" : "Pricing & FAQ"}
+                <ChevronDown className={`ml-1 h-4 w-4 transition-transform duration-300 ${showDetail ? "rotate-180" : ""}`} />
+              </Button>
+            )}
+          </div>
+        </div>
+        <div 
+          ref={imageRef}
+          className={`transition-all duration-700 delay-200 ${
+            isEven ? "" : "lg:order-1"
+          } ${
+            imageVisible 
+              ? "opacity-100 translate-x-0 scale-100" 
+              : `opacity-0 ${isEven ? "translate-x-8" : "-translate-x-8"} scale-95`
+          }`}
+        >
+          <div className="aspect-[4/3] bg-secondary rounded-lg overflow-hidden image-card-glow relative">
+            <img 
+              src={serviceImages[service.id]} 
+              alt={service.title}
+              className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-110 group-hover:saturate-[1.1]"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-accent/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+          </div>
         </div>
       </div>
-      <div 
-        ref={imageRef}
-        className={`transition-all duration-700 delay-200 ${
-          isEven ? "" : "lg:order-1"
-        } ${
-          imageVisible 
-            ? "opacity-100 translate-x-0 scale-100" 
-            : `opacity-0 ${isEven ? "translate-x-8" : "-translate-x-8"} scale-95`
-        }`}
-      >
-      <div className="aspect-[4/3] bg-secondary rounded-lg overflow-hidden image-card-glow relative">
-        <img 
-          src={serviceImages[service.id]} 
-          alt={service.title}
-          className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-110 group-hover:saturate-[1.1]"
-          loading="lazy"
-        />
-        {/* Subtle gradient overlay on hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-accent/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-      </div>
-      </div>
+
+      {/* Expandable pricing tiers + FAQ */}
+      {showDetail && (
+        <div className="mt-10 animate-in slide-in-from-top-4 fade-in duration-500">
+          {/* Pricing Tiers */}
+          {tiers.length > 0 && (
+            <div className="mb-10">
+              <h3 className="font-serif text-xl text-foreground mb-6 flex items-center gap-2">
+                <BarChart3 className="h-5 w-5 text-accent" />
+                Pricing Tiers
+              </h3>
+              <div className="grid sm:grid-cols-3 gap-4">
+                {tiers.map((tier) => (
+                  <div
+                    key={tier.name}
+                    className={`relative rounded-xl border p-5 transition-all duration-300 hover:shadow-md ${
+                      tier.popular
+                        ? "border-accent bg-accent/5 ring-1 ring-accent/20"
+                        : "border-border bg-card"
+                    }`}
+                  >
+                    {tier.popular && (
+                      <span className="absolute -top-2.5 left-4 px-2.5 py-0.5 bg-accent text-accent-foreground text-[10px] uppercase tracking-widest rounded-full font-semibold">
+                        Most Popular
+                      </span>
+                    )}
+                    <p className="text-sm font-semibold text-foreground mb-1">{tier.name}</p>
+                    <p className="text-2xl font-bold text-accent mb-2">{tier.price}</p>
+                    <p className="text-xs text-muted-foreground mb-4">{tier.description}</p>
+                    <ul className="space-y-2">
+                      {tier.features.map((f, i) => (
+                        <li key={i} className="flex items-start gap-2 text-sm">
+                          <CheckCircle className="h-3.5 w-3.5 text-accent mt-0.5 shrink-0" />
+                          <span className="text-foreground/80">{f}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <Button
+                      size="sm"
+                      variant={tier.popular ? "default" : "outline"}
+                      className="w-full mt-4"
+                      onClick={() => {
+                        trackCtaClick("tier_quote", { source: "pricing_tier", service: service.id, tier: tier.name });
+                        navigate(`/contact?services=${service.id}&ref=tier-${tier.name.toLowerCase()}`);
+                      }}
+                    >
+                      Get a Quote
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Per-service FAQ */}
+          {faqs.length > 0 && (
+            <div>
+              <h3 className="font-serif text-xl text-foreground mb-4 flex items-center gap-2">
+                <HelpCircle className="h-5 w-5 text-accent" />
+                Common Questions — {service.title}
+              </h3>
+              <Accordion type="single" collapsible className="border rounded-xl overflow-hidden">
+                {faqs.map((faq, i) => (
+                  <AccordionItem key={i} value={`faq-${i}`} className="border-b last:border-0">
+                    <AccordionTrigger className="px-5 text-sm font-medium text-foreground hover:no-underline">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="px-5 text-sm text-muted-foreground">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
