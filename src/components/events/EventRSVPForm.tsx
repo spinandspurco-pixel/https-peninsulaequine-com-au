@@ -155,6 +155,22 @@ export function EventRSVPForm({
         ? `You've been added to the waitlist for ${eventTitle}`
         : `RSVP confirmed for ${eventTitle}!`
     );
+
+    // Send confirmation email (fire-and-forget)
+    supabase.functions
+      .invoke("send-rsvp-confirmation", {
+        body: {
+          name: parsed.data.name,
+          email: parsed.data.email,
+          eventTitle,
+          eventDate,
+          eventTime,
+          eventLocation,
+          guests: parsed.data.guests,
+          status,
+        },
+      })
+      .catch(() => {});
   };
 
   // ── Confirmation screen ──
