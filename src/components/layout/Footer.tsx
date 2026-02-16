@@ -37,8 +37,8 @@ export function Footer() {
                 alt="Peninsula Equine"
                 className="h-10 w-10 object-contain transition-transform duration-300 group-hover:scale-105"
               />
-              <span className="font-serif text-xl font-semibold text-[hsl(var(--footer-foreground))]">
-                Peninsula<span className="text-[hsl(var(--footer-hover))]">Equine</span>
+              <span className="font-sans text-sm font-semibold tracking-[0.2em] uppercase text-[hsl(var(--footer-foreground))]">
+                Peninsula<span className="text-[hsl(var(--footer-hover))]"> Equine</span>
               </span>
             </Link>
             <p className="text-[hsl(var(--footer-muted))] mb-6 max-w-xs text-sm leading-relaxed">

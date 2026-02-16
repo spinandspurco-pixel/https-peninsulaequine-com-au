@@ -41,8 +41,8 @@ function HeroSection() {
           className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-8 drop-shadow-[0_4px_30px_hsl(var(--accent)/0.3)]"
         />
         <div className="w-16 h-px mx-auto mb-8 bg-accent" />
-        <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-normal tracking-tight text-primary-foreground leading-[1.05] mb-4">
-          Peninsula<br /><span className="text-accent">Equine</span>
+        <h1 className="font-sans text-2xl sm:text-3xl md:text-4xl font-semibold tracking-[0.25em] uppercase text-primary-foreground leading-[1.3] mb-4">
+          Peninsula <span className="text-accent">Equine</span>
         </h1>
         <p className="font-sans text-xs sm:text-sm tracking-[0.4em] uppercase text-primary-foreground/50 mb-3">
           From Dirt to Dynasty

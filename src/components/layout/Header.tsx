@@ -69,10 +69,10 @@ export function Header() {
               />
             </div>
             <span className={cn(
-              "hidden sm:block font-serif text-sm md:text-base tracking-[0.12em] uppercase transition-colors duration-300",
+              "hidden sm:block font-sans text-xs md:text-sm font-semibold tracking-[0.2em] uppercase transition-colors duration-300",
               isScrolled ? "text-[hsl(var(--header-scrolled-foreground))]" : "text-[hsl(var(--header-foreground))]"
             )}>
-              Peninsula<span className="text-[hsl(var(--header-active))]">Equine</span>
+              Peninsula<span className="text-[hsl(var(--header-active))]"> Equine</span>
             </span>
           </Link>
 
