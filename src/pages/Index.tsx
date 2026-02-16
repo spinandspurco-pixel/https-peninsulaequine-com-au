@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, ChevronDown, Star, Hammer, Ruler, CheckCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { CardGrid } from "@/components/CardGrid";
+import { ContentCard } from "@/components/ContentCard";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { MultiStepInquiryForm } from "@/components/MultiStepInquiryForm";
@@ -214,7 +216,7 @@ function GalleryTeaser() {
       ]}
       className="section-padding overflow-hidden"
     >
-      <div className="section-container">
+      <div ref={ref} className="section-container">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <AnimatedDivider className="mx-auto mb-8" />
           <SectionTransition variant="fade-up">
@@ -225,25 +227,27 @@ function GalleryTeaser() {
           </SectionTransition>
         </div>
 
-        <div ref={ref} className="grid grid-cols-3 gap-2 sm:gap-4">
+        <CardGrid columns="3" gap="sm" className="mb-10">
           {images.map((img, i) => (
-            <Link
+            <ContentCard
               key={i}
-              to="/gallery"
-              className={`group relative aspect-[4/3] overflow-hidden rounded-lg bg-muted/20 transition-all duration-700 ease-out ${
+              image={img.src}
+              imageAlt={img.alt}
+              aspect="portrait"
+              title={img.alt.split("—")[0].trim()}
+              description={img.alt.split("—")[1]?.trim()}
+              href="/gallery"
+              ctaLabel="View Gallery"
+              variant="elevated"
+              className={`transition-all duration-700 ease-out ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               }`}
               style={{ transitionDelay: `${i * 120}ms` }}
-            >
-              <img src={img.src} alt={img.alt} loading="lazy" decoding="async"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/30 transition-colors duration-300" />
-            </Link>
+            />
           ))}
-        </div>
+        </CardGrid>
 
-        <SectionTransition variant="fade-up" delay={300} className="text-center mt-10">
+        <SectionTransition variant="fade-up" delay={300} className="text-center">
           <Button asChild variant="outline" size="lg">
             <Link to="/gallery">
               View Full Gallery <ArrowRight className="ml-2 h-4 w-4" />
