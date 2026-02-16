@@ -11,7 +11,7 @@ import { siteConfig, services, testimonials } from "@/data/content";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 import { BlueprintScene } from "@/components/BlueprintScene";
-import heroVideo from "@/assets/videos/slow-mo-1.mp4";
+import heroVideo from "@/assets/videos/main-ridge-woodwork-1.mp4";
 import ciroWide from "@/assets/ciro-wide.png";
 import stoneworkBW from "@/assets/aberdeen-stonework-bw.jpg";
 import peBanner from "@/assets/pe-banner-2.png";

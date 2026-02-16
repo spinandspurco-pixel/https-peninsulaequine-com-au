@@ -61,9 +61,6 @@ import mainRidgeTimberPosts from "@/assets/main-ridge-timber-posts.jpg";
 import mainRidgeTrenchUtilities from "@/assets/main-ridge-trench-utilities.jpg";
 
 // Videos
-import slowMo1 from "@/assets/videos/slow-mo-1.mp4";
-import slowMo2 from "@/assets/videos/slow-mo-2.mp4";
-import slowMo3 from "@/assets/videos/slow-mo-3.mp4";
 import mainRidgeWoodwork1 from "@/assets/videos/main-ridge-woodwork-1.mp4";
 import mainRidgeWoodwork2 from "@/assets/videos/main-ridge-woodwork-2.mp4";
 import caulfieldVideo1 from "@/assets/videos/caulfield-1.mov";
@@ -90,7 +87,6 @@ export const projects = [
   { id: "queensland", name: "Queensland Facility" },
   { id: "equitana", name: "Equitana Melbourne" },
   { id: "caulfield", name: "Melbourne Cup" },
-  { id: "videos", name: "Videos" },
 ];
 
 export const serviceFilters = [
@@ -110,9 +106,6 @@ export const locationFilters = [
 ];
 
 export const allVideos: (GalleryItem & { description: string })[] = [
-  { id: 100, src: slowMo1, alt: "Graceful Movement", description: "Capturing natural horsemanship and the elegance of equine motion in slow motion", project: "videos", type: "video", thumbnail: mainRidgeInterior, service: "events", location: "victoria" },
-  { id: 101, src: slowMo2, alt: "Power & Precision", description: "Every stride tells a story - showcasing the athleticism and grace of trained horses", project: "videos", type: "video", thumbnail: mainRidgeTimber, service: "events", location: "victoria" },
-  { id: 102, src: slowMo3, alt: "Natural Beauty", description: "The artistry of horse training captured in stunning slow motion cinematography", project: "videos", type: "video", thumbnail: mainRidgeBrickwork, service: "events", location: "victoria" },
   { id: 103, src: mainRidgeWoodwork1, alt: "Main Ridge Timber Craftsmanship", description: "Ciro hand-crafting timber posts using traditional woodworking techniques at Main Ridge", project: "main-ridge", type: "video", thumbnail: mainRidgeCiroWoodwork1, service: "woodwork", location: "victoria" },
   { id: 104, src: mainRidgeWoodwork2, alt: "Main Ridge Woodworking Detail", description: "Precision hand-finishing of barn timber - attention to detail that lasts decades", project: "main-ridge", type: "video", thumbnail: mainRidgeCiroWoodwork2, service: "woodwork", location: "victoria" },
   { id: 105, src: caulfieldVideo1, alt: "Melbourne Cup Arena Prep - Day 1", description: "Professional arena surface preparation at Caulfield Racecourse for the Melbourne Cup carnival", project: "caulfield", type: "video", thumbnail: caulfieldEvent, service: "events", location: "victoria" },
@@ -189,7 +182,7 @@ export const quickTags = [
   { label: "🪨 Stonework", service: "stonework", project: "all" },
   { label: "🪵 Woodwork", service: "woodwork", project: "all" },
   { label: "🎪 Events", service: "events", project: "all" },
-  { label: "📹 Videos", service: "all", project: "videos" },
+  { label: "📹 Videos", service: "all", project: "all" },
   { label: "🌏 Queensland", service: "all", project: "queensland" },
 ];
 

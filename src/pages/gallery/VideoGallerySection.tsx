@@ -28,7 +28,7 @@ export function VideoGallerySection({ onVideoClick }: { onVideoClick: (item: Gal
           <span className="text-accent text-sm font-medium tracking-wider uppercase">Video Collection</span>
           <h2 className="font-serif text-3xl md:text-4xl text-foreground mt-2 mb-4">Behind the Craft</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Watch our work come to life through slow-motion horse training footage and detailed construction videos showcasing traditional timber craftsmanship.
+            Watch our construction process and event work come to life — from traditional timber craftsmanship to arena preparation at Australia's biggest equine events.
           </p>
         </div>
 
@@ -60,12 +60,12 @@ export function VideoGallerySection({ onVideoClick }: { onVideoClick: (item: Gal
               <div className="absolute bottom-0 left-0 right-0 p-4">
                 <h3 className="font-serif text-lg text-primary-foreground mb-1">{video.alt}</h3>
                 <p className="text-primary-foreground/60 text-xs uppercase tracking-wider">
-                  {video.project === "videos" ? "Slow Motion" : "Construction Process"}
+                  {video.project === "main-ridge" ? "Craftsmanship" : video.project === "equitana" ? "Major Event" : "Event Preparation"}
                 </p>
               </div>
               <div className="absolute top-3 left-3">
-                <span className={`px-2.5 py-1 rounded-full text-xs font-medium backdrop-blur-sm ${video.project === "videos" ? "bg-accent/90 text-accent-foreground" : "bg-secondary/90 text-secondary-foreground"}`}>
-                  {video.project === "videos" ? "Slow-Mo" : "Craftsmanship"}
+                <span className={`px-2.5 py-1 rounded-full text-xs font-medium backdrop-blur-sm ${video.project === "main-ridge" ? "bg-accent/90 text-accent-foreground" : "bg-secondary/90 text-secondary-foreground"}`}>
+                  {video.project === "main-ridge" ? "Craftsmanship" : "Events"}
                 </span>
               </div>
             </button>
