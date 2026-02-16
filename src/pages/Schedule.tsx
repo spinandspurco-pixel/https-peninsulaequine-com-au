@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
-import { CalendarIcon, Clock, CheckCircle, Loader2, ArrowRight, Phone } from "lucide-react";
+import { CalendarIcon, Clock, CheckCircle, Loader2, ArrowRight, Phone, Info } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -9,18 +10,41 @@ import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { siteConfig } from "@/data/content";
+import { siteConfig, services as allServices } from "@/data/content";
 import { cn } from "@/lib/utils";
+
+const SERVICE_DURATIONS: Record<string, { label: string; minutes: number }> = {
+  "arena-construction": { label: "Arena Consultation", minutes: 60 },
+  "barn-construction": { label: "Barn & Stables Consultation", minutes: 60 },
+  "full-facility": { label: "Full Facility Planning", minutes: 90 },
+  "fencing": { label: "Fencing Consultation", minutes: 45 },
+  "round-pens": { label: "Round Pen Consultation", minutes: 45 },
+  "infrastructure": { label: "Infrastructure Review", minutes: 60 },
+  "renovations": { label: "Renovation Assessment", minutes: 45 },
+  "riding-lessons": { label: "Lesson Introduction", minutes: 30 },
+  "clinics-events": { label: "Event Planning", minutes: 60 },
+  "follow-up-consultation": { label: "Follow-Up Consultation", minutes: 45 },
+};
 
 export default function Schedule() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+
+  // Read service context from URL
+  const serviceIds = searchParams.get("services")?.split(",").filter(Boolean) || [];
+  const prefilledName = searchParams.get("name") || "";
+  const prefilledEmail = searchParams.get("email") || "";
+  const primaryServiceId = serviceIds[0] || "follow-up-consultation";
+  const serviceMeta = SERVICE_DURATIONS[primaryServiceId] || SERVICE_DURATIONS["follow-up-consultation"];
+  const serviceTitle = allServices.find((s) => s.id === primaryServiceId)?.title;
+
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState(prefilledName);
+  const [email, setEmail] = useState(prefilledEmail);
   const [phone, setPhone] = useState("");
-  const [notes, setNotes] = useState("");
+  const [notes, setNotes] = useState(serviceIds.length > 0 ? `Interested in: ${serviceIds.map((id) => allServices.find((s) => s.id === id)?.title || id).join(", ")}` : "");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -90,8 +114,9 @@ export default function Schedule() {
         name: name.trim().slice(0, 100),
         email: email.trim().slice(0, 255),
         phone: phone.trim().slice(0, 30) || null,
-        services: ["follow-up-consultation"],
-        project_details: `Follow-up scheduled: ${dateStr} ${slot ? `${slot.start_time.slice(0, 5)}–${slot.end_time.slice(0, 5)}` : ""}`,
+        services: serviceIds.length > 0 ? serviceIds : ["follow-up-consultation"],
+        preferred_service: primaryServiceId || null,
+        project_details: `Follow-up scheduled: ${dateStr} ${slot ? `${slot.start_time.slice(0, 5)}–${slot.end_time.slice(0, 5)}` : ""} | Est. ${serviceMeta.minutes} min`,
         notes: notes.trim().slice(0, 500) || null,
         status: "new",
       });
@@ -101,8 +126,8 @@ export default function Schedule() {
         body: {
           name: name.trim(),
           email: email.trim(),
-          services: ["follow-up-consultation"],
-          goals: `Follow-up consultation on ${dateStr}`,
+          services: serviceIds.length > 0 ? serviceIds : ["follow-up-consultation"],
+          goals: `Follow-up consultation on ${dateStr} (${serviceMeta.label})`,
           preferredDate: dateStr,
         },
       }).catch(() => {});
@@ -121,9 +146,28 @@ export default function Schedule() {
   return (
     <Layout>
       <PageHeader
-        title="Schedule a Follow-Up"
-        description="Pick a convenient date and time for your consultation with Ciro"
+        title={serviceTitle ? `Schedule: ${serviceTitle}` : "Schedule a Follow-Up"}
+        description={serviceTitle
+          ? `Book your ${serviceMeta.minutes}-minute ${serviceMeta.label.toLowerCase()} with Ciro`
+          : "Pick a convenient date and time for your consultation with Ciro"
+        }
       />
+
+      {/* Service context banner */}
+      {serviceIds.length > 0 && (
+        <div className="bg-accent/5 border-b border-accent/20">
+          <div className="section-container py-4">
+            <div className="flex items-center gap-3 max-w-3xl mx-auto">
+              <Info className="h-4 w-4 text-accent shrink-0" />
+              <p className="text-sm text-foreground">
+                <span className="font-medium">Consultation for:</span>{" "}
+                {serviceIds.map((id) => allServices.find((s) => s.id === id)?.title || id).join(", ")}
+                <span className="text-muted-foreground"> · Est. {serviceMeta.minutes} min</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <section className="section-padding bg-background">
         <div className="section-container">

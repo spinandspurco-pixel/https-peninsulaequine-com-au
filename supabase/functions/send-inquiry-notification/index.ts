@@ -211,8 +211,8 @@ const handler = async (req: Request): Promise<Response> => {
             <p>A member of our team will review your inquiry and get back to you within 1-2 business days. We'll discuss your project in detail and provide you with a personalized quote.</p>
             
             <div style="text-align: center; margin: 25px 0;">
-              <a href="https://peninsulaequine.lovable.app/schedule" class="cta" style="font-size: 16px; padding: 14px 32px;">📅 Schedule Your Follow-Up Call</a>
-              <p style="margin-top: 10px; font-size: 13px; color: #888;">Pick a date & time that works for you</p>
+              <a href="https://peninsulaequine.lovable.app/schedule?services=${encodeURIComponent((inquiry.services || []).join(","))}&name=${encodeURIComponent(inquiry.name || "")}&email=${encodeURIComponent(inquiry.email || "")}" class="cta" style="font-size: 16px; padding: 14px 32px;">📅 Schedule Your Follow-Up Call</a>
+              <p style="margin-top: 10px; font-size: 13px; color: #888;">Pick a date & time that works for you — pre-filled with your details</p>
             </div>
 
             <div class="contact-box">
