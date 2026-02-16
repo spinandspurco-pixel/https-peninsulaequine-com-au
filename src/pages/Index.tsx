@@ -259,8 +259,17 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
 }
 
 function IntroSection() {
-  const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
+  const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
   const { ref: parallaxRef } = useParallax<HTMLDivElement>({ speed: 0.25 });
+  const [phase, setPhase] = useState(0); // 0=hidden, 1=lines, 2=fill, 3=logo
+
+  useEffect(() => {
+    if (!imageVisible) return;
+    const t1 = setTimeout(() => setPhase(1), 100);
+    const t2 = setTimeout(() => setPhase(2), 900);
+    const t3 = setTimeout(() => setPhase(3), 1600);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, [imageVisible]);
 
   return (
     <section id="intro" className="bg-background relative overflow-hidden">
@@ -298,39 +307,93 @@ function IntroSection() {
         </div>
       </div>
 
-      {/* Blueprint-animated panel replacing editorial image */}
+      {/* Cinematic Blueprint Reveal Panel */}
       <div 
         ref={(node) => {
           (imageRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
           (parallaxRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
         }}
-        className={`relative h-[50vh] min-h-[350px] overflow-hidden transition-all duration-1000 ${
-          imageVisible ? "opacity-100 scale-100" : "opacity-0 scale-[1.02]"
-        }`}
+        className="relative h-[55vh] min-h-[400px] overflow-hidden"
         style={{
-          clipPath: imageVisible ? "inset(0 0 0 0)" : "inset(5% 2% 5% 2%)",
-          transition: "opacity 1s ease-out, transform 1.2s ease-out, clip-path 1s ease-out"
+          clipPath: imageVisible ? "inset(0 0 0 0)" : "inset(8% 4% 8% 4%)",
+          opacity: imageVisible ? 1 : 0,
+          transition: "opacity 0.8s ease-out, clip-path 1.2s cubic-bezier(0.22,0.61,0.36,1)"
         }}
       >
-        {/* Blueprint background as the visual */}
-        <div className="absolute inset-0 bg-primary">
-          <BlueprintBackground image={blueprintFacility} opacity={0.15} direction="left-to-right" duration={1800} parallaxSpeed={0.04} />
-          <BlueprintBackground image={blueprintElevation} opacity={0.1} direction="right-to-left" duration={2200} parallaxSpeed={0.08} className="scale-110" />
+        {/* Base background */}
+        <div className="absolute inset-0 bg-primary" />
+
+        {/* Phase 1: Blueprint image layers sweep in */}
+        <div
+          className="absolute inset-0"
+          style={{
+            opacity: phase >= 1 ? 1 : 0,
+            transition: "opacity 1.2s ease-out",
+          }}
+        >
+          <BlueprintBackground image={blueprintFacility} opacity={0.18} direction="left-to-right" duration={1400} parallaxSpeed={0.04} />
+          <BlueprintBackground image={blueprintElevation} opacity={0.12} direction="right-to-left" duration={1800} parallaxSpeed={0.08} className="scale-110" />
+        </div>
+
+        {/* Phase 2: Architectural line overlays draw on */}
+        <div
+          className="absolute inset-0"
+          style={{
+            opacity: phase >= 2 ? 1 : 0,
+            transition: "opacity 0.8s ease-out 0.2s",
+          }}
+        >
           <BlueprintLineOverlay variant="barn" color="light" />
           <BlueprintLineOverlay variant="front-elevation" color="light" />
         </div>
-        {/* Centered logo watermark */}
+
+        {/* Phase 2: Secondary blueprint layer for depth */}
+        <div
+          className="absolute inset-0"
+          style={{
+            opacity: phase >= 2 ? 0.5 : 0,
+            transition: "opacity 1s ease-out 0.4s",
+          }}
+        >
+          <BlueprintLineOverlay variant="dimensions" color="light" />
+        </div>
+
+        {/* Phase 3: Centered PE logo watermark pulses in */}
         <div className="absolute inset-0 flex items-center justify-center">
           <img 
             src={logoPeMark} 
             alt="" 
             aria-hidden="true"
-            className={`w-32 h-32 sm:w-44 sm:h-44 object-contain opacity-20 transition-all duration-1000 ${
-              imageVisible ? "scale-100" : "scale-75"
-            }`}
+            className="w-36 h-36 sm:w-48 sm:h-48 md:w-56 md:h-56 object-contain select-none"
+            style={{
+              opacity: phase >= 3 ? 0.25 : 0,
+              transform: phase >= 3 ? "scale(1)" : "scale(0.7)",
+              filter: "brightness(1.5) drop-shadow(0 0 40px hsl(var(--accent) / 0.15))",
+              transition: "opacity 1s ease-out, transform 1.2s cubic-bezier(0.22,0.61,0.36,1)",
+            }}
           />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/30" />
+
+        {/* Tagline text that fades in with logo */}
+        <div 
+          className="absolute bottom-8 left-0 right-0 text-center"
+          style={{
+            opacity: phase >= 3 ? 1 : 0,
+            transform: phase >= 3 ? "translateY(0)" : "translateY(12px)",
+            transition: "opacity 0.8s ease-out 0.3s, transform 0.8s ease-out 0.3s",
+          }}
+        >
+          <p className="text-primary-foreground/40 text-xs sm:text-sm tracking-[0.3em] uppercase font-medium">
+            From Dirt to Dynasty
+          </p>
+        </div>
+
+        {/* Gradient edges for seamless blend */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-transparent to-background/30 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-primary/20 pointer-events-none" />
+
+        {/* Vignette */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,hsl(var(--primary)/0.5)_100%)] pointer-events-none" />
       </div>
     </section>
   );
