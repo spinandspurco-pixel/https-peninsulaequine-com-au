@@ -80,6 +80,14 @@ function PageHeader({ title, description }: { title: string; description: string
           </p>
           <h1 className="heading-display mb-6">{title}</h1>
           <p className="text-lg text-primary-foreground/80">{description}</p>
+          <button
+            onClick={() => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })}
+            className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium text-sm tracking-wider uppercase bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 hover:scale-105 hover:shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
+          >
+            <CalendarIcon className="h-4 w-4" />
+            Book a Lesson or Consultation
+            <ArrowRight className="h-4 w-4" />
+          </button>
         </div>
       </div>
       {/* Architectural divider at the bottom edge */}
@@ -617,7 +625,7 @@ function LessonsSection() {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>();
 
   return (
-    <section className="section-padding bg-background">
+    <section id="booking" className="section-padding bg-background scroll-mt-24">
       <div className="section-container">
         <div 
           ref={ref}
