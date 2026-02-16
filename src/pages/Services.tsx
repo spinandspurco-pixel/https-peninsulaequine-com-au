@@ -27,6 +27,7 @@ import { StickySubpageCTA } from "@/components/StickySubpageCTA";
 import { InlineBookingForm } from "@/components/InlineBookingForm";
 import { LiveBookingCapacity } from "@/components/LiveBookingCapacity";
 import { LessonAvailabilityCalendar } from "@/components/LessonAvailabilityCalendar";
+import { RequestLessonInquiry } from "@/components/RequestLessonInquiry";
 
 // Main Ridge construction process images
 import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
@@ -1701,6 +1702,8 @@ export default function Services() {
       <ConstructionProcessSection />
 
       <LessonsSection />
+
+      <RequestLessonInquiry />
 
       <DepositPaymentPolicy ctaHref="/contact" ctaLabel="Get a Free Quote" />
 
