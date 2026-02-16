@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { useParallax } from "@/hooks/useParallax";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
@@ -6,16 +7,19 @@ import { siteConfig } from "@/data/content";
 import logoPeMark from "@/assets/logo-pe-mark.png";
 import blueprintElevation from "@/assets/blueprint-elevation.png";
 import blueprintFacility from "@/assets/blueprint-facility.png";
+import blueprintBarn from "@/assets/blueprint-barn.png";
 
 interface PageHeaderProps {
   title: string;
   description: string;
   backgroundImage?: string;
   /** BlueprintDivider variant for the bottom edge. Defaults to "elevation". */
-  dividerVariant?: "elevation" | "floorplan" | "grid" | "contact";
+  dividerVariant?: "elevation" | "floorplan" | "grid" | "contact" | "structural";
+  /** Optional extra content rendered below the description (e.g. service pills) */
+  children?: ReactNode;
 }
 
-export function PageHeader({ title, description, backgroundImage, dividerVariant = "elevation" }: PageHeaderProps) {
+export function PageHeader({ title, description, backgroundImage, dividerVariant = "elevation", children }: PageHeaderProps) {
   const { ref: parallaxRef, offset } = useParallax<HTMLElement>({ speed: 0.3 });
 
   return (
@@ -26,9 +30,32 @@ export function PageHeader({ title, description, backgroundImage, dividerVariant
       {/* Layer 1: Elevation blueprint – slow reveal */}
       <BlueprintBackground image={blueprintElevation} opacity={0.07} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
       {/* Layer 2: Facility plan – opposite direction for depth */}
-      <BlueprintBackground image={blueprintFacility} opacity={0.03} direction="right-to-left" duration={2400} parallaxSpeed={0.1} className="scale-105" />
-      {/* Layer 3: SVG architectural line overlay */}
+      <BlueprintBackground image={blueprintFacility} opacity={0.035} direction="right-to-left" duration={2400} parallaxSpeed={0.1} className="scale-105" />
+      {/* Layer 3: Barn plan – vertical reveal for layered depth */}
+      <BlueprintBackground image={blueprintBarn} opacity={0.025} direction="bottom-to-top" duration={2800} parallaxSpeed={0.06} />
+      {/* Layer 4: SVG architectural line overlays */}
       <BlueprintLineOverlay variant="dimensions" color="light" />
+
+      {/* Gradient overlays for depth */}
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/0 via-primary/30 to-primary/70 pointer-events-none z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/40 via-transparent to-primary/40 pointer-events-none z-[1]" />
+
+      {/* PE logo watermark – large, centered, ultra-subtle */}
+      <div
+        className="absolute inset-0 flex items-center justify-center pointer-events-none z-[2]"
+        style={{
+          opacity: 0.04,
+          transform: `translateY(${offset * 0.15}px)`,
+        }}
+      >
+        <img
+          src={logoPeMark}
+          alt=""
+          aria-hidden="true"
+          className="w-[50vw] max-w-[400px] h-auto object-contain select-none"
+          style={{ filter: "grayscale(0.5) brightness(1.4)" }}
+        />
+      </div>
 
       {/* Parallax decorative background image */}
       {backgroundImage && (
@@ -41,20 +68,6 @@ export function PageHeader({ title, description, backgroundImage, dividerVariant
             backgroundPosition: 'center',
           }}
         />
-      )}
-      
-      {/* Abstract parallax pattern when no image */}
-      {!backgroundImage && (
-        <div 
-          className="absolute right-0 top-0 w-1/2 h-full opacity-5 will-change-transform"
-          style={{ 
-            transform: `translateY(${offset * 0.4}px)`,
-          }}
-        >
-          <div className="absolute top-1/4 right-1/4 w-32 h-32 border-2 border-primary-foreground rounded-full" />
-          <div className="absolute bottom-1/4 right-1/3 w-24 h-24 border-2 border-primary-foreground" />
-          <div className="absolute top-1/2 right-1/6 w-16 h-16 bg-primary-foreground/20 rounded-lg rotate-45" />
-        </div>
       )}
       
       <div className="section-container relative z-10">
@@ -72,20 +85,17 @@ export function PageHeader({ title, description, backgroundImage, dividerVariant
           </p>
           <h1 
             className="heading-display mb-6 transition-all duration-700"
-            style={{ 
-              transform: `translateY(${offset * 0.08}px)`,
-            }}
+            style={{ transform: `translateY(${offset * 0.08}px)` }}
           >
             {title}
           </h1>
           <p 
             className="text-lg text-primary-foreground/80 transition-all duration-700"
-            style={{ 
-              transform: `translateY(${offset * 0.12}px)`,
-            }}
+            style={{ transform: `translateY(${offset * 0.12}px)` }}
           >
             {description}
           </p>
+          {children && <div className="mt-8">{children}</div>}
         </div>
       </div>
 

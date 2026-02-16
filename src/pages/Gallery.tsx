@@ -9,6 +9,7 @@ import { usePinchZoom } from "@/hooks/usePinchZoom";
 import { SwipeIndicator } from "@/components/SwipeIndicator";
 import { Layout } from "@/components/layout/Layout";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
+import { PageHeader } from "@/components/PageHeader";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
@@ -203,50 +204,7 @@ const galleryItems: GalleryItem[] = [
   { id: 67, src: mainRidgeArenaGrading, alt: "Main Ridge - Arena surface grading and leveling", project: "main-ridge", type: "image", service: "arena", location: "victoria" },
 ];
 
-function PageHeader() {
-  const { ref: parallaxRef, offset } = useParallax<HTMLElement>({ speed: 0.3 });
-
-  return (
-    <section ref={parallaxRef} className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
-      {/* Multi-layer blueprint reveal */}
-      <BlueprintBackground image={blueprintElevation} opacity={0.07} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
-      <BlueprintBackground image={blueprintFacility} opacity={0.04} direction="right-to-left" duration={2800} parallaxSpeed={0.1} className="scale-110" />
-      <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="bottom-to-top" duration={3200} parallaxSpeed={0.06} />
-      <BlueprintLineOverlay variant="dimensions" color="light" />
-
-      {/* Lightening gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/0 via-primary/30 to-primary/70 pointer-events-none z-[1]" />
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/50 via-transparent to-primary/50 pointer-events-none z-[1]" />
-
-      {/* Parallax background collage */}
-      <div 
-        className="absolute inset-0 opacity-10 will-change-transform"
-        style={{ 
-          transform: `translateY(${offset * 0.5}px)`,
-          backgroundImage: `url(${aberdeenBarnInterior})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      />
-      <div className="section-container relative z-10">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="mb-6">
-            <img src={logoPeMark} alt="Peninsula Equine" className="w-20 h-20 sm:w-24 sm:h-24 mx-auto object-contain drop-shadow-[0_2px_20px_rgba(255,255,255,0.2)]" />
-          </div>
-          <p className="text-primary-foreground/50 uppercase tracking-[0.2em] text-xs sm:text-sm mb-6">
-            Crafting World-Class Equine Facilities
-          </p>
-          <h1 className="heading-display mb-6">Our Work</h1>
-          <p className="text-lg text-primary-foreground/80">
-            Explore our portfolio of premium equine facilities, from luxurious barns 
-            to competition arenas at Australia's biggest events.
-          </p>
-        </div>
-      </div>
-      <BlueprintDivider variant="structural" className="absolute bottom-0 left-0 right-0 h-12 sm:h-16" />
-    </section>
-  );
-}
+// Gallery uses the shared PageHeader component
 
 function FeaturedVideoSection({ onVideoClick }: { onVideoClick: (item: GalleryItem) => void }) {
   const { ref, isVisible } = useScrollAnimation<HTMLElement>({
@@ -1083,7 +1041,12 @@ export default function Gallery() {
 
   return (
     <Layout>
-      <PageHeader />
+      <PageHeader
+        title="Our Work"
+        description="Explore our portfolio of premium equine facilities, from luxurious barns to competition arenas at Australia's biggest events."
+        backgroundImage={aberdeenBarnInterior}
+        dividerVariant="structural"
+      />
       
       {/* Featured Video Section */}
       <FeaturedVideoSection onVideoClick={setLightboxItem} />
