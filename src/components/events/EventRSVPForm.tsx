@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { CheckCircle2, Send } from "lucide-react";
+import { CheckCircle2, Send, CalendarPlus, ExternalLink, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -21,15 +22,86 @@ interface EventRSVPFormProps {
   eventId: string;
   eventTitle: string;
   remainingSpots: number;
+  /** Event data for calendar sync on confirmation */
+  eventDate?: string;
+  eventTime?: string | null;
+  eventLocation?: string | null;
+  eventDescription?: string | null;
 }
 
-export function EventRSVPForm({ eventId, eventTitle, remainingSpots }: EventRSVPFormProps) {
+// Calendar helpers
+function toICSDate(d: string, time?: string | null) {
+  const datePart = d.replace(/-/g, "");
+  if (time) {
+    const timePart = time.replace(/:/g, "").slice(0, 6).padEnd(6, "0");
+    return `${datePart}T${timePart}`;
+  }
+  return `${datePart}T080000`;
+}
+
+function generateICS(title: string, date: string, time?: string | null, location?: string | null, description?: string | null) {
+  const dtStart = toICSDate(date, time);
+  // Default 2-hour duration
+  const startHour = time ? parseInt(time.split(":")[0], 10) : 8;
+  const endHour = String(startHour + 2).padStart(2, "0");
+  const endDate = date.replace(/-/g, "");
+  const dtEnd = `${endDate}T${endHour}0000`;
+
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Peninsula Equine//Events//EN",
+    "BEGIN:VEVENT",
+    `DTSTART:${dtStart}`,
+    `DTEND:${dtEnd}`,
+    `SUMMARY:${title}`,
+    `DESCRIPTION:${(description || "").slice(0, 200).replace(/\n/g, "\\n")}`,
+    `LOCATION:${location || ""}`,
+    "STATUS:CONFIRMED",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ];
+  return lines.join("\r\n");
+}
+
+function downloadICS(title: string, date: string, time?: string | null, location?: string | null, description?: string | null) {
+  const blob = new Blob([generateICS(title, date, time, location, description)], {
+    type: "text/calendar;charset=utf-8",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${title.replace(/\s+/g, "-").toLowerCase()}.ics`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function googleCalendarUrl(title: string, date: string, time?: string | null, location?: string | null, description?: string | null) {
+  const start = toICSDate(date, time) + "Z";
+  const startHour = time ? parseInt(time.split(":")[0], 10) : 8;
+  const endDate = date.replace(/-/g, "");
+  const end = `${endDate}T${String(startHour + 2).padStart(2, "0")}0000Z`;
+  return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent((description || "").slice(0, 200))}&location=${encodeURIComponent(location || "")}`;
+}
+
+export function EventRSVPForm({
+  eventId,
+  eventTitle,
+  remainingSpots,
+  eventDate,
+  eventTime,
+  eventLocation,
+  eventDescription,
+}: EventRSVPFormProps) {
   const [form, setForm] = useState({ name: "", email: "", phone: "", guests: 1, notes: "" });
+  const [joinWaitlist, setJoinWaitlist] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [rsvpStatus, setRsvpStatus] = useState<"confirmed" | "waitlisted">("confirmed");
 
-  const maxGuests = Math.min(10, remainingSpots);
+  const isFull = remainingSpots <= 0;
+  const maxGuests = isFull ? 10 : Math.min(10, remainingSpots);
 
   const handleChange = (field: string, value: string | number) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -39,7 +111,9 @@ export function EventRSVPForm({ eventId, eventTitle, remainingSpots }: EventRSVP
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (form.guests > remainingSpots) {
+    const isWaitlist = isFull || form.guests > remainingSpots;
+
+    if (!isWaitlist && form.guests > remainingSpots) {
       setErrors({ guests: `Only ${remainingSpots} spots remaining` });
       return;
     }
@@ -56,6 +130,8 @@ export function EventRSVPForm({ eventId, eventTitle, remainingSpots }: EventRSVP
     }
 
     setSubmitting(true);
+    const status = isWaitlist ? "waitlisted" : "confirmed";
+
     const { error } = await supabase.from("event_rsvps").insert({
       event_id: eventId,
       name: parsed.data.name,
@@ -63,6 +139,7 @@ export function EventRSVPForm({ eventId, eventTitle, remainingSpots }: EventRSVP
       phone: parsed.data.phone || null,
       guests: parsed.data.guests,
       notes: parsed.data.notes || null,
+      status,
     });
 
     setSubmitting(false);
@@ -70,31 +147,87 @@ export function EventRSVPForm({ eventId, eventTitle, remainingSpots }: EventRSVP
       toast.error("Something went wrong. Please try again.");
       return;
     }
+
+    setRsvpStatus(status);
     setSubmitted(true);
-    toast.success(`RSVP confirmed for ${eventTitle}!`);
+    toast.success(
+      status === "waitlisted"
+        ? `You've been added to the waitlist for ${eventTitle}`
+        : `RSVP confirmed for ${eventTitle}!`
+    );
   };
 
+  // ── Confirmation screen ──
   if (submitted) {
     return (
-      <div className="text-center py-8">
-        <CheckCircle2 className="h-12 w-12 text-accent mx-auto mb-4" />
-        <p className="font-serif text-xl text-foreground mb-1">You're In!</p>
-        <p className="text-muted-foreground text-sm">We'll send a confirmation to your email.</p>
+      <div className="text-center py-8 space-y-5">
+        <CheckCircle2 className="h-12 w-12 text-accent mx-auto" />
+        <div>
+          <p className="font-serif text-xl text-foreground mb-1">
+            {rsvpStatus === "waitlisted" ? "You're on the Waitlist!" : "You're In!"}
+          </p>
+          <p className="text-muted-foreground text-sm">
+            {rsvpStatus === "waitlisted"
+              ? "We'll notify you by email if a spot opens up."
+              : "We'll send a confirmation to your email."}
+          </p>
+        </div>
+
+        {/* Calendar sync — only for confirmed RSVPs */}
+        {rsvpStatus === "confirmed" && eventDate && (
+          <div className="border-t border-border pt-5 space-y-3">
+            <p className="text-sm font-medium text-foreground">Add to your calendar</p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => downloadICS(eventTitle, eventDate, eventTime, eventLocation, eventDescription)}
+                className="text-xs"
+              >
+                <CalendarPlus className="mr-1.5 h-3.5 w-3.5" />
+                Download .ics
+              </Button>
+              <Button variant="outline" size="sm" asChild className="text-xs">
+                <a
+                  href={googleCalendarUrl(eventTitle, eventDate, eventTime, eventLocation, eventDescription)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+                  Google Calendar
+                </a>
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
 
-  if (remainingSpots <= 0) {
+  // ── Sold out with waitlist option ──
+  if (isFull && !joinWaitlist) {
     return (
-      <div className="text-center py-8">
-        <p className="font-serif text-xl text-foreground mb-1">Sold Out</p>
-        <p className="text-muted-foreground text-sm">All spots have been taken for this event.</p>
+      <div className="text-center py-8 space-y-4">
+        <Clock className="h-10 w-10 text-muted-foreground mx-auto" />
+        <div>
+          <p className="font-serif text-xl text-foreground mb-1">Sold Out</p>
+          <p className="text-muted-foreground text-sm">All spots have been taken for this event.</p>
+        </div>
+        <Button variant="outline" onClick={() => setJoinWaitlist(true)}>
+          Join the Waitlist
+        </Button>
       </div>
     );
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {(isFull || joinWaitlist) && (
+        <div className="rounded-lg bg-accent/10 border border-accent/20 px-4 py-3 text-sm text-accent">
+          <strong>Waitlist:</strong> This event is full. Submit your details and we'll notify you if a spot opens.
+        </div>
+      )}
+
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <Label htmlFor={`name-${eventId}`}>Full Name *</Label>
@@ -162,7 +295,11 @@ export function EventRSVPForm({ eventId, eventTitle, remainingSpots }: EventRSVP
       </div>
       <Button type="submit" className="w-full" disabled={submitting}>
         <Send className="mr-2 h-4 w-4" />
-        {submitting ? "Submitting…" : "Confirm RSVP"}
+        {submitting
+          ? "Submitting…"
+          : isFull
+          ? "Join Waitlist"
+          : "Confirm RSVP"}
       </Button>
     </form>
   );

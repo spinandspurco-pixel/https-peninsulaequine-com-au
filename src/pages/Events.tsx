@@ -235,17 +235,22 @@ function EventRSVPCard({ event, index }: { event: DBEvent; index: number }) {
             <Button
               onClick={() => setShowRSVP(true)}
               className="w-full mt-2"
-              disabled={remainingSpots <= 0}
             >
-              {remainingSpots <= 0 ? "Sold Out" : "RSVP Now"}
+              {remainingSpots <= 0 ? "Join Waitlist" : "RSVP Now"}
             </Button>
           ) : (
             <div className="border-t border-border pt-6 mt-4">
-              <p className="font-serif text-lg text-foreground mb-4">Reserve Your Spot</p>
+              <p className="font-serif text-lg text-foreground mb-4">
+                {remainingSpots <= 0 ? "Join the Waitlist" : "Reserve Your Spot"}
+              </p>
               <EventRSVPForm
                 eventId={event.id}
                 eventTitle={event.title}
                 remainingSpots={remainingSpots}
+                eventDate={event.event_date}
+                eventTime={event.event_time}
+                eventLocation={event.location}
+                eventDescription={event.description}
               />
             </div>
           )}
