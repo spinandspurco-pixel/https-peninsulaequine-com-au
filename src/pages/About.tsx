@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { FamilyVideoCarousel } from "@/components/FamilyVideoCarousel";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
+import { InsuranceSafetyCard } from "@/components/InsuranceSafetyCard";
 import { SectionTransition } from "@/components/SectionTransition";
 import { aboutCiro, testimonials } from "@/data/content";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
@@ -515,6 +516,7 @@ export default function About() {
       <ImageBreak />
       <BlueprintDivider variant="structural" />
       <StorySection />
+      <InsuranceSafetyCard />
       <CTASection />
     </Layout>
   );
