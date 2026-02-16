@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      ab_test_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          metadata: Json | null
+          page_path: string | null
+          test_name: string
+          variant: string
+          visitor_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          page_path?: string | null
+          test_name: string
+          variant: string
+          visitor_id: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          page_path?: string | null
+          test_name?: string
+          variant?: string
+          visitor_id?: string
+        }
+        Relationships: []
+      }
       announcements: {
         Row: {
           active: boolean

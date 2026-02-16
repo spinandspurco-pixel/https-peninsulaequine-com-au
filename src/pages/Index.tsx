@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, X, Mail, Send, MessageSquare } from "lucide-react";
+import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, X, Mail, Send, MessageSquare, Star, ShieldCheck } from "lucide-react";
+import { useABTest } from "@/hooks/useABTest";
 import { BookingWidget } from "@/components/BookingWidget";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
@@ -36,12 +37,41 @@ import blueprintElevation from "@/assets/blueprint-elevation.png";
 const featuredServices = services.slice(0, 4);
 
 function HeroCTAToggle({ heroMode, setHeroMode }: { heroMode: "book" | "consult"; setHeroMode: (m: "book" | "consult") => void }) {
+  const { variant, trackClick } = useABTest({
+    testName: "hero_cta_2026",
+    variants: ["control", "urgency", "social_proof"],
+  });
+
+  // Variant-specific copy
+  const ctaCopy = {
+    control: {
+      bookLabel: "Book a Lesson",
+      consultLabel: "Request a Consult",
+      consultHeadline: "Tell us about your project — we'll get back to you within 1–2 business days.",
+      consultButton: "Start a Consultation",
+    },
+    urgency: {
+      bookLabel: "Book Today — Limited Spots",
+      consultLabel: "Get Your Free Quote",
+      consultHeadline: "Spots fill fast — lock in your consultation before the season books out.",
+      consultButton: "Claim Your Free Quote",
+    },
+    social_proof: {
+      bookLabel: "Join 200+ Happy Riders",
+      consultLabel: "See Why They Trust Us",
+      consultHeadline: "Trusted by over 200 riders across the Mornington Peninsula. Start your journey today.",
+      consultButton: "Start Your Journey",
+    },
+  };
+
+  const copy = ctaCopy[variant as keyof typeof ctaCopy] || ctaCopy.control;
+
   return (
     <div className="flex flex-col items-center gap-4 mt-2">
       {/* Toggle pills */}
       <div className="inline-flex rounded-full border border-white/20 bg-white/10 backdrop-blur-sm p-1">
         <button
-          onClick={() => setHeroMode("book")}
+          onClick={() => { setHeroMode("book"); trackClick({ action: "toggle", target: "book" }); }}
           className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
             heroMode === "book"
               ? "bg-accent text-accent-foreground shadow-md"
@@ -49,10 +79,10 @@ function HeroCTAToggle({ heroMode, setHeroMode }: { heroMode: "book" | "consult"
           }`}
         >
           <CalendarIcon className="inline h-4 w-4 mr-1.5 -mt-0.5" />
-          Book a Lesson
+          {copy.bookLabel}
         </button>
         <button
-          onClick={() => setHeroMode("consult")}
+          onClick={() => { setHeroMode("consult"); trackClick({ action: "toggle", target: "consult" }); }}
           className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
             heroMode === "consult"
               ? "bg-accent text-accent-foreground shadow-md"
@@ -60,9 +90,31 @@ function HeroCTAToggle({ heroMode, setHeroMode }: { heroMode: "book" | "consult"
           }`}
         >
           <MessageSquare className="inline h-4 w-4 mr-1.5 -mt-0.5" />
-          Request a Consult
+          {copy.consultLabel}
         </button>
       </div>
+
+      {/* Social proof badge for that variant */}
+      {variant === "social_proof" && (
+        <div className="flex items-center gap-2 text-white/70 text-xs">
+          <div className="flex -space-x-1">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="w-5 h-5 rounded-full bg-accent/40 border border-white/20 flex items-center justify-center text-[8px] text-white font-bold">
+                {String.fromCharCode(65 + i)}
+              </div>
+            ))}
+          </div>
+          <span className="flex items-center gap-1"><Star className="h-3 w-3 text-accent" /> 4.9/5 from 200+ riders</span>
+        </div>
+      )}
+
+      {/* Urgency badge */}
+      {variant === "urgency" && (
+        <div className="flex items-center gap-1.5 text-accent text-xs font-medium animate-pulse">
+          <ShieldCheck className="h-3.5 w-3.5" />
+          Only 3 consultation spots left this month
+        </div>
+      )}
 
       {/* Conditional content */}
       <div className="w-full max-w-lg mx-auto transition-all duration-300">
@@ -71,16 +123,17 @@ function HeroCTAToggle({ heroMode, setHeroMode }: { heroMode: "book" | "consult"
         ) : (
           <div className="flex flex-col items-center gap-3">
             <p className="text-white/70 text-sm text-center max-w-sm">
-              Tell us about your project — we'll get back to you within 1–2 business days.
+              {copy.consultHeadline}
             </p>
             <Button
               asChild
               size="lg"
               className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium tracking-wide shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+              onClick={() => trackClick({ action: "cta_click", target: "consult_page" })}
             >
               <Link to="/contact">
                 <MessageSquare className="mr-2 h-5 w-5" />
-                Start a Consultation
+                {copy.consultButton}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
