@@ -1394,29 +1394,56 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
           ))}
         </div>
 
-        {/* Pricing tier filter */}
-        <div className={`flex flex-wrap items-center justify-center gap-2 mb-8 transition-all duration-500 delay-300 ${
+        {/* Pricing tier filter panel */}
+        <div className={`rounded-xl border border-border bg-background p-4 sm:p-5 mb-8 transition-all duration-500 delay-300 ${
           headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         }`}>
-          <span className="text-xs text-muted-foreground mr-1">Budget:</span>
-          {[
-            { id: null as string | null, label: "All Tiers" },
-            { id: "basic", label: "Basic (≤$10k)" },
-            { id: "standard", label: "Standard ($10k–$50k)" },
-            { id: "premium", label: "Premium ($50k+)" },
-          ].map((tier) => (
-            <button
-              key={tier.label}
-              onClick={() => setActiveTier(activeTier === tier.id ? null : tier.id)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all duration-300 ${
-                activeTier === tier.id
-                  ? "bg-accent text-accent-foreground shadow-sm"
-                  : "bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
-              }`}
-            >
-              {tier.label}
-            </button>
-          ))}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+            <div className="flex items-center gap-2 shrink-0">
+              <BarChart3 className="h-4 w-4 text-accent" />
+              <span className="text-sm font-semibold text-foreground">Filter by Budget</span>
+            </div>
+            <div className="h-5 w-px bg-border hidden sm:block" />
+            <div className="flex flex-wrap items-center gap-2">
+              {[
+                { id: null as string | null, label: "All Tiers", description: "Show everything" },
+                { id: "basic", label: "Entry", description: "≤ $10k" },
+                { id: "standard", label: "Mid-Range", description: "$10k – $50k" },
+                { id: "premium", label: "Premium", description: "$50k+" },
+              ].map((tier) => (
+                <button
+                  key={tier.label}
+                  onClick={() => setActiveTier(activeTier === tier.id ? null : tier.id)}
+                  className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    activeTier === tier.id
+                      ? "bg-accent text-accent-foreground shadow-md"
+                      : "bg-muted text-muted-foreground hover:bg-accent/10 hover:text-accent"
+                  }`}
+                >
+                  <span>{tier.label}</span>
+                  <span className={`text-[10px] ${activeTier === tier.id ? "text-accent-foreground/70" : "text-muted-foreground/60"}`}>
+                    {tier.description}
+                  </span>
+                </button>
+              ))}
+            </div>
+            {(activeTier || activeFilter) && (
+              <button
+                onClick={() => { setActiveTier(null); setActiveFilter(null); }}
+                className="ml-auto text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+              >
+                <X className="h-3 w-3" />
+                Clear filters
+              </button>
+            )}
+          </div>
+          {/* Active filter summary */}
+          {(activeTier || activeFilter) && (
+            <div className="mt-3 pt-3 border-t border-border flex items-center gap-2 text-xs text-muted-foreground">
+              <span>Showing {filteredServices.length} service{filteredServices.length !== 1 ? "s" : ""}</span>
+              {priceRange && <span className="text-accent font-medium">· {priceRange}</span>}
+            </div>
+          )}
         </div>
 
         <div ref={containerRef} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" style={{ perspective: "1200px" }}>
