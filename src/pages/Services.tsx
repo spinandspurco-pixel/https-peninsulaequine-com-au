@@ -1129,16 +1129,26 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [compareServiceId, setCompareServiceId] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const [activeTier, setActiveTier] = useState<string | null>(null);
 
   const openGallery = (serviceId: string, title: string) => {
     setGalleryServiceId(serviceId);
     setGalleryServiceTitle(title);
   };
 
+  const getTier = (startingPrice: string) => {
+    const num = parseInt(startingPrice.replace(/[^0-9]/g, ""), 10) || 0;
+    if (num <= 10000) return "basic";
+    if (num <= 50000) return "standard";
+    return "premium";
+  };
+
   const filteredServices = useMemo(() => {
-    if (!activeFilter) return displayServices;
-    return displayServices.filter((s) => s.id === activeFilter);
-  }, [displayServices, activeFilter]);
+    let result = displayServices;
+    if (activeFilter) result = result.filter((s) => s.id === activeFilter);
+    if (activeTier) result = result.filter((s) => getTier(s.startingPrice) === activeTier);
+    return result;
+  }, [displayServices, activeFilter, activeTier]);
 
   const { containerRef, visibleItems } = useStaggeredAnimation(filteredServices.length);
 
@@ -1207,6 +1217,31 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
               }`}
             >
               {s.title}
+            </button>
+          ))}
+        </div>
+
+        {/* Pricing tier filter */}
+        <div className={`flex flex-wrap items-center justify-center gap-2 mb-8 transition-all duration-500 delay-300 ${
+          headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+        }`}>
+          <span className="text-xs text-muted-foreground mr-1">Budget:</span>
+          {[
+            { id: null as string | null, label: "All Tiers" },
+            { id: "basic", label: "Basic (≤$10k)" },
+            { id: "standard", label: "Standard ($10k–$50k)" },
+            { id: "premium", label: "Premium ($50k+)" },
+          ].map((tier) => (
+            <button
+              key={tier.label}
+              onClick={() => setActiveTier(activeTier === tier.id ? null : tier.id)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all duration-300 ${
+                activeTier === tier.id
+                  ? "bg-accent text-accent-foreground shadow-sm"
+                  : "bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
+              }`}
+            >
+              {tier.label}
             </button>
           ))}
         </div>
