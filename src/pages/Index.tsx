@@ -2229,6 +2229,8 @@ export default function Index() {
         <ServicesTeaserStrip />
         <ServicesOverviewSection />
         <MissionSection />
+        <TestimonialServiceCarousel />
+        <TestimonialsGallery />
         <MajorEventsSection />
         <BlueprintDivider variant="elevation" />
         <ServicesSection />
@@ -2237,8 +2239,6 @@ export default function Index() {
         <GallerySection />
         <UpcomingEventsStrip />
         <ClientStorySection />
-        <TestimonialServiceCarousel />
-        <TestimonialsGallery />
         <ForgeHeroBanner />
         <LeadCaptureSection submitted={leadSubmitted} onSubmitted={() => setLeadSubmitted(true)} />
         <HomeFAQSection />
