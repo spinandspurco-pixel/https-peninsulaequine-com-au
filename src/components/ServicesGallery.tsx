@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { services as hardcodedServices } from "@/data/content";
-import { CheckCircle, ArrowRight, Send, Filter } from "lucide-react";
+import { CheckCircle, ArrowRight, Send, Filter, CalendarIcon } from "lucide-react";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -305,15 +305,14 @@ function ServiceGalleryCard({
           </Button>
           <Button
             onClick={() => {
-              trackCtaClick("service_card_details", { source: "services_gallery", service: service.id });
-              navigate(`/contact?services=${service.id}&ref=service-card`);
+              trackCtaClick("service_card_quick_book", { source: "services_gallery", service: service.id });
+              navigate(`/contact?services=${service.id}&ref=quick-book&view=calendar`);
             }}
-            variant="outline"
             size="sm"
-            className="border-accent/30 text-accent hover:bg-accent/10"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground"
           >
-            Details
-            <ArrowRight className="h-3.5 w-3.5 ml-1" aria-hidden="true" />
+            <CalendarIcon className="h-3.5 w-3.5 mr-1.5" aria-hidden="true" />
+            Quick Book
           </Button>
         </div>
       </div>
