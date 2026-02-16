@@ -22,6 +22,7 @@ import AdminEvents from "./pages/AdminEvents";
 import HQ from "./pages/HQ";
 import EmployeeDashboard from "./pages/EmployeeDashboard";
 import BookLesson from "./pages/BookLesson";
+import Lessons from "./pages/Lessons";
 import BrandGuide from "./pages/BrandGuide";
 import Shop from "./pages/Shop";
 import ProductDetail from "./pages/ProductDetail";
@@ -63,6 +64,7 @@ function AppContent() {
           <Route path="/admin/testimonials" element={<AdminTestimonials />} />
           <Route path="/admin/events" element={<AdminEvents />} />
           <Route path="/employee" element={<EmployeeDashboard />} />
+          <Route path="/lessons" element={<Lessons />} />
           <Route path="/book-lesson" element={<BookLesson />} />
           <Route path="/brand" element={<BrandGuide />} />
           <Route path="/shop" element={<Shop />} />
