@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
@@ -727,7 +729,38 @@ function LessonsSection() {
 function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string) => void }) {
   const navigate = useNavigate();
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>();
-  const { containerRef, visibleItems } = useStaggeredAnimation(services.length);
+
+  // Fetch dynamic services from database, fall back to hardcoded
+  const { data: dbServices } = useQuery({
+    queryKey: ["managed-services"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("managed_services")
+        .select("*")
+        .eq("active", true)
+        .order("sort_order");
+      if (error || !data?.length) return null;
+      return data;
+    },
+    staleTime: 60_000,
+  });
+
+  const displayServices = useMemo(() => {
+    if (dbServices?.length) {
+      return dbServices.map((s) => ({
+        id: s.slug,
+        title: s.title,
+        shortDescription: s.short_description || "",
+        description: s.description || "",
+        features: s.features || [],
+        startingPrice: s.starting_price || "Contact Us",
+        icon: s.icon || "arena",
+      }));
+    }
+    return services;
+  }, [dbServices]);
+
+  const { containerRef, visibleItems } = useStaggeredAnimation(displayServices.length);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   return (
@@ -752,7 +785,7 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
         </div>
 
         <div ref={containerRef} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((service, index) => {
+          {displayServices.map((service, index) => {
             const isHovered = hoveredId === service.id;
 
             return (
@@ -764,7 +797,7 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                 onMouseEnter={() => setHoveredId(service.id)}
                 onMouseLeave={() => setHoveredId(null)}
               >
-                {/* Upfront pricing header */}
+                {/* Pricing header */}
                 <div className="relative px-6 pt-6 pb-4 border-b border-border/60">
                   <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1">Starting at</p>
                   <p className={`font-serif text-3xl font-bold transition-colors duration-300 ${isHovered ? "text-accent" : "text-foreground"}`}>
@@ -772,10 +805,10 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                   </p>
                 </div>
 
-                {/* Service image peek */}
+                {/* Service image */}
                 <div className="relative h-32 overflow-hidden">
                   <img
-                    src={serviceImages[service.id]}
+                    src={serviceImages[service.id] || serviceImages["arena-construction"]}
                     alt={service.title}
                     className={`w-full h-full object-cover transition-all duration-500 ${
                       isHovered ? "scale-110 brightness-75" : "scale-100 brightness-90"
@@ -784,7 +817,7 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                   />
                 </div>
 
-                {/* Content area */}
+                {/* Content */}
                 <div className="p-6">
                   <h3 className={`font-serif text-lg font-semibold mb-2 transition-colors duration-300 ${
                     isHovered ? "text-accent" : "text-foreground"
@@ -792,7 +825,7 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                     {service.title}
                   </h3>
 
-                  {/* Description — visible by default, slides away on hover */}
+                  {/* Description — visible by default */}
                   <div className={`transition-all duration-400 overflow-hidden ${
                     isHovered ? "max-h-0 opacity-0" : "max-h-20 opacity-100"
                   }`}>
@@ -801,7 +834,7 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                     </p>
                   </div>
 
-                  {/* Benefits list — reveals on hover */}
+                  {/* Features list — reveals on hover */}
                   <div className={`transition-all duration-400 overflow-hidden ${
                     isHovered ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
                   }`}>
@@ -825,20 +858,27 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                     </ul>
                   </div>
 
-                  {/* CTA button */}
-                  <div className={`mt-4 transition-all duration-300 ${
-                    isHovered ? "opacity-100 translate-y-0" : "opacity-70 translate-y-0"
-                  }`}>
-                    <Button 
+                  {/* Dual CTAs */}
+                  <div className="mt-4 flex gap-2">
+                    <Button
                       onClick={() => navigate(`/contact?services=${service.id}`)}
-                      className={`w-full transition-all duration-300 ${
+                      className={`flex-1 transition-all duration-300 ${
                         isHovered
                           ? "bg-accent hover:bg-accent/90 text-accent-foreground shadow-md"
                           : "bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
                       }`}
+                      size="sm"
                     >
                       {isHovered ? "Get a Quote" : "Learn More"}
-                      <ArrowRight className={`ml-2 h-4 w-4 transition-transform duration-300 ${isHovered ? "translate-x-1" : ""}`} />
+                      <ArrowRight className={`ml-1.5 h-3.5 w-3.5 transition-transform duration-300 ${isHovered ? "translate-x-1" : ""}`} />
+                    </Button>
+                    <Button
+                      onClick={() => onQuoteClick(service.id)}
+                      variant="outline"
+                      size="sm"
+                      className="border-accent/30 text-accent hover:bg-accent/10 shrink-0"
+                    >
+                      Quick Quote
                     </Button>
                   </div>
                 </div>
