@@ -33,6 +33,7 @@ import StudentSpotlight from "./pages/StudentSpotlight";
 import RoundPens from "./pages/RoundPens";
 import Schedule from "./pages/Schedule";
 import ThankYou from "./pages/ThankYou";
+import Pricing from "./pages/Pricing";
 import { useCartSync } from "./hooks/useCartSync";
 
 const queryClient = new QueryClient();
@@ -76,6 +77,7 @@ function AppContent() {
           <Route path="/student-spotlight" element={<StudentSpotlight />} />
           <Route path="/schedule" element={<Schedule />} />
           <Route path="/thank-you" element={<ThankYou />} />
+          <Route path="/pricing" element={<Pricing />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
