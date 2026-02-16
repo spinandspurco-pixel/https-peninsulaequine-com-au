@@ -293,7 +293,7 @@ function ServiceCard({ service, index, onQuoteClick }: { service: typeof service
             </div>
           )}
 
-          <ul className="space-y-3 mb-8">
+          <ul className="space-y-3 mb-6">
             {service.features.map((feature, i) => (
               <li 
                 key={i} 
@@ -307,32 +307,80 @@ function ServiceCard({ service, index, onQuoteClick }: { service: typeof service
               </li>
             ))}
           </ul>
+
+          {/* Dynamic pricing grid — always visible */}
+          {tiers.length > 0 && (
+            <div className="mb-6">
+              <div className="grid sm:grid-cols-3 gap-3">
+                {tiers.map((tier) => (
+                  <div
+                    key={tier.name}
+                    className={`relative rounded-xl border p-4 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 ${
+                      tier.popular
+                        ? "border-accent bg-accent/5 ring-1 ring-accent/20 shadow-sm"
+                        : "border-border bg-card"
+                    }`}
+                  >
+                    {tier.popular && (
+                      <span className="absolute -top-2.5 left-4 px-2.5 py-0.5 bg-accent text-accent-foreground text-[10px] uppercase tracking-widest rounded-full font-semibold">
+                        Popular
+                      </span>
+                    )}
+                    <p className="text-xs font-semibold text-foreground mb-0.5">{tier.name}</p>
+                    <p className="text-xl font-bold text-accent mb-1">{tier.price}</p>
+                    <p className="text-[11px] text-muted-foreground mb-3 leading-relaxed">{tier.description}</p>
+                    <ul className="space-y-1.5 mb-3">
+                      {tier.features.slice(0, 3).map((f, i) => (
+                        <li key={i} className="flex items-start gap-1.5 text-xs">
+                          <CheckCircle className="h-3 w-3 text-accent mt-0.5 shrink-0" />
+                          <span className="text-foreground/80">{f}</span>
+                        </li>
+                      ))}
+                      {tier.features.length > 3 && (
+                        <li className="text-[10px] text-muted-foreground pl-4">
+                          +{tier.features.length - 3} more
+                        </li>
+                      )}
+                    </ul>
+                    <Button
+                      size="sm"
+                      className={`w-full text-xs ${
+                        tier.popular
+                          ? "bg-accent text-accent-foreground hover:bg-accent/90"
+                          : "bg-muted text-foreground hover:bg-accent/10 border border-border"
+                      }`}
+                      onClick={() => {
+                        trackCtaClick("tier_quote", { source: "pricing_grid", service: service.id, tier: tier.name });
+                        navigate(`/contact?services=${service.id}&ref=tier-${tier.name.toLowerCase()}`);
+                      }}
+                    >
+                      Get a Quote
+                      <ArrowRight className="ml-1 h-3 w-3" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="flex flex-wrap gap-3">
             <Button 
-              onClick={() => navigate(`/book-lesson?service=${service.id}`)}
+              onClick={() => {
+                trackCtaClick("service_book", { source: "service_card", service: service.id });
+                navigate(`/contact?services=${service.id}`);
+              }}
               className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              Quick Book
+              Request a Quote
             </Button>
-            <Button 
-              onClick={() => {
-                trackCtaClick("get_a_quote", { source: "service_detail", service: service.id });
-                navigate(`/contact?services=${service.id}`);
-              }}
-              variant="outline"
-              className="border-accent/30 text-accent hover:bg-accent/10 transition-all duration-300"
-            >
-              Get a Quote
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </Button>
-            {(tiers.length > 0 || faqs.length > 0) && (
+            {faqs.length > 0 && (
               <Button
                 variant="ghost"
                 onClick={() => setShowDetail(!showDetail)}
                 className="text-muted-foreground hover:text-foreground transition-all duration-300"
               >
-                {showDetail ? "Hide Details" : "Pricing & FAQ"}
+                {showDetail ? "Hide FAQ" : "FAQ"}
                 <ChevronDown className={`ml-1 h-4 w-4 transition-transform duration-300 ${showDetail ? "rotate-180" : ""}`} />
               </Button>
             )}
@@ -360,59 +408,9 @@ function ServiceCard({ service, index, onQuoteClick }: { service: typeof service
         </div>
       </div>
 
-      {/* Expandable pricing tiers + FAQ */}
+      {/* Expandable FAQ */}
       {showDetail && (
         <div className="mt-10 animate-in slide-in-from-top-4 fade-in duration-500">
-          {/* Pricing Tiers */}
-          {tiers.length > 0 && (
-            <div className="mb-10">
-              <h3 className="font-serif text-xl text-foreground mb-6 flex items-center gap-2">
-                <BarChart3 className="h-5 w-5 text-accent" />
-                Pricing Tiers
-              </h3>
-              <div className="grid sm:grid-cols-3 gap-4">
-                {tiers.map((tier) => (
-                  <div
-                    key={tier.name}
-                    className={`relative rounded-xl border p-5 transition-all duration-300 hover:shadow-md ${
-                      tier.popular
-                        ? "border-accent bg-accent/5 ring-1 ring-accent/20"
-                        : "border-border bg-card"
-                    }`}
-                  >
-                    {tier.popular && (
-                      <span className="absolute -top-2.5 left-4 px-2.5 py-0.5 bg-accent text-accent-foreground text-[10px] uppercase tracking-widest rounded-full font-semibold">
-                        Most Popular
-                      </span>
-                    )}
-                    <p className="text-sm font-semibold text-foreground mb-1">{tier.name}</p>
-                    <p className="text-2xl font-bold text-accent mb-2">{tier.price}</p>
-                    <p className="text-xs text-muted-foreground mb-4">{tier.description}</p>
-                    <ul className="space-y-2">
-                      {tier.features.map((f, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm">
-                          <CheckCircle className="h-3.5 w-3.5 text-accent mt-0.5 shrink-0" />
-                          <span className="text-foreground/80">{f}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <Button
-                      size="sm"
-                      variant={tier.popular ? "default" : "outline"}
-                      className="w-full mt-4"
-                      onClick={() => {
-                        trackCtaClick("tier_quote", { source: "pricing_tier", service: service.id, tier: tier.name });
-                        navigate(`/contact?services=${service.id}&ref=tier-${tier.name.toLowerCase()}`);
-                      }}
-                    >
-                      Get a Quote
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Per-service FAQ */}
           {faqs.length > 0 && (
             <div>
