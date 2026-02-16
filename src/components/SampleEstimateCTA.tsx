@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Calculator, Sparkles } from "lucide-react";
+import { ArrowRight, Calculator, CalendarIcon, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
@@ -84,16 +84,29 @@ export function SampleEstimateCTA({ onGetQuote }: SampleEstimateCTAProps) {
           </div>
 
           {/* CTA */}
-          <div className="text-center space-y-3">
-            <Button
-              size="lg"
-              className="bg-accent hover:bg-accent/90 text-accent-foreground gap-2 min-w-[240px]"
-              onClick={onGetQuote}
-            >
-              <Calculator className="h-4 w-4" />
-              Get Your Free Custom Quote
-              <ArrowRight className="h-4 w-4" />
-            </Button>
+          <div className="text-center space-y-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Button
+                size="lg"
+                className="bg-accent hover:bg-accent/90 text-accent-foreground gap-2 min-w-[240px]"
+                onClick={onGetQuote}
+              >
+                <Calculator className="h-4 w-4" />
+                Get Your Free Custom Quote
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="gap-2 min-w-[200px]"
+                asChild
+              >
+                <Link to="/schedule">
+                  <CalendarIcon className="h-4 w-4" />
+                  Book a Consultation
+                </Link>
+              </Button>
+            </div>
             <p className="text-xs text-muted-foreground">
               No obligation · Response within 24 hours · On-site consultation included
             </p>

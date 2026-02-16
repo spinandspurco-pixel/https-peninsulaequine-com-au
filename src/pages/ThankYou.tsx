@@ -143,7 +143,11 @@ export default function ThankYou() {
           <p className="text-muted-foreground text-sm mb-6">In the meantime, you can:</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
-              <Link to={`/schedule${serviceIds.length ? `?services=${serviceIds.join(",")}` : ""}`}>
+              <Link to={`/schedule?${new URLSearchParams({
+                ...(serviceIds.length ? { services: serviceIds.join(",") } : {}),
+                ...(clientName ? { name: clientName } : {}),
+                ...(clientEmail ? { email: clientEmail } : {}),
+              }).toString()}`}>
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 Schedule a Call
               </Link>
