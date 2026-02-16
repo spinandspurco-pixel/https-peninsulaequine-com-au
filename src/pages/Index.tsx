@@ -554,17 +554,29 @@ function ServicesOverviewSection() {
         </div>
 
         <SectionTransition variant="fade-up" delay={500} className="text-center mt-12">
-          <Button
-            asChild
-            variant="outline"
-            size="lg"
-            className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-          >
-            <Link to="/services">
-              Explore All Services &amp; Pricing
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button
+              asChild
+              size="lg"
+              className="bg-accent text-accent-foreground hover:bg-accent/90 text-sm px-10 tracking-[0.15em] uppercase font-sans font-medium"
+            >
+              <Link to="/contact">
+                Request a Free Quote
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary text-sm px-10 tracking-[0.15em] uppercase font-sans"
+            >
+              <Link to="/services">
+                View All Services
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </SectionTransition>
       </div>
     </section>
