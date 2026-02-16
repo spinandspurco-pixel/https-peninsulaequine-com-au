@@ -497,6 +497,35 @@ function CTASection() {
   );
 }
 
+function IntroSection() {
+  return (
+    <section className="section-padding bg-background relative overflow-hidden">
+      <BlueprintBackground image={blueprintDetail} opacity={0.02} direction="left-to-right" duration={2000} />
+      <div className="section-container">
+        <div className="max-w-3xl mx-auto text-center">
+          <SectionTransition variant="fade-up">
+            <p className="text-muted-foreground uppercase tracking-[0.25em] text-sm mb-6">
+              Mornington Peninsula, Victoria
+            </p>
+          </SectionTransition>
+          <SectionTransition variant="blur-in" delay={100}>
+            <h2 className="heading-section text-foreground mb-6">
+              Where world-class equine facilities are built by the hands of a horseman
+            </h2>
+          </SectionTransition>
+          <SectionTransition variant="fade-up" delay={200}>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Peninsula Equine is a construction company specializing in premium arenas, barns,
+              and equestrian infrastructure. With decades of experience in both riding and building,
+              Ciro brings a horseman's intuition to every project.
+            </p>
+          </SectionTransition>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function About() {
   return (
     <Layout>
@@ -506,6 +535,7 @@ export default function About() {
         backgroundImage={ciroWithHorse}
         dividerVariant="grid"
       />
+      <IntroSection />
       <CiroSection />
       <BlueprintDivider variant="elevation" />
       <NaturalHorsemanshipSection />
