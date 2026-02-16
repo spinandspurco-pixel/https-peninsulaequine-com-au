@@ -87,28 +87,66 @@ const usageRules = {
 };
 
 function ColorSwatch({ color }: { color: (typeof colorGroups)[0]["colors"][0] }) {
-  const copyHex = () => {
-    navigator.clipboard.writeText(color.hex);
-    toast.success(`Copied ${color.hex}`);
+  const [copied, setCopied] = useState<string | null>(null);
+
+  const copyValue = (label: string, value: string) => {
+    navigator.clipboard.writeText(value);
+    setCopied(label);
+    toast.success(`Copied ${value}`);
+    setTimeout(() => setCopied(null), 1500);
   };
 
+  const isLight = color.hex === "#FAF8F3" || color.hex === "#F5F0E8" || color.hex === "#E8DFD0";
+
   return (
-    <button
-      onClick={copyHex}
-      className="group flex flex-col rounded-lg overflow-hidden border border-border hover:shadow-md transition-shadow"
-    >
-      <div
-        className="h-20 w-full relative"
+    <div className="group rounded-xl overflow-hidden border border-border hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
+      {/* Swatch preview */}
+      <button
+        onClick={() => copyValue("hex", color.hex)}
+        className="w-full h-28 sm:h-32 relative flex items-end p-3 cursor-pointer"
         style={{ backgroundColor: color.hex }}
       >
-        <Copy className="absolute top-2 right-2 h-4 w-4 text-white/60 opacity-0 group-hover:opacity-100 transition-opacity" />
+        <span className={`text-xs font-mono tracking-wide opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${isLight ? "text-foreground/50" : "text-white/70"}`}>
+          Click to copy
+        </span>
+        {copied === "hex" ? (
+          <Check className={`absolute top-3 right-3 h-4 w-4 ${isLight ? "text-accent" : "text-white"}`} />
+        ) : (
+          <Copy className={`absolute top-3 right-3 h-4 w-4 opacity-0 group-hover:opacity-70 transition-opacity ${isLight ? "text-foreground/60" : "text-white/60"}`} />
+        )}
+      </button>
+
+      {/* Info strip */}
+      <div className="p-3 bg-card space-y-2">
+        <p className="text-sm font-semibold text-foreground leading-tight">{color.name}</p>
+        <div className="flex flex-wrap gap-1.5">
+          <button
+            onClick={() => copyValue("hex", color.hex)}
+            className="inline-flex items-center gap-1 text-[11px] font-mono bg-secondary hover:bg-secondary/80 text-muted-foreground rounded px-1.5 py-0.5 transition-colors"
+            title="Copy HEX"
+          >
+            {copied === "hex" ? <Check className="h-2.5 w-2.5 text-accent" /> : null}
+            {color.hex}
+          </button>
+          <button
+            onClick={() => copyValue("hsl", color.hsl)}
+            className="inline-flex items-center gap-1 text-[11px] font-mono bg-secondary hover:bg-secondary/80 text-muted-foreground rounded px-1.5 py-0.5 transition-colors"
+            title="Copy HSL"
+          >
+            {copied === "hsl" ? <Check className="h-2.5 w-2.5 text-accent" /> : null}
+            hsl
+          </button>
+          <button
+            onClick={() => copyValue("token", color.token)}
+            className="inline-flex items-center gap-1 text-[11px] font-mono bg-secondary hover:bg-secondary/80 text-muted-foreground rounded px-1.5 py-0.5 transition-colors"
+            title="Copy CSS token"
+          >
+            {copied === "token" ? <Check className="h-2.5 w-2.5 text-accent" /> : null}
+            var
+          </button>
+        </div>
       </div>
-      <div className="p-3 bg-card text-left space-y-0.5">
-        <p className="text-sm font-semibold text-foreground">{color.name}</p>
-        <p className="text-xs font-mono text-muted-foreground">{color.hex}</p>
-        <p className="text-xs text-muted-foreground/70">{color.token}</p>
-      </div>
-    </button>
+    </div>
   );
 }
 
@@ -239,7 +277,7 @@ export default function BrandGuide() {
           {colorGroups.map((group) => (
             <div key={group.title}>
               <h3 className="font-sans text-sm uppercase tracking-[0.15em] text-muted-foreground mb-4">{group.title}</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                 {group.colors.map((c) => (
                   <ColorSwatch key={c.token} color={c} />
                 ))}
