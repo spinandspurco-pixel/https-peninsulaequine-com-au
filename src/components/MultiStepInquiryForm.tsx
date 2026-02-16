@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowRight, ArrowLeft, CheckCircle, Loader2, User, Mail, Phone, MessageSquare, CalendarIcon, Edit2, ShieldCheck } from "lucide-react";
+import { ArrowRight, ArrowLeft, CheckCircle, Loader2, User, Mail, Phone, MessageSquare, CalendarIcon, Edit2, ShieldCheck, RotateCcw, Save, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -42,6 +42,39 @@ const contactSchema = z.object({
 });
 
 const TOTAL_STEPS = 4;
+const DRAFT_KEY = "pe_inquiry_draft";
+
+interface DraftState {
+  step: number;
+  selectedServices: string[];
+  name: string;
+  email: string;
+  phone: string;
+  experience: string;
+  budget: string;
+  message: string;
+  savedAt: number;
+}
+
+function loadDraft(): DraftState | null {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return null;
+    const draft = JSON.parse(raw) as DraftState;
+    // Expire drafts after 7 days
+    if (Date.now() - draft.savedAt > 7 * 24 * 60 * 60 * 1000) {
+      localStorage.removeItem(DRAFT_KEY);
+      return null;
+    }
+    return draft;
+  } catch {
+    return null;
+  }
+}
+
+function clearDraft() {
+  localStorage.removeItem(DRAFT_KEY);
+}
 
 interface MultiStepInquiryFormProps {
   className?: string;
@@ -60,17 +93,65 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
   const preEmail = searchParams.get("email") || "";
   const prePhone = searchParams.get("phone") || "";
 
-  const [step, setStep] = useState(initialServices.length > 0 ? 2 : 1);
-  const [selectedServices, setSelectedServices] = useState<string[]>(initialServices);
-  const [name, setName] = useState(preName);
-  const [email, setEmail] = useState(preEmail);
-  const [phone, setPhone] = useState(prePhone);
-  const [experience, setExperience] = useState("");
-  const [budget, setBudget] = useState("");
-  const [message, setMessage] = useState("");
+  // Load saved draft (only if no URL params override)
+  const existingDraft = loadDraft();
+  const hasDraft = !!existingDraft && initialServices.length === 0;
+
+  const [step, setStep] = useState(initialServices.length > 0 ? 2 : hasDraft ? existingDraft!.step : 1);
+  const [selectedServices, setSelectedServices] = useState<string[]>(
+    initialServices.length > 0 ? initialServices : hasDraft ? existingDraft!.selectedServices : []
+  );
+  const [name, setName] = useState(preName || (hasDraft ? existingDraft!.name : ""));
+  const [email, setEmail] = useState(preEmail || (hasDraft ? existingDraft!.email : ""));
+  const [phone, setPhone] = useState(prePhone || (hasDraft ? existingDraft!.phone : ""));
+  const [experience, setExperience] = useState(hasDraft ? existingDraft!.experience : "");
+  const [budget, setBudget] = useState(hasDraft ? existingDraft!.budget : "");
+  const [message, setMessage] = useState(hasDraft ? existingDraft!.message : "");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [showDraftBanner, setShowDraftBanner] = useState(hasDraft);
+  const [lastSaved, setLastSaved] = useState<Date | null>(hasDraft ? new Date(existingDraft!.savedAt) : null);
+
+  // Auto-save draft on changes
+  const saveDraft = useCallback(() => {
+    if (submitted) return;
+    const draft: DraftState = {
+      step,
+      selectedServices,
+      name,
+      email,
+      phone,
+      experience,
+      budget,
+      message,
+      savedAt: Date.now(),
+    };
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    setLastSaved(new Date());
+  }, [step, selectedServices, name, email, phone, experience, budget, message, submitted]);
+
+  // Debounced auto-save
+  useEffect(() => {
+    if (submitted) return;
+    const timeout = setTimeout(saveDraft, 800);
+    return () => clearTimeout(timeout);
+  }, [saveDraft, submitted]);
+
+  const handleClearDraft = () => {
+    clearDraft();
+    setStep(1);
+    setSelectedServices([]);
+    setName("");
+    setEmail("");
+    setPhone("");
+    setExperience("");
+    setBudget("");
+    setMessage("");
+    setShowDraftBanner(false);
+    setLastSaved(null);
+    toast({ title: "Draft cleared", description: "Starting fresh." });
+  };
 
   const toggleService = (id: string) => {
     setSelectedServices((prev) =>
@@ -141,6 +222,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
         })
         .catch(() => {});
 
+      clearDraft();
       setSubmitted(true);
       toast({ title: "Inquiry sent!", description: "We'll be in touch within 1–2 business days." });
       navigate("/thank-you");
@@ -183,6 +265,33 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
 
   return (
     <div className={cn("rounded-2xl border border-border bg-card overflow-hidden", className)}>
+      {/* Draft resume banner */}
+      {showDraftBanner && (
+        <div className="flex items-center justify-between gap-3 px-5 py-3 bg-accent/10 border-b border-accent/20">
+          <div className="flex items-center gap-2 min-w-0">
+            <RotateCcw className="h-4 w-4 text-accent flex-shrink-0" />
+            <p className="text-sm text-foreground truncate">
+              <span className="font-medium">Draft restored</span>
+              <span className="text-muted-foreground"> — pick up where you left off</span>
+            </p>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button
+              onClick={handleClearDraft}
+              className="text-xs text-muted-foreground hover:text-destructive flex items-center gap-1 transition-colors"
+            >
+              <Trash2 className="h-3 w-3" /> Clear
+            </button>
+            <button
+              onClick={() => setShowDraftBanner(false)}
+              className="text-xs text-accent hover:text-accent/80 font-medium transition-colors"
+            >
+              Continue →
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Progress bar */}
       <div className="flex border-b border-border">
         {[1, 2, 3, 4].map((s) => (
@@ -208,6 +317,13 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
       </div>
 
       <div className="p-6 sm:p-8">
+        {/* Auto-save indicator */}
+        {lastSaved && !submitted && (
+          <div className="flex items-center gap-1.5 mb-4 text-xs text-muted-foreground">
+            <Save className="h-3 w-3" />
+            <span>Draft auto-saved — you can close and resume anytime</span>
+          </div>
+        )}
         {/* Step 1: Service selection */}
         {step === 1 && (
           <div className="space-y-5">
