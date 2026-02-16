@@ -518,14 +518,35 @@ function ServicesOverviewSection() {
                 </p>
 
                 {/* Pricing highlight */}
-                <div className="flex items-center justify-between pt-4 border-t border-primary-foreground/10">
+                <div className="flex items-center justify-between pt-4 border-t border-primary-foreground/10 mb-4">
                   <div>
                     <p className="text-[10px] uppercase tracking-[0.2em] text-primary-foreground/40 mb-0.5">Starting from</p>
                     <p className="text-accent font-semibold text-lg">{service.startingPrice}</p>
                   </div>
-                  <span className="w-9 h-9 rounded-full bg-accent/10 group-hover:bg-accent/20 flex items-center justify-center transition-all duration-300 group-hover:translate-x-1">
-                    <ArrowRight className="h-4 w-4 text-accent" />
-                  </span>
+                </div>
+
+                {/* CTA buttons */}
+                <div className="flex gap-2">
+                  <Button
+                    asChild
+                    size="sm"
+                    className="flex-1 bg-accent text-accent-foreground hover:bg-accent/90 text-xs tracking-wider uppercase"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Link to={`/contact?service=${service.id}`}>Get a Quote</Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 text-xs tracking-wider uppercase"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Link to={`/services#${service.id}`}>
+                      Learn More
+                      <ArrowRight className="ml-1 h-3 w-3" />
+                    </Link>
+                  </Button>
                 </div>
               </Link>
             );
