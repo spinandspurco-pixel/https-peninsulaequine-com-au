@@ -1021,9 +1021,8 @@ function UpcomingEventsStrip() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {events.map((event) => (
-            <Link
+            <div
               key={event.id}
-              to="/events"
               className="group rounded-lg border border-border bg-background p-5 hover:border-accent/40 hover:shadow-md transition-all duration-300"
             >
               <div className="flex items-start gap-3">
@@ -1035,7 +1034,7 @@ function UpcomingEventsStrip() {
                     {new Date(event.event_date + "T00:00:00").toLocaleDateString("en-AU", { month: "short" })}
                   </span>
                 </div>
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <h4 className="font-serif text-sm font-semibold text-foreground group-hover:text-accent transition-colors truncate">
                     {event.title}
                   </h4>
@@ -1053,7 +1052,14 @@ function UpcomingEventsStrip() {
                   )}
                 </div>
               </div>
-            </Link>
+              <Link
+                to={`/events?rsvp=${event.id}`}
+                className="mt-3 inline-flex items-center text-xs font-medium text-accent hover:text-accent/80 transition-colors group/rsvp"
+              >
+                RSVP Now
+                <ArrowRight className="ml-1 h-3 w-3 group-hover/rsvp:translate-x-0.5 transition-transform" />
+              </Link>
+            </div>
           ))}
         </div>
       </div>
