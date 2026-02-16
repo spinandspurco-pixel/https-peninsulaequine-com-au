@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, Play, X, Mail, Send } from "lucide-react";
+import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, X, Mail, Send } from "lucide-react";
 import { BookingWidget } from "@/components/BookingWidget";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { MajorEventsSection } from "@/components/MajorEventsSection";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
-import { MajorEventsVideoSection } from "@/components/MajorEventsVideoSection";
+
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { SectionTransition, AnimatedDivider, StaggeredTransition } from "@/components/SectionTransition";
 import { siteConfig, services, testimonials, aboutCiro } from "@/data/content";
@@ -15,7 +15,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
 // Import images
 import heroSunset from "@/assets/hero-sunset.png";
-import ciroWithHorse from "@/assets/ciro-with-horse.png";
+
 import horseAction from "@/assets/horse-action.png";
 import hatDetail from "@/assets/hat-detail.png";
 import ciroWide from "@/assets/ciro-wide.png";
@@ -29,32 +29,21 @@ import blueprintDetail from "@/assets/blueprint-detail.png";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
 import { LoadingSplash } from "@/components/LoadingSplash";
 
-// Import videos for hero rotation
-import slowMo1 from "@/assets/videos/slow-mo-1.mp4";
-import slowMo2 from "@/assets/videos/slow-mo-2.mp4";
-import slowMo3 from "@/assets/videos/slow-mo-3.mp4";
-import ciroJoinUp from "@/assets/videos/ciro-bareback-join-up.mp4";
-import ciroJoinUp2 from "@/assets/videos/ciro-bareback-join-up-2.mp4";
+// Blueprint images for hero
+import blueprintElevation from "@/assets/blueprint-elevation.png";
 
 // Featured services for homepage
 const featuredServices = services.slice(0, 4);
 const featuredTestimonials = testimonials.slice(0, 3);
 
-// Hero videos for rotation
-const heroVideos = [slowMo1, ciroJoinUp, slowMo2, slowMo3];
-
 function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [bannerLoaded, setBannerLoaded] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   // Track scroll position for parallax
   useEffect(() => {
     let ticking = false;
-    
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
@@ -64,33 +53,10 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
         ticking = true;
       }
     };
-
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Cycle videos every 15 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setCurrentVideoIndex((prev) => (prev + 1) % heroVideos.length);
-        setIsTransitioning(false);
-      }, 500);
-    }, 15000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Reset video when source changes
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.load();
-      videoRef.current.play().catch(() => {});
-    }
-  }, [currentVideoIndex]);
-
-  // Calculate parallax values
   const parallaxOffset = scrollY * 0.4;
   const contentOffset = scrollY * 0.15;
   const overlayOpacity = Math.min(scrollY / 800, 0.5);
@@ -100,7 +66,7 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
       ref={sectionRef} 
       className="relative h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Full-bleed Background Video with Enhanced Parallax */}
+      {/* Blueprint-animated background layers instead of video */}
       <div 
         className="absolute inset-[-20%] will-change-transform"
         style={{ 
@@ -108,37 +74,30 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
           transition: 'transform 0.1s ease-out'
         }}
       >
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster={heroSunset}
-          className={`w-full h-full object-cover transition-opacity duration-500 ${
-            isTransitioning ? "opacity-0" : "opacity-100"
-          }`}
-        >
-          <source src={heroVideos[currentVideoIndex]} type="video/mp4" />
-          {/* Fallback to image if video fails */}
-          <img
-            src={heroSunset}
-            alt="Horse silhouette at sunset"
-            className="w-full h-full object-cover scale-105"
-          />
-        </video>
-        
-        {/* Gradient overlay with dynamic opacity */}
-        <div 
-          className="absolute inset-0 bg-gradient-to-b from-primary/30 via-primary/10 to-primary/70 transition-opacity duration-300"
-          style={{ opacity: 1 + overlayOpacity }}
+        <img
+          src={heroSunset}
+          alt=""
+          aria-hidden="true"
+          className="w-full h-full object-cover"
         />
-        
-        {/* Vignette effect */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.3)_100%)]" />
       </div>
 
-      {/* Centered Content with subtle counter-parallax */}
+      {/* Blueprint overlay layers */}
+      <BlueprintBackground image={blueprintFacility} opacity={0.08} direction="left-to-right" duration={2500} parallaxSpeed={0.04} />
+      <BlueprintBackground image={blueprintElevation} opacity={0.05} direction="right-to-left" duration={3000} parallaxSpeed={0.08} className="scale-110" />
+      <BlueprintBackground image={blueprintBarn} opacity={0.04} direction="bottom-to-top" duration={2800} parallaxSpeed={0.06} />
+      <BlueprintLineOverlay variant="dimensions" color="light" />
+      <BlueprintLineOverlay variant="barn" color="light" />
+
+      {/* Gradient overlay */}
+      <div 
+        className="absolute inset-0 bg-gradient-to-b from-primary/40 via-primary/20 to-primary/80 transition-opacity duration-300"
+        style={{ opacity: 1 + overlayOpacity }}
+      />
+      {/* Vignette */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.3)_100%)]" />
+
+      {/* Centered Content */}
       <div 
         className="relative z-10 text-center px-4 will-change-transform"
         style={{ 
@@ -149,7 +108,6 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
         <div className="divider mx-auto mb-8 bg-accent/80" />
         
         {variant === "banner" ? (
-          /* PE Banner variant — loads async, fades in without blocking */
           <div className="mb-8">
             <img
               src={peBanner}
@@ -163,7 +121,6 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
             />
           </div>
         ) : (
-          /* Default logo mark variant */
           <>
             <div className="mb-8">
               <div className="w-32 h-32 sm:w-44 sm:h-44 md:w-52 md:h-52 mx-auto transition-transform duration-500 hover:scale-105">
@@ -174,7 +131,6 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
                 />
               </div>
             </div>
-
             <p className="font-serif text-xl sm:text-2xl md:text-3xl text-white tracking-[0.12em] uppercase font-normal text-shadow-editorial mb-4">
               Peninsula Equine
             </p>
@@ -192,7 +148,7 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
         )}
       </div>
 
-      {/* Scroll indicator with fade on scroll */}
+      {/* Scroll indicator */}
       <button 
         onClick={() => document.getElementById('intro')?.scrollIntoView({ behavior: 'smooth' })}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/60 hover:text-white transition-all cursor-pointer"
@@ -208,13 +164,15 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
 
 function IntroSection() {
   const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
-  const { ref: parallaxRef, offset: parallaxOffset } = useParallax<HTMLDivElement>({ speed: 0.25 });
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const { ref: parallaxRef } = useParallax<HTMLDivElement>({ speed: 0.25 });
 
   return (
     <section id="intro" className="bg-background relative overflow-hidden">
-      {/* Blueprint background reveal */}
-      <BlueprintBackground image={blueprintDetail} opacity={0.03} direction="bottom-to-top" duration={2000} parallaxSpeed={0.06} />
+      {/* Multi-layer blueprint reveal */}
+      <BlueprintBackground image={blueprintFacility} opacity={0.06} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
+      <BlueprintBackground image={blueprintDetail} opacity={0.04} direction="bottom-to-top" duration={2400} parallaxSpeed={0.08} className="scale-105" />
+      <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="right-to-left" duration={2800} parallaxSpeed={0.1} />
+      <BlueprintLineOverlay variant="dimensions" color="dark" />
       <BlueprintLineOverlay variant="detail" color="dark" />
 
       {/* Location tagline */}
@@ -244,14 +202,13 @@ function IntroSection() {
         </div>
       </div>
 
-      {/* Large editorial image with parallax and progressive loading */}
+      {/* Blueprint-animated panel replacing editorial image */}
       <div 
         ref={(node) => {
-          // Combine both refs
           (imageRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
           (parallaxRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
         }}
-        className={`relative h-[70vh] min-h-[500px] overflow-hidden transition-all duration-1000 ${
+        className={`relative h-[50vh] min-h-[350px] overflow-hidden transition-all duration-1000 ${
           imageVisible ? "opacity-100 scale-100" : "opacity-0 scale-[1.02]"
         }`}
         style={{
@@ -259,31 +216,25 @@ function IntroSection() {
           transition: "opacity 1s ease-out, transform 1.2s ease-out, clip-path 1s ease-out"
         }}
       >
-        {/* Skeleton placeholder */}
-        <div 
-          className={`absolute inset-0 bg-gradient-to-br from-muted/30 to-muted/10 transition-opacity duration-700 ${
-            imageLoaded ? "opacity-0" : "opacity-100"
-          }`}
-        />
-        
-        <div 
-          className="absolute inset-[-15%] will-change-transform"
-          style={{ 
-            transform: `translateY(${parallaxOffset}px)`,
-          }}
-        >
-          <img
-            src={ciroWithHorse}
-            alt="Ciro working with a horse"
-            loading="lazy"
-            decoding="async"
-            onLoad={() => setImageLoaded(true)}
-            className={`w-full h-full object-cover transition-all duration-1000 ${
-              imageVisible ? "scale-100" : "scale-105"
-            } ${imageLoaded ? "opacity-100 blur-0" : "opacity-0 blur-md"}`}
+        {/* Blueprint background as the visual */}
+        <div className="absolute inset-0 bg-primary">
+          <BlueprintBackground image={blueprintFacility} opacity={0.15} direction="left-to-right" duration={1800} parallaxSpeed={0.04} />
+          <BlueprintBackground image={blueprintElevation} opacity={0.1} direction="right-to-left" duration={2200} parallaxSpeed={0.08} className="scale-110" />
+          <BlueprintLineOverlay variant="barn" color="light" />
+          <BlueprintLineOverlay variant="front-elevation" color="light" />
+        </div>
+        {/* Centered logo watermark */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <img 
+            src={logoPeMark} 
+            alt="" 
+            aria-hidden="true"
+            className={`w-32 h-32 sm:w-44 sm:h-44 object-contain opacity-20 transition-all duration-1000 ${
+              imageVisible ? "scale-100" : "scale-75"
+            }`}
           />
         </div>
-        <div className="absolute inset-0 image-overlay-subtle" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/30" />
       </div>
     </section>
   );
@@ -773,148 +724,7 @@ function ClientStorySection() {
   );
 }
 
-function VideoTestimonialSpotlight() {
-  const [lightboxVideo, setLightboxVideo] = useState<string | null>(null);
-  const lightboxRef = useRef<HTMLVideoElement>(null);
-  const { ref: sectionRef, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
 
-  const spotlights = [
-    {
-      video: ciroJoinUp,
-      testimonial: testimonials[0],
-      caption: "Arena built for Sarah Mitchell, Woodside",
-    },
-    {
-      video: ciroJoinUp2,
-      testimonial: testimonials[3],
-      caption: "Private estate project, Los Altos Hills",
-    },
-  ];
-
-  // Close lightbox on Escape
-  useEffect(() => {
-    if (!lightboxVideo) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setLightboxVideo(null); };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [lightboxVideo]);
-
-  // Auto-play lightbox video
-  useEffect(() => {
-    if (lightboxVideo && lightboxRef.current) {
-      lightboxRef.current.play().catch(() => {});
-    }
-  }, [lightboxVideo]);
-
-  return (
-    <>
-      <section ref={sectionRef} className="section-padding bg-primary text-primary-foreground overflow-hidden relative">
-        <BlueprintBackground image={blueprintBarn} opacity={0.04} direction="right-to-left" duration={2000} parallaxSpeed={0.06} />
-        <BlueprintLineOverlay variant="barn" color="light" />
-
-        <div className="section-container relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <AnimatedDivider className="mx-auto mb-8 bg-accent" />
-            <SectionTransition variant="fade-up" delay={100}>
-              <p className="text-primary-foreground/60 uppercase tracking-[0.2em] text-sm mb-4">
-                Client Spotlights
-              </p>
-            </SectionTransition>
-            <SectionTransition variant="blur-in" delay={200}>
-              <h2 className="heading-editorial mb-4">
-                See the Results
-              </h2>
-            </SectionTransition>
-            <SectionTransition variant="fade-up" delay={300}>
-              <p className="text-primary-foreground/70">
-                Hear from the people who trust us with their equine facilities.
-              </p>
-            </SectionTransition>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-            {spotlights.map((spot, i) => (
-              <div
-                key={i}
-                className={`group transition-all duration-700 ${
-                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-                }`}
-                style={{ transitionDelay: `${i * 150}ms` }}
-              >
-                {/* Video thumbnail with play overlay */}
-                <button
-                  onClick={() => setLightboxVideo(spot.video)}
-                  className="relative w-full aspect-video rounded-lg overflow-hidden bg-primary-foreground/10 mb-5 cursor-pointer group/thumb"
-                  aria-label={`Play video: ${spot.caption}`}
-                >
-                  <video
-                    src={spot.video}
-                    muted
-                    playsInline
-                    preload="metadata"
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover/thumb:scale-105"
-                  />
-                  {/* Play button overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center bg-primary/30 group-hover/thumb:bg-primary/20 transition-colors duration-300">
-                    <div className="w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center shadow-lg transition-transform duration-300 group-hover/thumb:scale-110">
-                      <Play className="w-7 h-7 text-accent-foreground ml-1" fill="currentColor" />
-                    </div>
-                  </div>
-                  <p className="absolute bottom-3 left-3 text-xs text-primary-foreground/80 bg-primary/60 backdrop-blur-sm px-2 py-1 rounded">
-                    {spot.caption}
-                  </p>
-                </button>
-
-                {/* Quote */}
-                <div className="flex gap-1 mb-3">
-                  {[...Array(spot.testimonial.rating)].map((_, j) => (
-                    <svg key={j} className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-                <blockquote className="font-serif text-lg text-primary-foreground/90 italic leading-relaxed mb-3">
-                  "{spot.testimonial.quote.slice(0, 120)}…"
-                </blockquote>
-                <p className="font-serif font-semibold text-primary-foreground text-sm">{spot.testimonial.name}</p>
-                <p className="text-primary-foreground/60 text-xs">{spot.testimonial.role}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Video Lightbox */}
-      {lightboxVideo && (
-        <div
-          className="fixed inset-0 z-[9999] bg-primary/95 flex items-center justify-center p-4 animate-fade-in"
-          onClick={() => setLightboxVideo(null)}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Video lightbox"
-        >
-          <button
-            className="absolute top-6 right-6 text-primary-foreground/80 hover:text-primary-foreground z-10"
-            onClick={() => setLightboxVideo(null)}
-            aria-label="Close video (Escape)"
-          >
-            <X className="h-8 w-8" />
-          </button>
-          <div className="max-w-4xl w-full" onClick={(e) => e.stopPropagation()}>
-            <video
-              ref={lightboxRef}
-              src={lightboxVideo}
-              controls
-              autoPlay
-              playsInline
-              className="w-full rounded-lg shadow-2xl"
-            />
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
 
 function TestimonialsSection() {
   const featured = featuredTestimonials[0];
@@ -1076,14 +886,12 @@ export default function Index() {
         <BlueprintDivider variant="floorplan" />
         <MissionSection />
         <MajorEventsSection />
-        <MajorEventsVideoSection />
         <BlueprintDivider variant="elevation" />
         <ServicesSection />
         <BookingCTABanner />
         <GallerySection />
         <ClientStorySection />
         <BlueprintDivider variant="grid" />
-        <VideoTestimonialSpotlight />
         <TestimonialsSection />
         <LeadCaptureSection />
         <CTASection />
