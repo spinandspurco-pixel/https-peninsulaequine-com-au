@@ -13,6 +13,7 @@ import { BlueprintDivider } from "@/components/BlueprintDivider";
 import { SectionTransition, AnimatedDivider } from "@/components/SectionTransition";
 import { LessonAvailabilityCalendar } from "@/components/LessonAvailabilityCalendar";
 import { DepositPaymentPolicy } from "@/components/DepositPaymentPolicy";
+import { PolicyDownloadCenter } from "@/components/PolicyDownloadCenter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -1412,6 +1413,14 @@ export default function BookLesson() {
       <PrepChecklistSection />
 
       <DepositPaymentPolicy ctaHref="/book-lesson#book" ctaLabel="Book a Lesson" />
+
+      <section className="section-padding bg-background">
+        <div className="section-container">
+          <div className="max-w-2xl mx-auto">
+            <PolicyDownloadCenter />
+          </div>
+        </div>
+      </section>
 
       {/* Booking Form */}
       <section id="book" className="section-padding bg-card scroll-mt-20">
