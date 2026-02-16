@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Eye, EyeOff, Check, X, AlertTriangle, Paintbrush } from "lucide-react";
+import { Eye, EyeOff, Check, X, AlertTriangle, Paintbrush, Wand2, ArrowRight } from "lucide-react";
 
 /**
  * Dev-only accessibility contrast checker + branding audit.
@@ -259,21 +259,121 @@ function runBrandAudit(): BrandCheck[] {
   return checks;
 }
 
+// ── Auto-Adjuster ───────────────────────────────────
+
+type TokenFix = {
+  token: string;
+  label: string;
+  original: string;
+  adjusted: string;
+  beforeRatio: number;
+  afterRatio: number;
+  applied: boolean;
+};
+
+/** Parse an HSL string like "30 15% 40%" into [h, s, l] numbers */
+function parseHSL(value: string): [number, number, number] | null {
+  const m = value.match(/([\d.]+)\s+([\d.]+)%\s+([\d.]+)%/);
+  if (!m) return null;
+  return [parseFloat(m[1]), parseFloat(m[2]), parseFloat(m[3])];
+}
+
+/** Convert HSL to RGB */
+function hslToRgb(h: number, s: number, l: number): [number, number, number] {
+  s /= 100;
+  l /= 100;
+  const k = (n: number) => (n + h / 30) % 12;
+  const a = s * Math.min(l, 1 - l);
+  const f = (n: number) => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+  return [Math.round(f(0) * 255), Math.round(f(8) * 255), Math.round(f(4) * 255)];
+}
+
+function hslStr(h: number, s: number, l: number): string {
+  return `${Math.round(h)} ${Math.round(s)}% ${Math.round(l)}%`;
+}
+
+/** Check pairs of CSS tokens and suggest lightness adjustments for WCAG AA */
+function computeTokenFixes(): TokenFix[] {
+  const root = document.documentElement;
+  const style = getComputedStyle(root);
+
+  const pairs: { fg: string; bg: string; fgLabel: string; bgLabel: string }[] = [
+    { fg: "--foreground", bg: "--background", fgLabel: "Body text", bgLabel: "Background" },
+    { fg: "--card-foreground", bg: "--card", fgLabel: "Card text", bgLabel: "Card bg" },
+    { fg: "--muted-foreground", bg: "--background", fgLabel: "Muted text", bgLabel: "Background" },
+    { fg: "--muted-foreground", bg: "--card", fgLabel: "Muted text", bgLabel: "Card bg" },
+    { fg: "--accent-foreground", bg: "--accent", fgLabel: "Accent button text", bgLabel: "Accent bg" },
+    { fg: "--primary-foreground", bg: "--primary", fgLabel: "Primary btn text", bgLabel: "Primary bg" },
+    { fg: "--popover-foreground", bg: "--popover", fgLabel: "Popover text", bgLabel: "Popover bg" },
+    { fg: "--destructive-foreground", bg: "--destructive", fgLabel: "Destructive text", bgLabel: "Destructive bg" },
+  ];
+
+  const fixes: TokenFix[] = [];
+
+  pairs.forEach(({ fg, bg, fgLabel, bgLabel }) => {
+    const fgVal = style.getPropertyValue(fg).trim();
+    const bgVal = style.getPropertyValue(bg).trim();
+    const fgHsl = parseHSL(fgVal);
+    const bgHsl = parseHSL(bgVal);
+    if (!fgHsl || !bgHsl) return;
+
+    const fgRgb = hslToRgb(...fgHsl);
+    const bgRgb = hslToRgb(...bgHsl);
+    const ratio = contrastRatio(fgRgb, bgRgb);
+
+    if (ratio >= 4.5) return; // Already passes AA
+
+    // Determine direction: lighten fg if bg is dark, darken fg if bg is light
+    const bgLum = relativeLuminance(bgRgb);
+    let newL = fgHsl[2];
+    const step = bgLum < 0.5 ? 2 : -2;
+
+    for (let i = 0; i < 50; i++) {
+      newL += step;
+      if (newL < 0 || newL > 100) break;
+      const testRgb = hslToRgb(fgHsl[0], fgHsl[1], newL);
+      const testRatio = contrastRatio(testRgb, bgRgb);
+      if (testRatio >= 4.5) break;
+    }
+    newL = Math.max(0, Math.min(100, newL));
+
+    const adjustedVal = hslStr(fgHsl[0], fgHsl[1], newL);
+    const adjustedRgb = hslToRgb(fgHsl[0], fgHsl[1], newL);
+    const afterRatio = contrastRatio(adjustedRgb, bgRgb);
+
+    if (afterRatio <= ratio) return; // No improvement
+
+    fixes.push({
+      token: fg,
+      label: `${fgLabel} on ${bgLabel}`,
+      original: fgVal,
+      adjusted: adjustedVal,
+      beforeRatio: Math.round(ratio * 100) / 100,
+      afterRatio: Math.round(afterRatio * 100) / 100,
+      applied: false,
+    });
+  });
+
+  return fixes;
+}
+
 // ── Component ────────────────────────────────────────
 
-type Tab = "contrast" | "brand";
+type Tab = "contrast" | "brand" | "fix";
 
 export function ContrastChecker() {
   const [isOpen, setIsOpen] = useState(false);
   const [tab, setTab] = useState<Tab>("contrast");
   const [results, setResults] = useState<ContrastResult[]>([]);
   const [brandChecks, setBrandChecks] = useState<BrandCheck[]>([]);
+  const [tokenFixes, setTokenFixes] = useState<TokenFix[]>([]);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
   const runScan = useCallback(() => {
     setResults(scanElements());
     setBrandChecks(runBrandAudit());
+    setTokenFixes(computeTokenFixes());
   }, []);
 
   useEffect(() => {
@@ -369,6 +469,22 @@ export function ContrastChecker() {
                   <span className="ml-1 bg-red-600 text-white text-[9px] px-1 py-0.5 rounded-full">{brandSummary.fail}</span>
                 )}
               </button>
+              <button
+                onClick={() => setTab("fix")}
+                className={`flex-1 py-3 text-xs font-semibold uppercase tracking-wider transition-colors ${
+                  tab === "fix"
+                    ? "text-accent border-b-2 border-accent"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Wand2 className="w-3.5 h-3.5 inline mr-1 -mt-0.5" />
+                Fix
+                {tokenFixes.filter((f) => !f.applied).length > 0 && (
+                  <span className="ml-1 bg-amber-500 text-white text-[9px] px-1 py-0.5 rounded-full">
+                    {tokenFixes.filter((f) => !f.applied).length}
+                  </span>
+                )}
+              </button>
             </div>
             {/* Sub-header stats */}
             <div className="px-4 py-2 flex items-center justify-between">
@@ -380,12 +496,19 @@ export function ContrastChecker() {
                     {summary.fail > 0 && <span className="text-red-600 font-medium">{summary.fail} fail</span>}
                   </div>
                 </>
-              ) : (
+              ) : tab === "brand" ? (
                 <>
                   <span className="text-xs text-muted-foreground">{brandSummary.total} checks</span>
                   <div className="flex gap-3 text-xs">
                     <span className="text-green-600 font-medium">{brandSummary.pass} pass</span>
                     {brandSummary.fail > 0 && <span className="text-red-600 font-medium">{brandSummary.fail} fail</span>}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <span className="text-xs text-muted-foreground">{tokenFixes.length} token pair(s)</span>
+                  <div className="flex gap-3 text-xs">
+                    <span className="text-green-600 font-medium">{tokenFixes.filter((f) => f.applied).length} applied</span>
                   </div>
                 </>
               )}
@@ -476,6 +599,78 @@ export function ContrastChecker() {
             </div>
           )}
 
+          {/* Fix tab */}
+          {tab === "fix" && (
+            <div className="p-2 space-y-1">
+              {tokenFixes.length === 0 && (
+                <div className="p-4 text-center">
+                  <Check className="w-6 h-6 text-green-600 mx-auto mb-2" />
+                  <p className="text-xs text-muted-foreground">
+                    All color token pairs pass WCAG AA contrast. No adjustments needed.
+                  </p>
+                </div>
+              )}
+              {tokenFixes.map((fix, i) => (
+                <div key={i} className="rounded-lg p-3 hover:bg-card transition-colors">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs text-foreground font-medium">{fix.label}</p>
+                      <p className="text-[10px] text-muted-foreground mt-0.5 font-mono">{fix.token}</p>
+                      <div className="flex items-center gap-3 mt-2">
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-4 h-4 rounded border border-border" style={{ backgroundColor: `hsl(${fix.original})` }} />
+                          <span className="text-[10px] text-muted-foreground">{fix.beforeRatio}:1</span>
+                        </div>
+                        <ArrowRight className="w-3 h-3 text-muted-foreground" />
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-4 h-4 rounded border border-border" style={{ backgroundColor: `hsl(${fix.adjusted})` }} />
+                          <span className="text-[10px] text-green-600 font-medium">{fix.afterRatio}:1</span>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        const root = document.documentElement;
+                        if (fix.applied) {
+                          root.style.setProperty(fix.token, fix.original);
+                        } else {
+                          root.style.setProperty(fix.token, fix.adjusted);
+                        }
+                        setTokenFixes((prev) =>
+                          prev.map((f, j) => (j === i ? { ...f, applied: !f.applied } : f))
+                        );
+                      }}
+                      className={`shrink-0 text-[10px] font-semibold px-2 py-1 rounded transition-colors ${
+                        fix.applied
+                          ? "bg-green-600 text-white"
+                          : "bg-accent/10 text-accent hover:bg-accent/20"
+                      }`}
+                    >
+                      {fix.applied ? "Undo" : "Apply"}
+                    </button>
+                  </div>
+                </div>
+              ))}
+              {tokenFixes.length > 0 && (
+                <div className="px-3 pt-2 pb-1">
+                  <button
+                    onClick={() => {
+                      const root = document.documentElement;
+                      const allApplied = tokenFixes.every((f) => f.applied);
+                      tokenFixes.forEach((fix) => {
+                        root.style.setProperty(fix.token, allApplied ? fix.original : fix.adjusted);
+                      });
+                      setTokenFixes((prev) => prev.map((f) => ({ ...f, applied: !allApplied })));
+                    }}
+                    className="w-full text-xs font-medium py-2 px-3 rounded-lg border border-accent/30 text-accent hover:bg-accent/10 transition-colors"
+                  >
+                    {tokenFixes.every((f) => f.applied) ? "Revert All" : "Apply All Fixes"}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Footer */}
           <div className="sticky bottom-0 bg-background border-t border-border p-3">
             <div className="flex items-start gap-2 text-[10px] text-muted-foreground">
@@ -483,7 +678,9 @@ export function ContrastChecker() {
               <span>
                 {tab === "contrast"
                   ? "WCAG 2.1 AA requires 4.5:1 for normal text, 3:1 for large text (≥18pt bold or ≥24pt). AAA requires 7:1 / 4.5:1."
-                  : `Brand audit checks for rope-mark logo presence, consistent "${CANONICAL_ALT}" alt text, and Playfair Display in headings.`}
+                  : tab === "brand"
+                  ? `Brand audit checks for rope-mark logo presence, consistent "${CANONICAL_ALT}" alt text, and Playfair Display in headings.`
+                  : "Auto-adjuster modifies CSS custom properties in real-time. Changes are session-only — copy adjusted HSL values to index.css to persist."}
               </span>
             </div>
           </div>
