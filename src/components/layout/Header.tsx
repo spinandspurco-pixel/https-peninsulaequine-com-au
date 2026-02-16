@@ -37,7 +37,7 @@ export function Header() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         isScrolled
-          ? "bg-background/95 backdrop-blur-md border-b border-border"
+          ? "bg-[hsl(var(--header-scrolled-bg)/0.95)] backdrop-blur-md border-b border-border"
           : "bg-transparent"
       )}
     >
@@ -55,9 +55,9 @@ export function Header() {
             />
             <span className={cn(
               "hidden sm:block font-serif text-lg tracking-[0.1em] uppercase transition-colors",
-              isScrolled ? "text-foreground" : "text-white"
+              isScrolled ? "text-[hsl(var(--header-scrolled-foreground))]" : "text-[hsl(var(--header-foreground))]"
             )}>
-              Peninsula<span className="text-accent">Equine</span>
+              Peninsula<span className="text-[hsl(var(--header-active))]">Equine</span>
             </span>
           </Link>
 
@@ -68,12 +68,12 @@ export function Header() {
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  "text-sm uppercase tracking-[0.15em] transition-colors hover:text-accent",
+                  "text-sm uppercase tracking-[0.15em] transition-colors hover:text-[hsl(var(--header-active))]",
                   location.pathname === item.href
-                    ? "text-accent"
+                    ? "text-[hsl(var(--header-active))]"
                     : isScrolled
-                    ? "text-foreground"
-                    : "text-white/90"
+                    ? "text-[hsl(var(--header-scrolled-foreground))]"
+                    : "text-[hsl(var(--header-foreground))]/90"
                 )}
               >
                 {item.name}
@@ -88,8 +88,8 @@ export function Header() {
               className={cn(
                 "uppercase tracking-[0.1em] text-xs px-6",
                 isScrolled 
-                  ? "bg-accent hover:bg-accent/90 text-accent-foreground"
-                  : "bg-white/10 backdrop-blur-sm border border-white/30 text-white hover:bg-white hover:text-primary"
+                  ? "bg-[hsl(var(--header-active))] hover:bg-[hsl(var(--header-active))]/90 text-accent-foreground"
+                  : "bg-white/10 backdrop-blur-sm border border-[hsl(var(--header-foreground))]/30 text-[hsl(var(--header-foreground))] hover:bg-[hsl(var(--header-foreground))] hover:text-[hsl(var(--header-bg))]"
               )}
             >
               <Link to="/contact">Inquire</Link>
@@ -101,7 +101,7 @@ export function Header() {
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className={cn(
               "lg:hidden p-2 rounded-md transition-colors",
-              isScrolled ? "text-foreground" : "text-white"
+              isScrolled ? "text-[hsl(var(--header-scrolled-foreground))]" : "text-[hsl(var(--header-foreground))]"
             )}
             aria-label="Toggle menu"
           >

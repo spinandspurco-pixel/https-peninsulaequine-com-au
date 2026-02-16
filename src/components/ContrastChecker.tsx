@@ -81,12 +81,8 @@ function isLargeText(el: HTMLElement): boolean {
 function scanElements(): ContrastResult[] {
   const results: ContrastResult[] = [];
 
-  // Scan hero sections
-  const heroes = document.querySelectorAll<HTMLElement>(
-    'section:first-of-type, [class*="hero"], [class*="Hero"]'
-  );
-  heroes.forEach((hero) => {
-    const textEls = hero.querySelectorAll<HTMLElement>("h1, h2, p, span, a");
+  const addResults = (container: HTMLElement, prefix: string) => {
+    const textEls = container.querySelectorAll<HTMLElement>("h1, h2, h3, h4, p, span, a, button");
     textEls.forEach((el) => {
       const style = window.getComputedStyle(el);
       if (style.display === "none" || style.visibility === "hidden" || parseFloat(style.opacity) < 0.1) return;
@@ -99,7 +95,7 @@ function scanElements(): ContrastResult[] {
       const text = el.textContent?.trim().slice(0, 40) || el.tagName;
       results.push({
         element: el,
-        label: `${el.tagName.toLowerCase()}: "${text}"`,
+        label: `${prefix}${el.tagName.toLowerCase()}: "${text}"`,
         fgColor: style.color,
         bgColor: `rgb(${bg.join(", ")})`,
         ratio: Math.round(ratio * 100) / 100,
@@ -108,7 +104,21 @@ function scanElements(): ContrastResult[] {
         rect: el.getBoundingClientRect(),
       });
     });
-  });
+  };
+
+  // Scan header
+  const header = document.querySelector<HTMLElement>("header");
+  if (header) addResults(header, "Header › ");
+
+  // Scan hero sections
+  const heroes = document.querySelectorAll<HTMLElement>(
+    'section:first-of-type, [class*="hero"], [class*="Hero"]'
+  );
+  heroes.forEach((hero) => addResults(hero, ""));
+
+  // Scan footer
+  const footer = document.querySelector<HTMLElement>("footer");
+  if (footer) addResults(footer, "Footer › ");
 
   // Scan CTAs (buttons & links styled as buttons)
   const ctas = document.querySelectorAll<HTMLElement>(

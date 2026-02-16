@@ -73,6 +73,19 @@
     --sidebar-accent-foreground: 30 20% 15%;
     --sidebar-border: 38 25% 85%;
     --sidebar-ring: 35 75% 50%;
+
+    /* Header – transparent → scrolled states */
+    --header-bg: 30 20% 15%;
+    --header-foreground: 45 40% 97%;
+    --header-scrolled-bg: 45 40% 97%;
+    --header-scrolled-foreground: 30 15% 12%;
+    --header-active: 35 75% 50%;
+
+    /* Footer */
+    --footer-bg: 30 20% 15%;
+    --footer-foreground: 45 40% 97%;
+    --footer-muted: 45 20% 70%;
+    --footer-hover: 35 75% 50%;
   }
 
   .dark {
@@ -112,6 +125,19 @@
     --sidebar-accent-foreground: 42 30% 92%;
     --sidebar-border: 30 12% 20%;
     --sidebar-ring: 38 70% 55%;
+
+    /* Header – dark mode */
+    --header-bg: 30 15% 8%;
+    --header-foreground: 42 30% 92%;
+    --header-scrolled-bg: 30 15% 11%;
+    --header-scrolled-foreground: 42 30% 92%;
+    --header-active: 38 70% 55%;
+
+    /* Footer – dark mode */
+    --footer-bg: 30 15% 6%;
+    --footer-foreground: 42 30% 92%;
+    --footer-muted: 42 15% 55%;
+    --footer-hover: 38 70% 55%;
   }
 }
 

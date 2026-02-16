@@ -24,7 +24,7 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="bg-primary text-primary-foreground">
+    <footer className="bg-[hsl(var(--footer-bg))] text-[hsl(var(--footer-foreground))]">
       <div className="section-container py-16 lg:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           {/* Brand Column */}
@@ -35,11 +35,11 @@ export function Footer() {
                 alt="Peninsula Equine" 
                 className="h-10 w-10 object-contain transition-transform duration-300 group-hover:scale-105"
               />
-              <span className="font-serif text-2xl font-semibold">
-                Peninsula<span className="text-accent">Equine</span>
+              <span className="font-serif text-2xl font-semibold text-[hsl(var(--footer-foreground))]">
+                Peninsula<span className="text-[hsl(var(--footer-hover))]">Equine</span>
               </span>
             </Link>
-            <p className="text-primary-foreground/70 mb-6 max-w-xs">
+            <p className="text-[hsl(var(--footer-muted))] mb-6 max-w-xs">
               Expert equine facility construction by a horseman who understands what your horses need.
             </p>
             <div className="flex gap-4">
@@ -47,7 +47,7 @@ export function Footer() {
                 href={siteConfig.social.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 rounded-full bg-primary-foreground/10 hover:bg-accent transition-colors"
+                className="p-2 rounded-full bg-[hsl(var(--footer-foreground))]/10 hover:bg-[hsl(var(--footer-hover))] transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram className="h-5 w-5" />
@@ -56,7 +56,7 @@ export function Footer() {
                 href={siteConfig.social.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 rounded-full bg-primary-foreground/10 hover:bg-accent transition-colors"
+                className="p-2 rounded-full bg-[hsl(var(--footer-foreground))]/10 hover:bg-[hsl(var(--footer-hover))] transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook className="h-5 w-5" />
@@ -72,7 +72,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-primary-foreground/70 hover:text-accent transition-colors"
+                    className="text-[hsl(var(--footer-muted))] hover:text-[hsl(var(--footer-hover))] transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -89,7 +89,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-primary-foreground/70 hover:text-accent transition-colors"
+                    className="text-[hsl(var(--footer-muted))] hover:text-[hsl(var(--footer-hover))] transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -105,7 +105,7 @@ export function Footer() {
               <li>
                 <a
                   href={`tel:${siteConfig.phone}`}
-                  className="flex items-start gap-3 text-primary-foreground/70 hover:text-accent transition-colors"
+                  className="flex items-start gap-3 text-[hsl(var(--footer-muted))] hover:text-[hsl(var(--footer-hover))] transition-colors"
                 >
                   <Phone className="h-5 w-5 mt-0.5 shrink-0" />
                   <span>{siteConfig.phone}</span>
@@ -114,13 +114,13 @@ export function Footer() {
               <li>
                 <a
                   href={`mailto:${siteConfig.email}`}
-                  className="flex items-start gap-3 text-primary-foreground/70 hover:text-accent transition-colors"
+                  className="flex items-start gap-3 text-[hsl(var(--footer-muted))] hover:text-[hsl(var(--footer-hover))] transition-colors"
                 >
                   <Mail className="h-5 w-5 mt-0.5 shrink-0" />
                   <span>{siteConfig.email}</span>
                 </a>
               </li>
-              <li className="flex items-start gap-3 text-primary-foreground/70">
+              <li className="flex items-start gap-3 text-[hsl(var(--footer-muted))]">
                 <MapPin className="h-5 w-5 mt-0.5 shrink-0" />
                 <span>
                   {siteConfig.address.street}<br />
@@ -128,16 +128,16 @@ export function Footer() {
                 </span>
               </li>
             </ul>
-            <div className="mt-6 pt-6 border-t border-primary-foreground/10">
-              <p className="text-sm text-primary-foreground/60">{siteConfig.hours.weekdays}</p>
-              <p className="text-sm text-primary-foreground/60">{siteConfig.hours.saturday}</p>
+            <div className="mt-6 pt-6 border-t border-[hsl(var(--footer-foreground))]/10">
+              <p className="text-sm text-[hsl(var(--footer-muted))]/80">{siteConfig.hours.weekdays}</p>
+              <p className="text-sm text-[hsl(var(--footer-muted))]/80">{siteConfig.hours.saturday}</p>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-16 pt-8 border-t border-primary-foreground/10 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-primary-foreground/60">
+        <div className="mt-16 pt-8 border-t border-[hsl(var(--footer-foreground))]/10 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-[hsl(var(--footer-muted))]/80">
             © {new Date().getFullYear()} Peninsula Equine. All rights reserved.
           </p>
           <div className="flex gap-6">
@@ -145,14 +145,14 @@ export function Footer() {
               <Link
                 key={link.name}
                 to={link.href}
-                className="text-sm text-primary-foreground/60 hover:text-accent transition-colors"
+                className="text-sm text-[hsl(var(--footer-muted))]/80 hover:text-[hsl(var(--footer-hover))] transition-colors"
               >
                 {link.name}
               </Link>
             ))}
             <Link
               to="/hq"
-              className="text-sm text-primary-foreground/40 hover:text-accent transition-colors"
+              className="text-sm text-[hsl(var(--footer-muted))]/60 hover:text-[hsl(var(--footer-hover))] transition-colors"
             >
               Staff
             </Link>
