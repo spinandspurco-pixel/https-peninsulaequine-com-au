@@ -73,6 +73,16 @@ export default {
         linen: "hsl(40 30% 96%)",
         sand: "hsl(35 25% 88%)",
         cream: "hsl(40 25% 98%)",
+        hero: {
+          text: "hsl(var(--hero-text))",
+          "text-muted": "hsl(var(--hero-text-muted))",
+          glass: "hsl(var(--hero-glass-bg))",
+          "glass-border": "hsl(var(--hero-glass-border))",
+          "glass-active": "hsl(var(--hero-glass-bg-active))",
+          "input-bg": "hsl(var(--hero-input-bg))",
+          "input-border": "hsl(var(--hero-input-border))",
+          "input-placeholder": "hsl(var(--hero-input-placeholder))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

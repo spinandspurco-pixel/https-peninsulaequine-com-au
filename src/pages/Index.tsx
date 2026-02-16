@@ -71,13 +71,13 @@ function HeroCTAToggle({ heroMode, setHeroMode }: { heroMode: "book" | "consult"
   return (
     <div className="flex flex-col items-center gap-4 mt-2">
       {/* Toggle pills */}
-      <div className="inline-flex rounded-full border border-white/20 bg-white/10 backdrop-blur-sm p-1">
+      <div className="inline-flex rounded-full border border-hero-glass-border bg-hero-glass backdrop-blur-sm p-1">
         <button
           onClick={() => { setHeroMode("book"); trackClick({ action: "toggle", target: "book" }); }}
-          className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+          className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary ${
             heroMode === "book"
               ? "bg-accent text-accent-foreground shadow-md"
-              : "text-white/80 hover:text-white"
+              : "text-hero-text-muted hover:text-hero-text"
           }`}
         >
           <CalendarIcon className="inline h-4 w-4 mr-1.5 -mt-0.5" />
@@ -85,10 +85,10 @@ function HeroCTAToggle({ heroMode, setHeroMode }: { heroMode: "book" | "consult"
         </button>
         <button
           onClick={() => { setHeroMode("consult"); trackClick({ action: "toggle", target: "consult" }); }}
-          className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+          className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary ${
             heroMode === "consult"
               ? "bg-accent text-accent-foreground shadow-md"
-              : "text-white/80 hover:text-white"
+              : "text-hero-text-muted hover:text-hero-text"
           }`}
         >
           <MessageSquare className="inline h-4 w-4 mr-1.5 -mt-0.5" />
@@ -98,10 +98,10 @@ function HeroCTAToggle({ heroMode, setHeroMode }: { heroMode: "book" | "consult"
 
       {/* Social proof badge for that variant */}
       {variant === "social_proof" && (
-        <div className="flex items-center gap-2 text-white/70 text-xs">
+        <div className="flex items-center gap-2 text-hero-text-muted text-xs">
           <div className="flex -space-x-1">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="w-5 h-5 rounded-full bg-accent/40 border border-white/20 flex items-center justify-center text-[8px] text-white font-bold">
+              <div key={i} className="w-5 h-5 rounded-full bg-accent/40 border border-hero-glass-border flex items-center justify-center text-[8px] text-hero-text font-bold">
                 {String.fromCharCode(65 + i)}
               </div>
             ))}
@@ -319,7 +319,7 @@ function HeroSection({ variant = "banner" }: { variant?: "logo" | "banner" }) {
             transition: "opacity 0.7s ease-out, transform 0.8s ease-out",
           }}
         >
-          <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mb-6">
+          <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-hero-text-muted mb-6">
             Facility Construction • Training • Excellence
           </p>
           <HeroCTAToggle heroMode={heroMode} setHeroMode={setHeroMode} />
