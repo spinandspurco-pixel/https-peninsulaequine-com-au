@@ -107,6 +107,8 @@ const inquirySchema = z.object({
   eventCapacity: z.string().max(50).optional(),
   eventFrequency: z.string().optional(),
   eventAmenities: z.array(z.string()).optional(),
+  eventRsvpInterest: z.boolean().optional(),
+  eventExpectedAttendees: z.string().max(50).optional(),
   
   // Step 4: Experience & Budget
   experienceLevel: z.string().min(1, "Please select your experience level"),
@@ -474,6 +476,8 @@ export function InquiryForm() {
     eventCapacity: "",
     eventFrequency: "",
     eventAmenities: [],
+    eventRsvpInterest: false,
+    eventExpectedAttendees: "",
     experienceLevel: "",
     budgetRange: "",
     name: "",
@@ -599,6 +603,10 @@ export function InquiryForm() {
       if (formData.eventCapacity) detailParts.push(`Event capacity: ${formData.eventCapacity}`);
       if (formData.eventFrequency) detailParts.push(`Event frequency: ${formData.eventFrequency}`);
       if (formData.eventAmenities?.length) detailParts.push(`Event amenities: ${formData.eventAmenities.join(", ")}`);
+      if (formData.eventRsvpInterest) {
+        detailParts.push(`RSVP interest: Yes`);
+        if (formData.eventExpectedAttendees) detailParts.push(`Expected attendees: ${formData.eventExpectedAttendees}`);
+      }
       const combinedDetails = [detailParts.join("; "), formData.additionalNotes?.trim()].filter(Boolean).join("\n\n");
 
       const { error } = await supabase.from("inquiries").insert({
@@ -1227,6 +1235,32 @@ export function InquiryForm() {
                         );
                       })}
                     </div>
+                  </div>
+
+                  {/* Optional RSVP Interest */}
+                  <div className="p-3 rounded-md border border-border bg-background/50 space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Checkbox
+                        id="rsvp-interest"
+                        checked={formData.eventRsvpInterest || false}
+                        onCheckedChange={(checked) => updateField("eventRsvpInterest", !!checked)}
+                      />
+                      <Label htmlFor="rsvp-interest" className="text-sm cursor-pointer">
+                        I'm also interested in attending events at this venue
+                      </Label>
+                    </div>
+                    {formData.eventRsvpInterest && (
+                      <div className="space-y-2 pl-7">
+                        <Label className="text-sm text-muted-foreground">How many attendees in your group?</Label>
+                        <Input
+                          value={formData.eventExpectedAttendees || ""}
+                          onChange={(e) => updateField("eventExpectedAttendees", e.target.value)}
+                          placeholder="e.g., 4 riders + 2 spectators"
+                          maxLength={50}
+                          className="h-10 text-sm max-w-xs"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
