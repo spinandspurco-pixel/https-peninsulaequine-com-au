@@ -184,17 +184,16 @@ function ServiceCard({ service, index, onQuoteClick }: { service: typeof service
             onClick={() => navigate(`/contact?services=${service.id}`)}
             className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
           >
-            Get a Quote
-            <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            Quick Book
           </Button>
           <Button 
-            variant="outline" 
+            onClick={() => navigate(`/contact?services=${service.id}`)}
+            variant="outline"
             className="border-accent/30 text-accent hover:bg-accent/10 transition-all duration-300"
-            asChild
           >
-            <Link to={`/contact?services=${service.id}`}>
-              Learn More
-            </Link>
+            Get a Quote
+            <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Button>
         </div>
       </div>
