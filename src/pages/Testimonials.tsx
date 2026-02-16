@@ -1,12 +1,13 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ArrowRight, Star, Play, Quote, Filter, X } from "lucide-react";
+import { ArrowRight, Star, Play, Quote, Filter, X, Film, Expand } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { SectionTransition, AnimatedDivider } from "@/components/SectionTransition";
+import { TestimonialLightbox } from "@/components/TestimonialLightbox";
 import { fetchMergedTestimonials, SERVICE_FILTERS, type TestimonialItem } from "@/lib/testimonials";
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
 
@@ -169,6 +170,120 @@ function StatsBar({ testimonials }: { testimonials: TestimonialItem[] }) {
   );
 }
 
+function VideoGallerySection({ testimonials }: { testimonials: TestimonialItem[] }) {
+  const videos = useMemo(
+    () => testimonials.filter((t) => t.mediaType === "video" && t.mediaUrl),
+    [testimonials]
+  );
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const lightboxItems = useMemo(
+    () =>
+      videos.map((v) => ({
+        type: "video" as const,
+        src: v.mediaUrl!,
+        caption: `${v.name}${v.role ? ` — ${v.role}` : ""}`,
+      })),
+    [videos]
+  );
+
+  const getYouTubeId = (url: string) => {
+    const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+    return m ? m[1] : null;
+  };
+
+  if (videos.length === 0) return null;
+
+  return (
+    <section className="section-padding bg-card border-y border-border">
+      <div className="section-container">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <div className="w-16 h-0.5 bg-accent mx-auto mb-5" />
+          <SectionTransition variant="fade-up">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <Film className="h-5 w-5 text-accent" />
+              <h2 className="heading-section text-foreground">Video Testimonials</h2>
+            </div>
+            <p className="text-muted-foreground">
+              Watch our clients share their experiences in their own words.
+            </p>
+          </SectionTransition>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {videos.map((video, i) => {
+            const ytId = getYouTubeId(video.mediaUrl!);
+            const thumbnail = ytId
+              ? `https://img.youtube.com/vi/${ytId}/mqdefault.jpg`
+              : null;
+
+            return (
+              <SectionTransition key={video.id} variant="fade-up" delay={i * 80}>
+                <button
+                  onClick={() => setLightboxIndex(i)}
+                  className="group relative w-full aspect-video rounded-xl overflow-hidden border border-border bg-muted hover:border-accent/40 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                  aria-label={`Play video testimonial from ${video.name}`}
+                >
+                  {thumbnail ? (
+                    <img
+                      src={thumbnail}
+                      alt=""
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-primary/80" />
+                  )}
+
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
+
+                  {/* Play button */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-14 h-14 rounded-full bg-accent/90 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                      <Play className="h-6 w-6 text-accent-foreground ml-0.5" />
+                    </div>
+                  </div>
+
+                  {/* Expand icon */}
+                  <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Expand className="h-4 w-4 text-white" />
+                  </div>
+
+                  {/* Client info */}
+                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+                    <p className="text-white text-sm font-semibold">{video.name}</p>
+                    {video.role && (
+                      <p className="text-white/70 text-xs mt-0.5">{video.role}</p>
+                    )}
+                    {video.serviceTags.length > 0 && (
+                      <div className="flex gap-1 mt-1.5">
+                        {video.serviceTags.slice(0, 2).map((tag) => (
+                          <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-white/15 text-white/80">
+                            {SERVICE_FILTERS.find((s) => s.id === tag)?.label ?? tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </button>
+              </SectionTransition>
+            );
+          })}
+        </div>
+      </div>
+
+      {lightboxIndex !== null && (
+        <TestimonialLightbox
+          items={lightboxItems}
+          initialIndex={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+        />
+      )}
+    </section>
+  );
+}
+
 export default function Testimonials() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [testimonials, setTestimonials] = useState<TestimonialItem[]>([]);
@@ -204,6 +319,7 @@ export default function Testimonials() {
       />
 
       <StatsBar testimonials={testimonials} />
+      <VideoGallerySection testimonials={testimonials} />
 
       <section className="section-padding bg-background">
         <div className="section-container">
