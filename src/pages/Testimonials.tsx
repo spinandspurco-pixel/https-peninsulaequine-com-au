@@ -8,6 +8,7 @@ import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { testimonials, siteConfig } from "@/data/content";
 import blueprintBarn from "@/assets/blueprint-barn.png";
+import blueprintFacility from "@/assets/blueprint-facility.png";
 
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
 
@@ -37,9 +38,12 @@ export default function Testimonials() {
       />
 
       <section className="section-padding relative overflow-hidden">
-        <BlueprintBackground image={blueprintBarn} opacity={0.025} direction="right-to-left" duration={2000} parallaxSpeed={0.05} />
+        <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="right-to-left" duration={2000} parallaxSpeed={0.05} />
+        <BlueprintBackground image={blueprintFacility} opacity={0.02} direction="left-to-right" duration={3000} parallaxSpeed={0.08} className="scale-105" />
         <BlueprintLineOverlay variant="barn" color="dark" />
-        <div className="section-container">
+        {/* Lightening overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/90 to-background pointer-events-none z-[1]" />
+        <div className="section-container relative z-[2]">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial) => (
               <div
