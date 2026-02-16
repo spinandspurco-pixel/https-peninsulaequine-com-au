@@ -499,21 +499,30 @@ function ConstructionLightbox({
             onLoad={() => setIsImageLoaded(true)}
             draggable={false}
           />
-          {/* Zoom indicator */}
+          {/* Zoom indicator + drag hint on desktop */}
           {pinchZoom.isZoomed && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-primary/80 text-primary-foreground text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5">
-              <ZoomIn className="w-3 h-3" />
-              {Math.round(pinchZoom.scale * 100)}%
-            </div>
+            <>
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-primary/80 text-primary-foreground text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5">
+                <ZoomIn className="w-3 h-3" />
+                {Math.round(pinchZoom.scale * 100)}%
+              </div>
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-primary/70 text-primary-foreground/80 text-xs px-4 py-2 rounded-full hidden sm:flex items-center gap-2 animate-fade-in pointer-events-none">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0" aria-hidden="true">
+                  <path d="M5 9l-3 3 3 3" /><path d="M9 5l3-3 3 3" /><path d="M15 19l-3 3-3-3" /><path d="M19 9l3 3-3 3" />
+                  <line x1="2" y1="12" x2="22" y2="12" /><line x1="12" y1="2" x2="12" y2="22" />
+                </svg>
+                Click &amp; drag to pan • Double-click to reset
+              </div>
+            </>
           )}
-          {/* Zoom hint */}
+          {/* Zoom hint when not zoomed */}
           {!pinchZoom.isZoomed && isImageLoaded && (
             <>
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-primary/60 text-primary-foreground/70 text-xs px-3 py-1.5 rounded-full sm:hidden">
                 Pinch to zoom • Double-tap to zoom
               </div>
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-primary/60 text-primary-foreground/70 text-xs px-3 py-1.5 rounded-full hidden sm:block">
-                Scroll to zoom • Double-click to zoom • Drag to pan
+                Scroll to zoom • Double-click to zoom
               </div>
             </>
           )}
