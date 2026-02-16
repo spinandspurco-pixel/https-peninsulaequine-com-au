@@ -11,6 +11,7 @@ import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 
 import { ParallaxCTA } from "@/components/ParallaxCTA";
+import { BookingLandingSection } from "@/components/BookingLandingSection";
 import { StickyHeroCTA } from "@/components/StickyHeroCTA";
 import { SectionTransition, AnimatedDivider, StaggeredTransition } from "@/components/SectionTransition";
 import { siteConfig, services, testimonials, aboutCiro } from "@/data/content";
@@ -1255,6 +1256,7 @@ export default function Index() {
         <BlueprintDivider variant="elevation" />
         <ServicesSection />
         <BookingCTABanner />
+        <BookingLandingSection />
         <GallerySection />
         <ClientStorySection />
         <BlueprintDivider variant="grid" />
