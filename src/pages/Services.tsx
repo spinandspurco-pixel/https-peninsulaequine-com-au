@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
@@ -98,6 +98,7 @@ function PageHeader({ title, description }: { title: string; description: string
 }
 
 function ServiceCard({ service, index, onQuoteClick }: { service: typeof services[0]; index: number; onQuoteClick: (serviceId: string) => void }) {
+  const navigate = useNavigate();
   const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation<HTMLDivElement>();
   const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
 
@@ -153,7 +154,7 @@ function ServiceCard({ service, index, onQuoteClick }: { service: typeof service
         </ul>
         <div className="flex flex-wrap gap-3">
           <Button 
-            onClick={() => onQuoteClick(service.id)}
+            onClick={() => navigate(`/contact?services=${service.id}`)}
             className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
           >
             Get a Quote
@@ -164,7 +165,7 @@ function ServiceCard({ service, index, onQuoteClick }: { service: typeof service
             className="border-accent/30 text-accent hover:bg-accent/10 transition-all duration-300"
             asChild
           >
-            <Link to="/contact">
+            <Link to={`/contact?services=${service.id}`}>
               Learn More
             </Link>
           </Button>
@@ -671,6 +672,7 @@ function LessonsSection() {
 }
 
 function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string) => void }) {
+  const navigate = useNavigate();
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>();
   const { containerRef, visibleItems } = useStaggeredAnimation(services.length);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -783,7 +785,7 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
                     isHovered ? "opacity-100 translate-y-0" : "opacity-70 translate-y-0"
                   }`}>
                     <Button 
-                      onClick={() => onQuoteClick(service.id)}
+                      onClick={() => navigate(`/contact?services=${service.id}`)}
                       className={`w-full transition-all duration-300 ${
                         isHovered
                           ? "bg-accent hover:bg-accent/90 text-accent-foreground shadow-md"
