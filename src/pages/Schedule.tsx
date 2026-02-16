@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { CalendarIcon, Clock, CheckCircle, Loader2, ArrowRight, Phone } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
@@ -13,6 +13,7 @@ import { siteConfig } from "@/data/content";
 import { cn } from "@/lib/utils";
 
 export default function Schedule() {
+  const queryClient = useQueryClient();
   const { toast } = useToast();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
@@ -59,6 +60,22 @@ export default function Schedule() {
     },
     staleTime: 60_000,
   });
+  // Real-time updates for slot availability
+  useEffect(() => {
+    const channel = supabase
+      .channel("schedule-slots-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "lesson_slots" },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["schedule-slots"] });
+          queryClient.invalidateQueries({ queryKey: ["schedule-available-dates"] });
+        }
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [queryClient]);
 
   const isValid = name.trim().length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) && selectedSlot;
 
