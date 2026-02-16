@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/layout/Layout";
 import { MajorEventsSection } from "@/components/MajorEventsSection";
+import { LiveTestimonialsFeed } from "@/components/LiveTestimonialsFeed";
 // BlueprintBackground & BlueprintLineOverlay removed — PE banner is the sole brand background
 import { MultiStepInquiryForm } from "@/components/MultiStepInquiryForm";
 import { BookingWidget } from "@/components/BookingWidget";
@@ -2371,6 +2372,7 @@ export default function Index() {
         <MissionSection />
         <TestimonialServiceCarousel />
         <TestimonialsGallery />
+        <LiveTestimonialsFeed />
         <MajorEventsSection />
         <BlueprintDivider variant="elevation" />
         <ServicesSection />
