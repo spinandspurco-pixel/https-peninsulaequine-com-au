@@ -663,9 +663,21 @@ function Lightbox({
             )}
           </div>
         )}
-        <p className="text-center text-primary-foreground/70 mt-4 text-sm">
-          {item.alt}
-        </p>
+        {/* Structured caption */}
+        <div className="text-center mt-4 space-y-1">
+          {item.alt.includes(" - ") ? (
+            <>
+              <p className="text-primary-foreground/90 text-sm font-serif">
+                {item.alt.split(" - ").slice(1).join(" - ")}
+              </p>
+              <p className="text-primary-foreground/50 text-xs uppercase tracking-widest">
+                {item.alt.split(" - ")[0]}
+              </p>
+            </>
+          ) : (
+            <p className="text-primary-foreground/70 text-sm">{item.alt}</p>
+          )}
+        </div>
 
         {/* Thumbnail strip */}
         <div className="mt-6 px-4">
@@ -787,6 +799,11 @@ function VideoGridItem({
           <Play className="w-6 h-6 text-accent-foreground ml-1" fill="currentColor" />
         </div>
       </div>
+
+      {/* Video caption overlay */}
+      <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-primary/80 to-transparent p-3 pt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <p className="text-primary-foreground text-xs leading-snug line-clamp-1">{item.alt}</p>
+      </div>
     </button>
   );
 }
@@ -856,6 +873,15 @@ function GalleryGrid({
                 if (skeleton) skeleton.style.display = 'none';
               }}
             />
+            {/* Auto-caption overlay */}
+            <div className="absolute bottom-0 inset-x-0 z-[2] bg-gradient-to-t from-primary/80 via-primary/40 to-transparent p-3 pt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <p className="text-primary-foreground text-xs leading-snug line-clamp-2">
+                {item.alt.includes(" - ") ? item.alt.split(" - ").slice(1).join(" - ") : item.alt}
+              </p>
+              <p className="text-primary-foreground/60 text-[10px] uppercase tracking-wider mt-1">
+                {item.alt.includes(" - ") ? item.alt.split(" - ")[0] : "Peninsula Equine"}
+              </p>
+            </div>
           </button>
         )
       ))}
