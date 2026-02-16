@@ -799,102 +799,126 @@ function PricingGridSection({ onQuoteClick }: { onQuoteClick: (serviceId: string
           </p>
         </div>
 
-        <div ref={containerRef} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div ref={containerRef} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" style={{ perspective: "1200px" }}>
           {displayServices.map((service, index) => {
-            const isHovered = hoveredId === service.id;
+            const isFlipped = hoveredId === service.id;
 
             return (
               <div
                 key={service.id}
-                className={`group relative rounded-xl border bg-background overflow-hidden transition-all duration-700 ${
+                className={`relative transition-all duration-700 ${
                   visibleItems[index] ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-                } ${isHovered ? "border-accent shadow-[0_8px_30px_-8px_hsl(var(--accent)/0.3)] scale-[1.02]" : "border-border hover:border-accent/40"}`}
+                }`}
+                style={{ height: "380px" }}
                 onMouseEnter={() => setHoveredId(service.id)}
                 onMouseLeave={() => setHoveredId(null)}
               >
-                {/* Pricing header */}
-                <div className="relative px-6 pt-6 pb-4 border-b border-border/60">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1">Starting at</p>
-                  <p className={`font-serif text-3xl font-bold transition-colors duration-300 ${isHovered ? "text-accent" : "text-foreground"}`}>
-                    {service.startingPrice}
-                  </p>
-                </div>
+                <div
+                  className="absolute inset-0 transition-transform duration-600 ease-in-out"
+                  style={{
+                    transformStyle: "preserve-3d",
+                    transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+                  }}
+                >
+                  {/* ——— FRONT ——— */}
+                  <div
+                    className="absolute inset-0 rounded-xl border border-border bg-background overflow-hidden flex flex-col"
+                    style={{ backfaceVisibility: "hidden" }}
+                  >
+                    {/* Image */}
+                    <div className="relative h-36 overflow-hidden shrink-0">
+                      <img
+                        src={serviceImages[service.id] || serviceImages["arena-construction"]}
+                        alt={service.title}
+                        className="w-full h-full object-cover brightness-90"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                      <div className="absolute bottom-3 left-4 right-4">
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80">Starting at</p>
+                        <p className="font-serif text-2xl font-bold text-foreground drop-shadow-sm">
+                          {service.startingPrice}
+                        </p>
+                      </div>
+                    </div>
 
-                {/* Service image */}
-                <div className="relative h-32 overflow-hidden">
-                  <img
-                    src={serviceImages[service.id] || serviceImages["arena-construction"]}
-                    alt={service.title}
-                    className={`w-full h-full object-cover transition-all duration-500 ${
-                      isHovered ? "scale-110 brightness-75" : "scale-100 brightness-90"
-                    }`}
-                    loading="lazy"
-                  />
-                </div>
-
-                {/* Content */}
-                <div className="p-6">
-                  <h3 className={`font-serif text-lg font-semibold mb-2 transition-colors duration-300 ${
-                    isHovered ? "text-accent" : "text-foreground"
-                  }`}>
-                    {service.title}
-                  </h3>
-
-                  {/* Description — visible by default */}
-                  <div className={`transition-all duration-400 overflow-hidden ${
-                    isHovered ? "max-h-0 opacity-0" : "max-h-20 opacity-100"
-                  }`}>
-                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                      {service.shortDescription}
-                    </p>
-                  </div>
-
-                  {/* Features list — reveals on hover */}
-                  <div className={`transition-all duration-400 overflow-hidden ${
-                    isHovered ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
-                  }`}>
-                    <p className="text-[10px] uppercase tracking-widest text-accent mb-3">What's included</p>
-                    <ul className="space-y-2">
-                      {service.features.map((feature, i) => (
-                        <li
-                          key={i}
-                          className="flex items-start gap-2 text-sm text-foreground/80"
-                          style={{
-                            transitionDelay: isHovered ? `${i * 60}ms` : "0ms",
-                            opacity: isHovered ? 1 : 0,
-                            transform: isHovered ? "translateX(0)" : "translateX(-8px)",
-                            transition: "opacity 0.3s ease-out, transform 0.3s ease-out",
-                          }}
+                    {/* Content */}
+                    <div className="p-5 flex flex-col flex-1">
+                      <h3 className="font-serif text-lg font-semibold text-foreground mb-2">
+                        {service.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 flex-1">
+                        {service.shortDescription}
+                      </p>
+                      <div className="mt-4">
+                        <Button
+                          onClick={() => navigate(`/contact?services=${service.id}`)}
+                          className="w-full bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
+                          size="sm"
                         >
-                          <CheckCircle className="h-3.5 w-3.5 text-accent mt-0.5 shrink-0" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
+                          Learn More
+                          <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Dual CTAs */}
-                  <div className="mt-4 flex gap-2">
-                    <Button
-                      onClick={() => navigate(`/contact?services=${service.id}`)}
-                      className={`flex-1 transition-all duration-300 ${
-                        isHovered
-                          ? "bg-accent hover:bg-accent/90 text-accent-foreground shadow-md"
-                          : "bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
-                      }`}
-                      size="sm"
-                    >
-                      {isHovered ? "Get a Quote" : "Learn More"}
-                      <ArrowRight className={`ml-1.5 h-3.5 w-3.5 transition-transform duration-300 ${isHovered ? "translate-x-1" : ""}`} />
-                    </Button>
-                    <Button
-                      onClick={() => onQuoteClick(service.id)}
-                      variant="outline"
-                      size="sm"
-                      className="border-accent/30 text-accent hover:bg-accent/10 shrink-0"
-                    >
-                      Quick Quote
-                    </Button>
+                  {/* ——— BACK ——— */}
+                  <div
+                    className="absolute inset-0 rounded-xl border border-accent bg-background overflow-hidden flex flex-col shadow-[0_8px_30px_-8px_hsl(var(--accent)/0.35)]"
+                    style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+                  >
+                    {/* Accent header bar */}
+                    <div className="px-5 pt-5 pb-3 border-b border-accent/20 bg-accent/5">
+                      <h3 className="font-serif text-lg font-semibold text-accent mb-0.5">
+                        {service.title}
+                      </h3>
+                      <p className="font-serif text-2xl font-bold text-foreground">
+                        {service.startingPrice}
+                      </p>
+                    </div>
+
+                    {/* Features */}
+                    <div className="p-5 flex-1 overflow-y-auto">
+                      <p className="text-[10px] uppercase tracking-widest text-accent mb-3">What's included</p>
+                      <ul className="space-y-2">
+                        {service.features.map((feature, i) => (
+                          <li
+                            key={i}
+                            className="flex items-start gap-2 text-sm text-foreground/80"
+                            style={{
+                              transitionDelay: isFlipped ? `${150 + i * 60}ms` : "0ms",
+                              opacity: isFlipped ? 1 : 0,
+                              transform: isFlipped ? "translateY(0)" : "translateY(8px)",
+                              transition: "opacity 0.3s ease-out, transform 0.3s ease-out",
+                            }}
+                          >
+                            <CheckCircle className="h-3.5 w-3.5 text-accent mt-0.5 shrink-0" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Dynamic CTAs */}
+                    <div className="p-4 pt-0 flex gap-2 shrink-0">
+                      <Button
+                        onClick={() => navigate(`/contact?services=${service.id}`)}
+                        className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground shadow-md"
+                        size="sm"
+                      >
+                        Get a Quote
+                        <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                      </Button>
+                      <Button
+                        onClick={() => onQuoteClick(service.id)}
+                        variant="outline"
+                        size="sm"
+                        className="border-accent/30 text-accent hover:bg-accent/10 shrink-0"
+                      >
+                        Quick Quote
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
