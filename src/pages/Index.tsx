@@ -941,6 +941,72 @@ function CTASection() {
   );
 }
 
+function HeroBannerCTAStrip() {
+  return (
+    <section className="relative w-full bg-primary overflow-hidden">
+      {/* Full-width PE banner art */}
+      <div className="absolute inset-0">
+        <img
+          src={peBanner}
+          alt=""
+          aria-hidden="true"
+          className="w-full h-full object-cover opacity-[0.06]"
+          style={{ filter: "grayscale(0.4) brightness(1.3)" }}
+        />
+      </div>
+
+      {/* Accent border lines */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* Left: brand mark + tagline */}
+        <div className="flex items-center gap-4">
+          <img
+            src={logoPeMark}
+            alt="Peninsula Equine"
+            className="w-10 h-10 sm:w-12 sm:h-12 object-contain drop-shadow-[0_2px_8px_rgba(255,255,255,0.15)]"
+          />
+          <div className="text-primary-foreground">
+            <p className="text-sm sm:text-base font-serif font-semibold tracking-wide">
+              Peninsula Equine
+            </p>
+            <p className="text-xs text-primary-foreground/60 tracking-[0.15em] uppercase">
+              From Dirt to Dynasty
+            </p>
+          </div>
+        </div>
+
+        {/* Right: CTA buttons */}
+        <div className="flex items-center gap-3">
+          <Button
+            asChild
+            size="lg"
+            className="bg-accent hover:bg-accent/90 text-accent-foreground text-sm sm:text-base px-6 sm:px-8 hover:scale-105 hover:shadow-[0_4px_20px_hsl(var(--accent)/0.4)] transition-all duration-300"
+          >
+            <Link to="/book-lesson">
+              <CalendarIcon className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+              Book a Lesson
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="border-primary-foreground/25 text-primary-foreground hover:bg-primary-foreground hover:text-primary text-sm sm:text-base px-5 sm:px-6 hidden sm:inline-flex"
+          >
+            <a href={`tel:${siteConfig.phone}`}>
+              <Phone className="mr-2 h-4 w-4" />
+              {siteConfig.phone}
+            </a>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function BannerDivider() {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.3 });
   
@@ -1022,6 +1088,7 @@ export default function Index() {
       {!splashDone && <LoadingSplash minDuration={2400} onComplete={() => setSplashDone(true)} />}
       <Layout>
         <HeroSection variant="banner" />
+        <HeroBannerCTAStrip />
         <BannerDivider />
         <IntroSection />
         <BlueprintDivider variant="floorplan" />
