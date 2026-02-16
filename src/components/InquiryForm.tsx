@@ -490,10 +490,14 @@ export function InquiryForm() {
     additionalNotes: "",
   });
 
-  // Auto-advance to the Goals step (step 3) if services were pre-selected via URL,
-  // so users land directly on the service-specific fields (arena dims, barn stalls, etc.)
+  // Auto-advance based on URL params:
+  // - ?view=calendar → jump to Contact/Date step (step 5) with service pre-filled
+  // - ?services=... → jump to Goals step (step 3) for service-specific fields
+  const calendarView = searchParams.get("view") === "calendar";
   useEffect(() => {
-    if (preSelectedServices.length > 0) {
+    if (calendarView && preSelectedServices.length > 0) {
+      setCurrentStep(5);
+    } else if (preSelectedServices.length > 0) {
       setCurrentStep(3);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
