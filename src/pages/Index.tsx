@@ -169,6 +169,31 @@ function HeroSection() {
   );
 }
 
+function HeroSocialProof() {
+  const topQuotes = testimonials.slice(0, 3);
+  return (
+    <section className="bg-card border-b border-border">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <div className="grid sm:grid-cols-3 gap-4 sm:gap-6">
+          {topQuotes.map((t) => (
+            <div key={t.id} className="flex gap-3 items-start">
+              <div className="flex-shrink-0 mt-0.5">
+                <Star className="h-4 w-4 text-accent fill-accent" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm text-foreground leading-snug line-clamp-2 italic font-serif">
+                  "{t.quote.length > 100 ? t.quote.slice(0, 100) + "…" : t.quote}"
+                </p>
+                <p className="text-xs text-muted-foreground mt-1.5 font-medium">{t.name}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function HeroContactStrip() {
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
@@ -2197,6 +2222,7 @@ export default function Index() {
           />
         )}
         <HeroSection />
+        <HeroSocialProof />
         <HeroContactStrip />
         <IntroSection />
         <BlueprintDivider variant="floorplan" />
