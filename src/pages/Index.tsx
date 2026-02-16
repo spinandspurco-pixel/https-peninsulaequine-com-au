@@ -10,10 +10,12 @@ import { SectionTransition, AnimatedDivider } from "@/components/SectionTransiti
 import { siteConfig, services, testimonials } from "@/data/content";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
+import { AnimatedBlueprintBg } from "@/components/AnimatedBlueprintBg";
 import heroVideo from "@/assets/videos/slow-mo-1.mp4";
 import ciroWide from "@/assets/ciro-wide.png";
 import stoneworkBW from "@/assets/aberdeen-stonework-bw.jpg";
-import peBanner from "@/assets/pe-banner.png";
+import peBanner from "@/assets/pe-banner-2.png";
+import peLogo from "@/assets/pe-logo-new.png";
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
 import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
 import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
@@ -27,6 +29,7 @@ const featuredServices = services.slice(0, 6);
 function HeroSection() {
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden bg-primary">
+      {/* Video base layer */}
       <video
         autoPlay muted loop playsInline preload="auto"
         className="absolute inset-0 w-full h-full object-cover"
@@ -34,17 +37,24 @@ function HeroSection() {
       >
         <source src={heroVideo} type="video/mp4" />
       </video>
-      <div className="absolute inset-0 bg-primary/75" />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <img src={peBanner} alt="" aria-hidden="true" loading="eager"
-          className="w-full h-full object-contain max-w-[85vw] max-h-[70vh] opacity-[0.06]"
-          style={{ filter: "brightness(1.3)" }}
-        />
-      </div>
+      <div className="absolute inset-0 bg-primary/70" />
+
+      {/* Animated blueprint overlay with new banner */}
+      <AnimatedBlueprintBg image={peBanner} imageOpacity={0.1} variant="hero" />
+
+      {/* Vignette */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsl(var(--primary))_85%)]" />
 
+      {/* Content */}
       <div className="relative z-10 text-center px-6">
-        <div className="w-16 h-px mx-auto mb-10 bg-accent" />
+        {/* PE Logo mark */}
+        <img
+          src={peLogo}
+          alt="Peninsula Equine"
+          loading="eager"
+          className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-8 drop-shadow-[0_4px_30px_hsl(var(--accent)/0.3)]"
+        />
+        <div className="w-16 h-px mx-auto mb-8 bg-accent" />
         <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-normal tracking-tight text-primary-foreground leading-[1.05] mb-4">
           Peninsula<br /><span className="text-accent">Equine</span>
         </h1>
@@ -73,13 +83,14 @@ function HeroSection() {
         </div>
       </div>
 
+      {/* Scroll indicator */}
       <button
         onClick={() => document.getElementById('intro')?.scrollIntoView({ behavior: 'smooth' })}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-primary-foreground/40 hover:text-primary-foreground/70 transition-colors cursor-pointer"
         aria-label="Scroll to content"
       >
         <span className="text-[10px] tracking-[0.3em] uppercase font-sans">Scroll</span>
-        <ChevronDown className="h-4 w-4" />
+        <ChevronDown className="h-4 w-4 animate-bounce" />
       </button>
     </section>
   );
@@ -90,7 +101,9 @@ function IntroSection() {
   const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation<HTMLDivElement>();
 
   return (
-    <section id="intro" className="bg-background">
+    <section id="intro" className="bg-background relative">
+      {/* Animated blueprint bg for intro */}
+      <AnimatedBlueprintBg image={peBanner} imageOpacity={0.04} variant="section-a" showLines />
       <div className="section-padding">
         <div className="section-container">
           <div className="max-w-4xl mx-auto text-center">
@@ -147,7 +160,8 @@ function ServicesPreviewSection() {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
 
   return (
-    <section className="section-padding bg-primary text-primary-foreground overflow-hidden">
+    <section className="section-padding bg-primary text-primary-foreground overflow-hidden relative">
+      <AnimatedBlueprintBg image={peBanner} imageOpacity={0.06} variant="section-b" showLines />
       <div className="section-container">
         <div className="text-center max-w-3xl mx-auto mb-14">
           <AnimatedDivider className="mx-auto mb-8 bg-accent" />
