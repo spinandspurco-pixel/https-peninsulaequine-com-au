@@ -893,6 +893,165 @@ function VideoGridItem({
 
 const ITEMS_PER_PAGE = 20;
 
+// Per-item IntersectionObserver for true lazy loading
+function LazyGalleryImage({
+  item,
+  onClick,
+}: {
+  item: GalleryItem;
+  onClick: () => void;
+}) {
+  const itemRef = useRef<HTMLButtonElement>(null);
+  const [isInView, setIsInView] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const el = itemRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <button
+      ref={itemRef}
+      onClick={onClick}
+      className="group w-full overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative break-inside-avoid mb-3 sm:mb-4 block transition-opacity duration-500"
+      style={{ opacity: loaded ? 1 : 0.4 }}
+      aria-label={`View ${item.alt}`}
+    >
+      {/* Skeleton placeholder */}
+      {!loaded && (
+        <div className="aspect-[4/3] bg-muted animate-pulse" aria-hidden="true" />
+      )}
+      {isInView && (
+        <img
+          src={item.src}
+          alt={item.alt}
+          className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105 relative z-[1]"
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setLoaded(true)}
+        />
+      )}
+      {/* Auto-caption overlay */}
+      <div className="absolute bottom-0 inset-x-0 z-[2] bg-gradient-to-t from-primary/80 via-primary/40 to-transparent p-3 pt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <p className="text-primary-foreground text-xs leading-snug line-clamp-2">
+          {item.alt.includes(" - ") ? item.alt.split(" - ").slice(1).join(" - ") : item.alt}
+        </p>
+        <p className="text-primary-foreground/60 text-[10px] uppercase tracking-wider mt-1">
+          {item.alt.includes(" - ") ? item.alt.split(" - ")[0] : "Peninsula Equine"}
+        </p>
+      </div>
+    </button>
+  );
+}
+
+function LazyVideoGridItem({
+  item,
+  onClick,
+}: {
+  item: GalleryItem;
+  onClick: () => void;
+}) {
+  const itemRef = useRef<HTMLButtonElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isInView, setIsInView] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    const el = itemRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const handleMouseEnter = () => {
+    setIsHovering(true);
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {});
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  };
+
+  return (
+    <button
+      ref={itemRef}
+      onClick={onClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      aria-label={`Play video: ${item.alt}`}
+      className="group aspect-square overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative break-inside-avoid mb-3 sm:mb-4 block w-full"
+    >
+      {isInView ? (
+        <>
+          <img
+            src={item.thumbnail || item.src}
+            alt={item.alt}
+            className={`w-full h-full object-cover transition-all duration-500 ${
+              isHovering ? "opacity-0" : "opacity-100"
+            } group-hover:scale-105`}
+            loading="lazy"
+            decoding="async"
+          />
+          <video
+            ref={videoRef}
+            src={item.src}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+              isHovering ? "opacity-100" : "opacity-0"
+            }`}
+            muted
+            playsInline
+            loop
+            preload="none"
+          />
+        </>
+      ) : (
+        <div className="w-full h-full aspect-square bg-muted animate-pulse" />
+      )}
+      {/* Play icon */}
+      <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${
+        isHovering ? "bg-primary/20" : "bg-primary/30 group-hover:bg-primary/40"
+      }`}>
+        <div className={`w-14 h-14 rounded-full bg-accent/90 flex items-center justify-center transition-all duration-300 ${
+          isHovering ? "scale-90 opacity-70" : "group-hover:scale-110"
+        }`}>
+          <Play className="w-6 h-6 text-accent-foreground ml-1" fill="currentColor" />
+        </div>
+      </div>
+      <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-primary/80 to-transparent p-3 pt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <p className="text-primary-foreground text-xs leading-snug line-clamp-1">{item.alt}</p>
+      </div>
+    </button>
+  );
+}
+
 function GalleryGrid({
   items,
   onItemClick,
@@ -900,11 +1059,6 @@ function GalleryGrid({
   items: GalleryItem[];
   onItemClick: (item: GalleryItem) => void;
 }) {
-  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({
-    threshold: 0.05,
-    rootMargin: "50px",
-  });
-  const [visibleItems, setVisibleItems] = useState<Set<number>>(new Set());
   const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
@@ -928,73 +1082,26 @@ function GalleryGrid({
   // Reset when items change (filter change)
   useEffect(() => {
     setDisplayCount(ITEMS_PER_PAGE);
-    setVisibleItems(new Set());
   }, [items]);
-
-  // Staggered reveal
-  useEffect(() => {
-    if (isVisible) {
-      const displayed = items.slice(0, displayCount);
-      displayed.forEach((_, index) => {
-        setTimeout(() => {
-          setVisibleItems((prev) => new Set(prev).add(index));
-        }, index * 50);
-      });
-    }
-  }, [isVisible, displayCount, items]);
 
   const displayedItems = items.slice(0, displayCount);
 
   return (
     <>
-      <div
-        ref={ref}
-        className="columns-2 sm:columns-3 lg:columns-4 gap-3 sm:gap-4 [column-fill:_balance]"
-      >
-        {displayedItems.map((item, index) =>
+      <div className="columns-2 sm:columns-3 lg:columns-4 gap-3 sm:gap-4 [column-fill:_balance]">
+        {displayedItems.map((item) =>
           item.type === "video" ? (
-            <div key={item.id} className="break-inside-avoid mb-3 sm:mb-4">
-              <VideoGridItem
-                item={item}
-                onClick={() => onItemClick(item)}
-                isVisible={visibleItems.has(index)}
-                delay={Math.min(index, 12) * 30}
-              />
-            </div>
-          ) : (
-            <button
+            <LazyVideoGridItem
               key={item.id}
+              item={item}
               onClick={() => onItemClick(item)}
-              className={`group w-full overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative transition-all duration-500 break-inside-avoid mb-3 sm:mb-4 block ${
-                visibleItems.has(index)
-                  ? "opacity-100 translate-y-0 scale-100"
-                  : "opacity-0 translate-y-4 scale-95"
-              }`}
-              style={{ transitionDelay: `${Math.min(index, 12) * 30}ms` }}
-              aria-label={`View ${item.alt}`}
-            >
-              {/* Skeleton placeholder */}
-              <div className="absolute inset-0 bg-muted animate-pulse" aria-hidden="true" />
-              <img
-                src={item.src}
-                alt={item.alt}
-                className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105 relative z-[1]"
-                loading="lazy"
-                onLoad={(e) => {
-                  const skeleton = (e.currentTarget.parentElement?.querySelector('.animate-pulse') as HTMLElement);
-                  if (skeleton) skeleton.style.display = 'none';
-                }}
-              />
-              {/* Auto-caption overlay */}
-              <div className="absolute bottom-0 inset-x-0 z-[2] bg-gradient-to-t from-primary/80 via-primary/40 to-transparent p-3 pt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <p className="text-primary-foreground text-xs leading-snug line-clamp-2">
-                  {item.alt.includes(" - ") ? item.alt.split(" - ").slice(1).join(" - ") : item.alt}
-                </p>
-                <p className="text-primary-foreground/60 text-[10px] uppercase tracking-wider mt-1">
-                  {item.alt.includes(" - ") ? item.alt.split(" - ")[0] : "Peninsula Equine"}
-                </p>
-              </div>
-            </button>
+            />
+          ) : (
+            <LazyGalleryImage
+              key={item.id}
+              item={item}
+              onClick={() => onItemClick(item)}
+            />
           )
         )}
       </div>
@@ -1237,6 +1344,45 @@ export default function Gallery() {
               )}
             </div>
 
+          </div>
+
+          {/* Quick Tag Chips */}
+          <div className="flex flex-wrap gap-2 justify-center mb-6" role="group" aria-label="Quick filter tags">
+            {[
+              { label: "🏗️ Barns", service: "barn", project: "all" },
+              { label: "🏟️ Arenas", service: "arena", project: "all" },
+              { label: "🪨 Stonework", service: "stonework", project: "all" },
+              { label: "🪵 Woodwork", service: "woodwork", project: "all" },
+              { label: "🎪 Events", service: "events", project: "all" },
+              { label: "📹 Videos", service: "all", project: "videos" },
+              { label: "🌏 Queensland", service: "all", project: "queensland" },
+            ].map((tag) => {
+              const isActive =
+                (tag.service !== "all" && activeService === tag.service && activeProject === "all") ||
+                (tag.project !== "all" && activeProject === tag.project && activeService === "all");
+              return (
+                <button
+                  key={tag.label}
+                  onClick={() => {
+                    if (isActive) {
+                      setActiveService("all");
+                      setActiveProject("all");
+                    } else {
+                      setActiveService(tag.service);
+                      setActiveProject(tag.project);
+                      setActiveLocation("all");
+                    }
+                  }}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all border ${
+                    isActive
+                      ? "bg-accent text-accent-foreground border-accent shadow-sm"
+                      : "bg-card text-muted-foreground border-border hover:border-accent/40 hover:text-foreground"
+                  }`}
+                >
+                  {tag.label}
+                </button>
+              );
+            })}
           </div>
 
           {/* Project Filter Tabs */}
