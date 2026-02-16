@@ -20,6 +20,7 @@ import { useParallax } from "@/hooks/useParallax";
 import { usePinchZoom } from "@/hooks/usePinchZoom";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { StickySubpageCTA } from "@/components/StickySubpageCTA";
+import { InlineBookingForm } from "@/components/InlineBookingForm";
 
 // Main Ridge construction process images
 import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
@@ -770,7 +771,7 @@ function LessonsSection() {
       <div className="section-container">
         <div 
           ref={ref}
-          className={`max-w-3xl mx-auto text-center transition-all duration-700 ${
+          className={`max-w-3xl mx-auto text-center mb-10 transition-all duration-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
@@ -788,27 +789,29 @@ function LessonsSection() {
           }`}>
             {lessonInfo.description}
           </p>
-          <p className={`text-muted-foreground mb-8 transition-all duration-500 delay-250 ${
+          <p className={`text-muted-foreground transition-all duration-500 delay-250 ${
             isVisible ? "opacity-100" : "opacity-0"
           }`}>
             {lessonInfo.contact}
           </p>
-          <div className={`flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-500 delay-300 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}>
-            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-              <Link to="/book-lesson">
-                <CalendarIcon className="mr-2 h-5 w-5" />
-                Book a Lesson
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="border-accent/30 text-accent hover:bg-accent/10">
-              <Link to="/contact?services=clinics-events">
-                Plan a Clinic or Event
-              </Link>
-            </Button>
-            <BookingWidget variant="card" className="max-w-md" />
-          </div>
+        </div>
+
+        {/* Inline booking form with calendar */}
+        <div className={`max-w-3xl mx-auto transition-all duration-700 delay-300 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}>
+          <InlineBookingForm />
+        </div>
+
+        {/* Secondary CTAs */}
+        <div className={`flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 transition-all duration-500 delay-400 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+        }`}>
+          <Button asChild size="lg" variant="outline" className="border-accent/30 text-accent hover:bg-accent/10">
+            <Link to="/contact?services=clinics-events">
+              Plan a Clinic or Event
+            </Link>
+          </Button>
         </div>
       </div>
     </section>
