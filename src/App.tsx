@@ -24,6 +24,7 @@ import BookLesson from "./pages/BookLesson";
 import BrandGuide from "./pages/BrandGuide";
 import Shop from "./pages/Shop";
 import ProductDetail from "./pages/ProductDetail";
+import Forge from "./pages/Forge";
 import Events from "./pages/Events";
 import BookingsDashboard from "./pages/BookingsDashboard";
 import { useCartSync } from "./hooks/useCartSync";
@@ -59,6 +60,8 @@ function AppContent() {
           <Route path="/brand" element={<BrandGuide />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/shop/:handle" element={<ProductDetail />} />
+          <Route path="/forge" element={<Forge />} />
+          <Route path="/events" element={<Events />} />
           <Route path="/events" element={<Events />} />
           <Route path="/bookings" element={<BookingsDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
