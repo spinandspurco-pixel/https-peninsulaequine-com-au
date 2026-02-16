@@ -695,11 +695,29 @@ export function InquiryForm() {
           {isClinicInquiry ? "Event Inquiry Received!" : "Thank You for Your Inquiry!"}
         </h3>
         <p className="text-muted-foreground mb-2 max-w-md mx-auto">
-          We've received your project details and will review them carefully.
+          We've received your project details and sent a confirmation to your email.
         </p>
-        <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+        <p className="text-muted-foreground mb-4 max-w-md mx-auto">
           Expect to hear from us within 1-2 business days.
         </p>
+
+        {/* Scheduling CTA */}
+        <div className="rounded-xl border border-border bg-background p-5 max-w-sm mx-auto mb-6">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <CalendarIcon className="h-5 w-5 text-accent" />
+            <span className="font-serif font-semibold text-foreground">Want to Skip the Wait?</span>
+          </div>
+          <p className="text-sm text-muted-foreground mb-3">
+            Book a call or visit on our calendar right now.
+          </p>
+          <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+            <a href="/schedule">
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              Schedule a Call
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </a>
+          </Button>
+        </div>
 
         {/* Clinic/Event-specific summary & next steps */}
         {isClinicInquiry && (

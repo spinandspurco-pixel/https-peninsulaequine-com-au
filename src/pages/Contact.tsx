@@ -10,6 +10,7 @@ import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { PageHeader } from "@/components/PageHeader";
 import { InquiryForm } from "@/components/InquiryForm";
+import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { siteConfig } from "@/data/content";
 import { PolicyDownloadCenter } from "@/components/PolicyDownloadCenter";
 import { StickySubpageCTA } from "@/components/StickySubpageCTA";
@@ -159,10 +160,18 @@ function QuickInquiryBlock() {
 
             <div>
               {sent ? (
-                <div className="flex flex-col items-center justify-center py-10 text-center rounded-xl bg-primary-foreground/[0.06] border border-primary-foreground/10">
+                <div className="flex flex-col items-center justify-center py-8 text-center rounded-xl bg-primary-foreground/[0.06] border border-primary-foreground/10 px-6">
                   <CheckCircle className="h-10 w-10 text-accent mb-3" />
                   <p className="font-serif text-xl font-semibold mb-1">Message Sent!</p>
-                  <p className="text-primary-foreground/60 text-sm">We'll be in touch shortly.</p>
+                  <p className="text-primary-foreground/60 text-sm mb-4">Check your inbox — we've sent a confirmation with next steps.</p>
+                  <Link
+                    to="/schedule"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent text-accent-foreground text-sm font-semibold hover:bg-accent/90 transition-all"
+                  >
+                    <Clock className="h-4 w-4" />
+                    Schedule a Call Now
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-3 rounded-xl bg-primary-foreground/[0.06] border border-primary-foreground/10 p-6">
@@ -231,13 +240,17 @@ export default function Contact() {
         <div className="section-container relative z-10">
           <div className="grid lg:grid-cols-3 gap-12 lg:gap-16">
             {/* Form - Takes 2 columns */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 space-y-10">
+              {/* Lead Capture — quick form with auto-respond + scheduling link */}
+              <LeadCaptureForm />
+
+              {/* Full Project Inquiry */}
               <div className="bg-card rounded-xl p-6 sm:p-8 border border-border">
                 <h2 className="font-serif text-2xl font-semibold text-foreground mb-2">
-                  Project Inquiry
+                  Detailed Project Inquiry
                 </h2>
                 <p className="text-muted-foreground mb-8">
-                  Complete this form and we'll get back to you with a personalized consultation.
+                  Have a bigger project in mind? Complete this form for a personalised consultation.
                 </p>
                 <InquiryForm />
               </div>
