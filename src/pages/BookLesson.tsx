@@ -454,7 +454,27 @@ type BookingFormData = {
   preferredDay: string;
   preferredDate?: Date;
   additionalNotes?: string;
+  timezone: string;
 };
+
+const TIMEZONE_OPTIONS = [
+  { value: "Australia/Melbourne", label: "Melbourne (AEST/AEDT)" },
+  { value: "Australia/Sydney", label: "Sydney (AEST/AEDT)" },
+  { value: "Australia/Brisbane", label: "Brisbane (AEST)" },
+  { value: "Australia/Adelaide", label: "Adelaide (ACST/ACDT)" },
+  { value: "Australia/Perth", label: "Perth (AWST)" },
+  { value: "Pacific/Auckland", label: "Auckland (NZST/NZDT)" },
+];
+
+function getDetectedTimezone(): string {
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (TIMEZONE_OPTIONS.some((o) => o.value === tz)) return tz;
+    return "Australia/Melbourne";
+  } catch {
+    return "Australia/Melbourne";
+  }
+}
 
 function BookingForm() {
   const { toast } = useToast();
@@ -464,12 +484,10 @@ function BookingForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Pre-fill experience level from URL param (e.g. ?type=beginner)
   const prefilledLevel = searchParams.get("type") || "";
   const validLevels = PROGRAM_LEVELS.map((l) => l.value);
   const initialLevel = validLevels.includes(prefilledLevel) ? prefilledLevel : "";
 
-  // Pre-fill preferred date from URL param (e.g. ?date=2026-03-15)
   const prefilledDateStr = searchParams.get("date");
   const prefilledDate = prefilledDateStr ? new Date(prefilledDateStr) : undefined;
   const validPrefilledDate = prefilledDate && !isNaN(prefilledDate.getTime()) && prefilledDate >= new Date() ? prefilledDate : undefined;
@@ -477,6 +495,7 @@ function BookingForm() {
   const [formData, setFormData] = useState<Partial<BookingFormData>>({
     name: "", email: "", phone: "", horseName: "", experienceLevel: initialLevel,
     lessonGoals: "", preferredDay: "", preferredDate: validPrefilledDate, additionalNotes: "",
+    timezone: getDetectedTimezone(),
   });
 
   const updateField = <K extends keyof BookingFormData>(field: K, value: BookingFormData[K]) => {
@@ -517,7 +536,7 @@ function BookingForm() {
         horse_name: formData.horseName?.trim() || null,
         experience_level: formData.experienceLevel || null,
         project_vision: formData.lessonGoals?.trim() || null,
-        project_details: `Preferred day: ${formData.preferredDay}${formData.preferredDate ? ` | Preferred date: ${format(formData.preferredDate, "yyyy-MM-dd")}` : ""}${formData.additionalNotes?.trim() ? ` | Notes: ${formData.additionalNotes.trim()}` : ""}`,
+        project_details: `Preferred day: ${formData.preferredDay}${formData.preferredDate ? ` | Preferred date: ${format(formData.preferredDate, "yyyy-MM-dd")}` : ""} | Timezone: ${formData.timezone || "Australia/Melbourne"}${formData.additionalNotes?.trim() ? ` | Notes: ${formData.additionalNotes.trim()}` : ""}`,
         preferred_start: formData.preferredDate ? format(formData.preferredDate, "yyyy-MM-dd") : null,
       });
       if (error) throw error;
@@ -652,6 +671,24 @@ function BookingForm() {
                 />
               </PopoverContent>
             </Popover>
+          </div>
+
+          <div>
+            <Label className="text-base font-medium mb-3 block flex items-center gap-2">
+              <Clock className="h-4 w-4 text-accent" /> Your Timezone
+            </Label>
+            <select
+              value={formData.timezone || "Australia/Melbourne"}
+              onChange={(e) => updateField("timezone", e.target.value)}
+              className="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+            >
+              {TIMEZONE_OPTIONS.map((tz) => (
+                <option key={tz.value} value={tz.value}>{tz.label}</option>
+              ))}
+            </select>
+            <p className="text-xs text-muted-foreground mt-1.5">
+              Lessons run on AEST/AEDT (Melbourne time). We'll confirm your slot adjusted to your timezone.
+            </p>
           </div>
 
           <Button onClick={goToStep2} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
