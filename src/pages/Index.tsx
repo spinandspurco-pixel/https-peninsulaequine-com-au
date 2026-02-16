@@ -366,6 +366,111 @@ function MissionSection() {
   );
 }
 
+function ServicesOverviewSection() {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
+
+  const SERVICE_ICONS: Record<string, { icon: React.ReactNode; gradient: string }> = {
+    "arena-construction": {
+      icon: <svg viewBox="0 0 48 48" className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="2"><ellipse cx="24" cy="32" rx="20" ry="8" /><path d="M4 32V20l20-12 20 12v12" /><line x1="24" y1="8" x2="24" y2="32" strokeDasharray="3 3" /></svg>,
+      gradient: "from-accent/20 to-accent/5",
+    },
+    "barn-construction": {
+      icon: <svg viewBox="0 0 48 48" className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 44V22L24 6l18 16v22H6z" /><path d="M18 44V32h12v12" /><path d="M6 22h36" /></svg>,
+      gradient: "from-primary/20 to-primary/5",
+    },
+    "fencing": {
+      icon: <svg viewBox="0 0 48 48" className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="2"><line x1="8" y1="8" x2="8" y2="44" /><line x1="24" y1="8" x2="24" y2="44" /><line x1="40" y1="8" x2="40" y2="44" /><line x1="8" y1="18" x2="24" y2="18" /><line x1="24" y1="18" x2="40" y2="18" /><line x1="8" y1="30" x2="24" y2="30" /><line x1="24" y1="30" x2="40" y2="30" /></svg>,
+      gradient: "from-accent/15 to-accent/5",
+    },
+    "infrastructure": {
+      icon: <svg viewBox="0 0 48 48" className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="2"><rect x="6" y="24" width="36" height="18" rx="2" /><path d="M14 24V14h20v10" /><circle cx="24" cy="19" r="3" /><line x1="6" y1="34" x2="42" y2="34" /></svg>,
+      gradient: "from-primary/15 to-primary/5",
+    },
+    "round-pens": {
+      icon: <svg viewBox="0 0 48 48" className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="24" cy="26" r="16" /><ellipse cx="24" cy="26" rx="16" ry="8" /><line x1="24" y1="10" x2="24" y2="42" strokeDasharray="3 3" /></svg>,
+      gradient: "from-accent/20 to-accent/5",
+    },
+    "renovations": {
+      icon: <svg viewBox="0 0 48 48" className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 40V20L24 12l10 8v20" /><path d="M8 44h32" /><path d="M20 40v-8h8v8" /><path d="M36 16l6-6M42 10l-4 1 3 3-1-4z" strokeLinejoin="round" /></svg>,
+      gradient: "from-primary/20 to-primary/5",
+    },
+  };
+
+  return (
+    <section className="py-16 sm:py-20 bg-primary text-primary-foreground overflow-hidden">
+      <div className="section-container">
+        <div className="text-center max-w-3xl mx-auto mb-14">
+          <AnimatedDivider className="mx-auto mb-8 bg-accent" />
+          <SectionTransition variant="fade-up">
+            <p className="text-primary-foreground/50 uppercase tracking-[0.2em] text-sm mb-4">Services &amp; Pricing</p>
+          </SectionTransition>
+          <SectionTransition variant="blur-in" delay={100}>
+            <h2 className="heading-editorial mb-4">Built for Horses, Priced for Owners</h2>
+          </SectionTransition>
+          <SectionTransition variant="fade-up" delay={200}>
+            <p className="text-primary-foreground/60 leading-relaxed text-lg">
+              Every project is custom — here's where each journey begins.
+            </p>
+          </SectionTransition>
+        </div>
+
+        <div ref={ref} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          {featuredServices.map((service, i) => {
+            const config = SERVICE_ICONS[service.id] || { icon: null, gradient: "from-accent/10 to-transparent" };
+            return (
+              <Link
+                key={service.id}
+                to={`/services#${service.id}`}
+                className={`group relative flex flex-col rounded-xl bg-primary-foreground/[0.06] border border-primary-foreground/10 hover:border-accent/50 hover:bg-primary-foreground/[0.1] p-6 sm:p-7 transition-all duration-700 ease-out ${
+                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                }`}
+                style={{ transitionDelay: `${i * 90}ms` }}
+              >
+                {/* Icon */}
+                <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${config.gradient} flex items-center justify-center mb-5 text-accent group-hover:scale-110 transition-transform duration-300`}>
+                  {config.icon}
+                </div>
+
+                <h3 className="font-serif text-lg sm:text-xl text-primary-foreground mb-2 group-hover:text-accent transition-colors duration-300">
+                  {service.title}
+                </h3>
+                <p className="text-primary-foreground/55 text-sm leading-relaxed mb-5 flex-1">
+                  {service.shortDescription}
+                </p>
+
+                {/* Pricing highlight */}
+                <div className="flex items-center justify-between pt-4 border-t border-primary-foreground/10">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-primary-foreground/40 mb-0.5">Starting from</p>
+                    <p className="text-accent font-semibold text-lg">{service.startingPrice}</p>
+                  </div>
+                  <span className="w-9 h-9 rounded-full bg-accent/10 group-hover:bg-accent/20 flex items-center justify-center transition-all duration-300 group-hover:translate-x-1">
+                    <ArrowRight className="h-4 w-4 text-accent" />
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+
+        <SectionTransition variant="fade-up" delay={500} className="text-center mt-12">
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+          >
+            <Link to="/services">
+              Explore All Services &amp; Pricing
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </SectionTransition>
+      </div>
+    </section>
+  );
+}
+
 function ServicesSection() {
   const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
 
@@ -1679,6 +1784,7 @@ export default function Index() {
         <IntroSection />
         <BlueprintDivider variant="floorplan" />
         <ServicesTeaserStrip />
+        <ServicesOverviewSection />
         <MissionSection />
         <MajorEventsSection />
         <BlueprintDivider variant="elevation" />
