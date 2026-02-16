@@ -303,6 +303,7 @@ function FeaturedVideoSection({ onVideoClick }: { onVideoClick: (item: GalleryIt
                 setActiveVideo(index);
                 handleVideoClick();
               }}
+              aria-label={`Play video: ${video.alt}`}
               className={`group relative aspect-[4/3] overflow-hidden rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 transition-all duration-500 ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               }`}
@@ -404,6 +405,7 @@ function VideoGallerySection({ onVideoClick }: { onVideoClick: (item: GalleryIte
             <button
               key={video.id}
               onClick={() => onVideoClick(video)}
+              aria-label={`Play video: ${video.alt}`}
               className={`group relative aspect-video overflow-hidden rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted transition-all duration-500 ${
                 visibleItems.has(index)
                   ? "opacity-100 translate-y-0 scale-100"
@@ -505,6 +507,14 @@ function Lightbox({
   useEffect(() => {
     pinchZoom.reset();
   }, [item?.id]);
+
+  // Lock body scroll when lightbox is open
+  useEffect(() => {
+    if (item) {
+      document.body.style.overflow = 'hidden';
+      return () => { document.body.style.overflow = ''; };
+    }
+  }, [item]);
 
   useEffect(() => {
     if (item?.type === "video" && videoRef.current) {
@@ -828,6 +838,7 @@ function VideoGridItem({
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      aria-label={`Play video: ${item.alt}`}
       className={`group aspect-square overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative transition-all duration-500 ${
         isVisible
           ? "opacity-100 translate-y-0 scale-100"

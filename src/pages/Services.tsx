@@ -378,6 +378,14 @@ function ConstructionLightbox({
     loadInOrder();
   }, [step, currentIndex, allSteps, total]);
 
+  // Lock body scroll when lightbox is open
+  useEffect(() => {
+    if (step) {
+      document.body.style.overflow = 'hidden';
+      return () => { document.body.style.overflow = ''; };
+    }
+  }, [step]);
+
   // Keyboard navigation
   useEffect(() => {
     if (!step) return;
