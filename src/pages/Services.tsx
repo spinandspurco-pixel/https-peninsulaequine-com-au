@@ -770,7 +770,7 @@ function PricingGridSection() {
                         ? "bg-accent hover:bg-accent/90 text-accent-foreground shadow-md"
                         : "bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
                     }`}>
-                      <Link to={`/contact?service=${service.id}`}>
+                      <Link to={`/contact?services=${service.id}`}>
                         {isHovered ? "Get a Quote" : service.startingPrice ? "Learn More" : "Get a Quote"}
                         <ArrowRight className={`ml-2 h-4 w-4 transition-transform duration-300 ${isHovered ? "translate-x-1" : ""}`} />
                       </Link>
