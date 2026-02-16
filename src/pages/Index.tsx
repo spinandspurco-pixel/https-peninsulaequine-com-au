@@ -449,9 +449,8 @@ function ServicesSection() {
         {/* Services Grid with staggered reveal */}
         <div ref={gridRef} className="grid sm:grid-cols-2 gap-px bg-border">
           {featuredServices.map((service, index) => (
-            <Link
+            <div
               key={service.id}
-              to={`/services#${service.id}`}
               className={`group p-10 sm:p-12 lg:p-16 bg-background hover:bg-card transition-all duration-700 ease-out ${
                 gridVisible 
                   ? "opacity-100 translate-y-0 [clip-path:inset(0_0_0_0)]" 
@@ -468,16 +467,23 @@ function ServicesSection() {
               <p className="text-muted-foreground mb-6 leading-relaxed">
                 {service.shortDescription}
               </p>
-              <div className="flex items-center justify-between">
-                <span className="inline-flex items-center text-sm font-medium text-foreground group-hover:text-accent transition-colors">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <Link
+                  to={`/services#${service.id}`}
+                  className="inline-flex items-center text-sm font-medium text-foreground hover:text-accent transition-colors"
+                >
                   <span className="border-b border-current pb-0.5">Learn more</span>
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </span>
-                <span className="text-xs uppercase tracking-[0.15em] text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  Book consultation →
-                </span>
+                </Link>
+                <Link
+                  to={`/contact?service=${service.id}`}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium tracking-wide bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 hover:scale-105 hover:shadow-[0_4px_16px_hsl(var(--accent)/0.3)] whitespace-nowrap"
+                >
+                  <CalendarIcon className="h-3.5 w-3.5" />
+                  Book Consultation
+                </Link>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
 
