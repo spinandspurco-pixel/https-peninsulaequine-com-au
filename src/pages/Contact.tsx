@@ -14,6 +14,7 @@ import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { siteConfig } from "@/data/content";
 import { PolicyDownloadCenter } from "@/components/PolicyDownloadCenter";
 import { StickySubpageCTA } from "@/components/StickySubpageCTA";
+import { InteractiveMap } from "@/components/InteractiveMap";
 
 // Background image for header parallax
 import aberdeenInterior from "@/assets/aberdeen-barn-interior.jpg";
@@ -81,13 +82,7 @@ function ContactInfo() {
         </ul>
       </div>
 
-      {/* Map placeholder */}
-      <div className="aspect-video bg-secondary rounded-lg overflow-hidden">
-        <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-          <MapPin className="h-6 w-6 mr-2" />
-          <span>Map Coming Soon</span>
-        </div>
-      </div>
+      {/* Map integrated below in parent layout */}
     </div>
   );
 }
@@ -259,6 +254,7 @@ export default function Contact() {
             {/* Contact Info - Takes 1 column */}
             <div className="space-y-8">
               <ContactInfo />
+              <InteractiveMap />
               <PolicyDownloadCenter />
             </div>
           </div>

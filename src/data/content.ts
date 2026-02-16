@@ -8,14 +8,14 @@ export const siteConfig = {
   phone: "0418 585 489",
   email: "info@peninsulaequine.com.au",
   address: {
-    street: "1234 Ranch Road",
-    city: "Half Moon Bay",
-    state: "CA",
-    zip: "94019",
+    street: "59 Tubbarubba Road",
+    city: "Merricks North",
+    state: "VIC",
+    zip: "3926",
   },
   hours: {
-    weekdays: "Mon-Fri: 7am - 5pm",
-    saturday: "Sat: By Appointment",
+    weekdays: "Mon–Fri: 6am – 5pm",
+    saturday: "Sat: By Appointment Only",
     sunday: "Sun: Closed",
   },
   social: {
@@ -300,7 +300,7 @@ export const galleryItems = [
 export const faqs: { question: string; answer: string; category?: string }[] = [
   {
     question: "What geographic area do you serve?",
-    answer: "We primarily serve the San Francisco Peninsula, South Bay, and coastal areas including Half Moon Bay, Woodside, Atherton, Portola Valley, Los Altos Hills, and surrounding communities. For larger projects, we're available throughout Northern California.",
+    answer: "We primarily serve the Mornington Peninsula, Western Port, and surrounding regions of Victoria including Merricks North, Red Hill, Balnarring, Flinders, Hastings, and Somerville. For larger projects, we're available throughout Victoria and interstate.",
     category: "general",
   },
   {
