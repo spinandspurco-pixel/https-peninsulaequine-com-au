@@ -8,6 +8,7 @@ import { PageTransition } from "@/components/PageTransition";
 import { ContrastChecker } from "@/components/ContrastChecker";
 import { FloatingPEWatermark } from "@/components/FloatingPEWatermark";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
+import { ParallaxDepthToggle } from "@/components/ParallaxDepthToggle";
 import blueprintFacility from "@/assets/blueprint-facility.png";
 
 interface LayoutProps {
@@ -40,6 +41,7 @@ export function Layout({ children }: LayoutProps) {
       <ScrollToTop />
       <FloatingContactButton />
       <FloatingPEWatermark />
+      <ParallaxDepthToggle />
       <ContrastChecker />
     </div>
   );

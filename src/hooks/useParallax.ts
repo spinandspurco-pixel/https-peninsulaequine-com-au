@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, RefObject } from "react";
 import { useReducedMotion } from "./useReducedMotion";
+import { useParallaxDepthStore } from "@/stores/parallaxDepthStore";
 
 interface ParallaxOptions {
   speed?: number; // 0.1 = slow, 0.5 = medium, 1 = same as scroll
@@ -14,10 +15,11 @@ export function useParallax<T extends HTMLElement>(
   const ref = useRef<T>(null);
   const [offset, setOffset] = useState(0);
   const prefersReducedMotion = useReducedMotion();
+  const depthEnabled = useParallaxDepthStore((s) => s.enabled);
 
   useEffect(() => {
-    // Disable parallax for users who prefer reduced motion
-    if (disabled || prefersReducedMotion) return;
+    // Disable parallax when toggled off or OS reduced-motion is on
+    if (disabled || prefersReducedMotion || !depthEnabled) return;
 
     const handleScroll = () => {
       if (!ref.current) return;
@@ -52,7 +54,7 @@ export function useParallax<T extends HTMLElement>(
     handleScroll(); // Initial calculation
 
     return () => window.removeEventListener("scroll", onScroll);
-  }, [speed, direction, disabled, prefersReducedMotion]);
+  }, [speed, direction, disabled, prefersReducedMotion, depthEnabled]);
 
   return { ref, offset };
 }
@@ -64,10 +66,11 @@ export function useBackgroundParallax(speed: number = 0.5): {
 } {
   const { ref, offset } = useParallax<HTMLDivElement>({ speed });
   const prefersReducedMotion = useReducedMotion();
+  const depthEnabled = useParallaxDepthStore((s) => s.enabled);
 
   return {
     ref,
-    style: prefersReducedMotion 
+    style: (prefersReducedMotion || !depthEnabled)
       ? {} 
       : {
           transform: `translateY(${offset}px)`,
