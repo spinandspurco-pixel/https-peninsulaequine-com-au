@@ -77,7 +77,7 @@ function HeroCTAToggle({ heroMode, setHeroMode }: { heroMode: "book" | "consult"
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
         {/* Left: Book a Lesson card */}
         <div className="flex flex-col items-center gap-4 p-6 rounded-xl bg-hero-glass backdrop-blur-md border border-hero-glass-border">
-          <CalendarIcon className="h-8 w-8 text-accent" />
+          <CalendarIcon className="h-8 w-8 text-accent" aria-hidden="true" />
           <h3 className="font-serif text-lg text-hero-text font-semibold text-center">
             Ready to Ride?
           </h3>
@@ -114,10 +114,11 @@ function HeroCTAToggle({ heroMode, setHeroMode }: { heroMode: "book" | "consult"
           <Link
             to="/book-lesson"
             onClick={() => trackClick({ action: "click", target: "book_lesson_hero" })}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent text-accent-foreground font-semibold text-sm shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            aria-label="Book a lesson — go to lesson booking page"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent text-accent-foreground font-semibold text-sm shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
           >
             {copy.bookLabel}
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
 
@@ -130,9 +131,11 @@ function HeroCTAToggle({ heroMode, setHeroMode }: { heroMode: "book" | "consult"
       {/* Consult toggle below */}
       <button
         onClick={() => { setHeroMode(heroMode === "consult" ? "book" : "consult"); trackClick({ action: "toggle", target: "consult" }); }}
-        className="inline-flex items-center gap-2 text-hero-text-muted hover:text-hero-text text-sm transition-colors"
+        aria-label={heroMode === "consult" ? "Hide consultation form" : "Open consultation form"}
+        aria-expanded={heroMode === "consult"}
+        className="inline-flex items-center gap-2 text-hero-text-muted hover:text-hero-text text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary rounded-md px-2 py-1"
       >
-        <MessageSquare className="h-4 w-4" />
+        <MessageSquare className="h-4 w-4" aria-hidden="true" />
         {heroMode === "consult" ? "Hide consultation form" : copy.consultLabel}
       </button>
 
