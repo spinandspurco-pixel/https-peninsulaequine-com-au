@@ -462,6 +462,7 @@ export type Database = {
           media_url: string | null
           quote: string
           rating: number
+          service_tags: string[]
           sort_order: number
           updated_at: string
         }
@@ -475,6 +476,7 @@ export type Database = {
           media_url?: string | null
           quote: string
           rating?: number
+          service_tags?: string[]
           sort_order?: number
           updated_at?: string
         }
@@ -488,6 +490,7 @@ export type Database = {
           media_url?: string | null
           quote?: string
           rating?: number
+          service_tags?: string[]
           sort_order?: number
           updated_at?: string
         }
