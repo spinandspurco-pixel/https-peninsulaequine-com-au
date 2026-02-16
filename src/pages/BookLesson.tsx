@@ -541,12 +541,27 @@ function BookingForm() {
       });
       if (error) throw error;
 
+      // Send inquiry notification
       supabase.functions.invoke("send-inquiry-notification", {
         body: {
           name: formData.name?.trim(), email: formData.email?.trim(), phone: formData.phone?.trim(),
           services: ["lessons"], horseName: formData.horseName?.trim(), experienceLevel: formData.experienceLevel,
           goals: formData.lessonGoals?.trim(),
           additionalNotes: `Preferred day: ${formData.preferredDay}. ${formData.additionalNotes?.trim() || ""}`,
+        },
+      }).catch(() => {});
+
+      // Send booking confirmation with calendar invite
+      supabase.functions.invoke("send-booking-confirmation", {
+        body: {
+          clientName: formData.name?.trim(),
+          clientEmail: formData.email?.trim(),
+          serviceType: PROGRAM_LEVELS.find((l) => l.value === formData.experienceLevel)?.label || "Riding Lesson",
+          bookingDate: formData.preferredDate ? format(formData.preferredDate, "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd"),
+          bookingTime: "09:00",
+          durationMinutes: 60,
+          notes: formData.additionalNotes?.trim() || undefined,
+          timezone: formData.timezone || "Australia/Melbourne",
         },
       }).catch(() => {});
 
