@@ -93,6 +93,17 @@ function HeroSection() {
             size="lg"
             className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 text-sm px-10 tracking-[0.15em] uppercase font-sans"
           >
+            <Link to="/book-lesson">
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              Schedule a Lesson
+            </Link>
+          </Button>
+          <Button
+            asChild
+            variant="ghost"
+            size="lg"
+            className="text-primary-foreground/60 hover:text-primary-foreground hover:bg-primary-foreground/10 text-sm px-8 tracking-[0.15em] uppercase font-sans"
+          >
             <Link to="/services">
               View Our Work
             </Link>
