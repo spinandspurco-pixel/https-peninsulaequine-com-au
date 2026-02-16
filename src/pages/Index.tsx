@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/layout/Layout";
 import { MajorEventsSection } from "@/components/MajorEventsSection";
 import { LiveTestimonialsFeed } from "@/components/LiveTestimonialsFeed";
+import { TestimonialHighlightStrip } from "@/components/TestimonialHighlightStrip";
 // BlueprintBackground & BlueprintLineOverlay removed — PE banner is the sole brand background
 import { MultiStepInquiryForm } from "@/components/MultiStepInquiryForm";
 import { BookingWidget } from "@/components/BookingWidget";
@@ -2365,6 +2366,7 @@ export default function Index() {
         <HeroSocialProof />
         <TrustBadges />
         <HeroContactStrip />
+        <TestimonialHighlightStrip />
         <IntroSection />
         <BlueprintDivider variant="floorplan" />
         <ServicesTeaserStrip />
