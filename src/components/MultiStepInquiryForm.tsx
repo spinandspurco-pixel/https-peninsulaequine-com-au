@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, ArrowLeft, CheckCircle, Loader2, User, Mail, Phone, MessageSquare } from "lucide-react";
+import { ArrowRight, ArrowLeft, CheckCircle, Loader2, User, Mail, Phone, MessageSquare, CalendarIcon, Edit2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -41,7 +41,7 @@ const contactSchema = z.object({
   phone: z.string().max(30).optional(),
 });
 
-const TOTAL_STEPS = 3;
+const TOTAL_STEPS = 4;
 
 interface MultiStepInquiryFormProps {
   className?: string;
@@ -141,6 +141,22 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
     }
   };
 
+  /** Navigate to booking page with pre-filled data from the quote form */
+  const handleBookConsultation = () => {
+    const params = new URLSearchParams();
+    if (name.trim()) params.set("name", name.trim());
+    if (email.trim()) params.set("email", email.trim());
+    if (phone.trim()) params.set("phone", phone.trim());
+    navigate(`/book-lesson?${params.toString()}`);
+  };
+
+  const serviceLabels = selectedServices
+    .map((id) => SERVICE_OPTIONS.find((s) => s.id === id)?.label)
+    .filter(Boolean);
+
+  const budgetLabel = BUDGET_RANGES.find((b) => b.id === budget)?.label;
+  const experienceLabel = EXPERIENCE_LEVELS.find((e) => e.id === experience)?.label;
+
   if (submitted) {
     return (
       <div className={cn("rounded-2xl border border-border bg-card p-8 sm:p-12 text-center", className)}>
@@ -159,7 +175,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
     <div className={cn("rounded-2xl border border-border bg-card overflow-hidden", className)}>
       {/* Progress bar */}
       <div className="flex border-b border-border">
-        {[1, 2, 3].map((s) => (
+        {[1, 2, 3, 4].map((s) => (
           <div key={s} className="flex-1 flex flex-col items-center relative">
             <div
               className={cn(
@@ -174,7 +190,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
                   s <= step ? "text-accent" : "text-muted-foreground"
                 )}
               >
-                {s === 1 ? "Service" : s === 2 ? "Contact" : "Details"}
+                {s === 1 ? "Service" : s === 2 ? "Contact" : s === 3 ? "Details" : "Review"}
               </span>
             </div>
           </div>
@@ -311,38 +327,141 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
           </div>
         )}
 
-        {/* Navigation */}
-        <div className="flex items-center justify-between mt-8 pt-5 border-t border-border">
-          {step > 1 ? (
-            <Button variant="ghost" onClick={prevStep} className="text-muted-foreground hover:text-foreground">
-              <ArrowLeft className="mr-2 h-4 w-4" /> Back
-            </Button>
-          ) : (
-            <div />
-          )}
+        {/* Step 4: Checkout-style review */}
+        {step === 4 && (
+          <div className="space-y-5">
+            <div>
+              <h3 className="font-serif text-xl sm:text-2xl text-foreground mb-1">Review Your Quote Request</h3>
+              <p className="text-sm text-muted-foreground">Confirm everything looks right, then submit.</p>
+            </div>
 
-          {step < TOTAL_STEPS ? (
+            {/* Services summary */}
+            <div className="rounded-lg border border-border bg-background p-4">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Services</span>
+                <button onClick={() => setStep(1)} className="text-xs text-accent hover:underline flex items-center gap-1">
+                  <Edit2 className="h-3 w-3" /> Edit
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {serviceLabels.map((label) => (
+                  <span key={label} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-accent/10 text-accent border border-accent/20">
+                    {label}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Contact summary */}
+            <div className="rounded-lg border border-border bg-background p-4">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Contact</span>
+                <button onClick={() => setStep(2)} className="text-xs text-accent hover:underline flex items-center gap-1">
+                  <Edit2 className="h-3 w-3" /> Edit
+                </button>
+              </div>
+              <div className="space-y-1.5 text-sm">
+                <div className="flex items-center gap-2">
+                  <User className="h-4 w-4 text-accent shrink-0" />
+                  <span className="text-foreground">{name}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Mail className="h-4 w-4 text-accent shrink-0" />
+                  <span className="text-foreground">{email}</span>
+                </div>
+                {phone.trim() && (
+                  <div className="flex items-center gap-2">
+                    <Phone className="h-4 w-4 text-accent shrink-0" />
+                    <span className="text-foreground">{phone}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Details summary */}
+            {(experienceLabel || budgetLabel || message.trim()) && (
+              <div className="rounded-lg border border-border bg-background p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Details</span>
+                  <button onClick={() => setStep(3)} className="text-xs text-accent hover:underline flex items-center gap-1">
+                    <Edit2 className="h-3 w-3" /> Edit
+                  </button>
+                </div>
+                <div className="space-y-2 text-sm">
+                  {experienceLabel && (
+                    <div className="flex items-center gap-2 text-foreground">
+                      <span className="text-muted-foreground">Experience:</span> {experienceLabel}
+                    </div>
+                  )}
+                  {budgetLabel && (
+                    <div className="flex items-center gap-2 text-foreground">
+                      <span className="text-muted-foreground">Budget:</span> {budgetLabel}
+                    </div>
+                  )}
+                  {message.trim() && (
+                    <p className="text-foreground/80 leading-relaxed line-clamp-3">{message}</p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Trust signal */}
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <ShieldCheck className="h-4 w-4 text-accent" />
+              No obligation — we'll prepare a custom estimate and reach out within 1–2 business days.
+            </div>
+
+            {/* Dual CTA: Submit + Book Consultation */}
+            <div className="grid sm:grid-cols-2 gap-3 pt-2">
+              <Button
+                onClick={handleSubmit}
+                disabled={submitting}
+                className="bg-accent text-accent-foreground hover:bg-accent/90 w-full"
+              >
+                {submitting ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending…</>
+                ) : (
+                  <>Submit Quote Request <ArrowRight className="ml-2 h-4 w-4" /></>
+                )}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleBookConsultation}
+                disabled={submitting}
+                className="border-accent/30 text-accent hover:bg-accent/10 w-full"
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                Book a Consultation
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Navigation (steps 1-3) */}
+        {step < 4 && (
+          <div className="flex items-center justify-between mt-8 pt-5 border-t border-border">
+            {step > 1 ? (
+              <Button variant="ghost" onClick={prevStep} className="text-muted-foreground hover:text-foreground">
+                <ArrowLeft className="mr-2 h-4 w-4" /> Back
+              </Button>
+            ) : (
+              <div />
+            )}
+
             <Button onClick={nextStep} className="bg-accent text-accent-foreground hover:bg-accent/90">
               Continue <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-          ) : (
-            <Button
-              onClick={handleSubmit}
-              disabled={submitting}
-              className="bg-accent text-accent-foreground hover:bg-accent/90"
-            >
-              {submitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending…
-                </>
-              ) : (
-                <>
-                  Submit Inquiry <ArrowRight className="ml-2 h-4 w-4" />
-                </>
-              )}
+          </div>
+        )}
+
+        {/* Back button for step 4 */}
+        {step === 4 && (
+          <div className="mt-4 pt-4 border-t border-border">
+            <Button variant="ghost" onClick={prevStep} className="text-muted-foreground hover:text-foreground">
+              <ArrowLeft className="mr-2 h-4 w-4" /> Back to Details
             </Button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
