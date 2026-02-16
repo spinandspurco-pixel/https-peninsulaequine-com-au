@@ -566,3 +566,26 @@
     display: none;
   }
 }
+
+/* Print styles — only show the prep checklist */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #prep-checklist,
+  #prep-checklist * {
+    visibility: visible;
+  }
+  #prep-checklist {
+    position: absolute;
+    inset: 0;
+    padding: 2rem;
+  }
+  #prep-checklist h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  #prep-checklist button {
+    display: none;
+  }
+}
