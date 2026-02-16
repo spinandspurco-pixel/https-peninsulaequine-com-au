@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { ArrowRight, CalendarIcon, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
 import logoImage from "@/assets/logo-pe-mark.png";
 
@@ -38,6 +38,11 @@ export function StickySubpageCTA({
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, [showAfter]);
+
+  const location = useLocation();
+  // Hide on pages that already have heavy booking UI
+  const hideOn = ["/book-lesson", "/contact"];
+  if (hideOn.includes(location.pathname)) return null;
 
   const ctaContent = (
     <>
@@ -85,32 +90,48 @@ export function StickySubpageCTA({
             </span>
           </div>
 
-          {/* CTA */}
-          {onCtaClick ? (
-            <button
-              onClick={onCtaClick}
-              className={cn(
-                "inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium",
-                "bg-accent text-accent-foreground hover:bg-accent/90",
-                "transition-all duration-300 hover:scale-105 hover:shadow-[0_4px_16px_hsl(var(--accent)/0.4)]",
-                "whitespace-nowrap flex-shrink-0"
-              )}
-            >
-              {ctaContent}
-            </button>
-          ) : (
+          {/* Actions */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Book a Lesson — secondary */}
             <Link
-              to={ctaHref}
+              to="/book-lesson"
               className={cn(
-                "inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium",
-                "bg-accent text-accent-foreground hover:bg-accent/90",
-                "transition-all duration-300 hover:scale-105 hover:shadow-[0_4px_16px_hsl(var(--accent)/0.4)]",
-                "whitespace-nowrap flex-shrink-0"
+                "hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium",
+                "border border-primary-foreground/20 text-primary-foreground/80 hover:text-primary-foreground hover:border-accent/40",
+                "transition-all duration-300"
               )}
             >
-              {ctaContent}
+              <CalendarIcon className="h-3.5 w-3.5" />
+              Book Lesson
             </Link>
-          )}
+
+            {/* Primary CTA */}
+            {onCtaClick ? (
+              <button
+                onClick={onCtaClick}
+                className={cn(
+                  "inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium",
+                  "bg-accent text-accent-foreground hover:bg-accent/90",
+                  "transition-all duration-300 hover:scale-105 hover:shadow-[0_4px_16px_hsl(var(--accent)/0.4)]",
+                  "whitespace-nowrap"
+                )}
+              >
+                {ctaContent}
+              </button>
+            ) : (
+              <Link
+                to={ctaHref}
+                className={cn(
+                  "inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium",
+                  "bg-accent text-accent-foreground hover:bg-accent/90",
+                  "transition-all duration-300 hover:scale-105 hover:shadow-[0_4px_16px_hsl(var(--accent)/0.4)]",
+                  "whitespace-nowrap"
+                )}
+              >
+                {ctaContent}
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </div>
