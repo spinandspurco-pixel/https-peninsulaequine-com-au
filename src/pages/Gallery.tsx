@@ -12,6 +12,8 @@ import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { PageHeader } from "@/components/PageHeader";
 import { GalleryBlueprintOverlay } from "@/components/GalleryBlueprintOverlay";
 import { GalleryTourForm } from "@/components/GalleryTourForm";
+import { GalleryTestimonialStrip } from "@/components/GalleryTestimonialStrip";
+import { testimonials } from "@/data/content";
 import logoPeMark from "@/assets/logo-pe-mark.png";
 
 // Main Ridge images
@@ -1063,6 +1065,25 @@ export default function Gallery() {
     (activeLocation !== "all" ? 1 : 0) +
     (searchQuery.trim() ? 1 : 0);
 
+  // Map testimonials to service tags for contextual surfacing
+  const testimonialServiceMap: Record<string, number[]> = {
+    barn: [0, 2],        // Sarah (barn), Elena (mare barn)
+    arena: [1],          // Robert (arena/dressage)
+    woodwork: [0],       // Sarah (barn construction)
+    stonework: [0],      // Sarah (attention to detail)
+    infrastructure: [2], // Elena (paddock fencing)
+    events: [5],         // Marcus (understands equestrian)
+  };
+
+  const filteredTestimonials = useMemo(() => {
+    if (activeService === "all") return testimonials.slice(0, 3);
+    const indices = testimonialServiceMap[activeService] || [];
+    const matched = indices
+      .map((i) => testimonials[i])
+      .filter(Boolean);
+    return matched.length > 0 ? matched : testimonials.slice(0, 2);
+  }, [activeService]);
+
   const clearAllFilters = () => {
     setActiveProject("all");
     setActiveService("all");
@@ -1252,7 +1273,9 @@ export default function Gallery() {
                   </>
               }
             </p>
-          </div>
+          {/* Contextual Testimonials */}
+          <GalleryTestimonialStrip testimonials={filteredTestimonials} />
+        </div>
 
           {/* Gallery Grid */}
           <GalleryGrid 
