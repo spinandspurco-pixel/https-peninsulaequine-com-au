@@ -1,19 +1,14 @@
-import { useState, useMemo } from "react";
-import { Calendar, CalendarPlus, CheckCircle2, Clock, MapPin, Users, Send, ExternalLink } from "lucide-react";
+import { useState, useMemo, useCallback } from "react";
+import { Calendar, CalendarPlus, Clock, MapPin, Users, ExternalLink } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { z } from "zod";
+import { EventRSVPForm } from "@/components/events/EventRSVPForm";
+import { EventGuestList } from "@/components/events/EventGuestList";
 
 import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
 import equitanaArena5 from "@/assets/equitana-arena-5.jpg";
@@ -62,15 +57,6 @@ const upcomingEvents = [
   },
 ];
 
-// ── Validation schema ──
-const rsvpSchema = z.object({
-  name: z.string().trim().min(1, "Name is required").max(100),
-  email: z.string().trim().email("Enter a valid email").max(255),
-  phone: z.string().trim().max(20).optional(),
-  guests: z.number().int().min(1, "At least 1 guest").max(20, "Max 20 guests"),
-  notes: z.string().trim().max(500).optional(),
-});
-
 // ── Calendar helpers ──
 function toICSDate(d: string) {
   return d.replace(/-/g, "") + "T080000Z";
@@ -118,139 +104,15 @@ function formatDate(d: string) {
   });
 }
 
-// ── RSVP form component ──
-function RSVPForm({ eventId, eventTitle }: { eventId: string; eventTitle: string }) {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", guests: 1, notes: "" });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleChange = (field: string, value: string | number) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-    setErrors((prev) => ({ ...prev, [field]: "" }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const parsed = rsvpSchema.safeParse(form);
-    if (!parsed.success) {
-      const fieldErrors: Record<string, string> = {};
-      parsed.error.issues.forEach((i) => {
-        const key = i.path[0] as string;
-        if (!fieldErrors[key]) fieldErrors[key] = i.message;
-      });
-      setErrors(fieldErrors);
-      return;
-    }
-
-    setSubmitting(true);
-    const { error } = await supabase.from("event_rsvps" as any).insert({
-      event_id: eventId,
-      name: parsed.data.name,
-      email: parsed.data.email,
-      phone: parsed.data.phone || null,
-      guests: parsed.data.guests,
-      notes: parsed.data.notes || null,
-    } as any);
-
-    setSubmitting(false);
-    if (error) {
-      toast.error("Something went wrong. Please try again.");
-      return;
-    }
-    setSubmitted(true);
-    toast.success(`RSVP confirmed for ${eventTitle}!`);
-  };
-
-  if (submitted) {
-    return (
-      <div className="text-center py-8">
-        <CheckCircle2 className="h-12 w-12 text-accent mx-auto mb-4" />
-        <p className="font-serif text-xl text-foreground mb-1">You're In!</p>
-        <p className="text-muted-foreground text-sm">We'll send a confirmation to your email.</p>
-      </div>
-    );
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid sm:grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor={`name-${eventId}`}>Full Name *</Label>
-          <Input
-            id={`name-${eventId}`}
-            value={form.name}
-            onChange={(e) => handleChange("name", e.target.value)}
-            placeholder="Jane Smith"
-            className={errors.name ? "border-destructive" : ""}
-          />
-          {errors.name && <p className="text-destructive text-xs mt-1">{errors.name}</p>}
-        </div>
-        <div>
-          <Label htmlFor={`email-${eventId}`}>Email *</Label>
-          <Input
-            id={`email-${eventId}`}
-            type="email"
-            value={form.email}
-            onChange={(e) => handleChange("email", e.target.value)}
-            placeholder="jane@example.com"
-            className={errors.email ? "border-destructive" : ""}
-          />
-          {errors.email && <p className="text-destructive text-xs mt-1">{errors.email}</p>}
-        </div>
-      </div>
-      <div className="grid sm:grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor={`phone-${eventId}`}>Phone</Label>
-          <Input
-            id={`phone-${eventId}`}
-            value={form.phone}
-            onChange={(e) => handleChange("phone", e.target.value)}
-            placeholder="0400 000 000"
-          />
-        </div>
-        <div>
-          <Label htmlFor={`guests-${eventId}`}>Number of Guests</Label>
-          <Select
-            value={String(form.guests)}
-            onValueChange={(v) => handleChange("guests", Number(v))}
-          >
-            <SelectTrigger id={`guests-${eventId}`}>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
-                <SelectItem key={n} value={String(n)}>
-                  {n} {n === 1 ? "guest" : "guests"}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {errors.guests && <p className="text-destructive text-xs mt-1">{errors.guests}</p>}
-        </div>
-      </div>
-      <div>
-        <Label htmlFor={`notes-${eventId}`}>Notes (optional)</Label>
-        <Textarea
-          id={`notes-${eventId}`}
-          value={form.notes}
-          onChange={(e) => handleChange("notes", e.target.value)}
-          placeholder="Dietary requirements, accessibility needs…"
-          rows={2}
-        />
-      </div>
-      <Button type="submit" className="w-full" disabled={submitting}>
-        <Send className="mr-2 h-4 w-4" />
-        {submitting ? "Submitting…" : "Confirm RSVP"}
-      </Button>
-    </form>
-  );
-}
-
 // ── Event card ──
 function EventRSVPCard({ event, index }: { event: (typeof upcomingEvents)[0]; index: number }) {
   const [showRSVP, setShowRSVP] = useState(false);
+  const [remainingSpots, setRemainingSpots] = useState(event.spots);
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
+
+  const handleSpotsChange = useCallback((remaining: number) => {
+    setRemainingSpots(remaining);
+  }, []);
 
   return (
     <div
@@ -293,23 +155,20 @@ function EventRSVPCard({ event, index }: { event: (typeof upcomingEvents)[0]; in
 
           <p className="text-muted-foreground leading-relaxed">{event.description}</p>
 
+          {/* Live guest list & capacity */}
+          <EventGuestList
+            eventId={event.id}
+            totalSpots={event.spots}
+            onSpotsChange={handleSpotsChange}
+          />
+
           {/* Calendar sync buttons */}
           <div className="flex flex-wrap gap-3 pt-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => downloadICS(event)}
-              className="text-xs"
-            >
+            <Button variant="outline" size="sm" onClick={() => downloadICS(event)} className="text-xs">
               <CalendarPlus className="mr-1.5 h-3.5 w-3.5" />
               Add to Calendar (.ics)
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              asChild
-              className="text-xs"
-            >
+            <Button variant="outline" size="sm" asChild className="text-xs">
               <a href={googleCalendarUrl(event)} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
                 Google Calendar
@@ -319,13 +178,21 @@ function EventRSVPCard({ event, index }: { event: (typeof upcomingEvents)[0]; in
 
           {/* RSVP toggle */}
           {!showRSVP ? (
-            <Button onClick={() => setShowRSVP(true)} className="w-full mt-2">
-              RSVP Now
+            <Button
+              onClick={() => setShowRSVP(true)}
+              className="w-full mt-2"
+              disabled={remainingSpots <= 0}
+            >
+              {remainingSpots <= 0 ? "Sold Out" : "RSVP Now"}
             </Button>
           ) : (
             <div className="border-t border-border pt-6 mt-4">
               <p className="font-serif text-lg text-foreground mb-4">Reserve Your Spot</p>
-              <RSVPForm eventId={event.id} eventTitle={event.title} />
+              <EventRSVPForm
+                eventId={event.id}
+                eventTitle={event.title}
+                remainingSpots={remainingSpots}
+              />
             </div>
           )}
         </CardContent>
