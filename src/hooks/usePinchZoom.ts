@@ -173,6 +173,14 @@ export function usePinchZoom(options: UsePinchZoomOptions = {}) {
     setState({ scale: 1, translateX: 0, translateY: 0 });
   }, []);
 
+  const setTranslate = useCallback((x: number, y: number) => {
+    setState((prev) => ({ ...prev, translateX: x, translateY: y }));
+  }, []);
+
+  const zoomTo = useCallback((newScale: number, offsetX: number, offsetY: number) => {
+    setState({ scale: newScale, translateX: offsetX, translateY: offsetY });
+  }, []);
+
   // Reset when component unmounts or item changes
   useEffect(() => {
     return () => reset();
@@ -194,5 +202,7 @@ export function usePinchZoom(options: UsePinchZoomOptions = {}) {
     },
     handleDoubleTap,
     reset,
+    setTranslate,
+    zoomTo,
   };
 }
