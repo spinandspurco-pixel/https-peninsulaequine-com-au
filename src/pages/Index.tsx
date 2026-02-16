@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, FormEvent, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, X, Mail, Send, MessageSquare, Star, ShieldCheck, Flame, Loader2, CheckCircle, ZoomIn, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, X, Mail, Send, MessageSquare, Star, ShieldCheck, Flame, Loader2, CheckCircle, ZoomIn, MapPin, ChevronLeft, ChevronRight, BadgeCheck, Shield, Hammer } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useABTest } from "@/hooks/useABTest";
@@ -92,8 +92,14 @@ function HeroSection() {
           <span className="text-accent">Equine</span>
         </h1>
 
-        <p className="font-sans text-xs sm:text-sm tracking-[0.4em] uppercase text-primary-foreground/50 mb-6">
+        <p className="font-sans text-xs sm:text-sm tracking-[0.4em] uppercase text-primary-foreground/50 mb-3">
           From Dirt to Dynasty
+        </p>
+
+        {/* Lead-gen value prop */}
+        <p className="text-sm sm:text-base text-primary-foreground/70 max-w-lg mx-auto mb-6 leading-relaxed">
+          World-class arenas, barns &amp; facilities — designed by a horseman, built to last.
+          <span className="text-accent font-medium"> Get your free quote today.</span>
         </p>
 
         <a
@@ -246,6 +252,31 @@ function HeroSocialProof() {
           >
             Read all testimonials →
           </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function TrustBadges() {
+  const badges = [
+    { icon: Shield, label: "Fully Insured & Licensed" },
+    { icon: Hammer, label: "25+ Years Experience" },
+    { icon: Star, label: "5-Star Rated" },
+    { icon: BadgeCheck, label: "Horseman-Built Quality" },
+    { icon: Users, label: "100+ Facilities Completed" },
+  ];
+
+  return (
+    <section className="bg-muted/50 border-b border-border">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-5">
+        <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+          {badges.map((b) => (
+            <div key={b.label} className="flex items-center gap-2 text-muted-foreground">
+              <b.icon className="h-4 w-4 text-accent flex-shrink-0" />
+              <span className="text-xs sm:text-sm font-medium whitespace-nowrap">{b.label}</span>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -2314,6 +2345,7 @@ export default function Index() {
         )}
         <HeroSection />
         <HeroSocialProof />
+        <TrustBadges />
         <HeroContactStrip />
         <IntroSection />
         <BlueprintDivider variant="floorplan" />
