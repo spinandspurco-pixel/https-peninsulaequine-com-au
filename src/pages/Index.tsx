@@ -32,6 +32,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
 // Import images
 import hatDetail from "@/assets/hat-detail.png";
+import heroVideo from "@/assets/videos/slow-mo-1.mp4";
 import ciroWide from "@/assets/ciro-wide.png";
 import spurDetail from "@/assets/spur-detail.png";
 import stoneworkBW from "@/assets/aberdeen-stonework-bw.jpg";
@@ -67,14 +68,30 @@ function HeroSection() {
 
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden bg-primary">
-      {/* PE Banner — full-bleed background */}
+      {/* Background video */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        className="absolute inset-0 w-full h-full object-cover"
+        aria-hidden="true"
+      >
+        <source src={heroVideo} type="video/mp4" />
+      </video>
+
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-primary/75" />
+
+      {/* PE Banner watermark */}
       <div className="absolute inset-0 flex items-center justify-center">
         <img
           src={peBanner}
           alt=""
           aria-hidden="true"
           loading="eager"
-          className="w-full h-full object-contain max-w-[85vw] max-h-[70vh] opacity-[0.08]"
+          className="w-full h-full object-contain max-w-[85vw] max-h-[70vh] opacity-[0.06]"
           style={{ filter: "brightness(1.3)" }}
         />
       </div>
