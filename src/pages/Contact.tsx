@@ -5,6 +5,7 @@ import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { PageHeader } from "@/components/PageHeader";
 import { InquiryForm } from "@/components/InquiryForm";
 import { siteConfig } from "@/data/content";
+import { PolicyDownloadCenter } from "@/components/PolicyDownloadCenter";
 
 // Background image for header parallax
 import aberdeenInterior from "@/assets/aberdeen-barn-interior.jpg";
@@ -112,8 +113,9 @@ export default function Contact() {
             </div>
 
             {/* Contact Info - Takes 1 column */}
-            <div>
+            <div className="space-y-8">
               <ContactInfo />
+              <PolicyDownloadCenter />
             </div>
           </div>
         </div>
