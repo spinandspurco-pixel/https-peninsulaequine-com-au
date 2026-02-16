@@ -103,7 +103,7 @@ function CiroSection() {
             <div className="aspect-[4/5] rounded-lg overflow-hidden">
               <img
                 src={ciroWithHorse}
-                alt="Ciro, founder of Peninsula Equine"
+                alt="Ciro Parisella, founder of Peninsula Equine, standing alongside a horse at Main Ridge — expert horseman and equine facility builder"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -289,7 +289,7 @@ function ImageBreak() {
       >
         <img
           src={horseAction}
-          alt="Horse training in arena"
+          alt="Horse and rider training in a Peninsula Equine arena — natural horsemanship in action"
           className={`w-full h-full object-cover transition-transform duration-1000 ${
             isVisible ? "scale-100" : "scale-105"
           }`}
