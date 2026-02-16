@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, X, Mail, Send, MessageSquare, Star, ShieldCheck } from "lucide-react";
+import { HeroLeadForm } from "@/components/HeroLeadForm";
 import { useABTest } from "@/hooks/useABTest";
 import { BookingWidget } from "@/components/BookingWidget";
 import { Button } from "@/components/ui/button";
@@ -116,28 +117,11 @@ function HeroCTAToggle({ heroMode, setHeroMode }: { heroMode: "book" | "consult"
         </div>
       )}
 
-      {/* Conditional content */}
       <div className="w-full max-w-lg mx-auto transition-all duration-300">
         {heroMode === "book" ? (
           <BookingWidget variant="hero" />
         ) : (
-          <div className="flex flex-col items-center gap-3">
-            <p className="text-white/70 text-sm text-center max-w-sm">
-              {copy.consultHeadline}
-            </p>
-            <Button
-              asChild
-              size="lg"
-              className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium tracking-wide shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
-              onClick={() => trackClick({ action: "cta_click", target: "consult_page" })}
-            >
-              <Link to="/contact">
-                <MessageSquare className="mr-2 h-5 w-5" />
-                {copy.consultButton}
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
+          <HeroLeadForm />
         )}
       </div>
     </div>
