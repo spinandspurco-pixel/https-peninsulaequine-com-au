@@ -297,34 +297,82 @@ export const galleryItems = [
   },
 ];
 
-export const faqs = [
+export const faqs: { question: string; answer: string; category?: string }[] = [
   {
     question: "What geographic area do you serve?",
     answer: "We primarily serve the San Francisco Peninsula, South Bay, and coastal areas including Half Moon Bay, Woodside, Atherton, Portola Valley, Los Altos Hills, and surrounding communities. For larger projects, we're available throughout Northern California.",
+    category: "general",
   },
   {
     question: "How long does a typical arena construction project take?",
     answer: "Timeline varies based on size, complexity, and weather. A standard outdoor arena typically takes 2-4 weeks from ground breaking to completion. Covered arenas and larger projects may take 6-12 weeks. We provide detailed timelines during the consultation phase.",
+    category: "general",
   },
   {
     question: "Do you handle permits and engineering?",
     answer: "Yes, we manage the entire process including permits, engineering drawings, and inspections. We have established relationships with local jurisdictions and can navigate the permitting process efficiently.",
+    category: "general",
   },
   {
     question: "What makes your arena footing different?",
     answer: "We select footing materials based on your specific discipline, climate, and maintenance capabilities. Ciro personally tests and approves every footing installation—he won't sign off on an arena he wouldn't want to ride in himself.",
+    category: "general",
   },
   {
     question: "Can you work with my existing barn or arena?",
     answer: "Absolutely. We specialize in renovations and upgrades as well as new construction. Many clients start with arena resurfacing or drainage improvements and return for larger projects.",
+    category: "general",
   },
   {
     question: "What's the investment for a new barn or arena?",
     answer: "Every project is custom, and pricing depends on size, materials, site conditions, and features. We provide detailed quotes after an on-site consultation. Financing options are available for qualified projects.",
+    category: "general",
   },
   {
     question: "Are lessons available at your facility?",
     answer: "Yes, we have an experienced trainer on-site offering lessons every Thursday and Friday. Contact us to learn more about lesson packages and availability.",
+    category: "lessons",
+  },
+  // ── Payments & Packages ────────────────────────────
+  {
+    question: "What payment methods do you accept?",
+    answer: "We accept bank transfer (EFT), credit/debit cards, and cash. For lesson packages, payment is required upfront. Invoices are sent via email for construction projects.",
+    category: "payments",
+  },
+  {
+    question: "How do lesson packages work?",
+    answer: "Purchase a 5, 10, or 20-lesson pack at a discounted rate (10–20% off). Packs are valid for a set period and offer flexible scheduling. Visit our Pricing page for full details.",
+    category: "payments",
+  },
+  {
+    question: "Is a deposit required for bookings?",
+    answer: "Yes. Individual lessons require full payment at booking. Group bookings require a 30% deposit to secure the date, with the balance due on the day. Construction projects have a separate deposit structure outlined in your quote.",
+    category: "payments",
+  },
+  {
+    question: "What is your refund policy?",
+    answer: "Lesson cancellations with 24+ hours notice receive a full credit (no cash refunds). Late cancellations or no-shows forfeit the session. Unused lessons in a package can be transferred to another person but are non-refundable.",
+    category: "payments",
+  },
+  {
+    question: "Do you offer group discounts?",
+    answer: "Yes! Groups of 2–3 save 5%, 4–6 save 10%, 7–10 save 15%, and 11–20 save 20%. Weekend and peak-season surcharges may apply. See our Group Booking page for a live price calculator.",
+    category: "payments",
+  },
+  {
+    question: "Are there peak-season or weekend price differences?",
+    answer: "Weekday rates are our standard price. Weekends carry a $20/person surcharge, and peak season (December–February) adds $15/person. These are reflected automatically in our group booking calculator.",
+    category: "payments",
+  },
+  {
+    question: "Can I gift a lesson package?",
+    answer: "Absolutely. Contact us and we'll set up a gift voucher for any package or individual session. Vouchers are valid for 12 months from purchase.",
+    category: "payments",
+  },
+  {
+    question: "Do package lessons expire?",
+    answer: "Yes. 5-lesson packs are valid for 10 weeks, 10-lesson packs for 20 weeks, and 20-lesson packs for 40 weeks from date of purchase. Extensions may be granted for medical reasons.",
+    category: "payments",
   },
 ];
 
