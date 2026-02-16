@@ -53,19 +53,30 @@ export function Header() {
         <nav className="flex items-center justify-between h-20 lg:h-24">
           {/* Logo - Left */}
           <Link to="/" className="flex items-center gap-3 group">
-            <img 
-              src={logoImage} 
-              alt="Peninsula Equine" 
-              className={cn(
-                "h-10 w-10 sm:h-12 sm:w-12 transition-all duration-700 group-hover:scale-105",
-                isScrolled ? "" : "brightness-0 invert",
-                logoLoaded
-                  ? "opacity-100 scale-100 rotate-0"
-                  : "opacity-0 scale-75 -rotate-[15deg]"
-              )}
-            />
+            {/* Logo mark + accent bar */}
+            <div className="relative flex items-center">
+              <img 
+                src={logoImage} 
+                alt="Peninsula Equine" 
+                className={cn(
+                  "h-10 w-10 sm:h-12 sm:w-12 transition-all duration-700 group-hover:scale-105",
+                  isScrolled ? "" : "brightness-0 invert",
+                  logoLoaded
+                    ? "opacity-100 scale-100 rotate-0"
+                    : "opacity-0 scale-75 -rotate-[15deg]"
+                )}
+              />
+              {/* Accent bar */}
+              <span
+                className={cn(
+                  "absolute -right-2 top-1/2 -translate-y-1/2 w-[3px] rounded-full transition-all duration-500",
+                  isScrolled ? "h-6 bg-[hsl(var(--header-active))]" : "h-7 bg-[hsl(var(--header-active))]/80",
+                  logoLoaded ? "opacity-100 scale-y-100" : "opacity-0 scale-y-0"
+                )}
+              />
+            </div>
             <span className={cn(
-              "hidden sm:block font-serif text-lg tracking-[0.1em] uppercase transition-colors",
+              "hidden sm:block font-serif text-lg tracking-[0.1em] uppercase transition-colors pl-1",
               isScrolled ? "text-[hsl(var(--header-scrolled-foreground))]" : "text-[hsl(var(--header-foreground))]"
             )}>
               Peninsula<span className="text-[hsl(var(--header-active))]">Equine</span>
