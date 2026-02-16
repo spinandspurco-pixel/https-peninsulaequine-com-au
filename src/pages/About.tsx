@@ -51,7 +51,7 @@ function PageHeader() {
       {/* Blueprint layers */}
       <BlueprintBackground image={blueprintElevation} opacity={0.07} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
       <BlueprintBackground image={blueprintFacility} opacity={0.03} direction="right-to-left" duration={2400} parallaxSpeed={0.1} className="scale-105" />
-      <BlueprintLineOverlay variant="front-elevation" color="light" />
+      <BlueprintLineOverlay variant="about-elevation" color="light" />
       {/* Parallax background layer */}
       <div 
         className="absolute inset-0 opacity-10 will-change-transform"

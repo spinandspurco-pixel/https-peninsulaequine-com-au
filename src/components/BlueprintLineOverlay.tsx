@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface BlueprintLineOverlayProps {
-  variant?: "barn" | "detail" | "dimensions" | "front-elevation";
+  variant?: "barn" | "detail" | "dimensions" | "front-elevation" | "about-elevation";
   color?: "light" | "dark";
   className?: string;
 }
@@ -396,6 +396,95 @@ export function BlueprintLineOverlay({
           </text>
           <text x="1100" y="755" textAnchor="end" fill={t} fontSize="9" fontFamily="monospace" style={fade(2900)}>
             SCALE 1:48
+          </text>
+        </>
+      )}
+
+      {variant === "about-elevation" && (
+        <>
+          {/* ── Elevation grid — coordinated column/row system ── */}
+          {/* Vertical grid lines */}
+          {[120, 280, 440, 600, 760, 920, 1080].map((x, i) => (
+            <line key={`ag-v${i}`} x1={x} y1="100" x2={x} y2="700"
+              stroke={sf} strokeWidth="0.3" style={draw(i * 80, 650)} />
+          ))}
+          {/* Horizontal grid lines */}
+          {[160, 310, 460, 610].map((y, i) => (
+            <line key={`ag-h${i}`} x1="80" y1={y} x2="1120" y2={y}
+              stroke={sf} strokeWidth="0.3" style={draw(100 + i * 100, 1100)} />
+          ))}
+
+          {/* Column circle labels at top */}
+          {[120, 280, 440, 600, 760, 920, 1080].map((x, i) => (
+            <g key={`ag-cl${i}`}>
+              <circle cx={x} cy="80" r="10" fill="none" stroke={s} strokeWidth="0.45" style={draw(400 + i * 70, 65)} />
+              <text x={x} y="84" textAnchor="middle" fill={t} fontSize="8" fontFamily="monospace" style={fade(800 + i * 60)}>
+                {String.fromCharCode(65 + i)}
+              </text>
+            </g>
+          ))}
+
+          {/* Row labels on left */}
+          {[160, 310, 460, 610].map((y, i) => (
+            <g key={`ag-rl${i}`}>
+              <circle cx="55" cy={y} r="10" fill="none" stroke={s} strokeWidth="0.45" style={draw(500 + i * 80, 65)} />
+              <text x="55" y={y + 4} textAnchor="middle" fill={t} fontSize="8" fontFamily="monospace" style={fade(900 + i * 70)}>
+                {i + 1}
+              </text>
+            </g>
+          ))}
+
+          {/* ── Barn cross-section overlay (offset right) ── */}
+          {/* Foundation */}
+          <line x1="520" y1="610" x2="1080" y2="610" stroke={s} strokeWidth="0.9" style={draw(600, 600)} />
+
+          {/* Main posts */}
+          {[560, 720, 880, 1040].map((x, i) => (
+            <line key={`ag-p${i}`} x1={x} y1="240" x2={x} y2="610" stroke={s} strokeWidth="0.6" style={draw(700 + i * 110, 400)} />
+          ))}
+
+          {/* Eave beam */}
+          <line x1="520" y1="260" x2="1080" y2="260" stroke={s} strokeWidth="0.7" style={draw(1100, 600)} />
+
+          {/* Gable roof */}
+          <path d="M 520,260 L 800,130 L 1080,260" fill="none" stroke={s} strokeWidth="0.8" style={draw(1300, 900)} />
+          {/* Inner roof line */}
+          <path d="M 580,260 L 800,160 L 1020,260" fill="none" stroke={sf} strokeWidth="0.35" style={draw(1500, 700)} />
+          {/* Ridge point */}
+          <circle cx="800" cy="130" r="4" fill="none" stroke={a} strokeWidth="0.5" style={draw(1600, 28)} />
+          {/* King post */}
+          <line x1="800" y1="130" x2="800" y2="260" stroke={s} strokeWidth="0.4" strokeDasharray="5 3" style={draw(1650, 140)} />
+
+          {/* Stall dividers */}
+          {[640, 800, 960].map((x, i) => (
+            <line key={`ag-sd${i}`} x1={x} y1="420" x2={x} y2="610"
+              stroke={sf} strokeWidth="0.4" strokeDasharray="3 3" style={draw(1400 + i * 80, 200)} />
+          ))}
+
+          {/* ── Diagonal braces in left grid bay ── */}
+          <line x1="120" y1="160" x2="280" y2="310" stroke={a} strokeWidth="0.35" style={draw(1000, 220)} />
+          <line x1="280" y1="160" x2="120" y2="310" stroke={a} strokeWidth="0.35" style={draw(1050, 220)} />
+
+          {/* ── Dimension line — width ── */}
+          <line x1="560" y1="660" x2="1040" y2="660" stroke={s} strokeWidth="0.3"
+            markerStart="url(#ov-arr-l)" markerEnd="url(#ov-arr-r)" style={draw(1800, 500)} />
+          <text x="800" y="685" textAnchor="middle" fill={t} fontSize="11" fontFamily="monospace" style={fade(2300)}>
+            36'-0"
+          </text>
+
+          {/* Height dimension */}
+          <line x1="1115" y1="260" x2="1115" y2="610" stroke={s} strokeWidth="0.3"
+            markerStart="url(#ov-arr-l)" markerEnd="url(#ov-arr-r)" style={draw(1900, 400)} />
+          <text x="1140" y="440" textAnchor="start" fill={t} fontSize="9" fontFamily="monospace" style={fade(2400)}>
+            14'-0"
+          </text>
+
+          {/* ── Title block ── */}
+          <text x="600" y="50" textAnchor="middle" fill={t} fontSize="10" fontFamily="monospace" letterSpacing="4" style={fade(2500)}>
+            ELEVATION GRID — BARN SECTION
+          </text>
+          <text x="1100" y="740" textAnchor="end" fill={t} fontSize="8" fontFamily="monospace" style={fade(2700)}>
+            SCALE 1:60
           </text>
         </>
       )}
