@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import logoImage from "@/assets/logo-pe-mark.png";
 import { CartDrawer } from "@/components/CartDrawer";
+import { GlobalSearch } from "@/components/GlobalSearch";
 import { siteConfig } from "@/data/content";
 
 const navigation = [
@@ -135,6 +136,7 @@ export function Header() {
 
           {/* CTA + Cart - Right */}
           <div className="hidden lg:flex items-center gap-3">
+            <GlobalSearch />
             <CartDrawer />
             <Button 
               asChild 
