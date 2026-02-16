@@ -139,6 +139,18 @@ export function TestimonialLightbox({ items, initialIndex, onClose }: Testimonia
       <div id="testimonial-lightbox-media" className="relative max-w-4xl w-full mx-4 sm:mx-8" onClick={(e) => e.stopPropagation()} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
         {current.type === "image" ? (
           <img src={current.src} alt={current.caption || "Testimonial photo"} className="w-full max-h-[80vh] object-contain rounded-lg" />
+        ) : /\.(mp4|mov|webm|ogg)(\?.*)?$/i.test(current.src) ? (
+          <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-black">
+            <video
+              key={current.src}
+              src={current.src}
+              controls
+              autoPlay
+              playsInline
+              preload="metadata"
+              className="absolute inset-0 w-full h-full object-contain"
+            />
+          </div>
         ) : (
           <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-black">
             <iframe src={current.src} title={current.caption || "Testimonial video"} className="absolute inset-0 w-full h-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
