@@ -140,24 +140,18 @@ export function usePinchZoom(options: UsePinchZoomOptions = {}) {
         e.preventDefault();
         
         if (state.scale > 1) {
-          // Zoom out
           setState({ scale: 1, translateX: 0, translateY: 0 });
         } else {
-          // Zoom in to 2x centered on tap position
           const touch = e.changedTouches[0];
           const rect = containerRef.current?.getBoundingClientRect();
           
           if (rect) {
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
-            const offsetX = (centerX - touch.clientX) * 1; // Offset towards tap
+            const offsetX = (centerX - touch.clientX) * 1;
             const offsetY = (centerY - touch.clientY) * 1;
             
-            setState({
-              scale: 2,
-              translateX: offsetX,
-              translateY: offsetY,
-            });
+            setState({ scale: 2, translateX: offsetX, translateY: offsetY });
           } else {
             setState({ scale: 2, translateX: 0, translateY: 0 });
           }
@@ -169,8 +163,81 @@ export function usePinchZoom(options: UsePinchZoomOptions = {}) {
     [state.scale]
   );
 
+  // --- Desktop: drag-to-pan when zoomed ---
+  const isDragging = useRef(false);
+  const dragStart = useRef({ x: 0, y: 0 });
+  const dragTranslateStart = useRef({ x: 0, y: 0 });
+
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      if (state.scale <= 1) return;
+      e.preventDefault();
+      isDragging.current = true;
+      dragStart.current = { x: e.clientX, y: e.clientY };
+      dragTranslateStart.current = { x: state.translateX, y: state.translateY };
+    },
+    [state.scale, state.translateX, state.translateY]
+  );
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      if (!isDragging.current || state.scale <= 1) return;
+      e.preventDefault();
+      const dx = e.clientX - dragStart.current.x;
+      const dy = e.clientY - dragStart.current.y;
+      setState((prev) => ({
+        ...prev,
+        translateX: dragTranslateStart.current.x + dx,
+        translateY: dragTranslateStart.current.y + dy,
+      }));
+    },
+    [state.scale]
+  );
+
+  const handleMouseUp = useCallback(() => {
+    isDragging.current = false;
+  }, []);
+
+  // Double-click to toggle zoom on desktop
+  const handleDoubleClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (state.scale > 1) {
+        setState({ scale: 1, translateX: 0, translateY: 0 });
+      } else {
+        const rect = containerRef.current?.getBoundingClientRect();
+        if (rect) {
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          setState({
+            scale: 2,
+            translateX: (centerX - e.clientX),
+            translateY: (centerY - e.clientY),
+          });
+        } else {
+          setState({ scale: 2, translateX: 0, translateY: 0 });
+        }
+      }
+    },
+    [state.scale]
+  );
+
+  // Scroll-wheel zoom
+  const handleWheel = useCallback(
+    (e: React.WheelEvent) => {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? -0.15 : 0.15;
+      setState((prev) => {
+        const newScale = Math.max(minScale, Math.min(maxScale, prev.scale + delta));
+        if (newScale <= 1) return { scale: 1, translateX: 0, translateY: 0 };
+        return { ...prev, scale: newScale };
+      });
+    },
+    [minScale, maxScale]
+  );
+
   const reset = useCallback(() => {
     setState({ scale: 1, translateX: 0, translateY: 0 });
+    isDragging.current = false;
   }, []);
 
   const setTranslate = useCallback((x: number, y: number) => {
@@ -181,7 +248,6 @@ export function usePinchZoom(options: UsePinchZoomOptions = {}) {
     setState({ scale: newScale, translateX: offsetX, translateY: offsetY });
   }, []);
 
-  // Reset when component unmounts or item changes
   useEffect(() => {
     return () => reset();
   }, [reset]);
@@ -195,10 +261,17 @@ export function usePinchZoom(options: UsePinchZoomOptions = {}) {
     translateY: state.translateY,
     transform,
     isZoomed: state.scale > 1,
+    isDragging: isDragging.current,
     handlers: {
       onTouchStart: handleTouchStart,
       onTouchMove: handleTouchMove,
       onTouchEnd: handleTouchEnd,
+      onMouseDown: handleMouseDown,
+      onMouseMove: handleMouseMove,
+      onMouseUp: handleMouseUp,
+      onMouseLeave: handleMouseUp,
+      onDoubleClick: handleDoubleClick,
+      onWheel: handleWheel,
     },
     handleDoubleTap,
     reset,
