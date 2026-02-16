@@ -36,7 +36,7 @@ import { BlueprintDivider } from "@/components/BlueprintDivider";
 import { LoadingSplash } from "@/components/LoadingSplash";
 
 // Featured services for homepage
-const featuredServices = services.slice(0, 4);
+const featuredServices = services.slice(0, 6);
 
 function HeroSection() {
   return (
@@ -293,42 +293,33 @@ function ServicesSection() {
         </div>
 
         {/* Services Grid */}
-        <div ref={gridRef} className="grid sm:grid-cols-2 gap-px bg-border">
+        <div ref={gridRef} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border">
           {featuredServices.map((service, index) => (
             <div
               key={service.id}
-              className={`group p-10 sm:p-12 lg:p-16 bg-background hover:bg-card transition-all duration-700 ease-out ${
+              className={`group p-8 sm:p-10 bg-background hover:bg-card transition-all duration-700 ease-out ${
                 gridVisible 
-                  ? "opacity-100 translate-y-0 [clip-path:inset(0_0_0_0)]" 
-                  : "opacity-0 translate-y-8 [clip-path:inset(0_0_10%_0)]"
+                  ? "opacity-100 translate-y-0" 
+                  : "opacity-0 translate-y-8"
               }`}
-              style={{ transitionDelay: `${index * 120}ms` }}
+              style={{ transitionDelay: `${index * 100}ms` }}
             >
-              <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-4">
-                {service.id.replace(/-/g, ' ')}
+              <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-3">
+                {String(index + 1).padStart(2, '0')}
               </p>
-              <h3 className="font-serif text-2xl sm:text-3xl text-foreground mb-4 group-hover:text-accent transition-colors">
+              <h3 className="font-serif text-xl sm:text-2xl text-foreground mb-3 group-hover:text-accent transition-colors">
                 {service.title}
               </h3>
-              <p className="text-muted-foreground mb-6 leading-relaxed">
+              <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
                 {service.shortDescription}
               </p>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                <Link
-                  to={`/services#${service.id}`}
-                  className="inline-flex items-center text-sm font-medium text-foreground hover:text-accent transition-colors"
-                >
-                  <span className="border-b border-current pb-0.5">Learn more</span>
-                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <Link
-                  to={`/contact?service=${service.id}`}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium tracking-wide bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 hover:scale-105 hover:shadow-[0_4px_16px_hsl(var(--accent)/0.3)] whitespace-nowrap"
-                >
-                  <CalendarIcon className="h-3.5 w-3.5" />
-                  Book Consultation
-                </Link>
-              </div>
+              <Link
+                to={`/services#${service.id}`}
+                className="inline-flex items-center text-sm font-medium text-foreground hover:text-accent transition-colors"
+              >
+                <span className="border-b border-current pb-0.5">Learn More</span>
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </div>
           ))}
         </div>
