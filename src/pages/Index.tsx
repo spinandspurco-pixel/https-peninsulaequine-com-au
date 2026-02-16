@@ -1548,12 +1548,98 @@ function TestimonialServiceCarousel() {
   );
 }
 
+function HomeVideoEmbed({ url }: { url: string }) {
+  const [playing, setPlaying] = useState(false);
+  const isDirectFile = /\.(mp4|mov|webm|ogg)(\?.*)?$/i.test(url);
+
+  if (isDirectFile) {
+    return (
+      <div className="w-full aspect-video rounded-lg overflow-hidden border border-border bg-black mb-5">
+        <video src={url} controls preload="metadata" playsInline className="w-full h-full object-contain" />
+      </div>
+    );
+  }
+
+  const getEmbedUrl = (raw: string): string => {
+    const ytMatch = raw.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+    if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1`;
+    const vimeoMatch = raw.match(/vimeo\.com\/(\d+)/);
+    if (vimeoMatch) return `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1`;
+    return raw;
+  };
+
+  if (!playing) {
+    return (
+      <button
+        onClick={() => setPlaying(true)}
+        className="relative w-full aspect-video rounded-lg bg-muted/50 border border-border flex items-center justify-center group hover:border-accent/40 transition-colors overflow-hidden mb-5"
+        aria-label="Play video testimonial"
+      >
+        <div className="w-12 h-12 rounded-full bg-accent/90 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+          <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-accent-foreground ml-0.5"><path d="M8 5v14l11-7z" /></svg>
+        </div>
+      </button>
+    );
+  }
+
+  return (
+    <div className="w-full aspect-video rounded-lg overflow-hidden border border-border mb-5">
+      <iframe src={getEmbedUrl(url)} title="Video testimonial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="w-full h-full" />
+    </div>
+  );
+}
+
 function TestimonialsGallery() {
   const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
 
+  interface HomeTestimonial {
+    id: string;
+    name: string;
+    role: string;
+    quote: string;
+    rating: number;
+    mediaType?: "image" | "video" | null;
+    mediaUrl?: string | null;
+  }
+
+  const [items, setItems] = useState<HomeTestimonial[]>([]);
+
+  useEffect(() => {
+    async function load() {
+      const { data } = await supabase
+        .from("managed_testimonials")
+        .select("*")
+        .eq("active", true)
+        .order("sort_order")
+        .limit(6);
+
+      if (data && data.length > 0) {
+        setItems(data.map((t: any) => ({
+          id: t.id,
+          name: t.client_name,
+          role: t.client_role ?? "",
+          quote: t.quote,
+          rating: t.rating,
+          mediaType: (t.media_type as "image" | "video" | null) ?? null,
+          mediaUrl: t.media_url ?? null,
+        })));
+      } else {
+        setItems(testimonials.slice(0, 6).map((t) => ({
+          id: String(t.id),
+          name: t.name,
+          role: t.role,
+          quote: t.quote,
+          rating: t.rating,
+          mediaType: t.mediaType ?? null,
+          mediaUrl: null,
+        })));
+      }
+    }
+    load();
+  }, []);
+
   return (
     <section className="section-padding bg-card overflow-hidden relative">
-      {/* clean */}
       <div className="section-container relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <AnimatedDivider className="mx-auto mb-8" />
@@ -1579,7 +1665,7 @@ function TestimonialsGallery() {
         </div>
 
         <div ref={gridRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.slice(0, 6).map((testimonial, index) => (
+          {items.map((testimonial, index) => (
             <div
               key={testimonial.id}
               className={`group p-8 rounded-lg bg-background border border-border hover:border-accent/50 transition-all duration-700 ease-out hover:shadow-lg hover:-translate-y-1 ${
@@ -1589,6 +1675,18 @@ function TestimonialsGallery() {
               }`}
               style={{ transitionDelay: `${index * 100}ms` }}
             >
+              {/* Video embed */}
+              {testimonial.mediaType === "video" && testimonial.mediaUrl && (
+                <HomeVideoEmbed url={testimonial.mediaUrl} />
+              )}
+
+              {/* Image */}
+              {testimonial.mediaType === "image" && testimonial.mediaUrl && (
+                <div className="mb-5 rounded-lg overflow-hidden aspect-video">
+                  <img src={testimonial.mediaUrl} alt={`Project by ${testimonial.name}`} loading="lazy" className="w-full h-full object-cover" />
+                </div>
+              )}
+
               <div className="flex gap-1 mb-5">
                 {[...Array(testimonial.rating)].map((_, i) => (
                   <svg
@@ -1620,7 +1718,7 @@ function TestimonialsGallery() {
             className="inline-flex items-center text-muted-foreground text-sm hover:text-accent transition-colors group"
           >
             <span className="border-b border-muted-foreground/40 group-hover:border-accent transition-colors pb-0.5">
-              Read all {testimonials.length} reviews
+              Read all reviews
             </span>
             <ArrowRight className="ml-1.5 h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
           </Link>
