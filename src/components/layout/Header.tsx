@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Phone, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import logoImage from "@/assets/logo-pe-mark.png";
 import { CartDrawer } from "@/components/CartDrawer";
+import { siteConfig } from "@/data/content";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -124,11 +125,38 @@ export function Header() {
       {/* Mobile Menu */}
       <div
         className={cn(
-          "lg:hidden bg-background border-b border-border overflow-hidden transition-all duration-300",
-          isMobileMenuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+          "lg:hidden bg-background border-b border-border overflow-hidden transition-all duration-300 relative",
+          isMobileMenuOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
         )}
       >
-        <div className="section-container py-6 space-y-1">
+        {/* Blueprint SVG overlay inside mobile menu */}
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          viewBox="0 0 400 600"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          {/* Horizontal grid lines */}
+          {[80, 160, 240, 320, 400].map((y, i) => (
+            <line key={`mh${i}`} x1="10" y1={y} x2="390" y2={y}
+              stroke="hsl(30 15% 18% / 0.04)" strokeWidth="0.5" />
+          ))}
+          {/* Vertical grid lines */}
+          {[40, 120, 200, 280, 360].map((x, i) => (
+            <line key={`mv${i}`} x1={x} y1="10" x2={x} y2="590"
+              stroke="hsl(30 15% 18% / 0.04)" strokeWidth="0.5" />
+          ))}
+          {/* Corner brackets */}
+          <path d="M 15,15 L 15,45 M 15,15 L 45,15" fill="none" stroke="hsl(30 15% 18% / 0.06)" strokeWidth="0.6" />
+          <path d="M 385,15 L 385,45 M 385,15 L 355,15" fill="none" stroke="hsl(30 15% 18% / 0.06)" strokeWidth="0.6" />
+          <path d="M 15,585 L 15,555 M 15,585 L 45,585" fill="none" stroke="hsl(30 15% 18% / 0.06)" strokeWidth="0.6" />
+          <path d="M 385,585 L 385,555 M 385,585 L 355,585" fill="none" stroke="hsl(30 15% 18% / 0.06)" strokeWidth="0.6" />
+          {/* Centre cross */}
+          <line x1="195" y1="290" x2="205" y2="290" stroke="hsl(42 60% 50% / 0.06)" strokeWidth="0.5" />
+          <line x1="200" y1="285" x2="200" y2="295" stroke="hsl(42 60% 50% / 0.06)" strokeWidth="0.5" />
+        </svg>
+
+        <div className="section-container py-6 space-y-1 relative z-10">
           {navigation.map((item) => (
             <Link
               key={item.name}
@@ -143,7 +171,21 @@ export function Header() {
               {item.name}
             </Link>
           ))}
-          <div className="pt-4 mt-4 border-t border-border">
+
+          {/* Contact quick-access row */}
+          <div className="flex items-center gap-4 pt-3 mt-3 border-t border-border text-sm text-muted-foreground">
+            <a href={`tel:${siteConfig.phone}`} className="inline-flex items-center gap-1.5 hover:text-accent transition-colors">
+              <Phone className="h-3.5 w-3.5" />
+              <span>{siteConfig.phone}</span>
+            </a>
+            <span className="w-px h-4 bg-border" />
+            <a href={`mailto:${siteConfig.email}`} className="inline-flex items-center gap-1.5 hover:text-accent transition-colors truncate">
+              <Mail className="h-3.5 w-3.5 flex-shrink-0" />
+              <span className="truncate">{siteConfig.email}</span>
+            </a>
+          </div>
+
+          <div className="pt-4 mt-2">
             <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.1em]">
               <Link to="/contact">Inquire</Link>
             </Button>
