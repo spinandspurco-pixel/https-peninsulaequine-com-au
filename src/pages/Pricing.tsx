@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Check, ArrowRight, Zap, Users, Award, Star } from "lucide-react";
+import { Check, ArrowRight, Zap, Users, Award, Star, UserPlus } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -265,6 +265,37 @@ function PricingCTA() {
   );
 }
 
+// ── Group Rates Teaser ──────────────────────────────
+
+function GroupRatesTeaser() {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+
+  return (
+    <section className="section-padding bg-card border-y border-border">
+      <div className="section-container">
+        <div ref={ref} className={cn("max-w-3xl mx-auto text-center transition-all duration-700", isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8")}>
+          <div className="w-14 h-14 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-5">
+            <UserPlus className="h-7 w-7 text-accent" />
+          </div>
+          <h2 className="heading-section text-foreground mb-3">Group Rates Available</h2>
+          <p className="text-muted-foreground mb-4 max-w-xl mx-auto">
+            Bring your friends, family, or team and save up to <strong className="text-foreground">20%</strong> with our group discounts. Calendar-aware pricing means you always know the exact cost upfront.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3 mb-8 text-sm text-muted-foreground">
+            <span className="px-3 py-1 rounded-full border border-border bg-background">2–3 riders: 5% off</span>
+            <span className="px-3 py-1 rounded-full border border-border bg-background">4–6 riders: 10% off</span>
+            <span className="px-3 py-1 rounded-full border border-border bg-background">7–10 riders: 15% off</span>
+            <span className="px-3 py-1 rounded-full border border-accent/30 bg-accent/5 text-accent font-medium">11–20 riders: 20% off</span>
+          </div>
+          <Button asChild size="lg">
+            <Link to="/group-booking">View Group Rates & Book <ArrowRight className="ml-2 h-4 w-4" /></Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── Page ─────────────────────────────────────────────
 
 export default function Pricing() {
@@ -277,6 +308,7 @@ export default function Pricing() {
       <SingleLessons />
       <BulkPackages />
       <ClinicPricing />
+      <GroupRatesTeaser />
       <PricingCTA />
       <StickySubpageCTA
         ctaLabel="Book a Lesson"
