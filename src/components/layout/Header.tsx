@@ -50,33 +50,42 @@ export function Header() {
       )}
     >
       <div className="section-container">
-        <nav className="flex items-center justify-between h-20 lg:h-24">
+        <nav className="flex items-center justify-between h-16 sm:h-20 lg:h-24">
           {/* Logo - Left */}
-          <Link to="/" className="flex items-center gap-3 group">
-            {/* Logo mark + accent bar */}
-            <div className="relative flex items-center">
+          <Link to="/" className="flex items-center gap-2 sm:gap-3 group min-w-0">
+            {/* Logo mark + accent bar — fixed aspect-ratio container prevents layout shift */}
+            <div
+              className={cn(
+                "relative flex-shrink-0 flex items-center",
+                "w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12"
+              )}
+            >
               <img 
                 src={logoImage} 
                 alt="Peninsula Equine" 
+                width={48}
+                height={48}
                 className={cn(
-                  "h-10 w-10 sm:h-12 sm:w-12 transition-all duration-700 group-hover:scale-105",
+                  "w-full h-full object-contain transition-all duration-700 group-hover:scale-105",
                   isScrolled ? "" : "brightness-0 invert",
                   logoLoaded
                     ? "opacity-100 scale-100 rotate-0"
                     : "opacity-0 scale-75 -rotate-[15deg]"
                 )}
               />
-              {/* Accent bar */}
+              {/* Accent bar — scales with logo */}
               <span
                 className={cn(
-                  "absolute -right-2 top-1/2 -translate-y-1/2 w-[3px] rounded-full transition-all duration-500",
-                  isScrolled ? "h-6 bg-[hsl(var(--header-active))]" : "h-7 bg-[hsl(var(--header-active))]/80",
+                  "absolute -right-1.5 sm:-right-2 top-1/2 -translate-y-1/2 w-[2px] sm:w-[3px] rounded-full transition-all duration-500",
+                  isScrolled
+                    ? "h-4 sm:h-5 md:h-6 bg-[hsl(var(--header-active))]"
+                    : "h-5 sm:h-6 md:h-7 bg-[hsl(var(--header-active))]/80",
                   logoLoaded ? "opacity-100 scale-y-100" : "opacity-0 scale-y-0"
                 )}
               />
             </div>
             <span className={cn(
-              "hidden sm:block font-serif text-lg tracking-[0.1em] uppercase transition-colors pl-1",
+              "hidden sm:block font-serif text-base md:text-lg tracking-[0.1em] uppercase transition-colors pl-0.5 sm:pl-1 truncate",
               isScrolled ? "text-[hsl(var(--header-scrolled-foreground))]" : "text-[hsl(var(--header-foreground))]"
             )}>
               Peninsula<span className="text-[hsl(var(--header-active))]">Equine</span>
