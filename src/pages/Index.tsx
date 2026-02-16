@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Phone, ChevronDown, CalendarIcon, TrendingUp, Clock, Award, Users, X, Mail, Send, MessageSquare, Star, ShieldCheck, Flame, Loader2, CheckCircle } from "lucide-react";
-import { HeroLeadForm } from "@/components/HeroLeadForm";
 import { useABTest } from "@/hooks/useABTest";
-import { BookingWidget } from "@/components/BookingWidget";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
@@ -20,11 +18,9 @@ import {
 } from "@/components/ui/dialog";
 
 import { ParallaxCTA } from "@/components/ParallaxCTA";
-import { BookingLandingSection } from "@/components/BookingLandingSection";
 import { LeadMagnetPopup } from "@/components/LeadMagnetPopup";
 import { StickyHeroCTA } from "@/components/StickyHeroCTA";
-import { HeroBookingProgress } from "@/components/HeroBookingProgress";
-import { SectionTransition, AnimatedDivider, StaggeredTransition } from "@/components/SectionTransition";
+import { SectionTransition, AnimatedDivider } from "@/components/SectionTransition";
 import { ServicesTeaserStrip } from "@/components/ServicesTeaserStrip";
 import { siteConfig, services, testimonials, aboutCiro } from "@/data/content";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -32,7 +28,6 @@ import { useParallax } from "@/hooks/useParallax";
 // Import images
 import heroSunset from "@/assets/hero-sunset.png";
 
-import horseAction from "@/assets/horse-action.png";
 import hatDetail from "@/assets/hat-detail.png";
 import ciroWide from "@/assets/ciro-wide.png";
 import spurDetail from "@/assets/spur-detail.png";
@@ -51,190 +46,10 @@ import blueprintElevation from "@/assets/blueprint-elevation.png";
 // Featured services for homepage
 const featuredServices = services.slice(0, 4);
 
-function HeroLessonMiniForm({ trackClick, variant }: { trackClick: (meta: Record<string, string>) => void; variant: string }) {
-  const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [preferredDate, setPreferredDate] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const { toast } = useToast();
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!name.trim() || !email.trim()) return;
-
-    setSubmitting(true);
-    trackClick({ action: "submit", target: "hero_lesson_mini_form" });
-
-    try {
-      const { error } = await supabase.from("inquiries").insert({
-        name: name.trim(),
-        email: email.trim(),
-        services: ["lessons"],
-        preferred_start: preferredDate || null,
-        project_vision: "Quick lesson inquiry from homepage hero",
-        status: "new",
-      });
-
-      if (error) throw error;
-
-      // Also trigger email notification
-      try {
-        await supabase.functions.invoke("send-inquiry-notification", {
-          body: { name: name.trim(), email: email.trim(), services: ["lessons"], preferredDate },
-        });
-      } catch {
-        // Non-critical — inquiry saved
-      }
-
-      setSubmitted(true);
-      toast({ title: "Inquiry sent!", description: "We'll be in touch shortly." });
-
-      // Redirect to full booking page after brief pause
-      setTimeout(() => navigate(`/book-lesson${preferredDate ? `?date=${preferredDate}` : ""}`), 1500);
-    } catch {
-      toast({ title: "Something went wrong", description: "Please try again or call us directly.", variant: "destructive" });
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  if (submitted) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-3 p-6 rounded-xl bg-hero-glass backdrop-blur-md border border-hero-glass-border text-center">
-        <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
-          <CheckCircle className="h-6 w-6 text-accent" />
-        </div>
-        <p className="font-serif text-lg text-hero-text font-semibold">You're In!</p>
-        <p className="text-hero-text-muted text-sm">Taking you to the full booking page…</p>
-      </div>
-    );
-  }
-
-  return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col gap-3 p-5 rounded-xl bg-hero-glass backdrop-blur-md border border-hero-glass-border"
-    >
-      <h3 className="font-serif text-base text-hero-text font-semibold text-center">
-        Quick Lesson Inquiry
-      </h3>
-
-      <Input
-        type="text"
-        placeholder="Your name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-        maxLength={100}
-        aria-label="Your name"
-        className="bg-white/10 border-hero-glass-border text-hero-text placeholder:text-hero-text-muted/60 focus-visible:ring-accent"
-      />
-      <Input
-        type="email"
-        placeholder="Email address"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        maxLength={255}
-        aria-label="Email address"
-        className="bg-white/10 border-hero-glass-border text-hero-text placeholder:text-hero-text-muted/60 focus-visible:ring-accent"
-      />
-      <Input
-        type="date"
-        value={preferredDate}
-        onChange={(e) => setPreferredDate(e.target.value)}
-        aria-label="Preferred lesson date (optional)"
-        className="bg-white/10 border-hero-glass-border text-hero-text placeholder:text-hero-text-muted/60 focus-visible:ring-accent"
-      />
-      <p className="text-[11px] text-hero-text-muted/70 text-center -mt-1">Preferred date is optional</p>
-
-      <Button
-        type="submit"
-        disabled={submitting || !name.trim() || !email.trim()}
-        aria-label="Submit lesson inquiry"
-        className="w-full bg-accent text-accent-foreground hover:bg-accent/90 rounded-full font-semibold focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
-      >
-        {submitting ? (
-          <Loader2 className="h-4 w-4 animate-spin mr-2" />
-        ) : (
-          <Send className="h-4 w-4 mr-2" />
-        )}
-        {submitting ? "Sending…" : "Send & Book"}
-      </Button>
-    </form>
-  );
-}
-
-function HeroCTAToggle({ heroMode, setHeroMode }: { heroMode: "book" | "consult"; setHeroMode: (m: "book" | "consult") => void }) {
-  const { variant, trackClick } = useABTest({
-    testName: "hero_cta_2026",
-    variants: ["control", "urgency", "social_proof"],
-  });
-
-  // Variant-specific copy
-  const ctaCopy = {
-    control: {
-      bookLabel: "Book a Lesson",
-      consultLabel: "Request a Consult",
-      consultHeadline: "Tell us about your project — we'll get back to you within 1–2 business days.",
-      consultButton: "Start a Consultation",
-    },
-    urgency: {
-      bookLabel: "Book Today — Limited Spots",
-      consultLabel: "Get Your Free Quote",
-      consultHeadline: "Spots fill fast — lock in your consultation before the season books out.",
-      consultButton: "Claim Your Free Quote",
-    },
-    social_proof: {
-      bookLabel: "Join 200+ Happy Riders",
-      consultLabel: "See Why They Trust Us",
-      consultHeadline: "Trusted by over 200 riders across the Mornington Peninsula. Start your journey today.",
-      consultButton: "Start Your Journey",
-    },
-  };
-
-  const copy = ctaCopy[variant as keyof typeof ctaCopy] || ctaCopy.control;
-
-  return (
-    <div className="flex flex-col items-center gap-4 mt-2 w-full max-w-3xl mx-auto">
-      {/* Side-by-side: Book a Lesson CTA + Booking Widget */}
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-        {/* Left: Mini Lesson Inquiry Form */}
-        <HeroLessonMiniForm trackClick={trackClick} variant={variant} />
-
-        {/* Right: Inline Booking Widget */}
-        <div className="rounded-xl bg-hero-glass backdrop-blur-md border border-hero-glass-border p-4">
-          <BookingWidget variant="hero" />
-        </div>
-      </div>
-
-      {/* Consult toggle below */}
-      <button
-        onClick={() => { setHeroMode(heroMode === "consult" ? "book" : "consult"); trackClick({ action: "toggle", target: "consult" }); }}
-        aria-label={heroMode === "consult" ? "Hide consultation form" : "Open consultation form"}
-        aria-expanded={heroMode === "consult"}
-        className="inline-flex items-center gap-2 text-hero-text-muted hover:text-hero-text text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary rounded-md px-2 py-1"
-      >
-        <MessageSquare className="h-4 w-4" aria-hidden="true" />
-        {heroMode === "consult" ? "Hide consultation form" : copy.consultLabel}
-      </button>
-
-      {heroMode === "consult" && (
-        <div className="w-full max-w-lg mx-auto transition-all duration-300 animate-fade-in">
-          <HeroLeadForm />
-        </div>
-      )}
-    </div>
-  );
-}
-
-function HeroSection({ variant = "banner" }: { variant?: "logo" | "banner" }) {
+function HeroSection() {
   const [scrollY, setScrollY] = useState(0);
   const [bannerLoaded, setBannerLoaded] = useState(false);
   const [heroPhase, setHeroPhase] = useState(0); // 0=hidden, 1=blueprints, 2=banner, 3=cta
-  const [heroMode, setHeroMode] = useState<"book" | "consult">("book");
   const sectionRef = useRef<HTMLDivElement>(null);
 
   // Phased entrance
@@ -285,7 +100,7 @@ function HeroSection({ variant = "banner" }: { variant?: "logo" | "banner" }) {
         />
       </div>
 
-      {/* Blueprint overlay layers — phase 1 sweep-in */}
+      {/* Blueprint overlay — phase 1 sweep-in */}
       <div
         style={{
           opacity: heroPhase >= 1 ? 1 : 0,
@@ -313,7 +128,7 @@ function HeroSection({ variant = "banner" }: { variant?: "logo" | "banner" }) {
       {/* Vignette */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.3)_100%)]" />
 
-      {/* Blueprint corner brackets — architectural framing cues */}
+      {/* Blueprint corner brackets — architectural framing */}
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none z-[5]"
         viewBox="0 0 1000 1000"
@@ -324,24 +139,17 @@ function HeroSection({ variant = "banner" }: { variant?: "logo" | "banner" }) {
           transition: "opacity 1s ease-out 0.6s",
         }}
       >
-        {/* Top-left bracket */}
         <path d="M 40,40 L 40,120 M 40,40 L 120,40" fill="none" stroke="hsl(45 40% 97%)" strokeWidth="0.8" />
-        {/* Top-right bracket */}
         <path d="M 960,40 L 960,120 M 960,40 L 880,40" fill="none" stroke="hsl(45 40% 97%)" strokeWidth="0.8" />
-        {/* Bottom-left bracket */}
         <path d="M 40,960 L 40,880 M 40,960 L 120,960" fill="none" stroke="hsl(45 40% 97%)" strokeWidth="0.8" />
-        {/* Bottom-right bracket */}
         <path d="M 960,960 L 960,880 M 960,960 L 880,960" fill="none" stroke="hsl(45 40% 97%)" strokeWidth="0.8" />
-        {/* Centre crosshair */}
         <line x1="490" y1="500" x2="510" y2="500" stroke="hsl(35 75% 50% / 0.3)" strokeWidth="0.5" />
         <line x1="500" y1="490" x2="500" y2="510" stroke="hsl(35 75% 50% / 0.3)" strokeWidth="0.5" />
-        {/* Top dimension line */}
         <line x1="120" y1="40" x2="880" y2="40" stroke="hsl(45 40% 97% / 0.08)" strokeWidth="0.3" />
-        {/* Left dimension line */}
         <line x1="40" y1="120" x2="40" y2="880" stroke="hsl(45 40% 97% / 0.08)" strokeWidth="0.3" />
       </svg>
 
-      {/* Centered Content — phase 2 & 3 */}
+      {/* Centered Content */}
       <div 
         className="relative z-10 text-center px-4 will-change-transform"
         style={{ 
@@ -359,57 +167,28 @@ function HeroSection({ variant = "banner" }: { variant?: "logo" | "banner" }) {
           }}
         />
         
-        {variant === "banner" ? (
-          <div
-            className="mb-8"
-            style={{
-              opacity: heroPhase >= 2 ? 1 : 0,
-              transform: heroPhase >= 2 ? "translateY(0) scale(1)" : "translateY(20px) scale(0.95)",
-              transition: "opacity 0.8s ease-out 0.1s, transform 1s cubic-bezier(0.22,0.61,0.36,1) 0.1s",
-            }}
-          >
-            <img
-              src={peBanner}
-              alt="Peninsula Equine — From Dirt to Dynasty"
-              loading="eager"
-              decoding="async"
-              onLoad={() => setBannerLoaded(true)}
-              className={`w-[280px] sm:w-[400px] md:w-[520px] lg:w-[600px] mx-auto h-auto object-contain drop-shadow-[0_4px_30px_rgba(0,0,0,0.3)] transition-opacity duration-500 ${
-                bannerLoaded ? "opacity-100" : "opacity-0"
-              }`}
-            />
-          </div>
-        ) : (
-          <>
-            <div
-              className="mb-8"
-              style={{
-                opacity: heroPhase >= 2 ? 1 : 0,
-                transform: heroPhase >= 2 ? "translateY(0) scale(1)" : "translateY(20px) scale(0.8)",
-                transition: "opacity 0.8s ease-out, transform 1s cubic-bezier(0.22,0.61,0.36,1)",
-              }}
-            >
-              <div className="w-32 h-32 sm:w-44 sm:h-44 md:w-52 md:h-52 mx-auto transition-transform duration-500 hover:scale-105">
-                <img
-                  src={logoPeMark}
-                  alt="Peninsula Equine"
-                  className="w-full h-full object-contain drop-shadow-[0_2px_20px_rgba(255,255,255,0.2)]"
-                />
-              </div>
-            </div>
-            <p
-              className="font-serif text-xl sm:text-2xl md:text-3xl text-white tracking-[0.12em] uppercase font-normal text-shadow-editorial mb-4"
-              style={{
-                opacity: heroPhase >= 2 ? 1 : 0,
-                transition: "opacity 0.6s ease-out 0.3s",
-              }}
-            >
-              Peninsula Equine
-            </p>
-          </>
-        )}
+        {/* Banner logo */}
+        <div
+          className="mb-8"
+          style={{
+            opacity: heroPhase >= 2 ? 1 : 0,
+            transform: heroPhase >= 2 ? "translateY(0) scale(1)" : "translateY(20px) scale(0.95)",
+            transition: "opacity 0.8s ease-out 0.1s, transform 1s cubic-bezier(0.22,0.61,0.36,1) 0.1s",
+          }}
+        >
+          <img
+            src={peBanner}
+            alt="Peninsula Equine — From Dirt to Dynasty"
+            loading="eager"
+            decoding="async"
+            onLoad={() => setBannerLoaded(true)}
+            className={`w-[280px] sm:w-[400px] md:w-[520px] lg:w-[600px] mx-auto h-auto object-contain drop-shadow-[0_4px_30px_rgba(0,0,0,0.3)] transition-opacity duration-500 ${
+              bannerLoaded ? "opacity-100" : "opacity-0"
+            }`}
+          />
+        </div>
 
-        {/* Subtitle + CTA — phase 3 */}
+        {/* Subtitle + CTAs — phase 3 */}
         <div
           style={{
             opacity: heroPhase >= 3 ? 1 : 0,
@@ -417,12 +196,32 @@ function HeroSection({ variant = "banner" }: { variant?: "logo" | "banner" }) {
             transition: "opacity 0.7s ease-out, transform 0.8s ease-out",
           }}
         >
-          <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-hero-text-muted mb-6">
-            Facility Construction • Training • Excellence
+          <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-hero-text-muted mb-10">
+            Premium Equine Facility Construction
           </p>
-          <HeroCTAToggle heroMode={heroMode} setHeroMode={setHeroMode} />
-          <div className="mt-6">
-            <HeroBookingProgress percentFilled={72} totalSlots={25} remainingSlots={7} />
+
+          {/* Clean, elegant dual CTA */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button
+              asChild
+              size="lg"
+              className="bg-accent text-accent-foreground hover:bg-accent/90 text-sm sm:text-base px-8 sm:px-10 tracking-wider uppercase btn-hover-lift"
+            >
+              <Link to="/services">
+                Explore Our Work
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="border-white/30 text-white hover:bg-white hover:text-primary text-sm sm:text-base px-8 sm:px-10 tracking-wider uppercase"
+            >
+              <Link to="/contact">
+                Get in Touch
+              </Link>
+            </Button>
           </div>
         </div>
       </div>
@@ -444,7 +243,7 @@ function HeroSection({ variant = "banner" }: { variant?: "logo" | "banner" }) {
 function IntroSection() {
   const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
   const { ref: parallaxRef } = useParallax<HTMLDivElement>({ speed: 0.25 });
-  const [phase, setPhase] = useState(0); // 0=hidden, 1=lines, 2=fill, 3=logo
+  const [phase, setPhase] = useState(0);
 
   useEffect(() => {
     if (!imageVisible) return;
@@ -456,9 +255,7 @@ function IntroSection() {
 
   return (
     <section id="intro" className="bg-background relative overflow-hidden">
-      {/* Subtle blueprint layer */}
       <BlueprintBackground image={blueprintFacility} opacity={0.04} direction="left-to-right" duration={2000} parallaxSpeed={0.05} />
-      <BlueprintLineOverlay variant="dimensions" color="dark" />
 
       {/* Location tagline */}
       <div className="section-padding border-b border-border relative z-10">
@@ -500,7 +297,6 @@ function IntroSection() {
           transition: "opacity 0.8s ease-out, clip-path 1.2s cubic-bezier(0.22,0.61,0.36,1)"
         }}
       >
-        {/* Base background */}
         <div className="absolute inset-0 bg-primary" />
 
         {/* Phase 1: Blueprint image layers sweep in */}
@@ -525,7 +321,6 @@ function IntroSection() {
           <BlueprintLineOverlay variant="barn" color="light" />
         </div>
 
-
         {/* Phase 3: Centered PE logo watermark pulses in */}
         <div className="absolute inset-0 flex items-center justify-center">
           <img 
@@ -542,7 +337,7 @@ function IntroSection() {
           />
         </div>
 
-        {/* Tagline text that fades in with logo */}
+        {/* Tagline text */}
         <div 
           className="absolute bottom-8 left-0 right-0 text-center"
           style={{
@@ -556,11 +351,9 @@ function IntroSection() {
           </p>
         </div>
 
-        {/* Gradient edges for seamless blend */}
+        {/* Gradient edges */}
         <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-transparent to-background/30 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-primary/20 pointer-events-none" />
-
-        {/* Vignette */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,hsl(var(--primary)/0.5)_100%)] pointer-events-none" />
       </div>
     </section>
@@ -620,7 +413,7 @@ function MissionSection() {
             </SectionTransition>
           </div>
 
-          {/* Image with reveal animation */}
+          {/* Image — stonework craftsmanship instead of horse silhouette */}
           <div 
             ref={imageRef}
             className={`lg:col-span-7 transition-all duration-1000 ease-out ${
@@ -632,8 +425,8 @@ function MissionSection() {
           >
             <div className="aspect-[4/5] overflow-hidden bg-muted/20">
               <img
-                src={horseAction}
-                alt="Horse in training"
+                src={stoneworkBW}
+                alt="Peninsula Equine stonework craftsmanship"
                 loading="lazy"
                 decoding="async"
                 className={`w-full h-full object-cover transition-transform duration-1000 ${
@@ -653,7 +446,6 @@ function ServicesSection() {
 
   return (
     <section className="section-padding bg-background overflow-hidden relative">
-      {/* Single blueprint layer */}
       <BlueprintBackground image={blueprintFacility} opacity={0.04} parallaxSpeed={0.06} />
       <div className="section-container relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-20">
@@ -672,7 +464,7 @@ function ServicesSection() {
           </SectionTransition>
         </div>
 
-        {/* Services Grid with staggered reveal */}
+        {/* Services Grid */}
         <div ref={gridRef} className="grid sm:grid-cols-2 gap-px bg-border">
           {featuredServices.map((service, index) => (
             <div
@@ -741,7 +533,6 @@ function BookingCTABanner() {
         ref={ref}
         className="relative py-16 sm:py-20 bg-accent overflow-hidden"
       >
-
         <div
           className={`section-container relative z-10 text-center transition-all duration-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
@@ -924,7 +715,6 @@ function LeadCaptureSection({ submitted, onSubmitted }: { submitted: boolean; on
     const trimmedName = name.trim();
     const trimmedEmail = email.trim();
     if (!trimmedName || !trimmedEmail) return;
-    // Basic email validation
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) return;
 
     setSubmitting(true);
@@ -938,7 +728,6 @@ function LeadCaptureSection({ submitted, onSubmitted }: { submitted: boolean; on
         status: "new",
       });
 
-      // Trigger auto-email follow-up
       supabase.functions.invoke("send-inquiry-notification", {
         body: {
           name: trimmedName,
@@ -950,7 +739,6 @@ function LeadCaptureSection({ submitted, onSubmitted }: { submitted: boolean; on
 
       onSubmitted();
     } catch {
-      // Silently fail – form still shows success to avoid blocking UX
       onSubmitted();
     } finally {
       setSubmitting(false);
@@ -1027,7 +815,6 @@ function GallerySection() {
 
   return (
     <section className="bg-primary text-primary-foreground overflow-hidden">
-      {/* Full-width image strip with mask reveal */}
       <div 
         ref={imagesRef}
         className="grid grid-cols-3 h-[40vh] min-h-[300px]"
@@ -1055,7 +842,6 @@ function GallerySection() {
         ))}
       </div>
 
-      {/* Gallery CTA */}
       <div className="section-padding">
         <div className="section-container">
           <div className="max-w-3xl mx-auto text-center">
@@ -1211,7 +997,6 @@ function ClientStorySection() {
     ? stories
     : stories.filter((s) => s.service === activeFilter);
 
-  // Reset index when filter changes
   useEffect(() => {
     setActiveIndex(0);
   }, [activeFilter]);
@@ -1226,7 +1011,6 @@ function ClientStorySection() {
     <section ref={sectionRef} className="section-padding bg-card overflow-hidden relative">
       <BlueprintBackground image={blueprintBarn} opacity={0.025} direction="right-to-left" duration={2000} />
       <div className="section-container relative z-10">
-        {/* Header */}
         <AnimatedDivider className="mb-8" />
         <SectionTransition variant="fade-up">
           <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-4 text-center">
@@ -1237,7 +1021,6 @@ function ClientStorySection() {
           </h2>
         </SectionTransition>
 
-        {/* Service filter tabs */}
         <div className="flex flex-wrap justify-center gap-2 mb-10">
           {filters.map((f) => (
             <button
@@ -1255,14 +1038,12 @@ function ClientStorySection() {
           ))}
         </div>
 
-        {/* Story carousel card */}
         <div
           className={`transition-all duration-700 ease-out ${
             sectionVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            {/* Left: Story */}
             <div key={current.id} className="animate-fade-in">
               <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-3">
                 {current.serviceLabel}
@@ -1291,7 +1072,6 @@ function ClientStorySection() {
               </button>
             </div>
 
-            {/* Right: Outcome metrics */}
             <div className="grid grid-cols-2 gap-px bg-border" key={`metrics-${current.id}`}>
               {current.metrics.map((metric, index) => (
                 <div
@@ -1309,7 +1089,6 @@ function ClientStorySection() {
             </div>
           </div>
 
-          {/* Carousel navigation */}
           {filteredStories.length > 1 && (
             <div className="flex items-center justify-center gap-4 mt-10">
               <button
@@ -1370,7 +1149,6 @@ function ClientStorySection() {
               </DialogHeader>
 
               <div className="space-y-6 mt-4">
-                {/* Quote */}
                 <blockquote className="text-foreground font-serif italic leading-relaxed border-l-2 border-accent pl-5">
                   "{modalStory.quote}"
                 </blockquote>
@@ -1378,19 +1156,16 @@ function ClientStorySection() {
                   — <span className="font-semibold text-foreground">{modalStory.client}</span>, {modalStory.role}
                 </p>
 
-                {/* Challenge */}
                 <div>
                   <h4 className="font-serif font-semibold text-foreground mb-2">The Challenge</h4>
                   <p className="text-muted-foreground leading-relaxed">{modalStory.caseStudy.challenge}</p>
                 </div>
 
-                {/* Approach */}
                 <div>
                   <h4 className="font-serif font-semibold text-foreground mb-2">Our Approach</h4>
                   <p className="text-muted-foreground leading-relaxed">{modalStory.caseStudy.approach}</p>
                 </div>
 
-                {/* Materials */}
                 <div>
                   <h4 className="font-serif font-semibold text-foreground mb-2">Key Materials & Systems</h4>
                   <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -1403,19 +1178,16 @@ function ClientStorySection() {
                   </ul>
                 </div>
 
-                {/* Timeline */}
                 <div>
                   <h4 className="font-serif font-semibold text-foreground mb-2">Timeline</h4>
                   <p className="text-muted-foreground leading-relaxed">{modalStory.caseStudy.timeline}</p>
                 </div>
 
-                {/* Outcome */}
                 <div>
                   <h4 className="font-serif font-semibold text-foreground mb-2">The Outcome</h4>
                   <p className="text-muted-foreground leading-relaxed">{modalStory.caseStudy.outcome}</p>
                 </div>
 
-                {/* Metrics grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-border">
                   {modalStory.metrics.map((metric) => (
                     <div key={metric.label} className="text-center">
@@ -1426,7 +1198,6 @@ function ClientStorySection() {
                   ))}
                 </div>
 
-                {/* CTA */}
                 <div className="text-center pt-2">
                   <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
                     <Link to="/contact" onClick={() => setModalStory(null)}>
@@ -1444,33 +1215,30 @@ function ClientStorySection() {
   );
 }
 
-
-// ── Testimonial-Led Service Highlights ────────────────
-
 const SERVICE_TESTIMONIALS = [
   {
-    testimonial: testimonials[0], // Sarah Mitchell – Ranch Owner
+    testimonial: testimonials[0],
     serviceTitle: "Barn & Stable Construction",
     serviceId: "barn-stable",
     stat: "12-Stall Barn + Covered Arena",
     highlight: "5 years later, still looks and functions like new",
   },
   {
-    testimonial: testimonials[1], // Robert Chen – Dressage Trainer
+    testimonial: testimonials[1],
     serviceTitle: "Arena Construction",
     serviceId: "arena-construction",
     stat: "Best Footing for Dressage",
     highlight: "Surface designed specifically for discipline requirements",
   },
   {
-    testimonial: testimonials[2], // Elena Rodriguez – Breeding Farm
+    testimonial: testimonials[2],
     serviceTitle: "Fencing & Paddock Systems",
     serviceId: "fencing",
     stat: "Paddocks + Mare Barn",
     highlight: "Every project handled professionally and on time",
   },
   {
-    testimonial: testimonials[3], // Tom & Linda Hartley
+    testimonial: testimonials[3],
     serviceTitle: "Full Facility Design",
     serviceId: "full-facility",
     stat: "Chose Ciro Over 6 Contractors",
@@ -1512,17 +1280,15 @@ function TestimonialServiceCarousel() {
           <p className="text-muted-foreground uppercase tracking-[0.2em] text-sm mb-4">Proven Results</p>
           <h2 className="heading-section text-foreground mb-4">Our Work, Their Words</h2>
           <p className="text-muted-foreground leading-relaxed">
-            Every service we deliver is backed by real client outcomes. See how our expertise translates to lasting satisfaction.
+            Every service we deliver is backed by real client outcomes.
           </p>
         </div>
 
         <div className={`max-w-4xl mx-auto transition-all duration-700 delay-200 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}>
-          {/* Card */}
           <div className="rounded-xl border border-border bg-card overflow-hidden">
             <div className="grid md:grid-cols-5">
-              {/* Left: Service highlight */}
               <div className="md:col-span-2 p-6 sm:p-8 bg-accent/5 border-b md:border-b-0 md:border-r border-border flex flex-col justify-center">
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-semibold uppercase tracking-wider mb-4 self-start">
                   <ShieldCheck className="h-3 w-3" />
@@ -1540,7 +1306,6 @@ function TestimonialServiceCarousel() {
                 </Button>
               </div>
 
-              {/* Right: Testimonial */}
               <div className="md:col-span-3 p-6 sm:p-8 flex flex-col justify-center">
                 <div className="flex gap-1 mb-4">
                   {[...Array(current.testimonial.rating)].map((_, i) => (
@@ -1563,7 +1328,6 @@ function TestimonialServiceCarousel() {
             </div>
           </div>
 
-          {/* Dots */}
           <div className="flex items-center justify-center gap-2 mt-6">
             {SERVICE_TESTIMONIALS.map((_, i) => (
               <button
@@ -1583,7 +1347,6 @@ function TestimonialServiceCarousel() {
     </section>
   );
 }
-
 
 function TestimonialsGallery() {
   const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
@@ -1626,7 +1389,6 @@ function TestimonialsGallery() {
               }`}
               style={{ transitionDelay: `${index * 100}ms` }}
             >
-              {/* Star rating */}
               <div className="flex gap-1 mb-5">
                 {[...Array(testimonial.rating)].map((_, i) => (
                   <svg
@@ -1640,12 +1402,10 @@ function TestimonialsGallery() {
                 ))}
               </div>
 
-              {/* Quote */}
               <blockquote className="text-foreground leading-relaxed mb-6 line-clamp-5 group-hover:line-clamp-none transition-all">
                 "{testimonial.quote}"
               </blockquote>
 
-              {/* Attribution */}
               <div className="pt-5 border-t border-border">
                 <p className="font-serif font-semibold text-foreground">{testimonial.name}</p>
                 <p className="text-sm text-muted-foreground">{testimonial.role}</p>
@@ -1654,49 +1414,7 @@ function TestimonialsGallery() {
           ))}
         </div>
 
-        {/* Integrated lead capture + social proof strip */}
-        <div className="mt-14 rounded-xl bg-primary text-primary-foreground p-8 sm:p-10 relative overflow-hidden">
-          <div className="absolute inset-0 opacity-[0.04]" style={{
-            backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 18px, currentColor 18px, currentColor 19px)",
-          }} />
-          <div className="relative z-10 flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
-            {/* Social proof stats */}
-            <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 shrink-0">
-              <div className="flex items-center gap-2">
-                <div className="flex -space-x-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-accent fill-accent" />
-                  ))}
-                </div>
-                <span className="text-lg font-bold text-accent">
-                  {(testimonials.reduce((s, t) => s + t.rating, 0) / testimonials.length).toFixed(1)}
-                </span>
-              </div>
-              <div className="hidden sm:block h-8 w-px bg-primary-foreground/20" />
-              <p className="text-sm text-primary-foreground/70 text-center sm:text-left">
-                Trusted by <span className="font-semibold text-primary-foreground">{testimonials.length}+ clients</span> across the Peninsula
-              </p>
-            </div>
-
-            {/* CTA buttons */}
-            <div className="flex flex-col sm:flex-row items-center gap-3 lg:ml-auto">
-              <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium shadow-lg">
-                <Link to="/book-lesson">
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  Book a Lesson
-                </Link>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                <Link to="/contact">
-                  Start Your Project
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        <SectionTransition variant="fade-up" delay={600} className="text-center mt-8">
+        <SectionTransition variant="fade-up" delay={600} className="text-center mt-12">
           <Link
             to="/testimonials"
             className="inline-flex items-center text-muted-foreground text-sm hover:text-accent transition-colors group"
@@ -1716,13 +1434,8 @@ function ForgeHeroBanner() {
   const { ref, isVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.15 });
   return (
     <section ref={ref} className="relative py-20 md:py-28 bg-primary text-primary-foreground overflow-hidden">
-      {/* Diagonal hatch overlay */}
       <div className="absolute inset-0 opacity-[0.04]" style={{
         backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 18px, currentColor 18px, currentColor 19px)",
-      }} />
-      {/* Horizontal blueprint lines */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{
-        backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 60px, currentColor 60px, currentColor 61px)",
       }} />
 
       <div className={`section-container relative z-10 text-center max-w-3xl mx-auto transition-all duration-700 ${
@@ -1776,144 +1489,6 @@ function CTASection() {
   );
 }
 
-function HeroBannerCTAStrip() {
-  return (
-    <section className="relative w-full bg-primary overflow-hidden">
-      {/* Full-width PE banner art */}
-      <div className="absolute inset-0">
-        <img
-          src={peBanner}
-          alt=""
-          aria-hidden="true"
-          className="w-full h-full object-cover opacity-[0.06]"
-          style={{ filter: "grayscale(0.4) brightness(1.3)" }}
-        />
-      </div>
-
-      {/* Accent border lines */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-        {/* Left: brand mark + tagline */}
-        <div className="flex items-center gap-4">
-          <img
-            src={logoPeMark}
-            alt="Peninsula Equine"
-            className="w-10 h-10 sm:w-12 sm:h-12 object-contain drop-shadow-[0_2px_8px_rgba(255,255,255,0.15)]"
-          />
-          <div className="text-primary-foreground">
-            <p className="text-sm sm:text-base font-serif font-semibold tracking-wide">
-              Peninsula Equine
-            </p>
-            <p className="text-xs text-primary-foreground/60 tracking-[0.15em] uppercase">
-              From Dirt to Dynasty
-            </p>
-          </div>
-        </div>
-
-        {/* Right: CTA buttons */}
-        <div className="flex items-center gap-3">
-          <Button
-            asChild
-            size="lg"
-            className="bg-accent hover:bg-accent/90 text-accent-foreground text-sm sm:text-base px-6 sm:px-8 hover:scale-105 hover:shadow-[0_4px_20px_hsl(var(--accent)/0.4)] transition-all duration-300"
-          >
-            <Link to="/book-lesson">
-              <CalendarIcon className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-              Book a Lesson
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-          <Button
-            asChild
-            variant="outline"
-            size="lg"
-            className="border-primary-foreground/25 text-primary-foreground hover:bg-primary-foreground hover:text-primary text-sm sm:text-base px-5 sm:px-6 hidden sm:inline-flex"
-          >
-            <a href={`tel:${siteConfig.phone}`}>
-              <Phone className="mr-2 h-4 w-4" />
-              {siteConfig.phone}
-            </a>
-          </Button>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function BannerDivider() {
-  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.3 });
-  
-  return (
-    <section
-      ref={ref}
-      className="relative py-20 sm:py-28 overflow-hidden bg-primary"
-      aria-label="From Dirt to Dynasty"
-    >
-      {/* Blueprint background layer */}
-      <BlueprintBackground image={blueprintFacility} opacity={0.04} direction="left-to-right" duration={2200} parallaxSpeed={0.04} />
-
-      {/* Dark vignette */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsl(var(--primary)/0.7)_100%)]" />
-      
-      {/* Decorative lines */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
-
-      <div
-        className="relative z-10 flex justify-center px-4"
-        style={{
-          opacity: isVisible ? 1 : 0,
-          transform: isVisible ? "translateY(0) scale(1)" : "translateY(12px) scale(0.97)",
-          transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
-        }}
-      >
-        <img
-          src={peBanner}
-          alt="Peninsula Equine — From Dirt to Dynasty"
-          className="w-[260px] sm:w-[380px] md:w-[480px] lg:w-[560px] h-auto object-contain drop-shadow-[0_4px_30px_rgba(0,0,0,0.25)]"
-          loading="lazy"
-        />
-      </div>
-    </section>
-  );
-}
-
-function FloatingBannerWatermark({ visible }: { visible: boolean }) {
-  const [show, setShow] = useState(true);
-
-  useEffect(() => {
-    if (!visible) return;
-    // Linger for 3s after splash completes, then fade out
-    const timer = setTimeout(() => setShow(false), 3000);
-    return () => clearTimeout(timer);
-  }, [visible]);
-
-  if (!visible || !show) return null;
-
-  return (
-    <div
-      className="fixed inset-0 z-[100] pointer-events-none flex items-center justify-center"
-      style={{
-        opacity: show ? 0.07 : 0,
-        transition: "opacity 1.5s ease-out",
-      }}
-    >
-      <img
-        src={peBanner}
-        alt=""
-        aria-hidden="true"
-        className="w-[70vw] max-w-[700px] h-auto object-contain select-none"
-        style={{
-          filter: "grayscale(0.3) brightness(1.4)",
-          animation: "fade-out 1.5s ease-out 2.8s forwards",
-        }}
-      />
-    </div>
-  );
-}
-
 export default function Index() {
   const [splashDone, setSplashDone] = useState(false);
   const [leadSubmitted, setLeadSubmitted] = useState(false);
@@ -1927,7 +1502,6 @@ export default function Index() {
       {!splashDone && <LoadingSplash minDuration={2400} onComplete={() => setSplashDone(true)} />}
       {splashDone && <LeadMagnetPopup />}
       <Layout>
-        {/* Sticky CTA — auto-hides after lead form submission */}
         {!leadSubmitted && (
           <StickyHeroCTA
             showAfter={600}
@@ -1936,9 +1510,7 @@ export default function Index() {
             progressLabel="spots filled"
           />
         )}
-        <HeroSection variant="banner" />
-        <HeroBannerCTAStrip />
-        <BannerDivider />
+        <HeroSection />
         <IntroSection />
         <BlueprintDivider variant="floorplan" />
         <ServicesTeaserStrip />
@@ -1947,10 +1519,8 @@ export default function Index() {
         <BlueprintDivider variant="elevation" />
         <ServicesSection />
         <BookingCTABanner />
-        <BookingLandingSection />
         <GallerySection />
         <ClientStorySection />
-        <BlueprintDivider variant="grid" />
         <TestimonialServiceCarousel />
         <TestimonialsGallery />
         <ForgeHeroBanner />
