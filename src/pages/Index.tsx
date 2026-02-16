@@ -17,6 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { LeadMagnetPopup } from "@/components/LeadMagnetPopup";
@@ -1351,6 +1352,92 @@ function ForgeHeroBanner() {
   );
 }
 
+function HomeFAQSection() {
+  const faqs = [
+    {
+      q: "How much does an arena or barn project cost?",
+      a: "Every property is different, so we provide tailored quotes after a free on-site consultation. Typical arena projects start from $25k and barn builds from $50k depending on size, materials, and site conditions.",
+    },
+    {
+      q: "Do you work outside the Mornington Peninsula?",
+      a: "Yes — while we're based on the Peninsula, we regularly take on projects across Victoria and have completed builds interstate. Travel fees may apply for remote sites.",
+    },
+    {
+      q: "How long does a typical build take?",
+      a: "Arenas generally take 2–4 weeks, barns 6–12 weeks, and full facility builds 3–6 months. We'll give you a clear timeline during the consultation.",
+    },
+    {
+      q: "What makes Peninsula Equine different from a regular builder?",
+      a: "Ciro is both a builder and a horseman. He understands how horses move, where water drains, and what keeps a facility running for decades — things a standard contractor simply won't consider.",
+    },
+    {
+      q: "Do I need council permits for equine construction?",
+      a: "It depends on your local council and the scope of the project. We'll guide you through the permit process and handle applications where required.",
+    },
+    {
+      q: "Can I see examples of your previous work?",
+      a: "Absolutely. Visit our Gallery page for completed projects, or ask us for references from clients in your area.",
+    },
+  ];
+
+  return (
+    <section className="section-padding bg-card relative overflow-hidden">
+      <BlueprintBackground image={blueprintBarn} opacity={0.025} direction="bottom-to-top" duration={1800} />
+      <div className="section-container relative z-10">
+        <div className="text-center max-w-3xl mx-auto mb-14">
+          <AnimatedDivider className="mx-auto mb-8" />
+          <SectionTransition variant="fade-up">
+            <p className="text-muted-foreground uppercase tracking-[0.2em] text-sm mb-4">
+              Common Questions
+            </p>
+          </SectionTransition>
+          <SectionTransition variant="fade-up" delay={100}>
+            <h2 className="heading-section text-foreground">
+              Frequently Asked Questions
+            </h2>
+          </SectionTransition>
+        </div>
+
+        <div className="max-w-3xl mx-auto">
+          <SectionTransition variant="fade-up" delay={200}>
+            <Accordion type="single" collapsible className="space-y-3">
+              {faqs.map((faq, i) => (
+                <AccordionItem
+                  key={i}
+                  value={`faq-${i}`}
+                  className="border border-border rounded-lg px-6 bg-background data-[state=open]:border-accent/30"
+                >
+                  <AccordionTrigger className="text-left font-serif text-base sm:text-lg text-foreground hover:text-accent py-5 [&[data-state=open]>svg]:rotate-180">
+                    {faq.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground leading-relaxed pb-5">
+                    {faq.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </SectionTransition>
+
+          <SectionTransition variant="fade-up" delay={300} className="text-center mt-10">
+            <p className="text-muted-foreground text-sm mb-4">
+              Still have questions?
+            </p>
+            <Button
+              asChild
+              className="bg-accent text-accent-foreground hover:bg-accent/90"
+            >
+              <Link to="/contact">
+                Get in Touch
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </SectionTransition>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function CTASection() {
   return (
     <ParallaxCTA
@@ -1401,6 +1488,7 @@ export default function Index() {
         <TestimonialsGallery />
         <ForgeHeroBanner />
         <LeadCaptureSection submitted={leadSubmitted} onSubmitted={() => setLeadSubmitted(true)} />
+        <HomeFAQSection />
         <CTASection />
       </Layout>
     </>
