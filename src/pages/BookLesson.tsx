@@ -455,6 +455,7 @@ type BookingFormData = {
   preferredDate?: Date;
   additionalNotes?: string;
   timezone: string;
+  slotType: "lesson" | "clinic";
 };
 
 const TIMEZONE_OPTIONS = [
@@ -492,10 +493,12 @@ function BookingForm() {
   const prefilledDate = prefilledDateStr ? new Date(prefilledDateStr) : undefined;
   const validPrefilledDate = prefilledDate && !isNaN(prefilledDate.getTime()) && prefilledDate >= new Date() ? prefilledDate : undefined;
 
+  const prefilledSlotType = searchParams.get("slot") === "clinic" ? "clinic" : "lesson";
+
   const [formData, setFormData] = useState<Partial<BookingFormData>>({
     name: "", email: "", phone: "", horseName: "", experienceLevel: initialLevel,
     lessonGoals: "", preferredDay: "", preferredDate: validPrefilledDate, additionalNotes: "",
-    timezone: getDetectedTimezone(),
+    timezone: getDetectedTimezone(), slotType: prefilledSlotType as "lesson" | "clinic",
   });
 
   const updateField = <K extends keyof BookingFormData>(field: K, value: BookingFormData[K]) => {
@@ -532,11 +535,11 @@ function BookingForm() {
         email: formData.email?.trim() || "",
         phone: formData.phone?.trim() || null,
         preferred_contact: "email",
-        services: ["lessons"],
+        services: [formData.slotType === "clinic" ? "clinics" : "lessons"],
         horse_name: formData.horseName?.trim() || null,
         experience_level: formData.experienceLevel || null,
         project_vision: formData.lessonGoals?.trim() || null,
-        project_details: `Preferred day: ${formData.preferredDay}${formData.preferredDate ? ` | Preferred date: ${format(formData.preferredDate, "yyyy-MM-dd")}` : ""} | Timezone: ${formData.timezone || "Australia/Melbourne"}${formData.additionalNotes?.trim() ? ` | Notes: ${formData.additionalNotes.trim()}` : ""}`,
+        project_details: `Type: ${formData.slotType === "clinic" ? "Clinic/Group" : "Private Lesson"} | Preferred day: ${formData.preferredDay}${formData.preferredDate ? ` | Preferred date: ${format(formData.preferredDate, "yyyy-MM-dd")}` : ""} | Timezone: ${formData.timezone || "Australia/Melbourne"}${formData.additionalNotes?.trim() ? ` | Notes: ${formData.additionalNotes.trim()}` : ""}`,
         preferred_start: formData.preferredDate ? format(formData.preferredDate, "yyyy-MM-dd") : null,
       });
       if (error) throw error;
@@ -608,6 +611,32 @@ function BookingForm() {
 
       {step === 1 && (
         <div className="space-y-6">
+          {/* Slot type filter */}
+          <div>
+            <Label className="text-base font-medium mb-3 block">What are you booking?</Label>
+            <div className="flex gap-3">
+              {([
+                { value: "lesson" as const, label: "Private Lesson", desc: "One-on-one session with Glenn" },
+                { value: "clinic" as const, label: "Clinic / Group", desc: "Group training or workshop" },
+              ]).map((type) => (
+                <button
+                  key={type.value}
+                  type="button"
+                  onClick={() => updateField("slotType", type.value)}
+                  className={cn(
+                    "flex-1 py-4 px-4 rounded-lg border-2 text-center transition-all",
+                    formData.slotType === type.value
+                      ? "border-accent bg-accent/5"
+                      : "border-border hover:border-accent/50"
+                  )}
+                >
+                  <span className="font-medium text-sm text-foreground block">{type.label}</span>
+                  <span className="text-xs text-muted-foreground mt-0.5 block">{type.desc}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div>
             <Label className="text-base font-medium mb-3 block">Your Riding Experience</Label>
             <RadioGroup value={formData.experienceLevel} onValueChange={(v) => updateField("experienceLevel", v)} className="grid sm:grid-cols-3 gap-3">
