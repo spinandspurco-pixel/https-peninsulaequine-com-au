@@ -210,6 +210,11 @@ const handler = async (req: Request): Promise<Response> => {
             <p><strong>What happens next?</strong></p>
             <p>A member of our team will review your inquiry and get back to you within 1-2 business days. We'll discuss your project in detail and provide you with a personalized quote.</p>
             
+            <div style="text-align: center; margin: 25px 0;">
+              <a href="https://peninsulaequine.lovable.app/schedule" class="cta" style="font-size: 16px; padding: 14px 32px;">📅 Schedule Your Follow-Up Call</a>
+              <p style="margin-top: 10px; font-size: 13px; color: #888;">Pick a date & time that works for you</p>
+            </div>
+
             <div class="contact-box">
               <p style="margin: 0 0 10px 0;"><strong>Need to reach us sooner?</strong></p>
               <p style="margin: 0;">
@@ -217,9 +222,6 @@ const handler = async (req: Request): Promise<Response> => {
               </p>
               <p style="margin: 10px 0 0 0;">
                 📧 Email: <a href="mailto:ciro@peninsulaequine.com">ciro@peninsulaequine.com</a>
-              </p>
-              <p style="margin-top: 15px;">
-                <a href="https://peninsulaequine.lovable.app" class="cta">Visit Our Website</a>
               </p>
             </div>
             
