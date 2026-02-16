@@ -1,29 +1,11 @@
 import { Layout } from "@/components/layout/Layout";
+import { PageHeader } from "@/components/PageHeader";
 import { siteConfig } from "@/data/content";
-import logoPeMark from "@/assets/logo-pe-mark.png";
-
-function PageHeader({ title }: { title: string }) {
-  return (
-    <section className="pt-32 pb-16 bg-primary text-primary-foreground">
-      <div className="section-container">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="mb-6">
-            <img src={logoPeMark} alt="Peninsula Equine" className="w-20 h-20 sm:w-24 sm:h-24 mx-auto object-contain drop-shadow-[0_2px_20px_rgba(255,255,255,0.2)]" />
-          </div>
-          <p className="text-primary-foreground/50 uppercase tracking-[0.2em] text-xs sm:text-sm mb-6">
-            Crafting World-Class Equine Facilities
-          </p>
-          <h1 className="heading-display">{title}</h1>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 export function Privacy() {
   return (
     <Layout>
-      <PageHeader title="Privacy Policy" />
+      <PageHeader title="Privacy Policy" description="How we collect, use, and protect your personal information." />
       <section className="section-padding">
         <div className="section-container max-w-3xl prose prose-slate">
           <p className="text-muted-foreground mb-8">
@@ -73,7 +55,7 @@ export function Privacy() {
 export function Terms() {
   return (
     <Layout>
-      <PageHeader title="Terms of Service" />
+      <PageHeader title="Terms of Service" description="The terms and conditions governing use of our website and services." />
       <section className="section-padding">
         <div className="section-container max-w-3xl prose prose-slate">
           <p className="text-muted-foreground mb-8">
