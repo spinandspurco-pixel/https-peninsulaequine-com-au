@@ -1410,18 +1410,58 @@ function TestimonialsGallery() {
           ))}
         </div>
 
-        <SectionTransition variant="fade-up" delay={600} className="text-center mt-12">
-          <Button
-            asChild
-            variant="outline"
-            size="lg"
-            className="border-foreground text-foreground hover:bg-foreground hover:text-background"
+        {/* Integrated lead capture + social proof strip */}
+        <div className="mt-14 rounded-xl bg-primary text-primary-foreground p-8 sm:p-10 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-[0.04]" style={{
+            backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 18px, currentColor 18px, currentColor 19px)",
+          }} />
+          <div className="relative z-10 flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+            {/* Social proof stats */}
+            <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 shrink-0">
+              <div className="flex items-center gap-2">
+                <div className="flex -space-x-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 text-accent fill-accent" />
+                  ))}
+                </div>
+                <span className="text-lg font-bold text-accent">
+                  {(testimonials.reduce((s, t) => s + t.rating, 0) / testimonials.length).toFixed(1)}
+                </span>
+              </div>
+              <div className="hidden sm:block h-8 w-px bg-primary-foreground/20" />
+              <p className="text-sm text-primary-foreground/70 text-center sm:text-left">
+                Trusted by <span className="font-semibold text-primary-foreground">{testimonials.length}+ clients</span> across the Peninsula
+              </p>
+            </div>
+
+            {/* CTA buttons */}
+            <div className="flex flex-col sm:flex-row items-center gap-3 lg:ml-auto">
+              <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium shadow-lg">
+                <Link to="/book-lesson">
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  Book a Lesson
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                <Link to="/contact">
+                  Start Your Project
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <SectionTransition variant="fade-up" delay={600} className="text-center mt-8">
+          <Link
+            to="/testimonials"
+            className="inline-flex items-center text-muted-foreground text-sm hover:text-accent transition-colors group"
           >
-            <Link to="/testimonials">
-              Read All Reviews
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+            <span className="border-b border-muted-foreground/40 group-hover:border-accent transition-colors pb-0.5">
+              Read all {testimonials.length} reviews
+            </span>
+            <ArrowRight className="ml-1.5 h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </SectionTransition>
       </div>
     </section>
