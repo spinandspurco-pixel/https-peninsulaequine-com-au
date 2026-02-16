@@ -12,6 +12,7 @@ import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { SwipeIndicator } from "@/components/SwipeIndicator";
 import { QuickQuoteModal } from "@/components/QuickQuoteModal";
 import { QuoteCalculator } from "@/components/QuoteCalculator";
+import { ServicesGallery } from "@/components/ServicesGallery";
 import { services, lessonInfo, siteConfig } from "@/data/content";
 import { BookingWidget } from "@/components/BookingWidget";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
@@ -939,7 +940,7 @@ export default function Services() {
         ))}
       </section>
 
-      <PricingGridSection onQuoteClick={setQuoteServiceId} />
+      <ServicesGallery onQuoteClick={setQuoteServiceId} />
 
       <ConstructionProcessSection />
 
