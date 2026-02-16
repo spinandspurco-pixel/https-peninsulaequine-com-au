@@ -19,12 +19,16 @@ import HQ from "./pages/HQ";
 import EmployeeDashboard from "./pages/EmployeeDashboard";
 import BookLesson from "./pages/BookLesson";
 import BrandGuide from "./pages/BrandGuide";
+import Shop from "./pages/Shop";
+import ProductDetail from "./pages/ProductDetail";
+import { useCartSync } from "./hooks/useCartSync";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
+function AppContent() {
+  useCartSync();
+  return (
+    <>
       <Toaster />
       <Sonner />
       <BrowserRouter>
@@ -45,10 +49,20 @@ const App = () => (
           <Route path="/employee" element={<EmployeeDashboard />} />
           <Route path="/book-lesson" element={<BookLesson />} />
           <Route path="/brand" element={<BrandGuide />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/shop/:handle" element={<ProductDetail />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+    </>
+  );
+}
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <AppContent />
     </TooltipProvider>
   </QueryClientProvider>
 );
