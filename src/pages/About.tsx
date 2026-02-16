@@ -526,6 +526,72 @@ function IntroSection() {
   );
 }
 
+function PhilosophySection() {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>();
+  const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+  const { ref: closingRef, isVisible: closingVisible } = useScrollAnimation<HTMLDivElement>();
+
+  const { philosophy } = aboutCiro;
+
+  return (
+    <section className="section-padding bg-primary text-primary-foreground relative overflow-hidden">
+      <BlueprintBackground image={blueprintFacility} opacity={0.03} direction="bottom-to-top" duration={2400} parallaxSpeed={0.04} />
+      <div className="section-container relative z-10">
+        {/* Header */}
+        <div
+          ref={headerRef}
+          className={`max-w-3xl mx-auto text-center mb-16 transition-all duration-700 ${
+            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
+          <div className="w-16 h-0.5 bg-accent mx-auto mb-6" />
+          <p className="text-accent uppercase tracking-[0.25em] text-sm mb-4">Our Approach</p>
+          <h2 className="heading-section mb-6">{philosophy.headline}</h2>
+          <p className="text-primary-foreground/70 text-lg leading-relaxed max-w-2xl mx-auto">
+            {philosophy.intro}
+          </p>
+        </div>
+
+        {/* Pillars grid */}
+        <div ref={gridRef} className="grid sm:grid-cols-2 gap-px bg-primary-foreground/10 rounded-lg overflow-hidden mb-16">
+          {philosophy.pillars.map((pillar, i) => (
+            <div
+              key={pillar.number}
+              className={`p-8 sm:p-10 bg-primary transition-all duration-700 ${
+                gridVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              }`}
+              style={{ transitionDelay: `${i * 100}ms` }}
+            >
+              <span className="text-accent font-mono text-sm tracking-[0.3em] mb-4 block">
+                {pillar.number}
+              </span>
+              <h3 className="font-serif text-xl sm:text-2xl text-primary-foreground mb-3">
+                {pillar.title}
+              </h3>
+              <p className="text-primary-foreground/60 text-sm leading-relaxed">
+                {pillar.description}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Closing statement */}
+        <div
+          ref={closingRef}
+          className={`max-w-2xl mx-auto text-center transition-all duration-700 ${
+            closingVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
+          <blockquote className="font-serif text-lg sm:text-xl text-primary-foreground/80 italic leading-relaxed">
+            "{philosophy.closing}"
+          </blockquote>
+          <div className="w-12 h-px bg-accent mx-auto mt-8" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function About() {
   return (
     <Layout>
@@ -538,6 +604,7 @@ export default function About() {
       <IntroSection />
       <CiroSection />
       <BlueprintDivider variant="elevation" />
+      <PhilosophySection />
       <NaturalHorsemanshipSection />
       <ValuesSection />
       <TestimonialsGallerySection />
