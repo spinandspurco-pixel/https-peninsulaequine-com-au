@@ -128,6 +128,7 @@ const STEPS = [
   { id: 3, title: "Goals", description: "What do you want to achieve?" },
   { id: 4, title: "Experience", description: "Your background & budget" },
   { id: 5, title: "Contact", description: "How can we reach you?" },
+  { id: 6, title: "Review", description: "Confirm your inquiry" },
 ];
 
 const EXPERIENCE_LEVELS = [
@@ -406,6 +407,26 @@ function StepIndicator({ currentStep }: { currentStep: number }) {
       <p className="text-center text-xs text-muted-foreground mt-4 sm:hidden">
         Swipe left or right to navigate
       </p>
+    </div>
+  );
+}
+function ReviewBlock({ label, stepNum, onEdit, children }: { label: string; stepNum: number; onEdit: () => void; children: React.ReactNode }) {
+  return (
+    <div className="rounded-lg border border-border p-4">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">{label}</span>
+        <button type="button" onClick={onEdit} className="text-xs text-accent hover:underline">Edit (Step {stepNum})</button>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function ReviewField({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <span className="text-muted-foreground">{label}:</span>{" "}
+      <span className="text-foreground font-medium">{value}</span>
     </div>
   );
 }
@@ -718,6 +739,21 @@ export function InquiryForm() {
         {/* Step 1: Services */}
         {currentStep === 1 && (
           <div className="animate-fade-in">
+            {/* Pre-fill banner when services come from URL */}
+            {preSelectedServices.length > 0 && (
+              <div className="mb-6 rounded-lg bg-accent/5 border border-accent/20 p-4 flex items-start gap-3">
+                <CheckCircle className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">
+                    Pre-selected from your service choice
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {preSelectedServices.map(id => services.find(s => s.id === id)?.title).filter(Boolean).join(", ")}
+                    {" "}— feel free to add or remove services below.
+                  </p>
+                </div>
+              </div>
+            )}
             <h3 className="font-serif text-xl font-semibold text-foreground mb-2">
               What services are you interested in?
             </h3>
@@ -1406,6 +1442,77 @@ export function InquiryForm() {
                   maxLength={500}
                 />
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 6: Review Summary */}
+        {currentStep === 6 && (
+          <div className="animate-fade-in">
+            <h3 className="font-serif text-xl font-semibold text-foreground mb-2">
+              Review Your Inquiry
+            </h3>
+            <p className="text-muted-foreground mb-6">
+              Please confirm everything looks correct before submitting.
+            </p>
+
+            <div className="space-y-4">
+              {/* Services */}
+              <ReviewBlock
+                label="Services"
+                stepNum={1}
+                onEdit={() => setCurrentStep(1)}
+              >
+                <div className="flex flex-wrap gap-2">
+                  {(formData.interestedServices || []).map((id) => {
+                    const svc = services.find((s) => s.id === id);
+                    return svc ? (
+                      <span key={id} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-accent/10 text-accent text-xs font-medium border border-accent/20">
+                        <CheckCircle className="h-3 w-3" />
+                        {svc.title}
+                      </span>
+                    ) : null;
+                  })}
+                </div>
+              </ReviewBlock>
+
+              {/* Horse Details */}
+              {(formData.horseName || formData.horseBreed || formData.numberOfHorses) && (
+                <ReviewBlock label="Horse Details" stepNum={2} onEdit={() => setCurrentStep(2)}>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                    {formData.horseName && <ReviewField label="Name" value={formData.horseName} />}
+                    {formData.horseBreed && <ReviewField label="Breed" value={formData.horseBreed} />}
+                    {formData.horseAge && <ReviewField label="Age" value={formData.horseAge} />}
+                    {formData.numberOfHorses && <ReviewField label="No. of Horses" value={formData.numberOfHorses} />}
+                  </div>
+                </ReviewBlock>
+              )}
+
+              {/* Goals */}
+              {formData.goals && (
+                <ReviewBlock label="Project Goals" stepNum={3} onEdit={() => setCurrentStep(3)}>
+                  <p className="text-sm text-foreground/80 line-clamp-3">{formData.goals}</p>
+                </ReviewBlock>
+              )}
+
+              {/* Experience & Budget */}
+              <ReviewBlock label="Experience & Budget" stepNum={4} onEdit={() => setCurrentStep(4)}>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                  {formData.experienceLevel && <ReviewField label="Level" value={formData.experienceLevel} />}
+                  {formData.budgetRange && <ReviewField label="Budget" value={formData.budgetRange} />}
+                  
+                </div>
+              </ReviewBlock>
+
+              {/* Contact */}
+              <ReviewBlock label="Contact Info" stepNum={5} onEdit={() => setCurrentStep(5)}>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                  {formData.name && <ReviewField label="Name" value={formData.name} />}
+                  {formData.email && <ReviewField label="Email" value={formData.email} />}
+                  {formData.phone && <ReviewField label="Phone" value={formData.phone} />}
+                  {formData.preferredDate && <ReviewField label="Preferred Date" value={format(formData.preferredDate, "PPP")} />}
+                </div>
+              </ReviewBlock>
             </div>
           </div>
         )}
