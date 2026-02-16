@@ -891,6 +891,14 @@ function ConstructionProcessSection() {
 
 function LessonsSection() {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>();
+  const navigate = useNavigate();
+  const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
+
+  const LESSON_LEVELS = [
+    { value: "beginner", label: "Foundation", price: "$95", duration: "45 min", tagline: "Build confidence from the ground up", icon: "⭐" },
+    { value: "intermediate", label: "Development", price: "$120", duration: "60 min", tagline: "Refine your skills, deepen your partnership", icon: "🎯", popular: true },
+    { value: "advanced", label: "Performance", price: "$150", duration: "60 min", tagline: "Precision training for serious riders", icon: "🏆" },
+  ];
 
   return (
     <section id="booking" className="section-padding bg-background scroll-mt-24">
@@ -915,44 +923,100 @@ function LessonsSection() {
           }`}>
             {lessonInfo.description}
           </p>
-          <p className={`text-muted-foreground transition-all duration-500 delay-250 ${
-            isVisible ? "opacity-100" : "opacity-0"
-          }`}>
-            {lessonInfo.contact}
-          </p>
         </div>
 
-        {/* Inline booking form + live capacity */}
-        <div className={`max-w-4xl mx-auto grid md:grid-cols-[1fr_260px] gap-6 transition-all duration-700 delay-300 ${
+        {/* Step 1: Choose your level */}
+        <div className={`max-w-4xl mx-auto mb-12 transition-all duration-700 delay-200 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}>
-          <InlineBookingForm />
-          <LiveBookingCapacity className="h-fit md:sticky md:top-28" />
+          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground text-center mb-6">
+            Step 1 — Choose Your Level
+          </p>
+          <div className="grid sm:grid-cols-3 gap-4">
+            {LESSON_LEVELS.map((level) => (
+              <button
+                key={level.value}
+                onClick={() => setSelectedLevel(selectedLevel === level.value ? null : level.value)}
+                className={`relative text-left rounded-xl border p-5 transition-all duration-300 hover:shadow-md ${
+                  selectedLevel === level.value
+                    ? "border-accent bg-accent/5 ring-1 ring-accent/20 shadow-sm"
+                    : level.popular
+                      ? "border-accent/30 bg-card"
+                      : "border-border bg-card"
+                }`}
+              >
+                {level.popular && (
+                  <span className="absolute -top-2.5 right-4 px-2.5 py-0.5 bg-accent text-accent-foreground text-[10px] uppercase tracking-widest rounded-full font-semibold">
+                    Popular
+                  </span>
+                )}
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-xl">{level.icon}</span>
+                  <div>
+                    <p className="font-serif font-semibold text-foreground">{level.label}</p>
+                    <p className="text-xs text-muted-foreground">{level.tagline}</p>
+                  </div>
+                </div>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-2xl font-bold text-accent">{level.price}</span>
+                  <span className="text-xs text-muted-foreground">/ {level.duration}</span>
+                </div>
+                {selectedLevel === level.value && (
+                  <div className="mt-3 pt-3 border-t border-accent/20">
+                    <CheckCircle className="h-4 w-4 text-accent inline mr-1.5" />
+                    <span className="text-xs text-accent font-medium">Selected — pick a date below</span>
+                  </div>
+                )}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Secondary CTAs */}
-        <div className={`flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 transition-all duration-500 delay-400 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+        {/* Step 2: Calendar + booking form */}
+        <div className={`max-w-4xl mx-auto transition-all duration-700 delay-300 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}>
-          <Button asChild size="lg" variant="outline" className="border-accent/30 text-accent hover:bg-accent/10">
-            <Link to="/contact?services=clinics-events">
-              Plan a Clinic or Event
-            </Link>
-          </Button>
+          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground text-center mb-6">
+            Step 2 — Pick a Date & Book
+          </p>
+          <div className="grid md:grid-cols-[1fr_260px] gap-6">
+            <InlineBookingForm />
+            <LiveBookingCapacity className="h-fit md:sticky md:top-28" />
+          </div>
         </div>
 
-        {/* Availability calendar */}
+        {/* Step 3: Live availability calendar */}
         <div className={`mt-14 transition-all duration-700 delay-500 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}>
           <div className="text-center mb-8">
             <p className="text-muted-foreground uppercase tracking-[0.2em] text-xs mb-2">Live Availability</p>
-            <h3 className="font-serif text-2xl text-foreground">Pick a Date &amp; Time</h3>
+            <h3 className="font-serif text-2xl text-foreground">Or Browse Open Slots</h3>
             <p className="text-muted-foreground text-sm mt-2 max-w-lg mx-auto">
-              Browse available lesson and clinic slots below. Select a date to see open times, then book directly.
+              View real-time availability. Select a date to see open times, then book directly.
             </p>
           </div>
           <LessonAvailabilityCalendar />
+        </div>
+
+        {/* Secondary CTAs */}
+        <div className={`flex flex-col sm:flex-row items-center justify-center gap-4 mt-10 transition-all duration-500 delay-400 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+        }`}>
+          <Button 
+            onClick={() => navigate(`/book-lesson${selectedLevel ? `?type=${selectedLevel}` : ''}`)}
+            size="lg" 
+            className="bg-accent hover:bg-accent/90 text-accent-foreground"
+          >
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            Full Booking Page
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+          <Button asChild size="lg" variant="outline" className="border-accent/30 text-accent hover:bg-accent/10">
+            <Link to="/contact?services=clinics-events">
+              Plan a Clinic or Event
+            </Link>
+          </Button>
         </div>
       </div>
     </section>
