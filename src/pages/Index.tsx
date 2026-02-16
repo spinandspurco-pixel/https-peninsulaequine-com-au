@@ -74,10 +74,10 @@ function HeroSection() {
           <Button
             asChild
             size="lg"
-            className="bg-accent text-accent-foreground hover:bg-accent/90 text-sm px-10 tracking-[0.15em] uppercase font-sans font-medium"
+            className="bg-accent text-accent-foreground hover:bg-accent/90 text-sm px-10 tracking-[0.15em] uppercase font-sans font-medium shadow-[0_4px_20px_hsl(var(--accent)/0.35)] hover:shadow-[0_6px_28px_hsl(var(--accent)/0.5)] hover:scale-105"
           >
-            <Link to="/services">
-              Our Work
+            <Link to="/contact">
+              Get a Free Quote
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
@@ -87,8 +87,8 @@ function HeroSection() {
             size="lg"
             className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 text-sm px-10 tracking-[0.15em] uppercase font-sans"
           >
-            <Link to="/contact">
-              Get in Touch
+            <Link to="/services">
+              View Our Work
             </Link>
           </Button>
         </div>
