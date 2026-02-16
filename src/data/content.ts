@@ -402,4 +402,31 @@ export const aboutCiro = {
       description: "We build facilities that last decades and relationships that last longer.",
     },
   ],
+  philosophy: {
+    headline: "Our Philosophy",
+    intro: "Peninsula Equine isn't a construction company that happens to work with horses. We're horsemen who happen to build. That distinction shapes everything—from how we survey a site to the last fence post we set.",
+    pillars: [
+      {
+        number: "01",
+        title: "Design for the Horse",
+        description: "Every decision begins with the animal. Sight lines that reduce stress, ventilation that protects respiratory health, footing engineered for biomechanical soundness. A barn that looks beautiful but doesn't breathe is just an expensive box.",
+      },
+      {
+        number: "02",
+        title: "Build for Generations",
+        description: "We select materials and techniques for hundred-year performance. Hand-set stonework, kiln-dried hardwood, marine-grade hardware. Our facilities outlast trends because they're built on principles that don't change.",
+      },
+      {
+        number: "03",
+        title: "Respect the Land",
+        description: "We read the property before we draw a line. Natural drainage, prevailing winds, soil composition, existing tree lines—the land tells you where to build if you know how to listen.",
+      },
+      {
+        number: "04",
+        title: "Craft Over Convenience",
+        description: "There are faster ways to build. We choose the right way. Mortise-and-tenon joints where bolts would do. Stone foundations where concrete would suffice. The details you can't see matter most.",
+      },
+    ],
+    closing: "This philosophy isn't aspirational—it's operational. It's why Ciro is on every site, why we turn down projects that compromise our standards, and why our clients come back generation after generation.",
+  },
 };
