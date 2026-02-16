@@ -1,13 +1,15 @@
 import { useState, useMemo, useCallback } from "react";
-import { Calendar as CalendarIcon, CalendarPlus, Clock, MapPin, Users, ExternalLink, Tag, Zap } from "lucide-react";
+import { Calendar as CalendarIcon, CalendarPlus, Clock, MapPin, Users, ExternalLink, Tag, Zap, Search } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { format, isBefore, startOfDay, isSameMonth, parseISO } from "date-fns";
+import { format, isBefore, startOfDay, isAfter, parseISO } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar } from "@/components/ui/calendar";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
@@ -311,6 +313,8 @@ function EventCalendarSidebar({
 // ── Page ──
 export default function Events() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [timeFilter, setTimeFilter] = useState<"upcoming" | "past" | "all">("upcoming");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { data: dbEvents = [], isLoading } = useQuery<DBEvent[]>({
     queryKey: ["managed-events"],
@@ -329,12 +333,37 @@ export default function Events() {
 
   const events = dbEvents;
 
-  // Filter by selected calendar date
+  // Filter by time, search, and selected calendar date
   const displayEvents = useMemo(() => {
-    if (!selectedDate) return events;
-    const dateStr = format(selectedDate, "yyyy-MM-dd");
-    return events.filter((e) => e.event_date === dateStr);
-  }, [events, selectedDate]);
+    let filtered = events;
+
+    // Time filter
+    const today = startOfDay(new Date());
+    if (timeFilter === "upcoming") {
+      filtered = filtered.filter((e) => !isBefore(startOfDay(parseISO(e.event_date)), today));
+    } else if (timeFilter === "past") {
+      filtered = filtered.filter((e) => isBefore(startOfDay(parseISO(e.event_date)), today));
+    }
+
+    // Search filter
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (e) =>
+          e.title.toLowerCase().includes(q) ||
+          e.location?.toLowerCase().includes(q) ||
+          e.description?.toLowerCase().includes(q)
+      );
+    }
+
+    // Calendar date filter
+    if (selectedDate) {
+      const dateStr = format(selectedDate, "yyyy-MM-dd");
+      filtered = filtered.filter((e) => e.event_date === dateStr);
+    }
+
+    return filtered;
+  }, [events, selectedDate, timeFilter, searchQuery]);
 
   return (
     <Layout>
@@ -345,6 +374,26 @@ export default function Events() {
 
       <section className="section-padding bg-background">
         <div className="section-container">
+          {/* Filters row */}
+          <div className="flex flex-col sm:flex-row gap-4 mb-8 items-start sm:items-center">
+            <Tabs value={timeFilter} onValueChange={(v) => setTimeFilter(v as any)} className="w-auto">
+              <TabsList>
+                <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
+                <TabsTrigger value="past">Past</TabsTrigger>
+                <TabsTrigger value="all">All</TabsTrigger>
+              </TabsList>
+            </Tabs>
+            <div className="relative flex-1 max-w-xs">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search events…"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+          </div>
+
           <div className="grid lg:grid-cols-[1fr_300px] gap-8 items-start">
             {/* Event cards */}
             <div className="space-y-12">
