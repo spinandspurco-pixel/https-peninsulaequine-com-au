@@ -462,11 +462,10 @@ export function InquiryForm() {
     additionalNotes: "",
   });
 
-  // Auto-advance to the Goals step (step 3) if services were pre-selected via URL
-  // This skips service selection and horse details for faster lead capture
+  // Auto-advance to step 2 (horse details) if services were pre-selected via URL
   useEffect(() => {
     if (preSelectedServices.length > 0) {
-      setCurrentStep(3);
+      setCurrentStep(2);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
