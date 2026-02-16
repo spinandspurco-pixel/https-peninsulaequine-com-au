@@ -509,6 +509,17 @@ function LeadCaptureSection() {
         project_details: "Quick lead capture from homepage",
         status: "new",
       });
+
+      // Trigger auto-email follow-up
+      supabase.functions.invoke("send-inquiry-notification", {
+        body: {
+          name: trimmedName,
+          email: trimmedEmail,
+          services: ["general-inquiry"],
+          goals: "Homepage lead capture — interested in consultation",
+        },
+      }).catch(() => {});
+
       setSubmitted(true);
     } catch {
       // Silently fail – form still shows success to avoid blocking UX
