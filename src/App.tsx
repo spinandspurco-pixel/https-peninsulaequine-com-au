@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
+import ServiceDetail from "./pages/ServiceDetail";
 import Boarding from "./pages/Boarding";
 import About from "./pages/About";
 import Gallery from "./pages/Gallery";
@@ -45,6 +46,7 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/services/:slug" element={<ServiceDetail />} />
           <Route path="/services/round-pens" element={<RoundPens />} />
           <Route path="/boarding" element={<Boarding />} />
           <Route path="/about" element={<About />} />
