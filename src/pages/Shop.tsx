@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Loader2, ShoppingCart, Flame, Search, X, ArrowRight } from "lucide-react";
+import { Loader2, ShoppingCart, Flame, Search, X, ArrowRight, Fence, Wrench, Sparkles, Building2 } from "lucide-react";
 import { toast } from "sonner";
 import { storefrontApiRequest, STOREFRONT_PRODUCTS_QUERY, ShopifyProduct } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
@@ -156,6 +156,39 @@ export default function Shop() {
               {activeCategory !== "all" && ` in ${categories.find(c => c.id === activeCategory)?.label}`}
             </p>
           )}
+        </div>
+      </section>
+
+      {/* Category Showcase */}
+      <section className="py-16 md:py-20 border-b border-border">
+        <div className="section-container">
+          <div className="text-center mb-12">
+            <h2 className="font-serif text-3xl md:text-4xl mb-3">Shop by <span className="text-accent">Category</span></h2>
+            <p className="text-muted-foreground max-w-lg mx-auto">Every piece is built to order — heavy-gauge steel, hot-dip galvanised, with horsemen's tolerances.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { icon: Fence, title: "Custom Gates & Panels", desc: "Swing gates, sliding gates & modular stable panels built to your dimensions.", from: "$1,200", filter: "Custom Gates & Panels" },
+              { icon: Wrench, title: "Steel Fixtures", desc: "Tie-up rails, saddle racks & wash-bay fittings — designed for daily punishment.", from: "$180", filter: "Steel Fixtures" },
+              { icon: Sparkles, title: "Decorative Metalwork", desc: "Laser-cut property signs, ornamental brackets & bespoke embellishments.", from: "$250", filter: "Decorative Metalwork" },
+              { icon: Building2, title: "Structural Steel", desc: "I-beam brackets, arena perimeter fencing & load-bearing fabrications.", from: "$320", filter: "Structural Steel" },
+            ].map((cat) => (
+              <div key={cat.title} className="group border border-border rounded-lg p-6 bg-card hover:shadow-lg transition-all flex flex-col">
+                <cat.icon className="h-8 w-8 text-accent mb-4" />
+                <h3 className="font-serif text-lg font-semibold mb-2">{cat.title}</h3>
+                <p className="text-sm text-muted-foreground mb-4 flex-1">{cat.desc}</p>
+                <p className="text-accent font-semibold mb-4">From {cat.from}</p>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" className="flex-1 text-xs" onClick={() => setActiveCategory(cat.filter)}>
+                    View Products
+                  </Button>
+                  <Button asChild size="sm" className="flex-1 text-xs bg-accent hover:bg-accent/90 text-accent-foreground">
+                    <Link to="/contact">Get Quote</Link>
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
