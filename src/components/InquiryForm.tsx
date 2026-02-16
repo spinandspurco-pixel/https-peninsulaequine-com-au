@@ -444,6 +444,9 @@ export function InquiryForm() {
   // Read pre-selected services from URL params (e.g., ?services=arena-construction,fencing)
   const preSelectedServices = searchParams.get("services")?.split(",").filter(Boolean) || [];
 
+  // Track lead source from URL params (e.g., ?ref=service-card, ?ref=hero-cta)
+  const leadSource = searchParams.get("ref") || (preSelectedServices.length > 0 ? "direct-link" : "organic");
+
   // Read pre-selected date from URL params (e.g., ?date=2026-03-15)
   const preSelectedDateStr = searchParams.get("date");
   const preSelectedDate = preSelectedDateStr ? new Date(preSelectedDateStr) : undefined;
@@ -626,6 +629,7 @@ export function InquiryForm() {
           ? format(formData.preferredDate, "yyyy-MM-dd") 
           : null,
         attachment_urls: attachments.map((a) => a.url),
+        notes: `Lead source: ${leadSource}${preSelectedServices.length > 0 ? ` | Pre-filled services: ${preSelectedServices.join(", ")}` : ""}`,
       });
 
       if (error) throw error;
