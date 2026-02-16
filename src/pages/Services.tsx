@@ -181,7 +181,7 @@ function ServiceCard({ service, index, onQuoteClick }: { service: typeof service
         </ul>
         <div className="flex flex-wrap gap-3">
           <Button 
-            onClick={() => navigate(`/contact?services=${service.id}`)}
+            onClick={() => navigate(`/book-lesson?service=${service.id}`)}
             className="bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
           >
             <CalendarIcon className="mr-2 h-4 w-4" />

@@ -4,9 +4,9 @@ import { CalendarIcon, ArrowRight, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const QUICK_OPTIONS = [
-  { value: "lesson", label: "Private Lesson", price: "$95", time: "45–60 min" },
-  { value: "clinic", label: "Clinic Session", price: "$150", time: "Half day" },
-  { value: "assessment", label: "Trial Assessment", price: "$75", time: "30 min" },
+  { value: "beginner", label: "Foundation Lesson", price: "$95", time: "45 min" },
+  { value: "intermediate", label: "Development Lesson", price: "$120", time: "60 min" },
+  { value: "advanced", label: "Performance Lesson", price: "$150", time: "60 min" },
 ];
 
 interface BookingWidgetProps {
