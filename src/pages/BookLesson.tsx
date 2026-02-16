@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { CalendarIcon, Clock, CheckCircle, ArrowRight, Send, Star, Award, Target, ChevronDown, ExternalLink, Quote, Users, Sparkles, Play } from "lucide-react";
+import { CalendarIcon, Clock, CheckCircle, ArrowRight, Send, Star, Award, Target, ChevronDown, ExternalLink, Quote, Users, Sparkles, Play, Printer, CircleDot } from "lucide-react";
 import { z } from "zod";
 import { format } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
@@ -325,6 +325,114 @@ function LessonFAQSection() {
               </AccordionItem>
             ))}
           </Accordion>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── Prep Checklist ────────────────────────────────────
+
+const PREP_CHECKLIST = [
+  {
+    category: "What to Wear",
+    items: [
+      "Approved riding helmet (AS/NZS 3838 or equivalent)",
+      "Close-fitting trousers or jodhpurs",
+      "Boots with a small heel (no sneakers or open-toed shoes)",
+      "Riding gloves",
+      "No loose scarves, jewellery, or baggy clothing",
+    ],
+  },
+  {
+    category: "For Your Horse",
+    items: [
+      "Horse groomed and hooves picked out",
+      "Saddle and bridle fitted and clean",
+      "Saddle pad / numnah",
+      "Boots or bandages if required",
+      "Water bucket and hay net for after the session",
+    ],
+  },
+  {
+    category: "On the Day",
+    items: [
+      "Arrive 15 minutes early for warm-up",
+      "Bring a water bottle for yourself",
+      "Sunscreen and hat for waiting periods",
+      "Any veterinary notes or special instructions for Glenn",
+      "Phone for emergency contact (kept in car/bag during lesson)",
+    ],
+  },
+  {
+    category: "Safety Reminders",
+    items: [
+      "Let Glenn know about any injuries or medical conditions",
+      "Inform staff of your horse's quirks or behavioural notes",
+      "Walk the arena perimeter before mounting if it's your first visit",
+      "Emergency contacts saved in your phone",
+    ],
+  },
+];
+
+function PrepChecklistSection() {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  return (
+    <section className="section-padding bg-background" id="prep-checklist">
+      <div className="section-container">
+        <div
+          ref={ref}
+          className={`max-w-3xl mx-auto transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
+          <div className="text-center mb-10">
+            <div className={`w-16 h-0.5 bg-accent mx-auto mb-6 transition-all duration-500 delay-100 ${
+              isVisible ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"
+            }`} />
+            <h2 className="heading-section text-foreground mb-4">Rider Prep Checklist</h2>
+            <p className="text-muted-foreground mb-6">
+              Everything you need to bring and know before your lesson. Print or save this page to prepare.
+            </p>
+            <Button
+              onClick={handlePrint}
+              variant="outline"
+              className="border-accent text-accent hover:bg-accent hover:text-accent-foreground"
+            >
+              <Printer className="mr-2 h-4 w-4" />
+              Print Checklist
+            </Button>
+          </div>
+
+          <div className="space-y-8">
+            {PREP_CHECKLIST.map((group, gi) => (
+              <div
+                key={group.category}
+                className={`rounded-xl border border-border bg-card p-6 transition-all duration-500 ${
+                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+                }`}
+                style={{ transitionDelay: `${gi * 100 + 200}ms` }}
+              >
+                <h3 className="font-serif text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                  <CircleDot className="h-5 w-5 text-accent" />
+                  {group.category}
+                </h3>
+                <ul className="space-y-3">
+                  {group.items.map((item, ii) => (
+                    <li key={ii} className="flex items-start gap-3 text-sm text-foreground/80">
+                      <div className="mt-0.5 w-5 h-5 rounded border-2 border-accent/40 shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -913,6 +1021,9 @@ export default function BookLesson() {
 
       {/* FAQ */}
       <LessonFAQSection />
+
+      {/* Prep Checklist */}
+      <PrepChecklistSection />
 
       {/* Booking Form */}
       <section id="book" className="section-padding bg-card scroll-mt-20">
