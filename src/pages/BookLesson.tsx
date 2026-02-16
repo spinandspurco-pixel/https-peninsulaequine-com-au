@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { CalendarIcon, Clock, CheckCircle, ArrowRight, Send, Star, Award, Target, ChevronDown, ExternalLink, Quote, Users, Sparkles, Play, Printer, CircleDot } from "lucide-react";
 import { z } from "zod";
 import { format } from "date-fns";
@@ -254,10 +254,10 @@ function ProgramLevelsSection() {
                       : "bg-accent hover:bg-accent/90 text-accent-foreground"
                   )}
                 >
-                  <a href="#book">
+                  <Link to={`/book-lesson?type=${level.value}`}>
                     Book {level.label} Lesson
                     <ArrowRight className="ml-2 h-4 w-4" />
-                  </a>
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -455,12 +455,19 @@ type BookingFormData = {
 
 function BookingForm() {
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
   const [step, setStep] = useState<1 | 2>(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Pre-fill experience level from URL param (e.g. ?type=beginner)
+  const prefilledLevel = searchParams.get("type") || "";
+  const validLevels = PROGRAM_LEVELS.map((l) => l.value);
+  const initialLevel = validLevels.includes(prefilledLevel) ? prefilledLevel : "";
+
   const [formData, setFormData] = useState<Partial<BookingFormData>>({
-    name: "", email: "", phone: "", horseName: "", experienceLevel: "",
+    name: "", email: "", phone: "", horseName: "", experienceLevel: initialLevel,
     lessonGoals: "", preferredDay: "", preferredDate: undefined, additionalNotes: "",
   });
 
