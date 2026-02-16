@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Eye, EyeOff, Check, X, AlertTriangle, Paintbrush, Wand2, ArrowRight, ClipboardCopy, FileText } from "lucide-react";
+import { Eye, EyeOff, Check, X, AlertTriangle, Paintbrush, Wand2, ArrowRight, ClipboardCopy, FileText, Palette } from "lucide-react";
+import { ThemeTokenSwitcher } from "./ThemeTokenSwitcher";
 
 /**
  * Dev-only accessibility contrast checker + branding audit.
@@ -419,7 +420,7 @@ function computeTokenFixes(): TokenFix[] {
 
 // ── Component ────────────────────────────────────────
 
-type Tab = "contrast" | "brand" | "fix" | "report";
+type Tab = "contrast" | "brand" | "fix" | "report" | "theme";
 
 export function ContrastChecker() {
   const [isOpen, setIsOpen] = useState(false);
@@ -565,6 +566,17 @@ export function ContrastChecker() {
                   </span>
                 )}
               </button>
+              <button
+                onClick={() => setTab("theme")}
+                className={`flex-1 py-3 text-xs font-semibold uppercase tracking-wider transition-colors ${
+                  tab === "theme"
+                    ? "text-accent border-b-2 border-accent"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Palette className="w-3.5 h-3.5 inline mr-1 -mt-0.5" />
+                Theme
+              </button>
             </div>
             {/* Sub-header stats */}
             <div className="px-4 py-2 flex items-center justify-between">
@@ -591,6 +603,13 @@ export function ContrastChecker() {
                     <span className={`font-medium ${reportEntries.every((e) => e.pass) ? "text-green-600" : "text-red-600"}`}>
                       {reportEntries.every((e) => e.pass) ? "ALL PASS" : `${reportEntries.filter((e) => !e.pass).length} FAIL`}
                     </span>
+                  </div>
+                </>
+              ) : tab === "theme" ? (
+                <>
+                  <span className="text-xs text-muted-foreground">9 header/footer tokens</span>
+                  <div className="flex gap-3 text-xs">
+                    <span className="text-muted-foreground font-medium">Light / Dark</span>
                   </div>
                 </>
               ) : (
@@ -828,6 +847,11 @@ export function ContrastChecker() {
             </div>
           )}
 
+          {/* Theme tab */}
+          {tab === "theme" && (
+            <ThemeTokenSwitcher variant="panel" />
+          )}
+
           {/* Footer */}
           <div className="sticky bottom-0 bg-background border-t border-border p-3">
             <div className="flex items-start gap-2 text-[10px] text-muted-foreground">
@@ -839,6 +863,8 @@ export function ContrastChecker() {
                   ? `Brand audit checks for rope-mark logo presence, consistent "${CANONICAL_ALT}" alt text, and Playfair Display in headings.`
                   : tab === "report"
                   ? "Report shows pass/fail status for all header, footer, and core token pairs. Copy to clipboard to share or archive."
+                  : tab === "theme"
+                  ? "Preview header & footer tokens in light/dark themes. Apply Live to override tokens on the current page (session-only)."
                   : "Auto-adjuster modifies CSS custom properties in real-time. Changes are session-only — copy adjusted HSL values to index.css to persist."}
               </span>
             </div>
