@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface BlueprintLineOverlayProps {
-  variant?: "barn" | "detail" | "dimensions" | "front-elevation" | "about-elevation" | "story-blueprint" | "values-blueprint" | "horsemanship-blueprint";
+  variant?: "barn" | "detail" | "dimensions" | "front-elevation" | "about-elevation" | "story-blueprint" | "values-blueprint" | "horsemanship-blueprint" | "gallery";
   color?: "light" | "dark";
   className?: string;
 }
@@ -625,6 +625,68 @@ export function BlueprintLineOverlay({
           {/* Title */}
           <text x="600" y="80" textAnchor="middle" fill={t} fontSize="10" fontFamily="monospace" letterSpacing="4" style={fade(2200)}>ROUND PEN — PLAN VIEW</text>
           <text x="980" y="720" textAnchor="end" fill={t} fontSize="8" fontFamily="monospace" style={fade(2400)}>SCALE 1:48</text>
+        </>
+      )}
+
+      {variant === "gallery" && (
+        <>
+          {/* ── Viewfinder / camera frame motif ── */}
+          {/* Corner brackets — top-left */}
+          <path d="M 40,40 L 40,120 M 40,40 L 120,40" fill="none" stroke={s} strokeWidth="0.8" style={draw(0, 120)} />
+          {/* Corner brackets — top-right */}
+          <path d="M 1160,40 L 1160,120 M 1160,40 L 1080,40" fill="none" stroke={s} strokeWidth="0.8" style={draw(100, 120)} />
+          {/* Corner brackets — bottom-left */}
+          <path d="M 40,760 L 40,680 M 40,760 L 120,760" fill="none" stroke={s} strokeWidth="0.8" style={draw(200, 120)} />
+          {/* Corner brackets — bottom-right */}
+          <path d="M 1160,760 L 1160,680 M 1160,760 L 1080,760" fill="none" stroke={s} strokeWidth="0.8" style={draw(300, 120)} />
+
+          {/* Centre crosshair */}
+          <line x1="580" y1="400" x2="620" y2="400" stroke={a} strokeWidth="0.5" style={draw(500, 40)} />
+          <line x1="600" y1="380" x2="600" y2="420" stroke={a} strokeWidth="0.5" style={draw(550, 40)} />
+          <circle cx="600" cy="400" r="20" fill="none" stroke={a} strokeWidth="0.3" style={draw(600, 130)} />
+          <circle cx="600" cy="400" r="40" fill="none" stroke={sf} strokeWidth="0.2" style={draw(650, 260)} />
+
+          {/* Rule of thirds — horizontal */}
+          <line x1="60" y1="267" x2="1140" y2="267" stroke={sf} strokeWidth="0.25" strokeDasharray="12 8" style={draw(400, 1100)} />
+          <line x1="60" y1="533" x2="1140" y2="533" stroke={sf} strokeWidth="0.25" strokeDasharray="12 8" style={draw(500, 1100)} />
+          {/* Rule of thirds — vertical */}
+          <line x1="400" y1="60" x2="400" y2="740" stroke={sf} strokeWidth="0.25" strokeDasharray="12 8" style={draw(600, 700)} />
+          <line x1="800" y1="60" x2="800" y2="740" stroke={sf} strokeWidth="0.25" strokeDasharray="12 8" style={draw(700, 700)} />
+
+          {/* Intersection focus points */}
+          {[[400, 267], [800, 267], [400, 533], [800, 533]].map(([cx, cy], i) => (
+            <circle key={`fp${i}`} cx={cx} cy={cy} r="5" fill="none" stroke={a} strokeWidth="0.35" style={draw(900 + i * 80, 32)} />
+          ))}
+
+          {/* Frame tick marks — top edge */}
+          {[200, 400, 600, 800, 1000].map((x, i) => (
+            <line key={`tt${i}`} x1={x} y1="40" x2={x} y2="55" stroke={sf} strokeWidth="0.3" style={draw(300 + i * 40, 15)} />
+          ))}
+          {/* Frame tick marks — left edge */}
+          {[200, 400, 600].map((y, i) => (
+            <line key={`tl${i}`} x1="40" y1={y} x2="55" y2={y} stroke={sf} strokeWidth="0.3" style={draw(350 + i * 40, 15)} />
+          ))}
+
+          {/* Aspect ratio label */}
+          <text x="100" y="56" textAnchor="start" fill={t} fontSize="8" fontFamily="monospace" style={fade(1200)}>
+            16:9
+          </text>
+
+          {/* Film gate marks — bottom edge */}
+          <rect x="260" y="748" width="30" height="4" fill="none" stroke={sf} strokeWidth="0.3" style={draw(800, 70)} />
+          <rect x="910" y="748" width="30" height="4" fill="none" stroke={sf} strokeWidth="0.3" style={draw(850, 70)} />
+
+          {/* Exposure meter arc */}
+          <path d="M 1080,720 A 50,50 0 0,1 1130,670" fill="none" stroke={sf} strokeWidth="0.3" style={draw(1000, 100)} />
+          <line x1="1105" y1="695" x2="1120" y2="680" stroke={a} strokeWidth="0.4" style={draw(1100, 30)} />
+
+          {/* Title block */}
+          <text x="600" y="28" textAnchor="middle" fill={t} fontSize="9" fontFamily="monospace" letterSpacing="4" style={fade(1400)}>
+            GALLERY — PORTFOLIO VIEW
+          </text>
+          <text x="1140" y="775" textAnchor="end" fill={t} fontSize="7" fontFamily="monospace" style={fade(1600)}>
+            FRAME REF. PE-GAL
+          </text>
         </>
       )}
     </svg>
