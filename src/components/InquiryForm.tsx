@@ -91,6 +91,11 @@ const inquirySchema = z.object({
   barnFeatures: z.array(z.string()).optional(),
   fenceLength: z.string().max(100).optional(),
   fenceMaterial: z.string().optional(),
+  // Round Pens & Paddocks
+  roundPenDiameter: z.string().max(100).optional(),
+  roundPenSurface: z.string().optional(),
+  roundPenType: z.string().optional(),
+  paddockCount: z.string().max(20).optional(),
   propertyAcreage: z.string().max(50).optional(),
   existingStructures: z.string().max(500).optional(),
   // Facility Design & Build
@@ -203,6 +208,20 @@ const EVENT_AMENITY_OPTIONS = [
   { value: "food-vendor", label: "Food / Vendor Area" },
   { value: "parking", label: "Parking / Truck Access" },
   { value: "scoring", label: "Scoring / Judges Box" },
+];
+
+const ROUND_PEN_SURFACE_OPTIONS = [
+  { value: "sand", label: "Sand" },
+  { value: "fiber-sand", label: "Fiber-Sand Mix" },
+  { value: "rubber", label: "Rubber/Synthetic" },
+  { value: "dirt", label: "Compacted Dirt" },
+  { value: "not-sure", label: "Not sure – advise me" },
+];
+
+const ROUND_PEN_TYPE_OPTIONS = [
+  { value: "permanent", label: "Permanent" },
+  { value: "portable", label: "Portable Panels" },
+  { value: "not-sure", label: "Not sure yet" },
 ];
 
 const FENCE_MATERIAL_OPTIONS = [
@@ -416,6 +435,10 @@ export function InquiryForm() {
     barnFeatures: [],
     fenceLength: "",
     fenceMaterial: "",
+    roundPenDiameter: "",
+    roundPenSurface: "",
+    roundPenType: "",
+    paddockCount: "",
     propertyAcreage: "",
     existingStructures: "",
     facilityTotalAcreage: "",
@@ -537,6 +560,10 @@ export function InquiryForm() {
       if (formData.barnFeatures?.length) detailParts.push(`Barn features: ${formData.barnFeatures.join(", ")}`);
       if (formData.fenceLength) detailParts.push(`Fence length: ${formData.fenceLength}`);
       if (formData.fenceMaterial) detailParts.push(`Fence material: ${formData.fenceMaterial}`);
+      if (formData.roundPenDiameter) detailParts.push(`Round pen diameter: ${formData.roundPenDiameter}`);
+      if (formData.roundPenSurface) detailParts.push(`Round pen surface: ${formData.roundPenSurface}`);
+      if (formData.roundPenType) detailParts.push(`Round pen type: ${formData.roundPenType}`);
+      if (formData.paddockCount) detailParts.push(`Paddock count: ${formData.paddockCount}`);
       if (formData.propertyAcreage) detailParts.push(`Acreage: ${formData.propertyAcreage}`);
       if (formData.existingStructures) detailParts.push(`Existing structures: ${formData.existingStructures}`);
       if (formData.facilityTotalAcreage) detailParts.push(`Facility acreage: ${formData.facilityTotalAcreage}`);
@@ -644,6 +671,10 @@ export function InquiryForm() {
               barnFeatures: [],
               fenceLength: "",
               fenceMaterial: "",
+              roundPenDiameter: "",
+              roundPenSurface: "",
+              roundPenType: "",
+              paddockCount: "",
               propertyAcreage: "",
               existingStructures: "",
               facilityTotalAcreage: "",
@@ -925,6 +956,63 @@ export function InquiryForm() {
                         </SelectTrigger>
                         <SelectContent>
                           {FENCE_MATERIAL_OPTIONS.map((opt) => (
+                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Round Pens & Paddocks fields */}
+              {formData.interestedServices?.includes("round-pens") && (
+                <div className="p-4 rounded-lg border border-accent/20 bg-accent/5 space-y-4">
+                  <p className="text-sm font-medium text-accent">Round Pen & Paddock Details</p>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-base sm:text-sm">Pen Diameter</Label>
+                      <Input
+                        value={formData.roundPenDiameter || ""}
+                        onChange={(e) => updateField("roundPenDiameter", e.target.value)}
+                        placeholder="e.g., 18m, 60 feet"
+                        maxLength={100}
+                        className="h-12 sm:h-10 text-base sm:text-sm"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-base sm:text-sm">Number of Paddocks</Label>
+                      <Input
+                        value={formData.paddockCount || ""}
+                        onChange={(e) => updateField("paddockCount", e.target.value)}
+                        placeholder="e.g., 4, 8"
+                        maxLength={20}
+                        className="h-12 sm:h-10 text-base sm:text-sm"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-base sm:text-sm">Surface Material</Label>
+                      <Select value={formData.roundPenSurface} onValueChange={(v) => updateField("roundPenSurface", v)}>
+                        <SelectTrigger className="h-12 sm:h-10 text-base sm:text-sm">
+                          <SelectValue placeholder="Select surface..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {ROUND_PEN_SURFACE_OPTIONS.map((opt) => (
+                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-base sm:text-sm">Permanent or Portable?</Label>
+                      <Select value={formData.roundPenType} onValueChange={(v) => updateField("roundPenType", v)}>
+                        <SelectTrigger className="h-12 sm:h-10 text-base sm:text-sm">
+                          <SelectValue placeholder="Select type..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {ROUND_PEN_TYPE_OPTIONS.map((opt) => (
                             <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
                           ))}
                         </SelectContent>
