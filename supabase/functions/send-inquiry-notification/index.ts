@@ -218,10 +218,10 @@ const handler = async (req: Request): Promise<Response> => {
             <div class="contact-box">
               <p style="margin: 0 0 10px 0;"><strong>Need to reach us sooner?</strong></p>
               <p style="margin: 0;">
-                📞 Call us: <a href="tel:+15551234567">(555) 123-4567</a>
+                📞 Call us: <a href="tel:+61493555923">0493 555 923</a>
               </p>
               <p style="margin: 10px 0 0 0;">
-                📧 Email: <a href="mailto:ciro@peninsulaequine.com">ciro@peninsulaequine.com</a>
+                📧 Email: <a href="mailto:info@peninsulaequine.com.au">info@peninsulaequine.com.au</a>
               </p>
             </div>
             
