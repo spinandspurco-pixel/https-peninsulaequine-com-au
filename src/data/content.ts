@@ -149,8 +149,60 @@ export const services = [
 
 export const lessonInfo = {
   trainer: "Available Thursdays & Fridays",
-  description: "We partner with an experienced trainer who offers lessons on-site. Whether you're just starting out or refining advanced skills, quality instruction is available right here at our facility.",
+  description: "Lessons and clinics are led by Glenn Browitt, an experienced horseman and riding instructor operating out of the arena Ciro built here at Peninsula Equine. Whether you're just starting out or refining advanced skills, Glenn's patient, methodical approach meets every rider where they are.",
   contact: "Contact us to schedule a lesson or get more information about our training programs.",
+};
+
+export const glennBrowitt = {
+  name: "Glenn Browitt",
+  title: "Head Trainer — Riding Tuition & Horsemanship",
+  website: "https://glennbrowitt.com.au",
+  yearsExperience: 25,
+  bio: [
+    "Glenn Browitt brings over 25 years of hands-on experience as a riding instructor and horseman to Peninsula Equine. Based on the Mornington Peninsula, Glenn has built a reputation for his calm, methodical teaching style that transforms nervous beginners into confident riders—and sharpens the edge of those already competing at a high level.",
+    "His philosophy centres on the partnership between horse and rider. Every session begins with groundwork and observation, reading the horse's body language and matching the rider's energy before anyone puts foot in stirrup. It's an approach shaped by decades of working with every temperament—from hot Thoroughbreds to steady stock horses—and every rider, from a child's first sit to an experienced competitor fine-tuning collection.",
+    "Glenn runs all lessons and clinics from the purpose-built arena at Peninsula Equine, a facility designed and constructed by Ciro specifically with training in mind. The footing, dimensions, and layout were built to support exactly the kind of progressive horsemanship Glenn teaches. It's a true collaboration between builder and trainer.",
+  ],
+  specialties: [
+    "Confidence building — on the ground and in the saddle",
+    "Riding lessons for all levels (beginner through advanced)",
+    "Fine-tuning current riding skills and correcting habits",
+    "Competition preparation and show ring readiness",
+    "Problem-solving behavioural and riding issues",
+    "Young horse education and starting",
+    "Horsemanship clinics and group workshops",
+    "Natural horsemanship principles and groundwork",
+  ],
+  testimonials: [
+    {
+      id: 101,
+      name: "Jessica T.",
+      role: "Adult Returner",
+      quote: "Glenn completely changed my relationship with riding. After 15 years away from horses, I was terrified to get back on. Within three sessions, he had me trotting confidently and actually enjoying myself again. His patience is extraordinary.",
+      rating: 5,
+    },
+    {
+      id: 102,
+      name: "Karen & Lily M.",
+      role: "Mother & Daughter Students",
+      quote: "Both my daughter and I ride with Glenn—she's 12 and I'm a complete beginner at 42. He adjusts his approach perfectly for each of us. Lily is now jumping small courses and I can finally canter without gripping the mane!",
+      rating: 5,
+    },
+    {
+      id: 103,
+      name: "Steve R.",
+      role: "Competitive Dressage Rider",
+      quote: "I came to Glenn to sort out some tension issues with my horse's lateral work. His groundwork-first approach unlocked something I'd been fighting for months. We scored personal bests at our next three competitions.",
+      rating: 5,
+    },
+    {
+      id: 104,
+      name: "Amanda P.",
+      role: "Trail Rider & Horse Owner",
+      quote: "My horse had become nappy and difficult to load. Two sessions of Glenn's groundwork techniques and the problem was resolved. He doesn't just fix the symptom—he addresses the root cause. Can't recommend him enough.",
+      rating: 5,
+    },
+  ],
 };
 
 export const testimonials = [

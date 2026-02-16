@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { CalendarIcon, Clock, CheckCircle, ArrowRight, Send, Star, Award, Target, ChevronDown } from "lucide-react";
+import { CalendarIcon, Clock, CheckCircle, ArrowRight, Send, Star, Award, Target, ChevronDown, ExternalLink, Quote, Users, Sparkles } from "lucide-react";
 import { z } from "zod";
 import { format } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,6 +8,8 @@ import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
+import { BlueprintDivider } from "@/components/BlueprintDivider";
+import { SectionTransition, AnimatedDivider } from "@/components/SectionTransition";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,9 +21,10 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { useToast } from "@/hooks/use-toast";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
-import { lessonInfo } from "@/data/content";
+import { lessonInfo, glennBrowitt } from "@/data/content";
 import blueprintFacility from "@/assets/blueprint-facility.png";
 import blueprintDetail from "@/assets/blueprint-detail.png";
+import blueprintBarn from "@/assets/blueprint-barn.png";
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
 
@@ -464,14 +467,215 @@ function BookingForm() {
   );
 }
 
+// ── Glenn Browitt Trainer Profile ─────────────────────
+
+function TrainerProfileSection() {
+  const { ref: bioRef, isVisible: bioVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
+  const { ref: specRef, isVisible: specVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
+
+  return (
+    <section className="section-padding bg-background overflow-hidden relative">
+      <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="right-to-left" duration={2000} />
+      <BlueprintLineOverlay variant="detail" color="dark" />
+      <div className="section-container relative z-10">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-start">
+          {/* Bio content */}
+          <div
+            ref={bioRef}
+            className={`lg:col-span-7 transition-all duration-700 ${
+              bioVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
+            }`}
+          >
+            <AnimatedDivider className="mb-8" />
+            
+            <SectionTransition variant="fade-right" delay={100}>
+              <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-4">
+                Your Trainer
+              </p>
+            </SectionTransition>
+
+            <SectionTransition variant="fade-right" delay={200}>
+              <h2 className="heading-editorial text-foreground mb-2">
+                {glennBrowitt.name}
+              </h2>
+              <p className="text-lg text-accent font-serif italic mb-8">
+                {glennBrowitt.title}
+              </p>
+            </SectionTransition>
+
+            {glennBrowitt.bio.map((paragraph, i) => (
+              <SectionTransition key={i} variant="fade-up" delay={300 + i * 100}>
+                <p className="text-muted-foreground leading-relaxed mb-5">
+                  {paragraph}
+                </p>
+              </SectionTransition>
+            ))}
+
+            <SectionTransition variant="fade-up" delay={600}>
+              <div className="flex flex-wrap gap-3 mt-8">
+                <Button
+                  asChild
+                  className="bg-accent hover:bg-accent/90 text-accent-foreground"
+                >
+                  <a href="#book">
+                    Book a Lesson with Glenn
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </a>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="border-accent/30 text-accent hover:bg-accent/10"
+                >
+                  <a href={glennBrowitt.website} target="_blank" rel="noopener noreferrer">
+                    Glenn's Website
+                    <ExternalLink className="ml-2 h-4 w-4" />
+                  </a>
+                </Button>
+              </div>
+            </SectionTransition>
+          </div>
+
+          {/* Specialties card */}
+          <div
+            ref={specRef}
+            className={`lg:col-span-5 transition-all duration-700 delay-200 ${
+              specVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
+            }`}
+          >
+            <div className="bg-card rounded-xl border border-border p-6 sm:p-8 card-hover-glow">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
+                  <Sparkles className="h-6 w-6 text-accent" />
+                </div>
+                <div>
+                  <h3 className="font-serif text-lg font-semibold text-foreground">Specialties</h3>
+                  <p className="text-sm text-muted-foreground">{glennBrowitt.yearsExperience}+ years experience</p>
+                </div>
+              </div>
+              <ul className="space-y-3">
+                {glennBrowitt.specialties.map((specialty, i) => (
+                  <li
+                    key={i}
+                    className={`flex items-start gap-3 text-sm transition-all duration-500 ${
+                      specVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"
+                    }`}
+                    style={{ transitionDelay: `${300 + i * 60}ms` }}
+                  >
+                    <CheckCircle className="h-4 w-4 text-accent mt-0.5 shrink-0" />
+                    <span className="text-foreground/80">{specialty}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Quick stats */}
+            <div className="grid grid-cols-2 gap-px bg-border mt-6 rounded-xl overflow-hidden">
+              {[
+                { value: "25+", label: "Years Teaching" },
+                { value: "All", label: "Levels Welcome" },
+                { value: "1:1", label: "Private Lessons" },
+                { value: "Thu–Fri", label: "Available Days" },
+              ].map((stat, i) => (
+                <div
+                  key={stat.label}
+                  className={`bg-card p-5 text-center transition-all duration-500 ${
+                    specVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                  }`}
+                  style={{ transitionDelay: `${500 + i * 80}ms` }}
+                >
+                  <span className="font-serif text-2xl text-foreground font-semibold block">{stat.value}</span>
+                  <span className="text-xs text-muted-foreground">{stat.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── Glenn's Testimonials ──────────────────────────────
+
+function TrainerTestimonialsSection() {
+  const { ref: gridRef, isVisible: gridVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+
+  return (
+    <section className="section-padding bg-card overflow-hidden relative">
+      <BlueprintBackground image={blueprintDetail} opacity={0.03} direction="bottom-to-top" duration={1800} />
+      <div className="section-container relative z-10">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <AnimatedDivider className="mx-auto mb-8" />
+          <SectionTransition variant="fade-up" delay={100}>
+            <p className="text-muted-foreground uppercase tracking-[0.2em] text-sm mb-4">
+              What Riders Say About Glenn
+            </p>
+          </SectionTransition>
+          <SectionTransition variant="scale-up" delay={200}>
+            <h2 className="heading-section text-foreground mb-4">
+              Rider Testimonials
+            </h2>
+          </SectionTransition>
+          <SectionTransition variant="fade-up" delay={300}>
+            <p className="text-muted-foreground leading-relaxed">
+              From first-time riders to seasoned competitors, Glenn's students share their experiences.
+            </p>
+          </SectionTransition>
+        </div>
+
+        <div ref={gridRef} className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          {glennBrowitt.testimonials.map((testimonial, index) => (
+            <div
+              key={testimonial.id}
+              className={`group relative rounded-xl border border-border bg-background p-6 sm:p-8 transition-all duration-700 ease-out hover:border-accent/40 hover:shadow-lg hover:-translate-y-1 ${
+                gridVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              }`}
+              style={{ transitionDelay: `${index * 120}ms` }}
+            >
+              {/* Quote icon */}
+              <Quote className="h-8 w-8 text-accent/20 mb-4" />
+
+              {/* Stars */}
+              <div className="flex gap-1 mb-4">
+                {[...Array(testimonial.rating)].map((_, i) => (
+                  <svg
+                    key={i}
+                    className="w-4 h-4 text-accent"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+
+              {/* Quote */}
+              <blockquote className="text-foreground leading-relaxed mb-6 font-serif italic">
+                "{testimonial.quote}"
+              </blockquote>
+
+              {/* Attribution */}
+              <div className="pt-4 border-t border-border">
+                <p className="font-serif font-semibold text-foreground">{testimonial.name}</p>
+                <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── Page ──────────────────────────────────────────────
 
 export default function BookLesson() {
   return (
     <Layout>
       <PageHeader
-        title="Training & Lessons"
-        description="Structured riding programs for every level. Learn from an experienced trainer at our purpose-built facility, available Thursdays and Fridays."
+        title="Training with Glenn Browitt"
+        description="Over 25 years of riding tuition and horsemanship — from the nervous beginner to the competitive rider. Lessons run every Thursday and Friday at the Peninsula Equine arena."
         backgroundImage={aberdeenBarnInterior}
       />
 
@@ -491,8 +695,15 @@ export default function BookLesson() {
         </div>
       </section>
 
+      {/* Glenn Browitt Profile */}
+      <BlueprintDivider variant="elevation" />
+      <TrainerProfileSection />
+
       {/* Program Levels */}
       <ProgramLevelsSection />
+
+      {/* Glenn's Testimonials */}
+      <TrainerTestimonialsSection />
 
       {/* FAQ */}
       <LessonFAQSection />
@@ -502,8 +713,8 @@ export default function BookLesson() {
         <div className="section-container">
           <div className="max-w-xl mx-auto">
             <div className="bg-background rounded-xl p-6 sm:p-8 border border-border">
-              <h2 className="font-serif text-2xl font-semibold text-foreground mb-2">Book Your Lesson</h2>
-              <p className="text-muted-foreground mb-8 text-sm">Fill out the form below and we'll confirm your booking within 1–2 business days.</p>
+              <h2 className="font-serif text-2xl font-semibold text-foreground mb-2">Book a Lesson with Glenn</h2>
+              <p className="text-muted-foreground mb-8 text-sm">Fill out the form below and Glenn will confirm your booking within 1–2 business days.</p>
               <BookingForm />
             </div>
           </div>
