@@ -1,10 +1,10 @@
 import { ReactNode } from "react";
 import { useParallax } from "@/hooks/useParallax";
-import { AnimatedBlueprintBg } from "@/components/AnimatedBlueprintBg";
+import { BlueprintScene } from "@/components/BlueprintScene";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
 import { siteConfig } from "@/data/content";
 import logoPeMark from "@/assets/pe-logo-new.png";
-import blueprintHorseBarn from "@/assets/blueprint-horse-barn.png";
+
 
 interface PageHeaderProps {
   title: string;
@@ -25,7 +25,7 @@ export function PageHeader({ title, description, backgroundImage, dividerVariant
       className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden"
     >
       {/* Animated blueprint overlay */}
-      <AnimatedBlueprintBg image={blueprintHorseBarn} imageOpacity={0.06} variant="section-b" showLines />
+      <BlueprintScene preset="page-header" />
 
       {/* Gradient overlays for depth */}
       <div className="absolute inset-0 bg-gradient-to-b from-primary/0 via-primary/30 to-primary/70 pointer-events-none z-[1]" />

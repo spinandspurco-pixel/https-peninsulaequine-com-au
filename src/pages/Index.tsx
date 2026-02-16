@@ -10,15 +10,15 @@ import { SectionTransition, AnimatedDivider } from "@/components/SectionTransiti
 import { siteConfig, services, testimonials } from "@/data/content";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
-import { AnimatedBlueprintBg } from "@/components/AnimatedBlueprintBg";
+import { BlueprintScene } from "@/components/BlueprintScene";
 import heroVideo from "@/assets/videos/slow-mo-1.mp4";
 import ciroWide from "@/assets/ciro-wide.png";
 import stoneworkBW from "@/assets/aberdeen-stonework-bw.jpg";
 import peBanner from "@/assets/pe-banner-2.png";
 import peLogo from "@/assets/pe-logo-new.png";
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
-import blueprintHorseBarn from "@/assets/blueprint-horse-barn.png";
-import blueprintDoorDetail from "@/assets/blueprint-door-detail.png";
+
+
 import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
 import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
 import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
@@ -42,7 +42,7 @@ function HeroSection() {
       <div className="absolute inset-0 bg-primary/70" />
 
       {/* Animated blueprint overlay with new banner */}
-      <AnimatedBlueprintBg image={peBanner} imageOpacity={0.1} variant="hero" />
+      <BlueprintScene preset="hero" />
 
       {/* Vignette */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsl(var(--primary))_85%)]" />
@@ -105,7 +105,7 @@ function IntroSection() {
   return (
     <section id="intro" className="bg-background relative">
       {/* Animated blueprint bg for intro */}
-      <AnimatedBlueprintBg image={blueprintHorseBarn} imageOpacity={0.05} variant="section-a" showLines />
+      <BlueprintScene preset="intro" />
       <div className="section-padding">
         <div className="section-container">
           <div className="max-w-4xl mx-auto text-center">
@@ -163,7 +163,7 @@ function ServicesPreviewSection() {
 
   return (
     <section className="section-padding bg-primary text-primary-foreground overflow-hidden relative">
-      <AnimatedBlueprintBg image={blueprintDoorDetail} imageOpacity={0.07} variant="section-b" showLines />
+      <BlueprintScene preset="services" />
       <div className="section-container">
         <div className="text-center max-w-3xl mx-auto mb-14">
           <AnimatedDivider className="mx-auto mb-8 bg-accent" />
