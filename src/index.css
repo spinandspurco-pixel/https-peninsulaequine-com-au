@@ -1,92 +1,92 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Peninsula Equine Design System
-   Editorial ranch aesthetic inspired by Coast Performance Horses
-   Warm golden earth tones, editorial typography, immersive imagery
+   Navy & Gold palette — extracted from brand assets
+   Cinzel serif matching logo letterforms
 */
 
 @layer base {
   :root {
-    /* Warm cream/ivory background */
-    --background: 45 40% 97%;
-    --foreground: 30 15% 12%;
+    /* Cream/off-white background — #F5F1E8 */
+    --background: 42 45% 93%;
+    --foreground: 228 16% 11%;
 
-    /* Card surfaces - slightly warmer */
-    --card: 42 35% 95%;
-    --card-foreground: 30 15% 12%;
+    /* Card surfaces — slightly lighter cream */
+    --card: 42 40% 95%;
+    --card-foreground: 228 16% 11%;
 
     /* Popovers */
-    --popover: 42 35% 95%;
-    --popover-foreground: 30 15% 12%;
+    --popover: 42 40% 95%;
+    --popover-foreground: 228 16% 11%;
 
-    /* Primary - Deep warm brown/charcoal */
-    --primary: 30 20% 15%;
-    --primary-foreground: 45 40% 97%;
+    /* Primary — Deep navy #171A23 */
+    --primary: 228 16% 11%;
+    --primary-foreground: 42 45% 93%;
 
-    /* Secondary - Warm sand/taupe */
-    --secondary: 38 30% 88%;
-    --secondary-foreground: 30 20% 15%;
+    /* Secondary — Slate #2B3242 */
+    --secondary: 221 20% 21%;
+    --secondary-foreground: 42 45% 93%;
 
-    /* Muted - Soft warm gray */
-    --muted: 38 20% 90%;
-    --muted-foreground: 30 15% 40%;
+    /* Muted — Soft warm gray */
+    --muted: 225 12% 88%;
+    --muted-foreground: 221 15% 40%;
 
-    /* Accent - Rich golden amber */
-    --accent: 35 75% 50%;
-    --accent-foreground: 30 20% 10%;
+    /* Accent — Gold #D9B172 */
+    --accent: 37 58% 65%;
+    --accent-foreground: 228 16% 11%;
 
     /* Destructive */
     --destructive: 0 70% 50%;
-    --destructive-foreground: 45 40% 97%;
+    --destructive-foreground: 42 45% 93%;
 
     /* Borders and inputs */
-    --border: 38 25% 85%;
-    --input: 38 25% 85%;
-    --ring: 35 75% 50%;
+    --border: 225 15% 82%;
+    --input: 225 15% 82%;
+    --ring: 37 58% 65%;
 
     --radius: 0.375rem;
 
-    /* Custom tokens - Warm earth palette */
-    --gold: 35 75% 50%;
-    --gold-light: 40 65% 65%;
-    --gold-dark: 30 80% 38%;
-    --earth: 30 20% 15%;
-    --earth-light: 30 15% 28%;
-    --ivory: 45 40% 97%;
-    --sand: 38 30% 88%;
-    --cream: 42 35% 95%;
+    /* Custom tokens — Navy & Gold palette */
+    --gold: 37 58% 65%;
+    --gold-light: 40 55% 75%;
+    --gold-dark: 37 54% 53%;
+    --earth: 228 16% 11%;
+    --earth-light: 221 20% 21%;
+    --ivory: 42 45% 93%;
+    --sand: 225 12% 88%;
+    --cream: 42 40% 95%;
 
-    /* Typography */
-    --font-serif: 'Playfair Display', serif;
+    /* Typography — Cinzel matches the PE logo serif */
+    --font-serif: 'Cinzel', 'Trajan Pro', 'Times New Roman', serif;
     --font-sans: 'Source Sans 3', sans-serif;
 
     /* Sidebar */
-    --sidebar-background: 42 35% 95%;
-    --sidebar-foreground: 30 20% 15%;
-    --sidebar-primary: 30 20% 15%;
-    --sidebar-primary-foreground: 45 40% 97%;
-    --sidebar-accent: 38 30% 88%;
-    --sidebar-accent-foreground: 30 20% 15%;
-    --sidebar-border: 38 25% 85%;
-    --sidebar-ring: 35 75% 50%;
+    --sidebar-background: 42 40% 95%;
+    --sidebar-foreground: 228 16% 11%;
+    --sidebar-primary: 228 16% 11%;
+    --sidebar-primary-foreground: 42 45% 93%;
+    --sidebar-accent: 225 12% 88%;
+    --sidebar-accent-foreground: 228 16% 11%;
+    --sidebar-border: 225 15% 82%;
+    --sidebar-ring: 37 58% 65%;
 
-    /* Header – transparent → scrolled states */
-    --header-bg: 30 20% 15%;
-    --header-foreground: 45 40% 97%;
-    --header-scrolled-bg: 45 40% 97%;
-    --header-scrolled-foreground: 30 15% 12%;
-    --header-active: 35 75% 50%;
+    /* Header — navy bg */
+    --header-bg: 228 16% 11%;
+    --header-foreground: 42 45% 93%;
+    --header-scrolled-bg: 228 16% 11%;
+    --header-scrolled-foreground: 42 45% 93%;
+    --header-active: 37 58% 65%;
 
     /* Footer */
-    --footer-bg: 30 20% 15%;
-    --footer-foreground: 45 40% 97%;
+    --footer-bg: 228 16% 11%;
+    --footer-foreground: 42 45% 93%;
 
-    /* Hero overlay system – WCAG AA contrast against dark overlays */
-    --hero-text: 45 40% 98%;
+    /* Hero overlay system */
+    --hero-text: 42 45% 98%;
     --hero-text-muted: 42 30% 82%;
     --hero-glass-bg: 0 0% 100% / 0.12;
     --hero-glass-border: 0 0% 100% / 0.18;
@@ -94,63 +94,64 @@
     --hero-input-bg: 0 0% 100% / 0.14;
     --hero-input-border: 0 0% 100% / 0.22;
     --hero-input-placeholder: 42 20% 72%;
-    --footer-muted: 45 20% 70%;
-    --footer-hover: 35 75% 50%;
+    --footer-muted: 225 15% 65%;
+    --footer-hover: 37 58% 65%;
   }
 
   .dark {
-    --background: 30 15% 8%;
-    --foreground: 42 30% 92%;
+    /* Deep navy background */
+    --background: 228 20% 7%;
+    --foreground: 42 40% 92%;
 
-    --card: 30 15% 11%;
-    --card-foreground: 42 30% 92%;
+    --card: 228 18% 10%;
+    --card-foreground: 42 40% 92%;
 
-    --popover: 30 15% 11%;
-    --popover-foreground: 42 30% 92%;
+    --popover: 228 18% 10%;
+    --popover-foreground: 42 40% 92%;
 
-    --primary: 42 30% 92%;
-    --primary-foreground: 30 15% 8%;
+    --primary: 42 40% 92%;
+    --primary-foreground: 228 20% 7%;
 
-    --secondary: 30 12% 18%;
-    --secondary-foreground: 42 30% 92%;
+    --secondary: 221 18% 16%;
+    --secondary-foreground: 42 40% 92%;
 
-    --muted: 30 12% 18%;
-    --muted-foreground: 42 20% 60%;
+    --muted: 221 18% 16%;
+    --muted-foreground: 225 15% 55%;
 
-    --accent: 38 70% 55%;
-    --accent-foreground: 30 20% 8%;
+    --accent: 37 58% 65%;
+    --accent-foreground: 228 20% 7%;
 
     --destructive: 0 62% 40%;
-    --destructive-foreground: 42 30% 92%;
+    --destructive-foreground: 42 40% 92%;
 
-    --border: 30 12% 20%;
-    --input: 30 12% 20%;
-    --ring: 38 70% 55%;
+    --border: 221 15% 18%;
+    --input: 221 15% 18%;
+    --ring: 37 58% 65%;
 
-    --sidebar-background: 30 15% 8%;
-    --sidebar-foreground: 42 30% 92%;
-    --sidebar-primary: 38 70% 55%;
-    --sidebar-primary-foreground: 30 15% 8%;
-    --sidebar-accent: 30 12% 18%;
-    --sidebar-accent-foreground: 42 30% 92%;
-    --sidebar-border: 30 12% 20%;
-    --sidebar-ring: 38 70% 55%;
+    --sidebar-background: 228 20% 7%;
+    --sidebar-foreground: 42 40% 92%;
+    --sidebar-primary: 37 58% 65%;
+    --sidebar-primary-foreground: 228 20% 7%;
+    --sidebar-accent: 221 18% 16%;
+    --sidebar-accent-foreground: 42 40% 92%;
+    --sidebar-border: 221 15% 18%;
+    --sidebar-ring: 37 58% 65%;
 
     /* Header – dark mode */
-    --header-bg: 30 15% 8%;
-    --header-foreground: 42 30% 92%;
-    --header-scrolled-bg: 30 15% 11%;
-    --header-scrolled-foreground: 42 30% 92%;
-    --header-active: 38 70% 55%;
+    --header-bg: 228 20% 7%;
+    --header-foreground: 42 40% 92%;
+    --header-scrolled-bg: 228 18% 10%;
+    --header-scrolled-foreground: 42 40% 92%;
+    --header-active: 37 58% 65%;
 
     /* Footer – dark mode */
-    --footer-bg: 30 15% 6%;
-    --footer-foreground: 42 30% 92%;
-    --footer-muted: 42 15% 55%;
-    --footer-hover: 38 70% 55%;
+    --footer-bg: 228 22% 5%;
+    --footer-foreground: 42 40% 92%;
+    --footer-muted: 225 12% 50%;
+    --footer-hover: 37 58% 65%;
 
     /* Hero overlay system – dark mode */
-    --hero-text: 42 30% 96%;
+    --hero-text: 42 40% 96%;
     --hero-text-muted: 42 20% 78%;
     --hero-glass-bg: 0 0% 100% / 0.1;
     --hero-glass-border: 0 0% 100% / 0.15;
@@ -230,12 +231,12 @@
     @apply w-px h-20 bg-accent;
   }
 
-  /* Image overlay gradient - warmer */
+  /* Image overlay gradient — navy */
   .image-overlay {
     background: linear-gradient(
       to top,
-      hsl(30 20% 8% / 0.85) 0%,
-      hsl(30 20% 8% / 0.3) 50%,
+      hsl(228 20% 7% / 0.85) 0%,
+      hsl(228 20% 7% / 0.3) 50%,
       transparent 100%
     );
   }
@@ -243,14 +244,14 @@
   .image-overlay-subtle {
     background: linear-gradient(
       to top,
-      hsl(30 20% 8% / 0.5) 0%,
+      hsl(228 20% 7% / 0.5) 0%,
       transparent 60%
     );
   }
 
   /* Editorial text overlay */
   .text-shadow-editorial {
-    text-shadow: 0 2px 40px hsl(30 20% 8% / 0.4);
+    text-shadow: 0 2px 40px hsl(228 20% 7% / 0.4);
   }
 
   /* Button hover effects */
