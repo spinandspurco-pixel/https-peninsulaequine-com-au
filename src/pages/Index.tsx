@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/layout/Layout";
 import { MajorEventsSection } from "@/components/MajorEventsSection";
 // BlueprintBackground & BlueprintLineOverlay removed — PE banner is the sole brand background
+import { MultiStepInquiryForm } from "@/components/MultiStepInquiryForm";
 import {
   Dialog,
   DialogContent,
@@ -1380,6 +1381,27 @@ function HomeFAQSection() {
   );
 }
 
+function InquiryFormSection() {
+  return (
+    <section className="section-padding bg-background">
+      <div className="section-container">
+        <div className="max-w-2xl mx-auto">
+          <SectionTransition variant="fade-up">
+            <div className="text-center mb-10">
+              <AnimatedDivider className="mx-auto mb-8" />
+              <p className="text-muted-foreground uppercase tracking-[0.2em] text-sm mb-4">Start Your Project</p>
+              <h2 className="heading-section text-foreground">Get in Touch</h2>
+            </div>
+          </SectionTransition>
+          <SectionTransition variant="fade-up" delay={150}>
+            <MultiStepInquiryForm />
+          </SectionTransition>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function CTASection() {
   return (
     <ParallaxCTA
@@ -1431,6 +1453,7 @@ export default function Index() {
         <ForgeHeroBanner />
         <LeadCaptureSection submitted={leadSubmitted} onSubmitted={() => setLeadSubmitted(true)} />
         <HomeFAQSection />
+        <InquiryFormSection />
         <CTASection />
       </Layout>
     </>
