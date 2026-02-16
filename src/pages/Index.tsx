@@ -23,6 +23,7 @@ import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { BookingLandingSection } from "@/components/BookingLandingSection";
 import { LeadMagnetPopup } from "@/components/LeadMagnetPopup";
 import { StickyHeroCTA } from "@/components/StickyHeroCTA";
+import { HeroBookingProgress } from "@/components/HeroBookingProgress";
 import { SectionTransition, AnimatedDivider, StaggeredTransition } from "@/components/SectionTransition";
 import { ServicesTeaserStrip } from "@/components/ServicesTeaserStrip";
 import { siteConfig, services, testimonials, aboutCiro } from "@/data/content";
@@ -423,6 +424,9 @@ function HeroSection({ variant = "banner" }: { variant?: "logo" | "banner" }) {
             Facility Construction • Training • Excellence
           </p>
           <HeroCTAToggle heroMode={heroMode} setHeroMode={setHeroMode} />
+          <div className="mt-6">
+            <HeroBookingProgress percentFilled={72} totalSlots={25} remainingSlots={7} />
+          </div>
         </div>
       </div>
 
