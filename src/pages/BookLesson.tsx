@@ -10,6 +10,7 @@ import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
 import { SectionTransition, AnimatedDivider } from "@/components/SectionTransition";
+import { LessonAvailabilityCalendar } from "@/components/LessonAvailabilityCalendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -1027,6 +1028,14 @@ export default function BookLesson() {
 
       {/* Program Levels */}
       <ProgramLevelsSection />
+
+      {/* Availability Calendar */}
+      <section className="section-padding bg-background relative overflow-hidden">
+        <BlueprintBackground image={blueprintBarn} opacity={0.03} direction="left-to-right" duration={2200} parallaxSpeed={0.05} />
+        <div className="section-container relative z-10">
+          <LessonAvailabilityCalendar />
+        </div>
+      </section>
 
       {/* Glenn's Testimonials */}
       <TrainerTestimonialsSection />

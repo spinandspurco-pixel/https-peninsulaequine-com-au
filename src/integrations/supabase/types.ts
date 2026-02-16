@@ -313,6 +313,45 @@ export type Database = {
         }
         Relationships: []
       }
+      lesson_slots: {
+        Row: {
+          created_at: string
+          current_bookings: number
+          end_time: string
+          id: string
+          max_bookings: number
+          notes: string | null
+          slot_date: string
+          slot_type: string
+          start_time: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          current_bookings?: number
+          end_time: string
+          id?: string
+          max_bookings?: number
+          notes?: string | null
+          slot_date: string
+          slot_type?: string
+          start_time: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          current_bookings?: number
+          end_time?: string
+          id?: string
+          max_bookings?: number
+          notes?: string | null
+          slot_date?: string
+          slot_type?: string
+          start_time?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       managed_events: {
         Row: {
           active: boolean
