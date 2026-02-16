@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, X, Play, ZoomIn, Search, Download } from "lucide-react";
+import { ArrowRight, X, Play, ZoomIn, Search, Download, CheckSquare, Square, MousePointerClick } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 import { triggerHaptic } from "@/hooks/useHapticFeedback";
 import { Button } from "@/components/ui/button";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -895,9 +896,15 @@ const ITEMS_PER_PAGE = 20;
 function LazyGalleryImage({
   item,
   onClick,
+  selectMode,
+  isSelected,
+  onToggleSelect,
 }: {
   item: GalleryItem;
   onClick: () => void;
+  selectMode?: boolean;
+  isSelected?: boolean;
+  onToggleSelect?: () => void;
 }) {
   const itemRef = useRef<HTMLButtonElement>(null);
   const [isInView, setIsInView] = useState(false);
@@ -925,9 +932,22 @@ function LazyGalleryImage({
       onClick={onClick}
       className={`group w-full overflow-hidden rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative break-inside-avoid mb-4 sm:mb-5 block transition-all duration-700 ease-out ${
         loaded ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.97]"
-      }`}
-      aria-label={`View ${item.alt}`}
+      } ${selectMode && isSelected ? "ring-2 ring-accent ring-offset-2" : ""}`}
+      aria-label={selectMode ? `${isSelected ? "Deselect" : "Select"} ${item.alt}` : `View ${item.alt}`}
     >
+      {/* Selection checkbox */}
+      {selectMode && (
+        <div
+          className="absolute top-2 left-2 z-[5] cursor-pointer"
+          onClick={(e) => { e.stopPropagation(); onToggleSelect?.(); }}
+        >
+          {isSelected ? (
+            <CheckSquare className="h-6 w-6 text-accent drop-shadow-md" />
+          ) : (
+            <Square className="h-6 w-6 text-primary-foreground/70 drop-shadow-md" />
+          )}
+        </div>
+      )}
       {/* Skeleton placeholder */}
       {!loaded && (
         <div className="aspect-[4/3] bg-muted animate-pulse rounded-xl" aria-hidden="true" />
@@ -960,9 +980,15 @@ function LazyGalleryImage({
 function LazyVideoGridItem({
   item,
   onClick,
+  selectMode,
+  isSelected,
+  onToggleSelect,
 }: {
   item: GalleryItem;
   onClick: () => void;
+  selectMode?: boolean;
+  isSelected?: boolean;
+  onToggleSelect?: () => void;
 }) {
   const itemRef = useRef<HTMLButtonElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -1007,9 +1033,22 @@ function LazyVideoGridItem({
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      aria-label={`Play video: ${item.alt}`}
-      className="group aspect-square overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative break-inside-avoid mb-3 sm:mb-4 block w-full"
+      aria-label={selectMode ? `${isSelected ? "Deselect" : "Select"} ${item.alt}` : `Play video: ${item.alt}`}
+      className={`group aspect-square overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative break-inside-avoid mb-3 sm:mb-4 block w-full ${selectMode && isSelected ? "ring-2 ring-accent ring-offset-2" : ""}`}
     >
+      {/* Selection checkbox */}
+      {selectMode && (
+        <div
+          className="absolute top-2 left-2 z-[5] cursor-pointer"
+          onClick={(e) => { e.stopPropagation(); onToggleSelect?.(); }}
+        >
+          {isSelected ? (
+            <CheckSquare className="h-6 w-6 text-accent drop-shadow-md" />
+          ) : (
+            <Square className="h-6 w-6 text-primary-foreground/70 drop-shadow-md" />
+          )}
+        </div>
+      )}
       {isInView ? (
         <>
           <img
@@ -1056,9 +1095,15 @@ function LazyVideoGridItem({
 function GalleryGrid({
   items,
   onItemClick,
+  selectMode,
+  selectedIds,
+  onToggleSelect,
 }: {
   items: GalleryItem[];
   onItemClick: (item: GalleryItem) => void;
+  selectMode?: boolean;
+  selectedIds?: Set<number>;
+  onToggleSelect?: (id: number) => void;
 }) {
   const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -1095,13 +1140,19 @@ function GalleryGrid({
             <LazyVideoGridItem
               key={item.id}
               item={item}
-              onClick={() => onItemClick(item)}
+              onClick={() => selectMode ? onToggleSelect?.(item.id) : onItemClick(item)}
+              selectMode={selectMode}
+              isSelected={selectedIds?.has(item.id)}
+              onToggleSelect={() => onToggleSelect?.(item.id)}
             />
           ) : (
             <LazyGalleryImage
               key={item.id}
               item={item}
-              onClick={() => onItemClick(item)}
+              onClick={() => selectMode ? onToggleSelect?.(item.id) : onItemClick(item)}
+              selectMode={selectMode}
+              isSelected={selectedIds?.has(item.id)}
+              onToggleSelect={() => onToggleSelect?.(item.id)}
             />
           )
         )}
@@ -1117,13 +1168,16 @@ function GalleryGrid({
 }
 
 export default function Gallery() {
+  const { isAdmin } = useAuth();
   const [activeProject, setActiveProject] = useState("all");
   const [activeService, setActiveService] = useState("all");
   const [activeLocation, setActiveLocation] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [lightboxItem, setLightboxItem] = useState<GalleryItem | null>(null);
   const [showFilters, setShowFilters] = useState(true);
-  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>();
+  const [selectMode, setSelectMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
   // Convert allVideos to GalleryItem format for filtering
   const videoGalleryItems: GalleryItem[] = allVideos.map((v) => ({
@@ -1172,6 +1226,42 @@ export default function Gallery() {
     (activeService !== "all" ? 1 : 0) +
     (activeLocation !== "all" ? 1 : 0) +
     (searchQuery.trim() ? 1 : 0);
+
+  // Selection helpers (admin bulk export)
+  useEffect(() => {
+    setSelectedIds(new Set());
+  }, [activeProject, activeService, activeLocation, searchQuery]);
+
+  const toggleSelect = useCallback((id: number) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const selectAll = useCallback(() => {
+    setSelectedIds(new Set(filteredItems.map((i) => i.id)));
+  }, [filteredItems]);
+
+  const deselectAll = useCallback(() => {
+    setSelectedIds(new Set());
+  }, []);
+
+  const handleBulkDownload = useCallback(() => {
+    const selected = filteredItems.filter((i) => selectedIds.has(i.id));
+    selected.forEach((item, idx) => {
+      setTimeout(() => {
+        const a = document.createElement("a");
+        a.href = item.src;
+        a.download = `peninsula-equine-${item.id}.${item.type === "video" ? "mp4" : "jpg"}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }, idx * 300);
+    });
+  }, [filteredItems, selectedIds]);
 
   // Map testimonials to service tags for contextual surfacing
   const testimonialServiceMap: Record<string, number[]> = {
@@ -1424,10 +1514,50 @@ export default function Gallery() {
           <GalleryTestimonialStrip testimonials={filteredTestimonials} />
         </div>
 
+          {/* Admin bulk select toolbar */}
+          {isAdmin && (
+            <div className="flex items-center justify-between mb-6 px-2">
+              <Button
+                variant={selectMode ? "default" : "outline"}
+                size="sm"
+                onClick={() => {
+                  setSelectMode(!selectMode);
+                  if (selectMode) setSelectedIds(new Set());
+                }}
+                className="gap-1.5"
+              >
+                <MousePointerClick className="h-4 w-4" />
+                {selectMode ? "Exit Selection" : "Select Items"}
+              </Button>
+              {selectMode && (
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-muted-foreground">
+                    {selectedIds.size} selected
+                  </span>
+                  <Button variant="ghost" size="sm" onClick={selectedIds.size === filteredItems.length ? deselectAll : selectAll}>
+                    {selectedIds.size === filteredItems.length ? "Deselect All" : "Select All"}
+                  </Button>
+                  <Button
+                    size="sm"
+                    disabled={selectedIds.size === 0}
+                    onClick={handleBulkDownload}
+                    className="gap-1.5 bg-accent hover:bg-accent/90 text-accent-foreground"
+                  >
+                    <Download className="h-4 w-4" />
+                    Export {selectedIds.size > 0 ? `(${selectedIds.size})` : ""}
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Gallery Grid */}
           <GalleryGrid 
             items={filteredItems} 
             onItemClick={setLightboxItem}
+            selectMode={selectMode}
+            selectedIds={selectedIds}
+            onToggleSelect={toggleSelect}
             key={`${activeProject}-${activeService}-${activeLocation}-${searchQuery}`}
           />
 
