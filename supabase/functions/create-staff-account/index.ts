@@ -17,7 +17,31 @@ serve(async (req) => {
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    // Verify the caller is an admin
+    const body = await req.json();
+    const { action, email, role, display_name } = body;
+
+    if (action === "bootstrap") {
+      const password = Deno.env.get("GLENN_TEMP_PASSWORD")!;
+      const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+        user_metadata: { display_name },
+      });
+      if (createError) throw createError;
+
+      const { error: roleError } = await supabase
+        .from("user_roles")
+        .insert({ user_id: newUser.user!.id, role });
+      if (roleError) throw roleError;
+
+      return new Response(
+        JSON.stringify({ success: true, user_id: newUser.user!.id }),
+        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // Normal flow: verify caller is admin
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) throw new Error("Not authenticated");
 
@@ -31,7 +55,7 @@ serve(async (req) => {
     });
     if (!isAdmin) throw new Error("Admin access required");
 
-    const { email, password, role, display_name } = await req.json();
+    const password = body.password;
     if (!email || !password || !role) throw new Error("Missing required fields");
 
     const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
