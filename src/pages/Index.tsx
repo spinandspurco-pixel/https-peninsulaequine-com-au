@@ -159,7 +159,7 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
       ref={sectionRef} 
       className="relative h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Blueprint-animated background layers instead of video */}
+      {/* Blueprint-animated background layers */}
       <div 
         className="absolute inset-[-20%] will-change-transform"
         style={{ 
