@@ -27,7 +27,7 @@ import { siteConfig, services, testimonials, aboutCiro } from "@/data/content";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
 // Import images
-import heroSunset from "@/assets/hero-sunset.png";
+// heroSunset removed — PE banner is now the hero background
 
 import hatDetail from "@/assets/hat-detail.png";
 import ciroWide from "@/assets/ciro-wide.png";
@@ -49,8 +49,7 @@ const featuredServices = services.slice(0, 4);
 
 function HeroSection() {
   const [scrollY, setScrollY] = useState(0);
-  const [bannerLoaded, setBannerLoaded] = useState(false);
-  const [heroPhase, setHeroPhase] = useState(0); // 0=hidden, 1=blueprints, 2=banner, 3=cta
+  const [heroPhase, setHeroPhase] = useState(0); // 0=hidden, 1=background, 2=title, 3=cta
   const sectionRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
@@ -88,133 +87,96 @@ function HeroSection() {
   return (
     <section 
       ref={sectionRef} 
-      className="relative h-screen flex items-center justify-center overflow-hidden"
+      className="relative h-screen flex items-center justify-center overflow-hidden bg-primary"
     >
-      {/* Background image with parallax */}
+      {/* PE Banner as full background — the hero IS the brand */}
       <div 
-        className="absolute inset-[-20%] will-change-transform"
+        className="absolute inset-0 flex items-center justify-center will-change-transform"
         style={{ 
-          transform: `translateY(${parallaxOffset}px) scale(1.2)`,
-          transition: 'transform 0.1s ease-out'
+          transform: `translateY(${parallaxOffset * 0.3}px)`,
         }}
       >
         <img
-          src={heroSunset}
+          src={peBanner}
           alt=""
           aria-hidden="true"
-          className="w-full h-full object-cover"
+          loading="eager"
+          className="w-full h-full object-contain max-w-[85vw] max-h-[70vh]"
+          style={{
+            opacity: heroPhase >= 1 ? 0.08 : 0,
+            filter: "brightness(1.3)",
+            transition: prefersReducedMotion ? "none" : "opacity 2s cubic-bezier(0.22,0.61,0.36,1)",
+          }}
         />
       </div>
 
-      {/* Blueprint overlay — phase 1 sweep-in */}
+      {/* Blueprint overlay — subtle architectural texture */}
       <div
         style={{
           opacity: heroPhase >= 1 ? 1 : 0,
-          transition: prefersReducedMotion ? "none" : "opacity 1.6s cubic-bezier(0.22,0.61,0.36,1)",
+          transition: prefersReducedMotion ? "none" : "opacity 2s cubic-bezier(0.22,0.61,0.36,1) 0.3s",
         }}
       >
-        <BlueprintBackground image={blueprintFacility} opacity={0.06} direction="left-to-right" duration={2800} parallaxSpeed={0.04} />
+        <BlueprintBackground image={blueprintFacility} opacity={0.04} direction="left-to-right" duration={3000} parallaxSpeed={0.03} />
       </div>
 
-      {/* Blueprint line overlays — phase 1 draw-on */}
-      <div
-        style={{
-          opacity: heroPhase >= 1 ? 1 : 0,
-          transition: prefersReducedMotion ? "none" : "opacity 1.2s cubic-bezier(0.22,0.61,0.36,1) 0.5s",
-        }}
-      >
-        <BlueprintLineOverlay variant="dimensions" color="light" />
-      </div>
-
-      {/* Gradient overlay */}
-      <div 
-        className="absolute inset-0 bg-gradient-to-b from-primary/40 via-primary/20 to-primary/80 transition-opacity duration-300"
-        style={{ opacity: 1 + overlayOpacity }}
-      />
-      {/* Vignette */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.3)_100%)]" />
-
-      {/* Blueprint corner brackets — architectural framing */}
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-none z-[5]"
-        viewBox="0 0 1000 1000"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-        style={{
-          opacity: heroPhase >= 1 ? 0.2 : 0,
-          transition: prefersReducedMotion ? "none" : "opacity 1.2s cubic-bezier(0.22,0.61,0.36,1) 0.6s",
-        }}
-      >
-        <path d="M 40,40 L 40,120 M 40,40 L 120,40" fill="none" stroke="hsl(45 40% 97%)" strokeWidth="0.8" />
-        <path d="M 960,40 L 960,120 M 960,40 L 880,40" fill="none" stroke="hsl(45 40% 97%)" strokeWidth="0.8" />
-        <path d="M 40,960 L 40,880 M 40,960 L 120,960" fill="none" stroke="hsl(45 40% 97%)" strokeWidth="0.8" />
-        <path d="M 960,960 L 960,880 M 960,960 L 880,960" fill="none" stroke="hsl(45 40% 97%)" strokeWidth="0.8" />
-        <line x1="490" y1="500" x2="510" y2="500" stroke="hsl(35 75% 50% / 0.3)" strokeWidth="0.5" />
-        <line x1="500" y1="490" x2="500" y2="510" stroke="hsl(35 75% 50% / 0.3)" strokeWidth="0.5" />
-        <line x1="120" y1="40" x2="880" y2="40" stroke="hsl(45 40% 97% / 0.08)" strokeWidth="0.3" />
-        <line x1="40" y1="120" x2="40" y2="880" stroke="hsl(45 40% 97% / 0.08)" strokeWidth="0.3" />
-      </svg>
+      {/* Soft vignette */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsl(var(--primary))_85%)]" />
 
       {/* Centered Content */}
       <div 
-        className="relative z-10 text-center px-4 will-change-transform"
+        className="relative z-10 text-center px-6 will-change-transform"
         style={{ 
           transform: `translateY(${-contentOffset}px)`,
           opacity: Math.max(1 - scrollY / 600, 0)
         }}
       >
-        {/* Accent divider — phase 2 */}
+        {/* Thin accent line */}
         <div
-          className="divider mx-auto mb-8 bg-accent/80"
+          className="w-16 h-px mx-auto mb-10 bg-accent"
           style={{
             opacity: heroPhase >= 2 ? 1 : 0,
             transform: heroPhase >= 2 ? "scaleX(1)" : "scaleX(0)",
-            transition: prefersReducedMotion ? "none" : "opacity 0.8s ease-out, transform 1s cubic-bezier(0.22,0.61,0.36,1)",
+            transition: prefersReducedMotion ? "none" : "opacity 0.8s ease-out, transform 1.2s cubic-bezier(0.22,0.61,0.36,1)",
           }}
         />
-        
-        {/* Banner logo */}
+
+        {/* Brand name — clean serif type */}
         <div
-          className="mb-8"
           style={{
             opacity: heroPhase >= 2 ? 1 : 0,
-            transform: heroPhase >= 2 ? "translateY(0) scale(1)" : "translateY(24px) scale(0.97)",
-            transition: prefersReducedMotion ? "none" : "opacity 1s cubic-bezier(0.22,0.61,0.36,1) 0.15s, transform 1.2s cubic-bezier(0.22,0.61,0.36,1) 0.15s",
+            transform: heroPhase >= 2 ? "translateY(0)" : "translateY(30px)",
+            transition: prefersReducedMotion ? "none" : "opacity 1.2s cubic-bezier(0.22,0.61,0.36,1) 0.1s, transform 1.4s cubic-bezier(0.22,0.61,0.36,1) 0.1s",
           }}
         >
-          <img
-            src={peBanner}
-            alt="Peninsula Equine — From Dirt to Dynasty"
-            loading="eager"
-            decoding="async"
-            onLoad={() => setBannerLoaded(true)}
-            className={`w-[280px] sm:w-[400px] md:w-[520px] lg:w-[600px] mx-auto h-auto object-contain drop-shadow-[0_4px_30px_rgba(0,0,0,0.3)] transition-opacity duration-500 ${
-              bannerLoaded ? "opacity-100" : "opacity-0"
-            }`}
-          />
+          <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-normal tracking-tight text-primary-foreground leading-[1.05] mb-4">
+            Peninsula
+            <br />
+            <span className="text-accent">Equine</span>
+          </h1>
         </div>
 
-        {/* Subtitle + CTAs — phase 3 */}
+        {/* Tagline */}
         <div
           style={{
             opacity: heroPhase >= 3 ? 1 : 0,
-            transform: heroPhase >= 3 ? "translateY(0)" : "translateY(20px)",
-            transition: prefersReducedMotion ? "none" : "opacity 0.9s cubic-bezier(0.22,0.61,0.36,1), transform 1s cubic-bezier(0.22,0.61,0.36,1)",
+            transform: heroPhase >= 3 ? "translateY(0)" : "translateY(16px)",
+            transition: prefersReducedMotion ? "none" : "opacity 1s cubic-bezier(0.22,0.61,0.36,1), transform 1.2s cubic-bezier(0.22,0.61,0.36,1)",
           }}
         >
-          <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-hero-text-muted mb-10">
-            Premium Equine Facility Construction
+          <p className="font-sans text-xs sm:text-sm tracking-[0.4em] uppercase text-primary-foreground/50 mb-12">
+            From Dirt to Dynasty
           </p>
 
-          {/* Clean, elegant dual CTA */}
+          {/* Minimal CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button
               asChild
               size="lg"
-              className="bg-accent text-accent-foreground hover:bg-accent/90 text-sm sm:text-base px-8 sm:px-10 tracking-wider uppercase btn-hover-lift"
+              className="bg-accent text-accent-foreground hover:bg-accent/90 text-sm px-10 tracking-[0.15em] uppercase font-sans font-medium"
             >
               <Link to="/services">
-                Explore Our Work
+                Our Work
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -222,7 +184,7 @@ function HeroSection() {
               asChild
               variant="outline"
               size="lg"
-              className="border-white/30 text-white hover:bg-white hover:text-primary text-sm sm:text-base px-8 sm:px-10 tracking-wider uppercase"
+              className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 text-sm px-10 tracking-[0.15em] uppercase font-sans"
             >
               <Link to="/contact">
                 Get in Touch
@@ -235,12 +197,14 @@ function HeroSection() {
       {/* Scroll indicator */}
       <button 
         onClick={() => document.getElementById('intro')?.scrollIntoView({ behavior: 'smooth' })}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/60 hover:text-white transition-all cursor-pointer"
-        style={{ opacity: Math.max(1 - scrollY / 200, 0) }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-primary-foreground/40 hover:text-primary-foreground/70 transition-colors cursor-pointer"
+        style={{ 
+          opacity: Math.max(1 - scrollY / 200, 0),
+        }}
         aria-label="Scroll to content"
       >
-        <span className="text-xs tracking-[0.2em] uppercase">Scroll</span>
-        <ChevronDown className="h-5 w-5 animate-bounce" />
+        <span className="text-[10px] tracking-[0.3em] uppercase font-sans">Scroll</span>
+        <ChevronDown className="h-4 w-4 animate-bounce" />
       </button>
     </section>
   );
