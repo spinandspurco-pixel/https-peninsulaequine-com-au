@@ -28,6 +28,7 @@ import Forge from "./pages/Forge";
 import Events from "./pages/Events";
 import BookingsDashboard from "./pages/BookingsDashboard";
 import StudentSpotlight from "./pages/StudentSpotlight";
+import RoundPens from "./pages/RoundPens";
 import { useCartSync } from "./hooks/useCartSync";
 
 const queryClient = new QueryClient();
@@ -42,6 +43,7 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/services/round-pens" element={<RoundPens />} />
           <Route path="/boarding" element={<Boarding />} />
           <Route path="/about" element={<About />} />
           <Route path="/gallery" element={<Gallery />} />
