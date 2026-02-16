@@ -128,13 +128,21 @@ function HeroCTAToggle({ heroMode, setHeroMode }: { heroMode: "book" | "consult"
   );
 }
 
-function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
+function HeroSection({ variant = "banner" }: { variant?: "logo" | "banner" }) {
   const [scrollY, setScrollY] = useState(0);
   const [bannerLoaded, setBannerLoaded] = useState(false);
+  const [heroPhase, setHeroPhase] = useState(0); // 0=hidden, 1=blueprints, 2=banner, 3=cta
   const [heroMode, setHeroMode] = useState<"book" | "consult">("book");
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  // Track scroll position for parallax
+  // Phased entrance
+  useEffect(() => {
+    const t1 = setTimeout(() => setHeroPhase(1), 300);
+    const t2 = setTimeout(() => setHeroPhase(2), 1000);
+    const t3 = setTimeout(() => setHeroPhase(3), 1800);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, []);
+
   useEffect(() => {
     let ticking = false;
     const handleScroll = () => {
@@ -159,7 +167,7 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
       ref={sectionRef} 
       className="relative h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Blueprint-animated background layers */}
+      {/* Background image with parallax */}
       <div 
         className="absolute inset-[-20%] will-change-transform"
         style={{ 
@@ -175,12 +183,28 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
         />
       </div>
 
-      {/* Blueprint overlay layers */}
-      <BlueprintBackground image={blueprintFacility} opacity={0.08} direction="left-to-right" duration={2500} parallaxSpeed={0.04} />
-      <BlueprintBackground image={blueprintElevation} opacity={0.05} direction="right-to-left" duration={3000} parallaxSpeed={0.08} className="scale-110" />
-      <BlueprintBackground image={blueprintBarn} opacity={0.04} direction="bottom-to-top" duration={2800} parallaxSpeed={0.06} />
-      <BlueprintLineOverlay variant="dimensions" color="light" />
-      <BlueprintLineOverlay variant="barn" color="light" />
+      {/* Blueprint overlay layers — phase 1 sweep-in */}
+      <div
+        style={{
+          opacity: heroPhase >= 1 ? 1 : 0,
+          transition: "opacity 1.2s ease-out",
+        }}
+      >
+        <BlueprintBackground image={blueprintFacility} opacity={0.08} direction="left-to-right" duration={2500} parallaxSpeed={0.04} />
+        <BlueprintBackground image={blueprintElevation} opacity={0.05} direction="right-to-left" duration={3000} parallaxSpeed={0.08} className="scale-110" />
+        <BlueprintBackground image={blueprintBarn} opacity={0.04} direction="bottom-to-top" duration={2800} parallaxSpeed={0.06} />
+      </div>
+
+      {/* Blueprint line overlays — phase 1 draw-on */}
+      <div
+        style={{
+          opacity: heroPhase >= 1 ? 1 : 0,
+          transition: "opacity 1s ease-out 0.4s",
+        }}
+      >
+        <BlueprintLineOverlay variant="dimensions" color="light" />
+        <BlueprintLineOverlay variant="barn" color="light" />
+      </div>
 
       {/* Gradient overlay */}
       <div 
@@ -190,7 +214,35 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
       {/* Vignette */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.3)_100%)]" />
 
-      {/* Centered Content */}
+      {/* Blueprint corner brackets — architectural framing cues */}
+      <svg
+        className="absolute inset-0 w-full h-full pointer-events-none z-[5]"
+        viewBox="0 0 1000 1000"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+        style={{
+          opacity: heroPhase >= 1 ? 0.2 : 0,
+          transition: "opacity 1s ease-out 0.6s",
+        }}
+      >
+        {/* Top-left bracket */}
+        <path d="M 40,40 L 40,120 M 40,40 L 120,40" fill="none" stroke="hsl(45 40% 97%)" strokeWidth="0.8" />
+        {/* Top-right bracket */}
+        <path d="M 960,40 L 960,120 M 960,40 L 880,40" fill="none" stroke="hsl(45 40% 97%)" strokeWidth="0.8" />
+        {/* Bottom-left bracket */}
+        <path d="M 40,960 L 40,880 M 40,960 L 120,960" fill="none" stroke="hsl(45 40% 97%)" strokeWidth="0.8" />
+        {/* Bottom-right bracket */}
+        <path d="M 960,960 L 960,880 M 960,960 L 880,960" fill="none" stroke="hsl(45 40% 97%)" strokeWidth="0.8" />
+        {/* Centre crosshair */}
+        <line x1="490" y1="500" x2="510" y2="500" stroke="hsl(35 75% 50% / 0.3)" strokeWidth="0.5" />
+        <line x1="500" y1="490" x2="500" y2="510" stroke="hsl(35 75% 50% / 0.3)" strokeWidth="0.5" />
+        {/* Top dimension line */}
+        <line x1="120" y1="40" x2="880" y2="40" stroke="hsl(45 40% 97% / 0.08)" strokeWidth="0.3" />
+        {/* Left dimension line */}
+        <line x1="40" y1="120" x2="40" y2="880" stroke="hsl(45 40% 97% / 0.08)" strokeWidth="0.3" />
+      </svg>
+
+      {/* Centered Content — phase 2 & 3 */}
       <div 
         className="relative z-10 text-center px-4 will-change-transform"
         style={{ 
@@ -198,24 +250,46 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
           opacity: Math.max(1 - scrollY / 600, 0)
         }}
       >
-        <div className="divider mx-auto mb-8 bg-accent/80" />
+        {/* Accent divider — phase 2 */}
+        <div
+          className="divider mx-auto mb-8 bg-accent/80"
+          style={{
+            opacity: heroPhase >= 2 ? 1 : 0,
+            transform: heroPhase >= 2 ? "scaleX(1)" : "scaleX(0)",
+            transition: "opacity 0.6s ease-out, transform 0.8s cubic-bezier(0.22,0.61,0.36,1)",
+          }}
+        />
         
         {variant === "banner" ? (
-          <div className="mb-8">
+          <div
+            className="mb-8"
+            style={{
+              opacity: heroPhase >= 2 ? 1 : 0,
+              transform: heroPhase >= 2 ? "translateY(0) scale(1)" : "translateY(20px) scale(0.95)",
+              transition: "opacity 0.8s ease-out 0.1s, transform 1s cubic-bezier(0.22,0.61,0.36,1) 0.1s",
+            }}
+          >
             <img
               src={peBanner}
               alt="Peninsula Equine — From Dirt to Dynasty"
               loading="eager"
               decoding="async"
               onLoad={() => setBannerLoaded(true)}
-              className={`w-[280px] sm:w-[400px] md:w-[520px] lg:w-[600px] mx-auto h-auto object-contain drop-shadow-[0_4px_30px_rgba(0,0,0,0.3)] transition-all duration-700 ${
-                bannerLoaded ? "opacity-100 scale-100" : "opacity-0 scale-95"
+              className={`w-[280px] sm:w-[400px] md:w-[520px] lg:w-[600px] mx-auto h-auto object-contain drop-shadow-[0_4px_30px_rgba(0,0,0,0.3)] transition-opacity duration-500 ${
+                bannerLoaded ? "opacity-100" : "opacity-0"
               }`}
             />
           </div>
         ) : (
           <>
-            <div className="mb-8">
+            <div
+              className="mb-8"
+              style={{
+                opacity: heroPhase >= 2 ? 1 : 0,
+                transform: heroPhase >= 2 ? "translateY(0) scale(1)" : "translateY(20px) scale(0.8)",
+                transition: "opacity 0.8s ease-out, transform 1s cubic-bezier(0.22,0.61,0.36,1)",
+              }}
+            >
               <div className="w-32 h-32 sm:w-44 sm:h-44 md:w-52 md:h-52 mx-auto transition-transform duration-500 hover:scale-105">
                 <img
                   src={logoPeMark}
@@ -224,24 +298,31 @@ function HeroSection({ variant = "logo" }: { variant?: "logo" | "banner" }) {
                 />
               </div>
             </div>
-            <p className="font-serif text-xl sm:text-2xl md:text-3xl text-white tracking-[0.12em] uppercase font-normal text-shadow-editorial mb-4">
+            <p
+              className="font-serif text-xl sm:text-2xl md:text-3xl text-white tracking-[0.12em] uppercase font-normal text-shadow-editorial mb-4"
+              style={{
+                opacity: heroPhase >= 2 ? 1 : 0,
+                transition: "opacity 0.6s ease-out 0.3s",
+              }}
+            >
               Peninsula Equine
             </p>
-            <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mb-6">
-              Facility Construction • Training • Excellence
-            </p>
-            <HeroCTAToggle heroMode={heroMode} setHeroMode={setHeroMode} />
           </>
         )}
 
-        {variant === "banner" && (
-          <div className="mt-4 mb-16">
-            <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mb-6">
-              Facility Construction • Training • Excellence
-            </p>
-            <HeroCTAToggle heroMode={heroMode} setHeroMode={setHeroMode} />
-          </div>
-        )}
+        {/* Subtitle + CTA — phase 3 */}
+        <div
+          style={{
+            opacity: heroPhase >= 3 ? 1 : 0,
+            transform: heroPhase >= 3 ? "translateY(0)" : "translateY(16px)",
+            transition: "opacity 0.7s ease-out, transform 0.8s ease-out",
+          }}
+        >
+          <p className="font-sans text-sm sm:text-base tracking-[0.3em] uppercase text-white/80 mb-6">
+            Facility Construction • Training • Excellence
+          </p>
+          <HeroCTAToggle heroMode={heroMode} setHeroMode={setHeroMode} />
+        </div>
       </div>
 
       {/* Scroll indicator */}
