@@ -511,6 +511,38 @@ export type Database = {
         }
         Relationships: []
       }
+      slot_holds: {
+        Row: {
+          expires_at: string
+          held_at: string
+          id: string
+          session_id: string
+          slot_id: string
+        }
+        Insert: {
+          expires_at?: string
+          held_at?: string
+          id?: string
+          session_id: string
+          slot_id: string
+        }
+        Update: {
+          expires_at?: string
+          held_at?: string
+          id?: string
+          session_id?: string
+          slot_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "slot_holds_slot_id_fkey"
+            columns: ["slot_id"]
+            isOneToOne: false
+            referencedRelation: "lesson_slots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -537,6 +569,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_expired_holds: { Args: never; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
