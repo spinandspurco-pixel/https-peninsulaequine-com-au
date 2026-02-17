@@ -441,6 +441,7 @@ export type Database = {
           location: string | null
           price: string | null
           title: string
+          trainer: string | null
           updated_at: string
         }
         Insert: {
@@ -457,6 +458,7 @@ export type Database = {
           location?: string | null
           price?: string | null
           title: string
+          trainer?: string | null
           updated_at?: string
         }
         Update: {
@@ -473,6 +475,7 @@ export type Database = {
           location?: string | null
           price?: string | null
           title?: string
+          trainer?: string | null
           updated_at?: string
         }
         Relationships: []
