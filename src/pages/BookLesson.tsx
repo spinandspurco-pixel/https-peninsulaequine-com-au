@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { CalendarIcon, Clock, CheckCircle, ArrowRight, Send, Star, Award, Target, ChevronDown, ExternalLink, Quote, Users, Sparkles, Play, Printer, CircleDot, Mail, Phone, MapPin, User, Edit2 } from "lucide-react";
 import { z } from "zod";
-import { format, startOfMonth, endOfMonth, addMonths, isBefore, startOfDay } from "date-fns";
+import { format } from "date-fns";
 import Autoplay from "embla-carousel-autoplay";
 import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/layout/Layout";
@@ -11,7 +11,7 @@ import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { BlueprintDivider } from "@/components/BlueprintDivider";
 import { SectionTransition, AnimatedDivider } from "@/components/SectionTransition";
-import { LessonAvailabilityCalendar } from "@/components/LessonAvailabilityCalendar";
+import { LessonAvailabilityCalendar, type LessonSlot } from "@/components/LessonAvailabilityCalendar";
 import { DepositPaymentPolicy } from "@/components/DepositPaymentPolicy";
 import { PolicyDownloadCenter } from "@/components/PolicyDownloadCenter";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
@@ -510,70 +509,13 @@ function BookingWizard() {
 
   const pricing = DEPOSIT_MAP[data.lessonType];
 
-  // ── Slot fetching for Step 2 ──
-  const [slots, setSlots] = useState<any[]>([]);
-  const [slotsLoading, setSlotsLoading] = useState(true);
-  const [selectedSlotDate, setSelectedSlotDate] = useState<Date | undefined>();
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-
-  useEffect(() => {
-    const fetchSlots = async () => {
-      setSlotsLoading(true);
-      const from = format(startOfMonth(currentMonth), "yyyy-MM-dd");
-      const to = format(endOfMonth(addMonths(currentMonth, 1)), "yyyy-MM-dd");
-      const { data: slotData } = await supabase
-        .from("lesson_slots")
-        .select("*")
-        .gte("slot_date", from)
-        .lte("slot_date", to)
-        .order("slot_date")
-        .order("start_time");
-      setSlots(slotData || []);
-      setSlotsLoading(false);
-    };
-    if (step === 2) fetchSlots();
-  }, [step, currentMonth]);
-
-  const slotsByDate = useMemo(() => {
-    const map: Record<string, any[]> = {};
-    for (const slot of slots) {
-      if (!map[slot.slot_date]) map[slot.slot_date] = [];
-      map[slot.slot_date].push(slot);
-    }
-    return map;
-  }, [slots]);
-
-  const availableDates = useMemo(() => {
-    const dates = new Set<string>();
-    for (const slot of slots) {
-      if (slot.current_bookings < slot.max_bookings) {
-        // Filter by lesson type if applicable
-        if (slot.slot_type === "lesson" || slot.slot_type === data.lessonType) {
-          dates.add(slot.slot_date);
-        }
-      }
-    }
-    return dates;
-  }, [slots, data.lessonType]);
-
-  const fullDates = useMemo(() => {
-    const dates = new Set<string>();
-    for (const [date, dateSlots] of Object.entries(slotsByDate)) {
-      const relevantSlots = dateSlots.filter(
-        (s: any) => s.slot_type === "lesson" || s.slot_type === data.lessonType
-      );
-      if (relevantSlots.length > 0 && relevantSlots.every((s: any) => s.current_bookings >= s.max_bookings)) {
-        dates.add(date);
-      }
-    }
-    return dates;
-  }, [slotsByDate, data.lessonType]);
-
-  const selectedDateSlots = selectedSlotDate
-    ? (slotsByDate[format(selectedSlotDate, "yyyy-MM-dd")] || []).filter(
-        (s: any) => (s.slot_type === "lesson" || s.slot_type === data.lessonType) && s.current_bookings < s.max_bookings
-      )
-    : [];
+  // ── Slot selection handler for wizard Step 2 ──
+  const handleSlotSelected = (slot: LessonSlot) => {
+    update("slotId", slot.id);
+    update("slotDate", slot.slot_date);
+    update("slotTime", slot.start_time);
+    update("slotEndTime", slot.end_time);
+  };
 
   // ── Validation ──
   const validateStep = (s: number): boolean => {
@@ -759,87 +701,12 @@ function BookingWizard() {
             Showing available slots for <span className="font-medium text-foreground">{pricing?.label}</span>. Select a date then pick a time.
           </p>
 
-          <div className="grid md:grid-cols-2 gap-4">
-            {/* Calendar */}
-            <div className="bg-card rounded-xl border border-border p-4">
-              {slotsLoading ? (
-                <div className="flex items-center justify-center py-16">
-                  <Clock className="h-5 w-5 animate-spin text-muted-foreground" />
-                </div>
-              ) : (
-                <Calendar
-                  mode="single"
-                  selected={selectedSlotDate}
-                  onSelect={(d) => { setSelectedSlotDate(d); update("slotId", ""); }}
-                  onMonthChange={setCurrentMonth}
-                  disabled={(date) => {
-                    const day = date.getDay();
-                    const dateStr = format(date, "yyyy-MM-dd");
-                    return isBefore(date, startOfDay(new Date())) || (day !== 4 && day !== 5) || fullDates.has(dateStr);
-                  }}
-                  modifiers={{
-                    available: (date) => availableDates.has(format(date, "yyyy-MM-dd")),
-                  }}
-                  modifiersClassNames={{
-                    available: "!bg-accent/15 !text-accent font-semibold hover:!bg-accent/25 relative after:absolute after:bottom-0.5 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:rounded-full after:bg-accent",
-                  }}
-                  className={cn("p-3 pointer-events-auto")}
-                />
-              )}
-            </div>
-
-            {/* Time slots */}
-            <div className="bg-card rounded-xl border border-border p-4">
-              {!selectedSlotDate ? (
-                <div className="flex flex-col items-center justify-center h-full text-center py-12">
-                  <CalendarIcon className="h-7 w-7 text-accent mb-3" />
-                  <p className="text-sm text-muted-foreground">Select a date to see available times</p>
-                </div>
-              ) : selectedDateSlots.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full text-center py-12">
-                  <p className="font-medium text-foreground mb-1">{format(selectedSlotDate, "EEEE, MMMM d")}</p>
-                  <p className="text-sm text-muted-foreground">No available slots for this date.</p>
-                </div>
-              ) : (
-                <div>
-                  <p className="font-medium text-foreground mb-3">{format(selectedSlotDate, "EEEE, MMMM d")}</p>
-                  <div className="space-y-2">
-                    {selectedDateSlots.map((slot: any) => (
-                      <button
-                        key={slot.id}
-                        type="button"
-                        onClick={() => {
-                          update("slotId", slot.id);
-                          update("slotDate", slot.slot_date);
-                          update("slotTime", slot.start_time);
-                          update("slotEndTime", slot.end_time);
-                        }}
-                        className={cn(
-                          "w-full text-left rounded-lg border p-3 transition-all",
-                          data.slotId === slot.id
-                            ? "border-accent bg-accent/10 ring-1 ring-accent/30"
-                            : "border-border hover:border-accent/40"
-                        )}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Clock className="h-3.5 w-3.5 text-accent" />
-                            <span className="text-sm font-medium text-foreground">
-                              {formatTimeSimple(slot.start_time)} – {formatTimeSimple(slot.end_time)}
-                            </span>
-                          </div>
-                          {data.slotId === slot.id && <CheckCircle className="h-4 w-4 text-accent" />}
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {slot.max_bookings - slot.current_bookings} spot{slot.max_bookings - slot.current_bookings !== 1 ? "s" : ""} left
-                        </p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
+          <LessonAvailabilityCalendar
+            filterType={data.lessonType}
+            selectedSlotId={data.slotId}
+            onSlotSelect={handleSlotSelected}
+            showHeader={false}
+          />
 
           {errors.slotId && <p className="text-sm text-destructive">{errors.slotId}</p>}
 

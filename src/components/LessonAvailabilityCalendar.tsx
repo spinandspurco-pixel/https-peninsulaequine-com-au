@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Calendar } from "@/components/ui/calendar";
@@ -10,16 +10,13 @@ import {
   startOfMonth,
   endOfMonth,
   addMonths,
-  isSameDay,
-  isThursday,
-  isFriday,
   isBefore,
   startOfDay,
 } from "date-fns";
-import { CalendarIcon, Clock, ArrowRight, RefreshCw, Circle } from "lucide-react";
+import { CalendarIcon, Clock, ArrowRight, RefreshCw, Circle, CheckCircle } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
-type LessonSlot = {
+export type LessonSlot = {
   id: string;
   slot_date: string;
   start_time: string;
@@ -45,16 +42,15 @@ function formatTime(time: string) {
   return `${displayHour}:${m} ${ampm}`;
 }
 
-export function LessonAvailabilityCalendar() {
-  const navigate = useNavigate();
-  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+// ── Shared hook for slot fetching & indexing ──
+
+export function useLessonSlots(filterType?: string) {
   const [slots, setSlots] = useState<LessonSlot[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  // Fetch slots for the visible month range
-  const fetchSlots = async (month: Date) => {
+  const fetchSlots = useCallback(async (month: Date) => {
+    setLoading(true);
     const from = format(startOfMonth(month), "yyyy-MM-dd");
     const to = format(endOfMonth(addMonths(month, 1)), "yyyy-MM-dd");
 
@@ -68,11 +64,11 @@ export function LessonAvailabilityCalendar() {
 
     setSlots((data as LessonSlot[]) || []);
     setLoading(false);
-  };
+  }, []);
 
   useEffect(() => {
     fetchSlots(currentMonth);
-  }, [currentMonth]);
+  }, [currentMonth, fetchSlots]);
 
   // Real-time subscription
   useEffect(() => {
@@ -81,18 +77,18 @@ export function LessonAvailabilityCalendar() {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "lesson_slots" },
-        () => {
-          fetchSlots(currentMonth);
-        }
+        () => fetchSlots(currentMonth)
       )
       .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [currentMonth, fetchSlots]);
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [currentMonth]);
+  const matchesType = useCallback(
+    (slot: LessonSlot) =>
+      !filterType || slot.slot_type === "lesson" || slot.slot_type === filterType,
+    [filterType]
+  );
 
-  // Index slots by date
   const slotsByDate = useMemo(() => {
     const map: Record<string, LessonSlot[]> = {};
     for (const slot of slots) {
@@ -102,38 +98,75 @@ export function LessonAvailabilityCalendar() {
     return map;
   }, [slots]);
 
-  // Dates with available slots
   const availableDates = useMemo(() => {
     const dates = new Set<string>();
     for (const slot of slots) {
-      if (slot.current_bookings < slot.max_bookings) {
+      if (slot.current_bookings < slot.max_bookings && matchesType(slot)) {
         dates.add(slot.slot_date);
       }
     }
     return dates;
-  }, [slots]);
+  }, [slots, matchesType]);
 
-  // Full dates (all slots booked)
   const fullDates = useMemo(() => {
     const dates = new Set<string>();
     for (const [date, dateSlots] of Object.entries(slotsByDate)) {
-      if (dateSlots.every((s) => s.current_bookings >= s.max_bookings)) {
+      const relevant = dateSlots.filter(matchesType);
+      if (relevant.length > 0 && relevant.every((s) => s.current_bookings >= s.max_bookings)) {
         dates.add(date);
       }
     }
     return dates;
-  }, [slotsByDate]);
+  }, [slotsByDate, matchesType]);
 
-  // Selected date's slots
+  return { slots, loading, currentMonth, setCurrentMonth, slotsByDate, availableDates, fullDates, matchesType };
+}
+
+// ── Slot Calendar UI (shared between standalone & wizard) ──
+
+type SlotCalendarProps = {
+  /** Filter slots to a specific lesson type (e.g. "beginner") */
+  filterType?: string;
+  /** If provided, renders in "wizard" mode with selectable slots instead of "Book" buttons */
+  selectedSlotId?: string;
+  onSlotSelect?: (slot: LessonSlot) => void;
+  /** Show section header (standalone mode) */
+  showHeader?: boolean;
+};
+
+export function LessonAvailabilityCalendar({
+  filterType,
+  selectedSlotId,
+  onSlotSelect,
+  showHeader = true,
+}: SlotCalendarProps = {}) {
+  const navigate = useNavigate();
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+  const { loading, currentMonth, setCurrentMonth, slotsByDate, availableDates, fullDates, matchesType } =
+    useLessonSlots(filterType);
+
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const isWizardMode = !!onSlotSelect;
+
+  // Selected date's available slots
   const selectedDateSlots = selectedDate
-    ? slotsByDate[format(selectedDate, "yyyy-MM-dd")] || []
+    ? (slotsByDate[format(selectedDate, "yyyy-MM-dd")] || []).filter(
+        (s) => matchesType(s) && s.current_bookings < s.max_bookings
+      )
+    : [];
+
+  // All slots for date (for "X of Y available" count in standalone)
+  const allSelectedDateSlots = selectedDate
+    ? (slotsByDate[format(selectedDate, "yyyy-MM-dd")] || []).filter(matchesType)
     : [];
 
   const handleBookSlot = (slot: LessonSlot) => {
-    const typeParam = slot.slot_type !== "lesson" ? slot.slot_type : "";
-    navigate(
-      `/book-lesson?type=${typeParam}&date=${slot.slot_date}#book`
-    );
+    if (isWizardMode) {
+      onSlotSelect!(slot);
+    } else {
+      const typeParam = slot.slot_type !== "lesson" ? slot.slot_type : "";
+      navigate(`/book-lesson?type=${typeParam}&date=${slot.slot_date}#book`);
+    }
   };
 
   return (
@@ -143,18 +176,20 @@ export function LessonAvailabilityCalendar() {
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
       }`}
     >
-      <div className="text-center mb-8">
-        <div
-          className={`w-16 h-0.5 bg-accent mx-auto mb-6 transition-all duration-500 delay-100 ${
-            isVisible ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"
-          }`}
-        />
-        <h2 className="heading-section text-foreground mb-3">Lesson Availability</h2>
-        <p className="text-muted-foreground max-w-lg mx-auto">
-          View real-time availability and pick a slot. Green dates have open spots — select a
-          day to see available times.
-        </p>
-      </div>
+      {showHeader && (
+        <div className="text-center mb-8">
+          <div
+            className={`w-16 h-0.5 bg-accent mx-auto mb-6 transition-all duration-500 delay-100 ${
+              isVisible ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"
+            }`}
+          />
+          <h2 className="heading-section text-foreground mb-3">Lesson Availability</h2>
+          <p className="text-muted-foreground max-w-lg mx-auto">
+            View real-time availability and pick a slot. Green dates have open spots — select a
+            day to see available times.
+          </p>
+        </div>
+      )}
 
       <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
         {/* Calendar */}
@@ -173,7 +208,6 @@ export function LessonAvailabilityCalendar() {
                 disabled={(date) => {
                   const day = date.getDay();
                   const dateStr = format(date, "yyyy-MM-dd");
-                  // Disable past dates, non-Thu/Fri, and fully booked
                   return (
                     isBefore(date, startOfDay(new Date())) ||
                     (day !== 4 && day !== 5) ||
@@ -181,10 +215,8 @@ export function LessonAvailabilityCalendar() {
                   );
                 }}
                 modifiers={{
-                  available: (date) =>
-                    availableDates.has(format(date, "yyyy-MM-dd")),
-                  full: (date) =>
-                    fullDates.has(format(date, "yyyy-MM-dd")),
+                  available: (date) => availableDates.has(format(date, "yyyy-MM-dd")),
+                  full: (date) => fullDates.has(format(date, "yyyy-MM-dd")),
                 }}
                 modifiersClassNames={{
                   available:
@@ -229,7 +261,7 @@ export function LessonAvailabilityCalendar() {
                 {format(selectedDate, "EEEE, MMMM d")}
               </p>
               <p className="text-sm text-muted-foreground">
-                No slots published for this date yet. Check back soon or contact us directly.
+                No slots available for this date. Check back soon or contact us directly.
               </p>
             </div>
           ) : (
@@ -238,23 +270,24 @@ export function LessonAvailabilityCalendar() {
                 {format(selectedDate, "EEEE, MMMM d")}
               </h3>
               <p className="text-xs text-muted-foreground mb-4">
-                {selectedDateSlots.filter((s) => s.current_bookings < s.max_bookings).length} of{" "}
-                {selectedDateSlots.length} slots available
+                {selectedDateSlots.length} of {allSelectedDateSlots.length} slots available
               </p>
 
               <div className="space-y-3">
                 {selectedDateSlots.map((slot) => {
-                  const isAvailable = slot.current_bookings < slot.max_bookings;
                   const spotsLeft = slot.max_bookings - slot.current_bookings;
+                  const isSelected = isWizardMode && selectedSlotId === slot.id;
 
                   return (
-                    <div
+                    <button
                       key={slot.id}
+                      type="button"
+                      onClick={() => handleBookSlot(slot)}
                       className={cn(
-                        "rounded-lg border p-4 transition-all",
-                        isAvailable
-                          ? "border-accent/30 bg-accent/5 hover:border-accent/50"
-                          : "border-border bg-muted/30 opacity-60"
+                        "w-full text-left rounded-lg border p-4 transition-all",
+                        isSelected
+                          ? "border-accent bg-accent/10 ring-1 ring-accent/30"
+                          : "border-accent/30 bg-accent/5 hover:border-accent/50"
                       )}
                     >
                       <div className="flex items-start justify-between gap-3">
@@ -272,13 +305,9 @@ export function LessonAvailabilityCalendar() {
                             >
                               {SLOT_TYPE_LABELS[slot.slot_type] || slot.slot_type}
                             </Badge>
-                            {isAvailable ? (
-                              <span className="text-[10px] text-muted-foreground">
-                                {spotsLeft} spot{spotsLeft !== 1 ? "s" : ""} left
-                              </span>
-                            ) : (
-                              <span className="text-[10px] text-destructive">Fully booked</span>
-                            )}
+                            <span className="text-[10px] text-muted-foreground">
+                              {spotsLeft} spot{spotsLeft !== 1 ? "s" : ""} left
+                            </span>
                           </div>
                           {slot.notes && (
                             <p className="text-xs text-muted-foreground mt-1.5 italic">
@@ -287,18 +316,15 @@ export function LessonAvailabilityCalendar() {
                           )}
                         </div>
 
-                        {isAvailable && (
-                          <Button
-                            size="sm"
-                            onClick={() => handleBookSlot(slot)}
-                            className="bg-accent hover:bg-accent/90 text-accent-foreground shrink-0"
-                          >
-                            Book
-                            <ArrowRight className="ml-1 h-3 w-3" />
-                          </Button>
+                        {isWizardMode ? (
+                          isSelected && <CheckCircle className="h-4 w-4 text-accent shrink-0 mt-1" />
+                        ) : (
+                          <span className="text-xs font-medium text-accent flex items-center gap-1 shrink-0 mt-1">
+                            Book <ArrowRight className="h-3 w-3" />
+                          </span>
                         )}
                       </div>
-                    </div>
+                    </button>
                   );
                 })}
               </div>
