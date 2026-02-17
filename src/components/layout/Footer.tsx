@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Instagram, Facebook } from "lucide-react";
 import { siteConfig } from "@/data/content";
 import logoPeMark from "@/assets/logo-pe-mark.png";
+import { PEHorseshoe, PEBarn, PEHorseHead } from "@/components/icons/PEIcons";
 
 const footerLinks = {
   services: [
@@ -69,7 +70,10 @@ export function Footer() {
 
           {/* Services Links */}
           <div>
-            <h4 className="font-serif text-base font-semibold mb-5 text-[hsl(var(--footer-foreground))]">Services</h4>
+            <h4 className="font-serif text-base font-semibold mb-5 text-[hsl(var(--footer-foreground))] flex items-center gap-2">
+              <PEBarn size={16} className="text-[hsl(var(--footer-hover))]" />
+              Services
+            </h4>
             <ul className="space-y-2.5">
               {footerLinks.services.map((link) => (
                 <li key={link.name}>
@@ -86,7 +90,10 @@ export function Footer() {
 
           {/* Company Links */}
           <div>
-            <h4 className="font-serif text-base font-semibold mb-5 text-[hsl(var(--footer-foreground))]">Company</h4>
+            <h4 className="font-serif text-base font-semibold mb-5 text-[hsl(var(--footer-foreground))] flex items-center gap-2">
+              <PEHorseHead size={16} className="text-[hsl(var(--footer-hover))]" />
+              Company
+            </h4>
             <ul className="space-y-2.5">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
@@ -103,7 +110,10 @@ export function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h4 className="font-serif text-base font-semibold mb-5 text-[hsl(var(--footer-foreground))]">Contact</h4>
+            <h4 className="font-serif text-base font-semibold mb-5 text-[hsl(var(--footer-foreground))] flex items-center gap-2">
+              <PEHorseshoe size={16} className="text-[hsl(var(--footer-hover))]" />
+              Contact
+            </h4>
             <ul className="space-y-3">
               <li>
                 <a

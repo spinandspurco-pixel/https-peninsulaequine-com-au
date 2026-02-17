@@ -7,11 +7,12 @@ import logoImage from "@/assets/logo-pe-mark.png";
 import { CartDrawer } from "@/components/CartDrawer";
 import { GlobalSearch } from "@/components/GlobalSearch";
 import { siteConfig } from "@/data/content";
+import { PEHorseshoe } from "@/components/icons/PEIcons";
 
 const navigation = [
   { name: "Home", href: "/" },
   { name: "Services", href: "/services" },
-  { name: "The Forge", href: "/shop" },
+  { name: "The Forge", href: "/shop", icon: true },
   { name: "Portfolio", href: "/gallery" },
   { name: "Lessons", href: "/lessons" },
   { name: "About", href: "/about" },
@@ -82,14 +83,16 @@ export function Header() {
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  "text-xs uppercase tracking-[0.15em] transition-colors duration-200 hover:text-[hsl(var(--header-active))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-sm",
+                  "relative text-xs uppercase tracking-[0.15em] transition-colors duration-200 hover:text-[hsl(var(--header-active))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-sm",
+                  "after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-px after:bg-[hsl(var(--header-active))] after:origin-left after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100",
                   location.pathname === item.href
-                    ? "text-[hsl(var(--header-active))]"
+                    ? "text-[hsl(var(--header-active))] after:scale-x-100"
                     : isScrolled
                     ? "text-[hsl(var(--header-scrolled-foreground))]"
                     : "text-[hsl(var(--header-foreground))]"
                 )}
               >
+                {item.icon && <PEHorseshoe size={14} className="inline-block mr-1.5 -mt-0.5" />}
                 {item.name}
               </Link>
             ))}
