@@ -3,6 +3,7 @@ import { Phone, Mail, MapPin, Instagram, Facebook } from "lucide-react";
 import { siteConfig } from "@/data/content";
 import logoPeMark from "@/assets/logo-pe-mark.png";
 import { PEHorseshoe, PEBarn, PEHorseHead } from "@/components/icons/PEIcons";
+import { FooterNewsletter } from "@/components/FooterNewsletter";
 
 const footerLinks = {
   services: [
@@ -142,10 +143,15 @@ export function Footer() {
               </li>
             </ul>
             <div className="mt-5 pt-5 border-t border-[hsl(var(--footer-foreground))]/10">
-          <p className="text-xs text-[hsl(var(--footer-muted))]">{siteConfig.hours.weekdays}</p>
+              <p className="text-xs text-[hsl(var(--footer-muted))]">{siteConfig.hours.weekdays}</p>
               <p className="text-xs text-[hsl(var(--footer-muted))]">{siteConfig.hours.saturday}</p>
             </div>
           </div>
+        </div>
+
+        {/* Newsletter signup */}
+        <div className="mt-12 pt-8 border-t border-[hsl(var(--footer-foreground))]/10 max-w-md">
+          <FooterNewsletter />
         </div>
 
         {/* Bottom Bar */}
