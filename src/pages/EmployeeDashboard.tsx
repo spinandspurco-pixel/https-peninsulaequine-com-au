@@ -270,10 +270,15 @@ export default function EmployeeDashboard() {
             </div>
           </div>
           <div className="flex gap-2">
-            <Link to="/documents">
+            <Link to={isTrainer ? "/trainer/documents" : "/staff/documents"}>
               <Button variant="outline">
                 <ClipboardList className="mr-2 h-4 w-4" />
-                Documents
+                My Documents
+              </Button>
+            </Link>
+            <Link to="/documents">
+              <Button variant="outline" size="sm" className="text-xs">
+                + New
               </Button>
             </Link>
             <Button variant="outline" size="icon" onClick={fetchData} disabled={loadingData}>
