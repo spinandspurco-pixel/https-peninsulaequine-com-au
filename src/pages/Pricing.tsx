@@ -1,5 +1,6 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Check, ArrowRight, Zap, Users, Award, Star, UserPlus, DollarSign, MapPin, Truck, ShieldCheck, HelpCircle, Flame, Mountain, Trees, CloudRain, Ruler, Building, CreditCard, RefreshCcw, Milestone, Clock, Ban, ArrowRightLeft, Navigation, Car, Plane } from "lucide-react";
+import { Check, ArrowRight, Zap, Users, Award, Star, UserPlus, DollarSign, MapPin, Truck, ShieldCheck, HelpCircle, Flame, Mountain, Trees, CloudRain, Ruler, Building, CreditCard, RefreshCcw, Milestone, Clock, Ban, ArrowRightLeft, Navigation, Car, Plane, Shield, Phone, Sparkles } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,9 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { StickySubpageCTA } from "@/components/StickySubpageCTA";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { LessonPricingCalculator } from "@/components/LessonPricingCalculator";
+import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/data/content";
 
 // ── Package Data ─────────────────────────────────────
 
@@ -113,8 +116,16 @@ function SingleLessons() {
                     </li>
                   ))}
                 </ul>
-                <Button asChild variant={lesson.popular ? "default" : "outline"} className="w-full">
-                  <Link to="/book-lesson">Book Now <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                <Button
+                  asChild
+                  variant={lesson.popular ? "default" : "outline"}
+                  className={cn("w-full", lesson.popular && "bg-accent text-accent-foreground hover:bg-accent/90")}
+                  onClick={() => trackCtaClick("pricing_single_lesson", { tier: lesson.name })}
+                >
+                  <Link to={`/book-lesson?type=${lesson.name.toLowerCase()}`}>
+                    Book {lesson.name} Lesson
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
                 </Button>
               </div>
             ))}
@@ -254,8 +265,8 @@ function PricingCTA() {
             Chat with us and we'll recommend the best option based on your experience level and goals. No pressure, just honest advice.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button asChild size="lg" variant="secondary">
-              <Link to="/book-lesson">Book a Trial Lesson <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            <Button asChild size="lg" variant="secondary" onClick={() => trackCtaClick("pricing_cta_trial")}>
+              <Link to="/book-lesson">Book a Trial Lesson — No Commitment <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
               <Link to="/contact">Get in Touch</Link>
@@ -722,15 +733,215 @@ function ServiceAreaSection() {
   );
 }
 
+// ── Sales Hero ───────────────────────────────────────
+
+function SalesHero() {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+
+  return (
+    <section className="section-padding bg-gradient-to-b from-primary to-primary/95 text-primary-foreground relative overflow-hidden">
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMC41IiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDMpIi8+PC9zdmc+')] opacity-50" />
+      <div className="section-container relative z-10">
+        <div
+          ref={ref}
+          className={cn(
+            "max-w-3xl mx-auto text-center transition-all duration-700",
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          )}
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/15 text-accent text-xs font-semibold uppercase tracking-widest mb-6">
+            <Sparkles className="h-3 w-3" />
+            Limited Spots — Thursdays & Fridays Only
+          </div>
+
+          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight mb-5">
+            Invest in Your Riding.{" "}
+            <span className="text-accent">See Results Fast.</span>
+          </h1>
+
+          <p className="text-primary-foreground/70 text-base sm:text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
+            One-on-one lessons with Glenn Browitt — 25+ years' experience, a purpose-built arena, 
+            and a proven system that's transformed over 200 riders on the Mornington Peninsula.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-10">
+            <Button
+              asChild
+              size="xl"
+              variant="gold"
+              className="text-sm px-10"
+              onClick={() => trackCtaClick("pricing_hero_book")}
+            >
+              <Link to="/book-lesson">
+                Book Your First Lesson
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10"
+            >
+              <Link to="/contact">
+                <Phone className="mr-2 h-4 w-4" />
+                Free Consultation
+              </Link>
+            </Button>
+          </div>
+
+          {/* Trust signals */}
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs text-primary-foreground/50 uppercase tracking-widest">
+            <span className="inline-flex items-center gap-1.5">
+              <Shield className="h-3 w-3 text-accent" />
+              50% deposit — pay balance on the day
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <RefreshCcw className="h-3 w-3 text-accent" />
+              48-hour free reschedule
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <Star className="h-3 w-3 text-accent" />
+              200+ riders trained
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── Social Proof Strip ──────────────────────────────
+
+function SocialProofStrip() {
+  return (
+    <div className="bg-accent/5 border-y border-accent/10 py-4">
+      <div className="section-container flex flex-wrap items-center justify-center gap-x-10 gap-y-2 text-sm text-muted-foreground">
+        <span className="inline-flex items-center gap-2">
+          <span className="flex -space-x-1.5">
+            {[1,2,3,4,5].map(i => (
+              <Star key={i} className="h-3.5 w-3.5 text-accent fill-accent" />
+            ))}
+          </span>
+          <span className="font-medium text-foreground">5.0 average</span> from 40+ reviews
+        </span>
+        <span>·</span>
+        <span><strong className="text-foreground">25+ years</strong> teaching experience</span>
+        <span>·</span>
+        <span>All levels welcome — <strong className="text-foreground">beginner to competition</strong></span>
+      </div>
+    </div>
+  );
+}
+
+// ── Pricing Schema Markup ───────────────────────────
+
+function PricingSchemaMarkup() {
+  useEffect(() => {
+    const baseUrl = "https://peninsulaequine.lovable.app";
+    const tag = "pricing-schema";
+
+    const offerCatalog = {
+      "@context": "https://schema.org",
+      "@type": "OfferCatalog",
+      "@id": `${baseUrl}/pricing#catalog`,
+      name: "Riding Lesson Pricing — Peninsula Equine",
+      provider: { "@type": "LocalBusiness", "@id": `${baseUrl}/#business` },
+      itemListElement: [
+        ...SINGLE_LESSONS.map((l, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          item: {
+            "@type": "Offer",
+            name: `${l.name} Lesson`,
+            description: l.description,
+            price: String(l.price),
+            priceCurrency: "AUD",
+            url: `${baseUrl}/book-lesson`,
+            itemOffered: {
+              "@type": "Service",
+              name: `${l.name} Riding Lesson`,
+              description: l.description,
+              provider: { "@id": `${baseUrl}/#business` },
+            },
+          },
+        })),
+        ...CLINICS.map((c, i) => ({
+          "@type": "ListItem",
+          position: SINGLE_LESSONS.length + i + 1,
+          item: {
+            "@type": "Offer",
+            name: c.name,
+            price: String(c.price),
+            priceCurrency: "AUD",
+            description: `${c.duration} · ${c.groupSize}`,
+            url: `${baseUrl}/contact?subject=clinic`,
+          },
+        })),
+      ],
+    };
+
+    const faqSchema = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "@id": `${baseUrl}/pricing#faq`,
+      mainEntity: AUD_PRICING_FAQS.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: { "@type": "Answer", text: faq.answer },
+      })),
+    };
+
+    const breadcrumb = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: baseUrl },
+        { "@type": "ListItem", position: 2, name: "Pricing", item: `${baseUrl}/pricing` },
+      ],
+    };
+
+    document.querySelectorAll(`script[data-schema="${tag}"]`).forEach((el) => el.remove());
+    [offerCatalog, faqSchema, breadcrumb].forEach((schema) => {
+      const script = document.createElement("script");
+      script.type = "application/ld+json";
+      script.setAttribute("data-schema", tag);
+      script.textContent = JSON.stringify(schema);
+      document.head.appendChild(script);
+    });
+
+    return () => {
+      document.querySelectorAll(`script[data-schema="${tag}"]`).forEach((el) => el.remove());
+    };
+  }, []);
+
+  return null;
+}
+
 // ── Page ─────────────────────────────────────────────
 
 export default function Pricing() {
+  // SEO meta
+  useEffect(() => {
+    const prev = document.title;
+    document.title = "Riding Lesson Pricing & Packages | Peninsula Equine";
+    const meta = document.querySelector('meta[name="description"]');
+    const prevDesc = meta?.getAttribute("content") || "";
+    meta?.setAttribute(
+      "content",
+      "Book private riding lessons from $95 AUD. Save up to 20% with lesson packages. Clinics & group rates available. Mornington Peninsula."
+    );
+    return () => {
+      document.title = prev;
+      meta?.setAttribute("content", prevDesc);
+    };
+  }, []);
+
   return (
     <Layout>
-      <PageHeader
-        title="Lesson Pricing"
-        description="Transparent pricing for every level. Save more with lesson packages."
-      />
+      <PricingSchemaMarkup />
+      <SalesHero />
+      <SocialProofStrip />
       <SingleLessons />
       <BulkPackages />
       <ClinicPricing />
