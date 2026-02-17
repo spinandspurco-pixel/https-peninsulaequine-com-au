@@ -166,6 +166,7 @@ export function EventRSVPForm({
           eventDate,
           eventTime,
           eventLocation,
+          eventDescription,
           guests: parsed.data.guests,
           status,
         },
