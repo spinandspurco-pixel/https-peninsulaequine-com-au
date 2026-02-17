@@ -47,7 +47,7 @@ serve(async (req: Request): Promise<Response> => {
     const hubspotApiKey = setting?.value;
     if (!hubspotApiKey) {
       console.log("HubSpot API key not configured, skipping sync");
-      return new Response(JSON.stringify({ success: false, reason: "not_configured" }), {
+      return new Response(JSON.stringify({ success: false, error: "Integration not available" }), {
         status: 200,
         headers: { "Content-Type": "application/json", ...corsHeaders },
       });
@@ -113,12 +113,13 @@ serve(async (req: Request): Promise<Response> => {
 
         if (!updateResponse.ok) {
           const errBody = await updateResponse.text();
-          throw new Error(`HubSpot update failed [${updateResponse.status}]: ${errBody}`);
+          console.error(`HubSpot update failed [${updateResponse.status}]:`, errBody);
+          throw new Error("Sync failed");
         }
 
         console.log("HubSpot contact updated:", existingId);
         return new Response(
-          JSON.stringify({ success: true, action: "updated", hubspot_id: existingId }),
+          JSON.stringify({ success: true, action: "updated" }),
           { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
         );
       }
@@ -126,21 +127,21 @@ serve(async (req: Request): Promise<Response> => {
 
     if (!hubspotResponse.ok && hubspotResponse.status !== 409) {
       const errBody = await hubspotResponse.text();
-      throw new Error(`HubSpot create failed [${hubspotResponse.status}]: ${errBody}`);
+      console.error(`HubSpot create failed [${hubspotResponse.status}]:`, errBody);
+      throw new Error("Sync failed");
     }
 
     const hubspotData = await hubspotResponse.json();
     console.log("HubSpot contact created:", hubspotData.id);
 
     return new Response(
-      JSON.stringify({ success: true, action: "created", hubspot_id: hubspotData.id }),
+      JSON.stringify({ success: true, action: "created" }),
       { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   } catch (error: unknown) {
     console.error("Error syncing to HubSpot:", error);
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return new Response(
-      JSON.stringify({ success: false, error: errorMessage }),
+      JSON.stringify({ success: false, error: "Sync failed" }),
       { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   }
