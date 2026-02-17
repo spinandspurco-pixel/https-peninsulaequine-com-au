@@ -31,7 +31,7 @@ export function TestimonialSection() {
         </div>
 
         <div
-          className={`grid md:grid-cols-3 gap-6 transition-all duration-700 ${
+          className={`grid-cards transition-all duration-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
