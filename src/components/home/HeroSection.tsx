@@ -47,7 +47,7 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden bg-primary">
+    <section className="relative h-screen flex items-center justify-center overflow-hidden bg-primary pb-24">
       <video
         autoPlay muted loop playsInline preload="auto"
         className="absolute inset-0 w-full h-full object-cover"
@@ -114,7 +114,7 @@ export function HeroSection() {
 
       <button
         onClick={() => document.getElementById("about-teaser")?.scrollIntoView({ behavior: "smooth" })}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-primary-foreground/40 hover:text-primary-foreground/70 transition-colors cursor-pointer"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-primary-foreground/40 hover:text-primary-foreground/70 transition-colors cursor-pointer"
         aria-label="Scroll to content"
       >
         <span className="text-[10px] tracking-[0.3em] uppercase font-sans">Scroll</span>
