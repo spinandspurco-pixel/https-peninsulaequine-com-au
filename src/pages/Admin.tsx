@@ -428,7 +428,7 @@ export default function Admin() {
           </div>
 
           {/* Content Management Quick Links */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
             <Link to="/admin/services">
               <Card className="hover:border-accent/40 transition-colors cursor-pointer group">
                 <CardHeader className="pb-2">
@@ -469,6 +469,17 @@ export default function Admin() {
                   <CardTitle className="text-lg flex items-center gap-2 group-hover:text-accent transition-colors">
                     <CalendarDays className="h-5 w-5" />
                     Bookings Calendar
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+            </Link>
+            <Link to="/documents">
+              <Card className="hover:border-accent/40 transition-colors cursor-pointer group">
+                <CardHeader className="pb-2">
+                  <CardDescription>Compliance</CardDescription>
+                  <CardTitle className="text-lg flex items-center gap-2 group-hover:text-accent transition-colors">
+                    <Download className="h-5 w-5" />
+                    Staff Documents
                   </CardTitle>
                 </CardHeader>
               </Card>
