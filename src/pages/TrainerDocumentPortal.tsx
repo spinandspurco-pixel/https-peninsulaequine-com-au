@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
-import { exportDocumentAsPDF } from "./StaffDocuments";
+import { exportDocumentAsPDF } from "@/lib/documentUtils";
 import { format, startOfWeek, endOfWeek, isWithinInterval } from "date-fns";
 import {
   FileText, DollarSign, ClipboardCheck, Loader2, Plus, Clock,
