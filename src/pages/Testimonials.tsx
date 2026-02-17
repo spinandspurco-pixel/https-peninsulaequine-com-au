@@ -141,7 +141,12 @@ function TestimonialCard({ testimonial, index }: { testimonial: TestimonialItem;
             <p className="font-serif font-semibold text-foreground">{testimonial.name}</p>
             {testimonial.role && <p className="text-sm text-muted-foreground mt-0.5">{testimonial.role}</p>}
             {testimonial.trainer && (
-              <p className="text-xs text-accent mt-0.5">Trainer: {testimonial.trainer}</p>
+              <Link
+                to={`/trainers/${testimonial.trainer.toLowerCase().replace(/\s+/g, "-")}`}
+                className="text-xs text-accent hover:underline mt-0.5 inline-block"
+              >
+                Trainer: {testimonial.trainer}
+              </Link>
             )}
           </div>
         </div>

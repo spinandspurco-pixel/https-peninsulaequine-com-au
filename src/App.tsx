@@ -41,6 +41,7 @@ import StaffDocuments from "./pages/StaffDocuments";
 import AdminDocuments from "./pages/AdminDocuments";
 import StaffDocumentPortal from "./pages/StaffDocumentPortal";
 import TrainerDocumentPortal from "./pages/TrainerDocumentPortal";
+import TrainerProfile from "./pages/TrainerProfile";
 import { useCartSync } from "./hooks/useCartSync";
 
 const queryClient = new QueryClient();
@@ -91,6 +92,7 @@ function AppContent() {
           <Route path="/staff/documents" element={<StaffDocumentPortal />} />
           <Route path="/trainer/documents" element={<TrainerDocumentPortal />} />
           <Route path="/admin/documents" element={<AdminDocuments />} />
+          <Route path="/trainers/:slug" element={<TrainerProfile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
