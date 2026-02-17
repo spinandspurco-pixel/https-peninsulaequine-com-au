@@ -6,6 +6,39 @@ const DEFAULT_CLIPS = [
   { start: 2, end: 16 },
 ];
 const STORAGE_KEY = "pe_hero_video_clips";
+const QUALITY_KEY = "pe_hero_video_quality";
+
+export type VideoQuality = "performance" | "balanced" | "clarity";
+
+export const QUALITY_PROFILES: Record<VideoQuality, {
+  label: string;
+  playbackRate: number;
+  filter: string;
+  scale: number;
+  description: string;
+}> = {
+  performance: {
+    label: "⚡ Performance",
+    playbackRate: 0.75,
+    filter: "contrast(1.02) saturate(1.0)",
+    scale: 1.08,
+    description: "Lighter filters, faster playback",
+  },
+  balanced: {
+    label: "⚖️ Balanced",
+    playbackRate: 0.5,
+    filter: "contrast(1.08) saturate(1.1) brightness(1.02)",
+    scale: 1.15,
+    description: "Default slo-mo with detail boost",
+  },
+  clarity: {
+    label: "🔍 Clarity",
+    playbackRate: 0.35,
+    filter: "contrast(1.12) saturate(1.15) brightness(1.04) sharpen(0)",
+    scale: 1.18,
+    description: "Max detail, deep slo-mo",
+  },
+};
 
 export function saveClips(clips: { start: number; end: number }[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(clips));
@@ -17,6 +50,18 @@ export function loadClips(): { start: number; end: number }[] {
     if (raw) return JSON.parse(raw);
   } catch {}
   return DEFAULT_CLIPS;
+}
+
+export function loadQuality(): VideoQuality {
+  try {
+    const raw = localStorage.getItem(QUALITY_KEY);
+    if (raw && raw in QUALITY_PROFILES) return raw as VideoQuality;
+  } catch {}
+  return "balanced";
+}
+
+export function saveQuality(q: VideoQuality) {
+  localStorage.setItem(QUALITY_KEY, q);
 }
 
 export { DEFAULT_CLIPS };
@@ -126,7 +171,9 @@ export function HeroClipEditor({
   activeIdx,
   videoRefs,
   videoSrcs,
+  quality,
   onChange,
+  onQualityChange,
   onReset,
   onClose,
 }: {
@@ -134,7 +181,9 @@ export function HeroClipEditor({
   activeIdx: number;
   videoRefs: React.RefObject<HTMLVideoElement | null>[];
   videoSrcs: string[];
+  quality: VideoQuality;
   onChange: (clips: { start: number; end: number }[]) => void;
+  onQualityChange: (q: VideoQuality) => void;
   onReset: () => void;
   onClose: () => void;
 }) {
@@ -182,6 +231,34 @@ export function HeroClipEditor({
         >
           Standard
         </button>
+      </div>
+
+      {/* Video Quality toggle */}
+      <div className="mb-3">
+        <span className="text-[10px] text-muted-foreground uppercase tracking-wider block mb-1.5">Video Quality</span>
+        <div className="grid grid-cols-3 gap-1 bg-muted/50 rounded-lg p-1">
+          {(Object.keys(QUALITY_PROFILES) as VideoQuality[]).map((q) => {
+            const profile = QUALITY_PROFILES[q];
+            const active = quality === q;
+            return (
+              <button
+                key={q}
+                onClick={() => onQualityChange(q)}
+                className={`px-1.5 py-2 rounded-md text-[10px] font-medium tracking-wider transition-all ${
+                  active
+                    ? "bg-background text-foreground shadow-sm border border-border"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                title={profile.description}
+              >
+                {profile.label}
+              </button>
+            );
+          })}
+        </div>
+        <p className="text-[10px] text-muted-foreground/70 mt-1 leading-snug">
+          {QUALITY_PROFILES[quality].description}
+        </p>
       </div>
 
       {clips.map((clip, i) => (
