@@ -10,6 +10,8 @@ const corsHeaders = {
 
 const DOC_LABELS: Record<string, string> = {
   swms: "Safe Work Method Statement (SWMS)",
+  work_permit: "Work Permit",
+  risk_assessment: "Risk Assessment",
   payment_slip: "Weekly Payment Slip",
   site_inspection: "Site Inspection Report",
   event_checklist: "Event Safety Checklist",

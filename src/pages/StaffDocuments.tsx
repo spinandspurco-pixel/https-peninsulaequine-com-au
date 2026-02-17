@@ -27,8 +27,65 @@ import {
   ChevronDown,
   ChevronUp,
   Calendar,
+  ShieldCheck,
+  FileWarning,
+  Download,
 } from "lucide-react";
-import { format } from "date-fns";
+import { format, startOfWeek, endOfWeek, isWithinInterval } from "date-fns";
+
+// ── PDF Export Utility ──────────────────────────────
+export function exportDocumentAsPDF(doc: any) {
+  const cfg = DOC_TYPES[doc.document_type as DocType];
+  const title = doc.title || "Document";
+  const formData = doc.form_data || {};
+
+  const formatValue = (key: string, value: any): string => {
+    const label = key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+    if (Array.isArray(value)) {
+      if (value.length === 0) return "";
+      if (typeof value[0] === "object") {
+        return `<tr><td colspan="2" style="padding:8px;border-bottom:1px solid #ddd;"><strong>${label}</strong><br/>${value.map(item =>
+          Object.entries(item).filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`).join(" | ")
+        ).join("<br/>")}</td></tr>`;
+      }
+      return `<tr><td style="padding:8px;border-bottom:1px solid #ddd;font-weight:600;width:35%">${label}</td><td style="padding:8px;border-bottom:1px solid #ddd">${value.join(", ")}</td></tr>`;
+    }
+    if (typeof value === "boolean") {
+      return `<tr><td style="padding:8px;border-bottom:1px solid #ddd;font-weight:600;width:35%">${label}</td><td style="padding:8px;border-bottom:1px solid #ddd">${value ? "Yes" : "No"}</td></tr>`;
+    }
+    if (value && typeof value === "object") {
+      return Object.entries(value).map(([k, v]) => formatValue(k, v)).join("");
+    }
+    if (!value && value !== 0) return "";
+    return `<tr><td style="padding:8px;border-bottom:1px solid #ddd;font-weight:600;width:35%">${label}</td><td style="padding:8px;border-bottom:1px solid #ddd">${String(value)}</td></tr>`;
+  };
+
+  const rows = Object.entries(formData).map(([k, v]) => formatValue(k, v)).filter(Boolean).join("");
+
+  const html = `<!DOCTYPE html><html><head><title>${title}</title><style>
+    body{font-family:'Segoe UI',system-ui,sans-serif;max-width:800px;margin:0 auto;padding:40px 30px;color:#1a1a2e}
+    .header{background:#171A23;color:#F5F1E8;padding:24px;border-radius:8px;margin-bottom:24px}
+    .header h1{margin:0;font-size:22px;color:#E8C067} .header p{margin:6px 0 0;opacity:.7;font-size:13px}
+    table{width:100%;border-collapse:collapse;font-size:14px} .status{display:inline-block;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:600}
+    .footer{margin-top:32px;padding-top:16px;border-top:1px solid #ddd;font-size:11px;color:#888;text-align:center}
+    @media print{body{padding:20px}}
+  </style></head><body>
+    <div class="header"><h1>📋 ${cfg?.label || doc.document_type} — Peninsula Equine</h1>
+    <p>${title} · ${doc.submitted_at ? format(new Date(doc.submitted_at), "d MMMM yyyy, h:mm a") : format(new Date(doc.created_at), "d MMMM yyyy")}</p>
+    <p>Status: <span class="status" style="background:${doc.status === "approved" ? "#22c55e" : doc.status === "rejected" ? "#ef4444" : "#3b82f6"};color:#fff">${doc.status.toUpperCase()}</span></p></div>
+    <table>${rows}</table>
+    ${doc.review_notes ? `<div style="margin-top:20px;padding:12px;background:#fef2f2;border-radius:6px;font-size:13px"><strong>Admin Review Notes:</strong> ${doc.review_notes}</div>` : ""}
+    <div class="footer">Peninsula Equine · 59 Tubbarubba Rd, Merricks North VIC 3926 · peninsulaequine.com.au<br/>Generated ${format(new Date(), "d MMM yyyy, h:mm a")}</div>
+  </body></html>`;
+
+  const blob = new Blob([html], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  const printWindow = window.open(url, "_blank");
+  if (printWindow) {
+    printWindow.onload = () => { setTimeout(() => { printWindow.print(); }, 300); };
+  }
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+}
 
 // ── Document Type Configs ──────────────────────────────
 const DOC_TYPES = {
@@ -37,6 +94,18 @@ const DOC_TYPES = {
     description: "Safe Work Method Statement",
     icon: HardHat,
     color: "text-orange-500",
+  },
+  work_permit: {
+    label: "Work Permit",
+    description: "Hot works, confined space & excavation permits",
+    icon: ShieldCheck,
+    color: "text-amber-600",
+  },
+  risk_assessment: {
+    label: "Risk Assessment",
+    description: "Job-specific risk assessment & controls",
+    icon: FileWarning,
+    color: "text-red-500",
   },
   payment_slip: {
     label: "Payment Slip",
@@ -533,7 +602,287 @@ function EventChecklistForm({ onSubmit, loading }: { onSubmit: (data: any) => vo
   );
 }
 
-// ── Submitted Document View ──────────────────────────
+// ── Work Permit Form ──────────────────────────────
+function WorkPermitForm({ onSubmit, loading }: { onSubmit: (data: any) => void; loading: boolean }) {
+  const [form, setForm] = useState({
+    permit_type: "hot_work",
+    project_name: "",
+    site_address: "",
+    date: format(new Date(), "yyyy-MM-dd"),
+    valid_until: "",
+    requested_by: "",
+    approved_by: "",
+    work_description: "",
+    precautions: [
+      { item: "Area cleared of combustibles / hazards", checked: false },
+      { item: "Fire extinguisher within 10m", checked: false },
+      { item: "Gas testing completed (if confined space)", checked: false },
+      { item: "Ventilation adequate", checked: false },
+      { item: "All workers briefed on emergency procedures", checked: false },
+      { item: "Barricades / signage in place", checked: false },
+      { item: "Rescue equipment available (if confined space)", checked: false },
+      { item: "Services (gas, water, electrical) identified and isolated", checked: false },
+    ],
+    additional_conditions: "",
+    sign_off_name: "",
+    sign_off_agreed: false,
+  });
+
+  const toggleItem = (idx: number) => {
+    setForm(prev => {
+      const precautions = [...prev.precautions];
+      precautions[idx] = { ...precautions[idx], checked: !precautions[idx].checked };
+      return { ...prev, precautions };
+    });
+  };
+
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); onSubmit(form); }} className="space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label>Permit Type *</Label>
+          <Select value={form.permit_type} onValueChange={v => setForm(p => ({ ...p, permit_type: v }))}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="hot_work">🔥 Hot Work (Welding/Grinding)</SelectItem>
+              <SelectItem value="confined_space">🕳️ Confined Space Entry</SelectItem>
+              <SelectItem value="excavation">🚧 Excavation</SelectItem>
+              <SelectItem value="electrical">⚡ Electrical Isolation</SelectItem>
+              <SelectItem value="crane_lift">🏗️ Crane / Heavy Lift</SelectItem>
+              <SelectItem value="general">📋 General Work Permit</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-2">
+          <Label>Project / Job Name *</Label>
+          <Input value={form.project_name} onChange={e => setForm(p => ({ ...p, project_name: e.target.value }))} required placeholder="e.g. Arena Roof Welding — Balnarring" />
+        </div>
+        <div className="space-y-2">
+          <Label>Site Address *</Label>
+          <Input value={form.site_address} onChange={e => setForm(p => ({ ...p, site_address: e.target.value }))} required />
+        </div>
+        <div className="space-y-2">
+          <Label>Date *</Label>
+          <Input type="date" value={form.date} onChange={e => setForm(p => ({ ...p, date: e.target.value }))} required />
+        </div>
+        <div className="space-y-2">
+          <Label>Valid Until</Label>
+          <Input type="date" value={form.valid_until} onChange={e => setForm(p => ({ ...p, valid_until: e.target.value }))} />
+        </div>
+        <div className="space-y-2">
+          <Label>Requested By *</Label>
+          <Input value={form.requested_by} onChange={e => setForm(p => ({ ...p, requested_by: e.target.value }))} required placeholder="Your name" />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label>Work Description *</Label>
+        <Textarea value={form.work_description} onChange={e => setForm(p => ({ ...p, work_description: e.target.value }))} required placeholder="Describe the specific work to be carried out under this permit..." rows={3} />
+      </div>
+
+      <div className="space-y-3">
+        <Label className="text-base font-semibold">Safety Precautions Checklist</Label>
+        <div className="space-y-2">
+          {form.precautions.map((item, idx) => (
+            <label key={idx} className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${item.checked ? "bg-accent/10 border-accent/30" : "hover:bg-muted/50"}`}>
+              <Checkbox checked={item.checked} onCheckedChange={() => toggleItem(idx)} />
+              <span className="text-sm">{item.item}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label>Additional Conditions</Label>
+        <Textarea value={form.additional_conditions} onChange={e => setForm(p => ({ ...p, additional_conditions: e.target.value }))} placeholder="Any special conditions or restrictions..." rows={2} />
+      </div>
+
+      <div className="p-4 border rounded-lg bg-muted/30 space-y-3">
+        <Label className="text-base font-semibold">Sign-Off Declaration</Label>
+        <div className="space-y-2">
+          <Label>Full Name *</Label>
+          <Input value={form.sign_off_name} onChange={e => setForm(p => ({ ...p, sign_off_name: e.target.value }))} required />
+        </div>
+        <label className="flex items-start gap-3 cursor-pointer">
+          <Checkbox checked={form.sign_off_agreed} onCheckedChange={(c) => setForm(p => ({ ...p, sign_off_agreed: !!c }))} className="mt-0.5" />
+          <span className="text-sm">I confirm that all safety precautions have been implemented and the work area is safe to proceed.</span>
+        </label>
+      </div>
+
+      <Button type="submit" disabled={loading || !form.sign_off_agreed} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+        {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
+        Submit Work Permit
+      </Button>
+    </form>
+  );
+}
+
+// ── Risk Assessment Form ──────────────────────────────
+function RiskAssessmentForm({ onSubmit, loading }: { onSubmit: (data: any) => void; loading: boolean }) {
+  const [form, setForm] = useState({
+    project_name: "",
+    site_address: "",
+    date: format(new Date(), "yyyy-MM-dd"),
+    assessor_name: "",
+    task_description: "",
+    risks: [
+      { hazard: "", consequence: "", likelihood: "possible", severity: "moderate", existing_controls: "", additional_controls: "" },
+    ],
+    overall_risk_rating: "medium",
+    review_date: "",
+    sign_off_name: "",
+    sign_off_agreed: false,
+  });
+
+  const addRisk = () => {
+    setForm(prev => ({
+      ...prev,
+      risks: [...prev.risks, { hazard: "", consequence: "", likelihood: "possible", severity: "moderate", existing_controls: "", additional_controls: "" }],
+    }));
+  };
+
+  const updateRisk = (idx: number, field: string, value: string) => {
+    setForm(prev => {
+      const risks = [...prev.risks];
+      risks[idx] = { ...risks[idx], [field]: value };
+      return { ...prev, risks };
+    });
+  };
+
+  const removeRisk = (idx: number) => {
+    if (form.risks.length <= 1) return;
+    setForm(prev => ({ ...prev, risks: prev.risks.filter((_, i) => i !== idx) }));
+  };
+
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); onSubmit(form); }} className="space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label>Project / Task Name *</Label>
+          <Input value={form.project_name} onChange={e => setForm(p => ({ ...p, project_name: e.target.value }))} required placeholder="e.g. Post Hole Drilling — Red Hill" />
+        </div>
+        <div className="space-y-2">
+          <Label>Site Address *</Label>
+          <Input value={form.site_address} onChange={e => setForm(p => ({ ...p, site_address: e.target.value }))} required />
+        </div>
+        <div className="space-y-2">
+          <Label>Assessment Date *</Label>
+          <Input type="date" value={form.date} onChange={e => setForm(p => ({ ...p, date: e.target.value }))} required />
+        </div>
+        <div className="space-y-2">
+          <Label>Assessor Name *</Label>
+          <Input value={form.assessor_name} onChange={e => setForm(p => ({ ...p, assessor_name: e.target.value }))} required />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label>Task / Activity Description *</Label>
+        <Textarea value={form.task_description} onChange={e => setForm(p => ({ ...p, task_description: e.target.value }))} required placeholder="Describe the task or activity being assessed..." rows={3} />
+      </div>
+
+      {/* Risk Register */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <Label className="text-base font-semibold">Risk Register</Label>
+          <Button type="button" variant="outline" size="sm" onClick={addRisk}>
+            <Plus className="mr-1 h-3 w-3" /> Add Risk
+          </Button>
+        </div>
+        {form.risks.map((risk, idx) => (
+          <Card key={idx} className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-semibold text-muted-foreground">Risk #{idx + 1}</span>
+              {form.risks.length > 1 && (
+                <Button type="button" variant="ghost" size="sm" onClick={() => removeRisk(idx)} className="text-destructive text-xs h-6">Remove</Button>
+              )}
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label className="text-xs">Hazard *</Label>
+                <Input value={risk.hazard} onChange={e => updateRisk(idx, "hazard", e.target.value)} placeholder="e.g. Excavation collapse" className="text-sm" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Consequence</Label>
+                <Input value={risk.consequence} onChange={e => updateRisk(idx, "consequence", e.target.value)} placeholder="e.g. Burial, serious injury" className="text-sm" />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Likelihood</Label>
+                <Select value={risk.likelihood} onValueChange={v => updateRisk(idx, "likelihood", v)}>
+                  <SelectTrigger className="text-sm h-9"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="rare">Rare</SelectItem>
+                    <SelectItem value="unlikely">Unlikely</SelectItem>
+                    <SelectItem value="possible">Possible</SelectItem>
+                    <SelectItem value="likely">Likely</SelectItem>
+                    <SelectItem value="almost_certain">Almost Certain</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Severity</Label>
+                <Select value={risk.severity} onValueChange={v => updateRisk(idx, "severity", v)}>
+                  <SelectTrigger className="text-sm h-9"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="insignificant">Insignificant</SelectItem>
+                    <SelectItem value="minor">Minor</SelectItem>
+                    <SelectItem value="moderate">Moderate</SelectItem>
+                    <SelectItem value="major">Major</SelectItem>
+                    <SelectItem value="catastrophic">Catastrophic</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5 col-span-full">
+                <Label className="text-xs">Existing Controls</Label>
+                <Input value={risk.existing_controls} onChange={e => updateRisk(idx, "existing_controls", e.target.value)} placeholder="Current measures in place" className="text-sm" />
+              </div>
+              <div className="space-y-1.5 col-span-full">
+                <Label className="text-xs">Additional Controls Required</Label>
+                <Input value={risk.additional_controls} onChange={e => updateRisk(idx, "additional_controls", e.target.value)} placeholder="Further actions needed" className="text-sm" />
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label>Overall Risk Rating</Label>
+          <Select value={form.overall_risk_rating} onValueChange={v => setForm(p => ({ ...p, overall_risk_rating: v }))}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="low">Low — Acceptable</SelectItem>
+              <SelectItem value="medium">Medium — Monitor</SelectItem>
+              <SelectItem value="high">High — Action Required</SelectItem>
+              <SelectItem value="extreme">Extreme — Stop Work</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-2">
+          <Label>Review Date</Label>
+          <Input type="date" value={form.review_date} onChange={e => setForm(p => ({ ...p, review_date: e.target.value }))} />
+        </div>
+      </div>
+
+      <div className="p-4 border rounded-lg bg-muted/30 space-y-3">
+        <div className="space-y-2">
+          <Label>Assessor Sign-Off *</Label>
+          <Input value={form.sign_off_name} onChange={e => setForm(p => ({ ...p, sign_off_name: e.target.value }))} required />
+        </div>
+        <label className="flex items-start gap-3 cursor-pointer">
+          <Checkbox checked={form.sign_off_agreed} onCheckedChange={(c) => setForm(p => ({ ...p, sign_off_agreed: !!c }))} className="mt-0.5" />
+          <span className="text-sm">I confirm this risk assessment accurately reflects the hazards and controls for this task, and all workers will be briefed before work commences.</span>
+        </label>
+      </div>
+
+      <Button type="submit" disabled={loading || !form.sign_off_agreed} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+        {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
+        Submit Risk Assessment
+      </Button>
+    </form>
+  );
+}
+
+
 function DocCard({ doc }: { doc: any }) {
   const [expanded, setExpanded] = useState(false);
   const config = DOC_TYPES[doc.document_type as DocType];
@@ -574,6 +923,14 @@ function DocCard({ doc }: { doc: any }) {
               <strong>Admin Notes:</strong> {doc.review_notes}
             </div>
           )}
+          <Button
+            variant="outline"
+            size="sm"
+            className="mt-3"
+            onClick={(e) => { e.stopPropagation(); exportDocumentAsPDF(doc); }}
+          >
+            <Download className="mr-1.5 h-3.5 w-3.5" /> Export PDF
+          </Button>
         </div>
       )}
     </div>
@@ -664,6 +1021,13 @@ export default function StaffDocuments() {
 
   if (!user) return null;
 
+  // Weekly submission tracker
+  const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+  const weekEnd_ = endOfWeek(new Date(), { weekStartsOn: 1 });
+  const thisWeekDocs = documents.filter(d =>
+    d.submitted_at && isWithinInterval(new Date(d.submitted_at), { start: weekStart, end: weekEnd_ })
+  );
+
   return (
     <Layout>
       <div className="section-padding">
@@ -673,7 +1037,7 @@ export default function StaffDocuments() {
             <div>
               <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Staff Documents</h1>
               <p className="text-muted-foreground text-sm mt-1">
-                SWMS, payment slips, site inspections & event checklists
+                SWMS, work permits, risk assessments, timesheets & safety records
               </p>
             </div>
             <Button onClick={() => setShowForm(!showForm)} variant={showForm ? "outline" : "default"} className={showForm ? "" : "bg-accent hover:bg-accent/90 text-accent-foreground"}>
@@ -681,15 +1045,46 @@ export default function StaffDocuments() {
             </Button>
           </div>
 
+          {/* Weekly Submission Tracker */}
+          <Card className="mb-6 border-accent/20">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Calendar className="h-5 w-5 text-accent" />
+                  <div>
+                    <p className="font-semibold text-sm">This Week's Submissions</p>
+                    <p className="text-xs text-muted-foreground">
+                      {format(weekStart, "d MMM")} – {format(weekEnd_, "d MMM yyyy")}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 text-sm">
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-accent">{thisWeekDocs.length}</p>
+                    <p className="text-xs text-muted-foreground">Submitted</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-green-500">{thisWeekDocs.filter(d => d.status === "approved").length}</p>
+                    <p className="text-xs text-muted-foreground">Approved</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-blue-500">{thisWeekDocs.filter(d => d.status === "submitted").length}</p>
+                    <p className="text-xs text-muted-foreground">Pending</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={v => { setActiveTab(v as DocType); setShowForm(false); }}>
-            <TabsList className="grid grid-cols-2 sm:grid-cols-4 mb-6">
+            <TabsList className="grid grid-cols-3 sm:grid-cols-6 mb-6">
               {(Object.entries(DOC_TYPES) as [DocType, typeof DOC_TYPES[DocType]][]).map(([key, cfg]) => {
-                const Icon = cfg.icon;
+                const TabIcon = cfg.icon;
                 const count = documents.filter(d => d.document_type === key).length;
                 return (
                   <TabsTrigger key={key} value={key} className="flex items-center gap-1.5 text-xs sm:text-sm">
-                    <Icon className={`h-4 w-4 ${cfg.color}`} />
+                    <TabIcon className={`h-4 w-4 ${cfg.color}`} />
                     <span className="hidden sm:inline">{cfg.label}</span>
                     <span className="sm:hidden">{cfg.label.split(" ")[0]}</span>
                     {count > 0 && <Badge variant="secondary" className="text-xs ml-1">{count}</Badge>}
@@ -703,13 +1098,15 @@ export default function StaffDocuments() {
               <Card className="mb-6">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    {(() => { const Icon = DOC_TYPES[activeTab].icon; return <Icon className={`h-5 w-5 ${DOC_TYPES[activeTab].color}`} />; })()}
+                    {(() => { const FormIcon = DOC_TYPES[activeTab].icon; return <FormIcon className={`h-5 w-5 ${DOC_TYPES[activeTab].color}`} />; })()}
                     New {DOC_TYPES[activeTab].label}
                   </CardTitle>
                   <CardDescription>{DOC_TYPES[activeTab].description}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {activeTab === "swms" && <SWMSForm onSubmit={d => handleSubmit("swms", d)} loading={submitting} />}
+                  {activeTab === "work_permit" && <WorkPermitForm onSubmit={d => handleSubmit("work_permit", d)} loading={submitting} />}
+                  {activeTab === "risk_assessment" && <RiskAssessmentForm onSubmit={d => handleSubmit("risk_assessment", d)} loading={submitting} />}
                   {activeTab === "payment_slip" && <PaymentSlipForm onSubmit={d => handleSubmit("payment_slip", d)} loading={submitting} />}
                   {activeTab === "site_inspection" && <SiteInspectionForm onSubmit={d => handleSubmit("site_inspection", d)} loading={submitting} />}
                   {activeTab === "event_checklist" && <EventChecklistForm onSubmit={d => handleSubmit("event_checklist", d)} loading={submitting} />}
