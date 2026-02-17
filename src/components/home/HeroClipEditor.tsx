@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { RotateCcw, Play, Pause, Eye, EyeOff } from "lucide-react";
+import { RotateCcw, Play, Pause, Eye, EyeOff, Activity, Gauge, Clock, CheckCircle, AlertTriangle, XCircle } from "lucide-react";
+import type { HeroMediaMetrics } from "@/hooks/useHeroMediaLoader";
 
 const DEFAULT_CLIPS = [
   { start: 3, end: 18 },
@@ -165,6 +166,139 @@ function MiniPreview({
   );
 }
 
+// ── Performance dashboard ───────────────────────────────────
+function PerfDashboard({
+  metrics,
+  quality,
+  onQualityChange,
+}: {
+  metrics: HeroMediaMetrics;
+  quality: VideoQuality;
+  onQualityChange: (q: VideoQuality) => void;
+}) {
+  const [history, setHistory] = useState<{ time: number; quality: VideoQuality; status: string }[]>([]);
+
+  // Record each completed load
+  useEffect(() => {
+    if (metrics.stage === "ready" && metrics.loadTimeMs !== null) {
+      setHistory((prev) => [
+        { time: metrics.loadTimeMs!, quality, status: metrics.budgetStatus },
+        ...prev.slice(0, 9),
+      ]);
+    }
+  }, [metrics.stage, metrics.loadTimeMs]);
+
+  const statusIcon = {
+    good: <CheckCircle className="h-3.5 w-3.5 text-green-400" />,
+    fair: <AlertTriangle className="h-3.5 w-3.5 text-yellow-400" />,
+    over: <XCircle className="h-3.5 w-3.5 text-red-400" />,
+  };
+
+  const statusColors = {
+    good: "text-green-400",
+    fair: "text-yellow-400",
+    over: "text-red-400",
+  };
+
+  const statusBg = {
+    good: "bg-green-500/10 border-green-500/20",
+    fair: "bg-yellow-500/10 border-yellow-500/20",
+    over: "bg-red-500/10 border-red-500/20",
+  };
+
+  return (
+    <div className="mb-3">
+      <div className="flex items-center gap-1.5 mb-2">
+        <Activity className="h-3.5 w-3.5 text-accent" />
+        <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Performance Budget</span>
+      </div>
+
+      {/* Main metric card */}
+      <div className={`rounded-lg border p-3 mb-2 ${statusBg[metrics.budgetStatus]}`}>
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-1.5">
+            {statusIcon[metrics.budgetStatus]}
+            <span className={`text-xs font-semibold ${statusColors[metrics.budgetStatus]}`}>
+              {metrics.budgetStatus === "good" ? "Under budget" : metrics.budgetStatus === "fair" ? "Near budget" : "Over budget"}
+            </span>
+          </div>
+          <span className="text-xs font-mono text-foreground">
+            {metrics.loadTimeMs !== null ? `${(metrics.loadTimeMs / 1000).toFixed(2)}s` : "—"}
+          </span>
+        </div>
+
+        {/* Budget bar */}
+        <div className="relative h-2 bg-primary-foreground/10 rounded-full overflow-hidden">
+          <div
+            className={`h-full rounded-full transition-all duration-700 ${
+              metrics.budgetStatus === "good" ? "bg-green-500" : metrics.budgetStatus === "fair" ? "bg-yellow-500" : "bg-red-500"
+            }`}
+            style={{ width: `${Math.min(100, ((metrics.loadTimeMs ?? 0) / 4000) * 100)}%` }}
+          />
+          {/* 2s marker */}
+          <div className="absolute top-0 bottom-0 w-px bg-primary-foreground/30" style={{ left: "50%" }} />
+        </div>
+        <div className="flex justify-between mt-1">
+          <span className="text-[9px] text-muted-foreground/60">0s</span>
+          <span className="text-[9px] text-muted-foreground/60">2s target</span>
+          <span className="text-[9px] text-muted-foreground/60">4s+</span>
+        </div>
+      </div>
+
+      {/* Video readiness */}
+      <div className="grid grid-cols-2 gap-2 mb-2">
+        {metrics.videosReady.map((ready, i) => (
+          <div key={i} className="flex items-center gap-1.5 px-2 py-1.5 rounded-md bg-muted/30 border border-border/50">
+            <div className={`w-2 h-2 rounded-full ${ready ? "bg-green-400" : "bg-muted-foreground/30 animate-pulse"}`} />
+            <span className="text-[10px] text-muted-foreground">Video {i + 1}</span>
+            <span className={`text-[10px] ml-auto font-medium ${ready ? "text-green-400" : "text-muted-foreground/50"}`}>
+              {ready ? "Ready" : "Loading"}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* Quality recommendation */}
+      {metrics.budgetStatus === "over" && quality !== "performance" && (
+        <button
+          onClick={() => onQualityChange("performance")}
+          className="w-full px-2 py-1.5 rounded-md border border-yellow-500/30 bg-yellow-500/10 text-yellow-400 text-[10px] font-medium tracking-wider hover:bg-yellow-500/20 transition-colors flex items-center justify-center gap-1.5"
+        >
+          <Gauge className="h-3 w-3" />
+          Switch to Performance mode
+        </button>
+      )}
+      {metrics.budgetStatus === "good" && quality === "performance" && (
+        <button
+          onClick={() => onQualityChange("clarity")}
+          className="w-full px-2 py-1.5 rounded-md border border-green-500/30 bg-green-500/10 text-green-400 text-[10px] font-medium tracking-wider hover:bg-green-500/20 transition-colors flex items-center justify-center gap-1.5"
+        >
+          <Gauge className="h-3 w-3" />
+          Budget allows Clarity mode
+        </button>
+      )}
+
+      {/* Load history */}
+      {history.length > 0 && (
+        <div className="mt-2">
+          <span className="text-[9px] text-muted-foreground/60 uppercase tracking-wider block mb-1">Recent loads</span>
+          <div className="space-y-0.5 max-h-20 overflow-y-auto">
+            {history.map((h, i) => (
+              <div key={i} className="flex items-center gap-1.5 text-[9px]">
+                <div className={`w-1.5 h-1.5 rounded-full ${
+                  h.status === "good" ? "bg-green-400" : h.status === "fair" ? "bg-yellow-400" : "bg-red-400"
+                }`} />
+                <span className="font-mono text-muted-foreground">{(h.time / 1000).toFixed(2)}s</span>
+                <span className="text-muted-foreground/50">{QUALITY_PROFILES[h.quality].label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Main editor panel ───────────────────────────────────────
 export function HeroClipEditor({
   clips,
@@ -172,6 +306,7 @@ export function HeroClipEditor({
   videoRefs,
   videoSrcs,
   quality,
+  metrics,
   onChange,
   onQualityChange,
   onReset,
@@ -182,6 +317,7 @@ export function HeroClipEditor({
   videoRefs: React.RefObject<HTMLVideoElement | null>[];
   videoSrcs: string[];
   quality: VideoQuality;
+  metrics: HeroMediaMetrics;
   onChange: (clips: { start: number; end: number }[]) => void;
   onQualityChange: (q: VideoQuality) => void;
   onReset: () => void;
@@ -232,6 +368,9 @@ export function HeroClipEditor({
           Standard
         </button>
       </div>
+
+      {/* Performance dashboard */}
+      <PerfDashboard metrics={metrics} quality={quality} onQualityChange={onQualityChange} />
 
       {/* Video Quality toggle */}
       <div className="mb-3">
