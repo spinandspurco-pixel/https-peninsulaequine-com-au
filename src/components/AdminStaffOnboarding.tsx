@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
@@ -92,6 +93,8 @@ export function AdminStaffOnboarding() {
   const [showInviteWizard, setShowInviteWizard] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<StaffMember | null>(null);
   const [isDeletingRole, setIsDeletingRole] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [roleFilter, setRoleFilter] = useState<string>("all");
 
   // Invite wizard state
   const [wizardStep, setWizardStep] = useState(1);
@@ -249,11 +252,39 @@ export function AdminStaffOnboarding() {
       {/* Staff Directory Table */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Users className="h-5 w-5 text-accent" />
-            Staff Directory
-          </CardTitle>
-          <CardDescription>All team members and their assigned roles</CardDescription>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Users className="h-5 w-5 text-accent" />
+                Staff Directory
+              </CardTitle>
+              <CardDescription>All team members and their assigned roles</CardDescription>
+            </div>
+            <div className="flex gap-2 w-full sm:w-auto">
+              <div className="relative flex-1 sm:w-48">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                <Input
+                  placeholder="Search staff…"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9 h-9 text-sm"
+                />
+              </div>
+              <Select value={roleFilter} onValueChange={setRoleFilter}>
+                <SelectTrigger className="h-9 w-[130px]">
+                  <SelectValue placeholder="All Roles" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Roles</SelectItem>
+                  {Object.entries(ROLE_LABELS)
+                    .filter(([key]) => key !== "user")
+                    .map(([key, info]) => (
+                      <SelectItem key={key} value={key}>{info.label}</SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </CardHeader>
         <CardContent className="p-0">
           <Table>
@@ -261,6 +292,7 @@ export function AdminStaffOnboarding() {
               <TableRow>
                 <TableHead>User ID</TableHead>
                 <TableHead>Role</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead>Permissions</TableHead>
                 <TableHead>Added</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -269,20 +301,37 @@ export function AdminStaffOnboarding() {
             <TableBody>
               {loadingStaff ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8">
+                  <TableCell colSpan={6} className="text-center py-8">
                     <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
                   </TableCell>
                 </TableRow>
-              ) : staff.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                    <div className="text-4xl mb-2">🤠</div>
-                    No staff members yet. Invite your first team member!
-                  </TableCell>
-                </TableRow>
-              ) : (
-                staff.map((member) => {
+              ) : (() => {
+                const filtered = staff.filter((m) => {
+                  const matchesRole = roleFilter === "all" || m.role === roleFilter;
+                  const matchesSearch = !searchQuery || 
+                    m.user_id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    m.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    (ROLE_LABELS[m.role]?.label || "").toLowerCase().includes(searchQuery.toLowerCase());
+                  return matchesRole && matchesSearch;
+                });
+                if (filtered.length === 0) return (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                      <div className="text-4xl mb-2">🤠</div>
+                      {staff.length === 0 ? "No staff members yet. Invite your first team member!" : "No staff match your search."}
+                    </TableCell>
+                  </TableRow>
+                );
+                return filtered.map((member) => {
                   const info = ROLE_LABELS[member.role] || ROLE_LABELS.user;
+                  const daysSinceAdded = Math.floor((Date.now() - new Date(member.created_at).getTime()) / (1000 * 60 * 60 * 24));
+                  const onboardingStatus = daysSinceAdded < 7 ? "new" : daysSinceAdded < 30 ? "onboarding" : "active";
+                  const statusConfig = {
+                    new: { label: "New", className: "bg-accent/15 text-accent border-accent/30" },
+                    onboarding: { label: "Onboarding", className: "bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30" },
+                    active: { label: "Active", className: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30" },
+                  };
+                  const status = statusConfig[onboardingStatus];
                   return (
                     <TableRow key={`${member.user_id}-${member.role}`} className="group/row">
                       <TableCell className="font-mono text-xs max-w-[200px] truncate">
@@ -290,6 +339,9 @@ export function AdminStaffOnboarding() {
                       </TableCell>
                       <TableCell>
                         <Badge className={info.color}>{info.label}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className={status.className}>{status.label}</Badge>
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground max-w-[250px]">
                         {info.desc}
@@ -309,8 +361,8 @@ export function AdminStaffOnboarding() {
                       </TableCell>
                     </TableRow>
                   );
-                })
-              )}
+                });
+              })()}
             </TableBody>
           </Table>
         </CardContent>
