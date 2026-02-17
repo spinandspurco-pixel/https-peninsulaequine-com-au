@@ -20,114 +20,16 @@ import {
   ClipboardCheck,
   Send,
   Loader2,
-  Plus,
-  Clock,
-  CheckCircle2,
   AlertCircle,
-  ChevronDown,
-  ChevronUp,
-  Calendar,
+  Plus,
   ShieldCheck,
   FileWarning,
-  Download,
 } from "lucide-react";
-import { format, startOfWeek, endOfWeek, isWithinInterval, nextWednesday, isWednesday, differenceInHours, isPast, setHours } from "date-fns";
+import { format } from "date-fns";
 
-// ── PDF Export Utility ──────────────────────────────
-export function exportDocumentAsPDF(doc: any) {
-  const cfg = DOC_TYPES[doc.document_type as DocType];
-  const title = doc.title || "Document";
-  const formData = doc.form_data || {};
-
-  const formatValue = (key: string, value: any): string => {
-    const label = key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
-    if (Array.isArray(value)) {
-      if (value.length === 0) return "";
-      if (typeof value[0] === "object") {
-        return `<tr><td colspan="2" style="padding:8px;border-bottom:1px solid #ddd;"><strong>${label}</strong><br/>${value.map(item =>
-          Object.entries(item).filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`).join(" | ")
-        ).join("<br/>")}</td></tr>`;
-      }
-      return `<tr><td style="padding:8px;border-bottom:1px solid #ddd;font-weight:600;width:35%">${label}</td><td style="padding:8px;border-bottom:1px solid #ddd">${value.join(", ")}</td></tr>`;
-    }
-    if (typeof value === "boolean") {
-      return `<tr><td style="padding:8px;border-bottom:1px solid #ddd;font-weight:600;width:35%">${label}</td><td style="padding:8px;border-bottom:1px solid #ddd">${value ? "Yes" : "No"}</td></tr>`;
-    }
-    if (value && typeof value === "object") {
-      return Object.entries(value).map(([k, v]) => formatValue(k, v)).join("");
-    }
-    if (!value && value !== 0) return "";
-    return `<tr><td style="padding:8px;border-bottom:1px solid #ddd;font-weight:600;width:35%">${label}</td><td style="padding:8px;border-bottom:1px solid #ddd">${String(value)}</td></tr>`;
-  };
-
-  const rows = Object.entries(formData).map(([k, v]) => formatValue(k, v)).filter(Boolean).join("");
-
-  const html = `<!DOCTYPE html><html><head><title>${title}</title><style>
-    body{font-family:'Segoe UI',system-ui,sans-serif;max-width:800px;margin:0 auto;padding:40px 30px;color:#1a1a2e}
-    .header{background:#171A23;color:#F5F1E8;padding:24px;border-radius:8px;margin-bottom:24px}
-    .header h1{margin:0;font-size:22px;color:#E8C067} .header p{margin:6px 0 0;opacity:.7;font-size:13px}
-    table{width:100%;border-collapse:collapse;font-size:14px} .status{display:inline-block;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:600}
-    .footer{margin-top:32px;padding-top:16px;border-top:1px solid #ddd;font-size:11px;color:#888;text-align:center}
-    @media print{body{padding:20px}}
-  </style></head><body>
-    <div class="header"><h1>📋 ${cfg?.label || doc.document_type} — Peninsula Equine</h1>
-    <p>${title} · ${doc.submitted_at ? format(new Date(doc.submitted_at), "d MMMM yyyy, h:mm a") : format(new Date(doc.created_at), "d MMMM yyyy")}</p>
-    <p>Status: <span class="status" style="background:${doc.status === "approved" ? "#22c55e" : doc.status === "rejected" ? "#ef4444" : "#3b82f6"};color:#fff">${doc.status.toUpperCase()}</span></p></div>
-    <table>${rows}</table>
-    ${doc.review_notes ? `<div style="margin-top:20px;padding:12px;background:#fef2f2;border-radius:6px;font-size:13px"><strong>Admin Review Notes:</strong> ${doc.review_notes}</div>` : ""}
-    <div class="footer">Peninsula Equine · 59 Tubbarubba Rd, Merricks North VIC 3926 · peninsulaequine.com.au<br/>Generated ${format(new Date(), "d MMM yyyy, h:mm a")}</div>
-  </body></html>`;
-
-  const blob = new Blob([html], { type: "text/html" });
-  const url = URL.createObjectURL(blob);
-  const printWindow = window.open(url, "_blank");
-  if (printWindow) {
-    printWindow.onload = () => { setTimeout(() => { printWindow.print(); }, 300); };
-  }
-  setTimeout(() => URL.revokeObjectURL(url), 10000);
-}
-
-// ── Document Type Configs ──────────────────────────────
-const DOC_TYPES = {
-  swms: {
-    label: "SWMS",
-    description: "Safe Work Method Statement",
-    icon: HardHat,
-    color: "text-orange-500",
-  },
-  work_permit: {
-    label: "Work Permit",
-    description: "Hot works, confined space & excavation permits",
-    icon: ShieldCheck,
-    color: "text-amber-600",
-  },
-  risk_assessment: {
-    label: "Risk Assessment",
-    description: "Job-specific risk assessment & controls",
-    icon: FileWarning,
-    color: "text-red-500",
-  },
-  payment_slip: {
-    label: "Payment Slip",
-    description: "Weekly timesheet — due every Wednesday",
-    icon: DollarSign,
-    color: "text-green-500",
-  },
-  site_inspection: {
-    label: "Site Inspection",
-    description: "Construction site condition report",
-    icon: ClipboardCheck,
-    color: "text-blue-500",
-  },
-  event_checklist: {
-    label: "Event Safety",
-    description: "Pre-event safety sign-off",
-    icon: FileText,
-    color: "text-purple-500",
-  },
-} as const;
-
-type DocType = keyof typeof DOC_TYPES;
+// Re-export from shared utility for backward compatibility
+export { exportDocumentAsPDF, DOC_TYPES } from "@/lib/documentUtils";
+import { exportDocumentAsPDF, DOC_TYPES, type DocType } from "@/lib/documentUtils";
 
 // ── SWMS Hazard Presets ──────────────────────────────
 const SWMS_HAZARDS = [
@@ -883,69 +785,14 @@ function RiskAssessmentForm({ onSubmit, loading }: { onSubmit: (data: any) => vo
 }
 
 
-function DocCard({ doc }: { doc: any }) {
-  const [expanded, setExpanded] = useState(false);
-  const config = DOC_TYPES[doc.document_type as DocType];
-  const Icon = config?.icon || FileText;
-
-  const statusMap: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
-    draft: { label: "Draft", variant: "outline" },
-    submitted: { label: "Submitted", variant: "default" },
-    approved: { label: "Approved", variant: "secondary" },
-    rejected: { label: "Needs Review", variant: "destructive" },
-  };
-  const st = statusMap[doc.status] || statusMap.draft;
-
-  return (
-    <div className="border rounded-lg p-4 hover:bg-muted/30 transition-colors">
-      <div className="flex items-center justify-between cursor-pointer" onClick={() => setExpanded(!expanded)}>
-        <div className="flex items-center gap-3">
-          <Icon className={`h-5 w-5 ${config?.color || "text-muted-foreground"}`} />
-          <div>
-            <p className="font-medium text-sm">{doc.title}</p>
-            <p className="text-xs text-muted-foreground">
-              {format(new Date(doc.created_at), "d MMM yyyy, h:mm a")}
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <Badge variant={st.variant}>{st.label}</Badge>
-          {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-        </div>
-      </div>
-      {expanded && (
-        <div className="mt-4 pt-4 border-t">
-          <pre className="text-xs bg-muted/50 rounded p-3 overflow-auto max-h-60 whitespace-pre-wrap">
-            {JSON.stringify(doc.form_data, null, 2)}
-          </pre>
-          {doc.review_notes && (
-            <div className="mt-2 p-2 rounded bg-destructive/10 text-sm">
-              <strong>Admin Notes:</strong> {doc.review_notes}
-            </div>
-          )}
-          <Button
-            variant="outline"
-            size="sm"
-            className="mt-3"
-            onClick={(e) => { e.stopPropagation(); exportDocumentAsPDF(doc); }}
-          >
-            <Download className="mr-1.5 h-3.5 w-3.5" /> Export PDF
-          </Button>
-        </div>
-      )}
-    </div>
-  );
-}
 
 // ── Main Page ──────────────────────────────────────
 export default function StaffDocuments() {
   const { user, loading: authLoading, isAdmin, isEmployee, isTrainer } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<DocType>("swms");
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [documents, setDocuments] = useState<any[]>([]);
-  const [loadingDocs, setLoadingDocs] = useState(true);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -953,20 +800,6 @@ export default function StaffDocuments() {
     }
   }, [user, authLoading, navigate]);
 
-  useEffect(() => {
-    if (user) fetchDocuments();
-  }, [user]);
-
-  const fetchDocuments = async () => {
-    setLoadingDocs(true);
-    const { data, error } = await supabase
-      .from("staff_documents")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (!error) setDocuments(data || []);
-    setLoadingDocs(false);
-  };
 
   const handleSubmit = async (docType: DocType, formData: any) => {
     if (!user) return;
@@ -990,24 +823,19 @@ export default function StaffDocuments() {
       console.error(error);
     } else {
       toast.success(`${DOC_TYPES[docType].label} submitted successfully! Admin has been notified.`);
-      setShowForm(false);
 
-      // Trigger email notification
-      try {
-        await supabase.functions.invoke("send-document-notification", {
-          body: { document_type: docType, title, form_data: formData, submitted_by: user.email },
-        });
-      } catch (e) {
-        // Non-blocking — document is already saved
-        console.warn("Email notification failed:", e);
-      }
+      // Trigger email notification (non-blocking)
+      supabase.functions.invoke("send-document-notification", {
+        body: { document_type: docType, title, form_data: formData, submitted_by: user.email },
+      }).catch(e => console.warn("Email notification failed:", e));
 
-      fetchDocuments();
+      // Redirect to appropriate document portal
+      setTimeout(() => {
+        navigate(isTrainer ? "/trainer/documents" : "/staff/documents");
+      }, 1200);
     }
     setSubmitting(false);
   };
-
-  const filteredDocs = documents.filter(d => d.document_type === activeTab);
 
   if (authLoading) {
     return (
@@ -1021,12 +849,6 @@ export default function StaffDocuments() {
 
   if (!user) return null;
 
-  // Weekly submission tracker
-  const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
-  const weekEnd_ = endOfWeek(new Date(), { weekStartsOn: 1 });
-  const thisWeekDocs = documents.filter(d =>
-    d.submitted_at && isWithinInterval(new Date(d.submitted_at), { start: weekStart, end: weekEnd_ })
-  );
 
   return (
     <Layout>
@@ -1035,129 +857,26 @@ export default function StaffDocuments() {
           {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <div>
-              <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Staff Documents</h1>
+              <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">New Document</h1>
               <p className="text-muted-foreground text-sm mt-1">
-                SWMS, work permits, risk assessments, timesheets & safety records
+                Create and submit SWMS, permits, risk assessments, timesheets & safety records
               </p>
             </div>
-            <Button onClick={() => setShowForm(!showForm)} variant={showForm ? "outline" : "default"} className={showForm ? "" : "bg-accent hover:bg-accent/90 text-accent-foreground"}>
-              {showForm ? "Cancel" : <><Plus className="mr-2 h-4 w-4" /> New Document</>}
+            <Button variant="outline" onClick={() => navigate(isTrainer ? "/trainer/documents" : "/staff/documents")}>
+              ← Back to Repository
             </Button>
           </div>
 
-          {/* Wednesday Payment Slip Deadline Banner */}
-          {(() => {
-            const now = new Date();
-            const wed = isWednesday(now) ? setHours(now, 17) : nextWednesday(now);
-            const hoursLeft = differenceInHours(wed, now);
-            const isOverdue = isWednesday(now) && isPast(setHours(new Date(now.getFullYear(), now.getMonth(), now.getDate()), 17));
-            const hasSubmittedThisWeek = documents.some(
-              d => d.document_type === "payment_slip" && d.submitted_at &&
-                isWithinInterval(new Date(d.submitted_at), { start: weekStart, end: weekEnd_ })
-            );
-
-            if (hasSubmittedThisWeek) {
-              return (
-                <Card className="mb-6 border-green-500/30 bg-green-500/5">
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0" />
-                      <div>
-                        <p className="font-semibold text-sm text-green-700 dark:text-green-400">Payment Slip Submitted ✓</p>
-                        <p className="text-xs text-muted-foreground">Your weekly timesheet has been submitted for review.</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            }
-
-            const urgency = isOverdue ? "destructive" : hoursLeft <= 24 ? "warning" : "info";
-            return (
-              <Card className={`mb-6 ${
-                urgency === "destructive" ? "border-destructive/40 bg-destructive/5" :
-                urgency === "warning" ? "border-orange-500/40 bg-orange-500/5" :
-                "border-accent/20"
-              }`}>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      {urgency === "destructive" ? (
-                        <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
-                      ) : (
-                        <Clock className="h-5 w-5 text-accent shrink-0" />
-                      )}
-                      <div>
-                        <p className="font-semibold text-sm">
-                          {isOverdue
-                            ? "⚠️ Payment Slip Overdue!"
-                            : isWednesday(now)
-                              ? "📋 Payment Slip Due Today"
-                              : `💰 Payment Slip Due Wednesday`}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {isOverdue
-                            ? "Please submit your weekly timesheet as soon as possible."
-                            : `${hoursLeft} hours remaining — submit before 5:00 PM Wednesday`}
-                        </p>
-                      </div>
-                    </div>
-                    <Button
-                      size="sm"
-                      className="shrink-0 bg-accent hover:bg-accent/90 text-accent-foreground"
-                      onClick={() => { setActiveTab("payment_slip"); setShowForm(true); }}
-                    >
-                      <DollarSign className="mr-1.5 h-4 w-4" /> Submit Now
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })()}
-
-          {/* Weekly Submission Tracker */}
-          <Card className="mb-6 border-accent/20">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Calendar className="h-5 w-5 text-accent" />
-                  <div>
-                    <p className="font-semibold text-sm">This Week's Submissions</p>
-                    <p className="text-xs text-muted-foreground">
-                      {format(weekStart, "d MMM")} – {format(weekEnd_, "d MMM yyyy")}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 text-sm">
-                  <div className="text-center">
-                    <p className="text-2xl font-bold text-accent">{thisWeekDocs.length}</p>
-                    <p className="text-xs text-muted-foreground">Submitted</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-2xl font-bold text-green-500">{thisWeekDocs.filter(d => d.status === "approved").length}</p>
-                    <p className="text-xs text-muted-foreground">Approved</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-2xl font-bold text-blue-500">{thisWeekDocs.filter(d => d.status === "submitted").length}</p>
-                    <p className="text-xs text-muted-foreground">Pending</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
           {/* Tabs */}
-          <Tabs value={activeTab} onValueChange={v => { setActiveTab(v as DocType); setShowForm(false); }}>
+          <Tabs value={activeTab} onValueChange={v => { setActiveTab(v as DocType); setShowForm(true); }}>
             <TabsList className="grid grid-cols-3 sm:grid-cols-6 mb-6">
               {(Object.entries(DOC_TYPES) as [DocType, typeof DOC_TYPES[DocType]][]).map(([key, cfg]) => {
                 const TabIcon = cfg.icon;
-                const count = documents.filter(d => d.document_type === key).length;
                 return (
                   <TabsTrigger key={key} value={key} className="flex items-center gap-1.5 text-xs sm:text-sm">
                     <TabIcon className={`h-4 w-4 ${cfg.color}`} />
                     <span className="hidden sm:inline">{cfg.label}</span>
                     <span className="sm:hidden">{cfg.label.split(" ")[0]}</span>
-                    {count > 0 && <Badge variant="secondary" className="text-xs ml-1">{count}</Badge>}
                   </TabsTrigger>
                 );
               })}
@@ -1184,26 +903,19 @@ export default function StaffDocuments() {
               </Card>
             )}
 
-            {/* Document History */}
-            {(Object.keys(DOC_TYPES) as DocType[]).map(key => (
-              <TabsContent key={key} value={key}>
-                {loadingDocs ? (
-                  <div className="flex justify-center py-12">
-                    <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                  </div>
-                ) : filteredDocs.length === 0 ? (
-                  <div className="text-center py-12">
-                    <FileText className="h-10 w-10 mx-auto text-muted-foreground/40 mb-3" />
-                    <p className="font-medium text-muted-foreground">No {DOC_TYPES[key].label} documents yet</p>
-                    <p className="text-sm text-muted-foreground mt-1">Click "New Document" to create one.</p>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {filteredDocs.map(doc => <DocCard key={doc.id} doc={doc} />)}
-                  </div>
-                )}
-              </TabsContent>
-            ))}
+            {/* Link to portal for viewing history */}
+            {!showForm && (
+              <div className="text-center py-12">
+                <FileText className="h-10 w-10 mx-auto text-muted-foreground/40 mb-3" />
+                <p className="font-medium text-muted-foreground">Select a document type above and click "New Document" to create one.</p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  View your submitted documents in your{" "}
+                  <Button variant="link" className="p-0 h-auto" onClick={() => navigate(isTrainer ? "/trainer/documents" : "/staff/documents")}>
+                    Document Repository →
+                  </Button>
+                </p>
+              </div>
+            )}
           </Tabs>
         </div>
       </div>

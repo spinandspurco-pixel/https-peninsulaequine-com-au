@@ -20,7 +20,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { exportDocumentAsPDF } from "./StaffDocuments";
+import { exportDocumentAsPDF } from "@/lib/documentUtils";
 import {
   FileText,
   DollarSign,

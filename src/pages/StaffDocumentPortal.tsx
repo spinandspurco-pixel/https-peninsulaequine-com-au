@@ -8,8 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
-import { exportDocumentAsPDF } from "./StaffDocuments";
-import { format, startOfWeek, endOfWeek, isWithinInterval, nextWednesday, isWednesday, differenceInHours, setHours, isPast } from "date-fns";
+import { exportDocumentAsPDF } from "@/lib/documentUtils";
+import { format, startOfWeek, endOfWeek, isWithinInterval, isWednesday } from "date-fns";
 import {
   FileText, DollarSign, HardHat, ClipboardCheck, Send, Loader2, Plus, Clock,
   CheckCircle2, AlertCircle, ChevronDown, ChevronUp, Calendar, ShieldCheck,
