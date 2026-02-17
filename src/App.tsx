@@ -36,6 +36,7 @@ import Schedule from "./pages/Schedule";
 import ThankYou from "./pages/ThankYou";
 import Pricing from "./pages/Pricing";
 import GroupBooking from "./pages/GroupBooking";
+import Estimate from "./pages/Estimate";
 import { useCartSync } from "./hooks/useCartSync";
 
 const queryClient = new QueryClient();
@@ -81,6 +82,7 @@ function AppContent() {
           <Route path="/thank-you" element={<ThankYou />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/group-booking" element={<GroupBooking />} />
+          <Route path="/estimate" element={<Estimate />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
