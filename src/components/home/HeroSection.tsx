@@ -7,12 +7,80 @@ import { useABTest } from "@/hooks/useABTest";
 import { useAuth } from "@/hooks/useAuth";
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 import { HeroClipEditor, loadClips, loadQuality, saveQuality, DEFAULT_CLIPS, QUALITY_PROFILES, type VideoQuality } from "./HeroClipEditor";
+import { useHeroMediaLoader } from "@/hooks/useHeroMediaLoader";
 
 import heroVideoA from "@/assets/videos/pavilion-grill-1.mp4";
 import heroVideoB from "@/assets/videos/pavilion-grill-2.mp4";
 import peLogo from "@/assets/pe-logo-new.png";
 
 const VIDEO_SRCS = [heroVideoA, heroVideoB];
+
+// ── Loading shimmer overlay ─────────────────────────────────
+function HeroLoadingOverlay({ stage, videosReady }: { stage: string; videosReady: boolean[] }) {
+  if (stage === "ready") return null;
+
+  const readyCount = videosReady.filter(Boolean).length;
+  const total = videosReady.length;
+  const pct = total > 0 ? Math.round((readyCount / total) * 100) : 0;
+
+  return (
+    <div
+      className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-primary transition-opacity duration-700"
+      style={{ opacity: stage === "ready" ? 0 : 1 }}
+    >
+      {/* Shimmer background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div
+          className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite]"
+          style={{
+            background: "linear-gradient(90deg, transparent 0%, hsl(var(--accent) / 0.04) 50%, transparent 100%)",
+          }}
+        />
+      </div>
+
+      {/* Progress indicator */}
+      <div className="relative z-10 flex flex-col items-center gap-4">
+        <img
+          src={peLogo}
+          alt=""
+          className="w-16 h-16 opacity-40 animate-pulse"
+          aria-hidden="true"
+        />
+        <div className="w-32 h-1 bg-primary-foreground/10 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-accent/50 rounded-full transition-all duration-500 ease-out"
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+        <span className="text-[10px] text-primary-foreground/30 tracking-[0.3em] uppercase font-sans">
+          {stage === "idle" ? "Preparing" : `Loading media${readyCount > 0 ? ` ${readyCount}/${total}` : ""}`}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// ── Admin performance badge ─────────────────────────────────
+function PerfBadge({ loadTimeMs, budgetStatus }: { loadTimeMs: number | null; budgetStatus: string }) {
+  if (loadTimeMs === null) return null;
+
+  const colors = {
+    good: "bg-green-500/20 text-green-400 border-green-500/30",
+    fair: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+    over: "bg-red-500/20 text-red-400 border-red-500/30",
+  };
+
+  return (
+    <div
+      className={`absolute top-4 right-4 z-50 px-2.5 py-1 rounded-md border text-[10px] font-mono tracking-wider backdrop-blur-sm ${colors[budgetStatus as keyof typeof colors] || colors.good}`}
+    >
+      {(loadTimeMs / 1000).toFixed(1)}s
+      <span className="ml-1 opacity-70">
+        {budgetStatus === "good" ? "✓" : budgetStatus === "fair" ? "⚠" : "✗"}
+      </span>
+    </div>
+  );
+}
 
 // ── A/B test copy variants ──────────────────────────────────
 
@@ -85,9 +153,16 @@ export function HeroSection() {
     }
   }, [activeIdx, fading, getRef, startClip, clips]);
 
-  useEffect(() => {
+  // ── Progressive media loader ──────────────────────────────
+  const onAllReady = useCallback(() => {
     startClip(0);
   }, [startClip]);
+
+  const { stage, videosReady, loadTimeMs, budgetStatus } = useHeroMediaLoader(
+    videoRefs,
+    VIDEO_SRCS,
+    onAllReady,
+  );
 
   const handleQuoteClick = () => {
     trackCtaClick("hero_get_quote", { variant });
@@ -101,6 +176,14 @@ export function HeroSection() {
 
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden bg-primary pb-20 sm:pb-24">
+      {/* Progressive loading overlay */}
+      <HeroLoadingOverlay stage={stage} videosReady={videosReady} />
+
+      {/* Admin performance badge */}
+      {isAdmin && stage === "ready" && (
+        <PerfBadge loadTimeMs={loadTimeMs} budgetStatus={budgetStatus} />
+      )}
+
       {/* Admin clip editor */}
       {isAdmin && showEditor && (
         <HeroClipEditor
@@ -132,7 +215,7 @@ export function HeroSection() {
       {/* Video A — trimmed + zoomed + smoothed */}
       <video
         ref={videoARef}
-        muted playsInline preload="auto"
+        muted playsInline preload="metadata"
         onTimeUpdate={() => handleTimeUpdate(0)}
         className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out will-change-transform"
         style={{
@@ -149,7 +232,7 @@ export function HeroSection() {
       {/* Video B — trimmed + zoomed + smoothed */}
       <video
         ref={videoBRef}
-        muted playsInline preload="auto"
+        muted playsInline preload="metadata"
         onTimeUpdate={() => handleTimeUpdate(1)}
         className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out will-change-transform"
         style={{
