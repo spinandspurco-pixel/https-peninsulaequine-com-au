@@ -432,8 +432,8 @@ function IntroSection() {
             </p>
           </SectionTransition>
           <SectionTransition variant="blur-in" delay={100}>
-            <h2 className="heading-section text-foreground mb-6">
-              Where world-class equine facilities are built by the hands of a horseman
+            <h2 className="heading-section text-foreground mb-6 leading-tight">
+              Where world-class equine facilities are built by the hands of a <span className="text-accent italic">horseman</span>
             </h2>
           </SectionTransition>
           <SectionTransition variant="fade-up" delay={200}>
@@ -480,20 +480,21 @@ function PhilosophySection() {
           {philosophy.pillars.map((pillar, i) => (
             <div
               key={pillar.number}
-              className={`p-8 sm:p-10 bg-primary transition-all duration-700 ${
+              className={`group p-8 sm:p-10 bg-primary transition-all duration-700 hover:bg-primary-foreground/[0.04] ${
                 gridVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               }`}
               style={{ transitionDelay: `${i * 100}ms` }}
             >
-              <span className="text-accent font-mono text-sm tracking-[0.3em] mb-4 block">
+              <span className="text-accent font-mono text-sm tracking-[0.3em] mb-4 block transition-transform duration-300 group-hover:translate-x-1">
                 {pillar.number}
               </span>
-              <h3 className="font-serif text-xl sm:text-2xl text-primary-foreground mb-3">
+              <h3 className="font-serif text-xl sm:text-2xl text-primary-foreground mb-3 transition-colors duration-300 group-hover:text-accent">
                 {pillar.title}
               </h3>
-              <p className="text-primary-foreground/60 text-sm leading-relaxed">
+              <p className="text-primary-foreground/60 text-sm leading-relaxed transition-colors duration-300 group-hover:text-primary-foreground/80">
                 {pillar.description}
               </p>
+              <div className="w-0 h-px bg-accent mt-5 transition-all duration-500 group-hover:w-12" />
             </div>
           ))}
         </div>
