@@ -12,7 +12,7 @@ import { PEHorseshoe } from "@/components/icons/PEIcons";
 const navigation = [
   { name: "Home", href: "/" },
   { name: "Services", href: "/services" },
-  { name: "The Forge", href: "/shop", icon: true },
+  { name: "Forge", href: "/shop", icon: true },
   { name: "Portfolio", href: "/gallery" },
   { name: "Lessons", href: "/lessons" },
   { name: "About", href: "/about" },
@@ -77,13 +77,13 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-4 xl:gap-8">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  "relative text-xs uppercase tracking-[0.15em] transition-colors duration-200 hover:text-[hsl(var(--header-active))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-sm",
+                  "relative text-[10px] xl:text-xs uppercase tracking-[0.12em] xl:tracking-[0.15em] whitespace-nowrap transition-colors duration-200 hover:text-[hsl(var(--header-active))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-sm",
                   "after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-px after:bg-[hsl(var(--header-active))] after:origin-left after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100",
                   location.pathname === item.href
                     ? "text-[hsl(var(--header-active))] after:scale-x-100"
@@ -99,14 +99,14 @@ export function Header() {
           </div>
 
           {/* CTAs + Cart */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-2 xl:gap-3">
             <GlobalSearch />
             <CartDrawer />
             <Button
               asChild
               size="sm"
               variant="outline"
-              className="border-accent/40 text-accent hover:bg-accent/10 uppercase tracking-[0.1em] text-xs px-5"
+              className="border-accent/40 text-accent hover:bg-accent/10 uppercase tracking-[0.1em] text-[10px] xl:text-xs px-3 xl:px-5"
             >
               <Link to="/book-lesson">
                 <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
@@ -116,7 +116,7 @@ export function Header() {
             <Button
               asChild
               size="sm"
-              className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.1em] text-xs px-6"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.1em] text-[10px] xl:text-xs px-4 xl:px-6"
             >
               <Link to="/contact">Get a Quote</Link>
             </Button>
