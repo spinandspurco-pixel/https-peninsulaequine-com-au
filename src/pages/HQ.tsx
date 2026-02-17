@@ -12,7 +12,7 @@ import { Eye, EyeOff, LogIn, Shield, Users, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import logoPeMark from "@/assets/logo-pe-mark.png";
 
-export default function HQ() { // Staff login portal
+export default function HQ() { // Staff login portal — v2
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -64,15 +64,8 @@ export default function HQ() { // Staff login portal
     setIsLoading(false);
   };
 
-  if (loading) {
-    return (
-      <Layout>
-        <div className="min-h-[80vh] flex items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-accent" />
-        </div>
-      </Layout>
-    );
-  }
+  // Don't block the login form — show it immediately even while auth loads
+  // If user is already logged in, the useEffect above will redirect them
 
   return (
     <Layout>

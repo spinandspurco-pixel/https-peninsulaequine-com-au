@@ -13,14 +13,14 @@ export function useAuth() {
 
   useEffect(() => {
     mounted.current = true;
+    let resolved = false;
 
-    // Hard safety timeout — never hang longer than 3s
-    const timeout = setTimeout(() => {
-      if (mounted.current) {
-        console.log("[useAuth] Safety timeout — resolving loading");
+    const resolve = () => {
+      if (!resolved && mounted.current) {
+        resolved = true;
         setLoading(false);
       }
-    }, 3000);
+    };
 
     const fetchRoles = async (userId: string) => {
       try {
@@ -45,7 +45,29 @@ export function useAuth() {
       setIsTrainer(false);
     };
 
-    // 1. Get initial session
+    // Hard safety timeout — never hang longer than 2s
+    const timeout = setTimeout(() => {
+      console.log("[useAuth] Safety timeout — resolving loading");
+      resolve();
+    }, 2000);
+
+    // 1. Listen for auth changes FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (_event, newSession) => {
+        if (!mounted.current) return;
+        setSession(newSession);
+        setUser(newSession?.user ?? null);
+
+        if (newSession?.user) {
+          await fetchRoles(newSession.user.id);
+        } else {
+          clearRoles();
+        }
+        resolve();
+      }
+    );
+
+    // 2. Then get initial session
     supabase.auth.getSession().then(async ({ data: { session: s } }) => {
       if (!mounted.current) return;
       setSession(s);
@@ -56,30 +78,10 @@ export function useAuth() {
       } else {
         clearRoles();
       }
-      if (mounted.current) setLoading(false);
+      resolve();
     }).catch(() => {
-      if (mounted.current) setLoading(false);
+      resolve();
     });
-
-    // 2. Listen for future auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, newSession) => {
-        if (!mounted.current) return;
-        setSession(newSession);
-        setUser(newSession?.user ?? null);
-
-        if (newSession?.user) {
-          setTimeout(async () => {
-            if (!mounted.current) return;
-            await fetchRoles(newSession.user.id);
-            if (mounted.current) setLoading(false);
-          }, 0);
-        } else {
-          clearRoles();
-          setLoading(false);
-        }
-      }
-    );
 
     return () => {
       mounted.current = false;
