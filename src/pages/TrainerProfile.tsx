@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SectionTransition } from "@/components/SectionTransition";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
+import { TrainerVideoPlaylist } from "@/components/TrainerVideoPlaylist";
 import { fetchMergedTestimonials, TRAINER_PROFILES, SERVICE_FILTERS, type TestimonialItem } from "@/lib/testimonials";
 import { glennBrowitt, aboutCiro } from "@/data/content";
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
@@ -69,6 +70,11 @@ export default function TrainerProfile() {
   const relatedTestimonials = useMemo(
     () => testimonials.filter((t) => t.trainer === trainer?.name),
     [testimonials, trainer]
+  );
+
+  const trainerVideos = useMemo(
+    () => relatedTestimonials.filter((t) => t.mediaType === "video" && t.mediaUrl),
+    [relatedTestimonials]
   );
 
   if (!trainer) return <Navigate to="/about" replace />;
@@ -157,6 +163,11 @@ export default function TrainerProfile() {
           </div>
         </div>
       </section>
+
+      {/* Video playlist */}
+      {!loading && trainerVideos.length > 0 && (
+        <TrainerVideoPlaylist videos={trainerVideos} trainerName={trainer.name} />
+      )}
 
       {/* Related testimonials */}
       <section className="section-padding bg-card border-y border-border">
