@@ -216,7 +216,7 @@ export function HeroSection() {
       {/* Video A — trimmed + zoomed + smoothed */}
       <video
         ref={videoARef}
-        muted playsInline preload="metadata"
+        muted playsInline preload="none"
         onTimeUpdate={() => handleTimeUpdate(0)}
         className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out will-change-transform"
         style={{
@@ -226,14 +226,10 @@ export function HeroSection() {
           filter: qProfile.filter,
         }}
         aria-hidden="true"
-        aria-label="Pavilion exterior slow-motion footage"
-      >
-        <source src={VIDEO_SRCS[0]} type="video/mp4" />
-      </video>
-      {/* Video B — trimmed + zoomed + smoothed */}
+      />
       <video
         ref={videoBRef}
-        muted playsInline preload="metadata"
+        muted playsInline preload="none"
         onTimeUpdate={() => handleTimeUpdate(1)}
         className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out will-change-transform"
         style={{
@@ -243,10 +239,7 @@ export function HeroSection() {
           filter: qProfile.filter,
         }}
         aria-hidden="true"
-        aria-label="Grill and pavilion detail slow-motion footage"
-      >
-        <source src={VIDEO_SRCS[1]} type="video/mp4" />
-      </video>
+      />
       <div className="absolute inset-0 bg-primary/70" />
       <BlueprintScene preset="hero" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsl(var(--primary))_85%)]" />
