@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, CheckCircle, Phone, HelpCircle, Filter } from "lucide-react";
+import { ArrowRight, CheckCircle, Phone, HelpCircle, Filter, CalendarIcon, Star, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
@@ -48,6 +48,66 @@ const serviceImages: Record<string, string> = {
   "clinics-events": equitanaArena,
 };
 
+/* ── Pricing Block ────────────────────────────────────── */
+
+function PricingTiersBlock({ serviceId }: { serviceId: string }) {
+  const tiers = servicePricingTiers[serviceId] || [];
+  if (!tiers.length) return null;
+
+  return (
+    <div className="mb-5">
+      <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3 font-medium">
+        Investment Tiers
+      </p>
+      <div className="space-y-2">
+        {tiers.map((tier) => (
+          <div
+            key={tier.name}
+            className={cn(
+              "rounded-lg border p-3 transition-all",
+              tier.popular
+                ? "border-accent/40 bg-accent/[0.06] ring-1 ring-accent/10"
+                : "border-border bg-background"
+            )}
+          >
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-2">
+                <h4 className={cn(
+                  "text-xs font-semibold uppercase tracking-wide",
+                  tier.popular ? "text-accent" : "text-foreground"
+                )}>
+                  {tier.name}
+                </h4>
+                {tier.popular && (
+                  <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-accent text-accent-foreground text-[8px] font-bold uppercase tracking-widest">
+                    <Star className="h-2 w-2 fill-current" />
+                    Popular
+                  </span>
+                )}
+              </div>
+              <p className={cn(
+                "font-serif text-sm font-bold",
+                tier.popular ? "text-accent" : "text-foreground"
+              )}>
+                {tier.price}
+              </p>
+            </div>
+            <p className="text-[11px] text-muted-foreground mb-2">{tier.description}</p>
+            <ul className="grid grid-cols-2 gap-x-2 gap-y-0.5">
+              {tier.features.slice(0, 4).map((f, i) => (
+                <li key={i} className="flex items-start gap-1 text-[10px] text-foreground/70">
+                  <CheckCircle className="h-2.5 w-2.5 text-accent shrink-0 mt-0.5" />
+                  <span className="line-clamp-1">{f}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ── Service Card ─────────────────────────────────────── */
 
 function ServiceOverviewCard({
@@ -61,14 +121,13 @@ function ServiceOverviewCard({
 }) {
   const navigate = useNavigate();
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
-  const tiers = servicePricingTiers[service.id] || [];
   const faqs = serviceFaqs[service.id] || [];
 
   return (
     <div
       ref={ref}
       className={cn(
-        "group rounded-xl border border-border bg-card overflow-hidden transition-all duration-700 hover:shadow-lg hover:border-accent/30",
+        "group rounded-xl border border-border bg-card overflow-hidden transition-all duration-700 hover:shadow-lg hover:border-accent/30 flex flex-col",
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
       )}
       style={{ transitionDelay: `${index * 80}ms` }}
@@ -91,7 +150,7 @@ function ServiceOverviewCard({
       </div>
 
       {/* Content */}
-      <div className="p-5 sm:p-6">
+      <div className="p-5 sm:p-6 flex flex-col flex-1">
         <h3 className="font-serif text-lg font-semibold text-foreground mb-2 group-hover:text-accent transition-colors">
           {service.title}
         </h3>
@@ -114,29 +173,8 @@ function ServiceOverviewCard({
           )}
         </ul>
 
-        {/* Tier summary */}
-        {tiers.length > 0 && (
-          <div className="flex gap-1.5 mb-5">
-            {tiers.map((tier) => (
-              <div
-                key={tier.name}
-                className={cn(
-                  "flex-1 text-center rounded-md py-1.5 px-1 border transition-colors",
-                  tier.popular
-                    ? "bg-accent/10 border-accent/30"
-                    : "bg-background border-border"
-                )}
-              >
-                <p className="text-[9px] uppercase tracking-wider text-muted-foreground leading-none mb-0.5">
-                  {tier.name}
-                </p>
-                <p className={cn("font-serif text-xs font-bold leading-tight", tier.popular ? "text-accent" : "text-foreground")}>
-                  {tier.price}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
+        {/* Pricing tiers block */}
+        <PricingTiersBlock serviceId={service.id} />
 
         {/* Per-service FAQ accordion */}
         {faqs.length > 0 && (
@@ -160,8 +198,8 @@ function ServiceOverviewCard({
           </div>
         )}
 
-        {/* CTAs */}
-        <div className="flex gap-2">
+        {/* CTAs — pushed to bottom */}
+        <div className="flex gap-2 mt-auto pt-2">
           <Button
             onClick={() => navigate(`/services/${service.id}`)}
             className="flex-1 bg-accent/10 text-accent hover:bg-accent/20 border border-accent/20"
@@ -183,6 +221,100 @@ function ServiceOverviewCard({
         </div>
       </div>
     </div>
+  );
+}
+
+/* ── Book a Consult CTA Section ───────────────────────── */
+
+function BookConsultCTA() {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
+
+  return (
+    <section className="bg-primary text-primary-foreground py-16 sm:py-20 relative overflow-hidden">
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 opacity-[0.03]">
+        <BlueprintScene preset="barn" />
+      </div>
+
+      <div
+        ref={ref}
+        className={cn(
+          "section-container relative z-10 transition-all duration-700",
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        )}
+      >
+        <div className="max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-10 items-center">
+            {/* Left — copy */}
+            <div>
+              <div className={cn(
+                "w-12 h-0.5 bg-accent mb-6 transition-all duration-500 delay-100",
+                isVisible ? "opacity-100 scale-x-100 origin-left" : "opacity-0 scale-x-0"
+              )} />
+              <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-3">
+                Free · No Obligation
+              </p>
+              <h2 className="font-serif text-2xl sm:text-3xl font-semibold mb-4 leading-tight">
+                Not sure where to start?<br />
+                <span className="text-accent">Book a free consultation.</span>
+              </h2>
+              <p className="text-primary-foreground/60 leading-relaxed mb-6 text-sm">
+                Every great facility begins with a conversation. We'll visit your property,
+                understand your goals, and provide a no-obligation quote — all at no cost.
+              </p>
+              <ul className="space-y-2 mb-8">
+                {[
+                  "On-site property assessment",
+                  "Custom project scoping & 3D concepts",
+                  "Detailed, itemised quote within 5 business days",
+                  "No pressure — just expert advice",
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-2.5 text-sm text-primary-foreground/80">
+                    <CheckCircle className="h-4 w-4 text-accent shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Right — CTA buttons */}
+            <div className="flex flex-col gap-4 items-center md:items-start">
+              <Button
+                asChild
+                variant="gold"
+                size="xl"
+                className="w-full sm:w-auto text-sm px-10"
+                onClick={() => trackCtaClick("services_book_consult")}
+              >
+                <Link to="/contact?services=consultation">
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  Book a Free Consultation
+                </Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline-light"
+                size="lg"
+                className="w-full sm:w-auto text-sm px-8"
+              >
+                <Link to="/schedule">
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  Schedule a Call Instead
+                </Link>
+              </Button>
+              <a
+                href={`tel:${siteConfig.phone}`}
+                onClick={() => trackCtaClick("services_call_now")}
+                className="inline-flex items-center gap-2 text-primary-foreground/50 hover:text-accent text-xs tracking-widest uppercase transition-colors mt-2"
+              >
+                <Phone className="h-3.5 w-3.5" />
+                Or call {siteConfig.phone}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -288,6 +420,9 @@ export default function Services() {
           </div>
         </div>
       </section>
+
+      {/* Book a Consult CTA */}
+      <BookConsultCTA />
 
       {/* Service Detail Sections */}
       <ServiceDetailSections />
