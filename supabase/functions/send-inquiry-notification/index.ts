@@ -252,8 +252,12 @@ const handler = async (req: Request): Promise<Response> => {
       </html>
     `;
 
-    // Determine recipients — add Glenn for lesson/clinic inquiries
+    // Determine recipients — always notify admin + Sander; add Glenn for lesson/clinic inquiries
     const notifyRecipients: string[] = [NOTIFICATION_EMAIL];
+    const sanderEmail = "sander@peninsulaequine.com.au";
+    if (!notifyRecipients.includes(sanderEmail)) {
+      notifyRecipients.push(sanderEmail);
+    }
     const lessonServices = ["riding-lessons", "clinics-events"];
     const isLessonInquiry = inquiry.services?.some((s: string) => lessonServices.includes(s));
     const trainerEmail = "glenn@peninsulaequine.com.au";
