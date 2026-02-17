@@ -3,25 +3,27 @@ import { ArrowRight, Calculator, CalendarIcon, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
+import { PEArena, PEBarn, PERosette } from "@/components/icons/PEIcons";
+import { type ComponentType } from "react";
 
 const SAMPLE_ESTIMATES = [
   {
     service: "Arena Construction",
     range: "$25k – $55k",
     includes: "Base prep, drainage, premium footing",
-    icon: "🏟️",
+    Icon: PEArena,
   },
   {
     service: "Barn & Stable Build",
     range: "$45k – $120k",
     includes: "Custom stalls, ventilation, fit-out",
-    icon: "🏗️",
+    Icon: PEBarn,
   },
   {
     service: "Full Facility Package",
     range: "$150k – $350k+",
     includes: "Arena, barn, fencing, infrastructure",
-    icon: "⭐",
+    Icon: PERosette,
   },
 ];
 
@@ -75,7 +77,7 @@ export function SampleEstimateCTA({ onGetQuote }: SampleEstimateCTAProps) {
                     Most Popular
                   </span>
                 )}
-                <span className="text-3xl mb-3 block" aria-hidden="true">{est.icon}</span>
+                <est.Icon size={32} className="mx-auto mb-3 text-accent" />
                 <h3 className="font-serif text-lg text-foreground mb-1">{est.service}</h3>
                 <p className="text-2xl font-bold text-accent mb-2">{est.range}</p>
                 <p className="text-xs text-muted-foreground leading-relaxed">{est.includes}</p>

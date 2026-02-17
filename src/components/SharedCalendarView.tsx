@@ -353,7 +353,7 @@ export function SharedCalendarView({ isAdmin = false }: { isAdmin?: boolean }) {
               </div>
             ) : selectedSlots.length === 0 ? (
               <div className="text-center py-6 text-muted-foreground">
-                <div className="text-3xl mb-2">📅</div>
+                <CalendarDays className="h-8 w-8 mx-auto mb-2 text-muted-foreground/50" />
                 <p className="text-sm">No bookings or availability on this date</p>
               </div>
             ) : null}

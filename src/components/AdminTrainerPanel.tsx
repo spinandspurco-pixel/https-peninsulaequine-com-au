@@ -283,7 +283,7 @@ export function AdminTrainerPanel() {
               </div>
             ) : filteredBookings.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
-                <div className="text-3xl mb-2">📅</div>
+                <CalendarDays className="h-8 w-8 mx-auto mb-2 text-muted-foreground/50" />
                 <p className="text-sm">No lesson bookings match your filters.</p>
               </div>
             ) : (
@@ -420,7 +420,7 @@ export function AdminTrainerPanel() {
                         <TableCell>
                           <div className="text-xs text-muted-foreground space-y-0.5">
                             {i.experience_level && <div>Level: {i.experience_level}</div>}
-                            {i.horse_name && <div>🐴 {i.horse_name}</div>}
+                            {i.horse_name && <div>Horse: {i.horse_name}</div>}
                           </div>
                         </TableCell>
                         <TableCell>
