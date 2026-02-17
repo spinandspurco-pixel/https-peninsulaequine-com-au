@@ -209,7 +209,7 @@ export const testimonials = [
   {
     id: 1,
     name: "Sarah Mitchell",
-    role: "Ranch Owner, Woodside",
+    role: "Ranch Owner, Balnarring",
     quote: "Ciro built our entire 12-stall barn and covered arena. His attention to detail and understanding of what horses need is unmatched. Five years later, everything still looks and functions like new.",
     rating: 5,
     mediaType: "image" as const,
@@ -218,7 +218,7 @@ export const testimonials = [
   {
     id: 2,
     name: "Robert Chen",
-    role: "Dressage Trainer, Atherton",
+    role: "Dressage Trainer, Red Hill",
     quote: "The arena Ciro built for us has the best footing I've ever worked on. He took the time to understand our discipline and designed a surface that performs perfectly for dressage work.",
     rating: 5,
     mediaType: "video" as const,
@@ -227,7 +227,7 @@ export const testimonials = [
   {
     id: 3,
     name: "Elena Rodriguez",
-    role: "Breeding Farm Manager, Half Moon Bay",
+    role: "Breeding Farm Manager, Hastings",
     quote: "From paddock fencing to our new mare barn, Peninsula Equine handled every project professionally and on time. Ciro's personal involvement makes all the difference.",
     rating: 5,
     mediaType: "image" as const,
@@ -236,7 +236,7 @@ export const testimonials = [
   {
     id: 4,
     name: "Tom & Linda Hartley",
-    role: "Private Estate Owners, Los Altos Hills",
+    role: "Private Estate Owners, Flinders",
     quote: "We interviewed six contractors before choosing Ciro. His knowledge of horses convinced us immediately—this isn't just construction to him, it's his passion.",
     rating: 5,
   },
@@ -244,7 +244,7 @@ export const testimonials = [
     id: 5,
     name: "Dr. Amanda Foster",
     role: "Equine Veterinarian",
-    quote: "I recommend Peninsula Equine to all my clients building new facilities. The ventilation, safety features, and overall design always prioritize horse health.",
+    quote: "I recommend Peninsula Equine to all my clients building new facilities. The ventilation, safety features, and overall design always prioritise horse health.",
     rating: 5,
     mediaType: "image" as const,
     mediaKey: "amanda",
@@ -252,7 +252,7 @@ export const testimonials = [
   {
     id: 6,
     name: "Marcus Williams",
-    role: "Jumping Trainer, Portola Valley",
+    role: "Jumping Trainer, Somerville",
     quote: "Ciro doesn't just build—he rides. Having a contractor who truly understands the equestrian world makes the entire process seamless.",
     rating: 5,
   },
