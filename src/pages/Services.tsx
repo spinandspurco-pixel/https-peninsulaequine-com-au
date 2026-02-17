@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
@@ -11,6 +11,7 @@ import { BlueprintScene } from "@/components/BlueprintScene";
 import { QuickQuoteModal } from "@/components/QuickQuoteModal";
 import { QuoteCalculator } from "@/components/QuoteCalculator";
 import { ServiceDetailSections } from "@/components/ServiceDetailSections";
+import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
@@ -136,7 +137,7 @@ function ServiceOverviewCard({
       <div className="relative h-44 overflow-hidden">
         <img
           src={serviceImages[service.id] || equitanaArena}
-          alt={service.title}
+          alt={`${service.title} — Peninsula Equine construction project`}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
         />
@@ -359,10 +360,27 @@ export default function Services() {
     return base.filter((s) => (cat as any).ids.includes(s.id));
   }, [dbServices, activeFilter]);
 
+  // SEO: dynamic document head
+  useEffect(() => {
+    const prev = document.title;
+    document.title = "Equine Facility Construction Services | Peninsula Equine";
+    const meta = document.querySelector('meta[name="description"]');
+    const prevDesc = meta?.getAttribute("content") || "";
+    meta?.setAttribute(
+      "content",
+      "Arena construction, barn building, fencing & full facility design on the Mornington Peninsula. Free consultation — get a custom quote today."
+    );
+    return () => {
+      document.title = prev;
+      meta?.setAttribute("content", prevDesc);
+    };
+  }, []);
+
   return (
     <Layout>
+      <ServicesSchemaMarkup />
       <PageHeader
-        title="Our Services"
+        title="Equine Facility Construction Services"
         description="From custom arenas to complete barn construction, we deliver equine facilities built to last. Every project reflects our commitment to quality and our understanding of what horses—and their owners—truly need."
       />
 
