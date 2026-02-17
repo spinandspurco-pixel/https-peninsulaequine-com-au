@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { CalendarIcon, Clock, CheckCircle, ArrowRight, Send, Star, Award, Target, ChevronDown, ExternalLink, Quote, Users, Sparkles, Play, Printer, CircleDot, Mail, Phone, MapPin, User, Edit2 } from "lucide-react";
 import { z } from "zod";
-import { format } from "date-fns";
+import { format, startOfMonth, endOfMonth, addMonths, isBefore, startOfDay } from "date-fns";
 import Autoplay from "embla-carousel-autoplay";
 import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/layout/Layout";
@@ -444,462 +444,561 @@ function PrepChecklistSection() {
   );
 }
 
-// ── Booking Form (unchanged logic) ───────────────────
+// ── 4-Step Booking Wizard ─────────────────────────────
 
-type BookingFormData = {
+type WizardData = {
+  lessonType: string;
+  horseName: string;
+  lessonGoals: string;
+  slotId: string;
+  slotDate: string;
+  slotTime: string;
+  slotEndTime: string;
   name: string;
   email: string;
-  phone?: string;
-  horseName?: string;
-  experienceLevel: string;
-  lessonGoals: string;
-  preferredDay: string;
-  preferredDate?: Date;
-  additionalNotes?: string;
-  timezone: string;
-  slotType: "lesson" | "clinic";
+  phone: string;
+  additionalNotes: string;
 };
 
-const TIMEZONE_OPTIONS = [
-  { value: "Australia/Melbourne", label: "Melbourne (AEST/AEDT)" },
-  { value: "Australia/Sydney", label: "Sydney (AEST/AEDT)" },
-  { value: "Australia/Brisbane", label: "Brisbane (AEST)" },
-  { value: "Australia/Adelaide", label: "Adelaide (ACST/ACDT)" },
-  { value: "Australia/Perth", label: "Perth (AWST)" },
-  { value: "Pacific/Auckland", label: "Auckland (NZST/NZDT)" },
-];
+const DEPOSIT_MAP: Record<string, { full: number; deposit: number; label: string; duration: string }> = {
+  beginner:     { full: 95,   deposit: 47.50,  label: "Foundation Lesson",   duration: "45 min" },
+  intermediate: { full: 120,  deposit: 60.00,  label: "Development Lesson",  duration: "60 min" },
+  advanced:     { full: 150,  deposit: 75.00,  label: "Performance Lesson",  duration: "60 min" },
+};
 
-function getDetectedTimezone(): string {
-  try {
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    if (TIMEZONE_OPTIONS.some((o) => o.value === tz)) return tz;
-    return "Australia/Melbourne";
-  } catch {
-    return "Australia/Melbourne";
-  }
+function formatTimeSimple(time: string) {
+  const [h, m] = time.split(":");
+  const hour = parseInt(h);
+  const ampm = hour >= 12 ? "PM" : "AM";
+  const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+  return `${displayHour}:${m} ${ampm}`;
 }
 
-function BookingForm() {
+function BookingWizard() {
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
-  const [step, setStep] = useState<1 | 2>(1);
-  const [showConfirm, setShowConfirm] = useState(false);
+  const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // Check for success / cancel from Stripe redirect
+  const isSuccess = searchParams.get("success") === "true";
+  const isCancelled = searchParams.get("cancelled") === "true";
+
+  // Pre-fill from URL
   const prefilledLevel = searchParams.get("type") || "";
   const validLevels = PROGRAM_LEVELS.map((l) => l.value);
-  const initialLevel = validLevels.includes(prefilledLevel) ? prefilledLevel : "";
 
-  const prefilledDateStr = searchParams.get("date");
-  const prefilledDate = prefilledDateStr ? new Date(prefilledDateStr) : undefined;
-  const validPrefilledDate = prefilledDate && !isNaN(prefilledDate.getTime()) && prefilledDate >= new Date() ? prefilledDate : undefined;
-
-  const prefilledSlotType = searchParams.get("slot") === "clinic" ? "clinic" : "lesson";
-
-  // Auto-fill from URL params (e.g. from inline booking or inquiry forms)
-  const prefilledName = searchParams.get("name") || "";
-  const prefilledEmail = searchParams.get("email") || "";
-  const prefilledPhone = searchParams.get("phone") || "";
-
-  const [formData, setFormData] = useState<Partial<BookingFormData>>({
-    name: prefilledName, email: prefilledEmail, phone: prefilledPhone, horseName: "", experienceLevel: initialLevel,
-    lessonGoals: "", preferredDay: "", preferredDate: validPrefilledDate, additionalNotes: "",
-    timezone: getDetectedTimezone(), slotType: prefilledSlotType as "lesson" | "clinic",
+  const [data, setData] = useState<WizardData>({
+    lessonType: validLevels.includes(prefilledLevel) ? prefilledLevel : "",
+    horseName: "",
+    lessonGoals: "",
+    slotId: "",
+    slotDate: "",
+    slotTime: "",
+    slotEndTime: "",
+    name: searchParams.get("name") || "",
+    email: searchParams.get("email") || "",
+    phone: searchParams.get("phone") || "",
+    additionalNotes: "",
   });
 
-  const updateField = <K extends keyof BookingFormData>(field: K, value: BookingFormData[K]) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors((prev) => { const next = { ...prev }; delete next[field]; return next; });
-    }
+  const update = <K extends keyof WizardData>(key: K, value: WizardData[K]) => {
+    setData((prev) => ({ ...prev, [key]: value }));
+    if (errors[key]) setErrors((prev) => { const n = { ...prev }; delete n[key]; return n; });
   };
 
+  const pricing = DEPOSIT_MAP[data.lessonType];
+
+  // ── Slot fetching for Step 2 ──
+  const [slots, setSlots] = useState<any[]>([]);
+  const [slotsLoading, setSlotsLoading] = useState(true);
+  const [selectedSlotDate, setSelectedSlotDate] = useState<Date | undefined>();
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+
+  useEffect(() => {
+    const fetchSlots = async () => {
+      setSlotsLoading(true);
+      const from = format(startOfMonth(currentMonth), "yyyy-MM-dd");
+      const to = format(endOfMonth(addMonths(currentMonth, 1)), "yyyy-MM-dd");
+      const { data: slotData } = await supabase
+        .from("lesson_slots")
+        .select("*")
+        .gte("slot_date", from)
+        .lte("slot_date", to)
+        .order("slot_date")
+        .order("start_time");
+      setSlots(slotData || []);
+      setSlotsLoading(false);
+    };
+    if (step === 2) fetchSlots();
+  }, [step, currentMonth]);
+
+  const slotsByDate = useMemo(() => {
+    const map: Record<string, any[]> = {};
+    for (const slot of slots) {
+      if (!map[slot.slot_date]) map[slot.slot_date] = [];
+      map[slot.slot_date].push(slot);
+    }
+    return map;
+  }, [slots]);
+
+  const availableDates = useMemo(() => {
+    const dates = new Set<string>();
+    for (const slot of slots) {
+      if (slot.current_bookings < slot.max_bookings) {
+        // Filter by lesson type if applicable
+        if (slot.slot_type === "lesson" || slot.slot_type === data.lessonType) {
+          dates.add(slot.slot_date);
+        }
+      }
+    }
+    return dates;
+  }, [slots, data.lessonType]);
+
+  const fullDates = useMemo(() => {
+    const dates = new Set<string>();
+    for (const [date, dateSlots] of Object.entries(slotsByDate)) {
+      const relevantSlots = dateSlots.filter(
+        (s: any) => s.slot_type === "lesson" || s.slot_type === data.lessonType
+      );
+      if (relevantSlots.length > 0 && relevantSlots.every((s: any) => s.current_bookings >= s.max_bookings)) {
+        dates.add(date);
+      }
+    }
+    return dates;
+  }, [slotsByDate, data.lessonType]);
+
+  const selectedDateSlots = selectedSlotDate
+    ? (slotsByDate[format(selectedSlotDate, "yyyy-MM-dd")] || []).filter(
+        (s: any) => (s.slot_type === "lesson" || s.slot_type === data.lessonType) && s.current_bookings < s.max_bookings
+      )
+    : [];
+
+  // ── Validation ──
   const validateStep = (s: number): boolean => {
     const newErrors: Record<string, string> = {};
     if (s === 1) {
-      if (!formData.experienceLevel) newErrors.experienceLevel = "Please select your experience level";
-      if (!formData.lessonGoals?.trim()) newErrors.lessonGoals = "Please describe your goals";
-      if (!formData.preferredDay) newErrors.preferredDay = "Please select a preferred day";
+      if (!data.lessonType) newErrors.lessonType = "Please select a lesson type";
     }
     if (s === 2) {
-      if (!formData.name?.trim()) newErrors.name = "Name is required";
-      if (!formData.email?.trim()) newErrors.email = "Email is required";
-      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = "Please enter a valid email";
+      if (!data.slotId) newErrors.slotId = "Please select a time slot";
+    }
+    if (s === 3) {
+      if (!data.name.trim()) newErrors.name = "Name is required";
+      if (!data.email.trim()) newErrors.email = "Email is required";
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) newErrors.email = "Please enter a valid email";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const goToStep2 = () => { if (validateStep(1)) setStep(2); };
-
-  /** Opens the confirmation modal instead of submitting directly */
-  const handleReviewSubmit = () => {
-    if (!validateStep(2)) return;
-    setShowConfirm(true);
+  const nextStep = () => {
+    if (validateStep(step)) setStep((s) => Math.min(s + 1, 4));
   };
 
-  const handleConfirmAndSubmit = async () => {
+  // ── Submit / Checkout ──
+  const handleCheckout = async () => {
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.from("inquiries").insert({
-        name: formData.name?.trim() || "",
-        email: formData.email?.trim() || "",
-        phone: formData.phone?.trim() || null,
-        preferred_contact: "email",
-        services: [formData.slotType === "clinic" ? "clinics" : "lessons"],
-        horse_name: formData.horseName?.trim() || null,
-        experience_level: formData.experienceLevel || null,
-        project_vision: formData.lessonGoals?.trim() || null,
-        project_details: `Type: ${formData.slotType === "clinic" ? "Clinic/Group" : "Private Lesson"} | Preferred day: ${formData.preferredDay}${formData.preferredDate ? ` | Preferred date: ${format(formData.preferredDate, "yyyy-MM-dd")}` : ""} | Timezone: ${formData.timezone || "Australia/Melbourne"}${formData.additionalNotes?.trim() ? ` | Notes: ${formData.additionalNotes.trim()}` : ""}`,
-        preferred_start: formData.preferredDate ? format(formData.preferredDate, "yyyy-MM-dd") : null,
+      const { data: result, error } = await supabase.functions.invoke("create-lesson-checkout", {
+        body: {
+          slot_id: data.slotId,
+          lesson_type: data.lessonType,
+          client_name: data.name.trim(),
+          client_email: data.email.trim(),
+          client_phone: data.phone.trim() || null,
+          horse_name: data.horseName.trim() || null,
+          experience_level: data.lessonType,
+          lesson_goals: data.lessonGoals.trim() || null,
+        },
       });
-      if (error) throw error;
 
-      supabase.functions.invoke("send-inquiry-notification", {
-        body: {
-          name: formData.name?.trim(), email: formData.email?.trim(), phone: formData.phone?.trim(),
-          services: ["lessons"], horseName: formData.horseName?.trim(), experienceLevel: formData.experienceLevel,
-          goals: formData.lessonGoals?.trim(),
-          additionalNotes: `Preferred day: ${formData.preferredDay}. ${formData.additionalNotes?.trim() || ""}`,
-        },
-      }).catch(() => {});
+      if (error) throw new Error("Failed to create checkout");
 
-      supabase.functions.invoke("send-booking-confirmation", {
-        body: {
-          clientName: formData.name?.trim(),
-          clientEmail: formData.email?.trim(),
-          serviceType: PROGRAM_LEVELS.find((l) => l.value === formData.experienceLevel)?.label || "Riding Lesson",
-          bookingDate: formData.preferredDate ? format(formData.preferredDate, "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd"),
-          bookingTime: "09:00",
-          durationMinutes: 60,
-          notes: formData.additionalNotes?.trim() || undefined,
-          timezone: formData.timezone || "Australia/Melbourne",
-        },
-      }).catch(() => {});
-
-      setShowConfirm(false);
-      setIsSubmitted(true);
-      toast({ title: "Lesson inquiry sent!", description: "We'll be in touch to confirm your booking." });
-    } catch {
-      toast({ title: "Something went wrong", description: "Please try again or call us directly.", variant: "destructive" });
+      if (result.mode === "stripe" && result.url) {
+        window.location.href = result.url;
+      } else if (result.mode === "no_payment") {
+        toast({ title: "Booking confirmed!", description: "Your lesson has been booked. We'll send a confirmation email shortly." });
+        setStep(5); // success state
+      }
+    } catch (err: any) {
+      toast({ title: "Something went wrong", description: err.message || "Please try again.", variant: "destructive" });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const selectedProgram = PROGRAM_LEVELS.find((l) => l.value === formData.experienceLevel);
-
-  if (isSubmitted) {
+  // ── Success state ──
+  if (isSuccess || step === 5) {
     return (
       <div className="text-center py-12">
         <div className="w-20 h-20 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6">
           <CheckCircle className="h-10 w-10 text-accent" />
         </div>
-        <h3 className="font-serif text-2xl font-semibold text-foreground mb-4">Booking Request Received!</h3>
-        <p className="text-muted-foreground mb-2 max-w-md mx-auto">We'll confirm your lesson time within 1–2 business days.</p>
-        <p className="text-muted-foreground mb-8 max-w-md mx-auto">Check your email for a confirmation shortly.</p>
-        <Button onClick={() => { setIsSubmitted(false); setStep(1); setFormData({ name: "", email: "", phone: "", horseName: "", experienceLevel: "", lessonGoals: "", preferredDay: "", preferredDate: undefined, additionalNotes: "" }); }} variant="outline">
-          Book Another Lesson
+        <h3 className="font-serif text-2xl font-semibold text-foreground mb-4">You're All Set!</h3>
+        <p className="text-muted-foreground mb-2 max-w-md mx-auto">
+          {isSuccess ? "Your deposit has been received and your lesson is confirmed." : "Your lesson booking has been confirmed."}
+        </p>
+        <p className="text-muted-foreground mb-8 max-w-md mx-auto">Check your email for a confirmation with all the details.</p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
+            <Link to="/book-lesson">Book Another Lesson</Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link to="/lessons">View All Programs</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Cancelled state ──
+  if (isCancelled) {
+    return (
+      <div className="text-center py-12">
+        <div className="w-20 h-20 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-6">
+          <CalendarIcon className="h-10 w-10 text-destructive" />
+        </div>
+        <h3 className="font-serif text-2xl font-semibold text-foreground mb-4">Payment Cancelled</h3>
+        <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+          No worries — your spot hasn't been charged. You can try again when you're ready.
+        </p>
+        <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
+          <Link to="/book-lesson">Try Again</Link>
         </Button>
       </div>
     );
   }
 
+  const STEP_LABELS = ["Lesson Type", "Pick a Slot", "Your Details", "Review & Pay"];
+
   return (
     <div>
       {/* Step indicator */}
-      <div className="flex items-center gap-3 mb-8">
-        <div className={cn("w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all", step >= 1 ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground")}>
-          {step > 1 ? <CheckCircle className="w-4 h-4" /> : "1"}
-        </div>
-        <div className={cn("h-0.5 w-12 rounded-full transition-all", step > 1 ? "bg-accent" : "bg-muted")} />
-        <div className={cn("w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all", step === 2 ? "bg-accent text-accent-foreground ring-2 ring-accent/20" : "bg-muted text-muted-foreground")}>
-          2
-        </div>
-        <span className="text-sm text-muted-foreground ml-2">
-          {step === 1 ? "Lesson Details" : "Your Info"}
-        </span>
+      <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-2">
+        {STEP_LABELS.map((label, i) => {
+          const stepNum = i + 1;
+          const isActive = step === stepNum;
+          const isDone = step > stepNum;
+          return (
+            <div key={label} className="flex items-center gap-2">
+              {i > 0 && <div className={cn("h-0.5 w-6 sm:w-10 rounded-full transition-all", isDone ? "bg-accent" : "bg-muted")} />}
+              <div className="flex items-center gap-1.5 shrink-0">
+                <div className={cn(
+                  "w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium transition-all",
+                  isActive ? "bg-accent text-accent-foreground ring-2 ring-accent/20" :
+                  isDone ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"
+                )}>
+                  {isDone ? <CheckCircle className="w-3.5 h-3.5" /> : stepNum}
+                </div>
+                <span className={cn("text-xs hidden sm:inline", isActive ? "text-foreground font-medium" : "text-muted-foreground")}>
+                  {label}
+                </span>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
+      {/* ── Step 1: Lesson Type ── */}
       {step === 1 && (
         <div className="space-y-6">
-          {/* Slot type filter */}
           <div>
-            <Label className="text-base font-medium mb-3 block">What are you booking?</Label>
-            <div className="flex gap-3">
-              {([
-                { value: "lesson" as const, label: "Private Lesson", desc: "One-on-one session with Glenn" },
-                { value: "clinic" as const, label: "Clinic / Group", desc: "Group training or workshop" },
-              ]).map((type) => (
-                <button
-                  key={type.value}
-                  type="button"
-                  onClick={() => updateField("slotType", type.value)}
-                  className={cn(
-                    "flex-1 py-4 px-4 rounded-lg border-2 text-center transition-all",
-                    formData.slotType === type.value
-                      ? "border-accent bg-accent/5"
-                      : "border-border hover:border-accent/50"
-                  )}
-                >
-                  <span className="font-medium text-sm text-foreground block">{type.label}</span>
-                  <span className="text-xs text-muted-foreground mt-0.5 block">{type.desc}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <Label className="text-base font-medium mb-3 block">Your Riding Experience</Label>
-            <RadioGroup value={formData.experienceLevel} onValueChange={(v) => updateField("experienceLevel", v)} className="grid sm:grid-cols-3 gap-3">
+            <Label className="text-base font-medium mb-3 block">Select Your Program</Label>
+            <RadioGroup value={data.lessonType} onValueChange={(v) => update("lessonType", v)} className="grid gap-3">
               {PROGRAM_LEVELS.map((level) => (
                 <Label
                   key={level.value}
-                  htmlFor={`exp-${level.value}`}
+                  htmlFor={`wiz-${level.value}`}
                   className={cn(
-                    "flex flex-col items-center gap-2 rounded-lg border-2 p-4 cursor-pointer transition-all hover:border-accent/50",
-                    formData.experienceLevel === level.value ? "border-accent bg-accent/5" : "border-border"
+                    "flex items-center justify-between gap-3 rounded-lg border-2 p-4 cursor-pointer transition-all hover:border-accent/50",
+                    data.lessonType === level.value ? "border-accent bg-accent/5" : "border-border"
                   )}
                 >
-                  <RadioGroupItem value={level.value} id={`exp-${level.value}`} className="sr-only" />
-                  <span className="font-medium text-foreground">{level.label}</span>
-                  <span className="text-xs text-muted-foreground text-center">{level.tagline}</span>
+                  <div className="flex items-center gap-3">
+                    <RadioGroupItem value={level.value} id={`wiz-${level.value}`} className="sr-only" />
+                    <div className={cn("w-10 h-10 rounded-full flex items-center justify-center shrink-0", data.lessonType === level.value ? "bg-accent/20" : "bg-accent/10")}>
+                      <level.icon className="h-5 w-5 text-accent" />
+                    </div>
+                    <div>
+                      <span className="font-medium text-foreground block">{level.label}</span>
+                      <span className="text-xs text-muted-foreground">{level.tagline}</span>
+                    </div>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-sm font-semibold text-accent">{level.price}</span>
+                    <span className="text-xs text-muted-foreground block">{level.duration}</span>
+                  </div>
                 </Label>
               ))}
             </RadioGroup>
-            {errors.experienceLevel && <p className="text-sm text-destructive mt-1">{errors.experienceLevel}</p>}
+            {errors.lessonType && <p className="text-sm text-destructive mt-1">{errors.lessonType}</p>}
           </div>
 
           <div>
-            <Label htmlFor="horseName">Horse Name <span className="text-muted-foreground text-xs">(optional)</span></Label>
-            <Input id="horseName" value={formData.horseName || ""} onChange={(e) => updateField("horseName", e.target.value)} placeholder="Your horse's name" maxLength={100} className="mt-1" />
+            <Label htmlFor="wiz-horse">Horse Name <span className="text-muted-foreground text-xs">(optional)</span></Label>
+            <Input id="wiz-horse" value={data.horseName} onChange={(e) => update("horseName", e.target.value)} placeholder="Your horse's name" className="mt-1" />
           </div>
 
           <div>
-            <Label htmlFor="goals">What do you want to work on?</Label>
-            <Textarea id="goals" value={formData.lessonGoals || ""} onChange={(e) => updateField("lessonGoals", e.target.value)} placeholder="E.g. improve my seat at canter, build confidence jumping, introduce my young horse to arena work..." maxLength={1000} rows={4} className="mt-1" />
-            {errors.lessonGoals && <p className="text-sm text-destructive mt-1">{errors.lessonGoals}</p>}
-            <p className="text-xs text-muted-foreground mt-1">{(formData.lessonGoals?.length || 0)}/1000</p>
+            <Label htmlFor="wiz-goals">What do you want to work on? <span className="text-muted-foreground text-xs">(optional)</span></Label>
+            <Textarea id="wiz-goals" value={data.lessonGoals} onChange={(e) => update("lessonGoals", e.target.value)} placeholder="E.g. improve my seat at canter, build jumping confidence..." rows={3} className="mt-1" />
           </div>
 
-          <div>
-            <Label className="text-base font-medium mb-3 block">Preferred Day</Label>
-            <div className="flex gap-3">
-              {["Thursday", "Friday"].map((day) => (
-                <button
-                  key={day}
-                  type="button"
-                  onClick={() => updateField("preferredDay", day.toLowerCase())}
-                  className={cn(
-                    "flex-1 py-3 px-4 rounded-lg border-2 text-sm font-medium transition-all",
-                    formData.preferredDay === day.toLowerCase()
-                      ? "border-accent bg-accent/5 text-accent"
-                      : "border-border text-muted-foreground hover:border-accent/50"
-                  )}
-                >
-                  {day}
-                </button>
-              ))}
-            </div>
-            {errors.preferredDay && <p className="text-sm text-destructive mt-1">{errors.preferredDay}</p>}
-          </div>
-
-          <div>
-            <Label>Preferred Date <span className="text-muted-foreground text-xs">(optional)</span></Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className={cn("w-full justify-start text-left font-normal mt-1", !formData.preferredDate && "text-muted-foreground")}>
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {formData.preferredDate ? format(formData.preferredDate, "PPP") : "Pick a date"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={formData.preferredDate}
-                  onSelect={(d) => updateField("preferredDate", d)}
-                  disabled={(date) => {
-                    const day = date.getDay();
-                    return date < new Date() || (day !== 4 && day !== 5);
-                  }}
-                  initialFocus
-                  className={cn("p-3 pointer-events-auto")}
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-
-          <div>
-            <Label className="text-base font-medium mb-3 block flex items-center gap-2">
-              <Clock className="h-4 w-4 text-accent" /> Your Timezone
-            </Label>
-            <select
-              value={formData.timezone || "Australia/Melbourne"}
-              onChange={(e) => updateField("timezone", e.target.value)}
-              className="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
-            >
-              {TIMEZONE_OPTIONS.map((tz) => (
-                <option key={tz.value} value={tz.value}>{tz.label}</option>
-              ))}
-            </select>
-            <p className="text-xs text-muted-foreground mt-1.5">
-              Lessons run on AEST/AEDT (Melbourne time). We'll confirm your slot adjusted to your timezone.
-            </p>
-          </div>
-
-          <Button onClick={goToStep2} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-            Continue <ArrowRight className="ml-2 h-4 w-4" />
+          <Button onClick={nextStep} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+            Continue to Slot Selection <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
       )}
 
+      {/* ── Step 2: Pick a Slot ── */}
       {step === 2 && (
         <div className="space-y-6">
-          <div>
-            <Label htmlFor="name">Full Name *</Label>
-            <Input id="name" value={formData.name || ""} onChange={(e) => updateField("name", e.target.value)} placeholder="Your name" maxLength={100} className="mt-1" />
-            {errors.name && <p className="text-sm text-destructive mt-1">{errors.name}</p>}
-          </div>
-          <div>
-            <Label htmlFor="email">Email *</Label>
-            <Input id="email" type="email" value={formData.email || ""} onChange={(e) => updateField("email", e.target.value)} placeholder="you@example.com" maxLength={255} className="mt-1" />
-            {errors.email && <p className="text-sm text-destructive mt-1">{errors.email}</p>}
-          </div>
-          <div>
-            <Label htmlFor="phone">Phone <span className="text-muted-foreground text-xs">(optional)</span></Label>
-            <Input id="phone" type="tel" value={formData.phone || ""} onChange={(e) => updateField("phone", e.target.value)} placeholder="04XX XXX XXX" maxLength={20} className="mt-1" />
-          </div>
-          <div>
-            <Label htmlFor="notes">Anything else? <span className="text-muted-foreground text-xs">(optional)</span></Label>
-            <Textarea id="notes" value={formData.additionalNotes || ""} onChange={(e) => updateField("additionalNotes", e.target.value)} placeholder="Any additional info..." maxLength={500} rows={3} className="mt-1" />
+          <p className="text-sm text-muted-foreground">
+            Showing available slots for <span className="font-medium text-foreground">{pricing?.label}</span>. Select a date then pick a time.
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            {/* Calendar */}
+            <div className="bg-card rounded-xl border border-border p-4">
+              {slotsLoading ? (
+                <div className="flex items-center justify-center py-16">
+                  <Clock className="h-5 w-5 animate-spin text-muted-foreground" />
+                </div>
+              ) : (
+                <Calendar
+                  mode="single"
+                  selected={selectedSlotDate}
+                  onSelect={(d) => { setSelectedSlotDate(d); update("slotId", ""); }}
+                  onMonthChange={setCurrentMonth}
+                  disabled={(date) => {
+                    const day = date.getDay();
+                    const dateStr = format(date, "yyyy-MM-dd");
+                    return isBefore(date, startOfDay(new Date())) || (day !== 4 && day !== 5) || fullDates.has(dateStr);
+                  }}
+                  modifiers={{
+                    available: (date) => availableDates.has(format(date, "yyyy-MM-dd")),
+                  }}
+                  modifiersClassNames={{
+                    available: "!bg-accent/15 !text-accent font-semibold hover:!bg-accent/25 relative after:absolute after:bottom-0.5 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:rounded-full after:bg-accent",
+                  }}
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              )}
+            </div>
+
+            {/* Time slots */}
+            <div className="bg-card rounded-xl border border-border p-4">
+              {!selectedSlotDate ? (
+                <div className="flex flex-col items-center justify-center h-full text-center py-12">
+                  <CalendarIcon className="h-7 w-7 text-accent mb-3" />
+                  <p className="text-sm text-muted-foreground">Select a date to see available times</p>
+                </div>
+              ) : selectedDateSlots.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full text-center py-12">
+                  <p className="font-medium text-foreground mb-1">{format(selectedSlotDate, "EEEE, MMMM d")}</p>
+                  <p className="text-sm text-muted-foreground">No available slots for this date.</p>
+                </div>
+              ) : (
+                <div>
+                  <p className="font-medium text-foreground mb-3">{format(selectedSlotDate, "EEEE, MMMM d")}</p>
+                  <div className="space-y-2">
+                    {selectedDateSlots.map((slot: any) => (
+                      <button
+                        key={slot.id}
+                        type="button"
+                        onClick={() => {
+                          update("slotId", slot.id);
+                          update("slotDate", slot.slot_date);
+                          update("slotTime", slot.start_time);
+                          update("slotEndTime", slot.end_time);
+                        }}
+                        className={cn(
+                          "w-full text-left rounded-lg border p-3 transition-all",
+                          data.slotId === slot.id
+                            ? "border-accent bg-accent/10 ring-1 ring-accent/30"
+                            : "border-border hover:border-accent/40"
+                        )}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <Clock className="h-3.5 w-3.5 text-accent" />
+                            <span className="text-sm font-medium text-foreground">
+                              {formatTimeSimple(slot.start_time)} – {formatTimeSimple(slot.end_time)}
+                            </span>
+                          </div>
+                          {data.slotId === slot.id && <CheckCircle className="h-4 w-4 text-accent" />}
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {slot.max_bookings - slot.current_bookings} spot{slot.max_bookings - slot.current_bookings !== 1 ? "s" : ""} left
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
+          {errors.slotId && <p className="text-sm text-destructive">{errors.slotId}</p>}
+
           <div className="flex gap-3">
-            <Button variant="outline" onClick={() => setStep(1)} className="flex-1">
-              Back
-            </Button>
-            <Button onClick={handleReviewSubmit} disabled={isSubmitting} className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground">
-              Review & Book
-              <ArrowRight className="ml-2 h-4 w-4" />
+            <Button variant="outline" onClick={() => setStep(1)} className="flex-1">Back</Button>
+            <Button onClick={nextStep} className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground">
+              Continue <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
         </div>
       )}
 
-      {/* ── Confirmation Modal ──────────────────────────── */}
-      {showConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => !isSubmitting && setShowConfirm(false)}>
-          <div
-            className="bg-card border border-border rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto animate-scale-in"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header */}
-            <div className="bg-primary px-6 py-5 rounded-t-2xl">
-              <h3 className="font-serif text-xl font-semibold text-primary-foreground">Confirm Your Booking</h3>
-              <p className="text-sm text-primary-foreground/70 mt-1">Please review your details before submitting.</p>
+      {/* ── Step 3: Your Details ── */}
+      {step === 3 && (
+        <div className="space-y-6">
+          {/* Summary card */}
+          {pricing && data.slotDate && (
+            <div className="rounded-lg bg-accent/5 border border-accent/15 p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
+                  <CalendarIcon className="h-5 w-5 text-accent" />
+                </div>
+                <div>
+                  <p className="font-medium text-foreground">{pricing.label}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {format(new Date(data.slotDate + "T00:00:00"), "EEEE, MMMM d")} · {formatTimeSimple(data.slotTime)} – {formatTimeSimple(data.slotEndTime)}
+                  </p>
+                </div>
+                <div className="ml-auto text-right shrink-0">
+                  <p className="text-sm font-semibold text-accent">${pricing.deposit.toFixed(2)} deposit</p>
+                  <p className="text-[10px] text-muted-foreground">of ${pricing.full} total</p>
+                </div>
+              </div>
             </div>
+          )}
 
-            <div className="p-6 space-y-5">
-              {/* Lesson Details */}
-              <div className="rounded-lg border border-border bg-background p-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Lesson</span>
-                  <button onClick={() => { setShowConfirm(false); setStep(1); }} className="text-xs text-accent hover:underline flex items-center gap-1">
-                    <Edit2 className="h-3 w-3" /> Edit
-                  </button>
-                </div>
-                {selectedProgram && (
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
-                      <selectedProgram.icon className="h-5 w-5 text-accent" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">{selectedProgram.label}</p>
-                      <p className="text-xs text-muted-foreground">{selectedProgram.price} · {selectedProgram.duration}</p>
-                    </div>
+          <div>
+            <Label htmlFor="wiz-name">Full Name *</Label>
+            <div className="relative mt-1">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input id="wiz-name" value={data.name} onChange={(e) => update("name", e.target.value)} placeholder="Your name" className="pl-9" />
+            </div>
+            {errors.name && <p className="text-sm text-destructive mt-1">{errors.name}</p>}
+          </div>
+          <div>
+            <Label htmlFor="wiz-email">Email *</Label>
+            <div className="relative mt-1">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input id="wiz-email" type="email" value={data.email} onChange={(e) => update("email", e.target.value)} placeholder="you@example.com" className="pl-9" />
+            </div>
+            {errors.email && <p className="text-sm text-destructive mt-1">{errors.email}</p>}
+          </div>
+          <div>
+            <Label htmlFor="wiz-phone">Phone <span className="text-muted-foreground text-xs">(optional)</span></Label>
+            <div className="relative mt-1">
+              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input id="wiz-phone" type="tel" value={data.phone} onChange={(e) => update("phone", e.target.value)} placeholder="04XX XXX XXX" className="pl-9" />
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="wiz-notes">Additional Notes <span className="text-muted-foreground text-xs">(optional)</span></Label>
+            <Textarea id="wiz-notes" value={data.additionalNotes} onChange={(e) => update("additionalNotes", e.target.value)} placeholder="Anything else Glenn should know..." rows={3} className="mt-1" />
+          </div>
+
+          <div className="flex gap-3">
+            <Button variant="outline" onClick={() => setStep(2)} className="flex-1">Back</Button>
+            <Button onClick={nextStep} className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground">
+              Review Booking <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Step 4: Review & Pay ── */}
+      {step === 4 && pricing && (
+        <div className="space-y-6">
+          {/* Lesson summary */}
+          <div className="rounded-lg border border-border bg-card p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Lesson</span>
+              <button onClick={() => setStep(1)} className="text-xs text-accent hover:underline flex items-center gap-1">
+                <Edit2 className="h-3 w-3" /> Edit
+              </button>
+            </div>
+            <div className="flex items-center gap-3">
+              {(() => { const P = PROGRAM_LEVELS.find(l => l.value === data.lessonType); return P ? (
+                <>
+                  <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
+                    <P.icon className="h-5 w-5 text-accent" />
                   </div>
-                )}
-                <div className="grid grid-cols-2 gap-3 pt-2 border-t border-border">
-                  <div className="flex items-center gap-2 text-sm">
-                    <CalendarIcon className="h-4 w-4 text-accent shrink-0" />
-                    <span className="text-foreground">
-                      {formData.preferredDate ? format(formData.preferredDate, "EEE, MMM d") : "No date selected"}
-                    </span>
+                  <div>
+                    <p className="font-medium text-foreground">{P.label}</p>
+                    <p className="text-xs text-muted-foreground">{P.price} · {P.duration}</p>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Clock className="h-4 w-4 text-accent shrink-0" />
-                    <span className="text-foreground capitalize">{formData.preferredDay || "—"}</span>
-                  </div>
-                  {formData.horseName?.trim() && (
-                    <div className="flex items-center gap-2 text-sm col-span-2">
-                      <Star className="h-4 w-4 text-accent shrink-0" />
-                      <span className="text-foreground">{formData.horseName}</span>
-                    </div>
-                  )}
-                </div>
-                {formData.lessonGoals?.trim() && (
-                  <div className="pt-2 border-t border-border">
-                    <p className="text-xs text-muted-foreground mb-1">Goals</p>
-                    <p className="text-sm text-foreground leading-relaxed line-clamp-3">{formData.lessonGoals}</p>
-                  </div>
-                )}
+                </>
+              ) : null; })()}
+            </div>
+            <div className="grid grid-cols-2 gap-3 pt-3 border-t border-border">
+              <div className="flex items-center gap-2 text-sm">
+                <CalendarIcon className="h-4 w-4 text-accent shrink-0" />
+                <span className="text-foreground">{format(new Date(data.slotDate + "T00:00:00"), "EEE, MMM d")}</span>
               </div>
-
-              {/* Contact Details */}
-              <div className="rounded-lg border border-border bg-background p-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Your Details</span>
-                  <button onClick={() => { setShowConfirm(false); setStep(2); }} className="text-xs text-accent hover:underline flex items-center gap-1">
-                    <Edit2 className="h-3 w-3" /> Edit
-                  </button>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <User className="h-4 w-4 text-accent shrink-0" />
-                    <span className="text-foreground">{formData.name}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Mail className="h-4 w-4 text-accent shrink-0" />
-                    <span className="text-foreground">{formData.email}</span>
-                  </div>
-                  {formData.phone?.trim() && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <Phone className="h-4 w-4 text-accent shrink-0" />
-                      <span className="text-foreground">{formData.phone}</span>
-                    </div>
-                  )}
-                  <div className="flex items-center gap-2 text-sm">
-                    <MapPin className="h-4 w-4 text-accent shrink-0" />
-                    <span className="text-foreground">{TIMEZONE_OPTIONS.find(t => t.value === formData.timezone)?.label || formData.timezone}</span>
-                  </div>
-                </div>
+              <div className="flex items-center gap-2 text-sm">
+                <Clock className="h-4 w-4 text-accent shrink-0" />
+                <span className="text-foreground">{formatTimeSimple(data.slotTime)} – {formatTimeSimple(data.slotEndTime)}</span>
               </div>
-
-              {formData.additionalNotes?.trim() && (
-                <div className="rounded-lg border border-border bg-background p-4">
-                  <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-2">Additional Notes</p>
-                  <p className="text-sm text-foreground leading-relaxed">{formData.additionalNotes}</p>
-                </div>
-              )}
-
-              {/* Actions */}
-              <div className="flex gap-3 pt-2">
-                <Button variant="outline" onClick={() => setShowConfirm(false)} disabled={isSubmitting} className="flex-1">
-                  Go Back
-                </Button>
-                <Button onClick={handleConfirmAndSubmit} disabled={isSubmitting} className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground">
-                  {isSubmitting ? "Sending..." : "Confirm & Book"}
-                  {!isSubmitting && <Send className="ml-2 h-4 w-4" />}
-                </Button>
+            </div>
+            {data.horseName.trim() && (
+              <div className="flex items-center gap-2 text-sm pt-2 border-t border-border">
+                <Star className="h-4 w-4 text-accent shrink-0" />
+                <span className="text-foreground">{data.horseName}</span>
               </div>
+            )}
+          </div>
 
-              <p className="text-[11px] text-muted-foreground text-center">
-                You'll receive a confirmation email once your session is confirmed.
+          {/* Contact summary */}
+          <div className="rounded-lg border border-border bg-card p-5 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Your Details</span>
+              <button onClick={() => setStep(3)} className="text-xs text-accent hover:underline flex items-center gap-1">
+                <Edit2 className="h-3 w-3" /> Edit
+              </button>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-sm"><User className="h-4 w-4 text-accent shrink-0" /><span className="text-foreground">{data.name}</span></div>
+              <div className="flex items-center gap-2 text-sm"><Mail className="h-4 w-4 text-accent shrink-0" /><span className="text-foreground">{data.email}</span></div>
+              {data.phone.trim() && <div className="flex items-center gap-2 text-sm"><Phone className="h-4 w-4 text-accent shrink-0" /><span className="text-foreground">{data.phone}</span></div>}
+            </div>
+          </div>
+
+          {/* Deposit breakdown */}
+          <div className="rounded-lg border border-accent/20 bg-accent/5 p-5 space-y-3">
+            <span className="text-xs uppercase tracking-widest text-accent font-medium">Payment Summary</span>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-foreground">{pricing.label}</span>
+                <span className="text-foreground">${pricing.full.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between font-semibold text-accent border-t border-accent/15 pt-2">
+                <span>50% Deposit Due Now</span>
+                <span>${pricing.deposit.toFixed(2)}</span>
+              </div>
+              <p className="text-[11px] text-muted-foreground">
+                Remaining ${(pricing.full - pricing.deposit).toFixed(2)} due on the day of your lesson.
               </p>
             </div>
           </div>
+
+          <div className="flex gap-3">
+            <Button variant="outline" onClick={() => setStep(3)} className="flex-1">Back</Button>
+            <Button onClick={handleCheckout} disabled={isSubmitting} className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground">
+              {isSubmitting ? "Processing..." : `Pay $${pricing.deposit.toFixed(2)} Deposit`}
+              {!isSubmitting && <ArrowRight className="ml-2 h-4 w-4" />}
+            </Button>
+          </div>
+
+          <p className="text-[11px] text-muted-foreground text-center">
+            You'll be redirected to secure checkout. Your booking is confirmed once payment is received.
+          </p>
         </div>
       )}
     </div>
@@ -1426,8 +1525,8 @@ export default function BookLesson() {
           <div className="max-w-xl mx-auto">
             <div className="bg-background rounded-xl p-6 sm:p-8 border border-border">
               <h2 className="font-serif text-2xl font-semibold text-foreground mb-2">Book a Lesson with Glenn</h2>
-              <p className="text-muted-foreground mb-8 text-sm">Fill out the form below and Glenn will confirm your booking within 1–2 business days.</p>
-              <BookingForm />
+              <p className="text-muted-foreground mb-8 text-sm">Choose your lesson, pick a slot, and secure your spot with a 50% deposit.</p>
+              <BookingWizard />
             </div>
           </div>
         </div>
