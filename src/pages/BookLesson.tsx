@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { CalendarIcon, Clock, CheckCircle, ArrowRight, Send, Star, Award, Target, ChevronDown, ExternalLink, Quote, Users, Sparkles, Play, Printer, CircleDot, Mail, Phone, MapPin, User, Edit2 } from "lucide-react";
+import { CalendarSyncButtons } from "@/components/CalendarSyncButtons";
+import type { CalendarEvent } from "@/lib/calendarSync";
 import { z } from "zod";
 import { format } from "date-fns";
 import Autoplay from "embla-carousel-autoplay";
@@ -573,6 +575,24 @@ function BookingWizard() {
 
   // ── Success state ──
   if (isSuccess || step === 5) {
+    // Build calendar event from wizard data (available when step===5, may be empty on Stripe redirect)
+    const calEvent: CalendarEvent | null =
+      data.slotDate && data.slotTime
+        ? {
+            title: `${pricing?.label || "Riding Lesson"} — Peninsula Equine`,
+            date: data.slotDate,
+            startTime: data.slotTime,
+            endTime: data.slotEndTime || undefined,
+            durationMinutes: data.lessonType === "beginner" ? 45 : 60,
+            description: [
+              `Lesson: ${pricing?.label || data.lessonType}`,
+              data.horseName ? `Horse: ${data.horseName}` : "",
+              data.lessonGoals ? `Goals: ${data.lessonGoals}` : "",
+              "Arrive 15 minutes early. Wear approved helmet and closed-toe boots.",
+            ].filter(Boolean).join("\n"),
+          }
+        : null;
+
     return (
       <div className="text-center py-12">
         <div className="w-20 h-20 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6">
@@ -582,7 +602,27 @@ function BookingWizard() {
         <p className="text-muted-foreground mb-2 max-w-md mx-auto">
           {isSuccess ? "Your deposit has been received and your lesson is confirmed." : "Your lesson booking has been confirmed."}
         </p>
-        <p className="text-muted-foreground mb-8 max-w-md mx-auto">Check your email for a confirmation with all the details.</p>
+        <p className="text-muted-foreground mb-6 max-w-md mx-auto">Check your email for a confirmation with all the details.</p>
+
+        {/* Calendar sync */}
+        {calEvent && (
+          <div className="mb-8 p-5 rounded-xl border border-accent/20 bg-accent/5 max-w-sm mx-auto">
+            <CalendarIcon className="h-5 w-5 text-accent mx-auto mb-2" />
+            <p className="text-sm font-medium text-foreground mb-1">Add to Your Calendar</p>
+            <p className="text-xs text-muted-foreground mb-4">
+              Sync this lesson to Google Calendar, Apple Calendar, or Outlook.
+            </p>
+            <CalendarSyncButtons event={calEvent} />
+          </div>
+        )}
+        {!calEvent && (
+          <div className="mb-8 p-4 rounded-lg border border-border bg-card max-w-sm mx-auto">
+            <p className="text-sm text-muted-foreground">
+              📅 A calendar invite (.ics) is attached to your confirmation email — open it to sync with your calendar app.
+            </p>
+          </div>
+        )}
+
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
             <Link to="/book-lesson">Book Another Lesson</Link>
