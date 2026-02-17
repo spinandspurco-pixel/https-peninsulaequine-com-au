@@ -4,6 +4,7 @@ import { AdminStaffOnboarding } from "@/components/AdminStaffOnboarding";
 import { SharedCalendarView } from "@/components/SharedCalendarView";
 import { AdminTrainerPanel } from "@/components/AdminTrainerPanel";
 import { TestEmailPanel } from "@/components/TestEmailPanel";
+import { AdminAttachmentViewer } from "@/components/AdminAttachmentViewer";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -97,6 +98,7 @@ interface Inquiry {
   notes: string | null;
   lead_tier: string | null;
   lead_tags: string[] | null;
+  attachment_urls: string[] | null;
 }
 
 const TIER_COLORS: Record<string, string> = {
@@ -874,6 +876,9 @@ export default function Admin() {
                   </div>
                 )}
               </div>
+
+              {/* Attachments */}
+              <AdminAttachmentViewer attachmentUrls={selectedInquiry.attachment_urls} />
 
               {/* Status & Notes (Editable) */}
               <div className="border-t pt-4 space-y-4">
