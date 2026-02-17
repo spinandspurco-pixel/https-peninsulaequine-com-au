@@ -420,7 +420,7 @@ export default function Services() {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid-cards">
             {displayServices.map((service, index) => (
               <ServiceOverviewCard
                 key={service.id}

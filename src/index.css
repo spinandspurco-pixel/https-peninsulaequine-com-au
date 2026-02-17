@@ -261,6 +261,37 @@
   .section-padding-sm  { @apply py-section-sm sm:py-section lg:py-section-md; }
   .section-padding-lg  { @apply py-section-md sm:py-section-lg lg:py-section-xl; }
 
+  /* ── Grid utilities — consistent gutters ──────────── */
+  /*
+   * Use these instead of ad-hoc gap-* on grids.
+   * Gutters scale: 16px → 24px → 32px across breakpoints.
+   *
+   *   .grid-auto-fill   — auto-fill columns, min 280px
+   *   .grid-cards       — 1 → 2 → 3 col card layout
+   *   .grid-duo         — 1 → 2 col layout
+   */
+  .grid-gutter {
+    @apply gap-4 sm:gap-6 lg:gap-8;
+  }
+
+  .grid-gutter-sm {
+    @apply gap-3 sm:gap-4 lg:gap-6;
+  }
+
+  .grid-cards {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8;
+  }
+
+  .grid-duo {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8;
+  }
+
+  .grid-auto-fill {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+    @apply gap-4 sm:gap-6 lg:gap-8;
+  }
+
   /* ── Content gap scale — vertical rhythm inside sections */
   .stack-xs  { @apply space-y-2; }               /* 8px  — tight UI groups */
   .stack-sm  { @apply space-y-4; }               /* 16px — form fields, list items */
