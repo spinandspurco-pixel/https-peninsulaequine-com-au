@@ -4,9 +4,13 @@ import { Button } from "@/components/ui/button";
 import { BlueprintScene } from "@/components/BlueprintScene";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { useABTest } from "@/hooks/useABTest";
+import { useState, useRef, useCallback, useEffect } from "react";
 
-import heroVideo from "@/assets/videos/main-ridge-woodwork-1.mp4";
+import heroVideoA from "@/assets/videos/pavilion-grill-1.mp4";
+import heroVideoB from "@/assets/videos/pavilion-grill-2.mp4";
 import peLogo from "@/assets/pe-logo-new.png";
+
+const HERO_VIDEOS = [heroVideoA, heroVideoB];
 
 // ── A/B test copy variants ──────────────────────────────────
 
@@ -36,6 +40,34 @@ export function HeroSection() {
 
   const copy = HERO_COPY[variant] || HERO_COPY.control;
 
+  // ── Dual-video crossfade ──────────────────────────────────
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [fading, setFading] = useState(false);
+  const videoARef = useRef<HTMLVideoElement>(null);
+  const videoBRef = useRef<HTMLVideoElement>(null);
+
+  const handleVideoEnd = useCallback(() => {
+    setFading(true);
+    const nextIdx = (activeIdx + 1) % HERO_VIDEOS.length;
+    const nextVideo = nextIdx === 0 ? videoARef.current : videoBRef.current;
+    if (nextVideo) {
+      nextVideo.currentTime = 0;
+      nextVideo.play().catch(() => {});
+    }
+    setTimeout(() => {
+      setActiveIdx(nextIdx);
+      setFading(false);
+    }, 1200);
+  }, [activeIdx]);
+
+  useEffect(() => {
+    const current = activeIdx === 0 ? videoARef.current : videoBRef.current;
+    if (current) {
+      current.currentTime = 0;
+      current.play().catch(() => {});
+    }
+  }, []);
+
   const handleQuoteClick = () => {
     trackCtaClick("hero_get_quote", { variant });
     trackStep("click", { cta: copy.cta });
@@ -48,12 +80,27 @@ export function HeroSection() {
 
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden bg-primary pb-20 sm:pb-24">
+      {/* Video A */}
       <video
-        autoPlay muted loop playsInline preload="auto"
-        className="absolute inset-0 w-full h-full object-cover"
+        ref={videoARef}
+        muted playsInline preload="auto"
+        onEnded={handleVideoEnd}
+        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out"
+        style={{ opacity: activeIdx === 0 ? 1 : fading && activeIdx === 1 ? 0 : 0 }}
         aria-hidden="true"
       >
-        <source src={heroVideo} type="video/mp4" />
+        <source src={heroVideoA} type="video/mp4" />
+      </video>
+      {/* Video B */}
+      <video
+        ref={videoBRef}
+        muted playsInline preload="auto"
+        onEnded={handleVideoEnd}
+        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out"
+        style={{ opacity: activeIdx === 1 ? 1 : fading && activeIdx === 0 ? 0 : 0 }}
+        aria-hidden="true"
+      >
+        <source src={heroVideoB} type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-primary/70" />
       <BlueprintScene preset="hero" />
