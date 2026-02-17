@@ -9,75 +9,80 @@ export function useAuth() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isEmployee, setIsEmployee] = useState(false);
   const [isTrainer, setIsTrainer] = useState(false);
-  const loadingResolved = useRef(false);
-
-  const resolveLoading = () => {
-    if (!loadingResolved.current) {
-      loadingResolved.current = true;
-      setLoading(false);
-    }
-  };
+  const mounted = useRef(true);
 
   useEffect(() => {
-    // Safety timeout — never hang longer than 5s
-    const timeout = setTimeout(() => {
-      resolveLoading();
-    }, 5000);
+    mounted.current = true;
 
-    // Set up auth state listener FIRST
+    // Hard safety timeout — never hang longer than 3s
+    const timeout = setTimeout(() => {
+      if (mounted.current) {
+        console.log("[useAuth] Safety timeout — resolving loading");
+        setLoading(false);
+      }
+    }, 3000);
+
+    const fetchRoles = async (userId: string) => {
+      try {
+        const { data: roles } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", userId);
+
+        if (!mounted.current) return;
+        const roleList = roles?.map(r => r.role) || [];
+        setIsAdmin(roleList.includes("admin"));
+        setIsEmployee(roleList.includes("employee"));
+        setIsTrainer(roleList.includes("trainer"));
+      } catch (err) {
+        console.warn("[useAuth] Role fetch failed:", err);
+      }
+    };
+
+    const clearRoles = () => {
+      setIsAdmin(false);
+      setIsEmployee(false);
+      setIsTrainer(false);
+    };
+
+    // 1. Get initial session
+    supabase.auth.getSession().then(async ({ data: { session: s } }) => {
+      if (!mounted.current) return;
+      setSession(s);
+      setUser(s?.user ?? null);
+
+      if (s?.user) {
+        await fetchRoles(s.user.id);
+      } else {
+        clearRoles();
+      }
+      if (mounted.current) setLoading(false);
+    }).catch(() => {
+      if (mounted.current) setLoading(false);
+    });
+
+    // 2. Listen for future auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          // Use setTimeout to avoid Supabase client deadlock
+      (_event, newSession) => {
+        if (!mounted.current) return;
+        setSession(newSession);
+        setUser(newSession?.user ?? null);
+
+        if (newSession?.user) {
           setTimeout(async () => {
-            const { data: roles } = await supabase
-              .from("user_roles")
-              .select("role")
-              .eq("user_id", session.user.id);
-            
-            const roleList = roles?.map(r => r.role) || [];
-            setIsAdmin(roleList.includes("admin"));
-            setIsEmployee(roleList.includes("employee"));
-            setIsTrainer(roleList.includes("trainer"));
-            resolveLoading();
+            if (!mounted.current) return;
+            await fetchRoles(newSession.user.id);
+            if (mounted.current) setLoading(false);
           }, 0);
         } else {
-          setIsAdmin(false);
-          setIsEmployee(false);
-          setIsTrainer(false);
-          resolveLoading();
+          clearRoles();
+          setLoading(false);
         }
       }
     );
 
-    // THEN get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", session.user.id)
-          .then(({ data: roles }) => {
-            const roleList = roles?.map(r => r.role) || [];
-            setIsAdmin(roleList.includes("admin"));
-            setIsEmployee(roleList.includes("employee"));
-            setIsTrainer(roleList.includes("trainer"));
-            resolveLoading();
-          });
-      } else {
-        resolveLoading();
-      }
-    }).catch(() => {
-      resolveLoading();
-    });
-
     return () => {
+      mounted.current = false;
       clearTimeout(timeout);
       subscription.unsubscribe();
     };

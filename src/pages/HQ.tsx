@@ -12,7 +12,7 @@ import { Eye, EyeOff, LogIn, Shield, Users, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import logoPeMark from "@/assets/logo-pe-mark.png";
 
-export default function HQ() {
+export default function HQ() { // Staff login portal
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
