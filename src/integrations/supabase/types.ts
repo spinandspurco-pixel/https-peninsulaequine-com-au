@@ -724,7 +724,33 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      event_rsvps_public: {
+        Row: {
+          created_at: string | null
+          event_id: string | null
+          guests: number | null
+          id: string | null
+          name: string | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_id?: string | null
+          guests?: number | null
+          id?: string | null
+          name?: string | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_id?: string | null
+          guests?: number | null
+          id?: string | null
+          name?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       cleanup_expired_holds: { Args: never; Returns: undefined }

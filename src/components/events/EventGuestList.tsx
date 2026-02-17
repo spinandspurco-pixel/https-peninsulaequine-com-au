@@ -37,11 +37,11 @@ export function EventGuestList({ eventId, totalSpots, onSpotsChange }: EventGues
   useEffect(() => {
     const fetchRsvps = async () => {
       const { data } = await supabase
-        .from("event_rsvps")
+        .from("event_rsvps_public" as any)
         .select("id, name, guests, created_at")
         .eq("event_id", eventId)
         .order("created_at", { ascending: true });
-      if (data) setRsvps(data);
+      if (data) setRsvps(data as unknown as RSVP[]);
       setLoading(false);
     };
     fetchRsvps();
