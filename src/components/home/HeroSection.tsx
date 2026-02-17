@@ -80,24 +80,34 @@ export function HeroSection() {
 
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden bg-primary pb-20 sm:pb-24">
-      {/* Video A */}
+      {/* Video A — zoomed + smoothed to mask handheld shake */}
       <video
         ref={videoARef}
         muted playsInline preload="auto"
         onEnded={handleVideoEnd}
-        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out"
-        style={{ opacity: activeIdx === 0 ? 1 : fading && activeIdx === 1 ? 0 : 0 }}
+        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out will-change-transform"
+        style={{
+          opacity: activeIdx === 0 ? 1 : fading && activeIdx === 1 ? 0 : 0,
+          transform: "scale(1.12)",
+          transformOrigin: "center center",
+          filter: "contrast(1.04) saturate(1.05)",
+        }}
         aria-hidden="true"
       >
         <source src={heroVideoA} type="video/mp4" />
       </video>
-      {/* Video B */}
+      {/* Video B — zoomed + smoothed to mask handheld shake */}
       <video
         ref={videoBRef}
         muted playsInline preload="auto"
         onEnded={handleVideoEnd}
-        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out"
-        style={{ opacity: activeIdx === 1 ? 1 : fading && activeIdx === 0 ? 0 : 0 }}
+        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out will-change-transform"
+        style={{
+          opacity: activeIdx === 1 ? 1 : fading && activeIdx === 0 ? 0 : 0,
+          transform: "scale(1.12)",
+          transformOrigin: "center center",
+          filter: "contrast(1.04) saturate(1.05)",
+        }}
         aria-hidden="true"
       >
         <source src={heroVideoB} type="video/mp4" />
