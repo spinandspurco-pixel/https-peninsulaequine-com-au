@@ -61,6 +61,35 @@ function ClipEditor({
         <h3 className="font-serif font-semibold text-foreground text-xs tracking-wider uppercase">Hero Video Clips</h3>
         <button onClick={onClose} className="text-muted-foreground hover:text-foreground text-xs">✕</button>
       </div>
+
+      {/* Preset buttons */}
+      <div className="flex gap-2 mb-3">
+        <button
+          onClick={() => {
+            const preset = [{ start: 3, end: 22 }, { start: 2, end: 20 }];
+            onChange(preset);
+            saveClips(preset);
+            videoRefs.forEach((ref) => {
+              if (ref.current) { ref.current.playbackRate = 0.35; }
+            });
+          }}
+          className="flex-1 px-2 py-1.5 rounded-md border border-accent/40 bg-accent/10 text-accent text-[11px] font-medium tracking-wider uppercase hover:bg-accent/20 transition-colors"
+        >
+          🎬 Cinematic
+        </button>
+        <button
+          onClick={() => {
+            onChange(DEFAULT_CLIPS);
+            saveClips(DEFAULT_CLIPS);
+            videoRefs.forEach((ref) => {
+              if (ref.current) { ref.current.playbackRate = 0.5; }
+            });
+          }}
+          className="flex-1 px-2 py-1.5 rounded-md border border-border bg-card text-muted-foreground text-[11px] font-medium tracking-wider uppercase hover:bg-muted transition-colors"
+        >
+          Standard
+        </button>
+      </div>
       {clips.map((clip, i) => (
         <div
           key={i}
