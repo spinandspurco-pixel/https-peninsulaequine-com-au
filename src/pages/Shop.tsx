@@ -2,11 +2,12 @@ import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Loader2, ShoppingCart, Flame, Search, X, ArrowRight, Fence, Wrench, Sparkles, Building2 } from "lucide-react";
+import { Loader2, ShoppingCart, Flame, Search, X, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { storefrontApiRequest, STOREFRONT_PRODUCTS_QUERY, ShopifyProduct } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
 import { BlueprintScene } from "@/components/BlueprintScene";
+import { PEFencePost, PESaddle, PEStonework, PEBarn } from "@/components/icons/PEIcons";
 
 const categories = [
   { id: "all", label: "All Products" },
@@ -168,13 +169,13 @@ export default function Shop() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: Fence, title: "Custom Gates & Panels", desc: "Swing gates, sliding gates & modular stable panels built to your dimensions.", from: "$1,200", filter: "Custom Gates & Panels" },
-              { icon: Wrench, title: "Steel Fixtures", desc: "Tie-up rails, saddle racks & wash-bay fittings — designed for daily punishment.", from: "$180", filter: "Steel Fixtures" },
-              { icon: Sparkles, title: "Decorative Metalwork", desc: "Laser-cut property signs, ornamental brackets & bespoke embellishments.", from: "$250", filter: "Decorative Metalwork" },
-              { icon: Building2, title: "Structural Steel", desc: "I-beam brackets, arena perimeter fencing & load-bearing fabrications.", from: "$320", filter: "Structural Steel" },
+              { Icon: PEFencePost, title: "Custom Gates & Panels", desc: "Swing gates, sliding gates & modular stable panels built to your dimensions.", from: "$1,200", filter: "Custom Gates & Panels" },
+              { Icon: PESaddle, title: "Steel Fixtures", desc: "Tie-up rails, saddle racks & wash-bay fittings — designed for daily punishment.", from: "$180", filter: "Steel Fixtures" },
+              { Icon: PEStonework, title: "Decorative Metalwork", desc: "Laser-cut property signs, ornamental brackets & bespoke embellishments.", from: "$250", filter: "Decorative Metalwork" },
+              { Icon: PEBarn, title: "Structural Steel", desc: "I-beam brackets, arena perimeter fencing & load-bearing fabrications.", from: "$320", filter: "Structural Steel" },
             ].map((cat) => (
-              <div key={cat.title} className="group border border-border rounded-lg p-6 bg-card hover:shadow-lg transition-all flex flex-col">
-                <cat.icon className="h-8 w-8 text-accent mb-4" />
+              <div key={cat.title} className="group border border-border rounded-lg p-6 bg-card card-hover-glow transition-all duration-300 flex flex-col">
+                <cat.Icon size={32} className="text-accent mb-4 transition-transform duration-300 group-hover:scale-110" />
                 <h3 className="font-serif text-lg font-semibold mb-2">{cat.title}</h3>
                 <p className="text-sm text-muted-foreground mb-4 flex-1">{cat.desc}</p>
                 <p className="text-accent font-semibold mb-4">From {cat.from}</p>
@@ -225,7 +226,7 @@ export default function Shop() {
                 const image = product.node.images.edges[0]?.node;
                 const price = product.node.priceRange.minVariantPrice;
                 return (
-                  <div key={product.node.id} className="group border border-border rounded-lg overflow-hidden bg-card hover:shadow-lg transition-shadow duration-300 flex flex-col">
+                  <div key={product.node.id} className="group border border-border rounded-lg overflow-hidden bg-card card-hover-glow transition-all duration-300 flex flex-col">
                     <Link to={`/shop/${product.node.handle}`} className="block flex-1">
                       <div className="aspect-square bg-muted overflow-hidden">
                         {image ? (
