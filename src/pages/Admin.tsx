@@ -473,13 +473,13 @@ export default function Admin() {
                 </CardHeader>
               </Card>
             </Link>
-            <Link to="/documents">
+            <Link to="/admin/documents">
               <Card className="hover:border-accent/40 transition-colors cursor-pointer group">
                 <CardHeader className="pb-2">
                   <CardDescription>Compliance</CardDescription>
                   <CardTitle className="text-lg flex items-center gap-2 group-hover:text-accent transition-colors">
                     <Download className="h-5 w-5" />
-                    Staff Documents
+                    Document Portal
                   </CardTitle>
                 </CardHeader>
               </Card>
