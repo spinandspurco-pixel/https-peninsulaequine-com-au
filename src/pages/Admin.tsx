@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { ABTestStatsPanel } from "@/components/ABTestStatsPanel";
 import { AdminStaffOnboarding } from "@/components/AdminStaffOnboarding";
+import { SharedCalendarView } from "@/components/SharedCalendarView";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -510,6 +511,11 @@ export default function Admin() {
               </CardContent>
             </Card>
           )}
+
+          {/* Shared Calendar */}
+          <div className="mb-8">
+            <SharedCalendarView isAdmin={true} />
+          </div>
 
           {/* Staff & Onboarding */}
           <div className="mb-8">
