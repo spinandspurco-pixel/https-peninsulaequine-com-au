@@ -9,6 +9,7 @@ const footerLinks = {
     { name: "Barn Building", href: "/services/barn-construction" },
     { name: "Equine Fencing", href: "/services/fencing" },
     { name: "Renovations", href: "/services/renovations" },
+    { name: "The Forge — Shop", href: "/shop" },
   ],
   company: [
     { name: "About Ciro", href: "/about" },

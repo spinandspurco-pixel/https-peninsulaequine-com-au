@@ -6,6 +6,7 @@ import { Loader2, ShoppingCart, Flame, Search, X, ArrowRight, Fence, Wrench, Spa
 import { toast } from "sonner";
 import { storefrontApiRequest, STOREFRONT_PRODUCTS_QUERY, ShopifyProduct } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
+import { BlueprintScene } from "@/components/BlueprintScene";
 
 const categories = [
   { id: "all", label: "All Products" },
@@ -88,23 +89,22 @@ export default function Shop() {
 
   return (
     <Layout>
-      {/* Hero */}
+      {/* Hero — Blueprint-layered */}
       <section className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 40px, currentColor 40px, currentColor 41px), repeating-linear-gradient(90deg, transparent, transparent 40px, currentColor 40px, currentColor 41px)",
-          }} />
-        </div>
+        <BlueprintScene preset="elevation" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsl(var(--primary))_85%)]" />
         <div className="section-container relative z-10 text-center">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <Flame className="h-8 w-8 text-accent" />
-            <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl tracking-tight">
-              The Forge <span className="text-accent">at P.E.</span>
-            </h1>
-            <Flame className="h-8 w-8 text-accent" />
-          </div>
-          <p className="text-lg md:text-xl max-w-2xl mx-auto opacity-80 font-light">
-            Custom steel fabrications, gates, fixtures & decorative metalwork — forged by horsemen, for horsemen.
+          <div className="w-12 h-px mx-auto mb-6 bg-accent" />
+          <p className="text-overline text-primary-foreground/50 mb-4">Custom Fabrication</p>
+          <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl tracking-tight mb-4">
+            The Forge <span className="text-accent">at P.E.</span>
+          </h1>
+          <div className="w-16 h-px mx-auto mb-6 bg-accent/40" />
+          <p className="text-lg md:text-xl max-w-2xl mx-auto text-primary-foreground/70 font-light">
+            Custom steel fabrications, gates, fixtures &amp; decorative metalwork — forged by horsemen, for horsemen.
+          </p>
+          <p className="font-mono text-2xs tracking-[0.25em] uppercase text-primary-foreground/20 mt-8">
+            DWG-FG01 · THE FORGE
           </p>
         </div>
       </section>
@@ -275,11 +275,7 @@ export default function Shop() {
 
       {/* Custom Fabrication CTA */}
       <section className="py-20 bg-primary text-primary-foreground relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 20px, currentColor 20px, currentColor 21px)",
-          }} />
-        </div>
+        <BlueprintScene preset="barn" />
         <div className="section-container relative z-10 text-center max-w-2xl mx-auto">
           <Flame className="h-10 w-10 text-accent mx-auto mb-6" />
           <h2 className="font-serif text-3xl md:text-4xl mb-4">
