@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Mail, ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
@@ -12,10 +12,16 @@ export function FooterNewsletter() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const cooldownRef = useRef(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg("");
+
+    if (cooldownRef.current) {
+      setErrorMsg("Please wait before trying again.");
+      return;
+    }
 
     const parsed = schema.safeParse({ email });
     if (!parsed.success) {
@@ -25,30 +31,26 @@ export function FooterNewsletter() {
 
     setStatus("submitting");
 
-    // Upsert to newsletter_subscribers (unconfirmed)
-    const { data, error } = await supabase
-      .from("newsletter_subscribers")
-      .upsert(
-        { email: parsed.data.email, source: "footer", confirmed: false },
-        { onConflict: "email" }
-      )
-      .select("confirm_token")
-      .single();
+    const { data, error } = await supabase.functions.invoke("subscribe-newsletter", {
+      body: { email: parsed.data.email },
+    });
 
     if (error) {
       setStatus("error");
-      setErrorMsg("Something went wrong. Please try again.");
+      // Check for rate limit
+      const body = typeof data === "object" && data ? data : {};
+      const msg = body?.error || "Something went wrong. Please try again.";
+      if (String(msg).toLowerCase().includes("wait") || String(msg).toLowerCase().includes("too many")) {
+        setErrorMsg("Please wait a moment before trying again.");
+      } else {
+        setErrorMsg(msg);
+      }
       return;
     }
 
-    // Send double-opt-in confirmation email via edge function
-    const confirmUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/confirm-newsletter?token=${data.confirm_token}`;
-
-    await supabase.functions
-      .invoke("send-newsletter-confirm", {
-        body: { email: parsed.data.email, confirmUrl },
-      })
-      .catch(() => {});
+    // 30-second client-side cooldown
+    cooldownRef.current = true;
+    setTimeout(() => { cooldownRef.current = false; }, 30_000);
 
     setStatus("success");
   };

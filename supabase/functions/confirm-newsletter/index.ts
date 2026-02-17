@@ -6,16 +6,50 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+// IP rate limiter: 10 attempts per 10 minutes
+const ipLimits = new Map<string, { count: number; resetAt: number }>();
+const IP_MAX = 10;
+const IP_WINDOW_MS = 600_000;
+
+function checkIpRate(ip: string): boolean {
+  const now = Date.now();
+  const entry = ipLimits.get(ip);
+  if (!entry || now > entry.resetAt) {
+    ipLimits.set(ip, { count: 1, resetAt: now + IP_WINDOW_MS });
+    return true;
+  }
+  if (entry.count >= IP_MAX) return false;
+  entry.count++;
+  return true;
+}
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
+  const ip =
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("cf-connecting-ip") ||
+    "unknown";
+
+  if (!checkIpRate(ip)) {
+    return new Response(confirmPage("Too many attempts. Please try again later.", false), {
+      status: 429,
+      headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
+    });
+  }
+
   const url = new URL(req.url);
   const token = url.searchParams.get("token");
 
-  if (!token) {
-    return new Response("Missing token", { status: 400, headers: corsHeaders });
+  if (!token || !UUID_RE.test(token)) {
+    return new Response(confirmPage("Invalid or expired link.", false), {
+      status: 400,
+      headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
+    });
   }
 
   const supabase = createClient(
