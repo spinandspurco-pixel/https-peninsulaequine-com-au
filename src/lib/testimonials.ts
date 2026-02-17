@@ -1,5 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { testimonials as staticTestimonials, services } from "@/data/content";
+import trainerGlennImg from "@/assets/trainer-glenn.jpg";
+import trainerCiroImg from "@/assets/trainer-ciro.jpg";
 
 export interface TestimonialItem {
   id: string;
@@ -13,6 +15,26 @@ export interface TestimonialItem {
   serviceTags: string[];
   trainer?: string | null;
 }
+
+export interface TrainerInfo {
+  name: string;
+  portrait: string;
+  title: string;
+}
+
+/** Known trainers with portrait images */
+export const TRAINER_PROFILES: Record<string, TrainerInfo> = {
+  "Glenn Browitt": {
+    name: "Glenn Browitt",
+    portrait: trainerGlennImg,
+    title: "Head Riding Instructor",
+  },
+  "Ciro Postiglione": {
+    name: "Ciro Postiglione",
+    portrait: trainerCiroImg,
+    title: "Facility Builder & Horseman",
+  },
+};
 
 const SERVICE_IDS = services.map((s) => s.id);
 
