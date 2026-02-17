@@ -111,12 +111,29 @@ serve(async (req) => {
         .update({ current_bookings: slot.current_bookings + 1 })
         .eq("id", slot_id);
 
+      // Send confirmation email (no-payment mode)
+      try {
+        await supabase.functions.invoke("send-booking-confirmation", {
+          body: {
+            clientName: client_name,
+            clientEmail: client_email,
+            serviceType: pricing.label,
+            bookingDate: slot.slot_date,
+            bookingTime: slot.start_time,
+            durationMinutes: 60,
+            notes: lesson_goals || undefined,
+          },
+        });
+      } catch (emailErr) {
+        console.error("Confirmation email failed (no-payment mode):", emailErr);
+      }
+
       return new Response(
         JSON.stringify({
           success: true,
           mode: "no_payment",
           booking_id: booking.id,
-          message: "Booking created without payment — Stripe is not configured yet.",
+          message: "Booking confirmed — confirmation email sent.",
         }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
