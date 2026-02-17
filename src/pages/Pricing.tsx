@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { Check, ArrowRight, Zap, Users, Award, Star, UserPlus } from "lucide-react";
+import { Check, ArrowRight, Zap, Users, Award, Star, UserPlus, DollarSign, MapPin, Truck, ShieldCheck, HelpCircle } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { StickySubpageCTA } from "@/components/StickySubpageCTA";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { LessonPricingCalculator } from "@/components/LessonPricingCalculator";
@@ -297,6 +298,98 @@ function GroupRatesTeaser() {
   );
 }
 
+// ── AUD Budgeting & Regional Cost FAQ ───────────────
+
+const AUD_PRICING_FAQS = [
+  {
+    icon: DollarSign,
+    question: "Are all prices listed in Australian Dollars?",
+    answer: "Yes — every price on this site is in AUD. Lesson prices are inclusive of GST. Construction and facility quotes are ex. GST unless otherwise noted, as GST treatment varies by project scope and your ABN status.",
+  },
+  {
+    icon: MapPin,
+    question: "How does location affect pricing on the Mornington Peninsula?",
+    answer: "The Mornington Peninsula has specific cost drivers: BAL (Bushfire Attack Level) compliance can add 8–15% to barn and facility builds. Steep or coastal blocks require additional cut-and-fill earthworks. Council approval timelines vary by shire — Mornington Peninsula Shire typically runs 6–12 weeks for equine structures. We factor all of this into your quote upfront so there are no surprises.",
+  },
+  {
+    icon: Truck,
+    question: "What regional factors drive construction costs in Victoria?",
+    answer: "Key cost drivers include: distance from Melbourne for material delivery (sand, timber, steel), soil type and drainage requirements (clay-heavy Peninsula soils need deeper foundations), seasonal weather windows for earthworks (spring–autumn is ideal), and current material pricing — steel and quality arena sand fluctuate quarterly. We lock in material costs at quote stage wherever possible.",
+  },
+  {
+    icon: ShieldCheck,
+    question: "What's included in the 50% deposit for lessons?",
+    answer: "Your 50% deposit secures your time slot and covers booking administration. The remaining balance is due on the day of your lesson. Deposits are non-refundable within 24 hours of the session but can be transferred to a different date with notice. Package purchases require full payment upfront at the discounted rate.",
+  },
+  {
+    icon: HelpCircle,
+    question: "How should I budget for a full equine facility project?",
+    answer: "Start with your must-haves: a quality arena ($65K–$350K+) and functional barn ($95K–$450K+) form the core. Add infrastructure (access roads, drainage, fencing) at roughly 15–25% of the build cost. We recommend a 10% contingency for soil surprises or council variations. Every project gets a detailed staged quote so you can prioritise and build in phases if needed.",
+  },
+  {
+    icon: DollarSign,
+    question: "Do you offer payment plans for construction projects?",
+    answer: "Construction projects follow a milestone payment structure: typically 20% deposit at contract signing, 30% at slab/foundation stage, 30% at frame/fit-out, and 20% at practical completion. This protects both parties and aligns payments with visible progress. We can discuss variations for staged builds.",
+  },
+  {
+    icon: MapPin,
+    question: "Do you service areas outside the Mornington Peninsula?",
+    answer: "Our core service area covers the Mornington Peninsula and greater Melbourne region. We take on select projects across regional Victoria and interstate for larger facility builds — travel and accommodation costs are quoted separately. Lessons are on-site at our Merricks North property only.",
+  },
+];
+
+function AudPricingFAQ() {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+
+  return (
+    <section className="section-padding bg-background" id="pricing-faq">
+      <div className="section-container">
+        <div ref={ref} className={cn("max-w-3xl mx-auto transition-all duration-700", isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8")}>
+          <div className="text-center mb-10">
+            <div className={cn("w-16 h-0.5 bg-accent mx-auto mb-6 transition-all duration-500 delay-100", isVisible ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0")} />
+            <h2 className="heading-section text-foreground mb-3">Pricing & Budgeting FAQs</h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              Understanding AUD pricing, regional cost drivers, and how to budget for your equine project on the Mornington Peninsula.
+            </p>
+          </div>
+
+          <Accordion type="single" collapsible className="space-y-3">
+            {AUD_PRICING_FAQS.map((faq, i) => {
+              const Icon = faq.icon;
+              return (
+                <AccordionItem
+                  key={i}
+                  value={`aud-faq-${i}`}
+                  className={cn(
+                    "border border-border rounded-lg px-5 data-[state=open]:bg-card transition-all duration-500",
+                    isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                  )}
+                  style={{ transitionDelay: `${200 + i * 60}ms` }}
+                >
+                  <AccordionTrigger className="text-left font-medium text-foreground hover:text-accent hover:no-underline py-4 text-sm sm:text-base">
+                    <span className="flex items-center gap-2.5">
+                      <Icon className="h-4 w-4 text-accent shrink-0" />
+                      {faq.question}
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-4 text-sm leading-relaxed text-muted-foreground pl-6">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              );
+            })}
+          </Accordion>
+
+          <p className="text-center text-xs text-muted-foreground mt-8">
+            Have a specific budgeting question?{" "}
+            <Link to="/contact" className="text-accent hover:underline">Get in touch</Link> for a no-obligation conversation.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── Page ─────────────────────────────────────────────
 
 export default function Pricing() {
@@ -311,6 +404,7 @@ export default function Pricing() {
       <ClinicPricing />
       <LessonPricingCalculator />
       <GroupRatesTeaser />
+      <AudPricingFAQ />
       <PricingCTA />
       <StickySubpageCTA
         ctaLabel="Book a Lesson"
