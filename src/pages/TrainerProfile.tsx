@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { SectionTransition } from "@/components/SectionTransition";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { TrainerVideoPlaylist } from "@/components/TrainerVideoPlaylist";
+import { TrainerClinicRSVP } from "@/components/TrainerClinicRSVP";
 import { fetchMergedTestimonials, TRAINER_PROFILES, SERVICE_FILTERS, type TestimonialItem } from "@/lib/testimonials";
 import { glennBrowitt, aboutCiro } from "@/data/content";
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
@@ -168,6 +169,9 @@ export default function TrainerProfile() {
       {!loading && trainerVideos.length > 0 && (
         <TrainerVideoPlaylist videos={trainerVideos} trainerName={trainer.name} />
       )}
+
+      {/* Upcoming clinics with calendar-synced RSVP */}
+      <TrainerClinicRSVP trainerName={trainer.name} />
 
       {/* Related testimonials */}
       <section className="section-padding bg-card border-y border-border">
