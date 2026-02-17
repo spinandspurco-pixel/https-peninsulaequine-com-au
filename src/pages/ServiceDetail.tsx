@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams, Link, Navigate, useNavigate } from "react-router-dom";
-import { ArrowLeft, ArrowRight, CheckCircle, Phone, Star, X, ZoomIn, ChevronLeft, ChevronRight, HelpCircle, Images } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle, Phone, Star, X, ZoomIn, ChevronLeft, ChevronRight, HelpCircle, Images, Calendar, MessageSquare } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { BlueprintScene } from "@/components/BlueprintScene";
@@ -381,8 +381,10 @@ export default function ServiceDetail() {
 
       {/* Pricing tiers */}
       {tiers.length > 0 && (
-        <section className="section-padding bg-card">
-          <div className="section-container max-w-5xl">
+        <section className="section-padding bg-card relative overflow-hidden">
+          {/* Subtle background accent */}
+          <div className="absolute inset-0 bg-gradient-to-b from-accent/[0.02] via-transparent to-accent/[0.02] pointer-events-none" />
+          <div className="section-container max-w-5xl relative z-10">
             <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-3 text-center">
               Pricing
             </p>
@@ -393,52 +395,64 @@ export default function ServiceDetail() {
               Every project is unique — these tiers give you a starting point. We'll customise to your exact needs.
             </p>
 
-            <div className="grid sm:grid-cols-3 gap-6">
-              {tiers.map((tier) => (
+            <div className="grid sm:grid-cols-3 gap-6 items-stretch">
+              {tiers.map((tier, idx) => (
                 <div
                   key={tier.name}
                   className={cn(
-                    "relative rounded-xl border bg-background p-6 flex flex-col transition-shadow hover:shadow-lg",
+                    "relative rounded-xl flex flex-col transition-all duration-300 hover:-translate-y-1",
                     tier.popular
-                      ? "border-accent shadow-md ring-1 ring-accent/20"
-                      : "border-border"
+                      ? "shadow-xl ring-2 ring-accent"
+                      : "shadow-md border border-border hover:shadow-lg"
                   )}
                 >
-                  {tier.popular && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <span className="inline-flex items-center gap-1 rounded-full bg-accent text-accent-foreground px-3 py-1 text-[10px] font-semibold uppercase tracking-wider">
+                  {/* Tier header band */}
+                  <div className={cn(
+                    "rounded-t-xl px-6 py-4",
+                    tier.popular
+                      ? "bg-accent text-accent-foreground"
+                      : "bg-muted/50 text-foreground"
+                  )}>
+                    {tier.popular && (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider mb-1">
                         <Star className="h-3 w-3" /> Most Popular
                       </span>
-                    </div>
-                  )}
-
-                  <h3 className="font-serif text-lg font-semibold text-foreground mb-1">
-                    {tier.name}
-                  </h3>
-                  <p className="text-2xl font-bold text-accent mb-2">{tier.price}</p>
-                  <p className="text-sm text-muted-foreground mb-5">{tier.description}</p>
-
-                  <ul className="space-y-2 mb-6 flex-1">
-                    {tier.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2 text-sm text-foreground">
-                        <CheckCircle className="h-3.5 w-3.5 text-accent shrink-0 mt-0.5" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Button
-                    asChild
-                    variant={tier.popular ? "default" : "outline"}
-                    className={cn(
-                      "w-full",
-                      tier.popular && "bg-accent text-accent-foreground hover:bg-accent/90"
                     )}
-                  >
-                    <Link to={`/contact?services=${service.id}&ref=tier-${tier.name.toLowerCase()}`}>
-                      Get a Quote <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
+                    <h3 className="font-serif text-lg font-semibold">{tier.name}</h3>
+                    <p className={cn(
+                      "text-3xl font-bold mt-1",
+                      tier.popular ? "text-accent-foreground" : "text-accent"
+                    )}>
+                      {tier.price}
+                    </p>
+                  </div>
+
+                  {/* Tier body */}
+                  <div className="bg-background rounded-b-xl px-6 py-5 flex flex-col flex-1">
+                    <p className="text-sm text-muted-foreground mb-5">{tier.description}</p>
+
+                    <ul className="space-y-2.5 mb-6 flex-1">
+                      {tier.features.map((f) => (
+                        <li key={f} className="flex items-start gap-2 text-sm text-foreground">
+                          <CheckCircle className="h-3.5 w-3.5 text-accent shrink-0 mt-0.5" />
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+
+                    <Button
+                      asChild
+                      variant={tier.popular ? "default" : "outline"}
+                      className={cn(
+                        "w-full",
+                        tier.popular && "bg-accent text-accent-foreground hover:bg-accent/90"
+                      )}
+                    >
+                      <Link to={`/contact?services=${service.id}&ref=tier-${tier.name.toLowerCase()}`}>
+                        Get a Quote <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -548,6 +562,60 @@ export default function ServiceDetail() {
           </div>
         </section>
       )}
+
+      {/* Dual CTA: Book a Lesson or Consultation */}
+      <section className="section-padding bg-background relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-accent/[0.03] to-transparent pointer-events-none" />
+        <div className="section-container max-w-4xl relative z-10">
+          <div className="text-center mb-10">
+            <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-3">
+              Next Steps
+            </p>
+            <h2 className="font-serif text-2xl sm:text-3xl text-foreground mb-3">
+              Ready to Move Forward?
+            </h2>
+            <p className="text-muted-foreground max-w-lg mx-auto">
+              Whether you're exploring riding lessons or planning a build, we're here to help.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-6">
+            {/* Book a Lesson */}
+            <div className="rounded-xl border border-accent/20 bg-card p-6 sm:p-8 flex flex-col items-center text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+              <div className="w-14 h-14 rounded-full bg-accent/10 flex items-center justify-center mb-4">
+                <Calendar className="h-6 w-6 text-accent" />
+              </div>
+              <h3 className="font-serif text-xl font-semibold text-foreground mb-2">Book a Lesson</h3>
+              <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+                Experience our facilities firsthand with a riding lesson. 50% deposit secures your spot.
+              </p>
+              <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
+                <Link to="/lessons">
+                  <Calendar className="mr-2 h-4 w-4" />
+                  Browse Lessons
+                </Link>
+              </Button>
+            </div>
+
+            {/* Book a Consultation */}
+            <div className="rounded-xl border border-border bg-card p-6 sm:p-8 flex flex-col items-center text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+              <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center mb-4">
+                <MessageSquare className="h-6 w-6 text-foreground" />
+              </div>
+              <h3 className="font-serif text-xl font-semibold text-foreground mb-2">Free Consultation</h3>
+              <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+                Tell us about your project and receive a personalised quote within 1–2 business days.
+              </p>
+              <Button asChild variant="outline" className="w-full">
+                <Link to={`/contact?services=${service.id}&ref=consult-cta`}>
+                  <Phone className="mr-2 h-4 w-4" />
+                  Request a Consult
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Adjacent service navigation */}
       <section className="bg-card border-t border-border">
