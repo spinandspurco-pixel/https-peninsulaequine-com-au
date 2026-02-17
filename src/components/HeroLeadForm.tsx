@@ -47,6 +47,10 @@ export function HeroLeadForm({ className }: HeroLeadFormProps) {
       setErrorMsg("Something went wrong. Please try again.");
     } else {
       setStatus("success");
+      // Trigger welcome series step 1 (fire-and-forget)
+      supabase.functions.invoke("send-welcome-series", {
+        body: { email, name, source: "hero-form" },
+      }).catch(() => {});
     }
   };
 

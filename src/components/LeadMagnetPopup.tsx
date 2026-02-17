@@ -77,6 +77,10 @@ export function LeadMagnetPopup() {
 
       setSubmitted(true);
       localStorage.setItem(STORAGE_KEY, "true");
+      // Trigger welcome series step 1 (fire-and-forget)
+      supabase.functions.invoke("send-welcome-series", {
+        body: { email: result.data.email, name: result.data.name, source: "lead-magnet" },
+      }).catch(() => {});
       toast({
         title: "Guide on its way!",
         description: "Check your inbox for the Rider Prep Guide.",
