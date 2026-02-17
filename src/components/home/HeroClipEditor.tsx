@@ -299,6 +299,49 @@ function PerfDashboard({
   );
 }
 
+// ── Responsive skeleton gallery for admin preview ───────────
+function AdminSkeletonGallery({ clips, activeIdx }: { clips: { start: number; end: number }[]; activeIdx: number }) {
+  const items = [
+    ...clips.map((c, i) => ({ label: `Clip ${i + 1}`, dur: `${(c.end - c.start).toFixed(1)}s`, active: i === activeIdx })),
+    { label: "Poster", dur: "Static", active: false },
+    { label: "Fallback", dur: "Image", active: false },
+  ];
+
+  return (
+    <div className="mb-3">
+      <span className="text-[10px] text-muted-foreground uppercase tracking-wider block mb-1.5">Media Preview Grid</span>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+        {items.map((item, i) => (
+          <div
+            key={i}
+            className={`relative rounded-md overflow-hidden border transition-colors ${
+              item.active ? "border-accent bg-accent/10" : "border-border bg-muted/20"
+            }`}
+          >
+            {/* Skeleton aspect box */}
+            <div className="aspect-video relative">
+              <div
+                className="absolute inset-0 animate-[shimmer_2s_infinite]"
+                style={{
+                  background: `linear-gradient(90deg, transparent 0%, hsl(var(--accent) / ${item.active ? "0.12" : "0.06"}) 50%, transparent 100%)`,
+                  animationDelay: `${i * 0.15}s`,
+                }}
+              />
+              {item.active && (
+                <div className="absolute top-1 right-1 w-2 h-2 rounded-full bg-accent animate-pulse" />
+              )}
+            </div>
+            <div className="px-1.5 py-1 flex items-center justify-between">
+              <span className="text-[9px] font-medium text-foreground/70 truncate">{item.label}</span>
+              <span className="text-[8px] text-muted-foreground font-mono">{item.dur}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ── Main editor panel ───────────────────────────────────────
 export function HeroClipEditor({
   clips,
@@ -371,6 +414,9 @@ export function HeroClipEditor({
 
       {/* Performance dashboard */}
       <PerfDashboard metrics={metrics} quality={quality} onQualityChange={onQualityChange} />
+
+      {/* Responsive skeleton gallery */}
+      <AdminSkeletonGallery clips={clips} activeIdx={activeIdx} />
 
       {/* Video Quality toggle */}
       <div className="mb-3">
