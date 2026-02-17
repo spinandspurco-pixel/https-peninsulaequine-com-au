@@ -169,10 +169,10 @@ export default function Shop() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { Icon: PEFencePost, title: "Custom Gates & Panels", desc: "Swing gates, sliding gates & modular stable panels built to your dimensions.", from: "$1,200", filter: "Custom Gates & Panels" },
-              { Icon: PESaddle, title: "Steel Fixtures", desc: "Tie-up rails, saddle racks & wash-bay fittings — designed for daily punishment.", from: "$180", filter: "Steel Fixtures" },
-              { Icon: PEStonework, title: "Decorative Metalwork", desc: "Laser-cut property signs, ornamental brackets & bespoke embellishments.", from: "$250", filter: "Decorative Metalwork" },
-              { Icon: PEBarn, title: "Structural Steel", desc: "I-beam brackets, arena perimeter fencing & load-bearing fabrications.", from: "$320", filter: "Structural Steel" },
+              { Icon: PEFencePost, title: "Custom Gates & Panels", desc: "Swing gates, sliding gates & modular stable panels built to your dimensions.", from: "$1,450", filter: "Custom Gates & Panels" },
+              { Icon: PESaddle, title: "Steel Fixtures", desc: "Tie-up rails, saddle racks & wash-bay fittings — crafted for professional-grade durability.", from: "$380", filter: "Steel Fixtures" },
+              { Icon: PEStonework, title: "Decorative Metalwork", desc: "Laser-cut property signs, ornamental brackets & bespoke embellishments.", from: "$580", filter: "Decorative Metalwork" },
+              { Icon: PEBarn, title: "Structural Steel", desc: "I-beam brackets, arena perimeter fencing & load-bearing fabrications.", from: "$4,200", filter: "Structural Steel" },
             ].map((cat) => (
               <div key={cat.title} className="group border border-border rounded-lg p-6 bg-card card-hover-glow transition-all duration-300 flex flex-col">
                 <cat.Icon size={32} className="text-accent mb-4 transition-transform duration-300 group-hover:scale-110" />
@@ -250,7 +250,7 @@ export default function Shop() {
                           {product.node.description}
                         </p>
                         <p className="font-semibold text-accent text-lg">
-                          From {price.currencyCode} ${parseFloat(price.amount).toLocaleString()}
+                          From ${parseFloat(price.amount).toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {price.currencyCode}
                         </p>
                       </div>
                     </Link>
