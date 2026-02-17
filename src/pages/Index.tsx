@@ -2,6 +2,7 @@ import { Layout } from "@/components/layout/Layout";
 import { HeroSection } from "@/components/home/HeroSection";
 import { AboutTeaser } from "@/components/home/AboutTeaser";
 import { ServicesHighlights } from "@/components/home/ServicesHighlights";
+import { ServiceTabsSection } from "@/components/home/ServiceTabsSection";
 import { GalleryTeaser } from "@/components/home/GalleryTeaser";
 import { TestimonialSection } from "@/components/home/TestimonialSection";
 import { QuoteSection } from "@/components/home/QuoteSection";
@@ -40,6 +41,7 @@ export default function Index() {
       </section>
 
       <ServicesHighlights />
+      <ServiceTabsSection />
       <GalleryTeaser />
       <TestimonialSection />
       <QuoteSection />
