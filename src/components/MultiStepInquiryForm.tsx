@@ -227,6 +227,13 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
         })
         .catch(() => {});
 
+      // Trigger welcome series step 1 (fire-and-forget)
+      supabase.functions
+        .invoke("send-welcome-series", {
+          body: { email: email.trim(), name: name.trim(), source: "multi-step-inquiry" },
+        })
+        .catch(() => {});
+
       clearDraft();
       setSubmitted(true);
       toast({ title: "Inquiry sent!", description: "We'll be in touch within 1–2 business days." });
