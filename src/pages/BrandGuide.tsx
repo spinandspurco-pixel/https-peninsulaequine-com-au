@@ -766,6 +766,32 @@ export default function BrandGuide() {
               </ul>
             </div>
           </div>
+
+          {/* Mobile-First Spacing Checklist */}
+          <div className="rounded-lg border border-accent/30 bg-accent/[0.04] p-6 space-y-5">
+            <h3 className="font-serif text-xl font-semibold text-foreground">Mobile-First Spacing Checklist</h3>
+            <p className="text-sm text-muted-foreground">
+              Run through this checklist at <strong>360px viewport width</strong> before shipping any layout change to Home or Services pages.
+            </p>
+            <ol className="space-y-3 text-sm text-foreground/80 list-decimal list-inside">
+              {[
+                "Header nav height is h-16 on mobile — all content below starts after 64px",
+                "Hero uses h-screen with pb-20 to keep CTAs above the scroll indicator",
+                "Hero px is set to px-4 (16px) so text never touches the screen edge on 360px",
+                "CTA buttons use flex-col on mobile; gap-3 prevents touch-target collision",
+                "Scroll indicator sits at bottom-6 (24px) — minimum 48px above fold content",
+                "Section padding uses .section-padding tokens, never hard-coded py values",
+                "Service cards use .grid-cards (gap-4 mobile → gap-6 tablet → gap-8 desktop)",
+                "Card inner padding is p-4 on mobile, p-6 on sm+ — no text clipping at edges",
+                "Filter chip row uses flex-wrap with gap-2 so chips never overflow horizontally",
+                "Floating buttons (contact, scroll-to-top) use bottom-20 on mobile to clear sticky bars",
+                "z-index layers: header z-50 > sticky CTAs z-40 > hero content z-10",
+                "All heading sizes use fluid clamp() — no abrupt jumps at breakpoints",
+              ].map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
+            </ol>
+          </div>
         </div>
       </section>
 
