@@ -59,7 +59,7 @@ export function HeroSection() {
       <BlueprintScene preset="hero" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsl(var(--primary))_85%)]" />
 
-      <div className="relative z-10 text-center px-6">
+      <div className="relative z-10 text-center px-4 sm:px-6">
         <img
           src={peLogo}
           alt="Peninsula Equine"
@@ -120,7 +120,7 @@ export function HeroSection() {
 
       <button
         onClick={() => document.getElementById("about-teaser")?.scrollIntoView({ behavior: "smooth" })}
-        className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-primary-foreground/30 hover:text-primary-foreground/60 transition-colors cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+        className="absolute bottom-6 sm:bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-primary-foreground/30 hover:text-primary-foreground/60 transition-colors cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
         aria-label="Scroll to content"
       >
         <span className="text-[10px] tracking-[0.3em] uppercase font-sans">Scroll</span>

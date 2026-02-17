@@ -134,7 +134,7 @@ function ServiceOverviewCard({
       style={{ transitionDelay: `${index * 80}ms` }}
     >
       {/* Image */}
-      <div className="relative h-44 overflow-hidden">
+      <div className="relative h-40 sm:h-44 overflow-hidden">
         <img
           src={serviceImages[service.id] || equitanaArena}
           alt={`${service.title} — Peninsula Equine construction project`}
@@ -151,7 +151,7 @@ function ServiceOverviewCard({
       </div>
 
       {/* Content */}
-      <div className="p-5 sm:p-6 flex flex-col flex-1">
+      <div className="p-4 sm:p-6 flex flex-col flex-1">
         <h3 className="font-serif text-lg font-semibold text-foreground mb-2 group-hover:text-accent transition-colors">
           {service.title}
         </h3>
@@ -231,7 +231,7 @@ function BookConsultCTA() {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
 
   return (
-    <section className="bg-primary text-primary-foreground py-16 sm:py-20 relative overflow-hidden">
+    <section className="bg-primary text-primary-foreground py-12 sm:py-16 md:py-20 relative overflow-hidden">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 opacity-[0.03]">
         <BlueprintScene preset="barn" />
@@ -420,7 +420,7 @@ export default function Services() {
             ))}
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {displayServices.map((service, index) => (
               <ServiceOverviewCard
                 key={service.id}
