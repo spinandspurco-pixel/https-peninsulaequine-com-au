@@ -748,3 +748,9 @@
     display: none;
   }
 }
+
+/* Hero media progressive loading shimmer */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
