@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { CheckCircle, ArrowRight, CalendarIcon, Phone, Star } from "lucide-react";
+import { CheckCircle, ArrowRight, CalendarIcon, Phone, Star, CalendarPlus, ExternalLink, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { siteConfig, testimonials, services } from "@/data/content";
@@ -23,34 +23,60 @@ const SERVICE_DURATIONS: Record<string, number> = {
   "clinics-events": 60,
 };
 
-function buildCalendarLink(serviceIds: string[], name?: string, email?: string): string {
-  const primary = serviceIds[0] || "";
-  const svc = services.find((s) => s.id === primary);
-  const title = svc ? `PE Consultation: ${svc.title}` : "Peninsula Equine Consultation";
-  const duration = SERVICE_DURATIONS[primary] || 45;
-  const details = serviceIds.length > 1
-    ? `Services of interest: ${serviceIds.map((id) => services.find((s) => s.id === id)?.title || id).join(", ")}`
-    : svc ? `Regarding: ${svc.title}` : "General consultation";
-
-  // Build a Google Calendar link as a suggested follow-up
-  const now = new Date();
-  const start = new Date(now);
-  start.setDate(start.getDate() + 3); // suggest 3 days from now
+function getConsultationDates(daysOut: number, durationMinutes: number) {
+  const start = new Date();
+  start.setDate(start.getDate() + daysOut);
   start.setHours(10, 0, 0, 0);
   const end = new Date(start);
-  end.setMinutes(end.getMinutes() + duration);
+  end.setMinutes(end.getMinutes() + durationMinutes);
+  return { start, end };
+}
 
-  const fmt = (d: Date) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+function fmtCal(d: Date) {
+  return d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+}
 
+function buildGoogleCalendarLink(title: string, start: Date, end: Date, details: string): string {
   const params = new URLSearchParams({
     action: "TEMPLATE",
     text: title,
-    dates: `${fmt(start)}/${fmt(end)}`,
-    details: details + (name ? `\nClient: ${name}` : "") + (email ? `\nEmail: ${email}` : ""),
+    dates: `${fmtCal(start)}/${fmtCal(end)}`,
+    details,
     location: "Peninsula Equine - On-site or Phone",
   });
-
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
+
+function buildICSFile(title: string, start: Date, end: Date, details: string): string {
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Peninsula Equine//Consultation//EN",
+    "METHOD:REQUEST",
+    "BEGIN:VEVENT",
+    `DTSTART:${fmtCal(start)}`,
+    `DTEND:${fmtCal(end)}`,
+    `SUMMARY:${title}`,
+    `DESCRIPTION:${details.replace(/\n/g, "\\n").slice(0, 300)}`,
+    "LOCATION:Peninsula Equine - On-site or Phone",
+    "STATUS:TENTATIVE",
+    `UID:pe-consult-${Date.now()}@peninsulaequine.com`,
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ];
+  return lines.join("\r\n");
+}
+
+function downloadICS(title: string, start: Date, end: Date, details: string) {
+  const blob = new Blob([buildICSFile(title, start, end, details)], {
+    type: "text/calendar;charset=utf-8",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${title.replace(/\s+/g, "-").toLowerCase()}.ics`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 const featured = testimonials[0];
@@ -60,9 +86,20 @@ export default function ThankYou() {
   const serviceIds = searchParams.get("services")?.split(",").filter(Boolean) || [];
   const clientName = searchParams.get("name") || "";
   const clientEmail = searchParams.get("email") || "";
-  const calendarUrl = serviceIds.length > 0 ? buildCalendarLink(serviceIds, clientName, clientEmail) : null;
+
   const primaryService = services.find((s) => s.id === serviceIds[0]);
   const suggestedDuration = SERVICE_DURATIONS[serviceIds[0]] || 45;
+  const title = primaryService ? `PE Consultation: ${primaryService.title}` : "Peninsula Equine Consultation";
+  const details = [
+    serviceIds.length > 1
+      ? `Services: ${serviceIds.map((id) => services.find((s) => s.id === id)?.title || id).join(", ")}`
+      : primaryService ? `Regarding: ${primaryService.title}` : "General consultation",
+    clientName ? `Client: ${clientName}` : "",
+    clientEmail ? `Email: ${clientEmail}` : "",
+  ].filter(Boolean).join("\n");
+
+  const { start, end } = getConsultationDates(3, suggestedDuration);
+  const calendarUrl = serviceIds.length > 0 ? buildGoogleCalendarLink(title, start, end, details) : null;
   return (
     <Layout>
       <section className="relative pt-32 pb-20 bg-primary text-primary-foreground">
@@ -124,15 +161,27 @@ export default function ThankYou() {
             <h3 className="font-serif text-lg font-semibold text-foreground mb-2">
               Book Your {primaryService?.title || "Consultation"} Follow-Up
             </h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-sm text-muted-foreground mb-5">
               We've prepared a suggested {suggestedDuration}-minute consultation slot. Add it to your calendar and we'll confirm.
             </p>
-            <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
-              <a href={calendarUrl} target="_blank" rel="noopener noreferrer">
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                Add to Google Calendar
-              </a>
-            </Button>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
+                <a href={calendarUrl} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="mr-2 h-4 w-4" />
+                  Google Calendar
+                </a>
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => downloadICS(title, start, end, details)}
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Download .ics
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground mt-3">
+              The .ics file works with Apple Calendar, Outlook &amp; other calendar apps.
+            </p>
           </div>
         </section>
       )}
