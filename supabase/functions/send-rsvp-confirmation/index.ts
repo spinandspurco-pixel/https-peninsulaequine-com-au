@@ -18,6 +18,47 @@ interface RSVPConfirmationRequest {
   status: "confirmed" | "waitlisted";
 }
 
+function pad(n: number): string {
+  return n.toString().padStart(2, "0");
+}
+
+function generateEventICS(opts: {
+  summary: string;
+  description: string;
+  location: string;
+  dtStart: string;
+  dtEnd: string;
+  attendee: string;
+}): string {
+  const uid = crypto.randomUUID() + "@peninsulaequine.com";
+  const now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  return [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Peninsula Equine//Events//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:REQUEST",
+    "BEGIN:VEVENT",
+    `UID:${uid}`,
+    `DTSTAMP:${now}`,
+    `DTSTART;TZID=Australia/Melbourne:${opts.dtStart}`,
+    `DTEND;TZID=Australia/Melbourne:${opts.dtEnd}`,
+    `SUMMARY:${opts.summary}`,
+    `DESCRIPTION:${opts.description.replace(/\n/g, "\\n")}`,
+    `LOCATION:${opts.location}`,
+    `ORGANIZER;CN=Peninsula Equine:mailto:info@peninsulaequine.com.au`,
+    `ATTENDEE;RSVP=TRUE;CN=${opts.attendee}:mailto:${opts.attendee}`,
+    "STATUS:CONFIRMED",
+    "BEGIN:VALARM",
+    "TRIGGER:-PT1H",
+    "ACTION:DISPLAY",
+    "DESCRIPTION:Event reminder",
+    "END:VALARM",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+}
+
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -91,6 +132,10 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
 
             ${isConfirmed ? `
+            <div style="background: #fff; padding: 16px; border: 1px solid #e8e2d6; border-radius: 8px; margin: 20px 0; text-align: center;">
+              <p style="margin: 0 0 8px; font-weight: 600; color: #2c3e50;">📅 Add to Your Calendar</p>
+              <p style="margin: 0; font-size: 13px; color: #666;">Open the attached <strong>event.ics</strong> file to add this event to your calendar automatically.</p>
+            </div>
             <p style="text-align: center; margin-top: 20px;">
               <a href="https://peninsulaequine.lovable.app/events" style="background: #c9a227; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600;">View Event Details</a>
             </p>
@@ -110,6 +155,31 @@ const handler = async (req: Request): Promise<Response> => {
       </html>
     `;
 
+    // Generate .ics for confirmed RSVPs
+    let icsAttachments: { filename: string; content: string; content_type: string }[] = [];
+    if (isConfirmed && data.eventDate) {
+      const [year, month, day] = data.eventDate.split("-").map(Number);
+      const timeParts = data.eventTime?.split(":").map(Number) ?? [9, 0];
+      const startHour = timeParts[0] ?? 9;
+      const startMin = timeParts[1] ?? 0;
+      const dtStart = `${year}${pad(month)}${pad(day)}T${pad(startHour)}${pad(startMin)}00`;
+      const dtEnd = `${year}${pad(month)}${pad(day)}T${pad(startHour + 2)}${pad(startMin)}00`;
+
+      const icsContent = generateEventICS({
+        summary: data.eventTitle,
+        description: `${data.eventTitle} — Peninsula Equine\n${data.guests} guest(s)`,
+        location: data.eventLocation || "Peninsula Equine, Mornington Peninsula, VIC",
+        dtStart,
+        dtEnd,
+        attendee: data.email,
+      });
+      icsAttachments = [{
+        filename: "event.ics",
+        content: btoa(icsContent),
+        content_type: "text/calendar; method=REQUEST",
+      }];
+    }
+
     // Send confirmation to attendee + notify business
     const [confirmRes, notifyRes] = await Promise.all([
       resend.emails.send({
@@ -119,6 +189,7 @@ const handler = async (req: Request): Promise<Response> => {
           ? `RSVP Confirmed: ${data.eventTitle}`
           : `Waitlist: ${data.eventTitle}`,
         html: confirmationHtml,
+        ...(icsAttachments.length > 0 ? { attachments: icsAttachments } : {}),
       }),
       resend.emails.send({
         from: FROM_EMAIL,
