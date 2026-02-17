@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, ChevronDown, Phone, Settings } from "lucide-react";
+import { ArrowRight, ChevronDown, Phone, Settings, Captions } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BlueprintScene } from "@/components/BlueprintScene";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
@@ -14,6 +14,19 @@ import heroVideoB from "@/assets/videos/pavilion-grill-2.mp4";
 import peLogo from "@/assets/pe-logo-new.png";
 
 const VIDEO_SRCS = [heroVideoA, heroVideoB];
+
+const HERO_MEDIA_CAPTIONS = [
+  {
+    title: "Pavilion & Grill at Golden Hour",
+    alt: "Slow-motion footage of Peninsula Equine's handcrafted timber pavilion with stone detailing, surrounded by paddocks at sunset",
+    description: "A cinematic wide shot captures the warm golden light filtering through the pavilion's timber frame. Stone columns and hand-laid masonry anchor the structure while paddock fencing extends into the background.",
+  },
+  {
+    title: "Outdoor Kitchen Detail",
+    alt: "Close-up slow-motion footage of the outdoor grill and kitchen area built with natural stone and hardwood, showing craftsmanship details",
+    description: "The camera reveals the precision joinery of the outdoor kitchen — brushed steel fixtures set into hand-cut stone countertops, with native timber cabinetry and copper accents catching the fading light.",
+  },
+];
 
 // ── Loading shimmer overlay ─────────────────────────────────
 function HeroLoadingOverlay({ stage, videosReady }: { stage: string; videosReady: boolean[] }) {
@@ -115,6 +128,7 @@ export function HeroSection() {
   const [clips, setClips] = useState(loadClips);
   const [quality, setQuality] = useState<VideoQuality>(loadQuality);
   const [showEditor, setShowEditor] = useState(false);
+  const [showCaptions, setShowCaptions] = useState(false);
 
   const qProfile = QUALITY_PROFILES[quality];
 
@@ -209,11 +223,52 @@ export function HeroSection() {
         </button>
       )}
       {/* Accessible description for background videos */}
-      <div className="sr-only" role="img" aria-label="Background video showing Peninsula Equine's handcrafted pavilion and outdoor grill area at golden hour, played in slow motion">
-        Cinematic slow-motion footage of Peninsula Equine facilities — a timber pavilion with stone detailing surrounded by paddocks at sunset.
+      <div className="sr-only" role="img" aria-label={HERO_MEDIA_CAPTIONS[activeIdx].alt}>
+        {HERO_MEDIA_CAPTIONS[activeIdx].description}
       </div>
 
-      {/* Video A — trimmed + zoomed + smoothed */}
+      {/* Caption toggle button */}
+      <button
+        onClick={() => setShowCaptions((v) => !v)}
+        className="absolute bottom-20 sm:bottom-16 right-4 z-30 w-8 h-8 rounded-full bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/20 flex items-center justify-center text-primary-foreground/50 hover:text-primary-foreground hover:bg-primary-foreground/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        aria-label={showCaptions ? "Hide media captions" : "Show media captions"}
+        aria-pressed={showCaptions}
+      >
+        <Captions className="h-4 w-4" />
+      </button>
+
+      {/* Caption gallery overlay */}
+      {showCaptions && (
+        <div
+          className="absolute bottom-20 sm:bottom-16 right-14 z-30 w-72 bg-primary/90 backdrop-blur-md border border-primary-foreground/15 rounded-xl p-4 animate-fade-in shadow-2xl"
+          role="region"
+          aria-label="Hero media captions"
+        >
+          <h4 className="text-[10px] text-primary-foreground/40 uppercase tracking-[0.3em] font-sans mb-3">
+            Media Descriptions
+          </h4>
+          <div className="space-y-3">
+            {HERO_MEDIA_CAPTIONS.map((cap, i) => (
+              <div
+                key={i}
+                className={`rounded-lg border p-3 transition-colors ${
+                  i === activeIdx
+                    ? "border-accent/40 bg-accent/5"
+                    : "border-primary-foreground/10 bg-primary-foreground/[0.02]"
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-1.5">
+                  <div className={`w-2 h-2 rounded-full ${i === activeIdx ? "bg-accent animate-pulse" : "bg-primary-foreground/20"}`} />
+                  <span className="text-xs font-medium text-primary-foreground/90">{cap.title}</span>
+                </div>
+                <p className="text-[11px] text-primary-foreground/50 leading-relaxed">{cap.description}</p>
+                <p className="text-[10px] text-primary-foreground/30 mt-1.5 italic">Alt: {cap.alt}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <video
         ref={videoARef}
         muted playsInline preload="none"
@@ -226,6 +281,7 @@ export function HeroSection() {
           filter: qProfile.filter,
         }}
         aria-hidden="true"
+        aria-label={HERO_MEDIA_CAPTIONS[0].alt}
       />
       <video
         ref={videoBRef}
@@ -239,6 +295,7 @@ export function HeroSection() {
           filter: qProfile.filter,
         }}
         aria-hidden="true"
+        aria-label={HERO_MEDIA_CAPTIONS[1].alt}
       />
       <div className="absolute inset-0 bg-primary/70" />
       <BlueprintScene preset="hero" />
