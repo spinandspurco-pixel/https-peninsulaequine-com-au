@@ -36,6 +36,17 @@ Deno.serve(async (req) => {
     "unknown";
 
   if (!checkIpRate(ip)) {
+    // Log rate-limit hit
+    const rlClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    rlClient.from("ab_test_events").insert({
+      test_name: "newsletter_funnel",
+      variant: "default",
+      event_type: "confirm_rate_limited",
+      visitor_id: ip,
+      page_path: "/confirm-newsletter",
+      metadata: { reason: "ip_throttle" },
+    }).then(() => {});
+
     return new Response(confirmPage("Too many attempts. Please try again later.", false), {
       status: 429,
       headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
@@ -90,6 +101,16 @@ Deno.serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
     });
   }
+
+  // Log confirmation analytics event
+  supabase.from("ab_test_events").insert({
+    test_name: "newsletter_funnel",
+    variant: "default",
+    event_type: "email_confirmed",
+    visitor_id: ip,
+    page_path: "/confirm-newsletter",
+    metadata: { subscriber_id: subscriber.id },
+  }).then(() => {});
 
   // Fire welcome series (fire-and-forget)
   supabase.functions.invoke("send-welcome-series", {
