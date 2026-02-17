@@ -22,8 +22,8 @@ export function PageHeader({ title, description, backgroundImage, dividerVariant
       {/* Blueprint overlay */}
       <BlueprintScene preset="page-header" />
 
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-primary/50 to-primary/80 pointer-events-none z-[1]" />
+      {/* Gradient overlay — strong enough to ensure text legibility */}
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/70 via-primary/80 to-primary/95 pointer-events-none z-[1]" />
 
       {/* Background image */}
       {backgroundImage && (
@@ -42,13 +42,13 @@ export function PageHeader({ title, description, backgroundImage, dividerVariant
         <div className="max-w-3xl mx-auto text-center">
           <div className="w-12 h-px bg-accent mx-auto mb-6" />
           <h1
-            className="heading-display mb-5"
+            className="heading-display mb-5 text-primary-foreground drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
             style={{ transform: `translateY(${offset * 0.08}px)` }}
           >
             {title}
           </h1>
           <p
-            className="text-base sm:text-lg text-primary-foreground/70 max-w-2xl mx-auto leading-relaxed"
+            className="text-base sm:text-lg text-primary-foreground/90 max-w-2xl mx-auto leading-relaxed"
             style={{ transform: `translateY(${offset * 0.12}px)` }}
           >
             {description}
