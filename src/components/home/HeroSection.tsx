@@ -243,6 +243,11 @@ export function HeroSection() {
           <Settings className="h-4 w-4" />
         </button>
       )}
+      {/* Accessible description for background videos */}
+      <div className="sr-only" role="img" aria-label="Background video showing Peninsula Equine's handcrafted pavilion and outdoor grill area at golden hour, played in slow motion">
+        Cinematic slow-motion footage of Peninsula Equine facilities — a timber pavilion with stone detailing surrounded by paddocks at sunset.
+      </div>
+
       {/* Video A — trimmed + zoomed + smoothed */}
       <video
         ref={videoARef}
@@ -256,6 +261,7 @@ export function HeroSection() {
           filter: "contrast(1.08) saturate(1.1) brightness(1.02)",
         }}
         aria-hidden="true"
+        aria-label="Pavilion exterior slow-motion footage"
       >
         <source src={VIDEO_SRCS[0]} type="video/mp4" />
       </video>
@@ -272,6 +278,7 @@ export function HeroSection() {
           filter: "contrast(1.08) saturate(1.1) brightness(1.02)",
         }}
         aria-hidden="true"
+        aria-label="Grill and pavilion detail slow-motion footage"
       >
         <source src={VIDEO_SRCS[1]} type="video/mp4" />
       </video>
@@ -282,8 +289,10 @@ export function HeroSection() {
       <div className="relative z-10 text-center px-4 sm:px-6">
         <img
           src={peLogo}
-          alt="Peninsula Equine"
+          alt="Peninsula Equine logo — gold horseshoe emblem on dark background"
           loading="eager"
+          width={128}
+          height={128}
           className="w-20 h-20 sm:w-32 sm:h-32 mx-auto mb-6 sm:mb-8 drop-shadow-[0_4px_30px_hsl(var(--accent)/0.3)]"
         />
         <div className="w-16 h-px mx-auto mb-5 sm:mb-8 bg-accent" />
