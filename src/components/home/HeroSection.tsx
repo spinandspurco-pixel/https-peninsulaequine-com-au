@@ -28,6 +28,28 @@ const HERO_MEDIA_CAPTIONS = [
   },
 ];
 
+// ── Skeleton grid for perceived performance ─────────────────
+function HeroSkeletonGrid() {
+  return (
+    <div className="absolute inset-0 grid grid-cols-3 grid-rows-2 gap-px opacity-[0.07]" aria-hidden="true">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div
+          key={i}
+          className="bg-primary-foreground/20 rounded-sm overflow-hidden"
+        >
+          <div
+            className="w-full h-full animate-[shimmer_2s_infinite]"
+            style={{
+              background: "linear-gradient(90deg, transparent 0%, hsl(var(--accent) / 0.15) 50%, transparent 100%)",
+              animationDelay: `${i * 0.2}s`,
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ── Loading shimmer overlay ─────────────────────────────────
 function HeroLoadingOverlay({ stage, videosReady }: { stage: string; videosReady: boolean[] }) {
   if (stage === "ready") return null;
@@ -41,7 +63,10 @@ function HeroLoadingOverlay({ stage, videosReady }: { stage: string; videosReady
       className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-primary transition-opacity duration-700"
       style={{ opacity: stage === "ready" ? 0 : 1 }}
     >
-      {/* Shimmer background */}
+      {/* Skeleton grid backdrop */}
+      <HeroSkeletonGrid />
+
+      {/* Shimmer sweep */}
       <div className="absolute inset-0 overflow-hidden">
         <div
           className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite]"
