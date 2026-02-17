@@ -176,6 +176,18 @@ export function EventRSVPForm({
 
   // ── Confirmation screen ──
   if (submitted) {
+    const nextSteps = rsvpStatus === "confirmed"
+      ? [
+          { text: "A confirmation email is on its way to your inbox." },
+          { text: `Arrive 15 minutes early${eventLocation ? ` at ${eventLocation}` : ""}.` },
+          { text: "Wear closed-toe shoes and comfortable clothing." },
+          { text: "Check your email for any event updates closer to the date." },
+        ]
+      : [
+          { text: "We'll email you if a spot opens up." },
+          { text: "Keep an eye on your inbox for waitlist updates." },
+        ];
+
     return (
       <div className="text-center py-8 space-y-5">
         <CheckCircle2 className="h-12 w-12 text-accent mx-auto" />
@@ -188,6 +200,21 @@ export function EventRSVPForm({
               ? "We'll notify you by email if a spot opens up."
               : "We'll send a confirmation to your email."}
           </p>
+        </div>
+
+        {/* Next steps */}
+        <div className="border-t border-border pt-5">
+          <p className="text-sm font-medium text-foreground mb-3">What to do next</p>
+          <ol className="text-left max-w-xs mx-auto space-y-2">
+            {nextSteps.map((s, i) => (
+              <li key={i} className="flex items-start gap-2.5 text-sm text-muted-foreground">
+                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center mt-0.5">
+                  {i + 1}
+                </span>
+                <span>{s.text}</span>
+              </li>
+            ))}
+          </ol>
         </div>
 
         {/* Calendar sync — only for confirmed RSVPs */}
@@ -215,6 +242,9 @@ export function EventRSVPForm({
                 </a>
               </Button>
             </div>
+            <p className="text-[11px] text-muted-foreground">
+              Works with Apple Calendar, Outlook &amp; more.
+            </p>
           </div>
         )}
       </div>
