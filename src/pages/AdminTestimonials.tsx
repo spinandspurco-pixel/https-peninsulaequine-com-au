@@ -18,8 +18,84 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, Star, Pin, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, Star, Pin, ArrowUp, ArrowDown, Download, FileText } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
+
+/* ── Export helpers ─────────────────────────────────────────── */
+
+function exportCSV(items: ManagedTestimonial[]) {
+  const headers = ["Name", "Role", "Quote", "Rating", "Media Type", "Media URL", "Active", "Pinned", "Service Tags", "Trainer"];
+  const rows = items.map((t) => [
+    t.client_name,
+    t.client_role ?? "",
+    `"${t.quote.replace(/"/g, '""')}"`,
+    String(t.rating),
+    t.media_type ?? "",
+    t.media_url ?? "",
+    t.active ? "Yes" : "No",
+    t.pinned ? "Yes" : "No",
+    (t.service_tags ?? []).join("; "),
+    t.trainer ?? "",
+  ]);
+  const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `pe-testimonials-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast.success("CSV downloaded");
+}
+
+function exportPDF(items: ManagedTestimonial[]) {
+  const stars = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
+  const avgRating = items.length
+    ? (items.reduce((s, t) => s + t.rating, 0) / items.length).toFixed(1)
+    : "—";
+  const videoCount = items.filter((t) => t.media_type === "video").length;
+
+  const html = `
+    <html><head><title>Peninsula Equine — Testimonials Report</title>
+    <style>
+      body{font-family:Georgia,serif;max-width:800px;margin:40px auto;color:#1a1a1a;padding:0 20px}
+      h1{font-size:24px;border-bottom:2px solid #c5a55a;padding-bottom:8px;margin-bottom:4px}
+      .meta{color:#666;font-size:13px;margin-bottom:28px}
+      .stats{display:flex;gap:24px;margin-bottom:28px;padding:12px 16px;background:#f7f5f0;border-radius:8px;font-size:14px}
+      .stats b{color:#c5a55a}
+      .card{border:1px solid #e0dcd4;border-radius:8px;padding:16px 20px;margin-bottom:16px;page-break-inside:avoid}
+      .card h3{margin:0 0 2px;font-size:16px}
+      .card .role{color:#888;font-size:12px}
+      .card .stars{color:#c5a55a;letter-spacing:2px;margin:6px 0}
+      .card blockquote{margin:8px 0 0;font-style:italic;line-height:1.5;color:#333}
+      .tags{margin-top:8px;font-size:11px;color:#888}
+      @media print{body{margin:20px}}
+    </style></head><body>
+    <h1>Peninsula Equine — Testimonials Report</h1>
+    <p class="meta">Generated ${new Date().toLocaleDateString("en-AU", { year: "numeric", month: "long", day: "numeric" })} · ${items.length} testimonials</p>
+    <div class="stats">
+      <span><b>${avgRating}</b> avg rating</span>
+      <span><b>${items.length}</b> reviews</span>
+      <span><b>${videoCount}</b> video testimonials</span>
+    </div>
+    ${items.map((t) => `
+      <div class="card">
+        <h3>${t.client_name}</h3>
+        ${t.client_role ? `<p class="role">${t.client_role}</p>` : ""}
+        <div class="stars">${stars(t.rating)}</div>
+        <blockquote>"${t.quote}"</blockquote>
+        ${(t.service_tags?.length || t.trainer) ? `<p class="tags">${t.trainer ? `Trainer: ${t.trainer}` : ""}${t.trainer && t.service_tags?.length ? " · " : ""}${(t.service_tags ?? []).join(", ")}</p>` : ""}
+      </div>
+    `).join("")}
+    </body></html>`;
+
+  const w = window.open("", "_blank");
+  if (!w) { toast.error("Popup blocked — please allow popups"); return; }
+  w.document.write(html);
+  w.document.close();
+  setTimeout(() => w.print(), 400);
+  toast.success("PDF report opened for printing");
+}
 
 type ManagedTestimonial = Tables<"managed_testimonials">;
 
@@ -113,9 +189,17 @@ export default function AdminTestimonials() {
               <h1 className="font-serif text-3xl font-bold text-foreground">Manage Testimonials</h1>
               <p className="text-muted-foreground text-sm mt-1">{items.length} testimonials</p>
             </div>
-            <Button onClick={() => setEditItem({ active: true, rating: 5, sort_order: items.length })}>
-              <Plus className="h-4 w-4 mr-2" /> Add Testimonial
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" onClick={() => exportCSV(items)} disabled={items.length === 0}>
+                <Download className="h-4 w-4 mr-1" /> CSV
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => exportPDF(items)} disabled={items.length === 0}>
+                <FileText className="h-4 w-4 mr-1" /> PDF
+              </Button>
+              <Button onClick={() => setEditItem({ active: true, rating: 5, sort_order: items.length })}>
+                <Plus className="h-4 w-4 mr-2" /> Add
+              </Button>
+            </div>
           </div>
 
           {isLoading ? (
