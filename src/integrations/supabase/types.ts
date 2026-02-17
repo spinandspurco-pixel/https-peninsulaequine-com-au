@@ -325,6 +325,65 @@ export type Database = {
         }
         Relationships: []
       }
+      lesson_bookings: {
+        Row: {
+          client_email: string
+          client_name: string
+          client_phone: string | null
+          created_at: string
+          deposit_amount_cents: number
+          experience_level: string
+          full_price_cents: number
+          horse_name: string | null
+          id: string
+          lesson_goals: string | null
+          payment_status: string
+          slot_id: string
+          status: string
+          stripe_session_id: string
+        }
+        Insert: {
+          client_email: string
+          client_name: string
+          client_phone?: string | null
+          created_at?: string
+          deposit_amount_cents: number
+          experience_level?: string
+          full_price_cents: number
+          horse_name?: string | null
+          id?: string
+          lesson_goals?: string | null
+          payment_status?: string
+          slot_id: string
+          status?: string
+          stripe_session_id: string
+        }
+        Update: {
+          client_email?: string
+          client_name?: string
+          client_phone?: string | null
+          created_at?: string
+          deposit_amount_cents?: number
+          experience_level?: string
+          full_price_cents?: number
+          horse_name?: string | null
+          id?: string
+          lesson_goals?: string | null
+          payment_status?: string
+          slot_id?: string
+          status?: string
+          stripe_session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_bookings_slot_id_fkey"
+            columns: ["slot_id"]
+            isOneToOne: false
+            referencedRelation: "lesson_slots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lesson_slots: {
         Row: {
           created_at: string
