@@ -14,6 +14,7 @@ interface RSVPConfirmationRequest {
   eventDate: string;
   eventTime?: string | null;
   eventLocation?: string | null;
+  eventDescription?: string | null;
   guests: number;
   status: "confirmed" | "waitlisted";
 }
@@ -86,73 +87,135 @@ const handler = async (req: Request): Promise<Response> => {
       year: "numeric",
     });
 
+    // Detect if this is a clinic/lesson-type event
+    const titleLower = data.eventTitle.toLowerCase();
+    const isClinic = titleLower.includes("clinic") || titleLower.includes("lesson") || titleLower.includes("workshop") || titleLower.includes("masterclass");
+
+    // Format time for display
+    const displayTime = data.eventTime
+      ? (() => {
+          const [h, m] = data.eventTime.split(":").map(Number);
+          const ampm = h >= 12 ? "PM" : "AM";
+          const h12 = h % 12 || 12;
+          return `${h12}:${pad(m)} ${ampm}`;
+        })()
+      : null;
+
     const confirmationHtml = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <style>
-          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: #2c3e50; color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
-          .event-box { background: #fff; padding: 20px; border-left: 4px solid #c9a227; margin: 20px 0; border-radius: 4px; }
-          .event-box h3 { margin: 0 0 10px 0; color: #2c3e50; }
-          .detail { margin: 5px 0; color: #555; font-size: 14px; }
-          .status-badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; margin: 15px 0; }
-          .confirmed { background: #d4edda; color: #155724; }
-          .waitlisted { background: #fff3cd; color: #856404; }
-          .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1 style="margin: 0; font-size: 24px;">${isConfirmed ? "RSVP Confirmed!" : "You're on the Waitlist"}</h1>
-            <p style="margin: 10px 0 0 0; opacity: 0.9;">Peninsula Equine Events</p>
-          </div>
-          <div class="content">
-            <p>Hi ${data.name},</p>
-            <p>${isConfirmed
-              ? "Your spot has been reserved! Here are your event details:"
-              : "This event is currently full, but you're on the waitlist. We'll email you immediately if a spot opens up."
-            }</p>
-            
-            <div class="event-box">
-              <h3>${data.eventTitle}</h3>
-              <p class="detail">📅 ${formattedDate}</p>
-              ${data.eventTime ? `<p class="detail">🕐 ${data.eventTime}</p>` : ""}
-              ${data.eventLocation ? `<p class="detail">📍 ${data.eventLocation}</p>` : ""}
-              <p class="detail">👥 ${data.guests} ${data.guests === 1 ? "guest" : "guests"}</p>
-            </div>
-
-            <div style="text-align: center;">
-              <span class="status-badge ${isConfirmed ? "confirmed" : "waitlisted"}">
-                ${isConfirmed ? "✓ Confirmed" : "⏳ Waitlisted"}
-              </span>
-            </div>
-
-            ${isConfirmed ? `
-            <div style="background: #fff; padding: 16px; border: 1px solid #e8e2d6; border-radius: 8px; margin: 20px 0; text-align: center;">
-              <p style="margin: 0 0 8px; font-weight: 600; color: #2c3e50;">📅 Add to Your Calendar</p>
-              <p style="margin: 0; font-size: 13px; color: #666;">Open the attached <strong>event.ics</strong> file to add this event to your calendar automatically.</p>
-            </div>
-            <p style="text-align: center; margin-top: 20px;">
-              <a href="https://peninsulaequine.lovable.app/events" style="background: #c9a227; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600;">View Event Details</a>
-            </p>
-            ` : ""}
-
-            <p style="margin-top: 25px;">
-              See you there!<br>
-              <strong>The Peninsula Equine Team</strong>
-            </p>
-          </div>
-          <div class="footer">
-            <p><strong>Peninsula Equine</strong> | Premium Equine Facilities</p>
-            <p style="font-size: 11px; color: #999;">This is an automated confirmation of your RSVP.</p>
-          </div>
+      <div style="font-family: 'Georgia', serif; max-width: 600px; margin: 0 auto; color: #2d2418;">
+        <div style="background: #2d2418; padding: 28px; text-align: center;">
+          <h1 style="color: #f5f0e8; margin: 0; font-size: 22px;">Peninsula Equine</h1>
+          <p style="color: #c9a227; margin: 6px 0 0; font-size: 12px; letter-spacing: 3px; text-transform: uppercase;">
+            ${isConfirmed ? "RSVP Confirmed ✓" : "Waitlist Registered"}
+          </p>
         </div>
-      </body>
-      </html>
+
+        <div style="padding: 32px 24px; background: #faf8f4;">
+          <p style="font-size: 16px;">Hi ${data.name},</p>
+
+          ${isConfirmed
+            ? `<p>Great news — your spot is secured! We're looking forward to seeing you${data.guests > 1 ? ` and your ${data.guests - 1} guest${data.guests > 2 ? "s" : ""}` : ""}.</p>`
+            : `<p>This event is currently at capacity, but you're on the waitlist. We'll email you immediately if a spot opens up — no action needed on your end.</p>`
+          }
+
+          <!-- Event Details Card -->
+          <div style="background: white; border: 1px solid #e8e2d6; border-radius: 8px; padding: 20px; margin: 20px 0;">
+            <h2 style="margin: 0 0 14px; font-size: 18px; color: #2d2418;">${data.eventTitle}</h2>
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 7px 0; font-weight: 600; color: #888; width: 100px; font-size: 14px;">📅 Date</td>
+                <td style="padding: 7px 0; color: #2d2418; font-size: 14px;">${formattedDate}</td>
+              </tr>
+              ${displayTime ? `
+              <tr>
+                <td style="padding: 7px 0; font-weight: 600; color: #888; font-size: 14px;">🕐 Time</td>
+                <td style="padding: 7px 0; color: #2d2418; font-size: 14px;">${displayTime}</td>
+              </tr>
+              ` : ""}
+              ${data.eventLocation ? `
+              <tr>
+                <td style="padding: 7px 0; font-weight: 600; color: #888; font-size: 14px;">📍 Location</td>
+                <td style="padding: 7px 0; color: #2d2418; font-size: 14px;">${data.eventLocation}</td>
+              </tr>
+              ` : ""}
+              <tr>
+                <td style="padding: 7px 0; font-weight: 600; color: #888; font-size: 14px;">👥 Guests</td>
+                <td style="padding: 7px 0; color: #2d2418; font-size: 14px;">${data.guests} ${data.guests === 1 ? "person" : "people"}</td>
+              </tr>
+            </table>
+          </div>
+
+          ${data.eventDescription ? `
+          <div style="font-style: italic; color: #555; background: #fff; padding: 14px 16px; border-left: 3px solid #c9a227; margin: 16px 0; font-size: 14px; line-height: 1.7;">
+            ${data.eventDescription.slice(0, 300)}${data.eventDescription.length > 300 ? "…" : ""}
+          </div>
+          ` : ""}
+
+          <div style="text-align: center; margin: 16px 0;">
+            <span style="display: inline-block; padding: 6px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; ${isConfirmed ? "background: #d4edda; color: #155724;" : "background: #fff3cd; color: #856404;"}">
+              ${isConfirmed ? "✓ Confirmed" : "⏳ Waitlisted"}
+            </span>
+          </div>
+
+          ${isConfirmed ? `
+          <!-- Calendar Invite -->
+          <div style="background: #fff; border: 1px solid #e8e2d6; border-radius: 8px; padding: 16px; margin: 20px 0; text-align: center;">
+            <p style="margin: 0 0 8px; font-weight: 600; color: #2d2418;">📅 Add to Your Calendar</p>
+            <p style="margin: 0; font-size: 13px; color: #666;">Open the attached <strong>event.ics</strong> file to add this event to your calendar automatically.</p>
+          </div>
+
+          ${isClinic ? `
+          <!-- Clinic Preparation Tips -->
+          <div style="background: #fff; border: 1px solid #e8e2d6; border-radius: 8px; padding: 20px; margin: 20px 0;">
+            <p style="margin: 0 0 10px; font-weight: 600; font-size: 14px; color: #2d2418;">📋 How to Prepare</p>
+            <ul style="margin: 0; padding: 0 0 0 20px; font-size: 14px; color: #555; line-height: 1.9;">
+              <li>Arrive 15–20 minutes early for registration</li>
+              <li>Wear close-fitting trousers and boots with a heel</li>
+              <li>Bring your own approved riding helmet (limited spares available)</li>
+              <li>Horse groomed, tacked, and hooves picked out before the session</li>
+              <li>Bring water and sunscreen — we're outdoors!</li>
+            </ul>
+          </div>
+          ` : `
+          <!-- General Event Tips -->
+          <div style="background: #fff; border: 1px solid #e8e2d6; border-radius: 8px; padding: 20px; margin: 20px 0;">
+            <p style="margin: 0 0 10px; font-weight: 600; font-size: 14px; color: #2d2418;">📋 What to Bring</p>
+            <ul style="margin: 0; padding: 0 0 0 20px; font-size: 14px; color: #555; line-height: 1.9;">
+              <li>Arrive 10–15 minutes early</li>
+              <li>Wear closed-toe shoes suitable for a farm environment</li>
+              <li>Bring sunscreen and a hat — we're on the Peninsula!</li>
+            </ul>
+          </div>
+          `}
+
+          <div style="text-align: center; margin: 24px 0;">
+            <a href="https://peninsulaequine.lovable.app/events" style="background: #c9a227; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600; font-size: 15px;">View All Upcoming Events</a>
+          </div>
+          ` : `
+          <div style="text-align: center; margin: 24px 0;">
+            <a href="https://peninsulaequine.lovable.app/events" style="background: #c9a227; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600; font-size: 15px;">Browse Other Events</a>
+          </div>
+          `}
+
+          <div style="background: #f0ede6; border-radius: 8px; padding: 20px; margin: 24px 0; text-align: center;">
+            <p style="margin: 0 0 10px; font-weight: 600; color: #2d2418; font-size: 14px;">Questions? Get in touch</p>
+            <p style="margin: 0; font-size: 14px; color: #555;">
+              📞 <a href="tel:+61418585489" style="color: #c9a227; text-decoration: none;">0418 585 489</a>
+              &nbsp;&nbsp;·&nbsp;&nbsp;
+              📧 <a href="mailto:info@peninsulaequine.com.au" style="color: #c9a227; text-decoration: none;">info@peninsulaequine.com.au</a>
+            </p>
+          </div>
+
+          <p style="margin-top: 24px;">
+            ${isConfirmed ? "See you there!" : "We'll be in touch if a spot opens up."}<br/>
+            <strong>— Ciro & The Peninsula Equine Team</strong>
+          </p>
+        </div>
+
+        <div style="background: #2d2418; padding: 16px; text-align: center;">
+          <p style="color: #8a7e6a; margin: 0; font-size: 11px;">Peninsula Equine · Mornington Peninsula, VIC</p>
+        </div>
+      </div>
     `;
 
     // Generate .ics for confirmed RSVPs
