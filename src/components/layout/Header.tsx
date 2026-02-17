@@ -46,7 +46,7 @@ export function Header() {
       <div className="section-container">
         <nav className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 group min-w-0">
+          <Link to="/" className="flex items-center gap-2.5 group min-w-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2">
             <div className="relative flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10">
               <img
                 src={logoImage}
@@ -154,7 +154,7 @@ export function Header() {
               key={item.name}
               to={item.href}
               className={cn(
-                "block py-3 text-sm uppercase tracking-[0.15em] transition-colors",
+                "block py-3 text-sm uppercase tracking-[0.15em] transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
                 location.pathname === item.href
                   ? "text-accent"
                   : "text-foreground hover:text-accent"
@@ -165,12 +165,12 @@ export function Header() {
           ))}
 
           <div className="flex items-center gap-4 pt-3 mt-3 border-t border-border text-sm text-muted-foreground">
-            <a href={`tel:${siteConfig.phone}`} className="inline-flex items-center gap-1.5 hover:text-accent transition-colors">
+            <a href={`tel:${siteConfig.phone}`} className="inline-flex items-center gap-1.5 hover:text-accent transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2">
               <Phone className="h-4 w-4" />
               <span>{siteConfig.phone}</span>
             </a>
             <span className="w-px h-4 bg-border" />
-            <a href={`mailto:${siteConfig.email}`} className="inline-flex items-center gap-1.5 hover:text-accent transition-colors truncate">
+            <a href={`mailto:${siteConfig.email}`} className="inline-flex items-center gap-1.5 hover:text-accent transition-colors truncate rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2">
               <Mail className="h-4 w-4 flex-shrink-0" />
               <span className="truncate">{siteConfig.email}</span>
             </a>
