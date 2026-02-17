@@ -192,6 +192,7 @@ export function HeroSection() {
           videoRefs={videoRefs}
           videoSrcs={VIDEO_SRCS}
           quality={quality}
+          metrics={{ stage, videosReady, loadTimeMs, budgetStatus }}
           onChange={(c) => { setClips(c); }}
           onQualityChange={(q) => { setQuality(q); saveQuality(q); }}
           onReset={() => setClips(DEFAULT_CLIPS)}
