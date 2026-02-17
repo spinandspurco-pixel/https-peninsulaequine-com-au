@@ -126,14 +126,28 @@ export function Header() {
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className={cn(
-              "lg:hidden p-2 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
+              "lg:hidden relative w-10 h-10 flex items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
               isScrolled ? "text-[hsl(var(--header-scrolled-foreground))]" : "text-[hsl(var(--header-foreground))]"
             )}
             aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-menu"
           >
-            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            <span className="sr-only">{isMobileMenuOpen ? "Close" : "Menu"}</span>
+            <span className="relative w-5 h-4 flex flex-col justify-between">
+              <span className={cn(
+                "block h-0.5 w-full rounded-full bg-current transition-all duration-300 origin-center",
+                isMobileMenuOpen ? "translate-y-[7px] rotate-45" : ""
+              )} />
+              <span className={cn(
+                "block h-0.5 w-full rounded-full bg-current transition-all duration-200",
+                isMobileMenuOpen ? "opacity-0 scale-x-0" : "opacity-100 scale-x-100"
+              )} />
+              <span className={cn(
+                "block h-0.5 w-full rounded-full bg-current transition-all duration-300 origin-center",
+                isMobileMenuOpen ? "-translate-y-[7px] -rotate-45" : ""
+              )} />
+            </span>
           </button>
         </nav>
       </div>
