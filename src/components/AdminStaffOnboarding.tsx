@@ -58,18 +58,14 @@ import {
   Sparkles,
 } from "lucide-react";
 import { format } from "date-fns";
-
-/* ── Western Horse Avatars for onboarding ── */
-const HORSE_AVATARS = [
-  { id: "mustang", emoji: "🐴", label: "Mustang", bg: "bg-amber-100 dark:bg-amber-900/30" },
-  { id: "stallion", emoji: "🏇", label: "Stallion", bg: "bg-blue-100 dark:bg-blue-900/30" },
-  { id: "cowboy", emoji: "🤠", label: "Cowboy", bg: "bg-orange-100 dark:bg-orange-900/30" },
-  { id: "horseshoe", emoji: "🧲", label: "Lucky Shoe", bg: "bg-emerald-100 dark:bg-emerald-900/30" },
-  { id: "sunset", emoji: "🌅", label: "Sunset Rider", bg: "bg-rose-100 dark:bg-rose-900/30" },
-  { id: "cactus", emoji: "🌵", label: "Trail Boss", bg: "bg-lime-100 dark:bg-lime-900/30" },
-  { id: "lasso", emoji: "🪢", label: "Lasso", bg: "bg-yellow-100 dark:bg-yellow-900/30" },
-  { id: "saddle", emoji: "🐎", label: "Saddle Up", bg: "bg-purple-100 dark:bg-purple-900/30" },
-];
+import {
+  PE_AVATARS,
+  PEAvatarIcon,
+  PEBossHat,
+  PEHorseHead,
+  PERider,
+  PEHorseshoe,
+} from "@/components/icons/PEIcons";
 
 const ROLE_LABELS: Record<string, { label: string; color: string; desc: string }> = {
   admin: { label: "Admin", color: "bg-red-500 text-white", desc: "Full access to all features and staff management" },
@@ -153,7 +149,7 @@ export function AdminStaffOnboarding() {
         throw new Error(response.data?.error || response.error?.message || "Failed to create account");
       }
 
-      toast.success(`🤠 Welcome aboard! ${inviteDisplayName || inviteEmail} has been saddled up as ${ROLE_LABELS[inviteRole]?.label}`);
+      toast.success(`Welcome aboard! ${inviteDisplayName || inviteEmail} has been saddled up as ${ROLE_LABELS[inviteRole]?.label}`);
       resetWizard();
       fetchStaff();
     } catch (err: any) {
@@ -203,7 +199,7 @@ export function AdminStaffOnboarding() {
   };
 
   const roleInfo = ROLE_LABELS[inviteRole] || ROLE_LABELS.user;
-  const selectedAvatarData = HORSE_AVATARS.find((a) => a.id === inviteAvatar) || HORSE_AVATARS[0];
+  const selectedAvatarData = PE_AVATARS.find((a) => a.id === inviteAvatar) || PE_AVATARS[0];
 
   return (
     <div className="space-y-6">
@@ -317,7 +313,7 @@ export function AdminStaffOnboarding() {
                 if (filtered.length === 0) return (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                      <div className="text-4xl mb-2">🤠</div>
+                      <PEHorseHead size={40} className="mx-auto mb-2 text-muted-foreground/50" />
                       {staff.length === 0 ? "No staff members yet. Invite your first team member!" : "No staff match your search."}
                     </TableCell>
                   </TableRow>
@@ -382,7 +378,9 @@ export function AdminStaffOnboarding() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="p-4 rounded-lg border bg-muted/30">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-sm">👑</div>
+                  <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
+                    <PEBossHat size={16} className="text-accent" />
+                  </div>
                   <div>
                     <p className="font-medium text-sm">Admin Inbox</p>
                     <p className="text-xs text-muted-foreground">All inquiries & bookings</p>
@@ -394,7 +392,9 @@ export function AdminStaffOnboarding() {
 
               <div className="p-4 rounded-lg border bg-muted/30">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-sm">🤠</div>
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <PEHorseshoe size={16} className="text-accent" />
+                  </div>
                   <div>
                     <p className="font-medium text-sm">Employee (Sander)</p>
                     <p className="text-xs text-muted-foreground">All inquiries & bookings</p>
@@ -406,7 +406,9 @@ export function AdminStaffOnboarding() {
 
               <div className="p-4 rounded-lg border bg-muted/30">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-sm">🏇</div>
+                  <div className="w-8 h-8 rounded-full bg-accent/15 flex items-center justify-center">
+                    <PERider size={16} className="text-accent" />
+                  </div>
                   <div>
                     <p className="font-medium text-sm">Trainer (Glenn)</p>
                     <p className="text-xs text-muted-foreground">Lessons & clinics only</p>
@@ -532,7 +534,7 @@ export function AdminStaffOnboarding() {
               <div>
                 <Label className="mb-2 block">Choose an Avatar</Label>
                 <div className="grid grid-cols-4 gap-3">
-                  {HORSE_AVATARS.map((avatar) => (
+                  {PE_AVATARS.map((avatar) => (
                     <button
                       key={avatar.id}
                       onClick={() => setInviteAvatar(avatar.id)}
@@ -542,9 +544,7 @@ export function AdminStaffOnboarding() {
                           : "border-muted hover:border-accent/40"
                       }`}
                     >
-                      <span className={`w-10 h-10 rounded-full ${avatar.bg} flex items-center justify-center text-xl`}>
-                        {avatar.emoji}
-                      </span>
+                      <PEAvatarIcon avatarId={avatar.id} size={20} className="w-10 h-10" />
                       <span className="text-xs text-muted-foreground">{avatar.label}</span>
                     </button>
                   ))}
@@ -557,9 +557,7 @@ export function AdminStaffOnboarding() {
           {wizardStep === 3 && (
             <div className="space-y-4">
               <div className="flex items-center gap-4 p-4 rounded-xl border bg-muted/30">
-                <div className={`w-14 h-14 rounded-full ${selectedAvatarData.bg} flex items-center justify-center text-3xl`}>
-                  {selectedAvatarData.emoji}
-                </div>
+                <PEAvatarIcon avatarId={selectedAvatarData.id} size={28} className="w-14 h-14" />
                 <div>
                   <p className="font-serif font-bold text-lg">{inviteDisplayName || inviteEmail.split("@")[0]}</p>
                   <p className="text-sm text-muted-foreground">{inviteEmail}</p>

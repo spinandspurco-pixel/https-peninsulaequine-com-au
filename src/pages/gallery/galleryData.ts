@@ -177,13 +177,13 @@ export const galleryItems: GalleryItem[] = [
 ];
 
 export const quickTags = [
-  { label: "🏗️ Barns", service: "barn", project: "all" },
-  { label: "🏟️ Arenas", service: "arena", project: "all" },
-  { label: "🪨 Stonework", service: "stonework", project: "all" },
-  { label: "🪵 Woodwork", service: "woodwork", project: "all" },
-  { label: "🎪 Events", service: "events", project: "all" },
-  { label: "📹 Videos", service: "all", project: "all" },
-  { label: "🌏 Queensland", service: "all", project: "queensland" },
+  { label: "Barns", service: "barn", project: "all" },
+  { label: "Arenas", service: "arena", project: "all" },
+  { label: "Stonework", service: "stonework", project: "all" },
+  { label: "Woodwork", service: "woodwork", project: "all" },
+  { label: "Events", service: "events", project: "all" },
+  { label: "Videos", service: "all", project: "all" },
+  { label: "Queensland", service: "all", project: "queensland" },
 ];
 
 export const testimonialServiceMap: Record<string, number[]> = {

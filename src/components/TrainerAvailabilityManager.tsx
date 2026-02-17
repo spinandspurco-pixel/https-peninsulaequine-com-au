@@ -28,6 +28,7 @@ import { toast } from "sonner";
 import { format, addDays, isBefore, startOfDay } from "date-fns";
 import {
   CalendarIcon,
+  CalendarDays,
   Clock,
   Plus,
   Pencil,
@@ -228,7 +229,7 @@ export function TrainerAvailabilityManager() {
           </div>
         ) : slots.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">
-            <div className="text-4xl mb-3">📅</div>
+            <CalendarDays className="h-10 w-10 mx-auto mb-3 text-muted-foreground/50" />
             <p className="font-medium">No upcoming slots</p>
             <p className="text-sm mt-1">Tap "Add Slot" to publish your availability.</p>
           </div>

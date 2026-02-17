@@ -84,7 +84,7 @@ function PreviewStrip({ group, values, theme }: { group: TokenGroup; values: Rec
     >
       <div className="flex items-center justify-between mb-2">
         <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: `hsl(${fg})` }}>
-          {group.label} — {theme === "light" ? "☀️" : "🌙"} {theme}
+          {group.label} — {theme}
         </p>
       </div>
       <div className="flex flex-wrap gap-2">

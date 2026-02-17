@@ -28,18 +28,7 @@ import {
   Mail,
   Phone,
 } from "lucide-react";
-
-/* ── Western Horse Avatars ──────────────────────────────── */
-const HORSE_AVATARS = [
-  { id: "mustang", emoji: "🐴", label: "Mustang", bg: "bg-amber-100 dark:bg-amber-900/30" },
-  { id: "stallion", emoji: "🏇", label: "Stallion", bg: "bg-blue-100 dark:bg-blue-900/30" },
-  { id: "cowboy", emoji: "🤠", label: "Cowboy", bg: "bg-orange-100 dark:bg-orange-900/30" },
-  { id: "horseshoe", emoji: "🧲", label: "Lucky Shoe", bg: "bg-emerald-100 dark:bg-emerald-900/30" },
-  { id: "sunset", emoji: "🌅", label: "Sunset Rider", bg: "bg-rose-100 dark:bg-rose-900/30" },
-  { id: "cactus", emoji: "🌵", label: "Trail Boss", bg: "bg-lime-100 dark:bg-lime-900/30" },
-  { id: "lasso", emoji: "🪢", label: "Lasso", bg: "bg-yellow-100 dark:bg-yellow-900/30" },
-  { id: "saddle", emoji: "🐎", label: "Saddle Up", bg: "bg-purple-100 dark:bg-purple-900/30" },
-];
+import { PE_AVATARS, PEAvatarIcon, PEHorseHead, PECalendar, PESaddle, PESunrise } from "@/components/icons/PEIcons";
 
 interface Task {
   id: string;
@@ -196,14 +185,14 @@ export default function EmployeeDashboard() {
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate("/hq");
-    toast.success("Signed out. See ya later! 🤠");
+    toast.success("Signed out. See you next time!");
   };
 
   const handleAvatarSelect = (avatarId: string) => {
     setSelectedAvatar(avatarId);
     localStorage.setItem("pe-avatar", avatarId);
     setShowAvatarPicker(false);
-    toast.success("Avatar updated! Lookin' good 🤠");
+    toast.success("Avatar updated!");
   };
 
   const formatTime = (time: string | null) => {
@@ -235,13 +224,13 @@ export default function EmployeeDashboard() {
     return map[status] || "outline";
   };
 
-  const currentAvatar = HORSE_AVATARS.find((a) => a.id === selectedAvatar) || HORSE_AVATARS[0];
+  const currentAvatar = PE_AVATARS.find((a) => a.id === selectedAvatar) || PE_AVATARS[0];
 
   if (loading || checkingRole) {
     return (
       <Layout>
         <div className="min-h-[80vh] flex flex-col items-center justify-center gap-4">
-          <div className="text-5xl animate-bounce">🐴</div>
+          <PEHorseHead size={48} className="text-accent animate-bounce" />
           <Loader2 className="h-6 w-6 animate-spin text-accent" />
           <p className="text-sm text-muted-foreground">Saddling up...</p>
         </div>
@@ -265,10 +254,10 @@ export default function EmployeeDashboard() {
           <div className="flex items-center gap-4">
             <button
               onClick={() => setShowAvatarPicker(true)}
-              className={`w-14 h-14 rounded-full ${currentAvatar.bg} flex items-center justify-center text-3xl hover:scale-110 transition-transform cursor-pointer ring-2 ring-accent/20 hover:ring-accent/50`}
+              className="hover:scale-110 transition-transform cursor-pointer"
               title="Change avatar"
             >
-              {currentAvatar.emoji}
+              <PEAvatarIcon avatarId={currentAvatar.id} size={24} className="w-14 h-14 ring-2 ring-accent/20 hover:ring-accent/50" />
             </button>
             <div>
               <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">
@@ -396,12 +385,12 @@ export default function EmployeeDashboard() {
                 <CardContent>
                   {loadingData ? (
                     <div className="flex flex-col items-center justify-center py-8 gap-2">
-                      <div className="text-3xl animate-bounce">🐎</div>
+                      <PESaddle size={32} className="text-accent animate-bounce" />
                       <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
                     </div>
                   ) : upcomingBookings.length === 0 ? (
                     <div className="text-center py-8 text-muted-foreground">
-                      <div className="text-4xl mb-3">📅</div>
+                      <PECalendar size={40} className="mx-auto mb-3 text-muted-foreground/50" />
                       <p className="font-medium">No upcoming bookings</p>
                       <p className="text-sm mt-1">New lesson bookings will appear here automatically.</p>
                     </div>
@@ -444,7 +433,7 @@ export default function EmployeeDashboard() {
                               )}
                             </div>
                             {booking.notes && (
-                              <p className="text-xs text-muted-foreground mt-1 italic">📝 {booking.notes}</p>
+                              <p className="text-xs text-muted-foreground mt-1 italic">Notes: {booking.notes}</p>
                             )}
                           </div>
                         </div>
@@ -514,7 +503,7 @@ export default function EmployeeDashboard() {
                               <span>Level: {inquiry.experience_level}</span>
                             )}
                             {inquiry.horse_name && (
-                              <span>🐴 {inquiry.horse_name}</span>
+                              <span>Horse: {inquiry.horse_name}</span>
                             )}
                           </div>
                         </div>
@@ -561,7 +550,7 @@ export default function EmployeeDashboard() {
               </DialogTitle>
             </DialogHeader>
             <div className="grid grid-cols-4 gap-3 py-4">
-              {HORSE_AVATARS.map((avatar) => (
+              {PE_AVATARS.map((avatar) => (
                 <button
                   key={avatar.id}
                   onClick={() => handleAvatarSelect(avatar.id)}
@@ -571,7 +560,7 @@ export default function EmployeeDashboard() {
                       : "border-border hover:border-accent/40"
                   }`}
                 >
-                  <span className="text-2xl">{avatar.emoji}</span>
+                  <PEAvatarIcon avatarId={avatar.id} size={20} className="w-10 h-10" />
                   <span className="text-[10px] text-muted-foreground leading-tight text-center">{avatar.label}</span>
                 </button>
               ))}
@@ -596,12 +585,12 @@ export default function EmployeeDashboard() {
         <CardContent>
           {loadingData ? (
             <div className="flex flex-col items-center justify-center py-8 gap-2">
-              <div className="text-3xl animate-bounce">🐎</div>
+              <PESaddle size={32} className="text-accent animate-bounce" />
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
             </div>
           ) : tasks.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              <div className="text-4xl mb-3">🌅</div>
+              <PESunrise size={40} className="mx-auto mb-3 text-muted-foreground/50" />
               <p className="font-medium">All clear for today!</p>
               <p className="text-sm mt-1">No tasks on the schedule. Enjoy the ride.</p>
             </div>
@@ -675,7 +664,7 @@ export default function EmployeeDashboard() {
             </div>
           ) : announcements.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              <div className="text-3xl mb-2">📋</div>
+              <Bell className="h-8 w-8 mx-auto mb-2 text-muted-foreground/50" />
               <p className="text-sm">No announcements</p>
             </div>
           ) : (

@@ -352,7 +352,7 @@ function StepIndicator({ currentStep }: { currentStep: number }) {
               : "text-accent"
           )}>
             {Math.round(progressPercentage)}% Complete
-            {currentStep === STEPS.length && " 🎉"}
+            {currentStep === STEPS.length && " — Complete"}
           </span>
         </div>
       </div>
