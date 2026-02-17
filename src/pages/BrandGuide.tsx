@@ -787,6 +787,7 @@ export default function BrandGuide() {
                 "Floating buttons (contact, scroll-to-top) use bottom-20 on mobile to clear sticky bars",
                 "z-index layers: header z-50 > sticky CTAs z-40 > hero content z-10",
                 "All heading sizes use fluid clamp() — no abrupt jumps at breakpoints",
+                "Mobile-safe CTA stacking: all CTA button groups must use flex-col below sm breakpoint (640px) with gap-3, then switch to flex-row sm:flex-row at sm+. Each button must be full-width (w-full) on mobile to prevent side-by-side overflow on 360px. Applies to: Hero CTA cluster, Services \"Book Consult\" pair, and any inline action groups on Home and Services pages.",
               ].map((item, i) => (
                 <li key={i}>{item}</li>
               ))}
