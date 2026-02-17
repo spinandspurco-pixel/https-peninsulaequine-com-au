@@ -1,83 +1,97 @@
 
+# Harden Newsletter Flows: Email Validation + Rate Limiting
 
-# Private Attachments for Inquiries with Signed URLs
+## Current Vulnerabilities
 
-## Problem
-The `inquiry-attachments` storage bucket is currently **public**, meaning anyone with the URL can access uploaded files (site photos, sketches, PDFs). These files may contain sensitive client information and should only be accessible to admins.
+1. **No server-side email validation** -- `send-newsletter-confirm` accepts any string as `email` and forwards it directly to Resend. A bot could pass malformed addresses or injection payloads.
+2. **No rate limiting** -- The subscribe flow (FooterNewsletter) calls two endpoints (DB upsert + edge function) with zero throttling. An attacker can spam thousands of confirmation emails, burning Resend quota and potentially getting the sending domain blacklisted.
+3. **Confirm URL is built client-side** -- The `confirmUrl` is constructed in the browser and sent to the edge function, meaning an attacker could inject an arbitrary URL into the confirmation email (phishing vector).
+4. **`confirm-newsletter` has no rate limiting** -- Token confirmation endpoint can be brute-forced.
+5. **FooterNewsletter upsert resets `confirmed` to false** -- Re-subscribing an already-confirmed email overwrites `confirmed` to `false`, which is a denial-of-service vector against existing subscribers.
 
-## Solution
+## Plan
 
-### 1. Make the storage bucket private
-- Run a migration to set the `inquiry-attachments` bucket to `public = false`
-- Add RLS policies on `storage.objects` for the bucket:
-  - **INSERT (anon/authenticated)**: Allow anyone to upload (needed for the inquiry form)
-  - **SELECT (admin only)**: Only admins can download/view files
-  - **DELETE (admin only)**: Only admins can delete files
+### 1. New edge function: `subscribe-newsletter` (consolidate + harden)
 
-### 2. Create a signed-URL edge function
-Since the bucket will be private, the client can no longer use `getPublicUrl()`. Create an edge function `get-attachment-url` that:
-- Accepts a file path (or array of paths)
-- Validates the caller is an authenticated admin using `has_role()`
-- Returns time-limited signed URLs (e.g., 1-hour expiry) using the Supabase service role client
-- Returns 403 for non-admin users
+Replace the current two-step client flow (direct DB upsert + call `send-newsletter-confirm`) with a single hardened edge function that does everything server-side:
 
-### 3. Update FileUploadZone to store paths instead of public URLs
-- After uploading, store just the **storage path** (e.g., `abc123.jpg`) in `attachment_urls` instead of the full public URL
-- The upload itself still works for anonymous users via the INSERT policy
+- **Input validation** with zod: email format, max length, trimming
+- **IP-based rate limiting**: max 3 subscribe attempts per IP per 10-minute window, tracked via an in-memory Map (resets on cold start, which is acceptable for edge abuse prevention)
+- **Email-based rate limiting**: check `last_email_sent_at` on the subscriber row -- refuse to resend if less than 2 minutes ago
+- **Safe upsert logic**: only upsert if the email is not already confirmed (prevents resetting confirmed subscribers)
+- **Build confirmUrl server-side** from `SUPABASE_URL` env var (eliminates client-side URL injection)
+- **Send confirmation email** inline (absorbs `send-newsletter-confirm` logic)
 
-### 4. Update InquiryForm to use paths
-- The `InquiryForm.tsx` already maps `attachments.map(a => a.url)` into `attachment_urls` -- this will now store paths instead of full URLs
+### 2. Harden `confirm-newsletter`
 
-### 5. Add admin attachment viewer
-- Create a small helper hook `useSignedAttachmentUrls` that takes an array of paths, calls the edge function, and returns signed URLs
-- Use this hook wherever admins view inquiry details (the admin pages)
+- **Validate token format**: ensure the token param is a valid UUID before querying
+- **Add IP rate limiting**: max 10 confirmation attempts per IP per 10-minute window
+- **Null the token on confirmation** (already done, good)
+
+### 3. Update `FooterNewsletter.tsx`
+
+- Remove the direct DB upsert and the call to `send-newsletter-confirm`
+- Replace with a single call to `supabase.functions.invoke("subscribe-newsletter", { body: { email } })`
+- Handle rate-limit responses (429) with a user-friendly message
+- Add client-side cooldown (disable button for 30s after submit)
+
+### 4. Retire `send-newsletter-confirm` edge function
+
+- It will be absorbed into `subscribe-newsletter`, so the old function can be deleted
 
 ---
 
 ## Technical Details
 
-### Migration SQL
-```sql
--- Make bucket private
-UPDATE storage.buckets SET public = false WHERE id = 'inquiry-attachments';
+### `subscribe-newsletter` edge function
 
--- Allow anyone to upload files
-CREATE POLICY "Anyone can upload inquiry attachments"
-  ON storage.objects FOR INSERT
-  WITH CHECK (bucket_id = 'inquiry-attachments');
-
--- Only admins can read files
-CREATE POLICY "Admins can read inquiry attachments"
-  ON storage.objects FOR SELECT
-  USING (
-    bucket_id = 'inquiry-attachments'
-    AND has_role(auth.uid(), 'admin'::app_role)
-  );
-
--- Only admins can delete files
-CREATE POLICY "Admins can delete inquiry attachments"
-  ON storage.objects FOR DELETE
-  USING (
-    bucket_id = 'inquiry-attachments'
-    AND has_role(auth.uid(), 'admin'::app_role)
-  );
+```
+supabase/functions/subscribe-newsletter/index.ts
 ```
 
-### Edge Function: `get-attachment-url`
-- Accepts `{ paths: string[] }` in the request body
-- Uses service role Supabase client to call `storage.from('inquiry-attachments').createSignedUrls(paths, 3600)`
-- Returns the signed URLs array
-- Validates JWT and checks admin role before proceeding
+Key logic:
+- Zod schema: `z.object({ email: z.string().trim().email().max(255) })`
+- IP rate limit map: `Map<string, { count: number; resetAt: number }>` -- 3 requests per 600s
+- DB check: query `newsletter_subscribers` by email
+  - If confirmed: return `{ ok: true, message: "Already subscribed" }` (no email sent)
+  - If exists + `last_email_sent_at` within 2 min: return 429
+  - If exists + unconfirmed: regenerate `confirm_token`, update `last_email_sent_at`
+  - If new: insert row
+- Build `confirmUrl` from `Deno.env.get("SUPABASE_URL")` server-side
+- Send email via Resend (same template as current `send-newsletter-confirm`)
+- Update `last_email_sent_at` on the subscriber row
 
-### FileUploadZone Changes
-- Replace `getPublicUrl(path)` with storing just the `path` string directly
-- The `url` field in `UploadedFile` will now contain the storage path (not a full URL)
-- Thumbnail previews during upload can use a temporary object URL (`URL.createObjectURL(file)`) instead
+### `confirm-newsletter` changes
 
-### Files Modified
-1. **New migration** -- bucket privacy + storage RLS policies
-2. **New file**: `supabase/functions/get-attachment-url/index.ts` -- signed URL generator
-3. **Edit**: `src/components/FileUploadZone.tsx` -- store path instead of public URL, use object URLs for preview
-4. **New file**: `src/hooks/useSignedAttachmentUrls.ts` -- admin hook to resolve paths to signed URLs
-5. **Edit**: `src/components/InquiryForm.tsx` -- minor: `attachment_urls` now stores paths (no functional change needed since it already maps `a.url`)
+- Add UUID format check: `/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i`
+- Add IP rate limiter (same pattern, 10 per 10 min)
 
+### `FooterNewsletter.tsx` changes
+
+- Replace lines 28-51 (the DB upsert + edge call) with:
+  ```typescript
+  const { data, error } = await supabase.functions.invoke("subscribe-newsletter", {
+    body: { email: parsed.data.email },
+  });
+  ```
+- Handle 429 status in error path with "Please wait a moment before trying again"
+- Add 30-second client-side cooldown after successful submit
+
+### Migration: add index for rate-limit lookups
+
+```sql
+CREATE INDEX IF NOT EXISTS idx_newsletter_subscribers_email
+  ON public.newsletter_subscribers (email);
+```
+
+The `last_email_sent_at` column already exists on the table, so no schema change is needed.
+
+### Files Summary
+
+| File | Action |
+|------|--------|
+| `supabase/functions/subscribe-newsletter/index.ts` | Create -- consolidated, hardened subscribe endpoint |
+| `supabase/functions/confirm-newsletter/index.ts` | Edit -- add token format validation + IP rate limiting |
+| `supabase/functions/send-newsletter-confirm/index.ts` | Delete -- absorbed into `subscribe-newsletter` |
+| `src/components/FooterNewsletter.tsx` | Edit -- use new edge function, add cooldown |
+| New migration SQL | Create -- add email index |
