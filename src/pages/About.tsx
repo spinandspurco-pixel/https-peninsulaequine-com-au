@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { FamilyVideoCarousel } from "@/components/FamilyVideoCarousel";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
+import { MeetTheTeamGallery } from "@/components/MeetTheTeamGallery";
 import { InsuranceSafetyCard } from "@/components/InsuranceSafetyCard";
 import { SectionTransition } from "@/components/SectionTransition";
 import { aboutCiro, testimonials, faqs } from "@/data/content";
@@ -622,6 +623,7 @@ export default function About() {
       <ValuesSection />
       <BlueprintDivider variant="structural" />
       <StorySection />
+      <MeetTheTeamGallery />
       <TestimonialsSection />
       <FamilySection />
       <AboutFAQSection />
