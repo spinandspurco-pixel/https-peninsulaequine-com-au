@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { useABTest } from "@/hooks/useABTest";
 import { z } from "zod";
 
 const STORAGE_KEY = "pe_lead_popup_dismissed";
@@ -22,8 +23,34 @@ const GUIDE_BENEFITS = [
   "Safety essentials every rider should know",
 ];
 
+// ── A/B test copy for popup ──────────────────────────────────
+
+const POPUP_COPY: Record<string, { title: string; desc: string; cta: string }> = {
+  control: {
+    title: "Free Rider Prep Guide",
+    desc: "Everything you need before your first lesson at Peninsula Equine — delivered straight to your inbox.",
+    cta: "Send Me the Guide",
+  },
+  fomo: {
+    title: "Don't Miss Our Rider Checklist",
+    desc: "500+ riders have used this guide to nail their first session. Get yours free — no strings attached.",
+    cta: "Get My Free Copy",
+  },
+  benefit: {
+    title: "Ride Confident From Day One",
+    desc: "Our prep guide covers gear, safety, and horse handling so you arrive ready — not nervous.",
+    cta: "Download the Guide",
+  },
+};
+
 export function LeadMagnetPopup() {
   const { toast } = useToast();
+  const { variant, trackStep } = useABTest({
+    testName: "lead_magnet_popup_2026",
+    variants: ["control", "fomo", "benefit"],
+  });
+  const copy = POPUP_COPY[variant] || POPUP_COPY.control;
+
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
   const [name, setName] = useState("");
@@ -76,6 +103,7 @@ export function LeadMagnetPopup() {
       if (error) throw error;
 
       setSubmitted(true);
+      trackStep("convert", { source: "lead-magnet", variant });
       localStorage.setItem(STORAGE_KEY, "true");
       // Trigger welcome series step 1 (fire-and-forget)
       supabase.functions.invoke("send-welcome-series", {
@@ -142,10 +170,10 @@ export function LeadMagnetPopup() {
               </div>
 
               <h3 className="font-serif text-xl sm:text-2xl font-bold text-foreground text-center mb-2">
-                Free Rider Prep Guide
+                {copy.title}
               </h3>
               <p className="text-sm text-muted-foreground text-center mb-6 max-w-xs mx-auto">
-                Everything you need before your first lesson at Peninsula Equine — delivered straight to your inbox.
+                {copy.desc}
               </p>
 
               {/* Benefits */}
@@ -164,7 +192,7 @@ export function LeadMagnetPopup() {
                   <Input
                     placeholder="Your name"
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => { setName(e.target.value); trackStep("engage"); }}
                     className="bg-background border-border"
                     aria-label="Your name"
                     aria-required="true"
@@ -194,7 +222,7 @@ export function LeadMagnetPopup() {
                   disabled={submitting}
                   className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-medium"
                 >
-                  {submitting ? "Sending…" : "Send Me the Guide"}
+                  {submitting ? "Sending…" : copy.cta}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </form>

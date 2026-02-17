@@ -10,8 +10,11 @@ import { toast } from "sonner";
 interface VariantStats {
   variant: string;
   impressions: number;
+  engages: number;
   clicks: number;
+  converts: number;
   ctr: number;
+  conversionRate: number;
 }
 
 interface TestStats {
@@ -19,6 +22,7 @@ interface TestStats {
   variants: VariantStats[];
   totalImpressions: number;
   totalClicks: number;
+  totalConverts: number;
   startDate: string | null;
 }
 
@@ -41,7 +45,7 @@ export function ABTestStatsPanel() {
     }
 
     // Aggregate by test → variant → event_type
-    const testMap = new Map<string, Map<string, { impressions: number; clicks: number }>>();
+    const testMap = new Map<string, Map<string, { impressions: number; engages: number; clicks: number; converts: number }>>();
     const testDates = new Map<string, string>();
 
     for (const row of data || []) {
@@ -51,11 +55,13 @@ export function ABTestStatsPanel() {
       }
       const varMap = testMap.get(row.test_name)!;
       if (!varMap.has(row.variant)) {
-        varMap.set(row.variant, { impressions: 0, clicks: 0 });
+        varMap.set(row.variant, { impressions: 0, engages: 0, clicks: 0, converts: 0 });
       }
       const counts = varMap.get(row.variant)!;
       if (row.event_type === "impression") counts.impressions++;
+      else if (row.event_type === "engage") counts.engages++;
       else if (row.event_type === "click") counts.clicks++;
+      else if (row.event_type === "convert") counts.converts++;
     }
 
     const results: TestStats[] = [];
@@ -63,19 +69,23 @@ export function ABTestStatsPanel() {
       const variants: VariantStats[] = [];
       let totalImpressions = 0;
       let totalClicks = 0;
+      let totalConverts = 0;
       for (const [variant, counts] of varMap) {
         const ctr = counts.impressions > 0 ? (counts.clicks / counts.impressions) * 100 : 0;
-        variants.push({ variant, ...counts, ctr: Math.round(ctr * 100) / 100 });
+        const conversionRate = counts.impressions > 0 ? (counts.converts / counts.impressions) * 100 : 0;
+        variants.push({ variant, ...counts, ctr: Math.round(ctr * 100) / 100, conversionRate: Math.round(conversionRate * 100) / 100 });
         totalImpressions += counts.impressions;
         totalClicks += counts.clicks;
+        totalConverts += counts.converts;
       }
-      // Sort by CTR descending
-      variants.sort((a, b) => b.ctr - a.ctr);
+      // Sort by conversion rate descending, fallback to CTR
+      variants.sort((a, b) => b.conversionRate - a.conversionRate || b.ctr - a.ctr);
       results.push({
         testName,
         variants,
         totalImpressions,
         totalClicks,
+        totalConverts,
         startDate: testDates.get(testName) || null,
       });
     }
@@ -104,8 +114,8 @@ export function ABTestStatsPanel() {
   if (!isAdmin) return null;
 
   const bestVariant = (test: TestStats) => {
-    if (test.variants.length === 0) return null;
     const best = test.variants[0];
+    return best.impressions >= 30 ? best : null;
     return best.impressions >= 30 ? best : null; // Need minimum sample
   };
 
@@ -141,7 +151,7 @@ export function ABTestStatsPanel() {
                     <div>
                       <h4 className="font-medium text-sm">{test.testName}</h4>
                       <p className="text-xs text-muted-foreground">
-                        {test.totalImpressions} impressions · {test.totalClicks} clicks
+                        {test.totalImpressions} views · {test.totalClicks} clicks · {test.totalConverts} conversions
                         {test.startDate && ` · Since ${new Date(test.startDate).toLocaleDateString()}`}
                       </p>
                     </div>
@@ -154,31 +164,33 @@ export function ABTestStatsPanel() {
                     {test.variants.map((v) => (
                       <div
                         key={v.variant}
-                        className={`flex items-center justify-between rounded-md border p-3 text-sm ${
+                        className={`rounded-md border p-3 text-sm ${
                           winner?.variant === v.variant ? "border-accent bg-accent/5" : ""
                         }`}
                       >
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium capitalize">{v.variant.replace(/_/g, " ")}</span>
-                          {winner?.variant === v.variant && (
-                            <Badge variant="secondary" className="bg-accent/20 text-accent text-[10px]">
-                              <TrendingUp className="h-3 w-3 mr-0.5" />
-                              Winner
-                            </Badge>
-                          )}
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium capitalize">{v.variant.replace(/_/g, " ")}</span>
+                            {winner?.variant === v.variant && (
+                              <Badge variant="secondary" className="bg-accent/20 text-accent text-[10px]">
+                                <TrendingUp className="h-3 w-3 mr-0.5" />
+                                Winner
+                              </Badge>
+                            )}
+                          </div>
+                          <span className="font-semibold text-foreground text-xs">
+                            {v.conversionRate}% conv
+                          </span>
                         </div>
-                        <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                          <span className="flex items-center gap-1">
-                            <Eye className="h-3 w-3" />
-                            {v.impressions}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <MousePointerClick className="h-3 w-3" />
-                            {v.clicks}
-                          </span>
-                          <span className="font-semibold text-foreground min-w-[4ch] text-right">
-                            {v.ctr}%
-                          </span>
+                        {/* Funnel bar */}
+                        <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                          <span className="flex items-center gap-0.5"><Eye className="h-3 w-3" />{v.impressions}</span>
+                          <span className="text-border">→</span>
+                          <span>{v.engages} engage</span>
+                          <span className="text-border">→</span>
+                          <span className="flex items-center gap-0.5"><MousePointerClick className="h-3 w-3" />{v.clicks}</span>
+                          <span className="text-border">→</span>
+                          <span className="text-accent font-medium">{v.converts} conv</span>
                         </div>
                       </div>
                     ))}

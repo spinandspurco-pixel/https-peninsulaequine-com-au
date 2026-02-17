@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowRight, ArrowLeft, CheckCircle, Loader2, User, Mail, Phone, MessageSquare, CalendarIcon, Edit2, ShieldCheck, RotateCcw, Save, Trash2 } from "lucide-react";
+import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -236,6 +237,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
 
       clearDraft();
       setSubmitted(true);
+      trackCtaClick("inquiry_funnel_convert", { services: selectedServices, budget });
       toast({ title: "Inquiry sent!", description: "We'll be in touch within 1–2 business days." });
       const tyParams = new URLSearchParams();
       if (selectedServices.length) tyParams.set("services", selectedServices.join(","));
