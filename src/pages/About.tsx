@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Play, Pause, Quote, Star } from "lucide-react";
+import { ArrowRight, Play, Pause, Quote, Star, HelpCircle } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
@@ -10,7 +10,9 @@ import { FamilyVideoCarousel } from "@/components/FamilyVideoCarousel";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { InsuranceSafetyCard } from "@/components/InsuranceSafetyCard";
 import { SectionTransition } from "@/components/SectionTransition";
-import { aboutCiro, testimonials } from "@/data/content";
+import { aboutCiro, testimonials, faqs } from "@/data/content";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { cn } from "@/lib/utils";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { useParallax } from "@/hooks/useParallax";
 
@@ -592,6 +594,95 @@ function PhilosophySection() {
   );
 }
 
+/* ── FAQ Section ──────────────────────────────────────── */
+
+const FAQ_CATEGORIES = [
+  { key: "general", label: "General" },
+  { key: "lessons", label: "Lessons" },
+  { key: "payments", label: "Payments & Packages" },
+] as const;
+
+function AboutFAQSection() {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>();
+  const [activeTab, setActiveTab] = useState("general");
+
+  const filtered = faqs.filter((f) => (f.category || "general") === activeTab);
+
+  return (
+    <section className="section-padding bg-card relative overflow-hidden">
+      <BlueprintBackground image={blueprintDetail} opacity={0.02} direction="right-to-left" duration={2000} />
+      <div className="section-container relative z-10">
+        <div
+          ref={headerRef}
+          className={`text-center max-w-2xl mx-auto mb-10 transition-all duration-700 ${
+            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
+          <div className={`w-16 h-0.5 bg-accent mx-auto mb-6 transition-all duration-500 delay-100 ${
+            headerVisible ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0"
+          }`} />
+          <h2 className="heading-section text-foreground mb-3">Frequently Asked Questions</h2>
+          <p className="text-muted-foreground text-sm">
+            Quick answers to the questions we hear most. Can't find what you're looking for?{" "}
+            <Link to="/contact" className="text-accent hover:underline underline-offset-2">Get in touch.</Link>
+          </p>
+        </div>
+
+        {/* Category tabs */}
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+          {FAQ_CATEGORIES.map((cat) => (
+            <button
+              key={cat.key}
+              onClick={() => setActiveTab(cat.key)}
+              className={cn(
+                "inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium tracking-wide uppercase transition-all duration-300",
+                activeTab === cat.key
+                  ? "bg-accent text-accent-foreground shadow-[0_2px_12px_hsl(var(--accent)/0.25)]"
+                  : "bg-background border border-border text-muted-foreground hover:border-accent/40 hover:text-foreground"
+              )}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Accordion */}
+        <div className="max-w-3xl mx-auto">
+          <Accordion type="single" collapsible className="space-y-3">
+            {filtered.map((faq, i) => (
+              <AccordionItem
+                key={`${activeTab}-${i}`}
+                value={`faq-${i}`}
+                className="rounded-xl border border-border bg-background px-6 transition-all duration-300 hover:border-accent/30 data-[state=open]:border-accent/40 data-[state=open]:shadow-sm"
+              >
+                <AccordionTrigger className="py-4 text-sm font-medium text-foreground hover:text-accent hover:no-underline [&[data-state=open]]:text-accent gap-3">
+                  <span className="flex items-center gap-2.5 text-left">
+                    <HelpCircle className="h-4 w-4 text-accent shrink-0" />
+                    {faq.question}
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent className="text-sm text-muted-foreground leading-relaxed pb-5 pl-6">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+
+          {/* CTA under FAQ */}
+          <div className="text-center mt-10">
+            <Button asChild variant="outline" className="border-accent/30 text-accent hover:bg-accent/10">
+              <Link to="/faq">
+                View All FAQs
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function About() {
   return (
     <Layout>
@@ -612,6 +703,7 @@ export default function About() {
       <ImageBreak />
       <BlueprintDivider variant="structural" />
       <StorySection />
+      <AboutFAQSection />
       <InsuranceSafetyCard />
       <CTASection />
     </Layout>
