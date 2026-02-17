@@ -27,8 +27,7 @@ export default function Forge() {
       {/* Hero */}
       <section
         ref={heroAnim.ref}
-        className="relative pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden"
-        style={{ background: "linear-gradient(to bottom, hsl(var(--primary) / 0.70), hsl(var(--primary) / 0.95))" }}
+        className="relative pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden bg-primary"
       >
         {/* Diagonal hatch */}
         <div className="absolute inset-0 opacity-[0.04]" style={{
@@ -134,14 +133,16 @@ export default function Forge() {
         </div>
       </section>
 
+      {/* Spacer to separate from footer */}
+      <div className="h-1 bg-accent/30" />
+
       {/* Bottom CTA */}
       <section
         ref={ctaAnim.ref}
-        className="relative py-20 text-primary-foreground overflow-hidden"
-        style={{ background: "linear-gradient(to bottom, hsl(var(--primary) / 0.75), hsl(var(--primary) / 0.95))" }}
+        className="relative py-20 text-foreground overflow-hidden bg-secondary"
       >
-        <div className="absolute inset-0 opacity-[0.05]" style={{
-          backgroundImage: "repeating-linear-gradient(135deg, transparent, transparent 20px, hsl(var(--primary-foreground)) 20px, hsl(var(--primary-foreground)) 21px)",
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: "repeating-linear-gradient(135deg, transparent, transparent 20px, hsl(var(--foreground)) 20px, hsl(var(--foreground)) 21px)",
         }} />
         <div className={`section-container relative z-10 text-center max-w-2xl mx-auto transition-all duration-700 ${
           ctaAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
@@ -150,7 +151,7 @@ export default function Forge() {
           <h2 className="font-serif text-3xl md:text-4xl mb-4">
             Need Something <span className="text-accent">Bespoke?</span>
           </h2>
-          <p className="text-primary-foreground/80 mb-8 text-lg drop-shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
+          <p className="text-muted-foreground mb-8 text-lg">
             Send us your specs — no job too big, no detail too small. We'll quote it, forge it, and deliver it to your gate.
           </p>
           <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-wider">
