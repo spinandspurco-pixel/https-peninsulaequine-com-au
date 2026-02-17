@@ -17,6 +17,7 @@ import {
   ExternalLink,
   Zap,
 } from "lucide-react";
+import { PECalendar, PEHorseshoe, PERider } from "@/components/icons/PEIcons";
 import { supabase } from "@/integrations/supabase/client";
 import { EventRSVPForm } from "@/components/events/EventRSVPForm";
 import { EventGuestList } from "@/components/events/EventGuestList";
@@ -132,9 +133,9 @@ function InfoCards() {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
 
   const cards = [
-    { icon: CalendarIcon, title: "Available Days", detail: "Thursdays & Fridays" },
-    { icon: Clock, title: "Session Length", detail: "45–60 minutes" },
-    { icon: CheckCircle, title: "All Levels", detail: "Beginner to advanced" },
+    { Icon: PECalendar, title: "Available Days", detail: "Thursdays & Fridays" },
+    { Icon: PEHorseshoe, title: "Session Length", detail: "45–60 minutes" },
+    { Icon: PERider, title: "All Levels", detail: "Beginner to advanced" },
   ];
 
   return (
@@ -149,7 +150,7 @@ function InfoCards() {
           style={{ transitionDelay: `${i * 120}ms` }}
         >
           <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-4">
-            <card.icon className="h-6 w-6 text-accent" />
+            <card.Icon size={24} className="text-accent" />
           </div>
           <h3 className="font-serif text-lg font-semibold text-foreground mb-1">{card.title}</h3>
           <p className="text-sm text-muted-foreground">{card.detail}</p>
