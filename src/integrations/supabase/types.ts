@@ -395,6 +395,7 @@ export type Database = {
           slot_date: string
           slot_type: string
           start_time: string
+          trainer_id: string | null
           updated_at: string
         }
         Insert: {
@@ -407,6 +408,7 @@ export type Database = {
           slot_date: string
           slot_type?: string
           start_time: string
+          trainer_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -419,6 +421,7 @@ export type Database = {
           slot_date?: string
           slot_type?: string
           start_time?: string
+          trainer_id?: string | null
           updated_at?: string
         }
         Relationships: []

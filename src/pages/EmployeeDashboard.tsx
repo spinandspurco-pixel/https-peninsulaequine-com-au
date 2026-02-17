@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { SharedCalendarView } from "@/components/SharedCalendarView";
+import { TrainerAvailabilityManager } from "@/components/TrainerAvailabilityManager";
 import { toast } from "sonner";
 import {
   CalendarDays,
@@ -372,6 +373,10 @@ export default function EmployeeDashboard() {
                 <ClipboardList className="h-4 w-4" />
                 Tasks
               </TabsTrigger>
+              <TabsTrigger value="availability" className="flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                Availability
+              </TabsTrigger>
               <TabsTrigger value="calendar" className="flex items-center gap-2">
                 <CalendarDays className="h-4 w-4" />
                 Calendar
@@ -526,6 +531,11 @@ export default function EmployeeDashboard() {
                 {renderTasksCard()}
                 {renderAnnouncementsCard()}
               </div>
+            </TabsContent>
+
+            {/* ── Availability Tab ── */}
+            <TabsContent value="availability">
+              <TrainerAvailabilityManager />
             </TabsContent>
 
             {/* ── Calendar Tab ── */}
