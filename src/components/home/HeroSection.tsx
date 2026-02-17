@@ -1,21 +1,114 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, ChevronDown, Phone } from "lucide-react";
+import { ArrowRight, ChevronDown, Phone, Settings, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BlueprintScene } from "@/components/BlueprintScene";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { useABTest } from "@/hooks/useABTest";
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useState, useRef, useCallback, useEffect, useMemo } from "react";
 
 import heroVideoA from "@/assets/videos/pavilion-grill-1.mp4";
 import heroVideoB from "@/assets/videos/pavilion-grill-2.mp4";
 import peLogo from "@/assets/pe-logo-new.png";
 
-// ── Trim ranges: only play these segments (seconds) ─────────
-// Adjust start/end to skip walking/shaky parts and keep smooth footage
-const VIDEO_CLIPS = [
-  { src: heroVideoA, start: 3, end: 18 },   // Video A: skip first 3s walk-in, end before shaky outro
-  { src: heroVideoB, start: 2, end: 16 },   // Video B: skip opening walk, cut before camera pan
+// ── Default trim ranges ─────────────────────────────────────
+const DEFAULT_CLIPS = [
+  { start: 3, end: 18 },
+  { start: 2, end: 16 },
 ];
+const VIDEO_SRCS = [heroVideoA, heroVideoB];
+const STORAGE_KEY = "pe_hero_video_clips";
+
+function loadClips(): { start: number; end: number }[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return DEFAULT_CLIPS;
+}
+
+function saveClips(clips: { start: number; end: number }[]) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(clips));
+}
+
+// ── Floating editor panel (admin-only) ──────────────────────
+function ClipEditor({
+  clips,
+  activeIdx,
+  videoRefs,
+  onChange,
+  onReset,
+  onClose,
+}: {
+  clips: { start: number; end: number }[];
+  activeIdx: number;
+  videoRefs: React.RefObject<HTMLVideoElement | null>[];
+  onChange: (clips: { start: number; end: number }[]) => void;
+  onReset: () => void;
+  onClose: () => void;
+}) {
+  const currentTime = (idx: number) => videoRefs[idx]?.current?.currentTime?.toFixed(1) ?? "—";
+
+  const update = (idx: number, field: "start" | "end", value: number) => {
+    const next = clips.map((c, i) => (i === idx ? { ...c, [field]: value } : c));
+    onChange(next);
+    saveClips(next);
+  };
+
+  return (
+    <div className="absolute top-4 left-4 z-50 bg-background/95 backdrop-blur-md border border-border rounded-xl shadow-2xl p-4 w-72 text-sm animate-fade-in">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-serif font-semibold text-foreground text-xs tracking-wider uppercase">Hero Video Clips</h3>
+        <button onClick={onClose} className="text-muted-foreground hover:text-foreground text-xs">✕</button>
+      </div>
+      {clips.map((clip, i) => (
+        <div
+          key={i}
+          className={`rounded-lg border p-3 mb-2 ${
+            i === activeIdx ? "border-accent bg-accent/5" : "border-border"
+          }`}
+        >
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-medium text-foreground text-xs">Video {i + 1}</span>
+            <span className="text-[10px] text-muted-foreground font-mono">
+              Now: {currentTime(i)}s
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <label className="block">
+              <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Start (s)</span>
+              <input
+                type="number"
+                min={0}
+                step={0.5}
+                value={clip.start}
+                onChange={(e) => update(i, "start", parseFloat(e.target.value) || 0)}
+                className="w-full mt-0.5 px-2 py-1 rounded border border-border bg-card text-foreground text-xs focus:outline-none focus:ring-1 focus:ring-accent"
+              />
+            </label>
+            <label className="block">
+              <span className="text-[10px] text-muted-foreground uppercase tracking-wider">End (s)</span>
+              <input
+                type="number"
+                min={0}
+                step={0.5}
+                value={clip.end}
+                onChange={(e) => update(i, "end", parseFloat(e.target.value) || 0)}
+                className="w-full mt-0.5 px-2 py-1 rounded border border-border bg-card text-foreground text-xs focus:outline-none focus:ring-1 focus:ring-accent"
+              />
+            </label>
+          </div>
+        </div>
+      ))}
+      <button
+        onClick={() => { onReset(); saveClips(DEFAULT_CLIPS); }}
+        className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground mt-1 transition-colors"
+      >
+        <RotateCcw className="h-3 w-3" /> Reset to defaults
+      </button>
+    </div>
+  );
+}
 
 // ── A/B test copy variants ──────────────────────────────────
 
@@ -42,45 +135,48 @@ export function HeroSection() {
     testName: "hero_cta_2026",
     variants: ["control", "urgency", "social_proof"],
   });
+  const { isAdmin } = useAuth();
 
   const copy = HERO_COPY[variant] || HERO_COPY.control;
+
+  // ── Clip state (persisted to localStorage) ────────────────
+  const [clips, setClips] = useState(loadClips);
+  const [showEditor, setShowEditor] = useState(false);
 
   // ── Dual-video crossfade with trim ranges ─────────────────
   const [activeIdx, setActiveIdx] = useState(0);
   const [fading, setFading] = useState(false);
   const videoARef = useRef<HTMLVideoElement>(null);
   const videoBRef = useRef<HTMLVideoElement>(null);
+  const videoRefs = useMemo(() => [videoARef, videoBRef], []);
 
   const getRef = useCallback((idx: number) => idx === 0 ? videoARef : videoBRef, []);
 
-  // Start a clip at its trim start point
   const startClip = useCallback((idx: number) => {
     const video = getRef(idx).current;
-    const clip = VIDEO_CLIPS[idx];
+    const clip = clips[idx];
     if (video && clip) {
       video.currentTime = clip.start;
       video.play().catch(() => {});
     }
-  }, [getRef]);
+  }, [getRef, clips]);
 
-  // When current clip reaches its trim end → crossfade to next
   const handleTimeUpdate = useCallback((idx: number) => {
     const video = getRef(idx).current;
-    const clip = VIDEO_CLIPS[idx];
+    const clip = clips[idx];
     if (!video || !clip || idx !== activeIdx || fading) return;
     if (video.currentTime >= clip.end) {
       video.pause();
       setFading(true);
-      const nextIdx = (idx + 1) % VIDEO_CLIPS.length;
+      const nextIdx = (idx + 1) % clips.length;
       startClip(nextIdx);
       setTimeout(() => {
         setActiveIdx(nextIdx);
         setFading(false);
       }, 1200);
     }
-  }, [activeIdx, fading, getRef, startClip]);
+  }, [activeIdx, fading, getRef, startClip, clips]);
 
-  // Initial play
   useEffect(() => {
     startClip(0);
   }, [startClip]);
@@ -97,6 +193,26 @@ export function HeroSection() {
 
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden bg-primary pb-20 sm:pb-24">
+      {/* Admin clip editor */}
+      {isAdmin && showEditor && (
+        <ClipEditor
+          clips={clips}
+          activeIdx={activeIdx}
+          videoRefs={videoRefs}
+          onChange={(c) => { setClips(c); }}
+          onReset={() => setClips(DEFAULT_CLIPS)}
+          onClose={() => setShowEditor(false)}
+        />
+      )}
+      {isAdmin && !showEditor && (
+        <button
+          onClick={() => setShowEditor(true)}
+          className="absolute top-4 left-4 z-50 w-8 h-8 rounded-full bg-background/60 backdrop-blur-sm border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-background/90 transition-colors"
+          aria-label="Edit video clip ranges"
+        >
+          <Settings className="h-4 w-4" />
+        </button>
+      )}
       {/* Video A — trimmed + zoomed + smoothed */}
       <video
         ref={videoARef}
@@ -111,7 +227,7 @@ export function HeroSection() {
         }}
         aria-hidden="true"
       >
-        <source src={VIDEO_CLIPS[0].src} type="video/mp4" />
+        <source src={VIDEO_SRCS[0]} type="video/mp4" />
       </video>
       {/* Video B — trimmed + zoomed + smoothed */}
       <video
@@ -127,7 +243,7 @@ export function HeroSection() {
         }}
         aria-hidden="true"
       >
-        <source src={VIDEO_CLIPS[1].src} type="video/mp4" />
+        <source src={VIDEO_SRCS[1]} type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-primary/70" />
       <BlueprintScene preset="hero" />
