@@ -39,6 +39,17 @@ Deno.serve(async (req) => {
     "unknown";
 
   if (!checkIpRate(ip)) {
+    // Log rate-limit hit for abuse monitoring
+    const rlClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    rlClient.from("ab_test_events").insert({
+      test_name: "newsletter_funnel",
+      variant: "default",
+      event_type: "subscribe_rate_limited",
+      visitor_id: ip,
+      page_path: "/newsletter",
+      metadata: { reason: "ip_throttle" },
+    }).then(() => {});
+
     return new Response(
       JSON.stringify({ error: "Too many requests. Please wait a few minutes." }),
       { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -206,6 +217,16 @@ Deno.serve(async (req) => {
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
+
+  // Log analytics event (fire-and-forget)
+  supabase.from("ab_test_events").insert({
+    test_name: "newsletter_funnel",
+    variant: "default",
+    event_type: "signup_initiated",
+    visitor_id: ip,
+    page_path: "/newsletter",
+    metadata: { source: "footer", email_hash: email.replace(/(.{2}).*(@.*)/, "$1***$2") },
+  }).then(() => {});
 
   return new Response(
     JSON.stringify({ ok: true }),
