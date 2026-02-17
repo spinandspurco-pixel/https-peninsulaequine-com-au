@@ -1,8 +1,8 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, CheckCircle, Phone, Images, BarChart3, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, CheckCircle, Phone, HelpCircle, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
@@ -11,10 +11,12 @@ import { BlueprintScene } from "@/components/BlueprintScene";
 import { QuickQuoteModal } from "@/components/QuickQuoteModal";
 import { QuoteCalculator } from "@/components/QuoteCalculator";
 import { ServiceDetailSections } from "@/components/ServiceDetailSections";
-import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
+import { cn } from "@/lib/utils";
 import { services, siteConfig } from "@/data/content";
-import { servicePricingTiers } from "@/data/servicePricingFaq";
+import { servicePricingTiers, serviceFaqs } from "@/data/servicePricingFaq";
 
 // Service card images
 import equitanaArena from "@/assets/equitana-arena-1.jpg";
@@ -24,6 +26,16 @@ import qldFacilityConstruction from "@/assets/qld-facility-construction.jpg";
 import qldFacilityCourtyard from "@/assets/qld-facility-courtyard.jpg";
 import mainRidgeCiroWoodwork from "@/assets/main-ridge-ciro-woodwork-1.jpg";
 import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
+
+/* ── Category filters ─────────────────────────────────── */
+
+const SERVICE_CATEGORIES = [
+  { key: "all", label: "All Services" },
+  { key: "arenas", label: "Arenas & Pens", ids: ["arena-construction", "round-pens"] },
+  { key: "structures", label: "Barns & Structures", ids: ["barn-construction", "full-facility"] },
+  { key: "site", label: "Site & Infrastructure", ids: ["fencing", "infrastructure"] },
+  { key: "other", label: "Events & Renovations", ids: ["renovations", "clinics-events"] },
+] as const;
 
 const serviceImages: Record<string, string> = {
   "arena-construction": equitanaArena,
@@ -50,13 +62,15 @@ function ServiceOverviewCard({
   const navigate = useNavigate();
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
   const tiers = servicePricingTiers[service.id] || [];
+  const faqs = serviceFaqs[service.id] || [];
 
   return (
     <div
       ref={ref}
-      className={`group rounded-xl border border-border bg-card overflow-hidden transition-all duration-700 hover:shadow-lg hover:border-accent/30 ${
+      className={cn(
+        "group rounded-xl border border-border bg-card overflow-hidden transition-all duration-700 hover:shadow-lg hover:border-accent/30",
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-      }`}
+      )}
       style={{ transitionDelay: `${index * 80}ms` }}
     >
       {/* Image */}
@@ -106,22 +120,43 @@ function ServiceOverviewCard({
             {tiers.map((tier) => (
               <div
                 key={tier.name}
-                className={`flex-1 text-center rounded-md py-1.5 px-1 border transition-colors ${
+                className={cn(
+                  "flex-1 text-center rounded-md py-1.5 px-1 border transition-colors",
                   tier.popular
                     ? "bg-accent/10 border-accent/30"
                     : "bg-background border-border"
-                }`}
+                )}
               >
                 <p className="text-[9px] uppercase tracking-wider text-muted-foreground leading-none mb-0.5">
                   {tier.name}
                 </p>
-                <p className={`font-serif text-xs font-bold leading-tight ${
-                  tier.popular ? "text-accent" : "text-foreground"
-                }`}>
+                <p className={cn("font-serif text-xs font-bold leading-tight", tier.popular ? "text-accent" : "text-foreground")}>
                   {tier.price}
                 </p>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Per-service FAQ accordion */}
+        {faqs.length > 0 && (
+          <div className="mb-5 border-t border-border pt-4">
+            <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground mb-2 font-medium">
+              <HelpCircle className="h-3 w-3" />
+              Common Questions
+            </p>
+            <Accordion type="single" collapsible className="space-y-0">
+              {faqs.slice(0, 3).map((faq, i) => (
+                <AccordionItem key={i} value={`faq-${i}`} className="border-b-0">
+                  <AccordionTrigger className="py-2 text-xs text-foreground/85 hover:text-accent hover:no-underline [&[data-state=open]]:text-accent">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-xs text-muted-foreground leading-relaxed pb-2">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </div>
         )}
 
@@ -155,6 +190,7 @@ function ServiceOverviewCard({
 
 export default function Services() {
   const [quoteServiceId, setQuoteServiceId] = useState<string | null>(null);
+  const [activeFilter, setActiveFilter] = useState("all");
   const activeService = services.find((s) => s.id === quoteServiceId);
 
   // Fetch dynamic services from database, fall back to hardcoded
@@ -173,19 +209,23 @@ export default function Services() {
   });
 
   const displayServices = useMemo(() => {
-    if (dbServices?.length) {
-      return dbServices.map((s) => ({
-        id: s.slug,
-        title: s.title,
-        shortDescription: s.short_description || "",
-        description: s.description || "",
-        features: s.features || [],
-        startingPrice: s.starting_price || "Contact Us",
-        icon: s.icon || "arena",
-      }));
-    }
-    return services;
-  }, [dbServices]);
+    const base = dbServices?.length
+      ? dbServices.map((s) => ({
+          id: s.slug,
+          title: s.title,
+          shortDescription: s.short_description || "",
+          description: s.description || "",
+          features: s.features || [],
+          startingPrice: s.starting_price || "Contact Us",
+          icon: s.icon || "arena",
+        }))
+      : services;
+
+    if (activeFilter === "all") return base;
+    const cat = SERVICE_CATEGORIES.find((c) => c.key === activeFilter);
+    if (!cat || !("ids" in cat)) return base;
+    return base.filter((s) => (cat as any).ids.includes(s.id));
+  }, [dbServices, activeFilter]);
 
   return (
     <Layout>
@@ -199,7 +239,7 @@ export default function Services() {
         <BlueprintScene preset="facility" />
 
         <div className="section-container relative z-10">
-          <div className="text-center max-w-2xl mx-auto mb-10">
+          <div className="text-center max-w-2xl mx-auto mb-8">
             <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-3">
               What We Build
             </p>
@@ -209,6 +249,25 @@ export default function Services() {
             <p className="text-muted-foreground text-sm">
               Every project is custom-quoted after an on-site consultation. Below are starting points to help you plan.
             </p>
+          </div>
+
+          {/* Filter chips */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
+            {SERVICE_CATEGORIES.map((cat) => (
+              <button
+                key={cat.key}
+                onClick={() => setActiveFilter(cat.key)}
+                className={cn(
+                  "inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium tracking-wide uppercase transition-all duration-300",
+                  activeFilter === cat.key
+                    ? "bg-accent text-accent-foreground shadow-[0_2px_12px_hsl(var(--accent)/0.25)]"
+                    : "bg-card border border-border text-muted-foreground hover:border-accent/40 hover:text-foreground"
+                )}
+              >
+                {cat.key === "all" && <Filter className="h-3 w-3" />}
+                {cat.label}
+              </button>
+            ))}
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
