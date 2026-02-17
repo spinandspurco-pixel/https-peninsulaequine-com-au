@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ArrowRight, Star, Play, Quote, Filter, X, Film, Expand } from "lucide-react";
+import { ArrowRight, Star, Play, Quote, Filter, X, Film, Expand, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Layout } from "@/components/layout/Layout";
@@ -8,7 +8,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { SectionTransition, AnimatedDivider } from "@/components/SectionTransition";
 import { TestimonialLightbox } from "@/components/TestimonialLightbox";
-import { fetchMergedTestimonials, SERVICE_FILTERS, type TestimonialItem } from "@/lib/testimonials";
+import { fetchMergedTestimonials, SERVICE_FILTERS, getTrainerFilters, type TestimonialItem } from "@/lib/testimonials";
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
 
 function StarRating({ rating }: { rating: number }) {
@@ -290,13 +290,20 @@ export default function Testimonials() {
   const [loading, setLoading] = useState(true);
 
   const activeFilter = searchParams.get("service") || "";
+  const activeTrainer = searchParams.get("trainer") || "";
 
   const setFilter = (serviceId: string) => {
-    if (serviceId) {
-      setSearchParams({ service: serviceId });
-    } else {
-      setSearchParams({});
-    }
+    const params: Record<string, string> = {};
+    if (serviceId) params.service = serviceId;
+    if (activeTrainer) params.trainer = activeTrainer;
+    setSearchParams(params);
+  };
+
+  const setTrainerFilter = (trainer: string) => {
+    const params: Record<string, string> = {};
+    if (activeFilter) params.service = activeFilter;
+    if (trainer) params.trainer = trainer;
+    setSearchParams(params);
   };
 
   useEffect(() => {
@@ -306,10 +313,18 @@ export default function Testimonials() {
     });
   }, []);
 
+  const trainerOptions = useMemo(() => getTrainerFilters(testimonials), [testimonials]);
+
   const filtered = useMemo(() => {
-    if (!activeFilter) return testimonials;
-    return testimonials.filter((t) => t.serviceTags.includes(activeFilter));
-  }, [testimonials, activeFilter]);
+    let items = testimonials;
+    if (activeFilter) {
+      items = items.filter((t) => t.serviceTags.includes(activeFilter));
+    }
+    if (activeTrainer) {
+      items = items.filter((t) => t.trainer === activeTrainer);
+    }
+    return items;
+  }, [testimonials, activeFilter, activeTrainer]);
 
   return (
     <Layout>
@@ -331,9 +346,9 @@ export default function Testimonials() {
           </div>
 
           {/* Service filter bar */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
             <span className="text-xs text-muted-foreground mr-1 flex items-center gap-1">
-              <Filter className="h-3.5 w-3.5" /> Filter:
+              <Filter className="h-3.5 w-3.5" /> Service:
             </span>
             <button
               onClick={() => setFilter("")}
@@ -359,11 +374,49 @@ export default function Testimonials() {
               </button>
             ))}
             {activeFilter && (
-              <button onClick={() => setFilter("")} className="ml-1 text-muted-foreground hover:text-foreground transition-colors" aria-label="Clear filter">
+              <button onClick={() => setFilter("")} className="ml-1 text-muted-foreground hover:text-foreground transition-colors" aria-label="Clear service filter">
                 <X className="h-4 w-4" />
               </button>
             )}
           </div>
+
+          {/* Trainer filter bar */}
+          {trainerOptions.length > 0 && (
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
+              <span className="text-xs text-muted-foreground mr-1 flex items-center gap-1">
+                <User className="h-3.5 w-3.5" /> Trainer:
+              </span>
+              <button
+                onClick={() => setTrainerFilter("")}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                  !activeTrainer
+                    ? "bg-accent text-accent-foreground border-accent"
+                    : "bg-transparent text-muted-foreground border-border hover:border-accent/40 hover:text-foreground"
+                }`}
+              >
+                All
+              </button>
+              {trainerOptions.map((trainer) => (
+                <button
+                  key={trainer}
+                  onClick={() => setTrainerFilter(activeTrainer === trainer ? "" : trainer)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                    activeTrainer === trainer
+                      ? "bg-accent text-accent-foreground border-accent"
+                      : "bg-transparent text-muted-foreground border-border hover:border-accent/40 hover:text-foreground"
+                  }`}
+                >
+                  {trainer}
+                </button>
+              ))}
+              {activeTrainer && (
+                <button onClick={() => setTrainerFilter("")} className="ml-1 text-muted-foreground hover:text-foreground transition-colors" aria-label="Clear trainer filter">
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          )}
+          {trainerOptions.length === 0 && <div className="mb-12" />}
 
           {loading ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

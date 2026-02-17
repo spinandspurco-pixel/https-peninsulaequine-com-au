@@ -11,6 +11,7 @@ export interface TestimonialItem {
   mediaType?: "image" | "video" | null;
   mediaUrl?: string | null;
   serviceTags: string[];
+  trainer?: string | null;
 }
 
 const SERVICE_IDS = services.map((s) => s.id);
@@ -28,6 +29,14 @@ export function inferServiceTags(role: string): string[] {
   return [];
 }
 
+/** Infer trainer name from role text */
+function inferTrainer(role: string): string | null {
+  const l = role.toLowerCase();
+  if (l.includes("lesson") || l.includes("riding") || l.includes("student") || l.includes("beginner") || l.includes("dressage") || l.includes("jumping"))
+    return "Glenn Browitt";
+  return null;
+}
+
 /** Convert static testimonials to the unified shape */
 function staticToItems(): TestimonialItem[] {
   return staticTestimonials.map((t) => ({
@@ -39,6 +48,7 @@ function staticToItems(): TestimonialItem[] {
     mediaType: (t as any).mediaType ?? null,
     mediaUrl: null,
     serviceTags: inferServiceTags(t.role),
+    trainer: inferTrainer(t.role),
   }));
 }
 
@@ -54,7 +64,7 @@ export async function fetchMergedTestimonials(): Promise<TestimonialItem[]> {
   try {
     const { data, error } = await supabase
       .from("managed_testimonials")
-      .select("id, client_name, client_role, quote, rating, media_type, media_url, service_tags, pinned")
+      .select("id, client_name, client_role, quote, rating, media_type, media_url, service_tags, pinned, trainer")
       .eq("active", true)
       .order("pinned", { ascending: false })
       .order("sort_order", { ascending: true });
@@ -78,6 +88,7 @@ export async function fetchMergedTestimonials(): Promise<TestimonialItem[]> {
       mediaType: (t.media_type as "image" | "video" | null) ?? null,
       mediaUrl: t.media_url ?? null,
       serviceTags: (t.service_tags as string[]) ?? [],
+      trainer: (t as any).trainer ?? null,
     }));
 
     // De-duplicate: remove static entries that match a DB record
@@ -97,3 +108,12 @@ export async function fetchMergedTestimonials(): Promise<TestimonialItem[]> {
 
 /** Service filter options derived from content data */
 export const SERVICE_FILTERS = services.map((s) => ({ id: s.id, label: s.title }));
+
+/** Extract unique trainer names from testimonials */
+export function getTrainerFilters(testimonials: TestimonialItem[]): string[] {
+  const trainers = new Set<string>();
+  testimonials.forEach((t) => {
+    if (t.trainer) trainers.add(t.trainer);
+  });
+  return Array.from(trainers).sort();
+}
