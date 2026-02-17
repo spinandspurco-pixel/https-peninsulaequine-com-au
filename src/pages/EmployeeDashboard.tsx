@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -270,6 +270,12 @@ export default function EmployeeDashboard() {
             </div>
           </div>
           <div className="flex gap-2">
+            <Link to="/documents">
+              <Button variant="outline">
+                <ClipboardList className="mr-2 h-4 w-4" />
+                Documents
+              </Button>
+            </Link>
             <Button variant="outline" size="icon" onClick={fetchData} disabled={loadingData}>
               <RefreshCw className={`h-4 w-4 ${loadingData ? "animate-spin" : ""}`} />
             </Button>
