@@ -31,7 +31,7 @@ import {
   FileWarning,
   Download,
 } from "lucide-react";
-import { format, startOfWeek, endOfWeek, isWithinInterval } from "date-fns";
+import { format, startOfWeek, endOfWeek, isWithinInterval, nextWednesday, isWednesday, differenceInHours, isPast, setHours } from "date-fns";
 
 // ── PDF Export Utility ──────────────────────────────
 export function exportDocumentAsPDF(doc: any) {
@@ -1044,6 +1044,76 @@ export default function StaffDocuments() {
               {showForm ? "Cancel" : <><Plus className="mr-2 h-4 w-4" /> New Document</>}
             </Button>
           </div>
+
+          {/* Wednesday Payment Slip Deadline Banner */}
+          {(() => {
+            const now = new Date();
+            const wed = isWednesday(now) ? setHours(now, 17) : nextWednesday(now);
+            const hoursLeft = differenceInHours(wed, now);
+            const isOverdue = isWednesday(now) && isPast(setHours(new Date(now.getFullYear(), now.getMonth(), now.getDate()), 17));
+            const hasSubmittedThisWeek = documents.some(
+              d => d.document_type === "payment_slip" && d.submitted_at &&
+                isWithinInterval(new Date(d.submitted_at), { start: weekStart, end: weekEnd_ })
+            );
+
+            if (hasSubmittedThisWeek) {
+              return (
+                <Card className="mb-6 border-green-500/30 bg-green-500/5">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-sm text-green-700 dark:text-green-400">Payment Slip Submitted ✓</p>
+                        <p className="text-xs text-muted-foreground">Your weekly timesheet has been submitted for review.</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            }
+
+            const urgency = isOverdue ? "destructive" : hoursLeft <= 24 ? "warning" : "info";
+            return (
+              <Card className={`mb-6 ${
+                urgency === "destructive" ? "border-destructive/40 bg-destructive/5" :
+                urgency === "warning" ? "border-orange-500/40 bg-orange-500/5" :
+                "border-accent/20"
+              }`}>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      {urgency === "destructive" ? (
+                        <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
+                      ) : (
+                        <Clock className="h-5 w-5 text-accent shrink-0" />
+                      )}
+                      <div>
+                        <p className="font-semibold text-sm">
+                          {isOverdue
+                            ? "⚠️ Payment Slip Overdue!"
+                            : isWednesday(now)
+                              ? "📋 Payment Slip Due Today"
+                              : `💰 Payment Slip Due Wednesday`}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {isOverdue
+                            ? "Please submit your weekly timesheet as soon as possible."
+                            : `${hoursLeft} hours remaining — submit before 5:00 PM Wednesday`}
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      size="sm"
+                      className="shrink-0 bg-accent hover:bg-accent/90 text-accent-foreground"
+                      onClick={() => { setActiveTab("payment_slip"); setShowForm(true); }}
+                    >
+                      <DollarSign className="mr-1.5 h-4 w-4" /> Submit Now
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })()}
 
           {/* Weekly Submission Tracker */}
           <Card className="mb-6 border-accent/20">
