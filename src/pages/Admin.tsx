@@ -3,6 +3,7 @@ import { ABTestStatsPanel } from "@/components/ABTestStatsPanel";
 import { AdminStaffOnboarding } from "@/components/AdminStaffOnboarding";
 import { SharedCalendarView } from "@/components/SharedCalendarView";
 import { AdminTrainerPanel } from "@/components/AdminTrainerPanel";
+import { TestEmailPanel } from "@/components/TestEmailPanel";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -612,6 +613,9 @@ export default function Admin() {
               </CardContent>
             )}
           </Card>
+
+          {/* Email Deliverability Test */}
+          <TestEmailPanel />
 
           {/* Filters */}
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
