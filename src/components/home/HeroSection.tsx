@@ -105,7 +105,7 @@ export function HeroSection() {
             trackCtaClick("hero_call_now", { variant });
             trackStep("click", { cta: "call_now" });
           }}
-          className="inline-flex items-center gap-2 text-primary-foreground/50 hover:text-accent text-xs tracking-widest uppercase transition-colors"
+          className="inline-flex items-center gap-2 text-primary-foreground/50 hover:text-accent text-xs tracking-widest uppercase transition-colors mb-6"
         >
           <Phone className="h-3.5 w-3.5" />
           Or Call Us Now
@@ -114,7 +114,7 @@ export function HeroSection() {
 
       <button
         onClick={() => document.getElementById("about-teaser")?.scrollIntoView({ behavior: "smooth" })}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-primary-foreground/40 hover:text-primary-foreground/70 transition-colors cursor-pointer"
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-primary-foreground/30 hover:text-primary-foreground/60 transition-colors cursor-pointer"
         aria-label="Scroll to content"
       >
         <span className="text-[10px] tracking-[0.3em] uppercase font-sans">Scroll</span>
