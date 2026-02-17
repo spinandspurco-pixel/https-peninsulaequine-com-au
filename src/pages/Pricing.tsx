@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Check, ArrowRight, Zap, Users, Award, Star, UserPlus, DollarSign, MapPin, Truck, ShieldCheck, HelpCircle, Flame, Mountain, Trees, CloudRain, Ruler, Building, CreditCard, RefreshCcw, Milestone, Clock, Ban, ArrowRightLeft } from "lucide-react";
+import { Check, ArrowRight, Zap, Users, Award, Star, UserPlus, DollarSign, MapPin, Truck, ShieldCheck, HelpCircle, Flame, Mountain, Trees, CloudRain, Ruler, Building, CreditCard, RefreshCcw, Milestone, Clock, Ban, ArrowRightLeft, Navigation, Car, Plane } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -622,6 +622,106 @@ function DepositPolicySection() {
   );
 }
 
+// ── Service Area & Travel Fees ───────────────────────
+
+const SERVICE_ZONES = [
+  {
+    zone: "Core",
+    region: "Mornington Peninsula",
+    areas: "Merricks North, Balnarring, Red Hill, Main Ridge, Flinders, Hastings, Somerville, Moorooduc",
+    travelFee: "Included",
+    highlight: true,
+    note: "Our home turf — no travel surcharges for construction or lessons.",
+  },
+  {
+    zone: "Extended",
+    region: "Greater Melbourne & Surrounds",
+    areas: "Frankston, Cranbourne, Pakenham, Dandenong Ranges, Yarra Valley, Geelong corridor",
+    travelFee: "$150–$350",
+    highlight: false,
+    note: "Travel fee covers crew transport and equipment relocation. Quoted per project.",
+  },
+  {
+    zone: "Regional",
+    region: "Regional Victoria & Interstate",
+    areas: "Gippsland, Ballarat, Bendigo, Northern VIC, NSW & QLD (select projects)",
+    travelFee: "Custom quote",
+    highlight: false,
+    note: "Accommodation and travel quoted separately. We take on select large-scale facility builds only.",
+  },
+];
+
+function ServiceAreaSection() {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+
+  return (
+    <section className="section-padding bg-card border-y border-border" id="service-area">
+      <div className="section-container">
+        <div ref={ref} className={cn("transition-all duration-700", isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8")}>
+          <div className="text-center mb-12">
+            <div className={cn("w-16 h-0.5 bg-accent mx-auto mb-6 transition-all duration-500 delay-100", isVisible ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0")} />
+            <h2 className="heading-section text-foreground mb-3">Service Area & Travel Fees</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              We're based in Merricks North on the Mornington Peninsula. Here's how travel costs work depending on your location.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+            {SERVICE_ZONES.map((zone, i) => (
+              <div
+                key={zone.zone}
+                className={cn(
+                  "rounded-xl border p-6 transition-all duration-500",
+                  zone.highlight ? "border-accent/40 bg-accent/5 ring-1 ring-accent/10" : "border-border bg-background",
+                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+                )}
+                style={{ transitionDelay: `${150 + i * 100}ms` }}
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  {i === 0 && <MapPin className="h-5 w-5 text-accent" />}
+                  {i === 1 && <Car className="h-5 w-5 text-accent" />}
+                  {i === 2 && <Plane className="h-5 w-5 text-accent" />}
+                  <div>
+                    <h3 className="font-serif text-base font-semibold text-foreground">{zone.zone} Zone</h3>
+                    <p className="text-xs text-muted-foreground">{zone.region}</p>
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <span className="text-lg font-bold text-accent">{zone.travelFee}</span>
+                  {zone.travelFee !== "Included" && zone.travelFee !== "Custom quote" && (
+                    <span className="text-xs text-muted-foreground ml-1">per project</span>
+                  )}
+                </div>
+
+                <p className="text-xs text-muted-foreground leading-relaxed mb-3">{zone.note}</p>
+
+                <div className="pt-3 border-t border-border">
+                  <p className="text-xs text-muted-foreground">
+                    <span className="font-medium text-foreground">Covers:</span> {zone.areas}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="max-w-3xl mx-auto mt-8 p-4 rounded-lg bg-background border border-border">
+            <div className="flex items-start gap-3">
+              <Navigation className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-foreground mb-1">Lessons are on-site only</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  All riding lessons are conducted at our Merricks North property (59 Tubbarubba Rd). Construction services extend across all zones listed above. Not sure if we cover your area? <Link to="/contact" className="text-accent hover:underline">Get in touch</Link> — we're happy to discuss.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── Page ─────────────────────────────────────────────
 
 export default function Pricing() {
@@ -637,6 +737,7 @@ export default function Pricing() {
       <LessonPricingCalculator />
       <GroupRatesTeaser />
       <DepositPolicySection />
+      <ServiceAreaSection />
       <RegionalCostDrivers />
       <AudPricingFAQ />
       <PricingCTA />
