@@ -11,6 +11,48 @@ const PRICE_LABELS: Record<string, string> = {
   advanced: "Performance Lesson",
 };
 
+function pad(n: number): string {
+  return n.toString().padStart(2, "0");
+}
+
+function generateICS(opts: {
+  summary: string;
+  description: string;
+  location: string;
+  dtStart: string;
+  dtEnd: string;
+  organizer: string;
+  attendee: string;
+}): string {
+  const uid = crypto.randomUUID() + "@peninsulaequine.com";
+  const now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  return [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Peninsula Equine//Lessons//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:REQUEST",
+    "BEGIN:VEVENT",
+    `UID:${uid}`,
+    `DTSTAMP:${now}`,
+    `DTSTART;TZID=Australia/Melbourne:${opts.dtStart}`,
+    `DTEND;TZID=Australia/Melbourne:${opts.dtEnd}`,
+    `SUMMARY:${opts.summary}`,
+    `DESCRIPTION:${opts.description.replace(/\n/g, "\\n")}`,
+    `LOCATION:${opts.location}`,
+    `ORGANIZER;CN=Peninsula Equine:mailto:${opts.organizer}`,
+    `ATTENDEE;RSVP=TRUE;CN=${opts.attendee}:mailto:${opts.attendee}`,
+    "STATUS:CONFIRMED",
+    "BEGIN:VALARM",
+    "TRIGGER:-PT1H",
+    "ACTION:DISPLAY",
+    "DESCRIPTION:Lesson reminder",
+    "END:VALARM",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -150,6 +192,11 @@ Deno.serve(async (req) => {
 
                 ${booking.lesson_goals ? `<p style="font-style: italic; color: #666; background: #fff; padding: 12px; border-left: 3px solid #c9a227; margin: 16px 0;">📝 Goals: ${booking.lesson_goals}</p>` : ""}
 
+                <div style="background: #fff; border: 1px solid #e8e2d6; border-radius: 8px; padding: 16px; margin: 20px 0; text-align: center;">
+                  <p style="margin: 0 0 8px; font-weight: 600; color: #2d2418;">📅 Add to Your Calendar</p>
+                  <p style="margin: 0; font-size: 13px; color: #666;">Open the attached <strong>lesson-booking.ics</strong> file to add this lesson to your calendar automatically.</p>
+                </div>
+
                 <div style="margin: 24px 0; padding: 16px; background: #fff; border: 1px solid #e8e2d6; border-radius: 8px;">
                   <p style="margin: 0 0 8px; font-weight: 600; font-size: 14px;">📋 Before Your Lesson</p>
                   <ul style="margin: 0; padding: 0 0 0 20px; font-size: 14px; color: #555; line-height: 1.8;">
@@ -175,7 +222,25 @@ Deno.serve(async (req) => {
             </div>
           `;
 
-          // Send to client
+          // Generate .ics calendar invite
+          const endTimeParts = slot.end_time?.split(":").map(Number) ?? [startHour + 1, startMin];
+          const endHour = endTimeParts[0] ?? startHour + 1;
+          const endMin = endTimeParts[1] ?? 0;
+          const dtStart = `${year}${pad(month)}${pad(day)}T${pad(startHour)}${pad(startMin)}00`;
+          const dtEnd = `${year}${pad(month)}${pad(day)}T${pad(endHour)}${pad(endMin)}00`;
+
+          const icsContent = generateICS({
+            summary: `${lessonLabel} — Peninsula Equine`,
+            description: `Your ${lessonLabel} with Peninsula Equine.${booking.lesson_goals ? `\nGoals: ${booking.lesson_goals}` : ""}\n\nDeposit paid: $${depositDollars}\nRemaining: $${remainingDollars} (due on the day)`,
+            location: "59 Tubbarubba Road, Merricks North, VIC 3926",
+            dtStart,
+            dtEnd,
+            organizer: "info@peninsulaequine.com.au",
+            attendee: booking.client_email,
+          });
+          const icsBase64 = btoa(icsContent);
+
+          // Send to client with .ics attachment
           const clientRes = await fetch("https://api.resend.com/emails", {
             method: "POST",
             headers: {
@@ -187,6 +252,13 @@ Deno.serve(async (req) => {
               to: [booking.client_email],
               subject: `Lesson Confirmed: ${lessonLabel} on ${readableDate}`,
               html: emailHtml,
+              attachments: [
+                {
+                  filename: "lesson-booking.ics",
+                  content: icsBase64,
+                  content_type: "text/calendar; method=REQUEST",
+                },
+              ],
             }),
           });
 
@@ -229,6 +301,13 @@ Deno.serve(async (req) => {
                     ${booking.lesson_goals ? `<p><strong>Goals:</strong> ${booking.lesson_goals}</p>` : ""}
                   </div>
                 `,
+                attachments: [
+                  {
+                    filename: "lesson-booking.ics",
+                    content: icsBase64,
+                    content_type: "text/calendar; method=REQUEST",
+                  },
+                ],
               }),
             });
           }
