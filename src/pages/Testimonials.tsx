@@ -8,7 +8,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { SectionTransition, AnimatedDivider } from "@/components/SectionTransition";
 import { TestimonialLightbox } from "@/components/TestimonialLightbox";
-import { fetchMergedTestimonials, SERVICE_FILTERS, getTrainerFilters, type TestimonialItem } from "@/lib/testimonials";
+import { fetchMergedTestimonials, SERVICE_FILTERS, getTrainerFilters, TRAINER_PROFILES, type TestimonialItem } from "@/lib/testimonials";
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
 
 function StarRating({ rating }: { rating: number }) {
@@ -129,9 +129,21 @@ function TestimonialCard({ testimonial, index }: { testimonial: TestimonialItem;
           </div>
         )}
 
-        <div className="mt-6 pt-5 border-t border-border">
-          <p className="font-serif font-semibold text-foreground">{testimonial.name}</p>
-          {testimonial.role && <p className="text-sm text-muted-foreground mt-0.5">{testimonial.role}</p>}
+        <div className="mt-6 pt-5 border-t border-border flex items-center gap-3">
+          {testimonial.trainer && TRAINER_PROFILES[testimonial.trainer] && (
+            <img
+              src={TRAINER_PROFILES[testimonial.trainer].portrait}
+              alt={testimonial.trainer}
+              className="w-9 h-9 rounded-full object-cover border border-border flex-shrink-0"
+            />
+          )}
+          <div>
+            <p className="font-serif font-semibold text-foreground">{testimonial.name}</p>
+            {testimonial.role && <p className="text-sm text-muted-foreground mt-0.5">{testimonial.role}</p>}
+            {testimonial.trainer && (
+              <p className="text-xs text-accent mt-0.5">Trainer: {testimonial.trainer}</p>
+            )}
+          </div>
         </div>
       </article>
     </SectionTransition>
@@ -382,7 +394,7 @@ export default function Testimonials() {
 
           {/* Trainer filter bar */}
           {trainerOptions.length > 0 && (
-            <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
+            <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
               <span className="text-xs text-muted-foreground mr-1 flex items-center gap-1">
                 <User className="h-3.5 w-3.5" /> Trainer:
               </span>
@@ -396,19 +408,29 @@ export default function Testimonials() {
               >
                 All
               </button>
-              {trainerOptions.map((trainer) => (
-                <button
-                  key={trainer}
-                  onClick={() => setTrainerFilter(activeTrainer === trainer ? "" : trainer)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
-                    activeTrainer === trainer
-                      ? "bg-accent text-accent-foreground border-accent"
-                      : "bg-transparent text-muted-foreground border-border hover:border-accent/40 hover:text-foreground"
-                  }`}
-                >
-                  {trainer}
-                </button>
-              ))}
+              {trainerOptions.map((trainer) => {
+                const profile = TRAINER_PROFILES[trainer];
+                return (
+                  <button
+                    key={trainer}
+                    onClick={() => setTrainerFilter(activeTrainer === trainer ? "" : trainer)}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                      activeTrainer === trainer
+                        ? "bg-accent text-accent-foreground border-accent"
+                        : "bg-transparent text-muted-foreground border-border hover:border-accent/40 hover:text-foreground"
+                    }`}
+                  >
+                    {profile && (
+                      <img
+                        src={profile.portrait}
+                        alt={trainer}
+                        className="w-5 h-5 rounded-full object-cover"
+                      />
+                    )}
+                    {trainer}
+                  </button>
+                );
+              })}
               {activeTrainer && (
                 <button onClick={() => setTrainerFilter("")} className="ml-1 text-muted-foreground hover:text-foreground transition-colors" aria-label="Clear trainer filter">
                   <X className="h-4 w-4" />
