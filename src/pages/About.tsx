@@ -426,17 +426,17 @@ function IntroSection() {
       <BlueprintBackground image={blueprintDetail} opacity={0.02} direction="left-to-right" duration={2000} />
       <div className="section-container">
         <div className="max-w-3xl mx-auto text-center">
-          <SectionTransition variant="fade-up">
+          <SectionTransition variant="fade-up" delay={0}>
             <p className="text-muted-foreground uppercase tracking-[0.25em] text-sm mb-6">
               Mornington Peninsula, Victoria
             </p>
           </SectionTransition>
-          <SectionTransition variant="blur-in" delay={100}>
+          <SectionTransition variant="blur-in" delay={200}>
             <h2 className="heading-section text-foreground mb-6 leading-tight transition-all duration-500 hover:drop-shadow-[0_0_25px_hsl(var(--accent)/0.3)]">
               Where world-class equine facilities are built by the hands of a <span className="text-accent italic">horseman</span>
             </h2>
           </SectionTransition>
-          <SectionTransition variant="fade-up" delay={200}>
+          <SectionTransition variant="fade-up" delay={450}>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               Peninsula Equine is a construction company specializing in premium arenas, barns,
               and equestrian infrastructure. With decades of experience in both riding and building,
@@ -463,8 +463,8 @@ function PhilosophySection() {
         {/* Header */}
         <div
           ref={headerRef}
-          className={`max-w-3xl mx-auto text-center mb-16 transition-all duration-700 ${
-            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          className={`max-w-3xl mx-auto text-center mb-16 transition-all duration-1000 ease-out ${
+            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
           <div className="w-16 h-0.5 bg-accent mx-auto mb-6" />
@@ -480,10 +480,10 @@ function PhilosophySection() {
           {philosophy.pillars.map((pillar, i) => (
             <div
               key={pillar.number}
-              className={`group p-8 sm:p-10 bg-primary transition-all duration-700 hover:bg-primary-foreground/[0.04] ${
-                gridVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              className={`group p-8 sm:p-10 bg-primary transition-all duration-900 ease-out hover:bg-primary-foreground/[0.04] ${
+                gridVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
               }`}
-              style={{ transitionDelay: `${i * 100}ms` }}
+              style={{ transitionDelay: `${i * 150}ms` }}
             >
               <span className="text-accent font-mono text-sm tracking-[0.3em] mb-4 block transition-transform duration-300 group-hover:translate-x-1">
                 {pillar.number}
