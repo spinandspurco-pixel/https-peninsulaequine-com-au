@@ -22,6 +22,74 @@ interface InquiryNotificationRequest {
   additionalNotes?: string;
 }
 
+/** Pad a number to 2 digits */
+function pad(n: number): string {
+  return n.toString().padStart(2, "0");
+}
+
+/** Generate a .ics calendar invite for a suggested follow-up consultation */
+function generateConsultationICS(opts: {
+  clientName: string;
+  clientEmail: string;
+  services: string[];
+  isConstruction: boolean;
+}): { icsBase64: string; readableDate: string } {
+  const uid = crypto.randomUUID() + "@peninsulaequine.com";
+  const now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+
+  // Suggest consultation 3 business days from now at 10am Melbourne time
+  const suggestedDate = new Date();
+  let daysToAdd = 3;
+  while (daysToAdd > 0) {
+    suggestedDate.setDate(suggestedDate.getDate() + 1);
+    const dow = suggestedDate.getDay();
+    if (dow !== 0 && dow !== 6) daysToAdd--;
+  }
+  const y = suggestedDate.getFullYear();
+  const m = suggestedDate.getMonth() + 1;
+  const d = suggestedDate.getDate();
+  const dtStart = `${y}${pad(m)}${pad(d)}T100000`;
+  const dtEnd = `${y}${pad(m)}${pad(d)}T110000`;
+
+  const readableDate = suggestedDate.toLocaleDateString("en-AU", {
+    weekday: "long", year: "numeric", month: "long", day: "numeric",
+  });
+
+  const summary = opts.isConstruction
+    ? "Peninsula Equine — Project Consultation"
+    : "Peninsula Equine — Program Consultation";
+
+  const description = `Follow-up consultation with Peninsula Equine regarding: ${opts.services.join(", ")}.\\n\\nThis is a suggested time — reply to this email if you'd like to reschedule.`;
+
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Peninsula Equine//Inquiry//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:REQUEST",
+    "BEGIN:VEVENT",
+    `UID:${uid}`,
+    `DTSTAMP:${now}`,
+    `DTSTART;TZID=Australia/Melbourne:${dtStart}`,
+    `DTEND;TZID=Australia/Melbourne:${dtEnd}`,
+    `SUMMARY:${summary}`,
+    `DESCRIPTION:${description}`,
+    `LOCATION:Peninsula Equine, Mornington Peninsula, VIC`,
+    `ORGANIZER;CN=Peninsula Equine:mailto:info@peninsulaequine.com.au`,
+    `ATTENDEE;RSVP=TRUE;CN=${opts.clientName}:mailto:${opts.clientEmail}`,
+    "STATUS:TENTATIVE",
+    "BEGIN:VALARM",
+    "TRIGGER:-PT1H",
+    "ACTION:DISPLAY",
+    "DESCRIPTION:Consultation reminder",
+    "END:VALARM",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+
+  return { icsBase64: btoa(ics), readableDate };
+}
+
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -235,6 +303,14 @@ const handler = async (req: Request): Promise<Response> => {
       `;
     }
 
+    // Generate .ics calendar invite for suggested consultation
+    const { icsBase64, readableDate: suggestedConsultDate } = generateConsultationICS({
+      clientName: inquiry.name,
+      clientEmail: inquiry.email,
+      services: formattedServices,
+      isConstruction,
+    });
+
     // Tailored CTA based on service type
     const ctaUrl = isLessons
       ? `https://peninsulaequine.lovable.app/book-lesson`
@@ -300,6 +376,13 @@ const handler = async (req: Request): Promise<Response> => {
               <a href="${ctaUrl}" style="background: #c9a227; color: white; padding: 14px 32px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600; font-size: 15px;">${ctaEmoji} ${ctaText}</a>
             </div>
 
+            <!-- Calendar invite callout -->
+            <div style="background: #fff; border: 1px solid #c9a227; border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center;">
+              <p style="margin: 0 0 8px; font-weight: 600; color: #2d2418; font-size: 15px;">📅 Suggested Consultation</p>
+              <p style="margin: 0 0 4px; font-size: 14px; color: #555;">${suggestedConsultDate} at 10:00 AM (Melbourne)</p>
+              <p style="margin: 0; font-size: 12px; color: #888;">Open the attached <strong>consultation.ics</strong> file to add this to your calendar. Reply to reschedule.</p>
+            </div>
+
             <div style="background: #f0ede6; border-radius: 8px; padding: 20px; margin: 24px 0; text-align: center;">
               <p style="margin: 0 0 10px; font-weight: 600; color: #2d2418; font-size: 14px;">Need to reach us sooner?</p>
               <p style="margin: 0; font-size: 14px; color: #555;">
@@ -352,12 +435,19 @@ const handler = async (req: Request): Promise<Response> => {
         html: emailHtml,
         reply_to: inquiry.email,
       }),
-      // Send the confirmation email to the submitter
+      // Send the confirmation email to the submitter with .ics calendar invite
       resend.emails.send({
         from: FROM_EMAIL,
         to: [inquiry.email],
         subject: "Thank You for Your Inquiry - Peninsula Equine",
         html: confirmationHtml,
+        attachments: [
+          {
+            filename: "consultation.ics",
+            content: icsBase64,
+            content_type: "text/calendar; method=REQUEST",
+          },
+        ],
       }),
     ]);
 
