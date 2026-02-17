@@ -10,7 +10,12 @@ import heroVideoA from "@/assets/videos/pavilion-grill-1.mp4";
 import heroVideoB from "@/assets/videos/pavilion-grill-2.mp4";
 import peLogo from "@/assets/pe-logo-new.png";
 
-const HERO_VIDEOS = [heroVideoA, heroVideoB];
+// ── Trim ranges: only play these segments (seconds) ─────────
+// Adjust start/end to skip walking/shaky parts and keep smooth footage
+const VIDEO_CLIPS = [
+  { src: heroVideoA, start: 3, end: 18 },   // Video A: skip first 3s walk-in, end before shaky outro
+  { src: heroVideoB, start: 2, end: 16 },   // Video B: skip opening walk, cut before camera pan
+];
 
 // ── A/B test copy variants ──────────────────────────────────
 
@@ -40,33 +45,45 @@ export function HeroSection() {
 
   const copy = HERO_COPY[variant] || HERO_COPY.control;
 
-  // ── Dual-video crossfade ──────────────────────────────────
+  // ── Dual-video crossfade with trim ranges ─────────────────
   const [activeIdx, setActiveIdx] = useState(0);
   const [fading, setFading] = useState(false);
   const videoARef = useRef<HTMLVideoElement>(null);
   const videoBRef = useRef<HTMLVideoElement>(null);
 
-  const handleVideoEnd = useCallback(() => {
-    setFading(true);
-    const nextIdx = (activeIdx + 1) % HERO_VIDEOS.length;
-    const nextVideo = nextIdx === 0 ? videoARef.current : videoBRef.current;
-    if (nextVideo) {
-      nextVideo.currentTime = 0;
-      nextVideo.play().catch(() => {});
-    }
-    setTimeout(() => {
-      setActiveIdx(nextIdx);
-      setFading(false);
-    }, 1200);
-  }, [activeIdx]);
+  const getRef = useCallback((idx: number) => idx === 0 ? videoARef : videoBRef, []);
 
-  useEffect(() => {
-    const current = activeIdx === 0 ? videoARef.current : videoBRef.current;
-    if (current) {
-      current.currentTime = 0;
-      current.play().catch(() => {});
+  // Start a clip at its trim start point
+  const startClip = useCallback((idx: number) => {
+    const video = getRef(idx).current;
+    const clip = VIDEO_CLIPS[idx];
+    if (video && clip) {
+      video.currentTime = clip.start;
+      video.play().catch(() => {});
     }
-  }, []);
+  }, [getRef]);
+
+  // When current clip reaches its trim end → crossfade to next
+  const handleTimeUpdate = useCallback((idx: number) => {
+    const video = getRef(idx).current;
+    const clip = VIDEO_CLIPS[idx];
+    if (!video || !clip || idx !== activeIdx || fading) return;
+    if (video.currentTime >= clip.end) {
+      video.pause();
+      setFading(true);
+      const nextIdx = (idx + 1) % VIDEO_CLIPS.length;
+      startClip(nextIdx);
+      setTimeout(() => {
+        setActiveIdx(nextIdx);
+        setFading(false);
+      }, 1200);
+    }
+  }, [activeIdx, fading, getRef, startClip]);
+
+  // Initial play
+  useEffect(() => {
+    startClip(0);
+  }, [startClip]);
 
   const handleQuoteClick = () => {
     trackCtaClick("hero_get_quote", { variant });
@@ -80,11 +97,11 @@ export function HeroSection() {
 
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden bg-primary pb-20 sm:pb-24">
-      {/* Video A — zoomed + smoothed to mask handheld shake */}
+      {/* Video A — trimmed + zoomed + smoothed */}
       <video
         ref={videoARef}
         muted playsInline preload="auto"
-        onEnded={handleVideoEnd}
+        onTimeUpdate={() => handleTimeUpdate(0)}
         className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out will-change-transform"
         style={{
           opacity: activeIdx === 0 ? 1 : fading && activeIdx === 1 ? 0 : 0,
@@ -94,13 +111,13 @@ export function HeroSection() {
         }}
         aria-hidden="true"
       >
-        <source src={heroVideoA} type="video/mp4" />
+        <source src={VIDEO_CLIPS[0].src} type="video/mp4" />
       </video>
-      {/* Video B — zoomed + smoothed to mask handheld shake */}
+      {/* Video B — trimmed + zoomed + smoothed */}
       <video
         ref={videoBRef}
         muted playsInline preload="auto"
-        onEnded={handleVideoEnd}
+        onTimeUpdate={() => handleTimeUpdate(1)}
         className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out will-change-transform"
         style={{
           opacity: activeIdx === 1 ? 1 : fading && activeIdx === 0 ? 0 : 0,
@@ -110,7 +127,7 @@ export function HeroSection() {
         }}
         aria-hidden="true"
       >
-        <source src={heroVideoB} type="video/mp4" />
+        <source src={VIDEO_CLIPS[1].src} type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-primary/70" />
       <BlueprintScene preset="hero" />
