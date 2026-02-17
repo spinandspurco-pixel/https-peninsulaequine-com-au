@@ -1,6 +1,6 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Play, Pause, Quote, Star, HelpCircle } from "lucide-react";
+import { ArrowRight, Quote, Star, HelpCircle } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
@@ -29,22 +29,14 @@ import { BlueprintDivider } from "@/components/BlueprintDivider";
 import mainRidgeWoodwork1 from "@/assets/videos/main-ridge-woodwork-1.mp4";
 import mainRidgeWoodwork2 from "@/assets/videos/main-ridge-woodwork-2.mp4";
 
-// Video testimonials data — pairs testimonial quotes with related project footage
-const VIDEO_TESTIMONIALS = [
-  {
-    testimonial: testimonials[0], // Sarah Mitchell
-    video: mainRidgeWoodwork1,
-    poster: undefined as string | undefined,
-  },
-  {
-    testimonial: testimonials[3], // Tom & Linda Hartley
-    video: mainRidgeWoodwork2,
-    poster: undefined as string | undefined,
-  },
+// Craft videos shown independently — NOT paired with testimonials
+const CRAFT_VIDEOS = [
+  { src: mainRidgeWoodwork1, title: "Timber Craftsmanship — Main Ridge" },
+  { src: mainRidgeWoodwork2, title: "Precision Woodwork — Main Ridge" },
 ];
 
-// Featured written testimonials (the rest)
-const FEATURED_WRITTEN = [testimonials[1], testimonials[2], testimonials[4], testimonials[5]];
+// All written testimonials shown in a clean grid
+const FEATURED_TESTIMONIALS = testimonials;
 
 // About page uses the shared PageHeader component
 
@@ -292,8 +284,8 @@ function StorySection() {
               that make a facility truly work for horses and their people.
             </p>
             <p>
-              Today, Peninsula Equine serves the San Francisco Peninsula and surrounding 
-              areas, building facilities that stand as a testament to what's possible when 
+              Today, Peninsula Equine serves the Mornington Peninsula and surrounding regions 
+              of Victoria, building facilities that stand as a testament to what's possible when 
               you combine construction excellence with equestrian insight.
             </p>
           </div>
@@ -351,73 +343,9 @@ function FamilySection() {
   );
 }
 
-function VideoTestimonialCard({ item, index }: { item: typeof VIDEO_TESTIMONIALS[0]; index: number }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  const togglePlay = () => {
-    if (!videoRef.current) return;
-    if (isPlaying) {
-      videoRef.current.pause();
-    } else {
-      videoRef.current.play().catch(() => {});
-    }
-    setIsPlaying(!isPlaying);
-  };
-
-  return (
-    <div className="group rounded-xl overflow-hidden border border-border bg-card card-hover-glow">
-      {/* Video */}
-      <div className="relative aspect-video bg-muted cursor-pointer" onClick={togglePlay}>
-        <video
-          ref={videoRef}
-          className="w-full h-full object-cover"
-          muted
-          playsInline
-          preload="metadata"
-          loop
-          onEnded={() => setIsPlaying(false)}
-        >
-          <source src={item.video} type="video/mp4" />
-        </video>
-        {/* Play/pause overlay */}
-        <div className={`absolute inset-0 flex items-center justify-center bg-primary/30 transition-opacity duration-300 ${
-          isPlaying ? "opacity-0 hover:opacity-100" : "opacity-100"
-        }`}>
-          <div className="w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center shadow-lg transition-transform duration-300 group-hover:scale-110">
-            {isPlaying ? (
-              <Pause className="h-6 w-6 text-accent-foreground" />
-            ) : (
-              <Play className="h-6 w-6 text-accent-foreground ml-1" />
-            )}
-          </div>
-        </div>
-      </div>
-      {/* Quote card */}
-      <div className="p-6">
-        <Quote className="h-5 w-5 text-accent/40 mb-3" />
-        <p className="text-foreground text-sm leading-relaxed italic mb-4 line-clamp-3">
-          "{item.testimonial.quote}"
-        </p>
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="font-serif font-semibold text-foreground text-sm">{item.testimonial.name}</p>
-            <p className="text-xs text-muted-foreground">{item.testimonial.role}</p>
-          </div>
-          <div className="flex gap-0.5">
-            {Array.from({ length: item.testimonial.rating }).map((_, i) => (
-              <Star key={i} className="h-3.5 w-3.5 fill-accent text-accent" />
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function TestimonialsGallerySection() {
+function TestimonialsSection() {
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>();
-  const { containerRef, visibleItems } = useStaggeredAnimation(FEATURED_WRITTEN.length);
+  const { containerRef, visibleItems } = useStaggeredAnimation(FEATURED_TESTIMONIALS.length);
 
   return (
     <section className="section-padding bg-background relative overflow-hidden">
@@ -439,35 +367,28 @@ function TestimonialsGallerySection() {
           </p>
         </div>
 
-        {/* Video testimonials row */}
-        <div className="grid md:grid-cols-2 gap-6 lg:gap-8 mb-12">
-          {VIDEO_TESTIMONIALS.map((item, index) => (
-            <SectionTransition key={item.testimonial.id} variant="fade-up" delay={index * 150}>
-              <VideoTestimonialCard item={item} index={index} />
-            </SectionTransition>
-          ))}
-        </div>
-
-        {/* Written testimonials grid */}
-        <div ref={containerRef} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {FEATURED_WRITTEN.map((t, index) => (
+        {/* Clean testimonials grid — no videos attached */}
+        <div ref={containerRef} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {FEATURED_TESTIMONIALS.map((t, index) => (
             <div
               key={t.id}
-              className={`group p-5 rounded-xl border border-border bg-card card-hover-glow transition-all duration-600 ${
+              className={`group p-6 rounded-xl border border-border bg-card card-hover-glow transition-all duration-600 flex flex-col ${
                 visibleItems[index] ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
               }`}
             >
-              <Quote className="h-4 w-4 text-accent/30 mb-3" />
-              <p className="text-sm text-foreground/80 italic leading-relaxed mb-4 line-clamp-4">
+              <Quote className="h-4 w-4 text-accent/30 mb-3 shrink-0" />
+              <p className="text-sm text-foreground/80 italic leading-relaxed mb-5 flex-1">
                 "{t.quote}"
               </p>
-              <div className="flex items-center gap-1 mb-2">
-                {Array.from({ length: t.rating }).map((_, i) => (
-                  <Star key={i} className="h-3 w-3 fill-accent text-accent" />
-                ))}
+              <div>
+                <div className="flex items-center gap-1 mb-2">
+                  {Array.from({ length: t.rating }).map((_, i) => (
+                    <Star key={i} className="h-3 w-3 fill-accent text-accent" />
+                  ))}
+                </div>
+                <p className="font-serif font-semibold text-foreground text-sm">{t.name}</p>
+                <p className="text-xs text-muted-foreground">{t.role}</p>
               </div>
-              <p className="font-serif font-semibold text-foreground text-sm">{t.name}</p>
-              <p className="text-xs text-muted-foreground">{t.role}</p>
             </div>
           ))}
         </div>
@@ -698,11 +619,10 @@ export default function About() {
       <PhilosophySection />
       <NaturalHorsemanshipSection />
       <ValuesSection />
-      <TestimonialsGallerySection />
-      <FamilySection />
-      <ImageBreak />
       <BlueprintDivider variant="structural" />
       <StorySection />
+      <TestimonialsSection />
+      <FamilySection />
       <AboutFAQSection />
       <InsuranceSafetyCard />
       <CTASection />
