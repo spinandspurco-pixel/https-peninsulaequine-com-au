@@ -157,6 +157,7 @@ export function HeroSection() {
     const clip = clips[idx];
     if (video && clip) {
       video.currentTime = clip.start;
+      video.playbackRate = 0.5; // slo-mo
       video.play().catch(() => {});
     }
   }, [getRef, clips]);
@@ -221,9 +222,9 @@ export function HeroSection() {
         className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out will-change-transform"
         style={{
           opacity: activeIdx === 0 ? 1 : fading && activeIdx === 1 ? 0 : 0,
-          transform: "scale(1.12)",
+          transform: "scale(1.15)",
           transformOrigin: "center center",
-          filter: "contrast(1.04) saturate(1.05)",
+          filter: "contrast(1.08) saturate(1.1) brightness(1.02)",
         }}
         aria-hidden="true"
       >
@@ -237,9 +238,9 @@ export function HeroSection() {
         className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out will-change-transform"
         style={{
           opacity: activeIdx === 1 ? 1 : fading && activeIdx === 0 ? 0 : 0,
-          transform: "scale(1.12)",
+          transform: "scale(1.15)",
           transformOrigin: "center center",
-          filter: "contrast(1.04) saturate(1.05)",
+          filter: "contrast(1.08) saturate(1.1) brightness(1.02)",
         }}
         aria-hidden="true"
       >
