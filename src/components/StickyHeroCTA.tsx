@@ -190,12 +190,12 @@ export function StickyHeroCTA({
                     onClick={() => !isFull && handleQuickSelect(qd.date)}
                     disabled={isFull}
                     className={cn(
-                      "px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 border flex items-center gap-1.5",
+                      "px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 border flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary",
                       isFull
                         ? "opacity-50 cursor-not-allowed bg-primary-foreground/5 text-primary-foreground/40 border-primary-foreground/10"
                         : selectedDate && format(selectedDate, "yyyy-MM-dd") === dateKey
                           ? "bg-accent text-accent-foreground border-accent"
-                          : "bg-primary-foreground/5 text-primary-foreground/70 border-primary-foreground/10 hover:bg-primary-foreground/10 hover:text-primary-foreground"
+                          : "bg-primary-foreground/5 text-primary-foreground border-primary-foreground/10 hover:bg-primary-foreground/10 hover:text-primary-foreground"
                     )}
                   >
                     {badge && (
@@ -215,8 +215,8 @@ export function StickyHeroCTA({
               <button
                 onClick={() => setCalOpen(!calOpen)}
                 className={cn(
-                  "inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 border",
-                  "bg-primary-foreground/5 text-primary-foreground/70 border-primary-foreground/10 hover:bg-primary-foreground/10 hover:text-primary-foreground",
+                  "inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary",
+                  "bg-primary-foreground/5 text-primary-foreground border-primary-foreground/10 hover:bg-primary-foreground/10 hover:text-primary-foreground",
                   calOpen && "bg-primary-foreground/15 text-primary-foreground"
                 )}
                 aria-label="Open calendar"
@@ -256,7 +256,8 @@ export function StickyHeroCTA({
                 "inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium",
                 "bg-accent text-accent-foreground hover:bg-accent/90",
                 "transition-all duration-300 hover:scale-105 hover:shadow-[0_4px_16px_hsl(var(--accent)/0.4)]",
-                "whitespace-nowrap flex-shrink-0"
+                "whitespace-nowrap flex-shrink-0",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
               )}
             >
               <CalendarIcon className="h-4 w-4" />

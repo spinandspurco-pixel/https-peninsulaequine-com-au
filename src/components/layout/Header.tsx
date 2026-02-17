@@ -81,12 +81,12 @@ export function Header() {
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  "text-xs uppercase tracking-[0.15em] transition-colors duration-200 hover:text-[hsl(var(--header-active))]",
+                  "text-xs uppercase tracking-[0.15em] transition-colors duration-200 hover:text-[hsl(var(--header-active))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-sm",
                   location.pathname === item.href
                     ? "text-[hsl(var(--header-active))]"
                     : isScrolled
-                    ? "text-[hsl(var(--header-scrolled-foreground))]/80"
-                    : "text-[hsl(var(--header-foreground))]/80"
+                    ? "text-[hsl(var(--header-scrolled-foreground))]"
+                    : "text-[hsl(var(--header-foreground))]"
                 )}
               >
                 {item.name}
@@ -111,10 +111,12 @@ export function Header() {
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className={cn(
-              "lg:hidden p-2 rounded-md transition-colors",
+              "lg:hidden p-2 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
               isScrolled ? "text-[hsl(var(--header-scrolled-foreground))]" : "text-[hsl(var(--header-foreground))]"
             )}
-            aria-label="Toggle menu"
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-menu"
           >
             {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -123,9 +125,12 @@ export function Header() {
 
       {/* Mobile Menu */}
       <div
+        id="mobile-menu"
+        role="navigation"
+        aria-label="Mobile navigation"
         className={cn(
           "lg:hidden bg-background border-b border-border overflow-hidden transition-all duration-300",
-          isMobileMenuOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
+          isMobileMenuOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0 invisible"
         )}
       >
         <div className="section-container py-6 space-y-1">
