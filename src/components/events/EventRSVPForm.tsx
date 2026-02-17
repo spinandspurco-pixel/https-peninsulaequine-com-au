@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { CheckCircle2, Send, CalendarPlus, ExternalLink, Clock } from "lucide-react";
+import { CheckCircle2, Send, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { z } from "zod";
+import { CalendarSyncButtons } from "@/components/CalendarSyncButtons";
+import type { CalendarEvent } from "@/lib/calendarSync";
 
 const rsvpSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
@@ -29,59 +30,22 @@ interface EventRSVPFormProps {
   eventDescription?: string | null;
 }
 
-// Calendar helpers
-function toICSDate(d: string, time?: string | null) {
-  const datePart = d.replace(/-/g, "");
-  if (time) {
-    const timePart = time.replace(/:/g, "").slice(0, 6).padEnd(6, "0");
-    return `${datePart}T${timePart}`;
-  }
-  return `${datePart}T080000`;
-}
-
-function generateICS(title: string, date: string, time?: string | null, location?: string | null, description?: string | null) {
-  const dtStart = toICSDate(date, time);
-  // Default 2-hour duration
-  const startHour = time ? parseInt(time.split(":")[0], 10) : 8;
-  const endHour = String(startHour + 2).padStart(2, "0");
-  const endDate = date.replace(/-/g, "");
-  const dtEnd = `${endDate}T${endHour}0000`;
-
-  const lines = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//Peninsula Equine//Events//EN",
-    "BEGIN:VEVENT",
-    `DTSTART:${dtStart}`,
-    `DTEND:${dtEnd}`,
-    `SUMMARY:${title}`,
-    `DESCRIPTION:${(description || "").slice(0, 200).replace(/\n/g, "\\n")}`,
-    `LOCATION:${location || ""}`,
-    "STATUS:CONFIRMED",
-    "END:VEVENT",
-    "END:VCALENDAR",
-  ];
-  return lines.join("\r\n");
-}
-
-function downloadICS(title: string, date: string, time?: string | null, location?: string | null, description?: string | null) {
-  const blob = new Blob([generateICS(title, date, time, location, description)], {
-    type: "text/calendar;charset=utf-8",
-  });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${title.replace(/\s+/g, "-").toLowerCase()}.ics`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function googleCalendarUrl(title: string, date: string, time?: string | null, location?: string | null, description?: string | null) {
-  const start = toICSDate(date, time) + "Z";
-  const startHour = time ? parseInt(time.split(":")[0], 10) : 8;
-  const endDate = date.replace(/-/g, "");
-  const end = `${endDate}T${String(startHour + 2).padStart(2, "0")}0000Z`;
-  return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent((description || "").slice(0, 200))}&location=${encodeURIComponent(location || "")}`;
+/** Build a CalendarEvent from RSVP props */
+function toCalendarEvent(
+  title: string,
+  date: string,
+  time?: string | null,
+  location?: string | null,
+  description?: string | null
+): CalendarEvent {
+  return {
+    title,
+    date,
+    startTime: time ?? undefined,
+    durationMinutes: 120,
+    description: description ?? undefined,
+    location: location ?? undefined,
+  };
 }
 
 export function EventRSVPForm({
@@ -221,27 +185,9 @@ export function EventRSVPForm({
         {rsvpStatus === "confirmed" && eventDate && (
           <div className="border-t border-border pt-5 space-y-3">
             <p className="text-sm font-medium text-foreground">Add to your calendar</p>
-            <div className="flex flex-wrap justify-center gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => downloadICS(eventTitle, eventDate, eventTime, eventLocation, eventDescription)}
-                className="text-xs"
-              >
-                <CalendarPlus className="mr-1.5 h-3.5 w-3.5" />
-                Download .ics
-              </Button>
-              <Button variant="outline" size="sm" asChild className="text-xs">
-                <a
-                  href={googleCalendarUrl(eventTitle, eventDate, eventTime, eventLocation, eventDescription)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
-                  Google Calendar
-                </a>
-              </Button>
-            </div>
+            <CalendarSyncButtons
+              event={toCalendarEvent(eventTitle, eventDate, eventTime, eventLocation, eventDescription)}
+            />
             <p className="text-[11px] text-muted-foreground">
               Works with Apple Calendar, Outlook &amp; more.
             </p>
