@@ -188,11 +188,23 @@ function StatsBar({ testimonials }: { testimonials: TestimonialItem[] }) {
 }
 
 function VideoGallerySection({ testimonials }: { testimonials: TestimonialItem[] }) {
-  const videos = useMemo(
+  const allVideos = useMemo(
     () => testimonials.filter((t) => t.mediaType === "video" && t.mediaUrl),
     [testimonials]
   );
+  const [trainerTag, setTrainerTag] = useState("");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const trainerOptions = useMemo(() => {
+    const set = new Set<string>();
+    allVideos.forEach((v) => { if (v.trainer) set.add(v.trainer); });
+    return Array.from(set).sort();
+  }, [allVideos]);
+
+  const videos = useMemo(
+    () => trainerTag ? allVideos.filter((v) => v.trainer === trainerTag) : allVideos,
+    [allVideos, trainerTag]
+  );
 
   const lightboxItems = useMemo(
     () =>
@@ -209,12 +221,12 @@ function VideoGallerySection({ testimonials }: { testimonials: TestimonialItem[]
     return m ? m[1] : null;
   };
 
-  if (videos.length === 0) return null;
+  if (allVideos.length === 0) return null;
 
   return (
     <section className="section-padding bg-card border-y border-border">
       <div className="section-container">
-        <div className="text-center max-w-2xl mx-auto mb-10">
+        <div className="text-center max-w-2xl mx-auto mb-6">
           <div className="w-16 h-0.5 bg-accent mx-auto mb-5" />
           <SectionTransition variant="fade-up">
             <div className="flex items-center justify-center gap-2 mb-2">
@@ -227,67 +239,114 @@ function VideoGallerySection({ testimonials }: { testimonials: TestimonialItem[]
           </SectionTransition>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {videos.map((video, i) => {
-            const ytId = getYouTubeId(video.mediaUrl!);
-            const thumbnail = ytId
-              ? `https://img.youtube.com/vi/${ytId}/mqdefault.jpg`
-              : null;
-
-            return (
-              <SectionTransition key={video.id} variant="fade-up" delay={i * 80}>
+        {/* Trainer tag filter */}
+        {trainerOptions.length > 0 && (
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+            <button
+              onClick={() => setTrainerTag("")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                !trainerTag
+                  ? "bg-accent text-accent-foreground border-accent"
+                  : "bg-transparent text-muted-foreground border-border hover:border-accent/40 hover:text-foreground"
+              }`}
+            >
+              All Videos
+            </button>
+            {trainerOptions.map((name) => {
+              const profile = TRAINER_PROFILES[name];
+              return (
                 <button
-                  onClick={() => setLightboxIndex(i)}
-                  className="group relative w-full aspect-video rounded-xl overflow-hidden border border-border bg-muted hover:border-accent/40 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-                  aria-label={`Play video testimonial from ${video.name}`}
+                  key={name}
+                  onClick={() => setTrainerTag(trainerTag === name ? "" : name)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                    trainerTag === name
+                      ? "bg-accent text-accent-foreground border-accent"
+                      : "bg-transparent text-muted-foreground border-border hover:border-accent/40 hover:text-foreground"
+                  }`}
                 >
-                  {thumbnail ? (
-                    <img
-                      src={thumbnail}
-                      alt=""
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-primary/80" />
+                  {profile && (
+                    <img src={profile.portrait} alt={name} className="w-5 h-5 rounded-full object-cover" />
                   )}
+                  {name}
+                </button>
+              );
+            })}
+          </div>
+        )}
 
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
+        {videos.length === 0 ? (
+          <div className="text-center py-10">
+            <p className="text-muted-foreground text-sm">No videos for this trainer yet.</p>
+            <button onClick={() => setTrainerTag("")} className="text-accent text-sm mt-2 hover:underline">Show all</button>
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {videos.map((video, i) => {
+              const ytId = getYouTubeId(video.mediaUrl!);
+              const thumbnail = ytId
+                ? `https://img.youtube.com/vi/${ytId}/mqdefault.jpg`
+                : null;
+              const profile = video.trainer ? TRAINER_PROFILES[video.trainer] : undefined;
 
-                  {/* Play button */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-14 h-14 rounded-full bg-accent/90 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
-                      <Play className="h-6 w-6 text-accent-foreground ml-0.5" />
-                    </div>
-                  </div>
-
-                  {/* Expand icon */}
-                  <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Expand className="h-4 w-4 text-white" />
-                  </div>
-
-                  {/* Client info */}
-                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
-                    <p className="text-white text-sm font-semibold">{video.name}</p>
-                    {video.role && (
-                      <p className="text-white/70 text-xs mt-0.5">{video.role}</p>
+              return (
+                <SectionTransition key={video.id} variant="fade-up" delay={i * 80}>
+                  <button
+                    onClick={() => setLightboxIndex(i)}
+                    className="group relative w-full aspect-video rounded-xl overflow-hidden border border-border bg-muted hover:border-accent/40 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                    aria-label={`Play video testimonial from ${video.name}`}
+                  >
+                    {thumbnail ? (
+                      <img
+                        src={thumbnail}
+                        alt=""
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-primary/80" />
                     )}
-                    {video.serviceTags.length > 0 && (
-                      <div className="flex gap-1 mt-1.5">
-                        {video.serviceTags.slice(0, 2).map((tag) => (
-                          <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-white/15 text-white/80">
-                            {SERVICE_FILTERS.find((s) => s.id === tag)?.label ?? tag}
-                          </span>
-                        ))}
+
+                    <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
+
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-14 h-14 rounded-full bg-accent/90 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                        <Play className="h-6 w-6 text-accent-foreground ml-0.5" />
+                      </div>
+                    </div>
+
+                    <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Expand className="h-4 w-4 text-white" />
+                    </div>
+
+                    {/* Trainer portrait tag */}
+                    {profile && (
+                      <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm rounded-full pl-1 pr-2.5 py-1">
+                        <img src={profile.portrait} alt={video.trainer!} className="w-5 h-5 rounded-full object-cover" />
+                        <span className="text-[10px] text-white font-medium">{video.trainer}</span>
                       </div>
                     )}
-                  </div>
-                </button>
-              </SectionTransition>
-            );
-          })}
-        </div>
+
+                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+                      <p className="text-white text-sm font-semibold">{video.name}</p>
+                      {video.role && (
+                        <p className="text-white/70 text-xs mt-0.5">{video.role}</p>
+                      )}
+                      {video.serviceTags.length > 0 && (
+                        <div className="flex gap-1 mt-1.5">
+                          {video.serviceTags.slice(0, 2).map((tag) => (
+                            <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-white/15 text-white/80">
+                              {SERVICE_FILTERS.find((s) => s.id === tag)?.label ?? tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                </SectionTransition>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {lightboxIndex !== null && (
