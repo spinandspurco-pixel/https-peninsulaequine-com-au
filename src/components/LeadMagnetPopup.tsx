@@ -213,13 +213,18 @@ export function LeadMagnetPopup() {
                 Check Your Inbox!
               </h3>
               <p className="text-sm text-muted-foreground mb-6 max-w-xs mx-auto">
-                Your free Rider Prep Guide is on its way. In the meantime, why not book your first lesson?
+                Your free Rider Prep Guide is on its way. Ready to take the next step?
               </p>
               <Button
-                onClick={dismiss}
+                onClick={() => {
+                  dismiss();
+                  setTimeout(() => {
+                    document.getElementById("free-quote")?.scrollIntoView({ behavior: "smooth" });
+                  }, 350);
+                }}
                 className="bg-accent hover:bg-accent/90 text-accent-foreground"
               >
-                Browse Lessons
+                Schedule a Free Consult
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
