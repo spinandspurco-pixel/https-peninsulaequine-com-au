@@ -389,14 +389,14 @@ export default function Services() {
         <BlueprintScene preset="facility" />
 
         <div className="section-container relative z-10">
-          <div className="text-center max-w-2xl mx-auto mb-8">
-            <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-3">
+          <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
+            <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-2 sm:mb-3">
               What We Build
             </p>
-            <h2 className="heading-section text-foreground mb-3">
+            <h2 className="heading-section text-foreground mb-2 sm:mb-3">
               Investment Guide
             </h2>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-body">
               Every project is custom-quoted after an on-site consultation. Below are starting points to help you plan.
             </p>
           </div>

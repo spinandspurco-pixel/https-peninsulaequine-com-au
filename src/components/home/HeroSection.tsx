@@ -67,13 +67,19 @@ export function HeroSection() {
           className="w-20 h-20 sm:w-32 sm:h-32 mx-auto mb-6 sm:mb-8 drop-shadow-[0_4px_30px_hsl(var(--accent)/0.3)]"
         />
         <div className="w-16 h-px mx-auto mb-5 sm:mb-8 bg-accent" />
-        <h1 className="font-sans text-2xl sm:text-3xl md:text-4xl font-semibold tracking-[0.25em] uppercase text-primary-foreground leading-[1.3] mb-4">
+        <h1 className="font-sans tracking-[0.25em] uppercase text-primary-foreground leading-[1.3] mb-4"
+            style={{ fontSize: 'clamp(1.5rem, 1rem + 1.6vw, 2.25rem)' }}
+        >
           Peninsula <span className="text-accent">Equine</span>
         </h1>
-        <p className="font-sans text-xs sm:text-sm tracking-[0.4em] uppercase text-primary-foreground/50 mb-3">
+        <p className="font-sans tracking-[0.4em] uppercase text-primary-foreground/50 mb-3"
+           style={{ fontSize: 'clamp(0.7rem, 0.6rem + 0.3vw, 0.875rem)' }}
+        >
           {copy.headline}
         </p>
-        <p className="text-sm sm:text-base text-primary-foreground/70 max-w-lg mx-auto mb-6 sm:mb-8 leading-relaxed">
+        <p className="text-primary-foreground/70 max-w-lg mx-auto mb-6 sm:mb-8 leading-relaxed"
+           style={{ fontSize: 'clamp(0.875rem, 0.8rem + 0.2vw, 1rem)' }}
+        >
           {copy.sub}
         </p>
 
