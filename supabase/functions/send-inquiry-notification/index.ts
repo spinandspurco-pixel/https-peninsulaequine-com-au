@@ -167,85 +167,162 @@ const handler = async (req: Request): Promise<Response> => {
       </html>
     `;
 
+    // Tailored next-steps based on services requested
+    const serviceLabels: Record<string, string> = {
+      "arena-construction": "Arena Construction",
+      "barn-construction": "Barn & Stable Construction",
+      "full-facility": "Full Facility Design & Build",
+      "riding-lessons": "Riding Lessons",
+      "clinics-events": "Clinics & Events",
+      "fencing": "Fencing & Paddocks",
+      "round-pens": "Round Pens & Yards",
+      "infrastructure": "Site Infrastructure",
+      "renovations": "Facility Renovations",
+      "general": "General Inquiry",
+    };
+
+    const formattedServices = (inquiry.services || ["general"]).map(
+      (s: string) => serviceLabels[s] || s.replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase())
+    );
+
+    // Build tailored next-steps section based on service category
+    const isConstruction = (inquiry.services || []).some((s: string) =>
+      ["arena-construction", "barn-construction", "full-facility", "infrastructure", "fencing", "round-pens", "renovations"].includes(s)
+    );
+    const isLessons = (inquiry.services || []).some((s: string) =>
+      ["riding-lessons", "clinics-events"].includes(s)
+    );
+
+    let nextStepsHtml = "";
+    if (isConstruction && isLessons) {
+      nextStepsHtml = `
+        <p style="font-weight: 600; margin-bottom: 8px;">Here's what happens next:</p>
+        <ol style="padding-left: 20px; color: #555; line-height: 1.9;">
+          <li><strong>Project review</strong> — Ciro will personally assess your construction requirements and site needs</li>
+          <li><strong>Lesson matching</strong> — Glenn will review your riding goals and experience level to find the right program</li>
+          <li><strong>Tailored proposal</strong> — We'll prepare a detailed quote and lesson schedule within 1–2 business days</li>
+          <li><strong>Site visit</strong> — For builds, we'll arrange a property walkthrough at your convenience</li>
+        </ol>
+      `;
+    } else if (isConstruction) {
+      nextStepsHtml = `
+        <p style="font-weight: 600; margin-bottom: 8px;">Here's what happens next:</p>
+        <ol style="padding-left: 20px; color: #555; line-height: 1.9;">
+          <li><strong>Project review</strong> — Ciro will personally assess your requirements, site conditions, and vision</li>
+          <li><strong>Site visit</strong> — We'll arrange a property walkthrough to discuss layout, drainage, and logistics</li>
+          <li><strong>Custom proposal</strong> — You'll receive a detailed scope of work and quote within 3–5 business days</li>
+          <li><strong>Build timeline</strong> — Once approved, we'll lock in your start date and project milestones</li>
+        </ol>
+      `;
+    } else if (isLessons) {
+      nextStepsHtml = `
+        <p style="font-weight: 600; margin-bottom: 8px;">Here's what happens next:</p>
+        <ol style="padding-left: 20px; color: #555; line-height: 1.9;">
+          <li><strong>Goal assessment</strong> — Glenn will review your riding experience and goals</li>
+          <li><strong>Program recommendation</strong> — We'll suggest the right lesson tier (Foundation, Development, or Performance)</li>
+          <li><strong>Schedule your first lesson</strong> — We'll send available times within 1–2 business days</li>
+          <li><strong>Pre-lesson checklist</strong> — You'll get everything you need to prepare for day one</li>
+        </ol>
+      `;
+    } else {
+      nextStepsHtml = `
+        <p style="font-weight: 600; margin-bottom: 8px;">Here's what happens next:</p>
+        <ol style="padding-left: 20px; color: #555; line-height: 1.9;">
+          <li><strong>Review</strong> — A member of our team will review your inquiry in detail</li>
+          <li><strong>Personal follow-up</strong> — We'll reach out within 1–2 business days to discuss your project</li>
+          <li><strong>Tailored recommendation</strong> — Based on our conversation, we'll outline the best path forward</li>
+        </ol>
+      `;
+    }
+
+    // Tailored CTA based on service type
+    const ctaUrl = isLessons
+      ? `https://peninsulaequine.lovable.app/book-lesson`
+      : `https://peninsulaequine.lovable.app/schedule?services=${encodeURIComponent((inquiry.services || []).join(","))}&name=${encodeURIComponent(inquiry.name || "")}&email=${encodeURIComponent(inquiry.email || "")}`;
+    const ctaText = isLessons ? "Browse Lesson Programs" : "Schedule a Follow-Up Call";
+    const ctaEmoji = isLessons ? "🐴" : "📅";
+
     // Build the confirmation email HTML for the submitter
     const confirmationHtml = `
       <!DOCTYPE html>
       <html>
       <head>
         <style>
-          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: #2c3e50; color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
-          .highlight { background: #fff; padding: 15px; border-left: 4px solid #c9a227; margin: 15px 0; }
-          .services-list { margin: 0; padding-left: 20px; }
-          .services-list li { margin-bottom: 5px; }
-          .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
-          .cta { background: #c9a227; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin-top: 10px; font-weight: 600; }
-          .contact-box { background: #fff; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
-          .contact-box a { color: #c9a227; text-decoration: none; font-weight: 600; }
-          .social-links { margin-top: 15px; }
-          .social-links a { color: #666; text-decoration: none; margin: 0 10px; }
+          body { font-family: 'Georgia', serif; line-height: 1.6; color: #2d2418; }
+          .container { max-width: 600px; margin: 0 auto; }
         </style>
       </head>
       <body>
         <div class="container">
-          <div class="header">
-            <h1 style="margin: 0; font-size: 24px;">Thank You for Your Inquiry</h1>
-            <p style="margin: 10px 0 0 0; opacity: 0.9;">Peninsula Equine</p>
+          <div style="background: #2d2418; padding: 28px; text-align: center;">
+            <h1 style="color: #f5f0e8; margin: 0; font-size: 22px; font-family: Georgia, serif;">Peninsula Equine</h1>
+            <p style="color: #c9a227; margin: 6px 0 0; font-size: 12px; letter-spacing: 3px; text-transform: uppercase;">Inquiry Received ✓</p>
           </div>
           
-          <div class="content">
-            <p>Dear ${inquiry.name},</p>
+          <div style="padding: 32px 24px; background: #faf8f4;">
+            <p style="font-size: 16px;">Hi ${inquiry.name},</p>
             
-            <p>Thank you for reaching out to Peninsula Equine! We've received your inquiry and are excited to learn more about your project.</p>
+            <p>Thank you for reaching out to Peninsula Equine. We're glad you're considering us for your equestrian ${isConstruction ? "project" : isLessons ? "journey" : "needs"} — you're in great hands.</p>
             
-            <div class="highlight">
-              <strong>Services you're interested in:</strong>
-              <ul class="services-list">
-                ${inquiry.services?.map(s => `<li>${s}</li>`).join("") || "<li>General inquiry</li>"}
-              </ul>
-            </div>
-            
-            <p><strong>What happens next?</strong></p>
-            <p>A member of our team will review your inquiry and get back to you within 1-2 business days. We'll discuss your project in detail and provide you with a personalized quote.</p>
-            
-            <div style="text-align: center; margin: 25px 0;">
-              <a href="https://peninsulaequine.lovable.app/schedule?services=${encodeURIComponent((inquiry.services || []).join(","))}&name=${encodeURIComponent(inquiry.name || "")}&email=${encodeURIComponent(inquiry.email || "")}" class="cta" style="font-size: 16px; padding: 14px 32px;">📅 Schedule Your Follow-Up Call</a>
-              <p style="margin-top: 10px; font-size: 13px; color: #888;">Pick a date & time that works for you — pre-filled with your details</p>
+            <div style="background: white; border: 1px solid #e8e2d6; border-radius: 8px; padding: 20px; margin: 20px 0;">
+              <p style="margin: 0 0 10px; font-weight: 600; color: #2d2418; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Your Inquiry Summary</p>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #888; width: 130px; font-size: 14px;">Services</td>
+                  <td style="padding: 8px 0; color: #2d2418; font-size: 14px;">${formattedServices.join(", ")}</td>
+                </tr>
+                ${inquiry.budgetRange ? `
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #888; font-size: 14px;">Budget</td>
+                  <td style="padding: 8px 0; color: #2d2418; font-size: 14px;">${budgetDisplay}</td>
+                </tr>
+                ` : ""}
+                ${inquiry.experienceLevel ? `
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #888; font-size: 14px;">Experience</td>
+                  <td style="padding: 8px 0; color: #2d2418; font-size: 14px;">${inquiry.experienceLevel.replace(/\b\w/g, (c: string) => c.toUpperCase())}</td>
+                </tr>
+                ` : ""}
+                ${inquiry.horseName ? `
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #888; font-size: 14px;">Horse</td>
+                  <td style="padding: 8px 0; color: #2d2418; font-size: 14px;">${inquiry.horseName}${inquiry.horseBreed ? ` (${inquiry.horseBreed})` : ""}</td>
+                </tr>
+                ` : ""}
+              </table>
             </div>
 
-            <div class="contact-box">
-              <p style="margin: 0 0 10px 0;"><strong>Need to reach us sooner?</strong></p>
-              <p style="margin: 0;">
-                📞 Call us: <a href="tel:+61418585489">0418 585 489</a>
-              </p>
-              <p style="margin: 10px 0 0 0;">
-                📧 Email: <a href="mailto:info@peninsulaequine.com.au">info@peninsulaequine.com.au</a>
+            <div style="background: white; border: 1px solid #e8e2d6; border-radius: 8px; padding: 20px; margin: 20px 0;">
+              ${nextStepsHtml}
+            </div>
+
+            <div style="text-align: center; margin: 28px 0;">
+              <a href="${ctaUrl}" style="background: #c9a227; color: white; padding: 14px 32px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600; font-size: 15px;">${ctaEmoji} ${ctaText}</a>
+            </div>
+
+            <div style="background: #f0ede6; border-radius: 8px; padding: 20px; margin: 24px 0; text-align: center;">
+              <p style="margin: 0 0 10px; font-weight: 600; color: #2d2418; font-size: 14px;">Need to reach us sooner?</p>
+              <p style="margin: 0; font-size: 14px; color: #555;">
+                📞 <a href="tel:+61418585489" style="color: #c9a227; text-decoration: none;">0418 585 489</a>
+                &nbsp;&nbsp;·&nbsp;&nbsp;
+                📧 <a href="mailto:info@peninsulaequine.com.au" style="color: #c9a227; text-decoration: none;">info@peninsulaequine.com.au</a>
               </p>
             </div>
-            
-            <p>In the meantime, feel free to explore our <a href="https://peninsulaequine.lovable.app/gallery" style="color: #c9a227;">gallery</a> to see examples of our recent work.</p>
-            
-            <p style="margin-top: 25px;">
-              We look forward to working with you!
-            </p>
-            
-            <p>
-              Warm regards,<br>
-              <strong>Ciro & The Peninsula Equine Team</strong><br>
-              <span style="color: #666; font-size: 14px;">Half Moon Bay, CA</span>
+
+            <p style="font-size: 14px; color: #555;">In the meantime, explore our <a href="https://peninsulaequine.lovable.app/gallery" style="color: #c9a227;">project gallery</a> to see recent builds and transformations.</p>
+
+            <p style="margin-top: 24px;">
+              We look forward to working with you!<br/>
+              <strong>— Ciro & The Peninsula Equine Team</strong>
             </p>
           </div>
           
-          <div class="footer">
-            <p><strong>Peninsula Equine</strong> | Premium Equine Facilities</p>
-            <p>1234 Ranch Road, Half Moon Bay, CA 94019</p>
-            <div class="social-links">
-              <a href="https://instagram.com/peninsulaequine">Instagram</a> •
-              <a href="https://facebook.com/peninsulaequine">Facebook</a>
-            </div>
-            <p style="margin-top: 15px; font-size: 11px; color: #999;">This is an automated confirmation of your inquiry submission.</p>
+          <div style="background: #2d2418; padding: 16px; text-align: center;">
+            <p style="color: #8a7e6a; margin: 0; font-size: 11px;">Peninsula Equine · Mornington Peninsula, VIC</p>
+            <p style="color: #6a6050; margin: 6px 0 0; font-size: 11px;">
+              <a href="https://instagram.com/peninsulaequine" style="color: #8a7e6a; text-decoration: none;">Instagram</a> ·
+              <a href="https://facebook.com/peninsulaequine" style="color: #8a7e6a; text-decoration: none;">Facebook</a>
+            </p>
           </div>
         </div>
       </body>
