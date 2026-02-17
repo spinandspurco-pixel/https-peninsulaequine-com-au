@@ -1,94 +1,83 @@
 
 
-# Lessons Booking Flow with Stripe Checkout
+# Private Attachments for Inquiries with Signed URLs
 
-## Overview
+## Problem
+The `inquiry-attachments` storage bucket is currently **public**, meaning anyone with the URL can access uploaded files (site photos, sketches, PDFs). These files may contain sensitive client information and should only be accessible to admins.
 
-Build a complete lesson booking wizard that connects real-time slot availability to Stripe Checkout for 50% deposit payments. This requires enabling Stripe (which will prompt you for your API key), creating a checkout edge function, a new database table for lesson bookings, and updating the BookLesson page with a proper multi-step wizard.
+## Solution
 
-## Step 1 -- Enable Stripe
+### 1. Make the storage bucket private
+- Run a migration to set the `inquiry-attachments` bucket to `public = false`
+- Add RLS policies on `storage.objects` for the bucket:
+  - **INSERT (anon/authenticated)**: Allow anyone to upload (needed for the inquiry form)
+  - **SELECT (admin only)**: Only admins can download/view files
+  - **DELETE (admin only)**: Only admins can delete files
 
-Before any code is written, we need to connect Stripe to the project. You will be prompted to enter your **Stripe restricted API key** (starts with `rk_live_` or `rk_test_`). You can get this from your Stripe Dashboard under Developers > API Keys.
+### 2. Create a signed-URL edge function
+Since the bucket will be private, the client can no longer use `getPublicUrl()`. Create an edge function `get-attachment-url` that:
+- Accepts a file path (or array of paths)
+- Validates the caller is an authenticated admin using `has_role()`
+- Returns time-limited signed URLs (e.g., 1-hour expiry) using the Supabase service role client
+- Returns 403 for non-admin users
 
-This is a one-time setup that stores the key securely as a backend secret.
+### 3. Update FileUploadZone to store paths instead of public URLs
+- After uploading, store just the **storage path** (e.g., `abc123.jpg`) in `attachment_urls` instead of the full public URL
+- The upload itself still works for anonymous users via the INSERT policy
 
-## Step 2 -- Database: `lesson_bookings` Table
+### 4. Update InquiryForm to use paths
+- The `InquiryForm.tsx` already maps `attachments.map(a => a.url)` into `attachment_urls` -- this will now store paths instead of full URLs
 
-Create a new table to track confirmed bookings tied to Stripe sessions:
+### 5. Add admin attachment viewer
+- Create a small helper hook `useSignedAttachmentUrls` that takes an array of paths, calls the edge function, and returns signed URLs
+- Use this hook wherever admins view inquiry details (the admin pages)
 
-| Column | Type | Notes |
-|--------|------|-------|
-| id | uuid (PK) | Auto-generated |
-| slot_id | uuid (FK -> lesson_slots) | Which slot was booked |
-| client_name | text | |
-| client_email | text | |
-| client_phone | text (nullable) | |
-| horse_name | text (nullable) | |
-| experience_level | text | beginner/intermediate/advanced |
-| lesson_goals | text (nullable) | |
-| stripe_session_id | text | Stripe Checkout session ID |
-| payment_status | text | pending / paid / failed / refunded |
-| deposit_amount_cents | integer | 50% of lesson price in cents |
-| full_price_cents | integer | Full lesson price in cents |
-| status | text | pending / confirmed / cancelled |
-| created_at | timestamptz | Default now() |
-
-RLS: Public insert (for the edge function via service role), public select filtered by email for confirmation lookups.
-
-Also add a trigger to increment `lesson_slots.current_bookings` when a booking is confirmed.
-
-## Step 3 -- Edge Function: `create-lesson-checkout`
-
-A new backend function that:
-
-1. Receives: `slot_id`, `lesson_type`, `client_name`, `client_email`, `client_phone`, `horse_name`, `experience_level`, `lesson_goals`
-2. Validates the slot still has availability (queries `lesson_slots`)
-3. Calculates 50% deposit based on lesson type:
-   - Foundation: $95 x 50% = $47.50 -> 4750 cents
-   - Development: $120 x 50% = $60.00 -> 6000 cents
-   - Performance: $150 x 50% = $75.00 -> 7500 cents
-4. Creates a Stripe Checkout Session with the deposit amount
-5. Inserts a `lesson_bookings` row with status "pending"
-6. Returns the Stripe Checkout URL
-
-## Step 4 -- Edge Function: `stripe-lesson-webhook`
-
-Handles Stripe `checkout.session.completed` events:
-
-1. Verifies the webhook signature
-2. Updates `lesson_bookings.payment_status` to "paid" and `status` to "confirmed"
-3. Increments `lesson_slots.current_bookings`
-4. Triggers the existing `send-booking-confirmation` function to email the client
-
-## Step 5 -- Rewrite BookLesson Page as Multi-Step Wizard
-
-Replace the current 2-step inquiry form with a 4-step guided flow:
-
-```text
-+------------------+    +------------------+    +------------------+    +------------------+
-| 1. Select Lesson | -> | 2. Pick Slot     | -> | 3. Your Details  | -> | 4. Pay Deposit   |
-| (type + goals)   |    | (calendar + time)|    | (name, email...) |    | (Stripe redirect)|
-+------------------+    +------------------+    +------------------+    +------------------+
-```
-
-**Step 1 - Lesson Selection**: Keep the existing program level cards (Foundation/Development/Performance) with radio selection, horse name, and goals fields.
-
-**Step 2 - Slot Selection**: Integrate the existing `LessonAvailabilityCalendar` component inline. User picks a date, then selects a specific time slot. Only slots matching the selected lesson type (or "lesson" type) are shown.
-
-**Step 3 - Your Details**: Name, email, phone, additional notes. Shows a summary card of selected lesson + slot + deposit amount.
-
-**Step 4 - Review and Pay**: Summary of everything, deposit breakdown (50% of full price), then a "Pay Deposit" button that calls the edge function and redirects to Stripe Checkout.
-
-## Step 6 -- Success/Cancel Pages
-
-- **Success**: After Stripe payment, redirect to `/book-lesson?success=true&session_id=xxx`. Show a confirmation with next steps (same pattern as current success state but enriched with payment confirmation).
-- **Cancel**: Redirect to `/book-lesson?cancelled=true`. Show a message allowing them to retry.
+---
 
 ## Technical Details
 
-- **Price mapping** is hardcoded in both the frontend and edge function (Foundation=$95, Development=$120, Performance=$150) to prevent tampering
-- **Slot availability** is checked server-side in the edge function before creating the checkout session to prevent race conditions
-- The existing `LessonAvailabilityCalendar` component will be refactored slightly to accept an `onSelectSlot` callback prop so it can be embedded in the wizard
-- All existing functionality (prep checklist, FAQs, deposit policy sections) remains unchanged below the booking form
-- The `InlineBookingForm` on the Lessons page will be updated to link to the new wizard flow
+### Migration SQL
+```sql
+-- Make bucket private
+UPDATE storage.buckets SET public = false WHERE id = 'inquiry-attachments';
+
+-- Allow anyone to upload files
+CREATE POLICY "Anyone can upload inquiry attachments"
+  ON storage.objects FOR INSERT
+  WITH CHECK (bucket_id = 'inquiry-attachments');
+
+-- Only admins can read files
+CREATE POLICY "Admins can read inquiry attachments"
+  ON storage.objects FOR SELECT
+  USING (
+    bucket_id = 'inquiry-attachments'
+    AND has_role(auth.uid(), 'admin'::app_role)
+  );
+
+-- Only admins can delete files
+CREATE POLICY "Admins can delete inquiry attachments"
+  ON storage.objects FOR DELETE
+  USING (
+    bucket_id = 'inquiry-attachments'
+    AND has_role(auth.uid(), 'admin'::app_role)
+  );
+```
+
+### Edge Function: `get-attachment-url`
+- Accepts `{ paths: string[] }` in the request body
+- Uses service role Supabase client to call `storage.from('inquiry-attachments').createSignedUrls(paths, 3600)`
+- Returns the signed URLs array
+- Validates JWT and checks admin role before proceeding
+
+### FileUploadZone Changes
+- Replace `getPublicUrl(path)` with storing just the `path` string directly
+- The `url` field in `UploadedFile` will now contain the storage path (not a full URL)
+- Thumbnail previews during upload can use a temporary object URL (`URL.createObjectURL(file)`) instead
+
+### Files Modified
+1. **New migration** -- bucket privacy + storage RLS policies
+2. **New file**: `supabase/functions/get-attachment-url/index.ts` -- signed URL generator
+3. **Edit**: `src/components/FileUploadZone.tsx` -- store path instead of public URL, use object URLs for preview
+4. **New file**: `src/hooks/useSignedAttachmentUrls.ts` -- admin hook to resolve paths to signed URLs
+5. **Edit**: `src/components/InquiryForm.tsx` -- minor: `attachment_urls` now stores paths (no functional change needed since it already maps `a.url`)
 
