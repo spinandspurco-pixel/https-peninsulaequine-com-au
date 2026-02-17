@@ -11,10 +11,10 @@ const quickLinks = [
 ];
 
 const capabilities = [
-  { icon: Fence, title: "Gates & Panels", desc: "Swing gates, sliding gates & modular stable panels — sized to your opening, not off the shelf." },
-  { icon: Wrench, title: "Steel Fixtures", desc: "Tie-up rails, saddle racks, wash-bay fittings — designed for daily punishment, not weekend use." },
+  { icon: Fence, title: "Gates & Panels", desc: "Swing gates, sliding gates & modular stable panels — precision-sized to your opening, built heavy-gauge to last decades." },
+  { icon: Wrench, title: "Steel Fixtures", desc: "Tie-up rails, saddle racks, wash-bay fittings — crafted for professional-grade durability and everyday reliability." },
   { icon: Sparkles, title: "Decorative Metalwork", desc: "Laser-cut property signs, ornamental brackets & bespoke embellishments that say 'this is serious horse country'." },
-  { icon: Building2, title: "Structural Steel", desc: "I-beam brackets, arena perimeter fencing & load-bearing fabrications — engineered, not guessed." },
+  { icon: Building2, title: "Structural Steel", desc: "I-beam brackets, arena perimeter fencing & load-bearing fabrications — engineered, certified, and built to spec." },
 ];
 
 export default function Forge() {
@@ -27,15 +27,16 @@ export default function Forge() {
       {/* Hero */}
       <section
         ref={heroAnim.ref}
-        className="relative pt-32 pb-24 md:pt-40 md:pb-32 bg-primary text-primary-foreground overflow-hidden"
+        className="relative pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden"
+        style={{ background: "linear-gradient(to bottom, hsl(var(--primary) / 0.70), hsl(var(--primary) / 0.95))" }}
       >
         {/* Diagonal hatch */}
         <div className="absolute inset-0 opacity-[0.04]" style={{
-          backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 18px, currentColor 18px, currentColor 19px)",
+          backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 18px, hsl(var(--primary-foreground)) 18px, hsl(var(--primary-foreground)) 19px)",
         }} />
         {/* Horizontal blueprint lines */}
         <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 60px, currentColor 60px, currentColor 61px)",
+          backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 60px, hsl(var(--primary-foreground)) 60px, hsl(var(--primary-foreground)) 61px)",
         }} />
 
         <div className={`section-container relative z-10 text-center max-w-3xl mx-auto transition-all duration-700 ${
@@ -47,7 +48,7 @@ export default function Forge() {
             <span className="h-px w-10 bg-accent/50" />
           </div>
 
-          <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl mb-4 leading-[1.05]">
+          <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl mb-4 leading-[1.05] text-primary-foreground drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]">
             The Forge{" "}
             <span className="text-accent">at P.E.</span>
           </h1>
@@ -56,7 +57,7 @@ export default function Forge() {
             Steel With Soul · Forged by Horsemen
           </p>
 
-          <p className="text-primary-foreground/70 text-lg md:text-xl mb-10 max-w-xl mx-auto font-light leading-relaxed">
+          <p className="text-primary-foreground/80 text-lg md:text-xl mb-10 max-w-xl mx-auto font-light leading-relaxed drop-shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
             We don't just build barns — we bend steel to your will. Every gate, panel, and fixture is
             custom-fabricated by people who know the difference between a paddock latch and a fashion statement.
           </p>
@@ -136,10 +137,11 @@ export default function Forge() {
       {/* Bottom CTA */}
       <section
         ref={ctaAnim.ref}
-        className="relative py-20 bg-primary text-primary-foreground overflow-hidden"
+        className="relative py-20 text-primary-foreground overflow-hidden"
+        style={{ background: "linear-gradient(to bottom, hsl(var(--primary) / 0.75), hsl(var(--primary) / 0.95))" }}
       >
         <div className="absolute inset-0 opacity-[0.05]" style={{
-          backgroundImage: "repeating-linear-gradient(135deg, transparent, transparent 20px, currentColor 20px, currentColor 21px)",
+          backgroundImage: "repeating-linear-gradient(135deg, transparent, transparent 20px, hsl(var(--primary-foreground)) 20px, hsl(var(--primary-foreground)) 21px)",
         }} />
         <div className={`section-container relative z-10 text-center max-w-2xl mx-auto transition-all duration-700 ${
           ctaAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
@@ -148,7 +150,7 @@ export default function Forge() {
           <h2 className="font-serif text-3xl md:text-4xl mb-4">
             Need Something <span className="text-accent">Bespoke?</span>
           </h2>
-          <p className="text-primary-foreground/70 mb-8 text-lg">
+          <p className="text-primary-foreground/80 mb-8 text-lg drop-shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
             Send us your specs — no job too big, no detail too small. We'll quote it, forge it, and deliver it to your gate.
           </p>
           <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-wider">
