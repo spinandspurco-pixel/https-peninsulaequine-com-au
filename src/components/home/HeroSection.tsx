@@ -3,14 +3,47 @@ import { ArrowRight, ChevronDown, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BlueprintScene } from "@/components/BlueprintScene";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
+import { useABTest } from "@/hooks/useABTest";
 
 import heroVideo from "@/assets/videos/main-ridge-woodwork-1.mp4";
 import peLogo from "@/assets/pe-logo-new.png";
 
+// ── A/B test copy variants ──────────────────────────────────
+
+const HERO_COPY: Record<string, { headline: string; sub: string; cta: string }> = {
+  control: {
+    headline: "From Dirt to Dynasty",
+    sub: "World-class arenas, barns & facilities — designed by a horseman, built to last.",
+    cta: "Get a Free Quote",
+  },
+  urgency: {
+    headline: "Your Dream Facility Starts Here",
+    sub: "Limited build slots available — secure your project timeline today.",
+    cta: "Claim Your Free Quote",
+  },
+  social_proof: {
+    headline: "Trusted by 200+ Horse Owners",
+    sub: "Australia's leading equine facility builder — see why owners choose Peninsula Equine.",
+    cta: "Start Your Free Quote",
+  },
+};
+
 export function HeroSection() {
+  const { variant, trackStep } = useABTest({
+    testName: "hero_cta_2026",
+    variants: ["control", "urgency", "social_proof"],
+  });
+
+  const copy = HERO_COPY[variant] || HERO_COPY.control;
+
   const handleQuoteClick = () => {
-    trackCtaClick("hero_get_quote");
+    trackCtaClick("hero_get_quote", { variant });
+    trackStep("click", { cta: copy.cta });
     document.getElementById("free-quote")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleViewWorkClick = () => {
+    trackStep("engage", { action: "view_work" });
   };
 
   return (
@@ -38,10 +71,10 @@ export function HeroSection() {
           Peninsula <span className="text-accent">Equine</span>
         </h1>
         <p className="font-sans text-xs sm:text-sm tracking-[0.4em] uppercase text-primary-foreground/50 mb-3">
-          From Dirt to Dynasty
+          {copy.headline}
         </p>
         <p className="text-sm sm:text-base text-primary-foreground/70 max-w-lg mx-auto mb-8 leading-relaxed">
-          World-class arenas, barns &amp; facilities — designed by a horseman, built to last.
+          {copy.sub}
         </p>
 
         {/* Primary CTA cluster */}
@@ -52,7 +85,7 @@ export function HeroSection() {
             className="text-sm px-10"
             onClick={handleQuoteClick}
           >
-            Get a Free Quote
+            {copy.cta}
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
           <Button
@@ -61,14 +94,17 @@ export function HeroSection() {
             size="lg"
             className="text-sm px-10"
           >
-            <Link to="/services">View Our Work</Link>
+            <Link to="/services" onClick={handleViewWorkClick}>View Our Work</Link>
           </Button>
         </div>
 
         {/* Secondary micro-CTA */}
         <a
           href="tel:0412345678"
-          onClick={() => trackCtaClick("hero_call_now")}
+          onClick={() => {
+            trackCtaClick("hero_call_now", { variant });
+            trackStep("click", { cta: "call_now" });
+          }}
           className="inline-flex items-center gap-2 text-primary-foreground/50 hover:text-accent text-xs tracking-widest uppercase transition-colors"
         >
           <Phone className="h-3.5 w-3.5" />

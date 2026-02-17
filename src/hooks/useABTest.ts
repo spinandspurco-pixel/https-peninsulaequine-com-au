@@ -42,6 +42,8 @@ export interface ABTestConfig {
   variants: string[];
 }
 
+export type FunnelStep = "impression" | "engage" | "click" | "convert";
+
 export interface UseABTestReturn {
   /** The variant assigned to this visitor */
   variant: string;
@@ -49,6 +51,8 @@ export interface UseABTestReturn {
   trackImpression: () => void;
   /** Log a click / conversion */
   trackClick: (metadata?: Record<string, unknown>) => void;
+  /** Log any funnel step (impression, engage, click, convert) */
+  trackStep: (step: FunnelStep, metadata?: Record<string, unknown>) => void;
 }
 
 // ── Hook ────────────────────────────────────────────────────
@@ -56,9 +60,10 @@ export interface UseABTestReturn {
 export function useABTest({ testName, variants }: ABTestConfig): UseABTestReturn {
   const [variant] = useState(() => assignVariant(testName, variants));
   const impressionSent = useRef(false);
+  const firedSteps = useRef(new Set<string>());
 
   const track = useCallback(
-    async (eventType: "impression" | "click", metadata?: Record<string, unknown>) => {
+    async (eventType: string, metadata?: Record<string, unknown>) => {
       try {
         await (supabase as any).from("ab_test_events").insert({
           test_name: testName,
@@ -89,10 +94,20 @@ export function useABTest({ testName, variants }: ABTestConfig): UseABTestReturn
     [track]
   );
 
+  const trackStep = useCallback(
+    (step: FunnelStep, metadata?: Record<string, unknown>) => {
+      // Deduplicate impression and engage per session
+      if ((step === "impression" || step === "engage") && firedSteps.current.has(step)) return;
+      firedSteps.current.add(step);
+      track(step, metadata);
+    },
+    [track]
+  );
+
   // Auto-track impression on mount
   useEffect(() => {
     trackImpression();
   }, [trackImpression]);
 
-  return { variant, trackImpression, trackClick };
+  return { variant, trackImpression, trackClick, trackStep };
 }
