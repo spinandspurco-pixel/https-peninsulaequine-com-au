@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Check, ArrowRight, Zap, Users, Award, Star, UserPlus, DollarSign, MapPin, Truck, ShieldCheck, HelpCircle, Flame, Mountain, Trees, CloudRain, Ruler, Building } from "lucide-react";
+import { Check, ArrowRight, Zap, Users, Award, Star, UserPlus, DollarSign, MapPin, Truck, ShieldCheck, HelpCircle, Flame, Mountain, Trees, CloudRain, Ruler, Building, CreditCard, RefreshCcw, Milestone, Clock, Ban, ArrowRightLeft } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -503,6 +503,125 @@ function RegionalCostDrivers() {
   );
 }
 
+// ── Deposit & Payment Policy ────────────────────────
+
+const LESSON_DEPOSIT_ITEMS = [
+  { icon: CreditCard, label: "50% deposit at booking", detail: "Secures your time slot. Remaining balance due on lesson day." },
+  { icon: ArrowRightLeft, label: "Reschedule with 48 hrs notice", detail: "Move your booking to another available date at no charge." },
+  { icon: Ban, label: "No refund within 24 hrs", detail: "Deposits are non-refundable within 24 hours of the session." },
+  { icon: DollarSign, label: "Packages paid upfront", detail: "Multi-lesson packs are paid in full at the discounted rate." },
+];
+
+const CONSTRUCTION_MILESTONES = [
+  { pct: "20%", label: "Contract Signing", description: "Deposit secures your build slot and locks in material pricing." },
+  { pct: "30%", label: "Slab & Foundation", description: "Due when concrete is poured and footings are inspected." },
+  { pct: "30%", label: "Frame & Fit-Out", description: "Due at frame completion, roof-on, and internal fit-out." },
+  { pct: "20%", label: "Practical Completion", description: "Final payment on handover after your walk-through sign-off." },
+];
+
+function DepositPolicySection() {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+
+  return (
+    <section className="section-padding bg-background" id="deposit-policy">
+      <div className="section-container">
+        <div ref={ref} className={cn("transition-all duration-700", isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8")}>
+          <div className="text-center mb-12">
+            <div className={cn("w-16 h-0.5 bg-accent mx-auto mb-6 transition-all duration-500 delay-100", isVisible ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0")} />
+            <h2 className="heading-section text-foreground mb-3">Deposits, Refunds & Milestones</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              We believe in transparent payment terms. Here's exactly how deposits and payments work — no hidden fees, no surprises.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Lesson Deposits */}
+            <div className={cn(
+              "rounded-xl border border-border bg-card p-6 transition-all duration-500",
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+            )} style={{ transitionDelay: "150ms" }}>
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                  <CreditCard className="h-5 w-5 text-accent" />
+                </div>
+                <div>
+                  <h3 className="font-serif text-lg font-semibold text-foreground">Lesson Deposits</h3>
+                  <p className="text-xs text-muted-foreground">For all individual & clinic bookings</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {LESSON_DEPOSIT_ITEMS.map((item, i) => {
+                  const Icon = item.icon;
+                  return (
+                    <div key={i} className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-md bg-accent/5 flex items-center justify-center shrink-0 mt-0.5">
+                        <Icon className="h-4 w-4 text-accent" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{item.label}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{item.detail}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="mt-5 p-3 rounded-lg bg-accent/5 border border-accent/15">
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  <strong className="text-foreground">Example:</strong> A Development lesson ($120) requires a $60 deposit at booking. Pay the remaining $60 on the day. Package buyers pay $1,020 upfront (10-pack at 15% off) — no further payments needed.
+                </p>
+              </div>
+            </div>
+
+            {/* Construction Milestones */}
+            <div className={cn(
+              "rounded-xl border border-border bg-card p-6 transition-all duration-500",
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+            )} style={{ transitionDelay: "250ms" }}>
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                  <Milestone className="h-5 w-5 text-accent" />
+                </div>
+                <div>
+                  <h3 className="font-serif text-lg font-semibold text-foreground">Construction Milestones</h3>
+                  <p className="text-xs text-muted-foreground">Progress-based payments for builds</p>
+                </div>
+              </div>
+
+              <div className="relative space-y-0">
+                {CONSTRUCTION_MILESTONES.map((ms, i) => (
+                  <div key={i} className="flex gap-4 pb-5 last:pb-0">
+                    {/* Timeline line */}
+                    <div className="flex flex-col items-center">
+                      <div className="w-10 h-10 rounded-full bg-accent/10 border-2 border-accent/30 flex items-center justify-center shrink-0">
+                        <span className="text-xs font-bold text-accent">{ms.pct}</span>
+                      </div>
+                      {i < CONSTRUCTION_MILESTONES.length - 1 && (
+                        <div className="w-0.5 flex-1 bg-accent/15 mt-1" />
+                      )}
+                    </div>
+                    <div className="pt-1.5">
+                      <p className="text-sm font-medium text-foreground">{ms.label}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{ms.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-5 p-3 rounded-lg bg-accent/5 border border-accent/15">
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  <strong className="text-foreground">Your protection:</strong> Payments are tied to inspected milestones — you only pay when work is verified. Variations or extras are quoted in writing before proceeding.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── Page ─────────────────────────────────────────────
 
 export default function Pricing() {
@@ -517,6 +636,7 @@ export default function Pricing() {
       <ClinicPricing />
       <LessonPricingCalculator />
       <GroupRatesTeaser />
+      <DepositPolicySection />
       <RegionalCostDrivers />
       <AudPricingFAQ />
       <PricingCTA />
