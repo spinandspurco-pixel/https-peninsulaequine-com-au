@@ -34,7 +34,7 @@ export function ScrollToTop({ threshold = 400, className }: ScrollToTopProps) {
       onClick={scrollToTop}
       aria-label="Scroll to top"
       className={cn(
-        "fixed bottom-6 right-6 z-50 p-3 rounded-full",
+        "fixed bottom-20 sm:bottom-6 right-6 z-40 p-3 rounded-full",
         "bg-accent text-accent-foreground shadow-lg",
         "hover:bg-accent/90 hover:shadow-xl hover:-translate-y-0.5",
         "focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2",

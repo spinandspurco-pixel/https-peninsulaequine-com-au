@@ -55,8 +55,8 @@ export function StickySubpageCTA({
   return (
     <div
       className={cn(
-        "fixed left-0 right-0 z-[45] transition-all duration-500",
-        "bottom-0 lg:bottom-auto lg:top-16 lg:sm:top-20 xl:top-24",
+        "fixed left-0 right-0 z-40 transition-all duration-500",
+        "bottom-0 lg:bottom-auto lg:top-20",
         visible
           ? "translate-y-0 opacity-100"
           : "translate-y-full lg:-translate-y-full opacity-0 pointer-events-none"
