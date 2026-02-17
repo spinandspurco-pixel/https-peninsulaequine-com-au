@@ -432,7 +432,7 @@ function IntroSection() {
             </p>
           </SectionTransition>
           <SectionTransition variant="blur-in" delay={100}>
-            <h2 className="heading-section text-foreground mb-6 leading-tight">
+            <h2 className="heading-section text-foreground mb-6 leading-tight transition-all duration-500 hover:drop-shadow-[0_0_25px_hsl(var(--accent)/0.3)]">
               Where world-class equine facilities are built by the hands of a <span className="text-accent italic">horseman</span>
             </h2>
           </SectionTransition>
