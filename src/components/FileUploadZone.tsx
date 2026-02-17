@@ -82,13 +82,9 @@ export function FileUploadZone({ files, onFilesChange, className }: FileUploadZo
 
         if (uploadError) throw uploadError;
 
-        const { data: urlData } = supabase.storage
-          .from("inquiry-attachments")
-          .getPublicUrl(path);
-
         uploaded.push({
           name: file.name,
-          url: urlData.publicUrl,
+          url: path, // Store the storage path, not a public URL
           type: file.type,
           size: file.size,
         });
