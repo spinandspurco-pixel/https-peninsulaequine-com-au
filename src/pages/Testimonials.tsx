@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ArrowRight, Star, Play, Quote, Filter, X, Film, Expand, User, Image, SortDesc, ArrowUpDown } from "lucide-react";
+import { ArrowRight, Star, Play, Quote, Filter, X, Film, Expand, User, Image, SortDesc, ArrowUpDown, Search, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Layout } from "@/components/layout/Layout";
@@ -366,6 +366,9 @@ export default function Testimonials() {
   const [loading, setLoading] = useState(true);
   const [mediaFilter, setMediaFilter] = useState<"" | "video" | "image">("");
   const [sortNewest, setSortNewest] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTheme, setActiveTheme] = useState("");
+  const [minRating, setMinRating] = useState(0);
 
   const activeFilter = searchParams.get("service") || "";
   const activeTrainer = searchParams.get("trainer") || "";
@@ -393,6 +396,14 @@ export default function Testimonials() {
 
   const trainerOptions = useMemo(() => getTrainerFilters(testimonials), [testimonials]);
 
+  const THEME_KEYWORDS: { id: string; label: string; keywords: string[] }[] = [
+    { id: "trust", label: "Trust", keywords: ["trust", "reliable", "dependable", "honest", "integrity", "confident"] },
+    { id: "results", label: "Results", keywords: ["result", "transform", "amazing", "outstanding", "exceeded", "impressive", "incredible"] },
+    { id: "quality", label: "Quality", keywords: ["quality", "craftsmanship", "detail", "finish", "premium", "professional", "solid"] },
+    { id: "value", label: "Value", keywords: ["value", "worth", "investment", "affordable", "price", "budget"] },
+    { id: "communication", label: "Communication", keywords: ["communicat", "responsive", "listen", "understand", "attentive", "helpful"] },
+  ];
+
   const filtered = useMemo(() => {
     let items = testimonials;
     if (activeFilter) {
@@ -404,11 +415,31 @@ export default function Testimonials() {
     if (mediaFilter) {
       items = items.filter((t) => t.mediaType === mediaFilter && t.mediaUrl);
     }
+    if (minRating > 0) {
+      items = items.filter((t) => t.rating >= minRating);
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      items = items.filter((t) =>
+        t.quote.toLowerCase().includes(q) ||
+        t.name.toLowerCase().includes(q) ||
+        t.role.toLowerCase().includes(q)
+      );
+    }
+    if (activeTheme) {
+      const theme = THEME_KEYWORDS.find((k) => k.id === activeTheme);
+      if (theme) {
+        items = items.filter((t) => {
+          const text = `${t.quote} ${t.name} ${t.role}`.toLowerCase();
+          return theme.keywords.some((kw) => text.includes(kw));
+        });
+      }
+    }
     if (sortNewest) {
       items = [...items].sort((a, b) => (b.id > a.id ? 1 : -1));
     }
     return items;
-  }, [testimonials, activeFilter, activeTrainer, mediaFilter, sortNewest]);
+  }, [testimonials, activeFilter, activeTrainer, mediaFilter, sortNewest, searchQuery, activeTheme, minRating]);
 
   return (
     <Layout>
@@ -427,6 +458,79 @@ export default function Testimonials() {
             <SectionTransition variant="fade-up">
               <h2 className="heading-section text-foreground">Client Stories</h2>
             </SectionTransition>
+          </div>
+
+          {/* Search + Theme + Rating filters */}
+          <div className="max-w-xl mx-auto mb-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search testimonials by keyword, name, or role…"
+                className="w-full pl-10 pr-10 py-2.5 rounded-full border border-border bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors"
+              />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Theme keyword pills */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
+            <span className="text-xs text-muted-foreground mr-1 flex items-center gap-1">
+              <Tag className="h-3.5 w-3.5" /> Theme:
+            </span>
+            <button
+              onClick={() => setActiveTheme("")}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                !activeTheme
+                  ? "bg-accent text-accent-foreground border-accent"
+                  : "bg-transparent text-muted-foreground border-border hover:border-accent/40 hover:text-foreground"
+              }`}
+            >
+              All
+            </button>
+            {THEME_KEYWORDS.map((theme) => (
+              <button
+                key={theme.id}
+                onClick={() => setActiveTheme(activeTheme === theme.id ? "" : theme.id)}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                  activeTheme === theme.id
+                    ? "bg-accent text-accent-foreground border-accent"
+                    : "bg-transparent text-muted-foreground border-border hover:border-accent/40 hover:text-foreground"
+                }`}
+              >
+                {theme.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Rating filter */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
+            <span className="text-xs text-muted-foreground mr-1 flex items-center gap-1">
+              <Star className="h-3.5 w-3.5" /> Min Rating:
+            </span>
+            {[0, 3, 4, 5].map((r) => (
+              <button
+                key={r}
+                onClick={() => setMinRating(minRating === r ? 0 : r)}
+                className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                  minRating === r
+                    ? "bg-accent text-accent-foreground border-accent"
+                    : "bg-transparent text-muted-foreground border-border hover:border-accent/40 hover:text-foreground"
+                }`}
+              >
+                {r === 0 ? "Any" : (
+                  <>
+                    {r}+ <Star className="h-3 w-3 fill-current" />
+                  </>
+                )}
+              </button>
+            ))}
           </div>
 
           {/* Service filter bar */}
