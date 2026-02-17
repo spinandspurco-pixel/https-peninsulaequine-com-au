@@ -36,7 +36,7 @@ function LazyGalleryImage({
     <button
       ref={itemRef}
       onClick={onClick}
-      className={`group w-full overflow-hidden rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative break-inside-avoid mb-4 sm:mb-5 block transition-all duration-700 ease-out ${
+      className={`group w-full overflow-hidden rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative break-inside-avoid mb-4 sm:mb-5 block card-hover-glow transition-all duration-700 ease-out ${
         loaded ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.97]"
       } ${selectMode && isSelected ? "ring-2 ring-accent ring-offset-2" : ""}`}
       aria-label={selectMode ? `${isSelected ? "Deselect" : "Select"} ${item.alt}` : `View ${item.alt}`}
@@ -116,7 +116,7 @@ function LazyVideoGridItem({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       aria-label={selectMode ? `${isSelected ? "Deselect" : "Select"} ${item.alt}` : `Play video: ${item.alt}`}
-      className={`group aspect-square overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative break-inside-avoid mb-3 sm:mb-4 block w-full ${selectMode && isSelected ? "ring-2 ring-accent ring-offset-2" : ""}`}
+      className={`group aspect-square overflow-hidden rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted relative break-inside-avoid mb-3 sm:mb-4 block w-full card-hover-glow transition-all duration-500 ${selectMode && isSelected ? "ring-2 ring-accent ring-offset-2" : ""}`}
     >
       {selectMode && (
         <div className="absolute top-2 left-2 z-[5] cursor-pointer" onClick={(e) => { e.stopPropagation(); onToggleSelect?.(); }}>

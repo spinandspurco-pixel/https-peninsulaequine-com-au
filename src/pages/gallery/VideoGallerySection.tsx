@@ -38,7 +38,7 @@ export function VideoGallerySection({ onVideoClick }: { onVideoClick: (item: Gal
               key={video.id}
               onClick={() => onVideoClick(video)}
               aria-label={`Play video: ${video.alt}`}
-              className={`group relative aspect-video overflow-hidden rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted transition-all duration-500 ${visibleItems.has(index) ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-6 scale-95"}`}
+              className={`group relative aspect-video overflow-hidden rounded-xl focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 bg-muted card-hover-glow transition-all duration-500 ${visibleItems.has(index) ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-6 scale-95"}`}
               style={{ transitionDelay: `${index * 100}ms` }}
             >
               <video
