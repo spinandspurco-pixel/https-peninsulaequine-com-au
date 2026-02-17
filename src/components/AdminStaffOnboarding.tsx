@@ -327,7 +327,7 @@ export function AdminStaffOnboarding() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="p-4 rounded-lg border bg-muted/30">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-sm">👑</div>
@@ -338,6 +338,18 @@ export function AdminStaffOnboarding() {
                 </div>
                 <p className="text-sm font-mono bg-background px-2 py-1 rounded">NOTIFICATION_EMAIL (secret)</p>
                 <p className="text-xs text-muted-foreground mt-1">Receives every new inquiry, booking confirmation, and system alert</p>
+              </div>
+
+              <div className="p-4 rounded-lg border bg-muted/30">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-sm">🤠</div>
+                  <div>
+                    <p className="font-medium text-sm">Employee (Sander)</p>
+                    <p className="text-xs text-muted-foreground">All inquiries & bookings</p>
+                  </div>
+                </div>
+                <p className="text-sm font-mono bg-background px-2 py-1 rounded">sander@peninsulaequine.com.au</p>
+                <p className="text-xs text-muted-foreground mt-1">CC'd on every inquiry and booking notification</p>
               </div>
 
               <div className="p-4 rounded-lg border bg-muted/30">
@@ -356,8 +368,8 @@ export function AdminStaffOnboarding() {
             <div className="p-3 rounded-lg border-2 border-dashed border-muted-foreground/20">
               <p className="text-sm text-muted-foreground">
                 <Sparkles className="h-4 w-4 inline mr-1 text-accent" />
-                <strong>Routing rules:</strong> Lesson & clinic submissions auto-CC the trainer.
-                All other inquiry types go to the admin inbox only. Email notifications are powered by Resend.
+                <strong>Routing rules:</strong> All inquiries & bookings notify Admin + Sander.
+                Lesson & clinic submissions additionally CC the trainer (Glenn). Email notifications are powered by Resend.
               </p>
             </div>
           </div>

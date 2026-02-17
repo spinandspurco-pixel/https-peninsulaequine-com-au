@@ -209,9 +209,13 @@ Deno.serve(async (req) => {
       throw new Error(`Email send failed: ${errText}`);
     }
 
-    // Notify staff — admin + Glenn for lesson bookings
+    // Notify staff — admin + Sander always; Glenn for lesson bookings
     const staffRecipients: string[] = [];
     if (notificationEmail) staffRecipients.push(notificationEmail);
+    const sanderEmail = "sander@peninsulaequine.com.au";
+    if (!staffRecipients.includes(sanderEmail)) {
+      staffRecipients.push(sanderEmail);
+    }
     
     const lessonTypes = ["riding-lessons", "lesson", "clinic", "clinics-events"];
     const isLessonBooking = lessonTypes.includes(body.serviceType);
