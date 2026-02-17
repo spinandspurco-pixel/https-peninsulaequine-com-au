@@ -6,7 +6,7 @@ import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { useABTest } from "@/hooks/useABTest";
 import { useAuth } from "@/hooks/useAuth";
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
-import { HeroClipEditor, loadClips, DEFAULT_CLIPS } from "./HeroClipEditor";
+import { HeroClipEditor, loadClips, loadQuality, saveQuality, DEFAULT_CLIPS, QUALITY_PROFILES, type VideoQuality } from "./HeroClipEditor";
 
 import heroVideoA from "@/assets/videos/pavilion-grill-1.mp4";
 import heroVideoB from "@/assets/videos/pavilion-grill-2.mp4";
@@ -45,7 +45,10 @@ export function HeroSection() {
 
   // ── Clip state (persisted to localStorage) ────────────────
   const [clips, setClips] = useState(loadClips);
+  const [quality, setQuality] = useState<VideoQuality>(loadQuality);
   const [showEditor, setShowEditor] = useState(false);
+
+  const qProfile = QUALITY_PROFILES[quality];
 
   // ── Dual-video crossfade with trim ranges ─────────────────
   const [activeIdx, setActiveIdx] = useState(0);
@@ -61,10 +64,10 @@ export function HeroSection() {
     const clip = clips[idx];
     if (video && clip) {
       video.currentTime = clip.start;
-      video.playbackRate = 0.5; // slo-mo
+      video.playbackRate = qProfile.playbackRate;
       video.play().catch(() => {});
     }
-  }, [getRef, clips]);
+  }, [getRef, clips, qProfile.playbackRate]);
 
   const handleTimeUpdate = useCallback((idx: number) => {
     const video = getRef(idx).current;
@@ -105,7 +108,9 @@ export function HeroSection() {
           activeIdx={activeIdx}
           videoRefs={videoRefs}
           videoSrcs={VIDEO_SRCS}
+          quality={quality}
           onChange={(c) => { setClips(c); }}
+          onQualityChange={(q) => { setQuality(q); saveQuality(q); }}
           onReset={() => setClips(DEFAULT_CLIPS)}
           onClose={() => setShowEditor(false)}
         />
@@ -132,9 +137,9 @@ export function HeroSection() {
         className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out will-change-transform"
         style={{
           opacity: activeIdx === 0 ? 1 : fading && activeIdx === 1 ? 0 : 0,
-          transform: "scale(1.15)",
+          transform: `scale(${qProfile.scale})`,
           transformOrigin: "center center",
-          filter: "contrast(1.08) saturate(1.1) brightness(1.02)",
+          filter: qProfile.filter,
         }}
         aria-hidden="true"
         aria-label="Pavilion exterior slow-motion footage"
@@ -149,9 +154,9 @@ export function HeroSection() {
         className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[1200ms] ease-in-out will-change-transform"
         style={{
           opacity: activeIdx === 1 ? 1 : fading && activeIdx === 0 ? 0 : 0,
-          transform: "scale(1.15)",
+          transform: `scale(${qProfile.scale})`,
           transformOrigin: "center center",
-          filter: "contrast(1.08) saturate(1.1) brightness(1.02)",
+          filter: qProfile.filter,
         }}
         aria-hidden="true"
         aria-label="Grill and pavilion detail slow-motion footage"
