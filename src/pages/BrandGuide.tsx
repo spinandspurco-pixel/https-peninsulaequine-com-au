@@ -637,6 +637,138 @@ export default function BrandGuide() {
         </div>
       </section>
 
+      {/* Responsive Spacing Guide */}
+      <section className="py-20 bg-background">
+        <div className="section-container space-y-12">
+          <div>
+            <h2 className="font-serif text-3xl font-semibold text-foreground mb-2">Responsive Spacing Guide</h2>
+            <p className="text-muted-foreground max-w-2xl">
+              Consistent vertical rhythm prevents element overlap on all screen sizes. Use named spacing tokens instead of arbitrary values.
+            </p>
+          </div>
+
+          {/* Section Spacing Tokens */}
+          <div className="rounded-lg border border-border bg-card p-6 space-y-5">
+            <h3 className="font-serif text-xl font-semibold text-foreground">Section Padding Tokens</h3>
+            <p className="text-sm text-muted-foreground">Use these utility classes for vertical padding between major page sections. They scale responsively across breakpoints.</p>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-2 pr-4 text-xs uppercase tracking-wider text-muted-foreground font-medium">Class</th>
+                    <th className="text-left py-2 pr-4 text-xs uppercase tracking-wider text-muted-foreground font-medium">Mobile</th>
+                    <th className="text-left py-2 pr-4 text-xs uppercase tracking-wider text-muted-foreground font-medium">Tablet (sm)</th>
+                    <th className="text-left py-2 text-xs uppercase tracking-wider text-muted-foreground font-medium">Desktop (lg)</th>
+                  </tr>
+                </thead>
+                <tbody className="font-mono text-foreground/80">
+                  {[
+                    { cls: ".section-padding-sm", mobile: "40px", tablet: "64px", desktop: "96px" },
+                    { cls: ".section-padding", mobile: "64px", tablet: "96px", desktop: "128px" },
+                    { cls: ".section-padding-lg", mobile: "96px", tablet: "128px", desktop: "176px" },
+                  ].map((row) => (
+                    <tr key={row.cls} className="border-b border-border/50">
+                      <td className="py-2.5 pr-4 text-accent font-semibold">{row.cls}</td>
+                      <td className="py-2.5 pr-4">{row.mobile}</td>
+                      <td className="py-2.5 pr-4">{row.tablet}</td>
+                      <td className="py-2.5">{row.desktop}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Content Gap Scale */}
+          <div className="rounded-lg border border-border bg-card p-6 space-y-5">
+            <h3 className="font-serif text-xl font-semibold text-foreground">Content Gap Scale</h3>
+            <p className="text-sm text-muted-foreground">Vertical rhythm utilities for content within sections. Stack classes set consistent <code className="text-xs bg-secondary px-1.5 py-0.5 rounded">space-y</code> gaps.</p>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {[
+                { cls: ".stack-xs", size: "8px", use: "Tight UI groups (badge rows, icon+label)" },
+                { cls: ".stack-sm", size: "16px", use: "Form fields, list items" },
+                { cls: ".stack", size: "24px", use: "Default content blocks" },
+                { cls: ".stack-md", size: "32–40px", use: "Subsections within a page section" },
+                { cls: ".stack-lg", size: "48–64px", use: "Section intro blocks, major separations" },
+              ].map((item) => (
+                <div key={item.cls} className="flex items-start gap-3 p-3 rounded-lg bg-secondary/30">
+                  <code className="text-xs font-mono text-accent font-semibold whitespace-nowrap mt-0.5">{item.cls}</code>
+                  <div>
+                    <p className="text-xs font-semibold text-foreground">{item.size}</p>
+                    <p className="text-xs text-muted-foreground">{item.use}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Container Widths */}
+          <div className="rounded-lg border border-border bg-card p-6 space-y-5">
+            <h3 className="font-serif text-xl font-semibold text-foreground">Container Widths</h3>
+            <div className="space-y-3">
+              {[
+                { cls: ".section-container", width: "max-w-7xl (80rem)", use: "Default page sections" },
+                { cls: ".section-container-narrow", width: "max-w-3xl (48rem)", use: "Text-heavy content, forms" },
+                { cls: ".section-container-wide", width: "max-w-[1800px]", use: "Full-bleed galleries, dashboards" },
+              ].map((item) => (
+                <div key={item.cls} className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 p-3 rounded-lg bg-secondary/30">
+                  <code className="text-xs font-mono text-accent font-semibold whitespace-nowrap">{item.cls}</code>
+                  <span className="text-xs text-foreground font-medium">{item.width}</span>
+                  <span className="text-xs text-muted-foreground">— {item.use}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground">All containers include responsive horizontal padding: <code className="bg-secondary px-1 py-0.5 rounded">px-4 sm:px-6 lg:px-8</code>.</p>
+          </div>
+
+          {/* Anti-Overlap Rules */}
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+              <h3 className="font-serif text-xl font-semibold text-foreground flex items-center gap-2">
+                <Check className="h-5 w-5 text-accent" />
+                Do
+              </h3>
+              <ul className="space-y-2 text-sm text-foreground/80">
+                {[
+                  "Use section-padding classes for all major section spacing",
+                  "Scale padding down on mobile with responsive prefixes (pb-20 sm:pb-24)",
+                  "Stack CTA groups with flex-col on mobile, flex-row on sm+",
+                  "Use gap-3 on mobile, gap-4 on sm+ for button clusters",
+                  "Reduce logo/heading margins on small screens (mb-6 sm:mb-8)",
+                  "Test at 375px width — the smallest supported viewport",
+                ].map((rule, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <Check className="h-4 w-4 mt-0.5 text-accent shrink-0" />
+                    {rule}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+              <h3 className="font-serif text-xl font-semibold text-foreground flex items-center gap-2">
+                <XIcon className="h-5 w-5 text-destructive" />
+                Don't
+              </h3>
+              <ul className="space-y-2 text-sm text-foreground/80">
+                {[
+                  "Use fixed pixel values for section padding — always use tokens",
+                  "Place absolute-positioned elements without bottom/top safe zones",
+                  "Overlap a scroll indicator with inline CTA text (keep ≥ 48px gap)",
+                  "Use identical spacing at all breakpoints for sections > 200px tall",
+                  "Nest multiple pb/pt overrides — use a single section-padding class instead",
+                  "Ignore the hero pb value when content grows — test with long A/B copy variants",
+                ].map((rule, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <XIcon className="h-4 w-4 mt-0.5 text-destructive shrink-0" />
+                    {rule}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Contact CTA */}
       <section className="py-16 bg-secondary/30">
         <div className="section-container text-center max-w-xl mx-auto space-y-4">

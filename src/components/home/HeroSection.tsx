@@ -47,7 +47,7 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden bg-primary pb-24">
+    <section className="relative h-screen flex items-center justify-center overflow-hidden bg-primary pb-20 sm:pb-24">
       <video
         autoPlay muted loop playsInline preload="auto"
         className="absolute inset-0 w-full h-full object-cover"
@@ -64,21 +64,21 @@ export function HeroSection() {
           src={peLogo}
           alt="Peninsula Equine"
           loading="eager"
-          className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-8 drop-shadow-[0_4px_30px_hsl(var(--accent)/0.3)]"
+          className="w-20 h-20 sm:w-32 sm:h-32 mx-auto mb-6 sm:mb-8 drop-shadow-[0_4px_30px_hsl(var(--accent)/0.3)]"
         />
-        <div className="w-16 h-px mx-auto mb-8 bg-accent" />
+        <div className="w-16 h-px mx-auto mb-5 sm:mb-8 bg-accent" />
         <h1 className="font-sans text-2xl sm:text-3xl md:text-4xl font-semibold tracking-[0.25em] uppercase text-primary-foreground leading-[1.3] mb-4">
           Peninsula <span className="text-accent">Equine</span>
         </h1>
         <p className="font-sans text-xs sm:text-sm tracking-[0.4em] uppercase text-primary-foreground/50 mb-3">
           {copy.headline}
         </p>
-        <p className="text-sm sm:text-base text-primary-foreground/70 max-w-lg mx-auto mb-8 leading-relaxed">
+        <p className="text-sm sm:text-base text-primary-foreground/70 max-w-lg mx-auto mb-6 sm:mb-8 leading-relaxed">
           {copy.sub}
         </p>
 
         {/* Primary CTA cluster */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-3 sm:mb-4">
           <Button
             size="lg"
             variant="gold"

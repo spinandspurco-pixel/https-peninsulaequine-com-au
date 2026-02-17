@@ -306,7 +306,7 @@ function BookConsultCTA() {
               <a
                 href={`tel:${siteConfig.phone}`}
                 onClick={() => trackCtaClick("services_call_now")}
-                className="inline-flex items-center gap-2 text-primary-foreground/50 hover:text-accent text-xs tracking-widest uppercase transition-colors mt-2"
+                className="inline-flex items-center gap-2 text-primary-foreground/50 hover:text-accent text-xs tracking-widest uppercase transition-colors mt-2 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
               >
                 <Phone className="h-3.5 w-3.5" />
                 Or call {siteConfig.phone}
@@ -402,7 +402,7 @@ export default function Services() {
           </div>
 
           {/* Filter chips */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-8 sm:mb-10">
             {SERVICE_CATEGORIES.map((cat) => (
               <button
                 key={cat.key}
