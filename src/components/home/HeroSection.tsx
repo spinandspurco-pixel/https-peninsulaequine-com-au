@@ -1,143 +1,18 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, ChevronDown, Phone, Settings, RotateCcw } from "lucide-react";
+import { ArrowRight, ChevronDown, Phone, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BlueprintScene } from "@/components/BlueprintScene";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { useABTest } from "@/hooks/useABTest";
 import { useAuth } from "@/hooks/useAuth";
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
+import { HeroClipEditor, loadClips, DEFAULT_CLIPS } from "./HeroClipEditor";
 
 import heroVideoA from "@/assets/videos/pavilion-grill-1.mp4";
 import heroVideoB from "@/assets/videos/pavilion-grill-2.mp4";
 import peLogo from "@/assets/pe-logo-new.png";
 
-// ── Default trim ranges ─────────────────────────────────────
-const DEFAULT_CLIPS = [
-  { start: 3, end: 18 },
-  { start: 2, end: 16 },
-];
 const VIDEO_SRCS = [heroVideoA, heroVideoB];
-const STORAGE_KEY = "pe_hero_video_clips";
-
-function loadClips(): { start: number; end: number }[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch {}
-  return DEFAULT_CLIPS;
-}
-
-function saveClips(clips: { start: number; end: number }[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(clips));
-}
-
-// ── Floating editor panel (admin-only) ──────────────────────
-function ClipEditor({
-  clips,
-  activeIdx,
-  videoRefs,
-  onChange,
-  onReset,
-  onClose,
-}: {
-  clips: { start: number; end: number }[];
-  activeIdx: number;
-  videoRefs: React.RefObject<HTMLVideoElement | null>[];
-  onChange: (clips: { start: number; end: number }[]) => void;
-  onReset: () => void;
-  onClose: () => void;
-}) {
-  const currentTime = (idx: number) => videoRefs[idx]?.current?.currentTime?.toFixed(1) ?? "—";
-
-  const update = (idx: number, field: "start" | "end", value: number) => {
-    const next = clips.map((c, i) => (i === idx ? { ...c, [field]: value } : c));
-    onChange(next);
-    saveClips(next);
-  };
-
-  return (
-    <div className="absolute top-4 left-4 z-50 bg-background/95 backdrop-blur-md border border-border rounded-xl shadow-2xl p-4 w-72 text-sm animate-fade-in">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="font-serif font-semibold text-foreground text-xs tracking-wider uppercase">Hero Video Clips</h3>
-        <button onClick={onClose} className="text-muted-foreground hover:text-foreground text-xs">✕</button>
-      </div>
-
-      {/* Preset buttons */}
-      <div className="flex gap-2 mb-3">
-        <button
-          onClick={() => {
-            const preset = [{ start: 3, end: 22 }, { start: 2, end: 20 }];
-            onChange(preset);
-            saveClips(preset);
-            videoRefs.forEach((ref) => {
-              if (ref.current) { ref.current.playbackRate = 0.35; }
-            });
-          }}
-          className="flex-1 px-2 py-1.5 rounded-md border border-accent/40 bg-accent/10 text-accent text-[11px] font-medium tracking-wider uppercase hover:bg-accent/20 transition-colors"
-        >
-          🎬 Cinematic
-        </button>
-        <button
-          onClick={() => {
-            onChange(DEFAULT_CLIPS);
-            saveClips(DEFAULT_CLIPS);
-            videoRefs.forEach((ref) => {
-              if (ref.current) { ref.current.playbackRate = 0.5; }
-            });
-          }}
-          className="flex-1 px-2 py-1.5 rounded-md border border-border bg-card text-muted-foreground text-[11px] font-medium tracking-wider uppercase hover:bg-muted transition-colors"
-        >
-          Standard
-        </button>
-      </div>
-      {clips.map((clip, i) => (
-        <div
-          key={i}
-          className={`rounded-lg border p-3 mb-2 ${
-            i === activeIdx ? "border-accent bg-accent/5" : "border-border"
-          }`}
-        >
-          <div className="flex items-center justify-between mb-2">
-            <span className="font-medium text-foreground text-xs">Video {i + 1}</span>
-            <span className="text-[10px] text-muted-foreground font-mono">
-              Now: {currentTime(i)}s
-            </span>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <label className="block">
-              <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Start (s)</span>
-              <input
-                type="number"
-                min={0}
-                step={0.5}
-                value={clip.start}
-                onChange={(e) => update(i, "start", parseFloat(e.target.value) || 0)}
-                className="w-full mt-0.5 px-2 py-1 rounded border border-border bg-card text-foreground text-xs focus:outline-none focus:ring-1 focus:ring-accent"
-              />
-            </label>
-            <label className="block">
-              <span className="text-[10px] text-muted-foreground uppercase tracking-wider">End (s)</span>
-              <input
-                type="number"
-                min={0}
-                step={0.5}
-                value={clip.end}
-                onChange={(e) => update(i, "end", parseFloat(e.target.value) || 0)}
-                className="w-full mt-0.5 px-2 py-1 rounded border border-border bg-card text-foreground text-xs focus:outline-none focus:ring-1 focus:ring-accent"
-              />
-            </label>
-          </div>
-        </div>
-      ))}
-      <button
-        onClick={() => { onReset(); saveClips(DEFAULT_CLIPS); }}
-        className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground mt-1 transition-colors"
-      >
-        <RotateCcw className="h-3 w-3" /> Reset to defaults
-      </button>
-    </div>
-  );
-}
 
 // ── A/B test copy variants ──────────────────────────────────
 
@@ -225,10 +100,11 @@ export function HeroSection() {
     <section className="relative h-screen flex items-center justify-center overflow-hidden bg-primary pb-20 sm:pb-24">
       {/* Admin clip editor */}
       {isAdmin && showEditor && (
-        <ClipEditor
+        <HeroClipEditor
           clips={clips}
           activeIdx={activeIdx}
           videoRefs={videoRefs}
+          videoSrcs={VIDEO_SRCS}
           onChange={(c) => { setClips(c); }}
           onReset={() => setClips(DEFAULT_CLIPS)}
           onClose={() => setShowEditor(false)}
