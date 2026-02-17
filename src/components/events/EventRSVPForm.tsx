@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CheckCircle2, Send, Clock } from "lucide-react";
+import { CheckCircle2, Send, Clock, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,11 +9,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { z } from "zod";
 import { CalendarSyncButtons } from "@/components/CalendarSyncButtons";
+import { useAuth } from "@/hooks/useAuth";
+import { Link } from "react-router-dom";
 import type { CalendarEvent } from "@/lib/calendarSync";
 
 const rsvpSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
-  email: z.string().trim().email("Enter a valid email").max(255),
   phone: z.string().trim().max(20).optional(),
   guests: z.number().int().min(1, "At least 1 guest").max(20, "Max 20 guests"),
   notes: z.string().trim().max(500).optional(),
@@ -23,14 +24,12 @@ interface EventRSVPFormProps {
   eventId: string;
   eventTitle: string;
   remainingSpots: number;
-  /** Event data for calendar sync on confirmation */
   eventDate?: string;
   eventTime?: string | null;
   eventLocation?: string | null;
   eventDescription?: string | null;
 }
 
-/** Build a CalendarEvent from RSVP props */
 function toCalendarEvent(
   title: string,
   date: string,
@@ -57,7 +56,8 @@ export function EventRSVPForm({
   eventLocation,
   eventDescription,
 }: EventRSVPFormProps) {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", guests: 1, notes: "" });
+  const { user, loading: authLoading } = useAuth();
+  const [form, setForm] = useState({ name: "", phone: "", guests: 1, notes: "" });
   const [joinWaitlist, setJoinWaitlist] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -74,6 +74,7 @@ export function EventRSVPForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) return;
 
     const isWaitlist = isFull || form.guests > remainingSpots;
 
@@ -99,12 +100,13 @@ export function EventRSVPForm({
     const { error } = await supabase.from("event_rsvps").insert({
       event_id: eventId,
       name: parsed.data.name,
-      email: parsed.data.email,
+      email: user.email!,
       phone: parsed.data.phone || null,
       guests: parsed.data.guests,
       notes: parsed.data.notes || null,
       status,
-    });
+      user_id: user.id,
+    } as any);
 
     setSubmitting(false);
     if (error) {
@@ -120,12 +122,11 @@ export function EventRSVPForm({
         : `RSVP confirmed for ${eventTitle}!`
     );
 
-    // Send confirmation email (fire-and-forget)
     supabase.functions
       .invoke("send-rsvp-confirmation", {
         body: {
           name: parsed.data.name,
-          email: parsed.data.email,
+          email: user.email,
           eventTitle,
           eventDate,
           eventTime,
@@ -137,6 +138,34 @@ export function EventRSVPForm({
       })
       .catch(() => {});
   };
+
+  // ── Auth loading ──
+  if (authLoading) {
+    return (
+      <div className="animate-pulse space-y-3 py-6">
+        <div className="h-4 bg-muted rounded w-1/2 mx-auto" />
+        <div className="h-10 bg-muted rounded" />
+      </div>
+    );
+  }
+
+  // ── Not signed in ──
+  if (!user) {
+    return (
+      <div className="text-center py-8 space-y-4">
+        <LogIn className="h-10 w-10 text-muted-foreground mx-auto" />
+        <div>
+          <p className="font-serif text-xl text-foreground mb-1">Sign in to RSVP</p>
+          <p className="text-muted-foreground text-sm">
+            Create an account or sign in to reserve your spot.
+          </p>
+        </div>
+        <Button asChild>
+          <Link to="/login?redirect=/events">Sign In</Link>
+        </Button>
+      </div>
+    );
+  }
 
   // ── Confirmation screen ──
   if (submitted) {
@@ -166,7 +195,6 @@ export function EventRSVPForm({
           </p>
         </div>
 
-        {/* Next steps */}
         <div className="border-t border-border pt-5">
           <p className="text-sm font-medium text-foreground mb-3">What to do next</p>
           <ol className="text-left max-w-xs mx-auto space-y-2">
@@ -181,7 +209,6 @@ export function EventRSVPForm({
           </ol>
         </div>
 
-        {/* Calendar sync — only for confirmed RSVPs */}
         {rsvpStatus === "confirmed" && eventDate && (
           <div className="border-t border-border pt-5 space-y-3">
             <p className="text-sm font-medium text-foreground">Add to your calendar</p>
@@ -221,6 +248,11 @@ export function EventRSVPForm({
         </div>
       )}
 
+      {/* Show logged-in email */}
+      <div className="rounded-lg bg-muted/50 border border-border/40 px-4 py-3 text-sm text-muted-foreground">
+        Submitting as <span className="font-medium text-foreground">{user.email}</span>
+      </div>
+
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <Label htmlFor={`name-${eventId}`}>Full Name *</Label>
@@ -234,20 +266,6 @@ export function EventRSVPForm({
           {errors.name && <p className="text-destructive text-xs mt-1">{errors.name}</p>}
         </div>
         <div>
-          <Label htmlFor={`email-${eventId}`}>Email *</Label>
-          <Input
-            id={`email-${eventId}`}
-            type="email"
-            value={form.email}
-            onChange={(e) => handleChange("email", e.target.value)}
-            placeholder="jane@example.com"
-            className={errors.email ? "border-destructive" : ""}
-          />
-          {errors.email && <p className="text-destructive text-xs mt-1">{errors.email}</p>}
-        </div>
-      </div>
-      <div className="grid sm:grid-cols-2 gap-4">
-        <div>
           <Label htmlFor={`phone-${eventId}`}>Phone</Label>
           <Input
             id={`phone-${eventId}`}
@@ -256,6 +274,8 @@ export function EventRSVPForm({
             placeholder="0400 000 000"
           />
         </div>
+      </div>
+      <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <Label htmlFor={`guests-${eventId}`}>Number of Guests</Label>
           <Select
@@ -275,16 +295,16 @@ export function EventRSVPForm({
           </Select>
           {errors.guests && <p className="text-destructive text-xs mt-1">{errors.guests}</p>}
         </div>
-      </div>
-      <div>
-        <Label htmlFor={`notes-${eventId}`}>Notes (optional)</Label>
-        <Textarea
-          id={`notes-${eventId}`}
-          value={form.notes}
-          onChange={(e) => handleChange("notes", e.target.value)}
-          placeholder="Dietary requirements, accessibility needs…"
-          rows={2}
-        />
+        <div>
+          <Label htmlFor={`notes-${eventId}`}>Notes (optional)</Label>
+          <Textarea
+            id={`notes-${eventId}`}
+            value={form.notes}
+            onChange={(e) => handleChange("notes", e.target.value)}
+            placeholder="Dietary requirements, accessibility needs…"
+            rows={2}
+          />
+        </div>
       </div>
       <Button type="submit" className="w-full" disabled={submitting}>
         <Send className="mr-2 h-4 w-4" />
