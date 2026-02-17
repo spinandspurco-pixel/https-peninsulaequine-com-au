@@ -11,6 +11,7 @@ import { siteConfig } from "@/data/content";
 const navigation = [
   { name: "Home", href: "/" },
   { name: "Services", href: "/services" },
+  { name: "The Forge", href: "/shop" },
   { name: "Portfolio", href: "/gallery" },
   { name: "Lessons", href: "/lessons" },
   { name: "About", href: "/about" },
