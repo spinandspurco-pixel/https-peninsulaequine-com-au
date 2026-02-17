@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Check, ArrowRight, Zap, Users, Award, Star, UserPlus, DollarSign, MapPin, Truck, ShieldCheck, HelpCircle } from "lucide-react";
+import { Check, ArrowRight, Zap, Users, Award, Star, UserPlus, DollarSign, MapPin, Truck, ShieldCheck, HelpCircle, Flame, Mountain, Trees, CloudRain, Ruler, Building } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -390,6 +390,119 @@ function AudPricingFAQ() {
   );
 }
 
+// ── Regional Cost Drivers ────────────────────────────
+
+const COST_DRIVERS = [
+  {
+    icon: Flame,
+    title: "BAL Compliance",
+    stat: "8–15%",
+    statLabel: "added cost",
+    description: "Many Peninsula properties sit in BAL-12.5 to BAL-40 zones. Fire-rated cladding, ember guards, and non-combustible framing add to material and labour costs — but are non-negotiable for council approval.",
+  },
+  {
+    icon: Mountain,
+    title: "Steep & Coastal Sites",
+    stat: "$15–40K",
+    statLabel: "earthworks premium",
+    description: "Rolling hills from Red Hill to Flinders often require cut-and-fill, retaining walls, and engineered drainage. Coastal properties add salt-rated fixings and wind bracing to every structure.",
+  },
+  {
+    icon: Trees,
+    title: "Vegetation & Overlays",
+    stat: "6–12 wks",
+    statLabel: "added approval time",
+    description: "Significant Landscape Overlays (SLO) and native vegetation removal permits are common across Merricks, Balnarring, and Main Ridge. Planning consultants and arborist reports are often required before a build can begin.",
+  },
+  {
+    icon: CloudRain,
+    title: "Peninsula Clay Soils",
+    stat: "20–30%",
+    statLabel: "deeper foundations",
+    description: "Heavy clay across Hastings, Somerville, and Moorooduc means reactive soil classifications (Class H1–H2). Arena bases, barn footings, and post holes all need engineered solutions to prevent movement.",
+  },
+  {
+    icon: Truck,
+    title: "Material Freight",
+    stat: "80–120 km",
+    statLabel: "from Melbourne suppliers",
+    description: "Sand, steel, and hardwood travel from Dandenong South and western suburbs. Delivery surcharges apply — we consolidate loads and lock in pricing at quote stage to minimise freight cost.",
+  },
+  {
+    icon: Ruler,
+    title: "Council & Shire Permits",
+    stat: "$2–8K",
+    statLabel: "in permit fees",
+    description: "Mornington Peninsula Shire requires planning permits for most equine structures. Building permits, engineering certification, and BAL assessments are separate line items we include transparently in every quote.",
+  },
+];
+
+function RegionalCostDrivers() {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+
+  return (
+    <section className="section-padding bg-card border-y border-border" id="cost-drivers">
+      <div className="section-container">
+        <div ref={ref} className={cn("transition-all duration-700", isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8")}>
+          <div className="text-center mb-12">
+            <div className={cn("w-16 h-0.5 bg-accent mx-auto mb-6 transition-all duration-500 delay-100", isVisible ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0")} />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-medium mb-4">
+              <MapPin className="h-3 w-3" />
+              Mornington Peninsula Specific
+            </div>
+            <h2 className="heading-section text-foreground mb-3">Regional Cost Drivers</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Building equine facilities on the Peninsula comes with unique challenges. Here's what shapes your quote — and why we factor it all in upfront.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto">
+            {COST_DRIVERS.map((driver, i) => {
+              const Icon = driver.icon;
+              return (
+                <div
+                  key={driver.title}
+                  className={cn(
+                    "rounded-xl border border-border bg-background p-6 transition-all duration-500 hover:border-accent/30 hover:shadow-md",
+                    isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+                  )}
+                  style={{ transitionDelay: `${150 + i * 80}ms` }}
+                >
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
+                      <Icon className="h-5 w-5 text-accent" />
+                    </div>
+                    <div>
+                      <h3 className="font-serif text-base font-semibold text-foreground">{driver.title}</h3>
+                      <div className="flex items-baseline gap-1.5 mt-0.5">
+                        <span className="text-lg font-bold text-accent">{driver.stat}</span>
+                        <span className="text-xs text-muted-foreground">{driver.statLabel}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{driver.description}</p>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="text-center mt-10">
+            <p className="text-sm text-muted-foreground mb-4">
+              Every project is different. Get a quote that accounts for <em>your</em> site conditions.
+            </p>
+            <Button asChild variant="outline" size="lg">
+              <Link to="/estimate">
+                <Building className="mr-2 h-4 w-4" />
+                Get a Custom Estimate
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── Page ─────────────────────────────────────────────
 
 export default function Pricing() {
@@ -404,6 +517,7 @@ export default function Pricing() {
       <ClinicPricing />
       <LessonPricingCalculator />
       <GroupRatesTeaser />
+      <RegionalCostDrivers />
       <AudPricingFAQ />
       <PricingCTA />
       <StickySubpageCTA
