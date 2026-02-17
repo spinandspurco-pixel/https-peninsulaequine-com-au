@@ -28,24 +28,63 @@ const HERO_MEDIA_CAPTIONS = [
   },
 ];
 
-// ── Skeleton grid for perceived performance ─────────────────
-function HeroSkeletonGrid() {
+// ── Skeleton placeholder metadata for grid cells ────────────
+const SKELETON_PLACEHOLDERS = [
+  { label: "Pavilion Wide", hue: 35, caption: HERO_MEDIA_CAPTIONS[0].title },
+  { label: "Kitchen Detail", hue: 28, caption: HERO_MEDIA_CAPTIONS[1].title },
+  { label: "Golden Hour", hue: 40, caption: "Ambient light sweep" },
+  { label: "Stone Masonry", hue: 30, caption: "Craftsmanship close-up" },
+  { label: "Timber Frame", hue: 25, caption: "Structural detail" },
+  { label: "Paddock View", hue: 38, caption: "Landscape panorama" },
+];
+
+// ── Progressive skeleton grid with real-time captions ───────
+function HeroSkeletonGrid({ videosReady }: { videosReady: boolean[] }) {
   return (
-    <div className="absolute inset-0 grid grid-cols-3 grid-rows-2 gap-px opacity-[0.07]" aria-hidden="true">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div
-          key={i}
-          className="bg-primary-foreground/20 rounded-sm overflow-hidden"
-        >
+    <div className="absolute inset-0 grid grid-cols-3 grid-rows-2 gap-px opacity-[0.09]" aria-hidden="true">
+      {SKELETON_PLACEHOLDERS.map((ph, i) => {
+        const isReady = i < videosReady.length && videosReady[i];
+        return (
           <div
-            className="w-full h-full animate-[shimmer_2s_infinite]"
-            style={{
-              background: "linear-gradient(90deg, transparent 0%, hsl(var(--accent) / 0.15) 50%, transparent 100%)",
-              animationDelay: `${i * 0.2}s`,
-            }}
-          />
-        </div>
-      ))}
+            key={i}
+            className="relative rounded-sm overflow-hidden"
+            style={{ backgroundColor: `hsl(${ph.hue}, 15%, 20%)` }}
+          >
+            {/* Warm-tone progressive placeholder */}
+            <div
+              className="absolute inset-0 transition-opacity duration-700"
+              style={{
+                opacity: isReady ? 0.3 : 1,
+                background: `linear-gradient(135deg, hsl(${ph.hue}, 18%, 18%) 0%, hsl(${ph.hue}, 12%, 25%) 100%)`,
+              }}
+            />
+            {/* Shimmer sweep */}
+            <div
+              className="absolute inset-0 animate-[shimmer_2s_infinite]"
+              style={{
+                background: `linear-gradient(90deg, transparent 0%, hsl(var(--accent) / ${isReady ? "0.08" : "0.15"}) 50%, transparent 100%)`,
+                animationDelay: `${i * 0.2}s`,
+              }}
+            />
+            {/* Real-time caption overlay */}
+            <div className="absolute bottom-0 left-0 right-0 p-1.5 bg-gradient-to-t from-primary/60 to-transparent">
+              <span
+                className="block text-[8px] text-primary-foreground/40 tracking-wider uppercase font-sans truncate transition-all duration-500"
+                style={{ opacity: isReady ? 1 : 0.5 }}
+              >
+                {ph.caption}
+              </span>
+              <span className="block text-[7px] text-primary-foreground/20 font-mono mt-0.5">
+                {isReady ? "Ready" : "Loading\u2026"}
+              </span>
+            </div>
+            {/* Ready indicator */}
+            {isReady && (
+              <div className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-accent/60 animate-pulse" />
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -63,8 +102,8 @@ function HeroLoadingOverlay({ stage, videosReady }: { stage: string; videosReady
       className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-primary transition-opacity duration-700"
       style={{ opacity: stage === "ready" ? 0 : 1 }}
     >
-      {/* Skeleton grid backdrop */}
-      <HeroSkeletonGrid />
+      {/* Progressive skeleton grid with captions */}
+      <HeroSkeletonGrid videosReady={videosReady} />
 
       {/* Shimmer sweep */}
       <div className="absolute inset-0 overflow-hidden">
