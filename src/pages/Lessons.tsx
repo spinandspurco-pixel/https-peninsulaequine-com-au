@@ -5,7 +5,6 @@ import { format, parseISO, isBefore, startOfDay, isSameDay } from "date-fns";
 import {
   ArrowRight,
   CalendarIcon,
-  CalendarPlus,
   CheckCircle,
   Clock,
   MapPin,
@@ -18,6 +17,7 @@ import {
   Zap,
 } from "lucide-react";
 import { PECalendar, PEHorseshoe, PERider } from "@/components/icons/PEIcons";
+import { CalendarSyncButtons } from "@/components/CalendarSyncButtons";
 import { supabase } from "@/integrations/supabase/client";
 import { EventRSVPForm } from "@/components/events/EventRSVPForm";
 import { EventGuestList } from "@/components/events/EventGuestList";
@@ -249,42 +249,7 @@ function ProgramCard({
 }
 
 // ── Calendar helpers ──
-function toICSDate(d: string, time?: string | null) {
-  const datePart = d.replace(/-/g, "");
-  if (time) {
-    const timePart = time.replace(/:/g, "").slice(0, 6).padEnd(6, "0");
-    return `${datePart}T${timePart}`;
-  }
-  return `${datePart}T080000`;
-}
-
-function clinicGoogleCalendarUrl(title: string, date: string, time?: string | null, location?: string | null, description?: string | null) {
-  const start = toICSDate(date, time) + "Z";
-  const startHour = time ? parseInt(time.split(":")[0], 10) : 8;
-  const endDate = date.replace(/-/g, "");
-  const end = `${endDate}T${String(startHour + 2).padStart(2, "0")}0000Z`;
-  return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent((description || "").slice(0, 200))}&location=${encodeURIComponent(location || "")}`;
-}
-
-function clinicDownloadICS(title: string, date: string, time?: string | null, location?: string | null, description?: string | null) {
-  const dtStart = toICSDate(date, time);
-  const startHour = time ? parseInt(time.split(":")[0], 10) : 8;
-  const endDate = date.replace(/-/g, "");
-  const dtEnd = `${endDate}T${String(startHour + 2).padStart(2, "0")}0000`;
-  const lines = [
-    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Peninsula Equine//Events//EN",
-    "BEGIN:VEVENT", `DTSTART:${dtStart}`, `DTEND:${dtEnd}`,
-    `SUMMARY:${title}`, `DESCRIPTION:${(description || "").slice(0, 200).replace(/\n/g, "\\n")}`,
-    `LOCATION:${location || ""}`, "STATUS:CONFIRMED", "END:VEVENT", "END:VCALENDAR",
-  ];
-  const blob = new Blob([lines.join("\r\n")], { type: "text/calendar;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${title.replace(/\s+/g, "-").toLowerCase()}.ics`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
+// Calendar helpers removed — using shared CalendarSyncButtons component
 
 // ── Upcoming Clinics Section ─────────────────────────
 
@@ -368,22 +333,17 @@ function ClinicCard({ event }: { event: ClinicEvent }) {
         />
 
         {/* Calendar sync */}
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={() => clinicDownloadICS(event.title, event.event_date, event.event_time, event.location, event.description)}
-            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-accent transition-colors"
-          >
-            <CalendarPlus className="h-3.5 w-3.5" /> .ics
-          </button>
-          <a
-            href={clinicGoogleCalendarUrl(event.title, event.event_date, event.event_time, event.location, event.description)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-accent transition-colors"
-          >
-            <ExternalLink className="h-3.5 w-3.5" /> Google Cal
-          </a>
-        </div>
+        <CalendarSyncButtons
+          compact
+          event={{
+            title: event.title,
+            date: event.event_date,
+            startTime: event.event_time || undefined,
+            durationMinutes: 120,
+            description: event.description || undefined,
+            location: event.location || undefined,
+          }}
+        />
 
         {/* RSVP */}
         {!showRSVP ? (
