@@ -96,9 +96,9 @@ export function StickySubpageCTA({
             <Link
               to="/book-lesson"
               className={cn(
-                "hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium",
-                "border border-primary-foreground/20 text-primary-foreground/80 hover:text-primary-foreground hover:border-accent/40",
-                "transition-all duration-300"
+              "hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium",
+                "border border-primary-foreground/20 text-primary-foreground hover:text-primary-foreground hover:border-accent/40",
+                "transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
               )}
             >
               <CalendarIcon className="h-3.5 w-3.5" />
@@ -113,7 +113,8 @@ export function StickySubpageCTA({
                   "inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium",
                   "bg-accent text-accent-foreground hover:bg-accent/90",
                   "transition-all duration-300 hover:scale-105 hover:shadow-[0_4px_16px_hsl(var(--accent)/0.4)]",
-                  "whitespace-nowrap"
+                  "whitespace-nowrap",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
                 )}
               >
                 {ctaContent}
@@ -125,7 +126,8 @@ export function StickySubpageCTA({
                   "inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium",
                   "bg-accent text-accent-foreground hover:bg-accent/90",
                   "transition-all duration-300 hover:scale-105 hover:shadow-[0_4px_16px_hsl(var(--accent)/0.4)]",
-                  "whitespace-nowrap"
+                  "whitespace-nowrap",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
                 )}
               >
                 {ctaContent}

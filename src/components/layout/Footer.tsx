@@ -131,15 +131,15 @@ export function Footer() {
               </li>
             </ul>
             <div className="mt-5 pt-5 border-t border-[hsl(var(--footer-foreground))]/10">
-              <p className="text-xs text-[hsl(var(--footer-muted))]/80">{siteConfig.hours.weekdays}</p>
-              <p className="text-xs text-[hsl(var(--footer-muted))]/80">{siteConfig.hours.saturday}</p>
+          <p className="text-xs text-[hsl(var(--footer-muted))]">{siteConfig.hours.weekdays}</p>
+              <p className="text-xs text-[hsl(var(--footer-muted))]">{siteConfig.hours.saturday}</p>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="mt-16 pt-8 border-t border-[hsl(var(--footer-foreground))]/10 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-[hsl(var(--footer-muted))]/80">
+          <p className="text-xs text-[hsl(var(--footer-muted))]">
             © {new Date().getFullYear()} Peninsula Equine. All rights reserved.
           </p>
           <div className="flex gap-6">
@@ -147,14 +147,14 @@ export function Footer() {
               <Link
                 key={link.name}
                 to={link.href}
-                className="text-xs text-[hsl(var(--footer-muted))]/80 hover:text-[hsl(var(--footer-hover))] transition-colors"
+                className="text-xs text-[hsl(var(--footer-muted))] hover:text-[hsl(var(--footer-hover))] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
               >
                 {link.name}
               </Link>
             ))}
             <Link
               to="/hq"
-              className="text-xs text-[hsl(var(--footer-muted))]/60 hover:text-[hsl(var(--footer-hover))] transition-colors"
+              className="text-xs text-[hsl(var(--footer-muted))] hover:text-[hsl(var(--footer-hover))] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
             >
               Staff
             </Link>
