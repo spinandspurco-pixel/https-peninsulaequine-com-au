@@ -198,6 +198,7 @@ export type Database = {
           notes: string | null
           phone: string | null
           status: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string
@@ -209,6 +210,7 @@ export type Database = {
           notes?: string | null
           phone?: string | null
           status?: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string
@@ -220,6 +222,7 @@ export type Database = {
           notes?: string | null
           phone?: string | null
           status?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -724,30 +727,13 @@ export type Database = {
       }
     }
     Views: {
-      event_rsvps_public: {
+      event_rsvp_counts: {
         Row: {
-          created_at: string | null
+          confirmed_guests: number | null
           event_id: string | null
-          guests: number | null
-          id: string | null
-          name: string | null
-          status: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          event_id?: string | null
-          guests?: number | null
-          id?: string | null
-          name?: string | null
-          status?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          event_id?: string | null
-          guests?: number | null
-          id?: string | null
-          name?: string | null
-          status?: string | null
+          rsvp_count: number | null
+          total_guests: number | null
+          waitlisted_guests: number | null
         }
         Relationships: []
       }
