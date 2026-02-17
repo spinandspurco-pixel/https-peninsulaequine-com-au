@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ArrowRight, Star, Play, Quote, Filter, X, Film, Expand, User } from "lucide-react";
+import { ArrowRight, Star, Play, Quote, Filter, X, Film, Expand, User, Image, SortDesc, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Layout } from "@/components/layout/Layout";
@@ -364,6 +364,8 @@ export default function Testimonials() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [testimonials, setTestimonials] = useState<TestimonialItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [mediaFilter, setMediaFilter] = useState<"" | "video" | "image">("");
+  const [sortNewest, setSortNewest] = useState(false);
 
   const activeFilter = searchParams.get("service") || "";
   const activeTrainer = searchParams.get("trainer") || "";
@@ -399,8 +401,14 @@ export default function Testimonials() {
     if (activeTrainer) {
       items = items.filter((t) => t.trainer === activeTrainer);
     }
+    if (mediaFilter) {
+      items = items.filter((t) => t.mediaType === mediaFilter && t.mediaUrl);
+    }
+    if (sortNewest) {
+      items = [...items].sort((a, b) => (b.id > a.id ? 1 : -1));
+    }
     return items;
-  }, [testimonials, activeFilter, activeTrainer]);
+  }, [testimonials, activeFilter, activeTrainer, mediaFilter, sortNewest]);
 
   return (
     <Layout>
@@ -502,7 +510,46 @@ export default function Testimonials() {
               )}
             </div>
           )}
-          {trainerOptions.length === 0 && <div className="mb-12" />}
+          {trainerOptions.length === 0 && <div className="mb-4" />}
+
+          {/* Media type filter + sort */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
+            <span className="text-xs text-muted-foreground mr-1 flex items-center gap-1">
+              <Film className="h-3.5 w-3.5" /> Media:
+            </span>
+            {([
+              { key: "" as const, label: "All", icon: null },
+              { key: "video" as const, label: "Video", icon: <Play className="h-3 w-3" /> },
+              { key: "image" as const, label: "Photo", icon: <Image className="h-3 w-3" /> },
+            ]).map(({ key, label, icon }) => (
+              <button
+                key={key}
+                onClick={() => setMediaFilter(mediaFilter === key ? "" : key)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                  mediaFilter === key
+                    ? "bg-accent text-accent-foreground border-accent"
+                    : "bg-transparent text-muted-foreground border-border hover:border-accent/40 hover:text-foreground"
+                }`}
+              >
+                {icon}
+                {label}
+              </button>
+            ))}
+
+            <div className="h-4 w-px bg-border mx-2 hidden sm:block" />
+
+            <button
+              onClick={() => setSortNewest(!sortNewest)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                sortNewest
+                  ? "bg-accent text-accent-foreground border-accent"
+                  : "bg-transparent text-muted-foreground border-border hover:border-accent/40 hover:text-foreground"
+              }`}
+            >
+              <ArrowUpDown className="h-3 w-3" />
+              Newest First
+            </button>
+          </div>
 
           {loading ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
