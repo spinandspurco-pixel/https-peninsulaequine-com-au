@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ABTestStatsPanel } from "@/components/ABTestStatsPanel";
+import { AdminStaffOnboarding } from "@/components/AdminStaffOnboarding";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -509,6 +510,11 @@ export default function Admin() {
               </CardContent>
             </Card>
           )}
+
+          {/* Staff & Onboarding */}
+          <div className="mb-8">
+            <AdminStaffOnboarding />
+          </div>
 
           {/* A/B Test Stats */}
           <div className="mb-8">
