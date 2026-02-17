@@ -20,6 +20,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { exportDocumentAsPDF } from "./StaffDocuments";
 import {
   FileText,
   DollarSign,
@@ -38,12 +39,16 @@ import {
   ChevronUp,
   AlertCircle,
   ArrowLeft,
+  ShieldCheck,
+  FileWarning,
 } from "lucide-react";
 import logoPeMark from "@/assets/logo-pe-mark.png";
 
 const DOC_TYPES = {
   all: { label: "All Documents", icon: FileText, color: "text-foreground" },
   swms: { label: "SWMS", icon: HardHat, color: "text-orange-500" },
+  work_permit: { label: "Work Permits", icon: ShieldCheck, color: "text-amber-600" },
+  risk_assessment: { label: "Risk Assessments", icon: FileWarning, color: "text-red-500" },
   payment_slip: { label: "Payment Slips", icon: DollarSign, color: "text-green-500" },
   site_inspection: { label: "Site Inspections", icon: ClipboardCheck, color: "text-blue-500" },
   event_checklist: { label: "Event Safety", icon: FileText, color: "text-purple-500" },
@@ -468,6 +473,13 @@ export default function AdminDocuments() {
                 </div>
 
                 <DialogFooter className="flex-col sm:flex-row gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => exportDocumentAsPDF(selectedDoc)}
+                    className="w-full sm:w-auto"
+                  >
+                    <Download className="mr-2 h-4 w-4" /> Export PDF
+                  </Button>
                   <Button
                     variant="destructive"
                     onClick={() => handleReview("rejected")}
