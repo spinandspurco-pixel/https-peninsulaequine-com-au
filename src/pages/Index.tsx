@@ -11,6 +11,7 @@ import { LeadMagnetPopup } from "@/components/LeadMagnetPopup";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { FloatingContactButton } from "@/components/FloatingContactButton";
 import { SectionTransition, AnimatedDivider } from "@/components/SectionTransition";
+import { HomeBookingFlow } from "@/components/home/HomeBookingFlow";
 
 export default function Index() {
   return (
@@ -41,6 +42,7 @@ export default function Index() {
         </div>
       </section>
 
+      <HomeBookingFlow />
       <ServicesHighlights />
       <ServiceTabsSection />
       <GalleryTeaser />
