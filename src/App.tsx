@@ -42,6 +42,7 @@ import AdminDocuments from "./pages/AdminDocuments";
 import StaffDocumentPortal from "./pages/StaffDocumentPortal";
 import TrainerDocumentPortal from "./pages/TrainerDocumentPortal";
 import TrainerProfile from "./pages/TrainerProfile";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import { useCartSync } from "./hooks/useCartSync";
 
 const queryClient = new QueryClient();
@@ -74,7 +75,7 @@ function AppContent() {
           <Route path="/admin/events" element={<AdminEvents />} />
           <Route path="/employee" element={<EmployeeDashboard />} />
           <Route path="/lessons" element={<Lessons />} />
-          <Route path="/book-lesson" element={<BookLesson />} />
+          <Route path="/book-lesson" element={<ProtectedRoute><BookLesson /></ProtectedRoute>} />
           <Route path="/brand" element={<BrandGuide />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/shop/:handle" element={<ProductDetail />} />

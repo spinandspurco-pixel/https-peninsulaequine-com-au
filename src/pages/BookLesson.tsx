@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { Link, useSearchParams } from "react-router-dom";
 import { CalendarIcon, Clock, CheckCircle, ArrowRight, Send, Star, Award, Target, ChevronDown, ExternalLink, Quote, Users, Sparkles, Play, Printer, CircleDot, Mail, Phone, MapPin, User, Edit2 } from "lucide-react";
 import { CalendarSyncButtons } from "@/components/CalendarSyncButtons";
@@ -247,7 +248,7 @@ function ProgramLevelsSection() {
                 <div className="flex items-center gap-2">
                   <span className={cn(
                     "w-2 h-2 rounded-full",
-                    level.availability === "Open" ? "bg-green-500" : "bg-amber-500"
+                    level.availability === "Open" ? "bg-[hsl(142,76%,36%)]" : "bg-[hsl(38,92%,50%)]"
                   )} />
                   <span className="text-xs text-muted-foreground">{level.availability}</span>
                 </div>
@@ -477,6 +478,7 @@ function formatTimeSimple(time: string) {
 
 function BookingWizard() {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -498,9 +500,10 @@ function BookingWizard() {
     slotDate: "",
     slotTime: "",
     slotEndTime: "",
-    name: searchParams.get("name") || "",
-    email: searchParams.get("email") || "",
-    phone: searchParams.get("phone") || "",
+    // Pre-fill from auth user; URL params as fallback
+    name: searchParams.get("name") || user?.user_metadata?.full_name || user?.user_metadata?.name || "",
+    email: searchParams.get("email") || user?.email || "",
+    phone: searchParams.get("phone") || user?.user_metadata?.phone || "",
     additionalNotes: "",
   });
 
@@ -762,6 +765,14 @@ function BookingWizard() {
       {/* ── Step 3: Your Details ── */}
       {step === 3 && (
         <div className="space-y-6">
+          {/* Signed-in as banner */}
+          {user && (
+            <div className="rounded-lg bg-muted/50 border border-border/40 px-4 py-3 text-sm flex items-center gap-2.5 text-muted-foreground">
+              <User className="h-4 w-4 shrink-0 text-accent" />
+              Booking as <span className="font-medium text-foreground">{user.email}</span>
+            </div>
+          )}
+
           {/* Summary card */}
           {pricing && data.slotDate && (
             <div className="rounded-lg bg-accent/5 border border-accent/15 p-4">
@@ -795,7 +806,15 @@ function BookingWizard() {
             <Label htmlFor="wiz-email">Email *</Label>
             <div className="relative mt-1">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input id="wiz-email" type="email" value={data.email} onChange={(e) => update("email", e.target.value)} placeholder="you@example.com" className="pl-9" />
+              <Input
+                id="wiz-email"
+                type="email"
+                value={data.email}
+                onChange={(e) => update("email", e.target.value)}
+                placeholder="you@example.com"
+                className="pl-9"
+                readOnly={!!user?.email}
+              />
             </div>
             {errors.email && <p className="text-sm text-destructive mt-1">{errors.email}</p>}
           </div>
@@ -819,6 +838,7 @@ function BookingWizard() {
           </div>
         </div>
       )}
+
 
       {/* ── Step 4: Review & Pay ── */}
       {step === 4 && pricing && (
