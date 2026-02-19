@@ -727,19 +727,20 @@ export type Database = {
       }
     }
     Views: {
-      event_rsvp_counts: {
-        Row: {
-          confirmed_guests: number | null
-          event_id: string | null
-          rsvp_count: number | null
-          total_guests: number | null
-          waitlisted_guests: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       cleanup_expired_holds: { Args: never; Returns: undefined }
+      get_event_rsvp_counts: {
+        Args: { p_event_id: string }
+        Returns: {
+          confirmed_guests: number
+          event_id: string
+          rsvp_count: number
+          total_guests: number
+          waitlisted_guests: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

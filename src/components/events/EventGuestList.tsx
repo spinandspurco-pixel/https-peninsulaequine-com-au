@@ -34,12 +34,15 @@ export function EventGuestList({ eventId, totalSpots, onSpotsChange }: EventGues
 
   const fetchCounts = useCallback(async () => {
     const { data } = await supabase
-      .from("event_rsvp_counts" as any)
-      .select("total_guests, confirmed_guests, waitlisted_guests, rsvp_count")
-      .eq("event_id", eventId)
-      .maybeSingle();
-    if (data) {
-      setCounts(data as unknown as RsvpCounts);
+      .rpc("get_event_rsvp_counts", { p_event_id: eventId });
+    if (data && data.length > 0) {
+      const row = data[0];
+      setCounts({
+        total_guests: Number(row.total_guests) || 0,
+        confirmed_guests: Number(row.confirmed_guests) || 0,
+        waitlisted_guests: Number(row.waitlisted_guests) || 0,
+        rsvp_count: Number(row.rsvp_count) || 0,
+      });
     }
     setLoading(false);
   }, [eventId]);
