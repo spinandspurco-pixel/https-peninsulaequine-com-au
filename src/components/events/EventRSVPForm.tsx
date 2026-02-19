@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { CalendarSyncButtons } from "@/components/CalendarSyncButtons";
 import { useAuth } from "@/hooks/useAuth";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import type { CalendarEvent } from "@/lib/calendarSync";
 
 const rsvpSchema = z.object({
@@ -57,6 +57,7 @@ export function EventRSVPForm({
   eventDescription,
 }: EventRSVPFormProps) {
   const { user, loading: authLoading } = useAuth();
+  const location = useLocation();
   const [form, setForm] = useState({ name: "", phone: "", guests: 1, notes: "" });
   const [joinWaitlist, setJoinWaitlist] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -151,6 +152,7 @@ export function EventRSVPForm({
 
   // ── Not signed in ──
   if (!user) {
+    const redirectPath = location.pathname || "/events";
     return (
       <div className="text-center py-8 space-y-4">
         <LogIn className="h-10 w-10 text-muted-foreground mx-auto" />
@@ -161,7 +163,7 @@ export function EventRSVPForm({
           </p>
         </div>
         <Button asChild>
-          <Link to="/login?redirect=/events">Sign In</Link>
+          <Link to={`/login?redirect=${encodeURIComponent(redirectPath)}`}>Sign In</Link>
         </Button>
       </div>
     );

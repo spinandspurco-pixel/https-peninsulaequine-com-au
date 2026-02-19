@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
@@ -17,14 +17,17 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const { user, isAdmin, isEmployee, isTrainer, loading, signIn } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || null;
 
   // Redirect if already logged in
   useEffect(() => {
     if (!loading && user) {
-      if (isAdmin) navigate("/admin");
+      if (redirectTo) navigate(redirectTo);
+      else if (isAdmin) navigate("/admin");
       else if (isEmployee || isTrainer) navigate("/employee");
     }
-  }, [user, isAdmin, isEmployee, isTrainer, loading, navigate]);
+  }, [user, isAdmin, isEmployee, isTrainer, loading, navigate, redirectTo]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +45,7 @@ export default function Login() {
     }
 
     toast.success("Welcome back!");
-    // Role-based redirect happens via the useEffect above
+    // Role-based redirect (including ?redirect param) handled via useEffect above
   };
 
   if (loading) {
