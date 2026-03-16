@@ -24,8 +24,11 @@ const inquirySchema = z.object({
   status: z.string().max(50).optional().nullable(),
 });
 
-/** Generic user-safe message — never leaks HubSpot internals */
-const GENERIC_ERROR = "Your inquiry was saved. We'll follow up shortly.";
+/** Uniform client response — never leaks CRM internals, IDs, or config status */
+const OK_RESPONSE = { success: true, message: "Your inquiry was saved. We'll follow up shortly." };
+const jsonHeaders = { "Content-Type": "application/json", ...corsHeaders };
+const okJson = () =>
+  new Response(JSON.stringify(OK_RESPONSE), { status: 200, headers: jsonHeaders });
 
 /** Retry a fetch with exponential backoff for transient failures */
 async function fetchWithRetry(
