@@ -5,7 +5,7 @@ import { ServicesHighlights } from "@/components/home/ServicesHighlights";
 import { ServiceTabsSection } from "@/components/home/ServiceTabsSection";
 import { GalleryTeaser } from "@/components/home/GalleryTeaser";
 import { TestimonialSection } from "@/components/home/TestimonialSection";
-import { VideoShowcaseSection } from "@/components/home/VideoShowcaseSection";
+import { VideoTestimonialCarousel } from "@/components/home/VideoTestimonialCarousel";
 import { QuoteSection } from "@/components/home/QuoteSection";
 import { LeadMagnetPopup } from "@/components/LeadMagnetPopup";
 import { LeadCaptureForm } from "@/components/LeadCaptureForm";
@@ -47,7 +47,7 @@ export default function Index() {
       <ServiceTabsSection />
       <GalleryTeaser />
       <TestimonialSection />
-      <VideoShowcaseSection />
+      <VideoTestimonialCarousel />
       <QuoteSection />
     </Layout>
   );
