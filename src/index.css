@@ -754,3 +754,18 @@
   0% { transform: translateX(-100%); }
   100% { transform: translateX(200%); }
 }
+
+@keyframes rope-drift {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-8px) rotate(1deg); }
+}
+
+.animate-rope-drift {
+  animation: rope-drift 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rope-drift {
+    animation: none;
+  }
+}

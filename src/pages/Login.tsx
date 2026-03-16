@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { Eye, EyeOff, LogIn, Shield, Loader2 } from "lucide-react";
 import { lovable } from "@/integrations/lovable/index";
 import logoPeMark from "@/assets/logo-pe-mark.png";
+import { StaffPortalFrame } from "@/components/StaffPortalFrame";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -21,7 +22,6 @@ export default function Login() {
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirect") || null;
 
-  // Redirect if already logged in
   useEffect(() => {
     if (!loading && user) {
       if (redirectTo) navigate(redirectTo);
@@ -46,7 +46,6 @@ export default function Login() {
     }
 
     toast.success("Welcome back!");
-    // Role-based redirect (including ?redirect param) handled via useEffect above
   };
 
   if (loading) {
@@ -61,8 +60,11 @@ export default function Login() {
 
   return (
     <Layout>
-      <div className="min-h-[80vh] flex items-center justify-center py-12 px-4">
-        <Card className="w-full max-w-md border-border/50">
+      <StaffPortalFrame
+        title="Advanced Staff Access"
+        subtitle="A cleaner, faster staff portal with role-based routing and a focused login flow."
+      >
+        <Card className="w-full max-w-md border-border/40 bg-card/95 backdrop-blur">
           <CardHeader className="text-center space-y-4">
             <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
               <img src={logoPeMark} alt="P.E" className="h-10 w-10 object-contain" />
@@ -167,7 +169,7 @@ export default function Login() {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </StaffPortalFrame>
     </Layout>
   );
 }
