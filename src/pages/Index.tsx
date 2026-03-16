@@ -47,7 +47,7 @@ export default function Index() {
       <ServiceTabsSection />
       <GalleryTeaser />
       <TestimonialSection />
-      <VideoShowcaseSection />
+      <VideoTestimonialCarousel />
       <QuoteSection />
     </Layout>
   );
