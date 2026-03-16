@@ -98,10 +98,7 @@ serve(async (req: Request): Promise<Response> => {
     const hubspotApiKey = setting?.value;
     if (!hubspotApiKey) {
       console.log("HubSpot API key not configured, skipping sync");
-      return new Response(
-        JSON.stringify({ success: true, message: GENERIC_ERROR }),
-        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+      return okJson();
     }
 
     // Validate input
