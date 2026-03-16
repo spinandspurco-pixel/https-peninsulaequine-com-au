@@ -157,11 +157,7 @@ serve(async (req: Request): Promise<Response> => {
           const errBody = await updateRes.text();
           const code = classifyHubSpotError(updateRes.status, errBody);
           console.error(`[${code}] HubSpot update failed for contact ${existingId} [${updateRes.status}]:`, errBody);
-          // Return success to user — inquiry is already saved in DB
-          return new Response(
-            JSON.stringify({ success: true, message: GENERIC_ERROR }),
-            { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-          );
+          return okJson();
         }
 
         console.log("HubSpot contact updated:", existingId);
