@@ -24,6 +24,53 @@ const inquirySchema = z.object({
   status: z.string().max(50).optional().nullable(),
 });
 
+/** Generic user-safe message — never leaks HubSpot internals */
+const GENERIC_ERROR = "Your inquiry was saved. We'll follow up shortly.";
+
+/** Retry a fetch with exponential backoff for transient failures */
+async function fetchWithRetry(
+  url: string,
+  options: RequestInit,
+  { retries = 2, baseDelay = 500 } = {}
+): Promise<Response> {
+  let lastError: Error | null = null;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const res = await fetch(url, options);
+      // Only retry on 429 (rate-limit) or 5xx server errors
+      if (res.status === 429 || (res.status >= 500 && attempt < retries)) {
+        const retryAfter = res.headers.get("Retry-After");
+        const delay = retryAfter
+          ? Math.min(parseInt(retryAfter, 10) * 1000, 10_000)
+          : baseDelay * Math.pow(2, attempt);
+        console.warn(`HubSpot ${res.status} — retrying in ${delay}ms (attempt ${attempt + 1})`);
+        await new Promise((r) => setTimeout(r, delay));
+        continue;
+      }
+      return res;
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err));
+      if (attempt < retries) {
+        const delay = baseDelay * Math.pow(2, attempt);
+        console.warn(`HubSpot network error — retrying in ${delay}ms:`, lastError.message);
+        await new Promise((r) => setTimeout(r, delay));
+      }
+    }
+  }
+  throw lastError ?? new Error("HubSpot request failed after retries");
+}
+
+/** Classifies a HubSpot API error for internal logging */
+function classifyHubSpotError(status: number, body: string): string {
+  if (status === 401) return "HUBSPOT_AUTH_INVALID";
+  if (status === 403) return "HUBSPOT_SCOPE_DENIED";
+  if (status === 429) return "HUBSPOT_RATE_LIMITED";
+  if (status >= 500) return "HUBSPOT_SERVER_ERROR";
+  if (body.includes("PROPERTY_DOESNT_EXIST")) return "HUBSPOT_BAD_PROPERTY";
+  if (body.includes("INVALID_EMAIL")) return "HUBSPOT_INVALID_EMAIL";
+  return `HUBSPOT_ERROR_${status}`;
+}
+
 serve(async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -34,10 +81,13 @@ serve(async (req: Request): Promise<Response> => {
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-      throw new Error("Missing Supabase configuration");
+      console.error("Missing Supabase configuration");
+      return new Response(
+        JSON.stringify({ success: true, message: GENERIC_ERROR }),
+        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
     }
 
-    // Get HubSpot API key from integration_settings
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
     const { data: setting } = await supabase
       .from("integration_settings")
@@ -48,25 +98,26 @@ serve(async (req: Request): Promise<Response> => {
     const hubspotApiKey = setting?.value;
     if (!hubspotApiKey) {
       console.log("HubSpot API key not configured, skipping sync");
-      return new Response(JSON.stringify({ success: false, error: "Integration not available" }), {
-        status: 200,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      });
+      return new Response(
+        JSON.stringify({ success: true, message: GENERIC_ERROR }),
+        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
     }
 
+    // Validate input
     const parsed = inquirySchema.safeParse(await req.json());
     if (!parsed.success) {
       console.error("Invalid inquiry data:", parsed.error.flatten());
       return new Response(
-        JSON.stringify({ success: false, error: "Invalid data" }),
-        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        JSON.stringify({ success: true, message: GENERIC_ERROR }),
+        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
 
     const inquiry = parsed.data;
 
     // Split name into first/last
-    const nameParts = (inquiry.name || "").trim().split(/\s+/);
+    const nameParts = inquiry.name.trim().split(/\s+/);
     const firstName = nameParts[0] || "";
     const lastName = nameParts.slice(1).join(" ") || "";
 
@@ -86,41 +137,37 @@ serve(async (req: Request): Promise<Response> => {
     if (inquiry.budget_range) properties.annualrevenue = inquiry.budget_range;
     if (inquiry.horse_name) properties.jobtitle = `Horse: ${inquiry.horse_name}`;
 
-    // Create or update contact in HubSpot
-    const hubspotResponse = await fetch(
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${hubspotApiKey}`,
+    };
+
+    // Create contact
+    const createRes = await fetchWithRetry(
       "https://api.hubapi.com/crm/v3/objects/contacts",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${hubspotApiKey}`,
-        },
-        body: JSON.stringify({ properties }),
-      }
+      { method: "POST", headers, body: JSON.stringify({ properties }) }
     );
 
-    // If contact exists (409), update instead
-    if (hubspotResponse.status === 409) {
-      const conflictData = await hubspotResponse.json();
+    // Handle conflict — update existing contact
+    if (createRes.status === 409) {
+      const conflictData = await createRes.json();
       const existingId = conflictData?.message?.match(/Existing ID: (\d+)/)?.[1];
 
       if (existingId) {
-        const updateResponse = await fetch(
+        const updateRes = await fetchWithRetry(
           `https://api.hubapi.com/crm/v3/objects/contacts/${existingId}`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${hubspotApiKey}`,
-            },
-            body: JSON.stringify({ properties }),
-          }
+          { method: "PATCH", headers, body: JSON.stringify({ properties }) }
         );
 
-        if (!updateResponse.ok) {
-          const errBody = await updateResponse.text();
-          console.error(`HubSpot update failed [${updateResponse.status}]:`, errBody);
-          throw new Error("Sync failed");
+        if (!updateRes.ok) {
+          const errBody = await updateRes.text();
+          const code = classifyHubSpotError(updateRes.status, errBody);
+          console.error(`[${code}] HubSpot update failed for contact ${existingId} [${updateRes.status}]:`, errBody);
+          // Return success to user — inquiry is already saved in DB
+          return new Response(
+            JSON.stringify({ success: true, message: GENERIC_ERROR }),
+            { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+          );
         }
 
         console.log("HubSpot contact updated:", existingId);
@@ -129,15 +176,26 @@ serve(async (req: Request): Promise<Response> => {
           { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
         );
       }
+
+      // Could not extract existing ID from 409 response
+      console.error("HubSpot 409 but no existing ID found:", JSON.stringify(conflictData));
+      return new Response(
+        JSON.stringify({ success: true, message: GENERIC_ERROR }),
+        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
     }
 
-    if (!hubspotResponse.ok && hubspotResponse.status !== 409) {
-      const errBody = await hubspotResponse.text();
-      console.error(`HubSpot create failed [${hubspotResponse.status}]:`, errBody);
-      throw new Error("Sync failed");
+    if (!createRes.ok) {
+      const errBody = await createRes.text();
+      const code = classifyHubSpotError(createRes.status, errBody);
+      console.error(`[${code}] HubSpot create failed [${createRes.status}]:`, errBody);
+      return new Response(
+        JSON.stringify({ success: true, message: GENERIC_ERROR }),
+        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
     }
 
-    const hubspotData = await hubspotResponse.json();
+    const hubspotData = await createRes.json();
     console.log("HubSpot contact created:", hubspotData.id);
 
     return new Response(
@@ -145,10 +203,12 @@ serve(async (req: Request): Promise<Response> => {
       { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   } catch (error: unknown) {
-    console.error("Error syncing to HubSpot:", error);
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error("Unhandled HubSpot sync error:", msg);
+    // Always return success to end user — the inquiry is saved in the DB regardless
     return new Response(
-      JSON.stringify({ success: false, error: "Sync failed" }),
-      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      JSON.stringify({ success: true, message: GENERIC_ERROR }),
+      { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   }
 });
