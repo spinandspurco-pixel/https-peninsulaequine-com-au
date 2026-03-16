@@ -85,10 +85,7 @@ serve(async (req: Request): Promise<Response> => {
 
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
       console.error("Missing Supabase configuration");
-      return new Response(
-        JSON.stringify({ success: true, message: GENERIC_ERROR }),
-        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+      return okJson();
     }
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
