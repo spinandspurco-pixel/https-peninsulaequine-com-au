@@ -164,7 +164,7 @@ serve(async (req: Request): Promise<Response> => {
         return okJson();
       }
 
-      console.error("HubSpot 409 but no existing ID found");
+      console.error("CRM 409 conflict — could not resolve existing record:", JSON.stringify(conflictData));
       return okJson();
     }
 
