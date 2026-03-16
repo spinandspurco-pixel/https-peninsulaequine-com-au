@@ -24,8 +24,11 @@ const inquirySchema = z.object({
   status: z.string().max(50).optional().nullable(),
 });
 
-/** Generic user-safe message — never leaks HubSpot internals */
-const GENERIC_ERROR = "Your inquiry was saved. We'll follow up shortly.";
+/** Uniform client response — never leaks CRM internals, IDs, or config status */
+const OK_RESPONSE = { success: true, message: "Your inquiry was saved. We'll follow up shortly." };
+const jsonHeaders = { "Content-Type": "application/json", ...corsHeaders };
+const okJson = () =>
+  new Response(JSON.stringify(OK_RESPONSE), { status: 200, headers: jsonHeaders });
 
 /** Retry a fetch with exponential backoff for transient failures */
 async function fetchWithRetry(
@@ -82,10 +85,7 @@ serve(async (req: Request): Promise<Response> => {
 
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
       console.error("Missing Supabase configuration");
-      return new Response(
-        JSON.stringify({ success: true, message: GENERIC_ERROR }),
-        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+      return okJson();
     }
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
@@ -98,20 +98,14 @@ serve(async (req: Request): Promise<Response> => {
     const hubspotApiKey = setting?.value;
     if (!hubspotApiKey) {
       console.log("HubSpot API key not configured, skipping sync");
-      return new Response(
-        JSON.stringify({ success: true, message: GENERIC_ERROR }),
-        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+      return okJson();
     }
 
     // Validate input
     const parsed = inquirySchema.safeParse(await req.json());
     if (!parsed.success) {
       console.error("Invalid inquiry data:", parsed.error.flatten());
-      return new Response(
-        JSON.stringify({ success: true, message: GENERIC_ERROR }),
-        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+      return okJson();
     }
 
     const inquiry = parsed.data;
@@ -163,52 +157,29 @@ serve(async (req: Request): Promise<Response> => {
           const errBody = await updateRes.text();
           const code = classifyHubSpotError(updateRes.status, errBody);
           console.error(`[${code}] HubSpot update failed for contact ${existingId} [${updateRes.status}]:`, errBody);
-          // Return success to user — inquiry is already saved in DB
-          return new Response(
-            JSON.stringify({ success: true, message: GENERIC_ERROR }),
-            { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-          );
+          return okJson();
         }
 
-        console.log("HubSpot contact updated:", existingId);
-        return new Response(
-          JSON.stringify({ success: true, action: "updated" }),
-          { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-        );
+        console.log("HubSpot contact updated");
+        return okJson();
       }
 
-      // Could not extract existing ID from 409 response
-      console.error("HubSpot 409 but no existing ID found:", JSON.stringify(conflictData));
-      return new Response(
-        JSON.stringify({ success: true, message: GENERIC_ERROR }),
-        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+      console.error("HubSpot 409 but no existing ID found");
+      return okJson();
     }
 
     if (!createRes.ok) {
       const errBody = await createRes.text();
       const code = classifyHubSpotError(createRes.status, errBody);
-      console.error(`[${code}] HubSpot create failed [${createRes.status}]:`, errBody);
-      return new Response(
-        JSON.stringify({ success: true, message: GENERIC_ERROR }),
-        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+      console.error(`[${code}] HubSpot create failed [${createRes.status}]`);
+      return okJson();
     }
 
-    const hubspotData = await createRes.json();
-    console.log("HubSpot contact created:", hubspotData.id);
-
-    return new Response(
-      JSON.stringify({ success: true, action: "created" }),
-      { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-    );
+    console.log("HubSpot contact synced");
+    return okJson();
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
-    console.error("Unhandled HubSpot sync error:", msg);
-    // Always return success to end user — the inquiry is saved in the DB regardless
-    return new Response(
-      JSON.stringify({ success: true, message: GENERIC_ERROR }),
-      { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-    );
+    console.error("Unhandled sync error:", msg);
+    return okJson();
   }
 });
