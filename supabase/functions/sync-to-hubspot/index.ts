@@ -105,10 +105,7 @@ serve(async (req: Request): Promise<Response> => {
     const parsed = inquirySchema.safeParse(await req.json());
     if (!parsed.success) {
       console.error("Invalid inquiry data:", parsed.error.flatten());
-      return new Response(
-        JSON.stringify({ success: true, message: GENERIC_ERROR }),
-        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+      return okJson();
     }
 
     const inquiry = parsed.data;
