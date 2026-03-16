@@ -164,12 +164,8 @@ serve(async (req: Request): Promise<Response> => {
         return okJson();
       }
 
-      // Could not extract existing ID from 409 response
-      console.error("HubSpot 409 but no existing ID found:", JSON.stringify(conflictData));
-      return new Response(
-        JSON.stringify({ success: true, message: GENERIC_ERROR }),
-        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+      console.error("HubSpot 409 but no existing ID found");
+      return okJson();
     }
 
     if (!createRes.ok) {
