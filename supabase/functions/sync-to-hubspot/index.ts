@@ -175,13 +175,8 @@ serve(async (req: Request): Promise<Response> => {
       return okJson();
     }
 
-    const hubspotData = await createRes.json();
-    console.log("HubSpot contact created:", hubspotData.id);
-
-    return new Response(
-      JSON.stringify({ success: true, action: "created" }),
-      { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-    );
+    console.log("HubSpot contact synced");
+    return okJson();
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
     console.error("Unhandled HubSpot sync error:", msg);
