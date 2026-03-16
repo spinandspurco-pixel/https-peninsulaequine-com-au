@@ -156,7 +156,7 @@ serve(async (req: Request): Promise<Response> => {
         if (!updateRes.ok) {
           const errBody = await updateRes.text();
           const code = classifyHubSpotError(updateRes.status, errBody);
-          console.error(`[${code}] HubSpot update failed for contact ${existingId} [${updateRes.status}]:`, errBody);
+          console.error(`[${code}] CRM update failed [${updateRes.status}]:`, errBody);
           return okJson();
         }
 
