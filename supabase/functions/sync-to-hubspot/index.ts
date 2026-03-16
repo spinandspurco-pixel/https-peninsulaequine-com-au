@@ -156,7 +156,7 @@ serve(async (req: Request): Promise<Response> => {
         if (!updateRes.ok) {
           const errBody = await updateRes.text();
           const code = classifyHubSpotError(updateRes.status, errBody);
-          console.error(`[${code}] HubSpot update failed for contact ${existingId} [${updateRes.status}]:`, errBody);
+          console.error(`[${code}] CRM update failed [${updateRes.status}]:`, errBody);
           return okJson();
         }
 
@@ -164,14 +164,14 @@ serve(async (req: Request): Promise<Response> => {
         return okJson();
       }
 
-      console.error("HubSpot 409 but no existing ID found");
+      console.error("CRM 409 conflict — could not resolve existing record:", JSON.stringify(conflictData));
       return okJson();
     }
 
     if (!createRes.ok) {
       const errBody = await createRes.text();
       const code = classifyHubSpotError(createRes.status, errBody);
-      console.error(`[${code}] HubSpot create failed [${createRes.status}]`);
+      console.error(`[${code}] CRM create failed [${createRes.status}]:`, errBody);
       return okJson();
     }
 
