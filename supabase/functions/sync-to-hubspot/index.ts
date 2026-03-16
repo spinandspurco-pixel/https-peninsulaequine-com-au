@@ -171,7 +171,7 @@ serve(async (req: Request): Promise<Response> => {
     if (!createRes.ok) {
       const errBody = await createRes.text();
       const code = classifyHubSpotError(createRes.status, errBody);
-      console.error(`[${code}] HubSpot create failed [${createRes.status}]`);
+      console.error(`[${code}] CRM create failed [${createRes.status}]:`, errBody);
       return okJson();
     }
 
