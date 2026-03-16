@@ -12,8 +12,9 @@ import { Eye, EyeOff, LogIn, Shield, Users, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import logoPeMark from "@/assets/logo-pe-mark.png";
+import { StaffPortalFrame } from "@/components/StaffPortalFrame";
 
-export default function HQ() { // Staff login portal — v2
+export default function HQ() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -59,19 +60,19 @@ export default function HQ() { // Staff login portal — v2
         return;
       }
 
-      toast.success(`Welcome back!`);
+      toast.success("Welcome back!");
       navigate(roleData.role === "admin" ? "/admin" : "/employee");
     }
     setIsLoading(false);
   };
 
-  // Don't block the login form — show it immediately even while auth loads
-  // If user is already logged in, the useEffect above will redirect them
-
   return (
     <Layout>
-      <div className="min-h-[80vh] flex items-center justify-center py-12 px-4">
-        <Card className="w-full max-w-md border-border/50">
+      <StaffPortalFrame
+        title="Peninsula Equine HQ"
+        subtitle="Admin and worker access with modern, blueprint-led motion and focused controls."
+      >
+        <Card className="w-full max-w-md border-border/40 bg-card/95 backdrop-blur">
           <CardHeader className="text-center space-y-4">
             <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
               <img src={logoPeMark} alt="P.E" className="h-10 w-10 object-contain" />
@@ -190,7 +191,7 @@ export default function HQ() { // Staff login portal — v2
             </div>
           </CardContent>
         </Card>
-      </div>
+      </StaffPortalFrame>
     </Layout>
   );
 }
