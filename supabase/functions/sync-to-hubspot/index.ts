@@ -179,11 +179,7 @@ serve(async (req: Request): Promise<Response> => {
     return okJson();
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
-    console.error("Unhandled HubSpot sync error:", msg);
-    // Always return success to end user — the inquiry is saved in the DB regardless
-    return new Response(
-      JSON.stringify({ success: true, message: GENERIC_ERROR }),
-      { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-    );
+    console.error("Unhandled sync error:", msg);
+    return okJson();
   }
 });
