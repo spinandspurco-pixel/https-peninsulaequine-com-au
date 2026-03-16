@@ -24,8 +24,8 @@ const inquirySchema = z.object({
   status: z.string().max(50).optional().nullable(),
 });
 
-/** Uniform client response — never leaks CRM internals, IDs, or config status */
-const OK_RESPONSE = { success: true, message: "Your inquiry was saved. We'll follow up shortly." };
+/** Uniform client response — identical for success and failure, never leaks internals */
+const OK_RESPONSE = { success: true, message: "Sync complete" };
 const jsonHeaders = { "Content-Type": "application/json", ...corsHeaders };
 const okJson = () =>
   new Response(JSON.stringify(OK_RESPONSE), { status: 200, headers: jsonHeaders });
