@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
+import { z } from "https://esm.sh/zod@3.23.8";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -7,21 +8,21 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-interface InquiryPayload {
-  inquiry_id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  services?: string[];
-  project_vision?: string;
-  project_details?: string;
-  budget_range?: string;
-  preferred_start?: string;
-  horse_name?: string;
-  horse_breed?: string;
-  experience_level?: string;
-  status?: string;
-}
+const inquirySchema = z.object({
+  inquiry_id: z.string().uuid().optional(),
+  name: z.string().trim().min(1).max(200),
+  email: z.string().trim().email().max(254),
+  phone: z.string().trim().max(20).optional().nullable(),
+  services: z.array(z.string().max(100)).max(20).optional(),
+  project_vision: z.string().max(2000).optional().nullable(),
+  project_details: z.string().max(5000).optional().nullable(),
+  budget_range: z.string().max(50).optional().nullable(),
+  preferred_start: z.string().max(100).optional().nullable(),
+  horse_name: z.string().max(100).optional().nullable(),
+  horse_breed: z.string().max(100).optional().nullable(),
+  experience_level: z.string().max(50).optional().nullable(),
+  status: z.string().max(50).optional().nullable(),
+});
 
 serve(async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
@@ -53,11 +54,16 @@ serve(async (req: Request): Promise<Response> => {
       });
     }
 
-    const inquiry: InquiryPayload = await req.json();
-
-    if (!inquiry.email) {
-      throw new Error("Missing required field: email");
+    const parsed = inquirySchema.safeParse(await req.json());
+    if (!parsed.success) {
+      console.error("Invalid inquiry data:", parsed.error.flatten());
+      return new Response(
+        JSON.stringify({ success: false, error: "Invalid data" }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
     }
+
+    const inquiry = parsed.data;
 
     // Split name into first/last
     const nameParts = (inquiry.name || "").trim().split(/\s+/);
