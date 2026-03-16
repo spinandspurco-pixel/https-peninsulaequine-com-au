@@ -171,11 +171,8 @@ serve(async (req: Request): Promise<Response> => {
     if (!createRes.ok) {
       const errBody = await createRes.text();
       const code = classifyHubSpotError(createRes.status, errBody);
-      console.error(`[${code}] HubSpot create failed [${createRes.status}]:`, errBody);
-      return new Response(
-        JSON.stringify({ success: true, message: GENERIC_ERROR }),
-        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-      );
+      console.error(`[${code}] HubSpot create failed [${createRes.status}]`);
+      return okJson();
     }
 
     const hubspotData = await createRes.json();
