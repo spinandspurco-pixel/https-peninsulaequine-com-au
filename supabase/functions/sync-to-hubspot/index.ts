@@ -160,11 +160,8 @@ serve(async (req: Request): Promise<Response> => {
           return okJson();
         }
 
-        console.log("HubSpot contact updated:", existingId);
-        return new Response(
-          JSON.stringify({ success: true, action: "updated" }),
-          { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-        );
+        console.log("HubSpot contact updated");
+        return okJson();
       }
 
       // Could not extract existing ID from 409 response
