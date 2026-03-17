@@ -485,39 +485,50 @@ export default function Index() {
 
       {/* ═══ FINAL CTA ═══════════════════════════════════ */}
       <section className="py-36 sm:py-52 bg-primary text-primary-foreground relative overflow-hidden">
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-[0.06]">
+        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-[0.04]">
           <source src={heroVideo} type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-primary/90" />
+        <div className="absolute inset-0 bg-primary/92" />
+        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.03]" />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, transparent 30%, hsl(var(--primary)) 100%)" }} />
 
-        <div className="section-container relative z-10 text-center max-w-lg mx-auto space-y-8">
-          <RevealLine className="mx-auto" width="w-10" />
+        <div className="section-container relative z-10 text-center max-w-lg mx-auto">
           <RevealOnScroll direction="up">
-            <h2 className="font-serif text-2xl md:text-3xl text-primary-foreground leading-[1.3]">
+            <div className="w-8 h-px bg-accent/40 mx-auto mb-12" />
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={80}>
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold text-primary-foreground tracking-[0.01em] leading-[1.2] mb-10">
               Let's Build Something<br />That Lasts
             </h2>
           </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={100}>
-            <Button
-              asChild
-              size="lg"
-              className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.14em] text-xs font-medium btn-hover-lift"
-            >
-              <Link to="/contact">
-                Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </RevealOnScroll>
           <RevealOnScroll direction="up" delay={200}>
-            <p className="text-primary-foreground/20 text-[11px] tracking-wide">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+              <Button
+                asChild
+                size="lg"
+                className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.14em] text-xs font-medium btn-hover-lift px-10 py-3.5"
+              >
+                <Link to="/contact">
+                  Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/5 uppercase tracking-[0.14em] text-xs font-medium px-10 py-3.5"
+              >
+                <Link to="/groundlock">Estimate a Project</Link>
+              </Button>
+            </div>
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={350}>
+            <p className="text-primary-foreground/20 text-[11px] tracking-[0.15em]">
               We take on a limited number of projects each season.
             </p>
           </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={300}>
-            <p className="text-accent/30 text-[10px] italic tracking-wider">
-              Built once. Built properly.
-            </p>
-          </RevealOnScroll>
+        </div>
+      </section>
         </div>
       </section>
     </Layout>

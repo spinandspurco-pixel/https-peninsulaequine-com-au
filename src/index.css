@@ -398,13 +398,13 @@
      INTERACTIVE EFFECTS
      ═══════════════════════════════════════════════════════ */
 
-  /* Button lift — restrained */
+  /* Button lift — restrained with gold glow */
   .btn-hover-lift {
     @apply transition-all duration-500 ease-out;
   }
   .btn-hover-lift:hover {
-    @apply -translate-y-px;
-    box-shadow: 0 4px 12px -4px hsl(var(--primary) / 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px -6px hsl(var(--accent) / 0.3);
   }
 
   /* Universal glow — buttons & interactive elements */
