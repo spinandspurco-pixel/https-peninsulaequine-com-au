@@ -407,7 +407,7 @@ export default function GroundLock() {
       </section>
 
       {/* Problem Statement */}
-      <section className="py-36 sm:py-52 bg-background relative overflow-hidden">
+      <section className="py-44 sm:py-64 bg-background relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
         <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
           <RevealOnScroll direction="up">
