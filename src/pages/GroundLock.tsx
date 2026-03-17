@@ -70,14 +70,16 @@ const PROJECT_TYPES: {
   },
 ];
 
-/* ── Cross-Section Visual ─────────────────────────── */
+/* ── Interactive Cross-Section Visual ──────────────── */
 function SystemCrossSection() {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
   const layers = [
-    { label: "Panel + Infill", depth: "75–100mm", text: "10–15mm Angular Aggregate", accent: true },
-    { label: "Bedding Layer", depth: "25–50mm", text: "10–20mm Fine Aggregate", accent: false },
-    { label: "Sub-Base", depth: "100–150mm", text: "40–75mm Crushed Rock", accent: false },
-    { label: "Geotextile", depth: "~1mm", text: "Non-woven Separation Layer", accent: true },
-    { label: "Subgrade", depth: "Native", text: "Trimmed & Compacted Soil", accent: false },
+    { label: "Panel + Infill", depth: "75–100mm", text: "Interlocking structure distributes load and prevents surface breakdown.", accent: true },
+    { label: "Bedding Layer", depth: "25–50mm", text: "Creates a stable, level base for long-term performance.", accent: false },
+    { label: "Sub-Base", depth: "100–150mm", text: "Compacted aggregate allowing water to drain while maintaining strength.", accent: false },
+    { label: "Geotextile", depth: "~1mm", text: "Separates layers to prevent contamination and movement.", accent: true },
+    { label: "Subgrade", depth: "Native", text: "Trimmed & compacted native soil — the foundation of everything above.", accent: false },
   ];
 
   return (
@@ -86,26 +88,47 @@ function SystemCrossSection() {
         <Layers className="w-3 h-3" /> System Cross-Section
       </h3>
       <div className="space-y-1 relative">
-        {layers.map((layer, i) => (
-          <RevealOnScroll key={i} direction="up" stagger={i} staggerInterval={80}>
-            <div
-              className={cn(
-                "flex items-center gap-4 p-3 border border-border/50 transition-colors",
-                layer.accent ? "bg-accent/5" : "bg-card"
-              )}
-            >
-              <div className="w-20 font-mono text-[10px] text-muted-foreground tabular-nums">
-                {layer.depth}
-              </div>
-              <div className="flex-1">
-                <p className="text-xs font-semibold text-foreground uppercase tracking-wider">
-                  {layer.label}
-                </p>
-                <p className="text-[10px] text-muted-foreground">{layer.text}</p>
-              </div>
-            </div>
-          </RevealOnScroll>
-        ))}
+        {layers.map((layer, i) => {
+          const isActive = activeIndex === i;
+          return (
+            <RevealOnScroll key={i} direction="up" stagger={i} staggerInterval={80}>
+              <button
+                type="button"
+                className={cn(
+                  "w-full text-left flex items-center gap-4 p-3 border transition-all duration-300 cursor-pointer",
+                  isActive
+                    ? "bg-accent/10 border-accent/40 scale-[1.01] shadow-md"
+                    : layer.accent ? "bg-accent/5 border-border/50" : "bg-card border-border/50",
+                )}
+                onMouseEnter={() => setActiveIndex(i)}
+                onMouseLeave={() => setActiveIndex(null)}
+                onClick={() => setActiveIndex(isActive ? null : i)}
+              >
+                <div className="w-20 font-mono text-[10px] text-muted-foreground tabular-nums shrink-0">
+                  {layer.depth}
+                </div>
+                <div className="flex-1">
+                  <p className={cn(
+                    "text-xs font-semibold uppercase tracking-wider transition-colors duration-300",
+                    isActive ? "text-accent" : "text-foreground"
+                  )}>
+                    {layer.label}
+                  </p>
+                  <div className={cn(
+                    "overflow-hidden transition-all duration-300",
+                    isActive ? "max-h-16 opacity-100 mt-1" : "max-h-0 opacity-0"
+                  )}>
+                    <p className="text-[11px] text-muted-foreground leading-relaxed">{layer.text}</p>
+                  </div>
+                </div>
+                <div className={cn(
+                  "w-1 h-6 rounded-full transition-all duration-300 shrink-0",
+                  isActive ? "bg-accent" : "bg-border"
+                )} />
+              </button>
+            </RevealOnScroll>
+          );
+        })}
         {/* Fall indicator */}
         <div className="absolute -right-2 top-4 bottom-16 flex flex-col items-center justify-center">
           <div className="w-px h-full bg-accent/30 relative">
@@ -114,6 +137,9 @@ function SystemCrossSection() {
           <span className="font-mono text-[9px] text-accent mt-1 whitespace-nowrap">1–2% fall</span>
         </div>
       </div>
+      <p className="text-[11px] text-accent/60 italic mt-4 px-1">
+        Most properties fail from the ground up. We start where it matters.
+      </p>
     </div>
   );
 }
