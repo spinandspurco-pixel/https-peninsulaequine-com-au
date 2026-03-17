@@ -13,6 +13,10 @@ import { services } from "@/data/content";
 
 export default function Services() {
   const navigate = useNavigate();
+  const heroSpotRef = useRef<HTMLElement>(null);
+  const ctaSpotRef = useRef<HTMLElement>(null);
+  useCursorSpotlight(heroSpotRef);
+  useCursorSpotlight(ctaSpotRef);
 
   const { data: dbServices } = useQuery({
     queryKey: ["managed-services"],
