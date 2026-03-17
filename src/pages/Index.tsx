@@ -328,6 +328,52 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ═══ FROM THE FIELD ═══════════════════════════════ */}
+      <section className="py-36 sm:py-52 bg-card border-y border-border relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
+        <div className="section-container max-w-6xl mx-auto relative z-[1]">
+          <div className="text-center mb-20 sm:mb-28">
+            <RevealOnScroll direction="up">
+              <div className="w-8 h-px bg-accent/40 mx-auto mb-10" />
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={80}>
+              <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold text-foreground tracking-[0.01em] leading-[1.2] mb-6">
+                From the Field
+              </h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={160}>
+              <p className="text-sm text-muted-foreground/60 max-w-md mx-auto leading-[1.8]">
+                A look at how we build — materials, systems, and finished work in motion.
+              </p>
+            </RevealOnScroll>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+            {FIELD_CLIPS.map((clip, i) => (
+              <RevealOnScroll key={i} direction="up" stagger={i} staggerInterval={120}>
+                <div className="group relative aspect-[4/5] overflow-hidden">
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
+                  >
+                    <source src={clip.src} type="video/mp4" />
+                  </video>
+                  {/* Subtle bottom gradient */}
+                  <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-primary/40 to-transparent pointer-events-none" />
+                  {/* Minimal overlay text */}
+                  <p className="absolute bottom-4 left-4 text-[10px] uppercase tracking-[0.2em] text-primary-foreground/40 font-sans opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    {clip.overlay}
+                  </p>
+                </div>
+              </RevealOnScroll>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ═══ GROUNDLOCK™ SPOTLIGHT ════════════════════════ */}
       <section className="py-36 sm:py-52 bg-primary text-primary-foreground relative overflow-hidden">
         <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-[0.06]">
