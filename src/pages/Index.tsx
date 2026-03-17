@@ -313,7 +313,7 @@ export default function Index() {
       </section>
 
       {/* ─── CTA ─────────────────────────────────────── */}
-      <section className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
+      <section ref={ctaRef} className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
         <BlueprintScene preset="barn" className="absolute inset-0" />
 
         {/* Architectural frame lines */}
