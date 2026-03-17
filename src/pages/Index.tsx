@@ -138,6 +138,8 @@ function StaggerText({ text, className, delay = 0 }: { text: string; className?:
 export default function Index() {
   const heroRef = useHeroParallax();
   const [heroLoaded, setHeroLoaded] = useState(false);
+  const ctaRef = useRef<HTMLElement>(null);
+  useCursorSpotlight(ctaRef);
 
   return (
     <Layout>
