@@ -224,7 +224,7 @@ export default function Index() {
       </section>
 
       {/* ─── Portfolio grid — the work speaks ─────────── */}
-      <section className="py-24 sm:py-32">
+      <section className="py-24 sm:py-32 bg-background relative">
         <div className="section-container max-w-6xl mx-auto">
           <div className="text-center mb-16 max-w-lg mx-auto">
             <RevealLine className="mx-auto mb-7" width="w-12" />
