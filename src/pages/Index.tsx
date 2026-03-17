@@ -422,89 +422,30 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ FROM THE FIELD ═══════════════════════════════ */}
-      <section className="py-32 sm:py-48 bg-background relative grain-texture overflow-hidden">
-        <div className="section-container max-w-6xl mx-auto relative z-[1]">
-          <div className="text-center mb-16">
-            <RevealLine className="mx-auto mb-5" width="w-10" />
-            <RevealOnScroll direction="up">
-              <h2 className="heading-section text-foreground mb-3">From the Field</h2>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={80}>
-              <p className="text-muted-foreground text-sm max-w-md mx-auto">
-                A look at how we build — materials, systems,<br />and finished work in motion.
-              </p>
-            </RevealOnScroll>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {FIELD_CLIPS.map((clip, i) => (
-              <RevealOnScroll key={i} direction="up" stagger={i} staggerInterval={100}>
-                <div className="relative aspect-[9/16] sm:aspect-[3/4] overflow-hidden group">
-                  <video
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
-                  >
-                    <source src={clip.src} type="video/mp4" />
-                  </video>
-                  <div className="absolute inset-0 bg-primary/30 group-hover:bg-primary/50 transition-all duration-500" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-primary-foreground/60 font-medium italic">
-                      {clip.overlay}
-                    </p>
-                  </div>
-                </div>
-              </RevealOnScroll>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ═══ EQUUS RIDGE ═══════════════════════════════════ */}
-      <section className="py-28 sm:py-40 bg-primary text-primary-foreground relative overflow-hidden">
+      <section className="py-44 sm:py-60 bg-primary text-primary-foreground relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,hsl(var(--primary))_100%)]" />
-        <div className="section-container max-w-lg mx-auto text-center relative z-[1] space-y-8">
-          <RevealLine className="mx-auto" width="w-10" />
+        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.03]" />
+        <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
           <RevealOnScroll direction="up">
-            <h2 className="font-serif text-2xl sm:text-3xl text-primary-foreground tracking-[0.02em]">Equus Ridge</h2>
+            <div className="w-8 h-px bg-accent/40 mx-auto mb-12" />
           </RevealOnScroll>
           <RevealOnScroll direction="up" delay={100}>
-            <p className="text-sm text-primary-foreground/40 leading-[1.9]">
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold text-primary-foreground tracking-[0.01em] leading-[1.2] mb-10">
+              Equus Ridge
+            </h2>
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={200}>
+            <p className="text-sm text-primary-foreground/35 leading-[2]">
               The future home of Peninsula Equine —<br />
               a space where design, performance,<br />
               and environment come together.
             </p>
           </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={200}>
-            <p className="text-[10px] tracking-[0.2em] text-primary-foreground/15 uppercase italic">
+          <RevealOnScroll direction="up" delay={300}>
+            <p className="text-[10px] tracking-[0.2em] text-primary-foreground/15 uppercase italic mt-10">
               Coming soon
             </p>
-          </RevealOnScroll>
-        </div>
-      </section>
-
-      {/* ═══ WHO WE WORK WITH ═════════════════════════════ */}
-      <section className="py-32 sm:py-48 bg-card border-y border-border relative overflow-hidden">
-        <div className="section-container max-w-2xl mx-auto text-center relative z-[1] space-y-10">
-          <RevealLine className="mx-auto" width="w-10" />
-          <RevealOnScroll direction="up">
-            <h2 className="heading-section text-foreground">Who We Work With</h2>
-          </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={100}>
-            <div className="space-y-6 text-sm sm:text-base text-muted-foreground leading-[1.9] max-w-lg mx-auto">
-              <p>
-                We work with private owners, performance riders,<br />
-                and properties where function, longevity,<br />
-                and correct design matter.
-              </p>
-              <p className="text-foreground/50 italic">
-                Not every project is a fit.<br />
-                And that's by design.
-              </p>
-            </div>
           </RevealOnScroll>
         </div>
       </section>
