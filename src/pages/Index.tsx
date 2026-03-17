@@ -3,6 +3,7 @@ import { useCursorSpotlight } from "@/hooks/useCursorSpotlight";
 import { Layout } from "@/components/layout/Layout";
 import { BlueprintScene } from "@/components/BlueprintScene";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
@@ -283,7 +284,18 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ─── Philosophy pillars ─────────────────────── */}
+      {/* ─── Stats — let the numbers speak ────────────── */}
+      <section className="py-20 sm:py-24">
+        <div className="section-container max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
+            <AnimatedCounter end={20} suffix="+" label="Years Experience" duration={2000} />
+            <AnimatedCounter end={150} suffix="+" label="Projects Completed" duration={2200} />
+            <AnimatedCounter end={100} suffix="%" label="Word of Mouth" duration={1800} />
+            <AnimatedCounter end={3} label="States Covered" duration={1600} />
+          </div>
+        </div>
+      </section>
+
       <section className="py-24 sm:py-32">
         <div className="section-container max-w-4xl mx-auto">
           <div className="text-center mb-16">
