@@ -59,6 +59,8 @@ interface DraftState {
   name: string;
   email: string;
   phone: string;
+  propertyLocation: string;
+  timeline: string;
   experience: string;
   budget: string;
   message: string;
