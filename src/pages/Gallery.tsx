@@ -22,7 +22,6 @@ import {
 } from "./gallery/galleryData";
 import { GalleryLightbox } from "./gallery/GalleryLightbox";
 
-import { VideoGallerySection } from "./gallery/VideoGallerySection";
 import { GalleryGrid } from "./gallery/GalleryGrid";
 import { GalleryFilters } from "./gallery/GalleryFilters";
 
@@ -133,10 +132,8 @@ export default function Gallery() {
         dividerVariant="structural"
       />
 
-      
-      <VideoGallerySection onVideoClick={setLightboxItem} />
 
-      {/* Photo Gallery Section */}
+      {/* Photo & Video Gallery */}
       <GalleryBlueprintOverlay layer="elevation" bg="background" className="section-padding">
         <div className="section-container">
           <GalleryFilters
