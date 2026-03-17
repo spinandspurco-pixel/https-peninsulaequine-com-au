@@ -159,7 +159,7 @@ export default function Index() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={160}>
                 <p className="text-muted-foreground text-sm mt-2 max-w-md">
-                  Every project came from a recommendation. No advertising. No marketing.
+                  Every project came from a recommendation.
                 </p>
               </RevealOnScroll>
             </div>
