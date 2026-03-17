@@ -327,9 +327,9 @@ export default function GroundLock() {
               {/* Pricing Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {[
-                  { tier: "Base", rate: "$90–120", data: stats.base, featured: false },
-                  { tier: "Standard", rate: "$120–180", data: stats.standard, featured: true },
-                  { tier: "Premium", rate: "$180–250", data: stats.premium, featured: false },
+                  { tier: "Base", rate: stats.rateLabels.base, data: stats.base, featured: false },
+                  { tier: "Standard", rate: stats.rateLabels.standard, data: stats.standard, featured: true },
+                  { tier: "Premium", rate: stats.rateLabels.premium, data: stats.premium, featured: false },
                 ].map(({ tier, rate, data, featured }) => (
                   <RevealOnScroll key={tier} direction="up" delay={featured ? 0 : 100}>
                     <PricingCard
