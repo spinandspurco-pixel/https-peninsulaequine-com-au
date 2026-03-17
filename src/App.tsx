@@ -51,9 +51,11 @@ import { useCartSync } from "./hooks/useCartSync";
 const queryClient = new QueryClient();
 
 function AppContent() {
+  const [splashDone, setSplashDone] = useState(false);
   useCartSync();
   return (
     <>
+      {!splashDone && <LoadingSplash onComplete={() => setSplashDone(true)} />}
       <Toaster />
       <Sonner />
       <BrowserRouter>
