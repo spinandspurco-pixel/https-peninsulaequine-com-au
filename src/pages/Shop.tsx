@@ -2,12 +2,15 @@ import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Loader2, ShoppingCart, Flame, Search, X, ArrowRight } from "lucide-react";
+import { Loader2, ShoppingCart, Flame, Search, X, ArrowRight, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { storefrontApiRequest, STOREFRONT_PRODUCTS_QUERY, ShopifyProduct } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
 import { BlueprintScene } from "@/components/BlueprintScene";
 import { PEFencePost, PESaddle, PEStonework, PEBarn } from "@/components/icons/PEIcons";
+import blueprintDrawingLoop from "@/assets/videos/blueprint-drawing-loop.mp4";
+import blueprintConstructionLoop from "@/assets/videos/blueprint-construction-loop.mp4";
+import ropeRing from "@/assets/pe-rope-ring.png";
 
 const categories = [
   { id: "all", label: "All Products" },
@@ -22,8 +25,9 @@ export default function Shop() {
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const addItem = useCartStore(state => state.addItem);
-  const isCartLoading = useCartStore(state => state.isLoading);
+  const [heroVisual, setHeroVisual] = useState<"drawing" | "construction">("drawing");
+  const addItem = useCartStore((state) => state.addItem);
+  const isCartLoading = useCartStore((state) => state.isLoading);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -43,8 +47,6 @@ export default function Shop() {
     let items = products;
     if (activeCategory !== "all") {
       items = items.filter((p) => {
-        // Match by product_type via tags (Storefront API exposes tags)
-        // We'll match against title/description/tags keywords
         const title = p.node.title.toLowerCase();
         const desc = p.node.description.toLowerCase();
         const cat = activeCategory.toLowerCase();
@@ -65,11 +67,7 @@ export default function Shop() {
     }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
-      items = items.filter(
-        (p) =>
-          p.node.title.toLowerCase().includes(q) ||
-          p.node.description.toLowerCase().includes(q)
-      );
+      items = items.filter((p) => p.node.title.toLowerCase().includes(q) || p.node.description.toLowerCase().includes(q));
     }
     return items;
   }, [products, activeCategory, searchQuery]);
@@ -90,30 +88,68 @@ export default function Shop() {
 
   return (
     <Layout>
-      {/* Hero — Blueprint-layered */}
-      <section className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
-        <BlueprintScene preset="elevation" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsl(var(--primary))_85%)]" />
-        <div className="section-container relative z-10 text-center">
-          <div className="w-12 h-px mx-auto mb-6 bg-accent" />
-          <p className="text-overline text-primary-foreground/50 mb-4">Custom Fabrication</p>
-          <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl tracking-tight mb-4">
-            The Forge <span className="text-accent">at P.E.</span>
-          </h1>
-          <div className="w-16 h-px mx-auto mb-6 bg-accent/40" />
-          <p className="text-lg md:text-xl max-w-2xl mx-auto text-primary-foreground/70 font-light">
-            Custom steel fabrications, gates, fixtures &amp; decorative metalwork — forged by horsemen, for horsemen.
-          </p>
-          <p className="font-mono text-2xs tracking-[0.25em] uppercase text-primary-foreground/20 mt-8">
-            DWG-FG01 · THE FORGE
-          </p>
+      <section className="relative pt-32 pb-24 text-primary-foreground overflow-hidden bg-primary">
+        <video
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${heroVisual === "drawing" ? "opacity-45" : "opacity-0"}`}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+        >
+          <source src={blueprintDrawingLoop} type="video/mp4" />
+        </video>
+        <video
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${heroVisual === "construction" ? "opacity-45" : "opacity-0"}`}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+        >
+          <source src={blueprintConstructionLoop} type="video/mp4" />
+        </video>
+
+        <div className="absolute inset-0 bg-primary/68" />
+        <BlueprintScene preset="elevation" className="absolute inset-0" />
+
+        <div className="section-container relative z-10 text-center stack-md">
+          <div className="flex justify-center gap-2 flex-wrap">
+            <button
+              onClick={() => setHeroVisual("drawing")}
+              className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.14em] border transition-colors ${heroVisual === "drawing" ? "bg-accent text-accent-foreground border-accent" : "bg-primary/40 text-primary-foreground border-primary-foreground/25"}`}
+            >
+              Drawing Motion
+            </button>
+            <button
+              onClick={() => setHeroVisual("construction")}
+              className={`px-4 py-2 rounded-full text-xs uppercase tracking-[0.14em] border transition-colors ${heroVisual === "construction" ? "bg-accent text-accent-foreground border-accent" : "bg-primary/40 text-primary-foreground border-primary-foreground/25"}`}
+            >
+              Build Motion
+            </button>
+          </div>
+
+          <div>
+            <p className="text-overline text-primary-foreground/70 mb-4">Custom Fabrication</p>
+            <h1 className="heading-display text-primary-foreground">
+              The Forge <span className="text-accent">at P.E.</span>
+            </h1>
+            <p className="text-body-lg max-w-3xl mx-auto text-primary-foreground/80 mt-5">
+              Interactive, blueprint-led commerce for custom steel fabrications, gates, fixtures, and decorative metalwork.
+            </p>
+          </div>
+
+          <div className="flex items-center justify-center gap-2 text-primary-foreground/80">
+            <Sparkles className="h-4 w-4 text-accent" />
+            <p className="text-xs uppercase tracking-[0.18em]">Tap between animation layers</p>
+          </div>
+
+          <img src={ropeRing} alt="Decorative rope emblem" className="h-24 w-24 object-contain mx-auto animate-rope-drift" loading="lazy" />
         </div>
       </section>
 
-      {/* Search + Category Filters */}
       <section className="py-8 bg-card border-b border-border">
         <div className="section-container space-y-5">
-          {/* Search bar */}
           <div className="relative max-w-lg mx-auto">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
             <input
@@ -131,7 +167,6 @@ export default function Shop() {
             )}
           </div>
 
-          {/* Category chips */}
           <div className="flex flex-wrap gap-2 justify-center" role="radiogroup" aria-label="Filter by category">
             {categories.map((cat) => (
               <button
@@ -150,17 +185,15 @@ export default function Shop() {
             ))}
           </div>
 
-          {/* Result count */}
           {!loading && (
             <p className="text-center text-xs text-muted-foreground" aria-live="polite">
               {filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""}
-              {activeCategory !== "all" && ` in ${categories.find(c => c.id === activeCategory)?.label}`}
+              {activeCategory !== "all" && ` in ${categories.find((c) => c.id === activeCategory)?.label}`}
             </p>
           )}
         </div>
       </section>
 
-      {/* Category Showcase */}
       <section className="py-16 md:py-20 border-b border-border">
         <div className="section-container">
           <div className="text-center mb-12">
@@ -193,7 +226,6 @@ export default function Shop() {
         </div>
       </section>
 
-      {/* Products Grid */}
       <section className="py-16 md:py-24">
         <div className="section-container">
           {loading ? (
@@ -213,7 +245,10 @@ export default function Shop() {
               </p>
               {products.length > 0 && (
                 <button
-                  onClick={() => { setActiveCategory("all"); setSearchQuery(""); }}
+                  onClick={() => {
+                    setActiveCategory("all");
+                    setSearchQuery("");
+                  }}
                   className="mt-4 text-accent text-sm underline underline-offset-2"
                 >
                   Clear filters
@@ -246,9 +281,7 @@ export default function Shop() {
                         <h3 className="font-serif text-lg font-semibold mb-1 group-hover:text-accent transition-colors">
                           {product.node.title}
                         </h3>
-                        <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                          {product.node.description}
-                        </p>
+                        <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{product.node.description}</p>
                         <p className="font-semibold text-accent text-lg">
                           From ${parseFloat(price.amount).toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {price.currencyCode}
                         </p>
@@ -274,7 +307,6 @@ export default function Shop() {
         </div>
       </section>
 
-      {/* Custom Fabrication CTA */}
       <section className="py-20 bg-primary text-primary-foreground relative overflow-hidden">
         <BlueprintScene preset="barn" />
         <div className="section-container relative z-10 text-center max-w-2xl mx-auto">

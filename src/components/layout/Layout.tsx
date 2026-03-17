@@ -4,6 +4,7 @@ import { Footer } from "./Footer";
 import { SEOSchema } from "@/components/SEOSchema";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { PageTransition } from "@/components/PageTransition";
+import { GlobalCinematicBackdrop } from "@/components/GlobalCinematicBackdrop";
 
 interface LayoutProps {
   children: ReactNode;
@@ -13,6 +14,7 @@ export function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen flex flex-col relative">
       <SEOSchema />
+      <GlobalCinematicBackdrop />
       {/* Skip-to-content link for keyboard users */}
       <a
         href="#main-content"
