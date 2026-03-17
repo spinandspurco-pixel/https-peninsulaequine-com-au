@@ -85,9 +85,6 @@ const PROGRAM_LEVELS = [
   },
 ];
 
-import faqRidingGear from "@/assets/videos/faq-riding-gear.mp4";
-import faqLessonSession from "@/assets/videos/faq-lesson-session.mp4";
-import faqTrialLesson from "@/assets/videos/faq-trial-lesson.mp4";
 
 const LESSON_FAQS: { question: string; answer: string; video?: string }[] = [
   {
