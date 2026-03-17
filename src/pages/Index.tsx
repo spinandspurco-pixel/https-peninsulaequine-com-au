@@ -224,7 +224,7 @@ export default function Index() {
       </section>
 
       {/* ─── Portfolio grid — the work speaks ─────────── */}
-      <section className="py-24 sm:py-32">
+      <section className="py-24 sm:py-32 bg-background relative">
         <div className="section-container max-w-6xl mx-auto">
           <div className="text-center mb-16 max-w-lg mx-auto">
             <RevealLine className="mx-auto mb-7" width="w-12" />
@@ -285,7 +285,7 @@ export default function Index() {
       </section>
 
       {/* ─── Stats — let the numbers speak ────────────── */}
-      <section className="py-20 sm:py-24">
+      <section className="py-20 sm:py-24 bg-background relative">
         <div className="section-container max-w-4xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
             <AnimatedCounter end={20} suffix="+" label="Years Experience" duration={2000} />
@@ -296,7 +296,8 @@ export default function Index() {
         </div>
       </section>
 
-      <section className="py-24 sm:py-32">
+      {/* ─── Philosophy pillars ─────────────────────── */}
+      <section className="py-24 sm:py-32 bg-background relative">
         <div className="section-container max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <RevealLine className="mx-auto mb-7" width="w-12" />
