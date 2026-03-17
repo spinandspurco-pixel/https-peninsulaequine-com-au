@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import blueprintDrawingLoop from "@/assets/videos/blueprint-drawing-loop.mp4";
 import blueprintConstructionLoop from "@/assets/videos/blueprint-construction-loop.mp4";
-import ropeRing from "@/assets/pe-rope-ring.png";
 import blueprintLogoReference from "@/assets/pe-blueprint-gold-logo-reference.png";
+import { RopeEmblem } from "@/components/RopeEmblem";
 
 const hiddenPrefixes = ["/admin", "/employee", "/bookings", "/staff", "/trainer"];
 
@@ -26,23 +26,23 @@ export function GlobalCinematicBackdrop() {
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden" aria-hidden="true">
       <video
-        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${activeLayer === 0 ? "opacity-20" : "opacity-0"}`}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
+        className="absolute inset-0 h-full w-full object-cover"
+        style={{
+          opacity: activeLayer === 0 ? 0.18 : 0,
+          transition: "opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1)",
+        }}
+        autoPlay muted loop playsInline preload="metadata"
       >
         <source src={blueprintDrawingLoop} type="video/mp4" />
       </video>
 
       <video
-        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${activeLayer === 1 ? "opacity-20" : "opacity-0"}`}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
+        className="absolute inset-0 h-full w-full object-cover"
+        style={{
+          opacity: activeLayer === 1 ? 0.18 : 0,
+          transition: "opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1)",
+        }}
+        autoPlay muted loop playsInline preload="metadata"
       >
         <source src={blueprintConstructionLoop} type="video/mp4" />
       </video>
@@ -50,18 +50,16 @@ export function GlobalCinematicBackdrop() {
       <img
         src={blueprintLogoReference}
         alt=""
-        className="absolute inset-0 h-full w-full object-cover opacity-[0.06]"
+        className="absolute inset-0 h-full w-full object-cover opacity-[0.05]"
         loading="lazy"
       />
 
       <div className="absolute inset-0 bg-background/84" />
 
-      <img
-        src={ropeRing}
-        alt=""
-        className="absolute right-6 bottom-6 w-20 h-20 object-contain opacity-30 animate-rope-drift"
-        loading="lazy"
-      />
+      {/* Rope + PE emblem — bottom-right, soft blend */}
+      <div className="absolute right-6 bottom-6">
+        <RopeEmblem size="sm" opacity={0.22} />
+      </div>
     </div>
   );
 }
