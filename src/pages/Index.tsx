@@ -280,17 +280,6 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ PROOF / STATS ═══════════════════════════════ */}
-      <section className="py-16 sm:py-20 bg-card border-y border-border">
-        <div className="section-container max-w-4xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
-            <AnimatedCounter end={20} suffix="+" label="Years Experience" duration={2000} />
-            <AnimatedCounter end={150} suffix="+" label="Projects Delivered" duration={2200} />
-            <AnimatedCounter end={100} suffix="%" label="Word of Mouth" duration={1800} />
-            <AnimatedCounter end={3} label="States Covered" duration={1600} />
-          </div>
-        </div>
-      </section>
 
       {/* ═══ PHILOSOPHY ═══════════════════════════════════ */}
       <section className="py-20 sm:py-28 bg-background">
