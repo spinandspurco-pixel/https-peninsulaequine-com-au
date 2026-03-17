@@ -198,7 +198,7 @@ export default function Index() {
               </p>
               <p className="text-primary-foreground/30 italic">
                 This isn't guesswork.<br />
-                It's lived experience, applied properly.
+                It's experience — applied properly.
               </p>
             </div>
           </RevealOnScroll>
