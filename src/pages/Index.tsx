@@ -1,5 +1,4 @@
 import { Layout } from "@/components/layout/Layout";
-import { FloatingContactButton } from "@/components/FloatingContactButton";
 import { BlueprintScene } from "@/components/BlueprintScene";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -10,8 +9,6 @@ import { ArrowRight } from "lucide-react";
 export default function Index() {
   return (
     <Layout>
-      <FloatingContactButton />
-
       {/* Hero — full-bleed, minimal copy */}
       <section className="relative min-h-[92vh] overflow-hidden flex items-center">
         <img
