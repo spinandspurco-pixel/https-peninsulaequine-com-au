@@ -629,7 +629,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
               <div className="rounded-lg border border-border bg-background p-4">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Details</span>
-                  <button onClick={() => setStep(3)} className="text-xs text-accent hover:underline flex items-center gap-1">
+                  <button onClick={() => setStep(4)} className="text-xs text-accent hover:underline flex items-center gap-1">
                     <Edit2 className="h-3 w-3" /> Edit
                   </button>
                 </div>
