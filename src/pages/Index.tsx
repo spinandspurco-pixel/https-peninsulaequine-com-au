@@ -441,6 +441,16 @@ export default function Index() {
               </Button>
             </div>
           </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={300}>
+            <p className="text-primary-foreground/20 text-[11px] tracking-wide">
+              We take on a limited number of projects each season.
+            </p>
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={350}>
+            <p className="text-accent/40 text-[10px] italic tracking-wider">
+              Built once. Built properly.
+            </p>
+          </RevealOnScroll>
         </div>
       </section>
     </Layout>
