@@ -41,7 +41,7 @@ export default function Index() {
                   Start Your Project <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 uppercase tracking-[0.12em] text-xs">
+              <Button asChild size="lg" className="border border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground/10 uppercase tracking-[0.12em] text-xs">
                 <Link to="/gallery">View Portfolio</Link>
               </Button>
             </div>
