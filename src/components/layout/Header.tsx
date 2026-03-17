@@ -100,9 +100,9 @@ export function Header() {
 
           {/* CTAs + MLPGS Badge */}
           <div className="hidden lg:flex items-center gap-2 xl:gap-3">
-            <span className="px-2.5 py-1 rounded-full text-[9px] font-semibold uppercase tracking-[0.12em] bg-accent/15 text-accent border border-accent/30 animate-pulse">
+            <Link to="/mlpgs" className="px-2.5 py-1 rounded-full text-[9px] font-semibold uppercase tracking-[0.12em] bg-accent/15 text-accent border border-accent/30 animate-pulse hover:bg-accent/25 transition-colors">
               MLPGS — Coming Soon
-            </span>
+            </Link>
             <GlobalSearch />
             <CartDrawer />
             <Button
