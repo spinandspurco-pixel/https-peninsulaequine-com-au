@@ -471,7 +471,7 @@ export default function Index() {
       </section>
 
       {/* ═══ WHO WE WORK WITH ═════════════════════════════ */}
-      <section className="py-36 sm:py-52 bg-primary text-primary-foreground relative overflow-hidden">
+      <section className="py-44 sm:py-64 bg-primary text-primary-foreground relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.03]" />
         <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
           <RevealOnScroll direction="up">
