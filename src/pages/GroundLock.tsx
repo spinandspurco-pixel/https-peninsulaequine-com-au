@@ -30,6 +30,45 @@ const formatAUD = (val: number) =>
     maximumFractionDigits: 0,
   }).format(val);
 
+type ProjectType = "yard" | "stable" | "laneway" | "float";
+
+const PROJECT_TYPES: {
+  key: ProjectType;
+  label: string;
+  defaultArea: number;
+  rates: { base: [number, number]; standard: [number, number]; premium: [number, number] };
+  description: string;
+}[] = [
+  {
+    key: "yard",
+    label: "Yard",
+    defaultArea: 250,
+    rates: { base: [90, 120], standard: [120, 180], premium: [180, 250] },
+    description: "General-purpose equine yards & turnout areas",
+  },
+  {
+    key: "stable",
+    label: "Stable Surround",
+    defaultArea: 150,
+    rates: { base: [110, 140], standard: [140, 200], premium: [200, 280] },
+    description: "High-traffic zones around stable entries & wash bays",
+  },
+  {
+    key: "laneway",
+    label: "Laneway",
+    defaultArea: 400,
+    rates: { base: [80, 110], standard: [110, 160], premium: [160, 230] },
+    description: "Long, narrow access tracks & property laneways",
+  },
+  {
+    key: "float",
+    label: "Float Parking",
+    defaultArea: 300,
+    rates: { base: [100, 130], standard: [130, 190], premium: [190, 260] },
+    description: "Heavy-load zones for float & truck parking",
+  },
+];
+
 /* ── Cross-Section Visual ─────────────────────────── */
 function SystemCrossSection() {
   const layers = [
@@ -123,15 +162,29 @@ function PricingCard({
 
 /* ── Main Page ────────────────────────────────────── */
 export default function GroundLock() {
-  const [area, setArea] = useState(250);
+  const [projectType, setProjectType] = useState<ProjectType>("yard");
+  const activeType = PROJECT_TYPES.find((t) => t.key === projectType)!;
+  const [area, setArea] = useState(activeType.defaultArea);
+
+  const handleTypeChange = (type: ProjectType) => {
+    setProjectType(type);
+    const newType = PROJECT_TYPES.find((t) => t.key === type)!;
+    setArea(newType.defaultArea);
+  };
 
   const stats = useMemo(() => {
     const panels = Math.ceil(area / PANEL_SIZE);
+    const r = activeType.rates;
     return {
       panels,
-      base: { low: area * 90, high: area * 120 },
-      standard: { low: area * 120, high: area * 180 },
-      premium: { low: area * 180, high: area * 250 },
+      base: { low: area * r.base[0], high: area * r.base[1] },
+      standard: { low: area * r.standard[0], high: area * r.standard[1] },
+      premium: { low: area * r.premium[0], high: area * r.premium[1] },
+      rateLabels: {
+        base: `$${r.base[0]}–${r.base[1]}`,
+        standard: `$${r.standard[0]}–${r.standard[1]}`,
+        premium: `$${r.premium[0]}–${r.premium[1]}`,
+      },
       materials: {
         geotextile: (area * 1.08).toFixed(1),
         subBase: (area * 0.125).toFixed(1),
@@ -139,7 +192,7 @@ export default function GroundLock() {
         infill: (area * 0.085).toFixed(1),
       },
     };
-  }, [area]);
+  }, [area, activeType]);
 
   const handleAreaInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = Math.max(50, Math.min(5000, Number(e.target.value) || 50));
@@ -178,6 +231,30 @@ export default function GroundLock() {
       {/* Estimator */}
       <section className="py-16 sm:py-24 bg-background">
         <div className="section-container">
+          {/* Project Type Chips */}
+          <div className="max-w-7xl mx-auto mb-8">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
+              Project Type
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {PROJECT_TYPES.map((type) => (
+                <button
+                  key={type.key}
+                  onClick={() => handleTypeChange(type.key)}
+                  className={cn(
+                    "px-4 py-2 text-xs font-mono uppercase tracking-[0.1em] border transition-all duration-300",
+                    projectType === type.key
+                      ? "bg-accent text-accent-foreground border-accent shadow-md"
+                      : "bg-card text-muted-foreground border-border hover:border-accent/50 hover:text-foreground"
+                  )}
+                >
+                  {type.label}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground mt-2 italic">{activeType.description}</p>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 max-w-7xl mx-auto">
             {/* Left Column — Input + Cross-Section */}
             <div className="lg:col-span-5 space-y-8">
@@ -250,9 +327,9 @@ export default function GroundLock() {
               {/* Pricing Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {[
-                  { tier: "Base", rate: "$90–120", data: stats.base, featured: false },
-                  { tier: "Standard", rate: "$120–180", data: stats.standard, featured: true },
-                  { tier: "Premium", rate: "$180–250", data: stats.premium, featured: false },
+                  { tier: "Base", rate: stats.rateLabels.base, data: stats.base, featured: false },
+                  { tier: "Standard", rate: stats.rateLabels.standard, data: stats.standard, featured: true },
+                  { tier: "Premium", rate: stats.rateLabels.premium, data: stats.premium, featured: false },
                 ].map(({ tier, rate, data, featured }) => (
                   <RevealOnScroll key={tier} direction="up" delay={featured ? 0 : 100}>
                     <PricingCard
