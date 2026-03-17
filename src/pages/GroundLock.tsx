@@ -395,6 +395,33 @@ export default function GroundLock() {
         </div>
       </section>
 
+      {/* Problem Statement */}
+      <section className="py-28 sm:py-40 bg-background relative grain-texture overflow-hidden">
+        <div className="section-container max-w-2xl mx-auto text-center space-y-10 relative z-[1]">
+          <RevealLine className="mx-auto" width="w-10" />
+          <RevealOnScroll direction="up">
+            <h2 className="heading-section text-foreground">
+              Most Properties Fail<br />From the Ground Up
+            </h2>
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={100}>
+            <div className="space-y-5 text-sm sm:text-base text-muted-foreground leading-[1.9] max-w-lg mx-auto">
+              <p>
+                Drainage issues, unstable footing, and surface breakdown<br />
+                are rarely surface problems.
+              </p>
+              <p className="text-foreground/70">
+                They're structural.
+              </p>
+              <p className="text-foreground/50 italic">
+                GroundLock™ is designed to solve that —<br />
+                properly, from the base layer up.
+              </p>
+            </div>
+          </RevealOnScroll>
+        </div>
+      </section>
+
       {/* Estimator */}
       <section className="py-16 sm:py-24 bg-background">
         <div className="section-container">
