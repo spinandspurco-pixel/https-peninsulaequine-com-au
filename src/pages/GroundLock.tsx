@@ -204,8 +204,8 @@ export default function GroundLock() {
     const { jsPDF } = await import("jspdf");
     const doc = new jsPDF({ unit: "mm", format: "a4" });
     const W = 210;
-    const accent = [193, 154, 72]; // gold
-    const dark = [30, 30, 30];
+    const accent: [number, number, number] = [193, 154, 72];
+    const dark: [number, number, number] = [30, 30, 30];
     let y = 20;
 
     // Header bar
