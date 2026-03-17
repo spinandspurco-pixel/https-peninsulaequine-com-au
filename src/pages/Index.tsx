@@ -375,7 +375,7 @@ export default function Index() {
       </section>
 
       {/* ═══ GROUNDLOCK™ SPOTLIGHT ════════════════════════ */}
-      <section className="py-36 sm:py-52 bg-primary text-primary-foreground relative overflow-hidden">
+      <section className="py-44 sm:py-64 bg-primary text-primary-foreground relative overflow-hidden">
         <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-[0.06]">
           <source src={heroVideo} type="video/mp4" />
         </video>
