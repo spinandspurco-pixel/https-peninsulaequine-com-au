@@ -150,7 +150,12 @@ export default function Index() {
                 <Link to="/gallery">Selected Work</Link>
               </Button>
             </div>
-          </div>
+            <p
+              className="text-primary-foreground/15 text-[11px] tracking-wide opacity-0 animate-fade-in"
+              style={{ animationDelay: "1400ms", animationFillMode: "both" }}
+            >
+              We take on a limited number of projects each season.
+            </p>
         </div>
 
         {/* Scroll indicator */}
