@@ -8,7 +8,7 @@ export function useCursorSpotlight(
   containerRef: React.RefObject<HTMLElement | null>,
   options: { radius?: number; opacity?: number; color?: string } = {}
 ) {
-  const { radius = 350, opacity = 0.07, color = "var(--accent)" } = options;
+  const { radius = 350, opacity = 0.07 } = options;
   const spotRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
