@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
 // Hero
-import peBrandSplitHero from "@/assets/pe-brand-split-hero.png";
+// Hero is now fully animated — no static image needed
 
 // Portfolio — let the work speak
 import aberdeenStonework from "@/assets/aberdeen-stonework-color.jpg";
