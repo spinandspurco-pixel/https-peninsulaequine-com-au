@@ -24,19 +24,17 @@ export function useCursorSpotlight(
 
     // Create spotlight element
     const spot = document.createElement("div");
-    spot.style.cssText = `
-      position: absolute;
-      width: ${radius * 2}px;
-      height: ${radius * 2}px;
-      border-radius: 50%;
-      background: radial-gradient(circle, hsl(${color} / ${opacity}) 0%, transparent 70%);
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      opacity: 0;
-      transition: opacity 0.4s ease;
-      z-index: 1;
-      will-change: left, top;
-    `;
+    spot.style.position = "absolute";
+    spot.style.width = `${radius * 2}px`;
+    spot.style.height = `${radius * 2}px`;
+    spot.style.borderRadius = "50%";
+    spot.style.background = `radial-gradient(circle, hsl(${color} / ${opacity}) 0%, transparent 70%)`;
+    spot.style.pointerEvents = "none";
+    spot.style.transform = "translate(-50%, -50%)";
+    spot.style.opacity = "0";
+    spot.style.transition = "opacity 0.4s ease";
+    spot.style.zIndex = "1";
+    spot.style.willChange = "left, top";
     container.appendChild(spot);
     spotRef.current = spot;
 
