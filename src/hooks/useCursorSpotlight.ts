@@ -28,7 +28,7 @@ export function useCursorSpotlight(
     spot.style.width = `${radius * 2}px`;
     spot.style.height = `${radius * 2}px`;
     spot.style.borderRadius = "50%";
-    spot.style.background = `radial-gradient(circle, hsl(${color} / ${opacity}) 0%, transparent 70%)`;
+    spot.style.background = `radial-gradient(circle, hsl(var(--accent) / ${opacity}) 0%, transparent 70%)`;
     spot.style.pointerEvents = "none";
     spot.style.transform = "translate(-50%, -50%)";
     spot.style.opacity = "0";
