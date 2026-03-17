@@ -483,6 +483,33 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ═══ WHO WE WORK WITH ═════════════════════════════ */}
+      <section className="py-36 sm:py-52 bg-primary text-primary-foreground relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.03]" />
+        <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
+          <RevealOnScroll direction="up">
+            <div className="w-8 h-px bg-accent/40 mx-auto mb-12" />
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={100}>
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold text-primary-foreground tracking-[0.01em] leading-[1.2] mb-14">
+              Who We Work With
+            </h2>
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={200}>
+            <div className="space-y-8 text-sm sm:text-[15px] text-primary-foreground/45 leading-[2] font-sans">
+              <p>
+                We work with private owners, performance riders, and properties where<br />
+                function, longevity, and correct design matter.
+              </p>
+              <p className="text-primary-foreground/25 italic">
+                Not every project is a fit.<br />
+                And that's by design.
+              </p>
+            </div>
+          </RevealOnScroll>
+        </div>
+      </section>
+
       {/* ═══ FINAL CTA ═══════════════════════════════════ */}
       <section className="py-36 sm:py-52 bg-primary text-primary-foreground relative overflow-hidden">
         <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-[0.04]">
