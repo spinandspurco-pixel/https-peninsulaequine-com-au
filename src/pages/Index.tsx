@@ -206,12 +206,18 @@ export default function Index() {
       </section>
 
       {/* ═══ CAPABILITIES ════════════════════════════════ */}
-      <section className="py-28 sm:py-40 bg-card border-y border-border relative grain-texture overflow-hidden">
+      <section className="py-32 sm:py-48 bg-card border-y border-border relative grain-texture overflow-hidden">
         <div className="section-container max-w-5xl mx-auto relative z-[1]">
-          <div className="text-center mb-20">
+          <div className="text-center mb-24">
             <RevealLine className="mx-auto mb-5" width="w-10" />
             <RevealOnScroll direction="up">
-              <h2 className="heading-section text-foreground mb-3">Capabilities</h2>
+              <h2 className="heading-section text-foreground mb-4">Capabilities</h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={80}>
+              <p className="text-sm text-muted-foreground/70 max-w-sm mx-auto leading-relaxed">
+                What we build is only part of it.<br />
+                How it works is everything.
+              </p>
             </RevealOnScroll>
           </div>
 
