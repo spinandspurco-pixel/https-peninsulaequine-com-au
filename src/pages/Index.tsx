@@ -204,6 +204,9 @@ export default function Index() {
                 This isn't guesswork.<br />
                 It's experience — applied properly.
               </p>
+              <p className="text-[10px] tracking-[0.15em] text-primary-foreground/15 uppercase mt-4">
+                Engineered, not improvised · Systems, not surface fixes
+              </p>
             </div>
           </RevealOnScroll>
         </div>
@@ -376,6 +379,29 @@ export default function Index() {
               </RevealOnScroll>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ═══ EQUUS RIDGE ═══════════════════════════════════ */}
+      <section className="py-28 sm:py-40 bg-primary text-primary-foreground relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,hsl(var(--primary))_100%)]" />
+        <div className="section-container max-w-lg mx-auto text-center relative z-[1] space-y-8">
+          <RevealLine className="mx-auto" width="w-10" />
+          <RevealOnScroll direction="up">
+            <h2 className="font-serif text-2xl sm:text-3xl text-primary-foreground tracking-[0.02em]">Equus Ridge</h2>
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={100}>
+            <p className="text-sm text-primary-foreground/40 leading-[1.9]">
+              The future home of Peninsula Equine —<br />
+              a space where design, performance,<br />
+              and environment come together.
+            </p>
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={200}>
+            <p className="text-[10px] tracking-[0.2em] text-primary-foreground/15 uppercase italic">
+              Coming soon
+            </p>
+          </RevealOnScroll>
         </div>
       </section>
 
