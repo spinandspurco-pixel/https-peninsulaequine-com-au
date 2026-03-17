@@ -274,41 +274,57 @@ export default function Index() {
       </section>
 
       {/* ═══ SELECTED WORK ═══════════════════════════════ */}
-      <section className="py-28 sm:py-40 bg-background">
-        <div className="section-container max-w-6xl mx-auto">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-16 gap-4">
-            <div>
-              <RevealLine className="mb-5" width="w-10" />
-              <RevealOnScroll direction="up" delay={80}>
-                <h2 className="heading-section text-foreground">Selected Work</h2>
-              </RevealOnScroll>
-            </div>
-            <RevealOnScroll direction="up" delay={200}>
-              <Button asChild variant="outline" className="uppercase tracking-[0.1em] text-xs btn-hover-lift">
-                <Link to="/gallery">All Projects <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
-              </Button>
+      <section className="py-36 sm:py-52 bg-background relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
+        <div className="section-container max-w-5xl mx-auto relative z-[1]">
+          {/* Header */}
+          <div className="text-center mb-20 sm:mb-28">
+            <RevealOnScroll direction="up">
+              <div className="w-8 h-px bg-accent/40 mx-auto mb-10" />
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={80}>
+              <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold text-foreground tracking-[0.01em] leading-[1.2] mb-6">
+                Selected Work
+              </h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={160}>
+              <p className="text-sm text-muted-foreground/60 max-w-sm mx-auto leading-[1.8]">
+                A selection of builds that represent how we work.
+              </p>
             </RevealOnScroll>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {/* Project grid — larger images, generous gaps */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
             {PORTFOLIO.map((item, i) => (
-              <RevealOnScroll key={i} direction="up" stagger={i} staggerInterval={80}>
-                <Link to={`/project/${item.slug}`} className="group relative aspect-[4/3] overflow-hidden block">
+              <RevealOnScroll key={i} direction="up" stagger={i} staggerInterval={120}>
+                <Link to={`/project/${item.slug}`} className="group relative aspect-[3/2] overflow-hidden block">
                   <img
                     src={item.src}
                     alt={item.alt}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.02]"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/60 transition-all duration-500" />
-                  <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-accent font-medium mb-1">{item.type}</p>
-                    <p className="text-sm font-serif text-primary-foreground">{item.label}</p>
+                  {/* Dark overlay on hover */}
+                  <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/65 transition-all duration-600" />
+                  {/* Info reveal */}
+                  <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
+                    <p className="text-[9px] uppercase tracking-[0.25em] text-accent/80 font-medium mb-1.5">{item.type}</p>
+                    <p className="text-sm font-serif text-primary-foreground/90">{item.label}</p>
                   </div>
                 </Link>
               </RevealOnScroll>
             ))}
           </div>
+
+          {/* View all link */}
+          <RevealOnScroll direction="up" delay={400}>
+            <div className="text-center mt-16">
+              <Button asChild variant="outline" className="uppercase tracking-[0.14em] text-xs btn-hover-lift border-border/50">
+                <Link to="/gallery">All Projects <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
+              </Button>
+            </div>
+          </RevealOnScroll>
         </div>
       </section>
 
