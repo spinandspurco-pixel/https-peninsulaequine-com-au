@@ -280,6 +280,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
     .filter(Boolean);
 
   const budgetLabel = BUDGET_RANGES.find((b) => b.id === budget)?.label;
+  const timelineLabel = TIMELINE_OPTIONS.find((t) => t.id === timeline)?.label;
   const experienceLabel = EXPERIENCE_LEVELS.find((e) => e.id === experience)?.label;
 
   if (submitted) {
