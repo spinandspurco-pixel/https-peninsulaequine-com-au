@@ -573,8 +573,8 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
           </div>
         )}
 
-        {/* Step 4: Checkout-style review */}
-        {step === 4 && (
+        {/* Step 5: Checkout-style review */}
+        {step === 5 && (
           <div className="space-y-5">
             <div>
               <h3 className="font-serif text-xl sm:text-2xl text-foreground mb-1">Review Your Quote Request</h3>
