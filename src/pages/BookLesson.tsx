@@ -304,24 +304,10 @@ function LessonFAQSection() {
                 className="border border-border rounded-lg px-5 data-[state=open]:bg-card transition-colors"
               >
                 <AccordionTrigger className="text-left font-medium text-foreground hover:text-accent hover:no-underline py-4 text-sm sm:text-base">
-                  <span className="flex items-center gap-2">
-                    {faq.video && <Play className="h-4 w-4 text-accent shrink-0" />}
-                    {faq.question}
-                  </span>
+                  {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="pb-4 text-sm leading-relaxed space-y-4">
+                <AccordionContent className="pb-4 text-sm leading-relaxed">
                   <p className="text-muted-foreground">{faq.answer}</p>
-                  {faq.video && (
-                    <div className="rounded-lg overflow-hidden border border-border bg-background">
-                      <video
-                        src={faq.video}
-                        controls
-                        preload="metadata"
-                        playsInline
-                        className="w-full max-h-64 object-cover"
-                      />
-                    </div>
-                  )}
                 </AccordionContent>
               </AccordionItem>
             ))}
