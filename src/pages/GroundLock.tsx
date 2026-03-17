@@ -377,14 +377,20 @@ export default function GroundLock() {
             className="heading-display text-primary-foreground drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] opacity-0 animate-fade-in"
             style={{ animationDelay: "400ms", animationFillMode: "both" }}
           >
-            Engineer the quote before the site visit.
+            P.E. GroundLock™
           </h1>
           <p
-            className="text-primary-foreground/70 text-lg max-w-2xl mx-auto opacity-0 animate-fade-in"
-            style={{ animationDelay: "600ms", animationFillMode: "both" }}
+            className="text-[11px] uppercase tracking-[0.2em] text-primary-foreground/35 opacity-0 animate-fade-in"
+            style={{ animationDelay: "500ms", animationFillMode: "both" }}
           >
-            The engineered stabilization system for equine yards, stable surrounds,
-            float parking, laneways, and high-traffic paddock zones.
+            A Ground Stabilisation System
+          </p>
+          <p
+            className="text-primary-foreground/60 text-base sm:text-lg max-w-xl mx-auto opacity-0 animate-fade-in leading-relaxed"
+            style={{ animationDelay: "650ms", animationFillMode: "both" }}
+          >
+            Engineered stabilisation for equine yards, stable surrounds,
+            float parking, laneways, and high-traffic zones.
           </p>
         </div>
       </section>

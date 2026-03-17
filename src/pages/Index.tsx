@@ -305,9 +305,12 @@ export default function Index() {
                   <Layers className="w-5 h-5 text-accent" strokeWidth={1.5} />
                   <span className="text-[10px] uppercase tracking-[0.25em] text-accent font-medium">Proprietary System</span>
                 </div>
-                <h2 className="heading-section text-primary-foreground mb-5">
+                <h2 className="heading-section text-primary-foreground mb-2">
                   P.E. GroundLock™
                 </h2>
+                <p className="text-[11px] uppercase tracking-[0.2em] text-primary-foreground/30 mb-5">
+                  Ground Stabilisation Systems
+                </p>
                 <p className="text-primary-foreground/45 text-sm leading-[1.9] mb-4">
                   A system designed to solve ground failure at its source.
                 </p>
