@@ -3,7 +3,6 @@ import blueprintLogoReference from "@/assets/pe-blueprint-gold-logo-reference.pn
 import blueprintDrawingLoop from "@/assets/videos/blueprint-drawing-loop.mp4";
 import blueprintConstructionLoop from "@/assets/videos/blueprint-construction-loop.mp4";
 import { BlueprintScene } from "@/components/BlueprintScene";
-import { RopeEmblem } from "@/components/RopeEmblem";
 
 interface StaffPortalFrameProps {
   title: string;
@@ -141,15 +140,6 @@ export function StaffPortalFrame({ title, subtitle, children }: StaffPortalFrame
             />
           </div>
 
-          {/* Rope emblem with PE inside — blended into dark bg */}
-          <div
-            style={{
-              opacity: mounted ? 1 : 0,
-              transition: "opacity 1s ease-out 0.8s",
-            }}
-          >
-            <RopeEmblem size="lg" opacity={0.18} />
-          </div>
         </div>
 
         {/* Card slot */}

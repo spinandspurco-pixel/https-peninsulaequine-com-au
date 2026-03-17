@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import blueprintDrawingLoop from "@/assets/videos/blueprint-drawing-loop.mp4";
 import blueprintConstructionLoop from "@/assets/videos/blueprint-construction-loop.mp4";
 import blueprintLogoReference from "@/assets/pe-blueprint-gold-logo-reference.png";
-import { RopeEmblem } from "@/components/RopeEmblem";
 
 const hiddenPrefixes = ["/admin", "/employee", "/bookings", "/staff", "/trainer"];
 
@@ -55,11 +54,6 @@ export function GlobalCinematicBackdrop() {
       />
 
       <div className="absolute inset-0 bg-background/84" />
-
-      {/* Rope + PE emblem — bottom-right, soft blend */}
-      <div className="absolute right-6 bottom-6">
-        <RopeEmblem size="sm" opacity={0.22} />
-      </div>
     </div>
   );
 }

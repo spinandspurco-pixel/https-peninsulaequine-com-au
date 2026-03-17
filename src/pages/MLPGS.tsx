@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
-import peRopeRing from "@/assets/pe-rope-ring.png";
+
 
 const FEATURES = [
   { title: "Modular", desc: "Interchangeable panels. Reconfigure in hours, not weeks." },
@@ -158,7 +158,7 @@ export default function MLPGS() {
       <section ref={formRef} className="py-20 bg-primary text-primary-foreground relative overflow-hidden">
         <BlueprintScene preset="barn" className="absolute inset-0" />
         <div className="section-container relative z-10 max-w-lg mx-auto text-center">
-          <img src={peRopeRing} alt="" className="mx-auto h-16 w-16 mb-6 opacity-40 animate-rope-drift" loading="lazy" />
+          <div className="w-12 h-px bg-accent mx-auto mb-6" />
           <p className="text-overline text-accent tracking-[0.25em] mb-2">Be First</p>
           <h2 className="heading-section text-primary-foreground mb-3">Register Your Interest</h2>
           <p className="text-primary-foreground/60 text-sm mb-10 max-w-sm mx-auto">
