@@ -459,8 +459,53 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
           </div>
         )}
 
-        {/* Step 3: Experience & message */}
+        {/* Step 3: Property & Timeline */}
         {step === 3 && (
+          <div className="space-y-5">
+            <div>
+              <h3 className="font-serif text-xl sm:text-2xl text-foreground mb-1">About Your Property</h3>
+              <p className="text-sm text-muted-foreground">Helps us assess logistics and site requirements.</p>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-1.5 flex items-center gap-1.5">
+                  <MapPin className="h-3 w-3" /> Property Location
+                </label>
+                <Input
+                  value={propertyLocation}
+                  onChange={(e) => setPropertyLocation(e.target.value)}
+                  placeholder="e.g. Mornington Peninsula, VIC"
+                  maxLength={200}
+                />
+              </div>
+              <div>
+                <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-2 block">
+                  Preferred Timeline
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {TIMELINE_OPTIONS.map((t) => (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => setTimeline(t.id)}
+                      className={cn(
+                        "px-4 py-2 rounded-full text-sm font-medium border transition-all",
+                        timeline === t.id
+                          ? "bg-accent/10 border-accent text-foreground ring-1 ring-accent/30"
+                          : "bg-background border-border text-muted-foreground hover:border-accent/40"
+                      )}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 4: Experience & message */}
+        {step === 4 && (
           <div className="space-y-5">
             <div>
               <h3 className="font-serif text-xl sm:text-2xl text-foreground mb-1">Tell Us More</h3>
