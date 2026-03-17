@@ -98,21 +98,13 @@ export function Header() {
             ))}
           </div>
 
-          {/* CTAs + Cart */}
+          {/* CTAs + MLPGS Badge */}
           <div className="hidden lg:flex items-center gap-2 xl:gap-3">
+            <span className="px-2.5 py-1 rounded-full text-[9px] font-semibold uppercase tracking-[0.12em] bg-accent/15 text-accent border border-accent/30 animate-pulse">
+              MLPGS — Coming Soon
+            </span>
             <GlobalSearch />
             <CartDrawer />
-            <Button
-              asChild
-              size="sm"
-              variant="outline"
-              className="border-accent/40 text-accent hover:bg-accent/10 uppercase tracking-[0.1em] text-[10px] xl:text-xs px-3 xl:px-5"
-            >
-              <Link to="/book-lesson">
-                <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
-                Book Lesson
-              </Link>
-            </Button>
             <Button
               asChild
               size="sm"
