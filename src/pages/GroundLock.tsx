@@ -84,10 +84,10 @@ function SystemCrossSection() {
 
   return (
     <div className="space-y-4">
-      <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2 px-1">
+      <h3 className="font-mono text-[9px] uppercase tracking-[0.25em] text-muted-foreground/60 flex items-center gap-2 px-1">
         <Layers className="w-3 h-3" /> System Cross-Section
       </h3>
-      <div className="space-y-1 relative">
+      <div className="space-y-1.5 relative">
         {layers.map((layer, i) => {
           const isActive = activeIndex === i;
           return (
@@ -95,35 +95,35 @@ function SystemCrossSection() {
               <button
                 type="button"
                 className={cn(
-                  "w-full text-left flex items-center gap-4 p-3 border transition-all duration-300 cursor-pointer",
+                  "w-full text-left flex items-center gap-4 p-3.5 border transition-all duration-500 cursor-pointer",
                   isActive
-                    ? "bg-accent/10 border-accent/40 scale-[1.01] shadow-md"
-                    : layer.accent ? "bg-accent/5 border-border/50" : "bg-card border-border/50",
+                    ? "bg-accent/8 border-accent/30 shadow-[0_0_20px_-6px_hsl(var(--accent)/0.15)]"
+                    : layer.accent ? "bg-accent/[0.03] border-border/40" : "bg-card/50 border-border/40",
                 )}
                 onMouseEnter={() => setActiveIndex(i)}
                 onMouseLeave={() => setActiveIndex(null)}
                 onClick={() => setActiveIndex(isActive ? null : i)}
               >
-                <div className="w-20 font-mono text-[10px] text-muted-foreground tabular-nums shrink-0">
+                <div className="w-20 font-mono text-[10px] text-muted-foreground/50 tabular-nums shrink-0">
                   {layer.depth}
                 </div>
                 <div className="flex-1">
                   <p className={cn(
-                    "text-xs font-semibold uppercase tracking-wider transition-colors duration-300",
-                    isActive ? "text-accent" : "text-foreground"
+                    "text-[11px] font-semibold uppercase tracking-[0.1em] transition-colors duration-500",
+                    isActive ? "text-accent" : "text-foreground/80"
                   )}>
                     {layer.label}
                   </p>
                   <div className={cn(
-                    "overflow-hidden transition-all duration-300",
-                    isActive ? "max-h-16 opacity-100 mt-1" : "max-h-0 opacity-0"
+                    "overflow-hidden transition-all duration-500",
+                    isActive ? "max-h-16 opacity-100 mt-1.5" : "max-h-0 opacity-0"
                   )}>
-                    <p className="text-[11px] text-muted-foreground leading-relaxed">{layer.text}</p>
+                    <p className="text-[11px] text-muted-foreground/60 leading-relaxed">{layer.text}</p>
                   </div>
                 </div>
                 <div className={cn(
-                  "w-1 h-6 rounded-full transition-all duration-300 shrink-0",
-                  isActive ? "bg-accent" : "bg-border"
+                  "w-0.5 h-5 rounded-full transition-all duration-500 shrink-0",
+                  isActive ? "bg-accent/70" : "bg-border/50"
                 )} />
               </button>
             </RevealOnScroll>
@@ -131,14 +131,15 @@ function SystemCrossSection() {
         })}
         {/* Fall indicator */}
         <div className="absolute -right-2 top-4 bottom-16 flex flex-col items-center justify-center">
-          <div className="w-px h-full bg-accent/30 relative">
-            <ArrowDown className="w-3 h-3 text-accent absolute -bottom-1 -left-[5px]" />
+          <div className="w-px h-full bg-accent/20 relative">
+            <ArrowDown className="w-3 h-3 text-accent/50 absolute -bottom-1 -left-[5px]" />
           </div>
-          <span className="font-mono text-[9px] text-accent mt-1 whitespace-nowrap">1–2% fall</span>
+          <span className="font-mono text-[8px] text-accent/40 mt-1 whitespace-nowrap">1–2% fall</span>
         </div>
       </div>
-      <p className="text-[11px] text-accent/60 italic mt-4 px-1">
-        Most properties fail from the ground up. We start where it matters.
+      <p className="text-[11px] text-muted-foreground/40 italic mt-6 px-1 leading-relaxed">
+        Most properties fail from the ground up.<br />
+        We start where it matters.
       </p>
     </div>
   );
