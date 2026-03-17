@@ -103,6 +103,9 @@ export function Header() {
             <Link to="/mlpgs" className="px-2.5 py-1 rounded-full text-[9px] font-semibold uppercase tracking-[0.12em] bg-accent/15 text-accent border border-accent/30 animate-pulse hover:bg-accent/25 transition-colors">
               MLPGS — Coming Soon
             </Link>
+            <Link to="/groundlock" className="px-2.5 py-1 rounded-full text-[9px] font-semibold uppercase tracking-[0.12em] bg-accent/15 text-accent border border-accent/30 hover:bg-accent/25 transition-colors">
+              GroundLock™
+            </Link>
             <GlobalSearch />
             <CartDrawer />
             <Button
