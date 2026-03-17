@@ -682,7 +682,7 @@ export default function GroundLock() {
         </div>
       </section>
 
-      <StickySubpageCTA ctaLabel="Book Site Assessment" ctaHref="/contact" />
+      <StickySubpageCTA ctaLabel="Request Assessment" ctaHref="/contact" />
     </Layout>
   );
 }
