@@ -339,7 +339,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
 
       {/* Progress bar */}
       <div className="flex border-b border-border">
-        {[1, 2, 3, 4].map((s) => (
+        {[1, 2, 3, 4, 5].map((s) => (
           <div key={s} className="flex-1 flex flex-col items-center relative">
             <div
               className={cn(
@@ -347,14 +347,14 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
                 s <= step ? "bg-accent" : "bg-muted"
               )}
             />
-            <div className="py-3 px-2 text-center">
+            <div className="py-3 px-1 text-center">
               <span
                 className={cn(
-                  "text-[10px] uppercase tracking-[0.2em] font-medium transition-colors",
+                  "text-[9px] sm:text-[10px] uppercase tracking-[0.15em] font-medium transition-colors",
                   s <= step ? "text-accent" : "text-muted-foreground"
                 )}
               >
-                {s === 1 ? "Service" : s === 2 ? "Contact" : s === 3 ? "Details" : "Review"}
+                {s === 1 ? "Service" : s === 2 ? "Contact" : s === 3 ? "Project" : s === 4 ? "Details" : "Review"}
               </span>
             </div>
           </div>
