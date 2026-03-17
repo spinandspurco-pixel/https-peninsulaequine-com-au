@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useCursorSpotlight } from "@/hooks/useCursorSpotlight";
 import { Layout } from "@/components/layout/Layout";
 import { BlueprintScene } from "@/components/BlueprintScene";
