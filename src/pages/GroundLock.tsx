@@ -385,6 +385,14 @@ export default function GroundLock() {
                     </a>
                   </Button>
                 </div>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full mt-3 text-xs uppercase tracking-[0.1em] font-mono"
+                  onClick={handleDownloadPDF}
+                >
+                  <Download className="mr-2 h-4 w-4" /> Download Estimate PDF
+                </Button>
               </RevealOnScroll>
 
               <p className="text-[10px] text-muted-foreground/60 font-mono leading-relaxed">
