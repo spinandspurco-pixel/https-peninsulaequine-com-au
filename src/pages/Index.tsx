@@ -204,6 +204,9 @@ export default function Index() {
                 This isn't guesswork.<br />
                 It's experience — applied properly.
               </p>
+              <p className="text-[10px] tracking-[0.15em] text-primary-foreground/15 uppercase mt-4">
+                Engineered, not improvised · Systems, not surface fixes
+              </p>
             </div>
           </RevealOnScroll>
         </div>
