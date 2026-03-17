@@ -297,12 +297,12 @@ export default function Index() {
                   P.E. GroundLock™
                 </h2>
                 <p className="text-primary-foreground/55 text-sm leading-[1.8]">
-                  Engineered ground stabilisation designed<br />
-                  to eliminate mud, improve drainage,<br />
-                  and protect high-traffic areas.
+                  A layered system engineered to solve<br />
+                  ground failure — permanently.
                 </p>
-                <p className="text-primary-foreground/35 text-sm mt-4 italic">
-                  Layered. Tested. Built to last.
+                <p className="text-accent/70 text-sm mt-6 font-medium italic">
+                  Most properties fail from the ground up.<br />
+                  We start where it matters.
                 </p>
               </RevealOnScroll>
               <RevealOnScroll direction="left" delay={150}>
@@ -317,25 +317,32 @@ export default function Index() {
               </RevealOnScroll>
             </div>
             <RevealOnScroll direction="right" delay={200}>
-              <div className="space-y-3">
-                {[
-                  { label: "Panel + Infill", depth: "75–100mm", spec: "Angular aggregate fill" },
-                  { label: "Bedding Layer", depth: "25–50mm", spec: "Fine aggregate" },
-                  { label: "Sub-Base", depth: "100–150mm", spec: "Crushed rock" },
-                  { label: "Geotextile", depth: "~1mm", spec: "Separation layer" },
-                  { label: "Subgrade", depth: "Native", spec: "Compacted soil" },
-                ].map((layer, i) => (
-                  <div key={i} className="flex items-center gap-4 p-4 border border-primary-foreground/10 bg-primary-foreground/[0.03]">
-                    <span className="text-[10px] font-mono text-primary-foreground/35 w-20 tabular-nums">{layer.depth}</span>
-                    <div className="flex-1">
-                      <p className="text-xs font-semibold text-primary-foreground uppercase tracking-wider">{layer.label}</p>
-                      <p className="text-[10px] text-primary-foreground/35 mt-0.5">{layer.spec}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <InteractiveLayerStack />
             </RevealOnScroll>
           </div>
+        </div>
+      </section>
+
+      {/* ═══ WHO WE WORK WITH ═════════════════════════════ */}
+      <section className="py-20 sm:py-28 bg-background relative grain-texture overflow-hidden">
+        <div className="section-container max-w-2xl mx-auto text-center relative z-[1] space-y-8">
+          <RevealLine className="mx-auto" width="w-10" />
+          <RevealOnScroll direction="up">
+            <h2 className="heading-section text-foreground">Who We Work With</h2>
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={100}>
+            <div className="space-y-5 text-sm text-muted-foreground leading-[1.8] max-w-lg mx-auto">
+              <p>
+                We work with private owners, performance riders,<br />
+                and properties where function, longevity,<br />
+                and correct design matter.
+              </p>
+              <p className="text-foreground/60 italic">
+                Not every project is a fit.<br />
+                And that's intentional.
+              </p>
+            </div>
+          </RevealOnScroll>
         </div>
       </section>
 
