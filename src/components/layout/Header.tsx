@@ -183,12 +183,6 @@ export function Header() {
           </div>
 
           <div className="flex gap-3 pt-4 mt-2">
-            <Button asChild variant="outline" className="flex-1 border-accent/40 text-accent hover:bg-accent/10 uppercase tracking-[0.1em] text-xs">
-              <Link to="/book-lesson">
-                <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
-                Book Lesson
-              </Link>
-            </Button>
             <Button asChild className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.1em] text-xs">
               <Link to="/contact">Get a Quote</Link>
             </Button>
