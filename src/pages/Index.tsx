@@ -111,7 +111,7 @@ export default function Index() {
                 variant="outline"
                 className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/5 uppercase tracking-[0.14em] text-xs font-medium"
               >
-                <Link to="/gallery">View Projects</Link>
+                <Link to="/gallery">Selected Work</Link>
               </Button>
             </div>
           </div>
