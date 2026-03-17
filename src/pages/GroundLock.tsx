@@ -162,15 +162,29 @@ function PricingCard({
 
 /* ── Main Page ────────────────────────────────────── */
 export default function GroundLock() {
-  const [area, setArea] = useState(250);
+  const [projectType, setProjectType] = useState<ProjectType>("yard");
+  const activeType = PROJECT_TYPES.find((t) => t.key === projectType)!;
+  const [area, setArea] = useState(activeType.defaultArea);
+
+  const handleTypeChange = (type: ProjectType) => {
+    setProjectType(type);
+    const newType = PROJECT_TYPES.find((t) => t.key === type)!;
+    setArea(newType.defaultArea);
+  };
 
   const stats = useMemo(() => {
     const panels = Math.ceil(area / PANEL_SIZE);
+    const r = activeType.rates;
     return {
       panels,
-      base: { low: area * 90, high: area * 120 },
-      standard: { low: area * 120, high: area * 180 },
-      premium: { low: area * 180, high: area * 250 },
+      base: { low: area * r.base[0], high: area * r.base[1] },
+      standard: { low: area * r.standard[0], high: area * r.standard[1] },
+      premium: { low: area * r.premium[0], high: area * r.premium[1] },
+      rateLabels: {
+        base: `$${r.base[0]}–${r.base[1]}`,
+        standard: `$${r.standard[0]}–${r.standard[1]}`,
+        premium: `$${r.premium[0]}–${r.premium[1]}`,
+      },
       materials: {
         geotextile: (area * 1.08).toFixed(1),
         subBase: (area * 0.125).toFixed(1),
@@ -178,7 +192,7 @@ export default function GroundLock() {
         infill: (area * 0.085).toFixed(1),
       },
     };
-  }, [area]);
+  }, [area, activeType]);
 
   const handleAreaInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = Math.max(50, Math.min(5000, Number(e.target.value) || 50));
