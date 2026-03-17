@@ -388,7 +388,7 @@ export default function Index() {
               </p>
               <p className="text-foreground/50 italic">
                 Not every project is a fit.<br />
-                And that's intentional.
+                And that's by design.
               </p>
             </div>
           </RevealOnScroll>
