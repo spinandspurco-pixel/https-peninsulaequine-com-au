@@ -3,6 +3,7 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Layers } from "lucide-react";
+import { InteractiveLayerStack } from "@/components/InteractiveLayerStack";
 import {
   BPArena,
   BPStables,

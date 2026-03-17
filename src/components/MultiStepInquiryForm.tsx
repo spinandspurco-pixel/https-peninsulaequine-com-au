@@ -49,7 +49,7 @@ const contactSchema = z.object({
   phone: z.string().max(30).optional(),
 });
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 5;
 const DRAFT_KEY = "pe_inquiry_draft";
 
 interface DraftState {
