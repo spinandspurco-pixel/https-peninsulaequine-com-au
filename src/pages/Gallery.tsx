@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { GalleryBlueprintOverlay } from "@/components/GalleryBlueprintOverlay";
 import { GalleryTourForm } from "@/components/GalleryTourForm";
 import { GalleryTestimonialStrip } from "@/components/GalleryTestimonialStrip";
+import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { testimonials } from "@/data/content";
 
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
@@ -132,28 +133,31 @@ export default function Gallery() {
         dividerVariant="structural"
       />
 
-
       {/* Photo & Video Gallery */}
       <GalleryBlueprintOverlay layer="elevation" bg="background" className="section-padding">
         <div className="section-container">
-          <GalleryFilters
-            activeProject={activeProject}
-            setActiveProject={setActiveProject}
-            activeService={activeService}
-            setActiveService={setActiveService}
-            activeLocation={activeLocation}
-            setActiveLocation={setActiveLocation}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            searchInputRef={searchInputRef}
-            activeFilterCount={activeFilterCount}
-            clearAllFilters={clearAllFilters}
-            imageCount={imageCount}
-            videoCount={videoCount}
-            totalCount={filteredItems.length}
-          />
+          <RevealOnScroll direction="up" duration={600}>
+            <GalleryFilters
+              activeProject={activeProject}
+              setActiveProject={setActiveProject}
+              activeService={activeService}
+              setActiveService={setActiveService}
+              activeLocation={activeLocation}
+              setActiveLocation={setActiveLocation}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              searchInputRef={searchInputRef}
+              activeFilterCount={activeFilterCount}
+              clearAllFilters={clearAllFilters}
+              imageCount={imageCount}
+              videoCount={videoCount}
+              totalCount={filteredItems.length}
+            />
+          </RevealOnScroll>
 
-          <GalleryTestimonialStrip testimonials={filteredTestimonials} />
+          <RevealOnScroll direction="up" delay={100}>
+            <GalleryTestimonialStrip testimonials={filteredTestimonials} />
+          </RevealOnScroll>
 
           {/* Admin bulk select toolbar */}
           {isAdmin && (
@@ -210,7 +214,9 @@ export default function Gallery() {
       {/* Gallery Tour Lead Form */}
       <section className="section-padding bg-card border-y border-border">
         <div className="section-container">
-          <GalleryTourForm />
+          <RevealOnScroll direction="up">
+            <GalleryTourForm />
+          </RevealOnScroll>
         </div>
       </section>
 
