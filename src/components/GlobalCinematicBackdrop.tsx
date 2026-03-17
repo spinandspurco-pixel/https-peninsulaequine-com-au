@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import blueprintDrawingLoop from "@/assets/videos/blueprint-drawing-loop.mp4";
 import blueprintConstructionLoop from "@/assets/videos/blueprint-construction-loop.mp4";
-import blueprintLogoReference from "@/assets/pe-blueprint-gold-logo-reference.png";
 
 const hiddenPrefixes = ["/admin", "/employee", "/bookings", "/staff", "/trainer"];
 
+/**
+ * Ultra-subtle cinematic backdrop — blueprint video crossfade.
+ * Kept at very low opacity so it adds texture without competing with content.
+ */
 export function GlobalCinematicBackdrop() {
   const { pathname } = useLocation();
   const [activeLayer, setActiveLayer] = useState(0);
@@ -13,7 +16,7 @@ export function GlobalCinematicBackdrop() {
   useEffect(() => {
     const timer = window.setInterval(() => {
       setActiveLayer((prev) => (prev === 0 ? 1 : 0));
-    }, 9000);
+    }, 12000);
 
     return () => window.clearInterval(timer);
   }, []);
@@ -27,8 +30,8 @@ export function GlobalCinematicBackdrop() {
       <video
         className="absolute inset-0 h-full w-full object-cover"
         style={{
-          opacity: activeLayer === 0 ? 0.18 : 0,
-          transition: "opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1)",
+          opacity: activeLayer === 0 ? 0.06 : 0,
+          transition: "opacity 2s cubic-bezier(0.4, 0, 0.2, 1)",
         }}
         autoPlay muted loop playsInline preload="metadata"
       >
@@ -38,22 +41,16 @@ export function GlobalCinematicBackdrop() {
       <video
         className="absolute inset-0 h-full w-full object-cover"
         style={{
-          opacity: activeLayer === 1 ? 0.18 : 0,
-          transition: "opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1)",
+          opacity: activeLayer === 1 ? 0.06 : 0,
+          transition: "opacity 2s cubic-bezier(0.4, 0, 0.2, 1)",
         }}
         autoPlay muted loop playsInline preload="metadata"
       >
         <source src={blueprintConstructionLoop} type="video/mp4" />
       </video>
 
-      <img
-        src={blueprintLogoReference}
-        alt=""
-        className="absolute inset-0 h-full w-full object-cover opacity-[0.05]"
-        loading="lazy"
-      />
-
-      <div className="absolute inset-0 bg-background/84" />
+      {/* Heavy overlay to keep it barely perceptible */}
+      <div className="absolute inset-0 bg-background/95" />
     </div>
   );
 }

@@ -296,7 +296,8 @@ export default function Index() {
         </div>
       </section>
 
-      <section className="py-24 sm:py-32">
+      {/* ─── Philosophy pillars ─────────────────────── */}
+      <section className="py-24 sm:py-32 bg-background relative">
         <div className="section-container max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <RevealLine className="mx-auto mb-7" width="w-12" />
