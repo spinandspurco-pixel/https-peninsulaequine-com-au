@@ -1,12 +1,12 @@
-import { useRef } from "react";
 import { Layout } from "@/components/layout/Layout";
-import { AnimatedBlueprintHero } from "@/components/AnimatedBlueprintHero";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
-import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { BlueprintScene } from "@/components/BlueprintScene";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, Layers, Compass, Ruler, Mountain } from "lucide-react";
+import { ArrowRight, Layers, Compass, Ruler, Mountain, PenTool } from "lucide-react";
+
+// Video
+import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
 
 // Portfolio imagery
 import aberdeenStonework from "@/assets/aberdeen-stonework-color.jpg";
@@ -25,19 +25,42 @@ const PORTFOLIO = [
   { src: aberdeenBarnInterior, alt: "Barn interior at Aberdeen Farm", label: "Aberdeen Farm", type: "Barn" },
 ];
 
-const POSITIONING = [
-  { icon: Compass, label: "Arenas", desc: "Competition-grade surfaces" },
-  { icon: Layers, label: "Stables", desc: "Engineered equine housing" },
-  { icon: Ruler, label: "Ground Systems", desc: "P.E. GroundLock™ stabilisation" },
-  { icon: Mountain, label: "Rural Infrastructure", desc: "Built for the landscape" },
-];
-
-const SERVICES = [
-  { title: "Arena Construction", desc: "Precision-graded surfaces with engineered drainage and footing systems for competition and training.", href: "/services" },
-  { title: "Stables & Barns", desc: "Hand-crafted timber and stonework stables designed around equine behaviour and natural ventilation.", href: "/services" },
-  { title: "P.E. GroundLock™", desc: "Our proprietary interlocking ground stabilisation system for yards, laneways, and high-traffic zones.", href: "/groundlock" },
-  { title: "Rural Infrastructure", desc: "Fencing, laneways, wash bays, float parking, and property-wide infrastructure builds.", href: "/services" },
-  { title: "Design & Planning", desc: "Full site assessment, architectural planning, and engineering consultation for equine properties.", href: "/contact" },
+const CAPABILITIES = [
+  {
+    icon: Compass,
+    num: "01",
+    title: "Performance Arenas",
+    desc: "Precision-graded surfaces engineered for consistency, drainage, and longevity under real conditions — not theory. Built to ride the same in winter as it does in summer.",
+    href: "/services",
+  },
+  {
+    icon: Layers,
+    num: "02",
+    title: "Stables & Barns",
+    desc: "Hand-crafted timber and stone structures designed around equine behaviour, airflow, and durability. Form follows function. Always.",
+    href: "/services",
+  },
+  {
+    icon: Ruler,
+    num: "03",
+    title: "Ground Systems (GroundLock™)",
+    desc: "Interlocking stabilisation systems engineered to eliminate mud, protect hooves, and create permanent hard-standing. Where most properties fail — this is where we start.",
+    href: "/groundlock",
+  },
+  {
+    icon: Mountain,
+    num: "04",
+    title: "Rural Infrastructure",
+    desc: "Laneways, wash bays, float access, fencing — integrated systems designed to work together, not as afterthoughts.",
+    href: "/services",
+  },
+  {
+    icon: PenTool,
+    num: "05",
+    title: "Design & Consultancy",
+    desc: "Full-site planning informed by terrain, drainage, wind, and use. Because the land decides what works — we just read it properly.",
+    href: "/contact",
+  },
 ];
 
 /* ── Hero word stagger ────────────────────────────── */
@@ -62,21 +85,30 @@ export default function Index() {
   return (
     <Layout>
       {/* ═══ HERO ═══════════════════════════════════════ */}
-      <section className="relative min-h-[96vh] overflow-hidden flex items-center">
-        <div className="absolute inset-0 bg-primary" />
-        <AnimatedBlueprintHero />
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-transparent to-primary/70" />
+      <section className="relative min-h-[96vh] overflow-hidden flex items-center justify-center">
+        {/* Video background */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src={heroVideo} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-primary/75" />
 
-        <div className="relative z-10 section-container text-primary-foreground">
-          <div className="max-w-2xl space-y-8">
+        <div className="relative z-10 section-container text-primary-foreground text-center max-w-3xl mx-auto">
+          <div className="space-y-8">
             <div
-              className="flex items-center gap-4 opacity-0 animate-fade-in"
+              className="flex items-center justify-center gap-4 opacity-0 animate-fade-in"
               style={{ animationDelay: "200ms", animationFillMode: "both" }}
             >
               <div className="w-10 h-px bg-accent" />
               <p className="text-[10px] sm:text-[11px] font-sans font-medium tracking-[0.3em] uppercase text-accent">
-                Peninsula Equine
+                Engineered Equine Infrastructure
               </p>
+              <div className="w-10 h-px bg-accent" />
             </div>
 
             <h1 className="heading-display text-primary-foreground leading-[1.02]">
@@ -86,14 +118,14 @@ export default function Index() {
             </h1>
 
             <p
-              className="text-base sm:text-lg text-primary-foreground/55 max-w-md leading-relaxed opacity-0 animate-fade-in"
+              className="text-base sm:text-lg text-primary-foreground/45 max-w-md mx-auto leading-relaxed opacity-0 animate-fade-in"
               style={{ animationDelay: "950ms", animationFillMode: "both" }}
             >
-              Engineered equine infrastructure — arenas, stables, and ground systems built by a horseman.
+              Built by a horseman.
             </p>
 
             <div
-              className="flex flex-col sm:flex-row gap-3 opacity-0 animate-fade-in"
+              className="flex flex-col sm:flex-row gap-3 justify-center opacity-0 animate-fade-in"
               style={{ animationDelay: "1150ms", animationFillMode: "both" }}
             >
               <Button
@@ -129,26 +161,68 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ POSITIONING STRIP ═══════════════════════════ */}
-      <section className="py-0 border-y border-border bg-card">
-        <div className="section-container">
-          <div className="grid grid-cols-2 md:grid-cols-4">
-            {POSITIONING.map((item, i) => (
-              <RevealOnScroll key={item.label} direction="up" stagger={i} staggerInterval={100}>
-                <div className={`py-8 sm:py-10 px-4 sm:px-6 text-center ${i < 3 ? "border-r border-border" : ""}`}>
-                  <item.icon className="w-5 h-5 text-accent mx-auto mb-3" strokeWidth={1.5} />
-                  <h3 className="text-xs font-sans font-semibold uppercase tracking-[0.15em] text-foreground mb-1">
-                    {item.label}
-                  </h3>
-                  <p className="text-[11px] text-muted-foreground">{item.desc}</p>
-                </div>
+      {/* ═══ INTRO ═══════════════════════════════════════ */}
+      <section className="py-24 sm:py-32 bg-background relative overflow-hidden">
+        <div className="section-container max-w-3xl mx-auto text-center space-y-8">
+          <RevealLine className="mx-auto mb-2" width="w-10" />
+          <RevealOnScroll direction="up">
+            <h2 className="heading-section text-foreground">
+              Built on Understanding —<br />Not Assumption
+            </h2>
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={120}>
+            <div className="space-y-5 text-sm sm:text-base text-muted-foreground leading-relaxed max-w-xl mx-auto">
+              <p>
+                We don't build for appearances.<br />
+                We build for how horses move, live, and perform.
+              </p>
+              <p>
+                Every arena, every structure, every surface begins with the same question —
+                <em className="text-foreground/80"> what does the horse need for this to work properly?</em>
+              </p>
+              <p>
+                The result is infrastructure that doesn't just look right.<br />
+                It rides right. It lasts.
+              </p>
+            </div>
+          </RevealOnScroll>
+        </div>
+      </section>
+
+      {/* ═══ CAPABILITIES ════════════════════════════════ */}
+      <section className="py-20 sm:py-28 bg-card border-y border-border">
+        <div className="section-container max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <RevealLine className="mx-auto mb-5" width="w-10" />
+            <RevealOnScroll direction="up">
+              <h2 className="heading-section text-foreground mb-3">Capabilities</h2>
+            </RevealOnScroll>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-14">
+            {CAPABILITIES.map((item, i) => (
+              <RevealOnScroll key={item.title} direction="up" stagger={i} staggerInterval={100}>
+                <Link to={item.href} className="group block">
+                  <div className="flex items-start gap-5">
+                    <div className="flex-shrink-0 mt-1">
+                      <item.icon className="w-5 h-5 text-accent/60 group-hover:text-accent transition-colors" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-mono tracking-[0.25em] text-accent/40 mb-1">{item.num}</p>
+                      <h3 className="font-serif text-lg font-medium text-foreground mb-2 group-hover:text-accent transition-colors duration-300">
+                        {item.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                    </div>
+                  </div>
+                </Link>
               </RevealOnScroll>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══ FEATURED PROJECTS ═══════════════════════════ */}
+      {/* ═══ SELECTED WORK ═══════════════════════════════ */}
       <section className="py-20 sm:py-28 bg-background">
         <div className="section-container max-w-6xl mx-auto">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 gap-4">
@@ -159,7 +233,7 @@ export default function Index() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={160}>
                 <p className="text-muted-foreground text-sm mt-2 max-w-md">
-                  Every project came from a recommendation.
+                  A curated selection of builds — not everything, just what matters.
                 </p>
               </RevealOnScroll>
             </div>
@@ -177,10 +251,10 @@ export default function Index() {
                   <img
                     src={item.src}
                     alt={item.alt}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/75 via-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
                     <p className="text-[10px] uppercase tracking-[0.2em] text-accent font-medium mb-1">{item.type}</p>
                     <p className="text-sm font-serif text-primary-foreground">{item.label}</p>
@@ -192,10 +266,20 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ GROUNDLOCK SPOTLIGHT ════════════════════════ */}
+      {/* ═══ GROUNDLOCK™ SPOTLIGHT ════════════════════════ */}
       <section className="py-20 sm:py-28 bg-primary text-primary-foreground relative overflow-hidden">
-        <BlueprintScene preset="elevation" className="absolute inset-0" />
+        {/* Low-opacity video background */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.06]"
+        >
+          <source src={heroVideo} type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-primary/85" />
+
         <div className="section-container relative z-10 max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
@@ -208,12 +292,15 @@ export default function Index() {
                   P.E. GroundLock™
                 </h2>
                 <p className="text-primary-foreground/60 text-sm leading-relaxed">
-                  Our engineered interlocking ground stabilisation system eliminates mud, protects hooves, and creates permanent hard-standing for yards, laneways, wash bays, and float parking.
+                  Engineered ground stabilisation designed to eliminate mud, improve drainage, and protect high-traffic areas.
+                </p>
+                <p className="text-primary-foreground/40 text-sm mt-3 italic">
+                  Layered. Tested. Built to last.
                 </p>
               </RevealOnScroll>
               <RevealOnScroll direction="left" delay={150}>
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90 uppercase tracking-[0.12em] text-xs font-medium">
+                  <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90 uppercase tracking-[0.12em] text-xs font-medium btn-hover-lift">
                     <Link to="/groundlock">Explore GroundLock™ <ArrowRight className="ml-2 h-4 w-4" /></Link>
                   </Button>
                   <Button asChild variant="outline" className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/5 uppercase tracking-[0.12em] text-xs">
@@ -245,42 +332,6 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ SERVICES GRID ═══════════════════════════════ */}
-      <section className="py-20 sm:py-28 bg-background">
-        <div className="section-container max-w-5xl mx-auto">
-          <div className="text-center mb-14">
-            <RevealLine className="mx-auto mb-5" width="w-10" />
-            <RevealOnScroll direction="up">
-              <h2 className="heading-section text-foreground mb-3">Capabilities</h2>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={100}>
-              <p className="text-muted-foreground text-sm max-w-md mx-auto">
-                Full-scope equine infrastructure — from architectural planning through to final handover.
-              </p>
-            </RevealOnScroll>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border">
-            {SERVICES.map((service, i) => (
-              <RevealOnScroll key={service.title} direction="up" stagger={i} staggerInterval={80}>
-                <Link
-                  to={service.href}
-                  className="group bg-background p-8 flex flex-col h-full hover:bg-card transition-colors duration-300"
-                >
-                  <span className="text-[10px] font-mono text-accent/60 mb-3">0{i + 1}</span>
-                  <h3 className="font-serif text-lg font-medium text-foreground mb-2 group-hover:text-accent transition-colors duration-300">
-                    {service.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed flex-1">{service.desc}</p>
-                  <ArrowRight className="w-4 h-4 text-accent/0 group-hover:text-accent mt-4 transition-all duration-300 translate-x-0 group-hover:translate-x-1" />
-                </Link>
-              </RevealOnScroll>
-            ))}
-          </div>
-        </div>
-      </section>
-
-
       {/* ═══ PHILOSOPHY ═══════════════════════════════════ */}
       <section className="py-20 sm:py-28 bg-background">
         <div className="section-container max-w-4xl mx-auto">
@@ -293,10 +344,10 @@ export default function Index() {
 
           <div className="grid sm:grid-cols-2 gap-x-16 gap-y-12">
             {[
-              { n: "01", title: "Design for the Horse", desc: "Every decision begins with the animal. Sight lines, ventilation, footing — engineered for how horses actually live." },
-              { n: "02", title: "Build for Generations", desc: "Hand-set stonework, kiln-dried hardwood, marine-grade hardware. Our facilities outlast the trends." },
-              { n: "03", title: "Respect the Land", desc: "We read the property before we draw a line. Drainage, winds, soil — the land tells you where to build." },
-              { n: "04", title: "Craft Over Convenience", desc: "Mortise-and-tenon where bolts would do. Stone foundations where concrete would suffice." },
+              { n: "01", title: "Design for the Horse", desc: "Every decision begins with the animal — sight lines, footing, airflow, movement." },
+              { n: "02", title: "Build for Generations", desc: "Materials and methods chosen for longevity, not convenience." },
+              { n: "03", title: "Respect the Land", desc: "Drainage, slope, soil — the land dictates the outcome." },
+              { n: "04", title: "Craft Over Convenience", desc: "Where others cut corners, we build it properly." },
             ].map((p, i) => (
               <RevealOnScroll key={p.n} direction="up" stagger={i} staggerInterval={140}>
                 <div className="group">
@@ -334,19 +385,27 @@ export default function Index() {
 
       {/* ═══ FINAL CTA ═══════════════════════════════════ */}
       <section className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
-        <BlueprintScene preset="barn" className="absolute inset-0" />
-        <div className="absolute inset-10 border border-accent/[0.05] pointer-events-none" aria-hidden="true" />
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.06]"
+        >
+          <source src={heroVideo} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-primary/90" />
 
         <div className="section-container relative z-10 text-center max-w-lg mx-auto space-y-6">
           <RevealLine className="mx-auto" width="w-10" />
           <RevealOnScroll direction="up">
             <h2 className="font-serif text-2xl md:text-3xl text-primary-foreground">
-              Let's build something<br />that lasts.
+              Let's Build Something<br />That Lasts
             </h2>
           </RevealOnScroll>
           <RevealOnScroll direction="up" delay={100}>
             <p className="text-primary-foreground/40 text-sm">
-              Free on-site consultation. No obligation.
+              Site-specific. Horse-first. Built properly.
             </p>
           </RevealOnScroll>
           <RevealOnScroll direction="up" delay={200}>
@@ -357,7 +416,7 @@ export default function Index() {
                 className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.14em] text-xs font-medium btn-hover-lift"
               >
                 <Link to="/contact">
-                  Book Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                  Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button
