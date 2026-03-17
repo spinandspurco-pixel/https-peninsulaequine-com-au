@@ -116,6 +116,8 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
   const [name, setName] = useState(preName || (hasDraft ? existingDraft!.name : ""));
   const [email, setEmail] = useState(preEmail || (hasDraft ? existingDraft!.email : ""));
   const [phone, setPhone] = useState(prePhone || (hasDraft ? existingDraft!.phone : ""));
+  const [propertyLocation, setPropertyLocation] = useState(hasDraft ? existingDraft!.propertyLocation || "" : "");
+  const [timeline, setTimeline] = useState(hasDraft ? existingDraft!.timeline || "" : "");
   const [experience, setExperience] = useState(hasDraft ? existingDraft!.experience : "");
   const [budget, setBudget] = useState(hasDraft ? existingDraft!.budget : "");
   const [message, setMessage] = useState(hasDraft ? existingDraft!.message : "");
