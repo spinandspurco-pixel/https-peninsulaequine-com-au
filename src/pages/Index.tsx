@@ -98,44 +98,52 @@ export default function Index() {
     <Layout>
       {/* ═══ HERO ═══════════════════════════════════════ */}
       <section className="relative min-h-[100vh] overflow-hidden flex items-center justify-center">
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover brightness-[0.8] contrast-[1.05]">
+        {/* Video background — deep, cinematic */}
+        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover brightness-[0.55] contrast-[1.15] saturate-[0.85]">
           <source src={heroVideo} type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-primary/80" />
-        {/* Vignette */}
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, transparent 40%, hsl(var(--primary)) 100%)" }} />
+        {/* Dark overlay for depth */}
+        <div className="absolute inset-0 bg-primary/70" />
+        {/* Vignette — heavier edges */}
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, transparent 30%, hsl(var(--primary) / 0.6) 70%, hsl(var(--primary)) 100%)" }} />
+        {/* Subtle grain layer */}
+        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.04]" />
 
-        <div className="relative z-10 section-container text-primary-foreground text-center max-w-3xl mx-auto">
-          <div className="space-y-14">
+        <div className="relative z-10 section-container text-primary-foreground text-center max-w-4xl mx-auto">
+          <div className="flex flex-col items-center gap-16 sm:gap-20">
+            {/* Top line */}
             <div
-              className="flex items-center justify-center gap-4 opacity-0 animate-fade-in"
-              style={{ animationDelay: "200ms", animationFillMode: "both" }}
+              className="flex items-center justify-center gap-5 opacity-0 animate-fade-in"
+              style={{ animationDelay: "300ms", animationFillMode: "both" }}
             >
-              <div className="w-10 h-px bg-accent" />
-              <p className="text-[10px] sm:text-[11px] font-sans font-medium tracking-[0.3em] uppercase text-accent">
+              <div className="w-12 h-px bg-accent/50" />
+              <p className="text-[10px] sm:text-[11px] font-sans font-medium tracking-[0.35em] uppercase text-accent/80">
                 Engineered Equine Infrastructure
               </p>
-              <div className="w-10 h-px bg-accent" />
+              <div className="w-12 h-px bg-accent/50" />
             </div>
 
-            <h1 className="heading-display text-primary-foreground leading-[1.08] tracking-[0.01em]">
-              <StaggerText text="From Dirt" delay={400} />
-              <br />
-              <span className="block mt-2">
-                <StaggerText text="to Dynasty." delay={600} />
-              </span>
+            {/* Main heading — large, tight, cinematic */}
+            <h1
+              className="font-serif font-bold text-primary-foreground leading-[0.95] tracking-[-0.01em] text-6xl sm:text-7xl md:text-8xl lg:text-9xl opacity-0 animate-fade-in"
+              style={{ animationDelay: "600ms", animationFillMode: "both", animationDuration: "800ms" }}
+            >
+              <span className="block">FROM DIRT</span>
+              <span className="block mt-4 sm:mt-6">TO DYNASTY</span>
             </h1>
 
+            {/* Supporting line */}
             <p
-              className="text-primary-foreground/25 text-[11px] sm:text-xs tracking-[0.2em] uppercase opacity-0 animate-fade-in"
-              style={{ animationDelay: "900ms", animationFillMode: "both" }}
+              className="text-primary-foreground/30 text-[11px] sm:text-xs tracking-[0.22em] uppercase opacity-0 animate-fade-in"
+              style={{ animationDelay: "1100ms", animationFillMode: "both", animationDuration: "700ms" }}
             >
               Designed for the horse. Built for the long term.
             </p>
 
+            {/* Buttons */}
             <div
               className="flex flex-col sm:flex-row gap-4 justify-center opacity-0 animate-fade-in"
-              style={{ animationDelay: "1150ms", animationFillMode: "both" }}
+              style={{ animationDelay: "1500ms", animationFillMode: "both", animationDuration: "700ms" }}
             >
               <Button
                 asChild
@@ -155,19 +163,13 @@ export default function Index() {
                 <Link to="/gallery">Selected Work</Link>
               </Button>
             </div>
-            <p
-              className="text-primary-foreground/12 text-[10px] tracking-[0.15em] opacity-0 animate-fade-in"
-              style={{ animationDelay: "1400ms", animationFillMode: "both" }}
-            >
-              We take on a limited number of projects each season.
-            </p>
           </div>
         </div>
 
         {/* Scroll indicator */}
         <div
           className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0 animate-fade-in"
-          style={{ animationDelay: "1600ms", animationFillMode: "both" }}
+          style={{ animationDelay: "1900ms", animationFillMode: "both" }}
         >
           <span className="text-[9px] uppercase tracking-[0.3em] text-primary-foreground/20 font-sans">Scroll</span>
           <div className="w-px h-8 bg-accent/20 relative overflow-hidden">
