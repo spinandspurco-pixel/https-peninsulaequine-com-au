@@ -86,7 +86,7 @@ const PROGRAM_LEVELS = [
 ];
 
 
-const LESSON_FAQS: { question: string; answer: string; video?: string }[] = [
+const LESSON_FAQS: { question: string; answer: string }[] = [
   {
     question: "Do I need my own horse?",
     answer: "Lessons are available on your own horse only at this stage. If you don't have a horse, contact us and we can discuss options.",
@@ -94,12 +94,10 @@ const LESSON_FAQS: { question: string; answer: string; video?: string }[] = [
   {
     question: "What should I wear?",
     answer: "An approved riding helmet is mandatory. We recommend close-fitting trousers, boots with a small heel, and gloves. No loose clothing or open-toed shoes.",
-    video: faqRidingGear,
   },
   {
     question: "How long is each lesson?",
     answer: "Sessions run 45–60 minutes depending on the program level and rider fitness. Beginners typically start with shorter sessions.",
-    video: faqLessonSession,
   },
   {
     question: "What's the cancellation policy?",
@@ -108,7 +106,6 @@ const LESSON_FAQS: { question: string; answer: string; video?: string }[] = [
   {
     question: "Can I book a trial lesson?",
     answer: "Absolutely. Your first session is treated as an assessment so we can place you in the right program level. No long-term commitment required.",
-    video: faqTrialLesson,
   },
   {
     question: "Are group lessons available?",

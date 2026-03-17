@@ -132,10 +132,8 @@ export default function Gallery() {
         dividerVariant="structural"
       />
 
-      
-      <VideoGallerySection onVideoClick={setLightboxItem} />
 
-      {/* Photo Gallery Section */}
+      {/* Photo & Video Gallery */}
       <GalleryBlueprintOverlay layer="elevation" bg="background" className="section-padding">
         <div className="section-container">
           <GalleryFilters
