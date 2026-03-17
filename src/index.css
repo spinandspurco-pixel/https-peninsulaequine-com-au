@@ -410,22 +410,21 @@
 
   /* Universal glow — buttons & interactive elements */
   .btn-glow {
-    @apply relative overflow-hidden transition-all duration-300;
+    @apply relative overflow-hidden;
+    transition: all 600ms cubic-bezier(0.22, 1, 0.36, 1);
     box-shadow: 0 0 0 0 hsl(var(--accent) / 0);
   }
   .btn-glow:hover {
-    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.5),
-                0 0 20px -5px hsl(var(--accent) / 0.4),
-                0 4px 12px -4px hsl(var(--primary) / 0.2);
+    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.4),
+                0 0 16px -4px hsl(var(--accent) / 0.25);
   }
   .btn-glow:active {
-    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.6),
-                0 0 10px -3px hsl(var(--accent) / 0.3);
+    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.5),
+                0 0 8px -2px hsl(var(--accent) / 0.2);
   }
   .btn-glow:focus-visible {
     box-shadow: 0 0 0 2px hsl(var(--background)),
-                0 0 0 4px hsl(var(--ring)),
-                0 0 20px -5px hsl(var(--accent) / 0.4);
+                0 0 0 4px hsl(var(--ring));
   }
 
   /* Variant glow strengths */

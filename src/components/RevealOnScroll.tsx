@@ -32,14 +32,14 @@ export function RevealOnScroll({
   children,
   direction = "up",
   delay = 0,
-  duration = 800,
-  distance = 28,
+  duration = 700,
+  distance = 20,
   className,
   as: Tag = "div",
   threshold = 0.15,
   once = true,
   stagger,
-  staggerInterval = 120,
+  staggerInterval = 100,
 }: RevealOnScrollProps) {
   const { ref, isVisible } = useScrollReveal<HTMLDivElement>({ threshold, once });
 

@@ -415,7 +415,7 @@ export default function Index() {
                 </div>
               </RevealOnScroll>
             </div>
-            <RevealOnScroll direction="right" delay={200}>
+            <RevealOnScroll direction="up" delay={200}>
               <InteractiveLayerStack />
             </RevealOnScroll>
           </div>
