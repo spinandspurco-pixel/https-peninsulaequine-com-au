@@ -329,7 +329,7 @@ export default function Index() {
       </section>
 
       {/* ═══ FROM THE FIELD ═══════════════════════════════ */}
-      <section className="py-36 sm:py-52 bg-card border-y border-border relative overflow-hidden">
+      <section className="py-44 sm:py-64 bg-card border-y border-border relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
         <div className="section-container max-w-6xl mx-auto relative z-[1]">
           <div className="text-center mb-20 sm:mb-28">
