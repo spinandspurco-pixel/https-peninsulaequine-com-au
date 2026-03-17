@@ -23,25 +23,25 @@ export function Footer() {
   return (
     <footer className="bg-[hsl(var(--footer-bg))] text-[hsl(var(--footer-foreground))]">
       {/* Main Footer */}
-      <div className="section-container py-16 sm:py-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+      <div className="section-container py-20 sm:py-28">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-14 lg:gap-10">
           {/* Brand Column */}
           <div className="lg:col-span-1">
-            <Link to="/" className="inline-flex items-center gap-3 mb-5 group">
+            <Link to="/" className="inline-flex items-center gap-3 mb-6 group">
               <img src={logoPeMark} alt="Peninsula Equine" className="h-8 w-8 object-contain" />
               <span className="font-serif text-sm font-semibold tracking-wide">
                 Peninsula Equine
               </span>
             </Link>
-            <p className="text-[hsl(var(--footer-muted))] text-sm leading-relaxed max-w-xs mb-6">
-              Engineered equine infrastructure. Arenas, stables, ground systems, and rural builds — designed for the horse, built for generations.
+            <p className="text-[hsl(var(--footer-muted))] text-sm leading-[1.8] max-w-xs mb-8">
+              Engineered equine infrastructure — arenas, stables, ground systems, and rural builds designed for the horse.
             </p>
             <div className="flex gap-2">
               <a
                 href={siteConfig.social.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 flex items-center justify-center border border-[hsl(var(--footer-muted))]/20 hover:border-[hsl(var(--footer-hover))] hover:text-[hsl(var(--footer-hover))] transition-all duration-300"
+                className="w-9 h-9 flex items-center justify-center border border-[hsl(var(--footer-muted))]/15 hover:border-[hsl(var(--footer-hover))] hover:text-[hsl(var(--footer-hover))] transition-all duration-500"
                 aria-label="Instagram"
               >
                 <Instagram className="h-3.5 w-3.5" />
@@ -50,7 +50,7 @@ export function Footer() {
                 href={siteConfig.social.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 flex items-center justify-center border border-[hsl(var(--footer-muted))]/20 hover:border-[hsl(var(--footer-hover))] hover:text-[hsl(var(--footer-hover))] transition-all duration-300"
+                className="w-9 h-9 flex items-center justify-center border border-[hsl(var(--footer-muted))]/15 hover:border-[hsl(var(--footer-hover))] hover:text-[hsl(var(--footer-hover))] transition-all duration-500"
                 aria-label="Facebook"
               >
                 <Facebook className="h-3.5 w-3.5" />
@@ -60,15 +60,15 @@ export function Footer() {
 
           {/* Navigate */}
           <div>
-            <h4 className="text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[hsl(var(--footer-foreground))] mb-5">
+            <h4 className="text-[9px] font-sans font-semibold uppercase tracking-[0.25em] text-[hsl(var(--footer-foreground))]/70 mb-6">
               Navigate
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-3.5">
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-sm text-[hsl(var(--footer-muted))] hover:text-[hsl(var(--footer-hover))] transition-colors duration-200"
+                    className="text-sm text-[hsl(var(--footer-muted))] hover:text-[hsl(var(--footer-hover))] transition-colors duration-300"
                   >
                     {link.name}
                   </Link>
@@ -79,15 +79,15 @@ export function Footer() {
 
           {/* Services */}
           <div>
-            <h4 className="text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[hsl(var(--footer-foreground))] mb-5">
+            <h4 className="text-[9px] font-sans font-semibold uppercase tracking-[0.25em] text-[hsl(var(--footer-foreground))]/70 mb-6">
               Services
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-3.5">
               {serviceLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-sm text-[hsl(var(--footer-muted))] hover:text-[hsl(var(--footer-hover))] transition-colors duration-200"
+                    className="text-sm text-[hsl(var(--footer-muted))] hover:text-[hsl(var(--footer-hover))] transition-colors duration-300"
                   >
                     {link.name}
                   </Link>
@@ -98,14 +98,14 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-[hsl(var(--footer-foreground))] mb-5">
+            <h4 className="text-[9px] font-sans font-semibold uppercase tracking-[0.25em] text-[hsl(var(--footer-foreground))]/70 mb-6">
               Contact
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-3.5">
               <li>
                 <a
                   href={`tel:${siteConfig.phone}`}
-                  className="flex items-center gap-2.5 text-sm text-[hsl(var(--footer-muted))] hover:text-[hsl(var(--footer-hover))] transition-colors"
+                  className="flex items-center gap-2.5 text-sm text-[hsl(var(--footer-muted))] hover:text-[hsl(var(--footer-hover))] transition-colors duration-300"
                 >
                   <Phone className="h-3.5 w-3.5 shrink-0" />
                   {siteConfig.phone}
@@ -114,14 +114,14 @@ export function Footer() {
               <li>
                 <a
                   href={`mailto:${siteConfig.email}`}
-                  className="flex items-center gap-2.5 text-sm text-[hsl(var(--footer-muted))] hover:text-[hsl(var(--footer-hover))] transition-colors"
+                  className="flex items-center gap-2.5 text-sm text-[hsl(var(--footer-muted))] hover:text-[hsl(var(--footer-hover))] transition-colors duration-300"
                 >
                   <Mail className="h-3.5 w-3.5 shrink-0" />
                   {siteConfig.email}
                 </a>
               </li>
             </ul>
-            <div className="mt-6">
+            <div className="mt-8">
               <Link
                 to="/contact"
                 className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.15em] font-medium text-[hsl(var(--footer-hover))] hover:underline"
@@ -133,31 +133,31 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Brand Seed */}
-      <div className="border-t border-[hsl(var(--footer-foreground))]/6">
-        <div className="section-container py-8 text-center">
-          <p className="text-[11px] font-serif tracking-[0.15em] text-[hsl(var(--footer-muted))]/60">
+      {/* Equus Ridge — Brand Seed */}
+      <div className="border-t border-[hsl(var(--footer-foreground))]/5">
+        <div className="section-container py-14 text-center">
+          <p className="font-serif text-sm tracking-[0.12em] text-[hsl(var(--footer-muted))]/50">
             Equus Ridge&trade;
           </p>
-          <p className="text-[9px] text-[hsl(var(--footer-muted))]/35 tracking-wide mt-1">
+          <p className="text-[10px] text-[hsl(var(--footer-muted))]/30 tracking-[0.1em] mt-2 font-sans">
             The home of Peninsula Equine &amp; Spin &amp; Spur Co.
-          </p>
-          <p className="text-[9px] text-[hsl(var(--footer-muted))]/25 tracking-[0.15em] mt-3 italic">
-            Built properly. From the ground up.
           </p>
         </div>
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-[hsl(var(--footer-foreground))]/8">
-        <div className="section-container py-5 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="text-[10px] text-[hsl(var(--footer-muted))] tracking-wide">
+      <div className="border-t border-[hsl(var(--footer-foreground))]/5">
+        <div className="section-container py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-[10px] text-[hsl(var(--footer-muted))]/60 tracking-wide">
             © {new Date().getFullYear()} Peninsula Equine. All rights reserved.
           </p>
+          <p className="text-[10px] text-[hsl(var(--footer-muted))]/25 italic tracking-[0.1em]">
+            Built properly. From the ground up.
+          </p>
           <div className="flex gap-6">
-            <Link to="/privacy" className="text-[10px] text-[hsl(var(--footer-muted))] hover:text-[hsl(var(--footer-hover))] transition-colors">Privacy</Link>
-            <Link to="/terms" className="text-[10px] text-[hsl(var(--footer-muted))] hover:text-[hsl(var(--footer-hover))] transition-colors">Terms</Link>
-            <Link to="/login" className="text-[10px] text-[hsl(var(--footer-muted))] hover:text-[hsl(var(--footer-hover))] transition-colors">Staff</Link>
+            <Link to="/privacy" className="text-[10px] text-[hsl(var(--footer-muted))]/50 hover:text-[hsl(var(--footer-hover))] transition-colors duration-300">Privacy</Link>
+            <Link to="/terms" className="text-[10px] text-[hsl(var(--footer-muted))]/50 hover:text-[hsl(var(--footer-hover))] transition-colors duration-300">Terms</Link>
+            <Link to="/login" className="text-[10px] text-[hsl(var(--footer-muted))]/50 hover:text-[hsl(var(--footer-hover))] transition-colors duration-300">Staff</Link>
           </div>
         </div>
       </div>
