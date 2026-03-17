@@ -9,7 +9,7 @@ const base = (props: IconProps, size = 48) => ({
   viewBox: "0 0 48 48",
   fill: "none",
   stroke: "currentColor",
-  strokeWidth: 0.8,
+  strokeWidth: 0.7,
   strokeLinecap: "round" as const,
   strokeLinejoin: "round" as const,
   ...props,
