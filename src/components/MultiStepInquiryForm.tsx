@@ -137,6 +137,8 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
       name,
       email,
       phone,
+      propertyLocation,
+      timeline,
       experience,
       budget,
       message,
