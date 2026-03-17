@@ -179,20 +179,27 @@ export default function Index() {
       </section>
 
       {/* ═══ BUILT BY A HORSEMAN ═══════════════════════ */}
-      <section className="py-32 sm:py-44 bg-primary text-primary-foreground relative overflow-hidden">
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-[0.04]">
+      <section className="py-36 sm:py-52 bg-primary text-primary-foreground relative overflow-hidden">
+        {/* Ultra-subtle blueprint video texture */}
+        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-[0.03]">
           <source src={heroVideo} type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-primary/95" />
-        <div className="section-container max-w-2xl mx-auto text-center space-y-10 relative z-[1]">
-          <RevealLine className="mx-auto mb-2" width="w-10" />
+        <div className="absolute inset-0 bg-primary/96" />
+        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.03]" />
+
+        <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
           <RevealOnScroll direction="up">
-            <h2 className="heading-section text-primary-foreground">
+            <div className="w-8 h-px bg-accent/40 mx-auto mb-12" />
+          </RevealOnScroll>
+
+          <RevealOnScroll direction="up" delay={100}>
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold text-primary-foreground tracking-[0.01em] leading-[1.2] mb-14">
               Built by a Horseman
             </h2>
           </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={120}>
-            <div className="space-y-6 text-sm sm:text-base text-primary-foreground/50 leading-[1.9] max-w-lg mx-auto">
+
+          <RevealOnScroll direction="up" delay={200}>
+            <div className="space-y-8 text-sm sm:text-[15px] text-primary-foreground/45 leading-[2] font-sans">
               <p>
                 Peninsula Equine is built on firsthand understanding —<br />
                 not just of construction, but of how horses<br />
@@ -202,12 +209,9 @@ export default function Index() {
                 That perspective shapes every decision.<br />
                 From drainage to footing to airflow.
               </p>
-              <p className="text-primary-foreground/30 italic">
+              <p className="text-primary-foreground/25 italic">
                 This isn't guesswork.<br />
                 It's experience — applied properly.
-              </p>
-              <p className="text-[10px] tracking-[0.15em] text-primary-foreground/15 uppercase mt-4">
-                Engineered, not improvised · Systems, not surface fixes
               </p>
             </div>
           </RevealOnScroll>
