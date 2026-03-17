@@ -14,59 +14,46 @@ export default {
     },
     extend: {
       fontFamily: {
-        serif: ["'Cinzel'", "'Trajan Pro'", "'Times New Roman'", "serif"],
-        sans: ["'Source Sans 3'", "sans-serif"],
+        serif: ["'Playfair Display'", "Georgia", "serif"],
+        sans: ["'DM Sans'", "system-ui", "sans-serif"],
       },
-      /* ── Typographic scale ────────────────────────────── */
       fontSize: {
-        /* label / micro — monospace callouts, spec labels */
-        "2xs":    ["0.625rem",  { lineHeight: "1rem" }],        /* 10px */
-        /* caption — badges, metadata */
-        xs:       ["0.75rem",   { lineHeight: "1rem" }],        /* 12px */
-        /* body-sm — secondary text */
-        sm:       ["0.875rem",  { lineHeight: "1.375rem" }],    /* 14px */
-        /* body — default */
-        base:     ["1rem",      { lineHeight: "1.625rem" }],    /* 16px */
-        /* body-lg — intro paragraphs */
-        lg:       ["1.125rem",  { lineHeight: "1.75rem" }],     /* 18px */
-        /* heading-card */
-        xl:       ["1.25rem",   { lineHeight: "1.75rem" }],     /* 20px */
-        "2xl":    ["1.5rem",    { lineHeight: "2rem" }],        /* 24px */
-        /* heading-editorial */
-        "3xl":    ["1.875rem",  { lineHeight: "2.25rem" }],     /* 30px */
-        /* heading-section */
-        "4xl":    ["2.25rem",   { lineHeight: "2.5rem" }],      /* 36px */
-        "5xl":    ["3rem",      { lineHeight: "1.15" }],        /* 48px */
-        /* heading-display */
-        "6xl":    ["3.75rem",   { lineHeight: "1.1" }],         /* 60px */
-        "7xl":    ["4.5rem",    { lineHeight: "1.05" }],        /* 72px */
+        "2xs":    ["0.625rem",  { lineHeight: "1rem" }],
+        xs:       ["0.75rem",   { lineHeight: "1rem" }],
+        sm:       ["0.875rem",  { lineHeight: "1.375rem" }],
+        base:     ["1rem",      { lineHeight: "1.625rem" }],
+        lg:       ["1.125rem",  { lineHeight: "1.75rem" }],
+        xl:       ["1.25rem",   { lineHeight: "1.75rem" }],
+        "2xl":    ["1.5rem",    { lineHeight: "2rem" }],
+        "3xl":    ["1.875rem",  { lineHeight: "2.25rem" }],
+        "4xl":    ["2.25rem",   { lineHeight: "2.5rem" }],
+        "5xl":    ["3rem",      { lineHeight: "1.15" }],
+        "6xl":    ["3.75rem",   { lineHeight: "1.1" }],
+        "7xl":    ["4.5rem",    { lineHeight: "1.05" }],
       },
-      /* ── Spacing scale ────────────────────────────────── */
       spacing: {
-        /* Micro gaps */
-        "0.5":       "0.125rem",    /* 2px  */
-        "1":         "0.25rem",     /* 4px  */
-        "1.5":       "0.375rem",    /* 6px  */
-        "2":         "0.5rem",      /* 8px  — base unit */
-        "3":         "0.75rem",     /* 12px */
-        "4":         "1rem",        /* 16px */
-        "5":         "1.25rem",     /* 20px */
-        "6":         "1.5rem",      /* 24px */
-        "8":         "2rem",        /* 32px */
-        "10":        "2.5rem",      /* 40px */
-        "12":        "3rem",        /* 48px */
-        "16":        "4rem",        /* 64px */
-        "20":        "5rem",        /* 80px */
-        "24":        "6rem",        /* 96px */
-        "32":        "8rem",        /* 128px */
-        "40":        "10rem",       /* 160px */
-        "44":        "11rem",       /* 176px */
-        /* Named section tokens — use in py-section-* */
-        "section-sm": "2.5rem",     /* 40px  — compact sections */
-        "section":    "4rem",       /* 64px  — default section gap */
-        "section-md": "6rem",       /* 96px  — standard sections */
-        "section-lg": "8rem",       /* 128px — hero-adjacent */
-        "section-xl": "11rem",      /* 176px — dramatic breathing room */
+        "0.5":       "0.125rem",
+        "1":         "0.25rem",
+        "1.5":       "0.375rem",
+        "2":         "0.5rem",
+        "3":         "0.75rem",
+        "4":         "1rem",
+        "5":         "1.25rem",
+        "6":         "1.5rem",
+        "8":         "2rem",
+        "10":        "2.5rem",
+        "12":        "3rem",
+        "16":        "4rem",
+        "20":        "5rem",
+        "24":        "6rem",
+        "32":        "8rem",
+        "40":        "10rem",
+        "44":        "11rem",
+        "section-sm": "2.5rem",
+        "section":    "4rem",
+        "section-md": "6rem",
+        "section-lg": "8rem",
+        "section-xl": "11rem",
       },
       colors: {
         border: "hsl(var(--border))",
@@ -113,26 +100,16 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
         /* Brand tokens */
-        gold: {
-          DEFAULT: "hsl(var(--gold))",
-          light: "hsl(var(--gold-light))",
-          dark: "hsl(var(--gold-dark))",
+        bronze: {
+          DEFAULT: "hsl(var(--accent))",
+          light: "hsl(var(--accent-light))",
         },
-        navy: {
-          DEFAULT: "hsl(var(--navy))",
-          light: "hsl(var(--navy-light))",
-        },
-        ivory: "hsl(var(--ivory))",
-        cream: "hsl(var(--cream))",
+        carbon: "hsl(var(--primary))",
+        graphite: "hsl(var(--secondary))",
+        stone: "hsl(var(--muted))",
         hero: {
           text: "hsl(var(--hero-text))",
           "text-muted": "hsl(var(--hero-text-muted))",
-          glass: "hsl(var(--hero-glass-bg))",
-          "glass-border": "hsl(var(--hero-glass-border))",
-          "glass-active": "hsl(var(--hero-glass-bg-active))",
-          "input-bg": "hsl(var(--hero-input-bg))",
-          "input-border": "hsl(var(--hero-input-border))",
-          "input-placeholder": "hsl(var(--hero-input-placeholder))",
         },
       },
       borderRadius: {
@@ -140,7 +117,7 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-keyframes: {
+      keyframes: {
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },

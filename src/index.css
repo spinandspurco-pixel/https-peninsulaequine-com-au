@@ -1,164 +1,150 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Peninsula Equine Design System
-   Navy & Gold palette — extracted from brand assets
-   Cinzel serif matching logo letterforms
+/* Peninsula Equine Design System v2
+   Carbon / Graphite / Stone / Bronze palette
+   Playfair Display + DM Sans
 */
 
 @layer base {
   :root {
-    /* Cream/off-white background — #F5F1E8 */
-    --background: 42 45% 93%;
-    --foreground: 228 16% 11%;
+    /* Background — warm off-white with stone undertone */
+    --background: 40 20% 95%;
+    --foreground: 220 10% 12%;
 
-    /* Card surfaces — slightly lighter cream */
-    --card: 42 40% 95%;
-    --card-foreground: 228 16% 11%;
+    /* Card — slightly warmer surface */
+    --card: 40 18% 97%;
+    --card-foreground: 220 10% 12%;
 
     /* Popovers */
-    --popover: 42 40% 95%;
-    --popover-foreground: 228 16% 11%;
+    --popover: 40 18% 97%;
+    --popover-foreground: 220 10% 12%;
 
-    /* Primary — Deep navy #171A23 */
-    --primary: 228 16% 11%;
-    --primary-foreground: 42 45% 93%;
+    /* Primary — Carbon black */
+    --primary: 220 10% 12%;
+    --primary-foreground: 40 20% 95%;
 
-    /* Secondary — Slate #2B3242 */
-    --secondary: 221 20% 21%;
-    --secondary-foreground: 42 45% 93%;
+    /* Secondary — Graphite */
+    --secondary: 220 8% 22%;
+    --secondary-foreground: 40 20% 95%;
 
-    /* Muted — Soft warm gray */
-    --muted: 225 12% 88%;
-    --muted-foreground: 221 15% 40%;
+    /* Muted — Dusty stone */
+    --muted: 30 10% 88%;
+    --muted-foreground: 220 6% 46%;
 
-    /* Accent — Bright Gold #E8C067 (5.8:1 on navy, WCAG AA all sizes) */
-    --accent: 42 76% 65%;
-    --accent-foreground: 228 16% 11%;
+    /* Accent — Smoked bronze / antique gold */
+    --accent: 36 45% 48%;
+    --accent-foreground: 40 20% 97%;
+    --accent-light: 38 40% 62%;
 
     /* Destructive */
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 42 45% 93%;
+    --destructive: 0 55% 48%;
+    --destructive-foreground: 40 20% 97%;
 
-    /* Borders and inputs */
-    --border: 225 15% 82%;
-    --input: 225 15% 82%;
-    --ring: 42 76% 65%;
+    /* Borders — warm concrete */
+    --border: 30 12% 84%;
+    --input: 30 12% 84%;
+    --ring: 36 45% 48%;
 
-    --radius: 0.375rem;
+    --radius: 0.25rem;
 
-    /* Custom tokens — Navy & Bright Gold palette */
-    --gold: 42 76% 65%;
-    --gold-light: 44 70% 78%;
-    --gold-dark: 40 80% 50%;
-    --navy: 228 16% 11%;
-    --navy-light: 221 20% 21%;
-    --ivory: 42 45% 93%;
-    --sand: 225 12% 88%;
-    --cream: 42 40% 95%;
-
-    /* Typography — Cinzel matches the PE logo serif */
-    --font-serif: 'Cinzel', 'Trajan Pro', 'Times New Roman', serif;
-    --font-sans: 'Source Sans 3', sans-serif;
+    /* Typography */
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-sans: 'DM Sans', system-ui, sans-serif;
 
     /* Sidebar */
-    --sidebar-background: 42 40% 95%;
-    --sidebar-foreground: 228 16% 11%;
-    --sidebar-primary: 228 16% 11%;
-    --sidebar-primary-foreground: 42 45% 93%;
-    --sidebar-accent: 225 12% 88%;
-    --sidebar-accent-foreground: 228 16% 11%;
-    --sidebar-border: 225 15% 82%;
-    --sidebar-ring: 42 76% 65%;
+    --sidebar-background: 40 18% 97%;
+    --sidebar-foreground: 220 10% 12%;
+    --sidebar-primary: 220 10% 12%;
+    --sidebar-primary-foreground: 40 20% 95%;
+    --sidebar-accent: 30 10% 88%;
+    --sidebar-accent-foreground: 220 10% 12%;
+    --sidebar-border: 30 12% 84%;
+    --sidebar-ring: 36 45% 48%;
 
-    /* Header — navy bg */
-    --header-bg: 228 16% 11%;
-    --header-foreground: 42 45% 93%;
-    --header-scrolled-bg: 228 16% 11%;
-    --header-scrolled-foreground: 42 45% 93%;
-    --header-active: 42 76% 65%;
+    /* Header */
+    --header-bg: 220 10% 12%;
+    --header-foreground: 40 15% 90%;
+    --header-scrolled-bg: 220 10% 12%;
+    --header-scrolled-foreground: 40 15% 90%;
+    --header-active: 36 45% 52%;
 
     /* Footer */
-    --footer-bg: 228 16% 11%;
-    --footer-foreground: 42 45% 93%;
+    --footer-bg: 220 10% 10%;
+    --footer-foreground: 40 12% 88%;
+    --footer-muted: 220 6% 50%;
+    --footer-hover: 36 45% 52%;
 
-    /* Hero overlay system */
-    --hero-text: 42 45% 98%;
-    --hero-text-muted: 42 30% 82%;
-    --hero-glass-bg: 0 0% 100% / 0.12;
-    --hero-glass-border: 0 0% 100% / 0.18;
-    --hero-glass-bg-active: 0 0% 100% / 0.22;
-    --hero-input-bg: 0 0% 100% / 0.14;
-    --hero-input-border: 0 0% 100% / 0.22;
-    --hero-input-placeholder: 42 20% 72%;
-    --footer-muted: 225 15% 65%;
-    --footer-hover: 42 76% 65%;
+    /* Hero overlay */
+    --hero-text: 40 15% 96%;
+    --hero-text-muted: 30 12% 75%;
+    --hero-glass-bg: 0 0% 100% / 0.08;
+    --hero-glass-border: 0 0% 100% / 0.12;
+    --hero-glass-bg-active: 0 0% 100% / 0.16;
+    --hero-input-bg: 0 0% 100% / 0.10;
+    --hero-input-border: 0 0% 100% / 0.18;
+    --hero-input-placeholder: 30 10% 65%;
   }
 
   .dark {
-    /* Deep navy background */
-    --background: 228 20% 7%;
-    --foreground: 42 40% 92%;
+    --background: 220 12% 7%;
+    --foreground: 40 12% 90%;
 
-    --card: 228 18% 10%;
-    --card-foreground: 42 40% 92%;
+    --card: 220 10% 10%;
+    --card-foreground: 40 12% 90%;
 
-    --popover: 228 18% 10%;
-    --popover-foreground: 42 40% 92%;
+    --popover: 220 10% 10%;
+    --popover-foreground: 40 12% 90%;
 
-    --primary: 42 40% 92%;
-    --primary-foreground: 228 20% 7%;
+    --primary: 40 12% 90%;
+    --primary-foreground: 220 12% 7%;
 
-    --secondary: 221 18% 16%;
-    --secondary-foreground: 42 40% 92%;
+    --secondary: 220 8% 16%;
+    --secondary-foreground: 40 12% 90%;
 
-    --muted: 221 18% 16%;
-    --muted-foreground: 225 15% 55%;
+    --muted: 220 8% 16%;
+    --muted-foreground: 220 6% 50%;
 
-    --accent: 42 76% 65%;
-    --accent-foreground: 228 20% 7%;
+    --accent: 36 45% 48%;
+    --accent-foreground: 220 12% 7%;
+    --accent-light: 38 40% 62%;
 
-    --destructive: 0 62% 40%;
-    --destructive-foreground: 42 40% 92%;
+    --destructive: 0 50% 42%;
+    --destructive-foreground: 40 12% 90%;
 
-    --border: 221 15% 18%;
-    --input: 221 15% 18%;
-    --ring: 42 76% 65%;
+    --border: 220 8% 18%;
+    --input: 220 8% 18%;
+    --ring: 36 45% 48%;
 
-    --sidebar-background: 228 20% 7%;
-    --sidebar-foreground: 42 40% 92%;
-    --sidebar-primary: 42 76% 65%;
-    --sidebar-primary-foreground: 228 20% 7%;
-    --sidebar-accent: 221 18% 16%;
-    --sidebar-accent-foreground: 42 40% 92%;
-    --sidebar-border: 221 15% 18%;
-    --sidebar-ring: 42 76% 65%;
+    --sidebar-background: 220 12% 7%;
+    --sidebar-foreground: 40 12% 90%;
+    --sidebar-primary: 36 45% 48%;
+    --sidebar-primary-foreground: 220 12% 7%;
+    --sidebar-accent: 220 8% 16%;
+    --sidebar-accent-foreground: 40 12% 90%;
+    --sidebar-border: 220 8% 18%;
+    --sidebar-ring: 36 45% 48%;
 
-    /* Header – dark mode */
-    --header-bg: 228 20% 7%;
-    --header-foreground: 42 40% 92%;
-    --header-scrolled-bg: 228 18% 10%;
-    --header-scrolled-foreground: 42 40% 92%;
-    --header-active: 42 76% 65%;
+    --header-bg: 220 12% 7%;
+    --header-foreground: 40 12% 90%;
+    --header-scrolled-bg: 220 10% 10%;
+    --header-scrolled-foreground: 40 12% 90%;
+    --header-active: 36 45% 52%;
 
-    /* Footer – dark mode */
-    --footer-bg: 228 22% 5%;
-    --footer-foreground: 42 40% 92%;
-    --footer-muted: 225 12% 50%;
-    --footer-hover: 42 76% 65%;
+    --footer-bg: 220 14% 5%;
+    --footer-foreground: 40 12% 88%;
+    --footer-muted: 220 6% 45%;
+    --footer-hover: 36 45% 52%;
 
-    /* Hero overlay system – dark mode */
-    --hero-text: 42 40% 96%;
-    --hero-text-muted: 42 20% 78%;
-    --hero-glass-bg: 0 0% 100% / 0.1;
-    --hero-glass-border: 0 0% 100% / 0.15;
-    --hero-glass-bg-active: 0 0% 100% / 0.2;
-    --hero-input-bg: 0 0% 100% / 0.12;
-    --hero-input-border: 0 0% 100% / 0.2;
-    --hero-input-placeholder: 42 15% 65%;
+    --hero-text: 40 12% 94%;
+    --hero-text-muted: 30 8% 70%;
+    --hero-glass-bg: 0 0% 100% / 0.06;
+    --hero-glass-border: 0 0% 100% / 0.10;
+    --hero-glass-bg-active: 0 0% 100% / 0.14;
+    --hero-input-bg: 0 0% 100% / 0.08;
+    --hero-input-border: 0 0% 100% / 0.16;
+    --hero-input-placeholder: 30 8% 58%;
   }
 }
 
