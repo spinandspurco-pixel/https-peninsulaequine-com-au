@@ -46,6 +46,7 @@ import TrainerDocumentPortal from "./pages/TrainerDocumentPortal";
 import TrainerProfile from "./pages/TrainerProfile";
 import MLPGSPage from "./pages/MLPGS";
 import GroundLock from "./pages/GroundLock";
+import CaseStudy from "./pages/CaseStudy";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { useCartSync } from "./hooks/useCartSync";
 
@@ -102,6 +103,7 @@ function AppContent() {
           <Route path="/trainers/:slug" element={<TrainerProfile />} />
            <Route path="/mlpgs" element={<MLPGSPage />} />
           <Route path="/groundlock" element={<GroundLock />} />
+          <Route path="/project/:slug" element={<CaseStudy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
