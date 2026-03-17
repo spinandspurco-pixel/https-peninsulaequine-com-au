@@ -140,7 +140,7 @@ export function Footer() {
             Equus Ridge&trade;
           </p>
           <p className="text-[9px] text-[hsl(var(--footer-muted))]/35 tracking-wide mt-1">
-            Home of Peninsula Equine &amp; Spin &amp; Spur Co.
+            The home of Peninsula Equine &amp; Spin &amp; Spur Co.
           </p>
         </div>
       </div>

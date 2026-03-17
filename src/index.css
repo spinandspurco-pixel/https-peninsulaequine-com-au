@@ -290,9 +290,10 @@
      ═══════════════════════════════════════════════════════ */
   .heading-display {
     font-family: var(--font-serif);
-    font-size: clamp(2.25rem, 1.2rem + 3.5vw, 4.5rem);
-    line-height: 1.05;
-    @apply font-semibold tracking-tight;
+    font-size: clamp(2.75rem, 1.5rem + 4.2vw, 5.5rem);
+    line-height: 1.02;
+    letter-spacing: 0.02em;
+    @apply font-semibold;
   }
 
   .heading-section {
