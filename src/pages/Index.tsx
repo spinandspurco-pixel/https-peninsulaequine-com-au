@@ -147,27 +147,10 @@ export default function Index() {
     <Layout>
       {/* ─── Hero ─────────────────────────────────────── */}
       <section ref={heroRef} className="relative min-h-[94vh] overflow-hidden flex items-center">
-        <img
-          data-parallax-hero
-          src={peBrandSplitHero}
-          alt="Peninsula Equine"
-          className="absolute inset-0 h-[120%] w-full object-cover will-change-transform"
-          onLoad={() => setHeroLoaded(true)}
-        />
-        <div className="absolute inset-0 bg-primary/60" />
-        <BlueprintScene
-          preset="hero"
-          className="absolute inset-0"
-          gradient="linear-gradient(180deg, hsl(var(--primary) / 0.02), hsl(var(--primary) / 0.55))"
-        />
-
-        {/* Architectural grid lines — subtle background texture */}
-        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-          <div className="absolute top-0 left-[20%] w-px h-full bg-accent/[0.04]" />
-          <div className="absolute top-0 left-[40%] w-px h-full bg-accent/[0.03]" />
-          <div className="absolute top-0 left-[60%] w-px h-full bg-accent/[0.04]" />
-          <div className="absolute top-0 left-[80%] w-px h-full bg-accent/[0.03]" />
-        </div>
+        {/* Animated blueprint background — replaces static image */}
+        <div className="absolute inset-0 bg-primary" />
+        <AnimatedBlueprintHero />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/30 via-transparent to-primary/60" />
 
         <div className="relative z-10 section-container text-primary-foreground">
           <div className="max-w-2xl space-y-7">
