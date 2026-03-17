@@ -220,7 +220,7 @@ export default function Index() {
       </section>
 
       {/* ═══ CAPABILITIES ════════════════════════════════ */}
-      <section className="py-36 sm:py-52 bg-card border-y border-border relative overflow-hidden">
+      <section className="py-44 sm:py-64 bg-card border-y border-border relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.03]" />
         <div className="section-container max-w-4xl mx-auto relative z-[1]">
           {/* Header */}
