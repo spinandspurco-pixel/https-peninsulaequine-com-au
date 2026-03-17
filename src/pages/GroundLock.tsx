@@ -200,7 +200,140 @@ export default function GroundLock() {
     setArea(val);
   };
 
-  return (
+  const handleDownloadPDF = useCallback(async () => {
+    const { jsPDF } = await import("jspdf");
+    const doc = new jsPDF({ unit: "mm", format: "a4" });
+    const W = 210;
+    const accent = [193, 154, 72]; // gold
+    const dark = [30, 30, 30];
+    let y = 20;
+
+    // Header bar
+    doc.setFillColor(...accent);
+    doc.rect(0, 0, W, 12, "F");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(255, 255, 255);
+    doc.text("PENINSULA EQUINE — GROUNDLOCK™ ESTIMATE", W / 2, 8, { align: "center" });
+
+    y = 28;
+    doc.setTextColor(...dark);
+    doc.setFontSize(20);
+    doc.setFont("helvetica", "bold");
+    doc.text("GroundLock™ Cost Estimate", 20, y);
+    y += 10;
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Generated ${new Date().toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" })}`, 20, y);
+    y += 12;
+
+    // Project details
+    doc.setFillColor(245, 245, 240);
+    doc.rect(15, y - 4, W - 30, 26, "F");
+    doc.setTextColor(...dark);
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "bold");
+    doc.text("PROJECT DETAILS", 20, y + 2);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Type: ${activeType.label}`, 20, y + 10);
+    doc.text(`Area: ${area.toLocaleString()} m²`, 80, y + 10);
+    doc.text(`Panels: ${stats.panels.toLocaleString()}`, 140, y + 10);
+    doc.text(activeType.description, 20, y + 18);
+    y += 34;
+
+    // Pricing table
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(...dark);
+    doc.text("Pricing Summary", 20, y);
+    y += 8;
+
+    const tiers = [
+      { tier: "Base", rate: stats.rateLabels.base, low: stats.base.low, high: stats.base.high },
+      { tier: "Standard", rate: stats.rateLabels.standard, low: stats.standard.low, high: stats.standard.high },
+      { tier: "Premium", rate: stats.rateLabels.premium, low: stats.premium.low, high: stats.premium.high },
+    ];
+
+    // Table header
+    doc.setFillColor(...accent);
+    doc.rect(20, y, W - 40, 8, "F");
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(255, 255, 255);
+    doc.text("TIER", 25, y + 5.5);
+    doc.text("RATE / m²", 80, y + 5.5);
+    doc.text("ESTIMATED RANGE", 140, y + 5.5);
+    y += 8;
+
+    doc.setTextColor(...dark);
+    tiers.forEach((t, i) => {
+      if (i % 2 === 0) {
+        doc.setFillColor(248, 248, 245);
+        doc.rect(20, y, W - 40, 8, "F");
+      }
+      doc.setFont("helvetica", i === 1 ? "bold" : "normal");
+      doc.setFontSize(9);
+      doc.text(t.tier, 25, y + 5.5);
+      doc.text(t.rate, 80, y + 5.5);
+      doc.text(`${formatAUD(t.low)} – ${formatAUD(t.high)}`, 140, y + 5.5);
+      y += 8;
+    });
+
+    y += 10;
+
+    // Materials
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.text("Estimated Material Volumes", 20, y);
+    y += 8;
+
+    const mats = [
+      { label: "Geotextile", value: stats.materials.geotextile, unit: "m²" },
+      { label: "Sub-Base (Crushed Rock)", value: stats.materials.subBase, unit: "m³" },
+      { label: "Bedding Aggregate", value: stats.materials.bedding, unit: "m³" },
+      { label: "Panel Infill", value: stats.materials.infill, unit: "m³" },
+    ];
+
+    mats.forEach((m) => {
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.text(m.label, 25, y + 1);
+      doc.setFont("helvetica", "bold");
+      doc.text(`${m.value} ${m.unit}`, 140, y + 1);
+      y += 7;
+    });
+
+    y += 10;
+
+    // Disclaimer
+    doc.setDrawColor(...accent);
+    doc.line(20, y, W - 20, y);
+    y += 6;
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(7);
+    doc.setTextColor(130, 130, 130);
+    const disclaimer = "Estimates are indicative only. Final pricing subject to site access, ground conditions, excavation depth, and regional freight costs. All prices in AUD excl. GST. Contact Peninsula Equine for an itemised site-specific quotation.";
+    doc.text(disclaimer, 20, y, { maxWidth: W - 40 });
+
+    y += 16;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(...dark);
+    doc.text("Phone: 0418 585 489  |  peninsulaequine.com.au  |  info@peninsulaequine.com.au", W / 2, y, { align: "center" });
+
+    // Footer bar
+    doc.setFillColor(...accent);
+    doc.rect(0, 285, W, 12, "F");
+    doc.setFontSize(7);
+    doc.setTextColor(255, 255, 255);
+    doc.text("© Peninsula Equine — From Dirt to Dynasty", W / 2, 291, { align: "center" });
+
+    doc.save(`PE-GroundLock-Estimate-${area}m2-${activeType.key}.pdf`);
+  }, [area, stats, activeType]);
+
+
     <Layout>
       {/* Hero */}
       <section className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
