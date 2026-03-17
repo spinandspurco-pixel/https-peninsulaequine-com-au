@@ -97,14 +97,14 @@ export default function Index() {
   return (
     <Layout>
       {/* ═══ HERO ═══════════════════════════════════════ */}
-      <section className="relative min-h-[96vh] overflow-hidden flex items-center justify-center">
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover">
+      <section className="relative min-h-[100vh] overflow-hidden flex items-center justify-center">
+        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover brightness-[0.85]">
           <source src={heroVideo} type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-primary/75" />
+        <div className="absolute inset-0 bg-primary/80" />
 
         <div className="relative z-10 section-container text-primary-foreground text-center max-w-3xl mx-auto">
-          <div className="space-y-10">
+          <div className="space-y-12">
             <div
               className="flex items-center justify-center gap-4 opacity-0 animate-fade-in"
               style={{ animationDelay: "200ms", animationFillMode: "both" }}
@@ -198,7 +198,7 @@ export default function Index() {
               </p>
               <p className="text-primary-foreground/30 italic">
                 This isn't guesswork.<br />
-                It's lived experience, applied properly.
+                It's experience — applied properly.
               </p>
             </div>
           </RevealOnScroll>
@@ -206,16 +206,22 @@ export default function Index() {
       </section>
 
       {/* ═══ CAPABILITIES ════════════════════════════════ */}
-      <section className="py-28 sm:py-40 bg-card border-y border-border relative grain-texture overflow-hidden">
+      <section className="py-32 sm:py-48 bg-card border-y border-border relative grain-texture overflow-hidden">
         <div className="section-container max-w-5xl mx-auto relative z-[1]">
-          <div className="text-center mb-20">
+          <div className="text-center mb-24">
             <RevealLine className="mx-auto mb-5" width="w-10" />
             <RevealOnScroll direction="up">
-              <h2 className="heading-section text-foreground mb-3">Capabilities</h2>
+              <h2 className="heading-section text-foreground mb-4">Capabilities</h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={80}>
+              <p className="text-sm text-muted-foreground/70 max-w-sm mx-auto leading-relaxed">
+                What we build is only part of it.<br />
+                How it works is everything.
+              </p>
             </RevealOnScroll>
           </div>
 
-          <div className="space-y-16 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-20 md:gap-y-20">
+          <div className="space-y-20 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-24 md:gap-y-24">
             {CAPABILITIES.map((item, i) => (
               <RevealOnScroll key={item.title} direction="up" stagger={i} staggerInterval={100}>
                 <Link to={item.href} className="group block">
@@ -281,7 +287,7 @@ export default function Index() {
       </section>
 
       {/* ═══ GROUNDLOCK™ SPOTLIGHT ════════════════════════ */}
-      <section className="py-28 sm:py-40 bg-primary text-primary-foreground relative overflow-hidden">
+      <section className="py-36 sm:py-52 bg-primary text-primary-foreground relative overflow-hidden">
         <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-[0.06]">
           <source src={heroVideo} type="video/mp4" />
         </video>
@@ -298,9 +304,12 @@ export default function Index() {
                 <h2 className="heading-section text-primary-foreground mb-5">
                   P.E. GroundLock™
                 </h2>
+                <p className="text-primary-foreground/45 text-sm leading-[1.9] mb-4">
+                  A system designed to solve ground failure at its source.
+                </p>
                 <p className="text-primary-foreground/55 text-sm leading-[1.8]">
-                  A layered system engineered to solve<br />
-                  ground failure — permanently.
+                  Engineered layers that interlock, drain,<br />
+                  and hold — permanently.
                 </p>
                 <p className="text-accent/70 text-sm mt-6 font-medium italic">
                   Most properties fail from the ground up.<br />
@@ -323,7 +332,7 @@ export default function Index() {
       </section>
 
       {/* ═══ FROM THE FIELD ═══════════════════════════════ */}
-      <section className="py-28 sm:py-40 bg-background relative grain-texture overflow-hidden">
+      <section className="py-32 sm:py-48 bg-background relative grain-texture overflow-hidden">
         <div className="section-container max-w-6xl mx-auto relative z-[1]">
           <div className="text-center mb-16">
             <RevealLine className="mx-auto mb-5" width="w-10" />
@@ -364,7 +373,7 @@ export default function Index() {
       </section>
 
       {/* ═══ WHO WE WORK WITH ═════════════════════════════ */}
-      <section className="py-28 sm:py-40 bg-card border-y border-border relative overflow-hidden">
+      <section className="py-32 sm:py-48 bg-card border-y border-border relative overflow-hidden">
         <div className="section-container max-w-2xl mx-auto text-center relative z-[1] space-y-10">
           <RevealLine className="mx-auto" width="w-10" />
           <RevealOnScroll direction="up">
@@ -379,7 +388,7 @@ export default function Index() {
               </p>
               <p className="text-foreground/50 italic">
                 Not every project is a fit.<br />
-                And that's intentional.
+                And that's by design.
               </p>
             </div>
           </RevealOnScroll>
@@ -387,7 +396,7 @@ export default function Index() {
       </section>
 
       {/* ═══ TESTIMONIAL ═════════════════════════════════ */}
-      <section className="py-28 sm:py-36 bg-background relative overflow-hidden">
+      <section className="py-32 sm:py-44 bg-background relative overflow-hidden">
         <div className="section-container max-w-2xl mx-auto text-center relative z-10">
           <RevealLine className="mx-auto mb-10" width="w-10" />
           <RevealOnScroll direction="scale" duration={900}>
@@ -407,7 +416,7 @@ export default function Index() {
       </section>
 
       {/* ═══ FINAL CTA ═══════════════════════════════════ */}
-      <section className="py-32 sm:py-44 bg-primary text-primary-foreground relative overflow-hidden">
+      <section className="py-36 sm:py-52 bg-primary text-primary-foreground relative overflow-hidden">
         <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-[0.06]">
           <source src={heroVideo} type="video/mp4" />
         </video>
