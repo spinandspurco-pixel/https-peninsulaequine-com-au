@@ -46,6 +46,7 @@ import TrainerDocumentPortal from "./pages/TrainerDocumentPortal";
 import TrainerProfile from "./pages/TrainerProfile";
 import MLPGSPage from "./pages/MLPGS";
 import GroundLock from "./pages/GroundLock";
+import CaseStudy from "./pages/CaseStudy";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { useCartSync } from "./hooks/useCartSync";
 
