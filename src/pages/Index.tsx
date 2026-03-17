@@ -152,9 +152,7 @@ export default function Index() {
         <div className="absolute inset-0 bg-gradient-to-b from-primary/30 via-transparent to-primary/60" />
 
         <div className="relative z-10 section-container text-primary-foreground">
-          <div className="max-w-2xl space-y-7">
-            {heroLoaded && (
-              <>
+           <div className="max-w-2xl space-y-7">
                 <div
                   className="flex items-center gap-4 opacity-0 animate-fade-in"
                   style={{ animationDelay: "200ms", animationFillMode: "both" }}
@@ -192,8 +190,6 @@ export default function Index() {
                     </Link>
                   </Button>
                 </div>
-              </>
-            )}
           </div>
         </div>
 
