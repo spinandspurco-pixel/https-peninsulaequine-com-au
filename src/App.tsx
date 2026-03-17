@@ -42,6 +42,7 @@ import AdminDocuments from "./pages/AdminDocuments";
 import StaffDocumentPortal from "./pages/StaffDocumentPortal";
 import TrainerDocumentPortal from "./pages/TrainerDocumentPortal";
 import TrainerProfile from "./pages/TrainerProfile";
+import MLPGSPage from "./pages/MLPGS";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { useCartSync } from "./hooks/useCartSync";
 
