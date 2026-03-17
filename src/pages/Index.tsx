@@ -304,9 +304,12 @@ export default function Index() {
                 <h2 className="heading-section text-primary-foreground mb-5">
                   P.E. GroundLock™
                 </h2>
+                <p className="text-primary-foreground/45 text-sm leading-[1.9] mb-4">
+                  A system designed to solve ground failure at its source.
+                </p>
                 <p className="text-primary-foreground/55 text-sm leading-[1.8]">
-                  A layered system engineered to solve<br />
-                  ground failure — permanently.
+                  Engineered layers that interlock, drain,<br />
+                  and hold — permanently.
                 </p>
                 <p className="text-accent/70 text-sm mt-6 font-medium italic">
                   Most properties fail from the ground up.<br />
