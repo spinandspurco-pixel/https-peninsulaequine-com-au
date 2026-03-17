@@ -384,7 +384,7 @@ export default function Index() {
         <div className="section-container relative z-10 max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
-              <RevealOnScroll direction="left">
+              <RevealOnScroll direction="up">
                 <div className="flex items-center gap-3 mb-3">
                   <Layers className="w-5 h-5 text-accent" strokeWidth={1.5} />
                   <span className="text-[10px] uppercase tracking-[0.25em] text-accent font-medium">Proprietary System</span>
@@ -407,7 +407,7 @@ export default function Index() {
                   We start where it matters.
                 </p>
               </RevealOnScroll>
-              <RevealOnScroll direction="left" delay={150}>
+              <RevealOnScroll direction="up" delay={150}>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90 uppercase tracking-[0.12em] text-xs font-medium btn-hover-lift">
                     <Link to="/groundlock">Explore GroundLock™ <ArrowRight className="ml-2 h-4 w-4" /></Link>
@@ -415,7 +415,7 @@ export default function Index() {
                 </div>
               </RevealOnScroll>
             </div>
-            <RevealOnScroll direction="right" delay={200}>
+            <RevealOnScroll direction="up" delay={200}>
               <InteractiveLayerStack />
             </RevealOnScroll>
           </div>

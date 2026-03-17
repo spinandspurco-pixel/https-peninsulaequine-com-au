@@ -468,7 +468,7 @@ export default function GroundLock() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 max-w-7xl mx-auto">
             {/* Left Column — Input + Cross-Section */}
             <div className="lg:col-span-5 space-y-8">
-              <RevealOnScroll direction="left" duration={800}>
+              <RevealOnScroll direction="up" duration={700}>
                 <div className="bg-card border border-border border-t-2 border-t-accent/50 p-6 md:p-8 shadow-lg">
                   <div className="flex justify-between items-end mb-8">
                     <div>

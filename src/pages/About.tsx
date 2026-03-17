@@ -37,7 +37,7 @@ export default function About() {
       <section className="py-20 sm:py-28">
         <div className="section-container">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center max-w-5xl mx-auto">
-            <RevealOnScroll direction="left" duration={900}>
+            <RevealOnScroll direction="up" duration={700}>
               <div className="relative">
                 <div className="aspect-[4/5] rounded-lg overflow-hidden">
                   <img
