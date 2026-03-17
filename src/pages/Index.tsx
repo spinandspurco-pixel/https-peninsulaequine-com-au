@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { useCursorSpotlight } from "@/hooks/useCursorSpotlight";
 import { Layout } from "@/components/layout/Layout";
 import { BlueprintScene } from "@/components/BlueprintScene";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
@@ -137,6 +138,8 @@ function StaggerText({ text, className, delay = 0 }: { text: string; className?:
 export default function Index() {
   const heroRef = useHeroParallax();
   const [heroLoaded, setHeroLoaded] = useState(false);
+  const ctaRef = useRef<HTMLElement>(null);
+  useCursorSpotlight(ctaRef);
 
   return (
     <Layout>
@@ -310,7 +313,7 @@ export default function Index() {
       </section>
 
       {/* ─── CTA ─────────────────────────────────────── */}
-      <section className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
+      <section ref={ctaRef} className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
         <BlueprintScene preset="barn" className="absolute inset-0" />
 
         {/* Architectural frame lines */}

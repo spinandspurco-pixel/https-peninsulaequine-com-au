@@ -1,4 +1,5 @@
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useRef } from "react";
+import { useCursorSpotlight } from "@/hooks/useCursorSpotlight";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
@@ -12,6 +13,10 @@ import { services } from "@/data/content";
 
 export default function Services() {
   const navigate = useNavigate();
+  const heroSpotRef = useRef<HTMLElement>(null);
+  const ctaSpotRef = useRef<HTMLElement>(null);
+  useCursorSpotlight(heroSpotRef);
+  useCursorSpotlight(ctaSpotRef);
 
   const { data: dbServices } = useQuery({
     queryKey: ["managed-services"],
@@ -54,7 +59,7 @@ export default function Services() {
       <ServicesSchemaMarkup />
 
       {/* Hero */}
-      <section className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
+      <section ref={heroSpotRef} className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
         <div className="absolute inset-0 bg-primary/75" />
         <BlueprintScene preset="facility" className="absolute inset-0" />
         <div className="section-container relative z-10 text-center max-w-2xl mx-auto space-y-4">
@@ -111,7 +116,7 @@ export default function Services() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-primary text-primary-foreground relative overflow-hidden">
+      <section ref={ctaSpotRef} className="py-20 bg-primary text-primary-foreground relative overflow-hidden">
         <BlueprintScene preset="barn" className="absolute inset-0" />
         <div className="section-container relative z-10 text-center max-w-lg mx-auto space-y-5">
           <RevealLine className="mx-auto mb-2" width="w-10" />
