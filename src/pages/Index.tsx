@@ -529,8 +529,6 @@ export default function Index() {
           </RevealOnScroll>
         </div>
       </section>
-        </div>
-      </section>
     </Layout>
   );
 }
