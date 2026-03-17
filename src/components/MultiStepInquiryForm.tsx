@@ -15,9 +15,9 @@ const SERVICE_OPTIONS = [
   { id: "fencing", label: "Equine Fencing" },
   { id: "round-pens", label: "Round Pens & Paddocks" },
   { id: "full-facility", label: "Full Facility Build" },
-  { id: "riding-lessons", label: "Riding Lessons" },
+  { id: "ground-systems", label: "Ground Systems (GroundLock™)" },
   { id: "renovations", label: "Renovations & Repairs" },
-  { id: "general-inquiry", label: "General Inquiry" },
+  { id: "design-consultancy", label: "Design & Consultancy" },
 ];
 
 const EXPERIENCE_LEVELS = [
@@ -28,12 +28,19 @@ const EXPERIENCE_LEVELS = [
 ];
 
 const BUDGET_RANGES = [
-  { id: "under-5k", label: "Under $5k" },
-  { id: "5k-15k", label: "$5k – $15k" },
-  { id: "15k-50k", label: "$15k – $50k" },
-  { id: "50k-100k", label: "$50k – $100k" },
-  { id: "100k-plus", label: "$100k+" },
+  { id: "under-25k", label: "Under $25K" },
+  { id: "25k-75k", label: "$25K – $75K" },
+  { id: "75k-150k", label: "$75K – $150K" },
+  { id: "150k-plus", label: "$150K+" },
   { id: "not-sure", label: "Not Sure Yet" },
+];
+
+const TIMELINE_OPTIONS = [
+  { id: "asap", label: "As Soon as Possible" },
+  { id: "1-3-months", label: "1–3 Months" },
+  { id: "3-6-months", label: "3–6 Months" },
+  { id: "6-12-months", label: "6–12 Months" },
+  { id: "planning", label: "Just Planning" },
 ];
 
 const contactSchema = z.object({
