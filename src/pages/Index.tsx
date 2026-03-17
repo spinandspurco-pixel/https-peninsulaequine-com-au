@@ -407,7 +407,7 @@ export default function Index() {
                   We start where it matters.
                 </p>
               </RevealOnScroll>
-              <RevealOnScroll direction="left" delay={150}>
+              <RevealOnScroll direction="up" delay={150}>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90 uppercase tracking-[0.12em] text-xs font-medium btn-hover-lift">
                     <Link to="/groundlock">Explore GroundLock™ <ArrowRight className="ml-2 h-4 w-4" /></Link>
