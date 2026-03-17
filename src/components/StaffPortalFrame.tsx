@@ -3,7 +3,6 @@ import blueprintLogoReference from "@/assets/pe-blueprint-gold-logo-reference.pn
 import blueprintDrawingLoop from "@/assets/videos/blueprint-drawing-loop.mp4";
 import blueprintConstructionLoop from "@/assets/videos/blueprint-construction-loop.mp4";
 import { BlueprintScene } from "@/components/BlueprintScene";
-import { RopeEmblem } from "@/components/RopeEmblem";
 
 interface StaffPortalFrameProps {
   title: string;
