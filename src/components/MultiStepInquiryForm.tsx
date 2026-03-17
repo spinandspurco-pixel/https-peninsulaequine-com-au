@@ -683,8 +683,8 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
           </div>
         )}
 
-        {/* Navigation (steps 1-3) */}
-        {step < 4 && (
+        {/* Navigation (steps 1-4) */}
+        {step < 5 && (
           <div className="flex items-center justify-between mt-8 pt-5 border-t border-border">
             {step > 1 ? (
               <Button variant="ghost" onClick={prevStep} className="text-muted-foreground hover:text-foreground">
@@ -700,8 +700,8 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
           </div>
         )}
 
-        {/* Back button for step 4 */}
-        {step === 4 && (
+        {/* Back button for step 5 */}
+        {step === 5 && (
           <div className="mt-4 pt-4 border-t border-border">
             <Button variant="ghost" onClick={prevStep} className="text-muted-foreground hover:text-foreground">
               <ArrowLeft className="mr-2 h-4 w-4" /> Back to Details
