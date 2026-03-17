@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { LoadingSplash } from "@/components/LoadingSplash";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
 import ServiceDetail from "./pages/ServiceDetail";
@@ -49,9 +51,11 @@ import { useCartSync } from "./hooks/useCartSync";
 const queryClient = new QueryClient();
 
 function AppContent() {
+  const [splashDone, setSplashDone] = useState(false);
   useCartSync();
   return (
     <>
+      {!splashDone && <LoadingSplash onComplete={() => setSplashDone(true)} />}
       <Toaster />
       <Sonner />
       <BrowserRouter>
