@@ -146,7 +146,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
     };
     localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
     setLastSaved(new Date());
-  }, [step, selectedServices, preferredService, name, email, phone, experience, budget, message, submitted]);
+  }, [step, selectedServices, preferredService, name, email, phone, propertyLocation, timeline, experience, budget, message, submitted]);
 
   // Debounced auto-save
   useEffect(() => {
