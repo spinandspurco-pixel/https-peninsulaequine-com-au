@@ -156,6 +156,7 @@ export default function Index() {
             >
               We take on a limited number of projects each season.
             </p>
+          </div>
         </div>
 
         {/* Scroll indicator */}
