@@ -163,6 +163,8 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
     setName("");
     setEmail("");
     setPhone("");
+    setPropertyLocation("");
+    setTimeline("");
     setExperience("");
     setBudget("");
     setMessage("");
