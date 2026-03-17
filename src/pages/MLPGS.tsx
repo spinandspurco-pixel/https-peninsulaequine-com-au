@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
-import peRopeRing from "@/assets/pe-rope-ring.png";
+
 
 const FEATURES = [
   { title: "Modular", desc: "Interchangeable panels. Reconfigure in hours, not weeks." },

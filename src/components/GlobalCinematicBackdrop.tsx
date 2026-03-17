@@ -54,11 +54,6 @@ export function GlobalCinematicBackdrop() {
       />
 
       <div className="absolute inset-0 bg-background/84" />
-
-      {/* Rope + PE emblem — bottom-right, soft blend */}
-      <div className="absolute right-6 bottom-6">
-        <RopeEmblem size="sm" opacity={0.22} />
-      </div>
     </div>
   );
 }

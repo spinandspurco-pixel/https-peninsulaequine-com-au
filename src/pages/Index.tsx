@@ -42,12 +42,6 @@ export default function Index() {
             </div>
           </div>
 
-          <img
-            src={peRopeRing}
-            alt="Peninsula Equine rope emblem"
-            className="mt-16 h-24 w-24 animate-rope-drift opacity-60"
-            loading="lazy"
-          />
         </div>
       </section>
 

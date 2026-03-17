@@ -140,15 +140,6 @@ export function StaffPortalFrame({ title, subtitle, children }: StaffPortalFrame
             />
           </div>
 
-          {/* Rope emblem with PE inside — blended into dark bg */}
-          <div
-            style={{
-              opacity: mounted ? 1 : 0,
-              transition: "opacity 1s ease-out 0.8s",
-            }}
-          >
-            <RopeEmblem size="lg" opacity={0.18} />
-          </div>
         </div>
 
         {/* Card slot */}
