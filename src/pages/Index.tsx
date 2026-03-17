@@ -180,7 +180,7 @@ export default function Index() {
       </section>
 
       {/* ═══ BUILT BY A HORSEMAN ═══════════════════════ */}
-      <section className="py-36 sm:py-52 bg-primary text-primary-foreground relative overflow-hidden">
+      <section className="py-44 sm:py-64 bg-primary text-primary-foreground relative overflow-hidden">
         {/* Ultra-subtle blueprint video texture */}
         <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-[0.03]">
           <source src={heroVideo} type="video/mp4" />
