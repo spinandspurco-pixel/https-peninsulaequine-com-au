@@ -116,7 +116,7 @@ export default function Services() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-primary text-primary-foreground relative overflow-hidden">
+      <section ref={ctaSpotRef} className="py-20 bg-primary text-primary-foreground relative overflow-hidden">
         <BlueprintScene preset="barn" className="absolute inset-0" />
         <div className="section-container relative z-10 text-center max-w-lg mx-auto space-y-5">
           <RevealLine className="mx-auto mb-2" width="w-10" />
