@@ -84,10 +84,10 @@ function SystemCrossSection() {
 
   return (
     <div className="space-y-4">
-      <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2 px-1">
+      <h3 className="font-mono text-[9px] uppercase tracking-[0.25em] text-muted-foreground/60 flex items-center gap-2 px-1">
         <Layers className="w-3 h-3" /> System Cross-Section
       </h3>
-      <div className="space-y-1 relative">
+      <div className="space-y-1.5 relative">
         {layers.map((layer, i) => {
           const isActive = activeIndex === i;
           return (
@@ -95,35 +95,35 @@ function SystemCrossSection() {
               <button
                 type="button"
                 className={cn(
-                  "w-full text-left flex items-center gap-4 p-3 border transition-all duration-300 cursor-pointer",
+                  "w-full text-left flex items-center gap-4 p-3.5 border transition-all duration-500 cursor-pointer",
                   isActive
-                    ? "bg-accent/10 border-accent/40 scale-[1.01] shadow-md"
-                    : layer.accent ? "bg-accent/5 border-border/50" : "bg-card border-border/50",
+                    ? "bg-accent/8 border-accent/30 shadow-[0_0_20px_-6px_hsl(var(--accent)/0.15)]"
+                    : layer.accent ? "bg-accent/[0.03] border-border/40" : "bg-card/50 border-border/40",
                 )}
                 onMouseEnter={() => setActiveIndex(i)}
                 onMouseLeave={() => setActiveIndex(null)}
                 onClick={() => setActiveIndex(isActive ? null : i)}
               >
-                <div className="w-20 font-mono text-[10px] text-muted-foreground tabular-nums shrink-0">
+                <div className="w-20 font-mono text-[10px] text-muted-foreground/50 tabular-nums shrink-0">
                   {layer.depth}
                 </div>
                 <div className="flex-1">
                   <p className={cn(
-                    "text-xs font-semibold uppercase tracking-wider transition-colors duration-300",
-                    isActive ? "text-accent" : "text-foreground"
+                    "text-[11px] font-semibold uppercase tracking-[0.1em] transition-colors duration-500",
+                    isActive ? "text-accent" : "text-foreground/80"
                   )}>
                     {layer.label}
                   </p>
                   <div className={cn(
-                    "overflow-hidden transition-all duration-300",
-                    isActive ? "max-h-16 opacity-100 mt-1" : "max-h-0 opacity-0"
+                    "overflow-hidden transition-all duration-500",
+                    isActive ? "max-h-16 opacity-100 mt-1.5" : "max-h-0 opacity-0"
                   )}>
-                    <p className="text-[11px] text-muted-foreground leading-relaxed">{layer.text}</p>
+                    <p className="text-[11px] text-muted-foreground/60 leading-relaxed">{layer.text}</p>
                   </div>
                 </div>
                 <div className={cn(
-                  "w-1 h-6 rounded-full transition-all duration-300 shrink-0",
-                  isActive ? "bg-accent" : "bg-border"
+                  "w-0.5 h-5 rounded-full transition-all duration-500 shrink-0",
+                  isActive ? "bg-accent/70" : "bg-border/50"
                 )} />
               </button>
             </RevealOnScroll>
@@ -131,14 +131,15 @@ function SystemCrossSection() {
         })}
         {/* Fall indicator */}
         <div className="absolute -right-2 top-4 bottom-16 flex flex-col items-center justify-center">
-          <div className="w-px h-full bg-accent/30 relative">
-            <ArrowDown className="w-3 h-3 text-accent absolute -bottom-1 -left-[5px]" />
+          <div className="w-px h-full bg-accent/20 relative">
+            <ArrowDown className="w-3 h-3 text-accent/50 absolute -bottom-1 -left-[5px]" />
           </div>
-          <span className="font-mono text-[9px] text-accent mt-1 whitespace-nowrap">1–2% fall</span>
+          <span className="font-mono text-[8px] text-accent/40 mt-1 whitespace-nowrap">1–2% fall</span>
         </div>
       </div>
-      <p className="text-[11px] text-accent/60 italic mt-4 px-1">
-        Most properties fail from the ground up. We start where it matters.
+      <p className="text-[11px] text-muted-foreground/40 italic mt-6 px-1 leading-relaxed">
+        Most properties fail from the ground up.<br />
+        We start where it matters.
       </p>
     </div>
   );
@@ -363,31 +364,41 @@ export default function GroundLock() {
   return (
     <Layout>
       {/* Hero */}
-      <section className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
+      <section className="relative pt-36 sm:pt-44 pb-24 sm:pb-32 bg-primary text-primary-foreground overflow-hidden">
         <BlueprintScene preset="elevation" className="absolute inset-0" />
-        <div className="absolute inset-0 bg-primary/80" />
-        <div className="section-container relative z-10 text-center max-w-3xl mx-auto space-y-4">
-          <p
-            className="text-overline text-accent tracking-[0.25em] opacity-0 animate-fade-in"
+        <div className="absolute inset-0 bg-primary/85" />
+        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.03]" />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, transparent 30%, hsl(var(--primary)) 100%)" }} />
+
+        <div className="section-container relative z-10 text-center max-w-3xl mx-auto flex flex-col items-center gap-10">
+          <div
+            className="flex items-center gap-4 opacity-0 animate-fade-in"
             style={{ animationDelay: "200ms", animationFillMode: "both" }}
           >
-            P.E. GroundLock™
-          </p>
+            <div className="w-10 h-px bg-accent/40" />
+            <p className="text-[10px] font-sans font-medium tracking-[0.35em] uppercase text-accent/70">
+              Proprietary System
+            </p>
+            <div className="w-10 h-px bg-accent/40" />
+          </div>
+
           <h1
-            className="heading-display text-primary-foreground drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] opacity-0 animate-fade-in"
-            style={{ animationDelay: "400ms", animationFillMode: "both" }}
+            className="font-serif font-bold text-primary-foreground leading-[0.95] tracking-[-0.01em] text-5xl sm:text-6xl md:text-7xl opacity-0 animate-fade-in"
+            style={{ animationDelay: "450ms", animationFillMode: "both", animationDuration: "800ms" }}
           >
             P.E. GroundLock™
           </h1>
+
           <p
-            className="text-[11px] uppercase tracking-[0.2em] text-primary-foreground/35 opacity-0 animate-fade-in"
-            style={{ animationDelay: "500ms", animationFillMode: "both" }}
+            className="text-[11px] sm:text-xs uppercase tracking-[0.25em] text-primary-foreground/30 opacity-0 animate-fade-in"
+            style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
             A Ground Stabilisation System
           </p>
+
           <p
-            className="text-primary-foreground/60 text-base sm:text-lg max-w-xl mx-auto opacity-0 animate-fade-in leading-relaxed"
-            style={{ animationDelay: "650ms", animationFillMode: "both" }}
+            className="text-primary-foreground/45 text-sm sm:text-base max-w-md mx-auto opacity-0 animate-fade-in leading-[1.9]"
+            style={{ animationDelay: "950ms", animationFillMode: "both" }}
           >
             Engineered stabilisation for equine yards, stable surrounds,
             float parking, laneways, and high-traffic zones.
@@ -396,24 +407,29 @@ export default function GroundLock() {
       </section>
 
       {/* Problem Statement */}
-      <section className="py-28 sm:py-40 bg-background relative grain-texture overflow-hidden">
-        <div className="section-container max-w-2xl mx-auto text-center space-y-10 relative z-[1]">
-          <RevealLine className="mx-auto" width="w-10" />
+      <section className="py-36 sm:py-52 bg-background relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
+        <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
           <RevealOnScroll direction="up">
-            <h2 className="heading-section text-foreground">
+            <div className="w-8 h-px bg-accent/40 mx-auto mb-12" />
+          </RevealOnScroll>
+
+          <RevealOnScroll direction="up" delay={100}>
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold text-foreground tracking-[0.01em] leading-[1.2] mb-14">
               Most Properties Fail<br />From the Ground Up
             </h2>
           </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={100}>
-            <div className="space-y-5 text-sm sm:text-base text-muted-foreground leading-[1.9] max-w-lg mx-auto">
+
+          <RevealOnScroll direction="up" delay={200}>
+            <div className="space-y-8 text-sm sm:text-[15px] text-muted-foreground/60 leading-[2] font-sans">
               <p>
                 Drainage issues, unstable footing, and surface breakdown<br />
                 are rarely surface problems.
               </p>
-              <p className="text-foreground/70">
+              <p className="text-foreground/60">
                 They're structural.
               </p>
-              <p className="text-foreground/50 italic">
+              <p className="text-foreground/35 italic">
                 GroundLock™ is designed to solve that —<br />
                 properly, from the base layer up.
               </p>
