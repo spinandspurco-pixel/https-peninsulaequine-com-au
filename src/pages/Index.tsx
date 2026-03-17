@@ -43,28 +43,29 @@ const CAPABILITIES = [
     Icon: BPStables,
     num: "02",
     title: "Stables & Barns",
-    desc: "Hand-crafted timber and stone structures designed around equine behaviour and airflow.",
+    desc: "Structures designed around equine behaviour, airflow, and durability.",
     href: "/services",
   },
   {
     Icon: BPGroundSystems,
     num: "03",
     title: "Ground Systems",
-    desc: "Interlocking stabilisation systems engineered to eliminate mud and protect hooves.",
+    suffix: "GroundLock™",
+    desc: "Interlocking stabilisation designed to eliminate mud and improve performance.",
     href: "/groundlock",
   },
   {
     Icon: BPInfrastructure,
     num: "04",
     title: "Rural Infrastructure",
-    desc: "Laneways, wash bays, float access, fencing — integrated systems designed to work together.",
+    desc: "Integrated systems across the property — laneways, drainage, and access.",
     href: "/services",
   },
   {
     Icon: BPDesign,
     num: "05",
     title: "Design & Consultancy",
-    desc: "Full-site planning informed by terrain, drainage, wind, and use.",
+    desc: "Site planning informed by terrain, water flow, and long-term use.",
     href: "/contact",
   },
 ];
@@ -219,38 +220,50 @@ export default function Index() {
       </section>
 
       {/* ═══ CAPABILITIES ════════════════════════════════ */}
-      <section className="py-32 sm:py-48 bg-card border-y border-border relative grain-texture overflow-hidden">
-        <div className="section-container max-w-5xl mx-auto relative z-[1]">
-          <div className="text-center mb-24">
-            <RevealLine className="mx-auto mb-5" width="w-10" />
+      <section className="py-36 sm:py-52 bg-card border-y border-border relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.03]" />
+        <div className="section-container max-w-4xl mx-auto relative z-[1]">
+          {/* Header */}
+          <div className="text-center mb-28 sm:mb-36">
             <RevealOnScroll direction="up">
-              <h2 className="heading-section text-foreground mb-4">Capabilities</h2>
+              <div className="w-8 h-px bg-accent/40 mx-auto mb-10" />
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={80}>
-              <p className="text-sm text-muted-foreground/70 max-w-sm mx-auto leading-relaxed">
+              <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold text-foreground tracking-[0.01em] leading-[1.2] mb-8">
+                Capabilities
+              </h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={160}>
+              <p className="text-sm text-muted-foreground/60 max-w-sm mx-auto leading-[1.9]">
                 What we build is only part of it.<br />
                 How it works is everything.
               </p>
             </RevealOnScroll>
           </div>
 
-          <div className="space-y-20 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-24 md:gap-y-24">
+          {/* Pillar grid */}
+          <div className="space-y-20 sm:space-y-0 sm:grid sm:grid-cols-1 md:grid-cols-2 md:gap-x-20 md:gap-y-24">
             {CAPABILITIES.map((item, i) => (
-              <RevealOnScroll key={item.title} direction="up" stagger={i} staggerInterval={100}>
+              <RevealOnScroll key={item.title} direction="up" stagger={i} staggerInterval={120}>
                 <Link to={item.href} className="group block">
-                  <div className="flex items-start gap-6">
-                    <div className="flex-shrink-0 mt-1 w-12 h-12 flex items-center justify-center bp-backdrop rounded">
+                  <div className="flex items-start gap-5">
+                    {/* Blueprint icon */}
+                    <div className="flex-shrink-0 mt-1 w-10 h-10 flex items-center justify-center rounded border border-border/50 bg-background/50">
                       <item.Icon
-                        size={36}
-                        className="text-accent/50 group-hover:text-accent transition-colors duration-300"
+                        size={28}
+                        className="text-accent/40 group-hover:text-accent/70 transition-colors duration-500"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <p className="text-[10px] font-mono tracking-[0.25em] text-accent/30">{item.num}</p>
-                      <h3 className="font-serif text-lg font-medium text-foreground group-hover:text-accent transition-colors duration-300">
+
+                    <div className="space-y-3">
+                      <p className="text-[9px] font-mono tracking-[0.3em] text-accent/25 uppercase">{item.num}</p>
+                      <h3 className="font-serif text-base sm:text-lg font-medium text-foreground group-hover:text-accent transition-colors duration-500 tracking-[0.01em]">
                         {item.title}
+                        {(item as any).suffix && (
+                          <span className="text-accent/40 text-sm ml-2 font-sans font-normal">({(item as any).suffix})</span>
+                        )}
                       </h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                      <p className="text-[13px] text-muted-foreground/60 leading-[1.8] max-w-sm">{item.desc}</p>
                     </div>
                   </div>
                 </Link>
