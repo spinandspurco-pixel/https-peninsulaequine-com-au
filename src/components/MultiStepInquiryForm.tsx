@@ -225,7 +225,12 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
         experience_level: experience || null,
         budget_range: budget || null,
         project_details: message.trim().slice(0, 1000) || null,
-        notes: "Multi-step inquiry from homepage",
+        preferred_start: timeline || null,
+        notes: [
+          "Multi-step inquiry from homepage",
+          propertyLocation.trim() ? `Location: ${propertyLocation.trim()}` : "",
+          timeline ? `Timeline: ${timeline}` : "",
+        ].filter(Boolean).join(" | "),
         status: "new",
       });
 
