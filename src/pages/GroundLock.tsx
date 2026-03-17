@@ -663,7 +663,7 @@ export default function GroundLock() {
       </section>
 
       {/* CTA */}
-      <section className="py-36 sm:py-52 bg-primary text-primary-foreground relative overflow-hidden">
+      <section className="py-44 sm:py-64 bg-primary text-primary-foreground relative overflow-hidden">
         <BlueprintScene preset="barn" className="absolute inset-0" />
         <div className="absolute inset-0 bg-primary/92" />
         <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.03]" />
