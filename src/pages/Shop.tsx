@@ -91,21 +91,13 @@ export default function Shop() {
       <section className="relative pt-32 pb-24 text-primary-foreground overflow-hidden bg-primary">
         <video
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${heroVisual === "drawing" ? "opacity-45" : "opacity-0"}`}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="metadata"
+          autoPlay loop muted playsInline preload="metadata"
         >
           <source src={blueprintDrawingLoop} type="video/mp4" />
         </video>
         <video
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${heroVisual === "construction" ? "opacity-45" : "opacity-0"}`}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="metadata"
+          autoPlay loop muted playsInline preload="metadata"
         >
           <source src={blueprintConstructionLoop} type="video/mp4" />
         </video>
@@ -130,8 +122,8 @@ export default function Shop() {
           </div>
 
           <div>
-            <p className="text-overline text-primary-foreground/70 mb-4">Custom Fabrication</p>
-            <h1 className="heading-display text-primary-foreground">
+            <p className="text-overline text-accent mb-4">From Dirt to Dynasty</p>
+            <h1 className="heading-display text-primary-foreground drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
               The Forge <span className="text-accent">at P.E.</span>
             </h1>
             <p className="text-body-lg max-w-3xl mx-auto text-primary-foreground/80 mt-5">

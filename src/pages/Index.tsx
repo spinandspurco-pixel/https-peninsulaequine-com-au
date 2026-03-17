@@ -45,8 +45,8 @@ export default function Index() {
 
         <div className="relative z-10 section-container section-padding-lg text-primary-foreground">
           <div className="max-w-3xl stack-md">
-            <p className="text-overline text-primary-foreground/80">World-Class Equine Construction</p>
-            <h1 className="heading-display text-primary-foreground">From dirt to dynasty, without the noise.</h1>
+            <p className="text-overline text-accent">Peninsula Equine</p>
+            <h1 className="heading-display text-primary-foreground">From Dirt to Dynasty.</h1>
             <p className="text-body-lg text-primary-foreground/80 max-w-2xl">
               We simplified the experience to give clear decisions, fewer distractions, and deeper project confidence.
             </p>
