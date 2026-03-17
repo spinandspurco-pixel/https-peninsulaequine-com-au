@@ -231,6 +231,30 @@ export default function GroundLock() {
       {/* Estimator */}
       <section className="py-16 sm:py-24 bg-background">
         <div className="section-container">
+          {/* Project Type Chips */}
+          <div className="max-w-7xl mx-auto mb-8">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
+              Project Type
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {PROJECT_TYPES.map((type) => (
+                <button
+                  key={type.key}
+                  onClick={() => handleTypeChange(type.key)}
+                  className={cn(
+                    "px-4 py-2 text-xs font-mono uppercase tracking-[0.1em] border transition-all duration-300",
+                    projectType === type.key
+                      ? "bg-accent text-accent-foreground border-accent shadow-md"
+                      : "bg-card text-muted-foreground border-border hover:border-accent/50 hover:text-foreground"
+                  )}
+                >
+                  {type.label}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground mt-2 italic">{activeType.description}</p>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 max-w-7xl mx-auto">
             {/* Left Column — Input + Cross-Section */}
             <div className="lg:col-span-5 space-y-8">
