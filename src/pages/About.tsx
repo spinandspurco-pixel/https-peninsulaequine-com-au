@@ -67,6 +67,29 @@ export default function About() {
         </div>
       </section>
 
+      {/* Our Approach */}
+      <section className="py-24 sm:py-32 bg-background relative grain-texture overflow-hidden">
+        <div className="section-container max-w-2xl mx-auto text-center space-y-8 relative z-[1]">
+          <RevealLine className="mx-auto" width="w-10" />
+          <RevealOnScroll direction="up">
+            <h2 className="heading-section text-foreground">Our Approach</h2>
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={100}>
+            <div className="space-y-5 text-sm sm:text-base text-muted-foreground leading-[1.9] max-w-lg mx-auto">
+              <p>
+                We don't separate design from construction.<br />
+                Every decision — from ground preparation to final finish —<br />
+                is considered as part of a complete system.
+              </p>
+              <p className="text-foreground/50 italic">
+                Because when it's done properly,<br />
+                everything works together.
+              </p>
+            </div>
+          </RevealOnScroll>
+        </div>
+      </section>
+
       {/* Values */}
       <section className="py-20 bg-card">
         <div className="section-container max-w-5xl mx-auto">

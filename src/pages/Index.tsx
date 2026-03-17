@@ -19,17 +19,16 @@ import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
 import aberdeenStonework from "@/assets/aberdeen-stonework-color.jpg";
 import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
 import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
-import mainRidgeCiroWoodwork from "@/assets/main-ridge-ciro-woodwork-1.jpg";
-import equitanaArena from "@/assets/equitana-arena-1.jpg";
-import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
+
+// Video clips for content strip
+import slowMo1 from "@/assets/videos/slow-mo-1.mp4";
+import slowMo2 from "@/assets/videos/slow-mo-2.mp4";
+import slowMo3 from "@/assets/videos/slow-mo-3.mp4";
 
 const PORTFOLIO = [
   { src: aberdeenStonework, alt: "Hand-laid stonework at Aberdeen Farm", label: "Aberdeen Farm", type: "Stables", slug: "aberdeen-farm" },
   { src: mainRidgeInterior, alt: "Timber interior at Main Ridge", label: "Main Ridge", type: "Interior", slug: "main-ridge" },
   { src: qldCourtyard, alt: "Queensland facility courtyard", label: "QLD Facility", type: "Courtyard", slug: "qld-facility" },
-  { src: mainRidgeCiroWoodwork, alt: "Ciro hand-crafting timber joinery", label: "Main Ridge", type: "Woodwork", slug: "main-ridge" },
-  { src: equitanaArena, alt: "Competition arena at Equitana", label: "Equitana", type: "Arena", slug: "equitana" },
-  { src: aberdeenBarnInterior, alt: "Barn interior at Aberdeen Farm", label: "Aberdeen Farm", type: "Barn", slug: "aberdeen-farm" },
 ];
 
 const CAPABILITIES = [
@@ -37,32 +36,28 @@ const CAPABILITIES = [
     Icon: BPArena,
     num: "01",
     title: "Performance Arenas",
-    desc: "Precision-graded surfaces engineered for consistency, drainage, and longevity under real conditions — not theory.",
-    sub: "Built to ride the same in winter as it does in summer.",
+    desc: "Precision-graded surfaces engineered for consistency, drainage, and longevity.",
     href: "/services",
   },
   {
     Icon: BPStables,
     num: "02",
     title: "Stables & Barns",
-    desc: "Hand-crafted timber and stone structures designed around equine behaviour, airflow, and durability.",
-    sub: "Form follows function. Always.",
+    desc: "Hand-crafted timber and stone structures designed around equine behaviour and airflow.",
     href: "/services",
   },
   {
     Icon: BPGroundSystems,
     num: "03",
     title: "Ground Systems",
-    desc: "Interlocking stabilisation systems engineered to eliminate mud, protect hooves, and create permanent hard-standing.",
-    sub: "Where most properties fail — this is where we start.",
+    desc: "Interlocking stabilisation systems engineered to eliminate mud and protect hooves.",
     href: "/groundlock",
   },
   {
     Icon: BPInfrastructure,
     num: "04",
     title: "Rural Infrastructure",
-    desc: "Laneways, wash bays, float access, fencing — integrated systems designed to work together, not as afterthoughts.",
-    sub: "",
+    desc: "Laneways, wash bays, float access, fencing — integrated systems designed to work together.",
     href: "/services",
   },
   {
@@ -70,9 +65,14 @@ const CAPABILITIES = [
     num: "05",
     title: "Design & Consultancy",
     desc: "Full-site planning informed by terrain, drainage, wind, and use.",
-    sub: "Because the land decides what works — we just read it properly.",
     href: "/contact",
   },
+];
+
+const FIELD_CLIPS = [
+  { src: slowMo1, overlay: "Built properly." },
+  { src: slowMo2, overlay: "From the ground up." },
+  { src: slowMo3, overlay: "Designed to last." },
 ];
 
 /* ── Hero word stagger ────────────────────────────── */
@@ -172,30 +172,33 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ INTRO ═══════════════════════════════════════ */}
-      <section className="py-28 sm:py-40 bg-background relative grain-texture overflow-hidden">
+      {/* ═══ BUILT BY A HORSEMAN ═══════════════════════ */}
+      <section className="py-32 sm:py-44 bg-primary text-primary-foreground relative overflow-hidden">
+        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-[0.04]">
+          <source src={heroVideo} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-primary/95" />
         <div className="section-container max-w-2xl mx-auto text-center space-y-10 relative z-[1]">
           <RevealLine className="mx-auto mb-2" width="w-10" />
           <RevealOnScroll direction="up">
-            <h2 className="heading-section text-foreground">
-              Built on Understanding —<br />Not Assumption
+            <h2 className="heading-section text-primary-foreground">
+              Built by a Horseman
             </h2>
           </RevealOnScroll>
           <RevealOnScroll direction="up" delay={120}>
-            <div className="space-y-6 text-sm sm:text-base text-muted-foreground leading-[1.8] max-w-lg mx-auto">
+            <div className="space-y-6 text-sm sm:text-base text-primary-foreground/50 leading-[1.9] max-w-lg mx-auto">
               <p>
-                We don't build for appearances.<br />
-                We build for how horses move, live, and perform.
+                Peninsula Equine is built on firsthand understanding —<br />
+                not just of construction, but of how horses<br />
+                live, move, and perform.
               </p>
               <p>
-                Every arena, every structure, every surface<br />
-                begins with the same question —<br />
-                <em className="text-foreground/80">what does the horse need<br />for this to work properly?</em>
+                That perspective shapes every decision.<br />
+                From drainage to footing to airflow.
               </p>
-              <p>
-                The result is infrastructure<br />
-                that doesn't just look right.<br />
-                It rides right. It lasts.
+              <p className="text-primary-foreground/30 italic">
+                This isn't guesswork.<br />
+                It's lived experience, applied properly.
               </p>
             </div>
           </RevealOnScroll>
@@ -229,9 +232,6 @@ export default function Index() {
                         {item.title}
                       </h3>
                       <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-                      {item.sub && (
-                        <p className="text-sm text-muted-foreground/60 italic leading-relaxed">{item.sub}</p>
-                      )}
                     </div>
                   </div>
                 </Link>
@@ -250,11 +250,6 @@ export default function Index() {
               <RevealOnScroll direction="up" delay={80}>
                 <h2 className="heading-section text-foreground">Selected Work</h2>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={160}>
-                <p className="text-muted-foreground text-sm mt-3 max-w-md leading-relaxed">
-                  A curated selection of builds —<br />not everything, just what matters.
-                </p>
-              </RevealOnScroll>
             </div>
             <RevealOnScroll direction="up" delay={200}>
               <Button asChild variant="outline" className="uppercase tracking-[0.1em] text-xs btn-hover-lift">
@@ -263,7 +258,7 @@ export default function Index() {
             </RevealOnScroll>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {PORTFOLIO.map((item, i) => (
               <RevealOnScroll key={i} direction="up" stagger={i} staggerInterval={80}>
                 <Link to={`/project/${item.slug}`} className="group relative aspect-[4/3] overflow-hidden block">
@@ -317,9 +312,6 @@ export default function Index() {
                   <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90 uppercase tracking-[0.12em] text-xs font-medium btn-hover-lift">
                     <Link to="/groundlock">Explore GroundLock™ <ArrowRight className="ml-2 h-4 w-4" /></Link>
                   </Button>
-                  <Button asChild variant="outline" className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/5 uppercase tracking-[0.12em] text-xs">
-                    <Link to="/groundlock">Try the Estimator</Link>
-                  </Button>
                 </div>
               </RevealOnScroll>
             </div>
@@ -330,21 +322,62 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ═══ FROM THE FIELD ═══════════════════════════════ */}
+      <section className="py-28 sm:py-40 bg-background relative grain-texture overflow-hidden">
+        <div className="section-container max-w-6xl mx-auto relative z-[1]">
+          <div className="text-center mb-16">
+            <RevealLine className="mx-auto mb-5" width="w-10" />
+            <RevealOnScroll direction="up">
+              <h2 className="heading-section text-foreground mb-3">From the Field</h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={80}>
+              <p className="text-muted-foreground text-sm max-w-md mx-auto">
+                A look at how we build — materials, systems,<br />and finished work in motion.
+              </p>
+            </RevealOnScroll>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {FIELD_CLIPS.map((clip, i) => (
+              <RevealOnScroll key={i} direction="up" stagger={i} staggerInterval={100}>
+                <div className="relative aspect-[9/16] sm:aspect-[3/4] overflow-hidden group">
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                  >
+                    <source src={clip.src} type="video/mp4" />
+                  </video>
+                  <div className="absolute inset-0 bg-primary/30 group-hover:bg-primary/50 transition-all duration-500" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <p className="text-[11px] uppercase tracking-[0.2em] text-primary-foreground/60 font-medium italic">
+                      {clip.overlay}
+                    </p>
+                  </div>
+                </div>
+              </RevealOnScroll>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ═══ WHO WE WORK WITH ═════════════════════════════ */}
-      <section className="py-20 sm:py-28 bg-background relative grain-texture overflow-hidden">
-        <div className="section-container max-w-2xl mx-auto text-center relative z-[1] space-y-8">
+      <section className="py-28 sm:py-40 bg-card border-y border-border relative overflow-hidden">
+        <div className="section-container max-w-2xl mx-auto text-center relative z-[1] space-y-10">
           <RevealLine className="mx-auto" width="w-10" />
           <RevealOnScroll direction="up">
             <h2 className="heading-section text-foreground">Who We Work With</h2>
           </RevealOnScroll>
           <RevealOnScroll direction="up" delay={100}>
-            <div className="space-y-5 text-sm text-muted-foreground leading-[1.8] max-w-lg mx-auto">
+            <div className="space-y-6 text-sm sm:text-base text-muted-foreground leading-[1.9] max-w-lg mx-auto">
               <p>
                 We work with private owners, performance riders,<br />
                 and properties where function, longevity,<br />
                 and correct design matter.
               </p>
-              <p className="text-foreground/60 italic">
+              <p className="text-foreground/50 italic">
                 Not every project is a fit.<br />
                 And that's intentional.
               </p>
@@ -353,48 +386,13 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ PHILOSOPHY ═══════════════════════════════════ */}
-      <section className="py-28 sm:py-40 bg-background relative grain-texture overflow-hidden">
-        <div className="section-container max-w-4xl mx-auto relative z-[1]">
-          <div className="text-center mb-20">
-            <RevealLine className="mx-auto mb-5" width="w-10" />
-            <RevealOnScroll direction="up">
-              <h2 className="heading-section text-foreground">How We Build</h2>
-            </RevealOnScroll>
-          </div>
-
-          <div className="grid sm:grid-cols-2 gap-x-20 gap-y-16">
-            {[
-              { n: "01", title: "Design for the Horse", desc: "Every decision begins with the animal —\nsight lines, footing, airflow, movement." },
-              { n: "02", title: "Build for Generations", desc: "Materials and methods chosen\nfor longevity, not convenience." },
-              { n: "03", title: "Respect the Land", desc: "Drainage, slope, soil —\nthe land dictates the outcome." },
-              { n: "04", title: "Craft Over Convenience", desc: "Where others cut corners,\nwe build it properly." },
-            ].map((p, i) => (
-              <RevealOnScroll key={p.n} direction="up" stagger={i} staggerInterval={140}>
-                <div className="group">
-                  <p className="text-[10px] font-mono tracking-[0.25em] text-accent/30 mb-3 group-hover:text-accent/60 transition-colors duration-300">{p.n}</p>
-                  <h3 className="font-serif text-lg font-medium mb-3 text-foreground group-hover:text-accent transition-colors duration-300">{p.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-[1.8] whitespace-pre-line">{p.desc}</p>
-                </div>
-              </RevealOnScroll>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ═══ TESTIMONIAL ═════════════════════════════════ */}
-      <section className="py-24 sm:py-32 bg-card border-y border-border relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-          <div className="absolute top-0 left-[15%] w-px h-full bg-border/40" />
-          <div className="absolute top-0 right-[15%] w-px h-full bg-border/40" />
-        </div>
+      <section className="py-28 sm:py-36 bg-background relative overflow-hidden">
         <div className="section-container max-w-2xl mx-auto text-center relative z-10">
           <RevealLine className="mx-auto mb-10" width="w-10" />
           <RevealOnScroll direction="scale" duration={900}>
             <blockquote className="font-serif text-xl sm:text-2xl text-foreground italic leading-[1.6]">
-              "We interviewed six contractors<br />
-              before choosing Ciro.<br />
-              His knowledge of horses<br />
+              "His knowledge of horses<br />
               convinced us immediately —<br />
               this isn't just construction to him,<br />
               it's his passion."
@@ -409,7 +407,7 @@ export default function Index() {
       </section>
 
       {/* ═══ FINAL CTA ═══════════════════════════════════ */}
-      <section className="py-28 sm:py-36 bg-primary text-primary-foreground relative overflow-hidden">
+      <section className="py-32 sm:py-44 bg-primary text-primary-foreground relative overflow-hidden">
         <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-[0.06]">
           <source src={heroVideo} type="video/mp4" />
         </video>
@@ -423,38 +421,23 @@ export default function Index() {
             </h2>
           </RevealOnScroll>
           <RevealOnScroll direction="up" delay={100}>
-            <p className="text-primary-foreground/35 text-sm">
-              Site-specific. Horse-first. Built properly.
-            </p>
+            <Button
+              asChild
+              size="lg"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.14em] text-xs font-medium btn-hover-lift"
+            >
+              <Link to="/contact">
+                Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
           </RevealOnScroll>
           <RevealOnScroll direction="up" delay={200}>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                asChild
-                size="lg"
-                className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.14em] text-xs font-medium btn-hover-lift"
-              >
-                <Link to="/contact">
-                  Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/5 uppercase tracking-[0.12em] text-xs"
-              >
-                <Link to="/groundlock">Estimate a Project</Link>
-              </Button>
-            </div>
-          </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={300}>
             <p className="text-primary-foreground/20 text-[11px] tracking-wide">
               We take on a limited number of projects each season.
             </p>
           </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={350}>
-            <p className="text-accent/40 text-[10px] italic tracking-wider">
+          <RevealOnScroll direction="up" delay={300}>
+            <p className="text-accent/30 text-[10px] italic tracking-wider">
               Built once. Built properly.
             </p>
           </RevealOnScroll>
