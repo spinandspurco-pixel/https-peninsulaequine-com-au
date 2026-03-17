@@ -301,6 +301,50 @@ export type Database = {
         }
         Relationships: []
       }
+      inquiry_nurture: {
+        Row: {
+          client_email: string
+          client_name: string
+          completed: boolean
+          created_at: string
+          id: string
+          inquiry_id: string
+          next_send_at: string
+          step: number
+          updated_at: string
+        }
+        Insert: {
+          client_email: string
+          client_name: string
+          completed?: boolean
+          created_at?: string
+          id?: string
+          inquiry_id: string
+          next_send_at?: string
+          step?: number
+          updated_at?: string
+        }
+        Update: {
+          client_email?: string
+          client_name?: string
+          completed?: boolean
+          created_at?: string
+          id?: string
+          inquiry_id?: string
+          next_send_at?: string
+          step?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inquiry_nurture_inquiry_id_fkey"
+            columns: ["inquiry_id"]
+            isOneToOne: true
+            referencedRelation: "inquiries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       integration_settings: {
         Row: {
           created_at: string
