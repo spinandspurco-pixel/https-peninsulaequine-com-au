@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowRight, ArrowLeft, CheckCircle, Loader2, User, Mail, Phone, MessageSquare, CalendarIcon, Edit2, ShieldCheck, RotateCcw, Save, Trash2 } from "lucide-react";
+import { ArrowRight, ArrowLeft, CheckCircle, Loader2, User, Mail, Phone, MessageSquare, CalendarIcon, Edit2, ShieldCheck, RotateCcw, Save, Trash2, MapPin } from "lucide-react";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
