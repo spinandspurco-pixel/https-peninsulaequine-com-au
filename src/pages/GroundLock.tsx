@@ -407,7 +407,7 @@ export default function GroundLock() {
       </section>
 
       {/* Problem Statement */}
-      <section className="py-36 sm:py-52 bg-background relative overflow-hidden">
+      <section className="py-44 sm:py-64 bg-background relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
         <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
           <RevealOnScroll direction="up">
@@ -439,7 +439,7 @@ export default function GroundLock() {
       </section>
 
       {/* Estimator */}
-      <section className="py-16 sm:py-24 bg-background">
+      <section className="py-24 sm:py-36 bg-background">
         <div className="section-container">
           {/* Project Type Chips */}
           <div className="max-w-7xl mx-auto mb-8">
@@ -614,7 +614,7 @@ export default function GroundLock() {
       </section>
 
       {/* Scope & Variables */}
-      <section className="py-16 sm:py-24 bg-card border-t border-border">
+      <section className="py-24 sm:py-36 bg-card border-t border-border">
         <div className="section-container max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
             <RevealOnScroll direction="up" stagger={0} staggerInterval={120}>
@@ -663,7 +663,7 @@ export default function GroundLock() {
       </section>
 
       {/* CTA */}
-      <section className="py-36 sm:py-52 bg-primary text-primary-foreground relative overflow-hidden">
+      <section className="py-44 sm:py-64 bg-primary text-primary-foreground relative overflow-hidden">
         <BlueprintScene preset="barn" className="absolute inset-0" />
         <div className="absolute inset-0 bg-primary/92" />
         <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.03]" />
