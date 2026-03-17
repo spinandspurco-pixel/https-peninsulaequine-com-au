@@ -70,5 +70,5 @@ export function useCursorSpotlight(
       cancelAnimationFrame(raf);
       spot.remove();
     };
-  }, [containerRef, radius, opacity, color]);
+  }, [containerRef, radius, opacity]);
 }
