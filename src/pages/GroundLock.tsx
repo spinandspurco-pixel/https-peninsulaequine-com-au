@@ -30,6 +30,45 @@ const formatAUD = (val: number) =>
     maximumFractionDigits: 0,
   }).format(val);
 
+type ProjectType = "yard" | "stable" | "laneway" | "float";
+
+const PROJECT_TYPES: {
+  key: ProjectType;
+  label: string;
+  defaultArea: number;
+  rates: { base: [number, number]; standard: [number, number]; premium: [number, number] };
+  description: string;
+}[] = [
+  {
+    key: "yard",
+    label: "Yard",
+    defaultArea: 250,
+    rates: { base: [90, 120], standard: [120, 180], premium: [180, 250] },
+    description: "General-purpose equine yards & turnout areas",
+  },
+  {
+    key: "stable",
+    label: "Stable Surround",
+    defaultArea: 150,
+    rates: { base: [110, 140], standard: [140, 200], premium: [200, 280] },
+    description: "High-traffic zones around stable entries & wash bays",
+  },
+  {
+    key: "laneway",
+    label: "Laneway",
+    defaultArea: 400,
+    rates: { base: [80, 110], standard: [110, 160], premium: [160, 230] },
+    description: "Long, narrow access tracks & property laneways",
+  },
+  {
+    key: "float",
+    label: "Float Parking",
+    defaultArea: 300,
+    rates: { base: [100, 130], standard: [130, 190], premium: [190, 260] },
+    description: "Heavy-load zones for float & truck parking",
+  },
+];
+
 /* ── Cross-Section Visual ─────────────────────────── */
 function SystemCrossSection() {
   const layers = [
