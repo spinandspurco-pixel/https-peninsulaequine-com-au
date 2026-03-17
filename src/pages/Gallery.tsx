@@ -22,7 +22,6 @@ import {
 } from "./gallery/galleryData";
 import { GalleryLightbox } from "./gallery/GalleryLightbox";
 
-import { VideoGallerySection } from "./gallery/VideoGallerySection";
 import { GalleryGrid } from "./gallery/GalleryGrid";
 import { GalleryFilters } from "./gallery/GalleryFilters";
 
