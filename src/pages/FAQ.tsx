@@ -7,8 +7,8 @@ import { PolicyDownloadCenter } from "@/components/PolicyDownloadCenter";
 import { PageHeader } from "@/components/PageHeader";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
+import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { faqs } from "@/data/content";
-import { useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
 import {
   Accordion,
@@ -86,18 +86,15 @@ export default function FAQ() {
 
   const autoSuggestion = useMemo(() => getAutoSuggestion(search), [search]);
 
-  // Auto-switch category when suggestion matches and user hasn't manually picked one
   const effectiveCategory = activeCategory;
 
   const filtered = useMemo(() => {
     let items = faqs;
 
-    // Filter by category
     if (effectiveCategory !== "all") {
       items = items.filter((f) => (f.category || "general") === effectiveCategory);
     }
 
-    // Filter by search
     const q = search.toLowerCase().trim();
     if (q) {
       items = items.filter(
@@ -107,10 +104,6 @@ export default function FAQ() {
 
     return items;
   }, [search, effectiveCategory]);
-
-  const { containerRef, visibleItems } = useStaggeredAnimation(filtered.length, {
-    threshold: 0.1,
-  });
 
   const handleCategoryClick = useCallback((cat: string) => {
     setActiveCategory(cat);
@@ -129,43 +122,47 @@ export default function FAQ() {
 
         <div className="section-container max-w-3xl relative z-[2]">
           {/* Category tabs */}
-          <div className="flex flex-wrap gap-2 mb-6">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.value}
-                onClick={() => handleCategoryClick(cat.value)}
-                className={cn(
-                  "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border",
-                  effectiveCategory === cat.value
-                    ? "bg-accent text-accent-foreground border-accent"
-                    : "bg-background text-muted-foreground border-border hover:border-accent/40 hover:text-foreground"
-                )}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
+          <RevealOnScroll direction="up" duration={600}>
+            <div className="flex flex-wrap gap-2 mb-6">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat.value}
+                  onClick={() => handleCategoryClick(cat.value)}
+                  className={cn(
+                    "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border",
+                    effectiveCategory === cat.value
+                      ? "bg-accent text-accent-foreground border-accent"
+                      : "bg-background text-muted-foreground border-border hover:border-accent/40 hover:text-foreground"
+                  )}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          </RevealOnScroll>
 
           {/* Search filter */}
-          <div className="relative mb-4">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search questions… e.g. 'group discount', 'payment', 'book a lesson'"
-              className="w-full pl-11 pr-10 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/40 transition-shadow text-sm"
-            />
-            {search && (
-              <button
-                onClick={() => setSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Clear search"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
-          </div>
+          <RevealOnScroll direction="up" delay={100}>
+            <div className="relative mb-4">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search questions… e.g. 'group discount', 'payment', 'book a lesson'"
+                className="w-full pl-11 pr-10 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/40 transition-shadow text-sm"
+              />
+              {search && (
+                <button
+                  onClick={() => setSearch("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="Clear search"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          </RevealOnScroll>
 
           {/* Auto-suggest banner */}
           {autoSuggestion && (
@@ -215,43 +212,41 @@ export default function FAQ() {
               type="single"
               collapsible
               className="space-y-4"
-              ref={containerRef}
             >
               {filtered.map((faq, index) => (
-                <AccordionItem
-                  key={faq.question}
-                  value={faq.question}
-                  className={cn(
-                    "border border-border rounded-lg px-6 data-[state=open]:border-accent transition-all duration-500",
-                    visibleItems[index]
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 translate-y-6"
-                  )}
-                  style={{ transitionDelay: `${index * 80}ms` }}
-                >
-                  <AccordionTrigger className="text-left font-serif text-lg font-semibold text-foreground hover:text-accent hover:no-underline py-6">
-                    {faq.question}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground pb-6">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
+                <RevealOnScroll key={faq.question} direction="up" stagger={index} staggerInterval={80}>
+                  <AccordionItem
+                    value={faq.question}
+                    className="border border-border rounded-lg px-6 data-[state=open]:border-accent transition-all duration-300"
+                  >
+                    <AccordionTrigger className="text-left font-serif text-lg font-semibold text-foreground hover:text-accent hover:no-underline py-6">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground pb-6">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                </RevealOnScroll>
               ))}
             </Accordion>
           )}
 
           {/* Result count */}
           {filtered.length > 0 && (
-            <p className="text-xs text-muted-foreground mt-6 text-center">
-              Showing {filtered.length} of {faqs.length} questions
-            </p>
+            <RevealOnScroll direction="up" delay={200}>
+              <p className="text-xs text-muted-foreground mt-6 text-center">
+                Showing {filtered.length} of {faqs.length} questions
+              </p>
+            </RevealOnScroll>
           )}
         </div>
       </section>
 
       <section className="section-padding bg-card border-y border-border">
         <div className="section-container max-w-3xl">
-          <PolicyDownloadCenter />
+          <RevealOnScroll direction="up">
+            <PolicyDownloadCenter />
+          </RevealOnScroll>
         </div>
       </section>
 
