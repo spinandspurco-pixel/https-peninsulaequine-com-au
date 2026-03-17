@@ -3,9 +3,7 @@ import { BlueprintScene } from "@/components/BlueprintScene";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import peBrandSplitHero from "@/assets/pe-brand-split-hero.png";
-import peRopeRing from "@/assets/pe-rope-ring.png";
 import { ArrowRight } from "lucide-react";
-
 export default function Index() {
   return (
     <Layout>
