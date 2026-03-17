@@ -137,7 +137,7 @@ export function Footer() {
       <div className="border-t border-[hsl(var(--footer-foreground))]/6">
         <div className="section-container py-8 text-center">
           <p className="text-[11px] font-serif tracking-[0.15em] text-[hsl(var(--footer-muted))]/60">
-            Equus Ridge
+            Equus Ridge&trade;
           </p>
           <p className="text-[9px] text-[hsl(var(--footer-muted))]/35 tracking-wide mt-1">
             Home of Peninsula Equine &amp; Spin &amp; Spur Co.
