@@ -221,7 +221,7 @@ export default function Index() {
             </RevealOnScroll>
           </div>
 
-          <div className="space-y-16 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-20 md:gap-y-20">
+          <div className="space-y-20 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-24 md:gap-y-24">
             {CAPABILITIES.map((item, i) => (
               <RevealOnScroll key={item.title} direction="up" stagger={i} staggerInterval={100}>
                 <Link to={item.href} className="group block">
