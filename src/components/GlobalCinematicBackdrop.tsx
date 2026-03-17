@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import blueprintDrawingLoop from "@/assets/videos/blueprint-drawing-loop.mp4";
 import blueprintConstructionLoop from "@/assets/videos/blueprint-construction-loop.mp4";
 import blueprintLogoReference from "@/assets/pe-blueprint-gold-logo-reference.png";
-import { RopeEmblem } from "@/components/RopeEmblem";
 
 const hiddenPrefixes = ["/admin", "/employee", "/bookings", "/staff", "/trainer"];
 
