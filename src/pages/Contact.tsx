@@ -1,277 +1,599 @@
 import { useState } from "react";
-import { Phone, Mail, MapPin, Clock, Send, CheckCircle, Loader2, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Phone, Mail, ArrowRight, CheckCircle, Loader2, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/layout/Layout";
-import { BlueprintBackground } from "@/components/BlueprintBackground";
-import { PageHeader } from "@/components/PageHeader";
-import { InquiryForm } from "@/components/InquiryForm";
-import { LeadCaptureForm } from "@/components/LeadCaptureForm";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import { siteConfig } from "@/data/content";
-import { PolicyDownloadCenter } from "@/components/PolicyDownloadCenter";
-import { StickySubpageCTA } from "@/components/StickySubpageCTA";
-import { InteractiveMap } from "@/components/InteractiveMap";
+import { cn } from "@/lib/utils";
+import { z } from "zod";
 
-// Background image for header parallax
-import aberdeenInterior from "@/assets/aberdeen-barn-interior.jpg";
-import blueprintFacility from "@/assets/blueprint-facility.png";
+import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
 
-function ContactInfo() {
+/* ── Constants ──────────────────────────────────────── */
+const PROPERTY_TYPES = [
+  "Private Property",
+  "Performance / Competition Facility",
+  "Agistment / Commercial",
+  "Other",
+];
+
+const PROJECT_SCOPES = [
+  { id: "arena-construction", label: "Arena Construction" },
+  { id: "stables-barn", label: "Stables / Barn" },
+  { id: "ground-systems", label: "Ground Stabilisation (GroundLock™)" },
+  { id: "drainage-civil", label: "Drainage / Civil Works" },
+  { id: "full-infrastructure", label: "Full Property Infrastructure" },
+  { id: "design-planning", label: "Design & Planning" },
+];
+
+const TIMELINES = [
+  "Ready to start",
+  "Within 3 months",
+  "3–6 months",
+  "Planning stage",
+];
+
+const BUDGET_RANGES = [
+  "Under $25K",
+  "$25K – $75K",
+  "$75K – $150K",
+  "$150K+",
+];
+
+const formSchema = z.object({
+  name: z.string().trim().min(2, "Name is required").max(100),
+  email: z.string().trim().email("Valid email required").max(255),
+  phone: z.string().trim().max(30).optional(),
+});
+
+/* ── Select Component ─────────────────────────────── */
+function SelectField({
+  label,
+  value,
+  onChange,
+  options,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: string[];
+  placeholder: string;
+}) {
   return (
-    <div className="space-y-8">
-      <div>
-        <h3 className="font-serif text-xl font-semibold text-foreground mb-6">
-          Get in Touch
-        </h3>
-        <ul className="space-y-4">
-          {[
-            {
-              icon: Phone,
-              label: "Phone",
-              value: siteConfig.phone,
-              href: `tel:${siteConfig.phone}`,
-            },
-            {
-              icon: Mail,
-              label: "Email",
-              value: siteConfig.email,
-              href: `mailto:${siteConfig.email}`,
-            },
-          ].map((item, i) => (
-            <RevealOnScroll key={item.label} direction="left" stagger={i} staggerInterval={120}>
-              <li>
-                <a
-                  href={item.href}
-                  className="flex items-start gap-4 text-muted-foreground hover:text-accent transition-colors group"
-                >
-                  <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center shrink-0 group-hover:bg-accent/20 transition-colors">
-                    <item.icon className="h-5 w-5 text-accent" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-foreground">{item.label}</p>
-                    <p>{item.value}</p>
-                  </div>
-                </a>
-              </li>
-            </RevealOnScroll>
-          ))}
-          <RevealOnScroll direction="left" stagger={2} staggerInterval={120}>
-            <li className="flex items-start gap-4 text-muted-foreground">
-              <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
-                <MapPin className="h-5 w-5 text-accent" />
-              </div>
-              <div>
-                <p className="font-medium text-foreground">Location</p>
-                <p>
-                  {siteConfig.address.street}<br />
-                  {siteConfig.address.city}, {siteConfig.address.state} {siteConfig.address.zip}
-                </p>
-              </div>
-            </li>
-          </RevealOnScroll>
-          <RevealOnScroll direction="left" stagger={3} staggerInterval={120}>
-            <li className="flex items-start gap-4 text-muted-foreground">
-              <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
-                <Clock className="h-5 w-5 text-accent" />
-              </div>
-              <div>
-                <p className="font-medium text-foreground">Hours</p>
-                <p>{siteConfig.hours.weekdays}</p>
-                <p>{siteConfig.hours.saturday}</p>
-              </div>
-            </li>
-          </RevealOnScroll>
-        </ul>
-      </div>
+    <div>
+      <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+        {label}
+      </label>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full rounded-md border border-input bg-background px-3.5 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all appearance-none"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='rgba(120,120,120,0.5)' d='M6 8L1 3h10z'/%3E%3C/svg%3E\")",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "right 12px center",
+        }}
+      >
+        <option value="">{placeholder}</option>
+        {options.map((o) => (
+          <option key={o} value={o}>
+            {o}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
 
-function QuickInquiryBlock() {
+/* ── Main Page ────────────────────────────────────── */
+export default function Contact() {
   const { toast } = useToast();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    propertyLocation: "",
+    propertyType: "",
+    scopes: [] as string[],
+    details: "",
+    timeline: "",
+    budget: "",
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
-  const isValid = name.trim().length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) && message.trim().length >= 3;
+  const set = (key: string, value: string) =>
+    setForm((prev) => ({ ...prev, [key]: value }));
+
+  const toggleScope = (id: string) =>
+    setForm((prev) => ({
+      ...prev,
+      scopes: prev.scopes.includes(id)
+        ? prev.scopes.filter((s) => s !== id)
+        : [...prev.scopes, id],
+    }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isValid) return;
-    setSending(true);
+    const result = formSchema.safeParse({
+      name: form.name,
+      email: form.email,
+      phone: form.phone || undefined,
+    });
+    if (!result.success) {
+      const newErrors: Record<string, string> = {};
+      result.error.issues.forEach((i) => {
+        newErrors[i.path[0] as string] = i.message;
+      });
+      setErrors(newErrors);
+      return;
+    }
+    if (form.scopes.length === 0) {
+      setErrors({ scopes: "Please select at least one." });
+      return;
+    }
+    setErrors({});
+    setSubmitting(true);
+
     try {
       const { error } = await supabase.from("inquiries").insert({
-        name: name.trim().slice(0, 100),
-        email: email.trim().slice(0, 255),
-        services: ["quick-inquiry"],
-        notes: message.trim().slice(0, 500),
+        name: form.name.trim().slice(0, 100),
+        email: form.email.trim().slice(0, 255),
+        phone: form.phone.trim().slice(0, 30) || null,
+        services: form.scopes,
+        budget_range: form.budget || null,
+        preferred_start: form.timeline || null,
+        project_details: form.details.trim().slice(0, 2000) || null,
+        notes: [
+          form.propertyLocation.trim() ? `Location: ${form.propertyLocation.trim()}` : "",
+          form.propertyType ? `Type: ${form.propertyType}` : "",
+          form.timeline ? `Timeline: ${form.timeline}` : "",
+          form.budget ? `Scale: ${form.budget}` : "",
+        ]
+          .filter(Boolean)
+          .join(" | "),
         status: "new",
       });
       if (error) throw error;
 
-      supabase.functions.invoke("send-inquiry-notification", {
-        body: { name: name.trim(), email: email.trim(), services: ["quick-inquiry"], goals: message.trim() },
-      }).catch(() => {});
+      // Fire-and-forget notifications
+      supabase.functions
+        .invoke("send-inquiry-notification", {
+          body: {
+            name: form.name.trim(),
+            email: form.email.trim(),
+            services: form.scopes,
+            budgetRange: form.budget || undefined,
+            goals: form.details.trim() || "Site assessment request",
+          },
+        })
+        .catch(() => {});
 
-      setSent(true);
-      toast({ title: "Message sent!", description: "We'll get back to you within 1–2 business days." });
+      supabase.functions
+        .invoke("send-welcome-series", {
+          body: {
+            email: form.email.trim(),
+            name: form.name.trim(),
+            source: "contact-assessment",
+          },
+        })
+        .catch(() => {});
+
+      setSubmitted(true);
+      toast({
+        title: "Request received",
+        description: "We'll review your enquiry and be in touch shortly.",
+      });
     } catch {
-      toast({ title: "Something went wrong", description: "Please try again or call us.", variant: "destructive" });
+      toast({
+        title: "Something went wrong",
+        description: "Please try again or call us directly.",
+        variant: "destructive",
+      });
     } finally {
-      setSending(false);
+      setSubmitting(false);
     }
   };
 
+  const inputClass =
+    "w-full rounded-md border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all";
+
   return (
-    <section className="bg-primary text-primary-foreground py-12 sm:py-16">
-      <div className="section-container">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-            <RevealOnScroll direction="left" duration={800}>
-              <div>
-                <p className="text-accent uppercase tracking-[0.2em] text-xs font-medium mb-3">Quick Inquiry</p>
-                <h2 className="font-serif text-2xl sm:text-3xl mb-4">Have a Quick Question?</h2>
-                <p className="text-primary-foreground/60 leading-relaxed mb-6">
-                  Drop us a message and we'll respond within 24 hours. For detailed project inquiries, use our full form below.
+    <Layout>
+      {/* ═══ HERO ═══════════════════════════════════════ */}
+      <section className="relative py-32 sm:py-40 overflow-hidden">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src={heroVideo} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-primary/80" />
+
+        <div className="section-container relative z-10 text-center max-w-2xl mx-auto">
+          <div
+            className="flex items-center justify-center gap-4 mb-8 opacity-0 animate-fade-in"
+            style={{ animationDelay: "200ms", animationFillMode: "both" }}
+          >
+            <div className="w-10 h-px bg-accent" />
+            <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent">
+              Get Started
+            </span>
+            <div className="w-10 h-px bg-accent" />
+          </div>
+          <h1
+            className="heading-display text-primary-foreground leading-[1.05] opacity-0 animate-fade-in"
+            style={{ animationDelay: "400ms", animationFillMode: "both" }}
+          >
+            Request Site Assessment
+          </h1>
+          <p
+            className="mt-6 text-primary-foreground/40 text-sm sm:text-base max-w-lg mx-auto leading-relaxed opacity-0 animate-fade-in"
+            style={{ animationDelay: "650ms", animationFillMode: "both" }}
+          >
+            We take on a limited number of projects each season.<br />
+            Tell us about your property and what you're looking to build.
+          </p>
+        </div>
+      </section>
+
+      {/* ═══ INTRO ═══════════════════════════════════════ */}
+      <section className="py-20 sm:py-28 bg-background relative grain-texture overflow-hidden">
+        <div className="section-container max-w-2xl mx-auto text-center relative z-[1] space-y-8">
+          <RevealLine className="mx-auto" width="w-10" />
+          <RevealOnScroll direction="up">
+            <h2 className="heading-section text-foreground">
+              Start With the Land
+            </h2>
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={100}>
+            <div className="space-y-5 text-sm text-muted-foreground leading-[1.8] max-w-lg mx-auto">
+              <p>
+                Every project begins with understanding the property —<br />
+                its drainage, its layout, and how horses move through it.
+              </p>
+              <p className="text-foreground/60 italic">
+                This isn't a quick quote process.<br />
+                It's a considered build from the ground up.
+              </p>
+            </div>
+          </RevealOnScroll>
+        </div>
+      </section>
+
+      {/* ═══ FORM ════════════════════════════════════════ */}
+      <section className="py-16 sm:py-24 bg-card border-y border-border">
+        <div className="section-container max-w-2xl mx-auto">
+          {submitted ? (
+            <RevealOnScroll direction="up">
+              <div className="text-center py-16 space-y-6">
+                <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto">
+                  <CheckCircle className="h-8 w-8 text-accent" />
+                </div>
+                <h2 className="heading-section text-foreground">
+                  Request Received
+                </h2>
+                <p className="text-muted-foreground text-sm leading-[1.8] max-w-md mx-auto">
+                  We'll review your enquiry and be in touch shortly.<br /><br />
+                  Each project is assessed based on scope,<br />
+                  location, and current availability.
                 </p>
-                <div className="flex flex-wrap gap-3">
+                <div className="pt-6 flex flex-col sm:flex-row gap-4 justify-center">
                   <a
                     href={`tel:${siteConfig.phone}`}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent text-accent-foreground text-sm font-semibold hover:bg-accent/90 transition-all hover:scale-105"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-border text-sm font-medium text-foreground hover:bg-secondary transition-all"
                   >
-                    <Phone className="h-4 w-4" />
-                    Call Now
+                    <Phone className="h-4 w-4 text-accent" />
+                    {siteConfig.phone}
                   </a>
                   <a
                     href={`mailto:${siteConfig.email}`}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary-foreground/20 text-primary-foreground text-sm font-medium hover:bg-primary-foreground/10 transition-all"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-border text-sm font-medium text-foreground hover:bg-secondary transition-all"
                   >
-                    <Mail className="h-4 w-4" />
-                    Email Us
+                    <Mail className="h-4 w-4 text-accent" />
+                    {siteConfig.email}
                   </a>
                 </div>
               </div>
             </RevealOnScroll>
-
-            <RevealOnScroll direction="right" duration={800} delay={150}>
-              <div>
-                {sent ? (
-                  <div className="flex flex-col items-center justify-center py-8 text-center rounded-xl bg-primary-foreground/[0.06] border border-primary-foreground/10 px-6">
-                    <CheckCircle className="h-8 w-8 text-accent mb-3" />
-                    <p className="font-serif text-xl font-semibold mb-1">Message Sent!</p>
-                    <p className="text-primary-foreground/60 text-sm mb-4">Check your inbox — we've sent a confirmation with next steps.</p>
-                    <Link
-                      to="/schedule"
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent text-accent-foreground text-sm font-semibold hover:bg-accent/90 transition-all"
-                    >
-                      <Clock className="h-4 w-4" />
-                      Schedule a Call Now
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-3 rounded-xl bg-primary-foreground/[0.06] border border-primary-foreground/10 p-6">
-                    <Input
-                      placeholder="Your name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      maxLength={100}
-                      className="bg-primary-foreground/10 border-primary-foreground/15 text-primary-foreground placeholder:text-primary-foreground/40"
-                    />
-                    <Input
-                      type="email"
-                      placeholder="Email address"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      maxLength={255}
-                      className="bg-primary-foreground/10 border-primary-foreground/15 text-primary-foreground placeholder:text-primary-foreground/40"
-                    />
-                    <Input
-                      placeholder="Your question or message…"
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      maxLength={500}
-                      className="bg-primary-foreground/10 border-primary-foreground/15 text-primary-foreground placeholder:text-primary-foreground/40"
-                    />
-                    <Button
-                      type="submit"
-                      disabled={!isValid || sending}
-                      className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
-                    >
-                      {sending ? (
-                        <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Sending…</>
-                      ) : (
-                        <><Send className="mr-2 h-4 w-4" />Send Quick Inquiry</>
-                      )}
-                    </Button>
-                  </form>
-                )}
-              </div>
-            </RevealOnScroll>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export default function Contact() {
-  return (
-    <Layout>
-      <StickySubpageCTA
-        ctaLabel="Call Us Now"
-        ctaIcon={<Phone className="h-4 w-4" />}
-        onCtaClick={() => window.location.href = `tel:${siteConfig.phone}`}
-      />
-      <PageHeader 
-        title="Start Your Project"
-        description="Tell us about your vision and we'll help you bring it to life. Complete our inquiry form to get started."
-        backgroundImage={aberdeenInterior}
-        dividerVariant="contact"
-      />
-
-      <QuickInquiryBlock />
-
-      <section className="section-padding relative overflow-hidden">
-        <BlueprintBackground image={blueprintFacility} opacity={0.03} direction="right-to-left" duration={2000} parallaxSpeed={0.06} />
-        <div className="section-container relative z-10">
-          <div className="grid lg:grid-cols-3 gap-12 lg:gap-16">
-            {/* Form - Takes 2 columns */}
-            <div className="lg:col-span-2 space-y-10">
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-16">
+              {/* Section 1 — Contact Details */}
               <RevealOnScroll direction="up">
-                <LeadCaptureForm />
-              </RevealOnScroll>
-
-              <RevealOnScroll direction="up" delay={150}>
-                <div className="bg-card rounded-xl p-6 sm:p-8 border border-border">
-                  <h2 className="font-serif text-2xl font-semibold text-foreground mb-2">
-                    Detailed Project Inquiry
-                  </h2>
-                  <p className="text-muted-foreground mb-8">
-                    Have a bigger project in mind? Complete this form for a personalised consultation.
-                  </p>
-                  <InquiryForm />
+                <div className="space-y-6">
+                  <div>
+                    <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
+                      01
+                    </p>
+                    <h3 className="font-serif text-xl font-medium text-foreground">
+                      Your Details
+                    </h3>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="sm:col-span-2">
+                      <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                        Full Name *
+                      </label>
+                      <Input
+                        value={form.name}
+                        onChange={(e) => set("name", e.target.value)}
+                        placeholder="Your full name"
+                        maxLength={100}
+                      />
+                      {errors.name && (
+                        <p className="text-destructive text-xs mt-1">
+                          {errors.name}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                        Email Address *
+                      </label>
+                      <Input
+                        type="email"
+                        value={form.email}
+                        onChange={(e) => set("email", e.target.value)}
+                        placeholder="you@example.com"
+                        maxLength={255}
+                      />
+                      {errors.email && (
+                        <p className="text-destructive text-xs mt-1">
+                          {errors.email}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                        Phone Number
+                      </label>
+                      <Input
+                        type="tel"
+                        value={form.phone}
+                        onChange={(e) => set("phone", e.target.value)}
+                        placeholder="04XX XXX XXX"
+                        maxLength={30}
+                      />
+                    </div>
+                  </div>
                 </div>
               </RevealOnScroll>
-            </div>
 
-            {/* Contact Info - Takes 1 column */}
-            <div className="space-y-8">
-              <ContactInfo />
+              <div className="w-12 h-px bg-border mx-auto" />
+
+              {/* Section 2 — Property Details */}
+              <RevealOnScroll direction="up" delay={50}>
+                <div className="space-y-6">
+                  <div>
+                    <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
+                      02
+                    </p>
+                    <h3 className="font-serif text-xl font-medium text-foreground">
+                      Property Overview
+                    </h3>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                        <MapPin className="inline h-3 w-3 mr-1" />
+                        Property Location
+                      </label>
+                      <Input
+                        value={form.propertyLocation}
+                        onChange={(e) =>
+                          set("propertyLocation", e.target.value)
+                        }
+                        placeholder="e.g. Mornington Peninsula, VIC"
+                        maxLength={200}
+                      />
+                    </div>
+                    <SelectField
+                      label="Property Type"
+                      value={form.propertyType}
+                      onChange={(v) => set("propertyType", v)}
+                      options={PROPERTY_TYPES}
+                      placeholder="Select type"
+                    />
+                  </div>
+                </div>
+              </RevealOnScroll>
+
+              <div className="w-12 h-px bg-border mx-auto" />
+
+              {/* Section 3 — Project Scope */}
+              <RevealOnScroll direction="up" delay={100}>
+                <div className="space-y-6">
+                  <div>
+                    <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
+                      03
+                    </p>
+                    <h3 className="font-serif text-xl font-medium text-foreground">
+                      What Are You Looking to Build?
+                    </h3>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {PROJECT_SCOPES.map((scope) => (
+                      <button
+                        key={scope.id}
+                        type="button"
+                        onClick={() => toggleScope(scope.id)}
+                        className={cn(
+                          "px-4 py-3 rounded-md text-sm font-medium border transition-all text-left",
+                          form.scopes.includes(scope.id)
+                            ? "bg-accent/10 border-accent text-foreground ring-1 ring-accent/30"
+                            : "bg-background border-border text-muted-foreground hover:border-accent/40 hover:text-foreground"
+                        )}
+                      >
+                        {scope.label}
+                      </button>
+                    ))}
+                  </div>
+                  {errors.scopes && (
+                    <p className="text-destructive text-xs">
+                      {errors.scopes}
+                    </p>
+                  )}
+                </div>
+              </RevealOnScroll>
+
+              <div className="w-12 h-px bg-border mx-auto" />
+
+              {/* Section 4 — Project Details */}
+              <RevealOnScroll direction="up" delay={150}>
+                <div className="space-y-6">
+                  <div>
+                    <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
+                      04
+                    </p>
+                    <h3 className="font-serif text-xl font-medium text-foreground">
+                      Project Details
+                    </h3>
+                  </div>
+                  <div>
+                    <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                      Tell us about your project
+                    </label>
+                    <textarea
+                      value={form.details}
+                      onChange={(e) => set("details", e.target.value)}
+                      maxLength={2000}
+                      rows={5}
+                      placeholder="Describe what you're looking to build…"
+                      className={cn(inputClass, "resize-none")}
+                    />
+                    <p className="text-[10px] text-muted-foreground/50 mt-1.5">
+                      Include any known issues, goals, or ideas — drainage,
+                      footing, layout, etc.
+                    </p>
+                  </div>
+                </div>
+              </RevealOnScroll>
+
+              <div className="w-12 h-px bg-border mx-auto" />
+
+              {/* Section 5 & 6 — Timeline + Scale */}
               <RevealOnScroll direction="up" delay={200}>
-                <InteractiveMap />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                  <div className="space-y-6">
+                    <div>
+                      <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
+                        05
+                      </p>
+                      <h3 className="font-serif text-xl font-medium text-foreground">
+                        Timeline
+                      </h3>
+                    </div>
+                    <SelectField
+                      label="When are you looking to start?"
+                      value={form.timeline}
+                      onChange={(v) => set("timeline", v)}
+                      options={TIMELINES}
+                      placeholder="Select timeline"
+                    />
+                  </div>
+                  <div className="space-y-6">
+                    <div>
+                      <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
+                        06
+                      </p>
+                      <h3 className="font-serif text-xl font-medium text-foreground">
+                        Project Scale
+                      </h3>
+                    </div>
+                    <SelectField
+                      label="Approximate budget range"
+                      value={form.budget}
+                      onChange={(v) => set("budget", v)}
+                      options={BUDGET_RANGES}
+                      placeholder="Select range"
+                    />
+                  </div>
+                </div>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={300}>
-                <PolicyDownloadCenter />
+
+              <div className="w-12 h-px bg-border mx-auto" />
+
+              {/* Before You Submit */}
+              <RevealOnScroll direction="up" delay={250}>
+                <div className="bg-background rounded-lg border border-border p-6 sm:p-8 text-center space-y-4">
+                  <h3 className="font-serif text-lg font-medium text-foreground">
+                    Before You Submit
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-[1.8] max-w-md mx-auto">
+                    We approach every project as a long-term investment —<br />
+                    designed properly, built once, and built to last.
+                  </p>
+                  <p className="text-sm text-foreground/50 italic">
+                    If that aligns with how you want to build,<br />
+                    we look forward to hearing from you.
+                  </p>
+                </div>
               </RevealOnScroll>
+
+              {/* Submit */}
+              <div className="text-center space-y-3">
+                <Button
+                  type="submit"
+                  size="lg"
+                  disabled={submitting}
+                  className="bg-accent text-accent-foreground hover:bg-accent/90 uppercase tracking-[0.14em] text-xs font-medium btn-hover-lift px-10"
+                >
+                  {submitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
+                      Submitting…
+                    </>
+                  ) : (
+                    <>
+                      Submit Assessment Request{" "}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </>
+                  )}
+                </Button>
+                <p className="text-primary-foreground/0 text-[10px]">
+                  {/* spacer */}
+                </p>
+              </div>
+            </form>
+          )}
+        </div>
+      </section>
+
+      {/* ═══ DIRECT CONTACT ══════════════════════════════ */}
+      <section className="py-16 sm:py-20 bg-background relative grain-texture overflow-hidden">
+        <div className="section-container max-w-md mx-auto text-center relative z-[1] space-y-6">
+          <RevealOnScroll direction="up">
+            <p className="text-sm text-muted-foreground">
+              Prefer to speak directly?
+            </p>
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={100}>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href={`tel:${siteConfig.phone}`}
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-border text-sm font-medium text-foreground hover:bg-secondary transition-all btn-hover-lift"
+              >
+                <Phone className="h-4 w-4 text-accent" />
+                {siteConfig.phone}
+              </a>
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-border text-sm font-medium text-foreground hover:bg-secondary transition-all btn-hover-lift"
+              >
+                <Mail className="h-4 w-4 text-accent" />
+                {siteConfig.email}
+              </a>
             </div>
-          </div>
+          </RevealOnScroll>
         </div>
       </section>
     </Layout>
