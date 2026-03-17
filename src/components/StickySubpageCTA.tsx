@@ -85,8 +85,8 @@ export function StickySubpageCTA({
                 )}
               />
             </div>
-            <span className="hidden sm:block text-sm font-serif tracking-[0.08em] uppercase text-primary-foreground/90 truncate pl-0.5">
-              Peninsula<span className="text-accent">Equine</span>
+            <span className="hidden sm:block text-xs font-sans font-medium tracking-[0.25em] uppercase text-primary-foreground/90 truncate pl-0.5 leading-none">
+              Peninsula<span className="text-accent"> Equine</span>
             </span>
           </div>
 
