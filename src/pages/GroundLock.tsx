@@ -334,6 +334,7 @@ export default function GroundLock() {
   }, [area, stats, activeType]);
 
 
+  return (
     <Layout>
       {/* Hero */}
       <section className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
