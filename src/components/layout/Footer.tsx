@@ -142,6 +142,9 @@ export function Footer() {
           <p className="text-[9px] text-[hsl(var(--footer-muted))]/35 tracking-wide mt-1">
             The home of Peninsula Equine &amp; Spin &amp; Spur Co.
           </p>
+          <p className="text-[9px] text-[hsl(var(--footer-muted))]/25 tracking-[0.15em] mt-3 italic">
+            Built properly. From the ground up.
+          </p>
         </div>
       </div>
 

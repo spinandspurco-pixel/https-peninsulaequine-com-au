@@ -98,13 +98,15 @@ export default function Index() {
     <Layout>
       {/* ═══ HERO ═══════════════════════════════════════ */}
       <section className="relative min-h-[100vh] overflow-hidden flex items-center justify-center">
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover brightness-[0.85]">
+        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover brightness-[0.8] contrast-[1.05]">
           <source src={heroVideo} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-primary/80" />
+        {/* Vignette */}
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, transparent 40%, hsl(var(--primary)) 100%)" }} />
 
         <div className="relative z-10 section-container text-primary-foreground text-center max-w-3xl mx-auto">
-          <div className="space-y-12">
+          <div className="space-y-14">
             <div
               className="flex items-center justify-center gap-4 opacity-0 animate-fade-in"
               style={{ animationDelay: "200ms", animationFillMode: "both" }}
@@ -116,17 +118,19 @@ export default function Index() {
               <div className="w-10 h-px bg-accent" />
             </div>
 
-            <h1 className="heading-display text-primary-foreground leading-[1.02]">
+            <h1 className="heading-display text-primary-foreground leading-[1.08] tracking-[0.01em]">
               <StaggerText text="From Dirt" delay={400} />
               <br />
-              <StaggerText text="to Dynasty." delay={600} />
+              <span className="block mt-2">
+                <StaggerText text="to Dynasty." delay={600} />
+              </span>
             </h1>
 
             <p
-              className="text-base sm:text-lg text-primary-foreground/40 max-w-md mx-auto leading-relaxed opacity-0 animate-fade-in"
-              style={{ animationDelay: "950ms", animationFillMode: "both" }}
+              className="text-primary-foreground/25 text-[11px] sm:text-xs tracking-[0.2em] uppercase opacity-0 animate-fade-in"
+              style={{ animationDelay: "900ms", animationFillMode: "both" }}
             >
-              Built by a horseman.
+              Designed for the horse. Built for the long term.
             </p>
 
             <div
@@ -136,7 +140,7 @@ export default function Index() {
               <Button
                 asChild
                 size="lg"
-                className="bg-accent text-accent-foreground hover:bg-accent/90 uppercase tracking-[0.14em] text-xs font-medium btn-hover-lift"
+                className="bg-accent text-accent-foreground hover:bg-accent/90 uppercase tracking-[0.14em] text-xs font-medium btn-hover-lift px-8 py-3"
               >
                 <Link to="/contact">
                   Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
@@ -146,13 +150,13 @@ export default function Index() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/5 uppercase tracking-[0.14em] text-xs font-medium"
+                className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/5 uppercase tracking-[0.14em] text-xs font-medium px-8 py-3"
               >
                 <Link to="/gallery">Selected Work</Link>
               </Button>
             </div>
             <p
-              className="text-primary-foreground/15 text-[11px] tracking-wide opacity-0 animate-fade-in"
+              className="text-primary-foreground/12 text-[10px] tracking-[0.15em] opacity-0 animate-fade-in"
               style={{ animationDelay: "1400ms", animationFillMode: "both" }}
             >
               We take on a limited number of projects each season.
@@ -162,12 +166,12 @@ export default function Index() {
 
         {/* Scroll indicator */}
         <div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0 animate-fade-in"
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0 animate-fade-in"
           style={{ animationDelay: "1600ms", animationFillMode: "both" }}
         >
-          <span className="text-[9px] uppercase tracking-[0.3em] text-primary-foreground/25 font-sans">Scroll</span>
-          <div className="w-px h-8 bg-accent/25 relative overflow-hidden">
-            <div className="absolute top-0 w-full h-3 bg-accent animate-[scrollPulse_2s_ease-in-out_infinite]" />
+          <span className="text-[9px] uppercase tracking-[0.3em] text-primary-foreground/20 font-sans">Scroll</span>
+          <div className="w-px h-8 bg-accent/20 relative overflow-hidden">
+            <div className="absolute top-0 w-full h-3 bg-accent/60 animate-[scrollPulse_2s_ease-in-out_infinite]" />
           </div>
         </div>
       </section>
