@@ -625,6 +625,30 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
               </div>
             </div>
 
+            {/* Project summary */}
+            {(propertyLocation.trim() || timelineLabel) && (
+              <div className="rounded-lg border border-border bg-background p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Project</span>
+                  <button onClick={() => setStep(3)} className="text-xs text-accent hover:underline flex items-center gap-1">
+                    <Edit2 className="h-3 w-3" /> Edit
+                  </button>
+                </div>
+                <div className="space-y-2 text-sm">
+                  {propertyLocation.trim() && (
+                    <div className="flex items-center gap-2 text-foreground">
+                      <span className="text-muted-foreground">Location:</span> {propertyLocation}
+                    </div>
+                  )}
+                  {timelineLabel && (
+                    <div className="flex items-center gap-2 text-foreground">
+                      <span className="text-muted-foreground">Timeline:</span> {timelineLabel}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Details summary */}
             {(experienceLabel || budgetLabel || message.trim()) && (
               <div className="rounded-lg border border-border bg-background p-4">
