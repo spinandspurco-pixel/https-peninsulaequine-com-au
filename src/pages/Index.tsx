@@ -373,7 +373,7 @@ export default function Index() {
       </section>
 
       {/* ═══ WHO WE WORK WITH ═════════════════════════════ */}
-      <section className="py-28 sm:py-40 bg-card border-y border-border relative overflow-hidden">
+      <section className="py-32 sm:py-48 bg-card border-y border-border relative overflow-hidden">
         <div className="section-container max-w-2xl mx-auto text-center relative z-[1] space-y-10">
           <RevealLine className="mx-auto" width="w-10" />
           <RevealOnScroll direction="up">
