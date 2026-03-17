@@ -158,10 +158,10 @@
   }
 
   /* ── Global Lucide icon defaults ───────────────────── */
-  /* Consistent stroke rendering + smooth hover transitions */
+  /* Thin architectural strokes + smooth hover transitions */
   svg.lucide {
-    stroke-width: 2;
-    @apply transition-transform duration-200 ease-out;
+    stroke-width: 1.5;
+    @apply transition-all duration-300 ease-out;
   }
 
   body {
