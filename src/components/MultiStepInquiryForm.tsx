@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowRight, ArrowLeft, CheckCircle, Loader2, User, Mail, Phone, MessageSquare, CalendarIcon, Edit2, ShieldCheck, RotateCcw, Save, Trash2 } from "lucide-react";
+import { ArrowRight, ArrowLeft, CheckCircle, Loader2, User, Mail, Phone, MessageSquare, CalendarIcon, Edit2, ShieldCheck, RotateCcw, Save, Trash2, MapPin } from "lucide-react";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,9 +15,9 @@ const SERVICE_OPTIONS = [
   { id: "fencing", label: "Equine Fencing" },
   { id: "round-pens", label: "Round Pens & Paddocks" },
   { id: "full-facility", label: "Full Facility Build" },
-  { id: "riding-lessons", label: "Riding Lessons" },
+  { id: "ground-systems", label: "Ground Systems (GroundLock™)" },
   { id: "renovations", label: "Renovations & Repairs" },
-  { id: "general-inquiry", label: "General Inquiry" },
+  { id: "design-consultancy", label: "Design & Consultancy" },
 ];
 
 const EXPERIENCE_LEVELS = [
@@ -28,12 +28,19 @@ const EXPERIENCE_LEVELS = [
 ];
 
 const BUDGET_RANGES = [
-  { id: "under-5k", label: "Under $5k" },
-  { id: "5k-15k", label: "$5k – $15k" },
-  { id: "15k-50k", label: "$15k – $50k" },
-  { id: "50k-100k", label: "$50k – $100k" },
-  { id: "100k-plus", label: "$100k+" },
+  { id: "under-25k", label: "Under $25K" },
+  { id: "25k-75k", label: "$25K – $75K" },
+  { id: "75k-150k", label: "$75K – $150K" },
+  { id: "150k-plus", label: "$150K+" },
   { id: "not-sure", label: "Not Sure Yet" },
+];
+
+const TIMELINE_OPTIONS = [
+  { id: "asap", label: "As Soon as Possible" },
+  { id: "1-3-months", label: "1–3 Months" },
+  { id: "3-6-months", label: "3–6 Months" },
+  { id: "6-12-months", label: "6–12 Months" },
+  { id: "planning", label: "Just Planning" },
 ];
 
 const contactSchema = z.object({
@@ -42,7 +49,7 @@ const contactSchema = z.object({
   phone: z.string().max(30).optional(),
 });
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 5;
 const DRAFT_KEY = "pe_inquiry_draft";
 
 interface DraftState {
@@ -52,6 +59,8 @@ interface DraftState {
   name: string;
   email: string;
   phone: string;
+  propertyLocation: string;
+  timeline: string;
   experience: string;
   budget: string;
   message: string;
@@ -107,6 +116,8 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
   const [name, setName] = useState(preName || (hasDraft ? existingDraft!.name : ""));
   const [email, setEmail] = useState(preEmail || (hasDraft ? existingDraft!.email : ""));
   const [phone, setPhone] = useState(prePhone || (hasDraft ? existingDraft!.phone : ""));
+  const [propertyLocation, setPropertyLocation] = useState(hasDraft ? existingDraft!.propertyLocation || "" : "");
+  const [timeline, setTimeline] = useState(hasDraft ? existingDraft!.timeline || "" : "");
   const [experience, setExperience] = useState(hasDraft ? existingDraft!.experience : "");
   const [budget, setBudget] = useState(hasDraft ? existingDraft!.budget : "");
   const [message, setMessage] = useState(hasDraft ? existingDraft!.message : "");
@@ -126,6 +137,8 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
       name,
       email,
       phone,
+      propertyLocation,
+      timeline,
       experience,
       budget,
       message,
@@ -133,7 +146,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
     };
     localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
     setLastSaved(new Date());
-  }, [step, selectedServices, preferredService, name, email, phone, experience, budget, message, submitted]);
+  }, [step, selectedServices, preferredService, name, email, phone, propertyLocation, timeline, experience, budget, message, submitted]);
 
   // Debounced auto-save
   useEffect(() => {
@@ -150,6 +163,8 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
     setName("");
     setEmail("");
     setPhone("");
+    setPropertyLocation("");
+    setTimeline("");
     setExperience("");
     setBudget("");
     setMessage("");
@@ -210,7 +225,12 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
         experience_level: experience || null,
         budget_range: budget || null,
         project_details: message.trim().slice(0, 1000) || null,
-        notes: "Multi-step inquiry from homepage",
+        preferred_start: timeline || null,
+        notes: [
+          "Multi-step inquiry from homepage",
+          propertyLocation.trim() ? `Location: ${propertyLocation.trim()}` : "",
+          timeline ? `Timeline: ${timeline}` : "",
+        ].filter(Boolean).join(" | "),
         status: "new",
       });
 
@@ -265,6 +285,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
     .filter(Boolean);
 
   const budgetLabel = BUDGET_RANGES.find((b) => b.id === budget)?.label;
+  const timelineLabel = TIMELINE_OPTIONS.find((t) => t.id === timeline)?.label;
   const experienceLabel = EXPERIENCE_LEVELS.find((e) => e.id === experience)?.label;
 
   if (submitted) {
@@ -324,7 +345,7 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
 
       {/* Progress bar */}
       <div className="flex border-b border-border">
-        {[1, 2, 3, 4].map((s) => (
+        {[1, 2, 3, 4, 5].map((s) => (
           <div key={s} className="flex-1 flex flex-col items-center relative">
             <div
               className={cn(
@@ -332,14 +353,14 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
                 s <= step ? "bg-accent" : "bg-muted"
               )}
             />
-            <div className="py-3 px-2 text-center">
+            <div className="py-3 px-1 text-center">
               <span
                 className={cn(
-                  "text-[10px] uppercase tracking-[0.2em] font-medium transition-colors",
+                  "text-[9px] sm:text-[10px] uppercase tracking-[0.15em] font-medium transition-colors",
                   s <= step ? "text-accent" : "text-muted-foreground"
                 )}
               >
-                {s === 1 ? "Service" : s === 2 ? "Contact" : s === 3 ? "Details" : "Review"}
+                {s === 1 ? "Service" : s === 2 ? "Contact" : s === 3 ? "Project" : s === 4 ? "Details" : "Review"}
               </span>
             </div>
           </div>
@@ -444,8 +465,53 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
           </div>
         )}
 
-        {/* Step 3: Experience & message */}
+        {/* Step 3: Property & Timeline */}
         {step === 3 && (
+          <div className="space-y-5">
+            <div>
+              <h3 className="font-serif text-xl sm:text-2xl text-foreground mb-1">About Your Property</h3>
+              <p className="text-sm text-muted-foreground">Helps us assess logistics and site requirements.</p>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-1.5 flex items-center gap-1.5">
+                  <MapPin className="h-3 w-3" /> Property Location
+                </label>
+                <Input
+                  value={propertyLocation}
+                  onChange={(e) => setPropertyLocation(e.target.value)}
+                  placeholder="e.g. Mornington Peninsula, VIC"
+                  maxLength={200}
+                />
+              </div>
+              <div>
+                <label className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-2 block">
+                  Preferred Timeline
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {TIMELINE_OPTIONS.map((t) => (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => setTimeline(t.id)}
+                      className={cn(
+                        "px-4 py-2 rounded-full text-sm font-medium border transition-all",
+                        timeline === t.id
+                          ? "bg-accent/10 border-accent text-foreground ring-1 ring-accent/30"
+                          : "bg-background border-border text-muted-foreground hover:border-accent/40"
+                      )}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 4: Experience & message */}
+        {step === 4 && (
           <div className="space-y-5">
             <div>
               <h3 className="font-serif text-xl sm:text-2xl text-foreground mb-1">Tell Us More</h3>
@@ -513,8 +579,8 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
           </div>
         )}
 
-        {/* Step 4: Checkout-style review */}
-        {step === 4 && (
+        {/* Step 5: Checkout-style review */}
+        {step === 5 && (
           <div className="space-y-5">
             <div>
               <h3 className="font-serif text-xl sm:text-2xl text-foreground mb-1">Review Your Quote Request</h3>
@@ -564,12 +630,36 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
               </div>
             </div>
 
+            {/* Project summary */}
+            {(propertyLocation.trim() || timelineLabel) && (
+              <div className="rounded-lg border border-border bg-background p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Project</span>
+                  <button onClick={() => setStep(3)} className="text-xs text-accent hover:underline flex items-center gap-1">
+                    <Edit2 className="h-3 w-3" /> Edit
+                  </button>
+                </div>
+                <div className="space-y-2 text-sm">
+                  {propertyLocation.trim() && (
+                    <div className="flex items-center gap-2 text-foreground">
+                      <span className="text-muted-foreground">Location:</span> {propertyLocation}
+                    </div>
+                  )}
+                  {timelineLabel && (
+                    <div className="flex items-center gap-2 text-foreground">
+                      <span className="text-muted-foreground">Timeline:</span> {timelineLabel}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Details summary */}
             {(experienceLabel || budgetLabel || message.trim()) && (
               <div className="rounded-lg border border-border bg-background p-4">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium">Details</span>
-                  <button onClick={() => setStep(3)} className="text-xs text-accent hover:underline flex items-center gap-1">
+                  <button onClick={() => setStep(4)} className="text-xs text-accent hover:underline flex items-center gap-1">
                     <Edit2 className="h-3 w-3" /> Edit
                   </button>
                 </div>
@@ -623,8 +713,8 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
           </div>
         )}
 
-        {/* Navigation (steps 1-3) */}
-        {step < 4 && (
+        {/* Navigation (steps 1-4) */}
+        {step < 5 && (
           <div className="flex items-center justify-between mt-8 pt-5 border-t border-border">
             {step > 1 ? (
               <Button variant="ghost" onClick={prevStep} className="text-muted-foreground hover:text-foreground">
@@ -640,8 +730,8 @@ export function MultiStepInquiryForm({ className }: MultiStepInquiryFormProps) {
           </div>
         )}
 
-        {/* Back button for step 4 */}
-        {step === 4 && (
+        {/* Back button for step 5 */}
+        {step === 5 && (
           <div className="mt-4 pt-4 border-t border-border">
             <Button variant="ghost" onClick={prevStep} className="text-muted-foreground hover:text-foreground">
               <ArrowLeft className="mr-2 h-4 w-4" /> Back to Details
