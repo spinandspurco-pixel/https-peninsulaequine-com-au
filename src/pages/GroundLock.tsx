@@ -439,7 +439,7 @@ export default function GroundLock() {
       </section>
 
       {/* Estimator */}
-      <section className="py-16 sm:py-24 bg-background">
+      <section className="py-24 sm:py-36 bg-background">
         <div className="section-container">
           {/* Project Type Chips */}
           <div className="max-w-7xl mx-auto mb-8">
