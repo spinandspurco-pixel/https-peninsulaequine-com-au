@@ -42,6 +42,7 @@ import AdminDocuments from "./pages/AdminDocuments";
 import StaffDocumentPortal from "./pages/StaffDocumentPortal";
 import TrainerDocumentPortal from "./pages/TrainerDocumentPortal";
 import TrainerProfile from "./pages/TrainerProfile";
+import MLPGSPage from "./pages/MLPGS";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { useCartSync } from "./hooks/useCartSync";
 
@@ -94,6 +95,7 @@ function AppContent() {
           <Route path="/trainer/documents" element={<TrainerDocumentPortal />} />
           <Route path="/admin/documents" element={<AdminDocuments />} />
           <Route path="/trainers/:slug" element={<TrainerProfile />} />
+          <Route path="/mlpgs" element={<MLPGSPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
