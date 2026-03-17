@@ -332,7 +332,7 @@ export default function Index() {
       </section>
 
       {/* ═══ FROM THE FIELD ═══════════════════════════════ */}
-      <section className="py-28 sm:py-40 bg-background relative grain-texture overflow-hidden">
+      <section className="py-32 sm:py-48 bg-background relative grain-texture overflow-hidden">
         <div className="section-container max-w-6xl mx-auto relative z-[1]">
           <div className="text-center mb-16">
             <RevealLine className="mx-auto mb-5" width="w-10" />
