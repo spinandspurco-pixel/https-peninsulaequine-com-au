@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Phone, Mail, CalendarIcon } from "lucide-react";
+import { Menu, X, Phone, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import logoImage from "@/assets/logo-pe-mark.png";
@@ -14,7 +14,6 @@ const navigation = [
   { name: "Services", href: "/services" },
   { name: "Forge", href: "/shop", icon: true },
   { name: "Portfolio", href: "/gallery" },
-  { name: "Lessons", href: "/lessons" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
   { name: "Staff Login", href: "/login" },
@@ -99,21 +98,13 @@ export function Header() {
             ))}
           </div>
 
-          {/* CTAs + Cart */}
+          {/* CTAs + MLPGS Badge */}
           <div className="hidden lg:flex items-center gap-2 xl:gap-3">
+            <span className="px-2.5 py-1 rounded-full text-[9px] font-semibold uppercase tracking-[0.12em] bg-accent/15 text-accent border border-accent/30 animate-pulse">
+              MLPGS — Coming Soon
+            </span>
             <GlobalSearch />
             <CartDrawer />
-            <Button
-              asChild
-              size="sm"
-              variant="outline"
-              className="border-accent/40 text-accent hover:bg-accent/10 uppercase tracking-[0.1em] text-[10px] xl:text-xs px-3 xl:px-5"
-            >
-              <Link to="/book-lesson">
-                <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
-                Book Lesson
-              </Link>
-            </Button>
             <Button
               asChild
               size="sm"
@@ -192,12 +183,6 @@ export function Header() {
           </div>
 
           <div className="flex gap-3 pt-4 mt-2">
-            <Button asChild variant="outline" className="flex-1 border-accent/40 text-accent hover:bg-accent/10 uppercase tracking-[0.1em] text-xs">
-              <Link to="/book-lesson">
-                <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
-                Book Lesson
-              </Link>
-            </Button>
             <Button asChild className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.1em] text-xs">
               <Link to="/contact">Get a Quote</Link>
             </Button>
