@@ -47,6 +47,7 @@ import TrainerProfile from "./pages/TrainerProfile";
 import MLPGSPage from "./pages/MLPGS";
 import GroundLock from "./pages/GroundLock";
 import CaseStudy from "./pages/CaseStudy";
+import GroundLockSystems from "./pages/GroundLockSystems";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { useCartSync } from "./hooks/useCartSync";
 
