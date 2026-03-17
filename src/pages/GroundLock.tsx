@@ -395,6 +395,33 @@ export default function GroundLock() {
         </div>
       </section>
 
+      {/* Problem Statement */}
+      <section className="py-28 sm:py-40 bg-background relative grain-texture overflow-hidden">
+        <div className="section-container max-w-2xl mx-auto text-center space-y-10 relative z-[1]">
+          <RevealLine className="mx-auto" width="w-10" />
+          <RevealOnScroll direction="up">
+            <h2 className="heading-section text-foreground">
+              Most Properties Fail<br />From the Ground Up
+            </h2>
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={100}>
+            <div className="space-y-5 text-sm sm:text-base text-muted-foreground leading-[1.9] max-w-lg mx-auto">
+              <p>
+                Drainage issues, unstable footing, and surface breakdown<br />
+                are rarely surface problems.
+              </p>
+              <p className="text-foreground/70">
+                They're structural.
+              </p>
+              <p className="text-foreground/50 italic">
+                GroundLock™ is designed to solve that —<br />
+                properly, from the base layer up.
+              </p>
+            </div>
+          </RevealOnScroll>
+        </div>
+      </section>
+
       {/* Estimator */}
       <section className="py-16 sm:py-24 bg-background">
         <div className="section-container">
@@ -620,36 +647,42 @@ export default function GroundLock() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-primary text-primary-foreground relative overflow-hidden">
+      <section className="py-32 sm:py-44 bg-primary text-primary-foreground relative overflow-hidden">
         <BlueprintScene preset="barn" className="absolute inset-0" />
-        <div className="section-container relative z-10 text-center max-w-lg mx-auto space-y-5">
+        <div className="absolute inset-0 bg-primary/90" />
+        <div className="section-container relative z-10 text-center max-w-lg mx-auto space-y-8">
           <RevealLine className="mx-auto" width="w-10" />
           <RevealOnScroll direction="up">
-            <h2 className="font-serif text-2xl md:text-3xl text-primary-foreground">
-              Ready to stabilize <span className="text-accent">your ground?</span>
+            <h2 className="font-serif text-2xl md:text-3xl text-primary-foreground leading-[1.3]">
+              Request Site Assessment
             </h2>
           </RevealOnScroll>
           <RevealOnScroll direction="up" delay={100}>
-            <p className="text-primary-foreground/70 text-sm">
-              Every property is unique. Book a free on-site consultation with
-              Ciro to get an itemised quote tailored to your land and vision.
+            <p className="text-primary-foreground/45 text-sm leading-[1.8] max-w-sm mx-auto">
+              We assess each property based on ground conditions,<br />
+              use, and long-term performance.
             </p>
           </RevealOnScroll>
           <RevealOnScroll direction="up" delay={200}>
             <Button
               asChild
               size="lg"
-              className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.12em] text-xs btn-hover-lift"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.14em] text-xs font-medium btn-hover-lift px-10"
             >
               <Link to="/contact">
-                Get a Detailed Quote <ArrowRight className="ml-2 h-4 w-4" />
+                Request Assessment <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={300}>
+            <p className="text-primary-foreground/15 text-[10px] tracking-[0.15em]">
+              We take on a limited number of projects each season.
+            </p>
           </RevealOnScroll>
         </div>
       </section>
 
-      <StickySubpageCTA ctaLabel="Book Site Assessment" ctaHref="/contact" />
+      <StickySubpageCTA ctaLabel="Request Assessment" ctaHref="/contact" />
     </Layout>
   );
 }
