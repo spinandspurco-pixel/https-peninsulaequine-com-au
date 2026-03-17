@@ -451,7 +451,7 @@ export default function Index() {
       </section>
 
       {/* ═══ TESTIMONIAL ═════════════════════════════════ */}
-      <section className="py-32 sm:py-44 bg-background relative overflow-hidden">
+      <section className="py-44 sm:py-64 bg-background relative overflow-hidden">
         <div className="section-container max-w-2xl mx-auto text-center relative z-10">
           <RevealLine className="mx-auto mb-10" width="w-10" />
           <RevealOnScroll direction="scale" duration={900}>
