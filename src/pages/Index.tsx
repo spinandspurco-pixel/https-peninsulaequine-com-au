@@ -102,7 +102,7 @@ export default function Index() {
                 className="bg-accent text-accent-foreground hover:bg-accent/90 uppercase tracking-[0.14em] text-xs font-medium btn-hover-lift"
               >
                 <Link to="/contact">
-                  Book Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                  Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button
