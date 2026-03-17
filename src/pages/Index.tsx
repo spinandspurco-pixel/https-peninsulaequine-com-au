@@ -3,6 +3,7 @@ import { useCursorSpotlight } from "@/hooks/useCursorSpotlight";
 import { Layout } from "@/components/layout/Layout";
 import { BlueprintScene } from "@/components/BlueprintScene";
 import { AnimatedBlueprintHero } from "@/components/AnimatedBlueprintHero";
+import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
