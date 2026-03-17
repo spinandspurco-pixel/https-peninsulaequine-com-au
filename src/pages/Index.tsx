@@ -97,14 +97,14 @@ export default function Index() {
   return (
     <Layout>
       {/* ═══ HERO ═══════════════════════════════════════ */}
-      <section className="relative min-h-[96vh] overflow-hidden flex items-center justify-center">
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover">
+      <section className="relative min-h-[100vh] overflow-hidden flex items-center justify-center">
+        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover brightness-[0.85]">
           <source src={heroVideo} type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-primary/75" />
+        <div className="absolute inset-0 bg-primary/80" />
 
         <div className="relative z-10 section-container text-primary-foreground text-center max-w-3xl mx-auto">
-          <div className="space-y-10">
+          <div className="space-y-12">
             <div
               className="flex items-center justify-center gap-4 opacity-0 animate-fade-in"
               style={{ animationDelay: "200ms", animationFillMode: "both" }}
