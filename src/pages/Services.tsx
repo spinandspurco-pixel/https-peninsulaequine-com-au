@@ -59,7 +59,7 @@ export default function Services() {
       <ServicesSchemaMarkup />
 
       {/* Hero */}
-      <section className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
+      <section ref={heroSpotRef} className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
         <div className="absolute inset-0 bg-primary/75" />
         <BlueprintScene preset="facility" className="absolute inset-0" />
         <div className="section-container relative z-10 text-center max-w-2xl mx-auto space-y-4">
