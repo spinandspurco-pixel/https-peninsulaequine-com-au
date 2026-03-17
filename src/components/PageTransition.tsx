@@ -43,6 +43,7 @@ export function PageTransition({ children }: PageTransitionProps) {
     setPhase("wipe-in");
 
     const swapTimer = setTimeout(() => {
+      window.scrollTo(0, 0);
       setDisplayChildren(children);
       setPhase("wipe-out");
     }, 350);
