@@ -539,7 +539,7 @@ export default function GroundLock() {
                 </div>
               </RevealOnScroll>
 
-              <SystemCrossSection />
+              
             </div>
 
             {/* Right Column — Pricing + Materials */}
