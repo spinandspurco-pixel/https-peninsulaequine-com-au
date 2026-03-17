@@ -285,7 +285,7 @@ export default function Index() {
       </section>
 
       {/* ─── Stats — let the numbers speak ────────────── */}
-      <section className="py-20 sm:py-24">
+      <section className="py-20 sm:py-24 bg-background relative">
         <div className="section-container max-w-4xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
             <AnimatedCounter end={20} suffix="+" label="Years Experience" duration={2000} />
