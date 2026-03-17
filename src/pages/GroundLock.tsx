@@ -6,6 +6,7 @@ import { StickySubpageCTA } from "@/components/StickySubpageCTA";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { GroundLockSystemDiagram } from "@/components/GroundLockSystemDiagram";
 import { BlueprintScene } from "@/components/BlueprintScene";
 import {
   Truck,
