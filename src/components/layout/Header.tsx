@@ -14,7 +14,6 @@ const navigation = [
   { name: "Services", href: "/services" },
   { name: "Forge", href: "/shop", icon: true },
   { name: "Portfolio", href: "/gallery" },
-  { name: "Lessons", href: "/lessons" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
   { name: "Staff Login", href: "/login" },
