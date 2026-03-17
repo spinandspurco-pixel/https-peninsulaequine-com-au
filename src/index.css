@@ -400,11 +400,12 @@
 
   /* Button lift — restrained with gold glow */
   .btn-hover-lift {
-    @apply transition-all duration-500 ease-out;
+    @apply transition-all ease-out;
+    transition-duration: 600ms;
   }
   .btn-hover-lift:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px -6px hsl(var(--accent) / 0.3);
+    box-shadow: 0 8px 24px -8px hsl(var(--accent) / 0.25);
   }
 
   /* Universal glow — buttons & interactive elements */
