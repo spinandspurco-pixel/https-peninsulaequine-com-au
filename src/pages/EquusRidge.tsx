@@ -104,7 +104,7 @@ const EquusRidge = () => {
         </div>
       </section>
 
-      {/* SECTION 4 — PRIVATE VIEWING */}
+      {/* SECTION 4 — PRIVATE VIEWING + CLOSING */}
       <section className="py-44 sm:py-64 bg-background relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
         <div className="section-container max-w-3xl mx-auto relative z-[1]">
@@ -145,38 +145,16 @@ const EquusRidge = () => {
                 </p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={400}>
-                <div className="w-8 h-px bg-accent/30" />
+                <div className="w-8 h-px bg-accent/30 mb-10" />
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={500}>
+                <p className="text-xs text-muted-foreground/25 italic tracking-wide">
+                  Not everything is built to last.<br />
+                  This is.
+                </p>
               </RevealOnScroll>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="py-44 sm:py-64 bg-background relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
-        <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
-          <RevealOnScroll direction="up">
-            <div className="w-8 h-px bg-accent/30 mx-auto mb-14" />
-          </RevealOnScroll>
-
-          <RevealOnScroll direction="up" delay={100}>
-            <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-foreground/90 leading-[1.25] mb-6">
-              Coming Soon
-            </h2>
-          </RevealOnScroll>
-
-          <RevealOnScroll direction="up" delay={200}>
-            <p className="text-sm text-muted-foreground/45 leading-relaxed mb-12">
-              Equus Ridge is currently in development.
-            </p>
-          </RevealOnScroll>
-
-          <RevealOnScroll direction="up" delay={350}>
-            <p className="text-xs text-muted-foreground/25 italic tracking-wide">
-              Not everything is built to last.<br />
-              This is.
-            </p>
-          </RevealOnScroll>
         </div>
       </section>
     </Layout>
