@@ -1,9 +1,32 @@
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, FileText, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  generateInstallerAgreement,
+  generateSupplyAgreement,
+  generateBrandUsageRules,
+} from "@/lib/installerDocuments";
 import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
+
+const DOCUMENTS = [
+  {
+    title: "Installer Agreement",
+    desc: "Master agreement covering IP, permitted use, quality control, and termination.",
+    action: generateInstallerAgreement,
+  },
+  {
+    title: "Supply Agreement",
+    desc: "Terms for sourcing GroundLock™ materials through approved channels.",
+    action: generateSupplyAgreement,
+  },
+  {
+    title: "Brand Usage Rules",
+    desc: "Guidelines for correct use of the GroundLock™ name and trademark.",
+    action: generateBrandUsageRules,
+  },
+];
 
 const InstallerAccess = () => {
   return (
@@ -108,6 +131,56 @@ const InstallerAccess = () => {
           <RevealOnScroll direction="up" delay={300}>
             <p className="text-xs text-primary-foreground/25 italic">
               This isn't a franchise. It's a controlled methodology.
+            </p>
+          </RevealOnScroll>
+        </div>
+      </section>
+
+      {/* ═══ DOCUMENTS ═══════════════════════════════ */}
+      <section className="py-44 sm:py-64 bg-background relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
+        <div className="section-container max-w-2xl mx-auto relative z-[1]">
+          <RevealOnScroll direction="up">
+            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/60 mb-6">
+              Documentation
+            </p>
+            <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-foreground/90 leading-[1.2] mb-4">
+              Installer Documents
+            </h2>
+            <p className="text-sm text-muted-foreground/50 leading-relaxed mb-12 max-w-md">
+              Download the core documents required for the GroundLock™ installer program.
+            </p>
+          </RevealOnScroll>
+
+          <div className="space-y-4">
+            {DOCUMENTS.map((doc, i) => (
+              <RevealOnScroll key={doc.title} direction="up" delay={i * 80}>
+                <button
+                  type="button"
+                  onClick={doc.action}
+                  className="w-full text-left flex items-center gap-5 p-5 border border-border bg-card hover:border-accent/40 hover:bg-accent/[0.03] transition-all duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group cursor-pointer"
+                >
+                  <div className="p-2.5 bg-secondary rounded-sm shrink-0 group-hover:bg-accent/10 transition-colors duration-[600ms]">
+                    <FileText className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors duration-[600ms]" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-foreground/80 group-hover:text-foreground transition-colors duration-[600ms]">
+                      {doc.title}
+                    </p>
+                    <p className="text-xs text-muted-foreground/50 mt-1 leading-relaxed">
+                      {doc.desc}
+                    </p>
+                  </div>
+                  <Download className="w-4 h-4 text-muted-foreground/30 group-hover:text-accent/70 transition-colors duration-[600ms] shrink-0" />
+                </button>
+              </RevealOnScroll>
+            ))}
+          </div>
+
+          <RevealOnScroll direction="up" delay={300}>
+            <p className="text-[11px] text-muted-foreground/35 italic mt-8 leading-relaxed">
+              These documents are provided as working drafts.<br />
+              We recommend formal legal review before execution.
             </p>
           </RevealOnScroll>
         </div>
