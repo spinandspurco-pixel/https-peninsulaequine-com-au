@@ -246,8 +246,46 @@ export default function Contact() {
         </div>
       </section>
 
+      {/* ═══ SITE ASSESSMENT ════════════════════════════ */}
+      <section className="py-24 sm:py-32 bg-background relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
+        <div className="section-container max-w-2xl mx-auto relative z-[1]">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
+            <div>
+              <RevealOnScroll direction="up">
+                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/60 mb-6">
+                  Site Assessment
+                </p>
+                <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-foreground/90 leading-[1.25]">
+                  Our process begins<br />with an on-site assessment.
+                </h2>
+              </RevealOnScroll>
+            </div>
+            <div>
+              <RevealOnScroll direction="up" delay={100}>
+                <div className="space-y-5 text-sm text-muted-foreground/60 leading-[1.9]">
+                  <p>This allows us to properly evaluate:</p>
+                  <div className="space-y-3">
+                    {["Ground conditions", "Drainage", "Layout", "Long-term performance"].map((item) => (
+                      <div key={item} className="flex items-center gap-3">
+                        <div className="w-px h-4 bg-accent/40 shrink-0" />
+                        <span className="text-foreground/60 text-sm">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-muted-foreground/40 italic pt-2">
+                    Assessment fees apply and are credited<br />
+                    toward your project if you proceed.
+                  </p>
+                </div>
+              </RevealOnScroll>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ INTRO ═══════════════════════════════════════ */}
-      <section className="py-20 sm:py-28 bg-background relative grain-texture overflow-hidden">
+      <section className="py-20 sm:py-28 bg-card border-y border-border relative overflow-hidden">
         <div className="section-container max-w-2xl mx-auto text-center relative z-[1] space-y-8">
           <RevealLine className="mx-auto" width="w-10" />
           <RevealOnScroll direction="up">

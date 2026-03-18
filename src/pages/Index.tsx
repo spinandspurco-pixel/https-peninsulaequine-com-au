@@ -497,7 +497,33 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ FINAL CTA ═══════════════════════════════════ */}
+      {/* ═══ EQUUS RIDGE TEASER ═══════════════════════════ */}
+      <section className="py-44 sm:py-64 bg-background relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
+        <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
+          <RevealOnScroll direction="up">
+            <div className="w-8 h-px bg-accent/30 mx-auto mb-14" />
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={100}>
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold text-foreground/90 leading-[1.2] mb-8">
+              Equus Ridge
+            </h2>
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={200}>
+            <p className="text-sm sm:text-[15px] text-muted-foreground/50 leading-[2] max-w-md mx-auto mb-4">
+              The future home of Peninsula Equine —<br />
+              a space where design, performance,<br />
+              and environment come together.
+            </p>
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={300}>
+            <p className="text-xs text-muted-foreground/30 italic">
+              Currently in development.
+            </p>
+          </RevealOnScroll>
+        </div>
+      </section>
+
       <section className="py-44 sm:py-64 bg-primary text-primary-foreground relative overflow-hidden">
         <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-[0.04]">
           <source src={heroVideo} type="video/mp4" />
