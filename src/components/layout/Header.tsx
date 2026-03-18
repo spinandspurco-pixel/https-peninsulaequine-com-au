@@ -56,7 +56,7 @@ export function Header() {
                 height={36}
                 className={cn(
                   "w-full h-full object-contain transition-all duration-500 group-hover:scale-105",
-                  isScrolled ? "opacity-100" : "brightness-0 invert opacity-90"
+                  isScrolled ? "opacity-100" : "opacity-80 drop-shadow-[0_0_8px_rgba(255,255,255,0.15)]"
                 )}
                 loading="eager"
               />
