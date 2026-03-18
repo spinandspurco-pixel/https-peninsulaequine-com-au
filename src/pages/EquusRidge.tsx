@@ -38,31 +38,6 @@ const EquusRidge = () => {
         </div>
       </section>
 
-      {/* SECTION 2 — VISION */}
-      <section className="py-44 sm:py-64 bg-background relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
-        <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
-          <RevealOnScroll direction="up">
-            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/60 mb-10">
-              The Vision
-            </p>
-          </RevealOnScroll>
-
-          <RevealOnScroll direction="up" delay={100}>
-            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold text-foreground/90 leading-[1.25] mb-10">
-              Equus Ridge is the future home<br />
-              of Peninsula Equine.
-            </h2>
-          </RevealOnScroll>
-
-          <RevealOnScroll direction="up" delay={200}>
-            <p className="text-sm sm:text-[15px] text-muted-foreground/50 leading-[2] max-w-md mx-auto">
-              A space where everything is designed<br />
-              to work properly.
-            </p>
-          </RevealOnScroll>
-        </div>
-      </section>
 
       {/* SECTION 3 — ATMOSPHERE */}
       <section className="py-44 sm:py-64 bg-primary relative overflow-hidden">
