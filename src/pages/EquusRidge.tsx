@@ -57,8 +57,8 @@ const EquusRidge = () => {
 
           <RevealOnScroll direction="up" delay={200}>
             <p className="text-sm sm:text-[15px] text-muted-foreground/50 leading-[2] max-w-md mx-auto">
-              A space where design, performance,<br />
-              and environment come together.
+              A space where everything is designed<br />
+              to work properly.
             </p>
           </RevealOnScroll>
         </div>
@@ -119,8 +119,15 @@ const EquusRidge = () => {
           </RevealOnScroll>
 
           <RevealOnScroll direction="up" delay={200}>
-            <p className="text-sm text-muted-foreground/45 leading-relaxed">
+            <p className="text-sm text-muted-foreground/45 leading-relaxed mb-12">
               Equus Ridge is currently in development.
+            </p>
+          </RevealOnScroll>
+
+          <RevealOnScroll direction="up" delay={350}>
+            <p className="text-xs text-muted-foreground/25 italic tracking-wide">
+              Not everything is built to last.<br />
+              This is.
             </p>
           </RevealOnScroll>
         </div>
