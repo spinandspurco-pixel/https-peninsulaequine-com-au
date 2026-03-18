@@ -82,8 +82,10 @@ export function Header() {
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  "relative text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-200",
-                  "after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-px after:bg-[hsl(var(--header-active))] after:origin-left after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100",
+                  "relative transition-colors duration-200",
+                  item.subtle
+                    ? "text-[10px] italic tracking-[0.08em] font-normal opacity-50 hover:opacity-90"
+                    : "text-[11px] uppercase tracking-[0.14em] font-medium after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-px after:bg-[hsl(var(--header-active))] after:origin-left after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100",
                   isActive(item.href)
                     ? "text-[hsl(var(--header-active))] after:scale-x-100"
                     : isScrolled
