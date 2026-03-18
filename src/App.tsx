@@ -48,6 +48,7 @@ import MLPGSPage from "./pages/MLPGS";
 import GroundLock from "./pages/GroundLock";
 import CaseStudy from "./pages/CaseStudy";
 import GroundLockSystems from "./pages/GroundLockSystems";
+import EquusRidge from "./pages/EquusRidge";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { useCartSync } from "./hooks/useCartSync";
 
@@ -105,6 +106,7 @@ function AppContent() {
            <Route path="/mlpgs" element={<MLPGSPage />} />
           <Route path="/groundlock" element={<GroundLock />} />
           <Route path="/groundlock-systems" element={<GroundLockSystems />} />
+          <Route path="/equus-ridge" element={<EquusRidge />} />
           <Route path="/project/:slug" element={<CaseStudy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
