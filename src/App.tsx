@@ -49,6 +49,7 @@ import GroundLock from "./pages/GroundLock";
 import CaseStudy from "./pages/CaseStudy";
 import GroundLockSystems from "./pages/GroundLockSystems";
 import EquusRidge from "./pages/EquusRidge";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import { useCartSync } from "./hooks/useCartSync";
 
 const queryClient = new QueryClient();
