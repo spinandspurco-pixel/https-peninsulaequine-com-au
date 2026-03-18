@@ -48,7 +48,7 @@ import MLPGSPage from "./pages/MLPGS";
 import GroundLock from "./pages/GroundLock";
 import CaseStudy from "./pages/CaseStudy";
 import GroundLockSystems from "./pages/GroundLockSystems";
-import { ProtectedRoute } from "./components/ProtectedRoute";
+import EquusRidge from "./pages/EquusRidge";
 import { useCartSync } from "./hooks/useCartSync";
 
 const queryClient = new QueryClient();
