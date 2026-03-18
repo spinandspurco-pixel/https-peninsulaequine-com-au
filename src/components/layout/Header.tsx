@@ -55,9 +55,10 @@ export function Header() {
                 width={36}
                 height={36}
                 className={cn(
-                  "w-full h-full object-contain transition-all duration-300 group-hover:scale-105",
-                  isScrolled ? "" : "brightness-0 invert"
+                  "w-full h-full object-contain transition-all duration-500 group-hover:scale-105",
+                  isScrolled ? "opacity-100" : "brightness-0 invert opacity-0 animate-[fade-in_0.6s_ease-out_0.3s_forwards]"
                 )}
+                loading="eager"
               />
             </div>
             <div className={cn(
