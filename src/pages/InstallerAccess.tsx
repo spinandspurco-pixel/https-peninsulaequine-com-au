@@ -1,9 +1,32 @@
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, FileText, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  generateInstallerAgreement,
+  generateSupplyAgreement,
+  generateBrandUsageRules,
+} from "@/lib/installerDocuments";
 import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
+
+const DOCUMENTS = [
+  {
+    title: "Installer Agreement",
+    desc: "Master agreement covering IP, permitted use, quality control, and termination.",
+    action: generateInstallerAgreement,
+  },
+  {
+    title: "Supply Agreement",
+    desc: "Terms for sourcing GroundLock™ materials through approved channels.",
+    action: generateSupplyAgreement,
+  },
+  {
+    title: "Brand Usage Rules",
+    desc: "Guidelines for correct use of the GroundLock™ name and trademark.",
+    action: generateBrandUsageRules,
+  },
+];
 
 const InstallerAccess = () => {
   return (
