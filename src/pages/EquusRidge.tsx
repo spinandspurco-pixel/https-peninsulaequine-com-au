@@ -57,8 +57,8 @@ const EquusRidge = () => {
 
           <RevealOnScroll direction="up" delay={200}>
             <p className="text-sm sm:text-[15px] text-muted-foreground/50 leading-[2] max-w-md mx-auto">
-              A space where design, performance,<br />
-              and environment come together.
+              A space where everything is designed<br />
+              to work properly.
             </p>
           </RevealOnScroll>
         </div>
