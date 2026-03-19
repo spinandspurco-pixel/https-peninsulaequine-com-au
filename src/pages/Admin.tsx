@@ -341,30 +341,32 @@ export default function Admin() {
           {viewMode !== "operations" && <QuotesDashboard />}
 
           {/* ═══════════════════════════════════════════════════════ */}
-          {/* SUPPORTING SECTIONS                                     */}
+          {/* SUPPORTING SECTIONS — filtered by view mode              */}
           {/* ═══════════════════════════════════════════════════════ */}
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { label: "Total Inquiries", value: stats.total, icon: Users },
-              { label: "New", value: stats.new, icon: MessageSquare },
-              { label: "In Progress", value: stats.inProgress, icon: Clock },
-              { label: "Completed", value: stats.completed, icon: CheckCircle },
-            ].map((stat) => (
-              <Card key={stat.label} className="bg-card/80 border-border/40">
-                <CardHeader className="pb-1 pt-4 px-4">
-                  <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">{stat.label}</p>
-                </CardHeader>
-                <CardContent className="px-4 pb-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-serif font-semibold text-foreground">{stat.value}</span>
-                    <stat.icon className="h-4 w-4 text-accent/60" />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          {/* Stats — Admin + Founder */}
+          {viewMode !== "operations" && (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[
+                { label: "Total Inquiries", value: stats.total, icon: Users },
+                { label: "New", value: stats.new, icon: MessageSquare },
+                { label: "In Progress", value: stats.inProgress, icon: Clock },
+                { label: "Completed", value: stats.completed, icon: CheckCircle },
+              ].map((stat) => (
+                <Card key={stat.label} className="bg-card/80 border-border/40">
+                  <CardHeader className="pb-1 pt-4 px-4">
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">{stat.label}</p>
+                  </CardHeader>
+                  <CardContent className="px-4 pb-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-2xl font-serif font-semibold text-foreground">{stat.value}</span>
+                      <stat.icon className="h-4 w-4 text-accent/60" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
 
           {/* Quick Links */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
