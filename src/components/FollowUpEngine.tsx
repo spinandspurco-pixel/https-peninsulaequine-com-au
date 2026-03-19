@@ -546,10 +546,44 @@ export function FollowUpEngine() {
                 <p className="text-[9px] text-muted-foreground/30 uppercase tracking-wider">
                   Draft-only · All messages require approval
                 </p>
-                <Button size="sm" variant="ghost" className="h-6 text-[9px] text-muted-foreground/40" onClick={fetchData}>
-                  <RefreshCw className="h-3 w-3 mr-1" />Refresh
-                </Button>
+                <div className="flex items-center gap-1">
+                  <Button size="sm" variant="ghost" className="h-6 text-[9px] text-muted-foreground/40" onClick={() => setShowSettings(!showSettings)}>
+                    <Settings className="h-3 w-3 mr-1" />Settings
+                  </Button>
+                  <Button size="sm" variant="ghost" className="h-6 text-[9px] text-muted-foreground/40" onClick={fetchData}>
+                    <RefreshCw className="h-3 w-3 mr-1" />Refresh
+                  </Button>
+                </div>
               </div>
+
+              {/* ---- Settings Panel ---- */}
+              {showSettings && (
+                <FollowUpSettingsPanel
+                  timing={timing}
+                  toggles={toggles}
+                  onTimingChange={(k, v) => setTiming(prev => ({ ...prev, [k]: v }))}
+                  onToggleChange={(k, v) => setToggles(prev => ({ ...prev, [k]: v }))}
+                  saving={savingSettings}
+                  onSave={async () => {
+                    setSavingSettings(true);
+                    try {
+                      // Save timing values
+                      const timingUpdates = Object.entries(timing).map(([k, v]) =>
+                        supabase.from("integration_settings").update({ value: String(v), updated_at: new Date().toISOString() }).eq("key", `follow_up_${k}`)
+                      );
+                      // Save toggles
+                      const toggleUpdates = Object.entries(toggles).map(([k, v]) =>
+                        supabase.from("automation_settings").update({ enabled: v, updated_at: new Date().toISOString() }).eq("setting_key", k)
+                      );
+                      await Promise.all([...timingUpdates, ...toggleUpdates]);
+                      toast.success("Follow-up settings saved");
+                    } catch {
+                      toast.error("Failed to save settings");
+                    }
+                    setSavingSettings(false);
+                  }}
+                />
+              )}
             </>
           )}
         </CardContent>
