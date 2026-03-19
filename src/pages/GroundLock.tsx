@@ -606,7 +606,7 @@ export default function GroundLock() {
                 <div className="flex flex-col sm:flex-row gap-4 pt-2">
                   <Button asChild variant="gold" size="lg" className="flex-1">
                     <Link to="/contact">
-                      Book Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                      Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
                   <Button asChild size="lg" variant="outline-light" className="flex-1">
@@ -626,8 +626,8 @@ export default function GroundLock() {
               </RevealOnScroll>
 
               <p className="text-[10px] text-muted-foreground/60 font-mono leading-relaxed">
-                *Estimates are indicative only. Final pricing subject to site access,
-                ground conditions, excavation depth, and regional freight costs. All prices in AUD.
+                *Indicative investment range only. Final specification subject to site access,
+                ground conditions, excavation depth, and regional freight. All figures in AUD.
               </p>
             </div>
           </div>
@@ -710,25 +710,25 @@ export default function GroundLock() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <p className="text-sm text-muted-foreground/40 mb-10 leading-[1.8] max-w-sm mx-auto">
-                We assess each property based on ground conditions,
-                use, and long-term performance.
+                Each project is assessed individually to ensure correct
+                system specification and long-term performance.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={250}>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                <Button asChild variant="gold" size="lg">
-                  <Link to="/contact">
-                    Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline-light" size="lg">
-                  <Link to="/groundlock">Estimate a Project</Link>
-                </Button>
+                  <Button asChild variant="gold" size="lg">
+                    <Link to="/contact">
+                      Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline-light" size="lg">
+                    <Link to="/groundlock">Explore the System</Link>
+                  </Button>
               </div>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={350}>
               <p className="text-muted-foreground/20 text-[10px] tracking-[0.2em] uppercase">
-                We take on a limited number of projects each season.
+                Limited project intake. Projects are assessed prior to engagement.
               </p>
             </RevealOnScroll>
           </div>

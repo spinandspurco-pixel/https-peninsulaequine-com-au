@@ -19,7 +19,7 @@ interface StickySubpageCTAProps {
 
 export function StickySubpageCTA({
   showAfter = 500,
-  ctaLabel = "Get a Free Quote",
+  ctaLabel = "Request Assessment",
   ctaHref = "/contact",
   onCtaClick,
   ctaIcon,

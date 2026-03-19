@@ -126,7 +126,7 @@ export function Footer() {
                 to="/contact"
                 className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-semibold text-accent/80 hover:text-accent transition-colors duration-500"
               >
-                Book Assessment <ArrowUpRight className="h-3 w-3" />
+                Request Assessment <ArrowUpRight className="h-3 w-3" />
               </Link>
             </div>
           </div>
