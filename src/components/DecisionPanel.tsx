@@ -3,9 +3,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Phone, Mail, Calendar, FileText, RefreshCw, Lightbulb, TrendingUp, Clock } from "lucide-react";
+import { Phone, Mail, Calendar, FileText, RefreshCw, Lightbulb, TrendingUp, Clock, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, differenceInDays, parseISO } from "date-fns";
 
 interface Deal {
   id: string;
@@ -21,9 +21,22 @@ interface Deal {
   lead_tier: string | null;
 }
 
+interface OverdueFollowUp {
+  id: string;
+  name: string;
+  email: string;
+  deal_value: number | null;
+  lead_tier: string | null;
+  last_contact_at: string | null;
+  follow_up_stage: string;
+  created_at: string;
+  services: string[];
+}
+
 export function DecisionPanel() {
   const [closeToday, setCloseToday] = useState<Deal[]>([]);
   const [convertNext, setConvertNext] = useState<Deal[]>([]);
+  const [overdueFollowUps, setOverdueFollowUps] = useState<OverdueFollowUp[]>([]);
   const [systemLever, setSystemLever] = useState("");
   const [loading, setLoading] = useState(true);
   const [aiLoading, setAiLoading] = useState(false);
