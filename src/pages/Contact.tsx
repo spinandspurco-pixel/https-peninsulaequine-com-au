@@ -617,31 +617,35 @@ export default function Contact() {
       </section>
 
       {/* ═══ DIRECT CONTACT ══════════════════════════════ */}
-      <section className="py-16 sm:py-20 bg-background relative grain-texture overflow-hidden">
-        <div className="section-container max-w-md mx-auto text-center relative z-[1] space-y-6">
-          <RevealOnScroll direction="up">
-            <p className="text-sm text-muted-foreground">
-              Prefer to speak directly?
-            </p>
-          </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={100}>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href={`tel:${siteConfig.phone}`}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-border text-sm font-medium text-foreground hover:bg-secondary transition-all btn-hover-lift"
-              >
-                <Phone className="h-4 w-4 text-accent" />
-                {siteConfig.phone}
-              </a>
-              <a
-                href={`mailto:${siteConfig.email}`}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-border text-sm font-medium text-foreground hover:bg-secondary transition-all btn-hover-lift"
-              >
-                <Mail className="h-4 w-4 text-accent" />
-                {siteConfig.email}
-              </a>
-            </div>
-          </RevealOnScroll>
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-16 sm:py-20 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-md mx-auto text-center relative z-[1] space-y-6">
+            <RevealOnScroll direction="up">
+              <p className="text-sm text-muted-foreground">
+                Prefer to speak directly?
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={100}>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href={`tel:${siteConfig.phone}`}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium text-foreground hover:border-accent/30 hover:text-accent transition-all duration-500"
+                >
+                  <Phone className="h-4 w-4 text-accent" />
+                  {siteConfig.phone}
+                </a>
+                <a
+                  href={`mailto:${siteConfig.email}`}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium text-foreground hover:border-accent/30 hover:text-accent transition-all duration-500"
+                >
+                  <Mail className="h-4 w-4 text-accent" />
+                  {siteConfig.email}
+                </a>
+              </div>
+            </RevealOnScroll>
+          </div>
         </div>
       </section>
     </Layout>

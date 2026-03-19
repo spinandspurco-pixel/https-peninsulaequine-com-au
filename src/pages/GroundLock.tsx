@@ -639,7 +639,7 @@ export default function GroundLock() {
         <div className="divider-grid" />
         <div className="py-24 sm:py-36 bg-card relative">
           <div className="absolute inset-0 contour-texture" />
-        <div className="section-container max-w-6xl mx-auto">
+          <div className="section-container max-w-6xl mx-auto relative z-[1]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
             <RevealOnScroll direction="up" stagger={0} staggerInterval={120}>
               <div>
