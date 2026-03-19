@@ -173,8 +173,13 @@ export function FollowUpEngine() {
   useEffect(() => { fetchData(); }, [fetchData]);
 
   /* -- Compute follow-up candidates using dynamic thresholds -- */
+  /* -- Max 3 follow-ups: stage "3" or "final" = capped, no more prompts -- */
+  const MAX_FOLLOW_UP_STAGE = "3";
+
   const dueLeads = toggles.follow_up_leads ? inquiries.filter(i => {
     if (i.follow_up_status === "stopped" || i.follow_up_status === "completed") return false;
+    // Cap at stage 3 — no further prompts unless manually extended
+    if (["3", "final"].includes(i.follow_up_stage)) return false;
     const contactDate = i.last_contact_at || i.created_at;
     const days = daysSince(contactDate);
     if (days === null) return false;
@@ -187,8 +192,16 @@ export function FollowUpEngine() {
   const overdueLeads = toggles.follow_up_leads ? inquiries.filter(i => {
     const contactDate = i.last_contact_at || i.created_at;
     const days = daysSince(contactDate);
-    return days !== null && days >= timing.lead_day_3 && i.follow_up_stage !== "final" && i.follow_up_status !== "stopped" && i.follow_up_status !== "completed";
+    return days !== null && days >= timing.lead_day_3
+      && !["3", "final"].includes(i.follow_up_stage)
+      && i.follow_up_status !== "stopped" && i.follow_up_status !== "completed";
   }) : [];
+
+  // Leads that have exhausted all 3 follow-ups (for display)
+  const cappedLeads = inquiries.filter(i =>
+    ["3", "final"].includes(i.follow_up_stage)
+    && i.follow_up_status !== "stopped" && i.follow_up_status !== "completed"
+  );
 
   const dueQuotes = toggles.follow_up_quotes ? quotes.filter(q => {
     if (!q.sent_at) return false;
