@@ -359,6 +359,9 @@ export default function Admin() {
           {/* Staff & Onboarding */}
           <AdminStaffOnboarding />
 
+          {/* AI Operations Assistant */}
+          <AIOperationsAssistant inquiries={inquiries} />
+
           {/* Financial Control */}
           <FinancialDashboard />
 
