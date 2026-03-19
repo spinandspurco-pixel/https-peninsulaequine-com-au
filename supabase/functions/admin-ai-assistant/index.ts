@@ -339,27 +339,33 @@ serve(async (req) => {
 
     // Gather context data
     let contextData = "";
-    if (["triage", "daily_summary", "alerts", "follow_ups", "knowledge"].includes(action)) {
-      const [inquiriesRes, jobsRes, cashflowRes] = await Promise.all([
-        supabase
-          .from("inquiries")
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(20),
+    const needsContext = ["triage", "daily_summary", "alerts", "follow_ups", "knowledge", "daily_plan"].includes(action);
+    
+    if (needsContext) {
+      const today = new Date().toISOString().split("T")[0];
+      const queries: any[] = [
+        supabase.from("inquiries").select("*").order("created_at", { ascending: false }).limit(20),
         supabase.from("jobs").select("*").order("created_at", { ascending: false }).limit(20),
-        supabase
-          .from("cashflow")
-          .select("*, jobs(job_name, revenue)")
-          .order("created_at", { ascending: false })
-          .limit(20),
-      ]);
+        supabase.from("cashflow").select("*, jobs(job_name, revenue)").order("created_at", { ascending: false }).limit(20),
+      ];
 
-      const inquiries = inquiriesRes.data || [];
-      const jobs = jobsRes.data || [];
-      const cashflows = cashflowRes.data || [];
+      // For daily_plan, also fetch today's assessments and bookings
+      if (action === "daily_plan") {
+        queries.push(
+          supabase.from("site_assessments").select("*").gte("slot_date", today).order("slot_date", { ascending: true }).limit(10),
+          supabase.from("bookings").select("*").gte("booking_date", today).order("booking_date", { ascending: true }).limit(10),
+        );
+      }
+
+      const results = await Promise.all(queries);
+      const inquiries = results[0].data || [];
+      const jobs = results[1].data || [];
+      const cashflows = results[2].data || [];
+      const siteAssessments = results[3]?.data || [];
+      const bookings = results[4]?.data || [];
 
       contextData = `
-CURRENT DATA (${new Date().toISOString().split("T")[0]}):
+CURRENT DATA (${today}):
 
 INQUIRIES (${inquiries.length}):
 ${inquiries
@@ -389,6 +395,16 @@ ${cashflows
   })
   .join("\n")}
 `;
+
+      if (action === "daily_plan") {
+        contextData += `
+SITE ASSESSMENTS (upcoming):
+${siteAssessments.length === 0 ? "None scheduled." : siteAssessments.map((a: any) => `- ${a.client_name} | ${a.location} | ${a.slot_date} at ${a.slot_time} | Type: ${a.project_type} | Status: ${a.status}`).join("\n")}
+
+BOOKINGS (upcoming):
+${bookings.length === 0 ? "None scheduled." : bookings.map((b: any) => `- ${b.client_name} | ${b.booking_date} ${b.booking_time || ""} | ${b.service_type} | Status: ${b.status}`).join("\n")}
+`;
+      }
     }
 
     let userPrompt = "";
