@@ -875,7 +875,7 @@ export default function StaffDocuments() {
 
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={v => { setActiveTab(v as DocType); setShowForm(true); }}>
-            <TabsList className="grid grid-cols-3 sm:grid-cols-6 mb-6">
+            <TabsList className="grid grid-cols-3 sm:grid-cols-9 mb-6">
               {(Object.entries(DOC_TYPES) as [DocType, typeof DOC_TYPES[DocType]][]).map(([key, cfg]) => {
                 const TabIcon = cfg.icon;
                 return (
