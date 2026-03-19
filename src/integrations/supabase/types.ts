@@ -145,6 +145,44 @@ export type Database = {
           },
         ]
       }
+      cashflow: {
+        Row: {
+          created_at: string
+          deposit_received: number
+          final_payment: number
+          id: string
+          job_id: string
+          mid_payment: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          deposit_received?: number
+          final_payment?: number
+          id?: string
+          job_id: string
+          mid_payment?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          deposit_received?: number
+          final_payment?: number
+          id?: string
+          job_id?: string
+          mid_payment?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cashflow_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       employee_tasks: {
         Row: {
           assigned_to: string | null
@@ -369,6 +407,51 @@ export type Database = {
           key?: string
           updated_at?: string
           value?: string
+        }
+        Relationships: []
+      }
+      jobs: {
+        Row: {
+          client_name: string | null
+          created_at: string
+          id: string
+          job_name: string
+          labour_cost: number
+          location: string | null
+          materials_cost: number
+          notes: string | null
+          other_costs: number
+          revenue: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          client_name?: string | null
+          created_at?: string
+          id?: string
+          job_name: string
+          labour_cost?: number
+          location?: string | null
+          materials_cost?: number
+          notes?: string | null
+          other_costs?: number
+          revenue?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          client_name?: string | null
+          created_at?: string
+          id?: string
+          job_name?: string
+          labour_cost?: number
+          location?: string | null
+          materials_cost?: number
+          notes?: string | null
+          other_costs?: number
+          revenue?: number
+          status?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -698,6 +781,69 @@ export type Database = {
           subscribed_at?: string
           unsubscribed_at?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      overheads: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          id: string
+          month: string
+          notes: string | null
+        }
+        Insert: {
+          amount?: number
+          category: string
+          created_at?: string
+          id?: string
+          month: string
+          notes?: string | null
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          id?: string
+          month?: string
+          notes?: string | null
+        }
+        Relationships: []
+      }
+      pricing_calculations: {
+        Row: {
+          calculation_name: string | null
+          complexity_multiplier: number
+          created_at: string
+          id: string
+          labour_cost: number
+          materials_cost: number
+          notes: string | null
+          other_costs: number
+          target_margin: number
+        }
+        Insert: {
+          calculation_name?: string | null
+          complexity_multiplier?: number
+          created_at?: string
+          id?: string
+          labour_cost?: number
+          materials_cost?: number
+          notes?: string | null
+          other_costs?: number
+          target_margin?: number
+        }
+        Update: {
+          calculation_name?: string | null
+          complexity_multiplier?: number
+          created_at?: string
+          id?: string
+          labour_cost?: number
+          materials_cost?: number
+          notes?: string | null
+          other_costs?: number
+          target_margin?: number
         }
         Relationships: []
       }
