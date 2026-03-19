@@ -4,12 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { format, differenceInDays, parseISO } from "date-fns";
 import {
   Clock, Mail, Phone, CheckCircle, Pause, RefreshCw,
   AlertTriangle, ArrowRight, Bot, Send, Eye, Zap,
-  ChevronDown, ChevronUp, DollarSign,
+  ChevronDown, ChevronUp, DollarSign, Settings,
 } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
@@ -98,10 +100,24 @@ export function FollowUpEngine() {
   const [expanded, setExpanded] = useState(true);
   const [expandedDraft, setExpandedDraft] = useState<string | null>(null);
   const [editingMessage, setEditingMessage] = useState<Record<string, string>>({});
+  const [showSettings, setShowSettings] = useState(false);
+
+  // Timing thresholds (defaults)
+  const [timing, setTiming] = useState({
+    lead_day_1: 2, lead_day_2: 5, lead_day_3: 10,
+    quote_day_1: 2, quote_day_2: 5, quote_day_3: 10,
+  });
+  // Toggles
+  const [toggles, setToggles] = useState({
+    follow_up_leads: true, follow_up_quotes: true,
+    follow_up_lead_day_1: true, follow_up_lead_day_2: true, follow_up_lead_day_3: true,
+    follow_up_quote_day_1: true, follow_up_quote_day_2: true, follow_up_quote_day_3: true,
+  });
+  const [savingSettings, setSavingSettings] = useState(false);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const [draftsRes, inquiriesRes, quotesRes] = await Promise.all([
+    const [draftsRes, inquiriesRes, quotesRes, timingRes, toggleRes] = await Promise.all([
       supabase
         .from("follow_up_drafts")
         .select("*")
@@ -118,41 +134,67 @@ export function FollowUpEngine() {
         .select("id, quote_number, client_name, client_email, total, status, sent_at, viewed_at, project_type")
         .eq("status", "sent")
         .order("sent_at", { ascending: true }),
+      supabase
+        .from("integration_settings")
+        .select("key, value")
+        .like("key", "follow_up_%"),
+      supabase
+        .from("automation_settings")
+        .select("setting_key, enabled")
+        .eq("category", "follow_ups"),
     ]);
 
     if (draftsRes.data) setDrafts(draftsRes.data as unknown as FollowUpItem[]);
     if (inquiriesRes.data) setInquiries(inquiriesRes.data as unknown as InquiryFollowUp[]);
     if (quotesRes.data) setQuotes(quotesRes.data as unknown as QuoteFollowUp[]);
+
+    // Parse timing settings
+    if (timingRes.data) {
+      const t = { ...timing };
+      timingRes.data.forEach((row: { key: string; value: string }) => {
+        const k = row.key.replace("follow_up_", "") as keyof typeof t;
+        if (k in t) t[k] = parseInt(row.value, 10) || t[k];
+      });
+      setTiming(t);
+    }
+
+    // Parse toggles
+    if (toggleRes.data) {
+      const tg = { ...toggles };
+      toggleRes.data.forEach((row: { setting_key: string; enabled: boolean }) => {
+        if (row.setting_key in tg) (tg as any)[row.setting_key] = row.enabled;
+      });
+      setToggles(tg);
+    }
+
     setLoading(false);
   }, []);
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  /* -- Compute follow-up candidates -- */
-  const now = new Date();
-
-  const dueLeads = inquiries.filter(i => {
+  /* -- Compute follow-up candidates using dynamic thresholds -- */
+  const dueLeads = toggles.follow_up_leads ? inquiries.filter(i => {
     if (i.follow_up_status === "stopped" || i.follow_up_status === "completed") return false;
     const contactDate = i.last_contact_at || i.created_at;
     const days = daysSince(contactDate);
     if (days === null) return false;
-    if (i.follow_up_stage === "none" && days >= 2) return true;
-    if (i.follow_up_stage === "1" && days >= 3) return true;
-    if (i.follow_up_stage === "2" && days >= 5) return true;
+    if (i.follow_up_stage === "none" && toggles.follow_up_lead_day_1 && days >= timing.lead_day_1) return true;
+    if (i.follow_up_stage === "1" && toggles.follow_up_lead_day_2 && days >= timing.lead_day_2) return true;
+    if (i.follow_up_stage === "2" && toggles.follow_up_lead_day_3 && days >= timing.lead_day_3) return true;
     return false;
-  });
+  }) : [];
 
-  const overdueLeads = inquiries.filter(i => {
+  const overdueLeads = toggles.follow_up_leads ? inquiries.filter(i => {
     const contactDate = i.last_contact_at || i.created_at;
     const days = daysSince(contactDate);
-    return days !== null && days >= 10 && i.follow_up_stage !== "final" && i.follow_up_status !== "stopped" && i.follow_up_status !== "completed";
-  });
+    return days !== null && days >= timing.lead_day_3 && i.follow_up_stage !== "final" && i.follow_up_status !== "stopped" && i.follow_up_status !== "completed";
+  }) : [];
 
-  const dueQuotes = quotes.filter(q => {
+  const dueQuotes = toggles.follow_up_quotes ? quotes.filter(q => {
     if (!q.sent_at) return false;
     const days = daysSince(q.sent_at);
-    return days !== null && days >= 2;
-  });
+    return days !== null && days >= timing.quote_day_1;
+  }) : [];
 
   const highValueItems = [
     ...dueLeads.filter(l => l.deal_value && l.deal_value >= 50000),
@@ -504,10 +546,44 @@ export function FollowUpEngine() {
                 <p className="text-[9px] text-muted-foreground/30 uppercase tracking-wider">
                   Draft-only · All messages require approval
                 </p>
-                <Button size="sm" variant="ghost" className="h-6 text-[9px] text-muted-foreground/40" onClick={fetchData}>
-                  <RefreshCw className="h-3 w-3 mr-1" />Refresh
-                </Button>
+                <div className="flex items-center gap-1">
+                  <Button size="sm" variant="ghost" className="h-6 text-[9px] text-muted-foreground/40" onClick={() => setShowSettings(!showSettings)}>
+                    <Settings className="h-3 w-3 mr-1" />Settings
+                  </Button>
+                  <Button size="sm" variant="ghost" className="h-6 text-[9px] text-muted-foreground/40" onClick={fetchData}>
+                    <RefreshCw className="h-3 w-3 mr-1" />Refresh
+                  </Button>
+                </div>
               </div>
+
+              {/* ---- Settings Panel ---- */}
+              {showSettings && (
+                <FollowUpSettingsPanel
+                  timing={timing}
+                  toggles={toggles}
+                  onTimingChange={(k, v) => setTiming(prev => ({ ...prev, [k]: v }))}
+                  onToggleChange={(k, v) => setToggles(prev => ({ ...prev, [k]: v }))}
+                  saving={savingSettings}
+                  onSave={async () => {
+                    setSavingSettings(true);
+                    try {
+                      // Save timing values
+                      const timingUpdates = Object.entries(timing).map(([k, v]) =>
+                        supabase.from("integration_settings").update({ value: String(v), updated_at: new Date().toISOString() }).eq("key", `follow_up_${k}`)
+                      );
+                      // Save toggles
+                      const toggleUpdates = Object.entries(toggles).map(([k, v]) =>
+                        supabase.from("automation_settings").update({ enabled: v, updated_at: new Date().toISOString() }).eq("setting_key", k)
+                      );
+                      await Promise.all([...timingUpdates, ...toggleUpdates]);
+                      toast.success("Follow-up settings saved");
+                    } catch {
+                      toast.error("Failed to save settings");
+                    }
+                    setSavingSettings(false);
+                  }}
+                />
+              )}
             </>
           )}
         </CardContent>
@@ -570,6 +646,101 @@ function FollowUpRow({
           </Button>
         )}
       </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Settings sub-panel                                                 */
+/* ------------------------------------------------------------------ */
+
+function FollowUpSettingsPanel({
+  timing, toggles, onTimingChange, onToggleChange, saving, onSave,
+}: {
+  timing: Record<string, number>;
+  toggles: Record<string, boolean>;
+  onTimingChange: (key: string, val: number) => void;
+  onToggleChange: (key: string, val: boolean) => void;
+  saving: boolean;
+  onSave: () => void;
+}) {
+  const TIMING_ROWS = [
+    { section: "Lead Follow-Ups", toggleKey: "follow_up_leads", items: [
+      { label: "First follow-up", timingKey: "lead_day_1", toggleKey: "follow_up_lead_day_1" },
+      { label: "Second follow-up", timingKey: "lead_day_2", toggleKey: "follow_up_lead_day_2" },
+      { label: "Final follow-up", timingKey: "lead_day_3", toggleKey: "follow_up_lead_day_3" },
+    ]},
+    { section: "Quote Follow-Ups", toggleKey: "follow_up_quotes", items: [
+      { label: "First check-in", timingKey: "quote_day_1", toggleKey: "follow_up_quote_day_1" },
+      { label: "Reinforce value", timingKey: "quote_day_2", toggleKey: "follow_up_quote_day_2" },
+      { label: "Close loop", timingKey: "quote_day_3", toggleKey: "follow_up_quote_day_3" },
+    ]},
+  ];
+
+  return (
+    <div className="border border-border/20 rounded-sm p-4 space-y-4 bg-background/30">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Settings className="h-3.5 w-3.5 text-accent/60" />
+          <p className="text-sm font-medium text-foreground">Follow-Up Timing</p>
+        </div>
+        <Button size="sm" variant="gold" className="h-7 text-[9px]" disabled={saving} onClick={onSave}>
+          {saving ? <RefreshCw className="h-3 w-3 animate-spin mr-1" /> : null}
+          Save Settings
+        </Button>
+      </div>
+
+      {TIMING_ROWS.map((group) => {
+        const groupEnabled = toggles[group.toggleKey] ?? true;
+        return (
+          <div key={group.section} className="space-y-2">
+            <div className="flex items-center justify-between border-b border-border/10 pb-1.5">
+              <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 font-medium">{group.section}</p>
+              <div className="flex items-center gap-2">
+                <span className="text-[9px] text-muted-foreground/40">{groupEnabled ? "Active" : "Paused"}</span>
+                <Switch
+                  checked={groupEnabled}
+                  onCheckedChange={(v) => onToggleChange(group.toggleKey, v)}
+                  className="scale-75"
+                />
+              </div>
+            </div>
+            {groupEnabled && group.items.map((item) => {
+              const itemEnabled = toggles[item.toggleKey] ?? true;
+              return (
+                <div key={item.timingKey} className="flex items-center justify-between py-1">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <Switch
+                      checked={itemEnabled}
+                      onCheckedChange={(v) => onToggleChange(item.toggleKey, v)}
+                      className="scale-75 shrink-0"
+                    />
+                    <span className={`text-[12px] ${itemEnabled ? "text-foreground" : "text-muted-foreground/40"}`}>
+                      {item.label}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <span className="text-[10px] text-muted-foreground/40">Day</span>
+                    <Input
+                      type="number"
+                      min={1}
+                      max={60}
+                      value={timing[item.timingKey] || 0}
+                      onChange={(e) => onTimingChange(item.timingKey, parseInt(e.target.value, 10) || 1)}
+                      disabled={!itemEnabled}
+                      className="w-14 h-7 text-center text-sm bg-background/50 border-border/30"
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+
+      <p className="text-[9px] text-muted-foreground/30 pt-1 border-t border-border/10">
+        Changes take effect immediately after saving. Follow-ups remain draft-only.
+      </p>
     </div>
   );
 }
