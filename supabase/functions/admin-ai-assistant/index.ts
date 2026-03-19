@@ -156,49 +156,25 @@ const DAILY_SUMMARY_PROMPT = `Founder briefing. Bullets only. No narrative.
 
 Under 200 words total. If a section is empty, write "Clear" and move on. No filler sentences.`;
 
-const ALERTS_PROMPT = `Scan current data and generate a prioritised alert list.
+const ALERTS_PROMPT = `Generate alerts. One line each. No explanations.
 
-LEAD ALERTS:
-- New enquiries with no response (>24h) → 🔴
-- Stale quoted leads (>5 days) → 🟡
-- High-value leads needing attention → 🟡
+🔴 = needs action today. 🟡 = needs attention this week. 🟢 = awareness only.
 
-FINANCIAL ALERTS:
-- Outstanding balances >50% of job value → 🔴
-- Jobs with margin below 25% → 🟡
-- Unusual cost increase on a job → 🟡
+Check for:
+- Enquiries with no response >24h → 🔴
+- Quoted leads with no reply >5 days → 🟡
+- Outstanding balance >50% of job value → 🔴
+- Job margin below 25% → 🟡
+- Unusual cost spike on any job → 🟡
 
-OPERATIONS ALERTS:
-- Pipeline bottlenecks → 🟡
-- Overdue admin tasks → 🟡
+Format: emoji + label + fact + action. One line per alert. Omit empty categories. No padding.`;
 
-Format:
-🔴 **Critical** — (alert text, one line)
-🟡 **Warning** — (alert text, one line)
-🟢 **Info** — (alert text, one line)
+const KNOWLEDGE_PROMPT = (question: string) => `Internal question: ${question}
 
-Keep each alert to one line. No explanatory paragraphs. Sort by severity.
-If no alerts in a category, omit it.`;
+Answer using PE operational knowledge. Under 100 words. No generic advice.
+If uncertain, say "requires review" — do not speculate.
 
-const KNOWLEDGE_PROMPT = (question: string) => `Answer this internal admin question using Peninsula Equine operational knowledge.
-
-Question: ${question}
-
-INTERNAL REFERENCE:
-- Payment terms: 30% deposit, progress payment at 50% completion, final payment on handover
-- Follow-up sequence: Day 2, Day 5, Day 10
-- Site assessment: always recommended before formal quoting — covers terrain, access, soil conditions, existing structures, horse behaviour and management patterns
-- GroundLock™: proprietary ground stabilisation system — engineered arena infrastructure, not generic footing
-- Project stages: Enquiry → Site Assessment → Scope & Brief → Proposal → Approval → Build → Handover
-- Standard proposal validity: 30 days
-- Site visits: booked Mon-Fri, allow 1-2 hours, Ciro attends personally
-- Scope changes after approval require written variation and updated pricing
-
-Rules:
-- Prefer internal PE rules over generic business advice
-- Be concise and actionable
-- If uncertain, state "requires review" — do not guess
-- Keep answer under 150 words unless complexity demands more`;
+Reference: Payment 30/50/final. Follow-up Day 2/5/10. Site assessment before quoting. GroundLock = proprietary ground stabilisation. Stages: Enquiry → Assessment → Brief → Proposal → Approval → Build → Handover. Proposals valid 30 days. Site visits Mon-Fri, Ciro attends. Scope changes need written variation.`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
