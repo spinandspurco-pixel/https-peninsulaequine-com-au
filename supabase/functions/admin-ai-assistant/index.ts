@@ -197,28 +197,43 @@ Per lead:
 
 Priority order. Booking-ready leads first.`;
 
-const DAILY_SUMMARY_PROMPT = `Founder briefing. Bullets only. No narrative.
+const DAILY_SUMMARY_PROMPT = `Founder briefing. Bullets only. No narrative. Protect the founder's time.
 
-**Hot Leads** — name, type, action needed (or "Clear")
-**Overdue Follow-Ups** — name, days overdue, action (or "Clear")
-**Proposals Pending** — name, days waiting (or "Clear")
-**Financial Flags** — outstanding balances >50%, margins <25% (or "Clear")
-**Today's Top 3** — ranked actions
+**🔴 Priority Leads (Founder Review)**
+Hot leads requiring founder attention today — name, type, value estimate, recommended action. These are the only leads worth the founder's direct time. If none, write "Clear."
 
-Under 200 words total. If a section is empty, write "Clear" and move on. No filler sentences.`;
+**Hot Leads — Book Assessment**
+Other Hot/Warm leads ready to book — name, type, next step. If none, "Clear."
+
+**Overdue Follow-Ups**
+Leads past their follow-up window — name, days overdue, action. Skip Low Intent leads here. If none, "Clear."
+
+**Proposals Pending**
+Quoted leads awaiting response — name, days waiting. If none, "Clear."
+
+**Financial Flags**
+Outstanding balances >50%, margins <25%. If none, "Clear."
+
+**Today's Top 3**
+Ranked actions. Hot leads and founder-review items always rank first.
+
+Under 200 words total. No filler.`;
 
 const ALERTS_PROMPT = `Generate alerts. One line each. No explanations.
 
 🔴 = needs action today. 🟡 = needs attention this week. 🟢 = awareness only.
 
 Check for:
-- Enquiries with no response >24h → 🔴
+- Hot leads with no response >24h → 🔴 (founder should see these)
+- Hot leads not yet booked for assessment → 🔴
+- Warm leads with no response >48h → 🟡
 - Quoted leads with no reply >5 days → 🟡
+- Low Intent leads do NOT generate alerts unless >10 days stale → 🟢
 - Outstanding balance >50% of job value → 🔴
 - Job margin below 25% → 🟡
 - Unusual cost spike on any job → 🟡
 
-Format: emoji + label + fact + action. One line per alert. Omit empty categories. No padding.`;
+Format: emoji + label + fact + action. One line per alert. Hot lead alerts first. Omit empty categories.`;
 
 const KNOWLEDGE_PROMPT = (question: string) => `Internal question: ${question}
 
