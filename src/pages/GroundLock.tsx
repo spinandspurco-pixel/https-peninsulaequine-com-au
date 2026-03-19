@@ -689,53 +689,49 @@ export default function GroundLock() {
       </section>
 
       {/* CTA */}
-      <section className="py-44 sm:py-64 bg-primary text-primary-foreground relative overflow-hidden">
-        <BlueprintScene preset="barn" className="absolute inset-0" />
-        <div className="absolute inset-0 bg-primary/92" />
-        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.03]" />
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, transparent 30%, hsl(var(--primary)) 100%)" }} />
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-28 sm:py-40 relative">
+          <div className="absolute inset-0 engineering-grid" />
+          <div className="absolute inset-0 grain-texture" />
+          <div
+            className="absolute inset-0"
+            style={{ background: "radial-gradient(ellipse 70% 50% at 50% 50%, transparent 20%, hsl(222 20% 3% / 0.5) 100%)" }}
+          />
 
-        <div className="section-container relative z-10 text-center max-w-lg mx-auto">
-          <RevealOnScroll direction="up">
-            <div className="w-8 h-px bg-accent/40 mx-auto mb-12" />
-          </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={80}>
-            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold text-primary-foreground tracking-[0.01em] leading-[1.2] mb-6">
-              Request Site Assessment
-            </h2>
-          </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={150}>
-            <p className="text-primary-foreground/40 text-sm leading-[1.8] max-w-sm mx-auto mb-10">
-              We assess each property based on ground conditions,<br />
-              use, and long-term performance.
-            </p>
-          </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={250}>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <Button
-                asChild
-                size="lg"
-                className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.14em] text-xs font-medium btn-hover-lift px-10 py-3.5"
-              >
-                <Link to="/contact">
-                  Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/5 uppercase tracking-[0.14em] text-xs font-medium px-10 py-3.5"
-              >
-                <Link to="/groundlock">Estimate a Project</Link>
-              </Button>
-            </div>
-          </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={350}>
-            <p className="text-primary-foreground/18 text-[11px] tracking-[0.15em]">
-              We take on a limited number of projects each season.
-            </p>
-          </RevealOnScroll>
+          <div className="section-container relative z-10 text-center max-w-lg mx-auto">
+            <RevealOnScroll direction="up">
+              <RevealLine className="mx-auto mb-14" width="w-10" />
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={80}>
+              <h2 className="heading-section text-foreground mb-8">
+                Request Site Assessment
+              </h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={150}>
+              <p className="text-sm text-muted-foreground/40 mb-10 leading-[1.8] max-w-sm mx-auto">
+                We assess each property based on ground conditions,
+                use, and long-term performance.
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={250}>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                <Button asChild variant="gold" size="lg">
+                  <Link to="/contact">
+                    Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline-light" size="lg">
+                  <Link to="/groundlock">Estimate a Project</Link>
+                </Button>
+              </div>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={350}>
+              <p className="text-muted-foreground/20 text-[10px] tracking-[0.2em] uppercase">
+                We take on a limited number of projects each season.
+              </p>
+            </RevealOnScroll>
+          </div>
         </div>
       </section>
 
