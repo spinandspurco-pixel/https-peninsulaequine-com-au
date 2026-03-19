@@ -401,7 +401,7 @@ serve(async (req) => {
 
     // Gather context data
     let contextData = "";
-    const needsContext = ["triage", "daily_summary", "alerts", "follow_ups", "knowledge", "daily_plan"].includes(action);
+    const needsContext = ["triage", "daily_summary", "alerts", "follow_ups", "knowledge", "daily_plan", "decision_panel"].includes(action);
     
     if (needsContext) {
       const today = new Date().toISOString().split("T")[0];
