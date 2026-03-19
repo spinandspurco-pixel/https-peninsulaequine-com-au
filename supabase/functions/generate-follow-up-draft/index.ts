@@ -74,17 +74,26 @@ Deno.serve(async (req) => {
 VOICE:
 - Calm, direct, professional
 - No exclamation marks, no hype, no spam language
-- No "just checking in" or "touching base"
+- No "just checking in" or "touching base" or "hope you're well"
 - 2-4 sentences maximum
 - Include client's first name
 - Reference the project naturally
-- End with a clear, simple next step
+- End with a clear, specific next step — ALWAYS direct to booking a site assessment
+- Default CTA: "You can book a site assessment here: /site-assessment"
+
+CONVERSION RULES:
+- Every follow-up must push toward a concrete action (book assessment, confirm scope, accept proposal)
+- Never leave conversations open-ended
+- Frame the site assessment as the logical next step — not a suggestion
+- Hot/Warm leads: be directive, position booking as assumed
+- Low intent: brief, informational, no push
 
 NEVER:
 - Use "Hi there!" or generic greetings
 - Sound desperate or pushy
 - Use marketing language
-- Mention discounts or urgency tactics`;
+- Mention discounts or urgency tactics
+- Ask "Would you like to book?" — state it as the process`;
 
     let userPrompt = "";
 
@@ -94,11 +103,24 @@ NEVER:
       const services = (context.services || []).join(", ");
       const days = context.days_since_contact || 0;
 
+      // Rotate angles by stage to prevent repeated phrasing
       const stageGuidance: Record<string, string> = {
-        none: "First follow-up. Acknowledge their enquiry, reference their project briefly, invite them to book a site assessment or reply with questions.",
-        "1": "Second follow-up. Gently reinforce Peninsula Equine's approach — built once, built properly. Reference something specific about their project. Suggest a quick call.",
-        "2": "Third follow-up. Brief and warm. Let them know the door is open. No pressure. Offer to answer any remaining questions.",
-        final: "Final follow-up. Respectful close. Let them know you won't follow up again unless they reach out. Leave on a positive, professional note.",
+        none: `First follow-up. ANGLE: Project acknowledgment + process clarity.
+Address by first name. Reference their specific project (${services}). 
+State: "The next step is a site assessment — it covers terrain, access, and site-specific requirements."
+Direct to booking: /site-assessment. Sign off as Peninsula Equine.`,
+        "1": `Second follow-up. ANGLE: Value reinforcement.
+Reference what the site assessment would resolve for their specific project — e.g. ground conditions, structural planning, drainage considerations.
+Position PE's approach: "Built once, built properly — the assessment ensures the system is designed to your site."
+Include booking link: /site-assessment. Brief, no questions.`,
+        "2": `Third follow-up. ANGLE: Clarification prompt.
+Ask one specific, project-related question to re-engage — e.g. "Have your timeline or site requirements changed since we last spoke?"
+Keep the door open. Reference availability for a brief call or site visit.
+Include booking link: /site-assessment.`,
+        final: `Final follow-up. ANGLE: Close the loop.
+Respectful close. Let them know you won't follow up again unless they reach out.
+Reference the project one last time. Leave on a professional, composed note.
+No booking push — just availability if circumstances change.`,
       };
 
       userPrompt = `Write a follow-up email for:
@@ -112,13 +134,33 @@ Follow-up stage: ${stage}
 
 Guidance: ${stageGuidance[stage] || stageGuidance.none}
 
-${tier === "premium" || tier === "high" ? "This is a high-value lead — be slightly more attentive but still reserved." : ""}
+${tier === "premium" || tier === "high" ? "This is a high-value lead — be slightly more attentive but still reserved. Be directive about booking." : ""}
+${tier === "starter" || (!tier || tier === "standard") ? "Standard lead — keep it brief and professional. Include booking link but don't push hard." : ""}
+
+IMPORTANT: Do NOT repeat phrasing from previous follow-ups. Each stage uses a different angle.
 
 Return JSON with: { "subject_line": "...", "message": "..." }`;
     } else {
       const days = context.days_since_sent || 0;
       const viewed = context.viewed || false;
       const total = context.total || 0;
+
+      // Rotate quote follow-up angles
+      const angleIndex = days <= 3 ? 0 : days <= 7 ? 1 : 2;
+      const angles = [
+        // Angle 1: Clarification prompt
+        `They received the quote ${days} days ago. ${viewed ? "They've viewed it." : "They haven't opened it yet."}
+Ask if they have questions about the scope or specification. Reference the project type naturally.
+${!viewed ? "Mention you can walk through it over a quick call." : "Reference a specific aspect of the scope they may want to discuss."}`,
+        // Angle 2: Value reinforcement  
+        `It's been ${days} days since the proposal was sent. ${viewed ? "They've reviewed it." : "No view recorded."}
+Reinforce the long-term value: engineered infrastructure, reduced maintenance, site-specific design.
+Position the investment as performance — not cost. Reference their project type.`,
+        // Angle 3: Close the loop
+        `${days} days since the proposal. Time to close the loop.
+Be direct: "If the scope aligns, the next step is confirming the schedule." 
+Reference that build slots are allocated per season. No fake urgency — just operational reality.`,
+      ];
 
       userPrompt = `Write a follow-up email for a sent quote:
 Client: ${client_name}
@@ -128,11 +170,11 @@ Total: $${total.toLocaleString()}
 Days since sent: ${days}
 Quote viewed: ${viewed ? "Yes" : "No"}
 
-${viewed
-        ? "They've viewed the quote but haven't responded. Ask what questions they might have. Reference the project scope naturally."
-        : "They haven't viewed the quote yet. Gently check if they received it. Offer to walk through it over a call."}
+ANGLE: ${angles[angleIndex]}
 
-${total >= 100000 ? "This is a significant investment — be measured and respectful of the decision." : ""}
+${total >= 100000 ? "This is a significant investment — be measured and respectful of the decision. But be clear about next steps." : ""}
+
+IMPORTANT: End with a clear next step. Never leave it open-ended.
 
 Return JSON with: { "subject_line": "...", "message": "..." }`;
     }
