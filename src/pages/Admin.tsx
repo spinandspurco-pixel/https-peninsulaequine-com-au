@@ -47,6 +47,7 @@ import {
   LogOut, Eye, Trash2, RefreshCw, Search, Mail, Phone, Calendar,
   Filter, MessageSquare, Users, Clock, CheckCircle, Download,
   Settings, Zap, Save, ExternalLink, CalendarDays, BarChart3, UserCog, FileText,
+  Crown, Shield, HardHat,
 } from "lucide-react";
 import { format } from "date-fns";
 
@@ -105,6 +106,14 @@ function getStatusBadge(status: string) {
   );
 }
 
+type ViewMode = "founder" | "admin" | "operations";
+
+const VIEW_MODES: { value: ViewMode; label: string; icon: typeof Crown; desc: string }[] = [
+  { value: "founder", label: "Founder", icon: Crown, desc: "Full system view" },
+  { value: "admin", label: "Admin", icon: Shield, desc: "Leads, quotes & comms" },
+  { value: "operations", label: "Operations", icon: HardHat, desc: "Jobs, schedule & docs" },
+];
+
 export default function Admin() {
   const { user, isAdmin, loading, signOut } = useAuth();
   const navigate = useNavigate();
@@ -122,6 +131,10 @@ export default function Admin() {
   const [isSavingCrm, setIsSavingCrm] = useState(false);
   const [showCrmSettings, setShowCrmSettings] = useState(false);
   const [quoteForInquiryId, setQuoteForInquiryId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    const saved = localStorage.getItem("pe-admin-view-mode");
+    return (saved as ViewMode) || "founder";
+  });
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) navigate("/login");
@@ -276,68 +289,94 @@ export default function Admin() {
                 {user?.email} · {format(new Date(), "EEEE, d MMMM")}
               </p>
             </div>
-            <Button variant="outline" size="sm" onClick={handleSignOut} className="text-[11px] uppercase tracking-wider border-border/50 hover:border-accent/30">
-              <LogOut className="mr-2 h-3.5 w-3.5" />
-              Sign Out
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" onClick={handleSignOut} className="text-[11px] uppercase tracking-wider border-border/50 hover:border-accent/30">
+                <LogOut className="mr-2 h-3.5 w-3.5" />
+                Sign Out
+              </Button>
+            </div>
+          </div>
+
+          {/* View Mode Switcher */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-4 -mt-1">
+            <div className="flex items-center gap-1 bg-card/60 border border-border/30 rounded-sm p-0.5 w-fit">
+              {VIEW_MODES.map((mode) => (
+                <button
+                  key={mode.value}
+                  onClick={() => { setViewMode(mode.value); localStorage.setItem("pe-admin-view-mode", mode.value); }}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-[11px] uppercase tracking-wider transition-all duration-200 ${
+                    viewMode === mode.value
+                      ? "bg-accent text-accent-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  }`}
+                >
+                  <mode.icon className="h-3.5 w-3.5" />
+                  {mode.label}
+                </button>
+              ))}
+            </div>
+            <p className="text-[10px] text-muted-foreground/50 mt-1.5">
+              {VIEW_MODES.find((m) => m.value === viewMode)?.desc}
+            </p>
           </div>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-          {/* ═══════════════════════════════════════════════════════ */}
-          {/* LOCKED LAYOUT — Do not reorder these sections           */}
-          {/* ═══════════════════════════════════════════════════════ */}
-
-          {/* 1. Revenue Strip — always first */}
-          <RevenueStrip />
-
-          {/* 2. Decision Panel — pipeline intelligence */}
-          <DecisionPanel />
-
-          {/* 3. Follow-Up Engine — action queue */}
-          <FollowUpEngine />
-
-          {/* 4. Operations Command Centre — team lanes */}
-          <OperationsCommandCentre />
-
-          {/* 5. Quote System */}
-          <QuotesDashboard />
 
           {/* ═══════════════════════════════════════════════════════ */}
-          {/* SUPPORTING SECTIONS                                     */}
+          {/* FOUNDER + ADMIN: Revenue Strip                          */}
+          {/* ═══════════════════════════════════════════════════════ */}
+          {viewMode !== "operations" && <RevenueStrip />}
+
+          {/* FOUNDER ONLY: Decision Panel */}
+          {viewMode === "founder" && <DecisionPanel />}
+
+          {/* FOUNDER + ADMIN: Follow-Up Engine */}
+          {viewMode !== "operations" && <FollowUpEngine />}
+
+          {/* FOUNDER + OPERATIONS: Operations Command Centre */}
+          {(viewMode === "founder" || viewMode === "operations") && <OperationsCommandCentre />}
+
+          {/* FOUNDER + ADMIN: Quote System */}
+          {viewMode !== "operations" && <QuotesDashboard />}
+
+          {/* ═══════════════════════════════════════════════════════ */}
+          {/* SUPPORTING SECTIONS — filtered by view mode              */}
           {/* ═══════════════════════════════════════════════════════ */}
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { label: "Total Inquiries", value: stats.total, icon: Users },
-              { label: "New", value: stats.new, icon: MessageSquare },
-              { label: "In Progress", value: stats.inProgress, icon: Clock },
-              { label: "Completed", value: stats.completed, icon: CheckCircle },
-            ].map((stat) => (
-              <Card key={stat.label} className="bg-card/80 border-border/40">
-                <CardHeader className="pb-1 pt-4 px-4">
-                  <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">{stat.label}</p>
-                </CardHeader>
-                <CardContent className="px-4 pb-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-serif font-semibold text-foreground">{stat.value}</span>
-                    <stat.icon className="h-4 w-4 text-accent/60" />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          {/* Stats — Admin + Founder */}
+          {viewMode !== "operations" && (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[
+                { label: "Total Inquiries", value: stats.total, icon: Users },
+                { label: "New", value: stats.new, icon: MessageSquare },
+                { label: "In Progress", value: stats.inProgress, icon: Clock },
+                { label: "Completed", value: stats.completed, icon: CheckCircle },
+              ].map((stat) => (
+                <Card key={stat.label} className="bg-card/80 border-border/40">
+                  <CardHeader className="pb-1 pt-4 px-4">
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">{stat.label}</p>
+                  </CardHeader>
+                  <CardContent className="px-4 pb-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-2xl font-serif font-semibold text-foreground">{stat.value}</span>
+                      <stat.icon className="h-4 w-4 text-accent/60" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
 
-          {/* Quick Links */}
+          {/* Quick Links — filtered per view */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-            {[
-              { to: "/admin/services", label: "Services", desc: "Content", icon: Settings },
-              { to: "/admin/testimonials", label: "Testimonials", desc: "Content", icon: MessageSquare },
-              { to: "/admin/events", label: "Events", desc: "Content", icon: Calendar },
-              { to: "/bookings", label: "Bookings", desc: "Operations", icon: CalendarDays },
-              { to: "/admin/documents", label: "Documents", desc: "Compliance", icon: Download },
-            ].map((link) => (
+            {([
+              { to: "/admin/services", label: "Services", desc: "Content", icon: Settings, views: ["founder", "admin"] },
+              { to: "/admin/testimonials", label: "Testimonials", desc: "Content", icon: MessageSquare, views: ["founder", "admin"] },
+              { to: "/admin/events", label: "Events", desc: "Content", icon: Calendar, views: ["founder", "admin"] },
+              { to: "/bookings", label: "Bookings", desc: "Operations", icon: CalendarDays, views: ["founder", "admin", "operations"] },
+              { to: "/admin/documents", label: "Documents", desc: "Compliance", icon: Download, views: ["founder", "admin", "operations"] },
+            ] as const).filter((link) => (link.views as readonly string[]).includes(viewMode)).map((link) => (
               <Link key={link.to} to={link.to}>
                 <Card className="bg-card/60 border-border/30 hover:border-accent/30 transition-all duration-200 cursor-pointer group h-full">
                   <CardHeader className="p-4">
@@ -393,212 +432,217 @@ export default function Admin() {
             </Card>
           )}
 
-          {/* Calendar */}
-          <SharedCalendarView isAdmin={true} />
+          {/* Calendar — Founder + Operations */}
+          {viewMode !== "admin" && <SharedCalendarView isAdmin={true} />}
 
-          {/* Trainer Pipeline */}
-          <AdminTrainerPanel />
+          {/* Trainer Pipeline — Founder only */}
+          {viewMode === "founder" && <AdminTrainerPanel />}
 
-          {/* Staff & Onboarding */}
-          <AdminStaffOnboarding />
+          {/* Staff & Onboarding — Founder + Admin */}
+          {viewMode !== "operations" && <AdminStaffOnboarding />}
 
-          {/* AI Operations Assistant */}
-          <AIOperationsAssistant inquiries={inquiries} />
+          {/* AI Operations Assistant — Founder only */}
+          {viewMode === "founder" && <AIOperationsAssistant inquiries={inquiries} />}
 
-          {/* Site Assessment Manager */}
-          <AssessmentAvailabilityManager />
+          {/* Site Assessment Manager — Founder + Operations */}
+          {(viewMode === "founder" || viewMode === "operations") && <AssessmentAvailabilityManager />}
 
-          {/* Project Profit Tracker */}
-          <ProjectProfitTracker />
+          {/* Project Profit Tracker — Founder only */}
+          {viewMode === "founder" && <ProjectProfitTracker />}
 
-          {/* Financial Control */}
-          <FinancialDashboard />
+          {/* Financial Control — Founder only */}
+          {viewMode === "founder" && <FinancialDashboard />}
 
-          {/* Website Intelligence */}
-          <WebsiteIntelligence />
+          {/* Website Intelligence — Founder only */}
+          {viewMode === "founder" && <WebsiteIntelligence />}
 
-          {/* A/B Tests */}
-          <ABTestStatsPanel />
+          {/* A/B Tests — Founder only */}
+          {viewMode === "founder" && <ABTestStatsPanel />}
 
-          {/* System Settings — hidden admin panel */}
-          <AdminSystemSettings />
+          {/* System Settings — Founder only */}
+          {viewMode === "founder" && <AdminSystemSettings />}
 
-          {/* CRM Settings */}
-          <Card className="bg-card/80 border-border/40">
-            <CardHeader className="cursor-pointer" onClick={() => setShowCrmSettings(!showCrmSettings)}>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Zap className="h-4 w-4 text-accent/60" />
-                  <div>
-                    <CardTitle className="text-sm font-medium">CRM Integration</CardTitle>
-                    <CardDescription className="text-[11px]">
-                      {hubspotEnabled ? "HubSpot connected" : "Connect HubSpot to auto-sync leads"}
-                    </CardDescription>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  {hubspotEnabled && (
-                    <Badge variant="secondary" className="bg-emerald-600/15 text-emerald-600 text-[9px] uppercase tracking-wider">
-                      Active
-                    </Badge>
-                  )}
-                  <Settings className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${showCrmSettings ? "rotate-90" : ""}`} />
-                </div>
-              </div>
-            </CardHeader>
-            {showCrmSettings && (
-              <CardContent className="space-y-4 border-t border-border/30 pt-4">
+          {/* CRM Settings — Founder only */}
+          {viewMode === "founder" && (
+            <Card className="bg-card/80 border-border/40">
+              <CardHeader className="cursor-pointer" onClick={() => setShowCrmSettings(!showCrmSettings)}>
                 <div className="flex items-center justify-between">
-                  <div>
-                    <Label htmlFor="hubspot-toggle" className="text-sm font-medium">Enable HubSpot Sync</Label>
-                    <p className="text-[11px] text-muted-foreground">Auto-create contacts for new inquiries</p>
+                  <div className="flex items-center gap-3">
+                    <Zap className="h-4 w-4 text-accent/60" />
+                    <div>
+                      <CardTitle className="text-sm font-medium">CRM Integration</CardTitle>
+                      <CardDescription className="text-[11px]">
+                        {hubspotEnabled ? "HubSpot connected" : "Connect HubSpot to auto-sync leads"}
+                      </CardDescription>
+                    </div>
                   </div>
-                  <Switch id="hubspot-toggle" checked={hubspotEnabled} onCheckedChange={setHubspotEnabled} />
-                </div>
-                {hubspotEnabled && (
-                  <div className="space-y-2">
-                    <Label htmlFor="hubspot-key" className="text-[11px] uppercase tracking-wider text-muted-foreground">Access Token</Label>
-                    <Input
-                      id="hubspot-key"
-                      type="password"
-                      placeholder="pat-na1-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-                      value={hubspotApiKey}
-                      onChange={(e) => setHubspotApiKey(e.target.value)}
-                      className="h-10 bg-background/60 border-border/50 rounded-sm text-sm"
-                    />
+                  <div className="flex items-center gap-2">
+                    {hubspotEnabled && (
+                      <Badge variant="secondary" className="bg-accent/15 text-accent text-[9px] uppercase tracking-wider">
+                        Active
+                      </Badge>
+                    )}
+                    <Settings className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${showCrmSettings ? "rotate-90" : ""}`} />
                   </div>
-                )}
-                <div className="flex justify-end">
-                  <Button
-                    size="sm"
-                    onClick={handleSaveCrmSettings}
-                    disabled={isSavingCrm || (hubspotEnabled && !hubspotApiKey.trim())}
-                    className="text-[11px] uppercase tracking-wider"
-                  >
-                    {isSavingCrm ? <RefreshCw className="h-3.5 w-3.5 mr-2 animate-spin" /> : <Save className="h-3.5 w-3.5 mr-2" />}
-                    Save
-                  </Button>
                 </div>
-              </CardContent>
-            )}
-          </Card>
-
-          {/* Email Test */}
-          <TestEmailPanel />
-
-          {/* Inquiry Filters */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/50" />
-              <Input
-                placeholder="Search by name, email, or phone…"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 h-10 bg-card/60 border-border/40 rounded-sm text-sm"
-              />
-            </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-[160px] h-10 bg-card/60 border-border/40 rounded-sm text-sm">
-                <Filter className="mr-2 h-3.5 w-3.5 text-muted-foreground/50" />
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                {statusOptions.map((s) => (
-                  <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button variant="outline" size="sm" onClick={fetchInquiries} disabled={isLoadingData} className="h-10 border-border/40 text-[11px] uppercase tracking-wider">
-              <RefreshCw className={`mr-2 h-3.5 w-3.5 ${isLoadingData ? "animate-spin" : ""}`} />
-              Refresh
-            </Button>
-            <Button variant="outline" size="sm" onClick={exportToCSV} disabled={filteredInquiries.length === 0} className="h-10 border-border/40 text-[11px] uppercase tracking-wider">
-              <Download className="mr-2 h-3.5 w-3.5" />
-              Export
-            </Button>
-          </div>
-
-          {/* Inquiry Table */}
-          <Card className="bg-card/80 border-border/40 overflow-hidden">
-            <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-border/30 hover:bg-transparent">
-                    <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Date</TableHead>
-                    <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Name</TableHead>
-                    <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Contact</TableHead>
-                    <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Services</TableHead>
-                    <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Tier</TableHead>
-                    <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Status</TableHead>
-                    <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10 text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {isLoadingData ? (
-                    <TableRow>
-                      <TableCell colSpan={7} className="text-center py-12">
-                        <RefreshCw className="h-5 w-5 animate-spin mx-auto text-accent/60" />
-                      </TableCell>
-                    </TableRow>
-                  ) : filteredInquiries.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={7} className="text-center py-12 text-muted-foreground text-sm">
-                        No inquiries found
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    filteredInquiries.map((inquiry) => (
-                      <TableRow key={inquiry.id} className="border-border/20 hover:bg-accent/[0.03]">
-                        <TableCell className="text-[11px] text-muted-foreground whitespace-nowrap">
-                          {format(new Date(inquiry.created_at), "MMM d, yyyy")}
-                        </TableCell>
-                        <TableCell className="text-sm font-medium">{inquiry.name}</TableCell>
-                        <TableCell>
-                          <div className="flex flex-col gap-0.5">
-                            <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                              <Mail className="h-3 w-3" />{inquiry.email}
-                            </span>
-                            {inquiry.phone && (
-                              <span className="flex items-center gap-1 text-[11px] text-muted-foreground/60">
-                                <Phone className="h-3 w-3" />{inquiry.phone}
-                              </span>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex flex-wrap gap-1">
-                            {inquiry.services.slice(0, 2).map((s) => (
-                              <Badge key={s} variant="outline" className="text-[9px] uppercase tracking-wider border-border/40 text-muted-foreground">{s}</Badge>
-                            ))}
-                            {inquiry.services.length > 2 && (
-                              <Badge variant="outline" className="text-[9px] border-border/40 text-muted-foreground">+{inquiry.services.length - 2}</Badge>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="secondary" className={`${TIER_COLORS[inquiry.lead_tier || "standard"]} text-[9px] uppercase tracking-wider`}>
-                            {(inquiry.lead_tier || "standard")}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{getStatusBadge(inquiry.status)}</TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-1">
-                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-accent" onClick={() => handleViewInquiry(inquiry)}>
-                              <Eye className="h-3.5 w-3.5" />
-                            </Button>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/60 hover:text-destructive" onClick={() => setDeleteInquiry(inquiry)}>
-                              <Trash2 className="h-3.5 w-3.5" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
+              </CardHeader>
+              {showCrmSettings && (
+                <CardContent className="space-y-4 border-t border-border/30 pt-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label htmlFor="hubspot-toggle" className="text-sm font-medium">Enable HubSpot Sync</Label>
+                      <p className="text-[11px] text-muted-foreground">Auto-create contacts for new inquiries</p>
+                    </div>
+                    <Switch id="hubspot-toggle" checked={hubspotEnabled} onCheckedChange={setHubspotEnabled} />
+                  </div>
+                  {hubspotEnabled && (
+                    <div className="space-y-2">
+                      <Label htmlFor="hubspot-key" className="text-[11px] uppercase tracking-wider text-muted-foreground">Access Token</Label>
+                      <Input
+                        id="hubspot-key"
+                        type="password"
+                        placeholder="pat-na1-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                        value={hubspotApiKey}
+                        onChange={(e) => setHubspotApiKey(e.target.value)}
+                        className="h-10 bg-background/60 border-border/50 rounded-sm text-sm"
+                      />
+                    </div>
                   )}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+                  <div className="flex justify-end">
+                    <Button
+                      size="sm"
+                      onClick={handleSaveCrmSettings}
+                      disabled={isSavingCrm || (hubspotEnabled && !hubspotApiKey.trim())}
+                      className="text-[11px] uppercase tracking-wider"
+                    >
+                      {isSavingCrm ? <RefreshCw className="h-3.5 w-3.5 mr-2 animate-spin" /> : <Save className="h-3.5 w-3.5 mr-2" />}
+                      Save
+                    </Button>
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+          )}
+
+          {/* Email Test — Founder + Admin */}
+          {viewMode !== "operations" && <TestEmailPanel />}
+
+          {/* Inquiry Filters + Table — Admin + Founder */}
+          {viewMode !== "operations" && (
+            <>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/50" />
+                  <Input
+                    placeholder="Search by name, email, or phone…"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-9 h-10 bg-card/60 border-border/40 rounded-sm text-sm"
+                  />
+                </div>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-full sm:w-[160px] h-10 bg-card/60 border-border/40 rounded-sm text-sm">
+                    <Filter className="mr-2 h-3.5 w-3.5 text-muted-foreground/50" />
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    {statusOptions.map((s) => (
+                      <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button variant="outline" size="sm" onClick={fetchInquiries} disabled={isLoadingData} className="h-10 border-border/40 text-[11px] uppercase tracking-wider">
+                  <RefreshCw className={`mr-2 h-3.5 w-3.5 ${isLoadingData ? "animate-spin" : ""}`} />
+                  Refresh
+                </Button>
+                <Button variant="outline" size="sm" onClick={exportToCSV} disabled={filteredInquiries.length === 0} className="h-10 border-border/40 text-[11px] uppercase tracking-wider">
+                  <Download className="mr-2 h-3.5 w-3.5" />
+                  Export
+                </Button>
+              </div>
+
+              <Card className="bg-card/80 border-border/40 overflow-hidden">
+                <CardContent className="p-0">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-border/30 hover:bg-transparent">
+                        <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Date</TableHead>
+                        <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Name</TableHead>
+                        <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Contact</TableHead>
+                        <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Services</TableHead>
+                        <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Tier</TableHead>
+                        <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Status</TableHead>
+                        <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10 text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {isLoadingData ? (
+                        <TableRow>
+                          <TableCell colSpan={7} className="text-center py-12">
+                            <RefreshCw className="h-5 w-5 animate-spin mx-auto text-accent/60" />
+                          </TableCell>
+                        </TableRow>
+                      ) : filteredInquiries.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={7} className="text-center py-12 text-muted-foreground text-sm">
+                            No inquiries found
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        filteredInquiries.map((inquiry) => (
+                          <TableRow key={inquiry.id} className="border-border/20 hover:bg-accent/[0.03]">
+                            <TableCell className="text-[11px] text-muted-foreground whitespace-nowrap">
+                              {format(new Date(inquiry.created_at), "MMM d, yyyy")}
+                            </TableCell>
+                            <TableCell className="text-sm font-medium">{inquiry.name}</TableCell>
+                            <TableCell>
+                              <div className="flex flex-col gap-0.5">
+                                <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                                  <Mail className="h-3 w-3" />{inquiry.email}
+                                </span>
+                                {inquiry.phone && (
+                                  <span className="flex items-center gap-1 text-[11px] text-muted-foreground/60">
+                                    <Phone className="h-3 w-3" />{inquiry.phone}
+                                  </span>
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex flex-wrap gap-1">
+                                {inquiry.services.slice(0, 2).map((s) => (
+                                  <Badge key={s} variant="outline" className="text-[9px] uppercase tracking-wider border-border/40 text-muted-foreground">{s}</Badge>
+                                ))}
+                                {inquiry.services.length > 2 && (
+                                  <Badge variant="outline" className="text-[9px] border-border/40 text-muted-foreground">+{inquiry.services.length - 2}</Badge>
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="secondary" className={`${TIER_COLORS[inquiry.lead_tier || "standard"]} text-[9px] uppercase tracking-wider`}>
+                                {(inquiry.lead_tier || "standard")}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>{getStatusBadge(inquiry.status)}</TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-1">
+                                <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-accent" onClick={() => handleViewInquiry(inquiry)}>
+                                  <Eye className="h-3.5 w-3.5" />
+                                </Button>
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/60 hover:text-destructive" onClick={() => setDeleteInquiry(inquiry)}>
+                                  <Trash2 className="h-3.5 w-3.5" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </>
+          )}
         </div>
       </div>
 
