@@ -159,7 +159,7 @@ Deno.serve(async (req) => {
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
     if (!resendApiKey) throw new Error("RESEND_API_KEY is not configured");
 
-    const fromEmail = Deno.env.get("FROM_EMAIL") || "Peninsula Equine <onboarding@resend.dev>";
+    const fromEmail = Deno.env.get("FROM_EMAIL") || "Peninsula Equine <no-reply@notify.peninsulaequine.com.au>";
 
     const { to, type }: TestEmailRequest = await req.json();
 
