@@ -728,7 +728,7 @@ export default function GroundLock() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={350}>
               <p className="text-muted-foreground/20 text-[10px] tracking-[0.2em] uppercase">
-                We take on a limited number of projects each season.
+                Limited project intake. Projects are assessed prior to engagement.
               </p>
             </RevealOnScroll>
           </div>
