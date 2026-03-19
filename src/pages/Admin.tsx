@@ -106,6 +106,14 @@ function getStatusBadge(status: string) {
   );
 }
 
+type ViewMode = "founder" | "admin" | "operations";
+
+const VIEW_MODES: { value: ViewMode; label: string; icon: typeof Crown; desc: string }[] = [
+  { value: "founder", label: "Founder", icon: Crown, desc: "Full system view" },
+  { value: "admin", label: "Admin", icon: Shield, desc: "Leads, quotes & comms" },
+  { value: "operations", label: "Operations", icon: HardHat, desc: "Jobs, schedule & docs" },
+];
+
 export default function Admin() {
   const { user, isAdmin, loading, signOut } = useAuth();
   const navigate = useNavigate();
