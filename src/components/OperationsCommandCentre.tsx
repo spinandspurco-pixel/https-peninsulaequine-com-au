@@ -106,6 +106,7 @@ export function OperationsCommandCentre() {
   const [assessments, setAssessments] = useState<SiteAssessment[]>([]);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [cashFlows, setCashFlows] = useState<CashFlowRow[]>([]);
+  const [followUpsDue, setFollowUpsDue] = useState(0);
   const [loading, setLoading] = useState(true);
 
   // AI briefing
