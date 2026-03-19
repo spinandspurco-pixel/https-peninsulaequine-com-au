@@ -98,10 +98,24 @@ export function FollowUpEngine() {
   const [expanded, setExpanded] = useState(true);
   const [expandedDraft, setExpandedDraft] = useState<string | null>(null);
   const [editingMessage, setEditingMessage] = useState<Record<string, string>>({});
+  const [showSettings, setShowSettings] = useState(false);
+
+  // Timing thresholds (defaults)
+  const [timing, setTiming] = useState({
+    lead_day_1: 2, lead_day_2: 5, lead_day_3: 10,
+    quote_day_1: 2, quote_day_2: 5, quote_day_3: 10,
+  });
+  // Toggles
+  const [toggles, setToggles] = useState({
+    follow_up_leads: true, follow_up_quotes: true,
+    follow_up_lead_day_1: true, follow_up_lead_day_2: true, follow_up_lead_day_3: true,
+    follow_up_quote_day_1: true, follow_up_quote_day_2: true, follow_up_quote_day_3: true,
+  });
+  const [savingSettings, setSavingSettings] = useState(false);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const [draftsRes, inquiriesRes, quotesRes] = await Promise.all([
+    const [draftsRes, inquiriesRes, quotesRes, timingRes, toggleRes] = await Promise.all([
       supabase
         .from("follow_up_drafts")
         .select("*")
@@ -118,41 +132,67 @@ export function FollowUpEngine() {
         .select("id, quote_number, client_name, client_email, total, status, sent_at, viewed_at, project_type")
         .eq("status", "sent")
         .order("sent_at", { ascending: true }),
+      supabase
+        .from("integration_settings")
+        .select("key, value")
+        .like("key", "follow_up_%"),
+      supabase
+        .from("automation_settings")
+        .select("setting_key, enabled")
+        .eq("category", "follow_ups"),
     ]);
 
     if (draftsRes.data) setDrafts(draftsRes.data as unknown as FollowUpItem[]);
     if (inquiriesRes.data) setInquiries(inquiriesRes.data as unknown as InquiryFollowUp[]);
     if (quotesRes.data) setQuotes(quotesRes.data as unknown as QuoteFollowUp[]);
+
+    // Parse timing settings
+    if (timingRes.data) {
+      const t = { ...timing };
+      timingRes.data.forEach((row: { key: string; value: string }) => {
+        const k = row.key.replace("follow_up_", "") as keyof typeof t;
+        if (k in t) t[k] = parseInt(row.value, 10) || t[k];
+      });
+      setTiming(t);
+    }
+
+    // Parse toggles
+    if (toggleRes.data) {
+      const tg = { ...toggles };
+      toggleRes.data.forEach((row: { setting_key: string; enabled: boolean }) => {
+        if (row.setting_key in tg) (tg as any)[row.setting_key] = row.enabled;
+      });
+      setToggles(tg);
+    }
+
     setLoading(false);
   }, []);
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  /* -- Compute follow-up candidates -- */
-  const now = new Date();
-
-  const dueLeads = inquiries.filter(i => {
+  /* -- Compute follow-up candidates using dynamic thresholds -- */
+  const dueLeads = toggles.follow_up_leads ? inquiries.filter(i => {
     if (i.follow_up_status === "stopped" || i.follow_up_status === "completed") return false;
     const contactDate = i.last_contact_at || i.created_at;
     const days = daysSince(contactDate);
     if (days === null) return false;
-    if (i.follow_up_stage === "none" && days >= 2) return true;
-    if (i.follow_up_stage === "1" && days >= 3) return true;
-    if (i.follow_up_stage === "2" && days >= 5) return true;
+    if (i.follow_up_stage === "none" && toggles.follow_up_lead_day_1 && days >= timing.lead_day_1) return true;
+    if (i.follow_up_stage === "1" && toggles.follow_up_lead_day_2 && days >= timing.lead_day_2) return true;
+    if (i.follow_up_stage === "2" && toggles.follow_up_lead_day_3 && days >= timing.lead_day_3) return true;
     return false;
-  });
+  }) : [];
 
-  const overdueLeads = inquiries.filter(i => {
+  const overdueLeads = toggles.follow_up_leads ? inquiries.filter(i => {
     const contactDate = i.last_contact_at || i.created_at;
     const days = daysSince(contactDate);
-    return days !== null && days >= 10 && i.follow_up_stage !== "final" && i.follow_up_status !== "stopped" && i.follow_up_status !== "completed";
-  });
+    return days !== null && days >= timing.lead_day_3 && i.follow_up_stage !== "final" && i.follow_up_status !== "stopped" && i.follow_up_status !== "completed";
+  }) : [];
 
-  const dueQuotes = quotes.filter(q => {
+  const dueQuotes = toggles.follow_up_quotes ? quotes.filter(q => {
     if (!q.sent_at) return false;
     const days = daysSince(q.sent_at);
-    return days !== null && days >= 2;
-  });
+    return days !== null && days >= timing.quote_day_1;
+  }) : [];
 
   const highValueItems = [
     ...dueLeads.filter(l => l.deal_value && l.deal_value >= 50000),
