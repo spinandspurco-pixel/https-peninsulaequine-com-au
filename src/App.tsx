@@ -50,6 +50,7 @@ import CaseStudy from "./pages/CaseStudy";
 import GroundLockSystems from "./pages/GroundLockSystems";
 import EquusRidge from "./pages/EquusRidge";
 import InstallerAccess from "./pages/InstallerAccess";
+import SiteAssessment from "./pages/SiteAssessment";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { useCartSync } from "./hooks/useCartSync";
 
