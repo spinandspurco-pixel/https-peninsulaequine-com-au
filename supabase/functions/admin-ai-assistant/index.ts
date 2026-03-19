@@ -85,18 +85,46 @@ KNOWLEDGE BASE:
 - Scope changes require written variation and updated pricing
 - Prefer PE rules over generic advice. If uncertain, say so.`;
 
-const TRIAGE_PROMPT = `Classify each inquiry. Be decisive. Prioritise moving qualified leads to site assessment.
+const TRIAGE_PROMPT = `Classify each inquiry. Prioritise identifying high-value opportunities for the founder.
+
+HOT LEAD SIGNALS — classify as Hot when ANY combination present:
+- Clear intent to build (specific project described, not just browsing)
+- Budget signal present (stated budget, or services implying $50k+: full-facility, arena-construction, barn-construction)
+- Timeline within 3-6 months (preferred_start indicates near-term)
+- Property details mentioned (location, land size, existing structures)
+- Multiple high-value services selected
+- Lead tier "premium" or "high"
+
+WARM LEAD SIGNALS:
+- Some intent but missing details (budget or timeline unclear)
+- Single service enquiry with reasonable scope
+- Has project vision but vague on specifics
+
+LOW INTENT SIGNALS:
+- No budget signal, no timeline, vague enquiry
+- "Just enquiring" / information-gathering language
+- Lesson-only or event-only enquiries (unless combined with infrastructure)
 
 Per lead:
-- **State**: Hot / Warm / Early Stage / Low Intent / Not a Fit
+- **State**: 🔴 Hot / 🟡 Warm / ⚪ Early Stage / ⬜ Low Intent / ❌ Not a Fit
+- **Tags**: Priority / High-Value / Founder-Review / Booking-Ready / Info-Only
 - **Type**: (infer from services)
-- **Value**: High / Medium / Low
+- **Value**: High ($100k+) / Medium ($25k-100k) / Low (<$25k) / Unknown
 - **Fit**: Strong / Possible / Poor
-- **Next Step**: For Hot/Warm leads, default to "Book Site Assessment" unless there's a specific reason not to. Other options: Send Follow-Up / Wait / Escalate to Human Review / Decline
-- **Why**: One sentence. No hedging.
-- **Booking Ready**: Yes / No (can this lead be directed to /site-assessment now?)
+- **Next Step**:
+  - Hot → "Book Site Assessment — flag for founder review" (default)
+  - Warm → "Book Site Assessment" or "Send Follow-Up"
+  - Early Stage → "Send Follow-Up" (no booking push)
+  - Low Intent → "Wait" or light follow-up only
+  - Not a Fit → "Decline" or "Escalate to Human Review"
+- **Why**: One sentence. Decisive.
+- **Booking Ready**: Yes / No
 
-Put Hot and Warm leads first. For any lead classified Hot or Warm, the default action is Book Site Assessment — only override if there's a clear reason.`;
+PRIORITY RULES:
+- Hot leads always listed first with 🔴 marker
+- Hot leads tagged "Priority" and "Founder-Review"
+- For Low Intent: reduce follow-up intensity, do NOT push booking
+- Founder time is limited — only surface leads worth his direct attention`;
 
 const BOOKING_URL = "/site-assessment";
 
