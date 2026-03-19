@@ -411,20 +411,30 @@ serve(async (req) => {
         supabase.from("cashflow").select("*, jobs(job_name, revenue)").order("created_at", { ascending: false }).limit(20),
       ];
 
-      // For daily_plan, also fetch today's assessments and bookings
-      if (action === "daily_plan") {
+      // For daily_plan and decision_panel, also fetch assessments, bookings, and quotes
+      if (action === "daily_plan" || action === "decision_panel") {
         queries.push(
           supabase.from("site_assessments").select("*").gte("slot_date", today).order("slot_date", { ascending: true }).limit(10),
           supabase.from("bookings").select("*").gte("booking_date", today).order("booking_date", { ascending: true }).limit(10),
+          supabase.from("quotes").select("*").not("status", "in", '("expired","declined")').order("created_at", { ascending: false }).limit(20),
         );
       }
 
-      const results = await Promise.all(queries);
+      // For alerts and daily_summary, also fetch quotes
+      if (action === "alerts" || action === "daily_summary") {
+        queries.push(
+          null, null, // placeholders for assessments/bookings
+          supabase.from("quotes").select("*").not("status", "in", '("expired","declined")').order("created_at", { ascending: false }).limit(20),
+        );
+      }
+
+      const results = await Promise.all(queries.map((q: any) => q ? q : Promise.resolve({ data: [] })));
       const inquiries = results[0].data || [];
       const jobs = results[1].data || [];
       const cashflows = results[2].data || [];
       const siteAssessments = results[3]?.data || [];
       const bookings = results[4]?.data || [];
+      const activeQuotes = results[5]?.data || [];
 
       contextData = `
 CURRENT DATA (${today}):
@@ -433,7 +443,7 @@ INQUIRIES (${inquiries.length}):
 ${inquiries
   .map(
     (i: any) =>
-      `- ${i.name} | ${i.email} | Status: ${i.status} | Services: ${(i.services || []).join(", ")} | Budget: ${i.budget_range || "—"} | Tier: ${i.lead_tier || "standard"} | Created: ${i.created_at} | Updated: ${i.updated_at} | Notes: ${i.notes || "—"}`
+      `- ${i.name} | ${i.email} | Status: ${i.status} | Services: ${(i.services || []).join(", ")} | Budget: ${i.budget_range || "—"} | Tier: ${i.lead_tier || "standard"} | Deal: $${i.deal_value || 0} @ ${i.probability || 0}% = $${i.expected_value || 0} | Stage: ${i.deal_stage || "—"} | Last Contact: ${i.last_contact_at || "—"} | Created: ${i.created_at} | Notes: ${i.notes || "—"}`
   )
   .join("\n")}
 
@@ -456,9 +466,12 @@ ${cashflows
     return `- ${c.jobs?.job_name || "Unknown"} | Received: $${received} / $${invoiced} | Outstanding: $${invoiced - received}`;
   })
   .join("\n")}
+
+QUOTES (${activeQuotes.length}):
+${activeQuotes.length === 0 ? "None." : activeQuotes.map((q: any) => `- ${q.quote_number} | ${q.client_name} | $${q.total} | Status: ${q.status} | Sent: ${q.sent_at || "not sent"} | Expiry: ${q.expiry_date || "—"}`).join("\n")}
 `;
 
-      if (action === "daily_plan") {
+      if (action === "daily_plan" || action === "decision_panel") {
         contextData += `
 SITE ASSESSMENTS (upcoming):
 ${siteAssessments.length === 0 ? "None scheduled." : siteAssessments.map((a: any) => `- ${a.client_name} | ${a.location} | ${a.slot_date} at ${a.slot_time} | Type: ${a.project_type} | Status: ${a.status}`).join("\n")}
