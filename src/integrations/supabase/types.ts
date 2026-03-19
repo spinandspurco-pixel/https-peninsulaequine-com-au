@@ -587,45 +587,98 @@ export type Database = {
         }
         Relationships: []
       }
+      job_cost_entries: {
+        Row: {
+          category: string
+          cost_amount: number
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          job_id: string
+        }
+        Insert: {
+          category?: string
+          cost_amount?: number
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          job_id: string
+        }
+        Update: {
+          category?: string
+          cost_amount?: number
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          job_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_cost_entries_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       jobs: {
         Row: {
+          actual_cost: number
           client_name: string | null
           created_at: string
+          estimated_cost: number
+          gross_profit: number
           id: string
           job_name: string
           labour_cost: number
           location: string | null
+          margin_percentage: number
           materials_cost: number
           notes: string | null
           other_costs: number
+          profit_status: string
           revenue: number
           status: string
           updated_at: string
         }
         Insert: {
+          actual_cost?: number
           client_name?: string | null
           created_at?: string
+          estimated_cost?: number
+          gross_profit?: number
           id?: string
           job_name: string
           labour_cost?: number
           location?: string | null
+          margin_percentage?: number
           materials_cost?: number
           notes?: string | null
           other_costs?: number
+          profit_status?: string
           revenue?: number
           status?: string
           updated_at?: string
         }
         Update: {
+          actual_cost?: number
           client_name?: string | null
           created_at?: string
+          estimated_cost?: number
+          gross_profit?: number
           id?: string
           job_name?: string
           labour_cost?: number
           location?: string | null
+          margin_percentage?: number
           materials_cost?: number
           notes?: string | null
           other_costs?: number
+          profit_status?: string
           revenue?: number
           status?: string
           updated_at?: string

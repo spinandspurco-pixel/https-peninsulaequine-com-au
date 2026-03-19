@@ -5,6 +5,7 @@ import { RevenueStrip } from "@/components/RevenueStrip";
 import { DecisionPanel } from "@/components/DecisionPanel";
 import { QuotesDashboard } from "@/components/QuotesDashboard";
 import { QuoteBuilder } from "@/components/QuoteBuilder";
+import { ProjectProfitTracker } from "@/components/ProjectProfitTracker";
 import { AdminStaffOnboarding } from "@/components/AdminStaffOnboarding";
 import { SharedCalendarView } from "@/components/SharedCalendarView";
 import { AdminTrainerPanel } from "@/components/AdminTrainerPanel";
@@ -393,6 +394,9 @@ export default function Admin() {
 
           {/* Site Assessment Manager */}
           <AssessmentAvailabilityManager />
+
+          {/* Project Profit Tracker */}
+          <ProjectProfitTracker />
 
           {/* Financial Control */}
           <FinancialDashboard />

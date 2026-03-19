@@ -255,6 +255,9 @@ Look for patterns:
 - Concentration risk (revenue dependent on 1-2 deals)
 - Follow-up gaps creating pipeline leaks
 - Proposal-to-close ratio declining
+- Job margins dropping below 25% (watch), 15% (at_risk), or 5% (critical)
+- Actual costs exceeding estimated costs on active jobs
+- Labour or material cost spikes across multiple jobs
 
 Rules:
 - One sentence. Under 30 words. No filler.
@@ -451,9 +454,10 @@ JOBS (${jobs.length}):
 ${jobs
   .map(
     (j: any) => {
-      const costs = Number(j.materials_cost) + Number(j.labour_cost) + Number(j.other_costs);
-      const margin = j.revenue > 0 ? (((j.revenue - costs) / j.revenue) * 100).toFixed(1) : "0";
-      return `- ${j.job_name} | Client: ${j.client_name || "—"} | Status: ${j.status} | Revenue: $${j.revenue} | Costs: $${costs} | Margin: ${margin}%`;
+      const costs = Number(j.actual_cost) || (Number(j.materials_cost) + Number(j.labour_cost) + Number(j.other_costs));
+      const margin = j.margin_percentage != null ? Number(j.margin_percentage).toFixed(1) : (j.revenue > 0 ? (((j.revenue - costs) / j.revenue) * 100).toFixed(1) : "0");
+      const profitStatus = j.profit_status || "—";
+      return `- ${j.job_name} | Client: ${j.client_name || "—"} | Status: ${j.status} | Revenue: $${j.revenue} | Est Cost: $${j.estimated_cost || 0} | Actual Cost: $${costs} | Profit: $${j.gross_profit || 0} | Margin: ${margin}% | Profit Status: ${profitStatus}`;
     }
   )
   .join("\n")}
