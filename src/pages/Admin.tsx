@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { ABTestStatsPanel } from "@/components/ABTestStatsPanel";
 import { WebsiteIntelligence } from "@/components/WebsiteIntelligence";
+import { RevenueStrip } from "@/components/RevenueStrip";
+import { DecisionPanel } from "@/components/DecisionPanel";
 import { AdminStaffOnboarding } from "@/components/AdminStaffOnboarding";
 import { SharedCalendarView } from "@/components/SharedCalendarView";
 import { AdminTrainerPanel } from "@/components/AdminTrainerPanel";
