@@ -457,8 +457,11 @@ export default function GroundLock() {
       </section>
 
       {/* Estimator */}
-      <section className="py-24 sm:py-36 bg-background">
-        <div className="section-container">
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-24 sm:py-36 relative">
+          <div className="absolute inset-0 grain-texture" />
+        <div className="section-container relative z-[1]">
           {/* Project Type Chips */}
           <div className="max-w-7xl mx-auto mb-8">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
