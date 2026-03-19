@@ -289,32 +289,56 @@ export default function Admin() {
                 {user?.email} · {format(new Date(), "EEEE, d MMMM")}
               </p>
             </div>
-            <Button variant="outline" size="sm" onClick={handleSignOut} className="text-[11px] uppercase tracking-wider border-border/50 hover:border-accent/30">
-              <LogOut className="mr-2 h-3.5 w-3.5" />
-              Sign Out
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" onClick={handleSignOut} className="text-[11px] uppercase tracking-wider border-border/50 hover:border-accent/30">
+                <LogOut className="mr-2 h-3.5 w-3.5" />
+                Sign Out
+              </Button>
+            </div>
+          </div>
+
+          {/* View Mode Switcher */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-4 -mt-1">
+            <div className="flex items-center gap-1 bg-card/60 border border-border/30 rounded-sm p-0.5 w-fit">
+              {VIEW_MODES.map((mode) => (
+                <button
+                  key={mode.value}
+                  onClick={() => { setViewMode(mode.value); localStorage.setItem("pe-admin-view-mode", mode.value); }}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-[11px] uppercase tracking-wider transition-all duration-200 ${
+                    viewMode === mode.value
+                      ? "bg-accent text-accent-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  }`}
+                >
+                  <mode.icon className="h-3.5 w-3.5" />
+                  {mode.label}
+                </button>
+              ))}
+            </div>
+            <p className="text-[10px] text-muted-foreground/50 mt-1.5">
+              {VIEW_MODES.find((m) => m.value === viewMode)?.desc}
+            </p>
           </div>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+
           {/* ═══════════════════════════════════════════════════════ */}
-          {/* LOCKED LAYOUT — Do not reorder these sections           */}
+          {/* FOUNDER + ADMIN: Revenue Strip                          */}
           {/* ═══════════════════════════════════════════════════════ */}
+          {viewMode !== "operations" && <RevenueStrip />}
 
-          {/* 1. Revenue Strip — always first */}
-          <RevenueStrip />
+          {/* FOUNDER ONLY: Decision Panel */}
+          {viewMode === "founder" && <DecisionPanel />}
 
-          {/* 2. Decision Panel — pipeline intelligence */}
-          <DecisionPanel />
+          {/* FOUNDER + ADMIN: Follow-Up Engine */}
+          {viewMode !== "operations" && <FollowUpEngine />}
 
-          {/* 3. Follow-Up Engine — action queue */}
-          <FollowUpEngine />
+          {/* FOUNDER + OPERATIONS: Operations Command Centre */}
+          {(viewMode === "founder" || viewMode === "operations") && <OperationsCommandCentre />}
 
-          {/* 4. Operations Command Centre — team lanes */}
-          <OperationsCommandCentre />
-
-          {/* 5. Quote System */}
-          <QuotesDashboard />
+          {/* FOUNDER + ADMIN: Quote System */}
+          {viewMode !== "operations" && <QuotesDashboard />}
 
           {/* ═══════════════════════════════════════════════════════ */}
           {/* SUPPORTING SECTIONS                                     */}
