@@ -314,8 +314,13 @@ export default function Contact() {
         </div>
       </section>
 
+        </div>
+      </section>
+
       {/* ═══ FORM ════════════════════════════════════════ */}
-      <section className="py-16 sm:py-24 bg-card border-y border-border">
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-16 sm:py-24 bg-card relative">
         <div className="section-container max-w-2xl mx-auto">
           {submitted ? (
             <RevealOnScroll direction="up">
