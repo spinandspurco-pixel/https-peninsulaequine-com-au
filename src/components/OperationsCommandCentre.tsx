@@ -12,6 +12,9 @@ import {
   Eye, Mail, ArrowRight, TrendingUp,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { AutomationSettingsPanel } from "@/components/AutomationSettingsPanel";
+import { ActivityLog } from "@/components/ActivityLog";
+import { ApprovalQueue } from "@/components/ApprovalQueue";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -557,6 +560,14 @@ export function OperationsCommandCentre() {
           )}
         </CardContent>
       </Card>
+
+      {/* Approval Queue + Activity Log + Automation Settings */}
+      <ApprovalQueue />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <ActivityLog />
+        <AutomationSettingsPanel />
+      </div>
     </div>
   );
 }

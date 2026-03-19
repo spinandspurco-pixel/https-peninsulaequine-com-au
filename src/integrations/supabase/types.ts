@@ -47,6 +47,54 @@ export type Database = {
         }
         Relationships: []
       }
+      activity_log: {
+        Row: {
+          action_level: string
+          action_type: string
+          approved_at: string | null
+          approved_by: string | null
+          category: string
+          created_at: string
+          description: string | null
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          metadata: Json | null
+          performed_by: string
+          title: string
+        }
+        Insert: {
+          action_level?: string
+          action_type: string
+          approved_at?: string | null
+          approved_by?: string | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          metadata?: Json | null
+          performed_by?: string
+          title: string
+        }
+        Update: {
+          action_level?: string
+          action_type?: string
+          approved_at?: string | null
+          approved_by?: string | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          metadata?: Json | null
+          performed_by?: string
+          title?: string
+        }
+        Relationships: []
+      }
       announcements: {
         Row: {
           active: boolean
@@ -76,6 +124,57 @@ export type Database = {
           expires_at?: string | null
           id?: string
           priority?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      approval_queue: {
+        Row: {
+          action_type: string
+          created_at: string
+          description: string | null
+          draft_content: string | null
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          metadata: Json | null
+          priority: string
+          resolution: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+          title: string
+        }
+        Insert: {
+          action_type: string
+          created_at?: string
+          description?: string | null
+          draft_content?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          metadata?: Json | null
+          priority?: string
+          resolution?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          title: string
+        }
+        Update: {
+          action_type?: string
+          created_at?: string
+          description?: string | null
+          draft_content?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          metadata?: Json | null
+          priority?: string
+          resolution?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
           title?: string
         }
         Relationships: []
@@ -110,6 +209,36 @@ export type Database = {
           slot_date?: string
           start_time?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      automation_settings: {
+        Row: {
+          category: string
+          description: string | null
+          enabled: boolean
+          id: string
+          setting_key: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          category?: string
+          description?: string | null
+          enabled?: boolean
+          id?: string
+          setting_key: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          category?: string
+          description?: string | null
+          enabled?: boolean
+          id?: string
+          setting_key?: string
+          updated_at?: string
+          updated_by?: string | null
         }
         Relationships: []
       }
