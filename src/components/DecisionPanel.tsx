@@ -47,7 +47,7 @@ export function DecisionPanel() {
 
   const fetchDeals = async () => {
     try {
-      const [topDeals, coldDeals, overdueRes] = await Promise.all([
+      const [topDeals, coldDeals, overdueRes, atRiskQuotesRes] = await Promise.all([
         supabase
           .from("inquiries")
           .select("id, name, email, services, deal_value, probability, expected_value, deal_stage, last_contact_at, budget_range, lead_tier")
@@ -55,7 +55,7 @@ export function DecisionPanel() {
           .gt("expected_value", 0)
           .not("deal_stage", "in", '("closed","lost")')
           .order("expected_value", { ascending: false })
-          .limit(3),
+          .limit(5),
         supabase
           .from("inquiries")
           .select("id, name, email, services, deal_value, probability, expected_value, deal_stage, last_contact_at, budget_range, lead_tier")
