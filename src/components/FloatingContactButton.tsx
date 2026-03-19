@@ -72,7 +72,7 @@ export function FloatingContactButton() {
               : "opacity-0 translate-y-2"
           )}
         >
-          Quick message
+          Discuss your project
           <div className="absolute top-full left-4 w-2 h-2 bg-foreground rotate-45 -translate-y-1" />
         </div>
 

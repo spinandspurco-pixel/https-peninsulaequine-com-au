@@ -626,8 +626,8 @@ export default function GroundLock() {
               </RevealOnScroll>
 
               <p className="text-[10px] text-muted-foreground/60 font-mono leading-relaxed">
-                *Estimates are indicative only. Final pricing subject to site access,
-                ground conditions, excavation depth, and regional freight costs. All prices in AUD.
+                *Indicative investment range only. Final specification subject to site access,
+                ground conditions, excavation depth, and regional freight. All figures in AUD.
               </p>
             </div>
           </div>
