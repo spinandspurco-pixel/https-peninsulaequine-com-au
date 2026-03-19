@@ -11,7 +11,7 @@ import { format, differenceInDays, parseISO } from "date-fns";
 import {
   Clock, Mail, Phone, CheckCircle, Pause, RefreshCw,
   AlertTriangle, ArrowRight, Bot, Send, Eye, Zap,
-  ChevronDown, ChevronUp, DollarSign,
+  ChevronDown, ChevronUp, DollarSign, Settings,
 } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
