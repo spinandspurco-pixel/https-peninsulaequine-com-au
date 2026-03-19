@@ -291,29 +291,27 @@ export default function Contact() {
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-20 sm:py-28 bg-card relative">
-        <div className="absolute inset-0 contour-texture" />
-        <div className="section-container max-w-2xl mx-auto text-center relative z-[1] space-y-8">
-          <RevealLine className="mx-auto" width="w-10" />
-          <RevealOnScroll direction="up">
-            <h2 className="heading-section text-foreground">
-              Start With the Land
-            </h2>
-          </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={100}>
-            <div className="space-y-5 text-sm text-muted-foreground leading-[1.8] max-w-lg mx-auto">
-              <p>
-                Every project begins with understanding the property —<br />
-                its drainage, its layout, and how horses move through it.
-              </p>
-              <p className="text-foreground/60 italic">
-                This isn't a quick quote process.<br />
-                It's a considered build from the ground up.
-              </p>
-            </div>
-          </RevealOnScroll>
-        </div>
-      </section>
-
+          <div className="absolute inset-0 contour-texture" />
+          <div className="section-container max-w-2xl mx-auto text-center relative z-[1] space-y-8">
+            <RevealLine className="mx-auto" width="w-10" />
+            <RevealOnScroll direction="up">
+              <h2 className="heading-section text-foreground">
+                Start With the Land
+              </h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={100}>
+              <div className="space-y-5 text-sm text-muted-foreground leading-[1.8] max-w-lg mx-auto">
+                <p>
+                  Every project begins with understanding the property —<br />
+                  its drainage, its layout, and how horses move through it.
+                </p>
+                <p className="text-foreground/60 italic">
+                  This isn't a quick quote process.<br />
+                  It's a considered build from the ground up.
+                </p>
+              </div>
+            </RevealOnScroll>
+          </div>
         </div>
       </section>
 
