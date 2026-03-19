@@ -386,6 +386,9 @@ export default function Admin() {
           {/* AI Operations Assistant */}
           <AIOperationsAssistant inquiries={inquiries} />
 
+          {/* Quote System */}
+          <QuotesDashboard />
+
           {/* Site Assessment Manager */}
           <AssessmentAvailabilityManager />
 
