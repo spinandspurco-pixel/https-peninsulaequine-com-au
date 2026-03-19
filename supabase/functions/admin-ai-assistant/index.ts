@@ -502,6 +502,10 @@ ${bookings.length === 0 ? "None scheduled." : bookings.map((b: any) => `- ${b.cl
         userPrompt = `${DAILY_PLAN_PROMPT}\n\n${contextData}`;
         break;
 
+      case "decision_panel":
+        userPrompt = `${DECISION_PANEL_PROMPT}\n\n${contextData}`;
+        break;
+
       default:
         return new Response(
           JSON.stringify({ error: "Unknown action" }),
