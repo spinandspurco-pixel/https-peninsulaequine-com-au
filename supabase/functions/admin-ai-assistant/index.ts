@@ -428,12 +428,13 @@ serve(async (req) => {
         );
       }
 
-      const results = await Promise.all(queries);
+      const results = await Promise.all(queries.map((q: any) => q ? q : Promise.resolve({ data: [] })));
       const inquiries = results[0].data || [];
       const jobs = results[1].data || [];
       const cashflows = results[2].data || [];
       const siteAssessments = results[3]?.data || [];
       const bookings = results[4]?.data || [];
+      const activeQuotes = results[5]?.data || [];
 
       contextData = `
 CURRENT DATA (${today}):
@@ -442,7 +443,7 @@ INQUIRIES (${inquiries.length}):
 ${inquiries
   .map(
     (i: any) =>
-      `- ${i.name} | ${i.email} | Status: ${i.status} | Services: ${(i.services || []).join(", ")} | Budget: ${i.budget_range || "—"} | Tier: ${i.lead_tier || "standard"} | Created: ${i.created_at} | Updated: ${i.updated_at} | Notes: ${i.notes || "—"}`
+      `- ${i.name} | ${i.email} | Status: ${i.status} | Services: ${(i.services || []).join(", ")} | Budget: ${i.budget_range || "—"} | Tier: ${i.lead_tier || "standard"} | Deal: $${i.deal_value || 0} @ ${i.probability || 0}% = $${i.expected_value || 0} | Stage: ${i.deal_stage || "—"} | Last Contact: ${i.last_contact_at || "—"} | Created: ${i.created_at} | Notes: ${i.notes || "—"}`
   )
   .join("\n")}
 
@@ -465,9 +466,12 @@ ${cashflows
     return `- ${c.jobs?.job_name || "Unknown"} | Received: $${received} / $${invoiced} | Outstanding: $${invoiced - received}`;
   })
   .join("\n")}
+
+QUOTES (${activeQuotes.length}):
+${activeQuotes.length === 0 ? "None." : activeQuotes.map((q: any) => `- ${q.quote_number} | ${q.client_name} | $${q.total} | Status: ${q.status} | Sent: ${q.sent_at || "not sent"} | Expiry: ${q.expiry_date || "—"}`).join("\n")}
 `;
 
-      if (action === "daily_plan") {
+      if (action === "daily_plan" || action === "decision_panel") {
         contextData += `
 SITE ASSESSMENTS (upcoming):
 ${siteAssessments.length === 0 ? "None scheduled." : siteAssessments.map((a: any) => `- ${a.client_name} | ${a.location} | ${a.slot_date} at ${a.slot_time} | Type: ${a.project_type} | Status: ${a.status}`).join("\n")}
