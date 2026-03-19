@@ -9,6 +9,7 @@ import { FinancialDashboard } from "@/components/FinancialDashboard";
 import { AIOperationsAssistant } from "@/components/AIOperationsAssistant";
 import { AssessmentAvailabilityManager } from "@/components/AssessmentAvailabilityManager";
 import { TodaysPlan } from "@/components/TodaysPlan";
+import { OperationsCommandCentre } from "@/components/OperationsCommandCentre";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -314,7 +315,10 @@ export default function Admin() {
             ))}
           </div>
 
-          {/* Today's Plan — Daily Command Centre */}
+          {/* Operations Command Centre — Daily Hub */}
+          <OperationsCommandCentre />
+
+          {/* Today's Plan — Detailed AI Plan */}
           <TodaysPlan />
 
           {/* Upcoming Bookings */}
