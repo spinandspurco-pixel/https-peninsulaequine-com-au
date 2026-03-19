@@ -247,8 +247,10 @@ export default function Contact() {
       </section>
 
       {/* ═══ SITE ASSESSMENT ════════════════════════════ */}
-      <section className="py-24 sm:py-32 bg-background relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-24 sm:py-32 relative">
+        <div className="absolute inset-0 grain-texture" />
         <div className="section-container max-w-2xl mx-auto relative z-[1]">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
             <div>
