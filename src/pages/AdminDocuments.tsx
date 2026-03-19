@@ -41,6 +41,9 @@ import {
   ArrowLeft,
   ShieldCheck,
   FileWarning,
+  ClipboardList,
+  AlertTriangle,
+  Heart,
 } from "lucide-react";
 import logoPeMark from "@/assets/logo-pe-mark.png";
 
