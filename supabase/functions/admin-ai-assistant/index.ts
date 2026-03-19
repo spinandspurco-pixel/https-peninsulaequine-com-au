@@ -204,25 +204,27 @@ Hot/Warm leads first. Low Intent leads last.`;
 
 const DAILY_SUMMARY_PROMPT = `Founder briefing. Bullets only. No narrative. Protect the founder's time.
 
-**🔴 Priority Leads (Founder Review)**
-Hot leads requiring founder attention today — name, type, value estimate, recommended action. These are the only leads worth the founder's direct time. If none, write "Clear."
+STRICT CONSTRAINT: Maximum 6 items total across all sections. Group by lane.
 
-**Hot Leads — Book Assessment**
-Other Hot/Warm leads ready to book — name, type, next step. If none, "Clear."
+**Founder / Review** (max 2 items)
+Hot leads or decisions requiring founder attention. Name, value, action. If none: "Clear."
 
-**Overdue Follow-Ups**
-Leads past their follow-up window — name, days overdue, action. Skip Low Intent leads here. If none, "Clear."
+**Build / Site** (max 1 item)
+Today's site visits or active build flags. If none: "Clear."
 
-**Proposals Pending**
-Quoted leads awaiting response — name, days waiting. If none, "Clear."
+**Admin / Coordination** (max 2 items)
+Overdue high-value follow-ups OR overdue quotes only. Skip low-priority leads entirely. If none: "Clear."
 
-**Financial Flags**
-Outstanding balances >50%, margins <25%. If none, "Clear."
+**Financial Flag** (max 1 item)
+Only show: margins <25%, outstanding >50%, or overdue high-value quotes. If none: "Clear."
 
-**Today's Top 3**
-Ranked actions. Hot leads and founder-review items always rank first.
+SUPPRESSION RULES:
+- Do NOT show Low Intent or Early Stage leads
+- Do NOT show leads with deal_value < $25k unless overdue >10 days
+- Do NOT show completed or stopped follow-ups
+- Do NOT show proposals under 3 days old
 
-Under 200 words total. No filler.`;
+Under 150 words total. No filler. No exclamation marks.`;
 
 const ALERTS_PROMPT = `Generate alerts. One line each. No explanations.
 
