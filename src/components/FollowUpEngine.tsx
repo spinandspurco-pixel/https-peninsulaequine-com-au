@@ -214,14 +214,26 @@ export function FollowUpEngine() {
     ...dueQuotes.filter(q => q.total >= 50000),
   ];
 
-  /* -- Generate AI draft -- */
+  /* -- Generate AI draft with duplicate + cap guard -- */
   const generateDraft = async (entityType: "lead" | "quote", entityId: string, clientName: string, clientEmail: string, context: Record<string, unknown>) => {
     setGenerating(true);
     try {
       const { data, error } = await supabase.functions.invoke("generate-follow-up-draft", {
         body: { entity_type: entityType, entity_id: entityId, client_name: clientName, client_email: clientEmail, context },
       });
-      if (error) throw error;
+      if (error) {
+        // Parse edge function error message
+        const errMsg = typeof error === "object" && error.message ? error.message : String(error);
+        if (errMsg.includes("Maximum 3")) {
+          toast.error("Maximum 3 follow-ups reached for this lead.");
+        } else if (errMsg.includes("draft already exists")) {
+          toast.error("A draft already exists for this follow-up stage.");
+        } else {
+          throw error;
+        }
+        setGenerating(false);
+        return;
+      }
       toast.success("Draft generated");
       fetchData();
     } catch {
