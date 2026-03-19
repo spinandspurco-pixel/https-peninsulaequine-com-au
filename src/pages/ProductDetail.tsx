@@ -1,166 +1,189 @@
-import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Loader2, ShoppingCart, ArrowLeft, Flame } from "lucide-react";
-import { toast } from "sonner";
-import { storefrontApiRequest, STOREFRONT_PRODUCT_BY_HANDLE_QUERY, ShopifyProduct } from "@/lib/shopify";
-import { useCartStore } from "@/stores/cartStore";
+import { ArrowLeft, ArrowRight, CheckCircle2, Shield, Zap, Wrench } from "lucide-react";
+import { getProductByHandle, getAddOnsByTier, GROUNDLOCK_TIERS, type GroundLockProduct } from "@/data/groundlockProducts";
+import { BlueprintScene } from "@/components/BlueprintScene";
+
+function TierBadge({ tier }: { tier: GroundLockProduct["tier"] }) {
+  const t = GROUNDLOCK_TIERS[tier];
+  return (
+    <span className="inline-block px-3 py-1 rounded-sm text-[10px] font-mono uppercase tracking-[0.2em] border border-accent/30 text-accent">
+      {t.label}
+    </span>
+  );
+}
 
 export default function ProductDetail() {
   const { handle } = useParams<{ handle: string }>();
-  const [product, setProduct] = useState<ShopifyProduct["node"] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [selectedVariantIdx, setSelectedVariantIdx] = useState(0);
-  const [selectedImage, setSelectedImage] = useState(0);
-  const addItem = useCartStore(state => state.addItem);
-  const isCartLoading = useCartStore(state => state.isLoading);
-
-  useEffect(() => {
-    async function fetchProduct() {
-      try {
-        const data = await storefrontApiRequest(STOREFRONT_PRODUCT_BY_HANDLE_QUERY, { handle });
-        setProduct(data?.data?.product || null);
-      } catch (error) {
-        console.error("Failed to fetch product:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    if (handle) fetchProduct();
-  }, [handle]);
-
-  if (loading) {
-    return (
-      <Layout>
-        <div className="flex items-center justify-center min-h-[60vh] pt-32">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-        </div>
-      </Layout>
-    );
-  }
+  const product = handle ? getProductByHandle(handle) : undefined;
 
   if (!product) {
     return (
       <Layout>
-        <div className="text-center min-h-[60vh] pt-32">
-          <h2 className="font-serif text-2xl mb-4">Product not found</h2>
+        <div className="text-center min-h-[60vh] pt-32 space-y-4">
+          <h2 className="font-serif text-2xl">System not found</h2>
           <Button asChild variant="outline">
-            <Link to="/shop"><ArrowLeft className="w-4 h-4 mr-2" />Back to Shop</Link>
+            <Link to="/shop"><ArrowLeft className="w-4 h-4 mr-2" />Back to Equus Forge</Link>
           </Button>
         </div>
       </Layout>
     );
   }
 
-  const variant = product.variants.edges[selectedVariantIdx]?.node;
-  const images = product.images.edges;
-
-  const handleAddToCart = async () => {
-    if (!variant) return;
-    await addItem({
-      product: { node: product },
-      variantId: variant.id,
-      variantTitle: variant.title,
-      price: variant.price,
-      quantity: 1,
-      selectedOptions: variant.selectedOptions || [],
-    });
-    toast.success("Added to cart", { description: product.title });
-  };
+  const addOns = getAddOnsByTier(product.tier);
 
   return (
     <Layout>
-      <section className="pt-28 pb-16 md:py-32">
-        <div className="section-container">
-          <Link to="/shop" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors">
-            <ArrowLeft className="w-4 h-4" />Back to The Forge
+      {/* Hero */}
+      <section className="relative pt-32 pb-20 bg-primary text-primary-foreground overflow-hidden">
+        <BlueprintScene preset="elevation" className="absolute inset-0" />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/80 via-primary/60 to-primary" />
+        <div className="section-container relative z-10 max-w-3xl mx-auto text-center space-y-5">
+          <Link to="/shop" className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-accent transition-colors uppercase tracking-[0.15em]">
+            <ArrowLeft className="w-3 h-3" />Equus Forge
           </Link>
+          <TierBadge tier={product.tier} />
+          {product.badge && (
+            <span className="ml-3 inline-block px-3 py-1 rounded-sm text-[10px] font-mono uppercase tracking-[0.2em] bg-accent text-accent-foreground">
+              {product.badge}
+            </span>
+          )}
+          <h1 className="heading-display text-primary-foreground drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
+            {product.title}
+          </h1>
+          <p className="text-primary-foreground/50 text-xs uppercase tracking-[0.2em]">{product.subtitle}</p>
+          <p className="text-primary-foreground/75 text-lg md:text-xl max-w-xl mx-auto leading-relaxed">
+            {product.headline}
+          </p>
+        </div>
+      </section>
 
-          <div className="grid md:grid-cols-2 gap-10 lg:gap-16">
-            {/* Images */}
-            <div className="space-y-4">
-              <div className="aspect-square bg-muted rounded-lg overflow-hidden">
-                {images[selectedImage]?.node ? (
-                  <img
-                    src={images[selectedImage].node.url}
-                    alt={images[selectedImage].node.altText || product.title}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <Flame className="h-16 w-16 text-muted-foreground" />
-                  </div>
-                )}
-              </div>
-              {images.length > 1 && (
-                <div className="flex gap-3 overflow-x-auto">
-                  {images.map((img, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setSelectedImage(i)}
-                      className={`w-20 h-20 rounded-md overflow-hidden flex-shrink-0 border-2 transition-colors ${
-                        selectedImage === i ? "border-accent" : "border-transparent"
-                      }`}
-                    >
-                      <img src={img.node.url} alt={img.node.altText || ""} className="w-full h-full object-cover" />
-                    </button>
-                  ))}
-                </div>
-              )}
+      {/* Problem / Solution */}
+      <section className="py-20 border-b border-border">
+        <div className="section-container max-w-4xl mx-auto grid md:grid-cols-2 gap-12">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-destructive">
+              <Zap className="w-4 h-4" />
+              <p className="text-[10px] font-mono uppercase tracking-[0.2em]">The Problem</p>
             </div>
+            <p className="text-muted-foreground leading-relaxed">{product.problem}</p>
+          </div>
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-accent">
+              <Shield className="w-4 h-4" />
+              <p className="text-[10px] font-mono uppercase tracking-[0.2em]">The Solution</p>
+            </div>
+            <p className="text-foreground leading-relaxed">{product.solution}</p>
+          </div>
+        </div>
+      </section>
 
-            {/* Info */}
-            <div className="space-y-6">
-              <h1 className="font-serif text-3xl md:text-4xl">{product.title}</h1>
-              <p className="text-2xl font-semibold text-accent">
-                {variant?.price.currencyCode} {parseFloat(variant?.price.amount || "0").toFixed(2)}
-              </p>
-              <p className="text-muted-foreground leading-relaxed">{product.description}</p>
+      {/* What's Included */}
+      <section className="py-20 bg-card border-b border-border">
+        <div className="section-container max-w-4xl mx-auto">
+          <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/60 mb-3">System Specification</p>
+          <h2 className="font-serif text-2xl md:text-3xl mb-10">What's Included</h2>
+          <div className="grid sm:grid-cols-2 gap-x-10 gap-y-4">
+            {product.includes.map((item, i) => (
+              <div key={i} className="flex items-start gap-3">
+                <CheckCircle2 className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
+                <p className="text-sm text-foreground/80 leading-relaxed">{item}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-              {/* Options */}
-              {product.options.filter(o => o.name !== "Title" || o.values.length > 1).map((option) => (
-                <div key={option.name} className="space-y-2">
-                  <label className="text-sm font-medium uppercase tracking-wider">{option.name}</label>
-                  <div className="flex flex-wrap gap-2">
-                    {option.values.map((value) => {
-                      const variantIdx = product.variants.edges.findIndex(
-                        v => v.node.selectedOptions.some(o => o.name === option.name && o.value === value)
-                      );
-                      return (
-                        <button
-                          key={value}
-                          onClick={() => variantIdx >= 0 && setSelectedVariantIdx(variantIdx)}
-                          className={`px-4 py-2 rounded-md border text-sm transition-colors ${
-                            selectedVariantIdx === variantIdx
-                              ? "border-accent bg-accent/10 text-accent-foreground"
-                              : "border-border hover:border-accent/50"
-                          }`}
-                        >
-                          {value}
-                        </button>
-                      );
-                    })}
+      {/* Specs */}
+      <section className="py-20 border-b border-border">
+        <div className="section-container max-w-4xl mx-auto">
+          <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/60 mb-3">Technical Overview</p>
+          <h2 className="font-serif text-2xl md:text-3xl mb-10">System Specifications</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {product.specs.map((spec) => (
+              <div key={spec.label} className="bg-card border border-border rounded-sm p-5 text-center space-y-2">
+                <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground">{spec.label}</p>
+                <p className="font-serif text-lg text-accent">{spec.value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Add-Ons */}
+      {addOns.length > 0 && (
+        <section className="py-20 bg-card border-b border-border">
+          <div className="section-container max-w-4xl mx-auto">
+            <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/60 mb-3">Optional</p>
+            <h2 className="font-serif text-2xl md:text-3xl mb-10">System Add-Ons</h2>
+            <div className="grid sm:grid-cols-3 gap-6">
+              {addOns.map((addon) => (
+                <div key={addon.handle} className="border border-border rounded-sm p-6 space-y-3 hover:border-accent/30 transition-colors">
+                  <div className="flex items-center gap-2 text-accent">
+                    <Wrench className="w-4 h-4" />
+                    <p className="text-[10px] font-mono uppercase tracking-[0.15em]">{addon.subtitle}</p>
                   </div>
+                  <h3 className="font-serif text-lg">{addon.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{addon.description}</p>
+                  <p className="font-semibold text-accent">${addon.price.toLocaleString("en-AU")} AUD</p>
                 </div>
               ))}
-
-              <Button
-                onClick={handleAddToCart}
-                size="lg"
-                className="w-full mt-4"
-                disabled={isCartLoading || !variant?.availableForSale}
-              >
-                {isCartLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : !variant?.availableForSale ? (
-                  "Sold Out"
-                ) : (
-                  <><ShoppingCart className="w-4 h-4 mr-2" />Add to Cart</>
-                )}
-              </Button>
             </div>
           </div>
+        </section>
+      )}
+
+      {/* Pricing + CTA */}
+      <section className="py-24 relative overflow-hidden">
+        <BlueprintScene preset="barn" className="absolute inset-0" />
+        <div className="absolute inset-0 bg-primary/85" />
+        <div className="section-container relative z-10 max-w-2xl mx-auto text-center space-y-6">
+          <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/60">Investment Overview</p>
+          <div className="space-y-1">
+            {product.compareAtPrice && (
+              <p className="text-muted-foreground line-through text-lg">
+                ${product.compareAtPrice.toLocaleString("en-AU")} AUD
+              </p>
+            )}
+            <p className="font-serif text-4xl md:text-5xl text-accent">
+              ${product.price.toLocaleString("en-AU")}
+              <span className="text-lg text-muted-foreground ml-2">AUD</span>
+            </p>
+          </div>
+          <p className="text-primary-foreground/60 text-sm max-w-md mx-auto">
+            Includes full system specification, warranty, and documentation. Site-specific configuration available on request.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.12em] text-xs">
+              <Link to="/contact">
+                {product.ctaPrimary} <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="border-accent/30 text-accent hover:bg-accent/10 uppercase tracking-[0.12em] text-xs">
+              <Link to="/site-assessment">
+                {product.ctaSecondary}
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Cross-System Flow */}
+      <section className="py-16 border-t border-border">
+        <div className="section-container max-w-3xl mx-auto text-center space-y-5">
+          <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-muted-foreground">Beyond the system</p>
+          <h2 className="font-serif text-xl md:text-2xl">
+            Need a full <span className="text-accent">managed build?</span>
+          </h2>
+          <p className="text-muted-foreground text-sm max-w-lg mx-auto">
+            GroundLock™ systems are designed to integrate with Peninsula Equine's full arena, stable, and infrastructure builds. Move from product to project seamlessly.
+          </p>
+          <Button asChild variant="outline" size="lg" className="uppercase tracking-[0.12em] text-xs">
+            <Link to="/services">
+              Explore Peninsula Equine Services <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
         </div>
       </section>
     </Layout>
