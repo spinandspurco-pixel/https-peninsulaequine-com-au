@@ -390,6 +390,9 @@ export default function Admin() {
           {/* AI Operations Assistant */}
           <AIOperationsAssistant inquiries={inquiries} />
 
+          {/* Follow-Up Engine */}
+          <FollowUpEngine />
+
           {/* Quote System */}
           <QuotesDashboard />
 
