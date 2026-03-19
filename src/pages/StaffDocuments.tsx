@@ -799,12 +799,57 @@ export default function StaffDocuments() {
   const [activeTab, setActiveTab] = useState<DocType>("swms");
   const [showForm, setShowForm] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [jobDefaults, setJobDefaults] = useState<{ project_name: string; site_address: string }>({ project_name: "", site_address: "" });
 
   useEffect(() => {
     if (!authLoading && !user) {
       navigate("/hq");
     }
   }, [user, authLoading, navigate]);
+
+  // Auto-detect active job/site from employee_tasks + jobs
+  useEffect(() => {
+    if (!user) return;
+    const fetchDefaults = async () => {
+      // 1. Try employee tasks assigned to user for today
+      const today = format(new Date(), "yyyy-MM-dd");
+      const { data: tasks } = await supabase
+        .from("employee_tasks")
+        .select("title, description")
+        .eq("assigned_to", user.id)
+        .eq("scheduled_date", today)
+        .neq("status", "completed")
+        .order("created_at", { ascending: false })
+        .limit(1);
+
+      if (tasks && tasks.length > 0) {
+        const task = tasks[0];
+        // Extract project name from task title (often "Job — Location" format)
+        const parts = task.title?.split("—").map((s: string) => s.trim()) || [];
+        if (parts.length >= 2) {
+          setJobDefaults({ project_name: parts[0], site_address: parts[1] });
+          return;
+        }
+        if (parts.length === 1 && task.description) {
+          setJobDefaults({ project_name: parts[0], site_address: task.description });
+          return;
+        }
+      }
+
+      // 2. Fallback: most recent active job
+      const { data: jobs } = await supabase
+        .from("jobs")
+        .select("job_name, location")
+        .eq("status", "active")
+        .order("updated_at", { ascending: false })
+        .limit(1);
+
+      if (jobs && jobs.length > 0) {
+        setJobDefaults({ project_name: jobs[0].job_name || "", site_address: jobs[0].location || "" });
+      }
+    };
+    fetchDefaults();
+  }, [user]);
 
 
   const handleSubmit = async (docType: DocType, formData: any) => {
