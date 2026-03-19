@@ -426,6 +426,66 @@ export type Database = {
         }
         Relationships: []
       }
+      follow_up_drafts: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          client_email: string
+          client_name: string
+          created_at: string
+          deal_value: number | null
+          draft_message: string
+          entity_id: string
+          entity_type: string
+          id: string
+          project_ref: string | null
+          sent_at: string | null
+          snoozed_until: string | null
+          stage: string
+          status: string
+          subject_line: string | null
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          client_email: string
+          client_name: string
+          created_at?: string
+          deal_value?: number | null
+          draft_message: string
+          entity_id: string
+          entity_type?: string
+          id?: string
+          project_ref?: string | null
+          sent_at?: string | null
+          snoozed_until?: string | null
+          stage?: string
+          status?: string
+          subject_line?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          client_email?: string
+          client_name?: string
+          created_at?: string
+          deal_value?: number | null
+          draft_message?: string
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          project_ref?: string | null
+          sent_at?: string | null
+          snoozed_until?: string | null
+          stage?: string
+          status?: string
+          subject_line?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       inquiries: {
         Row: {
           attachment_urls: string[] | null
@@ -436,6 +496,8 @@ export type Database = {
           email: string
           expected_value: number | null
           experience_level: string | null
+          follow_up_stage: string
+          follow_up_status: string
           horse_age: string | null
           horse_breed: string | null
           horse_name: string | null
@@ -444,6 +506,7 @@ export type Database = {
           lead_tags: string[] | null
           lead_tier: string | null
           name: string
+          next_follow_up_at: string | null
           notes: string | null
           phone: string | null
           preferred_contact: string | null
@@ -465,6 +528,8 @@ export type Database = {
           email: string
           expected_value?: number | null
           experience_level?: string | null
+          follow_up_stage?: string
+          follow_up_status?: string
           horse_age?: string | null
           horse_breed?: string | null
           horse_name?: string | null
@@ -473,6 +538,7 @@ export type Database = {
           lead_tags?: string[] | null
           lead_tier?: string | null
           name: string
+          next_follow_up_at?: string | null
           notes?: string | null
           phone?: string | null
           preferred_contact?: string | null
@@ -494,6 +560,8 @@ export type Database = {
           email?: string
           expected_value?: number | null
           experience_level?: string | null
+          follow_up_stage?: string
+          follow_up_status?: string
           horse_age?: string | null
           horse_breed?: string | null
           horse_name?: string | null
@@ -502,6 +570,7 @@ export type Database = {
           lead_tags?: string[] | null
           lead_tier?: string | null
           name?: string
+          next_follow_up_at?: string | null
           notes?: string | null
           phone?: string | null
           preferred_contact?: string | null
