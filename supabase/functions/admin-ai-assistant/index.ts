@@ -255,6 +255,9 @@ Look for patterns:
 - Concentration risk (revenue dependent on 1-2 deals)
 - Follow-up gaps creating pipeline leaks
 - Proposal-to-close ratio declining
+- Job margins dropping below 25% (watch), 15% (at_risk), or 5% (critical)
+- Actual costs exceeding estimated costs on active jobs
+- Labour or material cost spikes across multiple jobs
 
 Rules:
 - One sentence. Under 30 words. No filler.
