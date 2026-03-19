@@ -106,7 +106,7 @@ export function Header() {
               variant="gold"
               size="sm"
             >
-              <Link to="/contact">Book Assessment</Link>
+              <Link to="/contact">Request Assessment</Link>
             </Button>
           </div>
 
