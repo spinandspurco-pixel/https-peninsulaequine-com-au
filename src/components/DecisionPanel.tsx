@@ -3,9 +3,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Phone, Mail, Calendar, FileText, RefreshCw, Lightbulb, TrendingUp, Clock } from "lucide-react";
+import { Phone, Mail, Calendar, FileText, RefreshCw, Lightbulb, TrendingUp, Clock, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, differenceInDays, parseISO } from "date-fns";
 
 interface Deal {
   id: string;
@@ -21,9 +21,22 @@ interface Deal {
   lead_tier: string | null;
 }
 
+interface OverdueFollowUp {
+  id: string;
+  name: string;
+  email: string;
+  deal_value: number | null;
+  lead_tier: string | null;
+  last_contact_at: string | null;
+  follow_up_stage: string;
+  created_at: string;
+  services: string[];
+}
+
 export function DecisionPanel() {
   const [closeToday, setCloseToday] = useState<Deal[]>([]);
   const [convertNext, setConvertNext] = useState<Deal[]>([]);
+  const [overdueFollowUps, setOverdueFollowUps] = useState<OverdueFollowUp[]>([]);
   const [systemLever, setSystemLever] = useState("");
   const [loading, setLoading] = useState(true);
   const [aiLoading, setAiLoading] = useState(false);
@@ -33,30 +46,40 @@ export function DecisionPanel() {
   }, []);
 
   const fetchDeals = async () => {
-    // Close Today: top 3 by expected_value, exclude low-intent
-    const { data: topDeals } = await supabase
-      .from("inquiries")
-      .select("id, name, email, services, deal_value, probability, expected_value, deal_stage, last_contact_at, budget_range, lead_tier")
-      .gt("probability", 10)
-      .gt("expected_value", 0)
-      .not("deal_stage", "in", '("closed","lost")')
-      .order("expected_value", { ascending: false })
-      .limit(3) as any;
+    const [topDeals, coldDeals, overdueRes] = await Promise.all([
+      // Close Today: top 3 by expected_value
+      supabase
+        .from("inquiries")
+        .select("id, name, email, services, deal_value, probability, expected_value, deal_stage, last_contact_at, budget_range, lead_tier")
+        .gt("probability", 10)
+        .gt("expected_value", 0)
+        .not("deal_stage", "in", '("closed","lost")')
+        .order("expected_value", { ascending: false })
+        .limit(3),
+      // Convert Next: leads going cold
+      supabase
+        .from("inquiries")
+        .select("id, name, email, services, deal_value, probability, expected_value, deal_stage, last_contact_at, budget_range, lead_tier")
+        .gt("probability", 10)
+        .not("deal_stage", "in", '("closed","lost")')
+        .lt("last_contact_at", new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString())
+        .order("expected_value", { ascending: false })
+        .limit(3),
+      // Overdue follow-ups: high-value leads overdue for follow-up
+      supabase
+        .from("inquiries")
+        .select("id, name, email, deal_value, lead_tier, last_contact_at, follow_up_stage, created_at, services")
+        .in("follow_up_status", ["due", "overdue"])
+        .neq("status", "archived")
+        .neq("follow_up_status", "stopped")
+        .neq("follow_up_status", "completed")
+        .order("deal_value", { ascending: false })
+        .limit(5),
+    ]);
 
-    setCloseToday(topDeals || []);
-
-    // Convert Next: leads going cold (no contact in 3+ days)
-    const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
-    const { data: coldDeals } = await supabase
-      .from("inquiries")
-      .select("id, name, email, services, deal_value, probability, expected_value, deal_stage, last_contact_at, budget_range, lead_tier")
-      .gt("probability", 10)
-      .not("deal_stage", "in", '("closed","lost")')
-      .lt("last_contact_at", threeDaysAgo)
-      .order("expected_value", { ascending: false })
-      .limit(3) as any;
-
-    setConvertNext(coldDeals || []);
+    setCloseToday((topDeals.data as Deal[]) || []);
+    setConvertNext((coldDeals.data as Deal[]) || []);
+    setOverdueFollowUps((overdueRes.data as OverdueFollowUp[]) || []);
     setLoading(false);
   };
 
@@ -232,6 +255,49 @@ export function DecisionPanel() {
           </CardContent>
         </Card>
       </div>
+
+      {/* OVERDUE FOLLOW-UPS */}
+      {overdueFollowUps.length > 0 && (
+        <Card className="bg-destructive/5 border-destructive/20">
+          <CardHeader className="pb-2">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-3.5 w-3.5 text-destructive" />
+              <div>
+                <p className="text-[9px] uppercase tracking-[0.15em] text-destructive/60">Attention</p>
+                <CardTitle className="text-sm font-medium">Overdue Follow-Ups</CardTitle>
+              </div>
+              <Badge variant="destructive" className="text-[9px] ml-auto">{overdueFollowUps.length}</Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {overdueFollowUps.map((item) => {
+              const contactDate = item.last_contact_at || item.created_at;
+              const days = contactDate ? differenceInDays(new Date(), parseISO(contactDate)) : null;
+              return (
+                <div key={item.id} className="flex items-center justify-between py-2 px-3 rounded-sm border border-destructive/10 bg-background/40">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium text-foreground truncate">{item.name}</p>
+                      {item.deal_value && item.deal_value > 0 && (
+                        <span className="text-[10px] text-accent/70 shrink-0">${item.deal_value.toLocaleString()}</span>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">
+                      {days}d since contact · Stage: {item.follow_up_stage === "none" ? "No follow-up sent" : `Follow-up ${item.follow_up_stage}`}
+                    </p>
+                  </div>
+                  <a href="#follow-ups">
+                    <Button size="sm" variant="outline" className="h-7 text-[9px] border-destructive/20 text-destructive hover:bg-destructive/10 shrink-0 ml-2">
+                      View
+                    </Button>
+                  </a>
+                </div>
+              );
+            })}
+            <p className="text-[9px] text-muted-foreground/30 pt-1">Action these in the Follow-Up Engine below</p>
+          </CardContent>
+        </Card>
+      )}
 
       {/* SYSTEM LEVER */}
       <Card className="bg-card/60 border-border/30">

@@ -106,6 +106,7 @@ export function OperationsCommandCentre() {
   const [assessments, setAssessments] = useState<SiteAssessment[]>([]);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [cashFlows, setCashFlows] = useState<CashFlowRow[]>([]);
+  const [followUpsDue, setFollowUpsDue] = useState(0);
   const [loading, setLoading] = useState(true);
 
   // AI briefing
@@ -119,16 +120,18 @@ export function OperationsCommandCentre() {
   const fetchAll = useCallback(async () => {
     setLoading(true);
     const today = new Date().toISOString().split("T")[0];
-    const [inqRes, assessRes, jobRes, cfRes] = await Promise.all([
+    const [inqRes, assessRes, jobRes, cfRes, followUpRes] = await Promise.all([
       supabase.from("inquiries").select("*").order("created_at", { ascending: false }).limit(50),
       supabase.from("site_assessments").select("*").gte("slot_date", today).order("slot_date", { ascending: true }).limit(10),
       supabase.from("jobs").select("*").order("created_at", { ascending: false }),
       supabase.from("cashflow").select("*, jobs(job_name, revenue)").order("created_at", { ascending: false }),
+      supabase.from("inquiries").select("id").in("follow_up_status", ["due", "overdue"]).neq("status", "archived"),
     ]);
     setInquiries((inqRes.data as Inquiry[]) || []);
     setAssessments((assessRes.data as SiteAssessment[]) || []);
     setJobs((jobRes.data as Job[]) || []);
     setCashFlows((cfRes.data as CashFlowRow[]) || []);
+    setFollowUpsDue((followUpRes.data || []).length);
     setLoading(false);
   }, []);
 
@@ -274,7 +277,7 @@ export function OperationsCommandCentre() {
         {[
           { label: "Hot Leads", value: hotLeads.length, icon: Zap, color: "text-accent" },
           { label: "Site Visits Today", value: todayAssessments.length, icon: MapPin, color: "text-foreground" },
-          { label: "Follow-Ups Due", value: staleLeads.length, icon: Clock, color: staleLeads.length > 0 ? "text-accent" : "text-foreground" },
+          { label: "Follow-Ups Due", value: followUpsDue || staleLeads.length, icon: Clock, color: (followUpsDue || staleLeads.length) > 0 ? "text-accent" : "text-foreground" },
           { label: "Financial Alerts", value: overduePayments.length + financials.lowMarginJobs.length, icon: AlertCircle, color: overduePayments.length > 0 ? "text-destructive" : "text-foreground" },
         ].map(s => (
           <Card key={s.label} className="bg-card/60 border-border/30">
