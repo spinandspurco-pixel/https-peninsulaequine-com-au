@@ -604,7 +604,7 @@ export default function GroundLock() {
               {/* CTAs */}
               <RevealOnScroll direction="up" delay={300}>
                 <div className="flex flex-col sm:flex-row gap-4 pt-2">
-                  <Button asChild size="lg" className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.1em] text-xs">
+                  <Button asChild variant="gold" size="lg" className="flex-1">
                     <Link to="/contact">
                       Book Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
