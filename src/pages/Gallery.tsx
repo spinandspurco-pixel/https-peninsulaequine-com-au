@@ -1,28 +1,20 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { Download, MousePointerClick } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
-import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { PageHeader } from "@/components/PageHeader";
-import { GalleryBlueprintOverlay } from "@/components/GalleryBlueprintOverlay";
-import { GalleryTourForm } from "@/components/GalleryTourForm";
-import { GalleryTestimonialStrip } from "@/components/GalleryTestimonialStrip";
-import { RevealOnScroll } from "@/components/RevealOnScroll";
-import { testimonials } from "@/data/content";
+import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
 
-// Extracted gallery modules
 import {
   type GalleryItem,
   galleryItems,
   allVideos,
-  projects,
-  testimonialServiceMap,
 } from "./gallery/galleryData";
 import { GalleryLightbox } from "./gallery/GalleryLightbox";
-
 import { GalleryGrid } from "./gallery/GalleryGrid";
 import { GalleryFilters } from "./gallery/GalleryFilters";
 
@@ -67,40 +59,16 @@ export default function Gallery() {
     (activeLocation !== "all" ? 1 : 0) +
     (searchQuery.trim() ? 1 : 0);
 
-  // Selection helpers (admin bulk export)
   useEffect(() => { setSelectedIds(new Set()); }, [activeProject, activeService, activeLocation, searchQuery]);
 
   const toggleSelect = useCallback((id: number) => {
     setSelectedIds((prev) => { const next = new Set(prev); if (next.has(id)) next.delete(id); else next.add(id); return next; });
   }, []);
 
-  const selectAll = useCallback(() => { setSelectedIds(new Set(filteredItems.map((i) => i.id))); }, [filteredItems]);
-  const deselectAll = useCallback(() => { setSelectedIds(new Set()); }, []);
-
-  const handleBulkDownload = useCallback(() => {
-    const selected = filteredItems.filter((i) => selectedIds.has(i.id));
-    selected.forEach((item, idx) => {
-      setTimeout(() => {
-        const a = document.createElement("a");
-        a.href = item.src;
-        a.download = `peninsula-equine-${item.id}.${item.type === "video" ? "mp4" : "jpg"}`;
-        document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      }, idx * 300);
-    });
-  }, [filteredItems, selectedIds]);
-
-  const filteredTestimonials = useMemo(() => {
-    if (activeService === "all") return testimonials.slice(0, 3);
-    const indices = testimonialServiceMap[activeService] || [];
-    const matched = indices.map((i) => testimonials[i]).filter(Boolean);
-    return matched.length > 0 ? matched : testimonials.slice(0, 2);
-  }, [activeService]);
-
   const clearAllFilters = () => {
     setActiveProject("all"); setActiveService("all"); setActiveLocation("all"); setSearchQuery("");
   };
 
-  // Keyboard shortcut: "/" to focus search
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "/" && !e.ctrlKey && !e.metaKey && document.activeElement?.tagName !== "INPUT") {
@@ -111,7 +79,6 @@ export default function Gallery() {
     return () => window.removeEventListener("keydown", handleKey);
   }, []);
 
-  // All navigable items for lightbox
   const allNavigableItems: GalleryItem[] = useMemo(() => [
     ...galleryItems,
     ...videoGalleryItems,
@@ -127,107 +94,92 @@ export default function Gallery() {
   return (
     <Layout>
       <PageHeader
-        title="Our Work"
-        description="Explore our portfolio of premium equine facilities, from luxurious barns to competition arenas at Australia's biggest events."
+        title="Selected Work"
+        overline="Portfolio"
+        subtitle="A curated collection of builds that represent how we work — quality, restraint, and long-term performance."
         backgroundImage={aberdeenBarnInterior}
-        dividerVariant="structural"
       />
 
-      {/* Photo & Video Gallery */}
-      <GalleryBlueprintOverlay layer="elevation" bg="background" className="section-padding">
-        <div className="section-container">
-          <RevealOnScroll direction="up" duration={600}>
-            <GalleryFilters
-              activeProject={activeProject}
-              setActiveProject={setActiveProject}
-              activeService={activeService}
-              setActiveService={setActiveService}
-              activeLocation={activeLocation}
-              setActiveLocation={setActiveLocation}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              searchInputRef={searchInputRef}
-              activeFilterCount={activeFilterCount}
-              clearAllFilters={clearAllFilters}
-              imageCount={imageCount}
-              videoCount={videoCount}
-              totalCount={filteredItems.length}
+      {/* Gallery */}
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-20 sm:py-28 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container relative z-[1]">
+            <RevealOnScroll direction="up" duration={600}>
+              <GalleryFilters
+                activeProject={activeProject}
+                setActiveProject={setActiveProject}
+                activeService={activeService}
+                setActiveService={setActiveService}
+                activeLocation={activeLocation}
+                setActiveLocation={setActiveLocation}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                searchInputRef={searchInputRef}
+                activeFilterCount={activeFilterCount}
+                clearAllFilters={clearAllFilters}
+                imageCount={imageCount}
+                videoCount={videoCount}
+                totalCount={filteredItems.length}
+              />
+            </RevealOnScroll>
+
+            <GalleryGrid
+              items={filteredItems}
+              onItemClick={setLightboxItem}
+              selectMode={selectMode}
+              selectedIds={selectedIds}
+              onToggleSelect={toggleSelect}
+              key={`${activeProject}-${activeService}-${activeLocation}-${searchQuery}`}
             />
-          </RevealOnScroll>
 
-          <RevealOnScroll direction="up" delay={100}>
-            <GalleryTestimonialStrip testimonials={filteredTestimonials} />
-          </RevealOnScroll>
-
-          {/* Admin bulk select toolbar */}
-          {isAdmin && (
-            <div className="flex items-center justify-between mb-6 px-2">
-              <Button
-                variant={selectMode ? "default" : "outline"}
-                size="sm"
-                onClick={() => { setSelectMode(!selectMode); if (selectMode) setSelectedIds(new Set()); }}
-                className="gap-1.5"
-              >
-                <MousePointerClick className="h-4 w-4" />
-                {selectMode ? "Exit Selection" : "Select Items"}
-              </Button>
-              {selectMode && (
-                <div className="flex items-center gap-3">
-                  <span className="text-sm text-muted-foreground">{selectedIds.size} selected</span>
-                  <Button variant="ghost" size="sm" onClick={selectedIds.size === filteredItems.length ? deselectAll : selectAll}>
-                    {selectedIds.size === filteredItems.length ? "Deselect All" : "Select All"}
-                  </Button>
-                  <Button
-                    size="sm"
-                    disabled={selectedIds.size === 0}
-                    onClick={handleBulkDownload}
-                    className="gap-1.5 bg-accent hover:bg-accent/90 text-accent-foreground"
-                  >
-                    <Download className="h-4 w-4" />
-                    Export {selectedIds.size > 0 ? `(${selectedIds.size})` : ""}
-                  </Button>
-                </div>
-              )}
-            </div>
-          )}
-
-          <GalleryGrid
-            items={filteredItems}
-            onItemClick={setLightboxItem}
-            selectMode={selectMode}
-            selectedIds={selectedIds}
-            onToggleSelect={toggleSelect}
-            key={`${activeProject}-${activeService}-${activeLocation}-${searchQuery}`}
-          />
-
-          {filteredItems.length === 0 && (
-            <div className="text-center py-16">
-              <p className="text-muted-foreground mb-4">No media matches your filters.</p>
-              <button onClick={clearAllFilters} className="text-accent hover:text-accent/80 text-sm underline underline-offset-2">
-                Clear all filters
-              </button>
-            </div>
-          )}
-        </div>
-      </GalleryBlueprintOverlay>
-
-      {/* Gallery Tour Lead Form */}
-      <section className="section-padding bg-card border-y border-border">
-        <div className="section-container">
-          <RevealOnScroll direction="up">
-            <GalleryTourForm />
-          </RevealOnScroll>
+            {filteredItems.length === 0 && (
+              <div className="text-center py-20">
+                <p className="text-muted-foreground/50 mb-4 text-sm">No media matches your filters.</p>
+                <button onClick={clearAllFilters} className="text-accent/70 hover:text-accent text-xs uppercase tracking-[0.15em] underline underline-offset-4">
+                  Clear all filters
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
-      <ParallaxCTA
-        title="Ready to Start Your Project?"
-        description="These projects represent our commitment to excellence. Let's discuss how we can bring your vision to life."
-        backgroundImage={aberdeenBarnInterior}
-        primaryButtonText="Get in Touch"
-        primaryButtonLink="/contact"
-        showPhoneButton={false}
-      />
+      {/* CTA */}
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-28 sm:py-40 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div
+            className="absolute inset-0"
+            style={{ background: "radial-gradient(ellipse 70% 50% at 50% 50%, transparent 20%, hsl(222 20% 3% / 0.5) 100%)" }}
+          />
+          <div className="section-container relative z-10 text-center max-w-lg mx-auto">
+            <RevealOnScroll direction="up">
+              <RevealLine className="mx-auto mb-14" width="w-10" />
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={80}>
+              <h2 className="heading-section text-foreground mb-8">
+                Ready to Start?
+              </h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={150}>
+              <p className="text-sm text-muted-foreground/40 mb-10 leading-relaxed">
+                These projects represent our commitment to getting it right.
+                Let's discuss how we can bring your vision to life.
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={250}>
+              <Button asChild variant="gold" size="lg">
+                <Link to="/contact">
+                  Discuss Your Project <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
 
       <GalleryLightbox
         item={lightboxItem}
