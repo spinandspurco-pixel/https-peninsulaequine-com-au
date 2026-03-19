@@ -411,11 +411,20 @@ serve(async (req) => {
         supabase.from("cashflow").select("*, jobs(job_name, revenue)").order("created_at", { ascending: false }).limit(20),
       ];
 
-      // For daily_plan, also fetch today's assessments and bookings
-      if (action === "daily_plan") {
+      // For daily_plan and decision_panel, also fetch assessments, bookings, and quotes
+      if (action === "daily_plan" || action === "decision_panel") {
         queries.push(
           supabase.from("site_assessments").select("*").gte("slot_date", today).order("slot_date", { ascending: true }).limit(10),
           supabase.from("bookings").select("*").gte("booking_date", today).order("booking_date", { ascending: true }).limit(10),
+          supabase.from("quotes").select("*").not("status", "in", '("expired","declined")').order("created_at", { ascending: false }).limit(20),
+        );
+      }
+
+      // For alerts and daily_summary, also fetch quotes
+      if (action === "alerts" || action === "daily_summary") {
+        queries.push(
+          null, null, // placeholders for assessments/bookings
+          supabase.from("quotes").select("*").not("status", "in", '("expired","declined")').order("created_at", { ascending: false }).limit(20),
         );
       }
 
