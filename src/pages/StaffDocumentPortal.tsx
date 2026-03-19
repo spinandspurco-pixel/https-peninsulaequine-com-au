@@ -13,7 +13,7 @@ import { format, startOfWeek, endOfWeek, isWithinInterval, isWednesday } from "d
 import {
   FileText, DollarSign, HardHat, ClipboardCheck, Send, Loader2, Plus, Clock,
   CheckCircle2, AlertCircle, ChevronDown, ChevronUp, Calendar, ShieldCheck,
-  FileWarning, Download, ArrowLeft, FolderOpen, Bell,
+  FileWarning, Download, ArrowLeft, FolderOpen, Bell, ClipboardList, AlertTriangle, Heart,
 } from "lucide-react";
 import logoPeMark from "@/assets/logo-pe-mark.png";
 
