@@ -563,6 +563,13 @@ ${bookings.length === 0 ? "None scheduled." : bookings.map((b: any) => `- ${b.cl
     const aiData = await aiResponse.json();
     const content = aiData.choices?.[0]?.message?.content || "No response generated.";
 
+    if (action === "decision_panel") {
+      return new Response(
+        JSON.stringify({ system_lever: content }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     return new Response(
       JSON.stringify({ result: content }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
