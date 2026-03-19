@@ -451,9 +451,10 @@ JOBS (${jobs.length}):
 ${jobs
   .map(
     (j: any) => {
-      const costs = Number(j.materials_cost) + Number(j.labour_cost) + Number(j.other_costs);
-      const margin = j.revenue > 0 ? (((j.revenue - costs) / j.revenue) * 100).toFixed(1) : "0";
-      return `- ${j.job_name} | Client: ${j.client_name || "—"} | Status: ${j.status} | Revenue: $${j.revenue} | Costs: $${costs} | Margin: ${margin}%`;
+      const costs = Number(j.actual_cost) || (Number(j.materials_cost) + Number(j.labour_cost) + Number(j.other_costs));
+      const margin = j.margin_percentage != null ? Number(j.margin_percentage).toFixed(1) : (j.revenue > 0 ? (((j.revenue - costs) / j.revenue) * 100).toFixed(1) : "0");
+      const profitStatus = j.profit_status || "—";
+      return `- ${j.job_name} | Client: ${j.client_name || "—"} | Status: ${j.status} | Revenue: $${j.revenue} | Est Cost: $${j.estimated_cost || 0} | Actual Cost: $${costs} | Profit: $${j.gross_profit || 0} | Margin: ${margin}% | Profit Status: ${profitStatus}`;
     }
   )
   .join("\n")}
