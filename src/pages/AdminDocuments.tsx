@@ -90,6 +90,25 @@ function FormDataDisplay({ data }: { data: any }) {
   const renderValue = (key: string, value: any): JSX.Element | null => {
     if (value === null || value === undefined || value === "") return null;
 
+    // Render photo URLs as image grid
+    if (key === "photo_urls" && Array.isArray(value) && value.length > 0) {
+      return (
+        <div key={key} className="col-span-full">
+          <p className="text-xs font-semibold text-muted-foreground mb-1">Site Photos</p>
+          <div className="grid grid-cols-3 gap-2">
+            {value.map((path: string, i: number) => {
+              const url = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/staff-document-photos/${path}`;
+              return (
+                <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="block rounded-lg overflow-hidden border border-border aspect-square">
+                  <img src={url} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" />
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
     const label = key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
 
     if (Array.isArray(value)) {

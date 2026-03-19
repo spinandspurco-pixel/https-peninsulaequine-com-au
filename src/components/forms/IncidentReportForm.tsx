@@ -7,8 +7,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Send, Loader2 } from "lucide-react";
 import { format } from "date-fns";
+import { DocumentPhotoUpload } from "./DocumentPhotoUpload";
 
-export function IncidentReportForm({ onSubmit, loading }: { onSubmit: (data: any) => void; loading: boolean }) {
+export function IncidentReportForm({ onSubmit, loading, userId }: { onSubmit: (data: any) => void; loading: boolean; userId?: string }) {
+  const [photos, setPhotos] = useState<string[]>([]);
   const [form, setForm] = useState({
     project_name: "",
     site_address: "",
@@ -27,13 +29,17 @@ export function IncidentReportForm({ onSubmit, loading }: { onSubmit: (data: any
     corrective_actions: "",
     work_stopped: false,
     authorities_notified: false,
-    photos_attached: false,
     sign_off_name: "",
     sign_off_agreed: false,
   });
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit({ ...form, photo_urls: photos });
+  };
+
   return (
-    <form onSubmit={(e) => { e.preventDefault(); onSubmit(form); }} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label>Project / Job Name *</Label>
@@ -133,6 +139,10 @@ export function IncidentReportForm({ onSubmit, loading }: { onSubmit: (data: any
         <Label>Corrective Actions / Recommendations</Label>
         <Textarea value={form.corrective_actions} onChange={e => setForm(p => ({ ...p, corrective_actions: e.target.value }))} placeholder="Steps to prevent recurrence..." rows={3} />
       </div>
+
+      {userId && (
+        <DocumentPhotoUpload userId={userId} photos={photos} onPhotosChange={setPhotos} maxPhotos={10} />
+      )}
 
       <div className="space-y-3">
         <label className="flex items-center gap-3 cursor-pointer">

@@ -4,11 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Send, Loader2 } from "lucide-react";
 import { format } from "date-fns";
+import { DocumentPhotoUpload } from "./DocumentPhotoUpload";
 
-export function DailySiteReportForm({ onSubmit, loading }: { onSubmit: (data: any) => void; loading: boolean }) {
+export function DailySiteReportForm({ onSubmit, loading, userId }: { onSubmit: (data: any) => void; loading: boolean; userId?: string }) {
+  const [photos, setPhotos] = useState<string[]>([]);
   const [form, setForm] = useState({
     project_name: "",
     site_address: "",
@@ -25,13 +26,17 @@ export function DailySiteReportForm({ onSubmit, loading }: { onSubmit: (data: an
     delays_issues: "",
     safety_incidents: "none",
     visitors_on_site: "",
-    photos_attached: false,
     next_day_plan: "",
     sign_off_name: "",
   });
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit({ ...form, photo_urls: photos });
+  };
+
   return (
-    <form onSubmit={(e) => { e.preventDefault(); onSubmit(form); }} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label>Project / Job Name *</Label>
@@ -121,6 +126,10 @@ export function DailySiteReportForm({ onSubmit, loading }: { onSubmit: (data: an
         <Label>Plan for Tomorrow</Label>
         <Textarea value={form.next_day_plan} onChange={e => setForm(p => ({ ...p, next_day_plan: e.target.value }))} placeholder="Brief plan for next work day..." rows={2} />
       </div>
+
+      {userId && (
+        <DocumentPhotoUpload userId={userId} photos={photos} onPhotosChange={setPhotos} />
+      )}
 
       <div className="p-4 border rounded-lg bg-muted/30 space-y-3">
         <div className="space-y-2">
