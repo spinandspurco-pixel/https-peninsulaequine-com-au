@@ -119,16 +119,18 @@ export function OperationsCommandCentre() {
   const fetchAll = useCallback(async () => {
     setLoading(true);
     const today = new Date().toISOString().split("T")[0];
-    const [inqRes, assessRes, jobRes, cfRes] = await Promise.all([
+    const [inqRes, assessRes, jobRes, cfRes, followUpRes] = await Promise.all([
       supabase.from("inquiries").select("*").order("created_at", { ascending: false }).limit(50),
       supabase.from("site_assessments").select("*").gte("slot_date", today).order("slot_date", { ascending: true }).limit(10),
       supabase.from("jobs").select("*").order("created_at", { ascending: false }),
       supabase.from("cashflow").select("*, jobs(job_name, revenue)").order("created_at", { ascending: false }),
+      supabase.from("inquiries").select("id").in("follow_up_status", ["due", "overdue"]).neq("status", "archived"),
     ]);
     setInquiries((inqRes.data as Inquiry[]) || []);
     setAssessments((assessRes.data as SiteAssessment[]) || []);
     setJobs((jobRes.data as Job[]) || []);
     setCashFlows((cfRes.data as CashFlowRow[]) || []);
+    setFollowUpsDue((followUpRes.data || []).length);
     setLoading(false);
   }, []);
 
