@@ -109,7 +109,8 @@ function AppContent() {
           <Route path="/groundlock" element={<GroundLock />} />
           <Route path="/groundlock-systems" element={<GroundLockSystems />} />
           <Route path="/equus-ridge" element={<EquusRidge />} />
-          <Route path="/installer" element={<InstallerAccess />} />
+           <Route path="/installer" element={<InstallerAccess />} />
+          <Route path="/site-assessment" element={<SiteAssessment />} />
           <Route path="/project/:slug" element={<CaseStudy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
