@@ -58,12 +58,13 @@ export default function Shop() {
         <div className="absolute inset-0 bg-primary/75" />
         <BlueprintScene preset="elevation" className="absolute inset-0" />
         <div className="section-container relative z-10 text-center max-w-2xl mx-auto space-y-4">
-          <p className="text-overline text-accent tracking-[0.25em]">From Dirt to Dynasty</p>
+          <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/60 mb-2">Product Division</p>
           <h1 className="heading-display text-primary-foreground drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
-            The Forge
+            Equus Forge
           </h1>
+          <p className="text-primary-foreground/25 text-[11px] uppercase tracking-[0.2em] mb-2">by Peninsula Equine</p>
           <p className="text-primary-foreground/70 text-lg">
-            Custom steel fabrications, built to order.
+            Systems. Components. Configurations.
           </p>
         </div>
       </section>
