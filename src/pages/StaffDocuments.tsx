@@ -24,8 +24,14 @@ import {
   Plus,
   ShieldCheck,
   FileWarning,
+  ClipboardList,
+  AlertTriangle,
+  Heart,
 } from "lucide-react";
 import { format } from "date-fns";
+import { DailySiteReportForm } from "@/components/forms/DailySiteReportForm";
+import { IncidentReportForm } from "@/components/forms/IncidentReportForm";
+import { HorseCareLogForm } from "@/components/forms/HorseCareLogForm";
 
 // Re-export from shared utility for backward compatibility
 export { exportDocumentAsPDF, DOC_TYPES } from "@/lib/documentUtils";
