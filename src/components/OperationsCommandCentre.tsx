@@ -277,7 +277,7 @@ export function OperationsCommandCentre() {
         {[
           { label: "Hot Leads", value: hotLeads.length, icon: Zap, color: "text-accent" },
           { label: "Site Visits Today", value: todayAssessments.length, icon: MapPin, color: "text-foreground" },
-          { label: "Follow-Ups Due", value: staleLeads.length, icon: Clock, color: staleLeads.length > 0 ? "text-accent" : "text-foreground" },
+          { label: "Follow-Ups Due", value: followUpsDue || staleLeads.length, icon: Clock, color: (followUpsDue || staleLeads.length) > 0 ? "text-accent" : "text-foreground" },
           { label: "Financial Alerts", value: overduePayments.length + financials.lowMarginJobs.length, icon: AlertCircle, color: overduePayments.length > 0 ? "text-destructive" : "text-foreground" },
         ].map(s => (
           <Card key={s.label} className="bg-card/60 border-border/30">
