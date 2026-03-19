@@ -54,10 +54,10 @@ const SWMS_HAZARDS = [
 ];
 
 // ── Form Components ──────────────────────────────
-function SWMSForm({ onSubmit, loading }: { onSubmit: (data: any) => void; loading: boolean }) {
+function SWMSForm({ onSubmit, loading, defaults }: { onSubmit: (data: any) => void; loading: boolean; defaults?: { project_name: string; site_address: string } }) {
   const [form, setForm] = useState({
-    project_name: "",
-    site_address: "",
+    project_name: defaults?.project_name || "",
+    site_address: defaults?.site_address || "",
     date: format(new Date(), "yyyy-MM-dd"),
     principal_contractor: "Peninsula Equine",
     prepared_by: "",
