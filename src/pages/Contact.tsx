@@ -247,8 +247,10 @@ export default function Contact() {
       </section>
 
       {/* ═══ SITE ASSESSMENT ════════════════════════════ */}
-      <section className="py-24 sm:py-32 bg-background relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-24 sm:py-32 relative">
+        <div className="absolute inset-0 grain-texture" />
         <div className="section-container max-w-2xl mx-auto relative z-[1]">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
             <div>
@@ -282,34 +284,41 @@ export default function Contact() {
             </div>
           </div>
         </div>
+        </div>
       </section>
 
       {/* ═══ INTRO ═══════════════════════════════════════ */}
-      <section className="py-20 sm:py-28 bg-card border-y border-border relative overflow-hidden">
-        <div className="section-container max-w-2xl mx-auto text-center relative z-[1] space-y-8">
-          <RevealLine className="mx-auto" width="w-10" />
-          <RevealOnScroll direction="up">
-            <h2 className="heading-section text-foreground">
-              Start With the Land
-            </h2>
-          </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={100}>
-            <div className="space-y-5 text-sm text-muted-foreground leading-[1.8] max-w-lg mx-auto">
-              <p>
-                Every project begins with understanding the property —<br />
-                its drainage, its layout, and how horses move through it.
-              </p>
-              <p className="text-foreground/60 italic">
-                This isn't a quick quote process.<br />
-                It's a considered build from the ground up.
-              </p>
-            </div>
-          </RevealOnScroll>
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-20 sm:py-28 bg-card relative">
+          <div className="absolute inset-0 contour-texture" />
+          <div className="section-container max-w-2xl mx-auto text-center relative z-[1] space-y-8">
+            <RevealLine className="mx-auto" width="w-10" />
+            <RevealOnScroll direction="up">
+              <h2 className="heading-section text-foreground">
+                Start With the Land
+              </h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={100}>
+              <div className="space-y-5 text-sm text-muted-foreground leading-[1.8] max-w-lg mx-auto">
+                <p>
+                  Every project begins with understanding the property —<br />
+                  its drainage, its layout, and how horses move through it.
+                </p>
+                <p className="text-foreground/60 italic">
+                  This isn't a quick quote process.<br />
+                  It's a considered build from the ground up.
+                </p>
+              </div>
+            </RevealOnScroll>
+          </div>
         </div>
       </section>
 
       {/* ═══ FORM ════════════════════════════════════════ */}
-      <section className="py-16 sm:py-24 bg-card border-y border-border">
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-16 sm:py-24 bg-card relative">
         <div className="section-container max-w-2xl mx-auto">
           {submitted ? (
             <RevealOnScroll direction="up">
@@ -328,14 +337,14 @@ export default function Contact() {
                 <div className="pt-6 flex flex-col sm:flex-row gap-4 justify-center">
                   <a
                     href={`tel:${siteConfig.phone}`}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-border text-sm font-medium text-foreground hover:bg-secondary transition-all"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium text-foreground hover:border-accent/30 hover:text-accent transition-all duration-500"
                   >
                     <Phone className="h-4 w-4 text-accent" />
                     {siteConfig.phone}
                   </a>
                   <a
                     href={`mailto:${siteConfig.email}`}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-border text-sm font-medium text-foreground hover:bg-secondary transition-all"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium text-foreground hover:border-accent/30 hover:text-accent transition-all duration-500"
                   >
                     <Mail className="h-4 w-4 text-accent" />
                     {siteConfig.email}
@@ -604,34 +613,39 @@ export default function Contact() {
             </form>
           )}
         </div>
+        </div>
       </section>
 
       {/* ═══ DIRECT CONTACT ══════════════════════════════ */}
-      <section className="py-16 sm:py-20 bg-background relative grain-texture overflow-hidden">
-        <div className="section-container max-w-md mx-auto text-center relative z-[1] space-y-6">
-          <RevealOnScroll direction="up">
-            <p className="text-sm text-muted-foreground">
-              Prefer to speak directly?
-            </p>
-          </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={100}>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href={`tel:${siteConfig.phone}`}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-border text-sm font-medium text-foreground hover:bg-secondary transition-all btn-hover-lift"
-              >
-                <Phone className="h-4 w-4 text-accent" />
-                {siteConfig.phone}
-              </a>
-              <a
-                href={`mailto:${siteConfig.email}`}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-border text-sm font-medium text-foreground hover:bg-secondary transition-all btn-hover-lift"
-              >
-                <Mail className="h-4 w-4 text-accent" />
-                {siteConfig.email}
-              </a>
-            </div>
-          </RevealOnScroll>
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-16 sm:py-20 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-md mx-auto text-center relative z-[1] space-y-6">
+            <RevealOnScroll direction="up">
+              <p className="text-sm text-muted-foreground">
+                Prefer to speak directly?
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={100}>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href={`tel:${siteConfig.phone}`}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium text-foreground hover:border-accent/30 hover:text-accent transition-all duration-500"
+                >
+                  <Phone className="h-4 w-4 text-accent" />
+                  {siteConfig.phone}
+                </a>
+                <a
+                  href={`mailto:${siteConfig.email}`}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium text-foreground hover:border-accent/30 hover:text-accent transition-all duration-500"
+                >
+                  <Mail className="h-4 w-4 text-accent" />
+                  {siteConfig.email}
+                </a>
+              </div>
+            </RevealOnScroll>
+          </div>
         </div>
       </section>
     </Layout>

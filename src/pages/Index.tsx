@@ -437,7 +437,7 @@ export default function Index() {
 
             <RevealOnScroll direction="up" delay={400}>
               <div className="text-center mt-16">
-                <Button asChild variant="outline" size="default">
+                <Button asChild variant="outline-light" size="default">
                   <Link to="/gallery">View Selected Works <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
                 </Button>
               </div>
@@ -530,7 +530,7 @@ export default function Index() {
                     Discuss Your Project <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg">
+                <Button asChild variant="outline-light" size="lg">
                   <Link to="/groundlock">Explore the System</Link>
                 </Button>
               </div>

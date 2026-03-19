@@ -444,18 +444,24 @@ export default function GroundLock() {
       </section>
 
       {/* Interactive System Diagram */}
-      <section className="py-44 sm:py-64 bg-background relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
-        <div className="section-container max-w-6xl mx-auto relative z-[1]">
-          <RevealOnScroll direction="up">
-            <GroundLockSystemDiagram />
-          </RevealOnScroll>
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-28 sm:py-40 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-6xl mx-auto relative z-[1]">
+            <RevealOnScroll direction="up">
+              <GroundLockSystemDiagram />
+            </RevealOnScroll>
+          </div>
         </div>
       </section>
 
       {/* Estimator */}
-      <section className="py-24 sm:py-36 bg-background">
-        <div className="section-container">
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-24 sm:py-36 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container relative z-[1]">
           {/* Project Type Chips */}
           <div className="max-w-7xl mx-auto mb-8">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
@@ -598,12 +604,12 @@ export default function GroundLock() {
               {/* CTAs */}
               <RevealOnScroll direction="up" delay={300}>
                 <div className="flex flex-col sm:flex-row gap-4 pt-2">
-                  <Button asChild size="lg" className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.1em] text-xs">
+                  <Button asChild variant="gold" size="lg" className="flex-1">
                     <Link to="/contact">
                       Book Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
-                  <Button asChild size="lg" variant="outline" className="flex-1">
+                  <Button asChild size="lg" variant="outline-light" className="flex-1">
                     <a href="tel:0418585489">
                       <Phone className="mr-2 h-4 w-4" /> Call 0418 585 489
                     </a>
@@ -625,12 +631,16 @@ export default function GroundLock() {
               </p>
             </div>
           </div>
+          </div>
         </div>
       </section>
 
       {/* Scope & Variables */}
-      <section className="py-24 sm:py-36 bg-card border-t border-border">
-        <div className="section-container max-w-6xl mx-auto">
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-24 sm:py-36 bg-card relative">
+          <div className="absolute inset-0 contour-texture" />
+          <div className="section-container max-w-6xl mx-auto relative z-[1]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
             <RevealOnScroll direction="up" stagger={0} staggerInterval={120}>
               <div>
@@ -674,57 +684,54 @@ export default function GroundLock() {
               </div>
             </RevealOnScroll>
           </div>
+          </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-44 sm:py-64 bg-primary text-primary-foreground relative overflow-hidden">
-        <BlueprintScene preset="barn" className="absolute inset-0" />
-        <div className="absolute inset-0 bg-primary/92" />
-        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.03]" />
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, transparent 30%, hsl(var(--primary)) 100%)" }} />
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-28 sm:py-40 relative">
+          <div className="absolute inset-0 engineering-grid" />
+          <div className="absolute inset-0 grain-texture" />
+          <div
+            className="absolute inset-0"
+            style={{ background: "radial-gradient(ellipse 70% 50% at 50% 50%, transparent 20%, hsl(222 20% 3% / 0.5) 100%)" }}
+          />
 
-        <div className="section-container relative z-10 text-center max-w-lg mx-auto">
-          <RevealOnScroll direction="up">
-            <div className="w-8 h-px bg-accent/40 mx-auto mb-12" />
-          </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={80}>
-            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold text-primary-foreground tracking-[0.01em] leading-[1.2] mb-6">
-              Request Site Assessment
-            </h2>
-          </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={150}>
-            <p className="text-primary-foreground/40 text-sm leading-[1.8] max-w-sm mx-auto mb-10">
-              We assess each property based on ground conditions,<br />
-              use, and long-term performance.
-            </p>
-          </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={250}>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <Button
-                asChild
-                size="lg"
-                className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.14em] text-xs font-medium btn-hover-lift px-10 py-3.5"
-              >
-                <Link to="/contact">
-                  Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/5 uppercase tracking-[0.14em] text-xs font-medium px-10 py-3.5"
-              >
-                <Link to="/groundlock">Estimate a Project</Link>
-              </Button>
-            </div>
-          </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={350}>
-            <p className="text-primary-foreground/18 text-[11px] tracking-[0.15em]">
-              We take on a limited number of projects each season.
-            </p>
-          </RevealOnScroll>
+          <div className="section-container relative z-10 text-center max-w-lg mx-auto">
+            <RevealOnScroll direction="up">
+              <RevealLine className="mx-auto mb-14" width="w-10" />
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={80}>
+              <h2 className="heading-section text-foreground mb-8">
+                Request Site Assessment
+              </h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={150}>
+              <p className="text-sm text-muted-foreground/40 mb-10 leading-[1.8] max-w-sm mx-auto">
+                We assess each property based on ground conditions,
+                use, and long-term performance.
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={250}>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                <Button asChild variant="gold" size="lg">
+                  <Link to="/contact">
+                    Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline-light" size="lg">
+                  <Link to="/groundlock">Estimate a Project</Link>
+                </Button>
+              </div>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={350}>
+              <p className="text-muted-foreground/20 text-[10px] tracking-[0.2em] uppercase">
+                We take on a limited number of projects each season.
+              </p>
+            </RevealOnScroll>
+          </div>
         </div>
       </section>
 
