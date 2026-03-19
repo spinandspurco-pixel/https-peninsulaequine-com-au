@@ -368,15 +368,15 @@ export default function Admin() {
             </div>
           )}
 
-          {/* Quick Links */}
+          {/* Quick Links — filtered per view */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-            {[
-              { to: "/admin/services", label: "Services", desc: "Content", icon: Settings },
-              { to: "/admin/testimonials", label: "Testimonials", desc: "Content", icon: MessageSquare },
-              { to: "/admin/events", label: "Events", desc: "Content", icon: Calendar },
-              { to: "/bookings", label: "Bookings", desc: "Operations", icon: CalendarDays },
-              { to: "/admin/documents", label: "Documents", desc: "Compliance", icon: Download },
-            ].map((link) => (
+            {([
+              { to: "/admin/services", label: "Services", desc: "Content", icon: Settings, views: ["founder", "admin"] },
+              { to: "/admin/testimonials", label: "Testimonials", desc: "Content", icon: MessageSquare, views: ["founder", "admin"] },
+              { to: "/admin/events", label: "Events", desc: "Content", icon: Calendar, views: ["founder", "admin"] },
+              { to: "/bookings", label: "Bookings", desc: "Operations", icon: CalendarDays, views: ["founder", "admin", "operations"] },
+              { to: "/admin/documents", label: "Documents", desc: "Compliance", icon: Download, views: ["founder", "admin", "operations"] },
+            ] as const).filter((link) => (link.views as readonly string[]).includes(viewMode)).map((link) => (
               <Link key={link.to} to={link.to}>
                 <Card className="bg-card/60 border-border/30 hover:border-accent/30 transition-all duration-200 cursor-pointer group h-full">
                   <CardHeader className="p-4">
