@@ -557,8 +557,44 @@ export function FollowUpEngine() {
                 </div>
               )}
 
+              {/* ---- Capped — exhausted follow-ups ---- */}
+              {cappedLeads.length > 0 && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-1.5 pb-1 border-b border-border/10">
+                    <Pause className="h-3 w-3 text-muted-foreground/30" />
+                    <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40 font-medium">
+                      Max Follow-Ups Reached ({cappedLeads.length})
+                    </p>
+                  </div>
+                  {cappedLeads.map((lead) => (
+                    <div key={lead.id} className="flex items-center justify-between py-2 px-3 rounded-sm bg-muted/10 border border-border/10">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-medium text-muted-foreground">{lead.name}</p>
+                          <Badge variant="outline" className="text-[8px] border-border/20 text-muted-foreground/50">3/3 sent</Badge>
+                          {lead.deal_value && lead.deal_value > 0 && (
+                            <span className="text-[10px] text-muted-foreground/40">${lead.deal_value.toLocaleString()}</span>
+                          )}
+                        </div>
+                        <p className="text-[10px] text-muted-foreground/40">
+                          {daysSince(lead.last_contact_at || lead.created_at)}d since contact · No further auto-prompts
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0 ml-2">
+                        <Button size="sm" variant="ghost" className="h-7 text-[9px] text-muted-foreground/40" onClick={() => markComplete("lead", lead.id)}>
+                          <CheckCircle className="h-3 w-3 mr-1" />Complete
+                        </Button>
+                        <Button size="sm" variant="ghost" className="h-7 text-[9px] text-muted-foreground/40" onClick={() => stopFollowUp(lead.id)}>
+                          <Pause className="h-3 w-3 mr-1" />Stop
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               {/* ---- Empty state ---- */}
-              {totalDue === 0 && totalOverdue === 0 && drafts.length === 0 && (
+              {totalDue === 0 && totalOverdue === 0 && drafts.length === 0 && cappedLeads.length === 0 && (
                 <div className="text-center py-8">
                   <CheckCircle className="h-6 w-6 text-emerald-500/40 mx-auto mb-2" />
                   <p className="text-sm text-muted-foreground/60">All follow-ups are current</p>

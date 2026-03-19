@@ -95,10 +95,16 @@ export function DecisionPanel() {
       const res = await supabase.functions.invoke("admin-ai-assistant", {
         body: { action: "decision_panel" },
       });
-      if (res.data?.system_lever) {
+      if (res.error) {
+        const msg = typeof res.error === "object" && res.error.message ? res.error.message : "Failed to generate insight";
+        toast.error(msg);
+      } else if (res.data?.system_lever) {
         setSystemLever(res.data.system_lever);
+      } else {
+        toast.error("No insight returned");
       }
-    } catch {
+    } catch (err) {
+      console.error("System lever error:", err);
       toast.error("Failed to generate insight");
     }
     setAiLoading(false);
