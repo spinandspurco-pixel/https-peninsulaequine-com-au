@@ -86,10 +86,26 @@ export function DecisionPanel() {
       if (topDeals.error) console.error("Decision Panel: topDeals error", topDeals.error);
       if (coldDeals.error) console.error("Decision Panel: coldDeals error", coldDeals.error);
       if (overdueRes.error) console.error("Decision Panel: overdueRes error", overdueRes.error);
+      if (atRiskQuotesRes.error) console.error("Decision Panel: atRiskQuotes error", atRiskQuotesRes.error);
 
-      setCloseToday((topDeals.data as Deal[]) || []);
+      // Force high-value or high-probability deals into Close Today
+      const allDeals = (topDeals.data as Deal[]) || [];
+      const forceClose = allDeals.filter(d =>
+        d.deal_value > 100000 || d.probability >= 70
+      );
+      const remaining = allDeals.filter(d =>
+        !forceClose.find(f => f.id === d.id)
+      );
+      // Merge: forced deals first, then by expected_value
+      const closeTodayList = [
+        ...forceClose.sort((a, b) => b.expected_value - a.expected_value),
+        ...remaining.sort((a, b) => b.expected_value - a.expected_value),
+      ].slice(0, 5);
+
+      setCloseToday(closeTodayList);
       setConvertNext((coldDeals.data as Deal[]) || []);
       setOverdueFollowUps((overdueRes.data as OverdueFollowUp[]) || []);
+      setAtRiskQuotes((atRiskQuotesRes.data as AtRiskQuote[]) || []);
     } catch (err) {
       console.error("Decision Panel fetch error:", err);
       toast.error("Failed to load decision data");
