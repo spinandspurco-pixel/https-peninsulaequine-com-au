@@ -12,6 +12,9 @@ import {
   Eye, Mail, ArrowRight, TrendingUp,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { AutomationSettingsPanel } from "@/components/AutomationSettingsPanel";
+import { ActivityLog } from "@/components/ActivityLog";
+import { ApprovalQueue } from "@/components/ApprovalQueue";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
