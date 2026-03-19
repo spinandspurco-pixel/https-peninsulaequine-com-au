@@ -288,10 +288,10 @@ function PaymentSlipForm({ onSubmit, loading }: { onSubmit: (data: any) => void;
   );
 }
 
-function SiteInspectionForm({ onSubmit, loading }: { onSubmit: (data: any) => void; loading: boolean }) {
+function SiteInspectionForm({ onSubmit, loading, defaults }: { onSubmit: (data: any) => void; loading: boolean; defaults?: { project_name: string; site_address: string } }) {
   const [form, setForm] = useState({
-    site_name: "",
-    site_address: "",
+    site_name: defaults?.project_name || "",
+    site_address: defaults?.site_address || "",
     date: format(new Date(), "yyyy-MM-dd"),
     inspector_name: "",
     weather_conditions: "fine",
