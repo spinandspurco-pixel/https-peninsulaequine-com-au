@@ -166,8 +166,8 @@ export default function Gallery() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <p className="text-sm text-muted-foreground/40 mb-10 leading-relaxed">
-                These outcomes represent our commitment to long-term performance.<br />
-                Let's discuss how we can bring that standard to your property.
+                Each project is assessed individually to ensure correct<br />
+                system specification and long-term performance.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={250}>

@@ -512,20 +512,15 @@ export default function GroundLock() {
                         Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
-                    <Button asChild size="lg" variant="outline-light" className="flex-1">
-                      <a href="tel:0418585489">
-                        <Phone className="mr-2 h-4 w-4" /> Call 0418 585 489
-                      </a>
+                    <Button
+                      size="lg"
+                      variant="outline-light"
+                      className="flex-1 text-xs uppercase tracking-[0.1em] font-mono"
+                      onClick={handleDownloadPDF}
+                    >
+                      <Download className="mr-2 h-4 w-4" /> Download Project Brief
                     </Button>
                   </div>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="w-full mt-3 text-xs uppercase tracking-[0.1em] font-mono"
-                    onClick={handleDownloadPDF}
-                  >
-                    <Download className="mr-2 h-4 w-4" /> Download Project Brief
-                  </Button>
                 </RevealOnScroll>
 
                 <p className="text-[10px] text-muted-foreground/30 font-mono leading-relaxed">
