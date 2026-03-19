@@ -315,7 +315,10 @@ export default function Admin() {
             ))}
           </div>
 
-          {/* Today's Plan — Daily Command Centre */}
+          {/* Operations Command Centre — Daily Hub */}
+          <OperationsCommandCentre />
+
+          {/* Today's Plan — Detailed AI Plan */}
           <TodaysPlan />
 
           {/* Upcoming Bookings */}
