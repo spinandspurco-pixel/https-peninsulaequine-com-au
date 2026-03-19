@@ -17,6 +17,7 @@ import { AssessmentAvailabilityManager } from "@/components/AssessmentAvailabili
 import { TodaysPlan } from "@/components/TodaysPlan";
 import { OperationsCommandCentre } from "@/components/OperationsCommandCentre";
 import { FollowUpEngine } from "@/components/FollowUpEngine";
+import { AdminSystemSettings } from "@/components/AdminSystemSettings";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -283,11 +284,28 @@ export default function Admin() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-          {/* Revenue Strip */}
+          {/* ═══════════════════════════════════════════════════════ */}
+          {/* LOCKED LAYOUT — Do not reorder these sections           */}
+          {/* ═══════════════════════════════════════════════════════ */}
+
+          {/* 1. Revenue Strip — always first */}
           <RevenueStrip />
 
-          {/* Decision Panel */}
+          {/* 2. Decision Panel — pipeline intelligence */}
           <DecisionPanel />
+
+          {/* 3. Follow-Up Engine — action queue */}
+          <FollowUpEngine />
+
+          {/* 4. Operations Command Centre — team lanes */}
+          <OperationsCommandCentre />
+
+          {/* 5. Quote System */}
+          <QuotesDashboard />
+
+          {/* ═══════════════════════════════════════════════════════ */}
+          {/* SUPPORTING SECTIONS                                     */}
+          {/* ═══════════════════════════════════════════════════════ */}
 
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -334,10 +352,7 @@ export default function Admin() {
             ))}
           </div>
 
-          {/* Operations Command Centre — Daily Hub */}
-          <OperationsCommandCentre />
-
-          {/* Today's Plan — Detailed AI Plan */}
+          {/* Today's Plan */}
           <TodaysPlan />
 
           {/* Upcoming Bookings */}
@@ -390,12 +405,6 @@ export default function Admin() {
           {/* AI Operations Assistant */}
           <AIOperationsAssistant inquiries={inquiries} />
 
-          {/* Follow-Up Engine */}
-          <FollowUpEngine />
-
-          {/* Quote System */}
-          <QuotesDashboard />
-
           {/* Site Assessment Manager */}
           <AssessmentAvailabilityManager />
 
@@ -410,6 +419,9 @@ export default function Admin() {
 
           {/* A/B Tests */}
           <ABTestStatsPanel />
+
+          {/* System Settings — hidden admin panel */}
+          <AdminSystemSettings />
 
           {/* CRM Settings */}
           <Card className="bg-card/80 border-border/40">

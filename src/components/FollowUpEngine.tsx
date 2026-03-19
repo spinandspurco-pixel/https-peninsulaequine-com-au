@@ -173,8 +173,13 @@ export function FollowUpEngine() {
   useEffect(() => { fetchData(); }, [fetchData]);
 
   /* -- Compute follow-up candidates using dynamic thresholds -- */
+  /* -- Max 3 follow-ups: stage "3" or "final" = capped, no more prompts -- */
+  const MAX_FOLLOW_UP_STAGE = "3";
+
   const dueLeads = toggles.follow_up_leads ? inquiries.filter(i => {
     if (i.follow_up_status === "stopped" || i.follow_up_status === "completed") return false;
+    // Cap at stage 3 — no further prompts unless manually extended
+    if (["3", "final"].includes(i.follow_up_stage)) return false;
     const contactDate = i.last_contact_at || i.created_at;
     const days = daysSince(contactDate);
     if (days === null) return false;
@@ -187,8 +192,16 @@ export function FollowUpEngine() {
   const overdueLeads = toggles.follow_up_leads ? inquiries.filter(i => {
     const contactDate = i.last_contact_at || i.created_at;
     const days = daysSince(contactDate);
-    return days !== null && days >= timing.lead_day_3 && i.follow_up_stage !== "final" && i.follow_up_status !== "stopped" && i.follow_up_status !== "completed";
+    return days !== null && days >= timing.lead_day_3
+      && !["3", "final"].includes(i.follow_up_stage)
+      && i.follow_up_status !== "stopped" && i.follow_up_status !== "completed";
   }) : [];
+
+  // Leads that have exhausted all 3 follow-ups (for display)
+  const cappedLeads = inquiries.filter(i =>
+    ["3", "final"].includes(i.follow_up_stage)
+    && i.follow_up_status !== "stopped" && i.follow_up_status !== "completed"
+  );
 
   const dueQuotes = toggles.follow_up_quotes ? quotes.filter(q => {
     if (!q.sent_at) return false;
@@ -201,14 +214,26 @@ export function FollowUpEngine() {
     ...dueQuotes.filter(q => q.total >= 50000),
   ];
 
-  /* -- Generate AI draft -- */
+  /* -- Generate AI draft with duplicate + cap guard -- */
   const generateDraft = async (entityType: "lead" | "quote", entityId: string, clientName: string, clientEmail: string, context: Record<string, unknown>) => {
     setGenerating(true);
     try {
       const { data, error } = await supabase.functions.invoke("generate-follow-up-draft", {
         body: { entity_type: entityType, entity_id: entityId, client_name: clientName, client_email: clientEmail, context },
       });
-      if (error) throw error;
+      if (error) {
+        // Parse edge function error message
+        const errMsg = typeof error === "object" && error.message ? error.message : String(error);
+        if (errMsg.includes("Maximum 3")) {
+          toast.error("Maximum 3 follow-ups reached for this lead.");
+        } else if (errMsg.includes("draft already exists")) {
+          toast.error("A draft already exists for this follow-up stage.");
+        } else {
+          throw error;
+        }
+        setGenerating(false);
+        return;
+      }
       toast.success("Draft generated");
       fetchData();
     } catch {
@@ -532,8 +557,44 @@ export function FollowUpEngine() {
                 </div>
               )}
 
+              {/* ---- Capped — exhausted follow-ups ---- */}
+              {cappedLeads.length > 0 && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-1.5 pb-1 border-b border-border/10">
+                    <Pause className="h-3 w-3 text-muted-foreground/30" />
+                    <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40 font-medium">
+                      Max Follow-Ups Reached ({cappedLeads.length})
+                    </p>
+                  </div>
+                  {cappedLeads.map((lead) => (
+                    <div key={lead.id} className="flex items-center justify-between py-2 px-3 rounded-sm bg-muted/10 border border-border/10">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-medium text-muted-foreground">{lead.name}</p>
+                          <Badge variant="outline" className="text-[8px] border-border/20 text-muted-foreground/50">3/3 sent</Badge>
+                          {lead.deal_value && lead.deal_value > 0 && (
+                            <span className="text-[10px] text-muted-foreground/40">${lead.deal_value.toLocaleString()}</span>
+                          )}
+                        </div>
+                        <p className="text-[10px] text-muted-foreground/40">
+                          {daysSince(lead.last_contact_at || lead.created_at)}d since contact · No further auto-prompts
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0 ml-2">
+                        <Button size="sm" variant="ghost" className="h-7 text-[9px] text-muted-foreground/40" onClick={() => markComplete("lead", lead.id)}>
+                          <CheckCircle className="h-3 w-3 mr-1" />Complete
+                        </Button>
+                        <Button size="sm" variant="ghost" className="h-7 text-[9px] text-muted-foreground/40" onClick={() => stopFollowUp(lead.id)}>
+                          <Pause className="h-3 w-3 mr-1" />Stop
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               {/* ---- Empty state ---- */}
-              {totalDue === 0 && totalOverdue === 0 && drafts.length === 0 && (
+              {totalDue === 0 && totalOverdue === 0 && drafts.length === 0 && cappedLeads.length === 0 && (
                 <div className="text-center py-8">
                   <CheckCircle className="h-6 w-6 text-emerald-500/40 mx-auto mb-2" />
                   <p className="text-sm text-muted-foreground/60">All follow-ups are current</p>
