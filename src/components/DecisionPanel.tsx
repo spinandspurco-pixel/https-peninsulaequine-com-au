@@ -46,30 +46,40 @@ export function DecisionPanel() {
   }, []);
 
   const fetchDeals = async () => {
-    // Close Today: top 3 by expected_value, exclude low-intent
-    const { data: topDeals } = await supabase
-      .from("inquiries")
-      .select("id, name, email, services, deal_value, probability, expected_value, deal_stage, last_contact_at, budget_range, lead_tier")
-      .gt("probability", 10)
-      .gt("expected_value", 0)
-      .not("deal_stage", "in", '("closed","lost")')
-      .order("expected_value", { ascending: false })
-      .limit(3) as any;
+    const [topDeals, coldDeals, overdueRes] = await Promise.all([
+      // Close Today: top 3 by expected_value
+      supabase
+        .from("inquiries")
+        .select("id, name, email, services, deal_value, probability, expected_value, deal_stage, last_contact_at, budget_range, lead_tier")
+        .gt("probability", 10)
+        .gt("expected_value", 0)
+        .not("deal_stage", "in", '("closed","lost")')
+        .order("expected_value", { ascending: false })
+        .limit(3),
+      // Convert Next: leads going cold
+      supabase
+        .from("inquiries")
+        .select("id, name, email, services, deal_value, probability, expected_value, deal_stage, last_contact_at, budget_range, lead_tier")
+        .gt("probability", 10)
+        .not("deal_stage", "in", '("closed","lost")')
+        .lt("last_contact_at", new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString())
+        .order("expected_value", { ascending: false })
+        .limit(3),
+      // Overdue follow-ups: high-value leads overdue for follow-up
+      supabase
+        .from("inquiries")
+        .select("id, name, email, deal_value, lead_tier, last_contact_at, follow_up_stage, created_at, services")
+        .in("follow_up_status", ["due", "overdue"])
+        .neq("status", "archived")
+        .neq("follow_up_status", "stopped")
+        .neq("follow_up_status", "completed")
+        .order("deal_value", { ascending: false })
+        .limit(5),
+    ]);
 
-    setCloseToday(topDeals || []);
-
-    // Convert Next: leads going cold (no contact in 3+ days)
-    const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
-    const { data: coldDeals } = await supabase
-      .from("inquiries")
-      .select("id, name, email, services, deal_value, probability, expected_value, deal_stage, last_contact_at, budget_range, lead_tier")
-      .gt("probability", 10)
-      .not("deal_stage", "in", '("closed","lost")')
-      .lt("last_contact_at", threeDaysAgo)
-      .order("expected_value", { ascending: false })
-      .limit(3) as any;
-
-    setConvertNext(coldDeals || []);
+    setCloseToday((topDeals.data as Deal[]) || []);
+    setConvertNext((coldDeals.data as Deal[]) || []);
+    setOverdueFollowUps((overdueRes.data as OverdueFollowUp[]) || []);
     setLoading(false);
   };
 
