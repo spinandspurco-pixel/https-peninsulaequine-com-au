@@ -118,6 +118,7 @@ export default function Admin() {
   const [hubspotEnabled, setHubspotEnabled] = useState(false);
   const [isSavingCrm, setIsSavingCrm] = useState(false);
   const [showCrmSettings, setShowCrmSettings] = useState(false);
+  const [quoteForInquiryId, setQuoteForInquiryId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) navigate("/login");
