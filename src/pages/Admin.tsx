@@ -358,6 +358,9 @@ export default function Admin() {
           {/* Staff & Onboarding */}
           <AdminStaffOnboarding />
 
+          {/* Financial Control */}
+          <FinancialDashboard />
+
           {/* A/B Tests */}
           <ABTestStatsPanel />
 
