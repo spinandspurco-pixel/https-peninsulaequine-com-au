@@ -33,10 +33,23 @@ interface OverdueFollowUp {
   services: string[];
 }
 
+interface AtRiskQuote {
+  id: string;
+  quote_number: string;
+  client_name: string;
+  client_email: string | null;
+  total: number;
+  status: string;
+  sent_at: string | null;
+  viewed_at: string | null;
+  project_type: string;
+}
+
 export function DecisionPanel() {
   const [closeToday, setCloseToday] = useState<Deal[]>([]);
   const [convertNext, setConvertNext] = useState<Deal[]>([]);
   const [overdueFollowUps, setOverdueFollowUps] = useState<OverdueFollowUp[]>([]);
+  const [atRiskQuotes, setAtRiskQuotes] = useState<AtRiskQuote[]>([]);
   const [systemLever, setSystemLever] = useState("");
   const [loading, setLoading] = useState(true);
   const [aiLoading, setAiLoading] = useState(false);
@@ -47,7 +60,7 @@ export function DecisionPanel() {
 
   const fetchDeals = async () => {
     try {
-      const [topDeals, coldDeals, overdueRes] = await Promise.all([
+      const [topDeals, coldDeals, overdueRes, atRiskQuotesRes] = await Promise.all([
         supabase
           .from("inquiries")
           .select("id, name, email, services, deal_value, probability, expected_value, deal_stage, last_contact_at, budget_range, lead_tier")
@@ -55,7 +68,7 @@ export function DecisionPanel() {
           .gt("expected_value", 0)
           .not("deal_stage", "in", '("closed","lost")')
           .order("expected_value", { ascending: false })
-          .limit(3),
+          .limit(5),
         supabase
           .from("inquiries")
           .select("id, name, email, services, deal_value, probability, expected_value, deal_stage, last_contact_at, budget_range, lead_tier")
@@ -73,15 +86,39 @@ export function DecisionPanel() {
           .neq("follow_up_status", "completed")
           .order("deal_value", { ascending: false })
           .limit(5),
+        supabase
+          .from("quotes")
+          .select("id, quote_number, client_name, client_email, total, status, sent_at, viewed_at, project_type")
+          .eq("status", "sent")
+          .lt("sent_at", new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString())
+          .is("viewed_at", null)
+          .order("total", { ascending: false })
+          .limit(5),
       ]);
 
       if (topDeals.error) console.error("Decision Panel: topDeals error", topDeals.error);
       if (coldDeals.error) console.error("Decision Panel: coldDeals error", coldDeals.error);
       if (overdueRes.error) console.error("Decision Panel: overdueRes error", overdueRes.error);
+      if (atRiskQuotesRes.error) console.error("Decision Panel: atRiskQuotes error", atRiskQuotesRes.error);
 
-      setCloseToday((topDeals.data as Deal[]) || []);
+      // Force high-value or high-probability deals into Close Today
+      const allDeals = (topDeals.data as Deal[]) || [];
+      const forceClose = allDeals.filter(d =>
+        d.deal_value > 100000 || d.probability >= 70
+      );
+      const remaining = allDeals.filter(d =>
+        !forceClose.find(f => f.id === d.id)
+      );
+      // Merge: forced deals first, then by expected_value
+      const closeTodayList = [
+        ...forceClose.sort((a, b) => b.expected_value - a.expected_value),
+        ...remaining.sort((a, b) => b.expected_value - a.expected_value),
+      ].slice(0, 5);
+
+      setCloseToday(closeTodayList);
       setConvertNext((coldDeals.data as Deal[]) || []);
       setOverdueFollowUps((overdueRes.data as OverdueFollowUp[]) || []);
+      setAtRiskQuotes((atRiskQuotesRes.data as AtRiskQuote[]) || []);
     } catch (err) {
       console.error("Decision Panel fetch error:", err);
       toast.error("Failed to load decision data");
@@ -307,6 +344,46 @@ export function DecisionPanel() {
               );
             })}
             <p className="text-[9px] text-muted-foreground/30 pt-1">Action these in the Follow-Up Engine below</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* AT RISK QUOTES — sent, no response, no view after 3 days */}
+      {atRiskQuotes.length > 0 && (
+        <Card className="bg-amber-500/5 border-amber-500/20">
+          <CardHeader className="pb-2">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
+              <div>
+                <p className="text-[9px] uppercase tracking-[0.15em] text-amber-500/60">At Risk</p>
+                <CardTitle className="text-sm font-medium">Stalled Quotes</CardTitle>
+              </div>
+              <Badge variant="outline" className="text-[9px] ml-auto border-amber-500/30 text-amber-500">{atRiskQuotes.length}</Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {atRiskQuotes.map((q) => {
+              const days = q.sent_at ? differenceInDays(new Date(), parseISO(q.sent_at)) : null;
+              return (
+                <div key={q.id} className="flex items-center justify-between py-2 px-3 rounded-sm border border-amber-500/10 bg-background/40">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium text-foreground truncate">{q.client_name}</p>
+                      <span className="text-[10px] text-accent/70 shrink-0">${q.total.toLocaleString()}</span>
+                      <Badge variant="outline" className="text-[8px] border-border/20 shrink-0">{q.quote_number}</Badge>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">
+                      {days}d since sent · Not viewed · {q.project_type}
+                    </p>
+                  </div>
+                  <a href="#follow-ups">
+                    <Button size="sm" variant="outline" className="h-7 text-[9px] border-amber-500/20 text-amber-500 hover:bg-amber-500/10 shrink-0 ml-2">
+                      Follow Up
+                    </Button>
+                  </a>
+                </div>
+              );
+            })}
           </CardContent>
         </Card>
       )}

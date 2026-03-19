@@ -252,22 +252,21 @@ If uncertain, say "requires review" — do not speculate.
 
 Reference: Payment 30/50/final. Follow-up Day 2/5/10. Site assessment before quoting. GroundLock = proprietary ground stabilisation. Stages: Enquiry → Assessment → Brief → Proposal → Approval → Build → Handover. Proposals valid 30 days. Site visits Mon-Fri, Ciro attends. Scope changes need written variation.`;
 
-const DECISION_PANEL_PROMPT = `Analyse the pipeline and return ONE actionable system-level insight. One sentence only.
+const DECISION_PANEL_PROMPT = `Analyse the pipeline and return ONE high-impact conversion insight. One sentence only.
 
-Look for patterns:
-- Multiple leads stalling at the same stage
-- Low reply-to-booking conversion
+FOCUS ON CONVERSION BLOCKERS:
+- Where are leads dropping off? (enquiry → assessment → proposal → close)
+- Which quotes are stalling and why? (value, timing, no view)
+- Where are follow-up gaps creating pipeline leaks?
+- Is there a booking drop-off pattern? (leads not converting to site assessments)
 - Concentration risk (revenue dependent on 1-2 deals)
-- Follow-up gaps creating pipeline leaks
 - Proposal-to-close ratio declining
-- Job margins dropping below 25% (watch), 15% (at_risk), or 5% (critical)
-- Actual costs exceeding estimated costs on active jobs
-- Labour or material cost spikes across multiple jobs
+- Job margins dropping below thresholds
 
 Rules:
-- One sentence. Under 30 words. No filler.
-- Be specific — reference the pattern you detected.
-- If pipeline is healthy, say "Pipeline operating normally. No structural issues detected."
+- One sentence. Under 30 words. Conversion-focused.
+- Be specific — name the bottleneck, suggest the action.
+- If pipeline is healthy: "Pipeline converting normally. No structural blockers detected."
 - No exclamation marks. No emoji.`;
 
 const DAILY_PLAN_PROMPT = `Generate today's operating plan for the Peninsula Equine team. This is the daily command centre.
