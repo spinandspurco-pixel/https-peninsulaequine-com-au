@@ -35,6 +35,39 @@ Deno.serve(async (req) => {
 
     const { entity_type, entity_id, client_name, client_email, context } = await req.json();
 
+    // ── Enforce max 3 follow-ups per entity ──
+    const { count: existingCount } = await supabase
+      .from("follow_up_drafts")
+      .select("id", { count: "exact", head: true })
+      .eq("entity_id", entity_id)
+      .neq("status", "stopped");
+
+    if ((existingCount ?? 0) >= 3) {
+      return new Response(JSON.stringify({ error: "Maximum 3 follow-ups reached. Extend manually if needed." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // ── Prevent duplicate pending drafts for same entity + stage ──
+    const currentStage = entity_type === "lead" ? (context.stage || "none") : "1";
+    const stageMap: Record<string, string> = { none: "1", "1": "2", "2": "3", "3": "final" };
+    const targetStage = stageMap[currentStage] || "final";
+
+    const { count: dupeCount } = await supabase
+      .from("follow_up_drafts")
+      .select("id", { count: "exact", head: true })
+      .eq("entity_id", entity_id)
+      .eq("stage", targetStage)
+      .in("status", ["pending", "approved"]);
+
+    if ((dupeCount ?? 0) > 0) {
+      return new Response(JSON.stringify({ error: "A draft already exists for this stage." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     // Build prompt
     let systemPrompt = `You are a follow-up message writer for Peninsula Equine, a premium equestrian facility builder in Victoria, Australia.
 

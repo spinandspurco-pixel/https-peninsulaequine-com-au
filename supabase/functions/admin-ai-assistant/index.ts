@@ -226,21 +226,24 @@ SUPPRESSION RULES:
 
 Under 150 words total. No filler. No exclamation marks.`;
 
-const ALERTS_PROMPT = `Generate alerts. One line each. No explanations.
+const ALERTS_PROMPT = `Generate alerts. One line each. No explanations. Maximum 5 alerts total.
 
-🔴 = needs action today. 🟡 = needs attention this week. 🟢 = awareness only.
+🔴 = needs action today. 🟡 = needs attention this week.
 
-Check for:
-- Hot leads with no response >24h → 🔴 (founder should see these)
-- Hot leads not yet booked for assessment → 🔴
-- Warm leads with no response >48h → 🟡
-- Quoted leads with no reply >5 days → 🟡
-- Low Intent leads do NOT generate alerts unless >10 days stale → 🟢
-- Outstanding balance >50% of job value → 🔴
-- Job margin below 25% → 🟡
-- Unusual cost spike on any job → 🟡
+PRIORITY ORDER (show highest priority first, stop at 5):
+1. Overdue high-value leads (deal_value >= $50k, no response >48h) → 🔴
+2. Overdue quotes (total >= $25k, no response >5 days) → 🔴
+3. Margin-risk jobs (margin <15%) → 🔴
+4. Hot leads not yet booked for assessment → 🟡
+5. Outstanding balance >50% of job value → 🟡
 
-Format: emoji + label + fact + action. One line per alert. Hot lead alerts first. Omit empty categories.`;
+SUPPRESS:
+- Low Intent leads entirely
+- Early Stage leads unless >10 days stale
+- Leads with deal_value < $10k
+- Any alert that doesn't have a clear action
+
+Format: emoji + label + fact + action. One line per alert. No 🟢 items. Omit empty categories.`;
 
 const KNOWLEDGE_PROMPT = (question: string) => `Internal question: ${question}
 
