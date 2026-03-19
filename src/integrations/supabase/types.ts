@@ -1173,6 +1173,54 @@ export type Database = {
         }
         Relationships: []
       }
+      website_suggestions: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          issue: string
+          priority: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          reviewer_notes: string | null
+          status: string
+          suggested_fix: string | null
+          title: string
+          updated_at: string
+          why_it_matters: string | null
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          id?: string
+          issue: string
+          priority?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          status?: string
+          suggested_fix?: string | null
+          title: string
+          updated_at?: string
+          why_it_matters?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          issue?: string
+          priority?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          status?: string
+          suggested_fix?: string | null
+          title?: string
+          updated_at?: string
+          why_it_matters?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
