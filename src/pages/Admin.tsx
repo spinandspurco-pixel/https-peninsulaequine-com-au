@@ -420,6 +420,9 @@ export default function Admin() {
           {/* A/B Tests */}
           <ABTestStatsPanel />
 
+          {/* System Settings — hidden admin panel */}
+          <AdminSystemSettings />
+
           {/* CRM Settings */}
           <Card className="bg-card/80 border-border/40">
             <CardHeader className="cursor-pointer" onClick={() => setShowCrmSettings(!showCrmSettings)}>
