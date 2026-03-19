@@ -4,31 +4,24 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const cardVariants = cva(
-  "rounded-lg border bg-card text-card-foreground transition-all duration-300",
+  "border bg-card text-card-foreground transition-all duration-700 ease-out",
   {
     variants: {
       variant: {
-        default: "shadow-sm",
-        /** Elevated card with hover lift + gold glow */
+        default: "border-border/50",
         elevated:
-          "shadow-md hover:shadow-xl hover:-translate-y-1 hover:border-accent/30",
-        /** Flat card — no shadow, minimal border */
-        flat: "shadow-none border-border/50",
-        /** Glass card — translucent on dark backgrounds */
+          "border-border/50 hover:border-accent/20 hover:-translate-y-0.5 hover:shadow-[0_0_40px_-12px_hsl(var(--accent)/0.15)]",
+        flat: "border-border/30",
         glass:
-          "bg-primary-foreground/5 border-primary-foreground/10 backdrop-blur-sm text-primary-foreground",
-        /** Feature card — accent border top */
+          "bg-foreground/[0.03] border-foreground/8 backdrop-blur-sm text-foreground",
         feature:
-          "shadow-sm border-t-2 border-t-accent hover:shadow-lg hover:-translate-y-0.5",
-        /** Inset panel — recessed surface inside another card */
+          "border-border/50 border-t border-t-accent/40 hover:border-t-accent/70 hover:-translate-y-0.5",
         inset:
-          "shadow-none bg-background border-border",
-        /** Dark surface — for navy-bg sections */
+          "bg-background border-border/40",
         dark:
-          "shadow-none bg-primary-foreground/[0.04] border-primary-foreground/10 text-primary-foreground",
-        /** Interactive — lift + subtle gold glow on hover */
+          "bg-foreground/[0.03] border-foreground/8 text-foreground",
         interactive:
-          "shadow-sm hover:-translate-y-1 hover:shadow-[0_0_20px_-8px_hsl(var(--accent)/0.2),0_10px_25px_-10px_hsl(var(--primary)/0.15)] hover:border-accent/30 cursor-pointer",
+          "border-border/50 hover:-translate-y-0.5 hover:border-accent/20 hover:shadow-[0_0_30px_-10px_hsl(var(--accent)/0.12)] cursor-pointer",
       },
     },
     defaultVariants: {
@@ -50,7 +43,7 @@ Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("flex flex-col space-y-1.5 p-6", className)} {...props} />
+    <div ref={ref} className={cn("flex flex-col space-y-2 p-6 sm:p-8", className)} {...props} />
   ),
 );
 CardHeader.displayName = "CardHeader";
@@ -74,13 +67,13 @@ const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttribu
 CardDescription.displayName = "CardDescription";
 
 const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />,
+  ({ className, ...props }, ref) => <div ref={ref} className={cn("p-6 sm:p-8 pt-0", className)} {...props} />,
 );
 CardContent.displayName = "CardContent";
 
 const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("flex items-center p-6 pt-0", className)} {...props} />
+    <div ref={ref} className={cn("flex items-center p-6 sm:p-8 pt-0", className)} {...props} />
   ),
 );
 CardFooter.displayName = "CardFooter";
