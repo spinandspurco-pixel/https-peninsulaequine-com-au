@@ -314,6 +314,9 @@ export default function Admin() {
             ))}
           </div>
 
+          {/* Today's Plan — Daily Command Centre */}
+          <TodaysPlan />
+
           {/* Upcoming Bookings */}
           {bookings.length > 0 && (
             <Card className="bg-card/80 border-border/40">
