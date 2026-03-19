@@ -207,38 +207,38 @@ export default function Contact() {
   return (
     <Layout>
       {/* ═══ HERO ═══════════════════════════════════════ */}
-      <section className="relative py-32 sm:py-40 overflow-hidden">
+      <section className="relative pt-40 sm:pt-48 pb-24 sm:pb-32 overflow-hidden">
         <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
+          autoPlay muted loop playsInline
+          className="absolute inset-0 w-full h-full object-cover brightness-[0.3] contrast-[1.1] saturate-[0.6]"
         >
           <source src={heroVideo} type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-primary/80" />
+        <div className="absolute inset-0 bg-background/65" />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse 70% 55% at 50% 50%, transparent 20%, hsl(222 20% 4% / 0.7) 80%)" }}
+        />
+        <div className="absolute inset-0 grain-texture" />
 
         <div className="section-container relative z-10 text-center max-w-2xl mx-auto">
           <div
-            className="flex items-center justify-center gap-4 mb-8 opacity-0 animate-fade-in"
+            className="flex items-center justify-center gap-5 mb-10 opacity-0 animate-fade-in"
             style={{ animationDelay: "200ms", animationFillMode: "both" }}
           >
-            <div className="w-10 h-px bg-accent" />
-            <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent">
-              Get Started
-            </span>
-            <div className="w-10 h-px bg-accent" />
+            <div className="w-8 h-px bg-accent/40" />
+            <p className="text-overline text-accent/70">Get Started</p>
+            <div className="w-8 h-px bg-accent/40" />
           </div>
           <h1
-            className="heading-display text-primary-foreground leading-[1.05] opacity-0 animate-fade-in"
-            style={{ animationDelay: "400ms", animationFillMode: "both" }}
+            className="heading-display text-foreground opacity-0 animate-fade-in"
+            style={{ animationDelay: "400ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
             Request Site Assessment
           </h1>
           <p
-            className="mt-6 text-primary-foreground/40 text-sm sm:text-base max-w-lg mx-auto leading-relaxed opacity-0 animate-fade-in"
-            style={{ animationDelay: "650ms", animationFillMode: "both" }}
+            className="mt-8 text-muted-foreground/45 text-sm sm:text-base max-w-lg mx-auto leading-relaxed opacity-0 animate-fade-in"
+            style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
             We take on a limited number of projects each season.<br />
             Tell us about your property and what you're looking to build.

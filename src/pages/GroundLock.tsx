@@ -365,40 +365,41 @@ export default function GroundLock() {
   return (
     <Layout>
       {/* Hero */}
-      <section className="relative pt-36 sm:pt-44 pb-24 sm:pb-32 bg-primary text-primary-foreground overflow-hidden">
-        <BlueprintScene preset="elevation" className="absolute inset-0" />
-        <div className="absolute inset-0 bg-primary/85" />
-        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.03]" />
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, transparent 30%, hsl(var(--primary)) 100%)" }} />
+      <section className="relative pt-40 sm:pt-48 pb-24 sm:pb-32 overflow-hidden">
+        <div className="absolute inset-0 bg-background" />
+        <div className="absolute inset-0 engineering-grid" />
+        <div className="absolute inset-0 grain-texture" />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse 60% 50% at 50% 50%, hsl(var(--accent) / 0.02) 0%, transparent 70%)" }}
+        />
 
-        <div className="section-container relative z-10 text-center max-w-3xl mx-auto flex flex-col items-center gap-10">
+        <div className="section-container relative z-10 text-center max-w-3xl mx-auto flex flex-col items-center gap-8">
           <div
-            className="flex items-center gap-4 opacity-0 animate-fade-in"
+            className="flex items-center gap-5 opacity-0 animate-fade-in"
             style={{ animationDelay: "200ms", animationFillMode: "both" }}
           >
-            <div className="w-10 h-px bg-accent/40" />
-            <p className="text-[10px] font-sans font-medium tracking-[0.35em] uppercase text-accent/70">
-              Proprietary System
-            </p>
-            <div className="w-10 h-px bg-accent/40" />
+            <div className="w-8 h-px bg-accent/40" />
+            <p className="text-overline text-accent/70">Proprietary System</p>
+            <div className="w-8 h-px bg-accent/40" />
           </div>
 
           <h1
-            className="font-serif font-bold text-primary-foreground leading-[0.95] tracking-[-0.01em] text-5xl sm:text-6xl md:text-7xl opacity-0 animate-fade-in"
-            style={{ animationDelay: "450ms", animationFillMode: "both", animationDuration: "800ms" }}
+            className="heading-display text-foreground opacity-0 animate-fade-in"
+            style={{ animationDelay: "400ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
             P.E. GroundLock™
           </h1>
 
           <p
-            className="text-[11px] sm:text-xs uppercase tracking-[0.25em] text-primary-foreground/30 opacity-0 animate-fade-in"
+            className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-muted-foreground/30 opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
-            A Ground Stabilisation System
+            Ground Stabilisation Systems
           </p>
 
           <p
-            className="text-primary-foreground/45 text-sm sm:text-base max-w-md mx-auto opacity-0 animate-fade-in leading-[1.9]"
+            className="text-muted-foreground/45 text-sm sm:text-base max-w-md mx-auto opacity-0 animate-fade-in leading-[1.9]"
             style={{ animationDelay: "950ms", animationFillMode: "both" }}
           >
             Engineered stabilisation for equine yards, stable surrounds,
@@ -408,34 +409,37 @@ export default function GroundLock() {
       </section>
 
       {/* Problem Statement */}
-      <section className="py-44 sm:py-64 bg-background relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
-        <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
-          <RevealOnScroll direction="up">
-            <div className="w-8 h-px bg-accent/40 mx-auto mb-12" />
-          </RevealOnScroll>
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-28 sm:py-40 bg-card relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
+            <RevealOnScroll direction="up">
+              <RevealLine className="mx-auto mb-14" width="w-10" />
+            </RevealOnScroll>
 
-          <RevealOnScroll direction="up" delay={100}>
-            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold text-foreground tracking-[0.01em] leading-[1.2] mb-14">
-              Most Properties Fail<br />From the Ground Up
-            </h2>
-          </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={100}>
+              <h2 className="heading-section text-foreground mb-14">
+                Most Properties Fail<br />From the Ground Up
+              </h2>
+            </RevealOnScroll>
 
-          <RevealOnScroll direction="up" delay={200}>
-            <div className="space-y-8 text-sm sm:text-[15px] text-muted-foreground/60 leading-[2] font-sans">
-              <p>
-                Drainage issues, unstable footing, and surface breakdown<br />
-                are rarely surface problems.
-              </p>
-              <p className="text-foreground/60">
-                They're structural.
-              </p>
-              <p className="text-foreground/35 italic">
-                GroundLock™ is designed to solve that —<br />
-                properly, from the base layer up.
-              </p>
-            </div>
-          </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={200}>
+              <div className="space-y-6 text-sm text-muted-foreground/50 leading-[2]">
+                <p>
+                  Drainage issues, unstable footing, and surface breakdown
+                  are rarely surface problems.
+                </p>
+                <p className="text-foreground/60">
+                  They're structural.
+                </p>
+                <p className="text-muted-foreground/30 italic text-[13px]">
+                  GroundLock™ is designed to solve that —
+                  properly, from the base layer up.
+                </p>
+              </div>
+            </RevealOnScroll>
+          </div>
         </div>
       </section>
 
