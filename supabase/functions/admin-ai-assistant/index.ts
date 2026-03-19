@@ -247,33 +247,77 @@ If uncertain, say "requires review" — do not speculate.
 
 Reference: Payment 30/50/final. Follow-up Day 2/5/10. Site assessment before quoting. GroundLock = proprietary ground stabilisation. Stages: Enquiry → Assessment → Brief → Proposal → Approval → Build → Handover. Proposals valid 30 days. Site visits Mon-Fri, Ciro attends. Scope changes need written variation.`;
 
-const DAILY_PLAN_PROMPT = `Generate today's operating plan for the founder. This is the daily command centre.
+const DAILY_PLAN_PROMPT = `Generate today's operating plan for the Peninsula Equine team. This is the daily command centre.
+
+The team has 4 operating lanes. Route every task to the correct lane based on who actually does the work.
+
+TEAM LANES:
+
+1. FOUNDER / SYSTEMS & CREATIVE (Jordynn)
+   - Lovable / dashboard refinement
+   - AI/admin system oversight
+   - Content capture planning
+   - Brand direction
+   - Proposal polish
+   - Selective high-value lead review (Hot leads with $100k+ or complex scope only)
+   - Do NOT overload with repetitive admin. Protect time for systems work and content.
+
+2. BUILD / SITE (Ciro + Sander)
+   - On-site build tasks
+   - Site visits / assessments (Ciro attends)
+   - Build decisions
+   - Delivery execution
+   - Client walkthroughs on site
+   - Do NOT route desk/admin tasks here. Field and build only.
+
+3. ADMIN / COORDINATION (Admin)
+   - Enquiry replies and follow-ups
+   - Booking management
+   - CRM status updates
+   - Proposal sending (not polish)
+   - Reminders
+   - Financial admin (chasing payments, invoicing)
+   - Day 2/5/10 follow-ups
+   - Recurring coordination tasks
+
+4. NEEDS FOUNDER REVIEW (Human Decision Required)
+   - High-value leads requiring personal attention
+   - Pricing-sensitive items
+   - Scope-sensitive items
+   - Unusual client situations
+   - Anything requiring sign-off
 
 Format EXACTLY as follows — use these headers and structure:
 
 ## Today's Briefing
 One sentence: what today looks like (e.g. "2 hot leads, 1 site visit, 1 overdue payment.")
 
-## 🔴 Priority Actions
-Tasks requiring immediate founder attention. Hot leads, high-value decisions, urgent issues.
-Per item: bullet with action, lead/job name, and why it's priority. Max 5 items.
-If none: "Clear — no priority actions today."
+## 🔴 Needs Founder Review
+Items requiring Jordynn's decision or sign-off. Hot leads, pricing, scope, unusual situations.
+Per item: bullet with action, name, and why it needs review. Max 5 items.
+If none: "Clear — no items requiring review."
 
-## Morning Block (Admin + Follow-Ups)
-- Follow-ups due (with suggested message summary)
+## 🛠 Build / Site — Ciro & Sander
+- Today's site visits: location, time, client name, project type
+- Active build tasks or decisions needed on site
+- Client walkthroughs scheduled
+If none: "No site tasks today."
+
+## 📋 Admin / Coordination
+- Follow-ups due (Day 2/5/10 with suggested action)
 - New lead replies needed
-- Quick admin tasks
+- Booking confirmations or reminders to send
+- CRM updates needed
+- Financial admin (payment chasing, invoicing)
 Group by: lead replies first, then follow-ups, then admin.
 
-## Midday Block (Site Visits)
-- Today's scheduled assessments: location, time, client name, project type
-- Prep notes if relevant
-If no visits: "No site visits scheduled."
-
-## Afternoon Block (Decisions + Proposals)
-- Proposals to review or send
-- Decisions pending (quoted leads, scope questions)
-- Financial reviews needed
+## 🎯 Founder / Systems & Creative — Jordynn
+- Dashboard or systems work flagged
+- Content capture opportunities
+- Proposal polish needed
+- Brand or creative tasks
+- Protected block recommendations
+If none: "No systems tasks flagged."
 
 ## Financial Alerts
 - Overdue payments (>30 days or >50% outstanding)
@@ -282,15 +326,18 @@ If no visits: "No site visits scheduled."
 If clear: "No financial flags."
 
 ## Quick Wins
-2-3 easy actions that move deals forward with minimal effort (e.g. "send booking link to warm lead", "chase deposit on completed job")
+2-3 easy actions that move deals forward with minimal effort. Assign each to the correct lane.
 
 RULES:
-- HOT leads → always in Priority Actions, suggest immediate action
-- WARM leads → Morning Block follow-ups
+- Route every task to the correct team lane. Never dump admin tasks on the founder.
+- HOT leads ($100k+ or complex) → Needs Founder Review
+- WARM leads → Admin / Coordination for follow-up
 - LOW INTENT → minimal attention, do not surface unless >10 days stale
-- Be decisive. Each item has a clear action.
+- Site visits → always Build / Site lane
+- Follow-ups, CRM, reminders → always Admin / Coordination
+- Be decisive. Each item has a clear action and clear owner.
 - No fluff. No narrative paragraphs. Bullets only.
-- Under 350 words total.
+- Under 400 words total.
 - Today's date for reference: ${new Date().toISOString().split("T")[0]}`;
 
 serve(async (req) => {
