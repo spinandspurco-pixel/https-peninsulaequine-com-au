@@ -943,6 +943,31 @@ export default function StaffDocuments() {
             </Button>
           </div>
 
+          {/* Job Switcher */}
+          {availableJobs.length > 0 && (
+            <div className="mb-6 p-4 rounded-lg border bg-muted/30">
+              <div className="flex items-center gap-3">
+                <Label className="text-sm font-medium whitespace-nowrap">Active Job / Site:</Label>
+                <Select value={selectedJobId} onValueChange={handleJobSwitch}>
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="Select a job..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableJobs.map(job => (
+                      <SelectItem key={job.id} value={job.id}>
+                        {job.project_name}{job.site_address ? ` — ${job.site_address}` : ""}
+                      </SelectItem>
+                    ))}
+                    <SelectItem value="manual">✏️ Enter manually</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {selectedJobId && selectedJobId !== "manual" && (
+                <p className="text-xs text-muted-foreground mt-2">Project name and site address will be pre-filled on applicable forms.</p>
+              )}
+            </div>
+          )}
+
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={v => { setActiveTab(v as DocType); setShowForm(true); }}>
             <TabsList className="grid grid-cols-3 sm:grid-cols-9 mb-6">
