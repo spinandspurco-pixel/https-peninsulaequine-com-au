@@ -5,53 +5,53 @@ import { Layers } from "lucide-react";
 const LAYERS = [
   {
     label: "Panel + Infill",
-    depth: "75–100mm",
+    depth: "75–100 mm",
     summary: "Interlocking structure distributes load and prevents surface breakdown.",
     detail:
-      "High-density polyethylene panels lock together to form a continuous load-bearing surface. Infill material — typically recycled rubber or aggregate — fills each cell, creating a permeable yet stable riding and working surface.",
-    heightClass: "h-14 sm:h-16",
-    color: "bg-accent/10 border-accent/25",
-    activeColor: "bg-accent/20 border-accent/50",
+      "High-density polyethylene panels lock together to form a continuous load-bearing surface. Infill material — recycled rubber or aggregate — fills each cell, creating a permeable yet stable working surface.",
+    heightClass: "h-[52px] sm:h-[60px]",
+    idle: "bg-accent/[0.06] border-accent/15",
+    active: "bg-accent/[0.14] border-accent/40",
   },
   {
     label: "Bedding Layer",
-    depth: "25–50mm",
+    depth: "25–50 mm",
     summary: "Creates a stable, level base for long-term performance.",
     detail:
-      "A fine crushed-rock or coarse-sand bedding course, screeded to level, ensures full contact between the panel system and the sub-base. This prevents point-loading and eliminates rocking under traffic.",
-    heightClass: "h-8 sm:h-10",
-    color: "bg-muted/40 border-border/30",
-    activeColor: "bg-muted/60 border-border/50",
+      "Fine crushed rock or coarse sand, screeded to level. Ensures full contact between the panel system and sub-base — eliminating point-loading and rocking under traffic.",
+    heightClass: "h-[32px] sm:h-[36px]",
+    idle: "bg-muted/30 border-border/20",
+    active: "bg-muted/50 border-border/40",
   },
   {
     label: "Sub-Base",
-    depth: "100–150mm",
-    summary: "Compacted aggregate allowing drainage while maintaining strength.",
+    depth: "100–150 mm",
+    summary: "Compacted aggregate — drainage and structural strength.",
     detail:
-      "Class-3 or Class-4 crushed rock, compacted in lifts to ≥ 95% Modified Proctor density. This structural layer carries the imposed loads and channels water laterally to perimeter drainage, preventing pooling and softening.",
-    heightClass: "h-16 sm:h-20",
-    color: "bg-muted/30 border-border/25",
-    activeColor: "bg-muted/50 border-border/45",
+      "Class-3 or Class-4 crushed rock, compacted to ≥ 95 % Modified Proctor density. Carries imposed loads and channels water laterally to perimeter drainage.",
+    heightClass: "h-[64px] sm:h-[72px]",
+    idle: "bg-muted/20 border-border/15",
+    active: "bg-muted/40 border-border/35",
   },
   {
     label: "Geotextile",
-    depth: "~1mm",
+    depth: "~1 mm",
     summary: "Prevents layer contamination and movement over time.",
     detail:
-      "A non-woven geotextile membrane placed between the sub-base and the subgrade. It prevents fine soil particles from migrating upward into the aggregate, preserving drainage capacity and structural integrity over decades.",
-    heightClass: "h-3 sm:h-4",
-    color: "bg-accent/8 border-accent/15",
-    activeColor: "bg-accent/15 border-accent/35",
+      "Non-woven geotextile membrane separating sub-base from subgrade. Prevents fine soil migrating upward, preserving drainage capacity and structural integrity over decades.",
+    heightClass: "h-[14px] sm:h-[16px]",
+    idle: "bg-accent/[0.04] border-accent/10",
+    active: "bg-accent/[0.10] border-accent/30",
   },
   {
     label: "Subgrade",
     depth: "Native",
-    summary: "Prepared natural ground forming the foundation of the system.",
+    summary: "Prepared natural ground — the foundation of everything above.",
     detail:
-      "The existing ground is stripped of organic material, graded to a 1–2% fall for drainage, and compacted. This is the most critical layer — every millimetre of preparation here multiplies the lifespan of the entire system.",
-    heightClass: "h-20 sm:h-24",
-    color: "bg-primary-foreground/[0.03] border-primary-foreground/8",
-    activeColor: "bg-primary-foreground/[0.06] border-primary-foreground/15",
+      "Stripped of organic material, graded to 1–2 % fall for drainage, and compacted. Every millimetre of preparation here multiplies the lifespan of the entire system.",
+    heightClass: "h-[72px] sm:h-[84px]",
+    idle: "bg-foreground/[0.02] border-foreground/[0.06]",
+    active: "bg-foreground/[0.04] border-foreground/[0.12]",
   },
 ];
 
@@ -60,144 +60,109 @@ export function GroundLockSystemDiagram() {
   const activeLayer = activeIndex !== null ? LAYERS[activeIndex] : null;
 
   return (
-    <div className="space-y-16 sm:space-y-20">
-      {/* Intro statement */}
-      <div className="text-center max-w-lg mx-auto">
-        <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold text-foreground/90 leading-[1.2] mb-5">
-          Most properties fail<br />from the ground up.
-        </h2>
-        <p className="text-sm sm:text-[15px] text-muted-foreground/50 leading-relaxed">
-          This is where we start.
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-start">
+      {/* LEFT — Visual Diagram */}
+      <div>
+        <h3 className="font-mono text-[9px] uppercase tracking-[0.25em] text-muted-foreground/40 flex items-center gap-2 mb-6">
+          <Layers className="w-3 h-3" /> System Cross-Section
+        </h3>
+
+        <div className="space-y-px">
+          {LAYERS.map((layer, i) => {
+            const isActive = activeIndex === i;
+            return (
+              <button
+                key={i}
+                type="button"
+                className={cn(
+                  "w-full flex items-center justify-between px-5 border transition-all duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer relative overflow-hidden",
+                  layer.heightClass,
+                  isActive ? layer.active : layer.idle,
+                  isActive && "shadow-[0_0_20px_-6px_hsl(var(--accent)/0.1)]",
+                )}
+                onMouseEnter={() => setActiveIndex(i)}
+                onMouseLeave={() => setActiveIndex(null)}
+                onClick={() => setActiveIndex(isActive ? null : i)}
+                aria-pressed={isActive}
+              >
+                {/* Geotextile dashed indicator */}
+                {i === 3 && (
+                  <div className="absolute inset-0 flex items-center pointer-events-none">
+                    <div className="w-full border-t border-dashed border-accent/15" />
+                  </div>
+                )}
+
+                <span
+                  className={cn(
+                    "text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.12em] transition-colors duration-[600ms] relative z-10",
+                    isActive ? "text-accent" : "text-foreground/50",
+                  )}
+                >
+                  {layer.label}
+                </span>
+                <span className="font-mono text-[9px] text-muted-foreground/30 tabular-nums relative z-10">
+                  {layer.depth}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <p className="text-[10px] text-muted-foreground/25 italic mt-5 px-1">
+          Hover or tap any layer.
         </p>
       </div>
 
-      {/* Split layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-        {/* LEFT — Visual Diagram */}
-        <div className="space-y-3">
-          <h3 className="font-mono text-[9px] uppercase tracking-[0.25em] text-muted-foreground/50 flex items-center gap-2 mb-4">
-            <Layers className="w-3 h-3" /> System Cross-Section
+      {/* RIGHT — Detail Panel */}
+      <div className="relative min-h-[280px] flex flex-col justify-center">
+        {/* Default state */}
+        <div
+          className={cn(
+            "transition-all duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
+            activeLayer ? "opacity-0 translate-y-2 absolute inset-0 pointer-events-none" : "opacity-100 translate-y-0",
+          )}
+        >
+          <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-muted-foreground/35 mb-4">
+            Engineered Ground System
+          </p>
+          <h3 className="font-serif text-2xl sm:text-3xl text-foreground/85 mb-5 leading-snug">
+            Five Layers.<br />
+            One System.
           </h3>
-
-          <div className="relative">
-            {/* Depth annotation line */}
-            <div className="absolute -right-6 top-0 bottom-0 hidden sm:flex flex-col items-center">
-              <div className="w-px h-full bg-border/30" />
-              <span className="font-mono text-[8px] text-muted-foreground/40 mt-1 whitespace-nowrap">
-                total depth
-              </span>
-            </div>
-
-            <div className="space-y-[2px]">
-              {LAYERS.map((layer, i) => {
-                const isActive = activeIndex === i;
-                return (
-                  <button
-                    key={i}
-                    type="button"
-                    className={cn(
-                      "w-full flex items-center justify-between px-4 border transition-all duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer relative overflow-hidden",
-                      layer.heightClass,
-                      isActive ? layer.activeColor : layer.color,
-                      isActive && "shadow-[0_0_24px_-8px_hsl(var(--accent)/0.12)]",
-                    )}
-                    onMouseEnter={() => setActiveIndex(i)}
-                    onMouseLeave={() => setActiveIndex(null)}
-                    onClick={() => setActiveIndex(isActive ? null : i)}
-                    aria-pressed={isActive}
-                  >
-                    {/* Sub-base texture dots */}
-                    {i === 2 && (
-                      <div className="absolute inset-0 opacity-[0.04]">
-                        {[...Array(6)].map((_, j) => (
-                          <div
-                            key={j}
-                            className="absolute w-1 h-1 rounded-full bg-foreground"
-                            style={{ left: `${15 + j * 14}%`, top: "50%" }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                    {/* Geotextile dashed line */}
-                    {i === 3 && (
-                      <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-dashed border-accent/20" />
-                      </div>
-                    )}
-
-                    <span
-                      className={cn(
-                        "text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.12em] transition-colors duration-[600ms] relative z-10",
-                        isActive ? "text-accent" : "text-foreground/60",
-                      )}
-                    >
-                      {layer.label}
-                    </span>
-                    <span className="font-mono text-[9px] text-muted-foreground/40 tabular-nums relative z-10">
-                      {layer.depth}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <p className="text-[10px] text-muted-foreground/35 italic mt-4 px-1">
-            Hover or tap any layer to explore.
+          <p className="text-sm text-muted-foreground/50 leading-[1.9] max-w-md">
+            Every GroundLock™ installation is a fully engineered cross-section —
+            each layer purpose-built to support the one above.
           </p>
         </div>
 
-        {/* RIGHT — Text Panel */}
-        <div className="relative min-h-[260px] flex flex-col justify-center">
-          {/* Default state */}
+        {/* Active layer detail */}
+        {LAYERS.map((layer, i) => (
           <div
+            key={i}
             className={cn(
               "transition-all duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
-              activeLayer ? "opacity-0 translate-y-2 absolute inset-0 pointer-events-none" : "opacity-100 translate-y-0",
+              activeIndex === i
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-3 absolute inset-0 pointer-events-none",
             )}
           >
-            <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-muted-foreground/40 mb-3">
-              Engineered Ground System
+            <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/60 mb-4">
+              Layer {i + 1} of 5
             </p>
-            <h3 className="font-serif text-2xl sm:text-3xl text-foreground/90 mb-4 leading-snug">
-              Five layers.<br />
-              One system.
+            <h3 className="font-serif text-2xl sm:text-3xl text-foreground/85 mb-3 leading-snug">
+              {layer.label}
             </h3>
-            <p className="text-sm text-muted-foreground/60 leading-relaxed max-w-md">
-              Every GroundLock™ installation is a fully engineered cross-section — each layer
-              purpose-built to support the one above. Select a layer to understand how it works.
+            <p className="font-mono text-[10px] text-muted-foreground/40 mb-5 tabular-nums">
+              Depth: {layer.depth}
+            </p>
+            <p className="text-sm text-muted-foreground/60 leading-[1.9] max-w-md mb-5">
+              {layer.summary}
+            </p>
+            <p className="text-[13px] text-muted-foreground/40 leading-[1.9] max-w-md">
+              {layer.detail}
             </p>
           </div>
-
-          {/* Active layer detail */}
-          {LAYERS.map((layer, i) => (
-            <div
-              key={i}
-              className={cn(
-                "transition-all duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
-                activeIndex === i
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-3 absolute inset-0 pointer-events-none",
-              )}
-            >
-              <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/70 mb-3">
-                Layer {i + 1} of 5
-              </p>
-              <h3 className="font-serif text-2xl sm:text-3xl text-foreground/90 mb-2 leading-snug">
-                {layer.label}
-              </h3>
-              <p className="font-mono text-[10px] text-muted-foreground/50 mb-4 tabular-nums">
-                Depth: {layer.depth}
-              </p>
-              <p className="text-sm text-muted-foreground/70 leading-relaxed max-w-md mb-4">
-                {layer.summary}
-              </p>
-              <p className="text-xs text-muted-foreground/50 leading-relaxed max-w-md">
-                {layer.detail}
-              </p>
-            </div>
-          ))}
-        </div>
+        ))}
       </div>
     </div>
   );
