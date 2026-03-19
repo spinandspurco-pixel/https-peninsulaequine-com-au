@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { ABTestStatsPanel } from "@/components/ABTestStatsPanel";
 import { WebsiteIntelligence } from "@/components/WebsiteIntelligence";
+import { RevenueStrip } from "@/components/RevenueStrip";
+import { DecisionPanel } from "@/components/DecisionPanel";
 import { AdminStaffOnboarding } from "@/components/AdminStaffOnboarding";
 import { SharedCalendarView } from "@/components/SharedCalendarView";
 import { AdminTrainerPanel } from "@/components/AdminTrainerPanel";
@@ -66,6 +68,11 @@ interface Inquiry {
   lead_tier: string | null;
   lead_tags: string[] | null;
   attachment_urls: string[] | null;
+  deal_value: number | null;
+  probability: number | null;
+  expected_value: number | null;
+  deal_stage: string | null;
+  last_contact_at: string | null;
 }
 
 const TIER_COLORS: Record<string, string> = {
@@ -271,6 +278,12 @@ export default function Admin() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+          {/* Revenue Strip */}
+          <RevenueStrip />
+
+          {/* Decision Panel */}
+          <DecisionPanel />
+
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
