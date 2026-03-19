@@ -56,11 +56,14 @@ export default function GroundLockSystems() {
             size="lg"
             className="bg-accent text-accent-foreground hover:bg-accent/90 uppercase tracking-[0.14em] text-xs font-medium btn-hover-lift px-10 py-3"
           >
-            <Link to="/contact">
-              Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
+            <Link to="/forge">
+              Explore Equus Forge <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
-          <p className="text-primary-foreground/15 text-[10px] tracking-[0.15em]">
+          <p className="text-primary-foreground/25 text-[10px] tracking-[0.15em]">
+            Systems. Components. Built to scale.
+          </p>
+          <p className="text-primary-foreground/12 text-[9px] tracking-[0.15em] mt-2">
             We take on a limited number of projects each season.
           </p>
         </div>

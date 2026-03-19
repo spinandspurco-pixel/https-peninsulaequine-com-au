@@ -174,11 +174,11 @@ export default function Shop() {
         <BlueprintScene preset="barn" className="absolute inset-0" />
         <div className="section-container relative z-10 text-center max-w-lg mx-auto space-y-5">
           <h2 className="font-serif text-2xl md:text-3xl">
-            Need something <span className="text-accent">custom?</span>
+            Need a custom <span className="text-accent">configuration?</span>
           </h2>
           <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.12em] text-xs">
             <Link to="/contact">
-              Request Quote <ArrowRight className="ml-2 h-4 w-4" />
+              Request Specification <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>
