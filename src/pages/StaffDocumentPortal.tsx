@@ -24,6 +24,9 @@ const STAFF_DOC_TYPES = {
   risk_assessment: { label: "Risk Assessment", description: "Job-specific risk assessment & controls", icon: FileWarning, color: "text-red-500" },
   payment_slip: { label: "Payment Slip", description: "Weekly timesheet — due every Wednesday", icon: DollarSign, color: "text-green-500" },
   site_inspection: { label: "Site Inspection", description: "Construction site condition report", icon: ClipboardCheck, color: "text-blue-500" },
+  daily_site_report: { label: "Daily Report", description: "End-of-day site progress report", icon: ClipboardList, color: "text-cyan-500" },
+  incident_report: { label: "Incident Report", description: "Safety incident & near-miss reporting", icon: AlertTriangle, color: "text-rose-500" },
+  horse_care_log: { label: "Horse Care", description: "Training, health & care record", icon: Heart, color: "text-pink-500" },
 } as const;
 
 type StaffDocType = keyof typeof STAFF_DOC_TYPES;
