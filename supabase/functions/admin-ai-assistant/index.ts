@@ -85,17 +85,18 @@ KNOWLEDGE BASE:
 - Scope changes require written variation and updated pricing
 - Prefer PE rules over generic advice. If uncertain, say so.`;
 
-const TRIAGE_PROMPT = `Classify each inquiry. Be decisive.
+const TRIAGE_PROMPT = `Classify each inquiry. Be decisive. Prioritise moving qualified leads to site assessment.
 
 Per lead:
 - **State**: Hot / Warm / Early Stage / Low Intent / Not a Fit
 - **Type**: (infer from services)
 - **Value**: High / Medium / Low
 - **Fit**: Strong / Possible / Poor
-- **Next Step**: Book Site Assessment / Send Follow-Up / Wait / Escalate to Human Review / Decline
+- **Next Step**: For Hot/Warm leads, default to "Book Site Assessment" unless there's a specific reason not to. Other options: Send Follow-Up / Wait / Escalate to Human Review / Decline
 - **Why**: One sentence. No hedging.
+- **Booking Ready**: Yes / No (can this lead be directed to /site-assessment now?)
 
-Put leads needing action today first. Skip narrative. If a lead looks like a poor fit, say so.`;
+Put Hot and Warm leads first. For any lead classified Hot or Warm, the default action is Book Site Assessment — only override if there's a clear reason.`;
 
 const DRAFT_REPLY_PROMPT = (inquiry: any, replyType: string) => {
   const templates: Record<string, string> = {
