@@ -145,8 +145,8 @@ export default function Services() {
                   different soil, different drainage, different needs.
                 </p>
                 <p className="text-muted-foreground/30 italic text-[13px]">
-                  Our process begins with an on-site assessment —
-                  not an investment estimate.
+                  Following assessment, a structured project brief
+                  and system specification is prepared.
                 </p>
               </div>
             </RevealOnScroll>

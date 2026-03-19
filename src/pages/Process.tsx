@@ -210,14 +210,14 @@ export default function Process() {
             <AnimatedDivider className="mx-auto mb-8" />
             <SectionTransition variant="fade-up">
               <h2 className="heading-editorial text-foreground mb-4">
-                Every Great Facility Starts With a Plan
+                Projects Are Carefully Planned<br />Prior to Commencement
               </h2>
             </SectionTransition>
             <SectionTransition variant="fade-up" delay={100}>
               <p className="text-muted-foreground text-lg leading-relaxed">
-                Unlike generic contractors who build from templates, Ciro designs every project
-                around the horse — their movement, their needs, their nature. Each phase is
-                executed with the precision of a builder and the intuition of a horseman.
+                Each build is approached as a long-term system — designed around the horse,
+                engineered for durability, and coordinated for precision.
+                Sequencing and specification are critical to performance.
               </p>
             </SectionTransition>
           </div>
