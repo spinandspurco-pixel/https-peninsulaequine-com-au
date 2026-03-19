@@ -1024,6 +1024,223 @@ export type Database = {
         }
         Relationships: []
       }
+      pricing_templates: {
+        Row: {
+          active: boolean
+          category: string
+          created_at: string
+          id: string
+          items: Json
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          category?: string
+          created_at?: string
+          id?: string
+          items?: Json
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          category?: string
+          created_at?: string
+          id?: string
+          items?: Json
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      quote_follow_ups: {
+        Row: {
+          action_type: string
+          completed_at: string | null
+          created_at: string
+          due_date: string
+          id: string
+          notes: string | null
+          quote_id: string
+          status: string
+        }
+        Insert: {
+          action_type?: string
+          completed_at?: string | null
+          created_at?: string
+          due_date: string
+          id?: string
+          notes?: string | null
+          quote_id: string
+          status?: string
+        }
+        Update: {
+          action_type?: string
+          completed_at?: string | null
+          created_at?: string
+          due_date?: string
+          id?: string
+          notes?: string | null
+          quote_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quote_follow_ups_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quote_line_items: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          line_total: number
+          quantity: number
+          quote_id: string
+          sort_order: number
+          title: string
+          unit: string
+          unit_price: number
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          line_total?: number
+          quantity?: number
+          quote_id: string
+          sort_order?: number
+          title: string
+          unit?: string
+          unit_price?: number
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          line_total?: number
+          quantity?: number
+          quote_id?: string
+          sort_order?: number
+          title?: string
+          unit?: string
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quote_line_items_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quotes: {
+        Row: {
+          accepted_at: string | null
+          approved_by: string | null
+          client_email: string | null
+          client_name: string
+          created_at: string
+          created_by: string | null
+          declined_at: string | null
+          exclusions: string | null
+          expiry_date: string | null
+          gst: number
+          id: string
+          inquiry_id: string | null
+          internal_notes: string | null
+          location: string | null
+          project_type: string
+          quote_number: string
+          scope_summary: string | null
+          sent_at: string | null
+          site_assessment_id: string | null
+          status: string
+          subtotal: number
+          total: number
+          updated_at: string
+          viewed_at: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          approved_by?: string | null
+          client_email?: string | null
+          client_name: string
+          created_at?: string
+          created_by?: string | null
+          declined_at?: string | null
+          exclusions?: string | null
+          expiry_date?: string | null
+          gst?: number
+          id?: string
+          inquiry_id?: string | null
+          internal_notes?: string | null
+          location?: string | null
+          project_type?: string
+          quote_number: string
+          scope_summary?: string | null
+          sent_at?: string | null
+          site_assessment_id?: string | null
+          status?: string
+          subtotal?: number
+          total?: number
+          updated_at?: string
+          viewed_at?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          approved_by?: string | null
+          client_email?: string | null
+          client_name?: string
+          created_at?: string
+          created_by?: string | null
+          declined_at?: string | null
+          exclusions?: string | null
+          expiry_date?: string | null
+          gst?: number
+          id?: string
+          inquiry_id?: string | null
+          internal_notes?: string | null
+          location?: string | null
+          project_type?: string
+          quote_number?: string
+          scope_summary?: string | null
+          sent_at?: string | null
+          site_assessment_id?: string | null
+          status?: string
+          subtotal?: number
+          total?: number
+          updated_at?: string
+          viewed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quotes_inquiry_id_fkey"
+            columns: ["inquiry_id"]
+            isOneToOne: false
+            referencedRelation: "inquiries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quotes_site_assessment_id_fkey"
+            columns: ["site_assessment_id"]
+            isOneToOne: false
+            referencedRelation: "site_assessments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       site_assessments: {
         Row: {
           client_email: string
