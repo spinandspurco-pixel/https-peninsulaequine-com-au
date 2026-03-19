@@ -461,7 +461,7 @@ export default function GroundLock() {
         <div className="divider-grid" />
         <div className="py-24 sm:py-36 relative">
           <div className="absolute inset-0 grain-texture" />
-        <div className="section-container relative z-[1]">
+          <div className="section-container relative z-[1]">
           {/* Project Type Chips */}
           <div className="max-w-7xl mx-auto mb-8">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
