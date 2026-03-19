@@ -755,3 +755,20 @@
 .animate-slow-drift {
   animation: slowDrift 25s ease-in-out infinite;
 }
+
+/* Icon draw-in animation — architectural reveal */
+@keyframes drawIn {
+  0% {
+    opacity: 0;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+  }
+  60% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    opacity: 1;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+}
