@@ -183,19 +183,24 @@ Format:
 (the message)`;
 };
 
-const FOLLOW_UPS_PROMPT = `Identify stale leads. Prioritise getting qualified leads to book a site assessment.
+const FOLLOW_UPS_PROMPT = `Identify stale leads. Differentiate follow-up intensity by lead quality.
 
 Flag if:
 - "new" status, >2 days old
 - "contacted", no update >3 days
 - "quoted", no response >5 days
 
-Per lead:
-- **Name** | **Days stale** | **Stage** (Day 2/5/10) | **Priority** (High/Med/Low)
-- **Booking Ready**: Yes/No — can this lead be directed to book a site assessment?
-- **Draft**: 2-3 sentences max. For qualified leads, include booking link (${BOOKING_URL}). Reference their project, not their enquiry. One value point about what the assessment would clarify. No "just checking in."
+FOLLOW-UP INTENSITY:
+- Hot/Warm leads: follow up promptly (Day 2/5), include booking link (${BOOKING_URL}), reference what the assessment would resolve for their specific project
+- Early Stage leads: lighter touch (Day 5/10), informational, no booking pressure
+- Low Intent leads: minimal follow-up (Day 10 only), brief check-in, do NOT push booking or assessment
 
-Priority order. Booking-ready leads first.`;
+Per lead:
+- **Name** | **Days stale** | **Quality** (Hot/Warm/Early/Low) | **Stage** (Day 2/5/10) | **Priority** (High/Med/Low)
+- **Booking Ready**: Yes/No
+- **Draft**: 2-3 sentences max. Tone and content must match lead quality level.
+
+Hot/Warm leads first. Low Intent leads last.`;
 
 const DAILY_SUMMARY_PROMPT = `Founder briefing. Bullets only. No narrative. Protect the founder's time.
 
