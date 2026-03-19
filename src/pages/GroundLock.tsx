@@ -716,14 +716,14 @@ export default function GroundLock() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={250}>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                <Button asChild variant="gold" size="lg">
-                  <Link to="/contact">
-                    Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline-light" size="lg">
-                  <Link to="/groundlock">Estimate a Project</Link>
-                </Button>
+                  <Button asChild variant="gold" size="lg">
+                    <Link to="/contact">
+                      Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline-light" size="lg">
+                    <Link to="/groundlock">Explore the System</Link>
+                  </Button>
               </div>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={350}>
