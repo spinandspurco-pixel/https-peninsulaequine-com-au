@@ -308,9 +308,6 @@ export default function GroundLock() {
                 <p className="text-foreground/55">
                   These are never surface problems. They're structural.
                 </p>
-                <p className="text-muted-foreground/25 italic text-[13px] pt-2">
-                  Specified where required to ensure structural integrity and consistent surface performance.
-                </p>
               </div>
             </RevealOnScroll>
           </div>
