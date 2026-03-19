@@ -683,6 +683,7 @@ export default function GroundLock() {
               </div>
             </RevealOnScroll>
           </div>
+          </div>
         </div>
       </section>
 
