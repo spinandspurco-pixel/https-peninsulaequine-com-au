@@ -98,24 +98,37 @@ Per lead:
 
 Put Hot and Warm leads first. For any lead classified Hot or Warm, the default action is Book Site Assessment — only override if there's a clear reason.`;
 
+const BOOKING_URL = "/site-assessment";
+
 const DRAFT_REPLY_PROMPT = (inquiry: any, replyType: string) => {
+  // Determine if this looks like a qualified lead
+  const services = (inquiry?.services || []).join(", ");
+  const hasBudget = inquiry?.budget_range && inquiry.budget_range !== "not-sure";
+  const hasDetails = inquiry?.project_vision || inquiry?.project_details;
+  const isQualified = hasBudget || hasDetails || services.length > 0;
+
+  const bookingInstruction = isQualified
+    ? `\nThis appears to be a qualified lead. Include the booking link (${BOOKING_URL}) naturally in the reply. Frame the site assessment as the next step — not a suggestion.`
+    : `\nThis appears to be an early-stage enquiry. Be helpful but do not push booking.`;
+
   const templates: Record<string, string> = {
-    "initial response": `Draft an initial reply. Maximum 4 sentences.
-Sentence 1: Address by first name, acknowledge the project type.
-Sentence 2: One line on PE's relevant capability — no boasting.
-Sentence 3: Recommend a site assessment as the starting point.
+    "initial response": `Draft an initial reply. Maximum 3-4 sentences.
+Sentence 1: Address by first name, acknowledge the specific project.
+Sentence 2: Position the site assessment as the standard next step — "The next step is a site assessment to evaluate your site."
+Sentence 3: Direct them to book: "You can book a time here: ${BOOKING_URL}"
 Sentence 4: Sign off as Peninsula Equine.
-No pleasantries. No "thank you for reaching out." No "we'd love to discuss." Just substance.`,
+Do NOT ask questions. Do NOT offer to "discuss further." Move directly to booking.${bookingInstruction}`,
 
     "site assessment booking": `Draft a site assessment booking note. Maximum 3 sentences.
 State the purpose (assess terrain, access, structures, horse management).
-Offer availability (use placeholder dates).
+Direct to booking: ${BOOKING_URL}
 Sign off. No selling. No filler.`,
 
     "follow-up": `Draft a follow-up. Maximum 3 sentences.
 Reference their project — not their enquiry.
 One value point: what a site assessment would clarify for them.
-Confirm availability. No urgency. No "just checking in." No "circling back."`,
+Include booking link: ${BOOKING_URL}
+No urgency. No "just checking in." No "circling back."${bookingInstruction}`,
 
     "proposal chase-up": `Draft a proposal chase-up. Maximum 3 sentences.
 Reference the proposal by project type.
@@ -131,7 +144,7 @@ No apology. No "unfortunately." Just direct and respectful.`,
   return `${templates[replyType] || templates["initial response"]}
 
 CONTEXT:
-Name: ${inquiry?.name || "Unknown"} | Services: ${(inquiry?.services || []).join(", ")} | Budget: ${inquiry?.budget_range || "—"} | Vision: ${inquiry?.project_vision || "—"} | Details: ${inquiry?.project_details || "—"} | Start: ${inquiry?.preferred_start || "—"}
+Name: ${inquiry?.name || "Unknown"} | Services: ${services} | Budget: ${inquiry?.budget_range || "—"} | Vision: ${inquiry?.project_vision || "—"} | Details: ${inquiry?.project_details || "—"} | Start: ${inquiry?.preferred_start || "—"}
 
 If pricing or scope is involved, prefix with [REQUIRES HUMAN REVIEW].
 
