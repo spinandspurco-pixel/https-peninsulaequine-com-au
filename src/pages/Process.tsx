@@ -49,7 +49,7 @@ const phases = [
       "Custom architectural drawings and 3D concepts",
       "Structural engineering and compliance",
       "Council permits and approvals managed for you",
-      "Detailed quote with transparent line items",
+      "Structured project brief with scope and specification",
     ],
     image: mainRidgeRebarFoundation,
     blueprint: blueprintBarn,
@@ -196,8 +196,8 @@ export default function Process() {
   return (
     <Layout>
       <PageHeader
-        title="From Dirt to Dynasty"
-        description="Our proven 8-phase construction process transforms raw land into world-class equine facilities. Here's how we do it."
+        title="Our Process"
+        description="A structured approach to equine infrastructure — from initial assessment through to long-term outcome."
         backgroundImage={ciroWide}
         dividerVariant="structural"
       />
@@ -210,14 +210,14 @@ export default function Process() {
             <AnimatedDivider className="mx-auto mb-8" />
             <SectionTransition variant="fade-up">
               <h2 className="heading-editorial text-foreground mb-4">
-                Every Great Facility Starts With a Plan
+                Projects Are Carefully Planned<br />Prior to Commencement
               </h2>
             </SectionTransition>
             <SectionTransition variant="fade-up" delay={100}>
               <p className="text-muted-foreground text-lg leading-relaxed">
-                Unlike generic contractors who build from templates, Ciro designs every project
-                around the horse — their movement, their needs, their nature. Each phase is
-                executed with the precision of a builder and the intuition of a horseman.
+                Each build is approached as a long-term system — designed around the horse,
+                engineered for durability, and coordinated for precision.
+                Sequencing and specification are critical to performance.
               </p>
             </SectionTransition>
           </div>
@@ -261,10 +261,10 @@ export default function Process() {
       </section>
 
       <ParallaxCTA
-        title="Ready to Start Your Journey?"
-        description="Every project begins with a conversation. Tell us about your vision and we'll show you how we bring it to life."
+        title="Discuss Your Project"
+        description="Each project begins with an on-site assessment to ensure correct system specification and long-term performance."
         backgroundImage={ciroWide}
-        primaryButtonText="Get a Free Quote"
+        primaryButtonText="Request Site Assessment"
         primaryButtonLink="/contact"
         showPhoneButton={true}
       />

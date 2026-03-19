@@ -439,8 +439,8 @@ export default function Index() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <p className="text-sm text-muted-foreground/35 mb-12 leading-[1.9]">
-                Each project begins with an on-site assessment<br />
-                to ensure correct specification.
+                Following assessment, a structured project brief<br />
+                and system specification is prepared.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={200}>
@@ -452,7 +452,7 @@ export default function Index() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={350}>
               <p className="text-muted-foreground/15 text-[10px] tracking-[0.25em] uppercase mt-10">
-                Currently accepting select projects
+                Limited projects per season
               </p>
             </RevealOnScroll>
           </div>

@@ -309,7 +309,7 @@ export default function GroundLock() {
                   These are never surface problems. They're structural.
                 </p>
                 <p className="text-muted-foreground/25 italic text-[13px] pt-2">
-                  GroundLock™ solves that — from the base layer up.
+                  Specified where required to ensure structural integrity and consistent surface performance.
                 </p>
               </div>
             </RevealOnScroll>
@@ -616,8 +616,8 @@ export default function GroundLock() {
               </Button>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={350}>
-              <p className="text-muted-foreground/15 text-[10px] tracking-[0.25em] uppercase mt-10">
-                Projects are assessed prior to engagement.
+                  <p className="text-muted-foreground/15 text-[10px] tracking-[0.25em] uppercase mt-10">
+                Limited projects per season.
               </p>
             </RevealOnScroll>
           </div>

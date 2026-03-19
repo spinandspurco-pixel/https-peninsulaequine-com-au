@@ -286,6 +286,43 @@ export default function Contact() {
         </div>
       </section>
 
+      {/* ═══ WHAT TO EXPECT ════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-20 sm:py-28 relative">
+          <div className="absolute inset-0 contour-texture" />
+          <div className="section-container max-w-xl mx-auto relative z-[1]">
+            <RevealOnScroll direction="up">
+              <RevealLine className="mx-auto mb-12" width="w-8" />
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={80}>
+              <p className="text-overline text-center mb-6">What to Expect</p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={150}>
+              <div className="space-y-0">
+                {[
+                  { num: "01", text: "Initial assessment and discussion" },
+                  { num: "02", text: "Site-specific recommendations" },
+                  { num: "03", text: "System and scope definition" },
+                  { num: "04", text: "Structured project brief" },
+                  { num: "05", text: "Project scheduling and delivery" },
+                ].map((step, i) => (
+                  <div key={step.num} className="flex items-center gap-5 py-4 border-b border-border/15 last:border-b-0">
+                    <span className="text-[9px] font-mono tracking-[0.3em] text-accent/25 uppercase w-6 shrink-0">{step.num}</span>
+                    <span className="text-sm text-foreground/60">{step.text}</span>
+                  </div>
+                ))}
+              </div>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={250}>
+              <p className="text-center text-[11px] text-muted-foreground/25 italic mt-8">
+                Projects are carefully planned prior to commencement.
+              </p>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ FORM ════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
