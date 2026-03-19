@@ -944,14 +944,14 @@ export default function StaffDocuments() {
                   <CardDescription>{DOC_TYPES[activeTab].description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {activeTab === "swms" && <SWMSForm onSubmit={d => handleSubmit("swms", d)} loading={submitting} />}
+                  {activeTab === "swms" && <SWMSForm onSubmit={d => handleSubmit("swms", d)} loading={submitting} defaults={jobDefaults} />}
                   {activeTab === "work_permit" && <WorkPermitForm onSubmit={d => handleSubmit("work_permit", d)} loading={submitting} />}
                   {activeTab === "risk_assessment" && <RiskAssessmentForm onSubmit={d => handleSubmit("risk_assessment", d)} loading={submitting} />}
                   {activeTab === "payment_slip" && <PaymentSlipForm onSubmit={d => handleSubmit("payment_slip", d)} loading={submitting} />}
-                  {activeTab === "site_inspection" && <SiteInspectionForm onSubmit={d => handleSubmit("site_inspection", d)} loading={submitting} />}
+                  {activeTab === "site_inspection" && <SiteInspectionForm onSubmit={d => handleSubmit("site_inspection", d)} loading={submitting} defaults={jobDefaults} />}
                   {activeTab === "event_checklist" && <EventChecklistForm onSubmit={d => handleSubmit("event_checklist", d)} loading={submitting} />}
-                  {activeTab === "daily_site_report" && <DailySiteReportForm onSubmit={d => handleSubmit("daily_site_report", d)} loading={submitting} userId={user?.id} />}
-                  {activeTab === "incident_report" && <IncidentReportForm onSubmit={d => handleSubmit("incident_report", d)} loading={submitting} userId={user?.id} />}
+                  {activeTab === "daily_site_report" && <DailySiteReportForm onSubmit={d => handleSubmit("daily_site_report", d)} loading={submitting} userId={user?.id} defaults={jobDefaults} />}
+                  {activeTab === "incident_report" && <IncidentReportForm onSubmit={d => handleSubmit("incident_report", d)} loading={submitting} userId={user?.id} defaults={jobDefaults} />}
                   {activeTab === "horse_care_log" && <HorseCareLogForm onSubmit={d => handleSubmit("horse_care_log", d)} loading={submitting} />}
                 </CardContent>
               </Card>
