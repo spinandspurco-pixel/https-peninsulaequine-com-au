@@ -49,7 +49,7 @@ const phases = [
       "Custom architectural drawings and 3D concepts",
       "Structural engineering and compliance",
       "Council permits and approvals managed for you",
-      "Detailed quote with transparent line items",
+      "Structured project brief with scope and specification",
     ],
     image: mainRidgeRebarFoundation,
     blueprint: blueprintBarn,
