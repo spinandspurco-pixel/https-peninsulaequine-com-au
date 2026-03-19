@@ -527,119 +527,122 @@ export default function Admin() {
           {/* Email Test — Founder + Admin */}
           {viewMode !== "operations" && <TestEmailPanel />}
 
-          {/* Inquiry Filters */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/50" />
-              <Input
-                placeholder="Search by name, email, or phone…"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 h-10 bg-card/60 border-border/40 rounded-sm text-sm"
-              />
-            </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-[160px] h-10 bg-card/60 border-border/40 rounded-sm text-sm">
-                <Filter className="mr-2 h-3.5 w-3.5 text-muted-foreground/50" />
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                {statusOptions.map((s) => (
-                  <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button variant="outline" size="sm" onClick={fetchInquiries} disabled={isLoadingData} className="h-10 border-border/40 text-[11px] uppercase tracking-wider">
-              <RefreshCw className={`mr-2 h-3.5 w-3.5 ${isLoadingData ? "animate-spin" : ""}`} />
-              Refresh
-            </Button>
-            <Button variant="outline" size="sm" onClick={exportToCSV} disabled={filteredInquiries.length === 0} className="h-10 border-border/40 text-[11px] uppercase tracking-wider">
-              <Download className="mr-2 h-3.5 w-3.5" />
-              Export
-            </Button>
-          </div>
+          {/* Inquiry Filters + Table — Admin + Founder */}
+          {viewMode !== "operations" && (
+            <>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/50" />
+                  <Input
+                    placeholder="Search by name, email, or phone…"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-9 h-10 bg-card/60 border-border/40 rounded-sm text-sm"
+                  />
+                </div>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-full sm:w-[160px] h-10 bg-card/60 border-border/40 rounded-sm text-sm">
+                    <Filter className="mr-2 h-3.5 w-3.5 text-muted-foreground/50" />
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    {statusOptions.map((s) => (
+                      <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button variant="outline" size="sm" onClick={fetchInquiries} disabled={isLoadingData} className="h-10 border-border/40 text-[11px] uppercase tracking-wider">
+                  <RefreshCw className={`mr-2 h-3.5 w-3.5 ${isLoadingData ? "animate-spin" : ""}`} />
+                  Refresh
+                </Button>
+                <Button variant="outline" size="sm" onClick={exportToCSV} disabled={filteredInquiries.length === 0} className="h-10 border-border/40 text-[11px] uppercase tracking-wider">
+                  <Download className="mr-2 h-3.5 w-3.5" />
+                  Export
+                </Button>
+              </div>
 
-          {/* Inquiry Table */}
-          <Card className="bg-card/80 border-border/40 overflow-hidden">
-            <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-border/30 hover:bg-transparent">
-                    <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Date</TableHead>
-                    <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Name</TableHead>
-                    <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Contact</TableHead>
-                    <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Services</TableHead>
-                    <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Tier</TableHead>
-                    <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Status</TableHead>
-                    <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10 text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {isLoadingData ? (
-                    <TableRow>
-                      <TableCell colSpan={7} className="text-center py-12">
-                        <RefreshCw className="h-5 w-5 animate-spin mx-auto text-accent/60" />
-                      </TableCell>
-                    </TableRow>
-                  ) : filteredInquiries.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={7} className="text-center py-12 text-muted-foreground text-sm">
-                        No inquiries found
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    filteredInquiries.map((inquiry) => (
-                      <TableRow key={inquiry.id} className="border-border/20 hover:bg-accent/[0.03]">
-                        <TableCell className="text-[11px] text-muted-foreground whitespace-nowrap">
-                          {format(new Date(inquiry.created_at), "MMM d, yyyy")}
-                        </TableCell>
-                        <TableCell className="text-sm font-medium">{inquiry.name}</TableCell>
-                        <TableCell>
-                          <div className="flex flex-col gap-0.5">
-                            <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                              <Mail className="h-3 w-3" />{inquiry.email}
-                            </span>
-                            {inquiry.phone && (
-                              <span className="flex items-center gap-1 text-[11px] text-muted-foreground/60">
-                                <Phone className="h-3 w-3" />{inquiry.phone}
-                              </span>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex flex-wrap gap-1">
-                            {inquiry.services.slice(0, 2).map((s) => (
-                              <Badge key={s} variant="outline" className="text-[9px] uppercase tracking-wider border-border/40 text-muted-foreground">{s}</Badge>
-                            ))}
-                            {inquiry.services.length > 2 && (
-                              <Badge variant="outline" className="text-[9px] border-border/40 text-muted-foreground">+{inquiry.services.length - 2}</Badge>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="secondary" className={`${TIER_COLORS[inquiry.lead_tier || "standard"]} text-[9px] uppercase tracking-wider`}>
-                            {(inquiry.lead_tier || "standard")}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{getStatusBadge(inquiry.status)}</TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-1">
-                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-accent" onClick={() => handleViewInquiry(inquiry)}>
-                              <Eye className="h-3.5 w-3.5" />
-                            </Button>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/60 hover:text-destructive" onClick={() => setDeleteInquiry(inquiry)}>
-                              <Trash2 className="h-3.5 w-3.5" />
-                            </Button>
-                          </div>
-                        </TableCell>
+              <Card className="bg-card/80 border-border/40 overflow-hidden">
+                <CardContent className="p-0">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-border/30 hover:bg-transparent">
+                        <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Date</TableHead>
+                        <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Name</TableHead>
+                        <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Contact</TableHead>
+                        <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Services</TableHead>
+                        <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Tier</TableHead>
+                        <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10">Status</TableHead>
+                        <TableHead className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 font-medium h-10 text-right">Actions</TableHead>
                       </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+                    </TableHeader>
+                    <TableBody>
+                      {isLoadingData ? (
+                        <TableRow>
+                          <TableCell colSpan={7} className="text-center py-12">
+                            <RefreshCw className="h-5 w-5 animate-spin mx-auto text-accent/60" />
+                          </TableCell>
+                        </TableRow>
+                      ) : filteredInquiries.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={7} className="text-center py-12 text-muted-foreground text-sm">
+                            No inquiries found
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        filteredInquiries.map((inquiry) => (
+                          <TableRow key={inquiry.id} className="border-border/20 hover:bg-accent/[0.03]">
+                            <TableCell className="text-[11px] text-muted-foreground whitespace-nowrap">
+                              {format(new Date(inquiry.created_at), "MMM d, yyyy")}
+                            </TableCell>
+                            <TableCell className="text-sm font-medium">{inquiry.name}</TableCell>
+                            <TableCell>
+                              <div className="flex flex-col gap-0.5">
+                                <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                                  <Mail className="h-3 w-3" />{inquiry.email}
+                                </span>
+                                {inquiry.phone && (
+                                  <span className="flex items-center gap-1 text-[11px] text-muted-foreground/60">
+                                    <Phone className="h-3 w-3" />{inquiry.phone}
+                                  </span>
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex flex-wrap gap-1">
+                                {inquiry.services.slice(0, 2).map((s) => (
+                                  <Badge key={s} variant="outline" className="text-[9px] uppercase tracking-wider border-border/40 text-muted-foreground">{s}</Badge>
+                                ))}
+                                {inquiry.services.length > 2 && (
+                                  <Badge variant="outline" className="text-[9px] border-border/40 text-muted-foreground">+{inquiry.services.length - 2}</Badge>
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="secondary" className={`${TIER_COLORS[inquiry.lead_tier || "standard"]} text-[9px] uppercase tracking-wider`}>
+                                {(inquiry.lead_tier || "standard")}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>{getStatusBadge(inquiry.status)}</TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-1">
+                                <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-accent" onClick={() => handleViewInquiry(inquiry)}>
+                                  <Eye className="h-3.5 w-3.5" />
+                                </Button>
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/60 hover:text-destructive" onClick={() => setDeleteInquiry(inquiry)}>
+                                  <Trash2 className="h-3.5 w-3.5" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </>
+          )}
         </div>
       </div>
 
