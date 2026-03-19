@@ -155,7 +155,7 @@ Format:
 (the message)`;
 };
 
-const FOLLOW_UPS_PROMPT = `Identify stale leads. Be direct about priority.
+const FOLLOW_UPS_PROMPT = `Identify stale leads. Prioritise getting qualified leads to book a site assessment.
 
 Flag if:
 - "new" status, >2 days old
@@ -164,9 +164,10 @@ Flag if:
 
 Per lead:
 - **Name** | **Days stale** | **Stage** (Day 2/5/10) | **Priority** (High/Med/Low)
-- **Draft**: 2-3 sentences max. Reference their project, not their enquiry. One value point. Confirm availability. No "just checking in." No "wanted to touch base."
+- **Booking Ready**: Yes/No — can this lead be directed to book a site assessment?
+- **Draft**: 2-3 sentences max. For qualified leads, include booking link (${BOOKING_URL}). Reference their project, not their enquiry. One value point about what the assessment would clarify. No "just checking in."
 
-Priority order. No padding.`;
+Priority order. Booking-ready leads first.`;
 
 const DAILY_SUMMARY_PROMPT = `Founder briefing. Bullets only. No narrative.
 
