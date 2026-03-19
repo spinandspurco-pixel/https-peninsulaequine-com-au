@@ -20,10 +20,13 @@ interface PageHeaderProps {
 export function PageHeader({
   title,
   subtitle,
+  description,
   overline,
   backgroundImage,
+  dividerVariant,
   children,
 }: PageHeaderProps) {
+  const displaySubtitle = subtitle || description;
   return (
     <section className="relative pt-40 sm:pt-48 pb-24 sm:pb-32 overflow-hidden">
       {/* Background image */}
