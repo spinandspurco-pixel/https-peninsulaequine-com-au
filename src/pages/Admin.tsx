@@ -47,6 +47,7 @@ import {
   LogOut, Eye, Trash2, RefreshCw, Search, Mail, Phone, Calendar,
   Filter, MessageSquare, Users, Clock, CheckCircle, Download,
   Settings, Zap, Save, ExternalLink, CalendarDays, BarChart3, UserCog, FileText,
+  Crown, Shield, HardHat,
 } from "lucide-react";
 import { format } from "date-fns";
 
