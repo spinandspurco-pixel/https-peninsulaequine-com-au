@@ -26,7 +26,7 @@ const PROJECT_SCOPES = [
   { id: "ground-systems", label: "Ground Stabilisation (GroundLock™)" },
   { id: "drainage-civil", label: "Drainage / Civil Works" },
   { id: "full-infrastructure", label: "Full Property Infrastructure" },
-  { id: "design-planning", label: "Design & Planning" },
+  { id: "design-planning", label: "Design & Site Planning" },
 ];
 
 const TIMELINES = [
@@ -154,7 +154,7 @@ export default function Contact() {
           form.propertyLocation.trim() ? `Location: ${form.propertyLocation.trim()}` : "",
           form.propertyType ? `Type: ${form.propertyType}` : "",
           form.timeline ? `Timeline: ${form.timeline}` : "",
-          form.budget ? `Scale: ${form.budget}` : "",
+          form.budget ? `Investment range: ${form.budget}` : "",
         ]
           .filter(Boolean)
           .join(" | "),
@@ -162,7 +162,6 @@ export default function Contact() {
       });
       if (error) throw error;
 
-      // Fire-and-forget notifications
       supabase.functions
         .invoke("send-inquiry-notification", {
           body: {
@@ -240,77 +239,49 @@ export default function Contact() {
             className="mt-8 text-muted-foreground/45 text-sm sm:text-base max-w-lg mx-auto leading-relaxed opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
-            We take on a limited number of projects each season.<br />
-            Tell us about your property and what you're looking to build.
+            Each project is assessed individually to ensure correct<br />
+            system specification and long-term performance.
           </p>
         </div>
       </section>
 
-      {/* ═══ SITE ASSESSMENT ════════════════════════════ */}
+      {/* ═══ SITE ASSESSMENT POSITIONING ═══════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-24 sm:py-32 relative">
-        <div className="absolute inset-0 grain-texture" />
-        <div className="section-container max-w-2xl mx-auto relative z-[1]">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
-            <div>
-              <RevealOnScroll direction="up">
-                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/60 mb-6">
-                  Site Assessment
-                </p>
-                <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-foreground/90 leading-[1.25]">
-                  Our process begins<br />with an on-site assessment.
-                </h2>
-              </RevealOnScroll>
-            </div>
-            <div>
-              <RevealOnScroll direction="up" delay={100}>
-                <div className="space-y-5 text-sm text-muted-foreground/60 leading-[1.9]">
-                  <p>This allows us to properly evaluate:</p>
-                  <div className="space-y-3">
-                    {["Ground conditions", "Drainage", "Layout", "Long-term performance"].map((item) => (
-                      <div key={item} className="flex items-center gap-3">
-                        <div className="w-px h-4 bg-accent/40 shrink-0" />
-                        <span className="text-foreground/60 text-sm">{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-muted-foreground/40 italic pt-2">
-                    Assessment fees apply and are credited<br />
-                    toward your project if you proceed.
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-2xl mx-auto relative z-[1]">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
+              <div>
+                <RevealOnScroll direction="up">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/60 mb-6">
+                    Site Assessment
                   </p>
-                </div>
-              </RevealOnScroll>
-            </div>
-          </div>
-        </div>
-        </div>
-      </section>
-
-      {/* ═══ INTRO ═══════════════════════════════════════ */}
-      <section className="relative overflow-hidden">
-        <div className="divider-grid" />
-        <div className="py-20 sm:py-28 bg-card relative">
-          <div className="absolute inset-0 contour-texture" />
-          <div className="section-container max-w-2xl mx-auto text-center relative z-[1] space-y-8">
-            <RevealLine className="mx-auto" width="w-10" />
-            <RevealOnScroll direction="up">
-              <h2 className="heading-section text-foreground">
-                Start With the Land
-              </h2>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={100}>
-              <div className="space-y-5 text-sm text-muted-foreground leading-[1.8] max-w-lg mx-auto">
-                <p>
-                  Every project begins with understanding the property —<br />
-                  its drainage, its layout, and how horses move through it.
-                </p>
-                <p className="text-foreground/60 italic">
-                  This isn't a quick quote process.<br />
-                  It's a considered build from the ground up.
-                </p>
+                  <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-foreground/90 leading-[1.25]">
+                    Our process begins<br />with an on-site assessment.
+                  </h2>
+                </RevealOnScroll>
               </div>
-            </RevealOnScroll>
+              <div>
+                <RevealOnScroll direction="up" delay={100}>
+                  <div className="space-y-5 text-sm text-muted-foreground/60 leading-[1.9]">
+                    <p>This allows us to properly evaluate:</p>
+                    <div className="space-y-3">
+                      {["Ground conditions", "Drainage pathways", "Site layout", "Long-term performance requirements"].map((item) => (
+                        <div key={item} className="flex items-center gap-3">
+                          <div className="w-px h-4 bg-accent/40 shrink-0" />
+                          <span className="text-foreground/60 text-sm">{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-muted-foreground/40 italic pt-2">
+                      Assessment fees apply and are credited<br />
+                      toward your project investment if you proceed.
+                    </p>
+                  </div>
+                </RevealOnScroll>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -319,300 +290,298 @@ export default function Contact() {
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-16 sm:py-24 bg-card relative">
-        <div className="section-container max-w-2xl mx-auto">
-          {submitted ? (
-            <RevealOnScroll direction="up">
-              <div className="text-center py-16 space-y-6">
-                <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto">
-                  <CheckCircle className="h-8 w-8 text-accent" />
-                </div>
-                <h2 className="heading-section text-foreground">
-                  Request Received
-                </h2>
-                <p className="text-muted-foreground text-sm leading-[1.8] max-w-md mx-auto">
-                  We'll review your enquiry and be in touch shortly.<br /><br />
-                  Each project is assessed based on scope,<br />
-                  location, and current availability.
-                </p>
-                <div className="pt-6 flex flex-col sm:flex-row gap-4 justify-center">
-                  <a
-                    href={`tel:${siteConfig.phone}`}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium text-foreground hover:border-accent/30 hover:text-accent transition-all duration-500"
-                  >
-                    <Phone className="h-4 w-4 text-accent" />
-                    {siteConfig.phone}
-                  </a>
-                  <a
-                    href={`mailto:${siteConfig.email}`}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium text-foreground hover:border-accent/30 hover:text-accent transition-all duration-500"
-                  >
-                    <Mail className="h-4 w-4 text-accent" />
-                    {siteConfig.email}
-                  </a>
-                </div>
-              </div>
-            </RevealOnScroll>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-16">
-              {/* Section 1 — Contact Details */}
+          <div className="section-container max-w-2xl mx-auto">
+            {submitted ? (
               <RevealOnScroll direction="up">
-                <div className="space-y-6">
-                  <div>
-                    <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
-                      01
-                    </p>
-                    <h3 className="font-serif text-xl font-medium text-foreground">
-                      Your Details
-                    </h3>
+                <div className="text-center py-16 space-y-6">
+                  <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto">
+                    <CheckCircle className="h-8 w-8 text-accent" />
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="sm:col-span-2">
-                      <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
-                        Full Name *
-                      </label>
-                      <Input
-                        value={form.name}
-                        onChange={(e) => set("name", e.target.value)}
-                        placeholder="Your full name"
-                        maxLength={100}
-                      />
-                      {errors.name && (
-                        <p className="text-destructive text-xs mt-1">
-                          {errors.name}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
-                        Email Address *
-                      </label>
-                      <Input
-                        type="email"
-                        value={form.email}
-                        onChange={(e) => set("email", e.target.value)}
-                        placeholder="you@example.com"
-                        maxLength={255}
-                      />
-                      {errors.email && (
-                        <p className="text-destructive text-xs mt-1">
-                          {errors.email}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
-                        Phone Number
-                      </label>
-                      <Input
-                        type="tel"
-                        value={form.phone}
-                        onChange={(e) => set("phone", e.target.value)}
-                        placeholder="04XX XXX XXX"
-                        maxLength={30}
-                      />
-                    </div>
+                  <h2 className="heading-section text-foreground">
+                    Request Received
+                  </h2>
+                  <p className="text-muted-foreground text-sm leading-[1.8] max-w-md mx-auto">
+                    We'll review your enquiry and be in touch shortly.<br /><br />
+                    Each project is assessed based on scope,<br />
+                    location, and current availability.
+                  </p>
+                  <div className="pt-6 flex flex-col sm:flex-row gap-4 justify-center">
+                    <a
+                      href={`tel:${siteConfig.phone}`}
+                      className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium text-foreground hover:border-accent/30 hover:text-accent transition-all duration-500"
+                    >
+                      <Phone className="h-4 w-4 text-accent" />
+                      {siteConfig.phone}
+                    </a>
+                    <a
+                      href={`mailto:${siteConfig.email}`}
+                      className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium text-foreground hover:border-accent/30 hover:text-accent transition-all duration-500"
+                    >
+                      <Mail className="h-4 w-4 text-accent" />
+                      {siteConfig.email}
+                    </a>
                   </div>
                 </div>
               </RevealOnScroll>
-
-              <div className="w-12 h-px bg-border mx-auto" />
-
-              {/* Section 2 — Property Details */}
-              <RevealOnScroll direction="up" delay={50}>
-                <div className="space-y-6">
-                  <div>
-                    <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
-                      02
-                    </p>
-                    <h3 className="font-serif text-xl font-medium text-foreground">
-                      Property Overview
-                    </h3>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-16">
+                {/* Section 1 — Contact Details */}
+                <RevealOnScroll direction="up">
+                  <div className="space-y-6">
                     <div>
-                      <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
-                        <MapPin className="inline h-3 w-3 mr-1" />
-                        Property Location
-                      </label>
-                      <Input
-                        value={form.propertyLocation}
-                        onChange={(e) =>
-                          set("propertyLocation", e.target.value)
-                        }
-                        placeholder="e.g. Mornington Peninsula, VIC"
-                        maxLength={200}
-                      />
+                      <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
+                        01
+                      </p>
+                      <h3 className="font-serif text-xl font-medium text-foreground">
+                        Your Details
+                      </h3>
                     </div>
-                    <SelectField
-                      label="Property Type"
-                      value={form.propertyType}
-                      onChange={(v) => set("propertyType", v)}
-                      options={PROPERTY_TYPES}
-                      placeholder="Select type"
-                    />
-                  </div>
-                </div>
-              </RevealOnScroll>
-
-              <div className="w-12 h-px bg-border mx-auto" />
-
-              {/* Section 3 — Project Scope */}
-              <RevealOnScroll direction="up" delay={100}>
-                <div className="space-y-6">
-                  <div>
-                    <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
-                      03
-                    </p>
-                    <h3 className="font-serif text-xl font-medium text-foreground">
-                      What Are You Looking to Build?
-                    </h3>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    {PROJECT_SCOPES.map((scope) => (
-                      <button
-                        key={scope.id}
-                        type="button"
-                        onClick={() => toggleScope(scope.id)}
-                        className={cn(
-                          "px-4 py-3 rounded-md text-sm font-medium border transition-all text-left",
-                          form.scopes.includes(scope.id)
-                            ? "bg-accent/10 border-accent text-foreground ring-1 ring-accent/30"
-                            : "bg-background border-border text-muted-foreground hover:border-accent/40 hover:text-foreground"
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="sm:col-span-2">
+                        <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                          Full Name *
+                        </label>
+                        <Input
+                          value={form.name}
+                          onChange={(e) => set("name", e.target.value)}
+                          placeholder="Your full name"
+                          maxLength={100}
+                        />
+                        {errors.name && (
+                          <p className="text-destructive text-xs mt-1">
+                            {errors.name}
+                          </p>
                         )}
-                      >
-                        {scope.label}
-                      </button>
-                    ))}
+                      </div>
+                      <div>
+                        <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                          Email Address *
+                        </label>
+                        <Input
+                          type="email"
+                          value={form.email}
+                          onChange={(e) => set("email", e.target.value)}
+                          placeholder="you@example.com"
+                          maxLength={255}
+                        />
+                        {errors.email && (
+                          <p className="text-destructive text-xs mt-1">
+                            {errors.email}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                          Phone Number
+                        </label>
+                        <Input
+                          type="tel"
+                          value={form.phone}
+                          onChange={(e) => set("phone", e.target.value)}
+                          placeholder="04XX XXX XXX"
+                          maxLength={30}
+                        />
+                      </div>
+                    </div>
                   </div>
-                  {errors.scopes && (
-                    <p className="text-destructive text-xs">
-                      {errors.scopes}
-                    </p>
-                  )}
-                </div>
-              </RevealOnScroll>
+                </RevealOnScroll>
 
-              <div className="w-12 h-px bg-border mx-auto" />
+                <div className="w-12 h-px bg-border mx-auto" />
 
-              {/* Section 4 — Project Details */}
-              <RevealOnScroll direction="up" delay={150}>
-                <div className="space-y-6">
-                  <div>
-                    <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
-                      04
-                    </p>
-                    <h3 className="font-serif text-xl font-medium text-foreground">
-                      Project Details
+                {/* Section 2 — Property Details */}
+                <RevealOnScroll direction="up" delay={50}>
+                  <div className="space-y-6">
+                    <div>
+                      <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
+                        02
+                      </p>
+                      <h3 className="font-serif text-xl font-medium text-foreground">
+                        Property Overview
+                      </h3>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                          <MapPin className="inline h-3 w-3 mr-1" />
+                          Property Location
+                        </label>
+                        <Input
+                          value={form.propertyLocation}
+                          onChange={(e) =>
+                            set("propertyLocation", e.target.value)
+                          }
+                          placeholder="e.g. Mornington Peninsula, VIC"
+                          maxLength={200}
+                        />
+                      </div>
+                      <SelectField
+                        label="Property Type"
+                        value={form.propertyType}
+                        onChange={(v) => set("propertyType", v)}
+                        options={PROPERTY_TYPES}
+                        placeholder="Select type"
+                      />
+                    </div>
+                  </div>
+                </RevealOnScroll>
+
+                <div className="w-12 h-px bg-border mx-auto" />
+
+                {/* Section 3 — Project Scope */}
+                <RevealOnScroll direction="up" delay={100}>
+                  <div className="space-y-6">
+                    <div>
+                      <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
+                        03
+                      </p>
+                      <h3 className="font-serif text-xl font-medium text-foreground">
+                        Project Type
+                      </h3>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      {PROJECT_SCOPES.map((scope) => (
+                        <button
+                          key={scope.id}
+                          type="button"
+                          onClick={() => toggleScope(scope.id)}
+                          className={cn(
+                            "px-4 py-3 rounded-md text-sm font-medium border transition-all text-left",
+                            form.scopes.includes(scope.id)
+                              ? "bg-accent/10 border-accent text-foreground ring-1 ring-accent/30"
+                              : "bg-background border-border text-muted-foreground hover:border-accent/40 hover:text-foreground"
+                          )}
+                        >
+                          {scope.label}
+                        </button>
+                      ))}
+                    </div>
+                    {errors.scopes && (
+                      <p className="text-destructive text-xs">
+                        {errors.scopes}
+                      </p>
+                    )}
+                  </div>
+                </RevealOnScroll>
+
+                <div className="w-12 h-px bg-border mx-auto" />
+
+                {/* Section 4 — Project Description */}
+                <RevealOnScroll direction="up" delay={150}>
+                  <div className="space-y-6">
+                    <div>
+                      <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
+                        04
+                      </p>
+                      <h3 className="font-serif text-xl font-medium text-foreground">
+                        Project Description
+                      </h3>
+                    </div>
+                    <div>
+                      <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                        Tell us about your project
+                      </label>
+                      <textarea
+                        value={form.details}
+                        onChange={(e) => set("details", e.target.value)}
+                        maxLength={2000}
+                        rows={5}
+                        placeholder="Describe what you're looking to build — include any known issues, goals, or requirements."
+                        className={cn(inputClass, "resize-none")}
+                      />
+                    </div>
+                  </div>
+                </RevealOnScroll>
+
+                <div className="w-12 h-px bg-border mx-auto" />
+
+                {/* Section 5 & 6 — Timeline + Investment Range */}
+                <RevealOnScroll direction="up" delay={200}>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                    <div className="space-y-6">
+                      <div>
+                        <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
+                          05
+                        </p>
+                        <h3 className="font-serif text-xl font-medium text-foreground">
+                          Timeline
+                        </h3>
+                      </div>
+                      <SelectField
+                        label="When are you looking to start?"
+                        value={form.timeline}
+                        onChange={(v) => set("timeline", v)}
+                        options={TIMELINES}
+                        placeholder="Select timeline"
+                      />
+                    </div>
+                    <div className="space-y-6">
+                      <div>
+                        <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
+                          06
+                        </p>
+                        <h3 className="font-serif text-xl font-medium text-foreground">
+                          Investment Range
+                        </h3>
+                        <p className="text-[11px] text-muted-foreground/40 mt-1">Optional</p>
+                      </div>
+                      <SelectField
+                        label="Approximate project investment"
+                        value={form.budget}
+                        onChange={(v) => set("budget", v)}
+                        options={BUDGET_RANGES}
+                        placeholder="Select range"
+                      />
+                    </div>
+                  </div>
+                </RevealOnScroll>
+
+                <div className="w-12 h-px bg-border mx-auto" />
+
+                {/* Before You Submit */}
+                <RevealOnScroll direction="up" delay={250}>
+                  <div className="bg-background rounded-lg border border-border p-6 sm:p-8 text-center space-y-4">
+                    <h3 className="font-serif text-lg font-medium text-foreground">
+                      Before You Submit
                     </h3>
-                  </div>
-                  <div>
-                    <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
-                      Tell us about your project
-                    </label>
-                    <textarea
-                      value={form.details}
-                      onChange={(e) => set("details", e.target.value)}
-                      maxLength={2000}
-                      rows={5}
-                      placeholder="Describe what you're looking to build…"
-                      className={cn(inputClass, "resize-none")}
-                    />
-                    <p className="text-[10px] text-muted-foreground/50 mt-1.5">
-                      Include any known issues, goals, or ideas — drainage,
-                      footing, layout, etc.
+                    <p className="text-sm text-muted-foreground leading-[1.8] max-w-md mx-auto">
+                      We approach every project as a long-term investment —<br />
+                      designed properly, built once, and specified for durability.
+                    </p>
+                    <p className="text-sm text-foreground/50 italic">
+                      If that aligns with how you want to build,<br />
+                      we look forward to hearing from you.
                     </p>
                   </div>
-                </div>
-              </RevealOnScroll>
+                </RevealOnScroll>
 
-              <div className="w-12 h-px bg-border mx-auto" />
-
-              {/* Section 5 & 6 — Timeline + Scale */}
-              <RevealOnScroll direction="up" delay={200}>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                  <div className="space-y-6">
-                    <div>
-                      <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
-                        05
-                      </p>
-                      <h3 className="font-serif text-xl font-medium text-foreground">
-                        Timeline
-                      </h3>
-                    </div>
-                    <SelectField
-                      label="When are you looking to start?"
-                      value={form.timeline}
-                      onChange={(v) => set("timeline", v)}
-                      options={TIMELINES}
-                      placeholder="Select timeline"
-                    />
-                  </div>
-                  <div className="space-y-6">
-                    <div>
-                      <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
-                        06
-                      </p>
-                      <h3 className="font-serif text-xl font-medium text-foreground">
-                        Project Scale
-                      </h3>
-                    </div>
-                    <SelectField
-                      label="Approximate budget range"
-                      value={form.budget}
-                      onChange={(v) => set("budget", v)}
-                      options={BUDGET_RANGES}
-                      placeholder="Select range"
-                    />
-                  </div>
-                </div>
-              </RevealOnScroll>
-
-              <div className="w-12 h-px bg-border mx-auto" />
-
-              {/* Before You Submit */}
-              <RevealOnScroll direction="up" delay={250}>
-                <div className="bg-background rounded-lg border border-border p-6 sm:p-8 text-center space-y-4">
-                  <h3 className="font-serif text-lg font-medium text-foreground">
-                    Before You Submit
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-[1.8] max-w-md mx-auto">
-                    We approach every project as a long-term investment —<br />
-                    designed properly, built once, and built to last.
-                  </p>
-                  <p className="text-sm text-foreground/50 italic">
-                    If that aligns with how you want to build,<br />
-                    we look forward to hearing from you.
+                {/* Submit */}
+                <div className="text-center space-y-3">
+                  <Button
+                    type="submit"
+                    size="lg"
+                    disabled={submitting}
+                    variant="gold"
+                    className="uppercase tracking-[0.14em] text-xs font-medium px-10"
+                  >
+                    {submitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
+                        Submitting…
+                      </>
+                    ) : (
+                      <>
+                        Submit Assessment Request{" "}
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
+                  <p className="text-muted-foreground/25 text-[10px] tracking-[0.15em] uppercase mt-4">
+                    Assessment availability is limited.
                   </p>
                 </div>
-              </RevealOnScroll>
-
-              {/* Submit */}
-              <div className="text-center space-y-3">
-                <Button
-                  type="submit"
-                  size="lg"
-                  disabled={submitting}
-                  className="bg-accent text-accent-foreground hover:bg-accent/90 uppercase tracking-[0.14em] text-xs font-medium btn-hover-lift px-10"
-                >
-                  {submitting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
-                      Submitting…
-                    </>
-                  ) : (
-                    <>
-                      Submit Assessment Request{" "}
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </>
-                  )}
-                </Button>
-                <p className="text-primary-foreground/0 text-[10px]">
-                  {/* spacer */}
-                </p>
-              </div>
-            </form>
-          )}
-        </div>
+              </form>
+            )}
+          </div>
         </div>
       </section>
 

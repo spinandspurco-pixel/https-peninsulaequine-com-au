@@ -31,14 +31,14 @@ const CAPABILITIES = [
     Icon: BPArena,
     num: "01",
     title: "Performance Arenas",
-    desc: "Precision-graded surfaces engineered for consistency, drainage, and longevity.",
+    desc: "Precision-graded surfaces engineered for consistency, drainage, and long-term performance.",
     href: "/services",
   },
   {
     Icon: BPStables,
     num: "02",
     title: "Stables & Barns",
-    desc: "Structures designed around equine behaviour, airflow, and durability.",
+    desc: "Structures designed around equine behaviour, airflow, and durability — specified for longevity.",
     href: "/services",
   },
   {
@@ -46,7 +46,7 @@ const CAPABILITIES = [
     num: "03",
     title: "Ground Systems",
     suffix: "GroundLock™",
-    desc: "Interlocking stabilisation designed to eliminate mud and improve performance.",
+    desc: "Interlocking stabilisation designed to eliminate mud and deliver consistent surface performance.",
     href: "/groundlock",
   },
   {
@@ -84,8 +84,16 @@ const PHILOSOPHY = [
   {
     num: "04",
     title: "Built for Generations",
-    body: "We don't build to a budget. We build to a standard. Every material, every joint, every layer is chosen for longevity — not convenience.",
+    body: "We don't build to a budget. We build to a standard. Every material, every joint, every layer is specified for durability — not convenience.",
   },
+];
+
+const PROCESS_STEPS = [
+  { num: "01", title: "Site Assessment", desc: "On-site evaluation of ground conditions, drainage, and layout." },
+  { num: "02", title: "Scope & System Design", desc: "Structured project brief and system specification." },
+  { num: "03", title: "Project Planning", desc: "Materials, sequencing, and long-term performance planning." },
+  { num: "04", title: "Implementation", desc: "Precision build with integrated quality control." },
+  { num: "05", title: "Long-Term Outcome", desc: "Designed to reduce maintenance over time." },
 ];
 
 /* ── Architectural section divider ─────────────────── */
@@ -109,31 +117,23 @@ export default function Index() {
     <Layout>
       {/* ═══ 1. HERO — Cinematic, emotional, bold ═══════════ */}
       <section className="relative min-h-[100dvh] overflow-hidden flex items-center justify-center">
-        {/* Video background */}
         <video
           autoPlay muted loop playsInline
           className="absolute inset-0 w-full h-full object-cover brightness-[0.4] contrast-[1.2] saturate-[0.7]"
         >
           <source src={heroVideo} type="video/mp4" />
         </video>
-
-        {/* Deep overlay */}
         <div className="absolute inset-0 bg-background/60" />
-
-        {/* Vignette */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background: "radial-gradient(ellipse 70% 55% at 50% 50%, transparent 20%, hsl(222 20% 4% / 0.7) 70%, hsl(222 20% 4%) 100%)",
           }}
         />
-
-        {/* Grain */}
         <div className="absolute inset-0 pointer-events-none grain-texture" />
 
         <div className="relative z-10 section-container text-center max-w-5xl mx-auto">
           <div className="flex flex-col items-center gap-12 sm:gap-16">
-            {/* Overline */}
             <div
               className="flex items-center justify-center gap-5 opacity-0 animate-fade-in"
               style={{ animationDelay: "400ms", animationFillMode: "both" }}
@@ -145,7 +145,6 @@ export default function Index() {
               <div className="w-10 h-px bg-accent/40" />
             </div>
 
-            {/* Headline */}
             <h1
               className="font-serif font-bold text-foreground leading-[0.92] tracking-[0.02em] opacity-0 animate-fade-in"
               style={{
@@ -159,7 +158,6 @@ export default function Index() {
               <span className="block mt-3 sm:mt-5">TO DYNASTY</span>
             </h1>
 
-            {/* Subline */}
             <p
               className="text-muted-foreground/50 text-[11px] sm:text-xs tracking-[0.25em] uppercase max-w-md opacity-0 animate-fade-in"
               style={{ animationDelay: "1200ms", animationFillMode: "both", animationDuration: "800ms" }}
@@ -167,7 +165,6 @@ export default function Index() {
               Designed for the horse. Built for the long term.
             </p>
 
-            {/* CTAs */}
             <div
               className="flex flex-col sm:flex-row gap-4 justify-center opacity-0 animate-fade-in"
               style={{ animationDelay: "1600ms", animationFillMode: "both", animationDuration: "800ms" }}
@@ -184,7 +181,6 @@ export default function Index() {
           </div>
         </div>
 
-        {/* Scroll cue */}
         <div
           className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-0 animate-fade-in"
           style={{ animationDelay: "2200ms", animationFillMode: "both" }}
@@ -248,7 +244,6 @@ export default function Index() {
         <div className="py-32 sm:py-44 lg:py-56 relative">
           <div className="absolute inset-0 contour-texture" />
           <div className="section-container max-w-4xl mx-auto relative z-[1]">
-            {/* Header */}
             <div className="text-center mb-24 sm:mb-32">
               <RevealOnScroll direction="up">
                 <RevealLine className="mx-auto mb-12" width="w-10" />
@@ -263,13 +258,12 @@ export default function Index() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={200}>
                 <p className="text-sm text-muted-foreground/50 max-w-sm mx-auto leading-[1.9]">
-                  What we build is only part of it.<br />
-                  How it works is everything.
+                  Projects range from focused infrastructure builds<br />
+                  to fully integrated property systems.
                 </p>
               </RevealOnScroll>
             </div>
 
-            {/* Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-x-20 md:gap-y-20">
               {CAPABILITIES.map((item, i) => (
                 <RevealOnScroll key={item.title} direction="up" stagger={i} staggerInterval={100}>
@@ -321,8 +315,8 @@ export default function Index() {
                   </p>
                   <div className="space-y-5 text-sm text-muted-foreground/55 leading-[1.9]">
                     <p>
-                      A system designed to solve ground failure at its source.
-                      Engineered layers that interlock, drain, and hold — permanently.
+                      Specified where required to ensure structural integrity
+                      and consistent surface performance.
                     </p>
                     <p className="text-accent/60 font-medium italic text-[13px]">
                       Most properties fail from the ground up.
@@ -385,10 +379,58 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ 6. SELECTED WORK ═══════════════════════════════ */}
+      {/* ═══ 6. PROCESS ═════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <SectionDivider variant="grid" />
-        <div className="py-32 sm:py-44 lg:py-56 bg-card relative">
+        <div className="py-28 sm:py-40 bg-card relative">
+          <div className="absolute inset-0 contour-texture" />
+          <div className="section-container max-w-3xl mx-auto relative z-[1]">
+            <div className="text-center mb-20 sm:mb-28">
+              <RevealOnScroll direction="up">
+                <RevealLine className="mx-auto mb-12" width="w-10" />
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={80}>
+                <p className="text-overline mb-6">How It Works</p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={120}>
+                <h2 className="heading-section text-foreground">
+                  Process
+                </h2>
+              </RevealOnScroll>
+            </div>
+
+            <div className="space-y-0">
+              {PROCESS_STEPS.map((step, i) => (
+                <RevealOnScroll key={step.num} direction="up" stagger={i} staggerInterval={80}>
+                  <div className="flex items-start gap-6 py-8 border-b border-border/20 last:border-b-0">
+                    <p className="text-[9px] font-mono tracking-[0.3em] text-accent/30 uppercase pt-1 w-8 shrink-0">{step.num}</p>
+                    <div>
+                      <h3 className="font-serif text-base font-medium text-foreground tracking-[0.02em] mb-2">
+                        {step.title}
+                      </h3>
+                      <p className="text-[13px] text-muted-foreground/45 leading-[1.8]">
+                        {step.desc}
+                      </p>
+                    </div>
+                  </div>
+                </RevealOnScroll>
+              ))}
+            </div>
+
+            <RevealOnScroll direction="up" delay={400}>
+              <p className="text-center mt-16 text-[11px] text-muted-foreground/30 italic leading-relaxed">
+                Following assessment, a structured project brief<br />
+                and system specification is prepared.
+              </p>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 7. SELECTED WORK ═══════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <SectionDivider variant="grid" />
+        <div className="py-32 sm:py-44 lg:py-56 relative">
           <div className="absolute inset-0 contour-texture" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
             <div className="text-center mb-20 sm:mb-28">
@@ -405,12 +447,11 @@ export default function Index() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={200}>
                 <p className="text-sm text-muted-foreground/45 max-w-md mx-auto leading-[1.8]">
-                  A selection of builds that speak for themselves.
+                  A selection of outcomes that demonstrate long-term value.
                 </p>
               </RevealOnScroll>
             </div>
 
-            {/* Project grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
               {PORTFOLIO.map((item, i) => (
                 <RevealOnScroll key={i} direction="up" stagger={i} staggerInterval={100}>
@@ -421,11 +462,8 @@ export default function Index() {
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"
                       loading="lazy"
                     />
-                    {/* Permanent base gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/10 to-transparent" />
-                    {/* Hover darkening */}
                     <div className="absolute inset-0 bg-background/0 group-hover:bg-background/40 transition-all duration-700" />
-                    {/* Info */}
                     <div className="absolute bottom-0 left-0 right-0 p-6">
                       <p className="text-[9px] uppercase tracking-[0.25em] text-accent/70 font-medium mb-2">{item.type}</p>
                       <p className="text-sm font-serif text-foreground/80 group-hover:text-foreground transition-colors duration-500">{item.label}</p>
@@ -446,7 +484,7 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ 7. TESTIMONIAL ═════════════════════════════════ */}
+      {/* ═══ 8. TESTIMONIAL ═════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <SectionDivider variant="grid" />
         <div className="py-32 sm:py-44 lg:py-52 relative">
@@ -473,7 +511,7 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ 8. EQUUS RIDGE TEASER ═════════════════════════ */}
+      {/* ═══ 9. EQUUS RIDGE TEASER ═════════════════════════ */}
       <section className="relative overflow-hidden">
         <SectionDivider variant="grid" />
         <div className="py-28 sm:py-36 lg:py-44 bg-card relative">
@@ -504,7 +542,7 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ 9. FINAL CTA ═══════════════════════════════════ */}
+      {/* ═══ 10. FINAL CTA ═══════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <SectionDivider variant="grid" />
         <div className="py-32 sm:py-44 lg:py-56 relative">
@@ -519,25 +557,31 @@ export default function Index() {
               <RevealLine className="mx-auto mb-14" width="w-10" />
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={80}>
-              <h2 className="heading-section text-foreground mb-10">
-                Let's Build Something<br />That Lasts
+              <h2 className="heading-section text-foreground mb-6">
+                Start With a<br />Site Assessment
               </h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={150}>
+              <p className="text-sm text-muted-foreground/40 mb-10 leading-[1.8] max-w-sm mx-auto">
+                Each project is assessed individually to ensure correct system
+                specification and long-term performance.
+              </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={200}>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
                 <Button asChild variant="gold" size="lg">
                   <Link to="/contact">
-                    Discuss Your Project <ArrowRight className="ml-2 h-4 w-4" />
+                    Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
                 <Button asChild variant="outline-light" size="lg">
-                  <Link to="/groundlock">Explore the System</Link>
+                  <Link to="/groundlock">Explore GroundLock</Link>
                 </Button>
               </div>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={350}>
               <p className="text-muted-foreground/20 text-[10px] tracking-[0.2em] uppercase">
-                We take on a limited number of projects each season.
+                Currently accepting select projects.
               </p>
             </RevealOnScroll>
           </div>

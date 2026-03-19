@@ -96,7 +96,7 @@ export default function Gallery() {
       <PageHeader
         title="Selected Work"
         overline="Portfolio"
-        subtitle="A curated collection of builds that represent how we work — quality, restraint, and long-term performance."
+        subtitle="A curated collection of outcomes that demonstrate long-term value and considered execution."
         backgroundImage={aberdeenBarnInterior}
       />
 
@@ -161,19 +161,19 @@ export default function Gallery() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={80}>
               <h2 className="heading-section text-foreground mb-8">
-                Ready to Start?
+                Discuss Your Project
               </h2>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <p className="text-sm text-muted-foreground/40 mb-10 leading-relaxed">
-                These projects represent our commitment to getting it right.
-                Let's discuss how we can bring your vision to life.
+                These outcomes represent our commitment to long-term performance.<br />
+                Let's discuss how we can bring that standard to your property.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={250}>
               <Button asChild variant="gold" size="lg">
                 <Link to="/contact">
-                  Discuss Your Project <ArrowRight className="ml-2 h-4 w-4" />
+                  Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </RevealOnScroll>

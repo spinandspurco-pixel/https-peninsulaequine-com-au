@@ -159,7 +159,7 @@ export function Header() {
           ))}
           <div className="pt-8 mt-6 border-t border-border/20 space-y-4">
             <Button asChild variant="gold" className="w-full">
-              <Link to="/contact">Book Assessment</Link>
+              <Link to="/contact">Request Assessment</Link>
             </Button>
             <a href="tel:0418585489" className="flex items-center justify-center gap-2.5 text-xs text-muted-foreground hover:text-accent transition-colors duration-500">
               <Phone className="h-3.5 w-3.5" /> 0418 585 489

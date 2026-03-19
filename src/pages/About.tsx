@@ -75,7 +75,6 @@ export default function About() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  {/* Accent border offset */}
                   <div className="absolute -bottom-3 -right-3 w-full h-full border border-accent/15 -z-10" />
                 </div>
               </RevealOnScroll>
@@ -123,7 +122,8 @@ export default function About() {
                 <p>
                   We don't separate design from construction.
                   Every decision — from ground preparation to final finish —
-                  is considered as part of a complete system.
+                  is considered as part of a complete system,
+                  designed to reduce maintenance over time.
                 </p>
                 <p className="text-muted-foreground/30 italic text-[13px]">
                   Because when it's done properly,
@@ -168,6 +168,12 @@ export default function About() {
                 </RevealOnScroll>
               ))}
             </div>
+
+            <RevealOnScroll direction="up" delay={500}>
+              <p className="text-center mt-20 text-[11px] text-muted-foreground/25 italic">
+                Projects range from focused infrastructure builds to fully integrated property systems.
+              </p>
+            </RevealOnScroll>
           </div>
         </div>
       </section>
@@ -211,16 +217,27 @@ export default function About() {
               <RevealLine className="mx-auto mb-14" width="w-10" />
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={80}>
-              <h2 className="heading-section text-foreground mb-10">
-                Let's Build Something<br />That Lasts
+              <h2 className="heading-section text-foreground mb-8">
+                Discuss Your Project
               </h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={150}>
+              <p className="text-sm text-muted-foreground/40 mb-10 leading-relaxed">
+                Each project is assessed individually to ensure correct<br />
+                system specification and long-term performance.
+              </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={200}>
               <Button asChild variant="gold" size="lg">
                 <Link to="/contact">
-                  Discuss Your Project <ArrowRight className="ml-2 h-4 w-4" />
+                  Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={350}>
+              <p className="text-muted-foreground/20 text-[10px] tracking-[0.2em] uppercase mt-8">
+                Assessment availability is limited.
+              </p>
             </RevealOnScroll>
           </div>
         </div>

@@ -132,9 +132,9 @@ export function QuickContactModal({ open, onOpenChange }: QuickContactModalProps
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="font-serif text-xl">Quick Message</DialogTitle>
+          <DialogTitle className="font-serif text-xl">Discuss Your Project</DialogTitle>
           <DialogDescription>
-            Send us a quick message and we'll get back to you soon.
+            Tell us about your project and we'll be in touch shortly.
           </DialogDescription>
         </DialogHeader>
 
