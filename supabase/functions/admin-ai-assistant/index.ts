@@ -247,6 +247,21 @@ If uncertain, say "requires review" — do not speculate.
 
 Reference: Payment 30/50/final. Follow-up Day 2/5/10. Site assessment before quoting. GroundLock = proprietary ground stabilisation. Stages: Enquiry → Assessment → Brief → Proposal → Approval → Build → Handover. Proposals valid 30 days. Site visits Mon-Fri, Ciro attends. Scope changes need written variation.`;
 
+const DECISION_PANEL_PROMPT = `Analyse the pipeline and return ONE actionable system-level insight. One sentence only.
+
+Look for patterns:
+- Multiple leads stalling at the same stage
+- Low reply-to-booking conversion
+- Concentration risk (revenue dependent on 1-2 deals)
+- Follow-up gaps creating pipeline leaks
+- Proposal-to-close ratio declining
+
+Rules:
+- One sentence. Under 30 words. No filler.
+- Be specific — reference the pattern you detected.
+- If pipeline is healthy, say "Pipeline operating normally. No structural issues detected."
+- No exclamation marks. No emoji.`;
+
 const DAILY_PLAN_PROMPT = `Generate today's operating plan for the Peninsula Equine team. This is the daily command centre.
 
 The team has 4 operating lanes. Route every task to the correct lane based on who actually does the work.
