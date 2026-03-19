@@ -710,8 +710,8 @@ export default function GroundLock() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <p className="text-sm text-muted-foreground/40 mb-10 leading-[1.8] max-w-sm mx-auto">
-                We assess each property based on ground conditions,
-                use, and long-term performance.
+                Each project is assessed individually to ensure correct
+                system specification and long-term performance.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={250}>
