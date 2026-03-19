@@ -14,7 +14,6 @@ import {
   Layers,
   ShieldCheck,
   HardHat,
-  Phone,
   Download,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
