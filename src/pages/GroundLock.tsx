@@ -444,12 +444,15 @@ export default function GroundLock() {
       </section>
 
       {/* Interactive System Diagram */}
-      <section className="py-44 sm:py-64 bg-background relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
-        <div className="section-container max-w-6xl mx-auto relative z-[1]">
-          <RevealOnScroll direction="up">
-            <GroundLockSystemDiagram />
-          </RevealOnScroll>
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-28 sm:py-40 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-6xl mx-auto relative z-[1]">
+            <RevealOnScroll direction="up">
+              <GroundLockSystemDiagram />
+            </RevealOnScroll>
+          </div>
         </div>
       </section>
 
