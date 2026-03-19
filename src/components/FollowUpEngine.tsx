@@ -187,7 +187,15 @@ export function FollowUpEngine() {
     if (i.follow_up_stage === "1" && toggles.follow_up_lead_day_2 && days >= timing.lead_day_2) return true;
     if (i.follow_up_stage === "2" && toggles.follow_up_lead_day_3 && days >= timing.lead_day_3) return true;
     return false;
-  }) : [];
+  })
+    // Sort: high-value first, low-intent last
+    .sort((a, b) => {
+      const tierOrder: Record<string, number> = { premium: 0, high: 1, standard: 2, starter: 3 };
+      const aTier = tierOrder[a.lead_tier || "standard"] ?? 2;
+      const bTier = tierOrder[b.lead_tier || "standard"] ?? 2;
+      if (aTier !== bTier) return aTier - bTier;
+      return (b.deal_value || 0) - (a.deal_value || 0);
+    }) : [];
 
   const overdueLeads = toggles.follow_up_leads ? inquiries.filter(i => {
     const contactDate = i.last_contact_at || i.created_at;
@@ -195,7 +203,8 @@ export function FollowUpEngine() {
     return days !== null && days >= timing.lead_day_3
       && !["3", "final"].includes(i.follow_up_stage)
       && i.follow_up_status !== "stopped" && i.follow_up_status !== "completed";
-  }) : [];
+  })
+    .sort((a, b) => (b.deal_value || 0) - (a.deal_value || 0)) : [];
 
   // Leads that have exhausted all 3 follow-ups (for display)
   const cappedLeads = inquiries.filter(i =>
@@ -203,11 +212,13 @@ export function FollowUpEngine() {
     && i.follow_up_status !== "stopped" && i.follow_up_status !== "completed"
   );
 
-  const dueQuotes = toggles.follow_up_quotes ? quotes.filter(q => {
-    if (!q.sent_at) return false;
-    const days = daysSince(q.sent_at);
-    return days !== null && days >= timing.quote_day_1;
-  }) : [];
+  const dueQuotes = toggles.follow_up_quotes ? quotes
+    .filter(q => {
+      if (!q.sent_at) return false;
+      const days = daysSince(q.sent_at);
+      return days !== null && days >= timing.quote_day_1;
+    })
+    .sort((a, b) => b.total - a.total) : [];
 
   const highValueItems = [
     ...dueLeads.filter(l => l.deal_value && l.deal_value >= 50000),
