@@ -73,6 +73,14 @@ export function DecisionPanel() {
           .neq("follow_up_status", "completed")
           .order("deal_value", { ascending: false })
           .limit(5),
+        supabase
+          .from("quotes")
+          .select("id, quote_number, client_name, client_email, total, status, sent_at, viewed_at, project_type")
+          .eq("status", "sent")
+          .lt("sent_at", new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString())
+          .is("viewed_at", null)
+          .order("total", { ascending: false })
+          .limit(5),
       ]);
 
       if (topDeals.error) console.error("Decision Panel: topDeals error", topDeals.error);
