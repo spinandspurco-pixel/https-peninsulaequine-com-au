@@ -3,9 +3,14 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 
 interface PageHeaderProps {
   title: string;
+  /** Primary subtitle text */
   subtitle?: string;
+  /** Alias for subtitle — backwards compat */
+  description?: string;
   overline?: string;
   backgroundImage?: string;
+  /** Accepted for backwards compat, no longer rendered */
+  dividerVariant?: string;
   children?: ReactNode;
 }
 
