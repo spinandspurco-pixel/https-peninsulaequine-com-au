@@ -131,6 +131,10 @@ export default function Admin() {
   const [isSavingCrm, setIsSavingCrm] = useState(false);
   const [showCrmSettings, setShowCrmSettings] = useState(false);
   const [quoteForInquiryId, setQuoteForInquiryId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    const saved = localStorage.getItem("pe-admin-view-mode");
+    return (saved as ViewMode) || "founder";
+  });
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) navigate("/login");
