@@ -80,6 +80,39 @@ export type Database = {
         }
         Relationships: []
       }
+      assessment_availability: {
+        Row: {
+          created_at: string
+          end_time: string
+          id: string
+          is_blocked: boolean
+          notes: string | null
+          slot_date: string
+          start_time: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          end_time: string
+          id?: string
+          is_blocked?: boolean
+          notes?: string | null
+          slot_date: string
+          start_time: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          end_time?: string
+          id?: string
+          is_blocked?: boolean
+          notes?: string | null
+          slot_date?: string
+          start_time?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           assigned_to: string | null
@@ -846,6 +879,72 @@ export type Database = {
           target_margin?: number
         }
         Relationships: []
+      }
+      site_assessments: {
+        Row: {
+          client_email: string
+          client_name: string
+          client_phone: string | null
+          created_at: string
+          id: string
+          inquiry_id: string | null
+          location: string
+          project_notes: string | null
+          project_type: string
+          slot_date: string
+          slot_id: string | null
+          slot_time: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          client_email: string
+          client_name: string
+          client_phone?: string | null
+          created_at?: string
+          id?: string
+          inquiry_id?: string | null
+          location: string
+          project_notes?: string | null
+          project_type: string
+          slot_date: string
+          slot_id?: string | null
+          slot_time: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          client_email?: string
+          client_name?: string
+          client_phone?: string | null
+          created_at?: string
+          id?: string
+          inquiry_id?: string | null
+          location?: string
+          project_notes?: string | null
+          project_type?: string
+          slot_date?: string
+          slot_id?: string | null
+          slot_time?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "site_assessments_inquiry_id_fkey"
+            columns: ["inquiry_id"]
+            isOneToOne: false
+            referencedRelation: "inquiries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "site_assessments_slot_id_fkey"
+            columns: ["slot_id"]
+            isOneToOne: false
+            referencedRelation: "assessment_availability"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       slot_holds: {
         Row: {
