@@ -348,6 +348,46 @@ export function DecisionPanel() {
         </Card>
       )}
 
+      {/* AT RISK QUOTES — sent, no response, no view after 3 days */}
+      {atRiskQuotes.length > 0 && (
+        <Card className="bg-amber-500/5 border-amber-500/20">
+          <CardHeader className="pb-2">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
+              <div>
+                <p className="text-[9px] uppercase tracking-[0.15em] text-amber-500/60">At Risk</p>
+                <CardTitle className="text-sm font-medium">Stalled Quotes</CardTitle>
+              </div>
+              <Badge variant="outline" className="text-[9px] ml-auto border-amber-500/30 text-amber-500">{atRiskQuotes.length}</Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {atRiskQuotes.map((q) => {
+              const days = q.sent_at ? differenceInDays(new Date(), parseISO(q.sent_at)) : null;
+              return (
+                <div key={q.id} className="flex items-center justify-between py-2 px-3 rounded-sm border border-amber-500/10 bg-background/40">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium text-foreground truncate">{q.client_name}</p>
+                      <span className="text-[10px] text-accent/70 shrink-0">${q.total.toLocaleString()}</span>
+                      <Badge variant="outline" className="text-[8px] border-border/20 shrink-0">{q.quote_number}</Badge>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">
+                      {days}d since sent · Not viewed · {q.project_type}
+                    </p>
+                  </div>
+                  <a href="#follow-ups">
+                    <Button size="sm" variant="outline" className="h-7 text-[9px] border-amber-500/20 text-amber-500 hover:bg-amber-500/10 shrink-0 ml-2">
+                      Follow Up
+                    </Button>
+                  </a>
+                </div>
+              );
+            })}
+          </CardContent>
+        </Card>
+      )}
+
       {/* SYSTEM LEVER */}
       <Card className="bg-card/60 border-border/30">
         <CardContent className="py-3 px-4">
