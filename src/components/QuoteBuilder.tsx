@@ -304,6 +304,9 @@ export function QuoteBuilder({ quoteId, inquiryId, onSaved, onClose }: QuoteBuil
           {onClose && (
             <Button variant="ghost" size="sm" onClick={onClose} className="text-[11px] uppercase tracking-wider">Cancel</Button>
           )}
+          <Button variant="outline" size="sm" onClick={() => generateQuotePDF(quote, lineItems)} className="text-[11px] uppercase tracking-wider border-border/40">
+            <Download className="h-3.5 w-3.5 mr-1" />Export PDF
+          </Button>
           <Button variant="outline" size="sm" onClick={() => saveQuote()} disabled={loading} className="text-[11px] uppercase tracking-wider border-border/40">
             {loading ? <RefreshCw className="h-3.5 w-3.5 animate-spin mr-1" /> : <Save className="h-3.5 w-3.5 mr-1" />}
             Save Draft
