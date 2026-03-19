@@ -6,6 +6,9 @@ import {
   ClipboardCheck,
   ShieldCheck,
   FileWarning,
+  ClipboardList,
+  AlertTriangle,
+  Heart,
 } from "lucide-react";
 
 // ── Shared Document Type Configs ──────────────────────────────
@@ -45,6 +48,24 @@ export const DOC_TYPES = {
     description: "Pre-event safety sign-off",
     icon: FileText,
     color: "text-purple-500",
+  },
+  daily_site_report: {
+    label: "Daily Report",
+    description: "End-of-day site progress report",
+    icon: ClipboardList,
+    color: "text-cyan-500",
+  },
+  incident_report: {
+    label: "Incident Report",
+    description: "Safety incident & near-miss reporting",
+    icon: AlertTriangle,
+    color: "text-rose-500",
+  },
+  horse_care_log: {
+    label: "Horse Care Log",
+    description: "Training, health & care record",
+    icon: Heart,
+    color: "text-pink-500",
   },
 } as const;
 
