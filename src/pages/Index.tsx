@@ -47,18 +47,37 @@ const PROCESS_STEPS = [
   { num: "04", title: "Completion", desc: "Final inspection, handover, and maintenance guidance." },
 ];
 
+/* ── Standardised spacing constants ───── */
+const SP_LG = "py-20"; // 80px
+const SP_MD = "mb-12"; // 48px
+const SP_SM = "mb-6"; // 24px
+
 /* ── Soft gradient transition between sections ─── */
 function SectionBleed({ from = "background", to = "card" }: { from?: string; to?: string }) {
   return (
-    <div className="relative h-24 sm:h-32 -mb-24 sm:-mb-32 z-[2] pointer-events-none" aria-hidden="true">
+    <div className="relative h-6 -mb-6 z-[2] pointer-events-none" aria-hidden="true">
       <div
         className="absolute inset-0"
         style={{
           background: `linear-gradient(to bottom, hsl(var(--${from})) 0%, hsl(var(--${to})) 100%)`,
         }}
       />
-      <div className="absolute inset-0 grain-texture opacity-50" />
     </div>
+  );
+}
+
+/* ── Service Icon with draw-in animation ───── */
+function ServiceIcon({ icon: Icon, className }: { icon: typeof Mountain; className?: string }) {
+  return (
+    <Icon
+      className={cn(
+        "w-5 h-5 text-foreground/30 transition-all duration-500",
+        "group-hover:text-accent/70",
+        "opacity-0 animate-[drawIn_0.5s_ease-out_forwards]",
+        className
+      )}
+      strokeWidth={1.5}
+    />
   );
 }
 
@@ -100,13 +119,10 @@ function ProjectsScroll() {
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1800ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06] brightness-[0.85] group-hover:brightness-[0.95]"
               loading="lazy"
             />
-            {/* Cinematic gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/5" />
             <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-transparent" />
             <div className="absolute inset-0 grain-texture opacity-30" />
-            {/* Hover reveal overlay */}
             <div className="absolute inset-0 bg-background/10 group-hover:bg-background/0 transition-all duration-700" />
-            {/* Text — slides up on hover */}
             <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 translate-y-2 group-hover:translate-y-0 transition-transform duration-700">
               <p className="text-[9px] uppercase tracking-[0.25em] text-accent/50 font-mono mb-2 opacity-70 group-hover:opacity-100 transition-opacity duration-500">{project.scope}</p>
               <p className="font-serif text-lg text-foreground/60 group-hover:text-foreground transition-all duration-700">{project.label}</p>
@@ -163,20 +179,17 @@ export default function Index() {
           <source src={heroVideo} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-background/55" />
-        {/* Vignette */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background: "radial-gradient(ellipse 60% 45% at 50% 48%, transparent 10%, hsl(222 20% 4% / 0.85) 60%, hsl(222 20% 4%) 100%)",
           }}
         />
-        {/* Grain + dust */}
         <div className="absolute inset-0 pointer-events-none grain-texture" />
         <div className="absolute inset-0 pointer-events-none contour-texture opacity-[0.015]" />
 
         <div className="relative z-10 section-container text-center max-w-5xl mx-auto">
           <div className="flex flex-col items-center gap-8 sm:gap-12">
-            {/* Overline */}
             <div
               className="flex items-center justify-center gap-5 opacity-0 animate-fade-in"
               style={{ animationDelay: "600ms", animationFillMode: "both", animationDuration: "1400ms" }}
@@ -186,7 +199,6 @@ export default function Index() {
               <div className="w-12 h-px bg-accent/20" />
             </div>
 
-            {/* Headline — two distinct lines with clear rhythm */}
             <div className="space-y-2 sm:space-y-4">
               <h1
                 className="font-serif font-bold text-foreground leading-[0.95] tracking-[0.01em] opacity-0 animate-fade-in"
@@ -212,7 +224,6 @@ export default function Index() {
               </p>
             </div>
 
-            {/* Subheading */}
             <p
               className="text-muted-foreground/30 text-[10px] sm:text-[11px] tracking-[0.3em] uppercase max-w-sm opacity-0 animate-fade-in leading-[2]"
               style={{ animationDelay: "2000ms", animationFillMode: "both", animationDuration: "1000ms" }}
@@ -220,7 +231,6 @@ export default function Index() {
               Arenas · Stables · Systems · Engineered with precision
             </p>
 
-            {/* CTAs — differentiated styling */}
             <div
               className="flex flex-col sm:flex-row gap-4 justify-center opacity-0 animate-fade-in pt-2"
               style={{ animationDelay: "2400ms", animationFillMode: "both", animationDuration: "1000ms" }}
@@ -237,7 +247,6 @@ export default function Index() {
           </div>
         </div>
 
-        {/* Scroll cue */}
         <div
           className="absolute bottom-10 left-1/2 -translate-x-1/2 opacity-0 animate-fade-in"
           style={{ animationDelay: "3200ms", animationFillMode: "both", animationDuration: "1200ms" }}
@@ -254,20 +263,20 @@ export default function Index() {
       {/* ═══ 2. INTRO — SPLIT SCREEN ═══════════════════════ */}
       <SectionBleed from="background" to="background" />
       <section className="relative overflow-hidden">
-        <div className="py-28 sm:py-40 lg:py-48 relative">
+        <div className={`${SP_LG} sm:py-28 lg:py-32 relative`}>
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-6xl mx-auto relative z-[1]">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-              {/* Text */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+              {/* Text — left-aligned */}
               <div>
                 <RevealOnScroll direction="up">
-                  <RevealLine className="mb-14" width="w-10" />
+                  <RevealLine className="mb-12" width="w-10" />
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" delay={100}>
-                  <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/40 mb-8">Built by a Horseman</p>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/40 mb-6">Built by a Horseman</p>
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" delay={200}>
-                  <h2 className="heading-section text-foreground mb-10 leading-[1.15]">
+                  <h2 className="heading-section text-foreground mb-6 leading-[1.15]">
                     Understanding First.<br />
                     Then Construction.
                   </h2>
@@ -301,16 +310,17 @@ export default function Index() {
       {/* ═══ 3. SERVICES GRID — 2x3 SYSTEM-STYLE ══════════ */}
       <SectionBleed from="background" to="card" />
       <section className="relative overflow-hidden">
-        <div className="py-28 sm:py-40 lg:py-48 bg-card relative">
+        <div className={`${SP_LG} sm:py-28 lg:py-32 bg-card relative`}>
           <div className="absolute inset-0 contour-texture" />
           <div className="absolute inset-0 grain-texture opacity-40" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
-            <div className="text-center mb-20 sm:mb-28">
+            {/* Section header — left-aligned */}
+            <div className={`${SP_MD}`}>
               <RevealOnScroll direction="up">
-                <RevealLine className="mx-auto mb-12" width="w-10" />
+                <RevealLine className="mb-6" width="w-10" />
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={80}>
-                <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/40 mb-6">What We Build</p>
+                <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/40 mb-3">What We Build</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={120}>
                 <h2 className="heading-section text-foreground">
@@ -319,31 +329,26 @@ export default function Index() {
               </RevealOnScroll>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border/10">
               {SERVICES.map((svc, i) => (
                 <RevealOnScroll key={svc.title} direction="up" stagger={i} staggerInterval={80}>
                   <Link
                     to={svc.href}
-                    className="group relative p-7 sm:p-8 border border-border/20 bg-background/30 hover:border-accent/20 transition-all duration-700 hover:-translate-y-1 overflow-hidden"
+                    className="group relative flex flex-col p-8 bg-card hover:bg-secondary/30 transition-all duration-700 hover:-translate-y-0.5 overflow-hidden min-h-[200px]"
                   >
-                    {/* Hover texture */}
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 engineering-grid" />
                     {/* Subtle glow on hover */}
                     <div
                       className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                      style={{ background: "radial-gradient(ellipse at 30% 30%, hsl(var(--accent) / 0.04) 0%, transparent 60%)" }}
+                      style={{ background: "radial-gradient(ellipse at 30% 30%, hsl(var(--accent) / 0.03) 0%, transparent 60%)" }}
                     />
-                    <div className="relative z-10">
-                      <svc.icon
-                        className="w-5 h-5 text-accent/30 mb-5 group-hover:text-accent/70 transition-all duration-700"
-                        strokeWidth={1}
-                      />
-                      <h3 className="font-serif text-[15px] font-medium text-foreground mb-3 tracking-[0.02em] group-hover:text-accent transition-colors duration-700">
+                    <div className="relative z-10 flex flex-col h-full">
+                      <ServiceIcon icon={svc.icon} className={`mb-6`} />
+                      <h3 className="font-serif text-[15px] font-medium text-foreground mb-3 tracking-[0.02em] group-hover:text-accent transition-colors duration-500">
                         {svc.title}
                       </h3>
-                      <p className="text-[12px] text-muted-foreground/35 leading-[1.9] max-w-[260px]">{svc.desc}</p>
+                      <p className="text-[12px] text-muted-foreground/35 leading-[1.9] max-w-[260px] flex-1">{svc.desc}</p>
+                      <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/0 group-hover:text-accent/40 transition-all duration-500 mt-6 self-end" />
                     </div>
-                    <ArrowRight className="absolute bottom-7 right-7 w-3.5 h-3.5 text-muted-foreground/0 group-hover:text-accent/40 transition-all duration-700 translate-x-[-4px] group-hover:translate-x-0" />
                   </Link>
                 </RevealOnScroll>
               ))}
@@ -355,15 +360,16 @@ export default function Index() {
       {/* ═══ 4. PROJECTS — HORIZONTAL SCROLL ═══════════════ */}
       <SectionBleed from="card" to="background" />
       <section className="relative overflow-hidden">
-        <div className="py-28 sm:py-40 lg:py-48 relative">
+        <div className={`${SP_LG} sm:py-28 lg:py-32 relative`}>
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-7xl mx-auto relative z-[1]">
-            <div className="text-center mb-16 sm:mb-24">
+            {/* Left-aligned header */}
+            <div className={`${SP_MD}`}>
               <RevealOnScroll direction="up">
-                <RevealLine className="mx-auto mb-12" width="w-10" />
+                <RevealLine className="mb-6" width="w-10" />
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={80}>
-                <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/40 mb-6">Portfolio</p>
+                <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/40 mb-3">Portfolio</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={120}>
                 <h2 className="heading-section text-foreground">
@@ -377,7 +383,7 @@ export default function Index() {
             </RevealOnScroll>
 
             <RevealOnScroll direction="up" delay={300}>
-              <div className="text-center mt-16">
+              <div className="mt-12">
                 <Button asChild variant="outline-light" size="default">
                   <Link to="/gallery">View All Projects <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
                 </Button>
@@ -390,26 +396,25 @@ export default function Index() {
       {/* ═══ 5. GROUNDLOCK — SIGNATURE SYSTEM ══════════════ */}
       <SectionBleed from="background" to="card" />
       <section className="relative overflow-hidden">
-        <div className="py-28 sm:py-40 lg:py-48 bg-card relative">
+        <div className={`${SP_LG} sm:py-28 lg:py-32 bg-card relative`}>
           <div className="absolute inset-0 engineering-grid" />
           <div className="absolute inset-0 grain-texture opacity-30" />
-          {/* Accent glow behind diagram */}
           <div
             className="absolute inset-0 pointer-events-none"
-            style={{ background: "radial-gradient(ellipse 40% 50% at 70% 50%, hsl(var(--accent) / 0.03) 0%, transparent 70%)" }}
+            style={{ background: "radial-gradient(ellipse 40% 50% at 70% 50%, hsl(var(--accent) / 0.04) 0%, transparent 70%)" }}
           />
           <div className="section-container relative z-10 max-w-5xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
               <div>
                 <RevealOnScroll direction="up">
                   <div className="flex items-center gap-3 mb-6">
-                    <Layers className="w-4 h-4 text-accent/40" strokeWidth={1} />
-                    <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/40">Proprietary System</span>
+                    <Layers className="w-4 h-4 text-accent/50" strokeWidth={1.5} />
+                    <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/50">Proprietary System</span>
                   </div>
                   <h2 className="heading-section text-foreground mb-4 leading-[1.15]">
                     P.E. GroundLock™
                   </h2>
-                  <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/20 mb-10">
+                  <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/20 mb-8">
                     Modular Ground Stabilisation
                   </p>
                   <p className="text-[14px] text-muted-foreground/45 leading-[2] mb-6 max-w-[360px]">
@@ -417,7 +422,7 @@ export default function Index() {
                     speed, and long-term stability. Built to outperform
                     traditional methods.
                   </p>
-                  <p className="text-[11px] text-muted-foreground/20 italic mb-10">
+                  <p className="text-[11px] text-muted-foreground/20 italic mb-8">
                     This is where the real intelligence lives.
                   </p>
                 </RevealOnScroll>
@@ -431,7 +436,6 @@ export default function Index() {
               </div>
               <RevealOnScroll direction="up" delay={150}>
                 <div className="relative">
-                  {/* Subtle pulsing glow behind the stack */}
                   <div
                     className="absolute -inset-8 rounded-full opacity-40"
                     style={{
@@ -450,15 +454,16 @@ export default function Index() {
       {/* ═══ 6. PROCESS TIMELINE ═══════════════════════════ */}
       <SectionBleed from="card" to="background" />
       <section className="relative overflow-hidden">
-        <div className="py-28 sm:py-40 lg:py-48 relative">
+        <div className="py-16 sm:py-20 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
-            <div className="text-center mb-20 sm:mb-28">
+            {/* Left-aligned header */}
+            <div className={`${SP_MD}`}>
               <RevealOnScroll direction="up">
-                <RevealLine className="mx-auto mb-12" width="w-10" />
+                <RevealLine className="mb-6" width="w-10" />
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={80}>
-                <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/40 mb-6">How We Work</p>
+                <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/40 mb-3">How We Work</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={120}>
                 <h2 className="heading-section text-foreground">
@@ -472,29 +477,28 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ 7. AUTHORITY STRIP ════════════════════════════ */}
+      {/* ═══ 7. AUTHORITY STRIP — reduced visual weight ═══ */}
       <section className="relative overflow-hidden">
-        <div className="py-16 sm:py-20 bg-card relative">
-          <div className="absolute inset-0 contour-texture" />
-          <div className="absolute inset-0 grain-texture opacity-30" />
+        <div className="py-12 sm:py-16 bg-card/50 relative">
+          <div className="absolute inset-0 grain-texture opacity-20" />
           <div className="section-container relative z-[1]">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-8 max-w-3xl mx-auto text-center">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6 max-w-3xl mx-auto text-center">
               <RevealOnScroll direction="up" stagger={0} staggerInterval={100}>
                 <div>
-                  <p className="font-serif text-2xl sm:text-3xl text-foreground/90 mb-2">Victoria-Wide</p>
-                  <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/25 font-mono">Projects Across the State</p>
+                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1">Victoria-Wide</p>
+                  <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/20 font-mono">Projects Across the State</p>
                 </div>
               </RevealOnScroll>
               <RevealOnScroll direction="up" stagger={1} staggerInterval={100}>
                 <div>
-                  <p className="font-serif text-2xl sm:text-3xl text-foreground/90 mb-2">$500K+</p>
-                  <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/25 font-mono">Custom Builds to Scale</p>
+                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1">$500K+</p>
+                  <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/20 font-mono">Custom Builds to Scale</p>
                 </div>
               </RevealOnScroll>
               <RevealOnScroll direction="up" stagger={2} staggerInterval={100}>
                 <div>
-                  <p className="font-serif text-2xl sm:text-3xl text-foreground/90 mb-2">Private &amp; Pro</p>
-                  <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/25 font-mono">Estates &amp; Facilities</p>
+                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1">Private &amp; Pro</p>
+                  <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/20 font-mono">Estates &amp; Facilities</p>
                 </div>
               </RevealOnScroll>
             </div>
@@ -505,13 +509,18 @@ export default function Index() {
       {/* ═══ 8. EQUUS FORGE — SHOP PREVIEW ════════════════ */}
       <SectionBleed from="card" to="primary" />
       <section className="relative overflow-hidden">
-        <div className="py-28 sm:py-36 bg-primary relative">
+        <div className={`${SP_LG} sm:py-28 bg-primary relative`}>
           <div className="absolute inset-0 opacity-[0.025]" style={{
             backgroundImage: "repeating-linear-gradient(135deg, transparent, transparent 20px, hsl(var(--primary-foreground)) 20px, hsl(var(--primary-foreground)) 21px)",
           }} />
           <div className="absolute inset-0 grain-texture" />
+          {/* Background glow behind CTA area */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: "radial-gradient(ellipse 50% 60% at 65% 50%, hsl(var(--accent) / 0.05) 0%, transparent 70%)" }}
+          />
           <div className="section-container relative z-10 max-w-5xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
               <RevealOnScroll direction="up">
                 <div className="relative aspect-[4/3] overflow-hidden group">
                   <img
@@ -526,25 +535,25 @@ export default function Index() {
               </RevealOnScroll>
               <div>
                 <RevealOnScroll direction="up" delay={100}>
-                  <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/40 mb-6">Product Division</p>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/50 mb-6">Product Division</p>
                   <h2 className="heading-section text-primary-foreground mb-4 leading-[1.15]">
                     Equus Forge
                   </h2>
-                  <p className="text-primary-foreground/20 text-[10px] uppercase tracking-[0.22em] mb-8">
+                  <p className="text-primary-foreground/25 text-[10px] uppercase tracking-[0.22em] mb-8">
                     by Peninsula Equine
                   </p>
-                  <p className="text-[14px] text-primary-foreground/40 leading-[2] mb-4 max-w-[360px]">
-                    Steel with soul. Custom-fabricated gates, panels, fixtures, and
-                    structural components — built for horsemen, by horsemen.
+                  <p className="text-[14px] text-primary-foreground/50 leading-[2] mb-4 max-w-[340px]">
+                    Engineered ground systems, steel components, and infrastructure
+                    configurations — designed for horsemen, by a horseman.
                   </p>
-                  <p className="text-[11px] text-primary-foreground/15 tracking-[0.15em] uppercase mb-10">
+                  <p className="text-[11px] text-primary-foreground/20 tracking-[0.15em] uppercase mb-8">
                     Systems. Components. Built to scale.
                   </p>
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" delay={250}>
                   <Button asChild variant="gold" size="lg" className="px-8">
-                    <Link to="/forge">
-                      Access Equus Forge <ArrowRight className="ml-2 h-4 w-4" />
+                    <Link to="/shop">
+                      Explore GroundLock™ Systems <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
                 </RevealOnScroll>
@@ -557,7 +566,7 @@ export default function Index() {
       {/* ═══ 9. FINAL CTA ═══════════════════════════════════ */}
       <SectionBleed from="primary" to="background" />
       <section className="relative overflow-hidden">
-        <div className="py-36 sm:py-48 lg:py-60 relative">
+        <div className="py-28 sm:py-36 lg:py-44 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="absolute inset-0 contour-texture opacity-[0.02]" />
           <div
@@ -571,15 +580,15 @@ export default function Index() {
 
           <div className="section-container relative z-10 text-center max-w-md mx-auto">
             <RevealOnScroll direction="up">
-              <RevealLine className="mx-auto mb-16" width="w-8" />
+              <RevealLine className="mx-auto mb-12" width="w-8" />
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={80}>
-              <h2 className="heading-section text-foreground mb-8 leading-[1.1]">
+              <h2 className="heading-section text-foreground mb-6 leading-[1.1]">
                 Build it properly.
               </h2>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
-              <p className="text-[14px] text-muted-foreground/30 mb-12 leading-[2] max-w-[320px] mx-auto">
+              <p className="text-[14px] text-muted-foreground/30 mb-10 leading-[2] max-w-[320px] mx-auto">
                 Every project begins with a site assessment.<br />
                 Let's talk about yours.
               </p>
@@ -592,7 +601,7 @@ export default function Index() {
               </Button>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={350}>
-              <p className="text-muted-foreground/12 text-[9px] tracking-[0.3em] uppercase mt-12">
+              <p className="text-muted-foreground/12 text-[9px] tracking-[0.3em] uppercase mt-10">
                 Limited projects per season
               </p>
             </RevealOnScroll>
