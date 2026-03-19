@@ -4,6 +4,7 @@ import { WebsiteIntelligence } from "@/components/WebsiteIntelligence";
 import { RevenueStrip } from "@/components/RevenueStrip";
 import { DecisionPanel } from "@/components/DecisionPanel";
 import { QuotesDashboard } from "@/components/QuotesDashboard";
+import { QuoteBuilder } from "@/components/QuoteBuilder";
 import { AdminStaffOnboarding } from "@/components/AdminStaffOnboarding";
 import { SharedCalendarView } from "@/components/SharedCalendarView";
 import { AdminTrainerPanel } from "@/components/AdminTrainerPanel";
