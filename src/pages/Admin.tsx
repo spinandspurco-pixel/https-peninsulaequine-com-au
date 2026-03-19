@@ -16,6 +16,7 @@ import { AIOperationsAssistant } from "@/components/AIOperationsAssistant";
 import { AssessmentAvailabilityManager } from "@/components/AssessmentAvailabilityManager";
 import { TodaysPlan } from "@/components/TodaysPlan";
 import { OperationsCommandCentre } from "@/components/OperationsCommandCentre";
+import { FollowUpEngine } from "@/components/FollowUpEngine";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -388,6 +389,9 @@ export default function Admin() {
 
           {/* AI Operations Assistant */}
           <AIOperationsAssistant inquiries={inquiries} />
+
+          {/* Follow-Up Engine */}
+          <FollowUpEngine />
 
           {/* Quote System */}
           <QuotesDashboard />
