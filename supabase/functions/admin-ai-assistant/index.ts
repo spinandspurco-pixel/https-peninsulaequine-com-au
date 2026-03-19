@@ -77,126 +77,84 @@ KNOWLEDGE BASE:
 - Scope changes require written variation and updated pricing
 - Prefer PE rules over generic advice. If uncertain, say so.`;
 
-// Lead classification definitions for triage
-const TRIAGE_PROMPT = `Review the current inquiries and classify each lead.
+const TRIAGE_PROMPT = `Classify each inquiry. Be decisive.
 
-For each lead provide:
-1. **Lead State**: Hot / Warm / Early Stage / Low Intent / Not a Fit
-2. **Project Type**: (infer from services and details)
-3. **Estimated Value**: High / Medium / Low (based on services, budget, scope)
-4. **Readiness Level**: Ready to proceed / Exploring / Just enquiring
-5. **Fit Quality**: Strong fit / Possible fit / Poor fit
-6. **Recommended Next Step**: Book Site Assessment / Send Follow-Up / Wait for Response / Escalate to Human Review / Politely Decline
-7. **Reasoning**: One sentence explaining the classification
-8. **AI Summary**: 1-2 sentences, action-oriented
+Per lead:
+- **State**: Hot / Warm / Early Stage / Low Intent / Not a Fit
+- **Type**: (infer from services)
+- **Value**: High / Medium / Low
+- **Fit**: Strong / Possible / Poor
+- **Next Step**: Book Site Assessment / Send Follow-Up / Wait / Escalate to Human Review / Decline
+- **Why**: One sentence. No hedging.
 
-Focus on new and in-progress leads first. Flag anything needing immediate attention at the top.
-
-Format each lead as a clear block. No narrative padding.`;
+Put leads needing action today first. Skip narrative. If a lead looks like a poor fit, say so.`;
 
 const DRAFT_REPLY_PROMPT = (inquiry: any, replyType: string) => {
   const templates: Record<string, string> = {
-    "initial response": `Draft a calm, premium initial response to this enquiry.
-- Welcome them by first name
-- Acknowledge their interest without flattery
-- Reference their specific project briefly
-- Suggest a site assessment as the logical next step
-- Keep it under 120 words
-- Sign off as Peninsula Equine`,
+    "initial response": `Draft an initial reply. Maximum 4 sentences.
+Sentence 1: Address by first name, acknowledge the project type.
+Sentence 2: One line on PE's relevant capability — no boasting.
+Sentence 3: Recommend a site assessment as the starting point.
+Sentence 4: Sign off as Peninsula Equine.
+No pleasantries. No "thank you for reaching out." No "we'd love to discuss." Just substance.`,
 
-    "site assessment booking": `Draft a site assessment booking message.
-- Confirm the purpose: assess terrain, access, existing structures, horse management patterns
-- Mention it is a no-obligation assessment
-- Suggest 2-3 time windows (placeholder)
-- Keep it under 100 words`,
+    "site assessment booking": `Draft a site assessment booking note. Maximum 3 sentences.
+State the purpose (assess terrain, access, structures, horse management).
+Offer availability (use placeholder dates).
+Sign off. No selling. No filler.`,
 
-    "follow-up": `Draft a light-touch follow-up.
-- Reference the original enquiry naturally
-- No desperation or urgency
-- Restate one clear value point
-- Offer availability without pressure
-- Keep it under 80 words`,
+    "follow-up": `Draft a follow-up. Maximum 3 sentences.
+Reference their project — not their enquiry.
+One value point: what a site assessment would clarify for them.
+Confirm availability. No urgency. No "just checking in." No "circling back."`,
 
-    "proposal chase-up": `Draft a composed proposal chase-up.
-- Low pressure, professional
-- Reference the proposal sent
-- Confirm availability for questions
-- Suggest a brief call if helpful
-- Keep it under 80 words`,
+    "proposal chase-up": `Draft a proposal chase-up. Maximum 3 sentences.
+Reference the proposal by project type.
+Confirm you're available for questions or a brief call.
+No pressure. No "wanted to follow up." Just composed availability.`,
 
-    "polite decline": `Draft a polite decline message.
-[REQUIRES HUMAN REVIEW]
-- Respectful and brief
-- Thank them for their enquiry
-- Be honest without over-explaining
-- Wish them well
-- Keep it under 60 words`,
+    "polite decline": `[REQUIRES HUMAN REVIEW]
+Draft a decline. Maximum 3 sentences.
+Acknowledge their enquiry. State it's not the right fit without over-explaining. Wish them well.
+No apology. No "unfortunately." Just direct and respectful.`,
   };
 
-  const instructions = templates[replyType] || templates["initial response"];
+  return `${templates[replyType] || templates["initial response"]}
 
-  return `${instructions}
+CONTEXT:
+Name: ${inquiry?.name || "Unknown"} | Services: ${(inquiry?.services || []).join(", ")} | Budget: ${inquiry?.budget_range || "—"} | Vision: ${inquiry?.project_vision || "—"} | Details: ${inquiry?.project_details || "—"} | Start: ${inquiry?.preferred_start || "—"}
 
-ENQUIRY CONTEXT:
-Name: ${inquiry?.name || "Unknown"}
-Email: ${inquiry?.email || ""}
-Services: ${(inquiry?.services || []).join(", ")}
-Project Vision: ${inquiry?.project_vision || "Not provided"}
-Project Details: ${inquiry?.project_details || "Not provided"}
-Budget: ${inquiry?.budget_range || "Not specified"}
-Preferred Start: ${inquiry?.preferred_start || "Not specified"}
-Status: ${inquiry?.status || "new"}
+If pricing or scope is involved, prefix with [REQUIRES HUMAN REVIEW].
 
-If this involves pricing, scope, or technical specifics, add [REQUIRES HUMAN REVIEW] at the top.
-
-Output format:
-**Recommended Next Step:** (one line)
-**Reasoning:** (one line)
-**Suggested Reply:**
-(the draft)`;
+Format:
+**Next Step:** (one line)
+**Reason:** (one line)
+**Draft:**
+(the message)`;
 };
 
-const FOLLOW_UPS_PROMPT = `Review inquiries and identify leads needing follow-up.
+const FOLLOW_UPS_PROMPT = `Identify stale leads. Be direct about priority.
 
-Flag leads where:
-- Status "new" and created >2 days ago (no response sent)
-- Status "contacted" and no update in >3 days
-- Status "quoted" and waiting >5 days
+Flag if:
+- "new" status, >2 days old
+- "contacted", no update >3 days
+- "quoted", no response >5 days
 
-For each stale lead:
-1. **Lead**: Name and project type
-2. **Days Since Last Contact**: (calculate from dates)
-3. **Follow-Up Stage**: Day 2 / Day 5 / Day 10
-4. **Priority**: High / Medium / Low
-5. **Reasoning**: One sentence
-6. **Draft Follow-Up**: A brief message in PE voice (under 80 words, light touch, no desperation)
+Per lead:
+- **Name** | **Days stale** | **Stage** (Day 2/5/10) | **Priority** (High/Med/Low)
+- **Draft**: 2-3 sentences max. Reference their project, not their enquiry. One value point. Confirm availability. No "just checking in." No "wanted to touch base."
 
-Sort by priority. Keep output scannable.`;
+Priority order. No padding.`;
 
-const DAILY_SUMMARY_PROMPT = `Generate a founder-level daily operations briefing. High signal only.
+const DAILY_SUMMARY_PROMPT = `Founder briefing. Bullets only. No narrative.
 
-Format exactly as:
+**Hot Leads** — name, type, action needed (or "Clear")
+**Overdue Follow-Ups** — name, days overdue, action (or "Clear")
+**Proposals Pending** — name, days waiting (or "Clear")
+**Financial Flags** — outstanding balances >50%, margins <25% (or "Clear")
+**Today's Top 3** — ranked actions
 
-## Hot Leads
-(leads requiring action today — name, type, next step)
-
-## Overdue Follow-Ups
-(leads past their follow-up window — name, days overdue, action)
-
-## Proposals Pending Decision
-(quoted leads awaiting response — name, days waiting)
-
-## Financial Risks
-(outstanding balances, jobs with margin below 25%, unusual cost patterns)
-
-## Today's Priorities
-(top 3-5 actions ranked by importance)
-
-Rules:
-- No narrative paragraphs
-- Bullet points only
-- If a section has nothing to report, write "Clear" and move on
-- Keep the entire summary under 300 words`;
+Under 200 words total. If a section is empty, write "Clear" and move on. No filler sentences.`;
 
 const ALERTS_PROMPT = `Scan current data and generate a prioritised alert list.
 
