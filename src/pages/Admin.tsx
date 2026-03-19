@@ -6,6 +6,7 @@ import { AdminTrainerPanel } from "@/components/AdminTrainerPanel";
 import { TestEmailPanel } from "@/components/TestEmailPanel";
 import { AdminAttachmentViewer } from "@/components/AdminAttachmentViewer";
 import { FinancialDashboard } from "@/components/FinancialDashboard";
+import { AIOperationsAssistant } from "@/components/AIOperationsAssistant";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
