@@ -4,6 +4,7 @@ import { WebsiteIntelligence } from "@/components/WebsiteIntelligence";
 import { RevenueStrip } from "@/components/RevenueStrip";
 import { DecisionPanel } from "@/components/DecisionPanel";
 import { QuotesDashboard } from "@/components/QuotesDashboard";
+import { QuoteBuilder } from "@/components/QuoteBuilder";
 import { AdminStaffOnboarding } from "@/components/AdminStaffOnboarding";
 import { SharedCalendarView } from "@/components/SharedCalendarView";
 import { AdminTrainerPanel } from "@/components/AdminTrainerPanel";
@@ -42,7 +43,7 @@ import { toast } from "sonner";
 import {
   LogOut, Eye, Trash2, RefreshCw, Search, Mail, Phone, Calendar,
   Filter, MessageSquare, Users, Clock, CheckCircle, Download,
-  Settings, Zap, Save, ExternalLink, CalendarDays, BarChart3, UserCog,
+  Settings, Zap, Save, ExternalLink, CalendarDays, BarChart3, UserCog, FileText,
 } from "lucide-react";
 import { format } from "date-fns";
 
@@ -117,6 +118,7 @@ export default function Admin() {
   const [hubspotEnabled, setHubspotEnabled] = useState(false);
   const [isSavingCrm, setIsSavingCrm] = useState(false);
   const [showCrmSettings, setShowCrmSettings] = useState(false);
+  const [quoteForInquiryId, setQuoteForInquiryId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) navigate("/login");
@@ -680,10 +682,25 @@ export default function Admin() {
               </div>
             </div>
           )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setSelectedInquiry(null)} className="text-[11px] uppercase tracking-wider">Cancel</Button>
-            <Button onClick={handleUpdateInquiry} className="text-[11px] uppercase tracking-wider">Save Changes</Button>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button variant="outline" onClick={() => { setQuoteForInquiryId(selectedInquiry?.id || null); setSelectedInquiry(null); }} className="text-[11px] uppercase tracking-wider border-accent/30 text-accent hover:bg-accent/10">
+              <FileText className="h-3.5 w-3.5 mr-1" />Create Quote
+            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setSelectedInquiry(null)} className="text-[11px] uppercase tracking-wider">Cancel</Button>
+              <Button onClick={handleUpdateInquiry} className="text-[11px] uppercase tracking-wider">Save Changes</Button>
+            </div>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Quote Builder Dialog */}
+      <Dialog open={!!quoteForInquiryId} onOpenChange={(v) => !v && setQuoteForInquiryId(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="font-serif text-lg">Create Quote from Inquiry</DialogTitle>
+          </DialogHeader>
+          <QuoteBuilder inquiryId={quoteForInquiryId} onSaved={() => setQuoteForInquiryId(null)} onClose={() => setQuoteForInquiryId(null)} />
         </DialogContent>
       </Dialog>
 
