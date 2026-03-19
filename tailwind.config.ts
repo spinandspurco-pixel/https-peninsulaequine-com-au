@@ -114,8 +114,13 @@ export default {
       },
       borderRadius: {
         lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        md: "calc(var(--radius) - 1px)",
+        sm: "calc(var(--radius) - 2px)",
+      },
+      height: {
+        "13": "3.25rem",
+        "18": "4.5rem",
+        "22": "5.5rem",
       },
       keyframes: {
         "accordion-down": {
@@ -151,11 +156,11 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards",
-        "fade-in-up": "fade-in-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards",
-        "scale-in": "scale-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards",
-        "ken-burns": "ken-burns 35s ease-in-out infinite alternate",
-        "pulse-subtle": "pulse-subtle 5s ease-in-out infinite",
+        "fade-in": "fade-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards",
+        "fade-in-up": "fade-in-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards",
+        "scale-in": "scale-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards",
+        "ken-burns": "ken-burns 40s ease-in-out infinite alternate",
+        "pulse-subtle": "pulse-subtle 6s ease-in-out infinite",
       },
     },
   },

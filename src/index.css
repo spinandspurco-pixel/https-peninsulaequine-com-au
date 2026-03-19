@@ -2,149 +2,96 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Peninsula Equine Design System v2
-   Carbon / Graphite / Stone / Bronze palette
+/* Peninsula Equine Design System v3
+   Midnight / Blackened Steel / Warm Stone / Antique Gold
+   Darker & moodier — cinematic, architectural, restrained
    Playfair Display + DM Sans
 */
 
 @layer base {
   :root {
-    /* Background — warm off-white with stone undertone */
-    --background: 40 20% 95%;
-    --foreground: 220 10% 12%;
+    /* Background — deep midnight */
+    --background: 222 20% 6%;
+    --foreground: 38 12% 88%;
 
-    /* Card — slightly warmer surface */
-    --card: 40 18% 97%;
-    --card-foreground: 220 10% 12%;
+    /* Card — blackened steel surface */
+    --card: 222 18% 9%;
+    --card-foreground: 38 12% 88%;
 
     /* Popovers */
-    --popover: 40 18% 97%;
-    --popover-foreground: 220 10% 12%;
+    --popover: 222 18% 9%;
+    --popover-foreground: 38 12% 88%;
 
-    /* Primary — Carbon black */
-    --primary: 220 10% 12%;
-    --primary-foreground: 40 20% 95%;
+    /* Primary — near-black with blue undertone */
+    --primary: 222 16% 11%;
+    --primary-foreground: 38 12% 92%;
 
-    /* Secondary — Graphite */
-    --secondary: 220 8% 22%;
-    --secondary-foreground: 40 20% 95%;
+    /* Secondary — charcoal slate */
+    --secondary: 220 12% 16%;
+    --secondary-foreground: 38 12% 88%;
 
-    /* Muted — Dusty stone */
-    --muted: 30 10% 88%;
-    --muted-foreground: 220 6% 46%;
+    /* Muted — warm stone undertone */
+    --muted: 220 10% 18%;
+    --muted-foreground: 30 8% 55%;
 
-    /* Accent — Smoked bronze / antique gold */
-    --accent: 36 45% 48%;
-    --accent-foreground: 40 20% 97%;
-    --accent-light: 38 40% 62%;
+    /* Accent — antique gold, warmer and richer */
+    --accent: 38 50% 50%;
+    --accent-foreground: 222 20% 6%;
+    --accent-light: 40 42% 62%;
 
     /* Destructive */
     --destructive: 0 55% 48%;
-    --destructive-foreground: 40 20% 97%;
+    --destructive-foreground: 38 12% 92%;
 
-    /* Borders — warm concrete */
-    --border: 30 12% 84%;
-    --input: 30 12% 84%;
-    --ring: 36 45% 48%;
+    /* Borders — subtle warm edge */
+    --border: 220 10% 15%;
+    --input: 220 10% 15%;
+    --ring: 38 50% 50%;
 
-    --radius: 0.25rem;
+    --radius: 0.125rem;
 
     /* Typography */
     --font-serif: 'Playfair Display', Georgia, serif;
     --font-sans: 'DM Sans', system-ui, sans-serif;
 
     /* Sidebar */
-    --sidebar-background: 40 18% 97%;
-    --sidebar-foreground: 220 10% 12%;
-    --sidebar-primary: 220 10% 12%;
-    --sidebar-primary-foreground: 40 20% 95%;
-    --sidebar-accent: 30 10% 88%;
-    --sidebar-accent-foreground: 220 10% 12%;
-    --sidebar-border: 30 12% 84%;
-    --sidebar-ring: 36 45% 48%;
+    --sidebar-background: 222 18% 8%;
+    --sidebar-foreground: 38 12% 88%;
+    --sidebar-primary: 38 50% 50%;
+    --sidebar-primary-foreground: 222 20% 6%;
+    --sidebar-accent: 220 10% 16%;
+    --sidebar-accent-foreground: 38 12% 88%;
+    --sidebar-border: 220 10% 15%;
+    --sidebar-ring: 38 50% 50%;
 
     /* Header */
-    --header-bg: 220 10% 12%;
-    --header-foreground: 40 15% 90%;
-    --header-scrolled-bg: 220 10% 12%;
-    --header-scrolled-foreground: 40 15% 90%;
-    --header-active: 36 45% 52%;
+    --header-bg: 222 20% 6%;
+    --header-foreground: 38 10% 85%;
+    --header-scrolled-bg: 222 20% 5%;
+    --header-scrolled-foreground: 38 10% 85%;
+    --header-active: 38 50% 55%;
 
     /* Footer */
-    --footer-bg: 220 10% 10%;
-    --footer-foreground: 40 12% 88%;
-    --footer-muted: 220 6% 50%;
-    --footer-hover: 36 45% 52%;
+    --footer-bg: 222 22% 4%;
+    --footer-foreground: 38 10% 80%;
+    --footer-muted: 220 8% 42%;
+    --footer-hover: 38 50% 55%;
 
     /* Hero overlay */
-    --hero-text: 40 15% 96%;
-    --hero-text-muted: 30 12% 75%;
-    --hero-glass-bg: 0 0% 100% / 0.08;
-    --hero-glass-border: 0 0% 100% / 0.12;
-    --hero-glass-bg-active: 0 0% 100% / 0.16;
-    --hero-input-bg: 0 0% 100% / 0.10;
-    --hero-input-border: 0 0% 100% / 0.18;
-    --hero-input-placeholder: 30 10% 65%;
+    --hero-text: 38 12% 94%;
+    --hero-text-muted: 30 8% 65%;
+    --hero-glass-bg: 0 0% 100% / 0.04;
+    --hero-glass-border: 0 0% 100% / 0.08;
+    --hero-glass-bg-active: 0 0% 100% / 0.10;
+    --hero-input-bg: 0 0% 100% / 0.06;
+    --hero-input-border: 0 0% 100% / 0.12;
+    --hero-input-placeholder: 30 8% 50%;
   }
 
-  .dark {
-    --background: 220 12% 7%;
-    --foreground: 40 12% 90%;
-
-    --card: 220 10% 10%;
-    --card-foreground: 40 12% 90%;
-
-    --popover: 220 10% 10%;
-    --popover-foreground: 40 12% 90%;
-
-    --primary: 40 12% 90%;
-    --primary-foreground: 220 12% 7%;
-
-    --secondary: 220 8% 16%;
-    --secondary-foreground: 40 12% 90%;
-
-    --muted: 220 8% 16%;
-    --muted-foreground: 220 6% 50%;
-
-    --accent: 36 45% 48%;
-    --accent-foreground: 220 12% 7%;
-    --accent-light: 38 40% 62%;
-
-    --destructive: 0 50% 42%;
-    --destructive-foreground: 40 12% 90%;
-
-    --border: 220 8% 18%;
-    --input: 220 8% 18%;
-    --ring: 36 45% 48%;
-
-    --sidebar-background: 220 12% 7%;
-    --sidebar-foreground: 40 12% 90%;
-    --sidebar-primary: 36 45% 48%;
-    --sidebar-primary-foreground: 220 12% 7%;
-    --sidebar-accent: 220 8% 16%;
-    --sidebar-accent-foreground: 40 12% 90%;
-    --sidebar-border: 220 8% 18%;
-    --sidebar-ring: 36 45% 48%;
-
-    --header-bg: 220 12% 7%;
-    --header-foreground: 40 12% 90%;
-    --header-scrolled-bg: 220 10% 10%;
-    --header-scrolled-foreground: 40 12% 90%;
-    --header-active: 36 45% 52%;
-
-    --footer-bg: 220 14% 5%;
-    --footer-foreground: 40 12% 88%;
-    --footer-muted: 220 6% 45%;
-    --footer-hover: 36 45% 52%;
-
-    --hero-text: 40 12% 94%;
-    --hero-text-muted: 30 8% 70%;
-    --hero-glass-bg: 0 0% 100% / 0.06;
-    --hero-glass-border: 0 0% 100% / 0.10;
-    --hero-glass-bg-active: 0 0% 100% / 0.14;
-    --hero-input-bg: 0 0% 100% / 0.08;
-    --hero-input-border: 0 0% 100% / 0.16;
-    --hero-input-placeholder: 30 8% 58%;
+  /* Dark mode is the default — light mode variant for admin/internal */
+  .dark,
+  .light {
+    /* Same as root — site is dark-first */
   }
 }
 
@@ -158,53 +105,41 @@
   }
 
   /* ── Global Lucide icon defaults ───────────────────── */
-  /* Thin architectural strokes + smooth hover transitions */
   svg.lucide {
-    stroke-width: 1.5;
-    @apply transition-all duration-300 ease-out;
+    stroke-width: 1.25;
+    @apply transition-all duration-500 ease-out;
   }
 
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
     font-size: 16px;
-    line-height: 1.6;
+    line-height: 1.65;
   }
 
   /* ── Typography Scale — fluid clamp() ─────────────── */
-  /*
-   * Fluid type ramp using clamp(min, preferred, max)
-   * No jarring jumps at breakpoints.
-   *
-   *   h1: 2.25rem → 3.75rem  (36 → 60px)
-   *   h2: 1.875rem → 3rem    (30 → 48px)
-   *   h3: 1.5rem → 1.875rem  (24 → 30px)
-   *   h4: 1.25rem → 1.5rem   (20 → 24px)
-   *   body: 1rem / body-lg: 1.125rem / caption: 0.75rem
-   *   overline: 0.75→0.875rem, uppercase, spaced
-   */
   h1, h2, h3, h4 {
     font-family: var(--font-serif);
     @apply text-foreground;
-    letter-spacing: 0.025em;
+    letter-spacing: 0.03em;
   }
 
   h1 {
-    font-size: clamp(2.25rem, 1.5rem + 2.4vw, 3.75rem);
-    line-height: 1.1;
-    letter-spacing: 0.03em;
+    font-size: clamp(2.5rem, 1.5rem + 3.2vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: 0.04em;
     @apply font-semibold;
   }
   h2 {
     font-size: clamp(1.875rem, 1.25rem + 2vw, 3rem);
-    line-height: 1.15;
-    letter-spacing: 0.025em;
+    line-height: 1.12;
+    letter-spacing: 0.03em;
     @apply font-medium;
   }
   h3 {
     font-size: clamp(1.5rem, 1.25rem + 0.8vw, 1.875rem);
     line-height: 1.25;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.025em;
     @apply font-medium;
   }
   h4 {
@@ -221,11 +156,10 @@
   }
 
   .text-overline {
-    font-size: clamp(0.75rem, 0.7rem + 0.15vw, 0.875rem);
-    @apply font-sans font-medium uppercase tracking-[0.25em] text-muted-foreground;
+    font-size: clamp(0.625rem, 0.6rem + 0.12vw, 0.75rem);
+    @apply font-sans font-semibold uppercase tracking-[0.3em] text-accent;
   }
 
-  /* ── Spec-label micro type ─────────────────────────── */
   .text-spec {
     @apply font-mono text-2xs tracking-[0.25em] uppercase text-muted-foreground/40;
   }
@@ -236,59 +170,46 @@
      LAYOUT TOKENS
      ═══════════════════════════════════════════════════════ */
   .section-container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-7xl mx-auto px-5 sm:px-8 lg:px-10;
   }
 
   .section-container-narrow {
-    @apply max-w-3xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-3xl mx-auto px-5 sm:px-8 lg:px-10;
   }
 
   .section-container-wide {
-    @apply max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-[1800px] mx-auto px-5 sm:px-8 lg:px-10;
   }
 
-  /* ── Section vertical rhythm ───────────────────────── */
+  /* ── Section vertical rhythm — more generous ──────── */
   .section-padding     { @apply py-section sm:py-section-md lg:py-section-lg; }
   .section-padding-sm  { @apply py-section-sm sm:py-section lg:py-section-md; }
-  .section-padding-lg  { @apply py-section-md sm:py-section-lg lg:py-section-xl; }
+  .section-padding-lg  { @apply py-section-lg sm:py-section-xl; }
 
-  /* ── Grid utilities — consistent gutters ──────────── */
-  /*
-   * Use these instead of ad-hoc gap-* on grids.
-   * Gutters scale: 16px → 24px → 32px across breakpoints.
-   *
-   *   .grid-auto-fill   — auto-fill columns, min 280px
-   *   .grid-cards       — 1 → 2 → 3 col card layout
-   *   .grid-duo         — 1 → 2 col layout
-   */
-  .grid-gutter {
-    @apply gap-4 sm:gap-6 lg:gap-8;
-  }
-
-  .grid-gutter-sm {
-    @apply gap-3 sm:gap-4 lg:gap-6;
-  }
+  /* ── Grid utilities ──────────────────────────────────── */
+  .grid-gutter    { @apply gap-5 sm:gap-8 lg:gap-10; }
+  .grid-gutter-sm { @apply gap-3 sm:gap-5 lg:gap-8; }
 
   .grid-cards {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8;
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8 lg:gap-10;
   }
 
   .grid-duo {
-    @apply grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8;
+    @apply grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8 lg:gap-10;
   }
 
   .grid-auto-fill {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
-    @apply gap-4 sm:gap-6 lg:gap-8;
+    grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+    @apply gap-5 sm:gap-8 lg:gap-10;
   }
 
-  /* ── Content gap scale — vertical rhythm inside sections */
-  .stack-xs  { @apply space-y-2; }               /* 8px  — tight UI groups */
-  .stack-sm  { @apply space-y-4; }               /* 16px — form fields, list items */
-  .stack     { @apply space-y-6; }               /* 24px — default content stack */
-  .stack-md  { @apply space-y-8 sm:space-y-10; } /* 32-40px — subsections */
-  .stack-lg  { @apply space-y-12 sm:space-y-16; }/* 48-64px — section intro blocks */
+  /* ── Content gap scale ───────────────────────────────── */
+  .stack-xs  { @apply space-y-2; }
+  .stack-sm  { @apply space-y-4; }
+  .stack     { @apply space-y-6; }
+  .stack-md  { @apply space-y-10 sm:space-y-12; }
+  .stack-lg  { @apply space-y-16 sm:space-y-20; }
 
   /* ═══════════════════════════════════════════════════════
      TYPOGRAPHY UTILITIES
@@ -296,16 +217,16 @@
   .heading-display {
     font-family: var(--font-serif);
     font-size: clamp(3rem, 1.8rem + 4.5vw, 6rem);
-    line-height: 1.05;
-    letter-spacing: 0.03em;
+    line-height: 1.02;
+    letter-spacing: 0.04em;
     @apply font-semibold;
   }
 
   .heading-section {
     font-family: var(--font-serif);
     font-size: clamp(1.875rem, 1.25rem + 2vw, 3rem);
-    line-height: 1.15;
-    letter-spacing: 0.025em;
+    line-height: 1.12;
+    letter-spacing: 0.03em;
     @apply font-medium;
   }
 
@@ -313,8 +234,8 @@
     font-family: var(--font-serif);
     font-size: clamp(1.5rem, 1rem + 1.6vw, 2.25rem);
     line-height: 1.2;
-    letter-spacing: 0.02em;
-    @apply font-normal;
+    letter-spacing: 0.025em;
+    @apply font-normal italic;
   }
 
   .heading-card {
@@ -327,6 +248,7 @@
 
   .text-body-lg {
     font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+    line-height: 1.75;
     @apply text-muted-foreground;
   }
 
@@ -339,35 +261,41 @@
   .border-gold { border-color: hsl(var(--accent)); }
 
   /* ═══════════════════════════════════════════════════════
-     DIVIDERS
+     DIVIDERS — architectural line language
      ═══════════════════════════════════════════════════════ */
-  .divider          { @apply w-20 h-px bg-accent; }
-  .divider-vertical { @apply w-px h-20 bg-accent; }
+  .divider          { @apply w-16 h-px bg-accent/60; }
+  .divider-wide     { @apply w-full h-px bg-border; }
+  .divider-vertical { @apply w-px h-16 bg-accent/60; }
+
+  /* Engineering grid divider */
+  .divider-grid {
+    @apply w-full h-px relative;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      hsl(var(--accent) / 0.3) 20%,
+      hsl(var(--accent) / 0.3) 80%,
+      transparent 100%
+    );
+  }
 
   /* ═══════════════════════════════════════════════════════
      CARD / SURFACE SYSTEM
-     Prefer <Card variant="…"> from ui/card.tsx.
-     These utilities are for ad-hoc containers.
      ═══════════════════════════════════════════════════════ */
-
-  /* Default card surface — cream on light, dark slate on dark */
   .surface-card {
-    @apply rounded-lg border border-border bg-card text-card-foreground;
+    @apply border border-border bg-card text-card-foreground;
   }
 
-  /* Inset panel — slightly recessed within a card */
   .surface-inset {
-    @apply rounded-lg border border-border bg-background p-4;
+    @apply border border-border bg-background p-5;
   }
 
-  /* Dark surface — for sections with navy bg */
   .surface-dark {
-    @apply rounded-lg border border-primary-foreground/10 bg-primary-foreground/[0.04] text-primary-foreground;
+    @apply border border-primary-foreground/8 bg-primary-foreground/[0.03] text-primary-foreground;
   }
 
-  /* Stat / metric pill */
   .surface-badge {
-    @apply inline-flex items-center rounded-full border border-border bg-background px-3 py-1 text-xs font-medium;
+    @apply inline-flex items-center border border-accent/20 bg-accent/5 px-3 py-1 text-2xs font-semibold uppercase tracking-[0.2em] text-accent;
   }
 
   /* ═══════════════════════════════════════════════════════
@@ -376,240 +304,250 @@
   .image-overlay {
     background: linear-gradient(
       to top,
-      hsl(228 20% 7% / 0.85) 0%,
-      hsl(228 20% 7% / 0.3) 50%,
-      transparent 100%
+      hsl(222 20% 4% / 0.92) 0%,
+      hsl(222 20% 4% / 0.4) 45%,
+      hsl(222 20% 4% / 0.1) 100%
     );
   }
 
   .image-overlay-subtle {
     background: linear-gradient(
       to top,
-      hsl(228 20% 7% / 0.5) 0%,
+      hsl(222 20% 4% / 0.6) 0%,
       transparent 60%
     );
   }
 
   .text-shadow-editorial {
-    text-shadow: 0 2px 40px hsl(228 20% 7% / 0.4);
+    text-shadow: 0 2px 50px hsl(222 20% 4% / 0.6);
   }
 
   /* ═══════════════════════════════════════════════════════
-     INTERACTIVE EFFECTS
+     INTERACTIVE EFFECTS — slower, more luxurious
      ═══════════════════════════════════════════════════════ */
-
-  /* Button lift — restrained with gold glow */
   .btn-hover-lift {
     @apply transition-all ease-out;
-    transition-duration: 600ms;
+    transition-duration: 700ms;
   }
   .btn-hover-lift:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px -8px hsl(var(--accent) / 0.25);
+    box-shadow: 0 12px 32px -12px hsl(var(--accent) / 0.3);
   }
 
-  /* Universal glow — buttons & interactive elements */
   .btn-glow {
     @apply relative overflow-hidden;
-    transition: all 600ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: all 700ms cubic-bezier(0.22, 1, 0.36, 1);
     box-shadow: 0 0 0 0 hsl(var(--accent) / 0);
   }
   .btn-glow:hover {
-    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.4),
-                0 0 16px -4px hsl(var(--accent) / 0.25);
+    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.3),
+                0 0 24px -6px hsl(var(--accent) / 0.2);
   }
   .btn-glow:active {
-    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.5),
-                0 0 8px -2px hsl(var(--accent) / 0.2);
+    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.4),
+                0 0 12px -3px hsl(var(--accent) / 0.15);
   }
   .btn-glow:focus-visible {
     box-shadow: 0 0 0 2px hsl(var(--background)),
                 0 0 0 4px hsl(var(--ring));
   }
 
-  /* Variant glow strengths */
   .btn-glow-primary:hover {
-    box-shadow: 0 0 25px -5px hsl(var(--accent) / 0.5),
-                0 4px 15px -2px hsl(var(--primary) / 0.2);
+    box-shadow: 0 0 30px -8px hsl(var(--accent) / 0.4),
+                0 4px 20px -4px hsl(var(--primary) / 0.15);
   }
   .btn-glow-outline:hover {
-    box-shadow: 0 0 15px -5px hsl(var(--accent) / 0.3),
-                0 2px 8px -2px hsl(var(--foreground) / 0.1);
+    box-shadow: 0 0 20px -8px hsl(var(--accent) / 0.25);
   }
   .btn-glow-destructive:hover {
-    box-shadow: 0 0 20px -5px hsl(var(--destructive) / 0.4),
-                0 4px 12px -2px hsl(var(--destructive) / 0.2);
+    box-shadow: 0 0 25px -8px hsl(var(--destructive) / 0.35);
   }
 
-  /* Card hover glow */
+  /* Card hover — refined */
   .card-hover-glow {
-    @apply transition-all duration-500;
-    box-shadow: 0 1px 3px 0 hsl(var(--foreground) / 0.05),
-                0 1px 2px -1px hsl(var(--foreground) / 0.05);
+    @apply transition-all duration-700;
   }
   .card-hover-glow:hover {
-    box-shadow: 0 0 30px -10px hsl(var(--accent) / 0.25),
-                0 20px 40px -15px hsl(var(--primary) / 0.15),
-                0 0 0 1px hsl(var(--accent) / 0.1);
+    box-shadow: 0 0 40px -12px hsl(var(--accent) / 0.15),
+                0 0 0 1px hsl(var(--accent) / 0.08);
   }
 
-  /* Image card glow */
   .image-card-glow {
-    @apply transition-all duration-500;
+    @apply transition-all duration-700;
   }
   .image-card-glow:hover {
-    box-shadow: 0 0 25px -8px hsl(var(--accent) / 0.3),
-                0 15px 30px -10px hsl(var(--primary) / 0.2);
+    box-shadow: 0 0 30px -10px hsl(var(--accent) / 0.2);
   }
 
-  /* Interactive card lift — restrained */
   .card-interactive {
-    @apply transition-all duration-500 ease-out;
+    @apply transition-all duration-700 ease-out;
   }
   .card-interactive:hover {
-    @apply -translate-y-px;
-    box-shadow: 0 0 20px -8px hsl(var(--accent) / 0.15),
-                0 10px 25px -10px hsl(var(--primary) / 0.1);
+    @apply -translate-y-0.5;
+    box-shadow: 0 0 30px -10px hsl(var(--accent) / 0.12),
+                0 0 0 1px hsl(var(--accent) / 0.06);
   }
   .card-interactive:active {
     @apply translate-y-0;
   }
 
-  /* Border glow */
   .border-glow {
-    @apply relative transition-all duration-300;
+    @apply relative transition-all duration-500;
   }
   .border-glow::before {
     content: '';
-    @apply absolute inset-0 rounded-[inherit] opacity-0 transition-opacity duration-300 pointer-events-none;
-    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.4),
-                0 0 15px -3px hsl(var(--accent) / 0.3);
+    @apply absolute inset-0 rounded-[inherit] opacity-0 transition-opacity duration-500 pointer-events-none;
+    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.3),
+                0 0 20px -4px hsl(var(--accent) / 0.2);
   }
   .border-glow:hover::before {
     @apply opacity-100;
   }
 
-  /* Input focus glow */
   .input-glow {
-    @apply transition-all duration-300;
+    @apply transition-all duration-500;
   }
   .input-glow:focus {
-    box-shadow: 0 0 0 2px hsl(var(--accent) / 0.2),
-                0 0 15px -5px hsl(var(--accent) / 0.25);
+    box-shadow: 0 0 0 2px hsl(var(--accent) / 0.15),
+                0 0 20px -8px hsl(var(--accent) / 0.2);
   }
 
-  /* Link underline glow */
   .link-glow {
-    @apply relative transition-all duration-300;
+    @apply relative transition-all duration-500;
   }
   .link-glow::after {
     content: '';
-    @apply absolute bottom-0 left-0 w-full h-0.5 bg-accent scale-x-0 origin-right transition-transform duration-300;
-    box-shadow: 0 0 8px 0 hsl(var(--accent) / 0.5);
+    @apply absolute bottom-0 left-0 w-full h-px bg-accent/60 scale-x-0 origin-right transition-transform duration-500;
   }
   .link-glow:hover::after {
     @apply scale-x-100 origin-left;
   }
 
-  /* Icon glow */
   .icon-glow {
-    @apply transition-all duration-300;
+    @apply transition-all duration-500;
   }
   .icon-glow:hover {
-    filter: drop-shadow(0 0 6px hsl(var(--accent) / 0.4));
+    filter: drop-shadow(0 0 8px hsl(var(--accent) / 0.35));
   }
 
   /* ═══════════════════════════════════════════════════════
      ANIMATION UTILITIES
      ═══════════════════════════════════════════════════════ */
   .editorial-fade-in {
-    @apply opacity-0 translate-y-8 transition-all duration-700 ease-out;
+    @apply opacity-0 translate-y-6 transition-all ease-out;
+    transition-duration: 900ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
   .editorial-fade-in.visible {
     @apply opacity-100 translate-y-0;
   }
 
   .section-transition {
-    @apply transition-all duration-700 ease-out;
+    @apply transition-all ease-out;
+    transition-duration: 900ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .mask-reveal {
     clip-path: inset(100% 0 0 0);
-    @apply transition-all duration-1000 ease-out;
+    @apply transition-all ease-out;
+    transition-duration: 1200ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
   .mask-reveal.visible {
     clip-path: inset(0 0 0 0);
   }
 
   .line-grow {
-    @apply transition-all duration-700 ease-out origin-left scale-x-0;
+    @apply transition-all ease-out origin-left scale-x-0;
+    transition-duration: 900ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
   .line-grow.visible {
     @apply scale-x-100;
   }
 
-  /* Stagger delays */
-  .stagger-1 { transition-delay: 100ms; }
-  .stagger-2 { transition-delay: 200ms; }
-  .stagger-3 { transition-delay: 300ms; }
-  .stagger-4 { transition-delay: 400ms; }
-  .stagger-5 { transition-delay: 500ms; }
-  .stagger-6 { transition-delay: 600ms; }
+  /* Stagger delays — longer intervals for luxury feel */
+  .stagger-1 { transition-delay: 120ms; }
+  .stagger-2 { transition-delay: 240ms; }
+  .stagger-3 { transition-delay: 360ms; }
+  .stagger-4 { transition-delay: 480ms; }
+  .stagger-5 { transition-delay: 600ms; }
+  .stagger-6 { transition-delay: 720ms; }
 }
 
 /* ═══════════════════════════════════════════════════════
    BLUEPRINT ICON SYSTEM
-   Technical sketch icons with draw-in hover animation.
-   Lines start visible at low opacity, draw-in on hover.
    ═══════════════════════════════════════════════════════ */
 .blueprint-icon .bp-line {
   stroke-dasharray: 200;
   stroke-dashoffset: 0;
-  opacity: 0.35;
-  transition: opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  opacity: 0.25;
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .blueprint-icon:hover .bp-line,
 .blueprint-icon--active .bp-line {
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
-/* Draw-in effect — lines sketch themselves on hover */
 .blueprint-icon .bp-line {
   stroke-dashoffset: 0;
-  transition: stroke-dashoffset 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-              opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.blueprint-icon:hover .bp-line,
-.blueprint-icon--active .bp-line {
-  stroke-dashoffset: 0;
-  opacity: 0.7;
+  transition: stroke-dashoffset 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Variant: start hidden, draw in on hover */
 .blueprint-icon.bp-draw-in .bp-line {
   stroke-dashoffset: 200;
 }
 .blueprint-icon.bp-draw-in:hover .bp-line {
   stroke-dashoffset: 0;
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
-/* Faint blueprint grid behind icons */
+/* Blueprint grid texture */
 .bp-backdrop {
   background-image:
-    linear-gradient(hsl(var(--accent) / 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, hsl(var(--accent) / 0.04) 1px, transparent 1px);
-  background-size: 12px 12px;
+    linear-gradient(hsl(var(--accent) / 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--accent) / 0.03) 1px, transparent 1px);
+  background-size: 16px 16px;
 }
 
-/* Subtle grain texture for sections — increased to 3.5% for richer feel */
+/* Subtle grain texture — barely perceptible */
 .grain-texture::before {
   content: '';
   position: absolute;
   inset: 0;
-  opacity: 0.035;
+  opacity: 0.025;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Contour-line section texture — topographic feel */
+.contour-texture::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.015;
+  background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 100 Q50 60 100 100 T200 100' fill='none' stroke='%23C9A96E' stroke-width='0.5'/%3E%3Cpath d='M0 120 Q50 80 100 120 T200 120' fill='none' stroke='%23C9A96E' stroke-width='0.3'/%3E%3Cpath d='M0 80 Q50 40 100 80 T200 80' fill='none' stroke='%23C9A96E' stroke-width='0.3'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Engineering grid background — subtle structural reference */
+.engineering-grid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.02;
+  background-image:
+    linear-gradient(hsl(var(--accent) / 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--accent) / 0.5) 1px, transparent 1px),
+    linear-gradient(hsl(var(--accent) / 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--accent) / 0.2) 1px, transparent 1px);
+  background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
   pointer-events: none;
   z-index: 0;
 }
@@ -622,10 +560,8 @@
 
 /* ═══════════════════════════════════════════════════════
    ARCHITECTURAL MOTION SYSTEM
-   Advanced keyframes for scroll-reveals and hero stagger
    ═══════════════════════════════════════════════════════ */
 
-/* Scroll indicator pulse */
 @keyframes scrollPulse {
   0%   { transform: translateY(-100%); opacity: 0; }
   30%  { opacity: 1; }
@@ -633,7 +569,6 @@
   100% { transform: translateY(200%); opacity: 0; }
 }
 
-/* Hero word stagger reveal — clip + translate */
 @keyframes heroWordReveal {
   from {
     opacity: 0;
@@ -646,10 +581,9 @@
 }
 
 .animate-hero-word {
-  animation: heroWordReveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: heroWordReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Architectural line draw — horizontal */
 @keyframes lineDraw {
   from { transform: scaleX(0); }
   to   { transform: scaleX(1); }
@@ -657,30 +591,28 @@
 
 .animate-line-draw {
   transform-origin: left;
-  animation: lineDraw 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: lineDraw 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-/* Mask clip reveal — bottom to top */
 @keyframes clipRevealUp {
   from { clip-path: inset(100% 0 0 0); }
   to   { clip-path: inset(0 0 0 0); }
 }
 
 .animate-clip-reveal-up {
-  animation: clipRevealUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: clipRevealUp 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-/* Subtle float for ambient elements */
 @keyframes gentleFloat {
   0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-6px); }
+  50%      { transform: translateY(-4px); }
 }
 
 .animate-gentle-float {
-  animation: gentleFloat 4s ease-in-out infinite;
+  animation: gentleFloat 5s ease-in-out infinite;
 }
 
-/* Reduced motion: disable animations and transitions for accessibility */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -691,25 +623,21 @@
     scroll-behavior: auto !important;
   }
 
-  /* Disable parallax transforms */
   .will-change-transform {
     will-change: auto !important;
     transform: none !important;
   }
 
-  /* Disable hover lift effects */
   .card-hover-glow:hover,
   .card-interactive:hover {
     transform: none !important;
   }
 
-  /* Ensure content is visible immediately */
   .editorial-fade-in {
     opacity: 1 !important;
     transform: none !important;
   }
 
-  /* Blueprint SVG overlays: show as static texture, no draw animation */
   svg[aria-hidden="true"] path,
   svg[aria-hidden="true"] line,
   svg[aria-hidden="true"] rect,
@@ -725,144 +653,66 @@
     transition: none !important;
   }
 
-  /* Disable parallax drift on blueprint overlays */
   svg[aria-hidden="true"] {
     transform: none !important;
     transition: none !important;
   }
 }
 
-/* Confetti celebration animation */
 @keyframes confetti {
-  0% {
-    transform: translateY(0) rotate(0deg) scale(1);
-    opacity: 1;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(400px) rotate(720deg) scale(0);
-    opacity: 0;
-  }
+  0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+  50% { opacity: 1; }
+  100% { transform: translateY(400px) rotate(720deg) scale(0); opacity: 0; }
 }
+.animate-confetti { animation: confetti 1.5s ease-out forwards; }
 
-.animate-confetti {
-  animation: confetti 1.5s ease-out forwards;
-}
-
-/* Scale-in animation for elements */
 @keyframes scale-in {
-  0% {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
-/* Swipe indicator animations for lightbox onboarding */
 @keyframes swipe-hint-left {
-  0%, 100% {
-    transform: translateX(0);
-    opacity: 0.5;
-  }
-  50% {
-    transform: translateX(-12px);
-    opacity: 1;
-  }
+  0%, 100% { transform: translateX(0); opacity: 0.5; }
+  50% { transform: translateX(-12px); opacity: 1; }
 }
-
 @keyframes swipe-hint-right {
-  0%, 100% {
-    transform: translateX(0);
-    opacity: 0.5;
-  }
-  50% {
-    transform: translateX(12px);
-    opacity: 1;
-  }
+  0%, 100% { transform: translateX(0); opacity: 0.5; }
+  50% { transform: translateX(12px); opacity: 1; }
 }
-
 @keyframes swipe-hand {
-  0%, 100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-30px);
-  }
-  75% {
-    transform: translateX(30px);
-  }
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-30px); }
+  75% { transform: translateX(30px); }
 }
+.animate-swipe-hint-left { animation: swipe-hint-left 1.5s ease-in-out infinite; }
+.animate-swipe-hint-right { animation: swipe-hint-right 1.5s ease-in-out infinite; }
+.animate-swipe-hand { animation: swipe-hand 2s ease-in-out infinite; }
 
-.animate-swipe-hint-left {
-  animation: swipe-hint-left 1.5s ease-in-out infinite;
-}
-
-.animate-swipe-hint-right {
-  animation: swipe-hint-right 1.5s ease-in-out infinite;
-}
-
-.animate-swipe-hand {
-  animation: swipe-hand 2s ease-in-out infinite;
-}
-
-/* Blueprint scan line that sweeps left-to-right */
 @keyframes blueprint-scan {
-  0% {
-    left: -2px;
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    left: 100%;
-    opacity: 0;
-  }
+  0% { left: -2px; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
 }
-
-.animate-blueprint-scan {
-  animation: blueprint-scan 3s ease-in-out forwards;
-}
+.animate-blueprint-scan { animation: blueprint-scan 3s ease-in-out forwards; }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-blueprint-scan {
-    animation: none;
-    display: none;
-  }
+  .animate-blueprint-scan { animation: none; display: none; }
 }
 
-/* Print styles — only show the prep checklist */
+/* Print */
 @media print {
-  body * {
-    visibility: hidden;
-  }
-  #prep-checklist,
-  #prep-checklist * {
-    visibility: visible;
-  }
+  body * { visibility: hidden; }
+  #prep-checklist, #prep-checklist * { visibility: visible; }
   #prep-checklist {
     position: absolute;
     inset: 0;
     padding: 2rem;
   }
-  #prep-checklist h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
-  #prep-checklist button {
-    display: none;
-  }
+  #prep-checklist h2 { font-size: 1.5rem; margin-bottom: 1rem; }
+  #prep-checklist button { display: none; }
 }
 
-/* Hero media progressive loading shimmer */
 @keyframes shimmer {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(200%); }
@@ -872,45 +722,36 @@
   0%, 100% { transform: translateY(0) rotate(-1deg); }
   50% { transform: translateY(-8px) rotate(1deg); }
 }
-
-.animate-rope-drift {
-  animation: rope-drift 5s ease-in-out infinite;
-}
+.animate-rope-drift { animation: rope-drift 5s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-rope-drift {
-    animation: none;
-  }
+  .animate-rope-drift { animation: none; }
 }
 
-/* ── Animated Blueprint Hero keyframes ─────────────── */
-@keyframes gridFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes drawLine {
-  to { stroke-dashoffset: 0; }
-}
-
-@keyframes fadeElement {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
+@keyframes gridFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes drawLine { to { stroke-dashoffset: 0; } }
+@keyframes fadeElement { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes scanSweep {
   0% { transform: translateY(-10vh); opacity: 0; }
   10% { opacity: 1; }
   90% { opacity: 1; }
   100% { transform: translateY(110vh); opacity: 0; }
 }
-
 @keyframes nodePulse {
   0%, 100% { opacity: 0.5; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.3); }
 }
-
 @keyframes nodeRing {
   0% { transform: scale(1); opacity: 0.3; }
   100% { transform: scale(3); opacity: 0; }
+}
+
+/* Slow background drift for hero/ambient elements */
+@keyframes slowDrift {
+  0% { transform: scale(1.02) translate(0, 0); }
+  50% { transform: scale(1.06) translate(-0.5%, -0.3%); }
+  100% { transform: scale(1.02) translate(0, 0); }
+}
+.animate-slow-drift {
+  animation: slowDrift 25s ease-in-out infinite;
 }
