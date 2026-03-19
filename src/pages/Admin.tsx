@@ -8,6 +8,7 @@ import { AdminAttachmentViewer } from "@/components/AdminAttachmentViewer";
 import { FinancialDashboard } from "@/components/FinancialDashboard";
 import { AIOperationsAssistant } from "@/components/AIOperationsAssistant";
 import { AssessmentAvailabilityManager } from "@/components/AssessmentAvailabilityManager";
+import { TodaysPlan } from "@/components/TodaysPlan";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -312,6 +313,9 @@ export default function Admin() {
               </Link>
             ))}
           </div>
+
+          {/* Today's Plan — Daily Command Centre */}
+          <TodaysPlan />
 
           {/* Upcoming Bookings */}
           {bookings.length > 0 && (

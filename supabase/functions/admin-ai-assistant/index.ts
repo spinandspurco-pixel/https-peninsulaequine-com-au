@@ -247,6 +247,52 @@ If uncertain, say "requires review" — do not speculate.
 
 Reference: Payment 30/50/final. Follow-up Day 2/5/10. Site assessment before quoting. GroundLock = proprietary ground stabilisation. Stages: Enquiry → Assessment → Brief → Proposal → Approval → Build → Handover. Proposals valid 30 days. Site visits Mon-Fri, Ciro attends. Scope changes need written variation.`;
 
+const DAILY_PLAN_PROMPT = `Generate today's operating plan for the founder. This is the daily command centre.
+
+Format EXACTLY as follows — use these headers and structure:
+
+## Today's Briefing
+One sentence: what today looks like (e.g. "2 hot leads, 1 site visit, 1 overdue payment.")
+
+## 🔴 Priority Actions
+Tasks requiring immediate founder attention. Hot leads, high-value decisions, urgent issues.
+Per item: bullet with action, lead/job name, and why it's priority. Max 5 items.
+If none: "Clear — no priority actions today."
+
+## Morning Block (Admin + Follow-Ups)
+- Follow-ups due (with suggested message summary)
+- New lead replies needed
+- Quick admin tasks
+Group by: lead replies first, then follow-ups, then admin.
+
+## Midday Block (Site Visits)
+- Today's scheduled assessments: location, time, client name, project type
+- Prep notes if relevant
+If no visits: "No site visits scheduled."
+
+## Afternoon Block (Decisions + Proposals)
+- Proposals to review or send
+- Decisions pending (quoted leads, scope questions)
+- Financial reviews needed
+
+## Financial Alerts
+- Overdue payments (>30 days or >50% outstanding)
+- Jobs with margin <25%
+- Cash flow concerns
+If clear: "No financial flags."
+
+## Quick Wins
+2-3 easy actions that move deals forward with minimal effort (e.g. "send booking link to warm lead", "chase deposit on completed job")
+
+RULES:
+- HOT leads → always in Priority Actions, suggest immediate action
+- WARM leads → Morning Block follow-ups
+- LOW INTENT → minimal attention, do not surface unless >10 days stale
+- Be decisive. Each item has a clear action.
+- No fluff. No narrative paragraphs. Bullets only.
+- Under 350 words total.
+- Today's date for reference: ${new Date().toISOString().split("T")[0]}`;
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -293,27 +339,33 @@ serve(async (req) => {
 
     // Gather context data
     let contextData = "";
-    if (["triage", "daily_summary", "alerts", "follow_ups", "knowledge"].includes(action)) {
-      const [inquiriesRes, jobsRes, cashflowRes] = await Promise.all([
-        supabase
-          .from("inquiries")
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(20),
+    const needsContext = ["triage", "daily_summary", "alerts", "follow_ups", "knowledge", "daily_plan"].includes(action);
+    
+    if (needsContext) {
+      const today = new Date().toISOString().split("T")[0];
+      const queries: any[] = [
+        supabase.from("inquiries").select("*").order("created_at", { ascending: false }).limit(20),
         supabase.from("jobs").select("*").order("created_at", { ascending: false }).limit(20),
-        supabase
-          .from("cashflow")
-          .select("*, jobs(job_name, revenue)")
-          .order("created_at", { ascending: false })
-          .limit(20),
-      ]);
+        supabase.from("cashflow").select("*, jobs(job_name, revenue)").order("created_at", { ascending: false }).limit(20),
+      ];
 
-      const inquiries = inquiriesRes.data || [];
-      const jobs = jobsRes.data || [];
-      const cashflows = cashflowRes.data || [];
+      // For daily_plan, also fetch today's assessments and bookings
+      if (action === "daily_plan") {
+        queries.push(
+          supabase.from("site_assessments").select("*").gte("slot_date", today).order("slot_date", { ascending: true }).limit(10),
+          supabase.from("bookings").select("*").gte("booking_date", today).order("booking_date", { ascending: true }).limit(10),
+        );
+      }
+
+      const results = await Promise.all(queries);
+      const inquiries = results[0].data || [];
+      const jobs = results[1].data || [];
+      const cashflows = results[2].data || [];
+      const siteAssessments = results[3]?.data || [];
+      const bookings = results[4]?.data || [];
 
       contextData = `
-CURRENT DATA (${new Date().toISOString().split("T")[0]}):
+CURRENT DATA (${today}):
 
 INQUIRIES (${inquiries.length}):
 ${inquiries
@@ -343,6 +395,16 @@ ${cashflows
   })
   .join("\n")}
 `;
+
+      if (action === "daily_plan") {
+        contextData += `
+SITE ASSESSMENTS (upcoming):
+${siteAssessments.length === 0 ? "None scheduled." : siteAssessments.map((a: any) => `- ${a.client_name} | ${a.location} | ${a.slot_date} at ${a.slot_time} | Type: ${a.project_type} | Status: ${a.status}`).join("\n")}
+
+BOOKINGS (upcoming):
+${bookings.length === 0 ? "None scheduled." : bookings.map((b: any) => `- ${b.client_name} | ${b.booking_date} ${b.booking_time || ""} | ${b.service_type} | Status: ${b.status}`).join("\n")}
+`;
+      }
     }
 
     let userPrompt = "";
@@ -372,6 +434,10 @@ ${cashflows
 
       case "knowledge":
         userPrompt = `${KNOWLEDGE_PROMPT(payload?.question || "No question provided")}\n\n${contextData}`;
+        break;
+
+      case "daily_plan":
+        userPrompt = `${DAILY_PLAN_PROMPT}\n\n${contextData}`;
         break;
 
       default:
