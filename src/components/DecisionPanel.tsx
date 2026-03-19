@@ -256,6 +256,49 @@ export function DecisionPanel() {
         </Card>
       </div>
 
+      {/* OVERDUE FOLLOW-UPS */}
+      {overdueFollowUps.length > 0 && (
+        <Card className="bg-destructive/5 border-destructive/20">
+          <CardHeader className="pb-2">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-3.5 w-3.5 text-destructive" />
+              <div>
+                <p className="text-[9px] uppercase tracking-[0.15em] text-destructive/60">Attention</p>
+                <CardTitle className="text-sm font-medium">Overdue Follow-Ups</CardTitle>
+              </div>
+              <Badge variant="destructive" className="text-[9px] ml-auto">{overdueFollowUps.length}</Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {overdueFollowUps.map((item) => {
+              const contactDate = item.last_contact_at || item.created_at;
+              const days = contactDate ? differenceInDays(new Date(), parseISO(contactDate)) : null;
+              return (
+                <div key={item.id} className="flex items-center justify-between py-2 px-3 rounded-sm border border-destructive/10 bg-background/40">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium text-foreground truncate">{item.name}</p>
+                      {item.deal_value && item.deal_value > 0 && (
+                        <span className="text-[10px] text-accent/70 shrink-0">${item.deal_value.toLocaleString()}</span>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">
+                      {days}d since contact · Stage: {item.follow_up_stage === "none" ? "No follow-up sent" : `Follow-up ${item.follow_up_stage}`}
+                    </p>
+                  </div>
+                  <a href="#follow-ups">
+                    <Button size="sm" variant="outline" className="h-7 text-[9px] border-destructive/20 text-destructive hover:bg-destructive/10 shrink-0 ml-2">
+                      View
+                    </Button>
+                  </a>
+                </div>
+              );
+            })}
+            <p className="text-[9px] text-muted-foreground/30 pt-1">Action these in the Follow-Up Engine below</p>
+          </CardContent>
+        </Card>
+      )}
+
       {/* SYSTEM LEVER */}
       <Card className="bg-card/60 border-border/30">
         <CardContent className="py-3 px-4">
