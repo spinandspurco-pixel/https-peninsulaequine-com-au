@@ -435,95 +435,97 @@ export default function Admin() {
           {/* Calendar — Founder + Operations */}
           {viewMode !== "admin" && <SharedCalendarView isAdmin={true} />}
 
-          {/* Trainer Pipeline */}
-          <AdminTrainerPanel />
+          {/* Trainer Pipeline — Founder only */}
+          {viewMode === "founder" && <AdminTrainerPanel />}
 
-          {/* Staff & Onboarding */}
-          <AdminStaffOnboarding />
+          {/* Staff & Onboarding — Founder + Admin */}
+          {viewMode !== "operations" && <AdminStaffOnboarding />}
 
-          {/* AI Operations Assistant */}
-          <AIOperationsAssistant inquiries={inquiries} />
+          {/* AI Operations Assistant — Founder only */}
+          {viewMode === "founder" && <AIOperationsAssistant inquiries={inquiries} />}
 
-          {/* Site Assessment Manager */}
-          <AssessmentAvailabilityManager />
+          {/* Site Assessment Manager — Founder + Operations */}
+          {(viewMode === "founder" || viewMode === "operations") && <AssessmentAvailabilityManager />}
 
-          {/* Project Profit Tracker */}
-          <ProjectProfitTracker />
+          {/* Project Profit Tracker — Founder only */}
+          {viewMode === "founder" && <ProjectProfitTracker />}
 
-          {/* Financial Control */}
-          <FinancialDashboard />
+          {/* Financial Control — Founder only */}
+          {viewMode === "founder" && <FinancialDashboard />}
 
-          {/* Website Intelligence */}
-          <WebsiteIntelligence />
+          {/* Website Intelligence — Founder only */}
+          {viewMode === "founder" && <WebsiteIntelligence />}
 
-          {/* A/B Tests */}
-          <ABTestStatsPanel />
+          {/* A/B Tests — Founder only */}
+          {viewMode === "founder" && <ABTestStatsPanel />}
 
-          {/* System Settings — hidden admin panel */}
-          <AdminSystemSettings />
+          {/* System Settings — Founder only */}
+          {viewMode === "founder" && <AdminSystemSettings />}
 
-          {/* CRM Settings */}
-          <Card className="bg-card/80 border-border/40">
-            <CardHeader className="cursor-pointer" onClick={() => setShowCrmSettings(!showCrmSettings)}>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Zap className="h-4 w-4 text-accent/60" />
-                  <div>
-                    <CardTitle className="text-sm font-medium">CRM Integration</CardTitle>
-                    <CardDescription className="text-[11px]">
-                      {hubspotEnabled ? "HubSpot connected" : "Connect HubSpot to auto-sync leads"}
-                    </CardDescription>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  {hubspotEnabled && (
-                    <Badge variant="secondary" className="bg-emerald-600/15 text-emerald-600 text-[9px] uppercase tracking-wider">
-                      Active
-                    </Badge>
-                  )}
-                  <Settings className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${showCrmSettings ? "rotate-90" : ""}`} />
-                </div>
-              </div>
-            </CardHeader>
-            {showCrmSettings && (
-              <CardContent className="space-y-4 border-t border-border/30 pt-4">
+          {/* CRM Settings — Founder only */}
+          {viewMode === "founder" && (
+            <Card className="bg-card/80 border-border/40">
+              <CardHeader className="cursor-pointer" onClick={() => setShowCrmSettings(!showCrmSettings)}>
                 <div className="flex items-center justify-between">
-                  <div>
-                    <Label htmlFor="hubspot-toggle" className="text-sm font-medium">Enable HubSpot Sync</Label>
-                    <p className="text-[11px] text-muted-foreground">Auto-create contacts for new inquiries</p>
+                  <div className="flex items-center gap-3">
+                    <Zap className="h-4 w-4 text-accent/60" />
+                    <div>
+                      <CardTitle className="text-sm font-medium">CRM Integration</CardTitle>
+                      <CardDescription className="text-[11px]">
+                        {hubspotEnabled ? "HubSpot connected" : "Connect HubSpot to auto-sync leads"}
+                      </CardDescription>
+                    </div>
                   </div>
-                  <Switch id="hubspot-toggle" checked={hubspotEnabled} onCheckedChange={setHubspotEnabled} />
-                </div>
-                {hubspotEnabled && (
-                  <div className="space-y-2">
-                    <Label htmlFor="hubspot-key" className="text-[11px] uppercase tracking-wider text-muted-foreground">Access Token</Label>
-                    <Input
-                      id="hubspot-key"
-                      type="password"
-                      placeholder="pat-na1-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-                      value={hubspotApiKey}
-                      onChange={(e) => setHubspotApiKey(e.target.value)}
-                      className="h-10 bg-background/60 border-border/50 rounded-sm text-sm"
-                    />
+                  <div className="flex items-center gap-2">
+                    {hubspotEnabled && (
+                      <Badge variant="secondary" className="bg-accent/15 text-accent text-[9px] uppercase tracking-wider">
+                        Active
+                      </Badge>
+                    )}
+                    <Settings className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${showCrmSettings ? "rotate-90" : ""}`} />
                   </div>
-                )}
-                <div className="flex justify-end">
-                  <Button
-                    size="sm"
-                    onClick={handleSaveCrmSettings}
-                    disabled={isSavingCrm || (hubspotEnabled && !hubspotApiKey.trim())}
-                    className="text-[11px] uppercase tracking-wider"
-                  >
-                    {isSavingCrm ? <RefreshCw className="h-3.5 w-3.5 mr-2 animate-spin" /> : <Save className="h-3.5 w-3.5 mr-2" />}
-                    Save
-                  </Button>
                 </div>
-              </CardContent>
-            )}
-          </Card>
+              </CardHeader>
+              {showCrmSettings && (
+                <CardContent className="space-y-4 border-t border-border/30 pt-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label htmlFor="hubspot-toggle" className="text-sm font-medium">Enable HubSpot Sync</Label>
+                      <p className="text-[11px] text-muted-foreground">Auto-create contacts for new inquiries</p>
+                    </div>
+                    <Switch id="hubspot-toggle" checked={hubspotEnabled} onCheckedChange={setHubspotEnabled} />
+                  </div>
+                  {hubspotEnabled && (
+                    <div className="space-y-2">
+                      <Label htmlFor="hubspot-key" className="text-[11px] uppercase tracking-wider text-muted-foreground">Access Token</Label>
+                      <Input
+                        id="hubspot-key"
+                        type="password"
+                        placeholder="pat-na1-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                        value={hubspotApiKey}
+                        onChange={(e) => setHubspotApiKey(e.target.value)}
+                        className="h-10 bg-background/60 border-border/50 rounded-sm text-sm"
+                      />
+                    </div>
+                  )}
+                  <div className="flex justify-end">
+                    <Button
+                      size="sm"
+                      onClick={handleSaveCrmSettings}
+                      disabled={isSavingCrm || (hubspotEnabled && !hubspotApiKey.trim())}
+                      className="text-[11px] uppercase tracking-wider"
+                    >
+                      {isSavingCrm ? <RefreshCw className="h-3.5 w-3.5 mr-2 animate-spin" /> : <Save className="h-3.5 w-3.5 mr-2" />}
+                      Save
+                    </Button>
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+          )}
 
-          {/* Email Test */}
-          <TestEmailPanel />
+          {/* Email Test — Founder + Admin */}
+          {viewMode !== "operations" && <TestEmailPanel />}
 
           {/* Inquiry Filters */}
           <div className="flex flex-col sm:flex-row gap-3">
