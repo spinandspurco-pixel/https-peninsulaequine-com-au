@@ -261,10 +261,10 @@ export default function Process() {
       </section>
 
       <ParallaxCTA
-        title="Ready to Start Your Journey?"
-        description="Every project begins with a conversation. Tell us about your vision and we'll show you how we bring it to life."
+        title="Discuss Your Project"
+        description="Each project begins with an on-site assessment to ensure correct system specification and long-term performance."
         backgroundImage={ciroWide}
-        primaryButtonText="Get a Free Quote"
+        primaryButtonText="Request Site Assessment"
         primaryButtonLink="/contact"
         showPhoneButton={true}
       />
