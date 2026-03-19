@@ -46,40 +46,46 @@ export function DecisionPanel() {
   }, []);
 
   const fetchDeals = async () => {
-    const [topDeals, coldDeals, overdueRes] = await Promise.all([
-      // Close Today: top 3 by expected_value
-      supabase
-        .from("inquiries")
-        .select("id, name, email, services, deal_value, probability, expected_value, deal_stage, last_contact_at, budget_range, lead_tier")
-        .gt("probability", 10)
-        .gt("expected_value", 0)
-        .not("deal_stage", "in", '("closed","lost")')
-        .order("expected_value", { ascending: false })
-        .limit(3),
-      // Convert Next: leads going cold
-      supabase
-        .from("inquiries")
-        .select("id, name, email, services, deal_value, probability, expected_value, deal_stage, last_contact_at, budget_range, lead_tier")
-        .gt("probability", 10)
-        .not("deal_stage", "in", '("closed","lost")')
-        .lt("last_contact_at", new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString())
-        .order("expected_value", { ascending: false })
-        .limit(3),
-      // Overdue follow-ups: high-value leads overdue for follow-up
-      supabase
-        .from("inquiries")
-        .select("id, name, email, deal_value, lead_tier, last_contact_at, follow_up_stage, created_at, services")
-        .in("follow_up_status", ["due", "overdue"])
-        .neq("status", "archived")
-        .neq("follow_up_status", "stopped")
-        .neq("follow_up_status", "completed")
-        .order("deal_value", { ascending: false })
-        .limit(5),
-    ]);
+    try {
+      const [topDeals, coldDeals, overdueRes] = await Promise.all([
+        supabase
+          .from("inquiries")
+          .select("id, name, email, services, deal_value, probability, expected_value, deal_stage, last_contact_at, budget_range, lead_tier")
+          .gt("probability", 10)
+          .gt("expected_value", 0)
+          .not("deal_stage", "in", '("closed","lost")')
+          .order("expected_value", { ascending: false })
+          .limit(3),
+        supabase
+          .from("inquiries")
+          .select("id, name, email, services, deal_value, probability, expected_value, deal_stage, last_contact_at, budget_range, lead_tier")
+          .gt("probability", 10)
+          .not("deal_stage", "in", '("closed","lost")')
+          .lt("last_contact_at", new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString())
+          .order("expected_value", { ascending: false })
+          .limit(3),
+        supabase
+          .from("inquiries")
+          .select("id, name, email, deal_value, lead_tier, last_contact_at, follow_up_stage, created_at, services")
+          .in("follow_up_status", ["due", "overdue"])
+          .neq("status", "archived")
+          .neq("follow_up_status", "stopped")
+          .neq("follow_up_status", "completed")
+          .order("deal_value", { ascending: false })
+          .limit(5),
+      ]);
 
-    setCloseToday((topDeals.data as Deal[]) || []);
-    setConvertNext((coldDeals.data as Deal[]) || []);
-    setOverdueFollowUps((overdueRes.data as OverdueFollowUp[]) || []);
+      if (topDeals.error) console.error("Decision Panel: topDeals error", topDeals.error);
+      if (coldDeals.error) console.error("Decision Panel: coldDeals error", coldDeals.error);
+      if (overdueRes.error) console.error("Decision Panel: overdueRes error", overdueRes.error);
+
+      setCloseToday((topDeals.data as Deal[]) || []);
+      setConvertNext((coldDeals.data as Deal[]) || []);
+      setOverdueFollowUps((overdueRes.data as OverdueFollowUp[]) || []);
+    } catch (err) {
+      console.error("Decision Panel fetch error:", err);
+      toast.error("Failed to load decision data");
+    }
     setLoading(false);
   };
 
