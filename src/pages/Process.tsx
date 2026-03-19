@@ -196,8 +196,8 @@ export default function Process() {
   return (
     <Layout>
       <PageHeader
-        title="From Dirt to Dynasty"
-        description="Our proven 8-phase construction process transforms raw land into world-class equine facilities. Here's how we do it."
+        title="Our Process"
+        description="A structured approach to equine infrastructure — from initial assessment through to long-term outcome."
         backgroundImage={ciroWide}
         dividerVariant="structural"
       />
