@@ -55,6 +55,9 @@ const DOC_TYPES = {
   payment_slip: { label: "Payment Slips", icon: DollarSign, color: "text-green-500" },
   site_inspection: { label: "Site Inspections", icon: ClipboardCheck, color: "text-blue-500" },
   event_checklist: { label: "Event Safety", icon: FileText, color: "text-purple-500" },
+  daily_site_report: { label: "Daily Reports", icon: ClipboardList, color: "text-cyan-500" },
+  incident_report: { label: "Incident Reports", icon: AlertTriangle, color: "text-rose-500" },
+  horse_care_log: { label: "Horse Care Logs", icon: Heart, color: "text-pink-500" },
 } as const;
 
 type DocFilter = keyof typeof DOC_TYPES;

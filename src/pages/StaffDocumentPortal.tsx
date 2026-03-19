@@ -194,7 +194,7 @@ export default function StaffDocumentPortal() {
 
           {/* Document Tabs */}
           <Tabs value={activeTab} onValueChange={v => setActiveTab(v as StaffDocType)}>
-            <TabsList className="grid grid-cols-5 mb-6">
+            <TabsList className="grid grid-cols-4 sm:grid-cols-8 mb-6">
               {(Object.entries(STAFF_DOC_TYPES) as [StaffDocType, typeof STAFF_DOC_TYPES[StaffDocType]][]).map(([key, cfg]) => {
                 const TabIcon = cfg.icon;
                 const count = documents.filter(d => d.document_type === key).length;

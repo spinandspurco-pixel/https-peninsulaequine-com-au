@@ -905,6 +905,9 @@ export default function StaffDocuments() {
                   {activeTab === "payment_slip" && <PaymentSlipForm onSubmit={d => handleSubmit("payment_slip", d)} loading={submitting} />}
                   {activeTab === "site_inspection" && <SiteInspectionForm onSubmit={d => handleSubmit("site_inspection", d)} loading={submitting} />}
                   {activeTab === "event_checklist" && <EventChecklistForm onSubmit={d => handleSubmit("event_checklist", d)} loading={submitting} />}
+                  {activeTab === "daily_site_report" && <DailySiteReportForm onSubmit={d => handleSubmit("daily_site_report", d)} loading={submitting} />}
+                  {activeTab === "incident_report" && <IncidentReportForm onSubmit={d => handleSubmit("incident_report", d)} loading={submitting} />}
+                  {activeTab === "horse_care_log" && <HorseCareLogForm onSubmit={d => handleSubmit("horse_care_log", d)} loading={submitting} />}
                 </CardContent>
               </Card>
             )}
