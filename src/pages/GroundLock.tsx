@@ -632,10 +632,15 @@ export default function GroundLock() {
             </div>
           </div>
         </div>
+        </div>
+        </div>
       </section>
 
       {/* Scope & Variables */}
-      <section className="py-24 sm:py-36 bg-card border-t border-border">
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-24 sm:py-36 bg-card relative">
+          <div className="absolute inset-0 contour-texture" />
         <div className="section-container max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
             <RevealOnScroll direction="up" stagger={0} staggerInterval={120}>
