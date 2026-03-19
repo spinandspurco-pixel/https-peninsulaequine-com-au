@@ -395,6 +395,9 @@ export default function Admin() {
           {/* Site Assessment Manager */}
           <AssessmentAvailabilityManager />
 
+          {/* Project Profit Tracker */}
+          <ProjectProfitTracker />
+
           {/* Financial Control */}
           <FinancialDashboard />
 
