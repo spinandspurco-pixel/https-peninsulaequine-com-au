@@ -44,11 +44,19 @@ WHAT TO AVOID — these phrases are banned:
 - Any sentence starting with "I" or "We" followed by an emotion
 
 CONTEXT VOICE:
-- Enquiry replies: 3-5 sentences max. Acknowledge project, suggest site assessment, stop.
-- Follow-ups: 2-3 sentences. Light. No desperation. One clear value point.
+- Enquiry replies (Hot/Warm leads): 3-4 sentences MAXIMUM. Structure: acknowledge project → position site assessment as the logical next step → include booking link → sign off. No questions. No delays. Move to booking.
+- Enquiry replies (Low Intent/Early Stage): helpful but do not push booking. Keep it brief and informational.
+- Follow-ups: 2-3 sentences. Reference project, position what a site assessment would resolve. Include booking link for qualified leads.
 - Chase-ups: 2-3 sentences. Composed. Confirm availability. No pressure.
 - Summaries: Bullets only. No narrative. Action-first.
 - Alerts: One line each. Priority label, fact, action.
+
+SITE ASSESSMENT BOOKING:
+- The booking page is: /site-assessment
+- For Hot and Warm leads, ALWAYS include the booking link in draft replies
+- Position the assessment as the natural next step — not a sales pitch
+- Frame it as: "The next step is a site assessment" — not "Would you like to book?"
+- Never ask if they want to book. State that it's the process.
 
 APPROVAL — Flag [REQUIRES HUMAN REVIEW] if draft touches:
 - Pricing, investment, or cost specifics
@@ -77,36 +85,50 @@ KNOWLEDGE BASE:
 - Scope changes require written variation and updated pricing
 - Prefer PE rules over generic advice. If uncertain, say so.`;
 
-const TRIAGE_PROMPT = `Classify each inquiry. Be decisive.
+const TRIAGE_PROMPT = `Classify each inquiry. Be decisive. Prioritise moving qualified leads to site assessment.
 
 Per lead:
 - **State**: Hot / Warm / Early Stage / Low Intent / Not a Fit
 - **Type**: (infer from services)
 - **Value**: High / Medium / Low
 - **Fit**: Strong / Possible / Poor
-- **Next Step**: Book Site Assessment / Send Follow-Up / Wait / Escalate to Human Review / Decline
+- **Next Step**: For Hot/Warm leads, default to "Book Site Assessment" unless there's a specific reason not to. Other options: Send Follow-Up / Wait / Escalate to Human Review / Decline
 - **Why**: One sentence. No hedging.
+- **Booking Ready**: Yes / No (can this lead be directed to /site-assessment now?)
 
-Put leads needing action today first. Skip narrative. If a lead looks like a poor fit, say so.`;
+Put Hot and Warm leads first. For any lead classified Hot or Warm, the default action is Book Site Assessment — only override if there's a clear reason.`;
+
+const BOOKING_URL = "/site-assessment";
 
 const DRAFT_REPLY_PROMPT = (inquiry: any, replyType: string) => {
+  // Determine if this looks like a qualified lead
+  const services = (inquiry?.services || []).join(", ");
+  const hasBudget = inquiry?.budget_range && inquiry.budget_range !== "not-sure";
+  const hasDetails = inquiry?.project_vision || inquiry?.project_details;
+  const isQualified = hasBudget || hasDetails || services.length > 0;
+
+  const bookingInstruction = isQualified
+    ? `\nThis appears to be a qualified lead. Include the booking link (${BOOKING_URL}) naturally in the reply. Frame the site assessment as the next step — not a suggestion.`
+    : `\nThis appears to be an early-stage enquiry. Be helpful but do not push booking.`;
+
   const templates: Record<string, string> = {
-    "initial response": `Draft an initial reply. Maximum 4 sentences.
-Sentence 1: Address by first name, acknowledge the project type.
-Sentence 2: One line on PE's relevant capability — no boasting.
-Sentence 3: Recommend a site assessment as the starting point.
+    "initial response": `Draft an initial reply. Maximum 3-4 sentences.
+Sentence 1: Address by first name, acknowledge the specific project.
+Sentence 2: Position the site assessment as the standard next step — "The next step is a site assessment to evaluate your site."
+Sentence 3: Direct them to book: "You can book a time here: ${BOOKING_URL}"
 Sentence 4: Sign off as Peninsula Equine.
-No pleasantries. No "thank you for reaching out." No "we'd love to discuss." Just substance.`,
+Do NOT ask questions. Do NOT offer to "discuss further." Move directly to booking.${bookingInstruction}`,
 
     "site assessment booking": `Draft a site assessment booking note. Maximum 3 sentences.
 State the purpose (assess terrain, access, structures, horse management).
-Offer availability (use placeholder dates).
+Direct to booking: ${BOOKING_URL}
 Sign off. No selling. No filler.`,
 
     "follow-up": `Draft a follow-up. Maximum 3 sentences.
 Reference their project — not their enquiry.
 One value point: what a site assessment would clarify for them.
-Confirm availability. No urgency. No "just checking in." No "circling back."`,
+Include booking link: ${BOOKING_URL}
+No urgency. No "just checking in." No "circling back."${bookingInstruction}`,
 
     "proposal chase-up": `Draft a proposal chase-up. Maximum 3 sentences.
 Reference the proposal by project type.
@@ -122,7 +144,7 @@ No apology. No "unfortunately." Just direct and respectful.`,
   return `${templates[replyType] || templates["initial response"]}
 
 CONTEXT:
-Name: ${inquiry?.name || "Unknown"} | Services: ${(inquiry?.services || []).join(", ")} | Budget: ${inquiry?.budget_range || "—"} | Vision: ${inquiry?.project_vision || "—"} | Details: ${inquiry?.project_details || "—"} | Start: ${inquiry?.preferred_start || "—"}
+Name: ${inquiry?.name || "Unknown"} | Services: ${services} | Budget: ${inquiry?.budget_range || "—"} | Vision: ${inquiry?.project_vision || "—"} | Details: ${inquiry?.project_details || "—"} | Start: ${inquiry?.preferred_start || "—"}
 
 If pricing or scope is involved, prefix with [REQUIRES HUMAN REVIEW].
 
@@ -133,7 +155,7 @@ Format:
 (the message)`;
 };
 
-const FOLLOW_UPS_PROMPT = `Identify stale leads. Be direct about priority.
+const FOLLOW_UPS_PROMPT = `Identify stale leads. Prioritise getting qualified leads to book a site assessment.
 
 Flag if:
 - "new" status, >2 days old
@@ -142,9 +164,10 @@ Flag if:
 
 Per lead:
 - **Name** | **Days stale** | **Stage** (Day 2/5/10) | **Priority** (High/Med/Low)
-- **Draft**: 2-3 sentences max. Reference their project, not their enquiry. One value point. Confirm availability. No "just checking in." No "wanted to touch base."
+- **Booking Ready**: Yes/No — can this lead be directed to book a site assessment?
+- **Draft**: 2-3 sentences max. For qualified leads, include booking link (${BOOKING_URL}). Reference their project, not their enquiry. One value point about what the assessment would clarify. No "just checking in."
 
-Priority order. No padding.`;
+Priority order. Booking-ready leads first.`;
 
 const DAILY_SUMMARY_PROMPT = `Founder briefing. Bullets only. No narrative.
 
