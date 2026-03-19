@@ -431,12 +431,16 @@ export type Database = {
           attachment_urls: string[] | null
           budget_range: string | null
           created_at: string
+          deal_stage: string | null
+          deal_value: number | null
           email: string
+          expected_value: number | null
           experience_level: string | null
           horse_age: string | null
           horse_breed: string | null
           horse_name: string | null
           id: string
+          last_contact_at: string | null
           lead_tags: string[] | null
           lead_tier: string | null
           name: string
@@ -445,6 +449,7 @@ export type Database = {
           preferred_contact: string | null
           preferred_service: string | null
           preferred_start: string | null
+          probability: number | null
           project_details: string | null
           project_vision: string | null
           services: string[]
@@ -455,12 +460,16 @@ export type Database = {
           attachment_urls?: string[] | null
           budget_range?: string | null
           created_at?: string
+          deal_stage?: string | null
+          deal_value?: number | null
           email: string
+          expected_value?: number | null
           experience_level?: string | null
           horse_age?: string | null
           horse_breed?: string | null
           horse_name?: string | null
           id?: string
+          last_contact_at?: string | null
           lead_tags?: string[] | null
           lead_tier?: string | null
           name: string
@@ -469,6 +478,7 @@ export type Database = {
           preferred_contact?: string | null
           preferred_service?: string | null
           preferred_start?: string | null
+          probability?: number | null
           project_details?: string | null
           project_vision?: string | null
           services?: string[]
@@ -479,12 +489,16 @@ export type Database = {
           attachment_urls?: string[] | null
           budget_range?: string | null
           created_at?: string
+          deal_stage?: string | null
+          deal_value?: number | null
           email?: string
+          expected_value?: number | null
           experience_level?: string | null
           horse_age?: string | null
           horse_breed?: string | null
           horse_name?: string | null
           id?: string
+          last_contact_at?: string | null
           lead_tags?: string[] | null
           lead_tier?: string | null
           name?: string
@@ -493,6 +507,7 @@ export type Database = {
           preferred_contact?: string | null
           preferred_service?: string | null
           preferred_start?: string | null
+          probability?: number | null
           project_details?: string | null
           project_vision?: string | null
           services?: string[]
