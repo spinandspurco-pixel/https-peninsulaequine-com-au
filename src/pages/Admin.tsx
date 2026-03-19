@@ -432,8 +432,8 @@ export default function Admin() {
             </Card>
           )}
 
-          {/* Calendar */}
-          <SharedCalendarView isAdmin={true} />
+          {/* Calendar — Founder + Operations */}
+          {viewMode !== "admin" && <SharedCalendarView isAdmin={true} />}
 
           {/* Trainer Pipeline */}
           <AdminTrainerPanel />
