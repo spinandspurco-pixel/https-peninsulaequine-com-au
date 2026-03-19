@@ -68,6 +68,11 @@ interface Inquiry {
   lead_tier: string | null;
   lead_tags: string[] | null;
   attachment_urls: string[] | null;
+  deal_value: number | null;
+  probability: number | null;
+  expected_value: number | null;
+  deal_stage: string | null;
+  last_contact_at: string | null;
 }
 
 const TIER_COLORS: Record<string, string> = {
