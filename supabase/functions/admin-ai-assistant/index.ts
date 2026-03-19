@@ -85,18 +85,46 @@ KNOWLEDGE BASE:
 - Scope changes require written variation and updated pricing
 - Prefer PE rules over generic advice. If uncertain, say so.`;
 
-const TRIAGE_PROMPT = `Classify each inquiry. Be decisive. Prioritise moving qualified leads to site assessment.
+const TRIAGE_PROMPT = `Classify each inquiry. Prioritise identifying high-value opportunities for the founder.
+
+HOT LEAD SIGNALS — classify as Hot when ANY combination present:
+- Clear intent to build (specific project described, not just browsing)
+- Budget signal present (stated budget, or services implying $50k+: full-facility, arena-construction, barn-construction)
+- Timeline within 3-6 months (preferred_start indicates near-term)
+- Property details mentioned (location, land size, existing structures)
+- Multiple high-value services selected
+- Lead tier "premium" or "high"
+
+WARM LEAD SIGNALS:
+- Some intent but missing details (budget or timeline unclear)
+- Single service enquiry with reasonable scope
+- Has project vision but vague on specifics
+
+LOW INTENT SIGNALS:
+- No budget signal, no timeline, vague enquiry
+- "Just enquiring" / information-gathering language
+- Lesson-only or event-only enquiries (unless combined with infrastructure)
 
 Per lead:
-- **State**: Hot / Warm / Early Stage / Low Intent / Not a Fit
+- **State**: 🔴 Hot / 🟡 Warm / ⚪ Early Stage / ⬜ Low Intent / ❌ Not a Fit
+- **Tags**: Priority / High-Value / Founder-Review / Booking-Ready / Info-Only
 - **Type**: (infer from services)
-- **Value**: High / Medium / Low
+- **Value**: High ($100k+) / Medium ($25k-100k) / Low (<$25k) / Unknown
 - **Fit**: Strong / Possible / Poor
-- **Next Step**: For Hot/Warm leads, default to "Book Site Assessment" unless there's a specific reason not to. Other options: Send Follow-Up / Wait / Escalate to Human Review / Decline
-- **Why**: One sentence. No hedging.
-- **Booking Ready**: Yes / No (can this lead be directed to /site-assessment now?)
+- **Next Step**:
+  - Hot → "Book Site Assessment — flag for founder review" (default)
+  - Warm → "Book Site Assessment" or "Send Follow-Up"
+  - Early Stage → "Send Follow-Up" (no booking push)
+  - Low Intent → "Wait" or light follow-up only
+  - Not a Fit → "Decline" or "Escalate to Human Review"
+- **Why**: One sentence. Decisive.
+- **Booking Ready**: Yes / No
 
-Put Hot and Warm leads first. For any lead classified Hot or Warm, the default action is Book Site Assessment — only override if there's a clear reason.`;
+PRIORITY RULES:
+- Hot leads always listed first with 🔴 marker
+- Hot leads tagged "Priority" and "Founder-Review"
+- For Low Intent: reduce follow-up intensity, do NOT push booking
+- Founder time is limited — only surface leads worth his direct attention`;
 
 const BOOKING_URL = "/site-assessment";
 
@@ -155,42 +183,62 @@ Format:
 (the message)`;
 };
 
-const FOLLOW_UPS_PROMPT = `Identify stale leads. Prioritise getting qualified leads to book a site assessment.
+const FOLLOW_UPS_PROMPT = `Identify stale leads. Differentiate follow-up intensity by lead quality.
 
 Flag if:
 - "new" status, >2 days old
 - "contacted", no update >3 days
 - "quoted", no response >5 days
 
+FOLLOW-UP INTENSITY:
+- Hot/Warm leads: follow up promptly (Day 2/5), include booking link (${BOOKING_URL}), reference what the assessment would resolve for their specific project
+- Early Stage leads: lighter touch (Day 5/10), informational, no booking pressure
+- Low Intent leads: minimal follow-up (Day 10 only), brief check-in, do NOT push booking or assessment
+
 Per lead:
-- **Name** | **Days stale** | **Stage** (Day 2/5/10) | **Priority** (High/Med/Low)
-- **Booking Ready**: Yes/No — can this lead be directed to book a site assessment?
-- **Draft**: 2-3 sentences max. For qualified leads, include booking link (${BOOKING_URL}). Reference their project, not their enquiry. One value point about what the assessment would clarify. No "just checking in."
+- **Name** | **Days stale** | **Quality** (Hot/Warm/Early/Low) | **Stage** (Day 2/5/10) | **Priority** (High/Med/Low)
+- **Booking Ready**: Yes/No
+- **Draft**: 2-3 sentences max. Tone and content must match lead quality level.
 
-Priority order. Booking-ready leads first.`;
+Hot/Warm leads first. Low Intent leads last.`;
 
-const DAILY_SUMMARY_PROMPT = `Founder briefing. Bullets only. No narrative.
+const DAILY_SUMMARY_PROMPT = `Founder briefing. Bullets only. No narrative. Protect the founder's time.
 
-**Hot Leads** — name, type, action needed (or "Clear")
-**Overdue Follow-Ups** — name, days overdue, action (or "Clear")
-**Proposals Pending** — name, days waiting (or "Clear")
-**Financial Flags** — outstanding balances >50%, margins <25% (or "Clear")
-**Today's Top 3** — ranked actions
+**🔴 Priority Leads (Founder Review)**
+Hot leads requiring founder attention today — name, type, value estimate, recommended action. These are the only leads worth the founder's direct time. If none, write "Clear."
 
-Under 200 words total. If a section is empty, write "Clear" and move on. No filler sentences.`;
+**Hot Leads — Book Assessment**
+Other Hot/Warm leads ready to book — name, type, next step. If none, "Clear."
+
+**Overdue Follow-Ups**
+Leads past their follow-up window — name, days overdue, action. Skip Low Intent leads here. If none, "Clear."
+
+**Proposals Pending**
+Quoted leads awaiting response — name, days waiting. If none, "Clear."
+
+**Financial Flags**
+Outstanding balances >50%, margins <25%. If none, "Clear."
+
+**Today's Top 3**
+Ranked actions. Hot leads and founder-review items always rank first.
+
+Under 200 words total. No filler.`;
 
 const ALERTS_PROMPT = `Generate alerts. One line each. No explanations.
 
 🔴 = needs action today. 🟡 = needs attention this week. 🟢 = awareness only.
 
 Check for:
-- Enquiries with no response >24h → 🔴
+- Hot leads with no response >24h → 🔴 (founder should see these)
+- Hot leads not yet booked for assessment → 🔴
+- Warm leads with no response >48h → 🟡
 - Quoted leads with no reply >5 days → 🟡
+- Low Intent leads do NOT generate alerts unless >10 days stale → 🟢
 - Outstanding balance >50% of job value → 🔴
 - Job margin below 25% → 🟡
 - Unusual cost spike on any job → 🟡
 
-Format: emoji + label + fact + action. One line per alert. Omit empty categories. No padding.`;
+Format: emoji + label + fact + action. One line per alert. Hot lead alerts first. Omit empty categories.`;
 
 const KNOWLEDGE_PROMPT = (question: string) => `Internal question: ${question}
 
