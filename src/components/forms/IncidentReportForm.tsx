@@ -9,11 +9,11 @@ import { Send, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { DocumentPhotoUpload } from "./DocumentPhotoUpload";
 
-export function IncidentReportForm({ onSubmit, loading, userId }: { onSubmit: (data: any) => void; loading: boolean; userId?: string }) {
+export function IncidentReportForm({ onSubmit, loading, userId, defaults }: { onSubmit: (data: any) => void; loading: boolean; userId?: string; defaults?: { project_name: string; site_address: string } }) {
   const [photos, setPhotos] = useState<string[]>([]);
   const [form, setForm] = useState({
-    project_name: "",
-    site_address: "",
+    project_name: defaults?.project_name || "",
+    site_address: defaults?.site_address || "",
     incident_date: format(new Date(), "yyyy-MM-dd"),
     incident_time: format(new Date(), "HH:mm"),
     reported_by: "",

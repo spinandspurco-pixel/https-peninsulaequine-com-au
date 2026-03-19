@@ -54,10 +54,10 @@ const SWMS_HAZARDS = [
 ];
 
 // ── Form Components ──────────────────────────────
-function SWMSForm({ onSubmit, loading }: { onSubmit: (data: any) => void; loading: boolean }) {
+function SWMSForm({ onSubmit, loading, defaults }: { onSubmit: (data: any) => void; loading: boolean; defaults?: { project_name: string; site_address: string } }) {
   const [form, setForm] = useState({
-    project_name: "",
-    site_address: "",
+    project_name: defaults?.project_name || "",
+    site_address: defaults?.site_address || "",
     date: format(new Date(), "yyyy-MM-dd"),
     principal_contractor: "Peninsula Equine",
     prepared_by: "",
@@ -288,10 +288,10 @@ function PaymentSlipForm({ onSubmit, loading }: { onSubmit: (data: any) => void;
   );
 }
 
-function SiteInspectionForm({ onSubmit, loading }: { onSubmit: (data: any) => void; loading: boolean }) {
+function SiteInspectionForm({ onSubmit, loading, defaults }: { onSubmit: (data: any) => void; loading: boolean; defaults?: { project_name: string; site_address: string } }) {
   const [form, setForm] = useState({
-    site_name: "",
-    site_address: "",
+    site_name: defaults?.project_name || "",
+    site_address: defaults?.site_address || "",
     date: format(new Date(), "yyyy-MM-dd"),
     inspector_name: "",
     weather_conditions: "fine",
@@ -799,12 +799,57 @@ export default function StaffDocuments() {
   const [activeTab, setActiveTab] = useState<DocType>("swms");
   const [showForm, setShowForm] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [jobDefaults, setJobDefaults] = useState<{ project_name: string; site_address: string }>({ project_name: "", site_address: "" });
 
   useEffect(() => {
     if (!authLoading && !user) {
       navigate("/hq");
     }
   }, [user, authLoading, navigate]);
+
+  // Auto-detect active job/site from employee_tasks + jobs
+  useEffect(() => {
+    if (!user) return;
+    const fetchDefaults = async () => {
+      // 1. Try employee tasks assigned to user for today
+      const today = format(new Date(), "yyyy-MM-dd");
+      const { data: tasks } = await supabase
+        .from("employee_tasks")
+        .select("title, description")
+        .eq("assigned_to", user.id)
+        .eq("scheduled_date", today)
+        .neq("status", "completed")
+        .order("created_at", { ascending: false })
+        .limit(1);
+
+      if (tasks && tasks.length > 0) {
+        const task = tasks[0];
+        // Extract project name from task title (often "Job — Location" format)
+        const parts = task.title?.split("—").map((s: string) => s.trim()) || [];
+        if (parts.length >= 2) {
+          setJobDefaults({ project_name: parts[0], site_address: parts[1] });
+          return;
+        }
+        if (parts.length === 1 && task.description) {
+          setJobDefaults({ project_name: parts[0], site_address: task.description });
+          return;
+        }
+      }
+
+      // 2. Fallback: most recent active job
+      const { data: jobs } = await supabase
+        .from("jobs")
+        .select("job_name, location")
+        .eq("status", "active")
+        .order("updated_at", { ascending: false })
+        .limit(1);
+
+      if (jobs && jobs.length > 0) {
+        setJobDefaults({ project_name: jobs[0].job_name || "", site_address: jobs[0].location || "" });
+      }
+    };
+    fetchDefaults();
+  }, [user]);
 
 
   const handleSubmit = async (docType: DocType, formData: any) => {
@@ -899,14 +944,14 @@ export default function StaffDocuments() {
                   <CardDescription>{DOC_TYPES[activeTab].description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {activeTab === "swms" && <SWMSForm onSubmit={d => handleSubmit("swms", d)} loading={submitting} />}
+                  {activeTab === "swms" && <SWMSForm onSubmit={d => handleSubmit("swms", d)} loading={submitting} defaults={jobDefaults} />}
                   {activeTab === "work_permit" && <WorkPermitForm onSubmit={d => handleSubmit("work_permit", d)} loading={submitting} />}
                   {activeTab === "risk_assessment" && <RiskAssessmentForm onSubmit={d => handleSubmit("risk_assessment", d)} loading={submitting} />}
                   {activeTab === "payment_slip" && <PaymentSlipForm onSubmit={d => handleSubmit("payment_slip", d)} loading={submitting} />}
-                  {activeTab === "site_inspection" && <SiteInspectionForm onSubmit={d => handleSubmit("site_inspection", d)} loading={submitting} />}
+                  {activeTab === "site_inspection" && <SiteInspectionForm onSubmit={d => handleSubmit("site_inspection", d)} loading={submitting} defaults={jobDefaults} />}
                   {activeTab === "event_checklist" && <EventChecklistForm onSubmit={d => handleSubmit("event_checklist", d)} loading={submitting} />}
-                  {activeTab === "daily_site_report" && <DailySiteReportForm onSubmit={d => handleSubmit("daily_site_report", d)} loading={submitting} userId={user?.id} />}
-                  {activeTab === "incident_report" && <IncidentReportForm onSubmit={d => handleSubmit("incident_report", d)} loading={submitting} userId={user?.id} />}
+                  {activeTab === "daily_site_report" && <DailySiteReportForm onSubmit={d => handleSubmit("daily_site_report", d)} loading={submitting} userId={user?.id} defaults={jobDefaults} />}
+                  {activeTab === "incident_report" && <IncidentReportForm onSubmit={d => handleSubmit("incident_report", d)} loading={submitting} userId={user?.id} defaults={jobDefaults} />}
                   {activeTab === "horse_care_log" && <HorseCareLogForm onSubmit={d => handleSubmit("horse_care_log", d)} loading={submitting} />}
                 </CardContent>
               </Card>
