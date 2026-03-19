@@ -649,3 +649,98 @@ function FollowUpRow({
     </div>
   );
 }
+
+/* ------------------------------------------------------------------ */
+/*  Settings sub-panel                                                 */
+/* ------------------------------------------------------------------ */
+
+function FollowUpSettingsPanel({
+  timing, toggles, onTimingChange, onToggleChange, saving, onSave,
+}: {
+  timing: Record<string, number>;
+  toggles: Record<string, boolean>;
+  onTimingChange: (key: string, val: number) => void;
+  onToggleChange: (key: string, val: boolean) => void;
+  saving: boolean;
+  onSave: () => void;
+}) {
+  const TIMING_ROWS = [
+    { section: "Lead Follow-Ups", toggleKey: "follow_up_leads", items: [
+      { label: "First follow-up", timingKey: "lead_day_1", toggleKey: "follow_up_lead_day_1" },
+      { label: "Second follow-up", timingKey: "lead_day_2", toggleKey: "follow_up_lead_day_2" },
+      { label: "Final follow-up", timingKey: "lead_day_3", toggleKey: "follow_up_lead_day_3" },
+    ]},
+    { section: "Quote Follow-Ups", toggleKey: "follow_up_quotes", items: [
+      { label: "First check-in", timingKey: "quote_day_1", toggleKey: "follow_up_quote_day_1" },
+      { label: "Reinforce value", timingKey: "quote_day_2", toggleKey: "follow_up_quote_day_2" },
+      { label: "Close loop", timingKey: "quote_day_3", toggleKey: "follow_up_quote_day_3" },
+    ]},
+  ];
+
+  return (
+    <div className="border border-border/20 rounded-sm p-4 space-y-4 bg-background/30">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Settings className="h-3.5 w-3.5 text-accent/60" />
+          <p className="text-sm font-medium text-foreground">Follow-Up Timing</p>
+        </div>
+        <Button size="sm" variant="gold" className="h-7 text-[9px]" disabled={saving} onClick={onSave}>
+          {saving ? <RefreshCw className="h-3 w-3 animate-spin mr-1" /> : null}
+          Save Settings
+        </Button>
+      </div>
+
+      {TIMING_ROWS.map((group) => {
+        const groupEnabled = toggles[group.toggleKey] ?? true;
+        return (
+          <div key={group.section} className="space-y-2">
+            <div className="flex items-center justify-between border-b border-border/10 pb-1.5">
+              <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 font-medium">{group.section}</p>
+              <div className="flex items-center gap-2">
+                <span className="text-[9px] text-muted-foreground/40">{groupEnabled ? "Active" : "Paused"}</span>
+                <Switch
+                  checked={groupEnabled}
+                  onCheckedChange={(v) => onToggleChange(group.toggleKey, v)}
+                  className="scale-75"
+                />
+              </div>
+            </div>
+            {groupEnabled && group.items.map((item) => {
+              const itemEnabled = toggles[item.toggleKey] ?? true;
+              return (
+                <div key={item.timingKey} className="flex items-center justify-between py-1">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <Switch
+                      checked={itemEnabled}
+                      onCheckedChange={(v) => onToggleChange(item.toggleKey, v)}
+                      className="scale-75 shrink-0"
+                    />
+                    <span className={`text-[12px] ${itemEnabled ? "text-foreground" : "text-muted-foreground/40"}`}>
+                      {item.label}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <span className="text-[10px] text-muted-foreground/40">Day</span>
+                    <Input
+                      type="number"
+                      min={1}
+                      max={60}
+                      value={timing[item.timingKey] || 0}
+                      onChange={(e) => onTimingChange(item.timingKey, parseInt(e.target.value, 10) || 1)}
+                      disabled={!itemEnabled}
+                      className="w-14 h-7 text-center text-sm bg-background/50 border-border/30"
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+
+      <p className="text-[9px] text-muted-foreground/30 pt-1 border-t border-border/10">
+        Changes take effect immediately after saving. Follow-ups remain draft-only.
+      </p>
+    </div>
+  );
+}
