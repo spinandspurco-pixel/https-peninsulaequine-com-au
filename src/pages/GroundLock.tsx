@@ -409,34 +409,37 @@ export default function GroundLock() {
       </section>
 
       {/* Problem Statement */}
-      <section className="py-44 sm:py-64 bg-background relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
-        <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
-          <RevealOnScroll direction="up">
-            <div className="w-8 h-px bg-accent/40 mx-auto mb-12" />
-          </RevealOnScroll>
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-28 sm:py-40 bg-card relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
+            <RevealOnScroll direction="up">
+              <RevealLine className="mx-auto mb-14" width="w-10" />
+            </RevealOnScroll>
 
-          <RevealOnScroll direction="up" delay={100}>
-            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold text-foreground tracking-[0.01em] leading-[1.2] mb-14">
-              Most Properties Fail<br />From the Ground Up
-            </h2>
-          </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={100}>
+              <h2 className="heading-section text-foreground mb-14">
+                Most Properties Fail<br />From the Ground Up
+              </h2>
+            </RevealOnScroll>
 
-          <RevealOnScroll direction="up" delay={200}>
-            <div className="space-y-8 text-sm sm:text-[15px] text-muted-foreground/60 leading-[2] font-sans">
-              <p>
-                Drainage issues, unstable footing, and surface breakdown<br />
-                are rarely surface problems.
-              </p>
-              <p className="text-foreground/60">
-                They're structural.
-              </p>
-              <p className="text-foreground/35 italic">
-                GroundLock™ is designed to solve that —<br />
-                properly, from the base layer up.
-              </p>
-            </div>
-          </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={200}>
+              <div className="space-y-6 text-sm text-muted-foreground/50 leading-[2]">
+                <p>
+                  Drainage issues, unstable footing, and surface breakdown
+                  are rarely surface problems.
+                </p>
+                <p className="text-foreground/60">
+                  They're structural.
+                </p>
+                <p className="text-muted-foreground/30 italic text-[13px]">
+                  GroundLock™ is designed to solve that —
+                  properly, from the base layer up.
+                </p>
+              </div>
+            </RevealOnScroll>
+          </div>
         </div>
       </section>
 
