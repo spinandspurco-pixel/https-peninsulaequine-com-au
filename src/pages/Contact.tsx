@@ -339,14 +339,14 @@ export default function Contact() {
                 <div className="pt-6 flex flex-col sm:flex-row gap-4 justify-center">
                   <a
                     href={`tel:${siteConfig.phone}`}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-border text-sm font-medium text-foreground hover:bg-secondary transition-all"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium text-foreground hover:border-accent/30 hover:text-accent transition-all duration-500"
                   >
                     <Phone className="h-4 w-4 text-accent" />
                     {siteConfig.phone}
                   </a>
                   <a
                     href={`mailto:${siteConfig.email}`}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-border text-sm font-medium text-foreground hover:bg-secondary transition-all"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium text-foreground hover:border-accent/30 hover:text-accent transition-all duration-500"
                   >
                     <Mail className="h-4 w-4 text-accent" />
                     {siteConfig.email}

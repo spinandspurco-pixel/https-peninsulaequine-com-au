@@ -25,7 +25,6 @@ export function LoadingSplash({ minDuration = 2800, onComplete }: LoadingSplashP
       return;
     }
 
-    // Kick off SVG line drawing after a micro-delay so stroke lengths compute correctly
     requestAnimationFrame(() => {
       const svg = svgRef.current;
       if (svg) {
@@ -53,7 +52,7 @@ export function LoadingSplash({ minDuration = 2800, onComplete }: LoadingSplashP
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-primary"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-background"
       aria-hidden="true"
       style={{
         opacity: phase === "exit" ? 0 : 1,
@@ -74,30 +73,27 @@ export function LoadingSplash({ minDuration = 2800, onComplete }: LoadingSplashP
         viewBox="0 0 1200 800"
         preserveAspectRatio="xMidYMid slice"
       >
-        {/* Horizontal grid */}
         {[100, 200, 300, 400, 500, 600, 700].map((y) => (
           <path key={`h${y}`} className="draw-line" d={`M0 ${y} H1200`} stroke="hsl(var(--accent))" strokeWidth="0.4" fill="none" opacity="0.12" />
         ))}
-        {/* Vertical grid */}
         {[150, 300, 450, 600, 750, 900, 1050].map((x) => (
           <path key={`v${x}`} className="draw-line" d={`M${x} 0 V800`} stroke="hsl(var(--accent))" strokeWidth="0.4" fill="none" opacity="0.12" />
         ))}
-        {/* Barn frame outline */}
         <path className="draw-line" d="M350 550 L350 250 L600 120 L850 250 L850 550 Z" stroke="hsl(var(--accent))" strokeWidth="1" fill="none" opacity="0.2" />
-        {/* Door */}
         <path className="draw-line" d="M520 550 V380 H680 V550" stroke="hsl(var(--accent))" strokeWidth="0.8" fill="none" opacity="0.16" />
-        {/* Cross braces */}
         <path className="draw-line" d="M350 400 H850" stroke="hsl(var(--accent))" strokeWidth="0.6" fill="none" opacity="0.1" />
         <path className="draw-line" d="M475 250 V550" stroke="hsl(var(--accent))" strokeWidth="0.5" fill="none" opacity="0.08" />
         <path className="draw-line" d="M725 250 V550" stroke="hsl(var(--accent))" strokeWidth="0.5" fill="none" opacity="0.08" />
-        {/* Dimension line */}
         <path className="draw-line" d="M350 580 H850" stroke="hsl(var(--accent))" strokeWidth="0.5" fill="none" opacity="0.12" />
       </svg>
 
       {/* Radial vignette */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,hsl(var(--primary)/0.75)_100%)]" />
+      <div
+        className="absolute inset-0"
+        style={{ background: "radial-gradient(ellipse at center, transparent 20%, hsl(222 20% 4% / 0.75) 100%)" }}
+      />
 
-      {/* Center content — logo + tagline */}
+      {/* Center content */}
       <div
         className="relative z-10 flex flex-col items-center gap-5"
         style={{
@@ -106,14 +102,12 @@ export function LoadingSplash({ minDuration = 2800, onComplete }: LoadingSplashP
           transition: "opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.25s, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.25s",
         }}
       >
-        {/* Logo mark */}
         <div className="relative">
           <img
             src={logoPeMark}
             alt="Peninsula Equine"
             className="w-20 h-20 sm:w-28 sm:h-28 object-contain brightness-0 invert drop-shadow-[0_0_40px_rgba(255,255,255,0.12)]"
           />
-          {/* Accent bar */}
           <span
             className="absolute -right-3 top-1/2 -translate-y-1/2 w-[2px] rounded-full bg-accent"
             style={{
@@ -123,7 +117,6 @@ export function LoadingSplash({ minDuration = 2800, onComplete }: LoadingSplashP
           />
         </div>
 
-        {/* Brand name */}
         <div
           style={{
             opacity: phase === "enter" ? 0 : 1,
@@ -131,16 +124,15 @@ export function LoadingSplash({ minDuration = 2800, onComplete }: LoadingSplashP
             transition: "opacity 0.6s ease-out 0.5s, transform 0.6s ease-out 0.5s",
           }}
         >
-          <p className="font-sans text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase text-primary-foreground">
+          <p className="font-sans text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase text-foreground">
             Peninsula<span className="text-accent"> Equine</span>
           </p>
-          <p className="mt-2 text-[10px] sm:text-xs tracking-[0.3em] uppercase text-primary-foreground/40">
+          <p className="mt-2 text-[10px] sm:text-xs tracking-[0.3em] uppercase text-muted-foreground/40">
             From Dirt to Dynasty
           </p>
         </div>
 
-        {/* Loading bar */}
-        <div className="w-16 h-[1.5px] bg-primary-foreground/10 rounded-full overflow-hidden mt-2">
+        <div className="w-16 h-[1.5px] bg-foreground/10 rounded-full overflow-hidden mt-2">
           <div
             className="h-full bg-accent rounded-full"
             style={{

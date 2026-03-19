@@ -530,7 +530,7 @@ export default function Index() {
                     Discuss Your Project <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg">
+                <Button asChild variant="outline-light" size="lg">
                   <Link to="/groundlock">Explore the System</Link>
                 </Button>
               </div>
