@@ -33,6 +33,18 @@ interface OverdueFollowUp {
   services: string[];
 }
 
+interface AtRiskQuote {
+  id: string;
+  quote_number: string;
+  client_name: string;
+  client_email: string | null;
+  total: number;
+  status: string;
+  sent_at: string | null;
+  viewed_at: string | null;
+  project_type: string;
+}
+
 export function DecisionPanel() {
   const [closeToday, setCloseToday] = useState<Deal[]>([]);
   const [convertNext, setConvertNext] = useState<Deal[]>([]);
