@@ -247,6 +247,52 @@ If uncertain, say "requires review" — do not speculate.
 
 Reference: Payment 30/50/final. Follow-up Day 2/5/10. Site assessment before quoting. GroundLock = proprietary ground stabilisation. Stages: Enquiry → Assessment → Brief → Proposal → Approval → Build → Handover. Proposals valid 30 days. Site visits Mon-Fri, Ciro attends. Scope changes need written variation.`;
 
+const DAILY_PLAN_PROMPT = `Generate today's operating plan for the founder. This is the daily command centre.
+
+Format EXACTLY as follows — use these headers and structure:
+
+## Today's Briefing
+One sentence: what today looks like (e.g. "2 hot leads, 1 site visit, 1 overdue payment.")
+
+## 🔴 Priority Actions
+Tasks requiring immediate founder attention. Hot leads, high-value decisions, urgent issues.
+Per item: bullet with action, lead/job name, and why it's priority. Max 5 items.
+If none: "Clear — no priority actions today."
+
+## Morning Block (Admin + Follow-Ups)
+- Follow-ups due (with suggested message summary)
+- New lead replies needed
+- Quick admin tasks
+Group by: lead replies first, then follow-ups, then admin.
+
+## Midday Block (Site Visits)
+- Today's scheduled assessments: location, time, client name, project type
+- Prep notes if relevant
+If no visits: "No site visits scheduled."
+
+## Afternoon Block (Decisions + Proposals)
+- Proposals to review or send
+- Decisions pending (quoted leads, scope questions)
+- Financial reviews needed
+
+## Financial Alerts
+- Overdue payments (>30 days or >50% outstanding)
+- Jobs with margin <25%
+- Cash flow concerns
+If clear: "No financial flags."
+
+## Quick Wins
+2-3 easy actions that move deals forward with minimal effort (e.g. "send booking link to warm lead", "chase deposit on completed job")
+
+RULES:
+- HOT leads → always in Priority Actions, suggest immediate action
+- WARM leads → Morning Block follow-ups
+- LOW INTENT → minimal attention, do not surface unless >10 days stale
+- Be decisive. Each item has a clear action.
+- No fluff. No narrative paragraphs. Bullets only.
+- Under 350 words total.
+- Today's date for reference: ${new Date().toISOString().split("T")[0]}`;
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
