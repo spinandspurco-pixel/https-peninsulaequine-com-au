@@ -49,6 +49,7 @@ export function DecisionPanel() {
   const [closeToday, setCloseToday] = useState<Deal[]>([]);
   const [convertNext, setConvertNext] = useState<Deal[]>([]);
   const [overdueFollowUps, setOverdueFollowUps] = useState<OverdueFollowUp[]>([]);
+  const [atRiskQuotes, setAtRiskQuotes] = useState<AtRiskQuote[]>([]);
   const [systemLever, setSystemLever] = useState("");
   const [loading, setLoading] = useState(true);
   const [aiLoading, setAiLoading] = useState(false);
