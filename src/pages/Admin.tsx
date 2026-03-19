@@ -378,6 +378,9 @@ export default function Admin() {
           {/* Financial Control */}
           <FinancialDashboard />
 
+          {/* Website Intelligence */}
+          <WebsiteIntelligence />
+
           {/* A/B Tests */}
           <ABTestStatsPanel />
 
