@@ -73,12 +73,12 @@ export function PageHeader({
           {title}
         </h1>
 
-        {subtitle && (
+        {displaySubtitle && (
           <p
             className="mt-8 text-muted-foreground/50 text-sm sm:text-base max-w-lg mx-auto leading-relaxed opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
-            {subtitle}
+            {displaySubtitle}
           </p>
         )}
 
