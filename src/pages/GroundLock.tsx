@@ -573,6 +573,51 @@ export default function GroundLock() {
         </div>
       </section>
 
+      {/* ═══ EQUUS FORGE DIVISION ═════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-28 sm:py-40 bg-primary relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div
+            className="absolute inset-0 opacity-[0.03]"
+            style={{ backgroundImage: "repeating-linear-gradient(135deg, transparent, transparent 20px, hsl(var(--primary-foreground)) 20px, hsl(var(--primary-foreground)) 21px)" }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{ background: "radial-gradient(ellipse 60% 50% at 50% 50%, hsl(var(--accent) / 0.04) 0%, transparent 70%)" }}
+          />
+
+          <div className="section-container relative z-10 text-center max-w-lg mx-auto">
+            <RevealOnScroll direction="up">
+              <RevealLine className="mx-auto mb-14" width="w-8" />
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={80}>
+              <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/50 mb-6">
+                Product Division
+              </p>
+              <h2 className="heading-section text-primary-foreground mb-4">
+                Equus Forge
+              </h2>
+              <p className="text-primary-foreground/25 text-[11px] uppercase tracking-[0.2em] mb-10">
+                by Peninsula Equine
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={150}>
+              <p className="text-sm text-primary-foreground/40 mb-12 leading-[1.9]">
+                Systems. Components. Built to scale.
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={250}>
+              <Button asChild variant="gold" size="lg">
+                <Link to="/forge">
+                  Explore Equus Forge <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ CTA ══════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
@@ -607,7 +652,7 @@ export default function GroundLock() {
               </Button>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={350}>
-                  <p className="text-muted-foreground/15 text-[10px] tracking-[0.25em] uppercase mt-10">
+              <p className="text-muted-foreground/15 text-[10px] tracking-[0.25em] uppercase mt-10">
                 Limited projects per season.
               </p>
             </RevealOnScroll>

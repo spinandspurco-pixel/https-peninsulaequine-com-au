@@ -1,20 +1,20 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Flame, ArrowRight, ShoppingCart, Mail, Wrench, Fence, Sparkles, Building2 } from "lucide-react";
+import { Flame, ArrowRight, Mail, Wrench, Fence, Sparkles, Building2, Layers } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const quickLinks = [
-  { icon: ShoppingCart, label: "Browse Catalog", to: "/shop", desc: "View all steel products" },
-  { icon: Mail, label: "Request a Quote", to: "/contact", desc: "Custom fabrication inquiry" },
-  { icon: Wrench, label: "Our Services", to: "/services", desc: "Full build capabilities" },
+  { icon: Layers, label: "Browse Systems", to: "/shop", desc: "View all configurations" },
+  { icon: Mail, label: "Request Specification", to: "/contact", desc: "Custom fabrication inquiry" },
+  { icon: Wrench, label: "Capabilities", to: "/services", desc: "Full build & install" },
 ];
 
 const capabilities = [
   { icon: Fence, title: "Gates & Panels", desc: "Swing gates, sliding gates & modular stable panels — precision-sized to your opening, built heavy-gauge to last decades." },
   { icon: Wrench, title: "Steel Fixtures", desc: "Tie-up rails, saddle racks, wash-bay fittings — crafted for professional-grade durability and everyday reliability." },
   { icon: Sparkles, title: "Decorative Metalwork", desc: "Laser-cut property signs, ornamental brackets & bespoke embellishments that say 'this is serious horse country'." },
-  { icon: Building2, title: "Structural Steel", desc: "I-beam brackets, arena perimeter fencing & load-bearing fabrications — engineered, certified, and built to spec." },
+  { icon: Building2, title: "Structural Steel", desc: "I-beam brackets, arena perimeter systems & load-bearing fabrications — engineered, certified, and built to spec." },
 ];
 
 export default function Forge() {
@@ -47,29 +47,36 @@ export default function Forge() {
             <span className="h-px w-10 bg-accent/50" />
           </div>
 
-          <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl mb-4 leading-[1.05] text-primary-foreground drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]">
-            The Forge{" "}
-            <span className="text-accent">at P.E.</span>
+          <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-primary-foreground/30 mb-4">
+            Product Division
+          </p>
+
+          <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl mb-2 leading-[1.05] text-primary-foreground drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]">
+            Equus Forge
           </h1>
+
+          <p className="text-primary-foreground/25 text-[11px] uppercase tracking-[0.2em] mb-6">
+            by Peninsula Equine
+          </p>
 
           <p className="text-accent text-sm font-medium uppercase tracking-[0.25em] mb-6">
             Steel With Soul · Forged by Horsemen
           </p>
 
           <p className="text-primary-foreground/80 text-lg md:text-xl mb-10 max-w-xl mx-auto font-light leading-relaxed drop-shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
-            We don't just build barns — we bend steel to your will. Every gate, panel, and fixture is
+            We don't just build barns — we bend steel to your will. Every gate, panel, and component is
             custom-fabricated by people who know the difference between a paddock latch and a fashion statement.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-wider px-8">
               <Link to="/shop">
-                View Catalog <ArrowRight className="ml-2 h-4 w-4" />
+                View Systems <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary uppercase tracking-wider px-8">
               <Link to="/contact">
-                Request a Quote
+                Request Specification
               </Link>
             </Button>
           </div>
@@ -91,8 +98,8 @@ export default function Forge() {
       <section className="py-16 md:py-24">
         <div className="section-container">
           <div className="text-center mb-14">
-            <h2 className="font-serif text-3xl md:text-4xl mb-3">What We <span className="text-accent">Forge</span></h2>
-            <p className="text-muted-foreground max-w-lg mx-auto">Every piece is built to order — no catalogue sizes, no compromises.</p>
+            <h2 className="font-serif text-3xl md:text-4xl mb-3">What We <span className="text-accent">Build</span></h2>
+            <p className="text-muted-foreground max-w-lg mx-auto">Every component is built to order — no catalogue sizes, no compromises.</p>
           </div>
           <div
             ref={capAnim.ref}
@@ -152,11 +159,11 @@ export default function Forge() {
             Need Something <span className="text-accent">Bespoke?</span>
           </h2>
           <p className="text-muted-foreground mb-8 text-lg">
-            Send us your specs — no job too big, no detail too small. We'll quote it, forge it, and deliver it to your gate.
+            Send us your specs — no job too big, no detail too small. We'll quote it, fabricate it, and deliver it to your gate.
           </p>
           <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-wider">
             <Link to="/contact">
-              Request Custom Quote <ArrowRight className="ml-2 h-4 w-4" />
+              Request Custom Specification <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>
