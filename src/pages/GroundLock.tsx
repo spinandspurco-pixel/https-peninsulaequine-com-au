@@ -632,8 +632,6 @@ export default function GroundLock() {
             </div>
           </div>
         </div>
-        </div>
-        </div>
       </section>
 
       {/* Scope & Variables */}
