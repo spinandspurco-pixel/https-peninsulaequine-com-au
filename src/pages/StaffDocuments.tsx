@@ -24,8 +24,14 @@ import {
   Plus,
   ShieldCheck,
   FileWarning,
+  ClipboardList,
+  AlertTriangle,
+  Heart,
 } from "lucide-react";
 import { format } from "date-fns";
+import { DailySiteReportForm } from "@/components/forms/DailySiteReportForm";
+import { IncidentReportForm } from "@/components/forms/IncidentReportForm";
+import { HorseCareLogForm } from "@/components/forms/HorseCareLogForm";
 
 // Re-export from shared utility for backward compatibility
 export { exportDocumentAsPDF, DOC_TYPES } from "@/lib/documentUtils";
@@ -869,7 +875,7 @@ export default function StaffDocuments() {
 
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={v => { setActiveTab(v as DocType); setShowForm(true); }}>
-            <TabsList className="grid grid-cols-3 sm:grid-cols-6 mb-6">
+            <TabsList className="grid grid-cols-3 sm:grid-cols-9 mb-6">
               {(Object.entries(DOC_TYPES) as [DocType, typeof DOC_TYPES[DocType]][]).map(([key, cfg]) => {
                 const TabIcon = cfg.icon;
                 return (
@@ -899,6 +905,9 @@ export default function StaffDocuments() {
                   {activeTab === "payment_slip" && <PaymentSlipForm onSubmit={d => handleSubmit("payment_slip", d)} loading={submitting} />}
                   {activeTab === "site_inspection" && <SiteInspectionForm onSubmit={d => handleSubmit("site_inspection", d)} loading={submitting} />}
                   {activeTab === "event_checklist" && <EventChecklistForm onSubmit={d => handleSubmit("event_checklist", d)} loading={submitting} />}
+                  {activeTab === "daily_site_report" && <DailySiteReportForm onSubmit={d => handleSubmit("daily_site_report", d)} loading={submitting} />}
+                  {activeTab === "incident_report" && <IncidentReportForm onSubmit={d => handleSubmit("incident_report", d)} loading={submitting} />}
+                  {activeTab === "horse_care_log" && <HorseCareLogForm onSubmit={d => handleSubmit("horse_care_log", d)} loading={submitting} />}
                 </CardContent>
               </Card>
             )}

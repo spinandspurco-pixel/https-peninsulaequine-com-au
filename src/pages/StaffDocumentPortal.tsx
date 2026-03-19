@@ -13,7 +13,7 @@ import { format, startOfWeek, endOfWeek, isWithinInterval, isWednesday } from "d
 import {
   FileText, DollarSign, HardHat, ClipboardCheck, Send, Loader2, Plus, Clock,
   CheckCircle2, AlertCircle, ChevronDown, ChevronUp, Calendar, ShieldCheck,
-  FileWarning, Download, ArrowLeft, FolderOpen, Bell,
+  FileWarning, Download, ArrowLeft, FolderOpen, Bell, ClipboardList, AlertTriangle, Heart,
 } from "lucide-react";
 import logoPeMark from "@/assets/logo-pe-mark.png";
 
@@ -24,6 +24,9 @@ const STAFF_DOC_TYPES = {
   risk_assessment: { label: "Risk Assessment", description: "Job-specific risk assessment & controls", icon: FileWarning, color: "text-red-500" },
   payment_slip: { label: "Payment Slip", description: "Weekly timesheet — due every Wednesday", icon: DollarSign, color: "text-green-500" },
   site_inspection: { label: "Site Inspection", description: "Construction site condition report", icon: ClipboardCheck, color: "text-blue-500" },
+  daily_site_report: { label: "Daily Report", description: "End-of-day site progress report", icon: ClipboardList, color: "text-cyan-500" },
+  incident_report: { label: "Incident Report", description: "Safety incident & near-miss reporting", icon: AlertTriangle, color: "text-rose-500" },
+  horse_care_log: { label: "Horse Care", description: "Training, health & care record", icon: Heart, color: "text-pink-500" },
 } as const;
 
 type StaffDocType = keyof typeof STAFF_DOC_TYPES;
@@ -191,7 +194,7 @@ export default function StaffDocumentPortal() {
 
           {/* Document Tabs */}
           <Tabs value={activeTab} onValueChange={v => setActiveTab(v as StaffDocType)}>
-            <TabsList className="grid grid-cols-5 mb-6">
+            <TabsList className="grid grid-cols-4 sm:grid-cols-8 mb-6">
               {(Object.entries(STAFF_DOC_TYPES) as [StaffDocType, typeof STAFF_DOC_TYPES[StaffDocType]][]).map(([key, cfg]) => {
                 const TabIcon = cfg.icon;
                 const count = documents.filter(d => d.document_type === key).length;
