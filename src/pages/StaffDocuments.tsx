@@ -800,6 +800,8 @@ export default function StaffDocuments() {
   const [showForm, setShowForm] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [jobDefaults, setJobDefaults] = useState<{ project_name: string; site_address: string }>({ project_name: "", site_address: "" });
+  const [availableJobs, setAvailableJobs] = useState<{ id: string; project_name: string; site_address: string }[]>([]);
+  const [selectedJobId, setSelectedJobId] = useState<string>("");
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -807,49 +809,72 @@ export default function StaffDocuments() {
     }
   }, [user, authLoading, navigate]);
 
-  // Auto-detect active job/site from employee_tasks + jobs
+  // Fetch all available jobs for the worker
   useEffect(() => {
     if (!user) return;
-    const fetchDefaults = async () => {
-      // 1. Try employee tasks assigned to user for today
+    const fetchJobs = async () => {
+      const allJobs: { id: string; project_name: string; site_address: string }[] = [];
+
+      // 1. Employee tasks assigned for today
       const today = format(new Date(), "yyyy-MM-dd");
       const { data: tasks } = await supabase
         .from("employee_tasks")
-        .select("title, description")
+        .select("id, title, description")
         .eq("assigned_to", user.id)
         .eq("scheduled_date", today)
         .neq("status", "completed")
-        .order("created_at", { ascending: false })
-        .limit(1);
+        .order("created_at", { ascending: false });
 
-      if (tasks && tasks.length > 0) {
-        const task = tasks[0];
-        // Extract project name from task title (often "Job — Location" format)
-        const parts = task.title?.split("—").map((s: string) => s.trim()) || [];
-        if (parts.length >= 2) {
-          setJobDefaults({ project_name: parts[0], site_address: parts[1] });
-          return;
-        }
-        if (parts.length === 1 && task.description) {
-          setJobDefaults({ project_name: parts[0], site_address: task.description });
-          return;
+      if (tasks) {
+        for (const task of tasks) {
+          const parts = task.title?.split("—").map((s: string) => s.trim()) || [];
+          allJobs.push({
+            id: `task-${task.id}`,
+            project_name: parts[0] || task.title || "",
+            site_address: parts[1] || task.description || "",
+          });
         }
       }
 
-      // 2. Fallback: most recent active job
+      // 2. Active jobs
       const { data: jobs } = await supabase
         .from("jobs")
-        .select("job_name, location")
+        .select("id, job_name, location")
         .eq("status", "active")
-        .order("updated_at", { ascending: false })
-        .limit(1);
+        .order("updated_at", { ascending: false });
 
-      if (jobs && jobs.length > 0) {
-        setJobDefaults({ project_name: jobs[0].job_name || "", site_address: jobs[0].location || "" });
+      if (jobs) {
+        for (const job of jobs) {
+          allJobs.push({
+            id: `job-${job.id}`,
+            project_name: job.job_name || "",
+            site_address: job.location || "",
+          });
+        }
+      }
+
+      setAvailableJobs(allJobs);
+
+      // Auto-select the first one
+      if (allJobs.length > 0) {
+        setSelectedJobId(allJobs[0].id);
+        setJobDefaults({ project_name: allJobs[0].project_name, site_address: allJobs[0].site_address });
       }
     };
-    fetchDefaults();
+    fetchJobs();
   }, [user]);
+
+  const handleJobSwitch = (jobId: string) => {
+    setSelectedJobId(jobId);
+    if (jobId === "manual") {
+      setJobDefaults({ project_name: "", site_address: "" });
+      return;
+    }
+    const job = availableJobs.find(j => j.id === jobId);
+    if (job) {
+      setJobDefaults({ project_name: job.project_name, site_address: job.site_address });
+    }
+  };
 
 
   const handleSubmit = async (docType: DocType, formData: any) => {
@@ -917,6 +942,31 @@ export default function StaffDocuments() {
               ← Back to Repository
             </Button>
           </div>
+
+          {/* Job Switcher */}
+          {availableJobs.length > 0 && (
+            <div className="mb-6 p-4 rounded-lg border bg-muted/30">
+              <div className="flex items-center gap-3">
+                <Label className="text-sm font-medium whitespace-nowrap">Active Job / Site:</Label>
+                <Select value={selectedJobId} onValueChange={handleJobSwitch}>
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="Select a job..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableJobs.map(job => (
+                      <SelectItem key={job.id} value={job.id}>
+                        {job.project_name}{job.site_address ? ` — ${job.site_address}` : ""}
+                      </SelectItem>
+                    ))}
+                    <SelectItem value="manual">✏️ Enter manually</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {selectedJobId && selectedJobId !== "manual" && (
+                <p className="text-xs text-muted-foreground mt-2">Project name and site address will be pre-filled on applicable forms.</p>
+              )}
+            </div>
+          )}
 
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={v => { setActiveTab(v as DocType); setShowForm(true); }}>
