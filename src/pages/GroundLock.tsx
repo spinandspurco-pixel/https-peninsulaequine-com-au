@@ -309,7 +309,7 @@ export default function GroundLock() {
                   These are never surface problems. They're structural.
                 </p>
                 <p className="text-muted-foreground/25 italic text-[13px] pt-2">
-                  GroundLock™ solves that — from the base layer up.
+                  Specified where required to ensure structural integrity and consistent surface performance.
                 </p>
               </div>
             </RevealOnScroll>
