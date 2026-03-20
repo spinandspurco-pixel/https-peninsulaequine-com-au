@@ -131,7 +131,7 @@ export default function HQ() {
           </h1>
 
           <p
-            className="mt-8 text-[13px] sm:text-[14px] text-muted-foreground/35 max-w-sm mx-auto leading-[2] opacity-0 animate-fade-in"
+            className="mt-8 text-[13px] sm:text-[14px] text-muted-foreground/50 max-w-sm mx-auto leading-[2] opacity-0 animate-fade-in"
             style={{ animationDelay: "600ms", animationFillMode: "both" }}
           >
             Three divisions. One standard.<br />
@@ -148,29 +148,29 @@ export default function HQ() {
               <RevealOnScroll key={div.title} direction="up" stagger={i} staggerInterval={120}>
                 <Link
                   to={div.href}
-                  className="group relative flex flex-col p-8 sm:p-10 lg:p-12 min-h-[300px] border border-border/20 hover:border-border/40 bg-card/30 hover:bg-card/60 transition-all duration-700"
+                  className="group relative flex flex-col p-8 sm:p-10 lg:p-12 min-h-[300px] border border-border/30 hover:border-border/40 bg-card/40 hover:bg-card/60 transition-all duration-700"
                 >
-                  <div className="absolute top-0 left-0 w-8 h-px bg-accent/20 group-hover:w-14 group-hover:bg-accent/40 transition-all duration-700" />
+                  <div className="absolute top-0 left-0 w-8 h-px bg-accent/30 group-hover:w-14 group-hover:bg-accent/40 transition-all duration-700" />
 
-                  <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/25 mb-3 block">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3 block">
                     {div.num}
                   </span>
 
-                  <p className="font-mono text-[8px] uppercase tracking-[0.25em] text-muted-foreground/20 mb-8">
+                  <p className="font-mono text-[8px] uppercase tracking-[0.25em] text-muted-foreground/35 mb-8">
                     {div.role}
                   </p>
 
-                  <h3 className="font-serif text-[17px] sm:text-[18px] font-medium text-foreground/65 tracking-[0.02em] mb-5 group-hover:text-foreground/90 transition-colors duration-500">
+                  <h3 className="font-serif text-[17px] sm:text-[18px] font-medium text-foreground/80 tracking-[0.02em] mb-5 group-hover:text-foreground/90 transition-colors duration-500">
                     {div.title}
                   </h3>
 
-                  <p className="text-[12px] text-muted-foreground/25 leading-[2.1] max-w-[280px] flex-1">
+                  <p className="text-[12px] text-muted-foreground/45 leading-[2.1] max-w-[280px] flex-1">
                     {div.body}
                   </p>
 
-                  <div className="flex items-center gap-2 mt-8 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0">
-                    <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-accent/50">{div.cta}</span>
-                    <ArrowRight className="w-3 h-3 text-accent/40" />
+                  <div className="flex items-center gap-2 mt-8 opacity-60 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-700 translate-y-0 sm:translate-y-1 sm:group-hover:translate-y-0">
+                    <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-accent/60">{div.cta}</span>
+                    <ArrowRight className="w-3 h-3 text-accent/50" />
                   </div>
                 </Link>
               </RevealOnScroll>
@@ -180,13 +180,13 @@ export default function HQ() {
       </section>
 
       {/* ── Horizon ──────────────────────────────────── */}
-      <section className="py-16 sm:py-20 border-t border-border/10">
+      <section className="py-16 sm:py-20 border-t border-border/15">
         <div className="section-container max-w-md mx-auto text-center">
           <RevealOnScroll>
-            <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/25 mb-6">
+            <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/40 mb-6">
               Expanding
             </p>
-            <p className="text-[12px] sm:text-[13px] text-muted-foreground/20 leading-[2.2]">
+            <p className="text-[12px] sm:text-[13px] text-muted-foreground/40 leading-[2.2]">
               Planning tools, entry automation, forecourt products, and
               estate hardware — validated through builds before release.
             </p>
@@ -199,10 +199,10 @@ export default function HQ() {
         <div className="section-container max-w-md mx-auto">
           <RevealOnScroll>
             <div className="text-center mb-10">
-              <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/30 mb-4">
+              <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/45 mb-4">
                 Staff Access
               </p>
-              <p className="text-[12px] text-muted-foreground/30 leading-relaxed">
+              <p className="text-[12px] text-muted-foreground/45 leading-relaxed">
                 Secure portal for Peninsula Equine team members.
               </p>
             </div>
