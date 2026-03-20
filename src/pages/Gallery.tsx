@@ -20,12 +20,12 @@ import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
 // ── 3. FINISHED RESULTS ──
 import aberdeenDeck from "@/assets/aberdeen-deck.jpg";
 import premiumStableFacade from "@/assets/premium-stable-facade.png";
-import coveredArenaBlackExterior from "@/assets/covered-arena-black-exterior.jpg";
+import westernEntertainingZone from "@/assets/western-entertaining-zone.jpg";
 
 // ── 4. CUSTOM BUILDS ──
 import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
 import timberCubbyFront from "@/assets/timber-cubby-front.webp";
-import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
+import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
 
 import {
   type GalleryItem,
