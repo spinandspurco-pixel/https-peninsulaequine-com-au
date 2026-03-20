@@ -858,8 +858,8 @@ export default function Index() {
                 {
                   title: "Forge Hardware",
                   body: "Architectural steelwork, gate elements, and branded hardware for the working property.",
-                  cta: "View Hardware",
-                  href: "/shop",
+                  cta: "Explore Forge",
+                  href: "/forge",
                 },
                 {
                   title: "Custom Property Elements",
