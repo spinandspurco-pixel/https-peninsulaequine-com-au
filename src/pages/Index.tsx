@@ -3,7 +3,7 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, Layers, Fence, Home, Mountain, Shovel, Wrench, ChevronRight } from "lucide-react";
+import { ArrowRight, Layers, Fence, Home, Mountain, Shovel, Wrench, ChevronRight, Truck, Droplets, Gem } from "lucide-react";
 import { InteractiveLayerStack } from "@/components/InteractiveLayerStack";
 import { cn } from "@/lib/utils";
 
