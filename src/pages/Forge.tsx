@@ -1,99 +1,133 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Flame, Layers, Wrench, Sparkles } from "lucide-react";
+import { ArrowRight, Flame } from "lucide-react";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { cn } from "@/lib/utils";
 
-/* ── Product families ─────────────────────────────── */
+import steelBarnFrame from "@/assets/steel-barn-frame-wide.jpg";
+import reclaimedBeam from "@/assets/reclaimed-beam-workshop.jpg";
+import roofingDetail from "@/assets/roofing-steel-detail.jpg";
 
-interface ProductFamily {
+/* ── Product Families ─────────────────────────────── */
+
+interface FamilyEntry {
   title: string;
   trademark?: boolean;
-  status: "live" | "development" | "planned";
-  description: string;
+  status: "active" | "development" | "future";
+  summary: string;
+  scope: string[];
   href?: string;
   cta?: string;
-  icon: typeof Flame;
 }
 
-const PRODUCT_FAMILIES: ProductFamily[] = [
+const FAMILIES: FamilyEntry[] = [
   {
-    title: "GroundLock Systems",
+    title: "GroundLock",
     trademark: true,
-    status: "live",
-    icon: Layers,
-    description:
-      "Permanent sub-surface entry systems for gates, driveways, and high-traffic equine zones — engineered for drainage, stability, and float-grade load.",
+    status: "active",
+    summary:
+      "Sub-surface entry systems for gates, driveways, and high-traffic zones.",
+    scope: [
+      "Starter, Pro & Complete configurations",
+      "Drainage-integrated base layers",
+      "Float-grade load engineering",
+    ],
     href: "/groundlock",
     cta: "Explore GroundLock",
   },
   {
     title: "Forge Hardware",
     status: "development",
-    icon: Wrench,
-    description:
-      "Architectural steelwork and gate elements — swing gates, sliding systems, tie-up rails, and structural fabrications built to horseman's tolerances.",
+    summary:
+      "Architectural steelwork for equine properties — precision-fabricated, site-specific, built to last decades.",
+    scope: [
+      "Swing & sliding gate systems",
+      "Structural steel fabrications",
+      "Tie-up rails, wash-bay fittings & stable hardware",
+    ],
   },
   {
     title: "Custom Property Elements",
-    status: "planned",
-    icon: Sparkles,
-    description:
-      "Bespoke estate details — laser-cut property signage, ornamental brackets, threshold hardware, and finishing elements that complete the built environment.",
+    status: "future",
+    summary:
+      "Bespoke estate details that complete the built environment with architectural precision.",
+    scope: [
+      "Laser-cut property signage",
+      "Threshold hardware & ornamental brackets",
+      "Entry and boundary finishing elements",
+    ],
   },
 ];
 
-const STATUS_LABEL: Record<ProductFamily["status"], string> = {
-  live: "Available Now",
-  development: "In Development",
-  planned: "Future Division",
+const STATUS_MAP: Record<FamilyEntry["status"], { label: string; style: string }> = {
+  active: { label: "Available Now", style: "text-accent/70" },
+  development: { label: "In Development", style: "text-foreground/35" },
+  future: { label: "Future Division", style: "text-foreground/20" },
 };
 
-const STATUS_STYLE: Record<ProductFamily["status"], string> = {
-  live: "text-accent/70",
-  development: "text-foreground/35",
-  planned: "text-foreground/20",
-};
+/* ── Image strip data ─────────────────────────────── */
 
-/* ── Family row ───────────────────────────────────── */
+const MATERIAL_IMAGES = [
+  { src: steelBarnFrame, alt: "Structural steel barn frame" },
+  { src: reclaimedBeam, alt: "Workshop beam preparation" },
+  { src: roofingDetail, alt: "Steel roofing detail" },
+];
 
-function FamilyRow({ family, delay = 0 }: { family: ProductFamily; delay?: number }) {
-  const Icon = family.icon;
+/* ── Family card ──────────────────────────────────── */
+
+function FamilyCard({ family, delay = 0 }: { family: FamilyEntry; delay?: number }) {
+  const { label, style } = STATUS_MAP[family.status];
+  const isActive = family.status === "active";
+
   return (
     <RevealOnScroll delay={delay}>
-      <div className="group py-12 sm:py-14">
-        <div className="flex items-start justify-between gap-6 mb-4">
-          <div className="flex items-center gap-3">
-            <Icon className="w-4 h-4 text-accent/40" strokeWidth={1.5} />
-            <h3 className="font-serif text-lg sm:text-xl font-medium text-foreground/70 group-hover:text-foreground/90 transition-colors duration-500">
-              {family.title}
-              {family.trademark && <span className="text-accent/40">™</span>}
-            </h3>
-          </div>
-          <span
-            className={cn(
-              "text-[10px] tracking-[0.2em] uppercase font-medium whitespace-nowrap mt-1.5",
-              STATUS_STYLE[family.status],
-            )}
-          >
-            {STATUS_LABEL[family.status]}
+      <div
+        className={cn(
+          "group relative p-8 sm:p-10 transition-colors duration-500",
+          isActive
+            ? "border border-accent/20 bg-accent/[0.02]"
+            : "border border-border/10 bg-card/40",
+        )}
+      >
+        {/* Header */}
+        <div className="flex items-start justify-between gap-6 mb-5">
+          <h3 className="font-serif text-xl sm:text-2xl font-medium text-foreground/80 group-hover:text-foreground transition-colors duration-500 leading-snug">
+            {family.title}
+            {family.trademark && <span className="text-accent/40">™</span>}
+          </h3>
+          <span className={cn("text-[10px] tracking-[0.2em] uppercase font-medium whitespace-nowrap mt-2", style)}>
+            {label}
           </span>
         </div>
 
-        <p className="text-[12px] sm:text-[13px] text-muted-foreground/30 leading-[2] max-w-xl mb-5 pl-7">
-          {family.description}
+        {/* Summary */}
+        <p className="text-[12px] sm:text-[13px] text-muted-foreground/30 leading-[2] max-w-lg mb-6">
+          {family.summary}
         </p>
 
+        {/* Scope list */}
+        <ul className="space-y-2 mb-8">
+          {family.scope.map((item) => (
+            <li key={item} className="flex items-start gap-2.5">
+              <span className="w-1 h-1 rounded-full bg-accent/30 mt-[7px] flex-shrink-0" />
+              <span className="text-[11px] sm:text-[12px] text-foreground/25 leading-[1.8]">
+                {item}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        {/* CTA */}
         {family.href ? (
           <Link
             to={family.href}
-            className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] uppercase text-accent/50 hover:text-accent/80 transition-colors duration-500 pl-7"
+            className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] uppercase text-accent/50 hover:text-accent/80 transition-colors duration-500"
           >
             {family.cta} <ArrowRight className="w-3 h-3" />
           </Link>
         ) : (
-          <span className="text-[11px] tracking-[0.15em] uppercase text-foreground/15 pl-7">
+          <span className="text-[11px] tracking-[0.15em] uppercase text-foreground/15">
             Details to follow
           </span>
         )}
@@ -119,7 +153,7 @@ export default function Forge() {
           >
             <div className="w-8 h-px bg-accent/30" />
             <Flame className="w-3.5 h-3.5 text-accent/50" strokeWidth={1.25} />
-            <p className="text-overline text-accent/60">Product & Systems Division</p>
+            <p className="text-overline text-accent/60">Product Division</p>
             <div className="w-8 h-px bg-accent/30" />
           </div>
 
@@ -138,16 +172,36 @@ export default function Forge() {
           </p>
 
           <p
-            className="mt-10 text-sm sm:text-[15px] text-muted-foreground/40 max-w-md mx-auto leading-[1.9] opacity-0 animate-fade-in"
+            className="mt-10 text-sm sm:text-[15px] text-muted-foreground/40 max-w-[420px] mx-auto leading-[1.9] opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
-            Engineered rural hardware and signature systems — designed, fabricated,
-            and installed by the same team that builds the property.
+            The engineering and product arm of Peninsula Equine.
+            Purpose-built systems, hardware, and estate elements —
+            designed for equine properties, fabricated by the people who build them.
           </p>
         </div>
       </section>
 
-      {/* ── Positioning statement ─────────────────────── */}
+      {/* ── Material strip ────────────────────────────── */}
+      <section className="relative overflow-hidden" aria-label="Material details">
+        <RevealOnScroll duration={700}>
+          <div className="grid grid-cols-3">
+            {MATERIAL_IMAGES.map((img, i) => (
+              <div key={i} className="relative aspect-[2/1] sm:aspect-[16/9] overflow-hidden group">
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover brightness-[0.45] saturate-[0.55] contrast-[1.12] group-hover:brightness-[0.6] transition-all duration-[900ms]"
+                />
+              </div>
+            ))}
+          </div>
+        </RevealOnScroll>
+      </section>
+
+      {/* ── Positioning ───────────────────────────────── */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-24 sm:py-32 bg-card relative">
@@ -157,10 +211,16 @@ export default function Forge() {
               <RevealLine className="mx-auto mb-14" width="w-8" />
             </RevealOnScroll>
             <RevealOnScroll delay={80}>
-              <p className="text-[13px] sm:text-[14px] text-muted-foreground/35 leading-[2.1] italic font-serif">
-                Every component is purpose-built for equine environments — heavy gauge,
-                hot-dip galvanised, engineered to the tolerances of working rural properties.
-                No catalogue sizes. No compromises.
+              <p className="text-[13px] sm:text-[14px] text-muted-foreground/30 leading-[2.2]">
+                Forge exists to give Peninsula Equine clients access to the same
+                engineered components we use in our own builds — heavy gauge,
+                hot-dip galvanised, and specified to the tolerances of working
+                rural properties.
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll delay={160}>
+              <p className="mt-8 text-[12px] text-muted-foreground/20 leading-[2] italic font-serif">
+                Not a catalogue. A product division.
               </p>
             </RevealOnScroll>
           </div>
@@ -170,49 +230,59 @@ export default function Forge() {
       {/* ── Product Families ──────────────────────────── */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-20 sm:py-28 relative">
+        <div className="py-24 sm:py-32 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-3xl mx-auto relative z-[1]">
             <RevealOnScroll>
-              <p className="text-overline text-accent/50 mb-4 text-center">Product Families</p>
+              <p className="text-overline text-accent/50 mb-6 text-center">Product Families</p>
+            </RevealOnScroll>
+            <RevealOnScroll delay={40}>
+              <p className="text-[12px] sm:text-[13px] text-muted-foreground/25 leading-[2] max-w-lg mx-auto text-center mb-16">
+                Three core divisions — each one engineered to integrate with
+                Peninsula Equine's design-build methodology and proprietary
+                Signature Systems.
+              </p>
             </RevealOnScroll>
 
-            <div className="divide-y divide-border/15">
-              {PRODUCT_FAMILIES.map((family, i) => (
-                <FamilyRow key={family.title} family={family} delay={i * 80} />
+            <div className="space-y-4 sm:space-y-6">
+              {FAMILIES.map((family, i) => (
+                <FamilyCard key={family.title} family={family} delay={i * 100} />
               ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Systems connection ────────────────────────── */}
+      {/* ── Expansion horizon ─────────────────────────── */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-20 sm:py-28 bg-card relative">
+        <div className="py-24 sm:py-32 bg-card relative">
           <div className="absolute inset-0 grain-texture" />
-          <div className="section-container max-w-3xl mx-auto relative z-[1]">
+          <div className="section-container max-w-xl mx-auto relative z-[1] text-center">
             <RevealOnScroll>
-              <div className="border border-accent/15 bg-accent/[0.02] p-8 sm:p-12 text-center">
-                <p className="text-overline text-accent/50 mb-6">Part of Signature Systems</p>
-                <p className="text-[13px] sm:text-[14px] text-muted-foreground/35 leading-[2] max-w-lg mx-auto mb-8">
-                  Equus Forge products integrate directly with Peninsula Equine's
-                  proprietary Signature Systems — ensuring every component works
-                  as part of a resolved, engineered whole.
-                </p>
-                <Link
-                  to="/systems"
-                  className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] uppercase text-accent/50 hover:text-accent/80 transition-colors duration-500"
-                >
-                  View Signature Systems <ArrowRight className="w-3 h-3" />
-                </Link>
-              </div>
+              <p className="text-overline text-foreground/20 mb-10">Future Scope</p>
+            </RevealOnScroll>
+            <RevealOnScroll delay={80}>
+              <p className="text-[12px] sm:text-[13px] text-muted-foreground/25 leading-[2.2] mb-10">
+                As Peninsula Equine's project library grows, Forge will expand
+                to include entry kits, gate automation packages, signage systems,
+                stable forecourt products, and threshold hardware — each one
+                validated through real-world builds before release.
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll delay={140}>
+              <Link
+                to="/systems"
+                className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] uppercase text-accent/40 hover:text-accent/70 transition-colors duration-500"
+              >
+                View Signature Systems <ArrowRight className="w-3 h-3" />
+              </Link>
             </RevealOnScroll>
           </div>
         </div>
       </section>
 
-      {/* ── CTA ──────────────────────────────────────── */}
+      {/* ── Dual CTA ──────────────────────────────────── */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-32 sm:py-44 relative">
@@ -229,21 +299,29 @@ export default function Forge() {
             </RevealOnScroll>
             <RevealOnScroll delay={80}>
               <h2 className="heading-section text-foreground mb-8">
-                Request a Specification
+                Work With Forge
               </h2>
             </RevealOnScroll>
             <RevealOnScroll delay={150}>
               <p className="text-sm text-muted-foreground/35 mb-12 leading-[1.9]">
-                Whether it's a GroundLock configuration, custom gate system,
-                or bespoke property element — we'll scope it, quote it, and build it.
+                Whether you're configuring a GroundLock system, specifying
+                custom hardware, or planning a bespoke element for your
+                property — we'll scope it, quote it, and build it.
               </p>
             </RevealOnScroll>
             <RevealOnScroll delay={250}>
-              <Button asChild variant="gold" size="lg">
-                <Link to="/contact">
-                  Enquire About Forge Products <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Button asChild variant="gold" size="lg">
+                  <Link to="/groundlock">
+                    Explore GroundLock <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outlineLight" size="lg">
+                  <Link to="/contact">
+                    Enquire About Forge
+                  </Link>
+                </Button>
+              </div>
             </RevealOnScroll>
           </div>
         </div>
