@@ -53,19 +53,19 @@ const PROJECTS = [
 ];
 
 const SERVICES = [
-  { icon: Mountain, title: "Arenas", desc: "Engineered surfaces with consistent footing and zero drainage failure.", href: "/services" },
-  { icon: Fence, title: "Fencing", desc: "Post-and-rail, steel, and custom fencing systems built for longevity.", href: "/services" },
-  { icon: Home, title: "Stables", desc: "Designed around equine behaviour, airflow, and structural durability.", href: "/services" },
-  { icon: Layers, title: "GroundLock Systems", desc: "Interlocking ground stabilisation — eliminates mud permanently.", href: "/groundlock" },
-  { icon: Shovel, title: "Earthworks", desc: "Civil preparation, drainage engineering, and sub-base profiling.", href: "/services" },
-  { icon: Wrench, title: "Custom Builds", desc: "Bespoke infrastructure — wash bays, float areas, rural structures.", href: "/services" },
+  { icon: Mountain, title: "Arenas", desc: "Precision-graded surfaces with consistent footing and zero drainage failure.", href: "/services" },
+  { icon: Fence, title: "Fencing", desc: "Post-and-rail, steel, and custom systems shaped for daily equine use.", href: "/services" },
+  { icon: Home, title: "Stables", desc: "Designed around horse behaviour, airflow, sightlines, and structural longevity.", href: "/services" },
+  { icon: Layers, title: "GroundLock Systems", desc: "Interlocking ground stabilisation for entries, laneways, and high-traffic zones.", href: "/groundlock" },
+  { icon: Shovel, title: "Earthworks", desc: "Civil preparation, sub-base profiling, and drainage behaviour mapping.", href: "/services" },
+  { icon: Wrench, title: "Custom Builds", desc: "Wash bays, float areas, pavilions, and bespoke rural infrastructure.", href: "/services" },
 ];
 
 const PROCESS_STEPS = [
-  { num: "01", title: "Site Assessment", desc: "On-site evaluation of terrain, drainage, and project scope." },
-  { num: "02", title: "Design + Scope", desc: "Detailed specification, materials planning, and timeline." },
-  { num: "03", title: "Build + Execution", desc: "Precision construction with quality checkpoints throughout." },
-  { num: "04", title: "Completion", desc: "Final inspection, handover, and maintenance guidance." },
+  { num: "01", title: "Site Reading", desc: "We walk the property — assessing how it moves, drains, wears, and lives under daily equine use." },
+  { num: "02", title: "Specification", desc: "A structured project brief covering materials, access logic, drainage behaviour, and build sequence." },
+  { num: "03", title: "Construction", desc: "Hands-on build with quality checkpoints, real-time decisions, and zero compromise on method." },
+  { num: "04", title: "Handover", desc: "Final walkthrough, care guidance, and a finished result built to hold up — not just look finished." },
 ];
 
 /* ── Standardised spacing constants ───── */
