@@ -566,13 +566,13 @@ export default function Index() {
       </section>
 
       {/* ═══ TRAINING MENTION ═════════════════════════════ */}
-      <section className="relative border-t border-border/10">
-        <div className="py-10 sm:py-12">
-          <div className="section-container relative z-10 text-center max-w-lg mx-auto">
-            <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground/20 font-mono mb-3">
+      <section className="relative border-t border-border/5">
+        <div className="py-6 sm:py-8">
+          <div className="section-container relative z-10 text-center max-w-md mx-auto">
+            <p className="text-[9px] uppercase tracking-[0.35em] text-muted-foreground/12 font-mono mb-2">
               On-site training
             </p>
-            <p className="text-[13px] text-muted-foreground/30 leading-[1.9] font-serif italic">
+            <p className="text-[11px] sm:text-[12px] text-muted-foreground/18 leading-[1.85] font-serif italic">
               Select training sessions are available on-site with Glenn Browitt on Thursdays and Fridays, offering experienced guidance in horsemanship and performance.
             </p>
           </div>
