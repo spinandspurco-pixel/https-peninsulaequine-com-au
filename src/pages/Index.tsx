@@ -11,28 +11,23 @@ import { cn } from "@/lib/utils";
 import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
 
 // Portfolio imagery — curated hero-tier visuals (unique to homepage)
-import stoneworkStables from "@/assets/stonework-stables-1.jpg";
-import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
-import qldAerial2 from "@/assets/qld-facility-aerial-2.jpg";
-import equitanaTractors from "@/assets/equitana-tractors.jpg";
-import caulfieldEvent from "@/assets/caulfield-event.jpg";
+import garageInterior from "@/assets/garage-interior-flake.jpg";
+import garageExterior from "@/assets/garage-exterior.jpg";
+import pavilionTimber from "@/assets/pavilion-timber-detail.jpg";
+import interiorTimberWindow from "@/assets/interior-timber-window.jpg";
+import mainRidgeFinishedExterior from "@/assets/main-ridge-finished-exterior.jpg";
 
 // Intro video
 import buildVideo from "@/assets/videos/main-ridge-woodwork-1.mp4";
 
 // Detail / material textures (unique to homepage strip)
-import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
-import arenaSandPrep2 from "@/assets/arena-sand-prep-2.jpg";
-import mainRidgeCiroWoodwork4 from "@/assets/main-ridge-ciro-woodwork-4.jpg";
+import brickworkEucalyptus from "@/assets/brickwork-eucalyptus.jpg";
 
 // Process / build imagery (unique to homepage)
-import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
+import rebarFoundation from "@/assets/rebar-foundation-deep.jpg";
 
 // Training
 import glennRiding from "@/assets/glenn-riding.jpg";
-
-// Main Ridge finished project
-import mainRidgeFinishedExterior from "@/assets/main-ridge-finished-exterior.jpg";
 
 // Shop / Forge imagery
 import peBanner from "@/assets/pe-banner.png";
