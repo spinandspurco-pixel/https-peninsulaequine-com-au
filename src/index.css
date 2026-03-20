@@ -781,5 +781,5 @@
 /* ── Global cinematic image tone — warm, desaturated ── */
 img[loading="lazy"],
 .cinematic-tone {
-  filter: saturate(0.85) contrast(1.05) sepia(0.04);
+  filter: saturate(0.88) contrast(1.04) sepia(0.03);
 }
