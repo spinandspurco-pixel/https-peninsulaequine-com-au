@@ -438,6 +438,78 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ═══ 4b. SIGNATURE SYSTEMS — 3-card ecosystem ═══════ */}
+      <SectionBleed from="background" to="card" />
+      <section className="relative overflow-hidden">
+        <div className={`${SP_SECTION} bg-card relative`}>
+          <div className="absolute inset-0 grain-texture opacity-25" />
+          <div className="section-container relative z-[1] max-w-5xl mx-auto">
+            <div className={`${SP_HEAD}`}>
+              <RevealOnScroll direction="up">
+                <RevealLine className="mb-6" width="w-10" />
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={80}>
+                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">Peninsula Equine</p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={120}>
+                <h2 className="heading-section text-foreground mb-4">
+                  Signature Systems
+                </h2>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={180}>
+                <p className="text-[13px] text-muted-foreground/35 leading-[2] max-w-[420px]">
+                  Proprietary systems and engineered details designed to solve the way equine
+                  properties actually move, wear, and endure.
+                </p>
+              </RevealOnScroll>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-border/8">
+              {[
+                {
+                  title: "GroundLock",
+                  body: "A premium stabilised entry system designed for floats, trucks, gated arrivals, and high-traffic rural entries.",
+                  cta: "Explore GroundLock",
+                  href: "/groundlock",
+                },
+                {
+                  title: "Arrival Packages",
+                  body: "Integrated front-entry concepts combining surface systems, gate logic, edging, and architectural presentation.",
+                  cta: "View Entry Systems",
+                  href: "/groundlock",
+                },
+                {
+                  title: "Forge Details",
+                  body: "Custom forged hardware, gate elements, signage, and rural design details that complete the property properly.",
+                  cta: "Explore Equus Forge",
+                  href: "/shop",
+                },
+              ].map((card, i) => (
+                <RevealOnScroll key={card.title} direction="up" stagger={i} staggerInterval={100}>
+                  <Link
+                    to={card.href}
+                    className="group relative flex flex-col p-8 sm:p-10 min-h-[240px] bg-card hover:bg-secondary/20 transition-all duration-700"
+                  >
+                    <div className="absolute top-0 left-8 right-8 sm:left-10 sm:right-10 h-px bg-accent/8" />
+                    <h4 className="font-serif text-[15px] font-medium text-foreground/60 tracking-[0.02em] mb-4 group-hover:text-foreground transition-colors duration-500">
+                      {card.title}
+                    </h4>
+                    <p className="text-[12px] text-muted-foreground/30 leading-[2] max-w-[260px] flex-1">
+                      {card.body}
+                    </p>
+                    <div className="flex items-center gap-1.5 mt-6 text-muted-foreground/0 group-hover:text-accent/50 transition-all duration-700">
+                      <span className="text-[10px] uppercase tracking-[0.15em] font-mono">{card.cta}</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </div>
+                  </Link>
+                </RevealOnScroll>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+      <SectionBleed from="card" to="background" />
+
       {/* ═══ 5. GROUNDLOCK — SIGNATURE SYSTEM ══════════════ */}
       <SectionBleed from="background" to="card" />
       <section className="relative overflow-hidden">
@@ -569,6 +641,41 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ═══ 5c. GROUNDLOCK — APPLICATIONS + CONFIGURATOR ══ */}
+      <section className="relative overflow-hidden">
+        <div className="py-14 sm:py-20 bg-card relative">
+          <div className="absolute inset-0 grain-texture opacity-15" />
+          <div className="section-container relative z-[1] max-w-5xl mx-auto">
+            <RevealOnScroll direction="up">
+              <div className="border-t border-border/8 pt-10 mb-16">
+                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/30 mb-6">Applications</p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-4 gap-x-8">
+                  {["Front Gate Entries", "Float + Truck Access", "Estate Driveways", "High-Traffic Arrival Zones"].map((item) => (
+                    <span key={item} className="text-[11px] text-muted-foreground/30 tracking-[0.04em]">{item}</span>
+                  ))}
+                </div>
+              </div>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={100}>
+              <div className="border-t border-border/8 pt-10 max-w-[400px]">
+                <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/25 mb-4">Coming Soon</p>
+                <h4 className="font-serif text-[15px] font-medium text-foreground/50 tracking-[0.02em] mb-3">
+                  GroundLock Planning Tool
+                </h4>
+                <p className="text-[12px] text-muted-foreground/30 leading-[2] mb-6 max-w-[340px]">
+                  A guided layout and finish tool for premium equine and rural entry systems.
+                </p>
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] text-accent/40 hover:text-accent/70 transition-colors duration-500 font-mono"
+                >
+                  Register Interest <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
 
       <SectionBleed from="card" to="background" />
       <section className="relative overflow-hidden">
@@ -757,6 +864,15 @@ export default function Index() {
                 </RevealOnScroll>
               ))}
             </div>
+
+            {/* Division tagline */}
+            <RevealOnScroll direction="up" delay={300}>
+              <div className="mt-14 pt-8 border-t border-primary-foreground/[0.05]">
+                <p className="text-[10px] uppercase tracking-[0.25em] text-primary-foreground/15 font-mono">
+                  The product division of Peninsula Equine
+                </p>
+              </div>
+            </RevealOnScroll>
           </div>
         </div>
       </section>
@@ -791,6 +907,71 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ═══ BUILT IN THE REAL WORLD — showroom band ═══════ */}
+      <section className="relative overflow-hidden">
+        <div className="py-20 sm:py-28 lg:py-36 relative">
+          <div className="absolute inset-0">
+            <img
+              src={steelShedDramatic}
+              alt="Peninsula Equine property"
+              className="absolute inset-0 w-full h-full object-cover brightness-[0.18] saturate-[0.4] contrast-[1.1]"
+              loading="lazy"
+            />
+          </div>
+          <div className="absolute inset-0 bg-background/70" />
+          <div className="absolute inset-0 grain-texture opacity-30" />
+          <div className="section-container relative z-10 max-w-3xl mx-auto text-center">
+            <RevealOnScroll direction="up">
+              <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/35 mb-6">Proof, Not Promises</p>
+              <h2 className="font-serif text-lg sm:text-xl font-medium text-foreground/70 tracking-[0.02em] mb-5">
+                Built in the Real World
+              </h2>
+              <p className="text-[13px] text-muted-foreground/35 leading-[2] max-w-[400px] mx-auto mb-8">
+                Our systems are designed to be lived with — under floats, trucks, weather, movement,
+                and daily use. The Peninsula Equine property will become the first live showroom for
+                GroundLock and future signature systems.
+              </p>
+              <Link
+                to="/gallery"
+                className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] text-accent/40 hover:text-accent/70 transition-colors duration-500 font-mono"
+              >
+                See the PE Showroom Vision <ArrowRight className="w-3 h-3" />
+              </Link>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ WHY PENINSULA EQUINE — distinction block ═══════ */}
+      <section className="relative overflow-hidden">
+        <div className="py-20 sm:py-28 relative">
+          <div className="absolute inset-0 grain-texture opacity-20" />
+          <div className="section-container relative z-[1] max-w-4xl mx-auto">
+            <RevealOnScroll direction="up">
+              <RevealLine className="mb-8 mx-auto" width="w-8" />
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={80}>
+              <h2 className="font-serif text-base sm:text-lg font-medium text-foreground/60 tracking-[0.02em] text-center mb-5 max-w-sm mx-auto leading-[1.5]">
+                Built by people who understand the property.
+              </h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={140}>
+              <p className="text-[13px] text-muted-foreground/30 leading-[2] text-center max-w-[440px] mx-auto mb-12">
+                Peninsula Equine is shaped by real equine use — movement, weather, traffic, drainage,
+                layout, durability, and the emotional importance of a property that feels properly resolved.
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={200}>
+              <div className="flex flex-wrap justify-center gap-x-10 gap-y-3">
+                {["Equine-Led Thinking", "Function Before Noise", "Built for Daily Use", "Architectural Rural Finish"].map((point) => (
+                  <span key={point} className="text-[9px] uppercase tracking-[0.25em] text-accent/25 font-mono">{point}</span>
+                ))}
+              </div>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ 9. FINAL CTA — cinematic sunset ═══════════════ */}
       <section className="relative h-[70vh] sm:h-[80vh] overflow-hidden">
         <img
@@ -803,27 +984,34 @@ export default function Index() {
         <div className="absolute inset-0 grain-texture" />
 
         <div className="absolute inset-0 flex items-center justify-center z-10">
-          <div className="section-container text-center max-w-md mx-auto">
+          <div className="section-container text-center max-w-lg mx-auto">
             <RevealOnScroll direction="up">
               <RevealLine className="mx-auto mb-12" width="w-8" />
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={80}>
               <h2 className="heading-section text-foreground mb-6 leading-[1.1]">
-                Build it properly.
+                Build it properly.<br />
+                <span className="text-foreground/40">Resolve it completely.</span>
               </h2>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
-              <p className="text-[14px] text-muted-foreground/30 mb-10 leading-[2] max-w-[300px] mx-auto">
-                Every project begins with a site assessment.<br />
-                Let's talk about yours.
+              <p className="text-[13px] text-muted-foreground/30 mb-10 leading-[2] max-w-[380px] mx-auto">
+                From equine construction and rural infrastructure to signature entry systems and
+                forged property details, Peninsula Equine creates environments designed to work hard,
+                endure beautifully, and feel fully resolved.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={200}>
-              <Button asChild variant="gold" size="lg" className="px-8">
-                <Link to="/site-assessment">
-                  Book Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button asChild variant="gold" size="lg" className="px-8">
+                  <Link to="/site-assessment">
+                    Start Your Project <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button asChild size="lg" className="bg-transparent border border-foreground/10 text-foreground/50 hover:text-foreground hover:border-foreground/25 hover:bg-foreground/[0.03] transition-all duration-700 px-8">
+                  <Link to="/contact">Enquire About Systems</Link>
+                </Button>
+              </div>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={350}>
               <p className="text-muted-foreground/12 text-[9px] tracking-[0.3em] uppercase mt-10">
