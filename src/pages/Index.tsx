@@ -257,7 +257,7 @@ export default function Index() {
             >
               <Button asChild variant="gold" size="lg" className="px-8">
                 <Link to="/site-assessment">
-                  Book Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                  Start a Project <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild size="lg" className="bg-transparent border border-foreground/10 text-foreground/50 hover:text-foreground hover:border-foreground/25 hover:bg-foreground/[0.03] transition-all duration-700 px-8">
