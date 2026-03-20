@@ -898,6 +898,71 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ═══ BUILT IN THE REAL WORLD — showroom band ═══════ */}
+      <section className="relative overflow-hidden">
+        <div className="py-20 sm:py-28 lg:py-36 relative">
+          <div className="absolute inset-0">
+            <img
+              src={steelShedDramatic}
+              alt="Peninsula Equine property"
+              className="absolute inset-0 w-full h-full object-cover brightness-[0.18] saturate-[0.4] contrast-[1.1]"
+              loading="lazy"
+            />
+          </div>
+          <div className="absolute inset-0 bg-background/70" />
+          <div className="absolute inset-0 grain-texture opacity-30" />
+          <div className="section-container relative z-10 max-w-3xl mx-auto text-center">
+            <RevealOnScroll direction="up">
+              <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/35 mb-6">Proof, Not Promises</p>
+              <h2 className="font-serif text-lg sm:text-xl font-medium text-foreground/70 tracking-[0.02em] mb-5">
+                Built in the Real World
+              </h2>
+              <p className="text-[13px] text-muted-foreground/35 leading-[2] max-w-[400px] mx-auto mb-8">
+                Our systems are designed to be lived with — under floats, trucks, weather, movement,
+                and daily use. The Peninsula Equine property will become the first live showroom for
+                GroundLock and future signature systems.
+              </p>
+              <Link
+                to="/gallery"
+                className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] text-accent/40 hover:text-accent/70 transition-colors duration-500 font-mono"
+              >
+                See the PE Showroom Vision <ArrowRight className="w-3 h-3" />
+              </Link>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ WHY PENINSULA EQUINE — distinction block ═══════ */}
+      <section className="relative overflow-hidden">
+        <div className="py-20 sm:py-28 relative">
+          <div className="absolute inset-0 grain-texture opacity-20" />
+          <div className="section-container relative z-[1] max-w-4xl mx-auto">
+            <RevealOnScroll direction="up">
+              <RevealLine className="mb-8 mx-auto" width="w-8" />
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={80}>
+              <h2 className="font-serif text-base sm:text-lg font-medium text-foreground/60 tracking-[0.02em] text-center mb-5 max-w-sm mx-auto leading-[1.5]">
+                Built by people who understand the property.
+              </h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={140}>
+              <p className="text-[13px] text-muted-foreground/30 leading-[2] text-center max-w-[440px] mx-auto mb-12">
+                Peninsula Equine is shaped by real equine use — movement, weather, traffic, drainage,
+                layout, durability, and the emotional importance of a property that feels properly resolved.
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={200}>
+              <div className="flex flex-wrap justify-center gap-x-10 gap-y-3">
+                {["Equine-Led Thinking", "Function Before Noise", "Built for Daily Use", "Architectural Rural Finish"].map((point) => (
+                  <span key={point} className="text-[9px] uppercase tracking-[0.25em] text-accent/25 font-mono">{point}</span>
+                ))}
+              </div>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ 9. FINAL CTA — cinematic sunset ═══════════════ */}
       <section className="relative h-[70vh] sm:h-[80vh] overflow-hidden">
         <img
@@ -910,27 +975,34 @@ export default function Index() {
         <div className="absolute inset-0 grain-texture" />
 
         <div className="absolute inset-0 flex items-center justify-center z-10">
-          <div className="section-container text-center max-w-md mx-auto">
+          <div className="section-container text-center max-w-lg mx-auto">
             <RevealOnScroll direction="up">
               <RevealLine className="mx-auto mb-12" width="w-8" />
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={80}>
               <h2 className="heading-section text-foreground mb-6 leading-[1.1]">
-                Build it properly.
+                Build it properly.<br />
+                <span className="text-foreground/40">Resolve it completely.</span>
               </h2>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
-              <p className="text-[14px] text-muted-foreground/30 mb-10 leading-[2] max-w-[300px] mx-auto">
-                Every project begins with a site assessment.<br />
-                Let's talk about yours.
+              <p className="text-[13px] text-muted-foreground/30 mb-10 leading-[2] max-w-[380px] mx-auto">
+                From equine construction and rural infrastructure to signature entry systems and
+                forged property details, Peninsula Equine creates environments designed to work hard,
+                endure beautifully, and feel fully resolved.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={200}>
-              <Button asChild variant="gold" size="lg" className="px-8">
-                <Link to="/site-assessment">
-                  Book Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button asChild variant="gold" size="lg" className="px-8">
+                  <Link to="/site-assessment">
+                    Start Your Project <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button asChild size="lg" className="bg-transparent border border-foreground/10 text-foreground/50 hover:text-foreground hover:border-foreground/25 hover:bg-foreground/[0.03] transition-all duration-700 px-8">
+                  <Link to="/contact">Enquire About Systems</Link>
+                </Button>
+              </div>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={350}>
               <p className="text-muted-foreground/12 text-[9px] tracking-[0.3em] uppercase mt-10">
