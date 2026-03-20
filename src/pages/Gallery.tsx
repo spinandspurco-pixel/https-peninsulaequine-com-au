@@ -500,7 +500,7 @@ export default function Gallery() {
             <RevealOnScroll direction="up" duration={700} delay={120}>
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
                 <EditorialImage src={timberCubbyFront} alt="Western-style bespoke timber cubby" aspect="aspect-[4/3]" onClick={() => openLightbox(timberCubbyFront)} />
-                <EditorialImage src={timberCubbyDetail} alt="Reclaimed hardwood and wagon wheel detail" aspect="aspect-[4/3]" onClick={() => openLightbox(timberCubbyDetail)} />
+                <EditorialImage src={roofingSteelDetail} alt="Steel roofing — galvanised ridge capping" aspect="aspect-[4/3]" onClick={() => openLightbox(roofingSteelDetail)} />
                 <div className="col-span-2 lg:col-span-1">
                   <EditorialImage src={roofingSteelDetail} alt="Steel roofing — galvanised ridge capping" aspect="aspect-[4/3]" onClick={() => openLightbox(roofingSteelDetail)} />
                 </div>
