@@ -536,7 +536,7 @@ export default function Gallery() {
                   loading="lazy"
                   decoding="async"
                 />
-                <div className="absolute inset-0 bg-background/10 group-hover:bg-transparent transition-colors duration-700" />
+                
               </div>
             ))}
           </div>
