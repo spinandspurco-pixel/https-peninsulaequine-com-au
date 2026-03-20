@@ -438,7 +438,7 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ 4b. SIGNATURE SYSTEMS — 3-card ecosystem ═══════ */}
+      {/* ═══ 4b. SIGNATURE SYSTEMS — strategic ecosystem layer ═══════ */}
       <SectionBleed from="background" to="card" />
       <section className="relative overflow-hidden">
         <div className={`${SP_SECTION} bg-card relative`}>
@@ -449,17 +449,18 @@ export default function Index() {
                 <RevealLine className="mb-6" width="w-10" />
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={80}>
-                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">Peninsula Equine</p>
+                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">Signature Systems</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={120}>
-                <h2 className="heading-section text-foreground mb-4">
-                  Signature Systems
+                <h2 className="heading-section text-foreground mb-5">
+                  Engineered for the way equine properties<br className="hidden sm:inline" /> move, wear, and endure.
                 </h2>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={180}>
-                <p className="text-[13px] text-muted-foreground/35 leading-[2] max-w-[420px]">
-                  Proprietary systems and engineered details designed to solve the way equine
-                  properties actually move, wear, and endure.
+                <p className="text-[13px] text-muted-foreground/35 leading-[2] max-w-[460px]">
+                  Peninsula Equine is evolving beyond construction alone — into a considered
+                  ecosystem of signature systems, engineered details, and premium rural solutions
+                  designed to resolve how a property arrives, functions, and lasts.
                 </p>
               </RevealOnScroll>
             </div>
@@ -468,19 +469,19 @@ export default function Index() {
               {[
                 {
                   title: "GroundLock",
-                  body: "A premium stabilised entry system designed for floats, trucks, gated arrivals, and high-traffic rural entries.",
+                  body: "A premium equine entry system designed for floats, trucks, gated arrivals, and high-traffic rural entries — engineered beneath the surface for drainage, stability, and a more resolved point of arrival.",
                   cta: "Explore GroundLock",
                   href: "/groundlock",
                 },
                 {
                   title: "Arrival Packages",
-                  body: "Integrated front-entry concepts combining surface systems, gate logic, edging, and architectural presentation.",
+                  body: "Integrated front-entry concepts that combine surface systems, gate logic, edging, and architectural presentation for properties that need to work hard and arrive properly.",
                   cta: "View Entry Systems",
-                  href: "/groundlock",
+                  href: "/systems",
                 },
                 {
                   title: "Forge Details",
-                  body: "Custom forged hardware, gate elements, signage, and rural design details that complete the property properly.",
+                  body: "Custom forged hardware, gate elements, signage, and branded rural details designed to complete the property with strength, identity, and restraint.",
                   cta: "Explore Equus Forge",
                   href: "/shop",
                 },
@@ -488,10 +489,10 @@ export default function Index() {
                 <RevealOnScroll key={card.title} direction="up" stagger={i} staggerInterval={100}>
                   <Link
                     to={card.href}
-                    className="group relative flex flex-col p-8 sm:p-10 min-h-[240px] bg-card hover:bg-secondary/20 transition-all duration-700"
+                    className="group relative flex flex-col p-8 sm:p-10 min-h-[260px] bg-card hover:bg-secondary/20 transition-all duration-700"
                   >
                     <div className="absolute top-0 left-8 right-8 sm:left-10 sm:right-10 h-px bg-accent/8" />
-                    <h4 className="font-serif text-[15px] font-medium text-foreground/60 tracking-[0.02em] mb-4 group-hover:text-foreground transition-colors duration-500">
+                    <h4 className="font-serif text-[15px] font-medium text-foreground/60 tracking-[0.02em] mb-4 group-hover:text-foreground/90 transition-colors duration-500">
                       {card.title}
                     </h4>
                     <p className="text-[12px] text-muted-foreground/30 leading-[2] max-w-[260px] flex-1">
@@ -505,6 +506,13 @@ export default function Index() {
                 </RevealOnScroll>
               ))}
             </div>
+
+            {/* Supporting line */}
+            <RevealOnScroll direction="up" delay={400}>
+              <p className="mt-14 text-center text-[11px] tracking-[0.2em] uppercase text-muted-foreground/20 font-mono">
+                Built in the real world. Designed for daily use.
+              </p>
+            </RevealOnScroll>
           </div>
         </div>
       </section>
