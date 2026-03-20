@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   HardHat,
   Download,
+  Gate,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -40,6 +41,25 @@ const PROJECT_TYPES: {
   { key: "stable", label: "Stable Surround", defaultArea: 150, rates: { base: [110, 140], standard: [140, 200], premium: [200, 280] }, description: "High-traffic zones around stable entries & wash bays" },
   { key: "laneway", label: "Laneway", defaultArea: 400, rates: { base: [80, 110], standard: [110, 160], premium: [160, 230] }, description: "Long, narrow access tracks & property laneways" },
   { key: "float", label: "Float Parking", defaultArea: 300, rates: { base: [100, 130], standard: [130, 190], premium: [190, 260] }, description: "Heavy-load zones for float & truck parking" },
+];
+
+const APPLICATIONS = [
+  {
+    title: "Front Gate Entries",
+    description: "First impression, engineered beneath. Stable under daily vehicle movement and seasonal weather.",
+  },
+  {
+    title: "Float & Truck Access",
+    description: "Load-rated for heavy vehicles, turning circles, and repeated float traffic without surface failure.",
+  },
+  {
+    title: "Estate Driveways",
+    description: "Premium stone or gravel finishes over a permanent structural base — built to match the property.",
+  },
+  {
+    title: "High-Traffic Arrival Zones",
+    description: "Yards, wash bays, and stable forecourts that hold up through constant use and weather extremes.",
+  },
 ];
 
 /* ── Pricing Card ─────────────────────────────────── */
@@ -262,7 +282,7 @@ export default function GroundLock() {
           >
             <div className="w-8 h-px bg-accent/30" />
             <Layers className="w-3.5 h-3.5 text-accent/50" strokeWidth={1.25} />
-            <p className="text-overline text-accent/60">Proprietary System</p>
+            <p className="text-overline text-accent/60">Engineered Entry System</p>
             <div className="w-8 h-px bg-accent/30" />
           </div>
 
@@ -274,16 +294,16 @@ export default function GroundLock() {
           </h1>
 
           <p
-            className="text-muted-foreground/40 text-sm sm:text-[15px] max-w-md mx-auto opacity-0 animate-fade-in leading-[1.9]"
+            className="text-muted-foreground/40 text-sm sm:text-[15px] max-w-lg mx-auto opacity-0 animate-fade-in leading-[1.9]"
             style={{ animationDelay: "1200ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
-            Interlocking ground stabilisation for entries, yards, laneways,
-            and high-traffic zones — built to hold up under horses, floats, and weather.
+            A permanent sub-surface system for gates, driveways, and high-traffic
+            equine entries — engineered for drainage, stability, and float-grade load.
           </p>
         </div>
       </section>
 
-      {/* ═══ PROBLEM STATEMENT ═════════════════════════════ */}
+      {/* ═══ WHY GROUNDLOCK ═══════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-32 sm:py-44 bg-card relative">
@@ -294,6 +314,10 @@ export default function GroundLock() {
             </RevealOnScroll>
 
             <RevealOnScroll direction="up" delay={100}>
+              <p className="text-overline mb-6">Why It Exists</p>
+            </RevealOnScroll>
+
+            <RevealOnScroll direction="up" delay={150}>
               <h2 className="heading-section text-foreground mb-10">
                 The Ground Fails First.
               </h2>
@@ -302,10 +326,11 @@ export default function GroundLock() {
             <RevealOnScroll direction="up" delay={200}>
               <div className="space-y-5 text-sm text-muted-foreground/45 leading-[2]">
                 <p>
-                  Mud. Pooling. Ruts. Surface breakdown after one winter.
+                  Mud after rain. Ruts under float wheels. Surface washout every winter.
+                  Standard gravel and compacted earth can't hold up to real equine traffic.
                 </p>
                 <p className="text-foreground/55">
-                  It's never a surface problem — it's a structural one.
+                  GroundLock resolves it beneath the surface — permanently.
                 </p>
               </div>
             </RevealOnScroll>
@@ -313,73 +338,45 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ PROOF ZONES — future asset-ready ═════════════ */}
+      {/* ═══ APPLICATIONS ═════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-24 sm:py-36 relative">
+        <div className="py-28 sm:py-40 relative">
           <div className="absolute inset-0 grain-texture" />
-          <div className="section-container max-w-6xl mx-auto relative z-[1]">
+          <div className="section-container max-w-5xl mx-auto relative z-[1]">
             <div className="text-center mb-16 sm:mb-24">
               <RevealOnScroll direction="up">
-                <p className="text-overline mb-6">In the Field</p>
+                <p className="text-overline mb-6">Where It Fits</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={80}>
                 <h2 className="heading-section text-foreground">
-                  Installed. Tested. Proven.
+                  Built for Real Properties
                 </h2>
               </RevealOnScroll>
             </div>
 
-            <RevealOnScroll direction="up" delay={150}>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-                {/* Proof card 1 — future: top-view layout photo */}
-                <div className="aspect-[4/3] bg-card border border-border/20 flex flex-col items-center justify-center p-8 text-center">
-                  <div className="w-10 h-10 border border-accent/15 rounded-sm flex items-center justify-center mb-5">
-                    <Layers className="w-4 h-4 text-accent/30" strokeWidth={1.25} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border/10">
+              {APPLICATIONS.map((app, i) => (
+                <RevealOnScroll key={app.title} direction="up" delay={i * 80}>
+                  <div className="bg-background p-8 sm:p-10 lg:p-12">
+                    <h3 className="font-serif text-[17px] font-medium text-foreground mb-3">
+                      {app.title}
+                    </h3>
+                    <p className="text-[13px] text-muted-foreground/40 leading-[1.9] max-w-xs">
+                      {app.description}
+                    </p>
                   </div>
-                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/30 mb-2">
-                    System Layout
-                  </p>
-                  <p className="text-[11px] text-muted-foreground/20 leading-relaxed max-w-[200px]">
-                    Panel coverage and drainage fall — resolved from above.
-                  </p>
-                </div>
-
-                {/* Proof card 2 — future: finished gate-entry visual */}
-                <div className="aspect-[4/3] bg-card border border-border/20 flex flex-col items-center justify-center p-8 text-center">
-                  <div className="w-10 h-10 border border-accent/15 rounded-sm flex items-center justify-center mb-5">
-                    <Truck className="w-4 h-4 text-accent/30" strokeWidth={1.25} />
-                  </div>
-                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/30 mb-2">
-                    Entry & Arrival
-                  </p>
-                  <p className="text-[11px] text-muted-foreground/20 leading-relaxed max-w-[200px]">
-                    Finished entry zones under float traffic, gates, and daily turnout.
-                  </p>
-                </div>
-
-                {/* Proof card 3 — future: layer build-up diagram or vehicle turn */}
-                <div className="aspect-[4/3] bg-card border border-border/20 flex flex-col items-center justify-center p-8 text-center">
-                  <div className="w-10 h-10 border border-accent/15 rounded-sm flex items-center justify-center mb-5">
-                    <ShieldCheck className="w-4 h-4 text-accent/30" strokeWidth={1.25} />
-                  </div>
-                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/30 mb-2">
-                    Load Performance
-                  </p>
-                  <p className="text-[11px] text-muted-foreground/20 leading-relaxed max-w-[200px]">
-                    Heavy vehicle movement and turning — tested under real conditions.
-                  </p>
-                </div>
-              </div>
-            </RevealOnScroll>
+                </RevealOnScroll>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ═══ SYSTEM DIAGRAM ═══════════════════════════════ */}
+      {/* ═══ HOW IT WORKS — SYSTEM DIAGRAM ════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-32 sm:py-48 relative">
+        <div className="py-32 sm:py-48 bg-card relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
             <div className="text-center mb-20 sm:mb-28">
@@ -387,7 +384,7 @@ export default function GroundLock() {
                 <RevealLine className="mx-auto mb-12" width="w-10" />
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={80}>
-                <p className="text-overline mb-6">The System</p>
+                <p className="text-overline mb-6">How It Works</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={120}>
                 <h2 className="heading-section text-foreground">
@@ -406,13 +403,54 @@ export default function GroundLock() {
       {/* ═══ COMPARISON ═══════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-32 sm:py-48 bg-card relative">
+        <div className="py-32 sm:py-48 relative">
           <div className="absolute inset-0 contour-texture" />
           <div className="section-container relative z-[1]">
             <RevealOnScroll direction="up">
               <RevealLine className="mx-auto mb-16" width="w-10" />
             </RevealOnScroll>
             <GroundLockComparison />
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ FINISH OPTIONS ═══════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-28 sm:py-40 bg-card relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-3xl mx-auto text-center relative z-[1]">
+            <RevealOnScroll direction="up">
+              <p className="text-overline mb-6">Surface Finish</p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={80}>
+              <h2 className="heading-section text-foreground mb-10">
+                The Structure Is Invisible.<br />
+                <span className="text-muted-foreground/30">The Finish Is Everything.</span>
+              </h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={150}>
+              <p className="text-sm text-muted-foreground/45 leading-[2] max-w-md mx-auto mb-12">
+                GroundLock accepts a range of surface finishes — from premium
+                natural stone and decorative gravel to hardened aggregate and cobble detailing.
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={200}>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-border/10">
+                {["Natural Stone", "Decorative Gravel", "Cobble Detail", "Compacted Aggregate"].map((finish) => (
+                  <div key={finish} className="bg-background py-6 px-4">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground/40">
+                      {finish}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={280}>
+              <p className="text-[11px] text-muted-foreground/25 mt-8 leading-relaxed max-w-sm mx-auto">
+                Concrete-capable and heavy-duty infill specifications available for commercial or council-grade applications.
+              </p>
+            </RevealOnScroll>
           </div>
         </div>
       </section>
@@ -605,7 +643,7 @@ export default function GroundLock() {
               <RevealOnScroll direction="up">
                 <div>
                   <h3 className="font-serif text-lg font-medium text-foreground mb-6 flex items-center gap-2.5">
-                    <ShieldCheck className="w-4 h-4 text-accent/50" /> Included Scope
+                    <ShieldCheck className="w-4 h-4 text-accent/50" strokeWidth={1.5} /> Included Scope
                   </h3>
                   <ul className="space-y-3 text-[13px] text-muted-foreground/50 leading-[1.8]">
                     <li>• Subgrade preparation & compaction</li>
@@ -620,7 +658,7 @@ export default function GroundLock() {
               <RevealOnScroll direction="up" delay={120}>
                 <div>
                   <h3 className="font-serif text-lg font-medium text-foreground mb-6 flex items-center gap-2.5">
-                    <HardHat className="w-4 h-4 text-accent/50" /> Specification Variables
+                    <HardHat className="w-4 h-4 text-accent/50" strokeWidth={1.5} /> Specification Variables
                   </h3>
                   <ul className="space-y-3 text-[13px] text-muted-foreground/50 leading-[1.8]">
                     <li>• Site access & machinery requirements</li>
@@ -632,32 +670,6 @@ export default function GroundLock() {
                 </div>
               </RevealOnScroll>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ EQUUS FORGE DIVISION ═════════════════════════ */}
-      <section className="relative overflow-hidden">
-        <div className="divider-grid" />
-        <div className="py-24 sm:py-32 bg-primary relative">
-          <div className="absolute inset-0 grain-texture" />
-          <div className="section-container relative z-10 flex flex-col sm:flex-row items-center justify-between gap-8 max-w-4xl mx-auto">
-            <div>
-              <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/50 mb-3">
-                Product Division
-              </p>
-              <h3 className="font-serif text-xl sm:text-2xl text-primary-foreground leading-snug">
-                Equus Forge
-              </h3>
-              <p className="text-primary-foreground/25 text-[10px] uppercase tracking-[0.2em] mt-1">
-                by Peninsula Equine
-              </p>
-            </div>
-            <Button asChild variant="gold" size="lg">
-              <Link to="/forge">
-                Explore Equus Forge <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
           </div>
         </div>
       </section>
@@ -679,19 +691,19 @@ export default function GroundLock() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={80}>
               <h2 className="heading-section text-foreground mb-8">
-                Start With a Site Reading
+                Enquire About GroundLock
               </h2>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <p className="text-sm text-muted-foreground/35 mb-12 leading-[1.9]">
-                We assess the ground, the traffic, the drainage — then specify<br className="hidden sm:block" />
-                the right system for how the site actually performs.
+                Tell us about your entry, access, or arrival zone — we'll assess the site
+                and specify the right system for how it actually performs.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={250}>
               <Button asChild variant="gold" size="lg">
                 <Link to="/contact">
-                  Request Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                  Start a GroundLock Entry Plan <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </RevealOnScroll>
@@ -699,7 +711,7 @@ export default function GroundLock() {
         </div>
       </section>
 
-      <StickySubpageCTA ctaLabel="Request Assessment" ctaHref="/contact" />
+      <StickySubpageCTA ctaLabel="Enquire About GroundLock" ctaHref="/contact" />
     </Layout>
   );
 }
