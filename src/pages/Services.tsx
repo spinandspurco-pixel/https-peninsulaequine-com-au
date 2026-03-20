@@ -134,6 +134,21 @@ export default function Services() {
         </div>
       </section>
 
+      {/* ═══ BUILD IMAGE BREAK ═════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <RevealOnScroll direction="up" duration={800}>
+          <div className="relative aspect-[21/9]">
+            <img
+              src={mainRidgeBarnFrame}
+              alt="Barn frame structure"
+              className="absolute inset-0 w-full h-full object-cover brightness-[0.55] saturate-[0.7]"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/20" />
+          </div>
+        </RevealOnScroll>
+      </section>
+
       {/* ═══ APPROACH ══════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />

@@ -99,6 +99,28 @@ export default function Forge() {
         </div>
       </section>
 
+      {/* Material Detail Strip — textures only */}
+      <section className="relative overflow-hidden" aria-label="Material details">
+        <RevealOnScroll direction="up" duration={700}>
+          <div className="grid grid-cols-3">
+            {[
+              { src: mainRidgeTimber, alt: "Timber grain" },
+              { src: aberdeenStallsDetail, alt: "Steel detail" },
+              { src: mainRidgeBrickwork, alt: "Material texture" },
+            ].map((img, i) => (
+              <div key={i} className="relative aspect-[16/9] overflow-hidden group">
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  className="absolute inset-0 w-full h-full object-cover brightness-[0.55] saturate-[0.6] contrast-[1.15] group-hover:brightness-[0.7] transition-all duration-[900ms]"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+        </RevealOnScroll>
+      </section>
+
       {/* Capabilities */}
       <section className="py-16 md:py-24">
         <div className="section-container">
