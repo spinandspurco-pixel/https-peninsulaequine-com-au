@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
-import { Phone, Mail, Instagram, Facebook, ArrowUpRight } from "lucide-react";
+import { Phone, Mail, MapPin, Instagram, Facebook, ArrowUpRight } from "lucide-react";
 import { siteConfig } from "@/data/content";
 import logoPeMark from "@/assets/logo-pe-mark.webp";
 
 const navLinks = [
   { name: "Projects", href: "/gallery" },
-  { name: "Services", href: "/services" },
   { name: "GroundLock™", href: "/groundlock" },
+  { name: "Equus Forge", href: "/forge" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];
@@ -98,6 +98,12 @@ export function Footer() {
                   {siteConfig.email}
                 </a>
               </li>
+              <li>
+                <span className="flex items-center gap-3 text-[13px] text-[hsl(var(--footer-muted))]">
+                  <MapPin className="h-3.5 w-3.5 shrink-0" />
+                  Mornington Peninsula, VIC
+                </span>
+              </li>
             </ul>
             <div className="mt-12">
               <Link
@@ -113,12 +119,12 @@ export function Footer() {
 
       {/* Equus Ridge — Brand Seed */}
       <div className="border-t border-border/10">
-        <div className="section-container py-20 text-center">
+        <div className="section-container py-16 text-center">
           <p className="font-serif text-sm tracking-[0.15em] text-muted-foreground/40 italic">
             Equus Ridge&trade;
           </p>
           <p className="text-[10px] text-muted-foreground/20 tracking-[0.12em] mt-3 font-sans">
-            The home of Peninsula Equine &amp; Spin &amp; Spur Co.
+            The home of Peninsula Equine
           </p>
         </div>
       </div>
