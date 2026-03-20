@@ -21,10 +21,15 @@ import mainRidgeFinishedExterior from "@/assets/main-ridge-finished-exterior.jpg
 import buildVideo from "@/assets/videos/main-ridge-woodwork-1.mp4";
 
 // Detail / material textures (unique to homepage strip)
-import brickworkEucalyptus from "@/assets/brickwork-eucalyptus.jpg";
+import reclaimedBeamWorkshop from "@/assets/reclaimed-beam-workshop.jpg";
+import reclaimedBoardsForklift from "@/assets/reclaimed-boards-forklift.jpg";
 
 // Process / build imagery (unique to homepage)
-import rebarFoundation from "@/assets/rebar-foundation-deep.jpg";
+import mainRidgeFrameAngle from "@/assets/main-ridge-frame-angle.jpg";
+import mainRidgeFrameWide from "@/assets/main-ridge-frame-wide.jpg";
+import mainRidgeRebarDepth2 from "@/assets/main-ridge-rebar-depth-2.jpg";
+import equitanaTractorStorm from "@/assets/equitana-tractor-storm.jpg";
+import equitanaArenaFinish from "@/assets/equitana-arena-finish.jpg";
 
 // Training
 import glennRiding from "@/assets/glenn-riding.jpg";
