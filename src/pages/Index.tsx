@@ -489,12 +489,12 @@ export default function Index() {
 
             {/* Build process imagery — cropped tight to hands/tools */}
             <RevealOnScroll direction="up" delay={200}>
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mt-16">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mt-16 img-bridge">
                 <div className="relative aspect-[16/10] overflow-hidden group col-span-2 lg:col-span-2">
                   <img
                     src={mainRidgeRebarFoundation}
                     alt="Foundation reinforcement"
-                    className="absolute inset-0 w-full h-full object-cover brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8] transition-all duration-[900ms]"
+                    className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8]"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-background/10" />
@@ -503,7 +503,7 @@ export default function Index() {
                   <img
                     src={mainRidgeCiroWoodwork4}
                     alt="Timber hand-crafting detail"
-                    className="absolute inset-0 w-full h-full object-cover object-top brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8] transition-all duration-[900ms]"
+                    className="absolute inset-0 w-full h-full object-cover object-top img-immersive brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8]"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-background/10" />
