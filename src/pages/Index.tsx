@@ -952,7 +952,7 @@ export default function Index() {
 
       {/* ═══ WHY PENINSULA EQUINE — distinction block ═══════ */}
       <section className="relative overflow-hidden">
-        <div className="py-20 sm:py-28 relative">
+        <div className="py-24 sm:py-32 relative">
           <div className="absolute inset-0 grain-texture opacity-20" />
           <div className="section-container relative z-[1] max-w-4xl mx-auto">
             <RevealOnScroll direction="up">
@@ -964,14 +964,14 @@ export default function Index() {
               </h2>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={140}>
-              <p className="text-[13px] text-muted-foreground/30 leading-[2] text-center max-w-[440px] mx-auto mb-12">
-                Peninsula Equine is shaped by real equine use — movement, weather, traffic, drainage,
-                layout, durability, and the emotional importance of a property that feels properly resolved.
+              <p className="text-[13px] text-muted-foreground/30 leading-[2] text-center max-w-[420px] mx-auto mb-12">
+                Peninsula Equine is shaped by firsthand equine knowledge and rural building experience
+                — not theoretical design or imported templates.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={200}>
               <div className="flex flex-wrap justify-center gap-x-10 gap-y-3">
-                {["Equine-Led Thinking", "Function Before Noise", "Built for Daily Use", "Architectural Rural Finish"].map((point) => (
+                {["Equine-Led Thinking", "Function Before Noise", "Horseman-Built", "Architectural Rural Finish"].map((point) => (
                   <span key={point} className="text-[9px] uppercase tracking-[0.25em] text-accent/25 font-mono">{point}</span>
                 ))}
               </div>
