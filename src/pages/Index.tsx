@@ -671,7 +671,7 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ 8. EQUUS FORGE — SHOP PREVIEW ════════════════ */}
+      {/* ═══ 8. EQUUS FORGE — PRODUCT DIVISION ════════════ */}
       <SectionBleed from="card" to="primary" />
       <section className="relative overflow-hidden">
         <div className={`${SP_SECTION} bg-primary relative`}>
@@ -679,18 +679,18 @@ export default function Index() {
             backgroundImage: "repeating-linear-gradient(135deg, transparent, transparent 20px, hsl(var(--primary-foreground)) 20px, hsl(var(--primary-foreground)) 21px)",
           }} />
           <div className="absolute inset-0 grain-texture" />
-          {/* Background glow behind CTA area */}
           <div
             className="absolute inset-0 pointer-events-none"
-            style={{ background: "radial-gradient(ellipse 50% 60% at 65% 50%, hsl(var(--accent) / 0.05) 0%, transparent 70%)" }}
+            style={{ background: "radial-gradient(ellipse 50% 60% at 50% 40%, hsl(var(--accent) / 0.04) 0%, transparent 70%)" }}
           />
           <div className="section-container relative z-10 max-w-5xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            {/* Hero intro — image + copy */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-20 sm:mb-28">
               <RevealOnScroll direction="up">
                 <div className="relative aspect-[4/3] overflow-hidden group img-feather-sides lg:img-overlap-top lg:img-overlap-bottom">
                   <img
                     src={peBanner}
-                    alt="Equus Forge — Peninsula Equine product line"
+                    alt="Equus Forge — Peninsula Equine product division"
                     className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.75] group-hover:brightness-[0.85]"
                     loading="lazy"
                   />
@@ -704,27 +704,58 @@ export default function Index() {
                   <h2 className="heading-section text-primary-foreground mb-4 leading-[1.15]">
                     Equus Forge
                   </h2>
-                  <p className="text-primary-foreground/25 text-[10px] uppercase tracking-[0.22em] mb-8">
-                    by Peninsula Equine
+                  <p className="text-primary-foreground/30 text-[12px] sm:text-[13px] leading-[2] mb-6 max-w-[360px]">
+                    Engineered products and signature systems for premium equine and rural properties.
                   </p>
-                  <p className="text-[14px] text-primary-foreground/50 leading-[2] mb-4 max-w-[340px]">
-                    Engineered ground systems, steel components, and infrastructure
-                    configurations — designed for horsemen, by a horseman.
+                  <p className="text-[14px] text-primary-foreground/45 leading-[2] mb-10 max-w-[360px]">
+                    Equus Forge is the product division of Peninsula Equine — bringing together forged
+                    hardware, engineered ground systems, and custom rural design elements built for
+                    properties that need to work hard and feel properly resolved.
                   </p>
-                  <p className="text-[11px] text-primary-foreground/20 tracking-[0.18em] uppercase mb-8">
-                  </p>
-                  <p className="text-[11px] text-primary-foreground/20 tracking-[0.15em] uppercase mb-8">
-                    Systems. Components. Built to scale.
-                  </p>
-                </RevealOnScroll>
-                <RevealOnScroll direction="up" delay={250}>
-                  <Button asChild variant="gold" size="lg" className="px-8">
-                    <Link to="/shop">
-                      Explore GroundLock™ Systems <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
                 </RevealOnScroll>
               </div>
+            </div>
+
+            {/* Product family cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-px">
+              {[
+                {
+                  title: "GroundLock Systems",
+                  body: "Premium stabilised entry systems designed for floats, trucks, and high-traffic rural arrivals.",
+                  cta: "Explore GroundLock",
+                  href: "/groundlock",
+                },
+                {
+                  title: "Forge Hardware",
+                  body: "Architectural steelwork, gate elements, and rural hardware designed to elevate the working property.",
+                  cta: "View Hardware",
+                  href: "/shop",
+                },
+                {
+                  title: "Custom Property Elements",
+                  body: "Bespoke entry packages, estate details, and made-to-fit solutions for standout equine and rural builds.",
+                  cta: "Enquire Now",
+                  href: "/contact",
+                },
+              ].map((card, i) => (
+                <RevealOnScroll key={card.title} direction="up" stagger={i} staggerInterval={100}>
+                  <Link
+                    to={card.href}
+                    className="group relative flex flex-col p-8 sm:p-10 min-h-[260px] bg-primary-foreground/[0.03] hover:bg-primary-foreground/[0.06] transition-all duration-700 border-t border-primary-foreground/[0.06]"
+                  >
+                    <h4 className="font-serif text-[15px] font-medium text-primary-foreground/70 tracking-[0.02em] mb-4 group-hover:text-primary-foreground transition-colors duration-500">
+                      {card.title}
+                    </h4>
+                    <p className="text-[12px] text-primary-foreground/30 leading-[2] max-w-[260px] flex-1">
+                      {card.body}
+                    </p>
+                    <div className="flex items-center gap-1.5 mt-6 text-primary-foreground/0 group-hover:text-accent/50 transition-all duration-700">
+                      <span className="text-[10px] uppercase tracking-[0.15em] font-mono">{card.cta}</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </div>
+                  </Link>
+                </RevealOnScroll>
+              ))}
             </div>
           </div>
         </div>
