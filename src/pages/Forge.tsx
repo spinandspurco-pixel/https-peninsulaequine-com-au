@@ -288,20 +288,14 @@ export default function Forge() {
           <div className="section-container relative z-10 text-center max-w-md mx-auto">
             <RevealOnScroll>
               <RevealLine className="mx-auto mb-16" width="w-8" />
-            </RevealOnScroll>
-            <RevealOnScroll delay={80}>
               <h2 className="heading-section text-foreground mb-8">
                 Work With Forge
               </h2>
-            </RevealOnScroll>
-            <RevealOnScroll delay={150}>
               <p className="text-sm text-muted-foreground/35 mb-12 leading-[1.9]">
                 Whether you're configuring a GroundLock system, specifying
                 custom hardware, or planning a bespoke element for your
                 property — we'll scope it, quote it, and build it.
               </p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={250}>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Button asChild variant="gold" size="lg">
                   <Link to="/groundlock">
