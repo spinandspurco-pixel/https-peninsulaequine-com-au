@@ -417,7 +417,7 @@ export default function Index() {
                   <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/20 mb-8">
                     Modular Ground Stabilisation
                   </p>
-                  <p className="text-[14px] text-muted-foreground/45 leading-[2] mb-6 max-w-[360px]">
+                  <p className="text-[14px] text-muted-foreground/45 leading-[2] mb-6 max-w-[340px]">
                     GroundLock is a modular base system designed for strength,
                     speed, and long-term stability. Built to outperform
                     traditional methods.
