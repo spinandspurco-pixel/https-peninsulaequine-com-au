@@ -25,10 +25,10 @@ import buildVideo from "@/assets/videos/main-ridge-woodwork-1.mp4";
 // Detail / material textures (unique to homepage strip)
 import reclaimedBeamWorkshop from "@/assets/reclaimed-beam-workshop.jpg";
 
-// Process / build imagery (unique to homepage)
-import mainRidgeFrameAngle from "@/assets/main-ridge-frame-angle.jpg";
-import mainRidgeFrameWide from "@/assets/main-ridge-frame-wide.jpg";
-import mainRidgeRebarDepth2 from "@/assets/main-ridge-rebar-depth-2.jpg";
+// Process / finished imagery (unique to homepage)
+import processWideFinished from "@/assets/homepage-process-wide-finished.jpg";
+import processTimberDetail from "@/assets/homepage-process-timber-detail.jpg";
+import processStoneTexture from "@/assets/homepage-process-stone-texture.jpg";
 import equitanaArenaFinish from "@/assets/equitana-arena-finish.jpg";
 
 // Training
@@ -731,8 +731,8 @@ export default function Index() {
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mt-16 img-bridge">
                 <div className="relative aspect-[16/10] overflow-hidden group col-span-2 lg:col-span-2">
                   <img
-                    src={mainRidgeFrameWide}
-                    alt="Main Ridge framing build phase"
+                    src={processWideFinished}
+                    alt="Finished timber and stone barn structure"
                     className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8]"
                     loading="lazy"
               decoding="async"
@@ -741,8 +741,8 @@ export default function Index() {
                 </div>
                 <div className="relative aspect-[3/4] overflow-hidden group">
                   <img
-                    src={mainRidgeFrameAngle}
-                    alt="Timber frame angle detail"
+                    src={processTimberDetail}
+                    alt="Premium timber joinery detail"
                     className="absolute inset-0 w-full h-full object-cover object-top img-immersive brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8]"
                     loading="lazy"
               decoding="async"
@@ -757,7 +757,7 @@ export default function Index() {
               <div className="grid grid-cols-4 gap-2 mt-12">
                 {[
                   { src: interiorTimberWindow, alt: "Timber cladding detail" },
-                  { src: mainRidgeRebarDepth2, alt: "Rebar foundation depth" },
+                  { src: processStoneTexture, alt: "Natural stone wall detail" },
                   { src: reclaimedBeamWorkshop, alt: "Reclaimed beam preparation" },
                   { src: equitanaArenaFinish, alt: "Finished arena surface" },
                 ].map((img, i) => (
