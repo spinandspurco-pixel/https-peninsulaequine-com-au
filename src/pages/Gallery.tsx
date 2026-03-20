@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { useParallax } from "@/hooks/useParallax";
 
 // ── 1. ESTABLISHING / HERO ──
-import qldAerial1 from "@/assets/qld-facility-aerial-1.jpg";
+import coveredArenaFinishedLit from "@/assets/covered-arena-finished-lit.jpg";
 
 // ── 2. FEATURE PROJECT (Aberdeen) ──
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
@@ -23,12 +23,8 @@ import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
 import mainRidgeFrameTrench from "@/assets/main-ridge-frame-trench.jpg";
 import mainRidgeCraneLift from "@/assets/main-ridge-crane-lift.jpg";
 import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
-import mainRidgeTimberPosts from "@/assets/main-ridge-timber-posts.jpg";
+
 import mainRidgePostDepth from "@/assets/main-ridge-post-depth.jpg";
-import mainRidgeFrameProgress from "@/assets/main-ridge-frame-progress.jpg";
-import mainRidgeFoundationPour from "@/assets/main-ridge-foundation-pour.jpg";
-import mainRidgeSitePrep from "@/assets/main-ridge-site-prep.jpg";
-import mainRidgeFrameAngle from "@/assets/main-ridge-frame-angle.jpg";
 import mainRidgeFrameWide from "@/assets/main-ridge-frame-wide.jpg";
 
 // ── 4. GROUNDLOCK / SYSTEM ──
@@ -40,12 +36,9 @@ import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
 // ── 5. EDITORIAL / FINISHED RESULTS ──
 import aberdeenDeck from "@/assets/aberdeen-deck.jpg";
 import stoneworkStables2 from "@/assets/stonework-stables-2.jpg";
-import qldExterior3 from "@/assets/qld-facility-exterior-3.jpg";
-import qldExterior1 from "@/assets/qld-facility-exterior-1.jpg";
-import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
 import equitanaArena3 from "@/assets/equitana-arena-3.jpg";
-import equitanaArena5 from "@/assets/equitana-arena-5.jpg";
-import equitanaArena6 from "@/assets/equitana-arena-6.jpg";
+import premiumStableFacade from "@/assets/premium-stable-facade.png";
+import coveredArenaBlackExterior from "@/assets/covered-arena-black-exterior.jpg";
 
 // ── 6. DETAIL / CRAFT ──
 import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
@@ -54,7 +47,6 @@ import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
 // ── 7. CUSTOM BUILDS ──
 import steelShedDramatic from "@/assets/steel-shed-dramatic.jpg";
 import timberCubbyFront from "@/assets/timber-cubby-front.jpg";
-import timberCubbyDetail from "@/assets/timber-cubby-detail.jpg";
 import timberCubbyCockatoo from "@/assets/timber-cubby-cockatoo.jpg";
 import roofingSteelDetail from "@/assets/roofing-steel-detail.jpg";
 import aberdeenInteriorStonework from "@/assets/aberdeen-interior-stonework.jpg";
@@ -245,9 +237,9 @@ export default function Gallery() {
           className="absolute inset-0 scale-110"
           style={{ transform: `translateY(${parallax.offset * 0.4}px) scale(1.1)` }}
         >
-          <img
-            src={qldAerial1}
-            alt="Queensland equine facility — aerial view"
+           <img
+            src={coveredArenaFinishedLit}
+            alt="Covered arena — finished and lit at dusk"
             className="w-full h-full object-cover"
           />
         </div>
@@ -362,28 +354,18 @@ export default function Gallery() {
               </div>
             </RevealOnScroll>
 
-            {/* Row 2 — four process shots */}
+            {/* Row 2 — three process shots */}
             <RevealOnScroll direction="up" duration={700} delay={120}>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-4 sm:mb-5">
-                <EditorialImage src={mainRidgeRebarFoundation} alt="Reinforced rebar foundation" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeRebarFoundation)} />
-                <EditorialImage src={mainRidgeFoundationPour} alt="Concrete foundation pour" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeFoundationPour)} />
-                <EditorialImage src={mainRidgeFrameAngle} alt="Timber frame angle detail" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeFrameAngle)} />
-                <EditorialImage src={mainRidgeFrameProgress} alt="Frame progress — structural assembly" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeFrameProgress)} />
-              </div>
-            </RevealOnScroll>
-
-            {/* Row 3 — three process shots */}
-            <RevealOnScroll direction="up" duration={700} delay={160}>
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mb-4 sm:mb-5">
+                <EditorialImage src={mainRidgeRebarFoundation} alt="Reinforced rebar foundation" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeRebarFoundation)} />
                 <EditorialImage src={mainRidgeFrameTrench} alt="Foundation trench with frame" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeFrameTrench)} />
-                <EditorialImage src={mainRidgeCraneLift} alt="Crane lifting timber frame" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeCraneLift)} />
                 <div className="col-span-2 lg:col-span-1">
-                  <EditorialImage src={mainRidgeSitePrep} alt="Site preparation and groundwork" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeSitePrep)} />
+                  <EditorialImage src={mainRidgeCraneLift} alt="Crane lifting timber frame" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeCraneLift)} />
                 </div>
               </div>
             </RevealOnScroll>
 
-            {/* Row 4 — wide completed frame */}
+            {/* Row 3 — wide completed frame */}
             <RevealOnScroll direction="up" duration={700} delay={200}>
               <EditorialImage src={mainRidgeBarnFrame} alt="Complete barn timber frame" aspect="aspect-[21/9]" onClick={() => openLightbox(mainRidgeBarnFrame)} />
             </RevealOnScroll>
@@ -465,22 +447,19 @@ export default function Gallery() {
             <RevealOnScroll direction="up" duration={700} delay={80}>
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 mb-4 sm:mb-5">
                 <div className="lg:col-span-5 lg:mt-8">
-                  <EditorialImage src={qldExterior3} alt="Queensland — exterior detail" aspect="aspect-[3/4]" onClick={() => openLightbox(qldExterior3)} />
+                  <EditorialImage src={premiumStableFacade} alt="Premium stable — architectural facade" aspect="aspect-[3/4]" onClick={() => openLightbox(premiumStableFacade)} />
                 </div>
                 <div className="lg:col-span-7 lg:-mt-6">
-                  <EditorialImage src={equitanaArena5} alt="Equitana — completed competition arena" aspect="aspect-[16/9]" onClick={() => openLightbox(equitanaArena5)} />
+                  <EditorialImage src={coveredArenaBlackExterior} alt="Covered arena — black exterior cladding" aspect="aspect-[16/9]" onClick={() => openLightbox(coveredArenaBlackExterior)} />
                 </div>
               </div>
             </RevealOnScroll>
 
-            {/* Row 3 — three polished results */}
+            {/* Row 3 — two polished results */}
             <RevealOnScroll direction="up" duration={700} delay={120}>
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-                <EditorialImage src={qldExterior1} alt="Queensland — barn exterior" aspect="aspect-[4/3]" onClick={() => openLightbox(qldExterior1)} />
-                <EditorialImage src={equitanaArena6} alt="Equitana — arena surface detail" aspect="aspect-[4/3]" onClick={() => openLightbox(equitanaArena6)} />
-                <div className="col-span-2 lg:col-span-1">
-                  <EditorialImage src={qldCourtyard} alt="Queensland — central courtyard" aspect="aspect-[4/3]" onClick={() => openLightbox(qldCourtyard)} />
-                </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
+                <EditorialImage src={equitanaArena3} alt="Equitana — competition arena with seating" aspect="aspect-[4/3]" onClick={() => openLightbox(equitanaArena3)} />
+                <EditorialImage src={mainRidgeArenaGrading} alt="Main Ridge — arena surface grading" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeArenaGrading)} />
               </div>
             </RevealOnScroll>
           </div>
@@ -521,7 +500,7 @@ export default function Gallery() {
             <RevealOnScroll direction="up" duration={700} delay={120}>
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
                 <EditorialImage src={timberCubbyFront} alt="Western-style bespoke timber cubby" aspect="aspect-[4/3]" onClick={() => openLightbox(timberCubbyFront)} />
-                <EditorialImage src={timberCubbyDetail} alt="Reclaimed hardwood and wagon wheel detail" aspect="aspect-[4/3]" onClick={() => openLightbox(timberCubbyDetail)} />
+                <EditorialImage src={roofingSteelDetail} alt="Steel roofing — galvanised ridge capping" aspect="aspect-[4/3]" onClick={() => openLightbox(roofingSteelDetail)} />
                 <div className="col-span-2 lg:col-span-1">
                   <EditorialImage src={roofingSteelDetail} alt="Steel roofing — galvanised ridge capping" aspect="aspect-[4/3]" onClick={() => openLightbox(roofingSteelDetail)} />
                 </div>
