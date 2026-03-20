@@ -61,6 +61,15 @@ import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
 import mainRidgeTimberPosts from "@/assets/main-ridge-timber-posts.jpg";
 import mainRidgeTrenchUtilities from "@/assets/main-ridge-trench-utilities.jpg";
 
+// Custom Builds
+import steelShedDramatic from "@/assets/steel-shed-dramatic.jpg";
+import timberCubbyFront from "@/assets/timber-cubby-front.jpg";
+import timberCubbyDetail from "@/assets/timber-cubby-detail.jpg";
+import timberCubbyCockatoo from "@/assets/timber-cubby-cockatoo.jpg";
+import roofingSteelDetail from "@/assets/roofing-steel-detail.jpg";
+import shedExteriorSide from "@/assets/shed-exterior-side.jpg";
+import shedRollerDoorDetail from "@/assets/shed-roller-door-detail.jpg";
+
 // Videos
 import mainRidgeWoodwork1 from "@/assets/videos/main-ridge-woodwork-1.mp4";
 import mainRidgeWoodwork2 from "@/assets/videos/main-ridge-woodwork-2.mp4";
