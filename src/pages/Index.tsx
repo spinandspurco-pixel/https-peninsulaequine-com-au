@@ -282,7 +282,7 @@ export default function Index() {
                   </h2>
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" delay={300}>
-                  <p className="text-[14px] text-muted-foreground/45 leading-[2.1] max-w-[380px]">
+                  <p className="text-[14px] text-muted-foreground/45 leading-[2.1] max-w-[340px]">
                     Peninsula Equine builds high-performance equine environments across Victoria.
                     From private arenas to full-scale facilities, every project is engineered for
                     longevity, usability, and clean execution.
