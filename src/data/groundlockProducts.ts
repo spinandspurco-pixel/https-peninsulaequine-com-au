@@ -21,6 +21,7 @@ export interface GroundLockProduct {
   specs: { label: string; value: string }[];
   ctaPrimary: string;
   ctaSecondary: string;
+  trustLine: string;
 }
 
 export interface GroundLockAddOn {
@@ -41,12 +42,12 @@ export const GROUNDLOCK_TIERS: Record<ProductTier, { label: string; color: strin
   pro: {
     label: "Pro",
     color: "hsl(var(--accent))",
-    description: "Full arena configuration — best value",
+    description: "Full arena system — most popular",
   },
   complete: {
     label: "Complete",
     color: "hsl(var(--accent-light))",
-    description: "Premium system with full support package",
+    description: "Premium system — full build pathway",
   },
 };
 
@@ -56,14 +57,14 @@ export const GROUNDLOCK_PRODUCTS: GroundLockProduct[] = [
     tier: "starter",
     title: "GroundLock™ Base System",
     subtitle: "Starter Configuration",
-    headline: "Stable ground starts here.",
+    headline: "Stop fighting your footing. Start riding on engineered ground.",
     problem:
-      "Unstable, poorly drained arenas lead to inconsistent footing, increased injury risk, and constant maintenance. Most arena surfaces fail within 2–3 years.",
+      "Poorly drained arenas create inconsistent footing, increased injury risk, and constant maintenance — most fail within 2–3 years.",
     solution:
-      "The GroundLock™ Base System delivers engineered drainage and ground stabilisation for small arenas and round pens — designed to outperform conventional builds from day one.",
+      "The Base System delivers engineered drainage and stabilisation for small arenas and round pens — designed to outperform conventional builds from day one.",
     price: 4950,
     includes: [
-      "P.E. GroundLock™ base grid panels (up to 20m × 40m)",
+      "GroundLock™ base grid panels (up to 20m × 40m)",
       "Integrated sub-surface drainage layer",
       "Geotextile separation membrane",
       "Compaction-rated edge restraints",
@@ -72,12 +73,13 @@ export const GROUNDLOCK_PRODUCTS: GroundLockProduct[] = [
     ],
     specs: [
       { label: "Coverage", value: "Up to 800m²" },
-      { label: "Drainage Rate", value: "≥ 50mm/hr" },
+      { label: "Drainage", value: "≥ 50mm/hr" },
       { label: "Load Rating", value: "Standard equine" },
       { label: "Warranty", value: "12 months" },
     ],
     ctaPrimary: "Configure System",
-    ctaSecondary: "Book Site Assessment",
+    ctaSecondary: "Get Build Ready",
+    trustLine: "Same ground engineering used in Peninsula Equine's private arena builds.",
   },
   {
     handle: "groundlock-arena-system",
@@ -85,15 +87,15 @@ export const GROUNDLOCK_PRODUCTS: GroundLockProduct[] = [
     title: "GroundLock™ Arena System",
     subtitle: "Pro Configuration",
     badge: "Most Popular",
-    headline: "Engineered performance. Zero compromise.",
+    headline: "The arena system serious riders choose. Engineered for decades of performance.",
     problem:
-      "Standard arena builds use generic materials with no engineering consideration for drainage, compaction, or long-term surface integrity. The result: rutting, pooling, and costly resurfacing.",
+      "Standard arena builds use generic materials with no consideration for drainage or long-term surface integrity — leading to rutting, pooling, and costly resurfacing.",
     solution:
-      "The GroundLock™ Arena System is a fully engineered ground configuration — drainage, stabilisation, and surface integration designed as one system, not assembled from parts.",
+      "A fully engineered ground configuration — drainage, stabilisation, and surface integration designed as one complete system, not assembled from parts.",
     price: 12500,
     compareAtPrice: 15000,
     includes: [
-      "P.E. GroundLock™ interlocking grid system (up to 40m × 60m)",
+      "GroundLock™ interlocking grid system (up to 40m × 60m)",
       "Dual-layer engineered drainage network",
       "Geotextile + geocomposite separation layers",
       "Heavy-duty perimeter restraint system",
@@ -104,27 +106,29 @@ export const GROUNDLOCK_PRODUCTS: GroundLockProduct[] = [
     ],
     specs: [
       { label: "Coverage", value: "Up to 2,400m²" },
-      { label: "Drainage Rate", value: "≥ 80mm/hr" },
+      { label: "Drainage", value: "≥ 80mm/hr" },
       { label: "Load Rating", value: "Heavy equine + vehicle" },
       { label: "Warranty", value: "24 months" },
     ],
     ctaPrimary: "Configure System",
-    ctaSecondary: "Book Site Assessment",
+    ctaSecondary: "Get Build Ready",
+    trustLine: "Our most requested configuration — the same system spec used across Peninsula Equine facility projects.",
   },
   {
     handle: "groundlock-full-system",
     tier: "complete",
     title: "GroundLock™ Full System",
     subtitle: "Complete Configuration",
-    headline: "The complete engineered arena — built to last decades.",
+    badge: "Premium",
+    headline: "The complete engineered arena — built to last generations, not seasons.",
     problem:
-      "High-performance arenas demand more than good materials. Without integrated engineering — drainage, compaction control, surface calibration — even premium builds degrade under use.",
+      "High-performance arenas demand more than good materials. Without integrated engineering, even premium builds degrade under use.",
     solution:
-      "The GroundLock™ Full System is our most comprehensive configuration: full ground engineering, surface integration, on-site support, and a direct pathway into a Peninsula Equine managed build.",
+      "Our most comprehensive configuration: full ground engineering, on-site commissioning, and a direct pathway into a Peninsula Equine managed build.",
     price: 28500,
     compareAtPrice: 34000,
     includes: [
-      "P.E. GroundLock™ full-coverage interlocking system",
+      "GroundLock™ full-coverage interlocking system",
       "Triple-layer engineered drainage with fall calculation",
       "Premium geotextile + geocomposite + capillary break layers",
       "Reinforced perimeter and transition zones",
@@ -137,13 +141,14 @@ export const GROUNDLOCK_PRODUCTS: GroundLockProduct[] = [
     ],
     specs: [
       { label: "Coverage", value: "Custom — unlimited" },
-      { label: "Drainage Rate", value: "≥ 120mm/hr" },
+      { label: "Drainage", value: "≥ 120mm/hr" },
       { label: "Load Rating", value: "Commercial grade" },
       { label: "Warranty", value: "60 months" },
       { label: "Support", value: "On-site + remote" },
     ],
     ctaPrimary: "Configure System",
-    ctaSecondary: "Book Site Assessment",
+    ctaSecondary: "Get Build Ready",
+    trustLine: "Includes on-site commissioning and priority access to Peninsula Equine's full infrastructure services.",
   },
 ];
 
@@ -154,7 +159,7 @@ export const GROUNDLOCK_ADDONS: GroundLockAddOn[] = [
     subtitle: "System Expansion",
     price: 890,
     description:
-      "Additional interlocking connectors for extending your GroundLock™ system beyond the standard coverage area. Includes edge adapters and transition joints.",
+      "Additional interlocking connectors for extending your GroundLock™ system beyond standard coverage. Includes edge adapters and transition joints.",
     compatibleTiers: ["starter", "pro", "complete"],
   },
   {
@@ -163,7 +168,7 @@ export const GROUNDLOCK_ADDONS: GroundLockAddOn[] = [
     subtitle: "Coverage Extension",
     price: 2450,
     description:
-      "Add up to 400m² of additional GroundLock™ grid coverage with matched drainage integration. Designed for warm-up areas, lunging rings, or secondary zones.",
+      "Add up to 400m² of additional grid coverage with matched drainage integration. For warm-up areas, lunging rings, or secondary zones.",
     compatibleTiers: ["pro", "complete"],
   },
   {
@@ -172,7 +177,7 @@ export const GROUNDLOCK_ADDONS: GroundLockAddOn[] = [
     subtitle: "Heavy-Duty Upgrade",
     price: 1650,
     description:
-      "Upgrade your system's load rating for vehicle access, heavy machinery, or commercial traffic. Includes reinforced grid panels and upgraded edge restraints.",
+      "Upgrade load rating for vehicle access, heavy machinery, or commercial traffic. Includes reinforced panels and upgraded edge restraints.",
     compatibleTiers: ["starter", "pro", "complete"],
   },
 ];
