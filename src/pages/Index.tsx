@@ -16,6 +16,8 @@ import garageExterior from "@/assets/garage-exterior.jpg";
 import pavilionTimber from "@/assets/pavilion-timber-detail.jpg";
 import interiorTimberWindow from "@/assets/interior-timber-window.jpg";
 import mainRidgeFinishedExterior from "@/assets/main-ridge-finished-exterior.jpg";
+import steelShedDramatic from "@/assets/steel-shed-dramatic.jpg";
+import timberCubbyFront from "@/assets/timber-cubby-front.jpg";
 
 // Intro video
 import buildVideo from "@/assets/videos/main-ridge-woodwork-1.mp4";
