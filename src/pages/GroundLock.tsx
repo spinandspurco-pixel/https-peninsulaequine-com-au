@@ -295,18 +295,81 @@ export default function GroundLock() {
 
             <RevealOnScroll direction="up" delay={100}>
               <h2 className="heading-section text-foreground mb-10">
-                Most Properties Fail<br />From the Ground Up.
+                The Ground Fails First.
               </h2>
             </RevealOnScroll>
 
             <RevealOnScroll direction="up" delay={200}>
               <div className="space-y-5 text-sm text-muted-foreground/45 leading-[2]">
                 <p>
-                  Poor drainage. Unstable footing. Surface breakdown.
+                  Mud. Pooling. Ruts. Surface breakdown after one winter.
                 </p>
                 <p className="text-foreground/55">
-                  These are never surface problems. They're structural.
+                  It's never a surface problem — it's a structural one.
                 </p>
+              </div>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ PROOF ZONES — future asset-ready ═════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-24 sm:py-36 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-6xl mx-auto relative z-[1]">
+            <div className="text-center mb-16 sm:mb-24">
+              <RevealOnScroll direction="up">
+                <p className="text-overline mb-6">In the Field</p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={80}>
+                <h2 className="heading-section text-foreground">
+                  Installed. Tested. Proven.
+                </h2>
+              </RevealOnScroll>
+            </div>
+
+            <RevealOnScroll direction="up" delay={150}>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                {/* Proof card 1 — future: top-view layout photo */}
+                <div className="aspect-[4/3] bg-card border border-border/20 flex flex-col items-center justify-center p-8 text-center">
+                  <div className="w-10 h-10 border border-accent/15 rounded-sm flex items-center justify-center mb-5">
+                    <Layers className="w-4 h-4 text-accent/30" strokeWidth={1.25} />
+                  </div>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/30 mb-2">
+                    System Layout
+                  </p>
+                  <p className="text-[11px] text-muted-foreground/20 leading-relaxed max-w-[200px]">
+                    Panel coverage and drainage fall — resolved from above.
+                  </p>
+                </div>
+
+                {/* Proof card 2 — future: finished gate-entry visual */}
+                <div className="aspect-[4/3] bg-card border border-border/20 flex flex-col items-center justify-center p-8 text-center">
+                  <div className="w-10 h-10 border border-accent/15 rounded-sm flex items-center justify-center mb-5">
+                    <Truck className="w-4 h-4 text-accent/30" strokeWidth={1.25} />
+                  </div>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/30 mb-2">
+                    Entry & Arrival
+                  </p>
+                  <p className="text-[11px] text-muted-foreground/20 leading-relaxed max-w-[200px]">
+                    Finished entry zones under float traffic, gates, and daily turnout.
+                  </p>
+                </div>
+
+                {/* Proof card 3 — future: layer build-up diagram or vehicle turn */}
+                <div className="aspect-[4/3] bg-card border border-border/20 flex flex-col items-center justify-center p-8 text-center">
+                  <div className="w-10 h-10 border border-accent/15 rounded-sm flex items-center justify-center mb-5">
+                    <ShieldCheck className="w-4 h-4 text-accent/30" strokeWidth={1.25} />
+                  </div>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/30 mb-2">
+                    Load Performance
+                  </p>
+                  <p className="text-[11px] text-muted-foreground/20 leading-relaxed max-w-[200px]">
+                    Heavy vehicle movement and turning — tested under real conditions.
+                  </p>
+                </div>
               </div>
             </RevealOnScroll>
           </div>
