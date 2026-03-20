@@ -101,7 +101,7 @@ export default function Services() {
       {/* ═══ CAPABILITY PILLARS ═════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-32 sm:py-44 relative">
+        <div className="py-32 sm:py-40 lg:py-48 relative">
           <div className="absolute inset-0 contour-texture" />
           <div className="section-container max-w-4xl mx-auto relative z-[1]">
             <div className="space-y-0">
