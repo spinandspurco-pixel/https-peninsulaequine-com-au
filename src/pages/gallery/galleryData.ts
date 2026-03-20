@@ -11,7 +11,6 @@ import aberdeenAisle from "@/assets/aberdeen-aisle.jpg";
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
 import aberdeenDeck from "@/assets/aberdeen-deck.jpg";
 import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
-import aberdeenInteriorStonework from "@/assets/aberdeen-interior-stonework.jpg";
 import aberdeenMural from "@/assets/aberdeen-mural.jpg";
 import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
 import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
@@ -19,7 +18,6 @@ import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
 // Equitana Melbourne images
 import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
 import equitanaArena3 from "@/assets/equitana-arena-3.jpg";
-import equitanaEquipment from "@/assets/equitana-equipment.jpg";
 import equitanaTractors from "@/assets/equitana-tractors.jpg";
 
 // Melbourne Cup / Caulfield
@@ -34,13 +32,10 @@ import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
 import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
 import mainRidgeCraneLift from "@/assets/main-ridge-crane-lift.jpg";
 import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
-import mainRidgeTimberPosts from "@/assets/main-ridge-timber-posts.jpg";
 
 // Custom Builds
 import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
 import timberCubbyFront from "@/assets/timber-cubby-front.webp";
-import timberCubbyCockatoo from "@/assets/timber-cubby-cockatoo.jpg";
-import roofingSteelDetail from "@/assets/roofing-steel-detail.jpg";
 
 // Curated portfolio additions
 import coveredArenaFinishedLit from "@/assets/covered-arena-finished-lit.jpg";
@@ -52,7 +47,6 @@ import westernEntertainingZone from "@/assets/western-entertaining-zone.jpg";
 import mainRidgeWoodwork1 from "@/assets/videos/main-ridge-woodwork-1.mp4";
 import mainRidgeWoodwork2 from "@/assets/videos/main-ridge-woodwork-2.mp4";
 import caulfieldVideo1 from "@/assets/videos/caulfield-1.mov";
-import caulfieldVideo2 from "@/assets/videos/caulfield-2.mov";
 import caulfieldVideo3 from "@/assets/videos/caulfield-3.mov";
 import equitanaArenaVideo from "@/assets/videos/equitana-arena.mov";
 
@@ -96,8 +90,7 @@ export const allVideos: (GalleryItem & { description: string })[] = [
   { id: 103, src: mainRidgeWoodwork1, alt: "Main Ridge Timber Craftsmanship", description: "Ciro hand-crafting timber posts using traditional woodworking techniques at Main Ridge", project: "main-ridge", type: "video", thumbnail: mainRidgeCiroWoodwork1, service: "woodwork", location: "victoria" },
   { id: 104, src: mainRidgeWoodwork2, alt: "Main Ridge Woodworking Detail", description: "Precision hand-finishing of barn timber — attention to detail that lasts decades", project: "main-ridge", type: "video", thumbnail: mainRidgeCiroWoodwork2, service: "woodwork", location: "victoria" },
   { id: 105, src: caulfieldVideo1, alt: "Melbourne Cup Arena Prep — Day 1", description: "Professional arena surface preparation at Caulfield Racecourse for the Melbourne Cup carnival", project: "caulfield", type: "video", thumbnail: caulfieldEvent, service: "events", location: "victoria" },
-  { id: 106, src: caulfieldVideo2, alt: "Melbourne Cup Surface Work — Day 2", description: "Precision grading and sand management for race-day perfection at world-class Caulfield", project: "caulfield", type: "video", thumbnail: arenaSandPrep1, service: "events", location: "victoria" },
-  { id: 107, src: caulfieldVideo3, alt: "Melbourne Cup Final Touches — Day 3", description: "Final surface finishing ensuring competition-ready footing for thoroughbred racing", project: "caulfield", type: "video", thumbnail: arenaSandPrep1, service: "events", location: "victoria" },
+  { id: 107, src: caulfieldVideo3, alt: "Melbourne Cup Final Touches", description: "Final surface finishing ensuring competition-ready footing for thoroughbred racing", project: "caulfield", type: "video", thumbnail: arenaSandPrep1, service: "events", location: "victoria" },
   { id: 108, src: equitanaArenaVideo, alt: "Equitana Arena Setup", description: "Competition arena preparation at Equitana Melbourne — Australia's biggest equine event", project: "equitana", type: "video", thumbnail: equitanaArena1, service: "events", location: "victoria" },
 ];
 
@@ -115,14 +108,12 @@ export const galleryItems: GalleryItem[] = [
   { id: 13, src: aberdeenAisle, alt: "Private Client — Barn aisle with natural stone flooring", project: "aberdeen", type: "image", service: "stonework", location: "victoria" },
   { id: 14, src: aberdeenMural, alt: "Private Client — Hand-painted equestrian mural", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
   { id: 16, src: aberdeenStonework, alt: "Private Client — Natural stonework masonry", project: "aberdeen", type: "image", service: "stonework", location: "victoria" },
-  { id: 19, src: aberdeenInteriorStonework, alt: "Private Client — Interior stone wall feature", project: "aberdeen", type: "image", service: "stonework", location: "victoria" },
   { id: 20, src: aberdeenDeck, alt: "Private Client — Timber deck overlooking property", project: "aberdeen", type: "image", service: "woodwork", location: "victoria" },
   { id: 21, src: aberdeenExterior, alt: "Private Client — Completed barn exterior", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
 
   // ── Equitana Melbourne ──
   { id: 40, src: equitanaArena1, alt: "Equitana Melbourne — Competition arena setup", project: "equitana", type: "image", service: "arena", location: "victoria" },
   { id: 42, src: equitanaArena3, alt: "Equitana Melbourne — Arena with spectator seating", project: "equitana", type: "image", service: "arena", location: "victoria" },
-  { id: 46, src: equitanaEquipment, alt: "Equitana Melbourne — Professional grooming equipment", project: "equitana", type: "image", service: "events", location: "victoria" },
   { id: 47, src: equitanaTractors, alt: "Equitana Melbourne — Tractor team at work", project: "equitana", type: "image", service: "events", location: "victoria" },
 
   // ── Melbourne Cup / Caulfield ──
@@ -131,7 +122,6 @@ export const galleryItems: GalleryItem[] = [
   { id: 54, src: ranchRoundupEvent, alt: "Caulfield Ranch Roundup — Event arena setup", project: "caulfield", type: "image", service: "events", location: "victoria" },
 
   // ── Main Ridge Construction Process ──
-  { id: 60, src: mainRidgeTimberPosts, alt: "Main Ridge — Timber post installation", project: "main-ridge", type: "image", service: "infrastructure", location: "victoria" },
   { id: 61, src: mainRidgeBarnFrame, alt: "Main Ridge — Complete barn timber frame", project: "main-ridge", type: "image", service: "barn", location: "victoria" },
   { id: 62, src: mainRidgeCraneLift, alt: "Main Ridge — Crane lifting frame into position", project: "main-ridge", type: "image", service: "infrastructure", location: "victoria" },
   { id: 64, src: mainRidgeRebarFoundation, alt: "Main Ridge — Reinforced steel rebar foundation", project: "main-ridge", type: "image", service: "infrastructure", location: "victoria" },
@@ -140,8 +130,6 @@ export const galleryItems: GalleryItem[] = [
   // ── Custom Builds ──
   { id: 70, src: steelShedDramatic, alt: "Custom colorbond barn — dramatic sky", project: "custom-builds", type: "image", service: "barn", location: "victoria" },
   { id: 71, src: timberCubbyFront, alt: "Bespoke western-style timber cubby", project: "custom-builds", type: "image", service: "woodwork", location: "victoria" },
-  { id: 73, src: timberCubbyCockatoo, alt: "Custom timber structure with cockatoo", project: "custom-builds", type: "image", service: "woodwork", location: "victoria" },
-  { id: 74, src: roofingSteelDetail, alt: "Steel roofing — galvanised ridge capping", project: "custom-builds", type: "image", service: "infrastructure", location: "victoria" },
 
   // ── Covered Arenas & Stables ──
   { id: 80, src: coveredArenaFinishedLit, alt: "Covered arena — finished and lit at dusk", project: "custom-builds", type: "image", service: "arena", location: "victoria" },
