@@ -690,9 +690,8 @@ export default function Index() {
         </div>
       </section>
 
-      <SectionBleed from="card" to="background" />
       <section className="relative overflow-hidden">
-        <div className="py-24 sm:py-32 lg:py-40 relative">
+        <div className="py-28 sm:py-36 lg:py-44 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
             <div className={`${SP_HEAD}`}>
@@ -703,9 +702,14 @@ export default function Index() {
                 <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">How We Work</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={120}>
-                <h2 className="heading-section text-foreground">
-                  The Process
+                <h2 className="heading-section text-foreground mb-4">
+                  Every Resolved Project Begins on Site
                 </h2>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={160}>
+                <p className="text-[13px] text-muted-foreground/35 leading-[2] max-w-[420px]">
+                  We assess how the property moves, drains, wears, and lives — so the outcome holds up under daily equine use, not just on handover day.
+                </p>
               </RevealOnScroll>
             </div>
 
