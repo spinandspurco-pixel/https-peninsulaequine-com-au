@@ -406,6 +406,31 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ═══ PAUSE — visual stillness ═══════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="py-32 sm:py-44 lg:py-56 relative">
+          <div className="absolute inset-0 grain-texture opacity-20" />
+          <div className="section-container relative z-10 flex flex-col items-center">
+            <RevealOnScroll direction="up">
+              <div className="relative w-full max-w-md aspect-[3/4] overflow-hidden img-feather-sides mx-auto">
+                <img
+                  src={qldAerial2}
+                  alt="Aerial view of completed equine facility"
+                  className="absolute inset-0 w-full h-full object-cover brightness-[0.55] saturate-[0.65] contrast-[1.1]"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-background/20" />
+              </div>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={200}>
+              <p className="mt-12 font-serif text-sm sm:text-base italic text-muted-foreground/25 tracking-[0.06em] text-center max-w-xs leading-[1.8]">
+                Every detail serves the horse.
+              </p>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ 5. GROUNDLOCK — SIGNATURE SYSTEM ══════════════ */}
       <SectionBleed from="background" to="card" />
       <section className="relative overflow-hidden">
