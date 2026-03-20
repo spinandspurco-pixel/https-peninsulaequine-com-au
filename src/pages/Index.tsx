@@ -520,12 +520,7 @@ export default function Index() {
               ))}
             </div>
 
-            {/* Supporting line */}
-            <RevealOnScroll direction="up" delay={500}>
-              <p className="mt-20 sm:mt-24 text-center text-[10px] tracking-[0.25em] uppercase text-muted-foreground/15 font-mono">
-                Built in the real world. Designed for daily use.
-              </p>
-            </RevealOnScroll>
+            {/* Supporting line — removed to reduce noise */}
           </div>
         </div>
       </section>
