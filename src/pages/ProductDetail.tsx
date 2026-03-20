@@ -80,7 +80,7 @@ export default function ProductDetail() {
         <div className="section-container max-w-4xl mx-auto grid md:grid-cols-2 gap-12">
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-destructive">
-              <Zap className="w-4 h-4" strokeWidth={1.7} />
+              <Zap className="w-4 h-4" strokeWidth={1.5} />
               <p className="text-[10px] font-mono uppercase tracking-[0.2em]">The Problem</p>
             </div>
             <p className="text-muted-foreground leading-relaxed text-sm">{product.problem}</p>
