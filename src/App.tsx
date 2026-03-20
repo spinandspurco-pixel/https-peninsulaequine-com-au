@@ -51,6 +51,7 @@ import GroundLockSystems from "./pages/GroundLockSystems";
 import EquusRidge from "./pages/EquusRidge";
 import InstallerAccess from "./pages/InstallerAccess";
 import SiteAssessment from "./pages/SiteAssessment";
+import SignatureSystems from "./pages/SignatureSystems";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { useCartSync } from "./hooks/useCartSync";
 import { IntroContext } from "./hooks/useIntroState";
