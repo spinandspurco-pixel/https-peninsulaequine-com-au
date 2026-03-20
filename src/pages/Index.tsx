@@ -3,7 +3,7 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, Layers, Fence, Home, Mountain, Shovel, Wrench, ChevronRight } from "lucide-react";
+import { ArrowRight, Layers, Fence, Home, Mountain, Shovel, Wrench, ChevronRight, Truck, Droplets, Gem } from "lucide-react";
 import { InteractiveLayerStack } from "@/components/InteractiveLayerStack";
 import { cn } from "@/lib/utils";
 
@@ -506,24 +506,65 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ 5b. GROUNDLOCK — FINISH OPTIONS ═══════════════ */}
+      {/* ═══ 5b. GROUNDLOCK — WHY IT WORKS ═══════════════ */}
       <section className="relative overflow-hidden">
-        <div className="py-16 sm:py-24 bg-card relative">
+        <div className="py-20 sm:py-28 lg:py-36 bg-card relative">
           <div className="absolute inset-0 grain-texture opacity-20" />
           <div className="section-container relative z-[1] max-w-5xl mx-auto">
-            <RevealOnScroll direction="up">
-              <div className="border-t border-border/10 pt-14 max-w-[420px]">
-                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/35 mb-4">Specifications</p>
-                <h3 className="font-serif text-base sm:text-lg font-medium text-foreground/70 mb-5 tracking-[0.02em]">
-                  Finish Options
+            {/* Section intro */}
+            <div className="mb-14 sm:mb-16">
+              <RevealOnScroll direction="up">
+                <RevealLine className="mb-6" width="w-8" />
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={80}>
+                <h3 className="font-serif text-lg sm:text-xl font-medium text-foreground/70 tracking-[0.02em] mb-3">
+                  Why it works
                 </h3>
-                <p className="text-[13px] text-muted-foreground/35 leading-[2]">
-                  GroundLock is designed to support a range of finish specifications depending on
-                  application — including premium stone, gravel, decorative aggregate, and selected
-                  heavy-duty infill options for utility or higher-load environments.
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={140}>
+                <p className="text-[13px] text-muted-foreground/30 leading-[2] max-w-[400px]">
+                  GroundLock is designed for the full point of arrival — not just the surface layer.
                 </p>
-              </div>
-            </RevealOnScroll>
+              </RevealOnScroll>
+            </div>
+
+            {/* Proof cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-border/8">
+              {[
+                {
+                  icon: Truck,
+                  title: "Traffic-Ready",
+                  body: "Built for floats, trucks, utes, and repeated front-entry movement where ordinary surfaces begin to break down.",
+                },
+                {
+                  icon: Droplets,
+                  title: "Drainage-Led",
+                  body: "Supports water movement beneath the finish to help reduce rutting, soft zones, and long-term surface instability.",
+                },
+                {
+                  icon: Gem,
+                  title: "Architectural Finish",
+                  body: "Pairs engineered performance with a cleaner, more resolved entry outcome using premium stone, gravel, cobble, or selected heavy-duty finish specifications.",
+                },
+              ].map((card, i) => (
+                <RevealOnScroll key={card.title} direction="up" stagger={i} staggerInterval={100}>
+                  <div className="bg-card p-8 sm:p-10 min-h-[240px] flex flex-col relative group">
+                    {/* Subtle top accent line */}
+                    <div className="absolute top-0 left-8 right-8 sm:left-10 sm:right-10 h-px bg-accent/8" />
+                    <card.icon
+                      className="w-[18px] h-[18px] text-muted-foreground/20 mb-7"
+                      strokeWidth={1.5}
+                    />
+                    <h4 className="font-serif text-[15px] font-medium text-foreground/60 tracking-[0.02em] mb-4">
+                      {card.title}
+                    </h4>
+                    <p className="text-[12px] text-muted-foreground/30 leading-[2] max-w-[260px]">
+                      {card.body}
+                    </p>
+                  </div>
+                </RevealOnScroll>
+              ))}
+            </div>
           </div>
         </div>
       </section>
