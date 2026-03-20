@@ -6,7 +6,7 @@ export function QuoteSection() {
   return (
     <BlueprintChapter
       chapter="05"
-      chapterTitle="Get Started"
+      chapterTitle="Start a Project"
       scenePreset="intro"
       bg="bg-background"
       specLabels={[{ text: "NO OBLIGATION · FREE ESTIMATE", position: "top-left" }]}
