@@ -207,8 +207,8 @@ export default function Gallery() {
           style={{ transform: `translateY(${parallax.offset * 0.4}px) scale(1.1)` }}
         >
            <img
-            src={coveredArenaFinishedLit}
-            alt="Covered arena — finished and lit at dusk"
+            src={projectsHeroDrone}
+            alt="Premium equestrian property — aerial view at golden hour"
             className="w-full h-full object-cover"
           />
         </div>
