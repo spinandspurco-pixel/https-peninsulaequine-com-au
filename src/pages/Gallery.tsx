@@ -116,6 +116,26 @@ function EditorialImage({
 }
 
 /* ────────────────────────────────────────────────────────
+   CHAPTER DIVIDER — subtle vertical pacing line
+   ──────────────────────────────────────────────────────── */
+function ChapterDivider() {
+  const { ref, isVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.5 });
+
+  return (
+    <div ref={ref} className="relative py-10 sm:py-14 lg:py-16 flex items-center justify-center overflow-hidden">
+      <div
+        className="w-px h-10 sm:h-14 bg-accent/20 origin-top"
+        style={{
+          transform: isVisible ? "scaleY(1)" : "scaleY(0)",
+          opacity: isVisible ? 1 : 0,
+          transition: "transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 100ms, opacity 600ms ease 100ms",
+        }}
+      />
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────
    MAIN GALLERY PAGE
    ──────────────────────────────────────────────────────── */
 export default function Gallery() {
