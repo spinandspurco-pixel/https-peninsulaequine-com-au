@@ -630,7 +630,7 @@ export default function Index() {
 
       {/* ═══ TRAINING STRIP — with Glenn image ═════════════ */}
       <section className="relative overflow-hidden">
-        <div className="relative py-10 sm:py-14">
+        <div className="relative py-14 sm:py-20">
           <div className="absolute inset-0">
             <img
               src={trainerGlenn}
