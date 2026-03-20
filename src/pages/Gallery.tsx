@@ -264,6 +264,8 @@ export default function Gallery() {
         </div>
       </section>
 
+      <ChapterDivider />
+
       {/* ═══════════════════════════════════════════════════
           2. FEATURE PROJECT — Aberdeen Farm (5 images)
           ═══════════════════════════════════════════════════ */}
