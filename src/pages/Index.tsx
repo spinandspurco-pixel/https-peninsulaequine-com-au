@@ -457,14 +457,14 @@ export default function Index() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={100}>
                 <h2 className="font-serif text-2xl sm:text-3xl md:text-[2.25rem] font-light text-foreground/80 leading-[1.25] max-w-2xl mx-auto">
-                  Engineered for the way equine properties move, wear, and endure.
+                  Proprietary solutions for the way equine properties arrive, function, and last.
                 </h2>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={200}>
                 <p className="mt-8 text-[12px] sm:text-[13px] text-muted-foreground/30 leading-[2.2] max-w-lg mx-auto">
-                  Peninsula Equine is evolving beyond construction alone — into a considered
-                  ecosystem of signature systems, engineered details, and premium rural solutions
-                  designed to resolve how a property arrives, functions, and lasts.
+                  Beyond construction — a growing catalogue of engineered details,
+                  ground systems, and architectural finishes designed to resolve the parts of a property
+                  that most builders overlook.
                 </p>
               </RevealOnScroll>
             </div>
