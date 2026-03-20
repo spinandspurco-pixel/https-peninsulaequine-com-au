@@ -20,12 +20,12 @@ import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
 // ── 3. FINISHED RESULTS ──
 import aberdeenDeck from "@/assets/aberdeen-deck.jpg";
 import premiumStableFacade from "@/assets/premium-stable-facade.png";
-import coveredArenaBlackExterior from "@/assets/covered-arena-black-exterior.jpg";
+import westernEntertainingZone from "@/assets/western-entertaining-zone.jpg";
 
 // ── 4. CUSTOM BUILDS ──
 import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
 import timberCubbyFront from "@/assets/timber-cubby-front.webp";
-import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
+import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
 
 import {
   type GalleryItem,
@@ -324,7 +324,7 @@ export default function Gallery() {
 
             {/* Row 2 — wide arena exterior */}
             <RevealOnScroll direction="up" duration={700} delay={80}>
-              <EditorialImage src={coveredArenaBlackExterior} alt="Covered arena — black exterior cladding" aspect="aspect-[21/9]" onClick={() => openLightbox(coveredArenaBlackExterior)} />
+              <EditorialImage src={westernEntertainingZone} alt="Western entertaining zone — timber and stone" aspect="aspect-[21/9]" onClick={() => openLightbox(westernEntertainingZone)} />
             </RevealOnScroll>
           </div>
         </div>
@@ -362,7 +362,7 @@ export default function Gallery() {
 
             {/* Row 2 — craft detail */}
             <RevealOnScroll direction="up" duration={700} delay={120}>
-              <EditorialImage src={mainRidgeBrickwork} alt="Main Ridge — custom reclaimed brickwork" aspect="aspect-[21/9]" onClick={() => openLightbox(mainRidgeBrickwork)} />
+              <EditorialImage src={aberdeenStonework} alt="Aberdeen — hand-laid natural stonework detail" aspect="aspect-[21/9]" onClick={() => openLightbox(aberdeenStonework)} />
             </RevealOnScroll>
           </div>
         </div>
@@ -447,8 +447,8 @@ export default function Gallery() {
           ═══════════════════════════════════════════════════ */}
       <section className="relative h-[60vh] sm:h-[70vh] overflow-hidden">
         <img
-          src={coveredArenaBlackExterior}
-          alt="Covered arena — black exterior cladding at dusk"
+          src={steelShedDramatic}
+          alt="Custom colorbond barn — dramatic sky"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/20" />
