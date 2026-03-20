@@ -51,6 +51,7 @@ import GroundLockSystems from "./pages/GroundLockSystems";
 import EquusRidge from "./pages/EquusRidge";
 import InstallerAccess from "./pages/InstallerAccess";
 import SiteAssessment from "./pages/SiteAssessment";
+import SignatureSystems from "./pages/SignatureSystems";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { useCartSync } from "./hooks/useCartSync";
 import { IntroContext } from "./hooks/useIntroState";
@@ -123,7 +124,8 @@ function AppContent() {
           <Route path="/groundlock-systems" element={<GroundLockSystems />} />
           <Route path="/equus-ridge" element={<EquusRidge />} />
            <Route path="/installer" element={<InstallerAccess />} />
-          <Route path="/site-assessment" element={<SiteAssessment />} />
+           <Route path="/site-assessment" element={<SiteAssessment />} />
+           <Route path="/systems" element={<SignatureSystems />} />
           <Route path="/project/:slug" element={<CaseStudy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
