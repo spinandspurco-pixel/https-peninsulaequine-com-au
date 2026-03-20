@@ -264,19 +264,13 @@ export default function SignatureSystems() {
           <div className="section-container relative z-10 text-center max-w-md mx-auto">
             <RevealOnScroll>
               <RevealLine className="mx-auto mb-16" width="w-8" />
-            </RevealOnScroll>
-            <RevealOnScroll delay={80}>
               <h2 className="heading-section text-foreground mb-8">
                 Discuss a System
               </h2>
-            </RevealOnScroll>
-            <RevealOnScroll delay={150}>
               <p className="text-sm text-muted-foreground/35 mb-12 leading-[1.9]">
                 Whether you're planning an entry, upgrading a high-traffic zone,
                 or interested in a future system — we're happy to talk through it.
               </p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={250}>
               <Button asChild variant="gold" size="lg">
                 <Link to="/contact">
                   Enquire About Signature Systems <ArrowRight className="ml-2 h-4 w-4" />
