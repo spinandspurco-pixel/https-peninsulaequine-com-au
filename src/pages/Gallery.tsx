@@ -447,22 +447,19 @@ export default function Gallery() {
             <RevealOnScroll direction="up" duration={700} delay={80}>
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 mb-4 sm:mb-5">
                 <div className="lg:col-span-5 lg:mt-8">
-                  <EditorialImage src={qldExterior3} alt="Queensland — exterior detail" aspect="aspect-[3/4]" onClick={() => openLightbox(qldExterior3)} />
+                  <EditorialImage src={premiumStableFacade} alt="Premium stable — architectural facade" aspect="aspect-[3/4]" onClick={() => openLightbox(premiumStableFacade)} />
                 </div>
                 <div className="lg:col-span-7 lg:-mt-6">
-                  <EditorialImage src={equitanaArena5} alt="Equitana — completed competition arena" aspect="aspect-[16/9]" onClick={() => openLightbox(equitanaArena5)} />
+                  <EditorialImage src={coveredArenaBlackExterior} alt="Covered arena — black exterior cladding" aspect="aspect-[16/9]" onClick={() => openLightbox(coveredArenaBlackExterior)} />
                 </div>
               </div>
             </RevealOnScroll>
 
-            {/* Row 3 — three polished results */}
+            {/* Row 3 — two polished results */}
             <RevealOnScroll direction="up" duration={700} delay={120}>
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-                <EditorialImage src={qldExterior1} alt="Queensland — barn exterior" aspect="aspect-[4/3]" onClick={() => openLightbox(qldExterior1)} />
-                <EditorialImage src={equitanaArena6} alt="Equitana — arena surface detail" aspect="aspect-[4/3]" onClick={() => openLightbox(equitanaArena6)} />
-                <div className="col-span-2 lg:col-span-1">
-                  <EditorialImage src={qldCourtyard} alt="Queensland — central courtyard" aspect="aspect-[4/3]" onClick={() => openLightbox(qldCourtyard)} />
-                </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
+                <EditorialImage src={equitanaArena3} alt="Equitana — competition arena with seating" aspect="aspect-[4/3]" onClick={() => openLightbox(equitanaArena3)} />
+                <EditorialImage src={mainRidgeArenaGrading} alt="Main Ridge — arena surface grading" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeArenaGrading)} />
               </div>
             </RevealOnScroll>
           </div>
