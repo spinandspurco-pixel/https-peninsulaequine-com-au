@@ -731,8 +731,8 @@ export default function Index() {
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mt-16 img-bridge">
                 <div className="relative aspect-[16/10] overflow-hidden group col-span-2 lg:col-span-2">
                   <img
-                    src={mainRidgeFrameWide}
-                    alt="Main Ridge framing build phase"
+                    src={processWideFinished}
+                    alt="Finished timber and stone barn structure"
                     className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8]"
                     loading="lazy"
               decoding="async"
