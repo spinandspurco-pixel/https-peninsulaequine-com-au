@@ -998,15 +998,13 @@ export default function Index() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={80}>
               <h2 className="heading-section text-foreground mb-6 leading-[1.1]">
-                Build it properly.<br />
-                <span className="text-foreground/40">Resolve it completely.</span>
+                Let's build it properly.
               </h2>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
-              <p className="text-[13px] text-muted-foreground/30 mb-10 leading-[2] max-w-[380px] mx-auto">
-                From equine construction and rural infrastructure to signature entry systems and
-                forged property details, Peninsula Equine creates environments designed to work hard,
-                endure beautifully, and feel fully resolved.
+              <p className="text-[13px] text-muted-foreground/30 mb-10 leading-[2] max-w-[360px] mx-auto">
+                From arenas and stables to signature entry systems and forged property details —
+                projects begin with a site reading.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={200}>
