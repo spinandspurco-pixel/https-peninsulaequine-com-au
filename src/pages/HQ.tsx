@@ -99,10 +99,10 @@ export default function HQ() {
   return (
     <Layout>
       {/* ── Hero ─────────────────────────────────────── */}
-      <section className="relative pt-44 sm:pt-56 pb-28 sm:pb-36 overflow-hidden">
+      <section className="relative pt-44 sm:pt-56 pb-20 sm:pb-28 overflow-hidden">
         <div className="absolute inset-0 grain-texture opacity-15" />
 
-        <div className="section-container relative z-10 max-w-3xl mx-auto text-center">
+        <div className="section-container relative z-10 max-w-2xl mx-auto text-center">
           <div
             className="opacity-0 animate-fade-in"
             style={{ animationDelay: "150ms", animationFillMode: "both" }}
@@ -124,26 +124,18 @@ export default function HQ() {
           </div>
 
           <h1
-            className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-foreground leading-[1.15] opacity-0 animate-fade-in"
+            className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-foreground leading-[1.1] opacity-0 animate-fade-in"
             style={{ animationDelay: "400ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
             Peninsula Equine HQ
           </h1>
 
           <p
-            className="mt-6 text-[13px] sm:text-[14px] text-muted-foreground/35 max-w-md mx-auto leading-[2] opacity-0 animate-fade-in"
+            className="mt-8 text-[13px] sm:text-[14px] text-muted-foreground/35 max-w-sm mx-auto leading-[2] opacity-0 animate-fade-in"
             style={{ animationDelay: "600ms", animationFillMode: "both" }}
           >
-            The command centre for projects, systems, and product-led rural innovation.
-          </p>
-
-          <p
-            className="mt-6 text-[12px] text-muted-foreground/25 max-w-lg mx-auto leading-[2.1] opacity-0 animate-fade-in"
-            style={{ animationDelay: "750ms", animationFillMode: "both" }}
-          >
-            HQ brings together the working parts of Peninsula Equine — from equine construction
-            and infrastructure to signature systems, forged product lines, and future-facing rural
-            solutions designed to work hard and feel properly resolved.
+            Three divisions. One standard.<br />
+            Build. Engineer. Deliver.
           </p>
         </div>
       </section>
