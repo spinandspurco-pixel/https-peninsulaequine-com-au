@@ -199,10 +199,10 @@ export default function HQ() {
         <div className="section-container max-w-md mx-auto">
           <RevealOnScroll>
             <div className="text-center mb-10">
-              <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/30 mb-4">
+              <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/45 mb-4">
                 Staff Access
               </p>
-              <p className="text-[12px] text-muted-foreground/30 leading-relaxed">
+              <p className="text-[12px] text-muted-foreground/45 leading-relaxed">
                 Secure portal for Peninsula Equine team members.
               </p>
             </div>
