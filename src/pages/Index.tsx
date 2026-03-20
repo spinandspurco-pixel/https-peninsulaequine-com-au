@@ -24,13 +24,11 @@ import buildVideo from "@/assets/videos/main-ridge-woodwork-1.mp4";
 
 // Detail / material textures (unique to homepage strip)
 import reclaimedBeamWorkshop from "@/assets/reclaimed-beam-workshop.jpg";
-import reclaimedBoardsForklift from "@/assets/reclaimed-boards-forklift.jpg";
 
 // Process / build imagery (unique to homepage)
 import mainRidgeFrameAngle from "@/assets/main-ridge-frame-angle.jpg";
 import mainRidgeFrameWide from "@/assets/main-ridge-frame-wide.jpg";
 import mainRidgeRebarDepth2 from "@/assets/main-ridge-rebar-depth-2.jpg";
-import equitanaTractorStorm from "@/assets/equitana-tractor-storm.jpg";
 import equitanaArenaFinish from "@/assets/equitana-arena-finish.jpg";
 
 // Training
@@ -53,24 +51,24 @@ const PROJECTS = [
 ];
 
 const SERVICES = [
-  { icon: Mountain, title: "Arenas", desc: "Engineered surfaces with consistent footing and zero drainage failure.", href: "/services" },
-  { icon: Fence, title: "Fencing", desc: "Post-and-rail, steel, and custom fencing systems built for longevity.", href: "/services" },
-  { icon: Home, title: "Stables", desc: "Designed around equine behaviour, airflow, and structural durability.", href: "/services" },
-  { icon: Layers, title: "GroundLock Systems", desc: "Interlocking ground stabilisation — eliminates mud permanently.", href: "/groundlock" },
-  { icon: Shovel, title: "Earthworks", desc: "Civil preparation, drainage engineering, and sub-base profiling.", href: "/services" },
-  { icon: Wrench, title: "Custom Builds", desc: "Bespoke infrastructure — wash bays, float areas, rural structures.", href: "/services" },
+  { icon: Mountain, title: "Arenas", desc: "Precision-graded surfaces with consistent footing and zero drainage failure.", href: "/services" },
+  { icon: Fence, title: "Fencing", desc: "Post-and-rail, steel, and custom systems shaped for daily equine use.", href: "/services" },
+  { icon: Home, title: "Stables", desc: "Designed around horse behaviour, airflow, sightlines, and structural longevity.", href: "/services" },
+  { icon: Layers, title: "GroundLock Systems", desc: "Interlocking ground stabilisation for entries, laneways, and high-traffic zones.", href: "/groundlock" },
+  { icon: Shovel, title: "Earthworks", desc: "Civil preparation, sub-base profiling, and drainage behaviour mapping.", href: "/services" },
+  { icon: Wrench, title: "Custom Builds", desc: "Wash bays, float areas, pavilions, and bespoke rural infrastructure.", href: "/services" },
 ];
 
 const PROCESS_STEPS = [
-  { num: "01", title: "Site Assessment", desc: "On-site evaluation of terrain, drainage, and project scope." },
-  { num: "02", title: "Design + Scope", desc: "Detailed specification, materials planning, and timeline." },
-  { num: "03", title: "Build + Execution", desc: "Precision construction with quality checkpoints throughout." },
-  { num: "04", title: "Completion", desc: "Final inspection, handover, and maintenance guidance." },
+  { num: "01", title: "Site Reading", desc: "We walk the property — assessing how it moves, drains, wears, and lives under daily equine use." },
+  { num: "02", title: "Specification", desc: "A structured project brief covering materials, access logic, drainage behaviour, and build sequence." },
+  { num: "03", title: "Construction", desc: "Hands-on build with quality checkpoints, real-time decisions, and zero compromise on method." },
+  { num: "04", title: "Handover", desc: "Final walkthrough, care guidance, and a finished result built to hold up — not just look finished." },
 ];
 
 /* ── Standardised spacing constants ───── */
-const SP_SECTION = "py-24 sm:py-32 lg:py-40";
-const SP_HEAD = "mb-14 sm:mb-16";
+const SP_SECTION = "py-28 sm:py-36 lg:py-44";
+const SP_HEAD = "mb-14 sm:mb-18";
 const SP_SM = "mb-6";
 
 /* ── Soft gradient transition between sections ─── */
@@ -257,7 +255,7 @@ export default function Index() {
             >
               <Button asChild variant="gold" size="lg" className="px-8">
                 <Link to="/site-assessment">
-                  Book Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                  Start a Project <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild size="lg" className="bg-transparent border border-foreground/10 text-foreground/50 hover:text-foreground hover:border-foreground/25 hover:bg-foreground/[0.03] transition-all duration-700 px-8">
@@ -457,14 +455,14 @@ export default function Index() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={100}>
                 <h2 className="font-serif text-2xl sm:text-3xl md:text-[2.25rem] font-light text-foreground/80 leading-[1.25] max-w-2xl mx-auto">
-                  Engineered for the way equine properties move, wear, and endure.
+                  Proprietary solutions for the way equine properties arrive, function, and last.
                 </h2>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={200}>
                 <p className="mt-8 text-[12px] sm:text-[13px] text-muted-foreground/30 leading-[2.2] max-w-lg mx-auto">
-                  Peninsula Equine is evolving beyond construction alone — into a considered
-                  ecosystem of signature systems, engineered details, and premium rural solutions
-                  designed to resolve how a property arrives, functions, and lasts.
+                  Beyond construction — a growing catalogue of engineered details,
+                  ground systems, and architectural finishes designed to resolve the parts of a property
+                  that most builders overlook.
                 </p>
               </RevealOnScroll>
             </div>
@@ -474,19 +472,19 @@ export default function Index() {
               {[
                 {
                   title: "GroundLock",
-                  body: "A premium equine entry system designed for floats, trucks, gated arrivals, and high-traffic rural entries — engineered beneath the surface for drainage, stability, and a more resolved point of arrival.",
+                  body: "An interlocking entry system for floats, trucks, and gated arrivals — engineered beneath the surface for drainage, load distribution, and a cleaner point of arrival.",
                   cta: "Explore GroundLock",
                   href: "/groundlock",
                 },
                 {
                   title: "Arrival Packages",
-                  body: "Integrated front-entry concepts that combine surface systems, gate logic, edging, and architectural presentation for properties that need to work hard and arrive properly.",
+                  body: "Integrated front-entry concepts combining surface systems, gate logic, edging, and threshold design for properties that need to present as well as they perform.",
                   cta: "View Entry Systems",
                   href: "/systems",
                 },
                 {
                   title: "Forge Details",
-                  body: "Custom forged hardware, gate elements, signage, and branded rural details designed to complete the property with strength, identity, and restraint.",
+                  body: "Custom forged hardware, gate elements, signage, and branded rural details designed to complete the property with strength and identity.",
                   cta: "Explore Equus Forge",
                   href: "/shop",
                 },
@@ -520,12 +518,7 @@ export default function Index() {
               ))}
             </div>
 
-            {/* Supporting line */}
-            <RevealOnScroll direction="up" delay={500}>
-              <p className="mt-20 sm:mt-24 text-center text-[10px] tracking-[0.25em] uppercase text-muted-foreground/15 font-mono">
-                Built in the real world. Designed for daily use.
-              </p>
-            </RevealOnScroll>
+            {/* Supporting line — removed to reduce noise */}
           </div>
         </div>
       </section>
@@ -551,18 +544,16 @@ export default function Index() {
                     P.E. GroundLock™
                   </h2>
                   <p className="text-[14px] text-muted-foreground/45 leading-[2] mb-5 max-w-[360px]">
-                    GroundLock is an engineered entry system designed specifically for equine and rural
-                    properties. Created for floats, trucks, utes, and high-traffic front arrivals, it
-                    stabilises the ground beneath the finish while creating a stronger, cleaner, more
-                    resolved entry experience.
+                    GroundLock is an engineered entry system built for equine and rural
+                    properties — designed for floats, trucks, utes, and repeated front-gate arrivals
+                    where standard surfaces fail within seasons.
                   </p>
                   <p className="text-[13px] text-muted-foreground/35 leading-[2] mb-6 max-w-[360px]">
-                    Where standard systems focus only on surface support, GroundLock is designed for the
-                    full point of arrival — drainage, load distribution, vehicle movement, and the visual
-                    impact of a front gate that feels properly built.
+                    It addresses the full arrival zone — drainage, load distribution, vehicle turning,
+                    and the visual quality of a front entry that feels considered, not improvised.
                   </p>
                   <p className="text-[11px] text-muted-foreground/20 italic tracking-[0.04em] mb-10">
-                    Engineered beneath the surface. Designed for the way equine properties live.
+                    What sits beneath determines what lasts above.
                   </p>
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" delay={200}>
@@ -615,7 +606,7 @@ export default function Index() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={140}>
                 <p className="text-[13px] text-muted-foreground/30 leading-[2] max-w-[400px]">
-                  GroundLock is designed for the full point of arrival — not just the surface layer.
+                  Three layers of logic beneath one clean surface.
                 </p>
               </RevealOnScroll>
             </div>
@@ -697,9 +688,8 @@ export default function Index() {
         </div>
       </section>
 
-      <SectionBleed from="card" to="background" />
       <section className="relative overflow-hidden">
-        <div className="py-24 sm:py-32 lg:py-40 relative">
+        <div className="py-28 sm:py-36 lg:py-44 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
             <div className={`${SP_HEAD}`}>
@@ -710,9 +700,14 @@ export default function Index() {
                 <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">How We Work</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={120}>
-                <h2 className="heading-section text-foreground">
-                  The Process
+                <h2 className="heading-section text-foreground mb-4">
+                  Every Resolved Project Begins on Site
                 </h2>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={160}>
+                <p className="text-[13px] text-muted-foreground/35 leading-[2] max-w-[420px]">
+                  We assess how the property moves, drains, wears, and lives — so the outcome holds up under daily equine use, not just on handover day.
+                </p>
               </RevealOnScroll>
             </div>
 
@@ -742,16 +737,14 @@ export default function Index() {
               </div>
             </RevealOnScroll>
 
-            {/* Material strip — scrolling mosaic */}
+            {/* Material strip — tighter, fewer images for restraint */}
             <RevealOnScroll direction="up" delay={300}>
-              <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mt-12">
+              <div className="grid grid-cols-4 gap-2 mt-12">
                 {[
                   { src: interiorTimberWindow, alt: "Timber cladding detail" },
                   { src: mainRidgeRebarDepth2, alt: "Rebar foundation depth" },
                   { src: reclaimedBeamWorkshop, alt: "Reclaimed beam preparation" },
-                  { src: reclaimedBoardsForklift, alt: "Timber boards ready for fabrication" },
-                  { src: equitanaTractorStorm, alt: "Equitana arena tractor pass" },
-                  { src: equitanaArenaFinish, alt: "Finished Equitana arena surface" },
+                  { src: equitanaArenaFinish, alt: "Finished arena surface" },
                 ].map((img, i) => (
                   <div key={i} className="relative aspect-square overflow-hidden group">
                     <img
@@ -769,30 +762,23 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ 7. AUTHORITY STRIP — reduced visual weight ═══ */}
+      {/* ═══ 7. AUTHORITY STRIP — minimal ═══ */}
       <section className="relative overflow-hidden">
-        <div className="py-16 sm:py-24 bg-card/50 relative">
+        <div className="py-14 sm:py-20 bg-card/50 relative">
           <div className="absolute inset-0 grain-texture opacity-20" />
           <div className="section-container relative z-[1]">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-8 max-w-3xl mx-auto text-center">
-              <RevealOnScroll direction="up" stagger={0} staggerInterval={120}>
-                <div>
-                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1.5">Victoria-Wide</p>
-                  <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/20 font-mono">Projects Across the State</p>
-                </div>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" stagger={1} staggerInterval={120}>
-                <div>
-                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1.5">$500K+</p>
-                  <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/20 font-mono">Custom Builds to Scale</p>
-                </div>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" stagger={2} staggerInterval={120}>
-                <div>
-                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1.5">Private &amp; Pro</p>
-                  <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/20 font-mono">Estates &amp; Facilities</p>
-                </div>
-              </RevealOnScroll>
+            <div className="flex flex-wrap justify-center gap-x-14 gap-y-6 max-w-3xl mx-auto">
+              {[
+                { stat: "Victoria-Wide", label: "Projects Across the State" },
+                { stat: "Private & Pro", label: "Estates & Facilities" },
+              ].map((item, i) => (
+                <RevealOnScroll key={item.stat} direction="up" stagger={i} staggerInterval={120}>
+                  <div className="text-center">
+                    <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1.5">{item.stat}</p>
+                    <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/20 font-mono">{item.label}</p>
+                  </div>
+                </RevealOnScroll>
+              ))}
             </div>
           </div>
         </div>
@@ -832,12 +818,12 @@ export default function Index() {
                     Equus Forge
                   </h2>
                   <p className="text-primary-foreground/30 text-[12px] sm:text-[13px] leading-[2] mb-6 max-w-[360px]">
-                    Engineered products and signature systems for premium equine and rural properties.
+                    The product and systems arm of Peninsula Equine.
                   </p>
                   <p className="text-[14px] text-primary-foreground/45 leading-[2] mb-10 max-w-[360px]">
-                    Equus Forge is the product division of Peninsula Equine — bringing together forged
-                    hardware, engineered ground systems, and custom rural design elements built for
-                    properties that need to work hard and feel properly resolved.
+                    Forged hardware, ground systems, and custom rural elements
+                    built to complete properties with strength, identity, and craft
+                    that outlasts the trends.
                   </p>
                 </RevealOnScroll>
               </div>
@@ -848,19 +834,19 @@ export default function Index() {
               {[
                 {
                   title: "GroundLock Systems",
-                  body: "Premium stabilised entry systems designed for floats, trucks, and high-traffic rural arrivals.",
+                  body: "Stabilised entry systems for floats, trucks, and high-traffic rural arrivals.",
                   cta: "Explore GroundLock",
                   href: "/groundlock",
                 },
                 {
                   title: "Forge Hardware",
-                  body: "Architectural steelwork, gate elements, and rural hardware designed to elevate the working property.",
+                  body: "Architectural steelwork, gate elements, and branded hardware for the working property.",
                   cta: "View Hardware",
                   href: "/shop",
                 },
                 {
                   title: "Custom Property Elements",
-                  body: "Bespoke entry packages, estate details, and made-to-fit solutions for standout equine and rural builds.",
+                  body: "Bespoke entry packages, estate details, and made-to-fit elements for standout builds.",
                   cta: "Enquire Now",
                   href: "/contact",
                 },
@@ -929,7 +915,7 @@ export default function Index() {
 
       {/* ═══ BUILT IN THE REAL WORLD — showroom band ═══════ */}
       <section className="relative overflow-hidden">
-        <div className="py-20 sm:py-28 lg:py-36 relative">
+        <div className="py-24 sm:py-32 lg:py-40 relative">
           <div className="absolute inset-0">
             <img
               src={steelShedDramatic}
@@ -947,8 +933,8 @@ export default function Index() {
                 Built in the Real World
               </h2>
               <p className="text-[13px] text-muted-foreground/35 leading-[2] max-w-[400px] mx-auto mb-8">
-                Our systems are designed to be lived with — under floats, trucks, weather, movement,
-                and daily use. The Peninsula Equine property will become the first live showroom for
+                Our systems are tested under floats, trucks, weather, and daily use.
+                The Peninsula Equine property is becoming the first live showroom for
                 GroundLock and future signature systems.
               </p>
               <Link
@@ -964,7 +950,7 @@ export default function Index() {
 
       {/* ═══ WHY PENINSULA EQUINE — distinction block ═══════ */}
       <section className="relative overflow-hidden">
-        <div className="py-20 sm:py-28 relative">
+        <div className="py-24 sm:py-32 relative">
           <div className="absolute inset-0 grain-texture opacity-20" />
           <div className="section-container relative z-[1] max-w-4xl mx-auto">
             <RevealOnScroll direction="up">
@@ -976,14 +962,14 @@ export default function Index() {
               </h2>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={140}>
-              <p className="text-[13px] text-muted-foreground/30 leading-[2] text-center max-w-[440px] mx-auto mb-12">
-                Peninsula Equine is shaped by real equine use — movement, weather, traffic, drainage,
-                layout, durability, and the emotional importance of a property that feels properly resolved.
+              <p className="text-[13px] text-muted-foreground/30 leading-[2] text-center max-w-[420px] mx-auto mb-12">
+                Peninsula Equine is shaped by firsthand equine knowledge and rural building experience
+                — not theoretical design or imported templates.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={200}>
               <div className="flex flex-wrap justify-center gap-x-10 gap-y-3">
-                {["Equine-Led Thinking", "Function Before Noise", "Built for Daily Use", "Architectural Rural Finish"].map((point) => (
+                {["Equine-Led Thinking", "Function Before Noise", "Horseman-Built", "Architectural Rural Finish"].map((point) => (
                   <span key={point} className="text-[9px] uppercase tracking-[0.25em] text-accent/25 font-mono">{point}</span>
                 ))}
               </div>
@@ -1010,15 +996,13 @@ export default function Index() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={80}>
               <h2 className="heading-section text-foreground mb-6 leading-[1.1]">
-                Build it properly.<br />
-                <span className="text-foreground/40">Resolve it completely.</span>
+                Let's build it properly.
               </h2>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
-              <p className="text-[13px] text-muted-foreground/30 mb-10 leading-[2] max-w-[380px] mx-auto">
-                From equine construction and rural infrastructure to signature entry systems and
-                forged property details, Peninsula Equine creates environments designed to work hard,
-                endure beautifully, and feel fully resolved.
+              <p className="text-[13px] text-muted-foreground/30 mb-10 leading-[2] max-w-[360px] mx-auto">
+                From arenas and stables to signature entry systems and forged property details —
+                projects begin with a site reading.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={200}>
