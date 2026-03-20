@@ -953,17 +953,14 @@ export default function StaffDocuments() {
       toast.error("Failed to submit document");
       console.error(error);
     } else {
-      toast.success(`${DOC_TYPES[docType].label} submitted successfully! Admin has been notified.`);
+      toast.success(`✅ ${DOC_TYPES[docType].label} submitted`);
 
       // Trigger email notification (non-blocking)
       supabase.functions.invoke("send-document-notification", {
         body: { document_type: docType, title, form_data: formData, submitted_by: user.email },
       }).catch(e => console.warn("Email notification failed:", e));
 
-      // Redirect to appropriate document portal
-      setTimeout(() => {
-        navigate(isTrainer ? "/trainer/documents" : "/staff/documents");
-      }, 1200);
+      // No redirect — inline success state in each form handles confirmation
     }
     setSubmitting(false);
   };
