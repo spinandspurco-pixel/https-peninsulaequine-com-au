@@ -328,6 +328,84 @@
   }
 
   /* ═══════════════════════════════════════════════════════
+     IMAGE INTEGRATION — immersive, embedded feel
+     ═══════════════════════════════════════════════════════ */
+
+  /* Soft feathered edges — dissolves image boundaries */
+  .img-feather {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 8%,
+      black 88%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 8%,
+      black 88%,
+      transparent 100%
+    );
+  }
+
+  .img-feather-sides {
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%);
+    mask-composite: intersect;
+  }
+
+  /* Slight overflow + scale for immersive images */
+  .img-immersive {
+    @apply scale-[1.06];
+    transition: transform 1.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .group:hover .img-immersive,
+  .img-immersive:hover {
+    @apply scale-[1.12];
+  }
+
+  /* Bridge between sections — image bleeds into both */
+  .img-bridge {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 12%,
+      black 85%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 12%,
+      black 85%,
+      transparent 100%
+    );
+  }
+
+  /* Vertical overlap — pulls image out of its box */
+  .img-overlap-top {
+    margin-top: -3rem;
+    position: relative;
+    z-index: 1;
+  }
+  .img-overlap-bottom {
+    margin-bottom: -3rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (min-width: 1024px) {
+    .lg\:img-overlap-top { margin-top: -5rem; position: relative; z-index: 1; }
+    .lg\:img-overlap-bottom { margin-bottom: -5rem; position: relative; z-index: 1; }
+  }
+
+  /* ═══════════════════════════════════════════════════════
      INTERACTIVE EFFECTS — slower, more luxurious
      ═══════════════════════════════════════════════════════ */
   .btn-hover-lift {

@@ -664,9 +664,9 @@ export default function Index() {
           src={heroSunset}
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover brightness-[0.35] saturate-[0.6] contrast-[1.15]"
+          className="absolute inset-0 w-full h-full object-cover scale-[1.1] brightness-[0.35] saturate-[0.6] contrast-[1.15]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/30" />
         <div className="absolute inset-0 grain-texture" />
 
         <div className="absolute inset-0 flex items-center justify-center z-10">
