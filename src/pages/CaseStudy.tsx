@@ -22,12 +22,6 @@ import mainRidgeFrameWide from "@/assets/main-ridge-frame-wide.jpg";
 import mainRidgeFrameAngle from "@/assets/main-ridge-frame-angle.jpg";
 import mainRidgeFoundationPour from "@/assets/main-ridge-foundation-pour.jpg";
 
-import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
-import qldAerial1 from "@/assets/qld-facility-aerial-1.jpg";
-import qldExterior1 from "@/assets/qld-facility-exterior-1.jpg";
-import qldStalls from "@/assets/qld-facility-stalls.jpg";
-import qldExterior2 from "@/assets/qld-facility-exterior-2.jpg";
-import qldConstruction from "@/assets/qld-facility-construction.jpg";
 
 import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
 import equitanaArena2 from "@/assets/equitana-arena-2.jpg";
@@ -88,26 +82,6 @@ export const CASE_STUDIES: CaseStudyData[] = [
       { src: mainRidgeArenaGrading, alt: "Arena surface grading" },
     ],
     closingLine: "Built to perform. Built to last.",
-  },
-  {
-    slug: "qld-facility",
-    title: "Queensland Facility",
-    subtitle: "Full Private Facility · Arena · Stables · Grounds",
-    hero: qldCourtyard,
-    problem:
-      "A greenfield site with challenging soil conditions and extreme weather exposure. The brief: a complete equestrian facility designed for professional use in tropical conditions.",
-    build:
-      "Comprehensive site development — engineered drainage, climate-adapted stable design, covered arena, and integrated ground systems built to withstand Queensland's seasonal extremes.",
-    outcome:
-      "A facility that operates at the highest level year-round, regardless of conditions. From float access to wash bay — every system works together.",
-    images: [
-      { src: qldAerial1, alt: "Aerial view of completed facility" },
-      { src: qldExterior1, alt: "Stable exterior with covered walkway" },
-      { src: qldStalls, alt: "Custom stall fit-out" },
-      { src: qldExterior2, alt: "Arena and grounds" },
-      { src: qldConstruction, alt: "Construction phase" },
-    ],
-    closingLine: "Engineered for extremes. Built to endure.",
   },
   {
     slug: "equitana",

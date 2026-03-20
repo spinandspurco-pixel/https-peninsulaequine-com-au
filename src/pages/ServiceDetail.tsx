@@ -25,12 +25,12 @@ import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
 import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
 import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
 import aberdeenAisle from "@/assets/aberdeen-aisle.jpg";
-import qldFacilityConstruction from "@/assets/qld-facility-construction.jpg";
-import qldFacilityCourtyard from "@/assets/qld-facility-courtyard.jpg";
-import qldFacilityExterior1 from "@/assets/qld-facility-exterior-1.jpg";
-import qldFacilityExterior2 from "@/assets/qld-facility-exterior-2.jpg";
-import qldFacilityAerial1 from "@/assets/qld-facility-aerial-1.jpg";
-import qldFacilityStalls from "@/assets/qld-facility-stalls.jpg";
+import coveredArenaLit from "@/assets/covered-arena-finished-lit.jpg";
+import coveredArenaBlack from "@/assets/covered-arena-black-exterior.jpg";
+import mainRidgeFinishedInterior1 from "@/assets/main-ridge-finished-interior-1.jpg";
+import mainRidgeFinishedInterior2 from "@/assets/main-ridge-finished-interior-2.jpg";
+import mainRidgeSitePrep from "@/assets/main-ridge-site-prep.jpg";
+import premiumStableFacade from "@/assets/premium-stable-facade.png";
 import mainRidgeCiroWoodwork from "@/assets/main-ridge-ciro-woodwork-1.jpg";
 import mainRidgeCiroWoodwork2 from "@/assets/main-ridge-ciro-woodwork-2.jpg";
 import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
@@ -53,10 +53,10 @@ const serviceImages: Record<string, string> = {
   "arena-construction": equitanaArena,
   "barn-construction": aberdeenBarnInterior,
   "fencing": aberdeenStalls,
-  "infrastructure": qldFacilityConstruction,
-  "round-pens": qldFacilityCourtyard,
+  "infrastructure": mainRidgeSitePrep,
+  "round-pens": coveredArenaLit,
   "renovations": mainRidgeCiroWoodwork,
-  "full-facility": qldFacilityConstruction,
+  "full-facility": mainRidgeSitePrep,
   "clinics-events": equitanaArena,
 };
 
@@ -79,19 +79,18 @@ const serviceGalleryImages: Record<string, { src: string; caption: string }[]> =
   ],
   "fencing": [
     { src: aberdeenStalls, caption: "Post and rail fencing" },
-    { src: qldFacilityExterior1, caption: "Paddock perimeter fencing" },
-    { src: qldFacilityExterior2, caption: "Gate and entry design" },
+    { src: aberdeenExterior, caption: "Paddock perimeter fencing" },
+    { src: coveredArenaBlack, caption: "Gate and entry design" },
   ],
   "infrastructure": [
-    { src: qldFacilityConstruction, caption: "Site development" },
-    { src: qldFacilityAerial1, caption: "Aerial view of facility" },
-    { src: qldFacilityExterior1, caption: "Access roads" },
+    { src: mainRidgeSitePrep, caption: "Site development" },
+    { src: mainRidgeBarnFrame, caption: "Structural framework" },
     { src: mainRidgeBrickwork, caption: "Drainage infrastructure" },
   ],
   "round-pens": [
-    { src: qldFacilityCourtyard, caption: "Round pen setup" },
+    { src: coveredArenaLit, caption: "Round pen setup" },
     { src: arenaSandPrep1, caption: "Footing preparation" },
-    { src: qldFacilityStalls, caption: "Adjacent paddock layout" },
+    { src: arenaSandPrep2, caption: "Surface grading" },
   ],
   "renovations": [
     { src: mainRidgeCiroWoodwork, caption: "Custom woodwork restoration" },
@@ -100,11 +99,11 @@ const serviceGalleryImages: Record<string, { src: string; caption: string }[]> =
     { src: mainRidgeBrickwork, caption: "Structural repair" },
   ],
   "full-facility": [
-    { src: qldFacilityConstruction, caption: "Full facility build" },
-    { src: qldFacilityAerial1, caption: "Master site layout" },
-    { src: qldFacilityExterior2, caption: "Completed exterior" },
-    { src: qldFacilityStalls, caption: "Stabling wing" },
-    { src: qldFacilityCourtyard, caption: "Courtyard & paddocks" },
+    { src: mainRidgeSitePrep, caption: "Full facility build" },
+    { src: mainRidgeFinishedInterior1, caption: "Completed interior" },
+    { src: mainRidgeFinishedInterior2, caption: "Interior detail" },
+    { src: premiumStableFacade, caption: "Stabling wing" },
+    { src: coveredArenaLit, caption: "Arena at dusk" },
   ],
   "clinics-events": [
     { src: equitanaArena, caption: "Competition arena" },

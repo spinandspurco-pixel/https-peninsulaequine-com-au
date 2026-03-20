@@ -47,7 +47,7 @@ const PROJECTS = [
   { src: timberCubbyFront, alt: "Western-style bespoke timber cubby", label: "Custom Builds", scope: "Bespoke Timber", slug: "equitana" },
   { src: pavilionTimber, alt: "Timber and corrugated iron detail", label: "Peninsula Build", scope: "Structural Carpentry", slug: "equitana" },
   { src: garageExterior, alt: "Steel shed with polished concrete apron", label: "Mornington Peninsula", scope: "Steel Structures", slug: "caulfield" },
-  { src: interiorTimberWindow, alt: "Recycled timber cladding with bush views", label: "Main Ridge Interior", scope: "Timber Fit-out", slug: "qld-facility" },
+  { src: interiorTimberWindow, alt: "Recycled timber cladding with bush views", label: "Main Ridge Interior", scope: "Timber Fit-out", slug: "main-ridge" },
 ];
 
 const SERVICES = [

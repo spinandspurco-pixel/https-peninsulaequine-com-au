@@ -9,9 +9,9 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { CheckCircle, ArrowRight, Phone, Ruler, Shield, Layers, CircleDot } from "lucide-react";
 import { siteConfig, services } from "@/data/content";
 
-import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
+import coveredArenaLit from "@/assets/covered-arena-finished-lit.jpg";
 import arenaSandPrep1 from "@/assets/arena-sand-prep-1.jpg";
-import qldStalls from "@/assets/qld-facility-stalls.jpg";
+import arenaSandPrep2 from "@/assets/arena-sand-prep-2.jpg";
 import blueprintFacility from "@/assets/blueprint-facility.png";
 import blueprintDetail from "@/assets/blueprint-detail.png";
 import roundPenDiagram from "@/assets/round-pen-diagram.png";
@@ -146,7 +146,7 @@ export default function RoundPens() {
       <PageHeader
         title="Round Pens & Paddocks"
         description={serviceData.description}
-        backgroundImage={qldCourtyard}
+        backgroundImage={coveredArenaLit}
         dividerVariant="contact"
       />
 
@@ -238,9 +238,9 @@ export default function RoundPens() {
           </h2>
           <div className="grid sm:grid-cols-3 gap-4">
             {[
-              { src: qldCourtyard, alt: "Round pen at QLD facility" },
+              { src: coveredArenaLit, alt: "Covered arena at dusk" },
               { src: arenaSandPrep1, alt: "Footing preparation for round pen" },
-              { src: qldStalls, alt: "Adjacent paddock layout" },
+              { src: arenaSandPrep2, alt: "Arena surface grading" },
             ].map((img) => (
               <div key={img.alt} className="aspect-[4/3] rounded-xl overflow-hidden border border-border">
                 <img

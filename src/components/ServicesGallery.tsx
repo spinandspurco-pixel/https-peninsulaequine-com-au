@@ -30,18 +30,18 @@ function formatPrice(n: number): string {
 import equitanaArena from "@/assets/equitana-arena-1.jpg";
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
 import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
-import qldFacilityConstruction from "@/assets/qld-facility-construction.jpg";
-import qldFacilityCourtyard from "@/assets/qld-facility-courtyard.jpg";
+import mainRidgeSitePrep from "@/assets/main-ridge-site-prep.jpg";
+import coveredArenaLit from "@/assets/covered-arena-finished-lit.jpg";
 import mainRidgeCiroWoodwork from "@/assets/main-ridge-ciro-woodwork-1.jpg";
 
 const serviceImages: Record<string, string> = {
   "arena-construction": equitanaArena,
   "barn-construction": aberdeenBarnInterior,
   "fencing": aberdeenStalls,
-  "infrastructure": qldFacilityConstruction,
-  "round-pens": qldFacilityCourtyard,
+  "infrastructure": mainRidgeSitePrep,
+  "round-pens": coveredArenaLit,
   "renovations": mainRidgeCiroWoodwork,
-  "full-facility": qldFacilityConstruction,
+  "full-facility": mainRidgeSitePrep,
   "clinics-events": equitanaArena,
 };
 
