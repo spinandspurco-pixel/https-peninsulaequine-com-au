@@ -116,14 +116,14 @@ function ProjectsScroll() {
             <img
               src={project.src}
               alt={project.alt}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1800ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06] brightness-[0.85] group-hover:brightness-[0.95]"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2200ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.08] brightness-[0.8] group-hover:brightness-[0.92]"
               loading="lazy"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/5" />
-            <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-background/10" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background/25 via-transparent to-transparent" />
             <div className="absolute inset-0 grain-texture opacity-30" />
-            <div className="absolute inset-0 bg-background/10 group-hover:bg-background/0 transition-all duration-700" />
-            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 translate-y-2 group-hover:translate-y-0 transition-transform duration-700">
+            <div className="absolute inset-0 bg-background/15 group-hover:bg-background/0 transition-all duration-900" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 translate-y-2 group-hover:translate-y-0 transition-transform duration-900">
               <p className="text-[9px] uppercase tracking-[0.25em] text-accent/50 font-mono mb-2 opacity-70 group-hover:opacity-100 transition-opacity duration-500">{project.scope}</p>
               <p className="font-serif text-lg text-foreground/60 group-hover:text-foreground transition-all duration-700">{project.label}</p>
               <div className="flex items-center gap-1.5 mt-3 text-accent/0 group-hover:text-accent/60 transition-all duration-700 translate-y-2 group-hover:translate-y-0">
