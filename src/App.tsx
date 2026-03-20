@@ -84,6 +84,7 @@ function AppContent() {
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/services" element={<Services />} />
@@ -95,8 +96,8 @@ function AppContent() {
           <Route path="/testimonials" element={<Testimonials />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<LegalPrivacy />} />
+          <Route path="/terms" element={<LegalTerms />} />
           <Route path="/login" element={<Login />} />
           <Route path="/hq" element={<HQ />} />
           <Route path="/admin" element={<Admin />} />
