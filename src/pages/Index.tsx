@@ -483,7 +483,7 @@ export default function Index() {
                 {/* Proof-point strip */}
                 <RevealOnScroll direction="up" delay={300}>
                   <div className="flex flex-wrap items-center gap-x-8 gap-y-3 mt-12">
-                    {["Built for Floats + Trucks", "75–100mm Engineered Depth", "Premium Stone / Gravel Finish"].map((point) => (
+                    {["Built for Floats + Trucks", "75–100mm Engineered Depth", "Stone / Gravel / Cobble Finish"].map((point) => (
                       <span key={point} className="text-[9px] uppercase tracking-[0.25em] text-accent/25 font-mono">{point}</span>
                     ))}
                   </div>
