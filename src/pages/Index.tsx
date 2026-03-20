@@ -320,7 +320,7 @@ export default function Index() {
                 <RevealLine className="mb-6" width="w-10" />
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={80}>
-                <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/40 mb-3">What We Build</p>
+                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">What We Build</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={120}>
                 <h2 className="heading-section text-foreground">
