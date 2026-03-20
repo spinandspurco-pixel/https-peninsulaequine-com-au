@@ -535,27 +535,34 @@ export default function Index() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-background/10" />
                 </div>
-...
-            {[
-              { src: interiorTimberWindow, alt: "Timber cladding detail" },
-              { src: mainRidgeRebarDepth2, alt: "Rebar foundation depth" },
-              { src: reclaimedBeamWorkshop, alt: "Reclaimed beam preparation" },
-              { src: reclaimedBoardsForklift, alt: "Timber boards ready for fabrication" },
-              { src: equitanaTractorStorm, alt: "Equitana arena tractor pass" },
-              { src: equitanaArenaFinish, alt: "Finished Equitana arena surface" },
-            ].map((img, i) => (
-              <div key={i} className="relative aspect-square overflow-hidden group">
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.65] saturate-[0.7] contrast-[1.1]"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-background/10 group-hover:bg-transparent transition-colors duration-700" />
               </div>
-            ))}
+            </RevealOnScroll>
+
+            {/* Material strip — scrolling mosaic */}
+            <RevealOnScroll direction="up" delay={300}>
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mt-12">
+                {[
+                  { src: interiorTimberWindow, alt: "Timber cladding detail" },
+                  { src: mainRidgeRebarDepth2, alt: "Rebar foundation depth" },
+                  { src: reclaimedBeamWorkshop, alt: "Reclaimed beam preparation" },
+                  { src: reclaimedBoardsForklift, alt: "Timber boards ready for fabrication" },
+                  { src: equitanaTractorStorm, alt: "Equitana arena tractor pass" },
+                  { src: equitanaArenaFinish, alt: "Finished Equitana arena surface" },
+                ].map((img, i) => (
+                  <div key={i} className="relative aspect-square overflow-hidden group">
+                    <img
+                      src={img.src}
+                      alt={img.alt}
+                      className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.65] saturate-[0.7] contrast-[1.1]"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-background/10 group-hover:bg-transparent transition-colors duration-700" />
+                  </div>
+                ))}
+              </div>
+            </RevealOnScroll>
           </div>
-        </RevealOnScroll>
+        </div>
       </section>
 
       {/* ═══ 7. AUTHORITY STRIP — reduced visual weight ═══ */}

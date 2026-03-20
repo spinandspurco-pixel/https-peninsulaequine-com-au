@@ -18,6 +18,9 @@ import mainRidgeCiroWoodwork1 from "@/assets/main-ridge-ciro-woodwork-1.jpg";
 import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
 import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
 import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
+import mainRidgeFrameWide from "@/assets/main-ridge-frame-wide.jpg";
+import mainRidgeFrameAngle from "@/assets/main-ridge-frame-angle.jpg";
+import mainRidgeFoundationPour from "@/assets/main-ridge-foundation-pour.jpg";
 
 import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
 import qldAerial1 from "@/assets/qld-facility-aerial-1.jpg";
@@ -76,9 +79,11 @@ export const CASE_STUDIES: CaseStudyData[] = [
     outcome:
       "A stable, high-performance arena that maintains ride quality in all conditions — paired with a barn that's as functional as it is beautiful.",
     images: [
-      { src: mainRidgeBrickwork, alt: "Precision brickwork foundation" },
+      { src: mainRidgeFrameWide, alt: "Main Ridge timber frame build phase" },
+      { src: mainRidgeFrameAngle, alt: "Timber frame angle detail" },
+      { src: mainRidgeFoundationPour, alt: "Concrete foundation pour" },
       { src: mainRidgeCiroWoodwork1, alt: "Ciro hand-crafting timber" },
-      { src: mainRidgeTimber, alt: "Timber frame construction" },
+      { src: mainRidgeBrickwork, alt: "Precision brickwork foundation" },
       { src: mainRidgeBarnFrame, alt: "Barn frame raising" },
       { src: mainRidgeArenaGrading, alt: "Arena surface grading" },
     ],
