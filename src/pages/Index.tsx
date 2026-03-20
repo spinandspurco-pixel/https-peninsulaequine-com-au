@@ -10,23 +10,22 @@ import { cn } from "@/lib/utils";
 // Video
 import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
 
-// Portfolio imagery — curated hero-tier visuals
-import aberdeenStonework from "@/assets/aberdeen-stonework-color.jpg";
+// Portfolio imagery — curated hero-tier visuals (unique to homepage)
+import stoneworkStables from "@/assets/stonework-stables-1.jpg";
 import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
-import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
+import qldAerial2 from "@/assets/qld-facility-aerial-2.jpg";
 import equitanaTractors from "@/assets/equitana-tractors.jpg";
-import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
+import caulfieldEvent from "@/assets/caulfield-event.jpg";
 
 // Intro video
 import buildVideo from "@/assets/videos/main-ridge-woodwork-1.mp4";
 
-// Detail / material textures
+// Detail / material textures (unique to homepage strip)
 import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
-import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
-import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
+import arenaSandPrep2 from "@/assets/arena-sand-prep-2.jpg";
+import mainRidgeCiroWoodwork4 from "@/assets/main-ridge-ciro-woodwork-4.jpg";
 
-// Process / build imagery
-import mainRidgeCiroWoodwork from "@/assets/main-ridge-ciro-woodwork-1.jpg";
+// Process / build imagery (unique to homepage)
 import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
 
 // Training
@@ -39,11 +38,11 @@ import peBanner from "@/assets/pe-banner.png";
 import heroSunset from "@/assets/hero-sunset.png";
 
 const PROJECTS = [
-  { src: aberdeenStonework, alt: "Hand-laid stonework at Private Client — Mornington Peninsula", label: "Private Client — Mornington Peninsula", scope: "Stables & Stonework", slug: "aberdeen-farm" },
+  { src: stoneworkStables, alt: "Hand-laid stonework stables", label: "Private Client — Mornington Peninsula", scope: "Stables & Stonework", slug: "aberdeen-farm" },
   { src: mainRidgeInterior, alt: "Timber interior at Main Ridge", label: "Main Ridge", scope: "Arena & Barn Complex", slug: "main-ridge" },
   { src: equitanaTractors, alt: "Equitana arena preparation", label: "Equitana", scope: "Competition Arena", slug: "equitana" },
-  { src: mainRidgeBarnFrame, alt: "Main Ridge barn frame", label: "Main Ridge", scope: "Structural Timber", slug: "main-ridge" },
-  { src: qldCourtyard, alt: "Queensland facility courtyard", label: "QLD Facility", scope: "Full Facility Build", slug: "qld-facility" },
+  { src: caulfieldEvent, alt: "Caulfield Ranch Roundup event build", label: "Caulfield", scope: "Event Infrastructure", slug: "caulfield" },
+  { src: qldAerial2, alt: "Queensland facility aerial view", label: "QLD Facility", scope: "Full Facility Build", slug: "qld-facility" },
 ];
 
 const SERVICES = [
@@ -502,7 +501,7 @@ export default function Index() {
                 </div>
                 <div className="relative aspect-[3/4] overflow-hidden group">
                   <img
-                    src={mainRidgeCiroWoodwork}
+                    src={mainRidgeCiroWoodwork4}
                     alt="Timber hand-crafting detail"
                     className="absolute inset-0 w-full h-full object-cover object-top brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8] transition-all duration-[900ms]"
                     loading="lazy"
@@ -521,11 +520,11 @@ export default function Index() {
           <div className="grid grid-cols-3 sm:grid-cols-6">
             {[
               { src: mainRidgeTimber, alt: "Timber grain detail" },
-              { src: mainRidgeBrickwork, alt: "Reclaimed brickwork" },
-              { src: aberdeenStallsDetail, alt: "Steel stall ironwork" },
+              { src: arenaSandPrep2, alt: "Arena sand preparation" },
+              { src: mainRidgeCiroWoodwork4, alt: "Timber hand-crafting" },
+              { src: mainRidgeRebarFoundation, alt: "Rebar foundation" },
+              { src: heroSunset, alt: "Landscape at golden hour" },
               { src: mainRidgeTimber, alt: "Timber joinery" },
-              { src: mainRidgeBrickwork, alt: "Brick and mortar" },
-              { src: aberdeenStallsDetail, alt: "Metalwork detail" },
             ].map((img, i) => (
               <div key={i} className="relative aspect-square overflow-hidden group">
                 <img

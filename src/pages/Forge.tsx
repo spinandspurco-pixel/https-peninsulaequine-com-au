@@ -5,9 +5,9 @@ import { Flame, ArrowRight, Mail, Wrench, Fence, Sparkles, Building2, Layers } f
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 
-import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
-import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
-import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
+import equitanaEquipment from "@/assets/equitana-equipment.jpg";
+import aberdeenStoneworkBw from "@/assets/aberdeen-stonework-bw.jpg";
+import mainRidgeCiroWoodwork2 from "@/assets/main-ridge-ciro-woodwork-2.jpg";
 
 const quickLinks = [
   { icon: Layers, label: "Browse Systems", to: "/shop", desc: "View all configurations" },
@@ -104,9 +104,9 @@ export default function Forge() {
         <RevealOnScroll direction="up" duration={700}>
           <div className="grid grid-cols-3">
             {[
-              { src: mainRidgeTimber, alt: "Timber grain" },
-              { src: aberdeenStallsDetail, alt: "Steel detail" },
-              { src: mainRidgeBrickwork, alt: "Material texture" },
+              { src: equitanaEquipment, alt: "Equine equipment detail" },
+              { src: aberdeenStoneworkBw, alt: "Stonework texture" },
+              { src: mainRidgeCiroWoodwork2, alt: "Craft detail" },
             ].map((img, i) => (
               <div key={i} className="relative aspect-[16/9] overflow-hidden group">
                 <img

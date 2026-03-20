@@ -7,7 +7,7 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 
 import equitanaArena from "@/assets/equitana-arena-1.jpg";
-import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
+import stoneworkStables from "@/assets/stonework-stables-1.jpg";
 
 const CAPABILITY_DETAILS = [
   {
@@ -139,7 +139,7 @@ export default function Services() {
         <RevealOnScroll direction="up" duration={800}>
           <div className="relative aspect-[21/9]">
             <img
-              src={mainRidgeBarnFrame}
+              src={stoneworkStables}
               alt="Barn frame structure"
               className="absolute inset-0 w-full h-full object-cover brightness-[0.55] saturate-[0.7]"
               loading="lazy"

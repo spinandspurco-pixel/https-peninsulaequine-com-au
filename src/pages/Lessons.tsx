@@ -33,7 +33,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
 import { glennBrowitt, lessonInfo, siteConfig } from "@/data/content";
-import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
+import equitanaArena4 from "@/assets/equitana-arena-4.jpg";
 
 // ── Program Data ─────────────────────────────────────
 
@@ -843,7 +843,7 @@ export default function Lessons() {
               )}
             >
               <img
-                src={aberdeenBarnInterior}
+                src={equitanaArena4}
                 alt="Riding lesson at Peninsula Equine arena"
                 className="w-full h-full object-cover"
               />

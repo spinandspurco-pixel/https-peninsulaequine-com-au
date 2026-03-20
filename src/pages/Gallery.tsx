@@ -33,17 +33,18 @@ import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
 import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
 
 // ── 5. EDITORIAL / FINISHED RESULTS ──
-import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
-import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
-import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
+import aberdeenDeck from "@/assets/aberdeen-deck.jpg";
+import stoneworkStables2 from "@/assets/stonework-stables-2.jpg";
+import qldExterior3 from "@/assets/qld-facility-exterior-3.jpg";
 import qldExterior1 from "@/assets/qld-facility-exterior-1.jpg";
 import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
 import equitanaArena3 from "@/assets/equitana-arena-3.jpg";
 import equitanaArena5 from "@/assets/equitana-arena-5.jpg";
+import equitanaArena6 from "@/assets/equitana-arena-6.jpg";
 
 // ── 6. DETAIL / CRAFT ──
 import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
-import aberdeenStoneworkColor from "@/assets/aberdeen-stonework-color.jpg";
+import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
 import aberdeenInteriorStonework from "@/assets/aberdeen-interior-stonework.jpg";
 import mainRidgeWorker from "@/assets/main-ridge-worker.jpg";
 import mainRidgeCiroWoodwork1 from "@/assets/main-ridge-ciro-woodwork-1.jpg";
@@ -430,10 +431,10 @@ export default function Gallery() {
             <RevealOnScroll direction="up" duration={800}>
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 mb-4 sm:mb-5">
                 <div className="lg:col-span-7">
-                  <EditorialImage src={mainRidgeInterior} alt="Main Ridge — open barn interior" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeInterior)} />
+                  <EditorialImage src={aberdeenDeck} alt="Private client — outdoor deck" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenDeck)} />
                 </div>
                 <div className="lg:col-span-5">
-                  <EditorialImage src={aberdeenStoneworkColor} alt="Private client — stonework facade" aspect="aspect-[3/4]" className="h-full" onClick={() => openLightbox(aberdeenStoneworkColor)} />
+                  <EditorialImage src={stoneworkStables2} alt="Stonework stables detail" aspect="aspect-[3/4]" className="h-full" onClick={() => openLightbox(stoneworkStables2)} />
                 </div>
               </div>
             </RevealOnScroll>
@@ -442,7 +443,7 @@ export default function Gallery() {
             <RevealOnScroll direction="up" duration={700} delay={80}>
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 mb-4 sm:mb-5">
                 <div className="lg:col-span-5 lg:mt-8">
-                  <EditorialImage src={mainRidgeBrickwork} alt="Main Ridge — reclaimed brickwork" aspect="aspect-[3/4]" onClick={() => openLightbox(mainRidgeBrickwork)} />
+                  <EditorialImage src={qldExterior3} alt="Queensland — exterior detail" aspect="aspect-[3/4]" onClick={() => openLightbox(qldExterior3)} />
                 </div>
                 <div className="lg:col-span-7 lg:-mt-6">
                   <EditorialImage src={equitanaArena5} alt="Equitana — completed competition arena" aspect="aspect-[16/9]" onClick={() => openLightbox(equitanaArena5)} />
@@ -454,7 +455,7 @@ export default function Gallery() {
             <RevealOnScroll direction="up" duration={700} delay={120}>
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
                 <EditorialImage src={qldExterior1} alt="Queensland — barn exterior" aspect="aspect-[4/3]" onClick={() => openLightbox(qldExterior1)} />
-                <EditorialImage src={mainRidgeTimber} alt="Main Ridge — timber beam joinery" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeTimber)} />
+                <EditorialImage src={equitanaArena6} alt="Equitana — arena surface detail" aspect="aspect-[4/3]" onClick={() => openLightbox(equitanaArena6)} />
                 <div className="col-span-2 lg:col-span-1">
                   <EditorialImage src={qldCourtyard} alt="Queensland — central courtyard" aspect="aspect-[4/3]" onClick={() => openLightbox(qldCourtyard)} />
                 </div>
