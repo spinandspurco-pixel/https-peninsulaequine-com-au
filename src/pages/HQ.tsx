@@ -180,13 +180,13 @@ export default function HQ() {
       </section>
 
       {/* ── Horizon ──────────────────────────────────── */}
-      <section className="py-16 sm:py-20 border-t border-border/10">
+      <section className="py-16 sm:py-20 border-t border-border/15">
         <div className="section-container max-w-md mx-auto text-center">
           <RevealOnScroll>
-            <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/25 mb-6">
+            <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/40 mb-6">
               Expanding
             </p>
-            <p className="text-[12px] sm:text-[13px] text-muted-foreground/20 leading-[2.2]">
+            <p className="text-[12px] sm:text-[13px] text-muted-foreground/40 leading-[2.2]">
               Planning tools, entry automation, forecourt products, and
               estate hardware — validated through builds before release.
             </p>
