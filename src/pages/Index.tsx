@@ -10,12 +10,12 @@ import { cn } from "@/lib/utils";
 // Video
 import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
 
-// Portfolio imagery — curated hero-tier visuals
-import aberdeenStonework from "@/assets/aberdeen-stonework-color.jpg";
+// Portfolio imagery — curated hero-tier visuals (unique to homepage)
+import stoneworkStables from "@/assets/stonework-stables-1.jpg";
 import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
-import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
+import qldAerial2 from "@/assets/qld-facility-aerial-2.jpg";
 import equitanaTractors from "@/assets/equitana-tractors.jpg";
-import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
+import caulfieldEvent from "@/assets/caulfield-event.jpg";
 
 // Intro video
 import buildVideo from "@/assets/videos/main-ridge-woodwork-1.mp4";
