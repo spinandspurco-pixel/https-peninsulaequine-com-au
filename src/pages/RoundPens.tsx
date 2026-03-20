@@ -138,7 +138,7 @@ export default function RoundPens() {
   return (
     <Layout>
       <StickySubpageCTA
-        ctaLabel="Get a Quote"
+        ctaLabel="Request Assessment"
         ctaIcon={<Phone className="h-4 w-4" />}
         onCtaClick={() => (window.location.href = `/contact?services=round-pens`)}
       />
