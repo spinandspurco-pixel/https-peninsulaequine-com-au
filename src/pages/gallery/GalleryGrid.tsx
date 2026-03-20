@@ -83,8 +83,6 @@ function CinematicImage({
         />
       )}
 
-      {/* Overlay — smooth fade */}
-      <div className="absolute inset-0 z-[2] bg-gradient-to-t from-background/80 via-background/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
       {/* Caption */}
       <div className="absolute bottom-0 inset-x-0 z-[3] p-5 sm:p-6 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0">
