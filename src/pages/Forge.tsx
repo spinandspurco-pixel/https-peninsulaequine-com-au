@@ -3,6 +3,11 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Flame, ArrowRight, Mail, Wrench, Fence, Sparkles, Building2, Layers } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { RevealOnScroll } from "@/components/RevealOnScroll";
+
+import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
+import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
+import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
 
 const quickLinks = [
   { icon: Layers, label: "Browse Systems", to: "/shop", desc: "View all configurations" },
