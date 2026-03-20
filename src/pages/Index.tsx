@@ -417,8 +417,8 @@ export default function Index() {
             <RevealOnScroll direction="up">
               <div className="relative w-full max-w-md aspect-[3/4] overflow-hidden img-feather-sides mx-auto">
                 <img
-                  src={qldAerial2}
-                  alt="Aerial view of completed equine facility"
+                  src={mainRidgeFinishedExterior}
+                  alt="Main Ridge finished pavilion at dusk"
                   className="absolute inset-0 w-full h-full object-cover brightness-[0.55] saturate-[0.65] contrast-[1.1]"
                   loading="lazy"
                 />
