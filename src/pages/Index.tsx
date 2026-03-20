@@ -69,8 +69,8 @@ const PROCESS_STEPS = [
 ];
 
 /* ── Standardised spacing constants ───── */
-const SP_SECTION = "py-24 sm:py-32 lg:py-40";
-const SP_HEAD = "mb-14 sm:mb-16";
+const SP_SECTION = "py-28 sm:py-36 lg:py-44";
+const SP_HEAD = "mb-14 sm:mb-18";
 const SP_SM = "mb-6";
 
 /* ── Soft gradient transition between sections ─── */
