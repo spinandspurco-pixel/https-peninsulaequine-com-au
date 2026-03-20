@@ -50,6 +50,13 @@ import equitanaArena6 from "@/assets/equitana-arena-6.jpg";
 // ── 6. DETAIL / CRAFT ──
 import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
 import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
+
+// ── 7. CUSTOM BUILDS ──
+import steelShedDramatic from "@/assets/steel-shed-dramatic.jpg";
+import timberCubbyFront from "@/assets/timber-cubby-front.jpg";
+import timberCubbyDetail from "@/assets/timber-cubby-detail.jpg";
+import timberCubbyCockatoo from "@/assets/timber-cubby-cockatoo.jpg";
+import roofingSteelDetail from "@/assets/roofing-steel-detail.jpg";
 import aberdeenInteriorStonework from "@/assets/aberdeen-interior-stonework.jpg";
 import mainRidgeWorker from "@/assets/main-ridge-worker.jpg";
 import mainRidgeCiroWoodwork1 from "@/assets/main-ridge-ciro-woodwork-1.jpg";
@@ -481,6 +488,48 @@ export default function Gallery() {
       </section>
 
       <ChapterDivider />
+
+      {/* ═══════════════════════════════════════════════════
+          5b. CUSTOM BUILDS — steel sheds & bespoke timber
+          ═══════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 grain-texture" />
+        <div className="py-20 sm:py-28 relative">
+          <div className="section-container-wide relative z-[1]">
+            <RevealOnScroll direction="up" duration={700}>
+              <div className="text-center max-w-md mx-auto mb-12">
+                <p className="text-[9px] uppercase tracking-[0.4em] text-accent/40 font-mono mb-3">Custom Builds</p>
+                <h2 className="font-serif text-xl sm:text-2xl text-foreground/80 font-normal tracking-[0.02em]">
+                  Steel &amp; Timber — Built to Brief
+                </h2>
+              </div>
+            </RevealOnScroll>
+
+            {/* Row 1 — wide steel shed + tall timber cubby */}
+            <RevealOnScroll direction="up" duration={800} delay={80}>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 mb-4 sm:mb-5">
+                <div className="lg:col-span-7">
+                  <EditorialImage src={steelShedDramatic} alt="Custom colorbond barn with dramatic sky" aspect="aspect-[16/10]" onClick={() => openLightbox(steelShedDramatic)} />
+                </div>
+                <div className="lg:col-span-5">
+                  <EditorialImage src={timberCubbyCockatoo} alt="Timber structure with cockatoo" aspect="aspect-[3/4]" className="h-full" onClick={() => openLightbox(timberCubbyCockatoo)} />
+                </div>
+              </div>
+            </RevealOnScroll>
+
+            {/* Row 2 — three detail shots */}
+            <RevealOnScroll direction="up" duration={700} delay={120}>
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+                <EditorialImage src={timberCubbyFront} alt="Western-style bespoke timber cubby" aspect="aspect-[4/3]" onClick={() => openLightbox(timberCubbyFront)} />
+                <EditorialImage src={timberCubbyDetail} alt="Reclaimed hardwood and wagon wheel detail" aspect="aspect-[4/3]" onClick={() => openLightbox(timberCubbyDetail)} />
+                <div className="col-span-2 lg:col-span-1">
+                  <EditorialImage src={roofingSteelDetail} alt="Steel roofing — galvanised ridge capping" aspect="aspect-[4/3]" onClick={() => openLightbox(roofingSteelDetail)} />
+                </div>
+              </div>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
 
       {/* ═══════════════════════════════════════════════════
           6. CRAFT & LIFE — detail + human moments

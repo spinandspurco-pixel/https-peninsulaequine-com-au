@@ -44,6 +44,7 @@ import equitanaTractors from "@/assets/equitana-tractors.jpg";
 
 // Melbourne Cup / Caulfield
 import caulfieldEvent from "@/assets/caulfield-event.jpg";
+import ranchRoundupEvent from "@/assets/ranch-roundup-event.jpg";
 
 // Arena Sand Prep
 import arenaSandPrep1 from "@/assets/arena-sand-prep-1.jpg";
@@ -59,6 +60,15 @@ import mainRidgePostDepth from "@/assets/main-ridge-post-depth.jpg";
 import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
 import mainRidgeTimberPosts from "@/assets/main-ridge-timber-posts.jpg";
 import mainRidgeTrenchUtilities from "@/assets/main-ridge-trench-utilities.jpg";
+
+// Custom Builds
+import steelShedDramatic from "@/assets/steel-shed-dramatic.jpg";
+import timberCubbyFront from "@/assets/timber-cubby-front.jpg";
+import timberCubbyDetail from "@/assets/timber-cubby-detail.jpg";
+import timberCubbyCockatoo from "@/assets/timber-cubby-cockatoo.jpg";
+import roofingSteelDetail from "@/assets/roofing-steel-detail.jpg";
+import shedExteriorSide from "@/assets/shed-exterior-side.jpg";
+import shedRollerDoorDetail from "@/assets/shed-roller-door-detail.jpg";
 
 // Videos
 import mainRidgeWoodwork1 from "@/assets/videos/main-ridge-woodwork-1.mp4";
@@ -87,6 +97,7 @@ export const projects = [
   { id: "queensland", name: "Queensland Facility" },
   { id: "equitana", name: "Equitana Melbourne" },
   { id: "caulfield", name: "Melbourne Cup" },
+  { id: "custom-builds", name: "Custom Builds" },
 ];
 
 export const serviceFilters = [
@@ -164,6 +175,7 @@ export const galleryItems: GalleryItem[] = [
   { id: 51, src: arenaSandPrep1, alt: "Melbourne Cup - Sand distribution and base preparation", project: "caulfield", type: "image", service: "arena", location: "victoria" },
   { id: 52, src: arenaSandPrep2, alt: "Melbourne Cup - Precision grading for optimal drainage", project: "caulfield", type: "image", service: "arena", location: "victoria" },
   { id: 53, src: arenaSandPrep3, alt: "Melbourne Cup - Finished competition-grade surface", project: "caulfield", type: "image", service: "arena", location: "victoria" },
+  { id: 54, src: ranchRoundupEvent, alt: "Caulfield Ranch Roundup - Event stage and arena setup", project: "caulfield", type: "image", service: "events", location: "victoria" },
 
   // Main Ridge Construction Process
   { id: 60, src: mainRidgeTimberPosts, alt: "Main Ridge - Timber post installation with concrete footings", project: "main-ridge", type: "image", service: "infrastructure", location: "victoria" },
@@ -174,6 +186,15 @@ export const galleryItems: GalleryItem[] = [
   { id: 65, src: mainRidgePostDepth, alt: "Main Ridge - Post hole depth measurement for stability", project: "main-ridge", type: "image", service: "infrastructure", location: "victoria" },
   { id: 66, src: mainRidgeTrenchUtilities, alt: "Main Ridge - Underground utility trench excavation", project: "main-ridge", type: "image", service: "infrastructure", location: "victoria" },
   { id: 67, src: mainRidgeArenaGrading, alt: "Main Ridge - Arena surface grading and leveling", project: "main-ridge", type: "image", service: "arena", location: "victoria" },
+
+  // Custom Builds
+  { id: 70, src: steelShedDramatic, alt: "Custom steel shed with dramatic sky — colorbond barn build", project: "custom-builds", type: "image", service: "barn", location: "victoria" },
+  { id: 71, src: timberCubbyFront, alt: "Bespoke western-style timber cubby with wagon wheel detail", project: "custom-builds", type: "image", service: "woodwork", location: "victoria" },
+  { id: 72, src: timberCubbyDetail, alt: "Timber cubby — reclaimed hardwood and corrugated iron detail", project: "custom-builds", type: "image", service: "woodwork", location: "victoria" },
+  { id: 73, src: timberCubbyCockatoo, alt: "Custom timber structure with cockatoo in flight", project: "custom-builds", type: "image", service: "woodwork", location: "victoria" },
+  { id: 74, src: roofingSteelDetail, alt: "Steel roofing installation — galvanised ridge capping detail", project: "custom-builds", type: "image", service: "infrastructure", location: "victoria" },
+  { id: 75, src: shedExteriorSide, alt: "Colorbond shed exterior with crushed rock apron", project: "custom-builds", type: "image", service: "barn", location: "victoria" },
+  { id: 76, src: shedRollerDoorDetail, alt: "Roller door and cladding detail — precision finish", project: "custom-builds", type: "image", service: "infrastructure", location: "victoria" },
 ];
 
 export const quickTags = [
