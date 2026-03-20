@@ -32,6 +32,8 @@ export default function ProductDetail() {
   }
 
   const addOns = getAddOnsByTier(product.tier);
+  const isPro = product.tier === "pro";
+  const isComplete = product.tier === "complete";
 
   return (
     <Layout>
@@ -43,12 +45,16 @@ export default function ProductDetail() {
           <Link to="/shop" className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-accent transition-colors uppercase tracking-[0.15em]">
             <ArrowLeft className="w-3 h-3" />Equus Forge
           </Link>
-          <TierBadge tier={product.tier} />
-          {product.badge && (
-            <span className="ml-3 inline-block px-3 py-1 rounded-sm text-[10px] font-mono uppercase tracking-[0.2em] bg-accent text-accent-foreground">
-              {product.badge}
-            </span>
-          )}
+          <div className="flex items-center justify-center gap-3">
+            <TierBadge tier={product.tier} />
+            {product.badge && (
+              <span className={`inline-block px-3 py-1 rounded-sm text-[10px] font-mono uppercase tracking-[0.2em] ${
+                isPro ? "bg-accent text-accent-foreground" : "bg-foreground/10 text-foreground/60"
+              }`}>
+                {product.badge}
+              </span>
+            )}
+          </div>
           <h1 className="heading-display text-primary-foreground drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
             {product.title}
           </h1>
@@ -59,22 +65,32 @@ export default function ProductDetail() {
         </div>
       </section>
 
+      {/* Trust Line */}
+      <section className="py-5 border-b border-border bg-card/50">
+        <div className="section-container text-center">
+          <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground/50 flex items-center justify-center gap-2">
+            <Shield className="w-3.5 h-3.5 text-accent/40" strokeWidth={1.7} />
+            {product.trustLine}
+          </p>
+        </div>
+      </section>
+
       {/* Problem / Solution */}
       <section className="py-20 border-b border-border">
         <div className="section-container max-w-4xl mx-auto grid md:grid-cols-2 gap-12">
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-destructive">
-              <Zap className="w-4 h-4" />
+              <Zap className="w-4 h-4" strokeWidth={1.7} />
               <p className="text-[10px] font-mono uppercase tracking-[0.2em]">The Problem</p>
             </div>
-            <p className="text-muted-foreground leading-relaxed">{product.problem}</p>
+            <p className="text-muted-foreground leading-relaxed text-sm">{product.problem}</p>
           </div>
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-accent">
-              <Shield className="w-4 h-4" />
+              <Shield className="w-4 h-4" strokeWidth={1.7} />
               <p className="text-[10px] font-mono uppercase tracking-[0.2em]">The Solution</p>
             </div>
-            <p className="text-foreground leading-relaxed">{product.solution}</p>
+            <p className="text-foreground leading-relaxed text-sm">{product.solution}</p>
           </div>
         </div>
       </section>
@@ -82,7 +98,7 @@ export default function ProductDetail() {
       {/* What's Included */}
       <section className="py-20 bg-card border-b border-border">
         <div className="section-container max-w-4xl mx-auto">
-          <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/60 mb-3">System Specification</p>
+          <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60 mb-3">System Specification</p>
           <h2 className="font-serif text-2xl md:text-3xl mb-10">What's Included</h2>
           <div className="grid sm:grid-cols-2 gap-x-10 gap-y-4">
             {product.includes.map((item, i) => (
@@ -98,7 +114,7 @@ export default function ProductDetail() {
       {/* Specs */}
       <section className="py-20 border-b border-border">
         <div className="section-container max-w-4xl mx-auto">
-          <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/60 mb-3">Technical Overview</p>
+          <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60 mb-3">Technical Overview</p>
           <h2 className="font-serif text-2xl md:text-3xl mb-10">System Specifications</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {product.specs.map((spec) => (
@@ -115,13 +131,13 @@ export default function ProductDetail() {
       {addOns.length > 0 && (
         <section className="py-20 bg-card border-b border-border">
           <div className="section-container max-w-4xl mx-auto">
-            <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/60 mb-3">Optional</p>
+            <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60 mb-3">Optional</p>
             <h2 className="font-serif text-2xl md:text-3xl mb-10">System Add-Ons</h2>
             <div className="grid sm:grid-cols-3 gap-6">
               {addOns.map((addon) => (
                 <div key={addon.handle} className="border border-border rounded-sm p-6 space-y-3 hover:border-accent/30 transition-colors">
                   <div className="flex items-center gap-2 text-accent">
-                    <Wrench className="w-4 h-4" />
+                    <Wrench className="w-4 h-4" strokeWidth={1.7} />
                     <p className="text-[10px] font-mono uppercase tracking-[0.15em]">{addon.subtitle}</p>
                   </div>
                   <h3 className="font-serif text-lg">{addon.title}</h3>
@@ -139,7 +155,7 @@ export default function ProductDetail() {
         <BlueprintScene preset="barn" className="absolute inset-0" />
         <div className="absolute inset-0 bg-primary/85" />
         <div className="section-container relative z-10 max-w-2xl mx-auto text-center space-y-6">
-          <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/60">Investment Overview</p>
+          <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60">Investment Overview</p>
           <div className="space-y-1">
             {product.compareAtPrice && (
               <p className="text-muted-foreground line-through text-lg">
@@ -166,18 +182,23 @@ export default function ProductDetail() {
               </Link>
             </Button>
           </div>
+
+          {/* Durability assurance */}
+          <p className="text-primary-foreground/25 text-[10px] uppercase tracking-[0.2em] pt-4">
+            Engineered for long-term performance · Backed by Peninsula Equine
+          </p>
         </div>
       </section>
 
       {/* Cross-System Flow */}
       <section className="py-16 border-t border-border">
         <div className="section-container max-w-3xl mx-auto text-center space-y-5">
-          <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-muted-foreground">Beyond the system</p>
+          <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted-foreground">Beyond the system</p>
           <h2 className="font-serif text-xl md:text-2xl">
             Need a full <span className="text-accent">managed build?</span>
           </h2>
           <p className="text-muted-foreground text-sm max-w-lg mx-auto">
-            GroundLock™ systems are designed to integrate with Peninsula Equine's full arena, stable, and infrastructure builds. Move from product to project seamlessly.
+            GroundLock™ systems integrate with Peninsula Equine's full arena, stable, and infrastructure builds. Move from product to project seamlessly.
           </p>
           <Button asChild variant="outline" size="lg" className="uppercase tracking-[0.12em] text-xs">
             <Link to="/services">
