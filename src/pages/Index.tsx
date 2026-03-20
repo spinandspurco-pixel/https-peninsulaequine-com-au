@@ -864,6 +864,15 @@ export default function Index() {
                 </RevealOnScroll>
               ))}
             </div>
+
+            {/* Division tagline */}
+            <RevealOnScroll direction="up" delay={300}>
+              <div className="mt-14 pt-8 border-t border-primary-foreground/[0.05]">
+                <p className="text-[10px] uppercase tracking-[0.25em] text-primary-foreground/15 font-mono">
+                  The product division of Peninsula Equine
+                </p>
+              </div>
+            </RevealOnScroll>
           </div>
         </div>
       </section>
