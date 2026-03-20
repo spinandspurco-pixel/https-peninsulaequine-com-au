@@ -80,17 +80,16 @@ function SectionBleed({ from = "background", to = "card" }: { from?: string; to?
   );
 }
 
-/* ── Service Icon with draw-in animation ───── */
+/* ── Service Icon — quiet, architectural ───── */
 function ServiceIcon({ icon: Icon, className }: { icon: typeof Mountain; className?: string }) {
   return (
     <Icon
       className={cn(
-        "w-5 h-5 text-foreground/30 transition-all duration-700",
-        "group-hover:text-accent/70",
-        "opacity-0 animate-[drawIn_0.7s_ease-out_forwards]",
+        "w-[18px] h-[18px] text-muted-foreground/25 transition-colors duration-700",
+        "group-hover:text-accent/50",
         className
       )}
-      strokeWidth={1.7}
+      strokeWidth={1.5}
     />
   );
 }
