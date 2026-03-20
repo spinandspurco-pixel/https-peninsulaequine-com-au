@@ -409,7 +409,7 @@ export default function Index() {
                 <RevealOnScroll direction="up">
                   <div className="flex items-center gap-3 mb-6">
                     <Layers className="w-4 h-4 text-accent/50" strokeWidth={1.5} />
-                    <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/50">Proprietary System</span>
+                    <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/50">Proprietary System</span>
                   </div>
                   <h2 className="heading-section text-foreground mb-4 leading-[1.15]">
                     P.E. GroundLock™
