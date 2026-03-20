@@ -15,6 +15,8 @@ interface StickySubpageCTAProps {
   onCtaClick?: () => void;
   /** Optional icon before label */
   ctaIcon?: React.ReactNode;
+  /** Hide the secondary "Book Lesson" link */
+  hideSecondary?: boolean;
 }
 
 export function StickySubpageCTA({
