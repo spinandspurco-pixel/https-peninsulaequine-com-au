@@ -15,7 +15,6 @@ import {
   ShieldCheck,
   HardHat,
   Download,
-  Gate,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
