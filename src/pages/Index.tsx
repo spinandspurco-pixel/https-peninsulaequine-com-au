@@ -659,7 +659,7 @@ export default function Index() {
       </section>
 
       {/* ═══ 9. FINAL CTA — cinematic sunset ═══════════════ */}
-      <section className="relative h-[65vh] sm:h-[75vh] overflow-hidden">
+      <section className="relative h-[70vh] sm:h-[80vh] overflow-hidden">
         <img
           src={heroSunset}
           alt=""
