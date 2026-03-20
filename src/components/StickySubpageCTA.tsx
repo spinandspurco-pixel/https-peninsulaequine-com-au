@@ -25,6 +25,7 @@ export function StickySubpageCTA({
   ctaHref = "/contact",
   onCtaClick,
   ctaIcon,
+  hideSecondary = false,
 }: StickySubpageCTAProps) {
   const [visible, setVisible] = useState(false);
   const [logoLoaded, setLogoLoaded] = useState(false);
