@@ -1,9 +1,15 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle2, Wrench } from "lucide-react";
+import { ArrowRight, CheckCircle2, Wrench, Shield } from "lucide-react";
 import { GROUNDLOCK_PRODUCTS, GROUNDLOCK_ADDONS, GROUNDLOCK_TIERS } from "@/data/groundlockProducts";
 import { BlueprintScene } from "@/components/BlueprintScene";
+
+const TRUST_POINTS = [
+  "Engineered by Peninsula Equine",
+  "Same systems used in managed builds",
+  "Designed to last decades, not seasons",
+];
 
 export default function Shop() {
   return (
@@ -13,14 +19,28 @@ export default function Shop() {
         <div className="absolute inset-0 bg-primary/75" />
         <BlueprintScene preset="elevation" className="absolute inset-0" />
         <div className="section-container relative z-10 text-center max-w-2xl mx-auto space-y-4">
-          <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/60 mb-2">Product Division</p>
+          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/60 mb-2">Product Division</p>
           <h1 className="heading-display text-primary-foreground drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
             Equus Forge
           </h1>
           <p className="text-primary-foreground/25 text-[11px] uppercase tracking-[0.2em] mb-2">by Peninsula Equine</p>
-          <p className="text-primary-foreground/70 text-lg">
+          <p className="text-primary-foreground/70 text-lg max-w-md mx-auto">
             Engineered Ground Systems. Configured to Perform.
           </p>
+        </div>
+      </section>
+
+      {/* Trust Strip */}
+      <section className="py-6 border-b border-border bg-card/50">
+        <div className="section-container">
+          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
+            {TRUST_POINTS.map((point) => (
+              <div key={point} className="flex items-center gap-2">
+                <Shield className="w-3.5 h-3.5 text-accent/50" strokeWidth={1.7} />
+                <span className="text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground/60">{point}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -28,10 +48,10 @@ export default function Shop() {
       <section className="py-20">
         <div className="section-container">
           <div className="text-center max-w-xl mx-auto mb-14 space-y-3">
-            <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/60">GroundLock™ Systems</p>
+            <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60">GroundLock™ Systems</p>
             <h2 className="font-serif text-2xl md:text-3xl">Choose Your Configuration</h2>
-            <p className="text-muted-foreground text-sm">
-              Three tiers. One engineered standard. Select the system that matches your arena, your goals, and your build.
+            <p className="text-muted-foreground text-sm max-w-md mx-auto">
+              Three tiers. One engineered standard. Select the system that matches your arena and your goals.
             </p>
           </div>
 
@@ -39,16 +59,25 @@ export default function Shop() {
             {GROUNDLOCK_PRODUCTS.map((product) => {
               const tierMeta = GROUNDLOCK_TIERS[product.tier];
               const isPro = product.tier === "pro";
+              const isComplete = product.tier === "complete";
 
               return (
                 <div
                   key={product.handle}
                   className={`relative flex flex-col border rounded-sm overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-accent/5 ${
-                    isPro ? "border-accent bg-card ring-1 ring-accent/20" : "border-border bg-card"
+                    isPro
+                      ? "border-accent bg-card ring-1 ring-accent/20"
+                      : isComplete
+                      ? "border-accent/40 bg-card"
+                      : "border-border bg-card"
                   }`}
                 >
                   {product.badge && (
-                    <div className="absolute top-0 right-0 bg-accent text-accent-foreground text-[9px] font-mono uppercase tracking-[0.2em] px-3 py-1.5">
+                    <div className={`absolute top-0 right-0 text-[9px] font-mono uppercase tracking-[0.2em] px-3 py-1.5 ${
+                      isPro
+                        ? "bg-accent text-accent-foreground"
+                        : "bg-foreground/10 text-foreground/60"
+                    }`}>
                       {product.badge}
                     </div>
                   )}
@@ -87,6 +116,11 @@ export default function Shop() {
                         </li>
                       )}
                     </ul>
+
+                    {/* Trust line */}
+                    <p className="text-[11px] text-muted-foreground/40 italic leading-relaxed pt-1">
+                      {product.trustLine}
+                    </p>
                   </div>
 
                   <div className="p-6 md:p-8 pt-0 space-y-3">
@@ -96,7 +130,7 @@ export default function Shop() {
                       </Link>
                     </Button>
                     <Button asChild variant="ghost" className="w-full text-xs text-muted-foreground hover:text-accent" size="sm">
-                      <Link to="/site-assessment">Book Site Assessment</Link>
+                      <Link to="/site-assessment">Get Build Ready</Link>
                     </Button>
                   </div>
                 </div>
@@ -110,14 +144,14 @@ export default function Shop() {
       <section className="py-16 bg-card border-y border-border">
         <div className="section-container">
           <div className="text-center max-w-xl mx-auto mb-10 space-y-3">
-            <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/60">Optional</p>
+            <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60">Optional</p>
             <h2 className="font-serif text-xl md:text-2xl">System Add-Ons</h2>
           </div>
           <div className="grid sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {GROUNDLOCK_ADDONS.map((addon) => (
               <div key={addon.handle} className="border border-border rounded-sm p-6 space-y-3 hover:border-accent/30 transition-colors">
                 <div className="flex items-center gap-2 text-accent">
-                  <Wrench className="w-4 h-4" />
+                  <Wrench className="w-4 h-4" strokeWidth={1.7} />
                   <p className="text-[10px] font-mono uppercase tracking-[0.15em]">{addon.subtitle}</p>
                 </div>
                 <h3 className="font-serif text-lg">{addon.title}</h3>
@@ -133,11 +167,11 @@ export default function Shop() {
       <section className="py-20 bg-primary text-primary-foreground relative overflow-hidden">
         <BlueprintScene preset="barn" className="absolute inset-0" />
         <div className="section-container relative z-10 text-center max-w-lg mx-auto space-y-5">
-          <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/40">Beyond the system</p>
+          <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/40">Beyond the system</p>
           <h2 className="font-serif text-2xl md:text-3xl">
             Ready for a full <span className="text-accent">managed build?</span>
           </h2>
-          <p className="text-primary-foreground/60 text-sm">
+          <p className="text-primary-foreground/60 text-sm max-w-md mx-auto">
             GroundLock™ integrates with Peninsula Equine's arena, stable, and infrastructure services. Move from system to project.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
