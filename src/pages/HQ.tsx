@@ -131,7 +131,7 @@ export default function HQ() {
           </h1>
 
           <p
-            className="mt-8 text-[13px] sm:text-[14px] text-muted-foreground/35 max-w-sm mx-auto leading-[2] opacity-0 animate-fade-in"
+            className="mt-8 text-[13px] sm:text-[14px] text-muted-foreground/50 max-w-sm mx-auto leading-[2] opacity-0 animate-fade-in"
             style={{ animationDelay: "600ms", animationFillMode: "both" }}
           >
             Three divisions. One standard.<br />
