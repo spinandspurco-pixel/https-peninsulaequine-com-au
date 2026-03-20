@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ABTestStatsPanel } from "@/components/ABTestStatsPanel";
+import { CommunicationsHub } from "@/components/CommunicationsHub";
 import { WebsiteIntelligence } from "@/components/WebsiteIntelligence";
 import { RevenueStrip } from "@/components/RevenueStrip";
 import { DecisionPanel } from "@/components/DecisionPanel";
@@ -333,6 +334,9 @@ export default function Admin() {
 
           {/* FOUNDER + ADMIN: Follow-Up Engine */}
           {viewMode !== "operations" && <FollowUpEngine />}
+
+          {/* FOUNDER + ADMIN: Communications Hub */}
+          {viewMode !== "operations" && <CommunicationsHub />}
 
           {/* FOUNDER + OPERATIONS: Operations Command Centre */}
           {(viewMode === "founder" || viewMode === "operations") && <OperationsCommandCentre />}
