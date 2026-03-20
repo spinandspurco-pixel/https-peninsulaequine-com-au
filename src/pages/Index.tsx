@@ -36,11 +36,11 @@ import peBanner from "@/assets/pe-banner.png";
 import heroSunset from "@/assets/hero-sunset.png";
 
 const PROJECTS = [
-  { src: stoneworkStables, alt: "Hand-laid stonework stables", label: "Private Client — Mornington Peninsula", scope: "Stables & Stonework", slug: "aberdeen-farm" },
-  { src: mainRidgeInterior, alt: "Timber interior at Main Ridge", label: "Main Ridge", scope: "Arena & Barn Complex", slug: "main-ridge" },
-  { src: equitanaTractors, alt: "Equitana arena preparation", label: "Equitana", scope: "Competition Arena", slug: "equitana" },
-  { src: caulfieldEvent, alt: "Caulfield Ranch Roundup event build", label: "Caulfield", scope: "Event Infrastructure", slug: "caulfield" },
-  { src: qldAerial2, alt: "Queensland facility aerial view", label: "QLD Facility", scope: "Full Facility Build", slug: "qld-facility" },
+  { src: mainRidgeFinishedExterior, alt: "Main Ridge pavilion at dusk", label: "Main Ridge", scope: "Pavilion & Fireplace", slug: "main-ridge" },
+  { src: garageInterior, alt: "Precision garage interior with flake floor", label: "Private Client", scope: "Garage & Workshop", slug: "aberdeen-farm" },
+  { src: pavilionTimber, alt: "Timber and corrugated iron detail", label: "Peninsula Build", scope: "Structural Carpentry", slug: "equitana" },
+  { src: garageExterior, alt: "Steel shed with polished concrete apron", label: "Mornington Peninsula", scope: "Steel Structures", slug: "caulfield" },
+  { src: interiorTimberWindow, alt: "Recycled timber cladding with bush views", label: "Main Ridge Interior", scope: "Timber Fit-out", slug: "qld-facility" },
 ];
 
 const SERVICES = [
