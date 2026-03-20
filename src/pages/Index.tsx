@@ -585,11 +585,11 @@ export default function Index() {
           <div className="section-container relative z-10 max-w-5xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
               <RevealOnScroll direction="up">
-                <div className="relative aspect-[4/3] overflow-hidden group">
+                <div className="relative aspect-[4/3] overflow-hidden group img-feather-sides lg:img-overlap-top lg:img-overlap-bottom">
                   <img
                     src={peBanner}
                     alt="Equus Forge — Peninsula Equine product line"
-                    className="absolute inset-0 w-full h-full object-cover brightness-[0.75] group-hover:brightness-[0.85] transition-all duration-700"
+                    className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.75] group-hover:brightness-[0.85]"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/50 via-primary/10 to-transparent" />
