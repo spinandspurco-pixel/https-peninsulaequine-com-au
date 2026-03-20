@@ -1,6 +1,8 @@
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
+import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
 
 const EquusRidge = () => {
   return (
@@ -38,22 +40,13 @@ const EquusRidge = () => {
         </div>
       </section>
 
-
-      {/* SECTION 3 — ATMOSPHERE */}
+      {/* SECTION 2 — ATMOSPHERE (dark editorial, no video) */}
       <section className="py-44 sm:py-64 bg-primary relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.02]" />
 
-        {/* Slow ambient video background */}
-        <div className="absolute inset-0 opacity-[0.06]">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover"
-          >
-            <source src={heroVideo} type="video/mp4" />
-          </video>
+        {/* Faint blueprint linework — single subtle brand callback */}
+        <div className="absolute inset-0 opacity-[0.04]">
+          <BlueprintLineOverlay variant="dimensions" color="light" />
         </div>
 
         <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
@@ -79,24 +72,21 @@ const EquusRidge = () => {
         </div>
       </section>
 
-      {/* SECTION 4 — PRIVATE VIEWING + CLOSING */}
+      {/* SECTION 3 — PRIVATE VIEWING (static image + text) */}
       <section className="py-44 sm:py-64 bg-background relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
         <div className="section-container max-w-3xl mx-auto relative z-[1]">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
-            {/* Video clip */}
+            {/* Static editorial image */}
             <RevealOnScroll direction="up">
               <div className="aspect-[4/5] relative overflow-hidden bg-primary/5 border border-border/30">
-                <video
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
+                <img
+                  src={aberdeenExterior}
+                  alt="Completed barn exterior — Mornington Peninsula"
                   className="absolute inset-0 w-full h-full object-cover"
                   style={{ filter: "brightness(0.7) contrast(1.05)" }}
-                >
-                  <source src={heroVideo} type="video/mp4" />
-                </video>
+                  loading="lazy"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
               </div>
             </RevealOnScroll>
