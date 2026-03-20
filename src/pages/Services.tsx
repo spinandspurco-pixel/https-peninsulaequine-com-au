@@ -202,7 +202,7 @@ export default function Services() {
       {/* ═══ CTA ═══════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-28 sm:py-40 relative">
+        <div className="py-32 sm:py-40 lg:py-48 relative">
           <div className="absolute inset-0 grain-texture" />
           <div
             className="absolute inset-0"
