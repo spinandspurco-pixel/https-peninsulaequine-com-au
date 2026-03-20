@@ -665,7 +665,7 @@ export default function GroundLock() {
       {/* ═══ CTA ══════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-32 sm:py-48 relative">
+        <div className="py-32 sm:py-44 relative">
           <div className="absolute inset-0 engineering-grid" />
           <div className="absolute inset-0 grain-texture" />
           <div
@@ -679,26 +679,21 @@ export default function GroundLock() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={80}>
               <h2 className="heading-section text-foreground mb-8">
-                Discuss Your Project
+                Start With a Site Reading
               </h2>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <p className="text-sm text-muted-foreground/35 mb-12 leading-[1.9]">
-                Each project is assessed individually to ensure correct<br />
-                system specification and long-term performance.
+                We assess the ground, the traffic, the drainage — then specify<br className="hidden sm:block" />
+                the right system for how the site actually performs.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={250}>
               <Button asChild variant="gold" size="lg">
                 <Link to="/contact">
-                  Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                  Request Assessment <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={350}>
-              <p className="text-muted-foreground/15 text-[10px] tracking-[0.25em] uppercase mt-10">
-                Limited projects per season.
-              </p>
             </RevealOnScroll>
           </div>
         </div>
