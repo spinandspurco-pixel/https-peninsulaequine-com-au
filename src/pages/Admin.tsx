@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ABTestStatsPanel } from "@/components/ABTestStatsPanel";
+import { CommunicationsHub } from "@/components/CommunicationsHub";
 import { WebsiteIntelligence } from "@/components/WebsiteIntelligence";
 import { RevenueStrip } from "@/components/RevenueStrip";
 import { DecisionPanel } from "@/components/DecisionPanel";
