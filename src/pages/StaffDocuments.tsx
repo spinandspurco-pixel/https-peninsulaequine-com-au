@@ -302,16 +302,6 @@ function SiteInspectionForm({ onSubmit, loading, defaults }: { onSubmit: (data: 
     inspector_name: "",
     weather_conditions: "fine",
     checklist: [
-  });
-
-  useEffect(() => {
-    if (defaults) {
-      setForm(prev => ({ ...prev, site_name: defaults.project_name || "", site_address: defaults.site_address || "" }));
-    }
-  }, [defaults?.project_name, defaults?.site_address]);
-
-  // Remove duplicate closing - need to check structure
-  const _placeholder = null; // will fix below
       { item: "Site access and egress clear", status: "pass", notes: "" },
       { item: "Excavation/trenches shored or barricaded", status: "na", notes: "" },
       { item: "Scaffolding secure and tagged", status: "na", notes: "" },
@@ -329,6 +319,12 @@ function SiteInspectionForm({ onSubmit, loading, defaults }: { onSubmit: (data: 
     corrective_actions: "",
     sign_off_name: "",
   });
+
+  useEffect(() => {
+    if (defaults) {
+      setForm(prev => ({ ...prev, site_name: defaults.project_name || "", site_address: defaults.site_address || "" }));
+    }
+  }, [defaults?.project_name, defaults?.site_address]);
 
   const updateCheck = (idx: number, field: string, value: string) => {
     setForm(prev => {
