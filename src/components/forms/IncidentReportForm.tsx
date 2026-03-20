@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,6 +32,12 @@ export function IncidentReportForm({ onSubmit, loading, userId, defaults }: { on
     sign_off_name: "",
     sign_off_agreed: false,
   });
+
+  useEffect(() => {
+    if (defaults) {
+      setForm(prev => ({ ...prev, project_name: defaults.project_name || "", site_address: defaults.site_address || "" }));
+    }
+  }, [defaults?.project_name, defaults?.site_address]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
