@@ -146,7 +146,7 @@ export default function RoundPens() {
       <PageHeader
         title="Round Pens & Paddocks"
         description={serviceData.description}
-        backgroundImage={qldCourtyard}
+        backgroundImage={coveredArenaLit}
         dividerVariant="contact"
       />
 
