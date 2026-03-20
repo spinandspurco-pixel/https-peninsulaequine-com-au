@@ -38,11 +38,11 @@ import peBanner from "@/assets/pe-banner.png";
 import heroSunset from "@/assets/hero-sunset.png";
 
 const PROJECTS = [
-  { src: aberdeenStonework, alt: "Hand-laid stonework at Private Client — Mornington Peninsula", label: "Private Client — Mornington Peninsula", scope: "Stables & Stonework", slug: "aberdeen-farm" },
+  { src: stoneworkStables, alt: "Hand-laid stonework stables", label: "Private Client — Mornington Peninsula", scope: "Stables & Stonework", slug: "aberdeen-farm" },
   { src: mainRidgeInterior, alt: "Timber interior at Main Ridge", label: "Main Ridge", scope: "Arena & Barn Complex", slug: "main-ridge" },
   { src: equitanaTractors, alt: "Equitana arena preparation", label: "Equitana", scope: "Competition Arena", slug: "equitana" },
-  { src: mainRidgeBarnFrame, alt: "Main Ridge barn frame", label: "Main Ridge", scope: "Structural Timber", slug: "main-ridge" },
-  { src: qldCourtyard, alt: "Queensland facility courtyard", label: "QLD Facility", scope: "Full Facility Build", slug: "qld-facility" },
+  { src: caulfieldEvent, alt: "Caulfield Ranch Roundup event build", label: "Caulfield", scope: "Event Infrastructure", slug: "caulfield" },
+  { src: qldAerial2, alt: "Queensland facility aerial view", label: "QLD Facility", scope: "Full Facility Build", slug: "qld-facility" },
 ];
 
 const SERVICES = [

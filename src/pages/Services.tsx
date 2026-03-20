@@ -7,7 +7,7 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 
 import equitanaArena from "@/assets/equitana-arena-1.jpg";
-import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
+import stoneworkStables from "@/assets/stonework-stables-1.jpg";
 
 const CAPABILITY_DETAILS = [
   {

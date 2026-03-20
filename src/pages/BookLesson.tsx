@@ -32,7 +32,7 @@ import { lessonInfo, glennBrowitt } from "@/data/content";
 import blueprintFacility from "@/assets/blueprint-facility.png";
 import blueprintDetail from "@/assets/blueprint-detail.png";
 import blueprintBarn from "@/assets/blueprint-barn.png";
-import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
+import ciroWide from "@/assets/ciro-wide.png";
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
 
 // ── Data ──────────────────────────────────────────────
