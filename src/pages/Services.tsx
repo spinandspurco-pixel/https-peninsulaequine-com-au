@@ -139,7 +139,7 @@ export default function Services() {
         <RevealOnScroll direction="up" duration={800}>
           <div className="relative aspect-[21/9]">
             <img
-              src={mainRidgeBarnFrame}
+              src={stoneworkStables}
               alt="Barn frame structure"
               className="absolute inset-0 w-full h-full object-cover brightness-[0.55] saturate-[0.7]"
               loading="lazy"

@@ -520,11 +520,11 @@ export default function Index() {
           <div className="grid grid-cols-3 sm:grid-cols-6">
             {[
               { src: mainRidgeTimber, alt: "Timber grain detail" },
-              { src: mainRidgeBrickwork, alt: "Reclaimed brickwork" },
-              { src: aberdeenStallsDetail, alt: "Steel stall ironwork" },
+              { src: arenaSandPrep2, alt: "Arena sand preparation" },
+              { src: mainRidgeCiroWoodwork4, alt: "Timber hand-crafting" },
+              { src: mainRidgeRebarFoundation, alt: "Rebar foundation" },
+              { src: heroSunset, alt: "Landscape at golden hour" },
               { src: mainRidgeTimber, alt: "Timber joinery" },
-              { src: mainRidgeBrickwork, alt: "Brick and mortar" },
-              { src: aberdeenStallsDetail, alt: "Metalwork detail" },
             ].map((img, i) => (
               <div key={i} className="relative aspect-square overflow-hidden group">
                 <img

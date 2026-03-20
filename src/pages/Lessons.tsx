@@ -843,7 +843,7 @@ export default function Lessons() {
               )}
             >
               <img
-                src={aberdeenBarnInterior}
+                src={equitanaArena4}
                 alt="Riding lesson at Peninsula Equine arena"
                 className="w-full h-full object-cover"
               />

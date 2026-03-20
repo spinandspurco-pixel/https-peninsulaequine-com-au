@@ -1372,7 +1372,7 @@ export default function BookLesson() {
       <PageHeader
         title="Training with Glenn Browitt"
         description="Over 25 years of riding tuition and horsemanship — from the nervous beginner to the competitive rider. Lessons run every Thursday and Friday at the Peninsula Equine arena."
-        backgroundImage={aberdeenBarnInterior}
+        backgroundImage={ciroWide}
       />
 
       {/* Quick info + intro */}
