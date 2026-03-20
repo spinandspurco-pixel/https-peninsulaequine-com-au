@@ -21,10 +21,15 @@ import mainRidgeFinishedExterior from "@/assets/main-ridge-finished-exterior.jpg
 import buildVideo from "@/assets/videos/main-ridge-woodwork-1.mp4";
 
 // Detail / material textures (unique to homepage strip)
-import brickworkEucalyptus from "@/assets/brickwork-eucalyptus.jpg";
+import reclaimedBeamWorkshop from "@/assets/reclaimed-beam-workshop.jpg";
+import reclaimedBoardsForklift from "@/assets/reclaimed-boards-forklift.jpg";
 
 // Process / build imagery (unique to homepage)
-import rebarFoundation from "@/assets/rebar-foundation-deep.jpg";
+import mainRidgeFrameAngle from "@/assets/main-ridge-frame-angle.jpg";
+import mainRidgeFrameWide from "@/assets/main-ridge-frame-wide.jpg";
+import mainRidgeRebarDepth2 from "@/assets/main-ridge-rebar-depth-2.jpg";
+import equitanaTractorStorm from "@/assets/equitana-tractor-storm.jpg";
+import equitanaArenaFinish from "@/assets/equitana-arena-finish.jpg";
 
 // Training
 import glennRiding from "@/assets/glenn-riding.jpg";
@@ -514,8 +519,8 @@ export default function Index() {
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mt-16 img-bridge">
                 <div className="relative aspect-[16/10] overflow-hidden group col-span-2 lg:col-span-2">
                   <img
-                    src={rebarFoundation}
-                    alt="Foundation reinforcement"
+                    src={mainRidgeFrameWide}
+                    alt="Main Ridge framing build phase"
                     className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8]"
                     loading="lazy"
                   />
@@ -523,30 +528,21 @@ export default function Index() {
                 </div>
                 <div className="relative aspect-[3/4] overflow-hidden group">
                   <img
-                    src={brickworkEucalyptus}
-                    alt="Brickwork with eucalyptus backdrop"
+                    src={mainRidgeFrameAngle}
+                    alt="Timber frame angle detail"
                     className="absolute inset-0 w-full h-full object-cover object-top img-immersive brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8]"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-background/10" />
                 </div>
-              </div>
-            </RevealOnScroll>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ MATERIAL DETAIL STRIP — textures, no text ═══════ */}
-      <section className="relative overflow-hidden -my-4 sm:-my-6" aria-label="Material details">
-        <RevealOnScroll direction="up" duration={700}>
-          <div className="grid grid-cols-3 sm:grid-cols-6 img-feather">
+...
             {[
               { src: interiorTimberWindow, alt: "Timber cladding detail" },
-              { src: rebarFoundation, alt: "Rebar foundation detail" },
-              { src: brickworkEucalyptus, alt: "Brickwork and bush" },
-              { src: pavilionTimber, alt: "Corrugated iron structure" },
-              { src: garageExterior, alt: "Steel shed exterior" },
-              { src: mainRidgeFinishedExterior, alt: "Pavilion at dusk" },
+              { src: mainRidgeRebarDepth2, alt: "Rebar foundation depth" },
+              { src: reclaimedBeamWorkshop, alt: "Reclaimed beam preparation" },
+              { src: reclaimedBoardsForklift, alt: "Timber boards ready for fabrication" },
+              { src: equitanaTractorStorm, alt: "Equitana arena tractor pass" },
+              { src: equitanaArenaFinish, alt: "Finished Equitana arena surface" },
             ].map((img, i) => (
               <div key={i} className="relative aspect-square overflow-hidden group">
                 <img
