@@ -29,7 +29,6 @@ import reclaimedBeamWorkshop from "@/assets/reclaimed-beam-workshop.jpg";
 import mainRidgeFrameAngle from "@/assets/main-ridge-frame-angle.jpg";
 import mainRidgeFrameWide from "@/assets/main-ridge-frame-wide.jpg";
 import mainRidgeRebarDepth2 from "@/assets/main-ridge-rebar-depth-2.jpg";
-import equitanaTractorStorm from "@/assets/equitana-tractor-storm.jpg";
 import equitanaArenaFinish from "@/assets/equitana-arena-finish.jpg";
 
 // Training
