@@ -26,7 +26,7 @@ const locations = [
   },
   {
     id: "aberdeen",
-    name: "Aberdeen Farm Barn & Stonework",
+    name: "Private Client — Mornington Peninsula Barn & Stonework",
     address: "Red Hill, VIC",
     suburb: "Red Hill",
     type: "project" as const,
