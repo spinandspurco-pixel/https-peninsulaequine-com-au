@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -53,15 +53,28 @@ import InstallerAccess from "./pages/InstallerAccess";
 import SiteAssessment from "./pages/SiteAssessment";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { useCartSync } from "./hooks/useCartSync";
+import { IntroContext } from "./hooks/useIntroState";
 
 const queryClient = new QueryClient();
 
 function AppContent() {
   const [splashDone, setSplashDone] = useState(false);
+  const [headerLogoReady, setHeaderLogoReady] = useState(false);
   useCartSync();
+
+  const handleLogoSettled = useCallback(() => {
+    // Brief pause then reveal header logo
+    setTimeout(() => setHeaderLogoReady(true), 800);
+  }, []);
+
   return (
-    <>
-      {!splashDone && <LoadingSplash onComplete={() => setSplashDone(true)} />}
+    <IntroContext.Provider value={{ headerLogoReady }}>
+      {!splashDone && (
+        <LoadingSplash
+          onComplete={() => setSplashDone(true)}
+          onLogoSettled={handleLogoSettled}
+        />
+      )}
       <Toaster />
       <Sonner />
       <BrowserRouter>
@@ -116,7 +129,7 @@ function AppContent() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
-    </>
+    </IntroContext.Provider>
   );
 }
 

@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useIntroState } from "@/hooks/useIntroState";
 import logoImage from "@/assets/logo-pe-mark.png";
 
 const navigation = [
@@ -19,6 +20,7 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { headerLogoReady } = useIntroState();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -47,7 +49,8 @@ export function Header() {
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center gap-3.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
+            className="flex items-center gap-3.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm transition-opacity duration-700 ease-out"
+            style={{ opacity: headerLogoReady ? 1 : 0 }}
           >
             <div className="relative flex-shrink-0 w-8 h-8 sm:w-9 sm:h-9">
               <img
