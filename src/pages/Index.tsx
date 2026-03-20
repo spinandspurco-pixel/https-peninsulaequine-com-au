@@ -496,7 +496,7 @@ export default function Index() {
                   title: "Forge Details",
                   body: "Custom forged hardware, gate elements, signage, and branded rural details designed to complete the property with strength and identity.",
                   cta: "Explore Equus Forge",
-                  href: "/shop",
+                  href: "/forge",
                 },
               ].map((card, i) => (
                 <RevealOnScroll key={card.title} direction="up" stagger={i} staggerInterval={120}>
