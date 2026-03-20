@@ -211,16 +211,12 @@ export default function Forge() {
           <div className="section-container max-w-xl mx-auto relative z-[1] text-center">
             <RevealOnScroll>
               <RevealLine className="mx-auto mb-14" width="w-8" />
-            </RevealOnScroll>
-            <RevealOnScroll delay={80}>
               <p className="text-[13px] sm:text-[14px] text-muted-foreground/30 leading-[2.2]">
                 Forge exists to give Peninsula Equine clients access to the same
                 engineered components we use in our own builds — heavy gauge,
                 hot-dip galvanised, and specified to the tolerances of working
                 rural properties.
               </p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={160}>
               <p className="mt-8 text-[12px] text-muted-foreground/20 leading-[2] italic font-serif">
                 Not a catalogue. A product division.
               </p>
