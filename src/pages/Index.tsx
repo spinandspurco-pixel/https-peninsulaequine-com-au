@@ -374,7 +374,7 @@ export default function Index() {
       {/* ═══ 4. PROJECTS — HORIZONTAL SCROLL ═══════════════ */}
       <SectionBleed from="card" to="background" />
       <section className="relative overflow-hidden">
-        <div className={`${SP_LG} sm:py-28 lg:py-32 relative`}>
+        <div className={`${SP_SECTION} relative`}>
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-7xl mx-auto relative z-[1]">
             {/* Left-aligned header */}
