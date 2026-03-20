@@ -231,7 +231,7 @@ export default function GroundLock() {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8);
     doc.setTextColor(...dark);
-    doc.text("Phone: 0418 585 489  |  peninsulaequine.com.au  |  info@peninsulaequine.com.au", W / 2, y, { align: "center" });
+    doc.text("Phone: 0418 585 489  |  peninsulaequine.org  |  info@peninsulaequine.org", W / 2, y, { align: "center" });
 
     doc.setFillColor(...accent);
     doc.rect(0, 285, W, 12, "F");

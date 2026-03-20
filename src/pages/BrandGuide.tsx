@@ -211,7 +211,7 @@ ${usageRules.dont.map((r) => `<div class="rule dont">✗ ${r}</div>`).join("")}
 <h2>Tone & Photography</h2>
 <p><strong>Editorial Tone:</strong> Confident, warm, knowledgeable. Speak as a craftsman and horseman — never salesy.</p>
 <p><strong>Photography:</strong> Warm-toned, naturally lit. Action shots and textural close-ups. No stock-photo aesthetics.</p>
-<div class="footer">Peninsula Equine Brand Kit · peninsulaequine.com.au</div>
+<div class="footer">Peninsula Equine Brand Kit · peninsulaequine.org</div>
 </body></html>`;
 }
 
