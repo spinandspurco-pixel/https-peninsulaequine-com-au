@@ -4,14 +4,24 @@ import logoPeMark from "@/assets/logo-pe-mark.png";
 interface LoadingSplashProps {
   minDuration?: number;
   onComplete?: () => void;
+  /** Called when the logo begins its journey to the header position */
+  onLogoSettled?: () => void;
 }
 
 /**
- * Cinematic intro splash — SVG blueprint line-draw + logo reveal + accent bar.
- * Renders over everything at z-9999, then fades out.
+ * Cinematic intro splash — SVG blueprint line-draw → logo stamp reveal →
+ * logo drifts to header position → page settles.
+ *
+ * Phases: enter → build → stamp → drift → exit → done
  */
-export function LoadingSplash({ minDuration = 2800, onComplete }: LoadingSplashProps) {
-  const [phase, setPhase] = useState<"enter" | "hold" | "exit" | "done">("enter");
+export function LoadingSplash({
+  minDuration = 4200,
+  onComplete,
+  onLogoSettled,
+}: LoadingSplashProps) {
+  const [phase, setPhase] = useState<
+    "enter" | "build" | "stamp" | "drift" | "exit" | "done"
+  >("enter");
   const svgRef = useRef<SVGSVGElement>(null);
 
   const prefersReduced =
@@ -21,10 +31,12 @@ export function LoadingSplash({ minDuration = 2800, onComplete }: LoadingSplashP
   useEffect(() => {
     if (prefersReduced) {
       setPhase("done");
+      onLogoSettled?.();
       onComplete?.();
       return;
     }
 
+    // Kick off SVG line-draw
     requestAnimationFrame(() => {
       const svg = svgRef.current;
       if (svg) {
@@ -33,22 +45,37 @@ export function LoadingSplash({ minDuration = 2800, onComplete }: LoadingSplashP
           const len = p.getTotalLength();
           p.style.strokeDasharray = `${len}`;
           p.style.strokeDashoffset = `${len}`;
-          p.style.animation = `splash-draw 1.2s ${i * 0.1}s cubic-bezier(0.22, 1, 0.36, 1) forwards`;
+          p.style.animation = `splash-draw 1.6s ${i * 0.12}s cubic-bezier(0.22, 1, 0.36, 1) forwards`;
         });
       }
     });
 
-    const t1 = setTimeout(() => setPhase("hold"), 180);
-    const t2 = setTimeout(() => setPhase("exit"), minDuration - 700);
+    // Phase timeline (ms from start)
+    const t1 = setTimeout(() => setPhase("build"), 200);     // grid + structure drawing
+    const t2 = setTimeout(() => setPhase("stamp"), 2400);    // logo appears as stamp
     const t3 = setTimeout(() => {
+      setPhase("drift");                                      // logo drifts to header
+      onLogoSettled?.();
+    }, 3400);
+    const t4 = setTimeout(() => setPhase("exit"), minDuration - 500);
+    const t5 = setTimeout(() => {
       setPhase("done");
       onComplete?.();
     }, minDuration);
 
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
-  }, [minDuration, onComplete, prefersReduced]);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
+      clearTimeout(t5);
+    };
+  }, [minDuration, onComplete, onLogoSettled, prefersReduced]);
 
   if (phase === "done") return null;
+
+  const isStampOrLater = phase === "stamp" || phase === "drift" || phase === "exit";
+  const isDrift = phase === "drift" || phase === "exit";
 
   return (
     <div
@@ -56,7 +83,7 @@ export function LoadingSplash({ minDuration = 2800, onComplete }: LoadingSplashP
       aria-hidden="true"
       style={{
         opacity: phase === "exit" ? 0 : 1,
-        transition: "opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+        transition: "opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1)",
         pointerEvents: phase === "exit" ? "none" : "auto",
       }}
     >
@@ -72,6 +99,10 @@ export function LoadingSplash({ minDuration = 2800, onComplete }: LoadingSplashP
         className="absolute inset-0 w-full h-full"
         viewBox="0 0 1200 800"
         preserveAspectRatio="xMidYMid slice"
+        style={{
+          opacity: isDrift ? 0 : 1,
+          transition: "opacity 1s ease-out",
+        }}
       >
         {[100, 200, 300, 400, 500, 600, 700].map((y) => (
           <path key={`h${y}`} className="draw-line" d={`M0 ${y} H1200`} stroke="hsl(var(--accent))" strokeWidth="0.4" fill="none" opacity="0.12" />
@@ -90,57 +121,90 @@ export function LoadingSplash({ minDuration = 2800, onComplete }: LoadingSplashP
       {/* Radial vignette */}
       <div
         className="absolute inset-0"
-        style={{ background: "radial-gradient(ellipse at center, transparent 20%, hsl(222 20% 4% / 0.75) 100%)" }}
+        style={{
+          background: "radial-gradient(ellipse at center, transparent 20%, hsl(222 20% 4% / 0.75) 100%)",
+          opacity: isDrift ? 0 : 1,
+          transition: "opacity 0.8s ease-out",
+        }}
       />
 
-      {/* Center content */}
+      {/* Center tagline — fades before drift */}
       <div
-        className="relative z-10 flex flex-col items-center gap-5"
+        className="absolute inset-0 flex items-center justify-center pointer-events-none"
         style={{
-          opacity: phase === "enter" ? 0 : 1,
-          transform: phase === "enter" ? "scale(0.94)" : "scale(1)",
-          transition: "opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.25s, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.25s",
+          opacity: phase === "build" ? 1 : phase === "stamp" ? 0.6 : 0,
+          transform: phase === "enter" ? "translateY(6px)" : "translateY(0)",
+          transition: "opacity 0.8s ease-out 0.4s, transform 0.7s ease-out 0.4s",
         }}
       >
-        <div className="relative">
-          <img
-            src={logoPeMark}
-            alt="Peninsula Equine"
-            className="w-20 h-20 sm:w-28 sm:h-28 object-contain brightness-0 invert drop-shadow-[0_0_40px_rgba(255,255,255,0.12)]"
-          />
-          <span
-            className="absolute -right-3 top-1/2 -translate-y-1/2 w-[2px] rounded-full bg-accent"
-            style={{
-              height: phase === "enter" ? 0 : "70%",
-              transition: "height 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.4s",
-            }}
-          />
-        </div>
-
-        <div
-          style={{
-            opacity: phase === "enter" ? 0 : 1,
-            transform: phase === "enter" ? "translateY(6px)" : "translateY(0)",
-            transition: "opacity 0.6s ease-out 0.5s, transform 0.6s ease-out 0.5s",
-          }}
-        >
-          <p className="font-sans text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase text-foreground">
+        <div className="text-center">
+          <p className="font-sans text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase text-foreground/80">
             Peninsula<span className="text-accent"> Equine</span>
           </p>
           <p className="mt-2 text-[10px] sm:text-xs tracking-[0.3em] uppercase text-muted-foreground/40">
             From Dirt to Dynasty
           </p>
         </div>
+      </div>
 
-        <div className="w-16 h-[1.5px] bg-foreground/10 rounded-full overflow-hidden mt-2">
-          <div
-            className="h-full bg-accent rounded-full"
-            style={{
-              width: phase === "enter" ? "0%" : phase === "hold" ? "85%" : "100%",
-              transition: `width ${minDuration * 0.65}ms cubic-bezier(0.22, 1, 0.36, 1)`,
-            }}
-          />
-        </div>
+      {/* Logo — stamp reveal, then drifts to top-left header position */}
+      <div
+        className="fixed z-10"
+        style={{
+          // Center position → header position transition
+          ...(isDrift
+            ? {
+                top: "18px",
+                left: "clamp(16px, 4vw, 48px)",
+                transform: "scale(0.72)",
+                opacity: phase === "exit" ? 0 : 0.9,
+              }
+            : {
+                top: "50%",
+                left: "50%",
+                transform: `translate(-50%, -50%) scale(${isStampOrLater ? 1 : 0.88})`,
+                opacity: isStampOrLater ? 1 : 0,
+              }),
+          transition: isDrift
+            ? "top 1s cubic-bezier(0.22, 1, 0.36, 1), left 1s cubic-bezier(0.22, 1, 0.36, 1), transform 1s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-out"
+            : "transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1)",
+        }}
+      >
+        <img
+          src={logoPeMark}
+          alt="Peninsula Equine"
+          className="w-16 h-16 sm:w-20 sm:h-20 object-contain brightness-0 invert drop-shadow-[0_0_40px_rgba(255,255,255,0.12)]"
+        />
+        {/* Accent bar — stamp accent */}
+        <span
+          className="absolute -right-2.5 top-1/2 -translate-y-1/2 w-[2px] rounded-full bg-accent"
+          style={{
+            height: isStampOrLater ? "60%" : "0%",
+            opacity: isDrift ? 0 : 1,
+            transition: "height 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s, opacity 0.5s ease-out",
+          }}
+        />
+      </div>
+
+      {/* Progress bar */}
+      <div
+        className="fixed bottom-[38%] left-1/2 -translate-x-1/2 w-14 h-[1.5px] bg-foreground/10 rounded-full overflow-hidden"
+        style={{
+          opacity: isDrift ? 0 : phase === "enter" ? 0 : 1,
+          transition: "opacity 0.6s ease-out",
+        }}
+      >
+        <div
+          className="h-full bg-accent rounded-full"
+          style={{
+            width:
+              phase === "enter" ? "0%" :
+              phase === "build" ? "55%" :
+              phase === "stamp" ? "85%" :
+              "100%",
+            transition: `width ${minDuration * 0.55}ms cubic-bezier(0.22, 1, 0.36, 1)`,
+          }}
+        />
       </div>
     </div>
   );
