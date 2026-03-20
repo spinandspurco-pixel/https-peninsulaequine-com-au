@@ -29,7 +29,10 @@ import mainRidgeCiroWoodwork4 from "@/assets/main-ridge-ciro-woodwork-4.jpg";
 import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
 
 // Training
-import trainerGlenn from "@/assets/trainer-glenn.jpg";
+import glennRiding from "@/assets/glenn-riding.jpg";
+
+// Main Ridge finished project
+import mainRidgeFinishedExterior from "@/assets/main-ridge-finished-exterior.jpg";
 
 // Shop / Forge imagery
 import peBanner from "@/assets/pe-banner.png";
