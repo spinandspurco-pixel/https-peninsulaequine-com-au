@@ -60,8 +60,15 @@ export default function Services() {
 
       {/* ═══ HERO ═══════════════════════════════════════ */}
       <section className="relative pt-40 sm:pt-48 pb-24 sm:pb-32 overflow-hidden">
-        <div className="absolute inset-0 bg-background" />
-        <div className="absolute inset-0 engineering-grid" />
+        <div className="absolute inset-0">
+          <img
+            src={equitanaArena}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover brightness-[0.2] saturate-[0.5] contrast-[1.1]"
+          />
+        </div>
+        <div className="absolute inset-0 bg-background/50" />
         <div className="absolute inset-0 grain-texture" />
 
         <div className="section-container relative z-10 text-center max-w-2xl mx-auto">
