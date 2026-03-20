@@ -11,12 +11,12 @@ import { cn } from "@/lib/utils";
 import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
 
 // Portfolio imagery — curated hero-tier visuals (unique to homepage)
-import garageInterior from "@/assets/garage-interior-flake.jpg";
-import garageExterior from "@/assets/garage-exterior.jpg";
+import garageInterior from "@/assets/garage-interior-flake.webp";
+import garageExterior from "@/assets/garage-exterior.webp";
 import pavilionTimber from "@/assets/pavilion-timber-detail.jpg";
 import interiorTimberWindow from "@/assets/interior-timber-window.jpg";
 import mainRidgeFinishedExterior from "@/assets/main-ridge-finished-exterior.jpg";
-import steelShedDramatic from "@/assets/steel-shed-dramatic.jpg";
+import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
 import timberCubbyFront from "@/assets/timber-cubby-front.jpg";
 
 // Intro video
