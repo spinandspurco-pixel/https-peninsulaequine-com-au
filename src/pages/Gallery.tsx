@@ -36,12 +36,9 @@ import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
 // ── 5. EDITORIAL / FINISHED RESULTS ──
 import aberdeenDeck from "@/assets/aberdeen-deck.jpg";
 import stoneworkStables2 from "@/assets/stonework-stables-2.jpg";
-import qldExterior3 from "@/assets/qld-facility-exterior-3.jpg";
-import qldExterior1 from "@/assets/qld-facility-exterior-1.jpg";
-import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
 import equitanaArena3 from "@/assets/equitana-arena-3.jpg";
-import equitanaArena5 from "@/assets/equitana-arena-5.jpg";
-import equitanaArena6 from "@/assets/equitana-arena-6.jpg";
+import premiumStableFacade from "@/assets/premium-stable-facade.png";
+import coveredArenaBlackExterior from "@/assets/covered-arena-black-exterior.jpg";
 
 // ── 6. DETAIL / CRAFT ──
 import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
