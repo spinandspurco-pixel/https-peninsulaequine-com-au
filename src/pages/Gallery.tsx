@@ -244,15 +244,15 @@ export default function Gallery() {
       </section>
 
       {/* ═══════════════════════════════════════════════════
-          2. FEATURE PROJECT — Aberdeen Farm (70/30 split)
+          2. FEATURE PROJECT — Aberdeen Farm (5 images)
           ═══════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grain-texture" />
         <div className="py-20 sm:py-28 lg:py-36 relative">
           <div className="section-container-wide relative z-[1]">
             <RevealOnScroll direction="up" duration={700}>
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 items-center">
-                {/* Large image — 70% */}
+              {/* Hero + details row */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 items-center mb-6 sm:mb-8">
                 <div className="lg:col-span-8">
                   <EditorialImage
                     src={aberdeenBarnInterior}
@@ -261,7 +261,6 @@ export default function Gallery() {
                     onClick={() => openLightbox(aberdeenBarnInterior)}
                   />
                 </div>
-                {/* Project details — 30% */}
                 <div className="lg:col-span-4 py-4 lg:py-8">
                   <p className="text-[9px] uppercase tracking-[0.35em] text-accent/40 font-mono mb-4">
                     Featured Project
@@ -279,109 +278,73 @@ export default function Gallery() {
                       <dt className="text-[9px] uppercase tracking-[0.3em] text-muted-foreground/25 font-mono">Scope</dt>
                       <dd className="text-sm text-muted-foreground/50 mt-0.5">Stables, stonework, timber joinery, arena</dd>
                     </div>
-                    <div>
-                      <dt className="text-[9px] uppercase tracking-[0.3em] text-muted-foreground/25 font-mono">Duration</dt>
-                      <dd className="text-sm text-muted-foreground/50 mt-0.5">Full facility build</dd>
-                    </div>
                   </dl>
                   <p className="text-xs text-muted-foreground/30 leading-[1.8] font-serif italic">
                     Premium equine facility featuring hand-laid stonework, bespoke stall systems, and architectural timber detailing throughout.
                   </p>
                 </div>
               </div>
+              {/* Supporting images — 4 across */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+                <EditorialImage src={aberdeenStalls} alt="Aberdeen — custom stalls" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenStalls)} />
+                <EditorialImage src={aberdeenAisle} alt="Aberdeen — stone aisle" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenAisle)} />
+                <EditorialImage src={aberdeenStonework} alt="Aberdeen — stonework masonry" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenStonework)} />
+                <EditorialImage src={aberdeenExterior} alt="Aberdeen — completed exterior" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenExterior)} />
+              </div>
             </RevealOnScroll>
           </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════════════
-          3. EDITORIAL GRID — asymmetric, mixed sizes
+          3. BUILD PROCESS — construction sequence strip
           ═══════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grain-texture" />
-        <div className="pb-20 sm:pb-28 lg:pb-36 relative">
+        <div className="py-20 sm:py-28 relative">
           <div className="section-container-wide relative z-[1]">
-            {/* Row 1 — 3 images: large left, two stacked right */}
-            <RevealOnScroll direction="up" duration={800}>
+            <RevealOnScroll direction="up" duration={700}>
+              <div className="text-center max-w-md mx-auto mb-12">
+                <p className="text-[9px] uppercase tracking-[0.4em] text-accent/40 font-mono mb-3">The Process</p>
+                <h2 className="font-serif text-xl sm:text-2xl text-foreground/80 font-normal tracking-[0.02em]">
+                  From Ground to Structure
+                </h2>
+              </div>
+            </RevealOnScroll>
+
+            {/* Row 1 — wide establishing + tall detail */}
+            <RevealOnScroll direction="up" duration={800} delay={80}>
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 mb-4 sm:mb-5">
-                <div className="lg:col-span-7">
-                  <EditorialImage
-                    src={mainRidgeInterior}
-                    alt="Main Ridge — open barn interior"
-                    aspect="aspect-[4/3]"
-                    onClick={() => openLightbox(mainRidgeInterior)}
-                  />
+                <div className="lg:col-span-8">
+                  <EditorialImage src={mainRidgeRebarFoundation} alt="Reinforced rebar foundation" aspect="aspect-[16/10]" onClick={() => openLightbox(mainRidgeRebarFoundation)} />
                 </div>
-                <div className="lg:col-span-5 grid grid-cols-2 lg:grid-cols-1 gap-4 sm:gap-5">
-                  <EditorialImage
-                    src={aberdeenStalls}
-                    alt="Aberdeen Farm — custom stalls"
-                    aspect="aspect-[16/10]"
-                    onClick={() => openLightbox(aberdeenStalls)}
-                  />
-                  <EditorialImage
-                    src={mainRidgeBrickwork}
-                    alt="Main Ridge — reclaimed brickwork"
-                    aspect="aspect-[16/10]"
-                    onClick={() => openLightbox(mainRidgeBrickwork)}
-                  />
+                <div className="lg:col-span-4">
+                  <EditorialImage src={mainRidgePostDepth} alt="Post hole depth measurement" aspect="aspect-[3/4]" className="h-full" onClick={() => openLightbox(mainRidgePostDepth)} />
                 </div>
               </div>
             </RevealOnScroll>
 
-            {/* Row 2 — offset pair with negative margin overlap */}
-            <RevealOnScroll direction="up" duration={700} delay={80}>
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 mb-4 sm:mb-5">
-                <div className="lg:col-span-5 lg:mt-8">
-                  <EditorialImage
-                    src={aberdeenStonework}
-                    alt="Aberdeen Farm — stonework masonry"
-                    aspect="aspect-[3/4]"
-                    onClick={() => openLightbox(aberdeenStonework)}
-                  />
-                </div>
-                <div className="lg:col-span-7 lg:-mt-6">
-                  <EditorialImage
-                    src={equitanaArena5}
-                    alt="Equitana Melbourne — competition arena"
-                    aspect="aspect-[16/9]"
-                    onClick={() => openLightbox(equitanaArena5)}
-                  />
-                </div>
-              </div>
-            </RevealOnScroll>
-
-            {/* Row 3 — three equal with generous gap */}
+            {/* Row 2 — three process shots */}
             <RevealOnScroll direction="up" duration={700} delay={120}>
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-                <EditorialImage
-                  src={qldExterior1}
-                  alt="Queensland — barn exterior"
-                  aspect="aspect-[4/3]"
-                  onClick={() => openLightbox(qldExterior1)}
-                />
-                <EditorialImage
-                  src={mainRidgeTimber}
-                  alt="Main Ridge — timber beam joinery"
-                  aspect="aspect-[4/3]"
-                  onClick={() => openLightbox(mainRidgeTimber)}
-                />
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mb-4 sm:mb-5">
+                <EditorialImage src={mainRidgeFrameTrench} alt="Foundation trench with frame" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeFrameTrench)} />
+                <EditorialImage src={mainRidgeCraneLift} alt="Crane lifting timber frame" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeCraneLift)} />
                 <div className="col-span-2 lg:col-span-1">
-                  <EditorialImage
-                    src={aberdeenAisle}
-                    alt="Aberdeen Farm — stone aisle"
-                    aspect="aspect-[4/3]"
-                    onClick={() => openLightbox(aberdeenAisle)}
-                  />
+                  <EditorialImage src={mainRidgeTimberPosts} alt="Timber post installation" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeTimberPosts)} />
                 </div>
               </div>
+            </RevealOnScroll>
+
+            {/* Row 3 — wide completed frame */}
+            <RevealOnScroll direction="up" duration={700} delay={160}>
+              <EditorialImage src={mainRidgeBarnFrame} alt="Complete barn timber frame" aspect="aspect-[21/9]" onClick={() => openLightbox(mainRidgeBarnFrame)} />
             </RevealOnScroll>
           </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════════════
-          4. SYSTEM STRIP — GroundLock feature
+          4. GROUNDLOCK / SYSTEM STRIP
           ═══════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="relative h-[50vh] sm:h-[55vh]">
@@ -407,84 +370,66 @@ export default function Gallery() {
             </div>
           </div>
         </div>
+        {/* System supporting images */}
+        <div className="section-container-wide py-10 sm:py-14">
+          <RevealOnScroll direction="up" duration={700}>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+              <EditorialImage src={arenaSandPrep1} alt="Arena sand distribution" aspect="aspect-[4/3]" onClick={() => openLightbox(arenaSandPrep1)} />
+              <EditorialImage src={mainRidgeArenaGrading} alt="Arena surface grading" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeArenaGrading)} />
+              <EditorialImage src={equitanaArena1} alt="Equitana competition arena" aspect="aspect-[4/3]" onClick={() => openLightbox(equitanaArena1)} />
+              <EditorialImage src={equitanaArena3} alt="Equitana arena with seating" aspect="aspect-[4/3]" onClick={() => openLightbox(equitanaArena3)} />
+            </div>
+          </RevealOnScroll>
+        </div>
       </section>
 
       {/* ═══════════════════════════════════════════════════
-          5. PROJECT BLOCKS — alternating left/right
+          5. FINISHED RESULTS — editorial mixed grid
           ═══════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grain-texture" />
         <div className="py-20 sm:py-28 lg:py-36 relative">
-          <div className="section-container-wide relative z-[1] space-y-16 sm:space-y-24 lg:space-y-32">
+          <div className="section-container-wide relative z-[1]">
+            <RevealOnScroll direction="up" duration={700}>
+              <div className="text-center max-w-md mx-auto mb-12">
+                <p className="text-[9px] uppercase tracking-[0.4em] text-accent/40 font-mono mb-3">Completed Work</p>
+                <h2 className="font-serif text-xl sm:text-2xl text-foreground/80 font-normal tracking-[0.02em]">
+                  The Finished Result
+                </h2>
+              </div>
+            </RevealOnScroll>
 
-            {/* Block A — Main Ridge: image left, text right */}
+            {/* Row 1 — wide interior + tall stone detail */}
             <RevealOnScroll direction="up" duration={800}>
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 mb-4 sm:mb-5">
                 <div className="lg:col-span-7">
-                  <EditorialImage
-                    src={mainRidgeBarnFrame}
-                    alt="Main Ridge — timber frame structure"
-                    aspect="aspect-[16/10]"
-                    onClick={() => openLightbox(mainRidgeBarnFrame)}
-                  />
+                  <EditorialImage src={mainRidgeInterior} alt="Main Ridge — open barn interior" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeInterior)} />
                 </div>
                 <div className="lg:col-span-5">
-                  <p className="text-[9px] uppercase tracking-[0.35em] text-accent/40 font-mono mb-3">Main Ridge</p>
-                  <h3 className="font-serif text-xl sm:text-2xl text-foreground/80 font-normal tracking-[0.02em] mb-3">
-                    Barn & Arena Complex
-                  </h3>
-                  <div className="w-8 h-px bg-accent/25 mb-5" />
-                  <p className="text-xs text-muted-foreground/30 leading-[1.9]">
-                    Full facility construction including timber-framed barn, competition arena, drainage systems, and hand-crafted stonework detailing. Mornington Peninsula, Victoria.
-                  </p>
+                  <EditorialImage src={aberdeenStoneworkColor} alt="Aberdeen — stonework facade" aspect="aspect-[3/4]" className="h-full" onClick={() => openLightbox(aberdeenStoneworkColor)} />
                 </div>
               </div>
             </RevealOnScroll>
 
-            {/* Block B — Queensland: text left, image right */}
-            <RevealOnScroll direction="up" duration={800}>
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-                <div className="lg:col-span-5 order-2 lg:order-1">
-                  <p className="text-[9px] uppercase tracking-[0.35em] text-accent/40 font-mono mb-3">Queensland Facility</p>
-                  <h3 className="font-serif text-xl sm:text-2xl text-foreground/80 font-normal tracking-[0.02em] mb-3">
-                    Multi-Structure Complex
-                  </h3>
-                  <div className="w-8 h-px bg-accent/25 mb-5" />
-                  <p className="text-xs text-muted-foreground/30 leading-[1.9]">
-                    Large-scale equine facility featuring multiple barns, covered walkways, climate-controlled stalls, and integrated paddock systems. Queensland.
-                  </p>
+            {/* Row 2 — offset pair */}
+            <RevealOnScroll direction="up" duration={700} delay={80}>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 mb-4 sm:mb-5">
+                <div className="lg:col-span-5 lg:mt-8">
+                  <EditorialImage src={mainRidgeBrickwork} alt="Main Ridge — reclaimed brickwork" aspect="aspect-[3/4]" onClick={() => openLightbox(mainRidgeBrickwork)} />
                 </div>
-                <div className="lg:col-span-7 order-1 lg:order-2">
-                  <EditorialImage
-                    src={qldCourtyard}
-                    alt="Queensland — central courtyard"
-                    aspect="aspect-[16/10]"
-                    onClick={() => openLightbox(qldCourtyard)}
-                  />
+                <div className="lg:col-span-7 lg:-mt-6">
+                  <EditorialImage src={equitanaArena5} alt="Equitana — completed competition arena" aspect="aspect-[16/9]" onClick={() => openLightbox(equitanaArena5)} />
                 </div>
               </div>
             </RevealOnScroll>
 
-            {/* Block C — Equitana: image left, text right */}
-            <RevealOnScroll direction="up" duration={800}>
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-                <div className="lg:col-span-7">
-                  <EditorialImage
-                    src={equitanaArena3}
-                    alt="Equitana Melbourne — competition arena"
-                    aspect="aspect-[16/10]"
-                    onClick={() => openLightbox(equitanaArena3)}
-                  />
-                </div>
-                <div className="lg:col-span-5">
-                  <p className="text-[9px] uppercase tracking-[0.35em] text-accent/40 font-mono mb-3">Equitana Melbourne</p>
-                  <h3 className="font-serif text-xl sm:text-2xl text-foreground/80 font-normal tracking-[0.02em] mb-3">
-                    Competition Infrastructure
-                  </h3>
-                  <div className="w-8 h-px bg-accent/25 mb-5" />
-                  <p className="text-xs text-muted-foreground/30 leading-[1.9]">
-                    Full arena preparation and surface engineering for Australia's premier equine event. Melbourne, Victoria.
-                  </p>
+            {/* Row 3 — three polished results */}
+            <RevealOnScroll direction="up" duration={700} delay={120}>
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+                <EditorialImage src={qldExterior1} alt="Queensland — barn exterior" aspect="aspect-[4/3]" onClick={() => openLightbox(qldExterior1)} />
+                <EditorialImage src={mainRidgeTimber} alt="Main Ridge — timber beam joinery" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeTimber)} />
+                <div className="col-span-2 lg:col-span-1">
+                  <EditorialImage src={qldCourtyard} alt="Queensland — central courtyard" aspect="aspect-[4/3]" onClick={() => openLightbox(qldCourtyard)} />
                 </div>
               </div>
             </RevealOnScroll>
@@ -493,18 +438,18 @@ export default function Gallery() {
       </section>
 
       {/* ═══════════════════════════════════════════════════
-          6. DETAIL STRIP — texture-focused, no text
+          6. CRAFT & LIFE — detail + human moments
           ═══════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <RevealOnScroll direction="up" duration={700}>
-          <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-6">
+          <div className="grid grid-cols-3 sm:grid-cols-6">
             {[
+              { src: mainRidgeCiroWoodwork1, alt: "Hand-crafting timber posts" },
               { src: aberdeenStallsDetail, alt: "Stall ironwork detail" },
-              { src: mainRidgeRebarFoundation, alt: "Rebar foundation detail" },
-              { src: aberdeenStoneworkColor, alt: "Stonework colour detail" },
+              { src: mainRidgeWorker, alt: "Ciro on-site" },
               { src: aberdeenInteriorStonework, alt: "Interior stone feature" },
-              { src: mainRidgeArenaGrading, alt: "Arena grading detail" },
-              { src: mainRidgeWorker, alt: "On-site craftsmanship" },
+              { src: mainRidgeCiroWoodwork3, alt: "Timber finishing" },
+              { src: mainRidgeBrickwork, alt: "Reclaimed brick detail" },
             ].map((img, i) => (
               <div
                 key={i}
