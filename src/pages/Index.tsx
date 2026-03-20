@@ -542,25 +542,25 @@ export default function Index() {
 
       {/* ═══ 7. AUTHORITY STRIP — reduced visual weight ═══ */}
       <section className="relative overflow-hidden">
-        <div className="py-12 sm:py-16 bg-card/50 relative">
+        <div className="py-16 sm:py-24 bg-card/50 relative">
           <div className="absolute inset-0 grain-texture opacity-20" />
           <div className="section-container relative z-[1]">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6 max-w-3xl mx-auto text-center">
-              <RevealOnScroll direction="up" stagger={0} staggerInterval={100}>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-8 max-w-3xl mx-auto text-center">
+              <RevealOnScroll direction="up" stagger={0} staggerInterval={120}>
                 <div>
-                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1">Victoria-Wide</p>
+                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1.5">Victoria-Wide</p>
                   <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/20 font-mono">Projects Across the State</p>
                 </div>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" stagger={1} staggerInterval={100}>
+              <RevealOnScroll direction="up" stagger={1} staggerInterval={120}>
                 <div>
-                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1">$500K+</p>
+                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1.5">$500K+</p>
                   <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/20 font-mono">Custom Builds to Scale</p>
                 </div>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" stagger={2} staggerInterval={100}>
+              <RevealOnScroll direction="up" stagger={2} staggerInterval={120}>
                 <div>
-                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1">Private &amp; Pro</p>
+                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1.5">Private &amp; Pro</p>
                   <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/20 font-mono">Estates &amp; Facilities</p>
                 </div>
               </RevealOnScroll>
