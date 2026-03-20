@@ -71,12 +71,12 @@ function ServiceIcon({ icon: Icon, className }: { icon: typeof Mountain; classNa
   return (
     <Icon
       className={cn(
-        "w-5 h-5 text-foreground/30 transition-all duration-500",
+        "w-5 h-5 text-foreground/30 transition-all duration-700",
         "group-hover:text-accent/70",
-        "opacity-0 animate-[drawIn_0.5s_ease-out_forwards]",
+        "opacity-0 animate-[drawIn_0.7s_ease-out_forwards]",
         className
       )}
-      strokeWidth={1.5}
+      strokeWidth={1.7}
     />
   );
 }
@@ -116,14 +116,14 @@ function ProjectsScroll() {
             <img
               src={project.src}
               alt={project.alt}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1800ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06] brightness-[0.85] group-hover:brightness-[0.95]"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2200ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.08] brightness-[0.8] group-hover:brightness-[0.92]"
               loading="lazy"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/5" />
-            <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-background/10" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background/25 via-transparent to-transparent" />
             <div className="absolute inset-0 grain-texture opacity-30" />
-            <div className="absolute inset-0 bg-background/10 group-hover:bg-background/0 transition-all duration-700" />
-            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 translate-y-2 group-hover:translate-y-0 transition-transform duration-700">
+            <div className="absolute inset-0 bg-background/15 group-hover:bg-background/0 transition-all duration-900" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 translate-y-2 group-hover:translate-y-0 transition-transform duration-900">
               <p className="text-[9px] uppercase tracking-[0.25em] text-accent/50 font-mono mb-2 opacity-70 group-hover:opacity-100 transition-opacity duration-500">{project.scope}</p>
               <p className="font-serif text-lg text-foreground/60 group-hover:text-foreground transition-all duration-700">{project.label}</p>
               <div className="flex items-center gap-1.5 mt-3 text-accent/0 group-hover:text-accent/60 transition-all duration-700 translate-y-2 group-hover:translate-y-0">
@@ -199,9 +199,9 @@ export default function Index() {
               <div className="w-12 h-px bg-accent/20" />
             </div>
 
-            <div className="space-y-2 sm:space-y-4">
+            <div className="space-y-1 sm:space-y-2">
               <h1
-                className="font-serif font-bold text-foreground leading-[0.95] tracking-[0.01em] opacity-0 animate-fade-in"
+                className="font-serif font-bold text-foreground leading-[0.9] tracking-[0.01em] opacity-0 animate-fade-in"
                 style={{
                   animationDelay: "1000ms",
                   animationFillMode: "both",
@@ -212,7 +212,7 @@ export default function Index() {
                 Built from the<br className="hidden sm:block" /> ground up.
               </h1>
               <p
-                className="font-serif font-light text-foreground/40 leading-[1] tracking-[0.02em] opacity-0 animate-fade-in"
+                className="font-serif font-light text-foreground/30 leading-[0.95] tracking-[0.02em] opacity-0 animate-fade-in"
                 style={{
                   animationDelay: "1500ms",
                   animationFillMode: "both",
@@ -225,7 +225,7 @@ export default function Index() {
             </div>
 
             <p
-              className="text-muted-foreground/30 text-[10px] sm:text-[11px] tracking-[0.3em] uppercase max-w-sm opacity-0 animate-fade-in leading-[2]"
+              className="text-muted-foreground/22 text-[10px] sm:text-[11px] tracking-[0.35em] uppercase max-w-sm opacity-0 animate-fade-in leading-[2]"
               style={{ animationDelay: "2000ms", animationFillMode: "both", animationDuration: "1000ms" }}
             >
               Arenas · Stables · Systems · Engineered with precision
@@ -273,7 +273,7 @@ export default function Index() {
                   <RevealLine className="mb-12" width="w-10" />
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" delay={100}>
-                  <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/40 mb-6">Built by a Horseman</p>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-6">Built by a Horseman</p>
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" delay={200}>
                   <h2 className="heading-section text-foreground mb-6 leading-[1.15]">
@@ -282,7 +282,7 @@ export default function Index() {
                   </h2>
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" delay={300}>
-                  <p className="text-[14px] text-muted-foreground/45 leading-[2.1] max-w-[380px]">
+                  <p className="text-[14px] text-muted-foreground/45 leading-[2.1] max-w-[340px]">
                     Peninsula Equine builds high-performance equine environments across Victoria.
                     From private arenas to full-scale facilities, every project is engineered for
                     longevity, usability, and clean execution.
@@ -320,7 +320,7 @@ export default function Index() {
                 <RevealLine className="mb-6" width="w-10" />
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={80}>
-                <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/40 mb-3">What We Build</p>
+                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">What We Build</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={120}>
                 <h2 className="heading-section text-foreground">
@@ -346,7 +346,7 @@ export default function Index() {
                       <h3 className="font-serif text-[15px] font-medium text-foreground mb-3 tracking-[0.02em] group-hover:text-accent transition-colors duration-500">
                         {svc.title}
                       </h3>
-                      <p className="text-[12px] text-muted-foreground/35 leading-[1.9] max-w-[260px] flex-1">{svc.desc}</p>
+                      <p className="text-[12px] text-muted-foreground/35 leading-[1.9] max-w-[240px] flex-1">{svc.desc}</p>
                       <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/0 group-hover:text-accent/40 transition-all duration-500 mt-6 self-end" />
                     </div>
                   </Link>
@@ -369,7 +369,7 @@ export default function Index() {
                 <RevealLine className="mb-6" width="w-10" />
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={80}>
-                <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/40 mb-3">Portfolio</p>
+                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">Portfolio</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={120}>
                 <h2 className="heading-section text-foreground">
@@ -409,7 +409,7 @@ export default function Index() {
                 <RevealOnScroll direction="up">
                   <div className="flex items-center gap-3 mb-6">
                     <Layers className="w-4 h-4 text-accent/50" strokeWidth={1.5} />
-                    <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/50">Proprietary System</span>
+                    <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/50">Proprietary System</span>
                   </div>
                   <h2 className="heading-section text-foreground mb-4 leading-[1.15]">
                     P.E. GroundLock™
@@ -417,7 +417,7 @@ export default function Index() {
                   <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/20 mb-8">
                     Modular Ground Stabilisation
                   </p>
-                  <p className="text-[14px] text-muted-foreground/45 leading-[2] mb-6 max-w-[360px]">
+                  <p className="text-[14px] text-muted-foreground/45 leading-[2] mb-6 max-w-[340px]">
                     GroundLock is a modular base system designed for strength,
                     speed, and long-term stability. Built to outperform
                     traditional methods.
@@ -463,7 +463,7 @@ export default function Index() {
                 <RevealLine className="mb-6" width="w-10" />
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={80}>
-                <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/40 mb-3">How We Work</p>
+                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">How We Work</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={120}>
                 <h2 className="heading-section text-foreground">
@@ -535,7 +535,7 @@ export default function Index() {
               </RevealOnScroll>
               <div>
                 <RevealOnScroll direction="up" delay={100}>
-                  <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/50 mb-6">Product Division</p>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/50 mb-6">Product Division</p>
                   <h2 className="heading-section text-primary-foreground mb-4 leading-[1.15]">
                     Equus Forge
                   </h2>
@@ -545,6 +545,8 @@ export default function Index() {
                   <p className="text-[14px] text-primary-foreground/50 leading-[2] mb-4 max-w-[340px]">
                     Engineered ground systems, steel components, and infrastructure
                     configurations — designed for horsemen, by a horseman.
+                  </p>
+                  <p className="text-[11px] text-primary-foreground/20 tracking-[0.18em] uppercase mb-8">
                   </p>
                   <p className="text-[11px] text-primary-foreground/20 tracking-[0.15em] uppercase mb-8">
                     Systems. Components. Built to scale.
@@ -588,7 +590,7 @@ export default function Index() {
               </h2>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
-              <p className="text-[14px] text-muted-foreground/30 mb-10 leading-[2] max-w-[320px] mx-auto">
+              <p className="text-[14px] text-muted-foreground/25 mb-10 leading-[2] max-w-[300px] mx-auto">
                 Every project begins with a site assessment.<br />
                 Let's talk about yours.
               </p>
