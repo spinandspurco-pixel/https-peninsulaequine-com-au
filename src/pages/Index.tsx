@@ -43,7 +43,7 @@ import peBanner from "@/assets/pe-banner.png";
 import heroSunset from "@/assets/hero-sunset.png";
 
 const PROJECTS = [
-  { src: mainRidgeFinishedExterior, alt: "Main Ridge pavilion at dusk", label: "Main Ridge", scope: "Pavilion & Fireplace", slug: "main-ridge" },
+  { src: mainRidgeFinishedExterior, alt: "Main Ridge pavilion at dusk", label: "Main Ridge", scope: "Pavilion & Parrilla Grill", slug: "main-ridge" },
   { src: garageInterior, alt: "Precision garage interior with flake floor", label: "Private Client", scope: "Garage & Workshop", slug: "aberdeen-farm" },
   { src: steelShedDramatic, alt: "Custom steel barn with dramatic sky", label: "Steel Structures", scope: "Colorbond Barn Build", slug: "caulfield" },
   { src: timberCubbyFront, alt: "Western-style bespoke timber cubby", label: "Custom Builds", scope: "Bespoke Timber", slug: "equitana" },
