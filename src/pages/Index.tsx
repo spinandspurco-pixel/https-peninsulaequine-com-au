@@ -24,7 +24,6 @@ import buildVideo from "@/assets/videos/main-ridge-woodwork-1.mp4";
 
 // Detail / material textures (unique to homepage strip)
 import reclaimedBeamWorkshop from "@/assets/reclaimed-beam-workshop.jpg";
-import reclaimedBoardsForklift from "@/assets/reclaimed-boards-forklift.jpg";
 
 // Process / build imagery (unique to homepage)
 import mainRidgeFrameAngle from "@/assets/main-ridge-frame-angle.jpg";
