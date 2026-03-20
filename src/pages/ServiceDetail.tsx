@@ -448,7 +448,7 @@ export default function ServiceDetail() {
                       )}
                     >
                       <Link to={`/contact?services=${service.id}&ref=tier-${tier.name.toLowerCase()}`}>
-                        Get a Quote <ArrowRight className="ml-2 h-4 w-4" />
+                        Request Assessment <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
                   </div>
