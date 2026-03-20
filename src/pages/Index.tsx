@@ -199,9 +199,9 @@ export default function Index() {
               <div className="w-12 h-px bg-accent/20" />
             </div>
 
-            <div className="space-y-2 sm:space-y-4">
+            <div className="space-y-1 sm:space-y-2">
               <h1
-                className="font-serif font-bold text-foreground leading-[0.95] tracking-[0.01em] opacity-0 animate-fade-in"
+                className="font-serif font-bold text-foreground leading-[0.9] tracking-[0.01em] opacity-0 animate-fade-in"
                 style={{
                   animationDelay: "1000ms",
                   animationFillMode: "both",
@@ -212,7 +212,7 @@ export default function Index() {
                 Built from the<br className="hidden sm:block" /> ground up.
               </h1>
               <p
-                className="font-serif font-light text-foreground/40 leading-[1] tracking-[0.02em] opacity-0 animate-fade-in"
+                className="font-serif font-light text-foreground/30 leading-[0.95] tracking-[0.02em] opacity-0 animate-fade-in"
                 style={{
                   animationDelay: "1500ms",
                   animationFillMode: "both",
@@ -225,7 +225,7 @@ export default function Index() {
             </div>
 
             <p
-              className="text-muted-foreground/30 text-[10px] sm:text-[11px] tracking-[0.3em] uppercase max-w-sm opacity-0 animate-fade-in leading-[2]"
+              className="text-muted-foreground/22 text-[10px] sm:text-[11px] tracking-[0.35em] uppercase max-w-sm opacity-0 animate-fade-in leading-[2]"
               style={{ animationDelay: "2000ms", animationFillMode: "both", animationDuration: "1000ms" }}
             >
               Arenas · Stables · Systems · Engineered with precision
