@@ -438,6 +438,78 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ═══ 4b. SIGNATURE SYSTEMS — 3-card ecosystem ═══════ */}
+      <SectionBleed from="background" to="card" />
+      <section className="relative overflow-hidden">
+        <div className={`${SP_SECTION} bg-card relative`}>
+          <div className="absolute inset-0 grain-texture opacity-25" />
+          <div className="section-container relative z-[1] max-w-5xl mx-auto">
+            <div className={`${SP_HEAD}`}>
+              <RevealOnScroll direction="up">
+                <RevealLine className="mb-6" width="w-10" />
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={80}>
+                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">Peninsula Equine</p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={120}>
+                <h2 className="heading-section text-foreground mb-4">
+                  Signature Systems
+                </h2>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={180}>
+                <p className="text-[13px] text-muted-foreground/35 leading-[2] max-w-[420px]">
+                  Proprietary systems and engineered details designed to solve the way equine
+                  properties actually move, wear, and endure.
+                </p>
+              </RevealOnScroll>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-border/8">
+              {[
+                {
+                  title: "GroundLock",
+                  body: "A premium stabilised entry system designed for floats, trucks, gated arrivals, and high-traffic rural entries.",
+                  cta: "Explore GroundLock",
+                  href: "/groundlock",
+                },
+                {
+                  title: "Arrival Packages",
+                  body: "Integrated front-entry concepts combining surface systems, gate logic, edging, and architectural presentation.",
+                  cta: "View Entry Systems",
+                  href: "/groundlock",
+                },
+                {
+                  title: "Forge Details",
+                  body: "Custom forged hardware, gate elements, signage, and rural design details that complete the property properly.",
+                  cta: "Explore Equus Forge",
+                  href: "/shop",
+                },
+              ].map((card, i) => (
+                <RevealOnScroll key={card.title} direction="up" stagger={i} staggerInterval={100}>
+                  <Link
+                    to={card.href}
+                    className="group relative flex flex-col p-8 sm:p-10 min-h-[240px] bg-card hover:bg-secondary/20 transition-all duration-700"
+                  >
+                    <div className="absolute top-0 left-8 right-8 sm:left-10 sm:right-10 h-px bg-accent/8" />
+                    <h4 className="font-serif text-[15px] font-medium text-foreground/60 tracking-[0.02em] mb-4 group-hover:text-foreground transition-colors duration-500">
+                      {card.title}
+                    </h4>
+                    <p className="text-[12px] text-muted-foreground/30 leading-[2] max-w-[260px] flex-1">
+                      {card.body}
+                    </p>
+                    <div className="flex items-center gap-1.5 mt-6 text-muted-foreground/0 group-hover:text-accent/50 transition-all duration-700">
+                      <span className="text-[10px] uppercase tracking-[0.15em] font-mono">{card.cta}</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </div>
+                  </Link>
+                </RevealOnScroll>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+      <SectionBleed from="card" to="background" />
+
       {/* ═══ 5. GROUNDLOCK — SIGNATURE SYSTEM ══════════════ */}
       <SectionBleed from="background" to="card" />
       <section className="relative overflow-hidden">
