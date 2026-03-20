@@ -104,10 +104,11 @@
     scroll-behavior: smooth;
   }
 
-  /* ── Global Lucide icon defaults ───────────────────── */
+  /* ── Global Lucide icon defaults — architectural, understated ── */
   svg.lucide {
-    stroke-width: 1.25;
-    @apply transition-all duration-500 ease-out;
+    stroke-width: 1.5;
+    @apply transition-colors duration-700 ease-out;
+    color: inherit;
   }
 
   body {

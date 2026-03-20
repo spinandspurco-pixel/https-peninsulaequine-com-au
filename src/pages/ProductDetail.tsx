@@ -69,7 +69,7 @@ export default function ProductDetail() {
       <section className="py-5 border-b border-border bg-card/50">
         <div className="section-container text-center">
           <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground/50 flex items-center justify-center gap-2">
-            <Shield className="w-3.5 h-3.5 text-accent/40" strokeWidth={1.7} />
+            <Shield className="w-3.5 h-3.5 text-muted-foreground/40" strokeWidth={1.5} />
             {product.trustLine}
           </p>
         </div>
@@ -80,14 +80,14 @@ export default function ProductDetail() {
         <div className="section-container max-w-4xl mx-auto grid md:grid-cols-2 gap-12">
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-destructive">
-              <Zap className="w-4 h-4" strokeWidth={1.7} />
+              <Zap className="w-4 h-4" strokeWidth={1.5} />
               <p className="text-[10px] font-mono uppercase tracking-[0.2em]">The Problem</p>
             </div>
             <p className="text-muted-foreground leading-relaxed text-sm">{product.problem}</p>
           </div>
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-accent">
-              <Shield className="w-4 h-4" strokeWidth={1.7} />
+              <Shield className="w-4 h-4" strokeWidth={1.5} />
               <p className="text-[10px] font-mono uppercase tracking-[0.2em]">The Solution</p>
             </div>
             <p className="text-foreground leading-relaxed text-sm">{product.solution}</p>
@@ -137,7 +137,7 @@ export default function ProductDetail() {
               {addOns.map((addon) => (
                 <div key={addon.handle} className="border border-border rounded-sm p-6 space-y-3 hover:border-accent/30 transition-colors">
                   <div className="flex items-center gap-2 text-accent">
-                    <Wrench className="w-4 h-4" strokeWidth={1.7} />
+                    <Wrench className="w-4 h-4" strokeWidth={1.5} />
                     <p className="text-[10px] font-mono uppercase tracking-[0.15em]">{addon.subtitle}</p>
                   </div>
                   <h3 className="font-serif text-lg">{addon.title}</h3>
