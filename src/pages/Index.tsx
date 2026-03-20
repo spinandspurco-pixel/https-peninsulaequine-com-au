@@ -466,13 +466,12 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ 6. PROCESS TIMELINE ═══════════════════════════ */}
+      {/* ═══ 6. PROCESS — TIMELINE + BUILD IMAGERY ══════════ */}
       <SectionBleed from="card" to="background" />
       <section className="relative overflow-hidden">
-        <div className="py-16 sm:py-20 relative">
+        <div className="py-20 sm:py-28 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
-            {/* Left-aligned header */}
             <div className={`${SP_MD}`}>
               <RevealOnScroll direction="up">
                 <RevealLine className="mb-6" width="w-10" />
@@ -488,8 +487,58 @@ export default function Index() {
             </div>
 
             <ProcessTimeline />
+
+            {/* Build process imagery — cropped tight to hands/tools */}
+            <RevealOnScroll direction="up" delay={200}>
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mt-16">
+                <div className="relative aspect-[16/10] overflow-hidden group col-span-2 lg:col-span-2">
+                  <img
+                    src={mainRidgeRebarFoundation}
+                    alt="Foundation reinforcement"
+                    className="absolute inset-0 w-full h-full object-cover brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8] transition-all duration-[900ms]"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-background/10" />
+                </div>
+                <div className="relative aspect-[3/4] overflow-hidden group">
+                  <img
+                    src={mainRidgeCiroWoodwork}
+                    alt="Timber hand-crafting detail"
+                    className="absolute inset-0 w-full h-full object-cover object-top brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8] transition-all duration-[900ms]"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-background/10" />
+                </div>
+              </div>
+            </RevealOnScroll>
           </div>
         </div>
+      </section>
+
+      {/* ═══ MATERIAL DETAIL STRIP — textures, no text ═══════ */}
+      <section className="relative overflow-hidden" aria-label="Material details">
+        <RevealOnScroll direction="up" duration={700}>
+          <div className="grid grid-cols-3 sm:grid-cols-6">
+            {[
+              { src: mainRidgeTimber, alt: "Timber grain detail" },
+              { src: mainRidgeBrickwork, alt: "Reclaimed brickwork" },
+              { src: aberdeenStallsDetail, alt: "Steel stall ironwork" },
+              { src: mainRidgeTimber, alt: "Timber joinery" },
+              { src: mainRidgeBrickwork, alt: "Brick and mortar" },
+              { src: aberdeenStallsDetail, alt: "Metalwork detail" },
+            ].map((img, i) => (
+              <div key={i} className="relative aspect-square overflow-hidden group">
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05] brightness-[0.65] saturate-[0.7] contrast-[1.1]"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-background/10 group-hover:bg-transparent transition-colors duration-700" />
+              </div>
+            ))}
+          </div>
+        </RevealOnScroll>
       </section>
 
       {/* ═══ 7. AUTHORITY STRIP — reduced visual weight ═══ */}
