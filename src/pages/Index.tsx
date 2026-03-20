@@ -468,7 +468,7 @@ export default function Index() {
       {/* ═══ 6. PROCESS — TIMELINE + BUILD IMAGERY ══════════ */}
       <SectionBleed from="card" to="background" />
       <section className="relative overflow-hidden">
-        <div className="py-20 sm:py-28 relative">
+        <div className="py-24 sm:py-32 lg:py-40 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
             <div className={`${SP_HEAD}`}>
