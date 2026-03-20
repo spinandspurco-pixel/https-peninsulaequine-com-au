@@ -27,6 +27,7 @@ import {
   ClipboardList,
   AlertTriangle,
   Heart,
+  CheckCircle2,
 } from "lucide-react";
 import { format } from "date-fns";
 import { DailySiteReportForm } from "@/components/forms/DailySiteReportForm";
