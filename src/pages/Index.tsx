@@ -590,7 +590,7 @@ export default function Index() {
               </h2>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
-              <p className="text-[14px] text-muted-foreground/30 mb-10 leading-[2] max-w-[320px] mx-auto">
+              <p className="text-[14px] text-muted-foreground/25 mb-10 leading-[2] max-w-[300px] mx-auto">
                 Every project begins with a site assessment.<br />
                 Let's talk about yours.
               </p>
