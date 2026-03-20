@@ -335,6 +335,9 @@ export default function Admin() {
           {/* FOUNDER + ADMIN: Follow-Up Engine */}
           {viewMode !== "operations" && <FollowUpEngine />}
 
+          {/* FOUNDER + ADMIN: Communications Hub */}
+          {viewMode !== "operations" && <CommunicationsHub />}
+
           {/* FOUNDER + OPERATIONS: Operations Command Centre */}
           {(viewMode === "founder" || viewMode === "operations") && <OperationsCommandCentre />}
 
