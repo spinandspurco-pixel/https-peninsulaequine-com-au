@@ -535,7 +535,7 @@ export default function Index() {
               </RevealOnScroll>
               <div>
                 <RevealOnScroll direction="up" delay={100}>
-                  <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/50 mb-6">Product Division</p>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/50 mb-6">Product Division</p>
                   <h2 className="heading-section text-primary-foreground mb-4 leading-[1.15]">
                     Equus Forge
                   </h2>
