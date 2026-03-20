@@ -431,10 +431,10 @@ export default function Gallery() {
             <RevealOnScroll direction="up" duration={800}>
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 mb-4 sm:mb-5">
                 <div className="lg:col-span-7">
-                  <EditorialImage src={mainRidgeInterior} alt="Main Ridge — open barn interior" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeInterior)} />
+                  <EditorialImage src={aberdeenDeck} alt="Private client — outdoor deck" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenDeck)} />
                 </div>
                 <div className="lg:col-span-5">
-                  <EditorialImage src={aberdeenStoneworkColor} alt="Private client — stonework facade" aspect="aspect-[3/4]" className="h-full" onClick={() => openLightbox(aberdeenStoneworkColor)} />
+                  <EditorialImage src={stoneworkStables2} alt="Stonework stables detail" aspect="aspect-[3/4]" className="h-full" onClick={() => openLightbox(stoneworkStables2)} />
                 </div>
               </div>
             </RevealOnScroll>
