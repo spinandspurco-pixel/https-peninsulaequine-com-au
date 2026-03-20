@@ -37,6 +37,8 @@ export function LoadingSplash({
   >("enter");
   const svgRef = useRef<SVGSVGElement>(null);
 
+  const logoReady = usePreloadedImage(logoPeMark);
+
   const prefersReduced =
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
