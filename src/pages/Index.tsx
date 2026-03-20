@@ -820,12 +820,12 @@ export default function Index() {
                     Equus Forge
                   </h2>
                   <p className="text-primary-foreground/30 text-[12px] sm:text-[13px] leading-[2] mb-6 max-w-[360px]">
-                    Engineered products and signature systems for premium equine and rural properties.
+                    The product and systems arm of Peninsula Equine.
                   </p>
                   <p className="text-[14px] text-primary-foreground/45 leading-[2] mb-10 max-w-[360px]">
-                    Equus Forge is the product division of Peninsula Equine — bringing together forged
-                    hardware, engineered ground systems, and custom rural design elements built for
-                    properties that need to work hard and feel properly resolved.
+                    Forged hardware, ground systems, and custom rural elements
+                    built to complete properties with strength, identity, and craft
+                    that outlasts the trends.
                   </p>
                 </RevealOnScroll>
               </div>
