@@ -1,198 +1,251 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Flame, ArrowRight, Mail, Wrench, Fence, Sparkles, Building2, Layers } from "lucide-react";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { ArrowRight, Flame, Layers, Wrench, Sparkles } from "lucide-react";
+import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { cn } from "@/lib/utils";
 
-import mainRidgeFrameWide from "@/assets/main-ridge-frame-wide.jpg";
-import reclaimedBeamWorkshop from "@/assets/reclaimed-beam-workshop.jpg";
-import pavilionTimber from "@/assets/pavilion-timber-detail.jpg";
+/* ── Product families ─────────────────────────────── */
 
-const quickLinks = [
-  { icon: Layers, label: "Browse Systems", to: "/shop", desc: "View all configurations" },
-  { icon: Mail, label: "Request Specification", to: "/contact", desc: "Custom fabrication inquiry" },
-  { icon: Wrench, label: "Capabilities", to: "/services", desc: "Full build & install" },
+interface ProductFamily {
+  title: string;
+  trademark?: boolean;
+  status: "live" | "development" | "planned";
+  description: string;
+  href?: string;
+  cta?: string;
+  icon: typeof Flame;
+}
+
+const PRODUCT_FAMILIES: ProductFamily[] = [
+  {
+    title: "GroundLock Systems",
+    trademark: true,
+    status: "live",
+    icon: Layers,
+    description:
+      "Permanent sub-surface entry systems for gates, driveways, and high-traffic equine zones — engineered for drainage, stability, and float-grade load.",
+    href: "/groundlock",
+    cta: "Explore GroundLock",
+  },
+  {
+    title: "Forge Hardware",
+    status: "development",
+    icon: Wrench,
+    description:
+      "Architectural steelwork and gate elements — swing gates, sliding systems, tie-up rails, and structural fabrications built to horseman's tolerances.",
+  },
+  {
+    title: "Custom Property Elements",
+    status: "planned",
+    icon: Sparkles,
+    description:
+      "Bespoke estate details — laser-cut property signage, ornamental brackets, threshold hardware, and finishing elements that complete the built environment.",
+  },
 ];
 
-const capabilities = [
-  { icon: Fence, title: "Gates & Panels", desc: "Swing gates, sliding gates & modular stable panels — precision-sized to your opening, built heavy-gauge to last decades." },
-  { icon: Wrench, title: "Steel Fixtures", desc: "Tie-up rails, saddle racks, wash-bay fittings — crafted for professional-grade durability and everyday reliability." },
-  { icon: Sparkles, title: "Decorative Metalwork", desc: "Laser-cut property signs, ornamental brackets & bespoke embellishments that say 'this is serious horse country'." },
-  { icon: Building2, title: "Structural Steel", desc: "I-beam brackets, arena perimeter systems & load-bearing fabrications — engineered, certified, and built to spec." },
-];
+const STATUS_LABEL: Record<ProductFamily["status"], string> = {
+  live: "Available Now",
+  development: "In Development",
+  planned: "Future Division",
+};
+
+const STATUS_STYLE: Record<ProductFamily["status"], string> = {
+  live: "text-accent/70",
+  development: "text-foreground/35",
+  planned: "text-foreground/20",
+};
+
+/* ── Family row ───────────────────────────────────── */
+
+function FamilyRow({ family, delay = 0 }: { family: ProductFamily; delay?: number }) {
+  const Icon = family.icon;
+  return (
+    <RevealOnScroll delay={delay}>
+      <div className="group py-12 sm:py-14">
+        <div className="flex items-start justify-between gap-6 mb-4">
+          <div className="flex items-center gap-3">
+            <Icon className="w-4 h-4 text-accent/40" strokeWidth={1.5} />
+            <h3 className="font-serif text-lg sm:text-xl font-medium text-foreground/70 group-hover:text-foreground/90 transition-colors duration-500">
+              {family.title}
+              {family.trademark && <span className="text-accent/40">™</span>}
+            </h3>
+          </div>
+          <span
+            className={cn(
+              "text-[10px] tracking-[0.2em] uppercase font-medium whitespace-nowrap mt-1.5",
+              STATUS_STYLE[family.status],
+            )}
+          >
+            {STATUS_LABEL[family.status]}
+          </span>
+        </div>
+
+        <p className="text-[12px] sm:text-[13px] text-muted-foreground/30 leading-[2] max-w-xl mb-5 pl-7">
+          {family.description}
+        </p>
+
+        {family.href ? (
+          <Link
+            to={family.href}
+            className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] uppercase text-accent/50 hover:text-accent/80 transition-colors duration-500 pl-7"
+          >
+            {family.cta} <ArrowRight className="w-3 h-3" />
+          </Link>
+        ) : (
+          <span className="text-[11px] tracking-[0.15em] uppercase text-foreground/15 pl-7">
+            Details to follow
+          </span>
+        )}
+      </div>
+    </RevealOnScroll>
+  );
+}
+
+/* ── Page ──────────────────────────────────────────── */
 
 export default function Forge() {
-  const heroAnim = useScrollAnimation<HTMLElement>({ threshold: 0.1 });
-  const capAnim = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
-  const ctaAnim = useScrollAnimation<HTMLElement>({ threshold: 0.15 });
-
   return (
     <Layout>
-      {/* Hero */}
-      <section
-        ref={heroAnim.ref}
-        className="relative pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden bg-primary"
-      >
-        {/* Diagonal hatch */}
-        <div className="absolute inset-0 opacity-[0.04]" style={{
-          backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 18px, hsl(var(--primary-foreground)) 18px, hsl(var(--primary-foreground)) 19px)",
-        }} />
-        {/* Horizontal blueprint lines */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 60px, hsl(var(--primary-foreground)) 60px, hsl(var(--primary-foreground)) 61px)",
-        }} />
+      {/* ── Hero ─────────────────────────────────────── */}
+      <section className="relative pt-44 sm:pt-56 pb-28 sm:pb-36 overflow-hidden">
+        <div className="absolute inset-0 bg-background" />
+        <div className="absolute inset-0 pointer-events-none grain-texture" />
 
-        <div className={`section-container relative z-10 text-center max-w-3xl mx-auto transition-all duration-700 ${
-          heroAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}>
-          <div className="flex items-center justify-center gap-3 mb-3">
-            <span className="h-px w-10 bg-accent/50" />
-            <Flame className="h-6 w-6 text-accent" />
-            <span className="h-px w-10 bg-accent/50" />
+        <div className="section-container relative z-10 max-w-2xl mx-auto text-center">
+          <div
+            className="flex items-center justify-center gap-5 mb-10 opacity-0 animate-fade-in"
+            style={{ animationDelay: "200ms", animationFillMode: "both" }}
+          >
+            <div className="w-8 h-px bg-accent/30" />
+            <Flame className="w-3.5 h-3.5 text-accent/50" strokeWidth={1.25} />
+            <p className="text-overline text-accent/60">Product & Systems Division</p>
+            <div className="w-8 h-px bg-accent/30" />
           </div>
 
-          <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-primary-foreground/30 mb-4">
-            Product Division
-          </p>
-
-          <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl mb-2 leading-[1.05] text-primary-foreground drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]">
+          <h1
+            className="heading-display text-foreground opacity-0 animate-fade-in"
+            style={{ animationDelay: "400ms", animationFillMode: "both", animationDuration: "1000ms" }}
+          >
             Equus Forge
           </h1>
 
-          <p className="text-primary-foreground/25 text-[11px] uppercase tracking-[0.2em] mb-6">
+          <p
+            className="mt-3 text-[11px] tracking-[0.2em] uppercase text-foreground/20 opacity-0 animate-fade-in"
+            style={{ animationDelay: "550ms", animationFillMode: "both" }}
+          >
             by Peninsula Equine
           </p>
 
-          <p className="text-accent text-sm font-medium uppercase tracking-[0.25em] mb-6">
-            Steel With Soul · Forged by Horsemen
-          </p>
-
-          <p className="text-primary-foreground/80 text-lg md:text-xl mb-10 max-w-xl mx-auto font-light leading-relaxed drop-shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
-            We don't just build barns — we bend steel to your will. Every gate, panel, and component is
-            custom-fabricated by people who know the difference between a paddock latch and a fashion statement.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-wider px-8">
-              <Link to="/shop">
-                View Systems <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary uppercase tracking-wider px-8">
-              <Link to="/contact">
-                Request Specification
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Tagline Strip */}
-      <section className="py-6 bg-accent text-accent-foreground">
-        <div className="section-container flex items-center justify-center gap-4 text-center">
-          <Flame className="h-4 w-4 flex-shrink-0 opacity-70" />
-          <p className="font-serif text-lg md:text-xl italic">
-            "Heavy gauge. Hot-dip galvanised. Horseman's tolerances."
-          </p>
-          <Flame className="h-4 w-4 flex-shrink-0 opacity-70" />
-        </div>
-      </section>
-
-      {/* Material Detail Strip — textures only */}
-      <section className="relative overflow-hidden" aria-label="Material details">
-        <RevealOnScroll direction="up" duration={700}>
-          <div className="grid grid-cols-3">
-            {[
-              { src: mainRidgeFrameWide, alt: "Structural timber frame build" },
-              { src: reclaimedBeamWorkshop, alt: "Reclaimed beam workshop prep" },
-              { src: pavilionTimber, alt: "Timber and iron detail" },
-            ].map((img, i) => (
-              <div key={i} className="relative aspect-[16/9] overflow-hidden group">
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  className="absolute inset-0 w-full h-full object-cover brightness-[0.55] saturate-[0.6] contrast-[1.15] group-hover:brightness-[0.7] transition-all duration-[900ms]"
-                  loading="lazy"
-                />
-              </div>
-            ))}
-          </div>
-        </RevealOnScroll>
-      </section>
-
-      {/* Capabilities */}
-      <section className="py-16 md:py-24">
-        <div className="section-container">
-          <div className="text-center mb-14">
-            <h2 className="font-serif text-3xl md:text-4xl mb-3">What We <span className="text-accent">Build</span></h2>
-            <p className="text-muted-foreground max-w-lg mx-auto">Every component is built to order — no catalogue sizes, no compromises.</p>
-          </div>
-          <div
-            ref={capAnim.ref}
-            className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 transition-all duration-700 ${
-              capAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-            }`}
+          <p
+            className="mt-10 text-sm sm:text-[15px] text-muted-foreground/40 max-w-md mx-auto leading-[1.9] opacity-0 animate-fade-in"
+            style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
-            {capabilities.map((cap) => (
-              <div key={cap.title} className="border border-border rounded-lg p-6 bg-card hover:shadow-lg transition-shadow flex flex-col">
-                <cap.icon className="h-8 w-8 text-accent mb-4" />
-                <h3 className="font-serif text-lg font-semibold mb-2">{cap.title}</h3>
-                <p className="text-sm text-muted-foreground flex-1">{cap.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Quick Links */}
-      <section className="py-16 md:py-20 bg-secondary/30">
-        <div className="section-container">
-          <div className="text-center mb-10">
-            <h2 className="font-serif text-3xl md:text-4xl mb-3">Get <span className="text-accent">Started</span></h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            {quickLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className="group flex flex-col items-center text-center p-8 rounded-lg border border-border bg-card hover:shadow-lg hover:border-accent/40 transition-all"
-              >
-                <link.icon className="h-8 w-8 text-accent mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="font-serif text-lg font-semibold mb-1">{link.label}</h3>
-                <p className="text-sm text-muted-foreground">{link.desc}</p>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Spacer to separate from footer */}
-      <div className="h-1 bg-accent/30" />
-
-      {/* Bottom CTA */}
-      <section
-        ref={ctaAnim.ref}
-        className="relative py-20 text-foreground overflow-hidden bg-secondary"
-      >
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: "repeating-linear-gradient(135deg, transparent, transparent 20px, hsl(var(--foreground)) 20px, hsl(var(--foreground)) 21px)",
-        }} />
-        <div className={`section-container relative z-10 text-center max-w-2xl mx-auto transition-all duration-700 ${
-          ctaAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}>
-          <Flame className="h-10 w-10 text-accent mx-auto mb-6" />
-          <h2 className="font-serif text-3xl md:text-4xl mb-4">
-            Need Something <span className="text-accent">Bespoke?</span>
-          </h2>
-          <p className="text-muted-foreground mb-8 text-lg">
-            Send us your specs — no job too big, no detail too small. We'll quote it, fabricate it, and deliver it to your gate.
+            Engineered rural hardware and signature systems — designed, fabricated,
+            and installed by the same team that builds the property.
           </p>
-          <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-wider">
-            <Link to="/contact">
-              Request Custom Specification <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+        </div>
+      </section>
+
+      {/* ── Positioning statement ─────────────────────── */}
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-24 sm:py-32 bg-card relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-xl mx-auto relative z-[1] text-center">
+            <RevealOnScroll>
+              <RevealLine className="mx-auto mb-14" width="w-8" />
+            </RevealOnScroll>
+            <RevealOnScroll delay={80}>
+              <p className="text-[13px] sm:text-[14px] text-muted-foreground/35 leading-[2.1] italic font-serif">
+                Every component is purpose-built for equine environments — heavy gauge,
+                hot-dip galvanised, engineered to the tolerances of working rural properties.
+                No catalogue sizes. No compromises.
+              </p>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Product Families ──────────────────────────── */}
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-20 sm:py-28 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-3xl mx-auto relative z-[1]">
+            <RevealOnScroll>
+              <p className="text-overline text-accent/50 mb-4 text-center">Product Families</p>
+            </RevealOnScroll>
+
+            <div className="divide-y divide-border/15">
+              {PRODUCT_FAMILIES.map((family, i) => (
+                <FamilyRow key={family.title} family={family} delay={i * 80} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Systems connection ────────────────────────── */}
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-20 sm:py-28 bg-card relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-3xl mx-auto relative z-[1]">
+            <RevealOnScroll>
+              <div className="border border-accent/15 bg-accent/[0.02] p-8 sm:p-12 text-center">
+                <p className="text-overline text-accent/50 mb-6">Part of Signature Systems</p>
+                <p className="text-[13px] sm:text-[14px] text-muted-foreground/35 leading-[2] max-w-lg mx-auto mb-8">
+                  Equus Forge products integrate directly with Peninsula Equine's
+                  proprietary Signature Systems — ensuring every component works
+                  as part of a resolved, engineered whole.
+                </p>
+                <Link
+                  to="/systems"
+                  className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] uppercase text-accent/50 hover:text-accent/80 transition-colors duration-500"
+                >
+                  View Signature Systems <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ──────────────────────────────────────── */}
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-32 sm:py-44 relative">
+          <div className="absolute inset-0 engineering-grid" />
+          <div className="absolute inset-0 grain-texture" />
+          <div
+            className="absolute inset-0"
+            style={{ background: "radial-gradient(ellipse 60% 45% at 50% 50%, transparent 15%, hsl(222 20% 3% / 0.5) 100%)" }}
+          />
+
+          <div className="section-container relative z-10 text-center max-w-md mx-auto">
+            <RevealOnScroll>
+              <RevealLine className="mx-auto mb-16" width="w-8" />
+            </RevealOnScroll>
+            <RevealOnScroll delay={80}>
+              <h2 className="heading-section text-foreground mb-8">
+                Request a Specification
+              </h2>
+            </RevealOnScroll>
+            <RevealOnScroll delay={150}>
+              <p className="text-sm text-muted-foreground/35 mb-12 leading-[1.9]">
+                Whether it's a GroundLock configuration, custom gate system,
+                or bespoke property element — we'll scope it, quote it, and build it.
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll delay={250}>
+              <Button asChild variant="gold" size="lg">
+                <Link to="/contact">
+                  Enquire About Forge Products <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </RevealOnScroll>
+          </div>
         </div>
       </section>
     </Layout>
