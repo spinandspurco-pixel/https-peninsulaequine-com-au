@@ -483,7 +483,7 @@ export default function Index() {
                 {/* Proof-point strip */}
                 <RevealOnScroll direction="up" delay={300}>
                   <div className="flex flex-wrap items-center gap-x-8 gap-y-3 mt-12">
-                    {["Built for Floats + Trucks", "75–100mm Engineered Depth", "Premium Stone / Gravel Finish"].map((point) => (
+                    {["Built for Floats + Trucks", "75–100mm Engineered Depth", "Stone / Gravel / Cobble Finish"].map((point) => (
                       <span key={point} className="text-[9px] uppercase tracking-[0.25em] text-accent/25 font-mono">{point}</span>
                     ))}
                   </div>
@@ -506,7 +506,29 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ 6. PROCESS — TIMELINE + BUILD IMAGERY ══════════ */}
+      {/* ═══ 5b. GROUNDLOCK — FINISH OPTIONS ═══════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="py-16 sm:py-24 bg-card relative">
+          <div className="absolute inset-0 grain-texture opacity-20" />
+          <div className="section-container relative z-[1] max-w-5xl mx-auto">
+            <RevealOnScroll direction="up">
+              <div className="border-t border-border/10 pt-14 max-w-[420px]">
+                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/35 mb-4">Specifications</p>
+                <h3 className="font-serif text-base sm:text-lg font-medium text-foreground/70 mb-5 tracking-[0.02em]">
+                  Finish Options
+                </h3>
+                <p className="text-[13px] text-muted-foreground/35 leading-[2]">
+                  GroundLock is designed to support a range of finish specifications depending on
+                  application — including premium stone, gravel, decorative aggregate, and selected
+                  heavy-duty infill options for utility or higher-load environments.
+                </p>
+              </div>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
+
       <SectionBleed from="card" to="background" />
       <section className="relative overflow-hidden">
         <div className="py-24 sm:py-32 lg:py-40 relative">
