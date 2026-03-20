@@ -21,7 +21,7 @@ const FLAGSHIP: SystemEntry = {
   trademark: true,
   status: "live",
   description:
-    "A permanent sub-surface entry system for gates, driveways, and high-traffic equine zones — engineered for drainage, stability, and float-grade load.",
+    "Peninsula Equine's flagship ground stabilisation system — resolving drainage, load distribution, and surface integrity for front entries, laneways, and high-traffic arrival zones.",
   href: "/groundlock",
   cta: "Explore GroundLock",
 };
