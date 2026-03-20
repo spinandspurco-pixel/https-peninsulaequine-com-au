@@ -62,9 +62,9 @@ const PROCESS_STEPS = [
 ];
 
 /* ── Standardised spacing constants ───── */
-const SP_LG = "py-20"; // 80px
-const SP_MD = "mb-12"; // 48px
-const SP_SM = "mb-6"; // 24px
+const SP_SECTION = "py-24 sm:py-32 lg:py-40";
+const SP_HEAD = "mb-14 sm:mb-16";
+const SP_SM = "mb-6";
 
 /* ── Soft gradient transition between sections ─── */
 function SectionBleed({ from = "background", to = "card" }: { from?: string; to?: string }) {
