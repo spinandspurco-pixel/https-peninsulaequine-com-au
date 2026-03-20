@@ -608,7 +608,7 @@ export default function Index() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={140}>
                 <p className="text-[13px] text-muted-foreground/30 leading-[2] max-w-[400px]">
-                  GroundLock is designed for the full point of arrival — not just the surface layer.
+                  Three layers of logic beneath one clean surface.
                 </p>
               </RevealOnScroll>
             </div>
