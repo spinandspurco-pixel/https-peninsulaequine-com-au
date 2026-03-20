@@ -17,7 +17,7 @@ import pavilionTimber from "@/assets/pavilion-timber-detail.webp";
 import interiorTimberWindow from "@/assets/interior-timber-window.webp";
 import mainRidgeFinishedExterior from "@/assets/main-ridge-finished-exterior.webp";
 import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
-import timberCubbyFront from "@/assets/timber-cubby-front.jpg";
+import timberCubbyFront from "@/assets/timber-cubby-front.webp";
 
 // Intro video
 import buildVideo from "@/assets/videos/main-ridge-woodwork-1.mp4";
