@@ -739,16 +739,14 @@ export default function Index() {
               </div>
             </RevealOnScroll>
 
-            {/* Material strip — scrolling mosaic */}
+            {/* Material strip — tighter, fewer images for restraint */}
             <RevealOnScroll direction="up" delay={300}>
-              <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mt-12">
+              <div className="grid grid-cols-4 gap-2 mt-12">
                 {[
                   { src: interiorTimberWindow, alt: "Timber cladding detail" },
                   { src: mainRidgeRebarDepth2, alt: "Rebar foundation depth" },
                   { src: reclaimedBeamWorkshop, alt: "Reclaimed beam preparation" },
-                  { src: reclaimedBoardsForklift, alt: "Timber boards ready for fabrication" },
-                  { src: equitanaTractorStorm, alt: "Equitana arena tractor pass" },
-                  { src: equitanaArenaFinish, alt: "Finished Equitana arena surface" },
+                  { src: equitanaArenaFinish, alt: "Finished arena surface" },
                 ].map((img, i) => (
                   <div key={i} className="relative aspect-square overflow-hidden group">
                     <img
