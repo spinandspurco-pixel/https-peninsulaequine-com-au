@@ -71,7 +71,7 @@ function TierCard({ tier, delay }: { tier: PricingTier; delay: number }) {
       </ul>
       <Button asChild variant={tier.popular ? "default" : "outline"} className="w-full">
         <Link to="/contact">
-          Get Quote <ArrowRight className="ml-2 h-4 w-4" />
+          Request Assessment <ArrowRight className="ml-2 h-4 w-4" />
         </Link>
       </Button>
     </div>

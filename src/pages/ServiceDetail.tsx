@@ -646,10 +646,10 @@ export default function ServiceDetail() {
 
       {/* Bottom CTA */}
       <ParallaxCTA
-        title="Ready to Get Started?"
+        title="Ready to Start a Project?"
         description="Tell us about your project and we'll prepare a personalised quote within 1–2 business days."
         backgroundImage={mainRidgeBarnFrame}
-        primaryButtonText="Request a Quote"
+        primaryButtonText="Request Assessment"
         primaryButtonLink={`/contact?services=${service.id}`}
         showPhoneButton={true}
       />
