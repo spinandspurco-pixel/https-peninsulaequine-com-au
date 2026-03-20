@@ -452,42 +452,40 @@ export default function Index() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
               <div>
                 <RevealOnScroll direction="up">
-                  <div className="flex items-center gap-3 mb-6">
-                    <Layers className="w-4 h-4 text-muted-foreground/30" strokeWidth={1.5} />
-                    <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/50">Proprietary System</span>
-                  </div>
-                  <h2 className="heading-section text-foreground mb-4 leading-[1.15]">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/50 mb-6">
+                    Premium Equine Entry System
+                  </p>
+                  <h2 className="heading-section text-foreground mb-8 leading-[1.1]">
                     P.E. GroundLock™
                   </h2>
-                  <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/20 mb-8">
-                    Engineered Entry System
+                  <p className="text-[14px] text-muted-foreground/45 leading-[2] mb-5 max-w-[360px]">
+                    GroundLock is an engineered entry system designed specifically for equine and rural
+                    properties. Created for floats, trucks, utes, and high-traffic front arrivals, it
+                    stabilises the ground beneath the finish while creating a stronger, cleaner, more
+                    resolved entry experience.
                   </p>
-                  <p className="text-[14px] text-muted-foreground/45 leading-[2] mb-4 max-w-[360px]">
-                    GroundLock is a premium stabilised entry system designed for equine and rural properties.
-                    Built for floats, trucks, utes, and daily vehicle traffic, it strengthens high-use arrival
-                    zones beneath the surface while delivering a cleaner, more resolved finish at the gate.
+                  <p className="text-[13px] text-muted-foreground/35 leading-[2] mb-6 max-w-[360px]">
+                    Where standard systems focus only on surface support, GroundLock is designed for the
+                    full point of arrival — drainage, load distribution, vehicle movement, and the visual
+                    impact of a front gate that feels properly built.
                   </p>
-                  <p className="text-[13px] text-muted-foreground/35 leading-[2] mb-4 max-w-[360px]">
-                    Designed for drainage, load distribution, and long-term stability, GroundLock brings
-                    together engineered performance and architectural presentation — so the front entry
-                    does not just hold up, it arrives properly.
-                  </p>
-                  <p className="text-[11px] text-muted-foreground/20 italic mb-8">
-                    Built for the way rural properties actually move.
+                  <p className="text-[11px] text-muted-foreground/20 italic tracking-[0.04em] mb-10">
+                    Engineered beneath the surface. Designed for the way equine properties live.
                   </p>
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" delay={200}>
                   <Button asChild variant="outline-light" size="default">
                     <Link to="/groundlock">
-                      Explore GroundLock <ArrowRight className="ml-2 h-4 w-4" />
+                      See How It Works <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
                 </RevealOnScroll>
-                {/* Spec strip */}
+                {/* Proof-point strip */}
                 <RevealOnScroll direction="up" delay={300}>
-                  <div className="flex flex-wrap gap-6 mt-10">
-                    <span className="text-[9px] uppercase tracking-[0.25em] text-accent/30 font-mono">75–100mm Engineered Depth</span>
-                    <span className="text-[9px] uppercase tracking-[0.25em] text-accent/30 font-mono">Stone / Gravel / Cobble Finish</span>
+                  <div className="flex flex-wrap items-center gap-x-8 gap-y-3 mt-12">
+                    {["Built for Floats + Trucks", "75–100mm Engineered Depth", "Premium Stone / Gravel Finish"].map((point) => (
+                      <span key={point} className="text-[9px] uppercase tracking-[0.25em] text-accent/25 font-mono">{point}</span>
+                    ))}
                   </div>
                 </RevealOnScroll>
               </div>
