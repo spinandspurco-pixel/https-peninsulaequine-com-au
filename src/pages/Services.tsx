@@ -152,7 +152,7 @@ export default function Services() {
       {/* ═══ APPROACH ══════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-28 sm:py-40 bg-card relative">
+        <div className="py-32 sm:py-40 lg:py-48 bg-card relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
             <RevealOnScroll direction="up">
