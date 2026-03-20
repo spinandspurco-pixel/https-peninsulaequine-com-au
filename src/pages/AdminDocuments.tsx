@@ -179,6 +179,7 @@ export default function AdminDocuments() {
   const [loadingDocs, setLoadingDocs] = useState(true);
   const [docFilter, setDocFilter] = useState<DocFilter>("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDoc, setSelectedDoc] = useState<StaffDoc | null>(null);
   const [reviewNotes, setReviewNotes] = useState("");
