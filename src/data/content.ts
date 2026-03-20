@@ -6,7 +6,7 @@ export const siteConfig = {
   tagline: "Crafting World-Class Equine Facilities",
   description: "Expert equine facility construction by a horseman who understands what your horses need. Premium arenas, barns, and infrastructure built to the highest standards.",
   phone: "0418 585 489",
-  email: "info@peninsulaequine.com.au",
+  email: "info@peninsulaequine.org",
   address: {
     street: "59 Tubbarubba Road",
     city: "Merricks North",
