@@ -22,12 +22,6 @@ import mainRidgeFrameWide from "@/assets/main-ridge-frame-wide.jpg";
 import mainRidgeFrameAngle from "@/assets/main-ridge-frame-angle.jpg";
 import mainRidgeFoundationPour from "@/assets/main-ridge-foundation-pour.jpg";
 
-import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
-import qldAerial1 from "@/assets/qld-facility-aerial-1.jpg";
-import qldExterior1 from "@/assets/qld-facility-exterior-1.jpg";
-import qldStalls from "@/assets/qld-facility-stalls.jpg";
-import qldExterior2 from "@/assets/qld-facility-exterior-2.jpg";
-import qldConstruction from "@/assets/qld-facility-construction.jpg";
 
 import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
 import equitanaArena2 from "@/assets/equitana-arena-2.jpg";
