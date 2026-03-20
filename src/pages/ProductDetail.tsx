@@ -69,7 +69,7 @@ export default function ProductDetail() {
       <section className="py-5 border-b border-border bg-card/50">
         <div className="section-container text-center">
           <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground/50 flex items-center justify-center gap-2">
-            <Shield className="w-3.5 h-3.5 text-accent/40" strokeWidth={1.7} />
+            <Shield className="w-3.5 h-3.5 text-muted-foreground/40" strokeWidth={1.5} />
             {product.trustLine}
           </p>
         </div>
