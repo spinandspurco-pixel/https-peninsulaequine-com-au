@@ -515,9 +515,9 @@ export default function Index() {
       </section>
 
       {/* ═══ MATERIAL DETAIL STRIP — textures, no text ═══════ */}
-      <section className="relative overflow-hidden" aria-label="Material details">
+      <section className="relative overflow-hidden -my-4 sm:-my-6" aria-label="Material details">
         <RevealOnScroll direction="up" duration={700}>
-          <div className="grid grid-cols-3 sm:grid-cols-6">
+          <div className="grid grid-cols-3 sm:grid-cols-6 img-feather">
             {[
               { src: mainRidgeTimber, alt: "Timber grain detail" },
               { src: arenaSandPrep2, alt: "Arena sand preparation" },
@@ -530,7 +530,7 @@ export default function Index() {
                 <img
                   src={img.src}
                   alt={img.alt}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05] brightness-[0.65] saturate-[0.7] contrast-[1.1]"
+                  className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.65] saturate-[0.7] contrast-[1.1]"
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-background/10 group-hover:bg-transparent transition-colors duration-700" />
