@@ -179,6 +179,7 @@ export default function AdminDocuments() {
   const [loadingDocs, setLoadingDocs] = useState(true);
   const [docFilter, setDocFilter] = useState<DocFilter>("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDoc, setSelectedDoc] = useState<StaffDoc | null>(null);
   const [reviewNotes, setReviewNotes] = useState("");
@@ -236,6 +237,19 @@ export default function AdminDocuments() {
   const filtered = documents.filter(doc => {
     if (docFilter !== "all" && doc.document_type !== docFilter) return false;
     if (statusFilter !== "all" && doc.status !== statusFilter) return false;
+    if (dateFilter !== "all") {
+      const docDate = new Date(doc.created_at);
+      const now = new Date();
+      if (dateFilter === "today" && format(docDate, "yyyy-MM-dd") !== format(now, "yyyy-MM-dd")) return false;
+      if (dateFilter === "week") {
+        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        if (docDate < weekAgo) return false;
+      }
+      if (dateFilter === "month") {
+        const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        if (docDate < monthAgo) return false;
+      }
+    }
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       return doc.title.toLowerCase().includes(term) ||
@@ -356,20 +370,20 @@ export default function AdminDocuments() {
           </div>
 
           {/* Filters */}
-          <div className="flex flex-col sm:flex-row gap-3 mb-6">
+          <div className="flex flex-col sm:flex-row gap-2 mb-6">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search documents..."
+                placeholder="Search by job, name, content..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className="pl-9"
+                className="pl-9 h-9 text-sm"
               />
             </div>
             <Select value={docFilter} onValueChange={v => setDocFilter(v as DocFilter)}>
-              <SelectTrigger className="w-full sm:w-[180px]">
-                <Filter className="mr-2 h-4 w-4" />
-                <SelectValue placeholder="Doc type" />
+              <SelectTrigger className="w-full sm:w-[160px] h-9 text-sm">
+                <Filter className="mr-1.5 h-3.5 w-3.5" />
+                <SelectValue placeholder="Type" />
               </SelectTrigger>
               <SelectContent>
                 {Object.entries(DOC_TYPES).map(([key, cfg]) => (
@@ -380,7 +394,7 @@ export default function AdminDocuments() {
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-[160px]">
+              <SelectTrigger className="w-full sm:w-[140px] h-9 text-sm">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -389,6 +403,17 @@ export default function AdminDocuments() {
                 <SelectItem value="approved">Approved</SelectItem>
                 <SelectItem value="rejected">Needs Revision</SelectItem>
                 <SelectItem value="draft">Draft</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={dateFilter} onValueChange={setDateFilter}>
+              <SelectTrigger className="w-full sm:w-[130px] h-9 text-sm">
+                <SelectValue placeholder="Date" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Time</SelectItem>
+                <SelectItem value="today">Today</SelectItem>
+                <SelectItem value="week">This Week</SelectItem>
+                <SelectItem value="month">This Month</SelectItem>
               </SelectContent>
             </Select>
           </div>

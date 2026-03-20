@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,6 +27,7 @@ import {
   ClipboardList,
   AlertTriangle,
   Heart,
+  CheckCircle2,
 } from "lucide-react";
 import { format } from "date-fns";
 import { DailySiteReportForm } from "@/components/forms/DailySiteReportForm";
@@ -55,20 +56,34 @@ const SWMS_HAZARDS = [
 
 // ── Form Components ──────────────────────────────
 function SWMSForm({ onSubmit, loading, defaults }: { onSubmit: (data: any) => void; loading: boolean; defaults?: { project_name: string; site_address: string } }) {
-  const [form, setForm] = useState({
-    project_name: defaults?.project_name || "",
-    site_address: defaults?.site_address || "",
-    date: format(new Date(), "yyyy-MM-dd"),
-    principal_contractor: "Peninsula Equine",
-    prepared_by: "",
-    work_description: "",
-    selected_hazards: [] as number[],
-    custom_hazards: [{ hazard: "", control: "", risk: "medium" }],
-    ppe_required: ["hard_hat", "hi_vis", "steel_cap_boots"],
-    emergency_contact: "000",
-    first_aid_location: "",
-    sign_off_name: "",
-    sign_off_agreed: false,
+  const SWMS_DRAFT_KEY = "draft_swms";
+  const [submitted, setSubmitted] = useState(false);
+
+  const getInitial = () => {
+    try {
+      const saved = localStorage.getItem(SWMS_DRAFT_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return null;
+  };
+
+  const [form, setForm] = useState(() => {
+    const saved = getInitial();
+    return {
+      project_name: defaults?.project_name || saved?.project_name || "",
+      site_address: defaults?.site_address || saved?.site_address || "",
+      date: format(new Date(), "yyyy-MM-dd"),
+      principal_contractor: "Peninsula Equine",
+      prepared_by: saved?.prepared_by || "",
+      work_description: saved?.work_description || "",
+      selected_hazards: saved?.selected_hazards || [] as number[],
+      custom_hazards: [{ hazard: "", control: "", risk: "medium" }],
+      ppe_required: saved?.ppe_required || ["hard_hat", "hi_vis", "steel_cap_boots"],
+      emergency_contact: "000",
+      first_aid_location: saved?.first_aid_location || "site_office",
+      sign_off_name: saved?.sign_off_name || "",
+      sign_off_agreed: false,
+    };
   });
 
   useEffect(() => {
@@ -76,6 +91,16 @@ function SWMSForm({ onSubmit, loading, defaults }: { onSubmit: (data: any) => vo
       setForm(prev => ({ ...prev, project_name: defaults.project_name || "", site_address: defaults.site_address || "" }));
     }
   }, [defaults?.project_name, defaults?.site_address]);
+
+  // Auto-save draft
+  const saveDraft = useCallback(() => {
+    try { localStorage.setItem(SWMS_DRAFT_KEY, JSON.stringify(form)); } catch {}
+  }, [form]);
+
+  useEffect(() => {
+    const t = setTimeout(saveDraft, 800);
+    return () => clearTimeout(t);
+  }, [saveDraft]);
 
   const PPE_OPTIONS = [
     { id: "hard_hat", label: "Hard Hat" },
@@ -107,46 +132,56 @@ function SWMSForm({ onSubmit, loading, defaults }: { onSubmit: (data: any) => vo
     }));
   };
 
+  if (submitted) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center space-y-3">
+        <CheckCircle2 className="h-12 w-12 text-green-500" />
+        <p className="text-lg font-semibold">SWMS Submitted</p>
+        <p className="text-sm text-muted-foreground">Your Safe Work Method Statement has been sent for admin review.</p>
+      </div>
+    );
+  }
+
   return (
-    <form onSubmit={(e) => { e.preventDefault(); onSubmit(form); }} className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label>Project / Job Name *</Label>
-          <Input value={form.project_name} onChange={e => setForm(p => ({ ...p, project_name: e.target.value }))} required placeholder="e.g. Arena Build — Red Hill" />
+    <form onSubmit={(e) => { e.preventDefault(); onSubmit(form); localStorage.removeItem(SWMS_DRAFT_KEY); setSubmitted(true); }} className="space-y-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="space-y-1.5">
+          <Label className="text-xs">Project / Job Name *</Label>
+          <Input value={form.project_name} onChange={e => setForm(p => ({ ...p, project_name: e.target.value }))} required placeholder="e.g. Arena Build — Red Hill" className="h-9 text-sm" />
         </div>
-        <div className="space-y-2">
-          <Label>Site Address *</Label>
-          <Input value={form.site_address} onChange={e => setForm(p => ({ ...p, site_address: e.target.value }))} required placeholder="123 Main Rd, Red Hill VIC" />
+        <div className="space-y-1.5">
+          <Label className="text-xs">Site Address *</Label>
+          <Input value={form.site_address} onChange={e => setForm(p => ({ ...p, site_address: e.target.value }))} required placeholder="123 Main Rd, Red Hill VIC" className="h-9 text-sm" />
         </div>
-        <div className="space-y-2">
-          <Label>Date *</Label>
-          <Input type="date" value={form.date} onChange={e => setForm(p => ({ ...p, date: e.target.value }))} required />
+        <div className="space-y-1.5">
+          <Label className="text-xs">Date *</Label>
+          <Input type="date" value={form.date} onChange={e => setForm(p => ({ ...p, date: e.target.value }))} required className="h-9 text-sm" />
         </div>
-        <div className="space-y-2">
-          <Label>Prepared By *</Label>
-          <Input value={form.prepared_by} onChange={e => setForm(p => ({ ...p, prepared_by: e.target.value }))} required placeholder="Your name" />
+        <div className="space-y-1.5">
+          <Label className="text-xs">Prepared By *</Label>
+          <Input value={form.prepared_by} onChange={e => setForm(p => ({ ...p, prepared_by: e.target.value }))} required placeholder="Your name" className="h-9 text-sm" />
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label>Work Description *</Label>
-        <Textarea value={form.work_description} onChange={e => setForm(p => ({ ...p, work_description: e.target.value }))} required placeholder="Describe the scope of work being carried out..." rows={3} />
+      <div className="space-y-1.5">
+        <Label className="text-xs">Work Description *</Label>
+        <Textarea value={form.work_description} onChange={e => setForm(p => ({ ...p, work_description: e.target.value }))} required placeholder="Describe the scope of work being carried out..." rows={3} className="text-sm" />
       </div>
 
       {/* Hazards */}
-      <div className="space-y-3">
-        <Label className="text-base font-semibold">Hazard Identification & Controls</Label>
-        <p className="text-sm text-muted-foreground">Select all hazards applicable to this job</p>
-        <div className="grid grid-cols-1 gap-2">
+      <div className="space-y-2">
+        <Label className="text-sm font-semibold">Hazard Identification & Controls</Label>
+        <p className="text-xs text-muted-foreground">Tap all hazards applicable to this job</p>
+        <div className="grid grid-cols-1 gap-1.5">
           {SWMS_HAZARDS.map((h, idx) => (
-            <label key={idx} className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${form.selected_hazards.includes(idx) ? "bg-accent/10 border-accent/40" : "hover:bg-muted/50"}`}>
-              <Checkbox checked={form.selected_hazards.includes(idx)} onCheckedChange={() => toggleHazard(idx)} />
+            <label key={idx} className={`flex items-start gap-2.5 p-2.5 rounded-lg border cursor-pointer transition-colors ${form.selected_hazards.includes(idx) ? "bg-accent/10 border-accent/40" : "hover:bg-muted/50"}`}>
+              <Checkbox checked={form.selected_hazards.includes(idx)} onCheckedChange={() => toggleHazard(idx)} className="mt-0.5" />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="font-medium text-sm">{h.hazard}</span>
-                  <Badge variant={h.risk === "high" ? "destructive" : h.risk === "medium" ? "secondary" : "outline"} className="text-xs">{h.risk}</Badge>
+                  <span className="font-medium text-xs">{h.hazard}</span>
+                  <Badge variant={h.risk === "high" ? "destructive" : h.risk === "medium" ? "secondary" : "outline"} className="text-[10px] px-1.5 py-0">{h.risk}</Badge>
                 </div>
-                <p className="text-xs text-muted-foreground mt-0.5">{h.control}</p>
+                <p className="text-[11px] text-muted-foreground mt-0.5 leading-tight">{h.control}</p>
               </div>
             </label>
           ))}
@@ -154,12 +189,12 @@ function SWMSForm({ onSubmit, loading, defaults }: { onSubmit: (data: any) => vo
       </div>
 
       {/* PPE */}
-      <div className="space-y-3">
-        <Label className="text-base font-semibold">PPE Required</Label>
-        <div className="flex flex-wrap gap-2">
+      <div className="space-y-2">
+        <Label className="text-sm font-semibold">PPE Required</Label>
+        <div className="flex flex-wrap gap-1.5">
           {PPE_OPTIONS.map(ppe => (
-            <label key={ppe.id} className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-sm cursor-pointer transition-colors ${form.ppe_required.includes(ppe.id) ? "bg-accent/20 border-accent/40 text-foreground" : "hover:bg-muted/50 text-muted-foreground"}`}>
-              <Checkbox checked={form.ppe_required.includes(ppe.id)} onCheckedChange={() => togglePPE(ppe.id)} className="h-3.5 w-3.5" />
+            <label key={ppe.id} className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs cursor-pointer transition-colors ${form.ppe_required.includes(ppe.id) ? "bg-accent/20 border-accent/40 text-foreground" : "hover:bg-muted/50 text-muted-foreground"}`}>
+              <Checkbox checked={form.ppe_required.includes(ppe.id)} onCheckedChange={() => togglePPE(ppe.id)} className="h-3 w-3" />
               {ppe.label}
             </label>
           ))}
@@ -167,31 +202,39 @@ function SWMSForm({ onSubmit, loading, defaults }: { onSubmit: (data: any) => vo
       </div>
 
       {/* Emergency */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label>Emergency Contact</Label>
-          <Input value={form.emergency_contact} onChange={e => setForm(p => ({ ...p, emergency_contact: e.target.value }))} placeholder="000" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="space-y-1.5">
+          <Label className="text-xs">Emergency Contact</Label>
+          <Input value={form.emergency_contact} onChange={e => setForm(p => ({ ...p, emergency_contact: e.target.value }))} placeholder="000" className="h-9 text-sm" />
         </div>
-        <div className="space-y-2">
-          <Label>First Aid Kit Location</Label>
-          <Input value={form.first_aid_location} onChange={e => setForm(p => ({ ...p, first_aid_location: e.target.value }))} placeholder="e.g. Site office / Ute" />
+        <div className="space-y-1.5">
+          <Label className="text-xs">First Aid Kit Location</Label>
+          <Select value={form.first_aid_location} onValueChange={v => setForm(p => ({ ...p, first_aid_location: v }))}>
+            <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="site_office">Site Office</SelectItem>
+              <SelectItem value="ute">Ute / Work Vehicle</SelectItem>
+              <SelectItem value="shed">Shed / Storage</SelectItem>
+              <SelectItem value="main_building">Main Building</SelectItem>
+              <SelectItem value="other">Other</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
       {/* Sign-off */}
-      <div className="p-4 border rounded-lg bg-muted/30 space-y-3">
-        <Label className="text-base font-semibold">Sign-Off Declaration</Label>
-        <div className="space-y-2">
-          <Label>Full Name *</Label>
-          <Input value={form.sign_off_name} onChange={e => setForm(p => ({ ...p, sign_off_name: e.target.value }))} required placeholder="Your full name" />
+      <div className="p-3 border rounded-lg bg-muted/30 space-y-2">
+        <div className="space-y-1.5">
+          <Label className="text-xs">Full Name *</Label>
+          <Input value={form.sign_off_name} onChange={e => setForm(p => ({ ...p, sign_off_name: e.target.value }))} required placeholder="Your full name" className="h-9 text-sm" />
         </div>
-        <label className="flex items-start gap-3 cursor-pointer">
+        <label className="flex items-start gap-2 cursor-pointer">
           <Checkbox checked={form.sign_off_agreed} onCheckedChange={(c) => setForm(p => ({ ...p, sign_off_agreed: !!c }))} className="mt-0.5" />
-          <span className="text-sm">I confirm that all workers have been briefed on the hazards and controls identified in this SWMS, and agree to follow safe work procedures.</span>
+          <span className="text-xs text-muted-foreground">I confirm all workers have been briefed on the hazards and controls in this SWMS.</span>
         </label>
       </div>
 
-      <Button type="submit" disabled={loading || !form.sign_off_agreed} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
+      <Button type="submit" disabled={loading || !form.sign_off_agreed} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground h-11">
         {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
         Submit SWMS
       </Button>
@@ -910,17 +953,14 @@ export default function StaffDocuments() {
       toast.error("Failed to submit document");
       console.error(error);
     } else {
-      toast.success(`${DOC_TYPES[docType].label} submitted successfully! Admin has been notified.`);
+      toast.success(`✅ ${DOC_TYPES[docType].label} submitted`);
 
       // Trigger email notification (non-blocking)
       supabase.functions.invoke("send-document-notification", {
         body: { document_type: docType, title, form_data: formData, submitted_by: user.email },
       }).catch(e => console.warn("Email notification failed:", e));
 
-      // Redirect to appropriate document portal
-      setTimeout(() => {
-        navigate(isTrainer ? "/trainer/documents" : "/staff/documents");
-      }, 1200);
+      // No redirect — inline success state in each form handles confirmation
     }
     setSubmitting(false);
   };
