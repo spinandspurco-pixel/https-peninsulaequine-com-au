@@ -131,6 +131,7 @@ export default function Gallery() {
               selectMode={selectMode}
               selectedIds={selectedIds}
               onToggleSelect={toggleSelect}
+              isFiltered={activeProject !== "all" || activeService !== "all" || activeLocation !== "all" || searchQuery.trim() !== ""}
               key={`${activeProject}-${activeService}-${activeLocation}-${searchQuery}`}
             />
 
