@@ -660,7 +660,7 @@ export default function Index() {
         <div className="relative py-14 sm:py-20">
           <div className="absolute inset-0">
             <img
-              src={trainerGlenn}
+              src={glennRiding}
               alt=""
               aria-hidden="true"
               className="absolute inset-0 w-full h-full object-cover brightness-[0.15] saturate-[0.4] contrast-[1.1]"
