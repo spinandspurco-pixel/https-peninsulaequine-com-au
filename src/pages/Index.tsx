@@ -1004,7 +1004,6 @@ export default function Index() {
           alt=""
           aria-hidden="true"
           loading="lazy"
-              decoding="async"
           decoding="async"
           className="absolute inset-0 w-full h-full object-cover scale-[1.1] brightness-[0.35] saturate-[0.6] contrast-[1.15]"
         />
