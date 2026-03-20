@@ -71,12 +71,12 @@ function ServiceIcon({ icon: Icon, className }: { icon: typeof Mountain; classNa
   return (
     <Icon
       className={cn(
-        "w-5 h-5 text-foreground/30 transition-all duration-500",
+        "w-5 h-5 text-foreground/30 transition-all duration-700",
         "group-hover:text-accent/70",
-        "opacity-0 animate-[drawIn_0.5s_ease-out_forwards]",
+        "opacity-0 animate-[drawIn_0.7s_ease-out_forwards]",
         className
       )}
-      strokeWidth={1.5}
+      strokeWidth={1.7}
     />
   );
 }
