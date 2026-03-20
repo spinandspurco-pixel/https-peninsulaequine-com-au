@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { useParallax } from "@/hooks/useParallax";
 
 // ── 1. HERO ──
-import coveredArenaFinishedLit from "@/assets/covered-arena-finished-lit.jpg";
+import projectsHeroDrone from "@/assets/projects-hero-drone-goldenhour.jpg";
 
 // ── 2. FEATURE PROJECT (Private Client) ──
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
@@ -207,8 +207,8 @@ export default function Gallery() {
           style={{ transform: `translateY(${parallax.offset * 0.4}px) scale(1.1)` }}
         >
            <img
-            src={coveredArenaFinishedLit}
-            alt="Covered arena — finished and lit at dusk"
+            src={projectsHeroDrone}
+            alt="Premium equestrian property — aerial view at golden hour"
             className="w-full h-full object-cover"
           />
         </div>
