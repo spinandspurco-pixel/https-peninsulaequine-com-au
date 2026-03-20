@@ -29,9 +29,9 @@ const AMENITIES = [
   { image: aberdeenAisle, title: "Wide Aisles", description: "Well-lit, clean aisles for safe horse handling", alt: "Clean, wide barn aisle with natural stone flooring and bright overhead lighting for safe horse handling" },
   { image: aberdeenBarnInterior, title: "Barn Interior", description: "Natural ventilation and abundant natural light", alt: "Spacious barn interior showing high ceilings with natural ventilation, chandeliers, and stained timber finishes" },
   { image: aberdeenStallsDetail, title: "Stall Details", description: "Heavy-duty hardware and quality timber finishes", alt: "Close-up of heavy-duty stall door hardware, sliding gate mechanism, and hand-finished timber detailing" },
-  { image: qldFacilityCourtyard, title: "Courtyard Area", description: "Covered wash bays and grooming areas", alt: "Covered courtyard area featuring wash bays and grooming stations surrounded by landscaped grounds" },
+  { image: coveredArenaLit, title: "Covered Arena", description: "Covered training and wash bay zones", alt: "Covered arena finished and illuminated at dusk, showcasing premium structural design" },
   { image: aberdeenDeck, title: "Viewing Deck", description: "Elevated viewing for owners and visitors", alt: "Elevated timber viewing deck overlooking paddocks and arena, designed for owners and visitors" },
-  { image: qldFacilityExterior1, title: "Paddock Turnout", description: "Safe, well-fenced individual and group paddocks", alt: "Panoramic view of well-fenced individual and group paddocks with safe post-and-rail boundaries" },
+  { image: mainRidgeFinishedInterior1, title: "Facility Interior", description: "Natural light and premium finishes throughout", alt: "Finished interior space with natural light and quality timber finishes" },
   { image: aberdeenExterior, title: "Facility Grounds", description: "Landscaped grounds with secure perimeter fencing", alt: "Exterior view of the completed facility showing landscaped grounds and secure perimeter fencing" },
 ];
 

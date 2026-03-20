@@ -79,19 +79,18 @@ const serviceGalleryImages: Record<string, { src: string; caption: string }[]> =
   ],
   "fencing": [
     { src: aberdeenStalls, caption: "Post and rail fencing" },
-    { src: qldFacilityExterior1, caption: "Paddock perimeter fencing" },
-    { src: qldFacilityExterior2, caption: "Gate and entry design" },
+    { src: aberdeenExterior, caption: "Paddock perimeter fencing" },
+    { src: coveredArenaBlack, caption: "Gate and entry design" },
   ],
   "infrastructure": [
-    { src: qldFacilityConstruction, caption: "Site development" },
-    { src: qldFacilityAerial1, caption: "Aerial view of facility" },
-    { src: qldFacilityExterior1, caption: "Access roads" },
+    { src: mainRidgeSitePrep, caption: "Site development" },
+    { src: mainRidgeBarnFrame, caption: "Structural framework" },
     { src: mainRidgeBrickwork, caption: "Drainage infrastructure" },
   ],
   "round-pens": [
-    { src: qldFacilityCourtyard, caption: "Round pen setup" },
+    { src: coveredArenaLit, caption: "Round pen setup" },
     { src: arenaSandPrep1, caption: "Footing preparation" },
-    { src: qldFacilityStalls, caption: "Adjacent paddock layout" },
+    { src: arenaSandPrep2, caption: "Surface grading" },
   ],
   "renovations": [
     { src: mainRidgeCiroWoodwork, caption: "Custom woodwork restoration" },
@@ -100,11 +99,11 @@ const serviceGalleryImages: Record<string, { src: string; caption: string }[]> =
     { src: mainRidgeBrickwork, caption: "Structural repair" },
   ],
   "full-facility": [
-    { src: qldFacilityConstruction, caption: "Full facility build" },
-    { src: qldFacilityAerial1, caption: "Master site layout" },
-    { src: qldFacilityExterior2, caption: "Completed exterior" },
-    { src: qldFacilityStalls, caption: "Stabling wing" },
-    { src: qldFacilityCourtyard, caption: "Courtyard & paddocks" },
+    { src: mainRidgeSitePrep, caption: "Full facility build" },
+    { src: mainRidgeFinishedInterior1, caption: "Completed interior" },
+    { src: mainRidgeFinishedInterior2, caption: "Interior detail" },
+    { src: premiumStableFacade, caption: "Stabling wing" },
+    { src: coveredArenaLit, caption: "Arena at dusk" },
   ],
   "clinics-events": [
     { src: equitanaArena, caption: "Competition arena" },

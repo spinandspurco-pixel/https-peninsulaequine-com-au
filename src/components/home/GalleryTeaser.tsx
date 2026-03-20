@@ -9,12 +9,12 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
 import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
-import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
+import coveredArenaLit from "@/assets/covered-arena-finished-lit.jpg";
 
 const images = [
   { src: aberdeenBarnInterior, alt: "Private Client — Mornington Peninsula — luxury barn interior" },
   { src: mainRidgeInterior, alt: "Main Ridge — open barn with natural light" },
-  { src: qldCourtyard, alt: "Queensland Facility — courtyard" },
+  { src: coveredArenaLit, alt: "Covered Arena — finished and lit at dusk" },
 ];
 
 export function GalleryTeaser() {

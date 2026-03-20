@@ -38,10 +38,10 @@ const serviceImages: Record<string, string> = {
   "arena-construction": equitanaArena,
   "barn-construction": aberdeenBarnInterior,
   "fencing": aberdeenStalls,
-  "infrastructure": qldFacilityConstruction,
-  "round-pens": qldFacilityCourtyard,
+  "infrastructure": mainRidgeSitePrep,
+  "round-pens": coveredArenaLit,
   "renovations": mainRidgeCiroWoodwork,
-  "full-facility": qldFacilityConstruction,
+  "full-facility": mainRidgeSitePrep,
   "clinics-events": equitanaArena,
 };
 

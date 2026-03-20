@@ -84,26 +84,6 @@ export const CASE_STUDIES: CaseStudyData[] = [
     closingLine: "Built to perform. Built to last.",
   },
   {
-    slug: "qld-facility",
-    title: "Queensland Facility",
-    subtitle: "Full Private Facility · Arena · Stables · Grounds",
-    hero: qldCourtyard,
-    problem:
-      "A greenfield site with challenging soil conditions and extreme weather exposure. The brief: a complete equestrian facility designed for professional use in tropical conditions.",
-    build:
-      "Comprehensive site development — engineered drainage, climate-adapted stable design, covered arena, and integrated ground systems built to withstand Queensland's seasonal extremes.",
-    outcome:
-      "A facility that operates at the highest level year-round, regardless of conditions. From float access to wash bay — every system works together.",
-    images: [
-      { src: qldAerial1, alt: "Aerial view of completed facility" },
-      { src: qldExterior1, alt: "Stable exterior with covered walkway" },
-      { src: qldStalls, alt: "Custom stall fit-out" },
-      { src: qldExterior2, alt: "Arena and grounds" },
-      { src: qldConstruction, alt: "Construction phase" },
-    ],
-    closingLine: "Engineered for extremes. Built to endure.",
-  },
-  {
     slug: "equitana",
     title: "Equitana Melbourne",
     subtitle: "Competition Arena · Surface Engineering",

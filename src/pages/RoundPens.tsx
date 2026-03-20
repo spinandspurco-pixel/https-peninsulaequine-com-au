@@ -9,9 +9,9 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { CheckCircle, ArrowRight, Phone, Ruler, Shield, Layers, CircleDot } from "lucide-react";
 import { siteConfig, services } from "@/data/content";
 
-import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
+import coveredArenaLit from "@/assets/covered-arena-finished-lit.jpg";
 import arenaSandPrep1 from "@/assets/arena-sand-prep-1.jpg";
-import qldStalls from "@/assets/qld-facility-stalls.jpg";
+import arenaSandPrep2 from "@/assets/arena-sand-prep-2.jpg";
 import blueprintFacility from "@/assets/blueprint-facility.png";
 import blueprintDetail from "@/assets/blueprint-detail.png";
 import roundPenDiagram from "@/assets/round-pen-diagram.png";
