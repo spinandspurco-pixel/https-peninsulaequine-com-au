@@ -71,6 +71,12 @@ function SWMSForm({ onSubmit, loading, defaults }: { onSubmit: (data: any) => vo
     sign_off_agreed: false,
   });
 
+  useEffect(() => {
+    if (defaults) {
+      setForm(prev => ({ ...prev, project_name: defaults.project_name || "", site_address: defaults.site_address || "" }));
+    }
+  }, [defaults?.project_name, defaults?.site_address]);
+
   const PPE_OPTIONS = [
     { id: "hard_hat", label: "Hard Hat" },
     { id: "hi_vis", label: "Hi-Vis Vest" },
