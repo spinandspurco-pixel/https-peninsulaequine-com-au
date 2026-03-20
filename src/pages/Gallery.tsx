@@ -25,10 +25,6 @@ import mainRidgeCraneLift from "@/assets/main-ridge-crane-lift.jpg";
 import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
 import mainRidgeTimberPosts from "@/assets/main-ridge-timber-posts.jpg";
 import mainRidgePostDepth from "@/assets/main-ridge-post-depth.jpg";
-import mainRidgeFrameProgress from "@/assets/main-ridge-frame-progress.jpg";
-import mainRidgeFoundationPour from "@/assets/main-ridge-foundation-pour.jpg";
-import mainRidgeSitePrep from "@/assets/main-ridge-site-prep.jpg";
-import mainRidgeFrameAngle from "@/assets/main-ridge-frame-angle.jpg";
 import mainRidgeFrameWide from "@/assets/main-ridge-frame-wide.jpg";
 
 // ── 4. GROUNDLOCK / SYSTEM ──
