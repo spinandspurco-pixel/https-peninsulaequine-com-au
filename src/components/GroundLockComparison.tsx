@@ -1,13 +1,12 @@
-import { cn } from "@/lib/utils";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 
 const CRITERIA = [
-  { label: "Drainage", standard: "Surface runoff — pooling, mud", engineered: "Sub-base channels water laterally off-site" },
+  { label: "Drainage", standard: "Surface runoff, pooling, mud", engineered: "Sub-base channels water laterally off-site" },
   { label: "Stability", standard: "Degrades under traffic and weather", engineered: "Interlocking panels distribute load permanently" },
   { label: "Longevity", standard: "2–5 years before rework", engineered: "Decades of consistent performance" },
-  { label: "Consistency", standard: "Uneven, seasonal variation", engineered: "Uniform surface — wet or dry" },
+  { label: "Consistency", standard: "Uneven surface, seasonal variation", engineered: "Uniform footing — wet or dry" },
   { label: "Maintenance", standard: "Ongoing regrading, material top-up", engineered: "Minimal intervention once installed" },
-  { label: "Horse Welfare", standard: "Inconsistent footing, joint stress", engineered: "Stable footing — better for joints and soundness" },
+  { label: "Horse Welfare", standard: "Inconsistent footing, joint stress", engineered: "Stable surface — better for joints and soundness" },
 ];
 
 export function GroundLockComparison() {
@@ -15,12 +14,12 @@ export function GroundLockComparison() {
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-20">
         <RevealOnScroll direction="up">
-          <p className="text-overline mb-6">Why It Matters</p>
+          <p className="text-overline mb-6">Performance Comparison</p>
         </RevealOnScroll>
         <RevealOnScroll direction="up" delay={80}>
           <h2 className="heading-section text-foreground">
             Standard Build<br />
-            <span className="text-muted-foreground/30">vs</span> Engineered System
+            <span className="text-muted-foreground/30">vs</span> GroundLock™
           </h2>
         </RevealOnScroll>
       </div>
@@ -36,7 +35,7 @@ export function GroundLockComparison() {
           </div>
           <div className="col-span-4">
             <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-accent/60">
-              GroundLock™ System
+              GroundLock™
             </p>
           </div>
         </div>
