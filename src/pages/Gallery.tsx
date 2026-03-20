@@ -8,51 +8,24 @@ import { ArrowRight, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useParallax } from "@/hooks/useParallax";
 
-// ── 1. ESTABLISHING / HERO ──
+// ── 1. HERO ──
 import coveredArenaFinishedLit from "@/assets/covered-arena-finished-lit.jpg";
 
-// ── 2. FEATURE PROJECT (Aberdeen) ──
+// ── 2. FEATURE PROJECT (Private Client) ──
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
 import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
 import aberdeenAisle from "@/assets/aberdeen-aisle.jpg";
-import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
 import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
 
-// ── 3. BUILD PROCESS ──
-import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
-import mainRidgeFrameTrench from "@/assets/main-ridge-frame-trench.jpg";
-import mainRidgeCraneLift from "@/assets/main-ridge-crane-lift.jpg";
-import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
-
-import mainRidgePostDepth from "@/assets/main-ridge-post-depth.jpg";
-import mainRidgeFrameWide from "@/assets/main-ridge-frame-wide.jpg";
-
-// ── 4. GROUNDLOCK / SYSTEM ──
-import arenaSandPrep1 from "@/assets/arena-sand-prep-1.jpg";
-import arenaSandPrep3 from "@/assets/arena-sand-prep-3.jpg";
-import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
-import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
-
-// ── 5. EDITORIAL / FINISHED RESULTS ──
+// ── 3. FINISHED RESULTS ──
 import aberdeenDeck from "@/assets/aberdeen-deck.jpg";
-import stoneworkStables2 from "@/assets/stonework-stables-2.jpg";
-import equitanaArena3 from "@/assets/equitana-arena-3.jpg";
 import premiumStableFacade from "@/assets/premium-stable-facade.png";
 import coveredArenaBlackExterior from "@/assets/covered-arena-black-exterior.jpg";
 
-// ── 6. DETAIL / CRAFT ──
-import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
-import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
-
-// ── 7. CUSTOM BUILDS ──
+// ── 4. CUSTOM BUILDS ──
 import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
 import timberCubbyFront from "@/assets/timber-cubby-front.webp";
-import timberCubbyCockatoo from "@/assets/timber-cubby-cockatoo.jpg";
-import roofingSteelDetail from "@/assets/roofing-steel-detail.jpg";
-import aberdeenInteriorStonework from "@/assets/aberdeen-interior-stonework.jpg";
-import mainRidgeWorker from "@/assets/main-ridge-worker.jpg";
-import mainRidgeCiroWoodwork1 from "@/assets/main-ridge-ciro-woodwork-1.jpg";
-import mainRidgeCiroWoodwork3 from "@/assets/main-ridge-ciro-woodwork-3.jpg";
+import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
 
 import {
   type GalleryItem,
@@ -268,7 +241,7 @@ export default function Gallery() {
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
-          2. FEATURE PROJECT — Private Client — Mornington Peninsula (5 images)
+          2. FEATURE PROJECT — Private Client — Mornington Peninsula
           ═══════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grain-texture" />
@@ -300,7 +273,7 @@ export default function Gallery() {
                     </div>
                     <div>
                       <dt className="text-[9px] uppercase tracking-[0.3em] text-muted-foreground/25 font-mono">Scope</dt>
-                      <dd className="text-sm text-muted-foreground/50 mt-0.5">Stables, stonework, timber joinery, arena</dd>
+                      <dd className="text-sm text-muted-foreground/50 mt-0.5">Stables, stonework, timber joinery</dd>
                     </div>
                   </dl>
                   <p className="text-xs text-muted-foreground/30 leading-[1.8] font-serif italic">
@@ -308,11 +281,10 @@ export default function Gallery() {
                   </p>
                 </div>
               </div>
-              {/* Supporting images — 4 across */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+              {/* Supporting images — 3 across */}
+              <div className="grid grid-cols-3 gap-4 sm:gap-5">
                 <EditorialImage src={aberdeenStalls} alt="Private client — custom stalls" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenStalls)} />
                 <EditorialImage src={aberdeenAisle} alt="Private client — stone aisle" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenAisle)} />
-                <EditorialImage src={aberdeenStonework} alt="Private client — stonework masonry" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenStonework)} />
                 <EditorialImage src={aberdeenExterior} alt="Private client — completed exterior" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenExterior)} />
               </div>
             </RevealOnScroll>
@@ -323,96 +295,7 @@ export default function Gallery() {
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
-          3. BUILD PROCESS — construction sequence strip
-          ═══════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 grain-texture" />
-        <div className="py-20 sm:py-28 relative">
-          <div className="section-container-wide relative z-[1]">
-            <RevealOnScroll direction="up" duration={700}>
-              <div className="text-center max-w-md mx-auto mb-12">
-                <p className="text-[9px] uppercase tracking-[0.4em] text-accent/40 font-mono mb-3">The Process</p>
-                <h2 className="font-serif text-xl sm:text-2xl text-foreground/80 font-normal tracking-[0.02em]">
-                  From Ground to Structure
-                </h2>
-              </div>
-            </RevealOnScroll>
-
-            {/* Row 1 — wide establishing + tall detail */}
-            <RevealOnScroll direction="up" duration={800} delay={80}>
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 mb-4 sm:mb-5">
-                <div className="lg:col-span-8">
-                  <EditorialImage src={mainRidgeFrameWide} alt="Main Ridge timber frame build phase" aspect="aspect-[16/10]" onClick={() => openLightbox(mainRidgeFrameWide)} />
-                </div>
-                <div className="lg:col-span-4">
-                  <EditorialImage src={mainRidgePostDepth} alt="Post hole depth measurement" aspect="aspect-[3/4]" className="h-full" onClick={() => openLightbox(mainRidgePostDepth)} />
-                </div>
-              </div>
-            </RevealOnScroll>
-
-            {/* Row 2 — three process shots */}
-            <RevealOnScroll direction="up" duration={700} delay={120}>
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mb-4 sm:mb-5">
-                <EditorialImage src={mainRidgeRebarFoundation} alt="Reinforced rebar foundation" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeRebarFoundation)} />
-                <EditorialImage src={mainRidgeFrameTrench} alt="Foundation trench with frame" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeFrameTrench)} />
-                <div className="col-span-2 lg:col-span-1">
-                  <EditorialImage src={mainRidgeCraneLift} alt="Crane lifting timber frame" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeCraneLift)} />
-                </div>
-              </div>
-            </RevealOnScroll>
-
-            {/* Row 3 — wide completed frame */}
-            <RevealOnScroll direction="up" duration={700} delay={200}>
-              <EditorialImage src={mainRidgeBarnFrame} alt="Complete barn timber frame" aspect="aspect-[21/9]" onClick={() => openLightbox(mainRidgeBarnFrame)} />
-            </RevealOnScroll>
-          </div>
-        </div>
-      </section>
-
-      <ChapterDivider />
-
-      {/* ═══════════════════════════════════════════════════
-          4. GROUNDLOCK / SYSTEM STRIP
-          ═══════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden">
-        <div className="relative h-[50vh] sm:h-[55vh]">
-          <img
-            src={arenaSandPrep3}
-            alt="GroundLock ground stabilisation system"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/30" />
-          <div className="absolute inset-0 flex items-center justify-center z-10">
-            <div className="text-center max-w-lg px-6">
-              <RevealOnScroll direction="up" duration={800}>
-                <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/40 font-mono mb-4">
-                  Proprietary System
-                </p>
-                <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/90 font-normal tracking-[0.03em] mb-4">
-                  GroundLock™
-                </h2>
-                <p className="text-xs sm:text-sm text-muted-foreground/30 leading-relaxed font-serif italic">
-                  Interlocking ground stabilisation engineered for equine performance surfaces.
-                </p>
-              </RevealOnScroll>
-            </div>
-          </div>
-        </div>
-        {/* System supporting images */}
-        <div className="section-container-wide py-10 sm:py-14">
-          <RevealOnScroll direction="up" duration={700}>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-              <EditorialImage src={arenaSandPrep1} alt="Arena sand distribution" aspect="aspect-[4/3]" onClick={() => openLightbox(arenaSandPrep1)} />
-              <EditorialImage src={mainRidgeArenaGrading} alt="Arena surface grading" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeArenaGrading)} />
-              <EditorialImage src={equitanaArena1} alt="Equitana competition arena" aspect="aspect-[4/3]" onClick={() => openLightbox(equitanaArena1)} />
-              <EditorialImage src={equitanaArena3} alt="Equitana arena with seating" aspect="aspect-[4/3]" onClick={() => openLightbox(equitanaArena3)} />
-            </div>
-          </RevealOnScroll>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════
-          5. FINISHED RESULTS — editorial mixed grid
+          3. FINISHED RESULTS — editorial mixed grid
           ═══════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grain-texture" />
@@ -427,36 +310,21 @@ export default function Gallery() {
               </div>
             </RevealOnScroll>
 
-            {/* Row 1 — wide interior + tall stone detail */}
+            {/* Row 1 — wide deck + tall stable facade */}
             <RevealOnScroll direction="up" duration={800}>
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 mb-4 sm:mb-5">
                 <div className="lg:col-span-7">
                   <EditorialImage src={aberdeenDeck} alt="Private client — outdoor deck" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenDeck)} />
                 </div>
                 <div className="lg:col-span-5">
-                  <EditorialImage src={stoneworkStables2} alt="Stonework stables detail" aspect="aspect-[3/4]" className="h-full" onClick={() => openLightbox(stoneworkStables2)} />
+                  <EditorialImage src={premiumStableFacade} alt="Premium stable — architectural facade" aspect="aspect-[3/4]" className="h-full" onClick={() => openLightbox(premiumStableFacade)} />
                 </div>
               </div>
             </RevealOnScroll>
 
-            {/* Row 2 — offset pair */}
+            {/* Row 2 — wide arena exterior */}
             <RevealOnScroll direction="up" duration={700} delay={80}>
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 mb-4 sm:mb-5">
-                <div className="lg:col-span-5 lg:mt-8">
-                  <EditorialImage src={premiumStableFacade} alt="Premium stable — architectural facade" aspect="aspect-[3/4]" onClick={() => openLightbox(premiumStableFacade)} />
-                </div>
-                <div className="lg:col-span-7 lg:-mt-6">
-                  <EditorialImage src={coveredArenaBlackExterior} alt="Covered arena — black exterior cladding" aspect="aspect-[16/9]" onClick={() => openLightbox(coveredArenaBlackExterior)} />
-                </div>
-              </div>
-            </RevealOnScroll>
-
-            {/* Row 3 — two polished results */}
-            <RevealOnScroll direction="up" duration={700} delay={120}>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
-                <EditorialImage src={equitanaArena3} alt="Equitana — competition arena with seating" aspect="aspect-[4/3]" onClick={() => openLightbox(equitanaArena3)} />
-                <EditorialImage src={mainRidgeArenaGrading} alt="Main Ridge — arena surface grading" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeArenaGrading)} />
-              </div>
+              <EditorialImage src={coveredArenaBlackExterior} alt="Covered arena — black exterior cladding" aspect="aspect-[21/9]" onClick={() => openLightbox(coveredArenaBlackExterior)} />
             </RevealOnScroll>
           </div>
         </div>
@@ -465,7 +333,7 @@ export default function Gallery() {
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
-          5b. CUSTOM BUILDS — steel sheds & bespoke timber
+          4. CUSTOM BUILDS — steel sheds & bespoke timber
           ═══════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grain-texture" />
@@ -487,30 +355,23 @@ export default function Gallery() {
                   <EditorialImage src={steelShedDramatic} alt="Custom colorbond barn with dramatic sky" aspect="aspect-[16/10]" onClick={() => openLightbox(steelShedDramatic)} />
                 </div>
                 <div className="lg:col-span-5">
-                  <EditorialImage src={timberCubbyCockatoo} alt="Timber structure with cockatoo" aspect="aspect-[3/4]" className="h-full" onClick={() => openLightbox(timberCubbyCockatoo)} />
+                  <EditorialImage src={timberCubbyFront} alt="Western-style bespoke timber cubby" aspect="aspect-[3/4]" className="h-full" onClick={() => openLightbox(timberCubbyFront)} />
                 </div>
               </div>
             </RevealOnScroll>
 
-            {/* Row 2 — three detail shots */}
+            {/* Row 2 — craft detail */}
             <RevealOnScroll direction="up" duration={700} delay={120}>
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-                <EditorialImage src={timberCubbyFront} alt="Western-style bespoke timber cubby" aspect="aspect-[4/3]" onClick={() => openLightbox(timberCubbyFront)} />
-                <EditorialImage src={roofingSteelDetail} alt="Steel roofing — galvanised ridge capping" aspect="aspect-[4/3]" onClick={() => openLightbox(roofingSteelDetail)} />
-                <div className="col-span-2 lg:col-span-1">
-                  <EditorialImage src={roofingSteelDetail} alt="Steel roofing — galvanised ridge capping" aspect="aspect-[4/3]" onClick={() => openLightbox(roofingSteelDetail)} />
-                </div>
-              </div>
+              <EditorialImage src={mainRidgeBrickwork} alt="Main Ridge — custom reclaimed brickwork" aspect="aspect-[21/9]" onClick={() => openLightbox(mainRidgeBrickwork)} />
             </RevealOnScroll>
           </div>
         </div>
       </section>
 
-
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
-          7. BROWSE ALL — expandable filter grid
+          5. BROWSE ALL — expandable filter grid
           ═══════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grain-texture" />
@@ -582,7 +443,7 @@ export default function Gallery() {
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
-          8. FINAL CTA — cinematic full-width image
+          6. FINAL CTA — cinematic full-width
           ═══════════════════════════════════════════════════ */}
       <section className="relative h-[60vh] sm:h-[70vh] overflow-hidden">
         <img
