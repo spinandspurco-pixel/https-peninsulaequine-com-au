@@ -283,21 +283,22 @@ export function LoadingSplash({
             : "opacity 0.8s ease-out",
         }}
       >
-        {/* SVG monogram — visible throughout, fades when raster is ready */}
+        {/* SVG monogram — visible throughout, never a blank box */}
         <PEMonogramSVG
           phase={phase}
           className="w-full h-full"
         />
 
-        {/* Raster logo — crossfades in during drift once preloaded */}
+        {/* Raster logo — only shown once preloaded, fades in over SVG */}
         {showRasterLogo && (
           <img
             src={logoPeMark}
-            alt="Peninsula Equine"
-            className="absolute inset-0 w-full h-full object-contain brightness-0 invert drop-shadow-[0_0_30px_rgba(255,255,255,0.08)]"
+            alt=""
+            className="absolute inset-0 w-full h-full object-contain"
             style={{
-              opacity: 1,
-              animation: "splash-draw 0.6s ease-out forwards",
+              opacity: 0,
+              filter: "brightness(0) invert(1) drop-shadow(0 0 20px rgba(255,255,255,0.06))",
+              animation: "rasterFadeIn 0.8s 0.15s ease-out forwards",
             }}
           />
         )}
