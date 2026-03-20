@@ -277,7 +277,7 @@ export default function Index() {
       {/* ═══ 2. INTRO — SPLIT SCREEN ═══════════════════════ */}
       <SectionBleed from="background" to="background" />
       <section className="relative overflow-hidden">
-        <div className={`${SP_LG} sm:py-28 lg:py-32 relative`}>
+        <div className={`${SP_SECTION} relative`}>
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-6xl mx-auto relative z-[1]">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
