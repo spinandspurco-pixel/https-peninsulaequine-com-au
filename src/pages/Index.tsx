@@ -321,47 +321,48 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ 3. SERVICES GRID — 2x3 SYSTEM-STYLE ══════════ */}
-      <SectionBleed from="background" to="card" />
+      {/* ═══ 3. CAPABILITIES — borderless, ecosystem-consistent ══════════ */}
       <section className="relative overflow-hidden">
-        <div className={`${SP_SECTION} bg-card relative`}>
-          <div className="absolute inset-0 contour-texture" />
-          <div className="absolute inset-0 grain-texture opacity-40" />
+        <div className="py-28 sm:py-36 lg:py-44 bg-card relative">
+          <div className="absolute inset-0 grain-texture opacity-30" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
-            {/* Section header — left-aligned */}
-            <div className={`${SP_HEAD}`}>
+            {/* Section header */}
+            <div className="text-center mb-20 sm:mb-24">
               <RevealOnScroll direction="up">
-                <RevealLine className="mb-6" width="w-10" />
+                <div className="flex items-center justify-center gap-5 mb-10">
+                  <div className="w-10 h-px bg-accent/20" />
+                  <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/40">What We Build</p>
+                  <div className="w-10 h-px bg-accent/20" />
+                </div>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={80}>
-                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">What We Build</p>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={120}>
-                <h2 className="heading-section text-foreground">
+              <RevealOnScroll direction="up" delay={100}>
+                <h2 className="font-serif text-2xl sm:text-3xl md:text-[2.25rem] font-light text-foreground/80 leading-[1.25] max-w-xl mx-auto">
                   Capabilities
                 </h2>
               </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={200}>
+                <p className="mt-8 text-[12px] sm:text-[13px] text-muted-foreground/30 leading-[2.2] max-w-md mx-auto">
+                  Equine construction and rural infrastructure — shaped by how properties
+                  actually move, drain, wear, and function under daily use.
+                </p>
+              </RevealOnScroll>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border/10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-5">
               {SERVICES.map((svc, i) => (
                 <RevealOnScroll key={svc.title} direction="up" stagger={i} staggerInterval={80}>
                   <Link
                     to={svc.href}
-                    className="group relative flex flex-col p-8 bg-card hover:bg-secondary/30 transition-all duration-700 hover:-translate-y-0.5 overflow-hidden min-h-[200px]"
+                    className="group relative flex flex-col p-8 sm:p-10 min-h-[240px] border border-border/20 hover:border-border/40 bg-card/40 hover:bg-card/70 transition-all duration-700 ease-out"
                   >
-                    {/* Subtle glow on hover */}
-                    <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                      style={{ background: "radial-gradient(ellipse at 30% 30%, hsl(var(--accent) / 0.03) 0%, transparent 60%)" }}
-                    />
-                    <div className="relative z-10 flex flex-col h-full">
-                      <ServiceIcon icon={svc.icon} className={`mb-6`} />
-                      <h3 className="font-serif text-[15px] font-medium text-foreground mb-3 tracking-[0.02em] group-hover:text-accent transition-colors duration-500">
-                        {svc.title}
-                      </h3>
-                      <p className="text-[12px] text-muted-foreground/35 leading-[1.9] max-w-[240px] flex-1">{svc.desc}</p>
-                      <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/0 group-hover:text-accent/40 transition-all duration-500 mt-6 self-end" />
+                    <div className="absolute top-0 left-0 w-8 h-px bg-accent/20 group-hover:w-14 group-hover:bg-accent/40 transition-all duration-700" />
+                    <ServiceIcon icon={svc.icon} className="mb-6" />
+                    <h3 className="font-serif text-[15px] font-medium text-foreground/65 mb-4 tracking-[0.02em] group-hover:text-foreground/90 transition-colors duration-500">
+                      {svc.title}
+                    </h3>
+                    <p className="text-[12px] text-muted-foreground/25 leading-[2.1] max-w-[260px] flex-1">{svc.desc}</p>
+                    <div className="flex items-center gap-2 mt-6 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0">
+                      <ArrowRight className="w-3 h-3 text-accent/40" />
                     </div>
                   </Link>
                 </RevealOnScroll>
