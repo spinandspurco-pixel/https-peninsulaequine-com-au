@@ -130,7 +130,7 @@ function ProjectsScroll() {
             <img
               src={project.src}
               alt={project.alt}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2200ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.08] brightness-[0.8] group-hover:brightness-[0.92]"
+              className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.8] group-hover:brightness-[0.92]"
               loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-background/10" />
@@ -305,10 +305,10 @@ export default function Index() {
               </div>
               {/* Video */}
               <RevealOnScroll direction="up" delay={200}>
-                <div className="relative aspect-[4/5] overflow-hidden">
+                <div className="relative aspect-[4/5] overflow-hidden img-feather-sides lg:img-overlap-top lg:img-overlap-bottom">
                   <video
                     autoPlay muted loop playsInline
-                    className="absolute inset-0 w-full h-full object-cover brightness-[0.65] contrast-[1.1] saturate-[0.7]"
+                    className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.65] contrast-[1.1] saturate-[0.7]"
                   >
                     <source src={buildVideo} type="video/mp4" />
                   </video>
@@ -489,12 +489,12 @@ export default function Index() {
 
             {/* Build process imagery — cropped tight to hands/tools */}
             <RevealOnScroll direction="up" delay={200}>
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mt-16">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mt-16 img-bridge">
                 <div className="relative aspect-[16/10] overflow-hidden group col-span-2 lg:col-span-2">
                   <img
                     src={mainRidgeRebarFoundation}
                     alt="Foundation reinforcement"
-                    className="absolute inset-0 w-full h-full object-cover brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8] transition-all duration-[900ms]"
+                    className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8]"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-background/10" />
@@ -503,7 +503,7 @@ export default function Index() {
                   <img
                     src={mainRidgeCiroWoodwork4}
                     alt="Timber hand-crafting detail"
-                    className="absolute inset-0 w-full h-full object-cover object-top brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8] transition-all duration-[900ms]"
+                    className="absolute inset-0 w-full h-full object-cover object-top img-immersive brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8]"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-background/10" />
@@ -515,9 +515,9 @@ export default function Index() {
       </section>
 
       {/* ═══ MATERIAL DETAIL STRIP — textures, no text ═══════ */}
-      <section className="relative overflow-hidden" aria-label="Material details">
+      <section className="relative overflow-hidden -my-4 sm:-my-6" aria-label="Material details">
         <RevealOnScroll direction="up" duration={700}>
-          <div className="grid grid-cols-3 sm:grid-cols-6">
+          <div className="grid grid-cols-3 sm:grid-cols-6 img-feather">
             {[
               { src: mainRidgeTimber, alt: "Timber grain detail" },
               { src: arenaSandPrep2, alt: "Arena sand preparation" },
@@ -530,7 +530,7 @@ export default function Index() {
                 <img
                   src={img.src}
                   alt={img.alt}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05] brightness-[0.65] saturate-[0.7] contrast-[1.1]"
+                  className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.65] saturate-[0.7] contrast-[1.1]"
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-background/10 group-hover:bg-transparent transition-colors duration-700" />
@@ -585,11 +585,11 @@ export default function Index() {
           <div className="section-container relative z-10 max-w-5xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
               <RevealOnScroll direction="up">
-                <div className="relative aspect-[4/3] overflow-hidden group">
+                <div className="relative aspect-[4/3] overflow-hidden group img-feather-sides lg:img-overlap-top lg:img-overlap-bottom">
                   <img
                     src={peBanner}
                     alt="Equus Forge — Peninsula Equine product line"
-                    className="absolute inset-0 w-full h-full object-cover brightness-[0.75] group-hover:brightness-[0.85] transition-all duration-700"
+                    className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.75] group-hover:brightness-[0.85]"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/50 via-primary/10 to-transparent" />
@@ -664,9 +664,9 @@ export default function Index() {
           src={heroSunset}
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover brightness-[0.35] saturate-[0.6] contrast-[1.15]"
+          className="absolute inset-0 w-full h-full object-cover scale-[1.1] brightness-[0.35] saturate-[0.6] contrast-[1.15]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/30" />
         <div className="absolute inset-0 grain-texture" />
 
         <div className="absolute inset-0 flex items-center justify-center z-10">
