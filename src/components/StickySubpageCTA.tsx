@@ -95,18 +95,20 @@ export function StickySubpageCTA({
 
           {/* Actions */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            {/* Book a Lesson — secondary */}
-            <Link
-              to="/book-lesson"
-              className={cn(
-              "hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium",
-                "border border-primary-foreground/20 text-primary-foreground hover:text-primary-foreground hover:border-accent/40",
-                "transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
-              )}
-            >
-              <CalendarIcon className="h-3.5 w-3.5" />
-              Book Lesson
-            </Link>
+            {/* Book a Lesson — secondary (hidden on infrastructure pages) */}
+            {!hideSecondary && (
+              <Link
+                to="/book-lesson"
+                className={cn(
+                "hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium",
+                  "border border-primary-foreground/20 text-primary-foreground hover:text-primary-foreground hover:border-accent/40",
+                  "transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+                )}
+              >
+                <CalendarIcon className="h-3.5 w-3.5" />
+                Book Lesson
+              </Link>
+            )}
 
             {/* Primary CTA */}
             {onCtaClick ? (
