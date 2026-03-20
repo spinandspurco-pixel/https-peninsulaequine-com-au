@@ -370,20 +370,20 @@ export default function AdminDocuments() {
           </div>
 
           {/* Filters */}
-          <div className="flex flex-col sm:flex-row gap-3 mb-6">
+          <div className="flex flex-col sm:flex-row gap-2 mb-6">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search documents..."
+                placeholder="Search by job, name, content..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className="pl-9"
+                className="pl-9 h-9 text-sm"
               />
             </div>
             <Select value={docFilter} onValueChange={v => setDocFilter(v as DocFilter)}>
-              <SelectTrigger className="w-full sm:w-[180px]">
-                <Filter className="mr-2 h-4 w-4" />
-                <SelectValue placeholder="Doc type" />
+              <SelectTrigger className="w-full sm:w-[160px] h-9 text-sm">
+                <Filter className="mr-1.5 h-3.5 w-3.5" />
+                <SelectValue placeholder="Type" />
               </SelectTrigger>
               <SelectContent>
                 {Object.entries(DOC_TYPES).map(([key, cfg]) => (
@@ -394,7 +394,7 @@ export default function AdminDocuments() {
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-[160px]">
+              <SelectTrigger className="w-full sm:w-[140px] h-9 text-sm">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -403,6 +403,17 @@ export default function AdminDocuments() {
                 <SelectItem value="approved">Approved</SelectItem>
                 <SelectItem value="rejected">Needs Revision</SelectItem>
                 <SelectItem value="draft">Draft</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={dateFilter} onValueChange={setDateFilter}>
+              <SelectTrigger className="w-full sm:w-[130px] h-9 text-sm">
+                <SelectValue placeholder="Date" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Time</SelectItem>
+                <SelectItem value="today">Today</SelectItem>
+                <SelectItem value="week">This Week</SelectItem>
+                <SelectItem value="month">This Month</SelectItem>
               </SelectContent>
             </Select>
           </div>
