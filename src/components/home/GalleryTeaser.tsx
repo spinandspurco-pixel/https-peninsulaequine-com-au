@@ -12,7 +12,7 @@ import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
 import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
 
 const images = [
-  { src: aberdeenBarnInterior, alt: "Aberdeen Farm — luxury barn interior" },
+  { src: aberdeenBarnInterior, alt: "Private Client — Mornington Peninsula — luxury barn interior" },
   { src: mainRidgeInterior, alt: "Main Ridge — open barn with natural light" },
   { src: qldCourtyard, alt: "Queensland Facility — courtyard" },
 ];

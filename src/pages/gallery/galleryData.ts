@@ -8,7 +8,7 @@ import mainRidgeCiroWoodwork2 from "@/assets/main-ridge-ciro-woodwork-2.jpg";
 import mainRidgeCiroWoodwork3 from "@/assets/main-ridge-ciro-woodwork-3.jpg";
 import mainRidgeCiroWoodwork4 from "@/assets/main-ridge-ciro-woodwork-4.jpg";
 
-// Aberdeen Farm images
+// Private Client — Mornington Peninsula images
 import aberdeenAisle from "@/assets/aberdeen-aisle.jpg";
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
 import aberdeenDeck from "@/assets/aberdeen-deck.jpg";
@@ -83,7 +83,7 @@ export type GalleryItem = {
 export const projects = [
   { id: "all", name: "All Projects" },
   { id: "main-ridge", name: "Main Ridge" },
-  { id: "aberdeen", name: "Aberdeen Farm" },
+  { id: "aberdeen", name: "Private Client" },
   { id: "queensland", name: "Queensland Facility" },
   { id: "equitana", name: "Equitana Melbourne" },
   { id: "caulfield", name: "Melbourne Cup" },
@@ -125,19 +125,19 @@ export const galleryItems: GalleryItem[] = [
   { id: 7, src: mainRidgeCiroWoodwork3, alt: "Main Ridge - Timber finishing and quality inspection", project: "main-ridge", type: "image", service: "woodwork", location: "victoria" },
   { id: 8, src: mainRidgeCiroWoodwork4, alt: "Main Ridge - Hand-crafted timber beam ready for installation", project: "main-ridge", type: "image", service: "woodwork", location: "victoria" },
 
-  // Aberdeen Farm
-  { id: 10, src: aberdeenBarnInterior, alt: "Aberdeen Farm - Luxury barn interior with chandeliers and stained timber", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
-  { id: 11, src: aberdeenStalls, alt: "Aberdeen Farm - Custom-built stalls with sliding gates and premium finishes", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
-  { id: 12, src: aberdeenStallsDetail, alt: "Aberdeen Farm - Stall door hardware and ironwork detail", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
-  { id: 13, src: aberdeenAisle, alt: "Aberdeen Farm - Barn aisle with natural stone flooring", project: "aberdeen", type: "image", service: "stonework", location: "victoria" },
-  { id: 14, src: aberdeenMural, alt: "Aberdeen Farm - Hand-painted decorative mural on barn wall", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
-  { id: 15, src: aberdeenMural2, alt: "Aberdeen Farm - Equestrian mural artwork detail", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
-  { id: 16, src: aberdeenStonework, alt: "Aberdeen Farm - Natural stonework masonry on exterior walls", project: "aberdeen", type: "image", service: "stonework", location: "victoria" },
-  { id: 17, src: aberdeenStoneworkColor, alt: "Aberdeen Farm - Multi-colored stonework facade detail", project: "aberdeen", type: "image", service: "stonework", location: "victoria" },
-  { id: 18, src: aberdeenStoneworkBw, alt: "Aberdeen Farm - Architectural stone column construction", project: "aberdeen", type: "image", service: "stonework", location: "victoria" },
-  { id: 19, src: aberdeenInteriorStonework, alt: "Aberdeen Farm - Interior stone wall feature with lighting", project: "aberdeen", type: "image", service: "stonework", location: "victoria" },
-  { id: 20, src: aberdeenDeck, alt: "Aberdeen Farm - Timber deck construction overlooking property", project: "aberdeen", type: "image", service: "woodwork", location: "victoria" },
-  { id: 21, src: aberdeenExterior, alt: "Aberdeen Farm - Complete exterior view of finished barn", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
+  // Private Client — Mornington Peninsula
+  { id: 10, src: aberdeenBarnInterior, alt: "Private Client — Mornington Peninsula - Luxury barn interior with chandeliers and stained timber", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
+  { id: 11, src: aberdeenStalls, alt: "Private Client — Mornington Peninsula - Custom-built stalls with sliding gates and premium finishes", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
+  { id: 12, src: aberdeenStallsDetail, alt: "Private Client — Mornington Peninsula - Stall door hardware and ironwork detail", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
+  { id: 13, src: aberdeenAisle, alt: "Private Client — Mornington Peninsula - Barn aisle with natural stone flooring", project: "aberdeen", type: "image", service: "stonework", location: "victoria" },
+  { id: 14, src: aberdeenMural, alt: "Private Client — Mornington Peninsula - Hand-painted decorative mural on barn wall", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
+  { id: 15, src: aberdeenMural2, alt: "Private Client — Mornington Peninsula - Equestrian mural artwork detail", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
+  { id: 16, src: aberdeenStonework, alt: "Private Client — Mornington Peninsula - Natural stonework masonry on exterior walls", project: "aberdeen", type: "image", service: "stonework", location: "victoria" },
+  { id: 17, src: aberdeenStoneworkColor, alt: "Private Client — Mornington Peninsula - Multi-colored stonework facade detail", project: "aberdeen", type: "image", service: "stonework", location: "victoria" },
+  { id: 18, src: aberdeenStoneworkBw, alt: "Private Client — Mornington Peninsula - Architectural stone column construction", project: "aberdeen", type: "image", service: "stonework", location: "victoria" },
+  { id: 19, src: aberdeenInteriorStonework, alt: "Private Client — Mornington Peninsula - Interior stone wall feature with lighting", project: "aberdeen", type: "image", service: "stonework", location: "victoria" },
+  { id: 20, src: aberdeenDeck, alt: "Private Client — Mornington Peninsula - Timber deck construction overlooking property", project: "aberdeen", type: "image", service: "woodwork", location: "victoria" },
+  { id: 21, src: aberdeenExterior, alt: "Private Client — Mornington Peninsula - Complete exterior view of finished barn", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
 
   // Queensland Facility
   { id: 30, src: qldAerial1, alt: "Queensland Facility - Aerial view showing full property layout and arena", project: "queensland", type: "image", service: "infrastructure", location: "queensland" },

@@ -267,7 +267,7 @@ export default function Gallery() {
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
-          2. FEATURE PROJECT — Aberdeen Farm (5 images)
+          2. FEATURE PROJECT — Private Client — Mornington Peninsula (5 images)
           ═══════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grain-texture" />
@@ -279,7 +279,7 @@ export default function Gallery() {
                 <div className="lg:col-span-8">
                   <EditorialImage
                     src={aberdeenBarnInterior}
-                    alt="Aberdeen Farm — luxury barn interior"
+                    alt="Private Client — Mornington Peninsula — luxury barn interior"
                     aspect="aspect-[16/10]"
                     onClick={() => openLightbox(aberdeenBarnInterior)}
                   />
@@ -289,7 +289,7 @@ export default function Gallery() {
                     Featured Project
                   </p>
                   <h2 className="font-serif text-2xl sm:text-3xl text-foreground/90 font-normal tracking-[0.02em] mb-4">
-                    Aberdeen Farm
+                    Private Client — Mornington Peninsula
                   </h2>
                   <div className="w-10 h-px bg-accent/30 mb-6" />
                   <dl className="space-y-3 mb-8">
@@ -309,10 +309,10 @@ export default function Gallery() {
               </div>
               {/* Supporting images — 4 across */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-                <EditorialImage src={aberdeenStalls} alt="Aberdeen — custom stalls" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenStalls)} />
-                <EditorialImage src={aberdeenAisle} alt="Aberdeen — stone aisle" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenAisle)} />
-                <EditorialImage src={aberdeenStonework} alt="Aberdeen — stonework masonry" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenStonework)} />
-                <EditorialImage src={aberdeenExterior} alt="Aberdeen — completed exterior" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenExterior)} />
+                <EditorialImage src={aberdeenStalls} alt="Private client — custom stalls" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenStalls)} />
+                <EditorialImage src={aberdeenAisle} alt="Private client — stone aisle" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenAisle)} />
+                <EditorialImage src={aberdeenStonework} alt="Private client — stonework masonry" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenStonework)} />
+                <EditorialImage src={aberdeenExterior} alt="Private client — completed exterior" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenExterior)} />
               </div>
             </RevealOnScroll>
           </div>
@@ -433,7 +433,7 @@ export default function Gallery() {
                   <EditorialImage src={mainRidgeInterior} alt="Main Ridge — open barn interior" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeInterior)} />
                 </div>
                 <div className="lg:col-span-5">
-                  <EditorialImage src={aberdeenStoneworkColor} alt="Aberdeen — stonework facade" aspect="aspect-[3/4]" className="h-full" onClick={() => openLightbox(aberdeenStoneworkColor)} />
+                  <EditorialImage src={aberdeenStoneworkColor} alt="Private client — stonework facade" aspect="aspect-[3/4]" className="h-full" onClick={() => openLightbox(aberdeenStoneworkColor)} />
                 </div>
               </div>
             </RevealOnScroll>
@@ -579,7 +579,7 @@ export default function Gallery() {
       <section className="relative h-[60vh] sm:h-[70vh] overflow-hidden">
         <img
           src={aberdeenExterior}
-          alt="Aberdeen Farm — completed barn exterior"
+          alt="Private Client — Mornington Peninsula — completed barn exterior"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/20" />
