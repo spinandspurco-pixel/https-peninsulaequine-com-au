@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
-import { StickySubpageCTA } from "@/components/StickySubpageCTA";
+
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
