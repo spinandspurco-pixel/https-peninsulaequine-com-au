@@ -362,7 +362,7 @@ export default function Gallery() {
 
             {/* Row 2 — craft detail */}
             <RevealOnScroll direction="up" duration={700} delay={120}>
-              <EditorialImage src={mainRidgeBrickwork} alt="Main Ridge — custom reclaimed brickwork" aspect="aspect-[21/9]" onClick={() => openLightbox(mainRidgeBrickwork)} />
+              <EditorialImage src={aberdeenStonework} alt="Aberdeen — hand-laid natural stonework detail" aspect="aspect-[21/9]" onClick={() => openLightbox(aberdeenStonework)} />
             </RevealOnScroll>
           </div>
         </div>
