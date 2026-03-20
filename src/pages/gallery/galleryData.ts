@@ -97,6 +97,7 @@ export const projects = [
   { id: "queensland", name: "Queensland Facility" },
   { id: "equitana", name: "Equitana Melbourne" },
   { id: "caulfield", name: "Melbourne Cup" },
+  { id: "custom-builds", name: "Custom Builds" },
 ];
 
 export const serviceFilters = [
