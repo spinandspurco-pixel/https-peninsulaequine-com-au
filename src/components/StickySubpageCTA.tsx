@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ArrowRight, CalendarIcon, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
-import logoImage from "@/assets/logo-pe-mark.png";
+import logoImage from "@/assets/logo-pe-mark.webp";
 
 interface StickySubpageCTAProps {
   /** Pixel scroll threshold before the bar appears */

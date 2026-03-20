@@ -15,7 +15,7 @@ import {
   CheckCircle2, ChevronDown, ChevronUp, Calendar, Download, ArrowLeft,
   FolderOpen, BookOpen, Users, ShieldAlert,
 } from "lucide-react";
-import logoPeMark from "@/assets/logo-pe-mark.png";
+import logoPeMark from "@/assets/logo-pe-mark.webp";
 
 // Trainer-specific document types
 const TRAINER_DOC_TYPES = {

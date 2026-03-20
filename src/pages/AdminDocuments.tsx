@@ -45,7 +45,7 @@ import {
   AlertTriangle,
   Heart,
 } from "lucide-react";
-import logoPeMark from "@/assets/logo-pe-mark.png";
+import logoPeMark from "@/assets/logo-pe-mark.webp";
 
 const DOC_TYPES = {
   all: { label: "All Documents", icon: FileText, color: "text-foreground" },

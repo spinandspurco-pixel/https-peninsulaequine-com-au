@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, Instagram, Facebook, ArrowUpRight } from "lucide-react";
 import { siteConfig } from "@/data/content";
-import logoPeMark from "@/assets/logo-pe-mark.png";
+import logoPeMark from "@/assets/logo-pe-mark.webp";
 
 const quickLinks = [
   { name: "Projects", href: "/gallery" },

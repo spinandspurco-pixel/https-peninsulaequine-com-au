@@ -1,5 +1,5 @@
 import peRopeRing from "@/assets/pe-rope-ring.png";
-import logoPeMark from "@/assets/logo-pe-mark.png";
+import logoPeMark from "@/assets/logo-pe-mark.webp";
 
 interface RopeEmblemProps {
   size?: "sm" | "md" | "lg";

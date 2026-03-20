@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import logoPeMark from "@/assets/logo-pe-mark.png";
+import logoPeMark from "@/assets/logo-pe-mark.webp";
 
 interface LoadingSplashProps {
   minDuration?: number;

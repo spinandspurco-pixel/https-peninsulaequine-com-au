@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InteractiveLayerStack } from "@/components/InteractiveLayerStack";
-import logoPeMark from "@/assets/logo-pe-mark.png";
+import logoPeMark from "@/assets/logo-pe-mark.webp";
 import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
 
 export default function GroundLockSystems() {
