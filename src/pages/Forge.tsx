@@ -142,6 +142,7 @@ function FamilyCard({ family, delay = 0 }: { family: FamilyEntry; delay?: number
 export default function Forge() {
   return (
     <Layout>
+      <StickySubpageCTA ctaLabel="Enquire About Forge" ctaHref="/contact" showAfter={600} />
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="relative pt-44 sm:pt-56 pb-28 sm:pb-36 overflow-hidden">
         <div className="absolute inset-0 bg-background" />
