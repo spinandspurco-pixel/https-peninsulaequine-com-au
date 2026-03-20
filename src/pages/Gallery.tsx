@@ -198,45 +198,9 @@ export default function Gallery() {
   return (
     <Layout>
       {/* ═══════════════════════════════════════════════════
-          1. HERO — full-width cinematic with parallax
+          1. HERO — cinematic blueprint with gold linework
           ═══════════════════════════════════════════════════ */}
-      <section className="relative h-[85vh] sm:h-[90vh] overflow-hidden">
-        <div
-          ref={parallax.ref}
-          className="absolute inset-0 scale-110"
-          style={{ transform: `translateY(${parallax.offset * 0.4}px) scale(1.1)` }}
-        >
-           <img
-            src={projectsHeroDrone}
-            alt="Premium equestrian property — aerial view at golden hour"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        {/* Overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-background/20" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/30 to-transparent" />
-
-        {/* Hero text */}
-        <div className="absolute inset-0 flex items-end z-10">
-          <div className="section-container pb-16 sm:pb-24 lg:pb-28 max-w-3xl">
-            <RevealOnScroll direction="up" duration={800}>
-              <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/50 font-mono mb-4 sm:mb-5">
-                Portfolio
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" duration={900} delay={100}>
-              <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl xl:text-6xl text-foreground font-medium leading-[1.08] tracking-[0.03em] mb-5 sm:mb-6">
-                Projects
-              </h1>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" duration={800} delay={200}>
-              <p className="text-sm sm:text-base text-muted-foreground/40 leading-relaxed max-w-md font-serif italic">
-                Built with precision. Designed to last.
-              </p>
-            </RevealOnScroll>
-          </div>
-        </div>
-      </section>
+      <ProjectsCinematicHero />
 
       <ChapterDivider />
 
