@@ -277,8 +277,8 @@ export default function GroundLock() {
             className="text-muted-foreground/40 text-sm sm:text-[15px] max-w-md mx-auto opacity-0 animate-fade-in leading-[1.9]"
             style={{ animationDelay: "1200ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
-            Engineered ground stabilisation for yards, stable surrounds,
-            laneways, and high-traffic zones.
+            Interlocking ground stabilisation for entries, yards, laneways,
+            and high-traffic zones — built to hold up under horses, floats, and weather.
           </p>
         </div>
       </section>
@@ -295,18 +295,81 @@ export default function GroundLock() {
 
             <RevealOnScroll direction="up" delay={100}>
               <h2 className="heading-section text-foreground mb-10">
-                Most Properties Fail<br />From the Ground Up.
+                The Ground Fails First.
               </h2>
             </RevealOnScroll>
 
             <RevealOnScroll direction="up" delay={200}>
               <div className="space-y-5 text-sm text-muted-foreground/45 leading-[2]">
                 <p>
-                  Poor drainage. Unstable footing. Surface breakdown.
+                  Mud. Pooling. Ruts. Surface breakdown after one winter.
                 </p>
                 <p className="text-foreground/55">
-                  These are never surface problems. They're structural.
+                  It's never a surface problem — it's a structural one.
                 </p>
+              </div>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ PROOF ZONES — future asset-ready ═════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-24 sm:py-36 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-6xl mx-auto relative z-[1]">
+            <div className="text-center mb-16 sm:mb-24">
+              <RevealOnScroll direction="up">
+                <p className="text-overline mb-6">In the Field</p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={80}>
+                <h2 className="heading-section text-foreground">
+                  Installed. Tested. Proven.
+                </h2>
+              </RevealOnScroll>
+            </div>
+
+            <RevealOnScroll direction="up" delay={150}>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                {/* Proof card 1 — future: top-view layout photo */}
+                <div className="aspect-[4/3] bg-card border border-border/20 flex flex-col items-center justify-center p-8 text-center">
+                  <div className="w-10 h-10 border border-accent/15 rounded-sm flex items-center justify-center mb-5">
+                    <Layers className="w-4 h-4 text-accent/30" strokeWidth={1.25} />
+                  </div>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/30 mb-2">
+                    System Layout
+                  </p>
+                  <p className="text-[11px] text-muted-foreground/20 leading-relaxed max-w-[200px]">
+                    Panel coverage and drainage fall — resolved from above.
+                  </p>
+                </div>
+
+                {/* Proof card 2 — future: finished gate-entry visual */}
+                <div className="aspect-[4/3] bg-card border border-border/20 flex flex-col items-center justify-center p-8 text-center">
+                  <div className="w-10 h-10 border border-accent/15 rounded-sm flex items-center justify-center mb-5">
+                    <Truck className="w-4 h-4 text-accent/30" strokeWidth={1.25} />
+                  </div>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/30 mb-2">
+                    Entry & Arrival
+                  </p>
+                  <p className="text-[11px] text-muted-foreground/20 leading-relaxed max-w-[200px]">
+                    Finished entry zones under float traffic, gates, and daily turnout.
+                  </p>
+                </div>
+
+                {/* Proof card 3 — future: layer build-up diagram or vehicle turn */}
+                <div className="aspect-[4/3] bg-card border border-border/20 flex flex-col items-center justify-center p-8 text-center">
+                  <div className="w-10 h-10 border border-accent/15 rounded-sm flex items-center justify-center mb-5">
+                    <ShieldCheck className="w-4 h-4 text-accent/30" strokeWidth={1.25} />
+                  </div>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/30 mb-2">
+                    Load Performance
+                  </p>
+                  <p className="text-[11px] text-muted-foreground/20 leading-relaxed max-w-[200px]">
+                    Heavy vehicle movement and turning — tested under real conditions.
+                  </p>
+                </div>
               </div>
             </RevealOnScroll>
           </div>
@@ -576,44 +639,25 @@ export default function GroundLock() {
       {/* ═══ EQUUS FORGE DIVISION ═════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-28 sm:py-40 bg-primary relative">
+        <div className="py-24 sm:py-32 bg-primary relative">
           <div className="absolute inset-0 grain-texture" />
-          <div
-            className="absolute inset-0 opacity-[0.03]"
-            style={{ backgroundImage: "repeating-linear-gradient(135deg, transparent, transparent 20px, hsl(var(--primary-foreground)) 20px, hsl(var(--primary-foreground)) 21px)" }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{ background: "radial-gradient(ellipse 60% 50% at 50% 50%, hsl(var(--accent) / 0.04) 0%, transparent 70%)" }}
-          />
-
-          <div className="section-container relative z-10 text-center max-w-lg mx-auto">
-            <RevealOnScroll direction="up">
-              <RevealLine className="mx-auto mb-14" width="w-8" />
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={80}>
-              <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/50 mb-6">
+          <div className="section-container relative z-10 flex flex-col sm:flex-row items-center justify-between gap-8 max-w-4xl mx-auto">
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/50 mb-3">
                 Product Division
               </p>
-              <h2 className="heading-section text-primary-foreground mb-4">
+              <h3 className="font-serif text-xl sm:text-2xl text-primary-foreground leading-snug">
                 Equus Forge
-              </h2>
-              <p className="text-primary-foreground/25 text-[11px] uppercase tracking-[0.2em] mb-10">
+              </h3>
+              <p className="text-primary-foreground/25 text-[10px] uppercase tracking-[0.2em] mt-1">
                 by Peninsula Equine
               </p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={150}>
-              <p className="text-sm text-primary-foreground/40 mb-12 leading-[1.9]">
-                Systems. Components. Built to scale.
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={250}>
-              <Button asChild variant="gold" size="lg">
-                <Link to="/forge">
-                  Explore Equus Forge <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </RevealOnScroll>
+            </div>
+            <Button asChild variant="gold" size="lg">
+              <Link to="/forge">
+                Explore Equus Forge <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
@@ -621,7 +665,7 @@ export default function GroundLock() {
       {/* ═══ CTA ══════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-32 sm:py-48 relative">
+        <div className="py-32 sm:py-44 relative">
           <div className="absolute inset-0 engineering-grid" />
           <div className="absolute inset-0 grain-texture" />
           <div
@@ -635,26 +679,21 @@ export default function GroundLock() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={80}>
               <h2 className="heading-section text-foreground mb-8">
-                Discuss Your Project
+                Start With a Site Reading
               </h2>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <p className="text-sm text-muted-foreground/35 mb-12 leading-[1.9]">
-                Each project is assessed individually to ensure correct<br />
-                system specification and long-term performance.
+                We assess the ground, the traffic, the drainage — then specify<br className="hidden sm:block" />
+                the right system for how the site actually performs.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={250}>
               <Button asChild variant="gold" size="lg">
                 <Link to="/contact">
-                  Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                  Request Assessment <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={350}>
-              <p className="text-muted-foreground/15 text-[10px] tracking-[0.25em] uppercase mt-10">
-                Limited projects per season.
-              </p>
             </RevealOnScroll>
           </div>
         </div>

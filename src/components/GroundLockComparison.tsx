@@ -2,12 +2,12 @@ import { cn } from "@/lib/utils";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 
 const CRITERIA = [
-  { label: "Drainage", standard: "Surface runoff — pooling, mud", engineered: "Engineered sub-base channels water laterally" },
+  { label: "Drainage", standard: "Surface runoff — pooling, mud", engineered: "Sub-base channels water laterally off-site" },
   { label: "Stability", standard: "Degrades under traffic and weather", engineered: "Interlocking panels distribute load permanently" },
-  { label: "Longevity", standard: "2–5 years before rework", engineered: "Designed for decades of consistent performance" },
+  { label: "Longevity", standard: "2–5 years before rework", engineered: "Decades of consistent performance" },
   { label: "Consistency", standard: "Uneven, seasonal variation", engineered: "Uniform surface — wet or dry" },
-  { label: "Maintenance", standard: "Ongoing regrading, material top-up", engineered: "Designed to reduce maintenance over time" },
-  { label: "Horse Welfare", standard: "Inconsistent footing, joint stress", engineered: "Engineered for skeletal health and soundness" },
+  { label: "Maintenance", standard: "Ongoing regrading, material top-up", engineered: "Minimal intervention once installed" },
+  { label: "Horse Welfare", standard: "Inconsistent footing, joint stress", engineered: "Stable footing — better for joints and soundness" },
 ];
 
 export function GroundLockComparison() {
