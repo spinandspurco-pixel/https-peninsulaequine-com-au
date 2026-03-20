@@ -439,25 +439,29 @@ export default function Index() {
       </section>
 
       {/* ═══ 4b. SIGNATURE SYSTEMS — strategic ecosystem layer ═══════ */}
-      <SectionBleed from="background" to="card" />
       <section className="relative overflow-hidden">
-        <div className={`${SP_SECTION} bg-card relative`}>
-          <div className="absolute inset-0 grain-texture opacity-25" />
+        <div className="py-32 sm:py-44 lg:py-52 relative">
+          <div className="absolute inset-0 grain-texture opacity-15" />
+
           <div className="section-container relative z-[1] max-w-5xl mx-auto">
-            <div className={`${SP_HEAD}`}>
+            {/* Header — centred, editorial */}
+            <div className="text-center mb-20 sm:mb-28">
               <RevealOnScroll direction="up">
-                <RevealLine className="mb-6" width="w-10" />
+                <div className="flex items-center justify-center gap-5 mb-10">
+                  <div className="w-10 h-px bg-accent/20" />
+                  <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/40">
+                    Signature Systems
+                  </p>
+                  <div className="w-10 h-px bg-accent/20" />
+                </div>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={80}>
-                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">Signature Systems</p>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={120}>
-                <h2 className="heading-section text-foreground mb-5">
-                  Engineered for the way equine properties<br className="hidden sm:inline" /> move, wear, and endure.
+              <RevealOnScroll direction="up" delay={100}>
+                <h2 className="font-serif text-2xl sm:text-3xl md:text-[2.25rem] font-light text-foreground/80 leading-[1.25] max-w-2xl mx-auto">
+                  Engineered for the way equine properties move, wear, and endure.
                 </h2>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={180}>
-                <p className="text-[13px] text-muted-foreground/35 leading-[2] max-w-[460px]">
+              <RevealOnScroll direction="up" delay={200}>
+                <p className="mt-8 text-[12px] sm:text-[13px] text-muted-foreground/30 leading-[2.2] max-w-lg mx-auto">
                   Peninsula Equine is evolving beyond construction alone — into a considered
                   ecosystem of signature systems, engineered details, and premium rural solutions
                   designed to resolve how a property arrives, functions, and lasts.
@@ -465,7 +469,8 @@ export default function Index() {
               </RevealOnScroll>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-border/8">
+            {/* Cards — separated with real borders, generous height */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-5">
               {[
                 {
                   title: "GroundLock",
@@ -486,21 +491,29 @@ export default function Index() {
                   href: "/shop",
                 },
               ].map((card, i) => (
-                <RevealOnScroll key={card.title} direction="up" stagger={i} staggerInterval={100}>
+                <RevealOnScroll key={card.title} direction="up" stagger={i} staggerInterval={120}>
                   <Link
                     to={card.href}
-                    className="group relative flex flex-col p-8 sm:p-10 min-h-[260px] bg-card hover:bg-secondary/20 transition-all duration-700"
+                    className="group relative flex flex-col p-8 sm:p-10 lg:p-12 min-h-[300px] sm:min-h-[320px] border border-border/20 hover:border-border/40 bg-card/40 hover:bg-card/70 transition-all duration-700 ease-out"
                   >
-                    <div className="absolute top-0 left-8 right-8 sm:left-10 sm:right-10 h-px bg-accent/8" />
-                    <h4 className="font-serif text-[15px] font-medium text-foreground/60 tracking-[0.02em] mb-4 group-hover:text-foreground/90 transition-colors duration-500">
+                    {/* Accent line at top */}
+                    <div className="absolute top-0 left-0 w-8 h-px bg-accent/20 group-hover:w-14 group-hover:bg-accent/40 transition-all duration-700" />
+
+                    <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/25 mb-8 block">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+
+                    <h4 className="font-serif text-[17px] sm:text-[18px] font-medium text-foreground/65 tracking-[0.02em] mb-5 group-hover:text-foreground/90 transition-colors duration-500">
                       {card.title}
                     </h4>
-                    <p className="text-[12px] text-muted-foreground/30 leading-[2] max-w-[260px] flex-1">
+
+                    <p className="text-[12px] text-muted-foreground/25 leading-[2.1] max-w-[280px] flex-1">
                       {card.body}
                     </p>
-                    <div className="flex items-center gap-1.5 mt-6 text-muted-foreground/0 group-hover:text-accent/50 transition-all duration-700">
-                      <span className="text-[10px] uppercase tracking-[0.15em] font-mono">{card.cta}</span>
-                      <ArrowRight className="w-3 h-3" />
+
+                    <div className="flex items-center gap-2 mt-8 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0">
+                      <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-accent/50">{card.cta}</span>
+                      <ArrowRight className="w-3 h-3 text-accent/40" />
                     </div>
                   </Link>
                 </RevealOnScroll>
@@ -508,15 +521,14 @@ export default function Index() {
             </div>
 
             {/* Supporting line */}
-            <RevealOnScroll direction="up" delay={400}>
-              <p className="mt-14 text-center text-[11px] tracking-[0.2em] uppercase text-muted-foreground/20 font-mono">
+            <RevealOnScroll direction="up" delay={500}>
+              <p className="mt-20 sm:mt-24 text-center text-[10px] tracking-[0.25em] uppercase text-muted-foreground/15 font-mono">
                 Built in the real world. Designed for daily use.
               </p>
             </RevealOnScroll>
           </div>
         </div>
       </section>
-      <SectionBleed from="card" to="background" />
 
       {/* ═══ 5. GROUNDLOCK — SIGNATURE SYSTEM ══════════════ */}
       <SectionBleed from="background" to="card" />
