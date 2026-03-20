@@ -1,60 +1,65 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LoadingSplash } from "@/components/LoadingSplash";
-import Index from "./pages/Index";
-import Services from "./pages/Services";
-import ServiceDetail from "./pages/ServiceDetail";
-import Boarding from "./pages/Boarding";
-import About from "./pages/About";
-import Gallery from "./pages/Gallery";
-import Testimonials from "./pages/Testimonials";
-import FAQ from "./pages/FAQ";
-import Contact from "./pages/Contact";
-import { Privacy, Terms } from "./pages/Legal";
-import NotFound from "./pages/NotFound";
-import Login from "./pages/Login";
-import Admin from "./pages/Admin";
-import AdminServices from "./pages/AdminServices";
-import AdminTestimonials from "./pages/AdminTestimonials";
-import AdminEvents from "./pages/AdminEvents";
-import HQ from "./pages/HQ";
-import EmployeeDashboard from "./pages/EmployeeDashboard";
-import BookLesson from "./pages/BookLesson";
-import Lessons from "./pages/Lessons";
-import BrandGuide from "./pages/BrandGuide";
-import Shop from "./pages/Shop";
-import ProductDetail from "./pages/ProductDetail";
-import Forge from "./pages/Forge";
-import Events from "./pages/Events";
-import Process from "./pages/Process";
-import BookingsDashboard from "./pages/BookingsDashboard";
-import StudentSpotlight from "./pages/StudentSpotlight";
-import RoundPens from "./pages/RoundPens";
-import Schedule from "./pages/Schedule";
-import ThankYou from "./pages/ThankYou";
-import Pricing from "./pages/Pricing";
-import GroupBooking from "./pages/GroupBooking";
-import Estimate from "./pages/Estimate";
-import StaffDocuments from "./pages/StaffDocuments";
-import AdminDocuments from "./pages/AdminDocuments";
-import StaffDocumentPortal from "./pages/StaffDocumentPortal";
-import TrainerDocumentPortal from "./pages/TrainerDocumentPortal";
-import TrainerProfile from "./pages/TrainerProfile";
-import MLPGSPage from "./pages/MLPGS";
-import GroundLock from "./pages/GroundLock";
-import CaseStudy from "./pages/CaseStudy";
-import GroundLockSystems from "./pages/GroundLockSystems";
-import EquusRidge from "./pages/EquusRidge";
-import InstallerAccess from "./pages/InstallerAccess";
-import SiteAssessment from "./pages/SiteAssessment";
-import SignatureSystems from "./pages/SignatureSystems";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { useCartSync } from "./hooks/useCartSync";
 import { IntroContext } from "./hooks/useIntroState";
+
+// Eagerly load the homepage for fastest FCP
+import Index from "./pages/Index";
+
+// Lazy-load all other routes
+const Services = lazy(() => import("./pages/Services"));
+const ServiceDetail = lazy(() => import("./pages/ServiceDetail"));
+const Boarding = lazy(() => import("./pages/Boarding"));
+const About = lazy(() => import("./pages/About"));
+const Gallery = lazy(() => import("./pages/Gallery"));
+const Testimonials = lazy(() => import("./pages/Testimonials"));
+const FAQ = lazy(() => import("./pages/FAQ"));
+const Contact = lazy(() => import("./pages/Contact"));
+const LegalPrivacy = lazy(() => import("./pages/Legal").then(m => ({ default: m.Privacy })));
+const LegalTerms = lazy(() => import("./pages/Legal").then(m => ({ default: m.Terms })));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Login = lazy(() => import("./pages/Login"));
+const Admin = lazy(() => import("./pages/Admin"));
+const AdminServices = lazy(() => import("./pages/AdminServices"));
+const AdminTestimonials = lazy(() => import("./pages/AdminTestimonials"));
+const AdminEvents = lazy(() => import("./pages/AdminEvents"));
+const HQ = lazy(() => import("./pages/HQ"));
+const EmployeeDashboard = lazy(() => import("./pages/EmployeeDashboard"));
+const BookLesson = lazy(() => import("./pages/BookLesson"));
+const Lessons = lazy(() => import("./pages/Lessons"));
+const BrandGuide = lazy(() => import("./pages/BrandGuide"));
+const Shop = lazy(() => import("./pages/Shop"));
+const ProductDetail = lazy(() => import("./pages/ProductDetail"));
+const Forge = lazy(() => import("./pages/Forge"));
+const Events = lazy(() => import("./pages/Events"));
+const Process = lazy(() => import("./pages/Process"));
+const BookingsDashboard = lazy(() => import("./pages/BookingsDashboard"));
+const StudentSpotlight = lazy(() => import("./pages/StudentSpotlight"));
+const RoundPens = lazy(() => import("./pages/RoundPens"));
+const Schedule = lazy(() => import("./pages/Schedule"));
+const ThankYou = lazy(() => import("./pages/ThankYou"));
+const Pricing = lazy(() => import("./pages/Pricing"));
+const GroupBooking = lazy(() => import("./pages/GroupBooking"));
+const Estimate = lazy(() => import("./pages/Estimate"));
+const StaffDocuments = lazy(() => import("./pages/StaffDocuments"));
+const AdminDocuments = lazy(() => import("./pages/AdminDocuments"));
+const StaffDocumentPortal = lazy(() => import("./pages/StaffDocumentPortal"));
+const TrainerDocumentPortal = lazy(() => import("./pages/TrainerDocumentPortal"));
+const TrainerProfile = lazy(() => import("./pages/TrainerProfile"));
+const MLPGSPage = lazy(() => import("./pages/MLPGS"));
+const GroundLock = lazy(() => import("./pages/GroundLock"));
+const CaseStudy = lazy(() => import("./pages/CaseStudy"));
+const GroundLockSystems = lazy(() => import("./pages/GroundLockSystems"));
+const EquusRidge = lazy(() => import("./pages/EquusRidge"));
+const InstallerAccess = lazy(() => import("./pages/InstallerAccess"));
+const SiteAssessment = lazy(() => import("./pages/SiteAssessment"));
+const SignatureSystems = lazy(() => import("./pages/SignatureSystems"));
 
 const queryClient = new QueryClient();
 
@@ -79,6 +84,7 @@ function AppContent() {
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/services" element={<Services />} />
@@ -90,8 +96,8 @@ function AppContent() {
           <Route path="/testimonials" element={<Testimonials />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<LegalPrivacy />} />
+          <Route path="/terms" element={<LegalTerms />} />
           <Route path="/login" element={<Login />} />
           <Route path="/hq" element={<HQ />} />
           <Route path="/admin" element={<Admin />} />
@@ -130,6 +136,7 @@ function AppContent() {
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </Suspense>
       </BrowserRouter>
     </IntroContext.Provider>
   );
