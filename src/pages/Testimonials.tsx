@@ -702,7 +702,7 @@ export default function Testimonials() {
         title="Join Our Satisfied Clients"
         description="Ready to experience the Peninsula Equine difference? Let's discuss your project."
         backgroundImage={ciroWithHorse}
-        primaryButtonText="Get a Quote"
+        primaryButtonText="Request Assessment"
         primaryButtonLink="/contact"
         showPhoneButton={true}
       />

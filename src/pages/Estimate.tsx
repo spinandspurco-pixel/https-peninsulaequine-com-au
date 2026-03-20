@@ -345,8 +345,9 @@ export default function Estimate() {
       <EstimateCTA />
 
       <StickySubpageCTA
-        ctaLabel="Get a Quote"
+        ctaLabel="Request Assessment"
         ctaHref="/contact"
+        hideSecondary
       />
     </Layout>
   );
