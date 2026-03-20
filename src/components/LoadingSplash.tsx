@@ -205,6 +205,10 @@ export function LoadingSplash({
         @keyframes splash-draw {
           to { stroke-dashoffset: 0; }
         }
+        @keyframes rasterFadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
       `}</style>
 
       {/* ── Blueprint grid ────────────────────────── */}
