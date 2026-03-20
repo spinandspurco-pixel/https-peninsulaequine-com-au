@@ -114,7 +114,6 @@ export default function Gallery() {
   const [selectMode, setSelectMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
-  const heroRef = useRef<HTMLDivElement>(null);
   const parallax = useParallax<HTMLDivElement>({ speed: 0.25 });
 
   const videoGalleryItems: GalleryItem[] = allVideos.map((v) => ({
