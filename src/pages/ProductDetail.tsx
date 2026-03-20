@@ -87,7 +87,7 @@ export default function ProductDetail() {
           </div>
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-accent">
-              <Shield className="w-4 h-4" strokeWidth={1.7} />
+              <Shield className="w-4 h-4" strokeWidth={1.5} />
               <p className="text-[10px] font-mono uppercase tracking-[0.2em]">The Solution</p>
             </div>
             <p className="text-foreground leading-relaxed text-sm">{product.solution}</p>
