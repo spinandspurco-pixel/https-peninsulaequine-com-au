@@ -10,25 +10,40 @@ import { cn } from "@/lib/utils";
 // Video
 import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
 
-// Portfolio imagery
+// Portfolio imagery — curated hero-tier visuals
 import aberdeenStonework from "@/assets/aberdeen-stonework-color.jpg";
 import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
 import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
-import qldExterior from "@/assets/qld-facility-exterior-1.jpg";
-import mainRidgeCraneLift from "@/assets/main-ridge-crane-lift.jpg";
+import equitanaTractors from "@/assets/equitana-tractors.jpg";
+import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
 
 // Intro video
 import buildVideo from "@/assets/videos/main-ridge-woodwork-1.mp4";
 
+// Detail / material textures
+import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
+import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
+import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
+
+// Process / build imagery
+import mainRidgeCiroWoodwork from "@/assets/main-ridge-ciro-woodwork-1.jpg";
+import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
+
+// Training
+import trainerGlenn from "@/assets/trainer-glenn.jpg";
+
 // Shop / Forge imagery
 import peBanner from "@/assets/pe-banner.png";
+
+// CTA closer
+import heroSunset from "@/assets/hero-sunset.png";
 
 const PROJECTS = [
   { src: aberdeenStonework, alt: "Hand-laid stonework at Aberdeen Farm", label: "Aberdeen Farm", scope: "Stables & Stonework", slug: "aberdeen-farm" },
   { src: mainRidgeInterior, alt: "Timber interior at Main Ridge", label: "Main Ridge", scope: "Arena & Barn Complex", slug: "main-ridge" },
+  { src: equitanaTractors, alt: "Equitana arena preparation", label: "Equitana", scope: "Competition Arena", slug: "equitana" },
+  { src: mainRidgeBarnFrame, alt: "Main Ridge barn frame", label: "Main Ridge", scope: "Structural Timber", slug: "main-ridge" },
   { src: qldCourtyard, alt: "Queensland facility courtyard", label: "QLD Facility", scope: "Full Facility Build", slug: "qld-facility" },
-  { src: qldExterior, alt: "QLD facility exterior view", label: "QLD Exterior", scope: "Stable & Arena", slug: "qld-facility" },
-  { src: mainRidgeCraneLift, alt: "Main Ridge crane lift", label: "Main Ridge", scope: "Structural Steel", slug: "main-ridge" },
 ];
 
 const SERVICES = [
@@ -451,13 +466,12 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ 6. PROCESS TIMELINE ═══════════════════════════ */}
+      {/* ═══ 6. PROCESS — TIMELINE + BUILD IMAGERY ══════════ */}
       <SectionBleed from="card" to="background" />
       <section className="relative overflow-hidden">
-        <div className="py-16 sm:py-20 relative">
+        <div className="py-20 sm:py-28 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
-            {/* Left-aligned header */}
             <div className={`${SP_MD}`}>
               <RevealOnScroll direction="up">
                 <RevealLine className="mb-6" width="w-10" />
@@ -473,8 +487,58 @@ export default function Index() {
             </div>
 
             <ProcessTimeline />
+
+            {/* Build process imagery — cropped tight to hands/tools */}
+            <RevealOnScroll direction="up" delay={200}>
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mt-16">
+                <div className="relative aspect-[16/10] overflow-hidden group col-span-2 lg:col-span-2">
+                  <img
+                    src={mainRidgeRebarFoundation}
+                    alt="Foundation reinforcement"
+                    className="absolute inset-0 w-full h-full object-cover brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8] transition-all duration-[900ms]"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-background/10" />
+                </div>
+                <div className="relative aspect-[3/4] overflow-hidden group">
+                  <img
+                    src={mainRidgeCiroWoodwork}
+                    alt="Timber hand-crafting detail"
+                    className="absolute inset-0 w-full h-full object-cover object-top brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8] transition-all duration-[900ms]"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-background/10" />
+                </div>
+              </div>
+            </RevealOnScroll>
           </div>
         </div>
+      </section>
+
+      {/* ═══ MATERIAL DETAIL STRIP — textures, no text ═══════ */}
+      <section className="relative overflow-hidden" aria-label="Material details">
+        <RevealOnScroll direction="up" duration={700}>
+          <div className="grid grid-cols-3 sm:grid-cols-6">
+            {[
+              { src: mainRidgeTimber, alt: "Timber grain detail" },
+              { src: mainRidgeBrickwork, alt: "Reclaimed brickwork" },
+              { src: aberdeenStallsDetail, alt: "Steel stall ironwork" },
+              { src: mainRidgeTimber, alt: "Timber joinery" },
+              { src: mainRidgeBrickwork, alt: "Brick and mortar" },
+              { src: aberdeenStallsDetail, alt: "Metalwork detail" },
+            ].map((img, i) => (
+              <div key={i} className="relative aspect-square overflow-hidden group">
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05] brightness-[0.65] saturate-[0.7] contrast-[1.1]"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-background/10 group-hover:bg-transparent transition-colors duration-700" />
+              </div>
+            ))}
+          </div>
+        </RevealOnScroll>
       </section>
 
       {/* ═══ 7. AUTHORITY STRIP — reduced visual weight ═══ */}
@@ -565,36 +629,43 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ TRAINING MENTION ═════════════════════════════ */}
-      <section className="relative border-t border-border/5">
-        <div className="py-6 sm:py-8">
+      {/* ═══ TRAINING STRIP — with Glenn image ═════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="relative py-10 sm:py-14">
+          <div className="absolute inset-0">
+            <img
+              src={trainerGlenn}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-cover brightness-[0.15] saturate-[0.4] contrast-[1.1]"
+              loading="lazy"
+            />
+          </div>
+          <div className="absolute inset-0 bg-background/75" />
           <div className="section-container relative z-10 text-center max-w-md mx-auto">
-            <p className="text-[9px] uppercase tracking-[0.35em] text-muted-foreground/12 font-mono mb-2">
+            <p className="text-[9px] uppercase tracking-[0.35em] text-muted-foreground/20 font-mono mb-2">
               On-site training
             </p>
-            <p className="text-[11px] sm:text-[12px] text-muted-foreground/18 leading-[1.85] font-serif italic">
+            <p className="text-[11px] sm:text-[12px] text-muted-foreground/30 leading-[1.85] font-serif italic">
               Select training sessions are available on-site with Glenn Browitt on Thursdays and Fridays, offering experienced guidance in horsemanship and performance.
             </p>
           </div>
         </div>
       </section>
 
-      {/* ═══ 9. FINAL CTA ═══════════════════════════════════ */}
-      <SectionBleed from="background" to="background" />
-      <section className="relative overflow-hidden">
-        <div className="py-28 sm:py-36 lg:py-44 relative">
-          <div className="absolute inset-0 grain-texture" />
-          <div className="absolute inset-0 contour-texture opacity-[0.02]" />
-          <div
-            className="absolute inset-0"
-            style={{ background: "radial-gradient(ellipse 55% 40% at 50% 50%, hsl(var(--accent) / 0.015) 0%, transparent 60%)" }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{ background: "radial-gradient(ellipse 60% 45% at 50% 50%, transparent 15%, hsl(222 20% 3% / 0.5) 100%)" }}
-          />
+      {/* ═══ 9. FINAL CTA — cinematic sunset ═══════════════ */}
+      <section className="relative h-[65vh] sm:h-[75vh] overflow-hidden">
+        <img
+          src={heroSunset}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover brightness-[0.35] saturate-[0.6] contrast-[1.15]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/20" />
+        <div className="absolute inset-0 grain-texture" />
 
-          <div className="section-container relative z-10 text-center max-w-md mx-auto">
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          <div className="section-container text-center max-w-md mx-auto">
             <RevealOnScroll direction="up">
               <RevealLine className="mx-auto mb-12" width="w-8" />
             </RevealOnScroll>
@@ -604,7 +675,7 @@ export default function Index() {
               </h2>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
-              <p className="text-[14px] text-muted-foreground/25 mb-10 leading-[2] max-w-[300px] mx-auto">
+              <p className="text-[14px] text-muted-foreground/30 mb-10 leading-[2] max-w-[300px] mx-auto">
                 Every project begins with a site assessment.<br />
                 Let's talk about yours.
               </p>

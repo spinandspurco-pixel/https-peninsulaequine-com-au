@@ -6,6 +6,9 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 
+import equitanaArena from "@/assets/equitana-arena-1.jpg";
+import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
+
 const CAPABILITY_DETAILS = [
   {
     num: "01",
@@ -57,8 +60,15 @@ export default function Services() {
 
       {/* ═══ HERO ═══════════════════════════════════════ */}
       <section className="relative pt-40 sm:pt-48 pb-24 sm:pb-32 overflow-hidden">
-        <div className="absolute inset-0 bg-background" />
-        <div className="absolute inset-0 engineering-grid" />
+        <div className="absolute inset-0">
+          <img
+            src={equitanaArena}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover brightness-[0.2] saturate-[0.5] contrast-[1.1]"
+          />
+        </div>
+        <div className="absolute inset-0 bg-background/50" />
         <div className="absolute inset-0 grain-texture" />
 
         <div className="section-container relative z-10 text-center max-w-2xl mx-auto">
@@ -122,6 +132,21 @@ export default function Services() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* ═══ BUILD IMAGE BREAK ═════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <RevealOnScroll direction="up" duration={800}>
+          <div className="relative aspect-[21/9]">
+            <img
+              src={mainRidgeBarnFrame}
+              alt="Barn frame structure"
+              className="absolute inset-0 w-full h-full object-cover brightness-[0.55] saturate-[0.7]"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/20" />
+          </div>
+        </RevealOnScroll>
       </section>
 
       {/* ═══ APPROACH ══════════════════════════════════ */}
