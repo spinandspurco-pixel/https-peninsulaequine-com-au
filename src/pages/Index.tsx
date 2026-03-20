@@ -641,6 +641,41 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ═══ 5c. GROUNDLOCK — APPLICATIONS + CONFIGURATOR ══ */}
+      <section className="relative overflow-hidden">
+        <div className="py-14 sm:py-20 bg-card relative">
+          <div className="absolute inset-0 grain-texture opacity-15" />
+          <div className="section-container relative z-[1] max-w-5xl mx-auto">
+            <RevealOnScroll direction="up">
+              <div className="border-t border-border/8 pt-10 mb-16">
+                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/30 mb-6">Applications</p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-4 gap-x-8">
+                  {["Front Gate Entries", "Float + Truck Access", "Estate Driveways", "High-Traffic Arrival Zones"].map((item) => (
+                    <span key={item} className="text-[11px] text-muted-foreground/30 tracking-[0.04em]">{item}</span>
+                  ))}
+                </div>
+              </div>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={100}>
+              <div className="border-t border-border/8 pt-10 max-w-[400px]">
+                <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-accent/25 mb-4">Coming Soon</p>
+                <h4 className="font-serif text-[15px] font-medium text-foreground/50 tracking-[0.02em] mb-3">
+                  GroundLock Planning Tool
+                </h4>
+                <p className="text-[12px] text-muted-foreground/30 leading-[2] mb-6 max-w-[340px]">
+                  A guided layout and finish tool for premium equine and rural entry systems.
+                </p>
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] text-accent/40 hover:text-accent/70 transition-colors duration-500 font-mono"
+                >
+                  Register Interest <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
 
       <SectionBleed from="card" to="background" />
       <section className="relative overflow-hidden">
