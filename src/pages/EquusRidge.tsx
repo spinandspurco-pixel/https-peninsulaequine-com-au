@@ -2,7 +2,7 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
-import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
+import coveredArenaBlackExterior from "@/assets/covered-arena-black-exterior.jpg";
 
 const EquusRidge = () => {
   return (
@@ -81,7 +81,7 @@ const EquusRidge = () => {
             <RevealOnScroll direction="up">
               <div className="aspect-[4/5] relative overflow-hidden bg-primary/5 border border-border/30">
                 <img
-                  src={aberdeenExterior}
+                  src={coveredArenaBlackExterior}
                   alt="Completed barn exterior — Mornington Peninsula"
                   className="absolute inset-0 w-full h-full object-cover"
                   style={{ filter: "brightness(0.7) contrast(1.05)" }}
