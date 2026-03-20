@@ -586,8 +586,8 @@ export default function Gallery() {
           ═══════════════════════════════════════════════════ */}
       <section className="relative h-[60vh] sm:h-[70vh] overflow-hidden">
         <img
-          src={aberdeenExterior}
-          alt="Private Client — Mornington Peninsula — completed barn exterior"
+          src={coveredArenaBlackExterior}
+          alt="Covered arena — black exterior cladding at dusk"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/20" />
