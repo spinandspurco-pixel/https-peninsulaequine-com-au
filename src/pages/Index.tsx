@@ -565,8 +565,22 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ═══ TRAINING MENTION ═════════════════════════════ */}
+      <section className="relative border-t border-border/10">
+        <div className="py-10 sm:py-12">
+          <div className="section-container relative z-10 text-center max-w-lg mx-auto">
+            <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground/20 font-mono mb-3">
+              On-site training
+            </p>
+            <p className="text-[13px] text-muted-foreground/30 leading-[1.9] font-serif italic">
+              Select training sessions are available on-site with Glenn Browitt on Thursdays and Fridays, offering experienced guidance in horsemanship and performance.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ 9. FINAL CTA ═══════════════════════════════════ */}
-      <SectionBleed from="primary" to="background" />
+      <SectionBleed from="background" to="background" />
       <section className="relative overflow-hidden">
         <div className="py-28 sm:py-36 lg:py-44 relative">
           <div className="absolute inset-0 grain-texture" />
