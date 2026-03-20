@@ -474,19 +474,19 @@ export default function Index() {
               {[
                 {
                   title: "GroundLock",
-                  body: "A premium equine entry system designed for floats, trucks, gated arrivals, and high-traffic rural entries — engineered beneath the surface for drainage, stability, and a more resolved point of arrival.",
+                  body: "An interlocking entry system for floats, trucks, and gated arrivals — engineered beneath the surface for drainage, load distribution, and a cleaner point of arrival.",
                   cta: "Explore GroundLock",
                   href: "/groundlock",
                 },
                 {
                   title: "Arrival Packages",
-                  body: "Integrated front-entry concepts that combine surface systems, gate logic, edging, and architectural presentation for properties that need to work hard and arrive properly.",
+                  body: "Integrated front-entry concepts combining surface systems, gate logic, edging, and threshold design for properties that need to present as well as they perform.",
                   cta: "View Entry Systems",
                   href: "/systems",
                 },
                 {
                   title: "Forge Details",
-                  body: "Custom forged hardware, gate elements, signage, and branded rural details designed to complete the property with strength, identity, and restraint.",
+                  body: "Custom forged hardware, gate elements, signage, and branded rural details designed to complete the property with strength and identity.",
                   cta: "Explore Equus Forge",
                   href: "/shop",
                 },
