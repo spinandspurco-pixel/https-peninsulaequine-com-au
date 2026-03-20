@@ -89,7 +89,7 @@ export function LoadingSplash({
 
   if (phase === "done") return null;
 
-  const isStampOrLater = phase === "stamp" || phase === "drift" || phase === "exit";
+  const isStampOrLater = logoReady && (phase === "stamp" || phase === "drift" || phase === "exit");
   const isDrift = phase === "drift" || phase === "exit";
 
   return (
