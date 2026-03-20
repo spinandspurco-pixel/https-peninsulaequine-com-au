@@ -1,24 +1,58 @@
 
 
-# Audit HubSpot Sync: Return Generic Errors Only
+## Audit Summary
 
-## Problem
+The Equus Ridge page has **three sections**, and the same `heroVideo` MP4 is used in all three:
 
-The `sync-to-hubspot` edge function currently leaks internal implementation details in its HTTP responses:
+1. **Hero** (full-screen) — video at 35% brightness as cinematic backdrop ✓ correct use
+2. **Atmosphere** (py-44/64) — same video at 6% opacity as ambient background → repetitive
+3. **Private Viewing** (py-44/64) — same video again in a 4:5 portrait frame → third use, feels wallpaper-like
 
-1. **Error responses include raw HubSpot API error bodies** -- lines 116, 129 throw errors containing `HubSpot update failed [status]: full_error_body`, which get returned verbatim to the caller in the catch block (line 143).
-2. **Success responses expose HubSpot contact IDs** -- `hubspot_id` is returned in the JSON body (lines 121, 136). This is internal CRM data with no use to the client.
-3. **"not_configured" reason is exposed** -- line 50 tells the caller the HubSpot key is missing, which is an internal infrastructure detail.
+The page is only ~3 sections long, so the fix is surgical: keep the hero video, remove the repeated video from the middle section, and replace the portrait video in section 3 with a static treatment.
 
-## Changes (single file)
+---
 
-**`supabase/functions/sync-to-hubspot/index.ts`**
+## Plan
 
-1. **Keep all `console.error` / `console.log` calls** so full details remain in server logs for debugging.
-2. **Sanitize error responses** -- the catch block will return a static generic message: `{ success: false, error: "Sync failed" }`. No status codes, no HubSpot error bodies.
-3. **Sanitize success responses** -- remove `hubspot_id` from returned JSON. Return only `{ success: true, action: "created" | "updated" }`.
-4. **Sanitize "not configured" response** -- return `{ success: false, error: "Integration not available" }` instead of `reason: "not_configured"`.
-5. **Sanitize inner error throws** -- lines 116 and 129 currently throw with the raw HubSpot body. Change these to log the full error first, then throw a generic message so the catch block stays clean.
+### 1. Hero section — KEEP as-is
+No changes. The full-screen video backdrop is the premium identity moment.
 
-No other files need changes -- this function is only called by the `notify_hubspot_on_inquiry` database trigger (server-side), but the endpoint is still reachable via HTTP, so sanitizing responses is the right call.
+### 2. Atmosphere section — REMOVE video, replace with grounded treatment
+- **Remove** the ambient video element entirely (lines 47–57)
+- **Keep** the grain texture overlay and `bg-primary` dark background
+- **Add** a single faint `BlueprintLineOverlay` (variant `"dimensions"`, color `"light"`) at very low opacity as the one permitted brand callback — subtle architectural linework, not a repeated animated background
+- This makes the section feel like a clean, dark editorial content block with just a whisper of PE identity
+
+### 3. Private Viewing section — REPLACE video frame with static image
+- **Remove** the `<video>` element from the portrait frame (lines 90–99)
+- **Replace** with a high-quality static image import (e.g., one of the existing architectural photos like a barn exterior or landscape shot from the assets)
+- This creates visual variety: video hero → dark text section → editorial image + text layout
+- **Keep** the grain texture, gradient overlay, and all text content
+
+### 4. Clean up unused import
+- Remove the `heroVideo` import if it's only used in the hero after these changes — but it will still be used in the hero, so keep it. Just ensure the two removed `<video>` elements no longer reference it.
+
+---
+
+### Visual rhythm after changes
+
+```text
+┌─────────────────────────────┐
+│  HERO — cinematic video     │  ← identity moment (video)
+│  full-screen, 35% bright    │
+└─────────────────────────────┘
+┌─────────────────────────────┐
+│  ATMOSPHERE — dark + grain  │  ← substance (no video)
+│  faint blueprint linework   │     clean editorial text block
+│  editorial text centered    │
+└─────────────────────────────┘
+┌─────────────────────────────┐
+│  PRIVATE VIEWING            │  ← refined closing (static image)
+│  static image | text        │     architectural photo in frame
+│  signature closing line     │
+└─────────────────────────────┘
+```
+
+### Files to edit
+- `src/pages/EquusRidge.tsx` — remove 2 video elements, add 1 blueprint line overlay import, add 1 static image import for the portrait frame
 
