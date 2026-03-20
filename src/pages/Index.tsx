@@ -689,21 +689,24 @@ export default function Index() {
         <div className="py-28 sm:py-36 lg:py-44 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
-            <div className={`${SP_HEAD}`}>
+            <div className="text-center mb-20 sm:mb-24">
               <RevealOnScroll direction="up">
-                <RevealLine className="mb-6" width="w-10" />
+                <div className="flex items-center justify-center gap-5 mb-10">
+                  <div className="w-10 h-px bg-accent/20" />
+                  <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/40">How We Work</p>
+                  <div className="w-10 h-px bg-accent/20" />
+                </div>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={80}>
-                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">How We Work</p>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={120}>
-                <h2 className="heading-section text-foreground mb-4">
-                  Every Resolved Project Begins on Site
+              <RevealOnScroll direction="up" delay={100}>
+                <h2 className="font-serif text-2xl sm:text-3xl md:text-[2.25rem] font-light text-foreground/80 leading-[1.25] max-w-xl mx-auto">
+                  Every resolved project begins on site.
                 </h2>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={160}>
-                <p className="text-[13px] text-muted-foreground/35 leading-[2] max-w-[420px]">
-                  We assess how the property moves, drains, wears, and lives — so the outcome holds up under daily equine use, not just on handover day.
+              <RevealOnScroll direction="up" delay={200}>
+                <p className="mt-8 text-[12px] sm:text-[13px] text-muted-foreground/30 leading-[2.2] max-w-lg mx-auto">
+                  We assess how the property moves, drains, wears, and functions under real daily use —
+                  from access and arrival to drainage behaviour, traffic flow, and long-term site performance.
+                  This early stage shapes everything that follows.
                 </p>
               </RevealOnScroll>
             </div>
