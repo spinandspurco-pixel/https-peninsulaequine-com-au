@@ -23,7 +23,7 @@ import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
 import mainRidgeFrameTrench from "@/assets/main-ridge-frame-trench.jpg";
 import mainRidgeCraneLift from "@/assets/main-ridge-crane-lift.jpg";
 import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
-import mainRidgeTimberPosts from "@/assets/main-ridge-timber-posts.jpg";
+
 import mainRidgePostDepth from "@/assets/main-ridge-post-depth.jpg";
 import mainRidgeFrameWide from "@/assets/main-ridge-frame-wide.jpg";
 
