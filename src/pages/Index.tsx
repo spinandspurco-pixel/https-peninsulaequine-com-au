@@ -501,7 +501,7 @@ export default function Index() {
                 </div>
                 <div className="relative aspect-[3/4] overflow-hidden group">
                   <img
-                    src={mainRidgeCiroWoodwork}
+                    src={mainRidgeCiroWoodwork4}
                     alt="Timber hand-crafting detail"
                     className="absolute inset-0 w-full h-full object-cover object-top brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8] transition-all duration-[900ms]"
                     loading="lazy"
