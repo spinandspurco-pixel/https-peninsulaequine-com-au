@@ -347,7 +347,7 @@ export default function Gallery() {
             <RevealOnScroll direction="up" duration={800} delay={80}>
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 mb-4 sm:mb-5">
                 <div className="lg:col-span-8">
-                  <EditorialImage src={mainRidgeRebarFoundation} alt="Reinforced rebar foundation" aspect="aspect-[16/10]" onClick={() => openLightbox(mainRidgeRebarFoundation)} />
+                  <EditorialImage src={mainRidgeFrameWide} alt="Main Ridge timber frame build phase" aspect="aspect-[16/10]" onClick={() => openLightbox(mainRidgeFrameWide)} />
                 </div>
                 <div className="lg:col-span-4">
                   <EditorialImage src={mainRidgePostDepth} alt="Post hole depth measurement" aspect="aspect-[3/4]" className="h-full" onClick={() => openLightbox(mainRidgePostDepth)} />
@@ -355,20 +355,31 @@ export default function Gallery() {
               </div>
             </RevealOnScroll>
 
-            {/* Row 2 — three process shots */}
+            {/* Row 2 — four process shots */}
             <RevealOnScroll direction="up" duration={700} delay={120}>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-4 sm:mb-5">
+                <EditorialImage src={mainRidgeRebarFoundation} alt="Reinforced rebar foundation" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeRebarFoundation)} />
+                <EditorialImage src={mainRidgeFoundationPour} alt="Concrete foundation pour" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeFoundationPour)} />
+                <EditorialImage src={mainRidgeFrameAngle} alt="Timber frame angle detail" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeFrameAngle)} />
+                <EditorialImage src={mainRidgeFrameProgress} alt="Frame progress — structural assembly" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeFrameProgress)} />
+              </div>
+            </RevealOnScroll>
+
+            {/* Row 3 — three process shots */}
+            <RevealOnScroll direction="up" duration={700} delay={160}>
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mb-4 sm:mb-5">
                 <EditorialImage src={mainRidgeFrameTrench} alt="Foundation trench with frame" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeFrameTrench)} />
                 <EditorialImage src={mainRidgeCraneLift} alt="Crane lifting timber frame" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeCraneLift)} />
                 <div className="col-span-2 lg:col-span-1">
-                  <EditorialImage src={mainRidgeTimberPosts} alt="Timber post installation" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeTimberPosts)} />
+                  <EditorialImage src={mainRidgeSitePrep} alt="Site preparation and groundwork" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeSitePrep)} />
                 </div>
               </div>
             </RevealOnScroll>
 
-            {/* Row 3 — wide completed frame */}
-            <RevealOnScroll direction="up" duration={700} delay={160}>
+            {/* Row 4 — wide completed frame */}
+            <RevealOnScroll direction="up" duration={700} delay={200}>
               <EditorialImage src={mainRidgeBarnFrame} alt="Complete barn timber frame" aspect="aspect-[21/9]" onClick={() => openLightbox(mainRidgeBarnFrame)} />
+            </RevealOnScroll>
             </RevealOnScroll>
           </div>
         </div>

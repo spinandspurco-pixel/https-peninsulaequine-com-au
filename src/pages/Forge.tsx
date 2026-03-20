@@ -104,9 +104,9 @@ export default function Forge() {
         <RevealOnScroll direction="up" duration={700}>
           <div className="grid grid-cols-3">
             {[
-              { src: equitanaEquipment, alt: "Equine equipment detail" },
-              { src: aberdeenStoneworkBw, alt: "Stonework texture" },
-              { src: mainRidgeCiroWoodwork2, alt: "Craft detail" },
+              { src: mainRidgeFrameWide, alt: "Structural timber frame build" },
+              { src: reclaimedBeamWorkshop, alt: "Reclaimed beam workshop prep" },
+              { src: pavilionTimber, alt: "Timber and iron detail" },
             ].map((img, i) => (
               <div key={i} className="relative aspect-[16/9] overflow-hidden group">
                 <img

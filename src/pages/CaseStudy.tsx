@@ -79,9 +79,11 @@ export const CASE_STUDIES: CaseStudyData[] = [
     outcome:
       "A stable, high-performance arena that maintains ride quality in all conditions — paired with a barn that's as functional as it is beautiful.",
     images: [
-      { src: mainRidgeBrickwork, alt: "Precision brickwork foundation" },
+      { src: mainRidgeFrameWide, alt: "Main Ridge timber frame build phase" },
+      { src: mainRidgeFrameAngle, alt: "Timber frame angle detail" },
+      { src: mainRidgeFoundationPour, alt: "Concrete foundation pour" },
       { src: mainRidgeCiroWoodwork1, alt: "Ciro hand-crafting timber" },
-      { src: mainRidgeTimber, alt: "Timber frame construction" },
+      { src: mainRidgeBrickwork, alt: "Precision brickwork foundation" },
       { src: mainRidgeBarnFrame, alt: "Barn frame raising" },
       { src: mainRidgeArenaGrading, alt: "Arena surface grading" },
     ],
