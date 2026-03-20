@@ -764,30 +764,23 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ 7. AUTHORITY STRIP — reduced visual weight ═══ */}
+      {/* ═══ 7. AUTHORITY STRIP — minimal ═══ */}
       <section className="relative overflow-hidden">
-        <div className="py-16 sm:py-24 bg-card/50 relative">
+        <div className="py-14 sm:py-20 bg-card/50 relative">
           <div className="absolute inset-0 grain-texture opacity-20" />
           <div className="section-container relative z-[1]">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-8 max-w-3xl mx-auto text-center">
-              <RevealOnScroll direction="up" stagger={0} staggerInterval={120}>
-                <div>
-                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1.5">Victoria-Wide</p>
-                  <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/20 font-mono">Projects Across the State</p>
-                </div>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" stagger={1} staggerInterval={120}>
-                <div>
-                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1.5">$500K+</p>
-                  <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/20 font-mono">Custom Builds to Scale</p>
-                </div>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" stagger={2} staggerInterval={120}>
-                <div>
-                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1.5">Private &amp; Pro</p>
-                  <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/20 font-mono">Estates &amp; Facilities</p>
-                </div>
-              </RevealOnScroll>
+            <div className="flex flex-wrap justify-center gap-x-14 gap-y-6 max-w-3xl mx-auto">
+              {[
+                { stat: "Victoria-Wide", label: "Projects Across the State" },
+                { stat: "Private & Pro", label: "Estates & Facilities" },
+              ].map((item, i) => (
+                <RevealOnScroll key={item.stat} direction="up" stagger={i} staggerInterval={120}>
+                  <div className="text-center">
+                    <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1.5">{item.stat}</p>
+                    <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/20 font-mono">{item.label}</p>
+                  </div>
+                </RevealOnScroll>
+              ))}
             </div>
           </div>
         </div>
