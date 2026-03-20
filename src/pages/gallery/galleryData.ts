@@ -44,6 +44,7 @@ import equitanaTractors from "@/assets/equitana-tractors.jpg";
 
 // Melbourne Cup / Caulfield
 import caulfieldEvent from "@/assets/caulfield-event.jpg";
+import ranchRoundupEvent from "@/assets/ranch-roundup-event.jpg";
 
 // Arena Sand Prep
 import arenaSandPrep1 from "@/assets/arena-sand-prep-1.jpg";
