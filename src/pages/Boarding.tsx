@@ -291,7 +291,7 @@ export default function Boarding() {
       <PageHeader
         title="Boarding & Facilities"
         description="A safe, well-managed home for your horse. Purpose-built amenities, attentive daily care, and transparent policies you can trust."
-        backgroundImage={qldFacilityStalls}
+        backgroundImage={aberdeenStalls}
       />
 
       <AmenitiesGallery />

@@ -238,9 +238,9 @@ export default function RoundPens() {
           </h2>
           <div className="grid sm:grid-cols-3 gap-4">
             {[
-              { src: qldCourtyard, alt: "Round pen at QLD facility" },
+              { src: coveredArenaLit, alt: "Covered arena at dusk" },
               { src: arenaSandPrep1, alt: "Footing preparation for round pen" },
-              { src: qldStalls, alt: "Adjacent paddock layout" },
+              { src: arenaSandPrep2, alt: "Arena surface grading" },
             ].map((img) => (
               <div key={img.alt} className="aspect-[4/3] rounded-xl overflow-hidden border border-border">
                 <img
