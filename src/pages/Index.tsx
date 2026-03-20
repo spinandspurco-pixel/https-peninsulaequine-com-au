@@ -39,7 +39,7 @@ import peBanner from "@/assets/pe-banner.png";
 import heroSunset from "@/assets/hero-sunset.png";
 
 const PROJECTS = [
-  { src: aberdeenStonework, alt: "Hand-laid stonework at Aberdeen Farm", label: "Aberdeen Farm", scope: "Stables & Stonework", slug: "aberdeen-farm" },
+  { src: aberdeenStonework, alt: "Hand-laid stonework at Private Client — Mornington Peninsula", label: "Private Client — Mornington Peninsula", scope: "Stables & Stonework", slug: "aberdeen-farm" },
   { src: mainRidgeInterior, alt: "Timber interior at Main Ridge", label: "Main Ridge", scope: "Arena & Barn Complex", slug: "main-ridge" },
   { src: equitanaTractors, alt: "Equitana arena preparation", label: "Equitana", scope: "Competition Arena", slug: "equitana" },
   { src: mainRidgeBarnFrame, alt: "Main Ridge barn frame", label: "Main Ridge", scope: "Structural Timber", slug: "main-ridge" },

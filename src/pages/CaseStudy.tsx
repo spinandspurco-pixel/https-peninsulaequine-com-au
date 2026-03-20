@@ -46,7 +46,7 @@ export interface CaseStudyData {
 export const CASE_STUDIES: CaseStudyData[] = [
   {
     slug: "aberdeen-farm",
-    title: "Aberdeen Farm",
+    title: "Private Client — Mornington Peninsula",
     subtitle: "Stables · Stonework · Interior Fit-Out",
     hero: aberdeenStoneworkColor,
     problem:
