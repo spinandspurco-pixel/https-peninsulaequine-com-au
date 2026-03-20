@@ -2,7 +2,7 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
-import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
+import coveredArenaBlackExterior from "@/assets/covered-arena-black-exterior.jpg";
 
 const EquusRidge = () => {
   return (
