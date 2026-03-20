@@ -136,6 +136,7 @@ function ProjectsScroll() {
               alt={project.alt}
               className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.8] group-hover:brightness-[0.92]"
               loading="lazy"
+              decoding="async"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-background/10" />
             <div className="absolute inset-0 bg-gradient-to-b from-background/25 via-transparent to-transparent" />
@@ -431,6 +432,7 @@ export default function Index() {
                   alt="Main Ridge finished pavilion at dusk"
                   className="absolute inset-0 w-full h-full object-cover brightness-[0.55] saturate-[0.65] contrast-[1.1]"
                   loading="lazy"
+              decoding="async"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-background/20" />
               </div>
@@ -733,6 +735,7 @@ export default function Index() {
                     alt="Main Ridge framing build phase"
                     className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8]"
                     loading="lazy"
+              decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-background/10" />
                 </div>
@@ -742,6 +745,7 @@ export default function Index() {
                     alt="Timber frame angle detail"
                     className="absolute inset-0 w-full h-full object-cover object-top img-immersive brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8]"
                     loading="lazy"
+              decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-background/10" />
                 </div>
@@ -763,6 +767,7 @@ export default function Index() {
                       alt={img.alt}
                       className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.65] saturate-[0.7] contrast-[1.1]"
                       loading="lazy"
+              decoding="async"
                     />
                     <div className="absolute inset-0 bg-background/10 group-hover:bg-transparent transition-colors duration-700" />
                   </div>
@@ -817,6 +822,7 @@ export default function Index() {
                     alt="Equus Forge — Peninsula Equine product division"
                     className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.75] group-hover:brightness-[0.85]"
                     loading="lazy"
+              decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/50 via-primary/10 to-transparent" />
                   <div className="absolute inset-0 grain-texture opacity-20" />
@@ -904,6 +910,7 @@ export default function Index() {
               aria-hidden="true"
               className="absolute inset-0 w-full h-full object-cover brightness-[0.15] saturate-[0.4] contrast-[1.1]"
               loading="lazy"
+              decoding="async"
             />
           </div>
           <div className="absolute inset-0 bg-background/75" />
@@ -933,6 +940,7 @@ export default function Index() {
               alt="Peninsula Equine property"
               className="absolute inset-0 w-full h-full object-cover brightness-[0.18] saturate-[0.4] contrast-[1.1]"
               loading="lazy"
+              decoding="async"
             />
           </div>
           <div className="absolute inset-0 bg-background/70" />
@@ -996,6 +1004,7 @@ export default function Index() {
           alt=""
           aria-hidden="true"
           loading="lazy"
+              decoding="async"
           decoding="async"
           className="absolute inset-0 w-full h-full object-cover scale-[1.1] brightness-[0.35] saturate-[0.6] contrast-[1.15]"
         />
