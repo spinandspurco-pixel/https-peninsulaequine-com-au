@@ -917,7 +917,7 @@ export default function Index() {
 
       {/* ═══ BUILT IN THE REAL WORLD — showroom band ═══════ */}
       <section className="relative overflow-hidden">
-        <div className="py-20 sm:py-28 lg:py-36 relative">
+        <div className="py-24 sm:py-32 lg:py-40 relative">
           <div className="absolute inset-0">
             <img
               src={steelShedDramatic}
@@ -935,8 +935,8 @@ export default function Index() {
                 Built in the Real World
               </h2>
               <p className="text-[13px] text-muted-foreground/35 leading-[2] max-w-[400px] mx-auto mb-8">
-                Our systems are designed to be lived with — under floats, trucks, weather, movement,
-                and daily use. The Peninsula Equine property will become the first live showroom for
+                Our systems are tested under floats, trucks, weather, and daily use.
+                The Peninsula Equine property is becoming the first live showroom for
                 GroundLock and future signature systems.
               </p>
               <Link
