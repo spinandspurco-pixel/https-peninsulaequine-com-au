@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useLayoutEffect } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { Button } from "@/components/ui/button";
@@ -182,6 +182,17 @@ function ProcessTimeline() {
 }
 
 export default function Index() {
+  // Preload hero video so LCP fires faster
+  useLayoutEffect(() => {
+    if (document.querySelector('link[data-hero-preload]')) return;
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'video';
+    link.href = heroVideo;
+    link.setAttribute('data-hero-preload', '');
+    document.head.appendChild(link);
+  }, []);
+
   return (
     <Layout>
       {/* ═══ 1. HERO — FULL SCREEN CINEMATIC ═══════════════ */}
