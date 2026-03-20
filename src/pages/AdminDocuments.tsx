@@ -237,6 +237,19 @@ export default function AdminDocuments() {
   const filtered = documents.filter(doc => {
     if (docFilter !== "all" && doc.document_type !== docFilter) return false;
     if (statusFilter !== "all" && doc.status !== statusFilter) return false;
+    if (dateFilter !== "all") {
+      const docDate = new Date(doc.created_at);
+      const now = new Date();
+      if (dateFilter === "today" && format(docDate, "yyyy-MM-dd") !== format(now, "yyyy-MM-dd")) return false;
+      if (dateFilter === "week") {
+        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        if (docDate < weekAgo) return false;
+      }
+      if (dateFilter === "month") {
+        const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        if (docDate < monthAgo) return false;
+      }
+    }
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       return doc.title.toLowerCase().includes(term) ||
