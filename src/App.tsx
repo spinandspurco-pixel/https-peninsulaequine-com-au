@@ -69,8 +69,8 @@ function AppContent() {
   useCartSync();
 
   const handleLogoSettled = useCallback(() => {
-    // Brief pause then reveal header logo
-    setTimeout(() => setHeaderLogoReady(true), 800);
+    // Wait until splash has fully faded out before revealing header logo
+    setTimeout(() => setHeaderLogoReady(true), 1400);
   }, []);
 
   return (
