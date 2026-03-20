@@ -324,7 +324,7 @@ export default function Index() {
       {/* ═══ 3. SERVICES GRID — 2x3 SYSTEM-STYLE ══════════ */}
       <SectionBleed from="background" to="card" />
       <section className="relative overflow-hidden">
-        <div className={`${SP_LG} sm:py-28 lg:py-32 bg-card relative`}>
+        <div className={`${SP_SECTION} bg-card relative`}>
           <div className="absolute inset-0 contour-texture" />
           <div className="absolute inset-0 grain-texture opacity-40" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
