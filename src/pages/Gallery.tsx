@@ -237,9 +237,9 @@ export default function Gallery() {
           className="absolute inset-0 scale-110"
           style={{ transform: `translateY(${parallax.offset * 0.4}px) scale(1.1)` }}
         >
-          <img
-            src={qldAerial1}
-            alt="Queensland equine facility — aerial view"
+           <img
+            src={coveredArenaFinishedLit}
+            alt="Covered arena — finished and lit at dusk"
             className="w-full h-full object-cover"
           />
         </div>
