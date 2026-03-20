@@ -18,6 +18,9 @@ import mainRidgeCiroWoodwork1 from "@/assets/main-ridge-ciro-woodwork-1.jpg";
 import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
 import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
 import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
+import mainRidgeFrameWide from "@/assets/main-ridge-frame-wide.jpg";
+import mainRidgeFrameAngle from "@/assets/main-ridge-frame-angle.jpg";
+import mainRidgeFoundationPour from "@/assets/main-ridge-foundation-pour.jpg";
 
 import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
 import qldAerial1 from "@/assets/qld-facility-aerial-1.jpg";
