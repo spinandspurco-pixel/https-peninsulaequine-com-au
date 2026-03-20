@@ -514,7 +514,7 @@ export default function Index() {
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mt-16 img-bridge">
                 <div className="relative aspect-[16/10] overflow-hidden group col-span-2 lg:col-span-2">
                   <img
-                    src={mainRidgeRebarFoundation}
+                    src={rebarFoundation}
                     alt="Foundation reinforcement"
                     className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8]"
                     loading="lazy"
@@ -523,8 +523,8 @@ export default function Index() {
                 </div>
                 <div className="relative aspect-[3/4] overflow-hidden group">
                   <img
-                    src={mainRidgeCiroWoodwork4}
-                    alt="Timber hand-crafting detail"
+                    src={brickworkEucalyptus}
+                    alt="Brickwork with eucalyptus backdrop"
                     className="absolute inset-0 w-full h-full object-cover object-top img-immersive brightness-[0.7] saturate-[0.8] group-hover:brightness-[0.8]"
                     loading="lazy"
                   />
