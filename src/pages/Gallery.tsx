@@ -455,7 +455,7 @@ export default function Gallery() {
             <RevealOnScroll direction="up" duration={700} delay={120}>
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
                 <EditorialImage src={qldExterior1} alt="Queensland — barn exterior" aspect="aspect-[4/3]" onClick={() => openLightbox(qldExterior1)} />
-                <EditorialImage src={mainRidgeTimber} alt="Main Ridge — timber beam joinery" aspect="aspect-[4/3]" onClick={() => openLightbox(mainRidgeTimber)} />
+                <EditorialImage src={equitanaArena6} alt="Equitana — arena surface detail" aspect="aspect-[4/3]" onClick={() => openLightbox(equitanaArena6)} />
                 <div className="col-span-2 lg:col-span-1">
                   <EditorialImage src={qldCourtyard} alt="Queensland — central courtyard" aspect="aspect-[4/3]" onClick={() => openLightbox(qldCourtyard)} />
                 </div>
