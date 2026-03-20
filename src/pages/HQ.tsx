@@ -10,7 +10,7 @@ import { Eye, EyeOff, Loader2, Lock, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
-import logoPeMark from "@/assets/logo-pe-mark.png";
+import logoPeMark from "@/assets/logo-pe-mark.webp";
 
 /* ── Division data ────────────────────────────────── */
 

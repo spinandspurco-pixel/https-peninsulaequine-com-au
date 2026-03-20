@@ -15,7 +15,7 @@ import {
   CheckCircle2, AlertCircle, ChevronDown, ChevronUp, Calendar, ShieldCheck,
   FileWarning, Download, ArrowLeft, FolderOpen, Bell, ClipboardList, AlertTriangle, Heart,
 } from "lucide-react";
-import logoPeMark from "@/assets/logo-pe-mark.png";
+import logoPeMark from "@/assets/logo-pe-mark.webp";
 
 // Staff-specific document types (construction & payroll)
 const STAFF_DOC_TYPES = {

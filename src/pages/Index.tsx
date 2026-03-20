@@ -38,7 +38,7 @@ import glennRiding from "@/assets/glenn-riding.jpg";
 import peBanner from "@/assets/pe-banner.png";
 
 // CTA closer
-import heroSunset from "@/assets/hero-sunset.png";
+import heroSunset from "@/assets/hero-sunset.webp";
 
 const PROJECTS = [
   { src: mainRidgeFinishedExterior, alt: "Main Ridge pavilion at dusk", label: "Main Ridge", scope: "Pavilion & Parrilla Grill", slug: "main-ridge" },

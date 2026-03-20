@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import logoPeMark from "@/assets/logo-pe-mark.png";
+import logoPeMark from "@/assets/logo-pe-mark.webp";
 
 interface StaffPortalFrameProps {
   title: string;
