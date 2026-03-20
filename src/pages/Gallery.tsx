@@ -571,6 +571,8 @@ export default function Gallery() {
         </div>
       </section>
 
+      <ChapterDivider />
+
       {/* ═══════════════════════════════════════════════════
           8. FINAL CTA — cinematic full-width image
           ═══════════════════════════════════════════════════ */}
