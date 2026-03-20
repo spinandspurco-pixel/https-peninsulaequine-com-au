@@ -346,7 +346,7 @@ export default function Index() {
                       <h3 className="font-serif text-[15px] font-medium text-foreground mb-3 tracking-[0.02em] group-hover:text-accent transition-colors duration-500">
                         {svc.title}
                       </h3>
-                      <p className="text-[12px] text-muted-foreground/35 leading-[1.9] max-w-[260px] flex-1">{svc.desc}</p>
+                      <p className="text-[12px] text-muted-foreground/35 leading-[1.9] max-w-[240px] flex-1">{svc.desc}</p>
                       <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/0 group-hover:text-accent/40 transition-all duration-500 mt-6 self-end" />
                     </div>
                   </Link>
