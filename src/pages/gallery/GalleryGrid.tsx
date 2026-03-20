@@ -84,16 +84,6 @@ function CinematicImage({
       )}
 
 
-      {/* Caption */}
-      <div className="absolute bottom-0 inset-x-0 z-[3] p-5 sm:p-6 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0">
-        <div className="w-8 h-px bg-accent/60 mb-2.5" />
-        <p className="text-foreground text-sm font-serif leading-snug line-clamp-2">
-          {item.alt.includes(" - ") ? item.alt.split(" - ").slice(1).join(" - ") : item.alt}
-        </p>
-        <p className="text-muted-foreground/40 text-[9px] uppercase tracking-[0.25em] mt-1.5 font-mono">
-          {item.alt.includes(" - ") ? item.alt.split(" - ")[0] : "Peninsula Equine"}
-        </p>
-      </div>
     </button>
   );
 }
