@@ -148,13 +148,17 @@ export default function HQ() {
               <RevealOnScroll key={div.title} direction="up" stagger={i} staggerInterval={120}>
                 <Link
                   to={div.href}
-                  className="group relative flex flex-col p-8 sm:p-10 lg:p-12 min-h-[260px] border border-border/20 hover:border-border/40 bg-card/30 hover:bg-card/60 transition-all duration-700"
+                  className="group relative flex flex-col p-8 sm:p-10 lg:p-12 min-h-[300px] border border-border/20 hover:border-border/40 bg-card/30 hover:bg-card/60 transition-all duration-700"
                 >
                   <div className="absolute top-0 left-0 w-8 h-px bg-accent/20 group-hover:w-14 group-hover:bg-accent/40 transition-all duration-700" />
 
-                  <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/25 mb-8 block">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/25 mb-3 block">
                     {div.num}
                   </span>
+
+                  <p className="font-mono text-[8px] uppercase tracking-[0.25em] text-muted-foreground/20 mb-8">
+                    {div.role}
+                  </p>
 
                   <h3 className="font-serif text-[17px] sm:text-[18px] font-medium text-foreground/65 tracking-[0.02em] mb-5 group-hover:text-foreground/90 transition-colors duration-500">
                     {div.title}
@@ -165,7 +169,7 @@ export default function HQ() {
                   </p>
 
                   <div className="flex items-center gap-2 mt-8 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0">
-                    <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-accent/50">View</span>
+                    <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-accent/50">{div.cta}</span>
                     <ArrowRight className="w-3 h-3 text-accent/40" />
                   </div>
                 </Link>
@@ -175,46 +179,17 @@ export default function HQ() {
         </div>
       </section>
 
-      {/* ── In Development ───────────────────────────── */}
-      <section className="py-20 sm:py-28 border-t border-border/15">
-        <div className="section-container max-w-2xl mx-auto text-center">
+      {/* ── Horizon ──────────────────────────────────── */}
+      <section className="py-16 sm:py-20 border-t border-border/10">
+        <div className="section-container max-w-md mx-auto text-center">
           <RevealOnScroll>
-            <div className="flex items-center justify-center gap-5 mb-8">
-              <div className="w-6 h-px bg-accent/15" />
-              <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/30">
-                In Development
-              </p>
-              <div className="w-6 h-px bg-accent/15" />
-            </div>
-            <p className="text-[12px] sm:text-[13px] text-muted-foreground/25 leading-[2.2] max-w-md mx-auto">
-              GroundLock planning tools, premium entry packages, forge-integrated
-              systems, and future Peninsula Equine product lines.
+            <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/25 mb-6">
+              Expanding
             </p>
-          </RevealOnScroll>
-        </div>
-      </section>
-
-      {/* ── CTA Row ──────────────────────────────────── */}
-      <section className="pb-16 sm:pb-20">
-        <div className="section-container max-w-3xl mx-auto">
-          <RevealOnScroll>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to="/contact">
-                <button className="px-8 py-3 text-[11px] tracking-[0.2em] uppercase font-medium border border-accent/30 text-accent/60 hover:bg-accent/10 hover:text-accent transition-all duration-500 w-full sm:w-auto">
-                  Start a Project
-                </button>
-              </Link>
-              <Link to="/systems">
-                <button className="px-8 py-3 text-[11px] tracking-[0.2em] uppercase font-medium border border-border/20 text-muted-foreground/40 hover:border-border/40 hover:text-muted-foreground/60 transition-all duration-500 w-full sm:w-auto">
-                  Enquire About Systems
-                </button>
-              </Link>
-              <Link to="/shop">
-                <button className="px-8 py-3 text-[11px] tracking-[0.2em] uppercase font-medium border border-border/20 text-muted-foreground/40 hover:border-border/40 hover:text-muted-foreground/60 transition-all duration-500 w-full sm:w-auto">
-                  Explore Equus Forge
-                </button>
-              </Link>
-            </div>
+            <p className="text-[12px] sm:text-[13px] text-muted-foreground/20 leading-[2.2]">
+              Planning tools, entry automation, forecourt products, and
+              estate hardware — validated through builds before release.
+            </p>
           </RevealOnScroll>
         </div>
       </section>
