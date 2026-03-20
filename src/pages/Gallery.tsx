@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { ArrowRight, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useParallax } from "@/hooks/useParallax";
@@ -110,6 +111,26 @@ function EditorialImage({
       {onClick && (
         <div className="absolute inset-0 z-[2] bg-gradient-to-t from-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       )}
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────
+   CHAPTER DIVIDER — subtle vertical pacing line
+   ──────────────────────────────────────────────────────── */
+function ChapterDivider() {
+  const { ref, isVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.5 });
+
+  return (
+    <div ref={ref} className="relative py-10 sm:py-14 lg:py-16 flex items-center justify-center overflow-hidden">
+      <div
+        className="w-px h-10 sm:h-14 bg-accent/20 origin-top"
+        style={{
+          transform: isVisible ? "scaleY(1)" : "scaleY(0)",
+          opacity: isVisible ? 1 : 0,
+          transition: "transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 100ms, opacity 600ms ease 100ms",
+        }}
+      />
     </div>
   );
 }
@@ -243,6 +264,8 @@ export default function Gallery() {
         </div>
       </section>
 
+      <ChapterDivider />
+
       {/* ═══════════════════════════════════════════════════
           2. FEATURE PROJECT — Aberdeen Farm (5 images)
           ═══════════════════════════════════════════════════ */}
@@ -296,6 +319,8 @@ export default function Gallery() {
         </div>
       </section>
 
+      <ChapterDivider />
+
       {/* ═══════════════════════════════════════════════════
           3. BUILD PROCESS — construction sequence strip
           ═══════════════════════════════════════════════════ */}
@@ -342,6 +367,8 @@ export default function Gallery() {
           </div>
         </div>
       </section>
+
+      <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
           4. GROUNDLOCK / SYSTEM STRIP
@@ -437,6 +464,8 @@ export default function Gallery() {
         </div>
       </section>
 
+      <ChapterDivider />
+
       {/* ═══════════════════════════════════════════════════
           6. CRAFT & LIFE — detail + human moments
           ═══════════════════════════════════════════════════ */}
@@ -469,6 +498,8 @@ export default function Gallery() {
           </div>
         </RevealOnScroll>
       </section>
+
+      <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
           7. BROWSE ALL — expandable filter grid
@@ -539,6 +570,8 @@ export default function Gallery() {
           </div>
         </div>
       </section>
+
+      <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
           8. FINAL CTA — cinematic full-width image
