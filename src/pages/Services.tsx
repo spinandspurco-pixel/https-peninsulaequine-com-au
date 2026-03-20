@@ -59,7 +59,7 @@ export default function Services() {
       <ServicesSchemaMarkup />
 
       {/* ═══ HERO ═══════════════════════════════════════ */}
-      <section className="relative pt-40 sm:pt-48 pb-24 sm:pb-32 overflow-hidden">
+      <section className="relative pt-40 sm:pt-52 pb-28 sm:pb-36 overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={equitanaArena}
@@ -101,7 +101,7 @@ export default function Services() {
       {/* ═══ CAPABILITY PILLARS ═════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-32 sm:py-44 relative">
+        <div className="py-32 sm:py-40 lg:py-48 relative">
           <div className="absolute inset-0 contour-texture" />
           <div className="section-container max-w-4xl mx-auto relative z-[1]">
             <div className="space-y-0">
@@ -152,7 +152,7 @@ export default function Services() {
       {/* ═══ APPROACH ══════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-28 sm:py-40 bg-card relative">
+        <div className="py-32 sm:py-40 lg:py-48 bg-card relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
             <RevealOnScroll direction="up">
@@ -202,7 +202,7 @@ export default function Services() {
       {/* ═══ CTA ═══════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-28 sm:py-40 relative">
+        <div className="py-32 sm:py-40 lg:py-48 relative">
           <div className="absolute inset-0 grain-texture" />
           <div
             className="absolute inset-0"

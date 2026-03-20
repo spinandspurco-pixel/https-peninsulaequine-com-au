@@ -62,9 +62,9 @@ const PROCESS_STEPS = [
 ];
 
 /* ── Standardised spacing constants ───── */
-const SP_LG = "py-20"; // 80px
-const SP_MD = "mb-12"; // 48px
-const SP_SM = "mb-6"; // 24px
+const SP_SECTION = "py-24 sm:py-32 lg:py-40";
+const SP_HEAD = "mb-14 sm:mb-16";
+const SP_SM = "mb-6";
 
 /* ── Soft gradient transition between sections ─── */
 function SectionBleed({ from = "background", to = "card" }: { from?: string; to?: string }) {
@@ -277,7 +277,7 @@ export default function Index() {
       {/* ═══ 2. INTRO — SPLIT SCREEN ═══════════════════════ */}
       <SectionBleed from="background" to="background" />
       <section className="relative overflow-hidden">
-        <div className={`${SP_LG} sm:py-28 lg:py-32 relative`}>
+        <div className={`${SP_SECTION} relative`}>
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-6xl mx-auto relative z-[1]">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
@@ -324,12 +324,12 @@ export default function Index() {
       {/* ═══ 3. SERVICES GRID — 2x3 SYSTEM-STYLE ══════════ */}
       <SectionBleed from="background" to="card" />
       <section className="relative overflow-hidden">
-        <div className={`${SP_LG} sm:py-28 lg:py-32 bg-card relative`}>
+        <div className={`${SP_SECTION} bg-card relative`}>
           <div className="absolute inset-0 contour-texture" />
           <div className="absolute inset-0 grain-texture opacity-40" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
             {/* Section header — left-aligned */}
-            <div className={`${SP_MD}`}>
+            <div className={`${SP_HEAD}`}>
               <RevealOnScroll direction="up">
                 <RevealLine className="mb-6" width="w-10" />
               </RevealOnScroll>
@@ -374,11 +374,11 @@ export default function Index() {
       {/* ═══ 4. PROJECTS — HORIZONTAL SCROLL ═══════════════ */}
       <SectionBleed from="card" to="background" />
       <section className="relative overflow-hidden">
-        <div className={`${SP_LG} sm:py-28 lg:py-32 relative`}>
+        <div className={`${SP_SECTION} relative`}>
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-7xl mx-auto relative z-[1]">
             {/* Left-aligned header */}
-            <div className={`${SP_MD}`}>
+             <div className={`${SP_HEAD}`}>
               <RevealOnScroll direction="up">
                 <RevealLine className="mb-6" width="w-10" />
               </RevealOnScroll>
@@ -410,7 +410,7 @@ export default function Index() {
       {/* ═══ 5. GROUNDLOCK — SIGNATURE SYSTEM ══════════════ */}
       <SectionBleed from="background" to="card" />
       <section className="relative overflow-hidden">
-        <div className={`${SP_LG} sm:py-28 lg:py-32 bg-card relative`}>
+        <div className={`${SP_SECTION} bg-card relative`}>
           <div className="absolute inset-0 engineering-grid" />
           <div className="absolute inset-0 grain-texture opacity-30" />
           <div
@@ -468,10 +468,10 @@ export default function Index() {
       {/* ═══ 6. PROCESS — TIMELINE + BUILD IMAGERY ══════════ */}
       <SectionBleed from="card" to="background" />
       <section className="relative overflow-hidden">
-        <div className="py-20 sm:py-28 relative">
+        <div className="py-24 sm:py-32 lg:py-40 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
-            <div className={`${SP_MD}`}>
+            <div className={`${SP_HEAD}`}>
               <RevealOnScroll direction="up">
                 <RevealLine className="mb-6" width="w-10" />
               </RevealOnScroll>
@@ -522,9 +522,9 @@ export default function Index() {
               { src: mainRidgeTimber, alt: "Timber grain detail" },
               { src: arenaSandPrep2, alt: "Arena sand preparation" },
               { src: mainRidgeCiroWoodwork4, alt: "Timber hand-crafting" },
-              { src: mainRidgeRebarFoundation, alt: "Rebar foundation" },
+              { src: mainRidgeRebarFoundation, alt: "Rebar foundation detail" },
               { src: heroSunset, alt: "Landscape at golden hour" },
-              { src: mainRidgeTimber, alt: "Timber joinery" },
+              { src: stoneworkStables, alt: "Stonework texture" },
             ].map((img, i) => (
               <div key={i} className="relative aspect-square overflow-hidden group">
                 <img
@@ -542,25 +542,25 @@ export default function Index() {
 
       {/* ═══ 7. AUTHORITY STRIP — reduced visual weight ═══ */}
       <section className="relative overflow-hidden">
-        <div className="py-12 sm:py-16 bg-card/50 relative">
+        <div className="py-16 sm:py-24 bg-card/50 relative">
           <div className="absolute inset-0 grain-texture opacity-20" />
           <div className="section-container relative z-[1]">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6 max-w-3xl mx-auto text-center">
-              <RevealOnScroll direction="up" stagger={0} staggerInterval={100}>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-8 max-w-3xl mx-auto text-center">
+              <RevealOnScroll direction="up" stagger={0} staggerInterval={120}>
                 <div>
-                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1">Victoria-Wide</p>
+                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1.5">Victoria-Wide</p>
                   <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/20 font-mono">Projects Across the State</p>
                 </div>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" stagger={1} staggerInterval={100}>
+              <RevealOnScroll direction="up" stagger={1} staggerInterval={120}>
                 <div>
-                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1">$500K+</p>
+                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1.5">$500K+</p>
                   <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/20 font-mono">Custom Builds to Scale</p>
                 </div>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" stagger={2} staggerInterval={100}>
+              <RevealOnScroll direction="up" stagger={2} staggerInterval={120}>
                 <div>
-                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1">Private &amp; Pro</p>
+                  <p className="font-serif text-xl sm:text-2xl text-foreground/70 mb-1.5">Private &amp; Pro</p>
                   <p className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground/20 font-mono">Estates &amp; Facilities</p>
                 </div>
               </RevealOnScroll>
@@ -572,7 +572,7 @@ export default function Index() {
       {/* ═══ 8. EQUUS FORGE — SHOP PREVIEW ════════════════ */}
       <SectionBleed from="card" to="primary" />
       <section className="relative overflow-hidden">
-        <div className={`${SP_LG} sm:py-28 bg-primary relative`}>
+        <div className={`${SP_SECTION} bg-primary relative`}>
           <div className="absolute inset-0 opacity-[0.025]" style={{
             backgroundImage: "repeating-linear-gradient(135deg, transparent, transparent 20px, hsl(var(--primary-foreground)) 20px, hsl(var(--primary-foreground)) 21px)",
           }} />
@@ -630,7 +630,7 @@ export default function Index() {
 
       {/* ═══ TRAINING STRIP — with Glenn image ═════════════ */}
       <section className="relative overflow-hidden">
-        <div className="relative py-10 sm:py-14">
+        <div className="relative py-14 sm:py-20">
           <div className="absolute inset-0">
             <img
               src={trainerGlenn}
@@ -659,7 +659,7 @@ export default function Index() {
       </section>
 
       {/* ═══ 9. FINAL CTA — cinematic sunset ═══════════════ */}
-      <section className="relative h-[65vh] sm:h-[75vh] overflow-hidden">
+      <section className="relative h-[70vh] sm:h-[80vh] overflow-hidden">
         <img
           src={heroSunset}
           alt=""
