@@ -154,6 +154,20 @@ export default function Services() {
         </div>
       </section>
 
+      {/* ═══ TRAINING MENTION ═════════════════════════════ */}
+      <section className="relative border-t border-border/5">
+        <div className="py-6 sm:py-8">
+          <div className="section-container relative z-10 text-center max-w-md mx-auto">
+            <p className="text-[9px] uppercase tracking-[0.35em] text-muted-foreground/12 font-mono mb-2">
+              On-site training
+            </p>
+            <p className="text-[11px] sm:text-[12px] text-muted-foreground/18 leading-[1.85] font-serif italic">
+              Select training sessions are available on-site with Glenn Browitt on Thursdays and Fridays, offering experienced guidance in horsemanship and performance.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ CTA ═══════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
