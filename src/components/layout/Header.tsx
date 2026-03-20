@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useIntroState } from "@/hooks/useIntroState";
 import logoImage from "@/assets/logo-pe-mark.png";
 
 const navigation = [
