@@ -233,8 +233,6 @@ export default function Forge() {
           <div className="section-container max-w-3xl mx-auto relative z-[1]">
             <RevealOnScroll>
               <p className="text-overline text-accent/50 mb-6 text-center">Product Families</p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={40}>
               <p className="text-[12px] sm:text-[13px] text-muted-foreground/25 leading-[2] max-w-lg mx-auto text-center mb-16">
                 Three core divisions — each one engineered to integrate with
                 Peninsula Equine's design-build methodology and proprietary
