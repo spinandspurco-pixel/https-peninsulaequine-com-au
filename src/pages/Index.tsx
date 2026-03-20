@@ -10,25 +10,40 @@ import { cn } from "@/lib/utils";
 // Video
 import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
 
-// Portfolio imagery
+// Portfolio imagery — curated hero-tier visuals
 import aberdeenStonework from "@/assets/aberdeen-stonework-color.jpg";
 import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
 import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
-import qldExterior from "@/assets/qld-facility-exterior-1.jpg";
-import mainRidgeCraneLift from "@/assets/main-ridge-crane-lift.jpg";
+import equitanaTractors from "@/assets/equitana-tractors.jpg";
+import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
 
 // Intro video
 import buildVideo from "@/assets/videos/main-ridge-woodwork-1.mp4";
 
+// Detail / material textures
+import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
+import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
+import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
+
+// Process / build imagery
+import mainRidgeCiroWoodwork from "@/assets/main-ridge-ciro-woodwork-1.jpg";
+import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
+
+// Training
+import trainerGlenn from "@/assets/trainer-glenn.jpg";
+
 // Shop / Forge imagery
 import peBanner from "@/assets/pe-banner.png";
+
+// CTA closer
+import heroSunset from "@/assets/hero-sunset.png";
 
 const PROJECTS = [
   { src: aberdeenStonework, alt: "Hand-laid stonework at Aberdeen Farm", label: "Aberdeen Farm", scope: "Stables & Stonework", slug: "aberdeen-farm" },
   { src: mainRidgeInterior, alt: "Timber interior at Main Ridge", label: "Main Ridge", scope: "Arena & Barn Complex", slug: "main-ridge" },
+  { src: equitanaTractors, alt: "Equitana arena preparation", label: "Equitana", scope: "Competition Arena", slug: "equitana" },
+  { src: mainRidgeBarnFrame, alt: "Main Ridge barn frame", label: "Main Ridge", scope: "Structural Timber", slug: "main-ridge" },
   { src: qldCourtyard, alt: "Queensland facility courtyard", label: "QLD Facility", scope: "Full Facility Build", slug: "qld-facility" },
-  { src: qldExterior, alt: "QLD facility exterior view", label: "QLD Exterior", scope: "Stable & Arena", slug: "qld-facility" },
-  { src: mainRidgeCraneLift, alt: "Main Ridge crane lift", label: "Main Ridge", scope: "Structural Steel", slug: "main-ridge" },
 ];
 
 const SERVICES = [
