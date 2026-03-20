@@ -51,19 +51,19 @@ const PROJECTS = [
 ];
 
 const SERVICES = [
-  { icon: Mountain, title: "Arenas", desc: "Precision-graded surfaces with consistent footing and zero drainage failure.", href: "/services" },
-  { icon: Fence, title: "Fencing", desc: "Post-and-rail, steel, and custom systems shaped for daily equine use.", href: "/services" },
-  { icon: Home, title: "Stables", desc: "Designed around horse behaviour, airflow, sightlines, and structural longevity.", href: "/services" },
-  { icon: Layers, title: "GroundLock Systems", desc: "Interlocking ground stabilisation for entries, laneways, and high-traffic zones.", href: "/groundlock" },
-  { icon: Shovel, title: "Earthworks", desc: "Civil preparation, sub-base profiling, and drainage behaviour mapping.", href: "/services" },
-  { icon: Wrench, title: "Custom Builds", desc: "Wash bays, float areas, pavilions, and bespoke rural infrastructure.", href: "/services" },
+  { icon: Mountain, title: "Arenas", desc: "Precision-graded surfaces engineered for consistent footing, drainage performance, and long-term use under horses and machinery.", href: "/services" },
+  { icon: Fence, title: "Fencing & Yard Systems", desc: "Post-and-rail, steel, and custom configurations shaped around horse movement, handler access, and property flow.", href: "/services" },
+  { icon: Home, title: "Stables & Barns", desc: "Structures designed around equine behaviour — airflow, sightlines, daily workflow, and structural longevity.", href: "/services" },
+  { icon: Layers, title: "GroundLock Entry Systems", desc: "Interlocking ground stabilisation for front entries, laneways, and high-traffic arrival zones.", href: "/groundlock" },
+  { icon: Shovel, title: "Earthworks & Drainage", desc: "Sub-base profiling, drainage behaviour mapping, and civil preparation shaped by how the site actually moves water.", href: "/services" },
+  { icon: Wrench, title: "Custom Infrastructure", desc: "Wash bays, float hardstands, pavilions, and bespoke rural builds resolved for real daily use.", href: "/services" },
 ];
 
 const PROCESS_STEPS = [
-  { num: "01", title: "Site Reading", desc: "We walk the property — assessing how it moves, drains, wears, and lives under daily equine use." },
-  { num: "02", title: "Specification", desc: "A structured project brief covering materials, access logic, drainage behaviour, and build sequence." },
-  { num: "03", title: "Construction", desc: "Hands-on build with quality checkpoints, real-time decisions, and zero compromise on method." },
-  { num: "04", title: "Handover", desc: "Final walkthrough, care guidance, and a finished result built to hold up — not just look finished." },
+  { num: "01", title: "Site Reading", desc: "We walk the property to understand how it moves, drains, wears, and functions — from access and arrival to traffic flow and water behaviour." },
+  { num: "02", title: "Specification", desc: "A structured project brief shaped by what the site told us — materials, drainage logic, access sequence, and build method." },
+  { num: "03", title: "Construction", desc: "Hands-on build with quality checkpoints, real-time decisions on site, and zero compromise on method or material." },
+  { num: "04", title: "Handover", desc: "Final walkthrough, care guidance, and a result built to hold up under weather, movement, machinery, horses, and time." },
 ];
 
 /* ── Standardised spacing constants ───── */
@@ -164,20 +164,16 @@ function ProjectsScroll() {
 /* ── Process Timeline ────────────────── */
 function ProcessTimeline() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-0">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-0">
       {PROCESS_STEPS.map((step, i) => (
         <RevealOnScroll key={step.num} direction="up" stagger={i} staggerInterval={120}>
           <div className="relative lg:px-8">
             {i < PROCESS_STEPS.length - 1 && (
-              <div className="hidden lg:block absolute top-5 left-[calc(50%+20px)] right-0 h-px bg-accent/10" />
+              <div className="hidden lg:block absolute top-3 left-[calc(50%+20px)] right-0 h-px bg-accent/8" />
             )}
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 rounded-full border border-accent/20 flex items-center justify-center flex-shrink-0 bg-accent/[0.03]">
-                <span className="text-[10px] font-mono text-accent/60 tracking-wider">{step.num}</span>
-              </div>
-              <h4 className="font-serif text-sm font-medium text-foreground tracking-[0.02em]">{step.title}</h4>
-            </div>
-            <p className="text-[12px] text-muted-foreground/35 leading-[1.9] lg:pl-[52px] max-w-[220px]">{step.desc}</p>
+            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/25 mb-5 block">{step.num}</span>
+            <h4 className="font-serif text-[15px] font-medium text-foreground/70 tracking-[0.02em] mb-4">{step.title}</h4>
+            <p className="text-[12px] text-muted-foreground/30 leading-[2] max-w-[240px]">{step.desc}</p>
           </div>
         </RevealOnScroll>
       ))}
@@ -325,47 +321,48 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ 3. SERVICES GRID — 2x3 SYSTEM-STYLE ══════════ */}
-      <SectionBleed from="background" to="card" />
+      {/* ═══ 3. CAPABILITIES — borderless, ecosystem-consistent ══════════ */}
       <section className="relative overflow-hidden">
-        <div className={`${SP_SECTION} bg-card relative`}>
-          <div className="absolute inset-0 contour-texture" />
-          <div className="absolute inset-0 grain-texture opacity-40" />
+        <div className="py-28 sm:py-36 lg:py-44 bg-card relative">
+          <div className="absolute inset-0 grain-texture opacity-30" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
-            {/* Section header — left-aligned */}
-            <div className={`${SP_HEAD}`}>
+            {/* Section header */}
+            <div className="text-center mb-20 sm:mb-24">
               <RevealOnScroll direction="up">
-                <RevealLine className="mb-6" width="w-10" />
+                <div className="flex items-center justify-center gap-5 mb-10">
+                  <div className="w-10 h-px bg-accent/20" />
+                  <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/40">What We Build</p>
+                  <div className="w-10 h-px bg-accent/20" />
+                </div>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={80}>
-                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">What We Build</p>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={120}>
-                <h2 className="heading-section text-foreground">
+              <RevealOnScroll direction="up" delay={100}>
+                <h2 className="font-serif text-2xl sm:text-3xl md:text-[2.25rem] font-light text-foreground/80 leading-[1.25] max-w-xl mx-auto">
                   Capabilities
                 </h2>
               </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={200}>
+                <p className="mt-8 text-[12px] sm:text-[13px] text-muted-foreground/30 leading-[2.2] max-w-md mx-auto">
+                  Equine construction and rural infrastructure — shaped by how properties
+                  actually move, drain, wear, and function under daily use.
+                </p>
+              </RevealOnScroll>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border/10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-5">
               {SERVICES.map((svc, i) => (
                 <RevealOnScroll key={svc.title} direction="up" stagger={i} staggerInterval={80}>
                   <Link
                     to={svc.href}
-                    className="group relative flex flex-col p-8 bg-card hover:bg-secondary/30 transition-all duration-700 hover:-translate-y-0.5 overflow-hidden min-h-[200px]"
+                    className="group relative flex flex-col p-8 sm:p-10 min-h-[240px] border border-border/20 hover:border-border/40 bg-card/40 hover:bg-card/70 transition-all duration-700 ease-out"
                   >
-                    {/* Subtle glow on hover */}
-                    <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                      style={{ background: "radial-gradient(ellipse at 30% 30%, hsl(var(--accent) / 0.03) 0%, transparent 60%)" }}
-                    />
-                    <div className="relative z-10 flex flex-col h-full">
-                      <ServiceIcon icon={svc.icon} className={`mb-6`} />
-                      <h3 className="font-serif text-[15px] font-medium text-foreground mb-3 tracking-[0.02em] group-hover:text-accent transition-colors duration-500">
-                        {svc.title}
-                      </h3>
-                      <p className="text-[12px] text-muted-foreground/35 leading-[1.9] max-w-[240px] flex-1">{svc.desc}</p>
-                      <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/0 group-hover:text-accent/40 transition-all duration-500 mt-6 self-end" />
+                    <div className="absolute top-0 left-0 w-8 h-px bg-accent/20 group-hover:w-14 group-hover:bg-accent/40 transition-all duration-700" />
+                    <ServiceIcon icon={svc.icon} className="mb-6" />
+                    <h3 className="font-serif text-[15px] font-medium text-foreground/65 mb-4 tracking-[0.02em] group-hover:text-foreground/90 transition-colors duration-500">
+                      {svc.title}
+                    </h3>
+                    <p className="text-[12px] text-muted-foreground/25 leading-[2.1] max-w-[260px] flex-1">{svc.desc}</p>
+                    <div className="flex items-center gap-2 mt-6 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0">
+                      <ArrowRight className="w-3 h-3 text-accent/40" />
                     </div>
                   </Link>
                 </RevealOnScroll>
@@ -692,21 +689,24 @@ export default function Index() {
         <div className="py-28 sm:py-36 lg:py-44 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
-            <div className={`${SP_HEAD}`}>
+            <div className="text-center mb-20 sm:mb-24">
               <RevealOnScroll direction="up">
-                <RevealLine className="mb-6" width="w-10" />
+                <div className="flex items-center justify-center gap-5 mb-10">
+                  <div className="w-10 h-px bg-accent/20" />
+                  <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/40">How We Work</p>
+                  <div className="w-10 h-px bg-accent/20" />
+                </div>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={80}>
-                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">How We Work</p>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={120}>
-                <h2 className="heading-section text-foreground mb-4">
-                  Every Resolved Project Begins on Site
+              <RevealOnScroll direction="up" delay={100}>
+                <h2 className="font-serif text-2xl sm:text-3xl md:text-[2.25rem] font-light text-foreground/80 leading-[1.25] max-w-xl mx-auto">
+                  Every resolved project begins on site.
                 </h2>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={160}>
-                <p className="text-[13px] text-muted-foreground/35 leading-[2] max-w-[420px]">
-                  We assess how the property moves, drains, wears, and lives — so the outcome holds up under daily equine use, not just on handover day.
+              <RevealOnScroll direction="up" delay={200}>
+                <p className="mt-8 text-[12px] sm:text-[13px] text-muted-foreground/30 leading-[2.2] max-w-lg mx-auto">
+                  We assess how the property moves, drains, wears, and functions under real daily use —
+                  from access and arrival to drainage behaviour, traffic flow, and long-term site performance.
+                  This early stage shapes everything that follows.
                 </p>
               </RevealOnScroll>
             </div>
