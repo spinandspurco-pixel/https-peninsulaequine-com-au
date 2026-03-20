@@ -193,9 +193,9 @@ export default function Gallery() {
           ═══════════════════════════════════════════════════ */}
       <section className="relative h-[85vh] sm:h-[90vh] overflow-hidden">
         <div
-          ref={heroRef}
+          ref={parallax.ref}
           className="absolute inset-0 scale-110"
-          style={{ transform: `translateY(${parallax.y * 0.4}px) scale(1.1)` }}
+          style={{ transform: `translateY(${parallax.offset * 0.4}px) scale(1.1)` }}
         >
           <img
             src={qldAerial1}
