@@ -378,7 +378,7 @@ export default function Index() {
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-7xl mx-auto relative z-[1]">
             {/* Left-aligned header */}
-            <div className={`${SP_MD}`}>
+             <div className={`${SP_HEAD}`}>
               <RevealOnScroll direction="up">
                 <RevealLine className="mb-6" width="w-10" />
               </RevealOnScroll>
