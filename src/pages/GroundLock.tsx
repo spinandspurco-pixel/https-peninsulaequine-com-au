@@ -277,8 +277,8 @@ export default function GroundLock() {
             className="text-muted-foreground/40 text-sm sm:text-[15px] max-w-md mx-auto opacity-0 animate-fade-in leading-[1.9]"
             style={{ animationDelay: "1200ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
-            Engineered ground stabilisation for yards, stable surrounds,
-            laneways, and high-traffic zones.
+            Interlocking ground stabilisation for entries, yards, laneways,
+            and high-traffic zones — built to hold up under horses, floats, and weather.
           </p>
         </div>
       </section>
