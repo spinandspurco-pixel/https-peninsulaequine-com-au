@@ -836,19 +836,19 @@ export default function Index() {
               {[
                 {
                   title: "GroundLock Systems",
-                  body: "Premium stabilised entry systems designed for floats, trucks, and high-traffic rural arrivals.",
+                  body: "Stabilised entry systems for floats, trucks, and high-traffic rural arrivals.",
                   cta: "Explore GroundLock",
                   href: "/groundlock",
                 },
                 {
                   title: "Forge Hardware",
-                  body: "Architectural steelwork, gate elements, and rural hardware designed to elevate the working property.",
+                  body: "Architectural steelwork, gate elements, and branded hardware for the working property.",
                   cta: "View Hardware",
                   href: "/shop",
                 },
                 {
                   title: "Custom Property Elements",
-                  body: "Bespoke entry packages, estate details, and made-to-fit solutions for standout equine and rural builds.",
+                  body: "Bespoke entry packages, estate details, and made-to-fit elements for standout builds.",
                   cta: "Enquire Now",
                   href: "/contact",
                 },
