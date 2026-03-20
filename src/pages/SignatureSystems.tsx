@@ -117,7 +117,7 @@ function SystemRow({ system, delay = 0 }: { system: SystemEntry; delay?: number 
 export default function SignatureSystems() {
   return (
     <Layout>
-      <StickySubpageCTA ctaLabel="Enquire About Signature Systems" ctaHref="/contact" showAfter={600} />
+      <StickySubpageCTA ctaLabel="Enquire About Signature Systems" ctaHref="/contact" showAfter={600} hideSecondary />
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="relative pt-44 sm:pt-56 pb-28 sm:pb-36 overflow-hidden">
         <div className="absolute inset-0 bg-background" />

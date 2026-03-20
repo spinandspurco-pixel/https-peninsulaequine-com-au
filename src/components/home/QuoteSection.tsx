@@ -6,7 +6,7 @@ export function QuoteSection() {
   return (
     <BlueprintChapter
       chapter="05"
-      chapterTitle="Get Started"
+      chapterTitle="Start a Project"
       scenePreset="intro"
       bg="bg-background"
       specLabels={[{ text: "NO OBLIGATION · FREE ESTIMATE", position: "top-left" }]}
@@ -18,7 +18,7 @@ export function QuoteSection() {
             <div className="text-center mb-10">
               <AnimatedDivider className="mx-auto mb-8" />
               <p className="text-muted-foreground uppercase tracking-[0.2em] text-sm mb-4">No Obligation</p>
-              <h2 className="heading-section text-foreground">Get a Free Quote</h2>
+              <h2 className="heading-section text-foreground">Request a Free Assessment</h2>
               <p className="text-muted-foreground mt-3 text-base">
                 Tell us about your project and we'll prepare a custom estimate — no strings attached.
               </p>
