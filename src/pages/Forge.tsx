@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
+import { StickySubpageCTA } from "@/components/StickySubpageCTA";
 import { ArrowRight, Flame } from "lucide-react";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { cn } from "@/lib/utils";
@@ -141,6 +142,7 @@ function FamilyCard({ family, delay = 0 }: { family: FamilyEntry; delay?: number
 export default function Forge() {
   return (
     <Layout>
+      <StickySubpageCTA ctaLabel="Enquire About Forge" ctaHref="/contact" showAfter={600} />
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="relative pt-44 sm:pt-56 pb-28 sm:pb-36 overflow-hidden">
         <div className="absolute inset-0 bg-background" />
