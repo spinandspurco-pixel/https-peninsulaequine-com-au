@@ -3,20 +3,12 @@ import { Phone, Mail, Instagram, Facebook, ArrowUpRight } from "lucide-react";
 import { siteConfig } from "@/data/content";
 import logoPeMark from "@/assets/logo-pe-mark.webp";
 
-const quickLinks = [
+const navLinks = [
   { name: "Projects", href: "/gallery" },
   { name: "Services", href: "/services" },
   { name: "GroundLock™", href: "/groundlock" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
-];
-
-const serviceLinks = [
-  { name: "Arenas", href: "/services" },
-  { name: "Stables & Barns", href: "/services" },
-  { name: "Ground Systems", href: "/groundlock" },
-  { name: "Rural Infrastructure", href: "/services" },
-  { name: "Design & Planning", href: "/services" },
 ];
 
 export function Footer() {
@@ -25,13 +17,18 @@ export function Footer() {
       {/* Subtle top accent line */}
       <div className="divider-grid" />
 
-      {/* Main Footer — generous breathing room */}
+      {/* Main Footer */}
       <div className="section-container py-28 sm:py-36 lg:py-44">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-14">
-          {/* Brand Column */}
-          <div className="lg:col-span-1">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 lg:gap-20">
+
+          {/* Brand */}
+          <div>
             <Link to="/" className="inline-flex items-center gap-3.5 mb-10 group">
-              <img src={logoPeMark} alt="Peninsula Equine" className="h-8 w-8 object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+              <img
+                src={logoPeMark}
+                alt="Peninsula Equine"
+                className="h-8 w-8 object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+              />
               <span className="font-serif text-sm font-semibold tracking-[0.06em]">
                 Peninsula Equine
               </span>
@@ -64,26 +61,7 @@ export function Footer() {
               Navigate
             </h4>
             <ul className="space-y-5">
-              {quickLinks.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-[13px] text-[hsl(var(--footer-muted))] hover:text-accent transition-colors duration-500"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Services */}
-          <div>
-            <h4 className="text-[9px] font-sans font-semibold uppercase tracking-[0.35em] text-accent/50 mb-10">
-              Services
-            </h4>
-            <ul className="space-y-5">
-              {serviceLinks.map((link) => (
+              {navLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.href}
