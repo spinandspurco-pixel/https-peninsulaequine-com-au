@@ -319,6 +319,8 @@ export default function Gallery() {
         </div>
       </section>
 
+      <ChapterDivider />
+
       {/* ═══════════════════════════════════════════════════
           3. BUILD PROCESS — construction sequence strip
           ═══════════════════════════════════════════════════ */}
