@@ -541,12 +541,12 @@ export default function Index() {
         <RevealOnScroll direction="up" duration={700}>
           <div className="grid grid-cols-3 sm:grid-cols-6 img-feather">
             {[
-              { src: mainRidgeTimber, alt: "Timber grain detail" },
-              { src: arenaSandPrep2, alt: "Arena sand preparation" },
-              { src: mainRidgeCiroWoodwork4, alt: "Timber hand-crafting" },
-              { src: mainRidgeRebarFoundation, alt: "Rebar foundation detail" },
-              { src: heroSunset, alt: "Landscape at golden hour" },
-              { src: stoneworkStables, alt: "Stonework texture" },
+              { src: interiorTimberWindow, alt: "Timber cladding detail" },
+              { src: rebarFoundation, alt: "Rebar foundation detail" },
+              { src: brickworkEucalyptus, alt: "Brickwork and bush" },
+              { src: pavilionTimber, alt: "Corrugated iron structure" },
+              { src: garageExterior, alt: "Steel shed exterior" },
+              { src: mainRidgeFinishedExterior, alt: "Pavilion at dusk" },
             ].map((img, i) => (
               <div key={i} className="relative aspect-square overflow-hidden group">
                 <img
