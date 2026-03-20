@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { useParallax } from "@/hooks/useParallax";
 
 // ── 1. HERO ──
-import coveredArenaFinishedLit from "@/assets/covered-arena-finished-lit.jpg";
+import projectsHeroDrone from "@/assets/projects-hero-drone-goldenhour.jpg";
 
 // ── 2. FEATURE PROJECT (Private Client) ──
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
