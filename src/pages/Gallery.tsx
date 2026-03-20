@@ -464,6 +464,8 @@ export default function Gallery() {
         </div>
       </section>
 
+      <ChapterDivider />
+
       {/* ═══════════════════════════════════════════════════
           6. CRAFT & LIFE — detail + human moments
           ═══════════════════════════════════════════════════ */}
