@@ -159,9 +159,7 @@ export default function SignatureSystems() {
           <div className="section-container max-w-3xl mx-auto relative z-[1]">
             <RevealOnScroll>
               <p className="text-overline text-accent/50 mb-16 text-center">Flagship System</p>
-            </RevealOnScroll>
 
-            <RevealOnScroll delay={80}>
               <div className="border border-accent/15 bg-accent/[0.02] p-8 sm:p-12">
                 <div className="flex items-start justify-between gap-6 mb-5">
                   <div>
@@ -235,18 +233,12 @@ export default function SignatureSystems() {
           <div className="section-container max-w-xl mx-auto relative z-[1] text-center">
             <RevealOnScroll>
               <RevealLine className="mx-auto mb-14" width="w-8" />
-            </RevealOnScroll>
-            <RevealOnScroll delay={80}>
               <p className="text-overline text-foreground/20 mb-6">Product Division</p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={140}>
               <p className="text-[13px] sm:text-[14px] text-muted-foreground/30 leading-[2.2] mb-10">
                 Signature Systems are developed and distributed through
                 Equus Forge — Peninsula Equine's product engineering arm,
                 housing GroundLock, custom hardware, and future property elements.
               </p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={200}>
               <Link
                 to="/forge"
                 className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] uppercase text-accent/40 hover:text-accent/70 transition-colors duration-500"
@@ -272,19 +264,13 @@ export default function SignatureSystems() {
           <div className="section-container relative z-10 text-center max-w-md mx-auto">
             <RevealOnScroll>
               <RevealLine className="mx-auto mb-16" width="w-8" />
-            </RevealOnScroll>
-            <RevealOnScroll delay={80}>
               <h2 className="heading-section text-foreground mb-8">
                 Discuss a System
               </h2>
-            </RevealOnScroll>
-            <RevealOnScroll delay={150}>
               <p className="text-sm text-muted-foreground/35 mb-12 leading-[1.9]">
                 Whether you're planning an entry, upgrading a high-traffic zone,
                 or interested in a future system — we're happy to talk through it.
               </p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={250}>
               <Button asChild variant="gold" size="lg">
                 <Link to="/contact">
                   Enquire About Signature Systems <ArrowRight className="ml-2 h-4 w-4" />

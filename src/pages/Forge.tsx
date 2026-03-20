@@ -211,16 +211,12 @@ export default function Forge() {
           <div className="section-container max-w-xl mx-auto relative z-[1] text-center">
             <RevealOnScroll>
               <RevealLine className="mx-auto mb-14" width="w-8" />
-            </RevealOnScroll>
-            <RevealOnScroll delay={80}>
               <p className="text-[13px] sm:text-[14px] text-muted-foreground/30 leading-[2.2]">
                 Forge exists to give Peninsula Equine clients access to the same
                 engineered components we use in our own builds — heavy gauge,
                 hot-dip galvanised, and specified to the tolerances of working
                 rural properties.
               </p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={160}>
               <p className="mt-8 text-[12px] text-muted-foreground/20 leading-[2] italic font-serif">
                 Not a catalogue. A product division.
               </p>
@@ -237,8 +233,6 @@ export default function Forge() {
           <div className="section-container max-w-3xl mx-auto relative z-[1]">
             <RevealOnScroll>
               <p className="text-overline text-accent/50 mb-6 text-center">Product Families</p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={40}>
               <p className="text-[12px] sm:text-[13px] text-muted-foreground/25 leading-[2] max-w-lg mx-auto text-center mb-16">
                 Three core divisions — each one engineered to integrate with
                 Peninsula Equine's design-build methodology and proprietary
@@ -263,16 +257,12 @@ export default function Forge() {
           <div className="section-container max-w-xl mx-auto relative z-[1] text-center">
             <RevealOnScroll>
               <p className="text-overline text-foreground/20 mb-10">Future Scope</p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={80}>
               <p className="text-[12px] sm:text-[13px] text-muted-foreground/25 leading-[2.2] mb-10">
                 As Peninsula Equine's project library grows, Forge will expand
                 to include entry kits, gate automation packages, signage systems,
                 stable forecourt products, and threshold hardware — each one
                 validated through real-world builds before release.
               </p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={140}>
               <Link
                 to="/systems"
                 className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] uppercase text-accent/40 hover:text-accent/70 transition-colors duration-500"
@@ -298,20 +288,14 @@ export default function Forge() {
           <div className="section-container relative z-10 text-center max-w-md mx-auto">
             <RevealOnScroll>
               <RevealLine className="mx-auto mb-16" width="w-8" />
-            </RevealOnScroll>
-            <RevealOnScroll delay={80}>
               <h2 className="heading-section text-foreground mb-8">
                 Work With Forge
               </h2>
-            </RevealOnScroll>
-            <RevealOnScroll delay={150}>
               <p className="text-sm text-muted-foreground/35 mb-12 leading-[1.9]">
                 Whether you're configuring a GroundLock system, specifying
                 custom hardware, or planning a bespoke element for your
                 property — we'll scope it, quote it, and build it.
               </p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={250}>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Button asChild variant="gold" size="lg">
                   <Link to="/groundlock">
