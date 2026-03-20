@@ -380,7 +380,6 @@ export default function Gallery() {
             <RevealOnScroll direction="up" duration={700} delay={200}>
               <EditorialImage src={mainRidgeBarnFrame} alt="Complete barn timber frame" aspect="aspect-[21/9]" onClick={() => openLightbox(mainRidgeBarnFrame)} />
             </RevealOnScroll>
-            </RevealOnScroll>
           </div>
         </div>
       </section>
