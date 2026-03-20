@@ -8,6 +8,19 @@ interface LoadingSplashProps {
   onLogoSettled?: () => void;
 }
 
+/** Preload the logo image so it's ready before the stamp phase */
+function usePreloadedImage(src: string) {
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => setLoaded(true);
+    img.onerror = () => setLoaded(true); // proceed anyway
+    img.src = src;
+    if (img.complete) setLoaded(true);
+  }, [src]);
+  return loaded;
+}
+
 /**
  * Cinematic intro splash — SVG blueprint line-draw → logo stamp reveal →
  * logo drifts to header position → page settles.
