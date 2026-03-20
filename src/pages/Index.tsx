@@ -20,10 +20,10 @@ import caulfieldEvent from "@/assets/caulfield-event.jpg";
 // Intro video
 import buildVideo from "@/assets/videos/main-ridge-woodwork-1.mp4";
 
-// Detail / material textures
+// Detail / material textures (unique to homepage strip)
 import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
-import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
-import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
+import arenaSandPrep2 from "@/assets/arena-sand-prep-2.jpg";
+import mainRidgeCiroWoodwork4 from "@/assets/main-ridge-ciro-woodwork-4.jpg";
 
 // Process / build imagery
 import mainRidgeCiroWoodwork from "@/assets/main-ridge-ciro-woodwork-1.jpg";
