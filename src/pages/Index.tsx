@@ -572,7 +572,7 @@ export default function Index() {
       {/* ═══ 8. EQUUS FORGE — SHOP PREVIEW ════════════════ */}
       <SectionBleed from="card" to="primary" />
       <section className="relative overflow-hidden">
-        <div className={`${SP_LG} sm:py-28 bg-primary relative`}>
+        <div className={`${SP_SECTION} bg-primary relative`}>
           <div className="absolute inset-0 opacity-[0.025]" style={{
             backgroundImage: "repeating-linear-gradient(135deg, transparent, transparent 20px, hsl(var(--primary-foreground)) 20px, hsl(var(--primary-foreground)) 21px)",
           }} />
