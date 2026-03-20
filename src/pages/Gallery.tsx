@@ -7,31 +7,46 @@ import { ArrowRight, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useParallax } from "@/hooks/useParallax";
 
-// Hero & feature images
-import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
+// ── 1. ESTABLISHING / HERO ──
 import qldAerial1 from "@/assets/qld-facility-aerial-1.jpg";
-import qldExterior1 from "@/assets/qld-facility-exterior-1.jpg";
-import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
-import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
-import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
-import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
-import mainRidgeWorker from "@/assets/main-ridge-worker.jpg";
+
+// ── 2. FEATURE PROJECT (Aberdeen) ──
+import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
+import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
+import aberdeenAisle from "@/assets/aberdeen-aisle.jpg";
+import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
+import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
+
+// ── 3. BUILD PROCESS ──
+import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
+import mainRidgeFrameTrench from "@/assets/main-ridge-frame-trench.jpg";
 import mainRidgeCraneLift from "@/assets/main-ridge-crane-lift.jpg";
 import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
-import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
-import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
-import aberdeenAisle from "@/assets/aberdeen-aisle.jpg";
-import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
-import aberdeenStoneworkColor from "@/assets/aberdeen-stonework-color.jpg";
-import aberdeenInteriorStonework from "@/assets/aberdeen-interior-stonework.jpg";
-import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
-import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
-import equitanaArena3 from "@/assets/equitana-arena-3.jpg";
-import equitanaArena5 from "@/assets/equitana-arena-5.jpg";
+import mainRidgeTimberPosts from "@/assets/main-ridge-timber-posts.jpg";
+import mainRidgePostDepth from "@/assets/main-ridge-post-depth.jpg";
+
+// ── 4. GROUNDLOCK / SYSTEM ──
 import arenaSandPrep1 from "@/assets/arena-sand-prep-1.jpg";
 import arenaSandPrep3 from "@/assets/arena-sand-prep-3.jpg";
-import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
+import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
 import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
+
+// ── 5. EDITORIAL / FINISHED RESULTS ──
+import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
+import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
+import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
+import qldExterior1 from "@/assets/qld-facility-exterior-1.jpg";
+import qldCourtyard from "@/assets/qld-facility-courtyard.jpg";
+import equitanaArena3 from "@/assets/equitana-arena-3.jpg";
+import equitanaArena5 from "@/assets/equitana-arena-5.jpg";
+
+// ── 6. DETAIL / CRAFT ──
+import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
+import aberdeenStoneworkColor from "@/assets/aberdeen-stonework-color.jpg";
+import aberdeenInteriorStonework from "@/assets/aberdeen-interior-stonework.jpg";
+import mainRidgeWorker from "@/assets/main-ridge-worker.jpg";
+import mainRidgeCiroWoodwork1 from "@/assets/main-ridge-ciro-woodwork-1.jpg";
+import mainRidgeCiroWoodwork3 from "@/assets/main-ridge-ciro-woodwork-3.jpg";
 
 import {
   type GalleryItem,
