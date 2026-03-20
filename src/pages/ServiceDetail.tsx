@@ -56,7 +56,7 @@ const serviceImages: Record<string, string> = {
   "infrastructure": mainRidgeSitePrep,
   "round-pens": coveredArenaLit,
   "renovations": mainRidgeCiroWoodwork,
-  "full-facility": qldFacilityConstruction,
+  "full-facility": mainRidgeSitePrep,
   "clinics-events": equitanaArena,
 };
 
