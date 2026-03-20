@@ -6,6 +6,9 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 
+import equitanaArena from "@/assets/equitana-arena-1.jpg";
+import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
+
 const CAPABILITY_DETAILS = [
   {
     num: "01",
