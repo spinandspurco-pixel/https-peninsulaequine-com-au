@@ -137,7 +137,7 @@ export default function ProductDetail() {
               {addOns.map((addon) => (
                 <div key={addon.handle} className="border border-border rounded-sm p-6 space-y-3 hover:border-accent/30 transition-colors">
                   <div className="flex items-center gap-2 text-accent">
-                    <Wrench className="w-4 h-4" strokeWidth={1.7} />
+                    <Wrench className="w-4 h-4" strokeWidth={1.5} />
                     <p className="text-[10px] font-mono uppercase tracking-[0.15em]">{addon.subtitle}</p>
                   </div>
                   <h3 className="font-serif text-lg">{addon.title}</h3>
