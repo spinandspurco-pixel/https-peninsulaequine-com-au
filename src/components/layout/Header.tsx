@@ -49,7 +49,8 @@ export function Header() {
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center gap-3.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
+            className="flex items-center gap-3.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm transition-opacity duration-700 ease-out"
+            style={{ opacity: headerLogoReady ? 1 : 0 }}
           >
             <div className="relative flex-shrink-0 w-8 h-8 sm:w-9 sm:h-9">
               <img
