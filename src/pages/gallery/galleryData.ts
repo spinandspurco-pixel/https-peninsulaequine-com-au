@@ -70,6 +70,17 @@ import roofingSteelDetail from "@/assets/roofing-steel-detail.jpg";
 import shedExteriorSide from "@/assets/shed-exterior-side.jpg";
 import shedRollerDoorDetail from "@/assets/shed-roller-door-detail.jpg";
 
+// Newly curated portfolio additions
+import customCoopExterior from "@/assets/custom-coop-exterior.jpg";
+import steelBarnSlabPosts from "@/assets/steel-barn-slab-posts.jpg";
+import steelBarnFrameWide from "@/assets/steel-barn-frame-wide.jpg";
+import steelBarnSiteDawn from "@/assets/steel-barn-site-dawn.jpg";
+import coveredArenaFinishedLit from "@/assets/covered-arena-finished-lit.jpg";
+import coveredArenaBlackExterior from "@/assets/covered-arena-black-exterior.jpg";
+import premiumStableFacade from "@/assets/premium-stable-facade.png";
+import horseMuralDetail from "@/assets/horse-mural-detail.png";
+import westernEntertainingZone from "@/assets/western-entertaining-zone.jpg";
+
 // Videos
 import mainRidgeWoodwork1 from "@/assets/videos/main-ridge-woodwork-1.mp4";
 import mainRidgeWoodwork2 from "@/assets/videos/main-ridge-woodwork-2.mp4";
