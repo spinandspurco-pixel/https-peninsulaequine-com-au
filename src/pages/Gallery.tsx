@@ -47,7 +47,6 @@ import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
 // ── 7. CUSTOM BUILDS ──
 import steelShedDramatic from "@/assets/steel-shed-dramatic.jpg";
 import timberCubbyFront from "@/assets/timber-cubby-front.jpg";
-import timberCubbyDetail from "@/assets/timber-cubby-detail.jpg";
 import timberCubbyCockatoo from "@/assets/timber-cubby-cockatoo.jpg";
 import roofingSteelDetail from "@/assets/roofing-steel-detail.jpg";
 import aberdeenInteriorStonework from "@/assets/aberdeen-interior-stonework.jpg";
