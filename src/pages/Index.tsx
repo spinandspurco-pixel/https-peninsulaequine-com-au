@@ -305,10 +305,10 @@ export default function Index() {
               </div>
               {/* Video */}
               <RevealOnScroll direction="up" delay={200}>
-                <div className="relative aspect-[4/5] overflow-hidden">
+                <div className="relative aspect-[4/5] overflow-hidden img-feather-sides lg:img-overlap-top lg:img-overlap-bottom">
                   <video
                     autoPlay muted loop playsInline
-                    className="absolute inset-0 w-full h-full object-cover brightness-[0.65] contrast-[1.1] saturate-[0.7]"
+                    className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.65] contrast-[1.1] saturate-[0.7]"
                   >
                     <source src={buildVideo} type="video/mp4" />
                   </video>
