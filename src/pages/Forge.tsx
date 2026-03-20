@@ -316,7 +316,7 @@ export default function Forge() {
                     Explore GroundLock <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
-                <Button asChild variant="outlineLight" size="lg">
+                <Button asChild variant="outline-light" size="lg">
                   <Link to="/contact">
                     Enquire About Forge
                   </Link>
