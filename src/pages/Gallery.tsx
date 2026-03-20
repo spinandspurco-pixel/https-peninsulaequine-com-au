@@ -447,8 +447,8 @@ export default function Gallery() {
           ═══════════════════════════════════════════════════ */}
       <section className="relative h-[60vh] sm:h-[70vh] overflow-hidden">
         <img
-          src={coveredArenaBlackExterior}
-          alt="Covered arena — black exterior cladding at dusk"
+          src={steelShedDramatic}
+          alt="Custom colorbond barn — dramatic sky"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/20" />
