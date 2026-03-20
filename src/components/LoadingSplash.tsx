@@ -8,6 +8,19 @@ interface LoadingSplashProps {
   onLogoSettled?: () => void;
 }
 
+/** Preload the logo image so it's ready before the stamp phase */
+function usePreloadedImage(src: string) {
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => setLoaded(true);
+    img.onerror = () => setLoaded(true); // proceed anyway
+    img.src = src;
+    if (img.complete) setLoaded(true);
+  }, [src]);
+  return loaded;
+}
+
 /**
  * Cinematic intro splash — SVG blueprint line-draw → logo stamp reveal →
  * logo drifts to header position → page settles.
@@ -23,6 +36,8 @@ export function LoadingSplash({
     "enter" | "build" | "stamp" | "drift" | "exit" | "done"
   >("enter");
   const svgRef = useRef<SVGSVGElement>(null);
+
+  const logoReady = usePreloadedImage(logoPeMark);
 
   const prefersReduced =
     typeof window !== "undefined" &&
@@ -74,7 +89,7 @@ export function LoadingSplash({
 
   if (phase === "done") return null;
 
-  const isStampOrLater = phase === "stamp" || phase === "drift" || phase === "exit";
+  const isStampOrLater = logoReady && (phase === "stamp" || phase === "drift" || phase === "exit");
   const isDrift = phase === "drift" || phase === "exit";
 
   return (
