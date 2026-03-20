@@ -522,9 +522,9 @@ export default function Index() {
               { src: mainRidgeTimber, alt: "Timber grain detail" },
               { src: arenaSandPrep2, alt: "Arena sand preparation" },
               { src: mainRidgeCiroWoodwork4, alt: "Timber hand-crafting" },
-              { src: mainRidgeRebarFoundation, alt: "Rebar foundation" },
+              { src: mainRidgeRebarFoundation, alt: "Rebar foundation detail" },
               { src: heroSunset, alt: "Landscape at golden hour" },
-              { src: mainRidgeTimber, alt: "Timber joinery" },
+              { src: stoneworkStables, alt: "Stonework texture" },
             ].map((img, i) => (
               <div key={i} className="relative aspect-square overflow-hidden group">
                 <img
