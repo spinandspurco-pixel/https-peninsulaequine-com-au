@@ -257,16 +257,12 @@ export default function Forge() {
           <div className="section-container max-w-xl mx-auto relative z-[1] text-center">
             <RevealOnScroll>
               <p className="text-overline text-foreground/20 mb-10">Future Scope</p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={80}>
               <p className="text-[12px] sm:text-[13px] text-muted-foreground/25 leading-[2.2] mb-10">
                 As Peninsula Equine's project library grows, Forge will expand
                 to include entry kits, gate automation packages, signage systems,
                 stable forecourt products, and threshold hardware — each one
                 validated through real-world builds before release.
               </p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={140}>
               <Link
                 to="/systems"
                 className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] uppercase text-accent/40 hover:text-accent/70 transition-colors duration-500"
