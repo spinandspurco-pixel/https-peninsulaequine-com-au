@@ -5,9 +5,9 @@ import { Flame, ArrowRight, Mail, Wrench, Fence, Sparkles, Building2, Layers } f
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 
-import equitanaEquipment from "@/assets/equitana-equipment.jpg";
-import aberdeenStoneworkBw from "@/assets/aberdeen-stonework-bw.jpg";
-import mainRidgeCiroWoodwork2 from "@/assets/main-ridge-ciro-woodwork-2.jpg";
+import mainRidgeFrameWide from "@/assets/main-ridge-frame-wide.jpg";
+import reclaimedBeamWorkshop from "@/assets/reclaimed-beam-workshop.jpg";
+import pavilionTimber from "@/assets/pavilion-timber-detail.jpg";
 
 const quickLinks = [
   { icon: Layers, label: "Browse Systems", to: "/shop", desc: "View all configurations" },
