@@ -37,7 +37,7 @@ import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
 import mainRidgeTimberPosts from "@/assets/main-ridge-timber-posts.jpg";
 
 // Custom Builds
-import steelShedDramatic from "@/assets/steel-shed-dramatic.jpg";
+import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
 import timberCubbyFront from "@/assets/timber-cubby-front.jpg";
 import timberCubbyCockatoo from "@/assets/timber-cubby-cockatoo.jpg";
 import roofingSteelDetail from "@/assets/roofing-steel-detail.jpg";
