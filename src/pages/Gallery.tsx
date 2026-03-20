@@ -366,6 +366,8 @@ export default function Gallery() {
         </div>
       </section>
 
+      <ChapterDivider />
+
       {/* ═══════════════════════════════════════════════════
           4. GROUNDLOCK / SYSTEM STRIP
           ═══════════════════════════════════════════════════ */}
