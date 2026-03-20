@@ -130,7 +130,7 @@ function ProjectsScroll() {
             <img
               src={project.src}
               alt={project.alt}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2200ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.08] brightness-[0.8] group-hover:brightness-[0.92]"
+              className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.8] group-hover:brightness-[0.92]"
               loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-background/10" />
