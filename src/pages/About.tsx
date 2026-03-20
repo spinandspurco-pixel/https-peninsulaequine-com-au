@@ -18,7 +18,7 @@ export default function About() {
   return (
     <Layout>
       {/* ═══ HERO ═══════════════════════════════════════ */}
-      <section className="relative pt-40 sm:pt-48 pb-24 sm:pb-32 overflow-hidden">
+      <section className="relative pt-40 sm:pt-52 pb-28 sm:pb-36 overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={horseAction}
