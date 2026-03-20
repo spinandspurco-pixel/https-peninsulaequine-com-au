@@ -115,7 +115,7 @@ Deno.serve(async (req) => {
       location: "Peninsula Equine, Mornington Peninsula, VIC",
       dtStart,
       dtEnd,
-      organizer: "info@peninsulaequine.com.au",
+      organizer: "info@peninsulaequine.org",
       attendee: body.clientEmail,
     });
 
@@ -171,7 +171,7 @@ Deno.serve(async (req) => {
             <a href="https://peninsulaequine.lovable.app/schedule" style="background: #c9a227; color: white; padding: 12px 28px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600; font-size: 14px;">📅 Schedule a Follow-Up</a>
           </div>
 
-          <p style="font-size: 14px;">Need to reschedule? Contact us at <a href="mailto:info@peninsulaequine.com.au" style="color: #c9a227;">info@peninsulaequine.com.au</a> or call <a href="tel:+61418585489" style="color: #c9a227;">0418 585 489</a>.</p>
+          <p style="font-size: 14px;">Need to reschedule? Contact us at <a href="mailto:info@peninsulaequine.org" style="color: #c9a227;">info@peninsulaequine.org</a> or call <a href="tel:+61418585489" style="color: #c9a227;">0418 585 489</a>.</p>
 
           <p style="margin-top: 24px;">See you soon!<br/><strong>— Ciro & The Peninsula Equine Team</strong></p>
         </div>
@@ -212,14 +212,14 @@ Deno.serve(async (req) => {
     // Notify staff — admin + Sander always; Glenn for lesson bookings
     const staffRecipients: string[] = [];
     if (notificationEmail) staffRecipients.push(notificationEmail);
-    const sanderEmail = "sander@peninsulaequine.com.au";
+    const sanderEmail = "sander@peninsulaequine.org";
     if (!staffRecipients.includes(sanderEmail)) {
       staffRecipients.push(sanderEmail);
     }
     
     const lessonTypes = ["riding-lessons", "lesson", "clinic", "clinics-events"];
     const isLessonBooking = lessonTypes.includes(body.serviceType);
-    const trainerEmail = "glenn@peninsulaequine.com.au";
+    const trainerEmail = "glenn@peninsulaequine.org";
     if (isLessonBooking && !staffRecipients.includes(trainerEmail)) {
       staffRecipients.push(trainerEmail);
     }

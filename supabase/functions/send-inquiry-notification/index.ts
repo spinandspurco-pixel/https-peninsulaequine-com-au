@@ -75,7 +75,7 @@ function generateConsultationICS(opts: {
     `SUMMARY:${summary}`,
     `DESCRIPTION:${description}`,
     `LOCATION:Peninsula Equine, Mornington Peninsula, VIC`,
-    `ORGANIZER;CN=Peninsula Equine:mailto:info@peninsulaequine.com.au`,
+    `ORGANIZER;CN=Peninsula Equine:mailto:info@peninsulaequine.org`,
     `ATTENDEE;RSVP=TRUE;CN=${opts.clientName}:mailto:${opts.clientEmail}`,
     "STATUS:TENTATIVE",
     "BEGIN:VALARM",
@@ -388,7 +388,7 @@ const handler = async (req: Request): Promise<Response> => {
               <p style="margin: 0; font-size: 14px; color: #555;">
                 📞 <a href="tel:+61418585489" style="color: #c9a227; text-decoration: none;">0418 585 489</a>
                 &nbsp;&nbsp;·&nbsp;&nbsp;
-                📧 <a href="mailto:info@peninsulaequine.com.au" style="color: #c9a227; text-decoration: none;">info@peninsulaequine.com.au</a>
+                📧 <a href="mailto:info@peninsulaequine.org" style="color: #c9a227; text-decoration: none;">info@peninsulaequine.org</a>
               </p>
             </div>
 
@@ -414,13 +414,13 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Determine recipients — always notify admin + Sander; add Glenn for lesson/clinic inquiries
     const notifyRecipients: string[] = [NOTIFICATION_EMAIL];
-    const sanderEmail = "sander@peninsulaequine.com.au";
+    const sanderEmail = "sander@peninsulaequine.org";
     if (!notifyRecipients.includes(sanderEmail)) {
       notifyRecipients.push(sanderEmail);
     }
     const lessonServices = ["riding-lessons", "clinics-events"];
     const isLessonInquiry = inquiry.services?.some((s: string) => lessonServices.includes(s));
-    const trainerEmail = "glenn@peninsulaequine.com.au";
+    const trainerEmail = "glenn@peninsulaequine.org";
     if (isLessonInquiry && !notifyRecipients.includes(trainerEmail)) {
       notifyRecipients.push(trainerEmail);
     }

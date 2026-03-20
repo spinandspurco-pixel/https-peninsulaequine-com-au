@@ -400,7 +400,7 @@ export function AdminStaffOnboarding() {
                     <p className="text-xs text-muted-foreground">All inquiries & bookings</p>
                   </div>
                 </div>
-                <p className="text-sm font-mono bg-background px-2 py-1 rounded">sander@peninsulaequine.com.au</p>
+                <p className="text-sm font-mono bg-background px-2 py-1 rounded">sander@peninsulaequine.org</p>
                 <p className="text-xs text-muted-foreground mt-1">CC'd on every inquiry and booking notification</p>
               </div>
 
@@ -414,7 +414,7 @@ export function AdminStaffOnboarding() {
                     <p className="text-xs text-muted-foreground">Lessons & clinics only</p>
                   </div>
                 </div>
-                <p className="text-sm font-mono bg-background px-2 py-1 rounded">glenn@peninsulaequine.com.au</p>
+                <p className="text-sm font-mono bg-background px-2 py-1 rounded">glenn@peninsulaequine.org</p>
                 <p className="text-xs text-muted-foreground mt-1">CC'd on lesson bookings and clinic-related inquiries</p>
               </div>
             </div>
@@ -463,7 +463,7 @@ export function AdminStaffOnboarding() {
                 <Input
                   id="invite-email"
                   type="email"
-                  placeholder="staff@peninsulaequine.com.au"
+                  placeholder="staff@peninsulaequine.org"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   className="mt-1"
