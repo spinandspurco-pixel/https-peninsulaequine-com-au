@@ -212,7 +212,7 @@ Deno.serve(async (req) => {
                   <p style="margin: 0; font-size: 14px; color: #555;">59 Tubbarubba Road, Merricks North, VIC 3926</p>
                 </div>
 
-                <p style="font-size: 14px;">Need to reschedule? Contact us at <a href="mailto:info@peninsulaequine.com.au" style="color: #c9a227;">info@peninsulaequine.com.au</a> or call <a href="tel:+61418585489" style="color: #c9a227;">0418 585 489</a>.</p>
+                <p style="font-size: 14px;">Need to reschedule? Contact us at <a href="mailto:info@peninsulaequine.org" style="color: #c9a227;">info@peninsulaequine.org</a> or call <a href="tel:+61418585489" style="color: #c9a227;">0418 585 489</a>.</p>
 
                 <p style="margin-top: 24px;">See you soon!<br/><strong>— Glenn & The Peninsula Equine Team</strong></p>
               </div>
@@ -235,7 +235,7 @@ Deno.serve(async (req) => {
             location: "59 Tubbarubba Road, Merricks North, VIC 3926",
             dtStart,
             dtEnd,
-            organizer: "info@peninsulaequine.com.au",
+            organizer: "info@peninsulaequine.org",
             attendee: booking.client_email,
           });
           const icsBase64 = btoa(icsContent);
@@ -271,7 +271,7 @@ Deno.serve(async (req) => {
           // Notify staff
           const staffRecipients: string[] = [];
           if (notificationEmail) staffRecipients.push(notificationEmail);
-          const trainerEmail = "glenn@peninsulaequine.com.au";
+          const trainerEmail = "glenn@peninsulaequine.org";
           if (!staffRecipients.includes(trainerEmail)) staffRecipients.push(trainerEmail);
 
           if (staffRecipients.length > 0) {

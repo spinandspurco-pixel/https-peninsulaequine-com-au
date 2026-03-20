@@ -47,7 +47,7 @@ function generateEventICS(opts: {
     `SUMMARY:${opts.summary}`,
     `DESCRIPTION:${opts.description.replace(/\n/g, "\\n")}`,
     `LOCATION:${opts.location}`,
-    `ORGANIZER;CN=Peninsula Equine:mailto:info@peninsulaequine.com.au`,
+    `ORGANIZER;CN=Peninsula Equine:mailto:info@peninsulaequine.org`,
     `ATTENDEE;RSVP=TRUE;CN=${opts.attendee}:mailto:${opts.attendee}`,
     "STATUS:CONFIRMED",
     "BEGIN:VALARM",
@@ -202,7 +202,7 @@ const handler = async (req: Request): Promise<Response> => {
             <p style="margin: 0; font-size: 14px; color: #555;">
               📞 <a href="tel:+61418585489" style="color: #c9a227; text-decoration: none;">0418 585 489</a>
               &nbsp;&nbsp;·&nbsp;&nbsp;
-              📧 <a href="mailto:info@peninsulaequine.com.au" style="color: #c9a227; text-decoration: none;">info@peninsulaequine.com.au</a>
+              📧 <a href="mailto:info@peninsulaequine.org" style="color: #c9a227; text-decoration: none;">info@peninsulaequine.org</a>
             </p>
           </div>
 

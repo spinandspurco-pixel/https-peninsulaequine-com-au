@@ -113,7 +113,7 @@ export function exportDocumentAsPDF(doc: any) {
     <p>Status: <span class="status" style="background:${doc.status === "approved" ? "#22c55e" : doc.status === "rejected" ? "#ef4444" : "#3b82f6"};color:#fff">${doc.status.toUpperCase()}</span></p></div>
     <table>${rows}</table>
     ${doc.review_notes ? `<div style="margin-top:20px;padding:12px;background:#fef2f2;border-radius:6px;font-size:13px"><strong>Admin Review Notes:</strong> ${doc.review_notes}</div>` : ""}
-    <div class="footer">Peninsula Equine · 59 Tubbarubba Rd, Merricks North VIC 3926 · peninsulaequine.com.au<br/>Generated ${format(new Date(), "d MMM yyyy, h:mm a")}</div>
+    <div class="footer">Peninsula Equine · 59 Tubbarubba Rd, Merricks North VIC 3926 · peninsulaequine.org<br/>Generated ${format(new Date(), "d MMM yyyy, h:mm a")}</div>
   </body></html>`;
 
   const blob = new Blob([html], { type: "text/html" });

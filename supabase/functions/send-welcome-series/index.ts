@@ -17,7 +17,7 @@ interface WelcomeRequest {
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 const FROM_EMAIL =
-  Deno.env.get("FROM_EMAIL") || "Peninsula Equine <hello@peninsulaequine.com.au>";
+  Deno.env.get("FROM_EMAIL") || "Peninsula Equine <hello@peninsulaequine.org>";
 const SITE_URL = "https://peninsulaequine.lovable.app";
 
 // ── Welcome Series Emails ──────────────────────────────────────────
@@ -167,7 +167,7 @@ function emailStep3(name: string): { subject: string; html: string } {
 
 <tr><td style="padding:24px 32px;border-top:1px solid #292524;text-align:center;">
   <p style="margin:0;color:#78716c;font-size:12px;">Peninsula Equine · Mornington Peninsula, VIC</p>
-  <p style="margin:8px 0 0;color:#78716c;font-size:11px;">You received this because you signed up at peninsulaequine.com.au. <a href="${SITE_URL}" style="color:#c8a96e;text-decoration:none;">Unsubscribe</a></p>
+  <p style="margin:8px 0 0;color:#78716c;font-size:11px;">You received this because you signed up at peninsulaequine.org. <a href="${SITE_URL}" style="color:#c8a96e;text-decoration:none;">Unsubscribe</a></p>
 </td></tr>
 
 </table></td></tr></table></body></html>`,

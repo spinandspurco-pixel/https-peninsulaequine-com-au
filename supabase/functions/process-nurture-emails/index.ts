@@ -104,7 +104,7 @@ function wrapEmail(bodyHtml: string): string {
     </div>
     <div class="footer">
       <p>Peninsula Equine · Mornington Peninsula, VIC</p>
-      <p><a href="https://peninsulaequine.com.au">peninsulaequine.com.au</a> · 0418 585 489</p>
+      <p><a href="https://peninsulaequine.org">peninsulaequine.org</a> · 0418 585 489</p>
       <p style="margin-top:12px;font-size:10px;color:#aaa;">Built properly. From the ground up.</p>
     </div>
   </div>
@@ -157,7 +157,7 @@ serve(async (req: Request) => {
         continue;
       }
 
-      const FROM_EMAIL = Deno.env.get("FROM_EMAIL") || "Peninsula Equine <info@peninsulaequine.com.au>";
+      const FROM_EMAIL = Deno.env.get("FROM_EMAIL") || "Peninsula Equine <info@peninsulaequine.org>";
       
       try {
         await resend.emails.send({

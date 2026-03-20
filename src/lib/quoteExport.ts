@@ -105,7 +105,7 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
   // Contact details in header
   doc.setFontSize(6.5);
   doc.setTextColor("#9CA3AF");
-  doc.text("peninsulaequine.com.au  ·  info@peninsulaequine.com.au", ml, 44);
+  doc.text("peninsulaequine.org  ·  info@peninsulaequine.org", ml, 44);
 
   y = 62;
 
@@ -342,7 +342,7 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
   doc.setFontSize(6);
   doc.setTextColor("#9CA3AF");
   doc.text("Peninsula Equine  ·  Engineered Infrastructure  ·  ABN XX XXX XXX XXX", ml, fy + 5);
-  doc.text("peninsulaequine.com.au", pw - mr, fy + 5, { align: "right" });
+  doc.text("peninsulaequine.org", pw - mr, fy + 5, { align: "right" });
 
   doc.setFontSize(5.5);
   doc.text("This document is confidential. Pricing valid for 30 days unless otherwise stated.", ml, fy + 9);
