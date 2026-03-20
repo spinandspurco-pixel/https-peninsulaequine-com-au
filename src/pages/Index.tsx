@@ -25,8 +25,7 @@ import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
 import arenaSandPrep2 from "@/assets/arena-sand-prep-2.jpg";
 import mainRidgeCiroWoodwork4 from "@/assets/main-ridge-ciro-woodwork-4.jpg";
 
-// Process / build imagery
-import mainRidgeCiroWoodwork from "@/assets/main-ridge-ciro-woodwork-1.jpg";
+// Process / build imagery (unique to homepage)
 import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
 
 // Training
