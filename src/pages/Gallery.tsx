@@ -44,7 +44,7 @@ import equitanaArena6 from "@/assets/equitana-arena-6.jpg";
 
 // ── 6. DETAIL / CRAFT ──
 import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
-import aberdeenStoneworkColor from "@/assets/aberdeen-stonework-color.jpg";
+import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
 import aberdeenInteriorStonework from "@/assets/aberdeen-interior-stonework.jpg";
 import mainRidgeWorker from "@/assets/main-ridge-worker.jpg";
 import mainRidgeCiroWoodwork1 from "@/assets/main-ridge-ciro-woodwork-1.jpg";
