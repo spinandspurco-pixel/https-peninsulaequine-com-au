@@ -18,20 +18,26 @@ const DIVISIONS = [
   {
     num: "01",
     title: "Build",
-    body: "Equine construction, arenas, stables, and property infrastructure shaped by real-world use and long-term function.",
-    href: "/services",
+    role: "Project Delivery",
+    body: "Site-to-handover execution across arenas, stables, barns, and rural infrastructure. Every project managed on-property, on-schedule.",
+    cta: "Start a Project",
+    href: "/site-assessment",
   },
   {
     num: "02",
     title: "Signature Systems",
-    body: "GroundLock, entry systems, threshold logic, and future Peninsula Equine solutions designed for movement, drainage, and daily wear.",
+    role: "Proprietary Engineering",
+    body: "GroundLock and future engineered systems — developed in-house, validated through builds, designed for how properties actually perform.",
+    cta: "Enquire About Systems",
     href: "/systems",
   },
   {
     num: "03",
     title: "Equus Forge",
-    body: "Engineered products, forged hardware, and custom rural elements built to complete the property with strength and identity.",
-    href: "/shop",
+    role: "Product Division",
+    body: "Hardware, estate elements, and GroundLock configurations — fabricated to Peninsula Equine tolerances, available as standalone products.",
+    cta: "Explore Forge",
+    href: "/forge",
   },
 ];
 
