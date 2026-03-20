@@ -164,20 +164,16 @@ function ProjectsScroll() {
 /* ── Process Timeline ────────────────── */
 function ProcessTimeline() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-0">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-0">
       {PROCESS_STEPS.map((step, i) => (
         <RevealOnScroll key={step.num} direction="up" stagger={i} staggerInterval={120}>
           <div className="relative lg:px-8">
             {i < PROCESS_STEPS.length - 1 && (
-              <div className="hidden lg:block absolute top-5 left-[calc(50%+20px)] right-0 h-px bg-accent/10" />
+              <div className="hidden lg:block absolute top-3 left-[calc(50%+20px)] right-0 h-px bg-accent/8" />
             )}
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 rounded-full border border-accent/20 flex items-center justify-center flex-shrink-0 bg-accent/[0.03]">
-                <span className="text-[10px] font-mono text-accent/60 tracking-wider">{step.num}</span>
-              </div>
-              <h4 className="font-serif text-sm font-medium text-foreground tracking-[0.02em]">{step.title}</h4>
-            </div>
-            <p className="text-[12px] text-muted-foreground/35 leading-[1.9] lg:pl-[52px] max-w-[220px]">{step.desc}</p>
+            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/25 mb-5 block">{step.num}</span>
+            <h4 className="font-serif text-[15px] font-medium text-foreground/70 tracking-[0.02em] mb-4">{step.title}</h4>
+            <p className="text-[12px] text-muted-foreground/30 leading-[2] max-w-[240px]">{step.desc}</p>
           </div>
         </RevealOnScroll>
       ))}
