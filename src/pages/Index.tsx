@@ -51,19 +51,19 @@ const PROJECTS = [
 ];
 
 const SERVICES = [
-  { icon: Mountain, title: "Arenas", desc: "Precision-graded surfaces with consistent footing and zero drainage failure.", href: "/services" },
-  { icon: Fence, title: "Fencing", desc: "Post-and-rail, steel, and custom systems shaped for daily equine use.", href: "/services" },
-  { icon: Home, title: "Stables", desc: "Designed around horse behaviour, airflow, sightlines, and structural longevity.", href: "/services" },
-  { icon: Layers, title: "GroundLock Systems", desc: "Interlocking ground stabilisation for entries, laneways, and high-traffic zones.", href: "/groundlock" },
-  { icon: Shovel, title: "Earthworks", desc: "Civil preparation, sub-base profiling, and drainage behaviour mapping.", href: "/services" },
-  { icon: Wrench, title: "Custom Builds", desc: "Wash bays, float areas, pavilions, and bespoke rural infrastructure.", href: "/services" },
+  { icon: Mountain, title: "Arenas", desc: "Precision-graded surfaces engineered for consistent footing, drainage performance, and long-term use under horses and machinery.", href: "/services" },
+  { icon: Fence, title: "Fencing & Yard Systems", desc: "Post-and-rail, steel, and custom configurations shaped around horse movement, handler access, and property flow.", href: "/services" },
+  { icon: Home, title: "Stables & Barns", desc: "Structures designed around equine behaviour — airflow, sightlines, daily workflow, and structural longevity.", href: "/services" },
+  { icon: Layers, title: "GroundLock Entry Systems", desc: "Interlocking ground stabilisation for front entries, laneways, and high-traffic arrival zones.", href: "/groundlock" },
+  { icon: Shovel, title: "Earthworks & Drainage", desc: "Sub-base profiling, drainage behaviour mapping, and civil preparation shaped by how the site actually moves water.", href: "/services" },
+  { icon: Wrench, title: "Custom Infrastructure", desc: "Wash bays, float hardstands, pavilions, and bespoke rural builds resolved for real daily use.", href: "/services" },
 ];
 
 const PROCESS_STEPS = [
-  { num: "01", title: "Site Reading", desc: "We walk the property — assessing how it moves, drains, wears, and lives under daily equine use." },
-  { num: "02", title: "Specification", desc: "A structured project brief covering materials, access logic, drainage behaviour, and build sequence." },
-  { num: "03", title: "Construction", desc: "Hands-on build with quality checkpoints, real-time decisions, and zero compromise on method." },
-  { num: "04", title: "Handover", desc: "Final walkthrough, care guidance, and a finished result built to hold up — not just look finished." },
+  { num: "01", title: "Site Reading", desc: "We walk the property to understand how it moves, drains, wears, and functions — from access and arrival to traffic flow and water behaviour." },
+  { num: "02", title: "Specification", desc: "A structured project brief shaped by what the site told us — materials, drainage logic, access sequence, and build method." },
+  { num: "03", title: "Construction", desc: "Hands-on build with quality checkpoints, real-time decisions on site, and zero compromise on method or material." },
+  { num: "04", title: "Handover", desc: "Final walkthrough, care guidance, and a result built to hold up under weather, movement, machinery, horses, and time." },
 ];
 
 /* ── Standardised spacing constants ───── */
