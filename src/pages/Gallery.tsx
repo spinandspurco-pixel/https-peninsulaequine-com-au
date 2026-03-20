@@ -499,6 +499,8 @@ export default function Gallery() {
         </RevealOnScroll>
       </section>
 
+      <ChapterDivider />
+
       {/* ═══════════════════════════════════════════════════
           7. BROWSE ALL — expandable filter grid
           ═══════════════════════════════════════════════════ */}
