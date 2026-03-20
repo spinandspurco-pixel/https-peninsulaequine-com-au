@@ -546,6 +546,8 @@ export default function Index() {
                     Engineered ground systems, steel components, and infrastructure
                     configurations — designed for horsemen, by a horseman.
                   </p>
+                  <p className="text-[11px] text-primary-foreground/20 tracking-[0.18em] uppercase mb-8">
+                  </p>
                   <p className="text-[11px] text-primary-foreground/20 tracking-[0.15em] uppercase mb-8">
                     Systems. Components. Built to scale.
                   </p>
