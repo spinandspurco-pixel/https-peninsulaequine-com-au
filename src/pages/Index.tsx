@@ -546,18 +546,16 @@ export default function Index() {
                     P.E. GroundLock™
                   </h2>
                   <p className="text-[14px] text-muted-foreground/45 leading-[2] mb-5 max-w-[360px]">
-                    GroundLock is an engineered entry system designed specifically for equine and rural
-                    properties. Created for floats, trucks, utes, and high-traffic front arrivals, it
-                    stabilises the ground beneath the finish while creating a stronger, cleaner, more
-                    resolved entry experience.
+                    GroundLock is an engineered entry system built for equine and rural
+                    properties — designed for floats, trucks, utes, and repeated front-gate arrivals
+                    where standard surfaces fail within seasons.
                   </p>
                   <p className="text-[13px] text-muted-foreground/35 leading-[2] mb-6 max-w-[360px]">
-                    Where standard systems focus only on surface support, GroundLock is designed for the
-                    full point of arrival — drainage, load distribution, vehicle movement, and the visual
-                    impact of a front gate that feels properly built.
+                    It addresses the full arrival zone — drainage, load distribution, vehicle turning,
+                    and the visual quality of a front entry that feels considered, not improvised.
                   </p>
                   <p className="text-[11px] text-muted-foreground/20 italic tracking-[0.04em] mb-10">
-                    Engineered beneath the surface. Designed for the way equine properties live.
+                    What sits beneath determines what lasts above.
                   </p>
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" delay={200}>
