@@ -647,8 +647,14 @@ export default function Index() {
               On-site training
             </p>
             <p className="text-[11px] sm:text-[12px] text-muted-foreground/30 leading-[1.85] font-serif italic">
-              Select training sessions are available on-site with Glenn Browitt on Thursdays and Fridays, offering experienced guidance in horsemanship and performance.
+              Training sessions with Glenn Browitt are available on select days. Submit a request and we'll coordinate availability.
             </p>
+            <a
+              href="mailto:info@peninsulaequine.org?subject=Training%20Session%20Request"
+              className="inline-block mt-5 text-[10px] uppercase tracking-[0.2em] text-accent/50 hover:text-accent transition-colors duration-500 font-sans font-medium"
+            >
+              Request Training Session →
+            </a>
           </div>
         </div>
       </section>
