@@ -29,7 +29,10 @@ import mainRidgeCiroWoodwork4 from "@/assets/main-ridge-ciro-woodwork-4.jpg";
 import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
 
 // Training
-import trainerGlenn from "@/assets/trainer-glenn.jpg";
+import glennRiding from "@/assets/glenn-riding.jpg";
+
+// Main Ridge finished project
+import mainRidgeFinishedExterior from "@/assets/main-ridge-finished-exterior.jpg";
 
 // Shop / Forge imagery
 import peBanner from "@/assets/pe-banner.png";
@@ -414,8 +417,8 @@ export default function Index() {
             <RevealOnScroll direction="up">
               <div className="relative w-full max-w-md aspect-[3/4] overflow-hidden img-feather-sides mx-auto">
                 <img
-                  src={qldAerial2}
-                  alt="Aerial view of completed equine facility"
+                  src={mainRidgeFinishedExterior}
+                  alt="Main Ridge finished pavilion at dusk"
                   className="absolute inset-0 w-full h-full object-cover brightness-[0.55] saturate-[0.65] contrast-[1.1]"
                   loading="lazy"
                 />
@@ -657,7 +660,7 @@ export default function Index() {
         <div className="relative py-14 sm:py-20">
           <div className="absolute inset-0">
             <img
-              src={trainerGlenn}
+              src={glennRiding}
               alt=""
               aria-hidden="true"
               className="absolute inset-0 w-full h-full object-cover brightness-[0.15] saturate-[0.4] contrast-[1.1]"
