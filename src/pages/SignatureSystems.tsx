@@ -225,6 +225,37 @@ export default function SignatureSystems() {
         </div>
       </section>
 
+      {/* ── Forge cross-link ─────────────────────────── */}
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-24 sm:py-32 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-xl mx-auto relative z-[1] text-center">
+            <RevealOnScroll>
+              <RevealLine className="mx-auto mb-14" width="w-8" />
+            </RevealOnScroll>
+            <RevealOnScroll delay={80}>
+              <p className="text-overline text-foreground/20 mb-6">Product Division</p>
+            </RevealOnScroll>
+            <RevealOnScroll delay={140}>
+              <p className="text-[13px] sm:text-[14px] text-muted-foreground/30 leading-[2.2] mb-10">
+                Signature Systems are developed and distributed through
+                Equus Forge — Peninsula Equine's product engineering arm,
+                housing GroundLock, custom hardware, and future property elements.
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll delay={200}>
+              <Link
+                to="/forge"
+                className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] uppercase text-accent/40 hover:text-accent/70 transition-colors duration-500"
+              >
+                Explore Equus Forge <ArrowRight className="w-3 h-3" />
+              </Link>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA ──────────────────────────────────────── */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
