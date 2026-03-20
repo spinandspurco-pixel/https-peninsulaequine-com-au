@@ -510,38 +510,6 @@ export default function Gallery() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════
-          6. CRAFT & LIFE — detail + human moments
-          ═══════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden">
-        <RevealOnScroll direction="up" duration={700}>
-          <div className="grid grid-cols-3 sm:grid-cols-6">
-            {[
-              { src: mainRidgeCiroWoodwork1, alt: "Hand-crafting timber posts" },
-              { src: aberdeenStallsDetail, alt: "Stall ironwork detail" },
-              { src: mainRidgeWorker, alt: "Ciro on-site" },
-              { src: aberdeenInteriorStonework, alt: "Interior stone feature" },
-              { src: mainRidgeCiroWoodwork3, alt: "Timber finishing" },
-              { src: mainRidgeBrickwork, alt: "Reclaimed brick detail" },
-            ].map((img, i) => (
-              <div
-                key={i}
-                className="relative aspect-square overflow-hidden group cursor-pointer"
-                onClick={() => openLightbox(img.src)}
-              >
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]"
-                  loading="lazy"
-                  decoding="async"
-                />
-                
-              </div>
-            ))}
-          </div>
-        </RevealOnScroll>
-      </section>
 
       <ChapterDivider />
 
