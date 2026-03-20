@@ -81,9 +81,9 @@ export const serviceFilters = [
   { id: "events", name: "Events" },
 ];
 
+// Location filter removed — all current work is Victoria-based
 export const locationFilters = [
   { id: "all", name: "All Locations" },
-  { id: "victoria", name: "Victoria" },
 ];
 
 export const allVideos: (GalleryItem & { description: string })[] = [
