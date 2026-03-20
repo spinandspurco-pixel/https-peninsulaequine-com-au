@@ -96,7 +96,7 @@ function PricingCard({ tier }: { tier: typeof PRICING_TIERS[number] }) {
         ))}
       </ul>
       <Button asChild className="w-full" variant={tier.popular ? "default" : "outline"}>
-        <Link to={`/contact?services=round-pens`}>Get a Quote</Link>
+        <Link to={`/contact?services=round-pens`}>Request Assessment</Link>
       </Button>
     </div>
   );
