@@ -460,23 +460,35 @@ export default function Index() {
                     P.E. GroundLock™
                   </h2>
                   <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/20 mb-8">
-                    Modular Ground Stabilisation
+                    Engineered Entry System
                   </p>
-                  <p className="text-[14px] text-muted-foreground/45 leading-[2] mb-6 max-w-[340px]">
-                    GroundLock is a modular base system designed for strength,
-                    speed, and long-term stability. Built to outperform
-                    traditional methods.
+                  <p className="text-[14px] text-muted-foreground/45 leading-[2] mb-4 max-w-[360px]">
+                    GroundLock is a premium stabilised entry system designed for equine and rural properties.
+                    Built for floats, trucks, utes, and daily vehicle traffic, it strengthens high-use arrival
+                    zones beneath the surface while delivering a cleaner, more resolved finish at the gate.
+                  </p>
+                  <p className="text-[13px] text-muted-foreground/35 leading-[2] mb-4 max-w-[360px]">
+                    Designed for drainage, load distribution, and long-term stability, GroundLock brings
+                    together engineered performance and architectural presentation — so the front entry
+                    does not just hold up, it arrives properly.
                   </p>
                   <p className="text-[11px] text-muted-foreground/20 italic mb-8">
-                    This is where the real intelligence lives.
+                    Built for the way rural properties actually move.
                   </p>
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" delay={200}>
                   <Button asChild variant="outline-light" size="default">
                     <Link to="/groundlock">
-                      Explore the System <ArrowRight className="ml-2 h-4 w-4" />
+                      Explore GroundLock <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
+                </RevealOnScroll>
+                {/* Spec strip */}
+                <RevealOnScroll direction="up" delay={300}>
+                  <div className="flex flex-wrap gap-6 mt-10">
+                    <span className="text-[9px] uppercase tracking-[0.25em] text-accent/30 font-mono">75–100mm Engineered Depth</span>
+                    <span className="text-[9px] uppercase tracking-[0.25em] text-accent/30 font-mono">Stone / Gravel / Cobble Finish</span>
+                  </div>
                 </RevealOnScroll>
               </div>
               <RevealOnScroll direction="up" delay={150}>
