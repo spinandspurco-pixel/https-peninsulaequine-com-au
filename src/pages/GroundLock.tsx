@@ -710,7 +710,7 @@ export default function GroundLock() {
         </div>
       </section>
 
-      <StickySubpageCTA ctaLabel="Enquire About GroundLock" ctaHref="/contact" />
+      
     </Layout>
   );
 }
