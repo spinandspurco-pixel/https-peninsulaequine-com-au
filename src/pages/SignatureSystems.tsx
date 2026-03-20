@@ -159,9 +159,7 @@ export default function SignatureSystems() {
           <div className="section-container max-w-3xl mx-auto relative z-[1]">
             <RevealOnScroll>
               <p className="text-overline text-accent/50 mb-16 text-center">Flagship System</p>
-            </RevealOnScroll>
 
-            <RevealOnScroll delay={80}>
               <div className="border border-accent/15 bg-accent/[0.02] p-8 sm:p-12">
                 <div className="flex items-start justify-between gap-6 mb-5">
                   <div>
