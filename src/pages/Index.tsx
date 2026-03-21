@@ -125,7 +125,7 @@ export default function Index() {
     const rect = el.getBoundingClientRect();
     const vh = window.innerHeight;
     // Start fading when top of hero content reaches 80% of viewport, fully gone by 30%
-    const progress = Math.max(0, Math.min(1, (rect.top - vh * 0.3) / (vh * 0.5)));
+    const progress = Math.max(0, Math.min(1, (rect.top - vh * 0.2) / (vh * 0.55)));
     setHeroFade(progress);
   }, []);
 
