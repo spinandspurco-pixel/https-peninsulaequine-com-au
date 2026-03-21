@@ -70,7 +70,7 @@ function BlueprintLinework() {
         x1="800" y1="200" x2="800" y2="600"
         stroke="#C6A86B" strokeWidth="0.3" opacity="0"
         strokeDasharray="400" strokeDashoffset="400"
-        style={{ animation: "blueprintDraw 1.2s 2.2s ease-out forwards" }}
+        style={{ animation: "blueprintDraw 0.9s 1.2s ease-out forwards" }}
       />
 
       {/* Dimension extension lines */}
