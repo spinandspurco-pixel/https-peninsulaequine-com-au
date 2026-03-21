@@ -28,8 +28,8 @@ export const services = [
   {
     id: "arena-construction",
     title: "Arena Construction",
-    shortDescription: "Custom riding arenas engineered for optimal footing, drainage, and durability.",
-    description: "From intimate training arenas to competition-grade facilities, we design and build arenas that perform. Every project starts with soil analysis and ends with perfect footing.",
+    shortDescription: "Precision-graded surfaces engineered for consistent footing and drainage.",
+    description: "From training arenas to competition-grade facilities — every project starts with soil analysis.",
     features: [
       "Custom base preparation and drainage systems",
       "Premium footing materials and installation",
