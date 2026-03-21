@@ -755,10 +755,7 @@
 }
 .animate-confetti { animation: confetti 1.5s ease-out forwards; }
 
-@keyframes scale-in {
-  0% { transform: scale(0.8); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
+/* scale-in removed — opacity-only animations site-wide */
 
 @keyframes swipe-hint-left {
   0%, 100% { transform: translateX(0); opacity: 0.5; }

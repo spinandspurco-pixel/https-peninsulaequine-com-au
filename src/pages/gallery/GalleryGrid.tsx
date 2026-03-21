@@ -76,7 +76,7 @@ function CinematicImage({
         <img
           src={item.src}
           alt={item.alt}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ease-out group-hover:opacity-90"
           loading="lazy"
           decoding="async"
           onLoad={() => setLoaded(true)}
@@ -146,7 +146,7 @@ function CinematicVideo({
           <img
             src={item.thumbnail || item.src}
             alt={item.alt}
-            className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${isHovering ? "opacity-0 scale-[1.03]" : "opacity-100"}`}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${isHovering ? "opacity-0" : "opacity-100"}`}
             loading="lazy"
             decoding="async"
           />
@@ -161,8 +161,8 @@ function CinematicVideo({
         <div className="w-full h-full bg-muted/20" />
       )}
 
-      <div className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ${isHovering ? "bg-background/10" : "bg-background/25"}`}>
-        <div className={`w-12 h-12 rounded-full border border-foreground/20 flex items-center justify-center transition-all duration-500 backdrop-blur-sm ${isHovering ? "scale-90 opacity-60" : "group-hover:scale-105"}`}>
+      <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${isHovering ? "bg-background/10" : "bg-background/25"}`}>
+        <div className={`w-12 h-12 rounded-full border border-foreground/20 flex items-center justify-center transition-opacity duration-300 backdrop-blur-sm ${isHovering ? "opacity-60" : "opacity-100"}`}>
           <Play className="w-5 h-5 text-foreground/80 ml-0.5" />
         </div>
       </div>

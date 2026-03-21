@@ -89,7 +89,7 @@ export function ContentCard({
             alt={imageAlt}
             loading="lazy"
             decoding="async"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+            className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-90"
           />
           {/* Subtle overlay on hover */}
           <div
@@ -121,7 +121,7 @@ export function ContentCard({
         <CardFooter className="pt-0">
           <span className="inline-flex items-center text-sm font-medium text-muted-foreground group-hover:text-accent transition-colors duration-300">
             {ctaLabel}
-            <ArrowRight className="ml-1.5 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+            <ArrowRight className="ml-1.5 h-4 w-4 transition-opacity duration-300" />
           </span>
         </CardFooter>
       )}

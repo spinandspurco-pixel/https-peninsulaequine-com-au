@@ -182,12 +182,12 @@ export function TestimonialLightbox({ items, initialIndex, onClose }: Testimonia
 
 export function TestimonialMediaBadge({ type, src, onClick }: { type: "image" | "video"; src: string; onClick: () => void }) {
   return (
-    <button onClick={onClick} className="group relative mt-4 w-full aspect-video rounded-md overflow-hidden bg-muted border border-border hover:border-accent/50 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2" aria-label={type === "image" ? "View photo" : "Play video"}>
+    <button onClick={onClick} className="group relative mt-4 w-full aspect-video rounded-md overflow-hidden bg-muted border border-border hover:border-accent/50 transition-opacity duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2" aria-label={type === "image" ? "View photo" : "Play video"}>
       {type === "image" ? (
-        <img src={src} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        <img src={src} alt="" className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-90" />
       ) : (
         <div className="w-full h-full bg-primary/90 flex items-center justify-center">
-          <Play className="h-8 w-8 text-white/80 group-hover:text-accent group-hover:scale-110 transition-all duration-300" />
+          <Play className="h-8 w-8 text-white/80 group-hover:text-accent transition-opacity duration-300" />
         </div>
       )}
       <div className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/50 flex items-center justify-center">

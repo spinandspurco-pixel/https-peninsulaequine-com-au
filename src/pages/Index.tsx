@@ -134,18 +134,18 @@ function ProjectsScroll() {
             <img
               src={project.src}
               alt={project.alt}
-              className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.8] group-hover:brightness-[0.92]"
+              className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.8] group-hover:brightness-[0.88] transition-[filter] duration-700"
               loading="lazy"
               decoding="async"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-background/10" />
             <div className="absolute inset-0 bg-gradient-to-b from-background/25 via-transparent to-transparent" />
             <div className="absolute inset-0 grain-texture opacity-30" />
-            <div className="absolute inset-0 bg-background/15 group-hover:bg-background/0 transition-all duration-900" />
-            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 translate-y-2 group-hover:translate-y-0 transition-transform duration-900">
-              <p className="text-[9px] uppercase tracking-[0.25em] text-accent/50 font-mono mb-2 opacity-70 group-hover:opacity-100 transition-opacity duration-500">{project.scope}</p>
-              <p className="font-serif text-lg text-foreground/60 group-hover:text-foreground transition-all duration-700">{project.label}</p>
-              <div className="flex items-center gap-1.5 mt-3 text-accent/0 group-hover:text-accent/60 transition-all duration-700 translate-y-2 group-hover:translate-y-0">
+            <div className="absolute inset-0 bg-background/15 group-hover:bg-background/0 transition-opacity duration-300" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
+              <p className="text-[9px] uppercase tracking-[0.25em] text-accent/50 font-mono mb-2 opacity-70 group-hover:opacity-100 transition-opacity duration-300">{project.scope}</p>
+              <p className="font-serif text-lg text-foreground/60 group-hover:text-foreground transition-opacity duration-300">{project.label}</p>
+              <div className="flex items-center gap-1.5 mt-3 opacity-0 group-hover:opacity-60 transition-opacity duration-300 text-accent">
                 <span className="text-[10px] uppercase tracking-[0.15em] font-mono">View Project</span>
                 <ArrowRight className="w-3 h-3" />
               </div>
@@ -368,15 +368,15 @@ export default function Index() {
                 <RevealOnScroll key={svc.title} direction="up" stagger={i} staggerInterval={80}>
                   <Link
                     to={svc.href}
-                    className="group relative flex flex-col p-8 sm:p-10 min-h-[240px] border border-border/20 hover:border-border/40 bg-card/40 hover:bg-card/70 transition-all duration-700 ease-out"
+                    className="group relative flex flex-col p-8 sm:p-10 min-h-[240px] border border-border/20 hover:border-border/40 bg-card/40 hover:bg-card/70 transition-opacity duration-300 ease-out"
                   >
-                    <div className="absolute top-0 left-0 w-8 h-px bg-accent/20 group-hover:w-14 group-hover:bg-accent/40 transition-all duration-700" />
+                    <div className="absolute top-0 left-0 w-8 h-px bg-accent/20 group-hover:w-14 group-hover:bg-accent/40 transition-opacity duration-300" />
                     <ServiceIcon icon={svc.icon} className="mb-6" />
-                    <h3 className="font-serif text-[15px] font-medium text-foreground/65 mb-4 tracking-[0.02em] group-hover:text-foreground/90 transition-colors duration-500">
+                    <h3 className="font-serif text-[15px] font-medium text-foreground/65 mb-4 tracking-[0.02em] group-hover:text-foreground/90 transition-opacity duration-300">
                       {svc.title}
                     </h3>
                     <p className="text-[12px] text-muted-foreground/25 leading-[2.1] max-w-[260px] flex-1">{svc.desc}</p>
-                    <div className="flex items-center gap-2 mt-6 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0">
+                    <div className="flex items-center gap-2 mt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <ArrowRight className="w-3 h-3 text-accent/40" />
                     </div>
                   </Link>
@@ -505,16 +505,16 @@ export default function Index() {
                 <RevealOnScroll key={card.title} direction="up" stagger={i} staggerInterval={120}>
                   <Link
                     to={card.href}
-                    className="group relative flex flex-col p-8 sm:p-10 lg:p-12 min-h-[300px] sm:min-h-[320px] border border-border/20 hover:border-border/40 bg-card/40 hover:bg-card/70 transition-all duration-700 ease-out"
+                    className="group relative flex flex-col p-8 sm:p-10 lg:p-12 min-h-[300px] sm:min-h-[320px] border border-border/20 hover:border-border/40 bg-card/40 hover:bg-card/70 transition-opacity duration-300 ease-out"
                   >
                     {/* Accent line at top */}
-                    <div className="absolute top-0 left-0 w-8 h-px bg-accent/20 group-hover:w-14 group-hover:bg-accent/40 transition-all duration-700" />
+                    <div className="absolute top-0 left-0 w-8 h-px bg-accent/20 group-hover:w-14 group-hover:bg-accent/40 transition-opacity duration-300" />
 
                     <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/25 mb-8 block">
                       {String(i + 1).padStart(2, "0")}
                     </span>
 
-                    <h4 className="font-serif text-[17px] sm:text-[18px] font-medium text-foreground/65 tracking-[0.02em] mb-5 group-hover:text-foreground/90 transition-colors duration-500">
+                    <h4 className="font-serif text-[17px] sm:text-[18px] font-medium text-foreground/65 tracking-[0.02em] mb-5 group-hover:text-foreground/90 transition-opacity duration-300">
                       {card.title}
                     </h4>
 
@@ -522,7 +522,7 @@ export default function Index() {
                       {card.body}
                     </p>
 
-                    <div className="flex items-center gap-2 mt-8 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0">
+                    <div className="flex items-center gap-2 mt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-accent/50">{card.cta}</span>
                       <ArrowRight className="w-3 h-3 text-accent/40" />
                     </div>

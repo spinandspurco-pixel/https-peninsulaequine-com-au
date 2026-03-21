@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 
-type RevealDirection = "up" | "down" | "left" | "right" | "none" | "scale";
+type RevealDirection = "up" | "down" | "left" | "right" | "none";
 
 interface RevealOnScrollProps {
   children: ReactNode;
@@ -26,7 +26,6 @@ const transforms: Record<RevealDirection, (distance: number) => string> = {
   left: (d) => `translateX(${d}px)`,
   right: (d) => `translateX(-${d}px)`,
   none: () => "none",
-  scale: () => "scale(0.92)",
 };
 
 export function RevealOnScroll({

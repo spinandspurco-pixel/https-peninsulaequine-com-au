@@ -184,7 +184,7 @@ export default function About() {
         <div className="py-24 sm:py-36 bg-card relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-2xl mx-auto text-center relative z-10">
-            <RevealOnScroll direction="scale" duration={1000}>
+            <RevealOnScroll direction="up" duration={1000}>
               <blockquote className="font-serif text-xl sm:text-2xl text-foreground/80 italic leading-[1.5] tracking-[0.01em]">
                 "When you understand how a horse thinks and moves,
                 you build facilities that work with their nature,
