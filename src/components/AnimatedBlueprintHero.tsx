@@ -165,7 +165,7 @@ function StructuralWireframe() {
         stroke="hsl(var(--accent))"
         strokeWidth="0.8"
         opacity="0"
-        className="animate-[fadeElement_0.6s_3s_ease-out_forwards]"
+        className="animate-[fadeElement_0.5s_1.8s_ease-out_forwards]"
       />
     </svg>
   );
