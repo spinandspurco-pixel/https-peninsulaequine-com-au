@@ -115,13 +115,16 @@ export function LeadDetailPanel({ record, onClose, onUpdated, onCreateQuote }: P
   const [notes, setNotes] = useState(record.notes || "");
   const [saving, setSaving] = useState(false);
   const [linkedQuote, setLinkedQuote] = useState<any | null>(null);
+  const [linkedProposal, setLinkedProposal] = useState<any | null>(null);
   const [dealValue, setDealValue] = useState(record.deal_value?.toString() || "");
   const [probability, setProbability] = useState(record.probability?.toString() || "");
   const [aiDraft, setAiDraft] = useState<{ draft_message: string; subject_line: string } | null>(null);
   const [generatingDraft, setGeneratingDraft] = useState(false);
   const [draftCopied, setDraftCopied] = useState(false);
+  const [proposalInternalNotes, setProposalInternalNotes] = useState("");
+  const [savingProposalNotes, setSavingProposalNotes] = useState(false);
 
-  // Fetch linked quote
+  // Fetch linked quote + proposal
   useEffect(() => {
     supabase
       .from("quotes")
@@ -131,6 +134,19 @@ export function LeadDetailPanel({ record, onClose, onUpdated, onCreateQuote }: P
       .limit(1)
       .then(({ data }) => {
         if (data && data.length > 0) setLinkedQuote(data[0]);
+      });
+
+    supabase
+      .from("groundlock_proposals")
+      .select("id, proposal_ref, status, investment_total, created_at, system_notes")
+      .eq("inquiry_id", record.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .then(({ data }) => {
+        if (data && data.length > 0) {
+          setLinkedProposal(data[0]);
+          setProposalInternalNotes(data[0].system_notes || "");
+        }
       });
   }, [record.id]);
 
