@@ -479,6 +479,13 @@ export default function Gallery() {
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
+          10b. BUILD OPTIONS — tiered positioning
+          ═══════════════════════════════════════════════════ */}
+      <BuildOptions onSelect={() => setEnquiryType("full-property")} />
+
+      <ChapterDivider />
+
+      {/* ═══════════════════════════════════════════════════
           11. THE VIEWING LINE — cinematic closer / sole CTA
           ═══════════════════════════════════════════════════ */}
       <ViewingLine />
