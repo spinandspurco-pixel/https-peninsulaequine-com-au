@@ -387,15 +387,8 @@ const handler = async (req: Request): Promise<Response> => {
       resend.emails.send({
         from: FROM_EMAIL,
         to: [inquiry.email],
-        subject: "Thank You for Your Inquiry - Peninsula Equine",
+        subject: "Project Received — Peninsula Equine",
         html: confirmationHtml,
-        attachments: [
-          {
-            filename: "consultation.ics",
-            content: icsBase64,
-            content_type: "text/calendar; method=REQUEST",
-          },
-        ],
       }),
     ]);
 
