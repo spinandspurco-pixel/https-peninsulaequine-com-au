@@ -109,7 +109,7 @@ export function Header() {
               variant="gold"
               size="sm"
             >
-              <Link to="/contact">Request Assessment</Link>
+              <Link to="/contact">Discuss Project</Link>
             </Button>
           </div>
 

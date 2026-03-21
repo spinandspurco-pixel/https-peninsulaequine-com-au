@@ -356,7 +356,7 @@ export default function GroundLock() {
             <RevealOnScroll direction="up" delay={340}>
               <Button asChild variant="outline-light" size="lg">
                 <Link to="/contact">
-                  Enquire About GroundLock Integration <ArrowRight className="ml-2 h-4 w-4" />
+                  Enquire About GroundLock Use <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </RevealOnScroll>

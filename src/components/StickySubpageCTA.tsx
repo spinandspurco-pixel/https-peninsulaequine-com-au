@@ -21,7 +21,7 @@ interface StickySubpageCTAProps {
 
 export function StickySubpageCTA({
   showAfter = 500,
-  ctaLabel = "Request Assessment",
+  ctaLabel = "Discuss Project",
   ctaHref = "/contact",
   onCtaClick,
   ctaIcon,
