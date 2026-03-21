@@ -350,7 +350,7 @@ export default function Gallery() {
             </RevealOnScroll>
 
             {/* Row 2 — wide arena exterior */}
-            <RevealOnScroll direction="up" duration={700} delay={80}>
+            <RevealOnScroll direction="up" duration={DURATION.normal} delay={80}>
               <EditorialImage src={westernEntertainingZone} alt="Western entertaining zone — timber and stone" aspect="aspect-[21/9]" onClick={() => openLightbox(westernEntertainingZone)} />
             </RevealOnScroll>
           </div>
