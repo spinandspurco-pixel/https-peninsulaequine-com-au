@@ -499,11 +499,15 @@ export function InteractiveMasterplan() {
   }, [tourActive, stopTour]);
 
   const jumpToStep = useCallback((idx: number) => {
-    setTourStep(idx);
-    setActiveZone(TOUR_ORDER[idx]);
-    // Reset timer
-    if (tourTimer.current) clearTimeout(tourTimer.current);
-  }, []);
+    clearTimer();
+    setTourTransitioning(true);
+    setActiveZone(null);
+    tourTimer.current = setTimeout(() => {
+      setTourStep(idx);
+      setActiveZone(TOUR_ORDER[idx]);
+      setTourTransitioning(false);
+    }, TOUR_DISSOLVE / 2);
+  }, [clearTimer]);
 
   return (
     <section className="relative py-28 sm:py-36 lg:py-44 overflow-hidden">
