@@ -495,6 +495,14 @@ export default function Gallery() {
         allItems={allNavigableItems}
         onNavigateTo={(index) => setLightboxItem(allNavigableItems[index])}
       />
+
+      {/* Guided Enquiry Overlay */}
+      {enquiryType && (
+        <GuidedEnquiryFlow
+          projectType={enquiryType}
+          onClose={() => setEnquiryType(null)}
+        />
+      )}
     </Layout>
   );
 }
