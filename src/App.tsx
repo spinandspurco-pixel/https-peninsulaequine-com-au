@@ -51,7 +51,7 @@ const AdminDocuments = lazy(() => import("./pages/AdminDocuments"));
 const StaffDocumentPortal = lazy(() => import("./pages/StaffDocumentPortal"));
 const TrainerDocumentPortal = lazy(() => import("./pages/TrainerDocumentPortal"));
 const TrainerProfile = lazy(() => import("./pages/TrainerProfile"));
-const MLPGSPage = lazy(() => import("./pages/MLPGS"));
+
 const GroundLock = lazy(() => import("./pages/GroundLock"));
 const CaseStudy = lazy(() => import("./pages/CaseStudy"));
 const GroundLockSystems = lazy(() => import("./pages/GroundLockSystems"));
