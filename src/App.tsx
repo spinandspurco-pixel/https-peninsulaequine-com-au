@@ -63,6 +63,7 @@ const GroundLockSetup = lazy(() => import("./pages/GroundLockSetup"));
 const GroundLockOnboarding = lazy(() => import("./pages/GroundLockOnboarding"));
 const ClientQuote = lazy(() => import("./pages/ClientQuote"));
 const ProposalTemplate = lazy(() => import("./pages/ProposalTemplate"));
+const ProposalEditor = lazy(() => import("./pages/ProposalEditor"));
 
 const queryClient = new QueryClient();
 
