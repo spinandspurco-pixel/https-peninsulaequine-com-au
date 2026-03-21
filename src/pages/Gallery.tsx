@@ -371,7 +371,7 @@ export default function Gallery() {
             </RevealOnScroll>
 
             {/* Row 1 — wide steel shed + tall timber cubby */}
-            <RevealOnScroll direction="up" duration={800} delay={80}>
+            <RevealOnScroll direction="up" duration={DURATION.slow} delay={80}>
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-5 mb-3 sm:mb-5">
                 <div className="lg:col-span-7">
                   <EditorialImage src={steelShedDramatic} alt="Custom colorbond barn with dramatic sky" aspect="aspect-[16/10]" onClick={() => openLightbox(steelShedDramatic)} />
