@@ -134,11 +134,11 @@ export default function Shop() {
                 </h2>
 
                 <p className="text-sm text-muted-foreground/40 leading-[1.9]">
-                  GroundLock is available for select builders and projects.
+                  GroundLock is used across our builds and available to select partners.
                 </p>
 
                 <p className="text-[13px] text-muted-foreground/30 leading-[1.9] max-w-sm">
-                  We provide system supply, guidance, and structured implementation for approved partners.
+                  We provide system supply, guidance, and structured implementation to ensure it's done properly.
                 </p>
 
                 <div className="w-10 h-px bg-border/20 my-2" />
