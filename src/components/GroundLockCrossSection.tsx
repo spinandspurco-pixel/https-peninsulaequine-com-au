@@ -112,6 +112,8 @@ export function GroundLockCrossSection() {
     setActiveLayer((prev) => (prev === id ? null : id));
   }, []);
 
+  const [viewMode, setViewMode] = useState<ViewMode>("system");
+
   const activeData = layers.find((l) => l.id === activeLayer) || null;
 
   return (
