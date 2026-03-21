@@ -47,8 +47,6 @@ import { format } from "date-fns";
 
 type ViewMode = "founder" | "admin" | "operations";
 
-type ViewMode = "founder" | "admin" | "operations";
-
 const VIEW_MODES: { value: ViewMode; label: string; icon: typeof Crown; desc: string }[] = [
   { value: "founder", label: "Founder", icon: Crown, desc: "Full system view" },
   { value: "admin", label: "Admin", icon: Shield, desc: "Leads, quotes & comms" },
