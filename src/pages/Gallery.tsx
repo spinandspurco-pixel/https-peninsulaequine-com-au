@@ -14,9 +14,6 @@ import { BuildIntelligence } from "@/components/BuildIntelligence";
 import { DetailMatters } from "@/components/DetailMatters";
 import { ViewingLine } from "@/components/ViewingLine";
 
-// ── 1. HERO ──
-// Hero image now handled by ProjectsCinematicHero component
-
 // ── 2. FEATURE PROJECT (Private Client) ──
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
 import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
@@ -102,15 +99,51 @@ function ChapterDivider() {
   const { ref, isVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.5 });
 
   return (
-    <div ref={ref} className="relative py-10 sm:py-14 lg:py-16 flex items-center justify-center overflow-hidden">
+    <div ref={ref} className="relative py-12 sm:py-16 lg:py-20 flex items-center justify-center overflow-hidden">
       <div
-        className="w-px h-10 sm:h-14 bg-accent/20 origin-top"
+        className="w-px h-12 sm:h-16 bg-accent/15 origin-top"
         style={{
           transform: isVisible ? "scaleY(1)" : "scaleY(0)",
           opacity: isVisible ? 1 : 0,
           transition: "transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 100ms, opacity 600ms ease 100ms",
         }}
       />
+    </div>
+  );
+}
+
+/* ────────────────────────────────────────────────────────
+   SECTION HEADER — consistent label + heading pattern
+   ──────────────────────────────────────────────────────── */
+function SectionHeader({
+  label,
+  heading,
+  subtitle,
+  align = "center",
+}: {
+  label: string;
+  heading: string;
+  subtitle?: string;
+  align?: "center" | "left";
+}) {
+  const isCenter = align === "center";
+  return (
+    <div className={`${isCenter ? "text-center" : ""} mb-14 sm:mb-18 lg:mb-20`}>
+      <div className={`flex items-center gap-5 mb-5 ${isCenter ? "justify-center" : ""}`}>
+        <div className="w-8 h-px bg-accent/25" />
+        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/35 font-mono">
+          {label}
+        </p>
+        {isCenter && <div className="w-8 h-px bg-accent/25" />}
+      </div>
+      <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/90 tracking-[0.03em] leading-tight">
+        {heading}
+      </h2>
+      {subtitle && (
+        <p className="mt-4 text-sm text-muted-foreground/35 font-serif italic max-w-md mx-auto">
+          {subtitle}
+        </p>
+      )}
     </div>
   );
 }
@@ -195,7 +228,6 @@ export default function Gallery() {
   const videoCount = filteredItems.filter((i) => i.type === "video").length;
   const imageCount = filteredItems.filter((i) => i.type === "image").length;
 
-  // Find gallery item by src for lightbox
   const openLightbox = (src: string) => {
     const item = allNavigableItems.find(i => i.src === src);
     if (item) setLightboxItem(item);
@@ -211,35 +243,45 @@ export default function Gallery() {
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
-          1b. INTERACTIVE MASTERPLAN
+          2. INTERACTIVE MASTERPLAN
           ═══════════════════════════════════════════════════ */}
       <InteractiveMasterplan />
 
+      <ChapterDivider />
+
+      {/* ═══════════════════════════════════════════════════
+          3. WALK THE PROJECT — cinematic scroll panels
+          ═══════════════════════════════════════════════════ */}
       <WalkTheProject />
 
       <ChapterDivider />
 
+      {/* ═══════════════════════════════════════════════════
+          4. BUILD INTELLIGENCE — interactive layer toggle
+          ═══════════════════════════════════════════════════ */}
       <BuildIntelligence />
 
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
-          1e. DETAIL MATTERS — editorial craftsmanship cards
+          5. DETAIL MATTERS — editorial craftsmanship cards
           ═══════════════════════════════════════════════════ */}
       <DetailMatters />
 
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
-          2. FEATURE PROJECT — Private Client — Mornington Peninsula
+          6. FEATURE PROJECT — Private Client
           ═══════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grain-texture" />
-        <div className="py-20 sm:py-28 lg:py-36 relative">
-          <div className="section-container-wide relative z-[1]">
+        <div className="py-28 sm:py-36 lg:py-44 relative">
+          <div className="section-container relative z-[1]">
             <RevealOnScroll direction="up" duration={700}>
+              <SectionHeader label="Featured Project" heading="Private Client — Mornington Peninsula" />
+
               {/* Hero + details row */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 items-center mb-6 sm:mb-8">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 items-start mb-6 sm:mb-8">
                 <div className="lg:col-span-8">
                   <EditorialImage
                     src={aberdeenBarnInterior}
@@ -248,22 +290,16 @@ export default function Gallery() {
                     onClick={() => openLightbox(aberdeenBarnInterior)}
                   />
                 </div>
-                <div className="lg:col-span-4 py-4 lg:py-8">
-                  <p className="text-[9px] uppercase tracking-[0.35em] text-accent/40 font-mono mb-4">
-                    Featured Project
-                  </p>
-                  <h2 className="font-serif text-2xl sm:text-3xl text-foreground/90 font-normal tracking-[0.02em] mb-4">
-                    Private Client — Mornington Peninsula
-                  </h2>
-                  <div className="w-10 h-px bg-accent/30 mb-6" />
-                  <dl className="space-y-3 mb-8">
+                <div className="lg:col-span-4 py-2 lg:py-6">
+                  <div className="w-10 h-px bg-accent/20 mb-6" />
+                  <dl className="space-y-4 mb-8">
                     <div>
                       <dt className="text-[9px] uppercase tracking-[0.3em] text-muted-foreground/25 font-mono">Location</dt>
-                      <dd className="text-sm text-muted-foreground/50 mt-0.5">Mornington Peninsula, Victoria</dd>
+                      <dd className="text-sm text-muted-foreground/50 mt-1">Mornington Peninsula, Victoria</dd>
                     </div>
                     <div>
                       <dt className="text-[9px] uppercase tracking-[0.3em] text-muted-foreground/25 font-mono">Scope</dt>
-                      <dd className="text-sm text-muted-foreground/50 mt-0.5">Stables, stonework, timber joinery</dd>
+                      <dd className="text-sm text-muted-foreground/50 mt-1">Stables, stonework, timber joinery</dd>
                     </div>
                   </dl>
                   <p className="text-xs text-muted-foreground/30 leading-[1.8] font-serif italic">
@@ -271,8 +307,9 @@ export default function Gallery() {
                   </p>
                 </div>
               </div>
+
               {/* Supporting images — 3 across */}
-              <div className="grid grid-cols-3 gap-4 sm:gap-5">
+              <div className="grid grid-cols-3 gap-3 sm:gap-5">
                 <EditorialImage src={aberdeenStalls} alt="Private client — custom stalls" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenStalls)} />
                 <EditorialImage src={aberdeenAisle} alt="Private client — stone aisle" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenAisle)} />
                 <EditorialImage src={aberdeenExterior} alt="Private client — completed exterior" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenExterior)} />
@@ -285,24 +322,19 @@ export default function Gallery() {
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
-          3. FINISHED RESULTS — editorial mixed grid
+          7. FINISHED RESULTS — editorial mixed grid
           ═══════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grain-texture" />
-        <div className="py-20 sm:py-28 lg:py-36 relative">
-          <div className="section-container-wide relative z-[1]">
+        <div className="py-28 sm:py-36 lg:py-44 relative">
+          <div className="section-container relative z-[1]">
             <RevealOnScroll direction="up" duration={700}>
-              <div className="text-center max-w-md mx-auto mb-12">
-                <p className="text-[9px] uppercase tracking-[0.4em] text-accent/40 font-mono mb-3">Completed Work</p>
-                <h2 className="font-serif text-xl sm:text-2xl text-foreground/80 font-normal tracking-[0.02em]">
-                  The Finished Result
-                </h2>
-              </div>
+              <SectionHeader label="Completed Work" heading="The Finished Result" />
             </RevealOnScroll>
 
             {/* Row 1 — wide deck + tall stable facade */}
             <RevealOnScroll direction="up" duration={800}>
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 mb-4 sm:mb-5">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-5 mb-3 sm:mb-5">
                 <div className="lg:col-span-7">
                   <EditorialImage src={aberdeenDeck} alt="Private client — outdoor deck" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenDeck)} />
                 </div>
@@ -323,24 +355,19 @@ export default function Gallery() {
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
-          4. CUSTOM BUILDS — steel sheds & bespoke timber
+          8. CUSTOM BUILDS — steel sheds & bespoke timber
           ═══════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grain-texture" />
-        <div className="py-20 sm:py-28 relative">
-          <div className="section-container-wide relative z-[1]">
+        <div className="py-28 sm:py-36 lg:py-44 relative">
+          <div className="section-container relative z-[1]">
             <RevealOnScroll direction="up" duration={700}>
-              <div className="text-center max-w-md mx-auto mb-12">
-                <p className="text-[9px] uppercase tracking-[0.4em] text-accent/40 font-mono mb-3">Custom Builds</p>
-                <h2 className="font-serif text-xl sm:text-2xl text-foreground/80 font-normal tracking-[0.02em]">
-                  Steel &amp; Timber — Built to Brief
-                </h2>
-              </div>
+              <SectionHeader label="Custom Builds" heading="Steel & Timber — Built to Brief" />
             </RevealOnScroll>
 
             {/* Row 1 — wide steel shed + tall timber cubby */}
             <RevealOnScroll direction="up" duration={800} delay={80}>
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 mb-4 sm:mb-5">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-5 mb-3 sm:mb-5">
                 <div className="lg:col-span-7">
                   <EditorialImage src={steelShedDramatic} alt="Custom colorbond barn with dramatic sky" aspect="aspect-[16/10]" onClick={() => openLightbox(steelShedDramatic)} />
                 </div>
@@ -361,28 +388,31 @@ export default function Gallery() {
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
-          5. BROWSE ALL — expandable filter grid
+          9. BROWSE ALL — expandable filter grid
           ═══════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grain-texture" />
-        <div className="py-20 sm:py-28 relative">
+        <div className="py-28 sm:py-36 lg:py-44 relative">
           <div className="section-container relative z-[1]">
             <RevealOnScroll direction="up" duration={600}>
-              <div className="flex items-center justify-between mb-10">
+              <div className="flex items-center justify-between mb-14 sm:mb-18 lg:mb-20">
                 <div>
-                  <p className="text-[9px] uppercase tracking-[0.35em] text-muted-foreground/20 font-mono mb-2">
-                    Complete Archive
-                  </p>
-                  <h2 className="font-serif text-xl sm:text-2xl text-foreground/80 font-normal tracking-[0.02em]">
+                  <div className="flex items-center gap-5 mb-5">
+                    <div className="w-8 h-px bg-accent/25" />
+                    <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/35 font-mono">
+                      Complete Archive
+                    </p>
+                  </div>
+                  <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/90 tracking-[0.03em]">
                     Browse All Work
                   </h2>
                 </div>
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-accent/60 transition-colors duration-500"
+                  className="flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-muted-foreground/35 hover:text-accent/60 transition-colors duration-500"
                 >
                   <Filter className="w-3.5 h-3.5" />
-                  {showFilters ? "Hide Filters" : "Filter"}
+                  {showFilters ? "Hide" : "Filter"}
                 </button>
               </div>
             </RevealOnScroll>
@@ -433,43 +463,8 @@ export default function Gallery() {
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
-          6. FINAL CTA — cinematic full-width
+          10. THE VIEWING LINE — cinematic closer / sole CTA
           ═══════════════════════════════════════════════════ */}
-      <section className="relative h-[60vh] sm:h-[70vh] overflow-hidden">
-        <img
-          src={steelShedDramatic}
-          alt="Custom colorbond barn — dramatic sky"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/20" />
-        <div className="absolute inset-0 flex items-center justify-center z-10">
-          <div className="text-center max-w-lg px-6">
-            <RevealOnScroll direction="up" duration={800}>
-              <RevealLine className="mx-auto mb-10" width="w-8" />
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" duration={900} delay={100}>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-foreground font-medium tracking-[0.03em] mb-6">
-                Build it properly.
-              </h2>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" duration={800} delay={200}>
-              <p className="text-xs sm:text-sm text-muted-foreground/35 mb-10 leading-relaxed">
-                Every project begins with a site assessment.<br />
-                Let's talk about yours.
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" duration={700} delay={300}>
-              <Button asChild variant="gold" size="lg">
-                <Link to="/contact">
-                  Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </RevealOnScroll>
-          </div>
-        </div>
-      </section>
-
-      {/* ── THE VIEWING LINE — cinematic closer ── */}
       <ViewingLine />
 
       {/* Lightbox */}
