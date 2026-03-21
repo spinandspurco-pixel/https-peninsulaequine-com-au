@@ -221,11 +221,11 @@ function ScanLine() {
 /* ── Floating measurement nodes ───────────────────── */
 function MeasurementNodes() {
   const nodes = [
-    { x: "17%", y: "42%", delay: 3.5 },
-    { x: "83%", y: "42%", delay: 3.7 },
-    { x: "50%", y: "15%", delay: 3.9 },
-    { x: "29%", y: "82%", delay: 4.1 },
-    { x: "71%", y: "82%", delay: 4.3 },
+    { x: "17%", y: "42%", delay: 2.0 },
+    { x: "83%", y: "42%", delay: 2.1 },
+    { x: "50%", y: "15%", delay: 2.2 },
+    { x: "29%", y: "82%", delay: 2.3 },
+    { x: "71%", y: "82%", delay: 2.4 },
   ];
 
   return (
