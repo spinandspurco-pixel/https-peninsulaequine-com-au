@@ -401,7 +401,10 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ COMPARISON ═══════════════════════════════════ */}
+      {/* ═══ CROSS-SECTION ══════════════════════════════ */}
+      <GroundLockCrossSection />
+
+
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-32 sm:py-48 relative">
