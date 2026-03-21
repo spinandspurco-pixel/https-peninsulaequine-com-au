@@ -345,6 +345,27 @@ export default function GroundLock() {
                 Most systems repeat. This one locks.
               </p>
             </div>
+
+            {/* Why It Matters */}
+            <div className="mt-14 sm:mt-18 text-center">
+              <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-primary-foreground/25 mb-8">
+                Why It Matters
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-10 max-w-2xl mx-auto">
+                {[
+                  "Increased structural consistency",
+                  "Reduced long-term movement",
+                  "More intelligent system performance",
+                ].map((point) => (
+                  <div key={point} className="flex flex-col items-center gap-2">
+                    <span className="w-1 h-1 rounded-full bg-accent/30" />
+                    <p className="text-[11px] sm:text-xs text-primary-foreground/35 leading-[1.7] tracking-wide">
+                      {point}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
