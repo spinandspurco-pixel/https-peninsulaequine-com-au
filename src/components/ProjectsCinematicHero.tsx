@@ -198,7 +198,7 @@ export function ProjectsCinematicHero() {
       }} />
 
       {/* Layer 5: Grain */}
-      <div className="absolute inset-0 pointer-events-none grain-texture" />
+      <div className="absolute inset-0 pointer-events-none grain-hero" />
 
       {/* Layer 5: Content — center-left */}
       <div className="absolute inset-0 flex items-center z-10">

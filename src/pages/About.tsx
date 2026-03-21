@@ -31,7 +31,7 @@ export default function About() {
           className="absolute inset-0 pointer-events-none"
           style={{ background: "radial-gradient(ellipse 70% 55% at 50% 50%, transparent 20%, hsl(222 20% 4% / 0.7) 80%)" }}
         />
-        <div className="absolute inset-0 grain-texture" />
+        <div className="absolute inset-0 grain-hero" />
 
         <div className="section-container relative z-10 text-center max-w-2xl mx-auto">
           <div
