@@ -224,6 +224,9 @@ export default function Admin() {
           {/* FOUNDER + ADMIN: Follow-Up Engine */}
           {viewMode !== "operations" && <FollowUpEngine />}
 
+          {/* FOUNDER + ADMIN: Auto-Send Overview */}
+          {viewMode !== "operations" && <AutoSendOverviewPanel />}
+
           {/* FOUNDER + ADMIN: Communications Hub */}
           {viewMode !== "operations" && <CommunicationsHub />}
 
