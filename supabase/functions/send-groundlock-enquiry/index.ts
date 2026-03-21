@@ -66,15 +66,49 @@ serve(async (req: Request) => {
       </div>
     </body></html>`;
 
-    const result = await resend.emails.send({
+    // 1. Admin notification
+    const adminResult = await resend.emails.send({
       from: FROM_EMAIL,
       to: [TO_EMAIL],
       subject: `New GroundLock Project Enquiry — ${name}`,
       html,
       reply_to: email,
     });
+    console.log("Admin email sent:", adminResult);
 
-    console.log("GroundLock enquiry email sent:", result);
+    // 2. Customer auto-response
+    const customerHtml = `<!DOCTYPE html><html><head><style>
+      body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.7;color:#333;margin:0;padding:0;}
+    </style></head><body>
+      <div style="max-width:560px;margin:0 auto;">
+        <div style="background:#1a1d26;padding:28px 24px;text-align:center;">
+          <h1 style="color:#f5f0e8;margin:0;font-size:18px;letter-spacing:0.5px;">Your GroundLock Project</h1>
+          <p style="color:#c9a227;margin:8px 0 0;font-size:10px;letter-spacing:3px;text-transform:uppercase;">Peninsula Equine</p>
+        </div>
+        <div style="padding:32px 24px;background:#faf8f4;">
+          <p style="margin:0 0 16px;color:#333;font-size:15px;">Hi ${name},</p>
+          <p style="margin:0 0 16px;color:#444;font-size:14px;">Thanks for sending through your project.</p>
+          <p style="margin:0 0 16px;color:#444;font-size:14px;">We'll review your space and map out the best way to approach it using the GroundLock system.</p>
+          <p style="margin:0 0 16px;color:#444;font-size:14px;">If you have any additional details — photos, layout ideas, or how the area is currently used — feel free to reply here.</p>
+          <p style="margin:0 0 0;color:#444;font-size:14px;">We'll be in touch shortly with next steps.</p>
+          <p style="margin:24px 0 0;color:#333;font-size:14px;font-weight:600;">— Peninsula Equine</p>
+        </div>
+        <div style="background:#1a1d26;padding:14px;text-align:center;">
+          <p style="color:#6a6050;margin:0;font-size:10px;letter-spacing:1px;">peninsulaequine.org · GroundLock™ System</p>
+        </div>
+      </div>
+    </body></html>`;
+
+    const customerResult = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: [email],
+      subject: "Your GroundLock Project",
+      html: customerHtml,
+      reply_to: TO_EMAIL,
+    });
+    console.log("Customer auto-response sent:", customerResult);
+
+    console.log("GroundLock enquiry emails sent:", { adminResult, customerResult });
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
