@@ -308,7 +308,7 @@ export default function GroundLock() {
           <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
             <RevealOnScroll direction="none">
               <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/28 italic leading-[1.9]">
-                Built to handle real equine movement, not light-use assumptions.
+                Built for real equine movement — not light-use assumptions.
               </p>
             </RevealOnScroll>
           </div>
