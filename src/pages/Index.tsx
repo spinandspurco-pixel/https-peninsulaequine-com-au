@@ -17,14 +17,18 @@ import garageExterior from "@/assets/garage-exterior.webp";
 import interiorTimberWindow from "@/assets/interior-timber-window.webp";
 import mainRidgeFinishedExterior from "@/assets/main-ridge-finished-exterior.webp";
 import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
+import portfolioArenaSymmetry from "@/assets/portfolio-arena-symmetry.jpg";
+import portfolioPropertyAerial from "@/assets/portfolio-property-aerial.jpg";
 
 // CTA closer
 import heroSunset from "@/assets/hero-sunset.webp";
 
 const PROJECTS = [
   { src: mainRidgeFinishedExterior, alt: "Main Ridge pavilion at dusk", label: "Main Ridge", scope: "Pavilion & Parrilla Grill", slug: "main-ridge" },
+  { src: portfolioPropertyAerial, alt: "Complete equine property — aerial masterplan", label: "Full Property", scope: "Arena, Stables & Paddocks", slug: "main-ridge" },
   { src: garageInterior, alt: "Precision garage interior with flake floor", label: "Private Client", scope: "Garage & Workshop", slug: "aberdeen-farm" },
   { src: steelShedDramatic, alt: "Custom steel barn with dramatic sky", label: "Steel Structures", scope: "Colorbond Barn Build", slug: "caulfield" },
+  { src: portfolioArenaSymmetry, alt: "Precision-groomed arena at golden hour", label: "Arena Build", scope: "Surface & Fencing", slug: "main-ridge" },
   { src: garageExterior, alt: "Steel shed with polished concrete apron", label: "Mornington Peninsula", scope: "Steel Structures", slug: "caulfield" },
   { src: interiorTimberWindow, alt: "Recycled timber cladding with bush views", label: "Main Ridge Interior", scope: "Timber Fit-out", slug: "main-ridge" },
 ];

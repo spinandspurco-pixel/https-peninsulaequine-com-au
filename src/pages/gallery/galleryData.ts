@@ -16,6 +16,13 @@ import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
 import coveredArenaFinishedLit from "@/assets/covered-arena-finished-lit.jpg";
 import westernEntertainingZone from "@/assets/western-entertaining-zone.jpg";
 
+// Premium portfolio visuals
+import portfolioArenaSymmetry from "@/assets/portfolio-arena-symmetry.jpg";
+import portfolioFencingDetail from "@/assets/portfolio-fencing-detail.jpg";
+import portfolioTimberJoinery from "@/assets/portfolio-timber-joinery.jpg";
+import portfolioPropertyAerial from "@/assets/portfolio-property-aerial.jpg";
+import portfolioGradingCinematic from "@/assets/portfolio-grading-cinematic.jpg";
+
 export type GalleryItem = {
   id: number;
   src: string;
@@ -66,6 +73,13 @@ export const galleryItems: GalleryItem[] = [
   { id: 70, src: steelShedDramatic, alt: "Custom colorbond barn — dramatic sky", project: "custom-builds", type: "image", service: "barn", location: "victoria" },
   { id: 80, src: coveredArenaFinishedLit, alt: "Covered arena — finished and lit at dusk", project: "custom-builds", type: "image", service: "barn", location: "victoria" },
   { id: 83, src: westernEntertainingZone, alt: "Western entertaining zone — timber and stone", project: "custom-builds", type: "image", service: "woodwork", location: "victoria" },
+
+  // ── Premium Portfolio ──
+  { id: 90, src: portfolioArenaSymmetry, alt: "Precision-groomed dressage arena at golden hour", project: "custom-builds", type: "image", service: "barn", location: "victoria" },
+  { id: 91, src: portfolioFencingDetail, alt: "Steel post-and-rail fencing — welded joint detail", project: "custom-builds", type: "image", service: "barn", location: "victoria" },
+  { id: 92, src: portfolioTimberJoinery, alt: "Hand-finished stable door joinery with iron hardware", project: "custom-builds", type: "image", service: "woodwork", location: "victoria" },
+  { id: 93, src: portfolioPropertyAerial, alt: "Aerial view — complete equine property layout", project: "custom-builds", type: "image", service: "barn", location: "victoria" },
+  { id: 94, src: portfolioGradingCinematic, alt: "Arena grading at dawn — cinematic silhouette", project: "custom-builds", type: "image", service: "barn", location: "victoria" },
 ];
 
 export const quickTags = [
