@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import {
   X, Phone, Mail, MapPin, DollarSign, Calendar,
   FileText, ArrowRight, CheckCircle, Zap, Lightbulb,
-  Briefcase, Shield,
+  Briefcase, Shield, Sparkles, Copy, Check, Send,
 } from "lucide-react";
 import { CommunicationTimeline } from "@/components/CommunicationTimeline";
 import { scheduleLeadFollowUps } from "@/lib/autoSendScheduler";
