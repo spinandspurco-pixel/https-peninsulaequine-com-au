@@ -1402,6 +1402,8 @@ export type Database = {
       quotes: {
         Row: {
           accepted_at: string | null
+          accepted_by_email: string | null
+          accepted_by_name: string | null
           approved_by: string | null
           client_email: string | null
           client_name: string
@@ -1410,15 +1412,19 @@ export type Database = {
           declined_at: string | null
           exclusions: string | null
           expiry_date: string | null
+          groundlock_included: boolean | null
           gst: number
           id: string
           inquiry_id: string | null
           internal_notes: string | null
           location: string | null
+          project_overview: string | null
           project_type: string
+          property_name: string | null
           quote_number: string
           scope_summary: string | null
           sent_at: string | null
+          share_token: string | null
           site_assessment_id: string | null
           status: string
           subtotal: number
@@ -1428,6 +1434,8 @@ export type Database = {
         }
         Insert: {
           accepted_at?: string | null
+          accepted_by_email?: string | null
+          accepted_by_name?: string | null
           approved_by?: string | null
           client_email?: string | null
           client_name: string
@@ -1436,15 +1444,19 @@ export type Database = {
           declined_at?: string | null
           exclusions?: string | null
           expiry_date?: string | null
+          groundlock_included?: boolean | null
           gst?: number
           id?: string
           inquiry_id?: string | null
           internal_notes?: string | null
           location?: string | null
+          project_overview?: string | null
           project_type?: string
+          property_name?: string | null
           quote_number: string
           scope_summary?: string | null
           sent_at?: string | null
+          share_token?: string | null
           site_assessment_id?: string | null
           status?: string
           subtotal?: number
@@ -1454,6 +1466,8 @@ export type Database = {
         }
         Update: {
           accepted_at?: string | null
+          accepted_by_email?: string | null
+          accepted_by_name?: string | null
           approved_by?: string | null
           client_email?: string | null
           client_name?: string
@@ -1462,15 +1476,19 @@ export type Database = {
           declined_at?: string | null
           exclusions?: string | null
           expiry_date?: string | null
+          groundlock_included?: boolean | null
           gst?: number
           id?: string
           inquiry_id?: string | null
           internal_notes?: string | null
           location?: string | null
+          project_overview?: string | null
           project_type?: string
+          property_name?: string | null
           quote_number?: string
           scope_summary?: string | null
           sent_at?: string | null
+          share_token?: string | null
           site_assessment_id?: string | null
           status?: string
           subtotal?: number
