@@ -1,164 +1,220 @@
 /**
- * GroundLock™ System Visuals — Three modes:
+ * GroundLock™ System Visuals — Three modes with staged reveal animations.
  *
- * 1. PanelSpecimen    — Hero / beauty visual (cinematic single panel)
- * 2. LockSequence     — Step-by-step: single → approach → locked → extended
- * 3. SystemDiagram    — Full interlocking system showing alternating rhythm
+ * 1. PanelSpecimen  — Hero / beauty visual (cinematic single panel)
+ * 2. LockSequence   — Step-by-step: single → approach → locked → extended
+ * 3. SystemDiagram  — Full interlocking system showing alternating rhythm
+ *
+ * All animations are opacity-only, lightweight, and work as static on touch.
  */
 
+import { useEffect, useRef, useState, useCallback } from "react";
 import { GroundLockPanelSVG, PanelDefs } from "./GroundLockPanelSVG";
+import { cn } from "@/lib/utils";
 
-/* ── 01 — Hero / Beauty Visual ─────────────────────────── */
+/* ── Intersection observer hook for staged reveals ── */
+function useInView(threshold = 0.3) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setInView(true); obs.disconnect(); } },
+      { threshold }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [threshold]);
+
+  return { ref, inView };
+}
+
+/* ── Staged opacity helper ── */
+function stageStyle(inView: boolean, delay: number): React.CSSProperties {
+  return {
+    opacity: inView ? 1 : 0,
+    transition: `opacity 450ms ease ${delay}ms`,
+  };
+}
+
+/* ══════════════════════════════════════════════════════════
+   01 — Hero / Beauty Visual
+   ══════════════════════════════════════════════════════════ */
 export function PanelSpecimen({ className }: { className?: string }) {
+  const { ref, inView } = useInView();
+
   return (
-    <div className={className}>
-      <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent/28 mb-5">
+    <div className={cn("text-center", className)} ref={ref}>
+      <p className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.2em] text-accent/30 mb-5" style={stageStyle(inView, 0)}>
         The Panel
       </p>
-      <svg viewBox="0 0 140 130" className="w-full max-w-[220px] h-auto mx-auto">
-        <PanelDefs id="sp" />
-        <GroundLockPanelSVG x={20} y={10} scale={1.1} active showTabs defsId="sp" direction="up" />
-      </svg>
-      <p className="text-[10px] font-mono text-muted-foreground/18 text-center mt-4 tracking-[0.12em]">
+      <div style={stageStyle(inView, 150)}>
+        <svg viewBox="0 0 100 110" className="w-full max-w-[180px] sm:max-w-[220px] h-auto mx-auto">
+          <PanelDefs id="sp" />
+          <GroundLockPanelSVG active showTabs showJoins defsId="sp" direction="up" />
+        </svg>
+      </div>
+      <p className="text-[10px] font-mono text-muted-foreground/20 mt-4 tracking-[0.12em]" style={stageStyle(inView, 300)}>
         Horseshoe geometry · Directional interlock
       </p>
     </div>
   );
 }
 
-/* ── 02 — Lock Sequence (step-by-step) ─────────────────── */
+/* ══════════════════════════════════════════════════════════
+   02 — Lock Sequence (step-by-step with staged reveals)
+   ══════════════════════════════════════════════════════════ */
 export function LockSequence({ className }: { className?: string }) {
+  const { ref, inView } = useInView(0.2);
+
   /*
-   * Four steps shown left-to-right:
-   * Step 1: Single panel A (up)
-   * Step 2: Panel B (down) approaching
-   * Step 3: Panels A+B locked together
-   * Step 4: Extended system A-B-A-B
+   * Mobile: stack vertically as a 2×2 grid
+   * Desktop: horizontal 4-step strip
+   *
+   * Each step has its own SVG for clean responsive scaling.
    */
+  const s = 0.45;
 
-  const s = 0.38;
-  const panelW = 100 * s; // ~38
-  const gap = 6;
-  const stepW = panelW + gap;
-  const stageGap = 28;
+  const steps = [
+    {
+      label: "Panel A",
+      step: "01",
+      render: () => (
+        <svg viewBox="0 0 100 110" className="w-full h-auto max-w-[140px] mx-auto">
+          <PanelDefs id="ls1" />
+          <GroundLockPanelSVG direction="up" active showTabs showJoins defsId="ls1" />
+        </svg>
+      ),
+    },
+    {
+      label: "Opposing",
+      step: "02",
+      render: () => (
+        <svg viewBox="0 0 130 110" className="w-full h-auto max-w-[160px] mx-auto">
+          <PanelDefs id="ls2" />
+          <GroundLockPanelSVG x={0} direction="up" showTabs defsId="ls2" />
+          <GroundLockPanelSVG x={48} y={2} direction="down" active showTabs showJoins defsId="ls2" opacity={0.75} />
+        </svg>
+      ),
+    },
+    {
+      label: "Interlocked",
+      step: "03",
+      render: () => (
+        <svg viewBox="0 0 140 110" className="w-full h-auto max-w-[160px] mx-auto">
+          <PanelDefs id="ls3" />
+          <GroundLockPanelSVG x={0} direction="up" active showTabs showJoins defsId="ls3" />
+          <GroundLockPanelSVG x={46} direction="down" active showTabs showJoins defsId="ls3" />
+        </svg>
+      ),
+    },
+    {
+      label: "System",
+      step: "04",
+      render: () => (
+        <svg viewBox="0 0 200 110" className="w-full h-auto max-w-[180px] mx-auto">
+          <PanelDefs id="ls4" />
+          {[0, 1, 2, 3].map((i) => (
+            <GroundLockPanelSVG
+              key={i}
+              x={i * 42}
+              direction={i % 2 === 0 ? "up" : "down"}
+              active
+              showTabs
+              showJoins={i < 2}
+              defsId="ls4"
+              scale={0.88}
+            />
+          ))}
+        </svg>
+      ),
+    },
+  ];
 
-  // Each stage gets its own group
   return (
-    <div className={className}>
-      <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent/28 mb-5">
+    <div className={cn("text-center", className)} ref={ref}>
+      <p className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.2em] text-accent/30 mb-6 sm:mb-8" style={stageStyle(inView, 0)}>
         The Lock Sequence
       </p>
-      <svg viewBox="0 0 420 120" className="w-full max-w-xl h-auto mx-auto">
-        <PanelDefs id="ls" />
 
-        {/* Step 1 — Single panel A */}
-        <g>
-          <GroundLockPanelSVG x={4} y={10} scale={s} direction="up" active showTabs defsId="ls" />
-          <text x={4 + panelW / 2} y={108} textAnchor="middle" className="fill-muted-foreground/20" style={{ fontSize: "6px", fontFamily: "monospace", letterSpacing: "0.08em" }}>
-            1 · Panel A
-          </text>
-        </g>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-4 max-w-2xl mx-auto">
+        {steps.map((step, i) => (
+          <div key={i} style={stageStyle(inView, 200 + i * 350)}>
+            <div className="mb-3">
+              {step.render()}
+            </div>
+            <p className="text-[9px] sm:text-[10px] font-mono text-muted-foreground/25 tracking-[0.1em]">
+              <span className="text-accent/35">{step.step}</span> · {step.label}
+            </p>
+          </div>
+        ))}
+      </div>
 
-        {/* Step 2 — Panel B approaching (offset, with gap showing approach) */}
-        <g>
-          <GroundLockPanelSVG x={4 + stageGap + stepW} y={10} scale={s} direction="up" showTabs defsId="ls" />
-          <GroundLockPanelSVG x={4 + stageGap + stepW + panelW * 0.55} y={14} scale={s} direction="down" active showTabs defsId="ls" opacity={0.7} />
-          <text x={4 + stageGap + stepW + panelW * 0.6} y={108} textAnchor="middle" className="fill-muted-foreground/20" style={{ fontSize: "6px", fontFamily: "monospace", letterSpacing: "0.08em" }}>
-            2 · Opposing
-          </text>
-        </g>
-
-        {/* Step 3 — Locked pair */}
-        <g>
-          {(() => {
-            const ox = 4 + (stageGap + stepW) * 2 + panelW * 0.3;
-            return (
-              <>
-                <GroundLockPanelSVG x={ox} y={10} scale={s} direction="up" active showTabs defsId="ls" />
-                <GroundLockPanelSVG x={ox + panelW * 0.52} y={10} scale={s} direction="down" active showTabs defsId="ls" />
-              </>
-            );
-          })()}
-          <text x={4 + (stageGap + stepW) * 2 + panelW * 0.9} y={108} textAnchor="middle" className="fill-muted-foreground/20" style={{ fontSize: "6px", fontFamily: "monospace", letterSpacing: "0.08em" }}>
-            3 · Interlocked
-          </text>
-        </g>
-
-        {/* Step 4 — Extended A-B-A-B */}
-        <g>
-          {(() => {
-            const ox = 4 + (stageGap + stepW) * 3 + panelW * 0.1;
-            const offset = panelW * 0.48;
-            return (
-              <>
-                <GroundLockPanelSVG x={ox} y={10} scale={s * 0.85} direction="up" active showTabs defsId="ls" />
-                <GroundLockPanelSVG x={ox + offset * 0.85} y={10} scale={s * 0.85} direction="down" active showTabs defsId="ls" />
-                <GroundLockPanelSVG x={ox + offset * 0.85 * 2} y={10} scale={s * 0.85} direction="up" active showTabs defsId="ls" />
-                <GroundLockPanelSVG x={ox + offset * 0.85 * 3} y={10} scale={s * 0.85} direction="down" active showTabs defsId="ls" />
-              </>
-            );
-          })()}
-          <text x={4 + (stageGap + stepW) * 3 + panelW * 0.9} y={108} textAnchor="middle" className="fill-muted-foreground/20" style={{ fontSize: "6px", fontFamily: "monospace", letterSpacing: "0.08em" }}>
-            4 · System
-          </text>
-        </g>
-      </svg>
-      <p className="text-[10px] font-mono text-muted-foreground/18 text-center mt-4 tracking-[0.12em]">
+      <p className="text-[10px] font-mono text-muted-foreground/18 mt-6 tracking-[0.12em]" style={stageStyle(inView, 1600)}>
         Opposing panels nest and lock into a continuous surface
       </p>
     </div>
   );
 }
 
-/* ── 03 — Full System Diagram (alternating A↑ B↓ rhythm) ── */
+/* ══════════════════════════════════════════════════════════
+   03 — Full System Diagram (alternating A↑ B↓ rhythm)
+   ══════════════════════════════════════════════════════════ */
 export function SystemDiagram({ className }: { className?: string }) {
-  const s = 0.32;
-  const panelW = 100 * s;
-  const nestOffset = panelW * 0.50; // horizontal nesting distance
-  const rowH = 110 * s * 0.65;     // vertical row spacing
+  const { ref, inView } = useInView(0.2);
 
-  const cols = 8;
-  const rows = 4;
+  /* Responsive: fewer columns on mobile */
+  const cols = 6;
+  const rows = 3;
+  const s = 0.36;
+  const nestX = 100 * s * 0.52; // horizontal nesting
+  const nestY = 110 * s * 0.58; // vertical row spacing
 
-  const panels: { x: number; y: number; dir: "up" | "down"; isCenter: boolean }[] = [];
+  const panels: { x: number; y: number; dir: "up" | "down"; isCenter: boolean; delay: number }[] = [];
 
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
       const dir: "up" | "down" = (r + c) % 2 === 0 ? "up" : "down";
-      const x = 8 + c * nestOffset;
-      const y = 6 + r * rowH;
-      const isCenter = r >= 1 && r <= 2 && c >= 2 && c <= 5;
-      panels.push({ x, y, dir, isCenter });
+      const x = 6 + c * nestX;
+      const y = 6 + r * nestY;
+      const isCenter = r === 1 && c >= 1 && c <= 4;
+      // Stagger: centre row reveals first, then edges
+      const delay = isCenter ? 200 + c * 80 : 600 + (Math.abs(c - 3) + Math.abs(r - 1)) * 60;
+      panels.push({ x, y, dir, isCenter, delay });
     }
   }
 
-  const svgW = Math.round(8 + cols * nestOffset + panelW * 0.5 + 8);
-  const svgH = Math.round(6 + rows * rowH + 110 * s * 0.4 + 6);
+  const svgW = Math.round(6 + cols * nestX + 100 * s * 0.5 + 6);
+  const svgH = Math.round(6 + rows * nestY + 110 * s * 0.45 + 6);
 
   return (
-    <div className={className}>
-      <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent/28 mb-5">
+    <div className={cn("text-center", className)} ref={ref}>
+      <p className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.2em] text-accent/30 mb-5" style={stageStyle(inView, 0)}>
         The System
       </p>
       <svg
         viewBox={`0 0 ${svgW} ${svgH}`}
-        className="w-full max-w-lg h-auto mx-auto"
+        className="w-full max-w-sm sm:max-w-md lg:max-w-lg h-auto mx-auto"
       >
         <PanelDefs id="sd" />
         {panels.map((p, i) => (
-          <GroundLockPanelSVG
-            key={i}
-            x={p.x}
-            y={p.y}
-            scale={s}
-            direction={p.dir}
-            active={p.isCenter}
-            showTabs
-            defsId="sd"
-          />
+          <g key={i} style={stageStyle(inView, p.delay)}>
+            <GroundLockPanelSVG
+              x={p.x}
+              y={p.y}
+              scale={s}
+              direction={p.dir}
+              active={p.isCenter}
+              showTabs
+              showJoins={p.isCenter}
+              defsId="sd"
+            />
+          </g>
         ))}
       </svg>
-      <p className="text-[10px] font-mono text-muted-foreground/18 text-center mt-4 tracking-[0.12em]">
+      <p className="text-[10px] font-mono text-muted-foreground/18 mt-4 tracking-[0.12em]" style={stageStyle(inView, 1200)}>
         Alternating interlock · Continuous stabilisation surface
       </p>
     </div>
