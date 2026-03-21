@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { DURATION, EASE, crossfadeStyle } from "@/lib/motion";
 
 /* ── Layer definitions ────────────────────────────────── */
 type LayerKey = "structure" | "envelope" | "finished";
 
-const layers: { key: LayerKey; label: string }[] = [
-  { key: "structure", label: "Structure" },
-  { key: "envelope", label: "Envelope" },
-  { key: "finished", label: "Finished" },
+const layers: { key: LayerKey; label: string; description: string }[] = [
+  { key: "structure", label: "Structure", description: "Steel + timber framework — the skeleton of every build" },
+  { key: "envelope", label: "Envelope", description: "Cladding, openings + weatherproofing — the protective shell" },
+  { key: "finished", label: "Finished", description: "Materials, landscaping + final detail — the resolved form" },
 ];
 
-/* ── SVG Layer: Structure — skeletal wireframe ────────── */
+/* ── SVG Layer: Structure ─────────────────────────────── */
 function StructureLayer() {
   return (
     <g>
@@ -35,7 +36,7 @@ function StructureLayer() {
   );
 }
 
-/* ── SVG Layer: Envelope — cladding, roof, openings ───── */
+/* ── SVG Layer: Envelope ──────────────────────────────── */
 function EnvelopeLayer() {
   return (
     <g>
@@ -58,7 +59,7 @@ function EnvelopeLayer() {
   );
 }
 
-/* ── SVG Layer: Finished — polished, material detail ──── */
+/* ── SVG Layer: Finished ──────────────────────────────── */
 function FinishedLayer() {
   return (
     <g>
@@ -80,13 +81,14 @@ function FinishedLayer() {
 /* ── Main export ──────────────────────────────────────── */
 export function BuildIntelligence() {
   const [active, setActive] = useState<LayerKey>("structure");
+  const activeLayer = layers.find((l) => l.key === active)!;
 
   return (
     <section className="relative py-28 sm:py-36 lg:py-44 overflow-hidden">
       <div className="absolute inset-0 grain-texture pointer-events-none" />
 
       <div className="section-container relative z-10">
-        <RevealOnScroll direction="up" duration={700}>
+        <RevealOnScroll direction="up" duration={DURATION.normal}>
           <div className="text-center mb-14 sm:mb-18 lg:mb-20">
             <div className="flex items-center justify-center gap-5 mb-5">
               <div className="w-8 h-px bg-accent/25" />
@@ -101,7 +103,7 @@ export function BuildIntelligence() {
           </div>
         </RevealOnScroll>
 
-        <RevealOnScroll direction="up" duration={800} delay={100}>
+        <RevealOnScroll direction="up" duration={DURATION.normal} delay={100}>
           {/* Toggles */}
           <div className="flex items-center justify-center gap-1 sm:gap-2 mb-14 sm:mb-16">
             {layers.map((l) => {
@@ -110,18 +112,20 @@ export function BuildIntelligence() {
                 <button
                   key={l.key}
                   onClick={() => setActive(l.key)}
-                  className="relative px-5 sm:px-7 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-mono transition-all duration-300 cursor-pointer bg-transparent border-0"
+                  className="relative px-5 sm:px-7 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-mono cursor-pointer bg-transparent border-0"
                   style={{
-                    color: isActive ? "rgba(198,168,107,0.7)" : "rgba(198,168,107,0.25)",
+                    color: isActive ? "hsl(var(--accent) / 0.7)" : "hsl(var(--accent) / 0.25)",
+                    transition: `color ${DURATION.fast}ms ${EASE.interactive}`,
                   }}
                 >
                   {l.label}
                   <span
-                    className="absolute bottom-0 left-1/2 -translate-x-1/2 h-px transition-all duration-300 ease-out"
+                    className="absolute bottom-0 left-1/2 -translate-x-1/2 h-px"
                     style={{
                       width: isActive ? "60%" : "0%",
-                      backgroundColor: "rgba(198,168,107,0.35)",
-                      boxShadow: isActive ? "0 0 10px rgba(198,168,107,0.1)" : "none",
+                      backgroundColor: "hsl(var(--accent) / 0.35)",
+                      boxShadow: isActive ? "0 0 10px hsl(var(--accent) / 0.1)" : "none",
+                      transition: `width ${DURATION.fast}ms ${EASE.interactive}, box-shadow ${DURATION.fast}ms ${EASE.interactive}`,
                     }}
                   />
                 </button>
@@ -139,13 +143,13 @@ export function BuildIntelligence() {
               </defs>
               <rect width="800" height="460" fill="url(#bi-grid)" />
 
-              <g className="transition-opacity duration-300 ease-out" style={{ opacity: active === "structure" ? 1 : 0.04 }}>
+              <g style={crossfadeStyle(active === "structure")}>
                 <StructureLayer />
               </g>
-              <g className="transition-opacity duration-300 ease-out" style={{ opacity: active === "envelope" ? 1 : 0.04 }}>
+              <g style={crossfadeStyle(active === "envelope")}>
                 <EnvelopeLayer />
               </g>
-              <g className="transition-opacity duration-300 ease-out" style={{ opacity: active === "finished" ? 1 : 0.04 }}>
+              <g style={crossfadeStyle(active === "finished")}>
                 <FinishedLayer />
               </g>
             </svg>
@@ -153,10 +157,11 @@ export function BuildIntelligence() {
 
           {/* Layer description */}
           <div className="text-center mt-10 sm:mt-12">
-            <p className="text-xs sm:text-[13px] font-mono uppercase tracking-[0.2em] text-accent/30 transition-all duration-300 ease-out">
-              {active === "structure" && "Steel + timber framework — the skeleton of every build"}
-              {active === "envelope" && "Cladding, openings + weatherproofing — the protective shell"}
-              {active === "finished" && "Materials, landscaping + final detail — the resolved form"}
+            <p
+              className="text-xs sm:text-[13px] font-mono uppercase tracking-[0.2em] text-accent/30"
+              style={{ transition: `opacity ${DURATION.fast}ms ${EASE.interactive}` }}
+            >
+              {activeLayer.description}
             </p>
           </div>
         </RevealOnScroll>

@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 
 import detailFlooring from "@/assets/detail-stable-flooring.jpg";
 import detailTransition from "@/assets/detail-material-transition.jpg";
@@ -48,11 +49,13 @@ function DetailCard({
     if (!el) return;
     const io = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) setVisible(true); },
-      { threshold: 0.2 }
+      { threshold: 0.15 }
     );
     io.observe(el);
     return () => io.disconnect();
   }, []);
+
+  const delay = index * 100;
 
   return (
     <div
@@ -60,8 +63,9 @@ function DetailCard({
       className="group"
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(10px)",
-        transition: `opacity 600ms ease-out ${index * 120}ms, transform 600ms ease-out ${index * 120}ms`,
+        transform: visible ? "translateY(0)" : `translateY(${DISTANCE.sm}px)`,
+        transition: `opacity ${DURATION.normal}ms ${EASE.default} ${delay}ms, transform ${DURATION.normal}ms ${EASE.default} ${delay}ms`,
+        willChange: "opacity, transform",
       }}
     >
       {/* Image — tall editorial crop */}
@@ -70,7 +74,13 @@ function DetailCard({
           src={image}
           alt={title}
           loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-[800ms] ease-out group-hover:scale-[1.03]"
+          decoding="async"
+          className="w-full h-full object-cover will-change-transform"
+          style={{
+            transition: `transform ${DURATION.parallax}ms ${EASE.default}`,
+          }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1.03)"; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1)"; }}
         />
         {/* Subtle bottom vignette */}
         <div
@@ -98,7 +108,7 @@ export function DetailMatters() {
       <div className="absolute inset-0 grain-texture pointer-events-none" />
 
       <div className="section-container relative z-10">
-        <RevealOnScroll direction="up" duration={700}>
+        <RevealOnScroll direction="up" duration={DURATION.normal} distance={DISTANCE.md}>
           <div className="text-center mb-16 sm:mb-20">
             <div className="flex items-center justify-center gap-5 mb-6">
               <div className="w-8 h-px bg-accent/30" />
