@@ -6,24 +6,6 @@
 
 import { GroundLockPanelSVG, PanelDefs } from "./GroundLockPanelSVG";
 
-/* ── Helper: arc positions ────────────────────────────── */
-function arcPositions(
-  cx: number, cy: number, radius: number,
-  startAngle: number, endAngle: number, count: number
-) {
-  const positions: { x: number; y: number; angle: number }[] = [];
-  for (let i = 0; i <= count; i++) {
-    const t = i / count;
-    const angle = startAngle + (endAngle - startAngle) * t;
-    positions.push({
-      x: cx + radius * Math.cos(angle),
-      y: cy + radius * Math.sin(angle),
-      angle: (angle * 180) / Math.PI + 90,
-    });
-  }
-  return positions;
-}
-
 /* ── 01 — The Panel (Hero) ────────────────────────────── */
 export function PanelSpecimen({ className }: { className?: string }) {
   return (
@@ -87,50 +69,48 @@ export function PanelArray({ className }: { className?: string }) {
   );
 }
 
-/* ── 03 — The Layout ──────────────────────────────────── */
+/* ── 03 — The Layout (proper modular grid, not scattered arcs) ── */
 export function PanelSiteLayout({ className }: { className?: string }) {
-  const cx = 200;
-  const cy = 150;
-  const s = 0.22;
+  const s = 0.18;
+  const colW = 18;   // horizontal spacing between panels
+  const rowH = 16;   // vertical spacing between rows
 
-  const panels: { x: number; y: number; rot: number; zone: string }[] = [];
+  const cols = 11;
+  const rowPairs = 5; // pairs of upright + inverted rows
 
-  // Outer horseshoe arc
-  const outerArc = arcPositions(cx, cy - 10, 120, Math.PI, 2 * Math.PI, 11);
-  outerArc.forEach((p) => {
-    panels.push({ x: p.x - 10, y: p.y - 12, rot: p.angle, zone: "perimeter" });
-  });
+  const panels: { x: number; y: number; rot: number; isHero: boolean; row: number }[] = [];
 
-  // Inner arc
-  const innerArc = arcPositions(cx, cy - 10, 82, Math.PI, 2 * Math.PI, 7);
-  innerArc.forEach((p) => {
-    panels.push({ x: p.x - 10, y: p.y - 12, rot: p.angle + 180, zone: "inner" });
-  });
-
-  // Left access column
-  for (let j = 0; j < 4; j++) {
-    panels.push({ x: cx - 130, y: cy - 10 + j * 26, rot: 0, zone: "access" });
-    panels.push({ x: cx - 105, y: cy + 3 + j * 26, rot: 180, zone: "access" });
+  for (let pair = 0; pair < rowPairs; pair++) {
+    const baseY = 8 + pair * rowH * 2;
+    // Upright row
+    for (let c = 0; c < cols; c++) {
+      panels.push({ x: 8 + c * colW, y: baseY, rot: 0, isHero: false, row: pair * 2 });
+    }
+    // Inverted row — offset half a column
+    for (let c = 0; c < cols - 1; c++) {
+      panels.push({ x: 8 + colW * 0.5 + c * colW, y: baseY + rowH, rot: 180, isHero: false, row: pair * 2 + 1 });
+    }
   }
 
-  // Right access column
-  for (let j = 0; j < 4; j++) {
-    panels.push({ x: cx + 90, y: cy - 10 + j * 26, rot: 0, zone: "access" });
-    panels.push({ x: cx + 65, y: cy + 3 + j * 26, rot: 180, zone: "access" });
-  }
+  // Mark centre panel as hero
+  const cx = Math.floor(cols / 2);
+  const heroIdx = panels.findIndex(
+    (p) => p.row === 4 && Math.abs(p.x - (8 + cx * colW)) < 2
+  );
+  if (heroIdx >= 0) panels[heroIdx].isHero = true;
 
-  // Entry threshold
-  for (let col = 0; col < 5; col++) {
-    panels.push({ x: cx - 55 + col * 28, y: cy + 95, rot: 0, zone: "entry" });
-    panels.push({ x: cx - 41 + col * 28, y: cy + 112, rot: 180, zone: "entry" });
-  }
+  const svgW = 8 + cols * colW + 20;
+  const svgH = 8 + rowPairs * rowH * 2 + 12;
 
   return (
     <div className={className}>
       <p className="text-2xs font-mono uppercase tracking-[0.25em] text-accent/30 mb-6">
         The Layout
       </p>
-      <svg viewBox="0 0 400 290" className="w-full max-w-lg h-auto mx-auto">
+      <svg
+        viewBox={`0 0 ${svgW} ${svgH}`}
+        className="w-full max-w-lg h-auto mx-auto"
+      >
         <PanelDefs id="sl" />
         {panels.map((p, i) => (
           <GroundLockPanelSVG
@@ -139,11 +119,15 @@ export function PanelSiteLayout({ className }: { className?: string }) {
             y={p.y}
             scale={s}
             rotation={p.rot}
-            active={p.zone === "entry"}
+            active={p.isHero}
+            showTabs
             defsId="sl"
           />
         ))}
       </svg>
+      <p className="text-2xs font-mono text-muted-foreground/20 text-center mt-5 tracking-wider">
+        Modular surface coverage · Repeatable installation grid
+      </p>
     </div>
   );
 }
