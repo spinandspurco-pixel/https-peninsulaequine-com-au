@@ -841,7 +841,7 @@ export default function ProposalTemplate() {
             CLOSING
         ════════════════════════════════════════════ */}
         <section
-          className="relative py-32 sm:py-40 -mx-6 sm:-mx-10 lg:-mx-16 px-6 sm:px-10 lg:px-16 mt-10 proposal-closing">
+          className="relative py-32 sm:py-40 -mx-6 sm:-mx-10 lg:-mx-16 px-6 sm:px-10 lg:px-16 mt-10 proposal-closing"
           style={{
             background: "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--card)) 100%)",
             borderTop: "1px solid hsl(var(--border))",
