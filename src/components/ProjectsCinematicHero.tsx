@@ -33,13 +33,13 @@ function BlueprintLinework() {
         x1="400" y1="0" x2="400" y2="900"
         stroke="#C6A86B" strokeWidth="0.4" opacity="0"
         strokeDasharray="900" strokeDashoffset="900"
-        style={{ animation: "blueprintDraw 2s 0.8s ease-out forwards" }}
+        style={{ animation: "blueprintDraw 1.5s 0.4s ease-out forwards" }}
       />
       <line
         x1="1200" y1="0" x2="1200" y2="900"
         stroke="#C6A86B" strokeWidth="0.4" opacity="0"
         strokeDasharray="900" strokeDashoffset="900"
-        style={{ animation: "blueprintDraw 2s 1s ease-out forwards" }}
+        style={{ animation: "blueprintDraw 1.5s 0.5s ease-out forwards" }}
       />
 
       {/* Diagonal structural braces */}
