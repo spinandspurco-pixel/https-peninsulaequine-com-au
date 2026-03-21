@@ -67,7 +67,7 @@ function StructuralWireframe() {
         stroke="hsl(var(--accent))"
         strokeWidth="1.5"
         opacity="0.25"
-        className="animate-[drawLine_1.8s_0.5s_cubic-bezier(0.22,1,0.36,1)_forwards]"
+        className="animate-[drawLine_1.2s_0.2s_cubic-bezier(0.22,1,0.36,1)_forwards]"
       />
       {/* Left wall */}
       <path
