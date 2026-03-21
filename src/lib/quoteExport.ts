@@ -102,7 +102,7 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
   const ml = 24;
   const mr = 24;
   const cw = pw - ml - mr;
-  const totalPages = 6;
+  const totalPages = 7;
 
   // ═══════════════════════════════════════════════════════════
   // PAGE 1 — COVER
