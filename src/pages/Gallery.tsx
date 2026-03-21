@@ -7,6 +7,7 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { ArrowRight, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useParallax } from "@/hooks/useParallax";
+import { ProjectsCinematicHero } from "@/components/ProjectsCinematicHero";
 
 // ── 1. HERO ──
 import projectsHeroDrone from "@/assets/projects-hero-drone-goldenhour.jpg";
