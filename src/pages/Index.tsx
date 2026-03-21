@@ -125,7 +125,7 @@ export default function Index() {
     const rect = el.getBoundingClientRect();
     const vh = window.innerHeight;
     // Start fading when top of hero content reaches 80% of viewport, fully gone by 30%
-    const progress = Math.max(0, Math.min(1, (rect.top - vh * 0.3) / (vh * 0.5)));
+    const progress = Math.max(0, Math.min(1, (rect.top - vh * 0.2) / (vh * 0.55)));
     setHeroFade(progress);
   }, []);
 
@@ -250,7 +250,7 @@ export default function Index() {
 
         {/* Bottom bleed — dissolves hero into next section */}
         <div
-          className="absolute bottom-0 left-0 right-0 h-32 sm:h-40 pointer-events-none z-20"
+          className="absolute bottom-0 left-0 right-0 h-40 sm:h-52 pointer-events-none z-20"
           style={{
             background: "linear-gradient(to bottom, transparent 0%, hsl(var(--card)) 100%)",
           }}
