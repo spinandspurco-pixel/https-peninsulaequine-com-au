@@ -60,19 +60,16 @@ const COMPARE = {
   standard: [
     "Generic grid geometry",
     "Inconsistent load behaviour",
-    "Visually industrial",
     "No directional logic",
   ],
   groundlock: [
     "Controlled horseshoe geometry",
     "Directional load distribution",
-    "Clean, premium finish",
     "Interlocking mechanical logic",
   ],
   outcome: [
     "Less ongoing maintenance",
     "Superior drainage performance",
-    "Premium surface appearance",
     "Longer system lifespan",
   ],
 };
@@ -120,7 +117,7 @@ export default function GroundLock() {
                 className="text-[13px] text-muted-foreground/35 leading-[1.7] mb-10 opacity-0 animate-fade-in"
                 style={{ animationDelay: "1000ms", animationFillMode: "both", animationDuration: "1000ms" }}
               >
-                Opposing horseshoe panels lock in alternating rhythm — distributing load, resisting lateral movement, and creating a structurally intelligent surface.
+                Opposing horseshoe panels lock in alternating rhythm — distributing load and resisting lateral movement.
               </p>
 
               <div
@@ -206,7 +203,7 @@ export default function GroundLock() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={160}>
                 <p className="text-[13px] text-muted-foreground/32 leading-[1.7] max-w-md mx-auto">
-                  Each panel interlocks in opposing orientation — crown into opening, tab into slot. The result is a unified field that resists movement in every direction.
+                  Crown into opening. Tab into slot. A unified field that resists movement in every direction.
                 </p>
               </RevealOnScroll>
             </div>
@@ -222,7 +219,7 @@ export default function GroundLock() {
             {/* Authority statement */}
             <RevealOnScroll direction="none" delay={200}>
               <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/25 italic leading-[1.9] text-center mt-14 sm:mt-20 max-w-sm mx-auto">
-                Designed to interlock in opposing rhythm — stronger by geometry, not by mass.
+                Stronger by geometry, not by mass.
               </p>
             </RevealOnScroll>
           </div>
@@ -255,19 +252,7 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ TRUST LINE 1 ════════════════════════════════ */}
-      <section className="relative overflow-hidden">
-        <div className="py-8 sm:py-12 relative">
-          <div className="absolute inset-0 grain-texture" />
-          <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
-            <RevealOnScroll direction="none">
-              <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/28 italic leading-[1.9]">
-                Standard flat grids sit on the ground. GroundLock™ locks into it.
-              </p>
-            </RevealOnScroll>
-          </div>
-        </div>
-      </section>
+      {/* trust line removed — system section carries authority */}
 
       {/* ═══ SECTION 3 — INTERACTIVE EDUCATION ════════════ */}
       <section className="relative overflow-hidden">
@@ -289,7 +274,7 @@ export default function GroundLock() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={160}>
                 <p className="font-serif text-[13px] text-muted-foreground/28 italic max-w-sm mx-auto leading-[1.7]">
-                  Tap each feature to see how the horseshoe form creates structural advantage.
+                  Tap each feature to explore the system logic.
                 </p>
               </RevealOnScroll>
             </div>
@@ -301,19 +286,7 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ TRUST LINE 2 ════════════════════════════════ */}
-      <section className="relative overflow-hidden">
-        <div className="py-8 sm:py-12 relative">
-          <div className="absolute inset-0 grain-texture" />
-          <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
-            <RevealOnScroll direction="none">
-              <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/28 italic leading-[1.9]">
-                Built for real equine movement — not light-use assumptions.
-              </p>
-            </RevealOnScroll>
-          </div>
-        </div>
-      </section>
+      {/* trust line removed — education section carries this */}
 
       {/* ═══ COMPARISON — Standard vs GroundLock ══════════ */}
       <section className="relative overflow-hidden">
@@ -345,30 +318,7 @@ export default function GroundLock() {
               </p>
             </div>
 
-            {/* Why It Matters */}
-            <div className="mt-14 sm:mt-18 text-center">
-              <RevealOnScroll direction="up">
-                <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-primary-foreground/25 mb-8">
-                  Why It Matters
-                </p>
-              </RevealOnScroll>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-10 max-w-2xl mx-auto">
-                {[
-                  "Increased structural consistency",
-                  "Reduced long-term movement",
-                  "More intelligent system performance",
-                ].map((point, i) => (
-                  <RevealOnScroll key={point} direction="up" delay={i * 120}>
-                    <div className="flex flex-col items-center gap-2">
-                      <span className="w-1 h-1 rounded-full bg-accent/30" />
-                      <p className="text-[11px] sm:text-xs text-primary-foreground/35 leading-[1.7] tracking-wide">
-                        {point}
-                      </p>
-                    </div>
-                  </RevealOnScroll>
-                ))}
-              </div>
-            </div>
+            {/* removed — comparison visual carries this */}
           </div>
         </div>
       </section>
@@ -485,19 +435,7 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ SECTION 6 — INTEGRATION ══════════════════════ */}
-      <section className="relative overflow-hidden">
-        <div className="py-10 sm:py-14 relative">
-          <div className="absolute inset-0 grain-texture" />
-          <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
-            <RevealOnScroll direction="none">
-              <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/28 italic leading-[1.9]">
-                Specified as part of complete site planning — not added later.
-              </p>
-            </RevealOnScroll>
-          </div>
-        </div>
-      </section>
+      {/* integration line removed — redundant */}
 
       {/* ═══ SECTION 7 — Start Your Project ═════════════ */}
       <section className="relative overflow-hidden">
@@ -521,7 +459,7 @@ export default function GroundLock() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <p className="text-[13px] text-muted-foreground/38 leading-[1.8] mb-10 text-center">
-                Tell us about your site. We'll recommend the right system.
+                Tell us your space. We'll map the system.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={220}>

@@ -13,37 +13,37 @@ const CAPABILITY_DETAILS = [
   {
     num: "01",
     title: "Performance Arenas",
-    desc: "Precision-graded surfaces engineered for consistency, drainage, and long-term footing integrity. Every arena begins with soil analysis and ends with surfaces that perform.",
+    desc: "Precision-graded surfaces engineered for consistent footing and drainage performance.",
     outcome: "Consistent footing. Zero drainage failure.",
   },
   {
     num: "02",
     title: "Stables & Barn Infrastructure",
-    desc: "Structures designed around equine behaviour — airflow, sightlines, movement, and durability. Not decoration. Function.",
+    desc: "Airflow, sightlines, movement — designed around equine behaviour.",
     outcome: "Horse-informed design. Built once.",
   },
   {
     num: "03",
     title: "Drainage & Ground Preparation",
-    desc: "The invisible layer that determines whether everything above it succeeds or fails. Sub-base engineering, water management, and compaction profiles — specified for durability.",
+    desc: "Sub-base engineering, water management, and compaction profiles.",
     outcome: "Performance starts below the surface.",
   },
   {
     num: "04",
     title: "Performance Surfaces",
-    desc: "Surface materials, stabilisation, and site-specific footing systems — including our proprietary GroundLock™ interlocking ground stabilisation.",
+    desc: "Site-specific footing systems including GroundLock™ ground stabilisation.",
     outcome: "Engineered footing. Long-term performance.",
   },
   {
     num: "05",
     title: "Site Planning & Equine Layouts",
-    desc: "Property-wide planning informed by terrain, water flow, horse movement, and long-term operational efficiency.",
+    desc: "Property-wide planning informed by terrain, water flow, and horse movement.",
     outcome: "Intelligent layout. Future-proof design.",
   },
   {
     num: "06",
     title: "Integrated System Design",
-    desc: "Complete infrastructure integration — laneways, drainage corridors, access, utility runs, and paddock systems designed as one connected system.",
+    desc: "Laneways, drainage corridors, access, and paddock systems — designed as one connected system.",
     outcome: "One system. No weak points.",
   },
 ];
@@ -92,8 +92,7 @@ export default function Services() {
             className="mt-8 text-muted-foreground/45 text-sm sm:text-base max-w-md mx-auto leading-relaxed opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
-            Projects range from focused infrastructure builds<br />
-            to fully integrated property systems.
+            Focused builds to fully integrated property systems.
           </p>
         </div>
       </section>
@@ -166,12 +165,7 @@ export default function Services() {
             <RevealOnScroll direction="up" delay={200}>
               <div className="space-y-6 text-sm text-muted-foreground/50 leading-[2]">
                 <p>
-                  We don't work from templates. Every property is different —
-                  different soil, different drainage, different needs.
-                </p>
-                <p className="text-muted-foreground/30 italic text-[13px]">
-                  Following assessment, a structured project brief
-                  and system specification is prepared.
+                  No templates. Every property is different — different soil, different drainage, different needs.
                 </p>
               </div>
             </RevealOnScroll>
@@ -179,25 +173,7 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ═══ TRAINING MENTION ═════════════════════════════ */}
-      <section className="relative border-t border-border/5">
-        <div className="py-6 sm:py-8">
-          <div className="section-container relative z-10 text-center max-w-md mx-auto">
-            <p className="text-[9px] uppercase tracking-[0.35em] text-muted-foreground/12 font-mono mb-2">
-              On-site training
-            </p>
-            <p className="text-[11px] sm:text-[12px] text-muted-foreground/18 leading-[1.85] font-serif italic">
-              Training sessions with Glenn Browitt are available on select days. Submit a request and we'll coordinate availability.
-            </p>
-            <a
-              href="mailto:info@peninsulaequine.org?subject=Training%20Session%20Request"
-              className="inline-block mt-5 text-[10px] uppercase tracking-[0.2em] text-muted-foreground/25 hover:text-accent/60 transition-colors duration-500 font-sans font-medium"
-            >
-              Request Training Session →
-            </a>
-          </div>
-        </div>
-      </section>
+      {/* training mention removed — available via lessons page */}
 
       {/* ═══ CTA ═══════════════════════════════════════ */}
       <section className="relative overflow-hidden">
@@ -219,8 +195,7 @@ export default function Services() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <p className="text-sm text-muted-foreground/40 mb-10 leading-relaxed">
-                Projects are assessed prior to engagement to ensure<br />
-                correct specification and long-term value.
+                Every project begins with a site assessment.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={250}>

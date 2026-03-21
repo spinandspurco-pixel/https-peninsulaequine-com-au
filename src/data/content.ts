@@ -3,8 +3,8 @@
 
 export const siteConfig = {
   name: "Peninsula Equine",
-  tagline: "Crafting World-Class Equine Facilities",
-  description: "Expert equine facility construction by a horseman who understands what your horses need. Premium arenas, barns, and infrastructure built to the highest standards.",
+  tagline: "Equine Infrastructure, Engineered Properly",
+  description: "Equine facility construction by a horseman. Arenas, barns, and infrastructure — engineered for performance and longevity.",
   phone: "0418 585 489",
   email: "info@peninsulaequine.org",
   address: {
@@ -28,8 +28,8 @@ export const services = [
   {
     id: "arena-construction",
     title: "Arena Construction",
-    shortDescription: "Custom riding arenas engineered for optimal footing, drainage, and durability.",
-    description: "From intimate training arenas to competition-grade facilities, we design and build arenas that perform. Every project starts with soil analysis and ends with perfect footing.",
+    shortDescription: "Precision-graded surfaces engineered for consistent footing and drainage.",
+    description: "From training arenas to competition-grade facilities — every project starts with soil analysis.",
     features: [
       "Custom base preparation and drainage systems",
       "Premium footing materials and installation",
@@ -43,8 +43,8 @@ export const services = [
   {
     id: "barn-construction",
     title: "Barn & Stable Building",
-    shortDescription: "Functional, beautiful barns designed for horse health and operational efficiency.",
-    description: "We build barns that work as hard as you do. Ventilation, natural light, workflow—every detail is considered from a horseman's perspective.",
+    shortDescription: "Structures designed around equine behaviour — airflow, sightlines, and workflow.",
+    description: "Ventilation, natural light, workflow — every detail considered from a horseman's perspective.",
     features: [
       "Custom stall configurations",
       "Optimal ventilation design",
@@ -58,8 +58,8 @@ export const services = [
   {
     id: "fencing",
     title: "Equine Fencing",
-    shortDescription: "Safe, durable fencing systems that protect your investment.",
-    description: "Proper fencing is the first line of safety for your horses. We install fencing systems designed specifically for equine properties—no sharp edges, no weak points.",
+    shortDescription: "Fencing configured for equine safety and property flow.",
+    description: "Designed for equine properties — no sharp edges, no weak points.",
     features: [
       "No-climb and flex fencing",
       "Wood post and rail",
@@ -73,8 +73,8 @@ export const services = [
   {
     id: "infrastructure",
     title: "Site Infrastructure",
-    shortDescription: "Complete property development from grading to utilities.",
-    description: "Transform raw land into a fully functional equine property. We handle everything from initial grading to final landscaping.",
+    shortDescription: "Grading, drainage, access, and utility infrastructure.",
+    description: "Raw land to fully functional equine property.",
     features: [
       "Land clearing and grading",
       "Drainage solutions",
@@ -88,8 +88,8 @@ export const services = [
   {
     id: "round-pens",
     title: "Round Pens & Paddocks",
-    shortDescription: "Training spaces that support natural horsemanship.",
-    description: "Purpose-built round pens and paddocks for groundwork, turnout, and rehabilitation. Sized and surfaced to your specific needs.",
+    shortDescription: "Round pens and paddocks configured for groundwork and turnout.",
+    description: "Sized and surfaced to your specific needs.",
     features: [
       "Custom diameter options",
       "Portable and permanent designs",
@@ -103,8 +103,8 @@ export const services = [
   {
     id: "renovations",
     title: "Renovations & Repairs",
-    shortDescription: "Breathing new life into existing equine facilities.",
-    description: "Upgrade your current facility without starting from scratch. We assess, repair, and modernize existing structures to meet today's standards.",
+    shortDescription: "Upgrades and repairs for existing equine facilities.",
+    description: "Assess, repair, and modernise — without starting from scratch.",
     features: [
       "Structural assessments",
       "Arena resurfacing",
@@ -118,8 +118,8 @@ export const services = [
   {
     id: "full-facility",
     title: "Full Facility Design & Build",
-    shortDescription: "Complete equine property design from concept to keys in hand.",
-    description: "End-to-end facility planning and construction. We coordinate every trade—from initial site survey through barn, arena, paddocks, and landscaping—delivering a turnkey equine property.",
+    shortDescription: "Complete property design — concept to keys in hand.",
+    description: "Every trade coordinated. Arena, barn, paddocks, and landscaping — delivered as one system.",
     features: [
       "Master site planning & 3-D concept renders",
       "All permits, engineering & council liaison",
@@ -133,8 +133,8 @@ export const services = [
   {
     id: "clinics-events",
     title: "Clinics & Event Facilities",
-    shortDescription: "Purpose-built spaces for clinics, competitions, and equestrian events.",
-    description: "Design and build venues that host everything from weekend clinics to multi-day competitions. We handle spectator amenities, warm-up areas, and all the infrastructure an event demands.",
+    shortDescription: "Venues for clinics, competitions, and equestrian events.",
+    description: "From weekend clinics to multi-day competitions — all infrastructure included.",
     features: [
       "Competition-grade arena builds",
       "Warm-up rings & holding yards",
@@ -380,27 +380,26 @@ export const aboutCiro = {
   name: "Ciro",
   title: "Founder & Master Builder",
   bio: [
-    "Long before he founded Peninsula Equine, Ciro was already reading a horse's body language across a round pen. Raised around livestock and heavy machinery in equal measure, he grew up understanding that the best equine facilities aren't designed on a screen—they're born from watching how animals move, breathe, and rest. That instinct, refined over two decades both in the saddle and on the tools, is what sets Peninsula Equine apart.",
-    "A dedicated practitioner of natural horsemanship, Ciro brings the same patience, timing, and ability to listen that defines great horsemen to every construction project. He doesn't arrive on site with a one-size-fits-all plan. He walks the land, studies the drainage, reads the prevailing wind, and observes the horses already on the property before a single post goes in the ground—producing facilities that work with nature rather than against it.",
-    "His portfolio speaks to the breadth of his craft: hand-laid stonework stables at Private Client — Mornington Peninsula, precision timber joinery at Main Ridge, full-scale competition infrastructure for Equitana (Melbourne, Victoria), and arena preparation for Melbourne Racing Club's Ranch Roundup at Caulfield. Whether it's a bespoke four-stall barn on a private property or a multi-arena event complex, Ciro brings the same uncompromising standard—because he knows the details a horse notices are rarely the ones a typical contractor thinks about.",
-    "Away from the job site, you'll find him bareback in the round pen, working a young horse through join-up, or teaching his own children the same quiet confidence with animals that his family passed down to him. Peninsula Equine is, at its core, a family operation—built on the belief that the person who designs your facility should be the same person who'd trust their own horse to live in it.",
+    "Raised around livestock and heavy machinery in equal measure, Ciro grew up understanding that equine facilities are born from watching how animals move, breathe, and rest. That instinct — refined over two decades on the tools and in the saddle — is what sets Peninsula Equine apart.",
+    "He walks the land, studies the drainage, reads the prevailing wind, and observes the horses before a single post goes in the ground. No templates. Facilities that work with nature, not against it.",
+    "From hand-laid stonework stables to full-scale competition infrastructure, Ciro applies the same standard — because the details a horse notices are rarely the ones a typical contractor thinks about.",
   ],
   values: [
     {
       title: "Horseman First",
-      description: "We build from a rider's perspective, not just a contractor's blueprint.",
+      description: "Built from a rider's perspective, not a contractor's blueprint.",
     },
     {
-      title: "Uncompromising Quality",
-      description: "Every material, every technique, every finish meets our exacting standards.",
+      title: "Specified for Performance",
+      description: "Every material and technique selected for long-term outcome.",
     },
     {
-      title: "Personal Involvement",
-      description: "Ciro is on-site for every project, from first survey to final walkthrough.",
+      title: "Owner-Operated",
+      description: "Ciro is on-site — from first survey to final walkthrough.",
     },
     {
-      title: "Long-Term Relationships",
-      description: "We build facilities that last decades and relationships that last longer.",
+      title: "Built Once",
+      description: "Facilities engineered to last decades without rework.",
     },
   ],
   philosophy: {

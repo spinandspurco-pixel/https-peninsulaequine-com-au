@@ -54,7 +54,7 @@ export default function About() {
             className="mt-8 text-muted-foreground/45 text-sm sm:text-base max-w-md mx-auto leading-relaxed opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
-            Construction expertise meets genuine horsemanship.
+            Construction expertise shaped by horsemanship.
           </p>
         </div>
       </section>
@@ -120,14 +120,7 @@ export default function About() {
             <RevealOnScroll direction="up" delay={200}>
               <div className="space-y-6 text-sm text-muted-foreground/50 leading-[2]">
                 <p>
-                  We don't separate design from construction.
-                  Every decision — from ground preparation to final finish —
-                  is considered as part of a complete system,
-                  designed to reduce maintenance over time.
-                </p>
-                <p className="text-muted-foreground/30 italic text-[13px]">
-                  Because when it's done properly,
-                  everything works together.
+                  Design and construction as one system. Every decision considered as a whole — built to reduce maintenance over time.
                 </p>
               </div>
             </RevealOnScroll>
@@ -223,8 +216,7 @@ export default function About() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <p className="text-sm text-muted-foreground/40 mb-10 leading-relaxed">
-                Each project is assessed individually to ensure correct<br />
-                system specification and long-term performance.
+                Every project begins with a site assessment.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={200}>

@@ -34,12 +34,12 @@ const PROJECTS = [
 ];
 
 const SERVICES = [
-  { icon: Mountain, title: "Arenas", desc: "Precision-graded surfaces engineered for consistent footing, drainage performance, and long-term use.", href: "/services" },
-  { icon: Fence, title: "Fencing & Yards", desc: "Post-and-rail, steel, and custom configurations shaped around horse movement and property flow.", href: "/services" },
-  { icon: Home, title: "Stables & Barns", desc: "Structures designed around equine behaviour — airflow, sightlines, workflow, and longevity.", href: "/services" },
-  { icon: Layers, title: "GroundLock Entry Systems", desc: "Interlocking ground stabilisation for entries, laneways, and high-traffic arrival zones.", href: "/groundlock" },
-  { icon: Shovel, title: "Earthworks & Drainage", desc: "Sub-base profiling and drainage mapping shaped by how the site actually moves water.", href: "/services" },
-  { icon: Wrench, title: "Custom Infrastructure", desc: "Wash bays, float hardstands, pavilions, and bespoke rural builds for real daily use.", href: "/services" },
+  { icon: Mountain, title: "Arenas", desc: "Engineered surfaces. Consistent footing. Zero drainage failure.", href: "/services" },
+  { icon: Fence, title: "Fencing & Yards", desc: "Configured around horse movement and property flow.", href: "/services" },
+  { icon: Home, title: "Stables & Barns", desc: "Airflow, sightlines, and workflow — designed for horses.", href: "/services" },
+  { icon: Layers, title: "GroundLock Entry Systems", desc: "Interlocking ground stabilisation for high-traffic zones.", href: "/groundlock" },
+  { icon: Shovel, title: "Earthworks & Drainage", desc: "Sub-base profiling shaped by how your site moves water.", href: "/services" },
+  { icon: Wrench, title: "Custom Infrastructure", desc: "Wash bays, hardstands, pavilions — built for daily use.", href: "/services" },
 ];
 
 /* ── Service Icon ───── */
@@ -215,7 +215,7 @@ export default function Index() {
               className="text-muted-foreground/30 text-[11px] sm:text-[12px] tracking-[0.2em] uppercase max-w-lg leading-[2.2]"
               style={{ opacity: 0, animation: "heroFadeIn 800ms ease-out 2000ms forwards" }}
             >
-              Premium equine infrastructure engineered for performance, longevity, and legacy.
+              Equine infrastructure engineered for performance and longevity.
             </p>
 
             {/* CTA — 2500ms */}
@@ -273,12 +273,10 @@ export default function Index() {
                     P.E. GroundLock™
                   </h2>
                   <p className="text-[14px] text-muted-foreground/45 leading-[2] mb-6 max-w-[360px]">
-                    An engineered entry system built for equine and rural properties —
-                    designed for floats, trucks, and repeated front-gate arrivals
-                    where standard surfaces fail within seasons.
+                    Interlocking ground stabilisation for entries, laneways, and arrival zones where standard surfaces fail.
                   </p>
                   <p className="text-[11px] text-muted-foreground/20 italic tracking-[0.04em] mb-10">
-                    What sits beneath determines what lasts above.
+                    Designed to perform under load.
                   </p>
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" delay={200}>
@@ -300,8 +298,7 @@ export default function Index() {
       {/* ── Conversion Bridge 1 ──────────────────── */}
       <ConversionBridge
         label="Every project starts here"
-        heading="Book a complimentary site reading."
-        subtext="We assess your property's terrain, drainage, and access before recommending any system or build."
+        heading="Book a site assessment."
         ctaLabel="Assess My Site"
         ctaHref="/site-assessment"
         trustLine="50+ properties assessed across the Mornington Peninsula"
@@ -345,8 +342,7 @@ export default function Index() {
       <ConversionBridge
         variant="accent"
         label="From concept to completion"
-        heading="Discuss your project with our team."
-        subtext="Whether it's a single arena or a full property build — we scope it properly before quoting."
+        heading="Discuss your project."
         ctaLabel="Discuss Project"
         ctaHref="/contact"
         trustLine="Limited projects accepted per season"
@@ -446,8 +442,7 @@ export default function Index() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <p className="text-[13px] text-muted-foreground/30 mb-10 leading-[2] max-w-[360px] mx-auto">
-                From arenas and stables to signature entry systems —
-                projects begin with a site reading.
+                Every project begins with a site assessment.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={200}>

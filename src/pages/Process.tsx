@@ -16,37 +16,37 @@ const PHASES = [
   {
     num: "01",
     title: "Site Assessment",
-    desc: "On-site evaluation of ground conditions, drainage pathways, terrain, and layout constraints.",
+    desc: "Ground conditions, drainage, terrain, and layout constraints — evaluated on-site.",
     image: mainRidgePostDepth,
   },
   {
     num: "02",
     title: "Scope & System Design",
-    desc: "Custom engineering drawings, material specification, and a structured project brief — not a template.",
+    desc: "Engineering drawings, material specification, and a structured project brief.",
     image: mainRidgeRebarFoundation,
   },
   {
     num: "03",
     title: "Ground Preparation",
-    desc: "Clearing, grading, drainage engineering, and foundation work. Everything above depends on this.",
+    desc: "Clearing, grading, drainage, and foundation work.",
     image: mainRidgeFrameTrench,
   },
   {
     num: "04",
     title: "Structural Build",
-    desc: "Steel, timber, roofing, and connections — engineered to withstand decades of use.",
+    desc: "Steel, timber, roofing — engineered for decades of use.",
     image: mainRidgeBarnFrame,
   },
   {
     num: "05",
     title: "Fit-Out & Detailing",
-    desc: "Stall configurations, joinery, ventilation, and hardware — finished to a standard a horseman would sign off on.",
+    desc: "Stall configurations, joinery, ventilation, and hardware.",
     image: mainRidgeCiroWoodwork1,
   },
   {
     num: "06",
-    title: "Surface & Long-Term Outcome",
-    desc: "Arena footing, final grading, and system commissioning. Designed to reduce maintenance over time.",
+    title: "Surface & Commissioning",
+    desc: "Arena footing, final grading, and system handover.",
     image: mainRidgeArenaGrading,
   },
 ];
@@ -92,8 +92,7 @@ export default function Process() {
             className="mt-8 text-muted-foreground/45 text-sm sm:text-base max-w-md mx-auto leading-relaxed opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
-            A structured approach — from initial assessment<br />
-            through to long-term outcome.
+            Assessment through to long-term outcome.
           </p>
         </div>
       </section>
@@ -169,7 +168,7 @@ export default function Process() {
 
             <RevealOnScroll direction="up" delay={400}>
               <p className="text-center text-[11px] text-muted-foreground/25 italic mt-14">
-                Every project is unique. Timelines vary by scope and specification.
+                Timelines vary by scope and specification.
               </p>
             </RevealOnScroll>
           </div>
@@ -196,8 +195,7 @@ export default function Process() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <p className="text-sm text-muted-foreground/40 mb-10 leading-relaxed">
-                Each project is assessed individually to ensure correct<br />
-                system specification and long-term performance.
+                Every project begins with a site assessment.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={250}>
