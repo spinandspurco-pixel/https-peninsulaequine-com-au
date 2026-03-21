@@ -281,23 +281,74 @@ export default function ProposalTemplate() {
           </div>
         </section>
 
-        <Divider />
+        {/* ═══════════════════════════════════════════════════════
+            EDITORIAL DIVIDER — architectural rhythm
+        ═══════════════════════════════════════════════════════ */}
 
         {/* ════════════════════════════════════════════
             2. PROJECT OVERVIEW
         ════════════════════════════════════════════ */}
-        <section className="py-28 sm:py-36">
-          <SectionLabel number="01">Project Overview</SectionLabel>
-          <div className="max-w-xl">
-            {data.overview.split("\n\n").map((para, i) => (
-              <p
-                key={i}
-                className="text-[14px] font-sans leading-[2] mb-8 last:mb-0 whitespace-pre-line"
-                style={{ color: "hsl(var(--foreground))", opacity: 0.4 }}
+        <section className="pt-32 sm:pt-40 pb-28 sm:pb-36">
+          {/* Accent rule entry */}
+          <div className="flex items-center gap-5 mb-16 sm:mb-20">
+            <div className="h-px w-8" style={{ background: "hsl(var(--accent))", opacity: 0.25 }} />
+            <SectionLabel number="01">Project Overview</SectionLabel>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16">
+            {/* Heading column */}
+            <div className="md:col-span-4">
+              <h2
+                className="font-serif text-xl sm:text-2xl font-semibold sticky top-24"
+                style={{
+                  color: "hsl(var(--foreground))",
+                  lineHeight: 1.15,
+                  letterSpacing: "0.01em",
+                  opacity: 0.75,
+                }}
               >
-                {para}
-              </p>
-            ))}
+                A system approach,<br />not a surface layer.
+              </h2>
+            </div>
+
+            {/* Body column */}
+            <div className="md:col-span-7 md:col-start-6">
+              {data.overview.split("\n\n").map((para, i) => (
+                <p
+                  key={i}
+                  className="text-[14px] font-sans leading-[2.05] mb-8 last:mb-0"
+                  style={{ color: "hsl(var(--foreground))", opacity: 0.38 }}
+                >
+                  {para}
+                </p>
+              ))}
+
+              {/* Summary markers */}
+              <div className="mt-12 pt-8" style={{ borderTop: "1px solid hsl(var(--border))" }}>
+                <div className="grid grid-cols-3 gap-6">
+                  {[
+                    { label: "Approach", value: "Engineered" },
+                    { label: "Foundation", value: "Interlocking" },
+                    { label: "Performance", value: "Long-term" },
+                  ].map((item) => (
+                    <div key={item.label}>
+                      <p
+                        className="text-[7px] font-sans uppercase tracking-[0.28em] mb-2"
+                        style={{ color: "hsl(var(--accent))", opacity: 0.3 }}
+                      >
+                        {item.label}
+                      </p>
+                      <p
+                        className="text-[13px] font-sans font-medium"
+                        style={{ color: "hsl(var(--foreground))", opacity: 0.5 }}
+                      >
+                        {item.value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -307,23 +358,61 @@ export default function ProposalTemplate() {
             3. THE GROUNDLOCK SYSTEM
         ════════════════════════════════════════════ */}
         <section className="py-28 sm:py-36">
-          <SectionLabel number="02">The GroundLock System</SectionLabel>
+          <div className="flex items-center gap-5 mb-16 sm:mb-20">
+            <div className="h-px w-8" style={{ background: "hsl(var(--accent))", opacity: 0.25 }} />
+            <SectionLabel number="02">The GroundLock System</SectionLabel>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
-            {/* Text */}
-            <div>
+          {/* Full-width visual hero for system */}
+          <div
+            className="w-full py-16 sm:py-20 mb-16 sm:mb-20 flex flex-col items-center text-center"
+            style={{
+              background: "hsl(var(--card))",
+              border: "1px solid hsl(var(--border))",
+            }}
+          >
+            <svg viewBox="0 0 100 110" className="w-32 sm:w-40 h-auto mb-10" style={{ opacity: 0.55 }}>
+              <PanelDefs id="prop" />
+              <GroundLockPanelSVG active showTabs defsId="prop" direction="up" />
+            </svg>
+            <p
+              className="text-[8px] font-sans uppercase tracking-[0.25em] mb-3"
+              style={{ color: "hsl(var(--accent))", opacity: 0.35 }}
+            >
+              GroundLock™ Panel Unit
+            </p>
+            <p
+              className="text-[10px] font-sans max-w-xs leading-[1.8]"
+              style={{ color: "hsl(var(--foreground))", opacity: 0.2 }}
+            >
+              Alternating geometry. Interlocking field behaviour.
+            </p>
+          </div>
+
+          {/* Two-column editorial */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16">
+            <div className="md:col-span-5">
               <h2
                 className="font-serif text-2xl sm:text-3xl font-semibold mb-6"
                 style={{
                   color: "hsl(var(--foreground))",
                   lineHeight: 1.1,
                   letterSpacing: "0.01em",
+                  opacity: 0.75,
                 }}
               >
                 Engineered to perform<br />under load, over time.
               </h2>
+              <p
+                className="text-[12px] font-sans leading-[1.95]"
+                style={{ color: "hsl(var(--foreground))", opacity: 0.28 }}
+              >
+                Most ground systems rely on flat, repeated structures that sit in place. GroundLock is designed differently.
+              </p>
+            </div>
 
-              <div className="space-y-5">
+            <div className="md:col-span-6 md:col-start-7">
+              <div className="space-y-5 mb-10">
                 {[
                   "Each panel interlocks in an alternating geometry, allowing the system to behave as a unified field rather than individual components.",
                   "This creates more consistent load distribution, reduced long-term movement, and a more stable, predictable surface.",
@@ -331,7 +420,7 @@ export default function ProposalTemplate() {
                 ].map((text, i) => (
                   <p
                     key={i}
-                    className="text-[13px] font-sans leading-[1.95]"
+                    className="text-[13px] font-sans leading-[2]"
                     style={{ color: "hsl(var(--foreground))", opacity: 0.35 }}
                   >
                     {text}
@@ -339,44 +428,38 @@ export default function ProposalTemplate() {
                 ))}
               </div>
 
-              {/* Performance points */}
-              <div className="mt-10 space-y-3">
-                {["Consistent load distribution", "Reduced long-term movement", "Stable, predictable surface", "Unified field behaviour"].map((point) => (
-                  <div key={point} className="flex items-center gap-3">
-                    <span
-                      className="w-1 h-1 rounded-full shrink-0"
-                      style={{ background: "hsl(var(--accent))", opacity: 0.4 }}
-                    />
+              {/* Performance attributes */}
+              <div
+                className="pt-8 space-y-4"
+                style={{ borderTop: "1px solid hsl(var(--border))" }}
+              >
+                {[
+                  { attr: "Load Distribution", note: "Consistent across surface" },
+                  { attr: "Long-term Movement", note: "Significantly reduced" },
+                  { attr: "Surface Behaviour", note: "Stable and predictable" },
+                  { attr: "Field Unity", note: "Unified, not individual" },
+                ].map((item) => (
+                  <div key={item.attr} className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span
+                        className="w-1 h-1 rounded-full shrink-0"
+                        style={{ background: "hsl(var(--accent))", opacity: 0.35 }}
+                      />
+                      <p
+                        className="text-[11px] font-sans"
+                        style={{ color: "hsl(var(--foreground))", opacity: 0.45 }}
+                      >
+                        {item.attr}
+                      </p>
+                    </div>
                     <p
-                      className="text-[11px] font-sans"
-                      style={{ color: "hsl(var(--foreground))", opacity: 0.4 }}
+                      className="text-[10px] font-sans"
+                      style={{ color: "hsl(var(--foreground))", opacity: 0.2 }}
                     >
-                      {point}
+                      {item.note}
                     </p>
                   </div>
                 ))}
-              </div>
-            </div>
-
-            {/* Visual */}
-            <div className="flex items-center justify-center">
-              <div
-                className="w-full max-w-xs p-10 flex flex-col items-center"
-                style={{
-                  background: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
-                }}
-              >
-                <svg viewBox="0 0 100 110" className="w-40 h-auto mb-8" style={{ opacity: 0.6 }}>
-                  <PanelDefs id="prop" />
-                  <GroundLockPanelSVG active showTabs defsId="prop" direction="up" />
-                </svg>
-                <p
-                  className="text-[9px] font-sans uppercase tracking-[0.2em] text-center"
-                  style={{ color: "hsl(var(--accent))", opacity: 0.35 }}
-                >
-                  GroundLock™ Panel Unit
-                </p>
               </div>
             </div>
           </div>
@@ -388,37 +471,69 @@ export default function ProposalTemplate() {
             4. PROPOSED LAYOUT
         ════════════════════════════════════════════ */}
         <section className="py-28 sm:py-36">
-          <SectionLabel number="03">Proposed Layout</SectionLabel>
+          <div className="flex items-center gap-5 mb-16 sm:mb-20">
+            <div className="h-px w-8" style={{ background: "hsl(var(--accent))", opacity: 0.25 }} />
+            <SectionLabel number="03">Proposed Layout</SectionLabel>
+          </div>
 
+          {/* Layout visual zone */}
           <div
-            className="w-full aspect-[16/9] flex items-center justify-center"
+            className="w-full aspect-[16/10] relative overflow-hidden mb-8"
             style={{
               background: "hsl(var(--card))",
               border: "1px solid hsl(var(--border))",
             }}
           >
-            <div className="text-center">
+            {/* Faint grid inside */}
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `
+                  linear-gradient(hsla(var(--accent) / 0.04) 1px, transparent 1px),
+                  linear-gradient(90deg, hsla(var(--accent) / 0.04) 1px, transparent 1px)
+                `,
+                backgroundSize: "40px 40px",
+              }}
+            />
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
+              <div
+                className="w-8 h-8 mb-5"
+                style={{
+                  border: "1px solid hsl(var(--accent))",
+                  opacity: 0.15,
+                  transform: "rotate(45deg)",
+                }}
+              />
               <p
-                className="text-[11px] font-sans uppercase tracking-[0.16em] mb-2"
+                className="text-[10px] font-sans uppercase tracking-[0.2em] mb-2"
                 style={{ color: "hsl(var(--foreground))", opacity: 0.2 }}
               >
                 Site Layout
               </p>
               <p
-                className="text-[10px] font-sans"
+                className="text-[9px] font-sans max-w-xs leading-[1.8]"
                 style={{ color: "hsl(var(--foreground))", opacity: 0.12 }}
               >
-                Layout diagram or site photo inserted here
+                Layout diagram, aerial view, or site photography inserted here
               </p>
             </div>
           </div>
 
-          <p
-            className="text-[11px] font-sans mt-6 leading-[1.9]"
-            style={{ color: "hsl(var(--foreground))", opacity: 0.25 }}
-          >
-            The proposed layout is based on the initial site assessment and may be refined during the preparation phase.
-          </p>
+          {/* Caption strip */}
+          <div className="flex items-start justify-between gap-8">
+            <p
+              className="text-[10px] font-sans leading-[1.85] max-w-md"
+              style={{ color: "hsl(var(--foreground))", opacity: 0.22 }}
+            >
+              The proposed layout is based on the initial site assessment and may be refined during the preparation phase.
+            </p>
+            <p
+              className="text-[8px] font-sans uppercase tracking-[0.2em] shrink-0 pt-0.5"
+              style={{ color: "hsl(var(--accent))", opacity: 0.2 }}
+            >
+              Fig. 01
+            </p>
+          </div>
         </section>
 
         <Divider />
@@ -427,52 +542,57 @@ export default function ProposalTemplate() {
             5. SCOPE OF WORK
         ════════════════════════════════════════════ */}
         <section className="py-28 sm:py-36">
-          <SectionLabel number="04">Scope of Work</SectionLabel>
+          <div className="flex items-center gap-5 mb-16 sm:mb-20">
+            <div className="h-px w-8" style={{ background: "hsl(var(--accent))", opacity: 0.25 }} />
+            <SectionLabel number="04">Scope of Work</SectionLabel>
+          </div>
 
-          <p
-            className="text-[13px] font-sans leading-[2] max-w-xl mb-14"
-            style={{ color: "hsl(var(--foreground))", opacity: 0.35 }}
-          >
-            Each stage is executed to ensure the system performs as designed over time.
-          </p>
-
-          <div className="space-y-0">
-            {data.scopeItems.map((item, i) => (
-              <div
-                key={item.phase}
-                className="py-8 sm:py-10"
-                style={{
-                  borderBottom: i < data.scopeItems.length - 1
-                    ? "1px solid hsl(var(--border))"
-                    : "none",
-                  borderBottomWidth: i < data.scopeItems.length - 1 ? "1px" : "0",
-                  opacity: 1,
-                }}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16">
+            {/* Left intro */}
+            <div className="md:col-span-4">
+              <p
+                className="text-[13px] font-sans leading-[2] sticky top-24"
+                style={{ color: "hsl(var(--foreground))", opacity: 0.32 }}
               >
-                <div className="flex items-start gap-6">
-                  <span
-                    className="text-[10px] font-sans tabular-nums pt-0.5 shrink-0"
-                    style={{ color: "hsl(var(--accent))", opacity: 0.3 }}
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <div>
+                The proposed system includes four phases, each executed to ensure long-term performance.
+              </p>
+            </div>
+
+            {/* Right — structured phases */}
+            <div className="md:col-span-7 md:col-start-6">
+              {data.scopeItems.map((item, i) => (
+                <div
+                  key={item.phase}
+                  className="pb-10 mb-10 last:pb-0 last:mb-0"
+                  style={{
+                    borderBottom: i < data.scopeItems.length - 1
+                      ? "1px solid hsl(var(--border))"
+                      : "none",
+                  }}
+                >
+                  <div className="flex items-baseline gap-5 mb-3">
+                    <span
+                      className="text-[9px] font-sans tabular-nums shrink-0"
+                      style={{ color: "hsl(var(--accent))", opacity: 0.3 }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
                     <h3
-                      className="text-[14px] font-sans font-medium mb-2"
-                      style={{ color: "hsl(var(--foreground))", opacity: 0.65 }}
+                      className="text-[15px] font-sans font-medium"
+                      style={{ color: "hsl(var(--foreground))", opacity: 0.6 }}
                     >
                       {item.phase}
                     </h3>
-                    <p
-                      className="text-[12px] font-sans leading-[1.9] max-w-lg"
-                      style={{ color: "hsl(var(--foreground))", opacity: 0.3 }}
-                    >
-                      {item.description}
-                    </p>
                   </div>
+                  <p
+                    className="text-[12px] font-sans leading-[1.95] ml-[calc(0.5rem+20px)]"
+                    style={{ color: "hsl(var(--foreground))", opacity: 0.28 }}
+                  >
+                    {item.description}
+                  </p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
 
@@ -482,72 +602,111 @@ export default function ProposalTemplate() {
             6. INVESTMENT
         ════════════════════════════════════════════ */}
         <section className="py-28 sm:py-36">
-          <SectionLabel number="05">Investment</SectionLabel>
+          <div className="flex items-center gap-5 mb-16 sm:mb-20">
+            <div className="h-px w-8" style={{ background: "hsl(var(--accent))", opacity: 0.25 }} />
+            <SectionLabel number="05">Investment</SectionLabel>
+          </div>
 
           <p
-            className="text-[13px] font-sans leading-[2] max-w-xl mb-14"
+            className="text-[13px] font-sans leading-[2] max-w-lg mb-16"
             style={{ color: "hsl(var(--foreground))", opacity: 0.35 }}
           >
             This proposal reflects a complete GroundLock system approach tailored to your site.
           </p>
 
-          {/* Investment block */}
+          {/* Investment hero block */}
           <div
-            className="p-10 sm:p-14 text-center"
+            className="relative py-16 sm:py-20 px-10 sm:px-14 text-center overflow-hidden"
             style={{
               background: "hsl(var(--card))",
               border: "1px solid hsl(var(--border))",
             }}
           >
+            {/* Subtle corner marks */}
+            {[
+              { top: 16, left: 16 },
+              { top: 16, right: 16 },
+              { bottom: 16, left: 16 },
+              { bottom: 16, right: 16 },
+            ].map((pos, i) => (
+              <div
+                key={i}
+                className="absolute w-4 h-4"
+                style={{
+                  ...pos as any,
+                  borderTop: pos.top !== undefined ? `1px solid hsl(var(--accent))` : undefined,
+                  borderBottom: pos.bottom !== undefined ? `1px solid hsl(var(--accent))` : undefined,
+                  borderLeft: pos.left !== undefined ? `1px solid hsl(var(--accent))` : undefined,
+                  borderRight: pos.right !== undefined ? `1px solid hsl(var(--accent))` : undefined,
+                  opacity: 0.12,
+                }}
+              />
+            ))}
+
             <p
-              className="text-[9px] font-sans uppercase tracking-[0.22em] mb-6"
+              className="text-[8px] font-sans uppercase tracking-[0.3em] mb-8"
               style={{ color: "hsl(var(--accent))", opacity: 0.4 }}
             >
               Total Investment
             </p>
+
             <p
-              className="font-serif text-3xl sm:text-4xl lg:text-5xl font-semibold mb-6"
+              className="font-serif text-[2.5rem] sm:text-[3.5rem] lg:text-[4rem] font-semibold mb-8"
               style={{
                 color: "hsl(var(--foreground))",
-                letterSpacing: "0.01em",
-                lineHeight: 1.1,
+                letterSpacing: "0.02em",
+                lineHeight: 1,
+                opacity: 0.85,
               }}
             >
               {data.investmentTotal}
             </p>
+
             <div
-              className="w-12 h-px mx-auto mb-6"
+              className="w-10 h-px mx-auto mb-8"
               style={{ background: "hsl(var(--accent))", opacity: 0.2 }}
             />
+
             <p
-              className="text-[11px] font-sans leading-[1.85] max-w-sm mx-auto"
-              style={{ color: "hsl(var(--foreground))", opacity: 0.28 }}
+              className="text-[11px] font-sans leading-[1.9] max-w-sm mx-auto"
+              style={{ color: "hsl(var(--foreground))", opacity: 0.25 }}
             >
               {data.investmentNote}
             </p>
           </div>
 
-          {/* Includes */}
-          <div className="mt-12 grid grid-cols-2 gap-4">
-            {["Site preparation & base formation", "GroundLock panel installation", "System alignment & integration", "Surface preparation & completion"].map((inc) => (
-              <div key={inc} className="flex items-start gap-2.5">
-                <span
-                  className="w-1 h-1 rounded-full mt-1.5 shrink-0"
-                  style={{ background: "hsl(var(--accent))", opacity: 0.3 }}
-                />
-                <p
-                  className="text-[10px] font-sans leading-[1.7]"
-                  style={{ color: "hsl(var(--foreground))", opacity: 0.3 }}
-                >
-                  {inc}
-                </p>
-              </div>
-            ))}
+          {/* Includes strip */}
+          <div
+            className="mt-14 pt-8"
+            style={{ borderTop: "1px solid hsl(var(--border))" }}
+          >
+            <p
+              className="text-[7px] font-sans uppercase tracking-[0.28em] mb-6"
+              style={{ color: "hsl(var(--accent))", opacity: 0.25 }}
+            >
+              Includes
+            </p>
+            <div className="grid grid-cols-2 gap-x-8 gap-y-3">
+              {["Site preparation & base formation", "GroundLock panel installation", "System alignment & integration", "Surface preparation & completion"].map((inc) => (
+                <div key={inc} className="flex items-start gap-3">
+                  <span
+                    className="w-1 h-1 rounded-full mt-1.5 shrink-0"
+                    style={{ background: "hsl(var(--accent))", opacity: 0.3 }}
+                  />
+                  <p
+                    className="text-[11px] font-sans leading-[1.75]"
+                    style={{ color: "hsl(var(--foreground))", opacity: 0.32 }}
+                  >
+                    {inc}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
 
           <p
             className="text-[9px] font-sans mt-10 leading-[1.8]"
-            style={{ color: "hsl(var(--foreground))", opacity: 0.15 }}
+            style={{ color: "hsl(var(--foreground))", opacity: 0.13 }}
           >
             Final pricing confirmed following site assessment. All figures include GST where applicable.
           </p>
@@ -559,123 +718,139 @@ export default function ProposalTemplate() {
             7. NEXT STEPS
         ════════════════════════════════════════════ */}
         <section className="py-28 sm:py-36">
-          <SectionLabel number="06">Next Steps</SectionLabel>
-
-          <div className="max-w-xl mb-16">
-            {[
-              "If you'd like to proceed, we'll finalise the layout and confirm scheduling.",
-              "From there, we move into preparation and installation.",
-              "If you have any questions or would like to refine the approach, we're happy to walk through it with you.",
-            ].map((para, i) => (
-              <p
-                key={i}
-                className="text-[13px] font-sans leading-[2] mb-6 last:mb-0"
-                style={{ color: "hsl(var(--foreground))", opacity: 0.38 }}
-              >
-                {para}
-              </p>
-            ))}
+          <div className="flex items-center gap-5 mb-16 sm:mb-20">
+            <div className="h-px w-8" style={{ background: "hsl(var(--accent))", opacity: 0.25 }} />
+            <SectionLabel number="06">Next Steps</SectionLabel>
           </div>
 
-          {/* Process timeline */}
-          <div className="space-y-0 mb-16">
-            {[
-              { step: "Confirm", desc: "Approve the proposal and lock in your build window." },
-              { step: "Prepare", desc: "Site assessment, base profiling, and material coordination." },
-              { step: "Install", desc: "GroundLock system laid, aligned, and finished on-site." },
-              { step: "Handover", desc: "Final inspection, surface completion, and care guidance." },
-            ].map((item, i, arr) => (
-              <div key={item.step} className="flex items-start gap-6 py-5">
-                {/* Timeline dot + line */}
-                <div className="flex flex-col items-center shrink-0 w-3">
-                  <div
-                    className="w-2 h-2 rounded-full mt-1"
-                    style={{ background: "hsl(var(--accent))", opacity: 0.35 }}
-                  />
-                  {i < arr.length - 1 && (
-                    <div
-                      className="w-px flex-1 mt-2"
-                      style={{ background: "hsl(var(--accent))", opacity: 0.1, minHeight: 32 }}
-                    />
-                  )}
-                </div>
-                <div>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16">
+            {/* Left — message */}
+            <div className="md:col-span-5">
+              <div className="space-y-6">
+                {[
+                  "If you'd like to proceed, we'll finalise the layout and confirm scheduling.",
+                  "From there, we move into preparation and installation.",
+                  "If you have any questions or would like to refine the approach, we're happy to walk through it with you.",
+                ].map((para, i) => (
                   <p
-                    className="text-[13px] font-sans font-medium mb-1"
-                    style={{ color: "hsl(var(--foreground))", opacity: 0.55 }}
+                    key={i}
+                    className="text-[13px] font-sans leading-[2]"
+                    style={{ color: "hsl(var(--foreground))", opacity: 0.35 }}
                   >
-                    {item.step}
+                    {para}
                   </p>
-                  <p
-                    className="text-[11px] font-sans leading-[1.8]"
-                    style={{ color: "hsl(var(--foreground))", opacity: 0.25 }}
-                  >
-                    {item.desc}
-                  </p>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
-
-          {/* Contact CTAs */}
-          <div
-            className="p-10 sm:p-12"
-            style={{
-              background: "hsl(var(--card))",
-              border: "1px solid hsl(var(--border))",
-            }}
-          >
-            <p
-              className="text-[9px] font-sans uppercase tracking-[0.22em] mb-8"
-              style={{ color: "hsl(var(--accent))", opacity: 0.4 }}
-            >
-              Contact
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
-              {[
-                { label: "Email", value: "info@peninsulaequine.org" },
-                { label: "Phone", value: "By arrangement" },
-                { label: "Web", value: "peninsulaequine.com.au" },
-              ].map((c) => (
-                <div key={c.label}>
-                  <p
-                    className="text-[8px] font-sans uppercase tracking-[0.2em] mb-1.5"
-                    style={{ color: "hsl(var(--foreground))", opacity: 0.18 }}
-                  >
-                    {c.label}
-                  </p>
-                  <p
-                    className="text-[12px] font-sans"
-                    style={{ color: "hsl(var(--foreground))", opacity: 0.5 }}
-                  >
-                    {c.value}
-                  </p>
-                </div>
-              ))}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <a
-                href="mailto:info@peninsulaequine.org?subject=GroundLock Proposal — Proceed"
-                className="flex items-center justify-center gap-2 px-6 py-3.5 text-[10px] font-sans uppercase tracking-[0.16em] font-medium transition-opacity duration-300 hover:opacity-85"
-                style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
-              >
-                Proceed with Project
-                <ArrowRight className="w-3.5 h-3.5" />
-              </a>
-              <a
-                href="mailto:info@peninsulaequine.org?subject=GroundLock Proposal — Question"
-                className="flex items-center justify-center gap-2 px-6 py-3.5 text-[10px] font-sans uppercase tracking-[0.16em] transition-opacity duration-300 hover:opacity-65"
+            {/* Right — process + contact */}
+            <div className="md:col-span-6 md:col-start-7">
+              {/* Process steps */}
+              <div className="mb-14">
+                <p
+                  className="text-[7px] font-sans uppercase tracking-[0.28em] mb-8"
+                  style={{ color: "hsl(var(--accent))", opacity: 0.25 }}
+                >
+                  The Process
+                </p>
+                {[
+                  { step: "Confirm", desc: "Approve the proposal and lock in your build window." },
+                  { step: "Prepare", desc: "Site assessment, base profiling, and material coordination." },
+                  { step: "Install", desc: "GroundLock system laid, aligned, and finished on-site." },
+                  { step: "Handover", desc: "Final inspection, surface completion, and care guidance." },
+                ].map((item, i, arr) => (
+                  <div key={item.step} className="flex items-start gap-5 mb-6 last:mb-0">
+                    <div className="flex flex-col items-center shrink-0 w-3 pt-1">
+                      <div
+                        className="w-[5px] h-[5px] rounded-full"
+                        style={{ background: "hsl(var(--accent))", opacity: 0.35 }}
+                      />
+                      {i < arr.length - 1 && (
+                        <div
+                          className="w-px mt-1.5"
+                          style={{ background: "hsl(var(--accent))", opacity: 0.08, height: 36 }}
+                        />
+                      )}
+                    </div>
+                    <div>
+                      <p
+                        className="text-[12px] font-sans font-medium mb-0.5"
+                        style={{ color: "hsl(var(--foreground))", opacity: 0.5 }}
+                      >
+                        {item.step}
+                      </p>
+                      <p
+                        className="text-[10px] font-sans leading-[1.8]"
+                        style={{ color: "hsl(var(--foreground))", opacity: 0.22 }}
+                      >
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Contact block */}
+              <div
+                className="p-8 sm:p-10"
                 style={{
+                  background: "hsl(var(--card))",
                   border: "1px solid hsl(var(--border))",
-                  color: "hsl(var(--foreground))",
-                  opacity: 0.45,
                 }}
               >
-                <MessageSquare className="w-3.5 h-3.5" />
-                Ask a Question
-              </a>
+                <p
+                  className="text-[7px] font-sans uppercase tracking-[0.28em] mb-6"
+                  style={{ color: "hsl(var(--accent))", opacity: 0.3 }}
+                >
+                  Contact
+                </p>
+
+                <div className="space-y-4 mb-8">
+                  {[
+                    { label: "Email", value: "info@peninsulaequine.org" },
+                    { label: "Phone", value: "By arrangement" },
+                    { label: "Web", value: "peninsulaequine.com.au" },
+                  ].map((c) => (
+                    <div key={c.label} className="flex items-baseline justify-between">
+                      <p
+                        className="text-[8px] font-sans uppercase tracking-[0.2em]"
+                        style={{ color: "hsl(var(--foreground))", opacity: 0.15 }}
+                      >
+                        {c.label}
+                      </p>
+                      <p
+                        className="text-[12px] font-sans"
+                        style={{ color: "hsl(var(--foreground))", opacity: 0.45 }}
+                      >
+                        {c.value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <a
+                    href="mailto:info@peninsulaequine.org?subject=GroundLock Proposal — Proceed"
+                    className="flex items-center justify-center gap-2 px-5 py-3 text-[9px] font-sans uppercase tracking-[0.16em] font-medium transition-opacity duration-300 hover:opacity-85"
+                    style={{ background: "hsl(var(--accent))", color: "hsl(var(--accent-foreground))" }}
+                  >
+                    Proceed
+                    <ArrowRight className="w-3 h-3" />
+                  </a>
+                  <a
+                    href="mailto:info@peninsulaequine.org?subject=GroundLock Proposal — Question"
+                    className="flex items-center justify-center gap-2 px-5 py-3 text-[9px] font-sans uppercase tracking-[0.16em] transition-opacity duration-300 hover:opacity-65"
+                    style={{
+                      border: "1px solid hsl(var(--border))",
+                      color: "hsl(var(--foreground))",
+                      opacity: 0.4,
+                    }}
+                  >
+                    <MessageSquare className="w-3 h-3" />
+                    Question
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -683,31 +858,30 @@ export default function ProposalTemplate() {
         {/* ════════════════════════════════════════════
             FOOTER
         ════════════════════════════════════════════ */}
-        <footer className="py-12 border-t" style={{ borderColor: "hsl(var(--border))" }}>
-          <div className="flex items-center justify-between">
+        <footer className="pt-10 pb-14" style={{ borderTop: "1px solid hsl(var(--border))" }}>
+          <div className="flex items-center justify-between mb-12">
             <p
-              className="text-[9px] font-sans uppercase tracking-[0.2em]"
-              style={{ color: "hsl(var(--accent))", opacity: 0.3 }}
+              className="text-[8px] font-sans uppercase tracking-[0.25em]"
+              style={{ color: "hsl(var(--accent))", opacity: 0.25 }}
             >
               Peninsula Equine
             </p>
             <p
-              className="text-[9px] font-sans"
-              style={{ color: "hsl(var(--foreground))", opacity: 0.12 }}
+              className="text-[8px] font-sans"
+              style={{ color: "hsl(var(--foreground))", opacity: 0.1 }}
             >
               peninsulaequine.com.au
             </p>
           </div>
           <p
-            className="text-center font-serif text-[14px] mt-10 italic"
-            style={{ color: "hsl(var(--accent))", opacity: 0.2 }}
+            className="text-center font-serif text-[13px] italic"
+            style={{ color: "hsl(var(--accent))", opacity: 0.18 }}
           >
             Built properly, from the ground up.
           </p>
         </footer>
 
-        {/* Bottom breathing space */}
-        <div className="h-16" />
+        <div className="h-12" />
       </div>
     </div>
   );
