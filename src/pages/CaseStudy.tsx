@@ -202,7 +202,7 @@ export default function CaseStudy() {
       <section className="py-20 sm:py-28 bg-background">
         <div className="section-container max-w-3xl mx-auto text-center space-y-8">
           <RevealLine className="mx-auto" width="w-10" />
-          <RevealOnScroll direction="scale" duration={900}>
+          <RevealOnScroll direction="up" duration={900}>
             <p className="font-serif text-xl sm:text-2xl text-foreground italic">
               {study.closingLine}
             </p>
