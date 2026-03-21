@@ -50,9 +50,8 @@ export function CRMKanbanView({ records, onSelectRecord, onMoveRecord }: Props) 
                     draggable
                     onDragStart={(e) => e.dataTransfer.setData("text/plain", record.id)}
                     onClick={() => onSelectRecord(record)}
-                    className="p-3.5 bg-card/90 border border-border/30 cursor-pointer
-                      hover:border-accent/20 transition-all duration-200
-                      active:scale-[0.98]"
+                    className="p-3 bg-card/80 border border-border/20 cursor-pointer
+                      transition-opacity duration-200 hover:opacity-80"
                   >
                     <p className="text-[12px] font-medium text-foreground/80 mb-1 truncate">
                       {record.name}

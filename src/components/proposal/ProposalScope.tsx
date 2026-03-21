@@ -22,9 +22,9 @@ export function ProposalScope({ groupedItems, scopeSummary }: Props) {
   if (categories.length === 0 && !scopeSummary) return null;
 
   return (
-    <section className="pb-20">
+    <section className="pb-24">
       <p
-        className="text-[10px] font-sans uppercase tracking-[0.2em] mb-10"
+        className="text-[9px] font-sans uppercase tracking-[0.22em] mb-10 font-medium"
         style={{ color: "#8C6A3B", opacity: 0.4 }}
       >
         Scope of Works
@@ -32,30 +32,30 @@ export function ProposalScope({ groupedItems, scopeSummary }: Props) {
 
       {scopeSummary && (
         <p
-          className="text-[13px] font-sans leading-[2] max-w-2xl mb-12 whitespace-pre-line"
+          className="text-[12px] font-sans leading-[2] max-w-2xl mb-14 whitespace-pre-line"
           style={{ color: "#2B2B2B", opacity: 0.35 }}
         >
           {scopeSummary}
         </p>
       )}
 
-      <div className="space-y-8">
+      <div className="space-y-6">
         {categories.map(([category, items]) => (
           <div
             key={category}
-            className="p-8 sm:p-10"
+            className="p-7 sm:p-9"
             style={{
-              background: "rgba(255,255,255,0.5)",
+              background: "rgba(255,255,255,0.45)",
               borderLeft: "2px solid rgba(140,106,59,0.12)",
             }}
           >
             <p
-              className="text-[12px] font-sans uppercase tracking-[0.15em] mb-5"
-              style={{ color: "#2B2B2B", opacity: 0.6 }}
+              className="text-[11px] font-sans uppercase tracking-[0.16em] mb-5 font-medium"
+              style={{ color: "#2B2B2B", opacity: 0.55 }}
             >
               {CATEGORY_LABELS[category] || category}
             </p>
-            <ul className="space-y-2.5">
+            <ul className="space-y-2">
               {items.map((item) => (
                 <li key={item.id} className="flex items-start gap-3">
                   <span
@@ -63,11 +63,11 @@ export function ProposalScope({ groupedItems, scopeSummary }: Props) {
                     style={{ background: "#8C6A3B", opacity: 0.3 }}
                   />
                   <div className="flex-1">
-                    <p className="text-[13px] font-sans" style={{ color: "#2B2B2B", opacity: 0.65 }}>
+                    <p className="text-[12px] font-sans" style={{ color: "#2B2B2B", opacity: 0.6 }}>
                       {item.title}
                     </p>
                     {item.description && (
-                      <p className="text-[11px] font-sans mt-0.5" style={{ color: "#2B2B2B", opacity: 0.3 }}>
+                      <p className="text-[10px] font-sans mt-0.5" style={{ color: "#2B2B2B", opacity: 0.28 }}>
                         {item.description}
                       </p>
                     )}

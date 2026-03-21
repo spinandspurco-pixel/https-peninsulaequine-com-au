@@ -1,5 +1,4 @@
-import { CRMRecord, PIPELINE_STAGES } from "./crmTypes";
-import { Users, FileText, CheckCircle, AlertTriangle } from "lucide-react";
+import { CRMRecord } from "./crmTypes";
 
 interface Props {
   records: CRMRecord[];
@@ -27,35 +26,25 @@ export function CRMSummaryCards({ records, quotes, followUps }: Props) {
   ).length;
 
   const cards = [
-    { label: "Active Enquiries", value: activeEnquiries, icon: Users },
-    { label: "Quotes Awaiting", value: quotesAwaitingFollowUp, icon: FileText },
-    { label: "Won This Month", value: wonThisMonth, icon: CheckCircle },
-    { label: "Overdue Follow-Ups", value: overdueFollowUps, icon: AlertTriangle, alert: overdueFollowUps > 0 },
+    { label: "Active", value: activeEnquiries },
+    { label: "Awaiting", value: quotesAwaitingFollowUp },
+    { label: "Won", value: wonThisMonth },
+    { label: "Overdue", value: overdueFollowUps, alert: overdueFollowUps > 0 },
   ];
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="flex items-center gap-8">
       {cards.map((card) => (
-        <div
-          key={card.label}
-          className="p-5 bg-card/80 border border-border/40 transition-all duration-300"
-        >
-          <div className="flex items-start justify-between mb-3">
-            <p className="text-[10px] font-sans uppercase tracking-[0.15em] text-muted-foreground/60">
-              {card.label}
-            </p>
-            <card.icon
-              className={`h-4 w-4 ${
-                card.alert ? "text-amber-500/70" : "text-accent/50"
-              }`}
-            />
-          </div>
+        <div key={card.label} className="flex items-baseline gap-2.5">
           <p
-            className={`font-serif text-2xl ${
-              card.alert ? "text-amber-600" : "text-foreground"
+            className={`font-serif text-xl ${
+              card.alert ? "text-amber-600/80" : "text-foreground"
             }`}
           >
             {card.value}
+          </p>
+          <p className="text-[9px] font-sans uppercase tracking-[0.18em] text-muted-foreground/45">
+            {card.label}
           </p>
         </div>
       ))}
