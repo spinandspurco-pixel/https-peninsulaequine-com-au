@@ -533,7 +533,7 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
   doc.text("Images are indicative of style and intent. Final specification may vary.", ml, y);
 
   drawFooterBar(doc, pw, ph, ml);
-  drawPageNumber(doc, pw, ph, 4, totalPages);
+  drawPageNumber(doc, pw, ph, 5, totalPages);
 
   // ═══════════════════════════════════════════════════════════
   // PAGE 5 — INVESTMENT
