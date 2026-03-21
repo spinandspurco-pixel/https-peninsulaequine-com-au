@@ -97,7 +97,7 @@ function StructuralWireframe() {
         stroke="hsl(var(--accent))"
         strokeWidth="1.2"
         opacity="0.22"
-        className="animate-[drawLine_1.4s_1.6s_cubic-bezier(0.22,1,0.36,1)_forwards]"
+        className="animate-[drawLine_1s_0.8s_cubic-bezier(0.22,1,0.36,1)_forwards]"
       />
       {/* Roof right */}
       <path
