@@ -298,6 +298,17 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ── Conversion Bridge 2 ──────────────────── */}
+      <ConversionBridge
+        variant="accent"
+        label="From concept to completion"
+        heading="Discuss your project with our team."
+        subtext="Whether it's a single arena or a full property build — we scope it properly before quoting."
+        ctaLabel="Discuss Project"
+        ctaHref="/contact"
+        trustLine="Limited projects accepted per season"
+      />
+
       {/* ═══ 4. SERVICES — WHAT WE BUILD ═══════════════════ */}
       <section className="relative overflow-hidden">
         <div className="py-32 sm:py-40 lg:py-48 bg-card relative">
