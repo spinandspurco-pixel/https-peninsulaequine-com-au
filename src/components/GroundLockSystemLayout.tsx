@@ -437,7 +437,7 @@ export function GroundLockSystemLayout() {
         >
           {viewMode === "system"
             ? (activeZone ? (activeData?.sublabel ?? "") : "Hover or tap a zone to explore")
-            : "Used under arenas, access routes, and high-traffic zones"
+            : "Horseshoe panels — engineered to interlock"
           }
         </p>
       </div>
