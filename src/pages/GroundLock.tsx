@@ -60,19 +60,16 @@ const COMPARE = {
   standard: [
     "Generic grid geometry",
     "Inconsistent load behaviour",
-    "Visually industrial",
     "No directional logic",
   ],
   groundlock: [
     "Controlled horseshoe geometry",
     "Directional load distribution",
-    "Clean, premium finish",
     "Interlocking mechanical logic",
   ],
   outcome: [
     "Less ongoing maintenance",
     "Superior drainage performance",
-    "Premium surface appearance",
     "Longer system lifespan",
   ],
 };
