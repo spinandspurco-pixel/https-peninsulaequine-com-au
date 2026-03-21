@@ -83,15 +83,15 @@ export function GroundLockSystemLayout() {
     <div className="max-w-2xl mx-auto">
       {/* Sub-label */}
       <div className="text-center mb-10">
-        <div className="flex items-center justify-center gap-5 mb-4">
+        <div className="flex items-center justify-center gap-5 mb-3">
           <div className="w-6 h-px bg-accent/20" />
           <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/30 font-mono">
-            Top-Down Layout
+            System Layout
           </p>
           <div className="w-6 h-px bg-accent/20" />
         </div>
-        <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/30 italic max-w-lg mx-auto leading-relaxed">
-          The horseshoe layout controls movement, reduces congestion, and maintains consistent ground performance across all traffic zones.
+        <p className="text-[11px] sm:text-xs text-muted-foreground/30 font-mono tracking-wide">
+          Controls movement and flow across all zones
         </p>
       </div>
 
