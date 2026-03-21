@@ -39,7 +39,7 @@ const Forge = lazy(() => import("./pages/Forge"));
 const Events = lazy(() => import("./pages/Events"));
 const Process = lazy(() => import("./pages/Process"));
 const BookingsDashboard = lazy(() => import("./pages/BookingsDashboard"));
-const StudentSpotlight = lazy(() => import("./pages/StudentSpotlight"));
+
 const RoundPens = lazy(() => import("./pages/RoundPens"));
 const Schedule = lazy(() => import("./pages/Schedule"));
 const ThankYou = lazy(() => import("./pages/ThankYou"));
