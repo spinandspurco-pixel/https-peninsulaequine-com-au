@@ -397,7 +397,7 @@ export default function GroundLock() {
             <RevealOnScroll direction="up" delay={250}>
               <Button asChild variant="gold" size="lg">
                 <Link to="/site-assessment">
-                  Request Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                  Assess My Site <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </RevealOnScroll>
