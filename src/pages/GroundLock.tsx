@@ -5,6 +5,7 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { GroundLockProductEducation } from "@/components/groundlock/GroundLockProductEducation";
 import { PanelSpecimen, SystemDiagram, LockSequence } from "@/components/groundlock/GroundLockSystemSVG";
 import { GroundLockPanelSVG, PanelDefs } from "@/components/groundlock/GroundLockPanelSVG";
+import { GroundLockComparison } from "@/components/groundlock/GroundLockComparison";
 import { ArrowRight, Shield, Droplets, Grid3X3, Wrench, Sparkles } from "lucide-react";
 
 /* ── Data ─────────────────────────────────────────── */
