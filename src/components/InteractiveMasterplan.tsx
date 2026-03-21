@@ -509,8 +509,40 @@ export function InteractiveMasterplan() {
     }, TOUR_DISSOLVE / 2);
   }, [clearTimer]);
 
+  /* ── Entrance sequence — fade in, flash primary zone, return to neutral ── */
+  const sectionRef = useRef<HTMLElement>(null);
+  const [hasEntered, setHasEntered] = useState(false);
+  const [planVisible, setPlanVisible] = useState(false);
+  const entranceDone = useRef(false);
+
+  useEffect(() => {
+    if (!sectionRef.current || entranceDone.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          entranceDone.current = true;
+          observer.disconnect();
+          // Phase 1: fade in the plan
+          setPlanVisible(true);
+          // Phase 2: after plan fades in, briefly highlight the arena
+          setTimeout(() => {
+            setActiveZone("indoor-arena");
+            setHasEntered(true);
+          }, 1100);
+          // Phase 3: return to neutral
+          setTimeout(() => {
+            setActiveZone(null);
+          }, 3200);
+        }
+      },
+      { threshold: 0.25 }
+    );
+    observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="relative py-28 sm:py-36 lg:py-44 overflow-hidden">
+    <section ref={sectionRef} className="relative py-28 sm:py-36 lg:py-44 overflow-hidden">
       <div className="absolute inset-0 grain-texture pointer-events-none" />
 
       <div className="section-container relative z-10">
@@ -530,7 +562,13 @@ export function InteractiveMasterplan() {
           </div>
         </RevealOnScroll>
 
-        <RevealOnScroll direction="up" duration={DURATION.normal} delay={100}>
+        <div
+          style={{
+            opacity: planVisible ? 1 : 0,
+            transition: "opacity 1100ms cubic-bezier(0.22, 0.61, 0.36, 1)",
+            willChange: "opacity",
+          }}
+        >
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             <div className="lg:col-span-8 flex justify-center overflow-hidden rounded-sm">
               <CameraWrapper activeZone={activeZone}>
@@ -607,7 +645,7 @@ export function InteractiveMasterplan() {
               )}
             </div>
           </div>
-        </RevealOnScroll>
+        </div>
       </div>
     </section>
   );
