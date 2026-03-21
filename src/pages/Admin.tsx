@@ -154,48 +154,24 @@ export default function Admin() {
     }
   }, [isAdmin]);
 
-  const fetchInquiries = async () => {
+  const fetchBookings = async () => {
     setIsLoadingData(true);
-    const [inquiryRes, bookingRes] = await Promise.all([
-      supabase.from("inquiries").select("*").order("created_at", { ascending: false }),
-      supabase.from("bookings").select("*").order("booking_date", { ascending: true }).limit(10),
-    ]);
-    if (inquiryRes.error) toast.error("Failed to load inquiries");
-    else setInquiries(inquiryRes.data || []);
-    setBookings(bookingRes.data || []);
+    const { data } = await supabase
+      .from("bookings")
+      .select("*")
+      .order("booking_date", { ascending: true })
+      .limit(10);
+    setBookings(data || []);
     setIsLoadingData(false);
   };
 
   useEffect(() => {
-    if (isAdmin) fetchInquiries();
+    if (isAdmin) fetchBookings();
   }, [isAdmin]);
 
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
-  };
-
-  const handleViewInquiry = (inquiry: Inquiry) => {
-    setSelectedInquiry(inquiry);
-    setEditNotes(inquiry.notes || "");
-    setEditStatus(inquiry.status);
-  };
-
-  const handleUpdateInquiry = async () => {
-    if (!selectedInquiry) return;
-    const { error } = await supabase
-      .from("inquiries")
-      .update({ status: editStatus, notes: editNotes, updated_at: new Date().toISOString() })
-      .eq("id", selectedInquiry.id);
-    if (error) toast.error("Failed to update inquiry");
-    else { toast.success("Inquiry updated"); setSelectedInquiry(null); fetchInquiries(); }
-  };
-
-  const handleDeleteInquiry = async () => {
-    if (!deleteInquiry) return;
-    const { error } = await supabase.from("inquiries").delete().eq("id", deleteInquiry.id);
-    if (error) toast.error("Failed to delete inquiry");
-    else { toast.success("Inquiry deleted"); setDeleteInquiry(null); fetchInquiries(); }
   };
 
   const handleSaveCrmSettings = async () => {
@@ -217,47 +193,6 @@ export default function Admin() {
     } finally {
       setIsSavingCrm(false);
     }
-  };
-
-  const filteredInquiries = inquiries.filter((inquiry) => {
-    const matchesSearch =
-      inquiry.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      inquiry.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (inquiry.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false);
-    const matchesStatus = statusFilter === "all" || inquiry.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
-
-  const exportToCSV = () => {
-    const headers = ["Date", "Name", "Email", "Phone", "Services", "Status", "Budget Range", "Preferred Start", "Notes"];
-    const escapeCSV = (v: string | null | undefined): string => {
-      if (!v) return "";
-      const s = String(v);
-      return s.includes(",") || s.includes('"') || s.includes("\n") ? `"${s.replace(/"/g, '""')}"` : s;
-    };
-    const rows = filteredInquiries.map((i) => [
-      format(new Date(i.created_at), "yyyy-MM-dd HH:mm"), escapeCSV(i.name), escapeCSV(i.email),
-      escapeCSV(i.phone), escapeCSV(i.services.join("; ")), escapeCSV(i.status),
-      escapeCSV(i.budget_range), escapeCSV(i.preferred_start), escapeCSV(i.notes),
-    ]);
-    const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `inquiries-${format(new Date(), "yyyy-MM-dd")}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    toast.success(`Exported ${filteredInquiries.length} inquiries`);
-  };
-
-  const stats = {
-    total: inquiries.length,
-    new: inquiries.filter((i) => i.status === "new").length,
-    inProgress: inquiries.filter((i) => ["contacted", "in_progress", "quoted"].includes(i.status)).length,
-    completed: inquiries.filter((i) => ["won", "lost"].includes(i.status)).length,
   };
 
   if (loading) {
