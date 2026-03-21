@@ -392,6 +392,15 @@ export function LeadDetailPanel({ record, onClose, onUpdated, onCreateQuote }: P
             </Select>
           </section>
 
+          {/* ═══ COMMUNICATION TIMELINE ═══ */}
+          <section>
+            <CommunicationTimeline
+              entityType={linkedQuote ? "quote" : "lead"}
+              entityId={linkedQuote ? linkedQuote.id : record.id}
+              clientName={record.name}
+            />
+          </section>
+
           {/* ═══ INTERNAL NOTES ═══ */}
           <section>
             <p className="text-[10px] font-sans uppercase tracking-[0.2em] text-accent/40 mb-3">Internal Notes</p>

@@ -322,6 +322,9 @@ export default function Admin() {
           {/* System Settings — Founder only */}
           {viewMode === "founder" && <AdminSystemSettings />}
 
+          {/* FOUNDER: Auto-Send Timing Settings */}
+          {viewMode === "founder" && <AutoSendSettingsPanel />}
+
           {/* CRM Settings — Founder only */}
           {viewMode === "founder" && (
             <Card className="bg-card/80 border-border/40">
