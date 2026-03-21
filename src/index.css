@@ -646,6 +646,11 @@
    ARCHITECTURAL MOTION SYSTEM
    ═══════════════════════════════════════════════════════ */
 
+@keyframes heroFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 @keyframes scrollPulse {
   0%   { transform: translateY(-100%); opacity: 0; }
   30%  { opacity: 1; }
