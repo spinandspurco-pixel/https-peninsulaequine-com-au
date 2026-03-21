@@ -165,14 +165,36 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
   drawLine(doc, ml, y, pw - mr, GOLD, 0.5);
   y += 10;
 
-  // Concept intro text
+  // Concept intro — priorities
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.setTextColor(CHARCOAL);
-  const conceptIntro = "This project is structured around performance, access, and longevity. Every element is engineered for the specific conditions of the site — not adapted from a generic template.";
-  const conceptLines = doc.splitTextToSize(conceptIntro, cw);
-  doc.text(conceptLines, ml, y);
-  y += conceptLines.length * 4.2 + 8;
+  const conceptIntro = "This project is structured around three priorities:";
+  doc.text(conceptIntro, ml, y);
+  y += 7;
+
+  const priorities = [
+    "Performance — ensuring consistent, safe riding conditions",
+    "Access — clean movement for horses, vehicles, and daily use",
+    "Longevity — materials and systems designed to last",
+  ];
+  priorities.forEach((p) => {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.5);
+    doc.setTextColor(CHARCOAL);
+    doc.text(`•  ${p}`, ml + 4, y);
+    y += 5;
+  });
+  y += 4;
+
+  // Cohesion statement
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(8.5);
+  doc.setTextColor(SLATE);
+  const cohesionLine = "The layout, materials, and systems have been considered together — not as separate elements — to create a cohesive and durable result.";
+  const cohesionLines = doc.splitTextToSize(cohesionLine, cw);
+  doc.text(cohesionLines, ml, y);
+  y += cohesionLines.length * 3.8 + 8;
 
   // Scope of works
   if (quote.scope_summary) {
@@ -374,6 +396,17 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
       doc.addPage();
       y = 32;
     }
+
+    drawLine(doc, ml, y, pw - mr, DIVIDER, 0.3);
+    y += 8;
+
+    // Investment disclaimer
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7);
+    doc.setTextColor(SLATE);
+    const disclaimer = "Final cost will depend on site conditions, material selections, and confirmed scope.";
+    doc.text(disclaimer, ml, y);
+    y += 8;
 
     drawLine(doc, ml, y, pw - mr, DIVIDER, 0.3);
     y += 8;
