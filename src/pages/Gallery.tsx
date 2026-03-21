@@ -383,7 +383,7 @@ export default function Gallery() {
             </RevealOnScroll>
 
             {/* Row 2 — craft detail */}
-            <RevealOnScroll direction="up" duration={700} delay={120}>
+            <RevealOnScroll direction="up" duration={DURATION.normal} delay={120}>
               <EditorialImage src={aberdeenStonework} alt="Aberdeen — hand-laid natural stonework detail" aspect="aspect-[21/9]" onClick={() => openLightbox(aberdeenStonework)} />
             </RevealOnScroll>
           </div>
