@@ -1,7 +1,6 @@
 // Main Ridge images
 import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
 import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
-import mainRidgeCiroWoodwork1 from "@/assets/main-ridge-ciro-woodwork-1.jpg";
 
 // Private Client — Mornington Peninsula images
 import aberdeenAisle from "@/assets/aberdeen-aisle.jpg";
@@ -12,11 +11,9 @@ import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
 
 // Custom Builds
 import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
-import timberCubbyFront from "@/assets/timber-cubby-front.webp";
 
 // Curated portfolio additions
 import coveredArenaFinishedLit from "@/assets/covered-arena-finished-lit.jpg";
-import premiumStableFacade from "@/assets/premium-stable-facade.png";
 import westernEntertainingZone from "@/assets/western-entertaining-zone.jpg";
 
 export type GalleryItem = {
@@ -57,7 +54,6 @@ export const galleryItems: GalleryItem[] = [
   // ── Main Ridge — Pavilion & Barn ──
   { id: 1, src: mainRidgeBrickwork, alt: "Main Ridge — Custom reclaimed brickwork detail", project: "main-ridge", type: "image", service: "stonework", location: "victoria" },
   { id: 2, src: mainRidgeInterior, alt: "Main Ridge — Open barn interior with timber framing", project: "main-ridge", type: "image", service: "barn", location: "victoria" },
-  { id: 5, src: mainRidgeCiroWoodwork1, alt: "Main Ridge — Hand-shaping timber posts", project: "main-ridge", type: "image", service: "woodwork", location: "victoria" },
 
   // ── Private Client — Mornington Peninsula ──
   { id: 10, src: aberdeenBarnInterior, alt: "Private Client — Luxury barn interior with chandeliers", project: "aberdeen", type: "image", service: "barn", location: "victoria" },
@@ -68,9 +64,7 @@ export const galleryItems: GalleryItem[] = [
 
   // ── Custom Builds ──
   { id: 70, src: steelShedDramatic, alt: "Custom colorbond barn — dramatic sky", project: "custom-builds", type: "image", service: "barn", location: "victoria" },
-  { id: 71, src: timberCubbyFront, alt: "Bespoke western-style timber cubby", project: "custom-builds", type: "image", service: "woodwork", location: "victoria" },
   { id: 80, src: coveredArenaFinishedLit, alt: "Covered arena — finished and lit at dusk", project: "custom-builds", type: "image", service: "barn", location: "victoria" },
-  { id: 82, src: premiumStableFacade, alt: "Premium stable — architectural facade", project: "custom-builds", type: "image", service: "barn", location: "victoria" },
   { id: 83, src: westernEntertainingZone, alt: "Western entertaining zone — timber and stone", project: "custom-builds", type: "image", service: "woodwork", location: "victoria" },
 ];
 

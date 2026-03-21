@@ -14,11 +14,9 @@ import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
 // Portfolio imagery
 import garageInterior from "@/assets/garage-interior-flake.webp";
 import garageExterior from "@/assets/garage-exterior.webp";
-import pavilionTimber from "@/assets/pavilion-timber-detail.webp";
 import interiorTimberWindow from "@/assets/interior-timber-window.webp";
 import mainRidgeFinishedExterior from "@/assets/main-ridge-finished-exterior.webp";
 import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
-import timberCubbyFront from "@/assets/timber-cubby-front.webp";
 
 // CTA closer
 import heroSunset from "@/assets/hero-sunset.webp";
@@ -27,8 +25,6 @@ const PROJECTS = [
   { src: mainRidgeFinishedExterior, alt: "Main Ridge pavilion at dusk", label: "Main Ridge", scope: "Pavilion & Parrilla Grill", slug: "main-ridge" },
   { src: garageInterior, alt: "Precision garage interior with flake floor", label: "Private Client", scope: "Garage & Workshop", slug: "aberdeen-farm" },
   { src: steelShedDramatic, alt: "Custom steel barn with dramatic sky", label: "Steel Structures", scope: "Colorbond Barn Build", slug: "caulfield" },
-  { src: timberCubbyFront, alt: "Western-style bespoke timber cubby", label: "Custom Builds", scope: "Bespoke Timber", slug: "equitana" },
-  { src: pavilionTimber, alt: "Timber and corrugated iron detail", label: "Peninsula Build", scope: "Structural Carpentry", slug: "equitana" },
   { src: garageExterior, alt: "Steel shed with polished concrete apron", label: "Mornington Peninsula", scope: "Steel Structures", slug: "caulfield" },
   { src: interiorTimberWindow, alt: "Recycled timber cladding with bush views", label: "Main Ridge Interior", scope: "Timber Fit-out", slug: "main-ridge" },
 ];
