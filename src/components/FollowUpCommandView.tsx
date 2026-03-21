@@ -20,7 +20,7 @@ import {
 import {
   CheckCircle, CalendarDays, Phone, Mail, MapPin,
 
-  MessageSquare, ExternalLink, Clock, RefreshCw, cn,
+  MessageSquare, ExternalLink, Clock, RefreshCw,
 } from "lucide-react";
 import { cn as clsx } from "@/lib/utils";
 import { TEAM_MEMBERS } from "@/components/crm/crmTypes";
