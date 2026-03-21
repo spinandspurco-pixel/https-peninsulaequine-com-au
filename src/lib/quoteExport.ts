@@ -102,7 +102,7 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
   const ml = 24;
   const mr = 24;
   const cw = pw - ml - mr;
-  const totalPages = 6;
+  const totalPages = 7;
 
   // ═══════════════════════════════════════════════════════════
   // PAGE 1 — COVER
@@ -399,6 +399,83 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
   drawPageNumber(doc, pw, ph, 3, totalPages);
 
   // ═══════════════════════════════════════════════════════════
+  // PAGE 4 — PROJECT STRUCTURE
+  // ═══════════════════════════════════════════════════════════
+  doc.addPage();
+  doc.setFillColor(WARM_WHITE);
+  doc.rect(0, 0, pw, ph, "F");
+
+  y = 38;
+
+  drawSectionLabel(doc, "03 — Project Structure", ml, y);
+  y += 10;
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(22);
+  doc.setTextColor(CHARCOAL);
+  doc.text("Project Structure", ml, y);
+  y += 6;
+
+  drawGoldRule(doc, ml, y, 36);
+  y += 14;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8.5);
+  doc.setTextColor(SLATE);
+  doc.text("Each project is staged to maintain clarity, quality, and momentum throughout the build.", ml, y);
+  y += 14;
+
+  const stages = [
+    { title: "Project Secured", desc: "Initial deposit to secure schedule and begin planning." },
+    { title: "Planning & Site Phase", desc: "Scope refinement, site preparation, and final build planning." },
+    { title: "Groundworks", desc: "Site preparation and foundational work." },
+    { title: "Structure & Systems", desc: "Core construction, materials, and installation." },
+    { title: "Completion", desc: "Final works and project handover." },
+  ];
+
+  stages.forEach((stage, i) => {
+    // Stage block
+    doc.setFillColor(FAINT);
+    doc.roundedRect(ml, y - 2, cw, 18, 1, 1, "F");
+
+    // Left accent line for active feel
+    doc.setFillColor(GOLD);
+    doc.rect(ml, y - 2, 0.6, 18, "F");
+
+    // Number
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7);
+    doc.setTextColor(GOLD_DARK);
+    doc.text(`0${i + 1}`, ml + 5, y + 5);
+
+    // Title
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(CHARCOAL);
+    doc.text(stage.title, ml + 16, y + 5);
+
+    // Description
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(SLATE);
+    doc.text(stage.desc, ml + 16, y + 12);
+
+    y += 24;
+  });
+
+  y += 8;
+
+  // Connecting note
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(7.5);
+  doc.setTextColor(SLATE);
+  const structureNote = "Payment stages are aligned to project milestones — each phase is completed and confirmed before progressing.";
+  doc.text(doc.splitTextToSize(structureNote, cw), ml, y);
+
+  drawFooterBar(doc, pw, ph, ml);
+  drawPageNumber(doc, pw, ph, 4, totalPages);
+
+  // ═══════════════════════════════════════════════════════════
   // PAGE 4 — VISUAL REFERENCE
   // ═══════════════════════════════════════════════════════════
   doc.addPage();
@@ -407,7 +484,7 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
 
   y = 38;
 
-  drawSectionLabel(doc, "03 — Visual Reference", ml, y);
+  drawSectionLabel(doc, "04 — Visual Reference", ml, y);
   y += 10;
 
   doc.setFont("helvetica", "bold");
@@ -456,7 +533,7 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
   doc.text("Images are indicative of style and intent. Final specification may vary.", ml, y);
 
   drawFooterBar(doc, pw, ph, ml);
-  drawPageNumber(doc, pw, ph, 4, totalPages);
+  drawPageNumber(doc, pw, ph, 5, totalPages);
 
   // ═══════════════════════════════════════════════════════════
   // PAGE 5 — INVESTMENT
@@ -467,7 +544,7 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
 
   y = 38;
 
-  drawSectionLabel(doc, "04 — Investment", ml, y);
+  drawSectionLabel(doc, "05 — Investment", ml, y);
   y += 10;
 
   doc.setFont("helvetica", "bold");
@@ -553,7 +630,7 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
   }
 
   drawFooterBar(doc, pw, ph, ml);
-  drawPageNumber(doc, pw, ph, 5, totalPages);
+  drawPageNumber(doc, pw, ph, 6, totalPages);
 
   // ═══════════════════════════════════════════════════════════
   // PAGE 6 — CLOSING
@@ -607,7 +684,7 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
   doc.setTextColor("#3e424d");
   doc.text("Private projects  ·  Discreet builds  ·  Designed for long-term ownership", ml, ph - 30);
 
-  drawPageNumber(doc, pw, ph, 6, totalPages);
+  drawPageNumber(doc, pw, ph, 7, totalPages);
 
   // ─── Save ──────────────────────────────────────────────────
   const filename = `${quote.quote_number || "PE-ProjectPack"}-${quote.client_name.replace(/\s+/g, "-")}.pdf`;
