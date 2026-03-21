@@ -174,11 +174,11 @@ function StructuralWireframe() {
 /* ── Dimension annotations ────────────────────────── */
 function DimensionAnnotations() {
   const annotations = [
-    { x: "17%", y: "86%", label: "12.0m", delay: 2.8 },
-    { x: "78%", y: "16%", label: "RIDGE: 8.4m", delay: 3.2 },
-    { x: "88%", y: "50%", label: "EAVE: 4.2m", delay: 3.0 },
-    { x: "8%", y: "50%", label: "SEC A-A", delay: 3.4 },
-    { x: "50%", y: "92%", label: "FLOOR: FRL 100.00", delay: 3.6 },
+    { x: "17%", y: "86%", label: "12.0m", delay: 1.6 },
+    { x: "78%", y: "16%", label: "RIDGE: 8.4m", delay: 1.9 },
+    { x: "88%", y: "50%", label: "EAVE: 4.2m", delay: 1.8 },
+    { x: "8%", y: "50%", label: "SEC A-A", delay: 2.0 },
+    { x: "50%", y: "92%", label: "FLOOR: FRL 100.00", delay: 2.1 },
   ];
 
   return (
