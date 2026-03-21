@@ -92,7 +92,7 @@ export default function GroundLock() {
 
       {/* ═══ CONSEQUENCE ══════════════════════════════════ */}
       <section className="relative overflow-hidden">
-        <div className="py-20 sm:py-28 relative">
+        <div className="py-16 sm:py-24 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
             <RevealOnScroll direction="up">
@@ -113,7 +113,7 @@ export default function GroundLock() {
       {/* ═══ 2. PROBLEM ═══════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-32 sm:py-44 bg-card relative">
+        <div className="py-28 sm:py-36 bg-card relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
             <RevealOnScroll direction="up">
@@ -150,7 +150,7 @@ export default function GroundLock() {
       {/* ═══ 3. UNIFIED SYSTEM — Layout → Cross-Section → Toggle ═ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-32 sm:py-48 relative">
+        <div className="py-28 sm:py-36 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
             {/* Shared section header */}
@@ -190,7 +190,7 @@ export default function GroundLock() {
       {/* ═══ 4. HOW IT WORKS — 3 STEPS ═══════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-32 sm:py-48 bg-card relative">
+        <div className="py-28 sm:py-36 bg-card relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-4xl mx-auto relative z-[1]">
             <div className="text-center mb-20 sm:mb-28">
@@ -231,7 +231,7 @@ export default function GroundLock() {
       {/* ═══ 5. APPLICATIONS ═══════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-28 sm:py-40 relative">
+        <div className="py-28 sm:py-36 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-3xl mx-auto relative z-[1]">
             <div className="text-center mb-16 sm:mb-24">
@@ -261,7 +261,7 @@ export default function GroundLock() {
       {/* ═══ 6. PROOF ═════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-28 sm:py-40 bg-card relative">
+        <div className="py-28 sm:py-36 bg-card relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
             <div className="text-center mb-16 sm:mb-24">
@@ -319,7 +319,7 @@ export default function GroundLock() {
       {/* ═══ FOR BUILDERS ═════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-28 sm:py-40 bg-card relative">
+        <div className="py-28 sm:py-36 bg-card relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
             <RevealOnScroll direction="up">
@@ -367,7 +367,7 @@ export default function GroundLock() {
       {/* ═══ 7. CTA ═══════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-32 sm:py-44 relative">
+        <div className="py-28 sm:py-36 relative">
           <div className="absolute inset-0 engineering-grid" />
           <div className="absolute inset-0 grain-texture" />
           <div

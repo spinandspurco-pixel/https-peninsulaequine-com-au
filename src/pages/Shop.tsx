@@ -76,7 +76,7 @@ export default function Shop() {
                 },
               ].map((card, i) => (
                 <RevealOnScroll key={card.title} direction="up" delay={i * 150}>
-                  <div className="flex flex-col bg-card p-10 md:p-12 lg:p-14 h-full transition-shadow duration-500 hover:shadow-lg hover:shadow-accent/[0.03]">
+                  <div className="flex flex-col bg-card p-8 sm:p-10 lg:p-12 h-full transition-shadow duration-500 hover:shadow-lg hover:shadow-accent/[0.03]">
                     <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent/40 mb-6">
                       0{i + 1}
                     </span>
@@ -159,7 +159,7 @@ export default function Shop() {
       {/* ─── SECTION 4 — TRUST + ACCESS CTA ─── */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-24 sm:py-32 bg-card relative">
+        <div className="py-28 sm:py-36 bg-card relative">
           <div className="absolute inset-0 grain-texture" />
 
           <div className="section-container relative z-[1]">
