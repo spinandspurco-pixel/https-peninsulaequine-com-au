@@ -102,7 +102,7 @@ function BlueprintLinework() {
           cx={p.x} cy={p.y} r="3"
           fill="none" stroke="#C6A86B" strokeWidth="0.5"
           opacity="0"
-          style={{ animation: `blueprintFade 0.6s ${3 + i * 0.15}s ease-out forwards` }}
+          style={{ animation: `blueprintFade 0.5s ${1.8 + i * 0.1}s ease-out forwards` }}
         />
       ))}
     </svg>
