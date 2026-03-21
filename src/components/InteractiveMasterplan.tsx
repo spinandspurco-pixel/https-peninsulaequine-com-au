@@ -393,7 +393,7 @@ function useIsTouchDevice() {
 
 /* ── Camera wrapper — subtle zoom toward active zone ── */
 const CAMERA_SCALE = 1.06;
-const CAMERA_EASE = "cubic-bezier(0.25, 0.1, 0.25, 1)";
+const CAMERA_EASE = "cubic-bezier(0.22, 0.61, 0.36, 1)";
 const SVG_W = 740;
 const SVG_H = 680;
 
@@ -411,7 +411,7 @@ function CameraWrapper({ activeZone, children }: { activeZone: string | null; ch
       style={{
         transform: zone ? `scale(${CAMERA_SCALE})` : "scale(1)",
         transformOrigin: `${originX}% ${originY}%`,
-        transition: `transform 500ms ${CAMERA_EASE}, transform-origin 500ms ${CAMERA_EASE}`,
+        transition: `transform 700ms ${CAMERA_EASE}, transform-origin 700ms ${CAMERA_EASE}`,
         willChange: "transform",
       }}
     >
@@ -422,7 +422,8 @@ function CameraWrapper({ activeZone, children }: { activeZone: string | null; ch
 
 /* ── Tour sequence order ── */
 const TOUR_ORDER = ["stables", "courtyard", "service-wing", "viewing-area", "indoor-arena"];
-const TOUR_HOLD = 2800;
+const TOUR_DWELL = 3200;    // time spent on each zone
+const TOUR_DISSOLVE = 600;  // fade gap between zones
 
 /* ── Main export ── */
 export function InteractiveMasterplan() {
@@ -430,37 +431,57 @@ export function InteractiveMasterplan() {
   const [activeZone, setActiveZone] = useState<string | null>(null);
   const [tourActive, setTourActive] = useState(false);
   const [tourStep, setTourStep] = useState(0);
+  const [tourTransitioning, setTourTransitioning] = useState(false);
   const tourTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const activeZoneData = zones.find((z) => z.id === activeZone) || null;
   const isTouch = useIsTouchDevice();
 
-  /* Tour logic */
+  const clearTimer = useCallback(() => {
+    if (tourTimer.current) { clearTimeout(tourTimer.current); tourTimer.current = null; }
+  }, []);
+
   const stopTour = useCallback(() => {
     setTourActive(false);
-    if (tourTimer.current) clearTimeout(tourTimer.current);
-    tourTimer.current = null;
-  }, []);
+    setTourTransitioning(false);
+    clearTimer();
+  }, [clearTimer]);
 
   const startTour = useCallback(() => {
     setTourStep(0);
     setActiveZone(TOUR_ORDER[0]);
     setTourActive(true);
+    setTourTransitioning(false);
   }, []);
 
   useEffect(() => {
     if (!tourActive) return;
+
+    // Phase 1: dwell on current zone, then start dissolve
     tourTimer.current = setTimeout(() => {
       const next = tourStep + 1;
       if (next >= TOUR_ORDER.length) {
-        stopTour();
+        // End of tour — fade out gracefully
+        setTourTransitioning(true);
         setActiveZone(null);
-      } else {
+        tourTimer.current = setTimeout(() => {
+          stopTour();
+        }, TOUR_DISSOLVE);
+        return;
+      }
+
+      // Phase 2: brief dissolve — clear zone, pause, then reveal next
+      setTourTransitioning(true);
+      setActiveZone(null);
+
+      tourTimer.current = setTimeout(() => {
         setTourStep(next);
         setActiveZone(TOUR_ORDER[next]);
-      }
-    }, TOUR_HOLD);
-    return () => { if (tourTimer.current) clearTimeout(tourTimer.current); };
-  }, [tourActive, tourStep, stopTour]);
+        setTourTransitioning(false);
+      }, TOUR_DISSOLVE);
+    }, TOUR_DWELL);
+
+    return clearTimer;
+  }, [tourActive, tourStep, stopTour, clearTimer]);
 
   const handleHover = useCallback((id: string) => {
     if (tourActive) return;
@@ -478,11 +499,15 @@ export function InteractiveMasterplan() {
   }, [tourActive, stopTour]);
 
   const jumpToStep = useCallback((idx: number) => {
-    setTourStep(idx);
-    setActiveZone(TOUR_ORDER[idx]);
-    // Reset timer
-    if (tourTimer.current) clearTimeout(tourTimer.current);
-  }, []);
+    clearTimer();
+    setTourTransitioning(true);
+    setActiveZone(null);
+    tourTimer.current = setTimeout(() => {
+      setTourStep(idx);
+      setActiveZone(TOUR_ORDER[idx]);
+      setTourTransitioning(false);
+    }, TOUR_DISSOLVE / 2);
+  }, [clearTimer]);
 
   return (
     <section className="relative py-28 sm:py-36 lg:py-44 overflow-hidden">
