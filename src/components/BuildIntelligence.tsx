@@ -97,8 +97,14 @@ export function BuildIntelligence() {
               </p>
               <div className="w-8 h-px bg-accent/25" />
             </div>
-            <p className="font-serif text-lg sm:text-xl lg:text-2xl italic text-muted-foreground/35 max-w-lg mx-auto leading-relaxed">
-              "Every build is engineered before it is seen."
+            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/90 tracking-[0.03em] mb-4">
+              What You Don't See Matters Most
+            </h2>
+            <p className="font-serif text-sm sm:text-base italic text-muted-foreground/35 max-w-lg mx-auto leading-relaxed mb-2">
+              Every build is engineered before it is seen.
+            </p>
+            <p className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.25em] text-accent/25">
+              Structure first. Finish second. Longevity always.
             </p>
           </div>
         </RevealOnScroll>

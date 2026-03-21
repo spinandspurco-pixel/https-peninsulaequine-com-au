@@ -193,10 +193,10 @@ export function InteractiveMasterplan() {
               <div className="w-8 h-px bg-accent/25" />
             </div>
             <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/90 tracking-[0.03em] leading-tight">
-              Main Ridge Estate
+              The Layout Defines Everything
             </h2>
-            <p className="mt-4 text-sm text-muted-foreground/35 font-serif italic max-w-md mx-auto">
-              Five integrated zones, one seamless property
+            <p className="mt-4 text-sm text-muted-foreground/35 font-serif italic max-w-lg mx-auto leading-relaxed">
+              Every movement — horse, rider, vehicle — is considered before a single post goes in the ground.
             </p>
           </div>
         </RevealOnScroll>

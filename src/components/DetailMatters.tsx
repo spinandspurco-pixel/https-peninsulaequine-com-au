@@ -11,22 +11,22 @@ const details = [
   {
     image: detailFlooring,
     title: "Stable Flooring",
-    insight: "Designed with fall for drainage and hoof health.",
+    insight: "Designed with fall — for drainage, hygiene, and hoof longevity.",
   },
   {
     image: detailTransition,
     title: "Material Transitions",
-    insight: "Where durability meets finish.",
+    insight: "Where durability meets finish — without compromise.",
   },
   {
     image: detailHardware,
-    title: "Hardware Selection",
-    insight: "Every latch, hinge and bolt chosen for purpose.",
+    title: "Hardware & Fixings",
+    insight: "Every junction is considered. Nothing is accidental.",
   },
   {
     image: detailRidge,
-    title: "Ridge & Roofline",
-    insight: "Engineered to perform. Designed to endure.",
+    title: "Roof & Ridge Lines",
+    insight: "Built to manage load, weather, and time.",
   },
 ];
 

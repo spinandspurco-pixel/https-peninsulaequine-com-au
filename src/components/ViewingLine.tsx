@@ -118,6 +118,16 @@ export function ViewingLine() {
                 Start Your Project <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
+            {/* Quiet closer */}
+            <p
+              className="mt-6 text-[10px] sm:text-[11px] font-serif italic text-muted-foreground/20"
+              style={{
+                opacity: visible ? 1 : 0,
+                transition: `opacity ${DURATION.slow}ms ${EASE.default} 1200ms`,
+              }}
+            >
+              We design for people who expect it to last.
+            </p>
           </div>
         </div>
       </div>

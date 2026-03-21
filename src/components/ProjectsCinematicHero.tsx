@@ -228,13 +228,35 @@ export function ProjectsCinematicHero() {
 
             {/* Subtext */}
             <p
-              className="text-sm sm:text-base font-serif italic leading-relaxed mb-10 opacity-0"
+              className="text-sm sm:text-base font-serif italic leading-relaxed mb-3 opacity-0"
               style={{
                 color: "rgba(198,168,107,0.45)",
                 animation: "blueprintFade 1s 3s ease-out forwards",
               }}
             >
-              Designed for performance, built for longevity
+              A private equine facility engineered for performance, flow, and long-term durability.
+            </p>
+
+            {/* Micro line */}
+            <p
+              className="text-[11px] sm:text-xs font-mono uppercase tracking-[0.2em] mb-10 opacity-0"
+              style={{
+                color: "rgba(198,168,107,0.3)",
+                animation: "blueprintFade 0.8s 3.3s ease-out forwards",
+              }}
+            >
+              Designed from the ground up. Built to hold up.
+            </p>
+
+            {/* Trust signal */}
+            <p
+              className="text-[10px] sm:text-[11px] font-serif italic mb-10 opacity-0"
+              style={{
+                color: "rgba(198,168,107,0.2)",
+                animation: "blueprintFade 0.8s 3.6s ease-out forwards",
+              }}
+            >
+              Private projects. Discreet builds. Built for long-term ownership.
             </p>
 
             {/* CTA */}
