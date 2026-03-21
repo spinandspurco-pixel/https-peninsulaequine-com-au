@@ -250,7 +250,7 @@ export default function Index() {
 
         {/* Bottom bleed — dissolves hero into next section */}
         <div
-          className="absolute bottom-0 left-0 right-0 h-32 sm:h-40 pointer-events-none z-20"
+          className="absolute bottom-0 left-0 right-0 h-40 sm:h-52 pointer-events-none z-20"
           style={{
             background: "linear-gradient(to bottom, transparent 0%, hsl(var(--card)) 100%)",
           }}
