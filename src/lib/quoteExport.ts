@@ -630,7 +630,7 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
   }
 
   drawFooterBar(doc, pw, ph, ml);
-  drawPageNumber(doc, pw, ph, 5, totalPages);
+  drawPageNumber(doc, pw, ph, 6, totalPages);
 
   // ═══════════════════════════════════════════════════════════
   // PAGE 6 — CLOSING
