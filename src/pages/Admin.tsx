@@ -8,6 +8,7 @@ import { QuotesDashboard } from "@/components/QuotesDashboard";
 import { QuoteBuilder } from "@/components/QuoteBuilder";
 import { ProjectProfitTracker } from "@/components/ProjectProfitTracker";
 import { AdminStaffOnboarding } from "@/components/AdminStaffOnboarding";
+import { CRMPipeline } from "@/components/crm/CRMPipeline";
 import { SharedCalendarView } from "@/components/SharedCalendarView";
 import { AdminTrainerPanel } from "@/components/AdminTrainerPanel";
 import { TestEmailPanel } from "@/components/TestEmailPanel";
