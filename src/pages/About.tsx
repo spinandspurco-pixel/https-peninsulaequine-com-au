@@ -120,14 +120,7 @@ export default function About() {
             <RevealOnScroll direction="up" delay={200}>
               <div className="space-y-6 text-sm text-muted-foreground/50 leading-[2]">
                 <p>
-                  We don't separate design from construction.
-                  Every decision — from ground preparation to final finish —
-                  is considered as part of a complete system,
-                  designed to reduce maintenance over time.
-                </p>
-                <p className="text-muted-foreground/30 italic text-[13px]">
-                  Because when it's done properly,
-                  everything works together.
+                  Design and construction as one system. Every decision considered as a whole — built to reduce maintenance over time.
                 </p>
               </div>
             </RevealOnScroll>
