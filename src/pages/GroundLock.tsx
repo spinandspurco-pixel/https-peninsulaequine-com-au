@@ -210,9 +210,9 @@ export default function GroundLock() {
               <div className="space-y-14">
                 <PanelSpecimen />
                 <div className="w-10 h-px bg-accent/8 mx-auto" />
-                <PanelArray />
+                <LockSequence />
                 <div className="w-10 h-px bg-accent/8 mx-auto" />
-                <PanelSiteLayout />
+                <SystemDiagram />
               </div>
             </RevealOnScroll>
           </div>
