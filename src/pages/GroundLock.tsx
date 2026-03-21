@@ -206,7 +206,7 @@ export default function GroundLock() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={160}>
                 <p className="text-[13px] text-muted-foreground/32 leading-[1.7] max-w-md mx-auto">
-                  Each panel interlocks in opposing orientation — crown into opening, tab into slot. The result is a unified field that resists movement in every direction.
+                  Crown into opening. Tab into slot. A unified field that resists movement in every direction.
                 </p>
               </RevealOnScroll>
             </div>
