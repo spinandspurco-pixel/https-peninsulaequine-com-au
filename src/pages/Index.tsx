@@ -87,7 +87,7 @@ function ProjectsScroll() {
             <img
               src={project.src}
               alt={project.alt}
-              className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.8] group-hover:brightness-[0.88] transition-[filter] duration-700"
+              className="absolute inset-0 w-full h-full object-cover img-immersive img-portfolio"
               loading="lazy"
               decoding="async"
             />
