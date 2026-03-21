@@ -92,7 +92,7 @@ export default function GroundLock() {
 
       {/* ═══ CONSEQUENCE ══════════════════════════════════ */}
       <section className="relative overflow-hidden">
-        <div className="py-20 sm:py-28 relative">
+        <div className="py-16 sm:py-24 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
             <RevealOnScroll direction="up">
