@@ -130,8 +130,8 @@ function StructuralWireframe() {
           stroke="hsl(var(--accent))"
           strokeWidth="0.6"
           opacity="0.12"
-          className="animate-[drawLine_0.8s_ease-out_forwards]"
-          style={{ animationDelay: `${2.2 + i * 0.15}s` }}
+          className="animate-[drawLine_0.6s_ease-out_forwards]"
+          style={{ animationDelay: `${1.3 + i * 0.1}s` }}
         />
       ))}
       {/* Cross bracing */}
