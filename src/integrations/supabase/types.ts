@@ -546,6 +546,60 @@ export type Database = {
         }
         Relationships: []
       }
+      groundlock_project_setups: {
+        Row: {
+          attachment_urls: string[] | null
+          created_at: string
+          estimated_area: string | null
+          ground_conditions: string
+          id: string
+          notes: string | null
+          primary_use: string
+          project_location: string
+          review_notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          traffic_level: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attachment_urls?: string[] | null
+          created_at?: string
+          estimated_area?: string | null
+          ground_conditions: string
+          id?: string
+          notes?: string | null
+          primary_use?: string
+          project_location: string
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          traffic_level?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attachment_urls?: string[] | null
+          created_at?: string
+          estimated_area?: string | null
+          ground_conditions?: string
+          id?: string
+          notes?: string | null
+          primary_use?: string
+          project_location?: string
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          traffic_level?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       inquiries: {
         Row: {
           attachment_urls: string[] | null
