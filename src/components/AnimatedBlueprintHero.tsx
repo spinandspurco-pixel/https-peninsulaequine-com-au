@@ -142,7 +142,7 @@ function StructuralWireframe() {
         stroke="hsl(var(--accent))"
         strokeWidth="0.6"
         opacity="0.1"
-        className="animate-[drawLine_1.2s_2.5s_ease-out_forwards]"
+        className="animate-[drawLine_0.9s_1.5s_ease-out_forwards]"
       />
       {/* Truss details */}
       {[300, 450, 750, 900].map((x, i) => (
