@@ -150,7 +150,7 @@ export default function Shop() {
                 </div>
                 <h3 className="font-serif text-lg">{addon.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{addon.description}</p>
-                <p className="font-semibold text-accent">${addon.price.toLocaleString("en-AU")} AUD</p>
+                <p className="text-sm text-muted-foreground/60 italic">Available on request</p>
               </div>
             ))}
           </div>
