@@ -127,12 +127,13 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ 3. SYSTEM — LAYOUT + CROSS-SECTION + TOGGLE ═ */}
+      {/* ═══ 3. UNIFIED SYSTEM — Layout → Cross-Section → Toggle ═ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-32 sm:py-48 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
+            {/* Shared section header */}
             <div className="text-center mb-20 sm:mb-28">
               <RevealOnScroll direction="up">
                 <RevealLine className="mx-auto mb-12" width="w-10" />
@@ -151,15 +152,20 @@ export default function GroundLock() {
                 </p>
               </RevealOnScroll>
             </div>
+
+            {/* Layout → Cross-Section in continuous flow */}
+            <div className="space-y-24 sm:space-y-32">
+              <RevealOnScroll direction="up" delay={200}>
+                <GroundLockSystemLayout />
+              </RevealOnScroll>
+
+              <RevealOnScroll direction="up" delay={100}>
+                <GroundLockCrossSection />
+              </RevealOnScroll>
+            </div>
           </div>
         </div>
       </section>
-
-      {/* Top-down layout */}
-      <GroundLockSystemLayout />
-
-      {/* Cross-section with System/Real World toggle */}
-      <GroundLockCrossSection />
 
       {/* ═══ 4. HOW IT WORKS — 3 STEPS ═══════════════════ */}
       <section className="relative overflow-hidden">
