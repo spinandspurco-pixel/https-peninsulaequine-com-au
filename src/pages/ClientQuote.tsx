@@ -163,34 +163,46 @@ export default function ClientQuote() {
     <div className="min-h-screen" style={{ background: "#F6F3EE", color: "#2B2B2B" }}>
       <div className="max-w-[1140px] mx-auto px-6 sm:px-10 lg:px-16">
 
-        <ProposalHeader quote={quote} accepted={accepted} isExpired={!!isExpired} />
+        <div className="animate-fade-in" style={{ animationDuration: "250ms" }}>
+          <ProposalHeader quote={quote} accepted={accepted} isExpired={!!isExpired} />
+        </div>
 
-        <ProposalOverview overview={quote.project_overview} />
+        <div className="animate-fade-in" style={{ animationDuration: "350ms", animationDelay: "80ms", animationFillMode: "both" }}>
+          <ProposalOverview overview={quote.project_overview} />
+        </div>
 
-        <ProposalScope groupedItems={groupedItems} scopeSummary={quote.scope_summary} />
+        <div className="animate-fade-in" style={{ animationDuration: "350ms", animationDelay: "140ms", animationFillMode: "both" }}>
+          <ProposalScope groupedItems={groupedItems} scopeSummary={quote.scope_summary} />
+        </div>
 
-        <ProposalGroundLock
-          included={quote.groundlock_included}
-          groundlockOn={groundlockOn}
-          onToggle={setGroundlockOn}
-        />
+        <div className="animate-fade-in" style={{ animationDuration: "400ms", animationDelay: "180ms", animationFillMode: "both" }}>
+          <ProposalGroundLock
+            included={quote.groundlock_included}
+            groundlockOn={groundlockOn}
+            onToggle={setGroundlockOn}
+          />
+        </div>
 
-        <ProposalInvestment
-          quote={quote}
-          lineItems={lineItems}
-          groundlockOn={groundlockOn}
-          exclusions={quote.exclusions}
-        />
+        <div className="animate-fade-in" style={{ animationDuration: "350ms", animationDelay: "220ms", animationFillMode: "both" }}>
+          <ProposalInvestment
+            quote={quote}
+            lineItems={lineItems}
+            groundlockOn={groundlockOn}
+            exclusions={quote.exclusions}
+          />
+        </div>
 
-        <ProposalDecision
-          quote={quote}
-          accepted={accepted}
-          isExpired={!!isExpired}
-          onAccept={handleAccept}
-        />
+        <div className="animate-fade-in" style={{ animationDuration: "350ms", animationDelay: "260ms", animationFillMode: "both" }}>
+          <ProposalDecision
+            quote={quote}
+            accepted={accepted}
+            isExpired={!!isExpired}
+            onAccept={handleAccept}
+          />
+        </div>
 
         {/* Footer */}
-        <footer className="py-12 mt-8 border-t" style={{ borderColor: "rgba(43,43,43,0.06)" }}>
+        <footer className="py-14 mt-10 border-t" style={{ borderColor: "rgba(43,43,43,0.06)" }}>
           <div className="flex items-center justify-between">
             <p className="text-[10px] font-sans tracking-[0.15em] uppercase" style={{ color: "rgba(43,43,43,0.25)" }}>
               Peninsula Equine · Mornington Peninsula, VIC
