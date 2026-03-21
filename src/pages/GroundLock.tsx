@@ -159,17 +159,19 @@ export default function GroundLock() {
           <div className="section-container relative z-[1]">
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-4">
               {SPECS.map((spec, i) => (
-                <div key={spec.label} className="text-center lg:text-left">
-                  <div className="flex items-center justify-center lg:justify-start gap-2.5 mb-2">
-                    <spec.icon className="w-3.5 h-3.5 text-accent/40" strokeWidth={1.5} />
-                    <p className="text-[11px] font-mono uppercase tracking-[0.15em] text-foreground/50">
-                      {spec.label}
+                <RevealOnScroll key={spec.label} direction="up" delay={i * 100}>
+                  <div className="text-center lg:text-left">
+                    <div className="flex items-center justify-center lg:justify-start gap-2.5 mb-2">
+                      <spec.icon className="w-3.5 h-3.5 text-accent/40" strokeWidth={1.5} />
+                      <p className="text-[11px] font-mono uppercase tracking-[0.15em] text-foreground/50">
+                        {spec.label}
+                      </p>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground/30 leading-[1.7]">
+                      {spec.detail}
                     </p>
                   </div>
-                  <p className="text-[11px] text-muted-foreground/30 leading-[1.7]">
-                    {spec.detail}
-                  </p>
-                </div>
+                </RevealOnScroll>
               ))}
             </div>
           </div>
