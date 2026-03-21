@@ -127,12 +127,12 @@ export default function ProductDetail() {
         </div>
       </section>
 
-      {/* Add-Ons */}
+      {/* System Extensions */}
       {addOns.length > 0 && (
         <section className="py-20 bg-card border-b border-border">
           <div className="section-container max-w-4xl mx-auto">
-            <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60 mb-3">Optional</p>
-            <h2 className="font-serif text-2xl md:text-3xl mb-10">System Add-Ons</h2>
+            <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60 mb-3">Extended Integration</p>
+            <h2 className="font-serif text-2xl md:text-3xl mb-10">System Extensions</h2>
             <div className="grid sm:grid-cols-3 gap-6">
               {addOns.map((addon) => (
                 <div key={addon.handle} className="border border-border rounded-sm p-6 space-y-3 hover:border-accent/30 transition-colors">
