@@ -411,7 +411,7 @@ function CameraWrapper({ activeZone, children }: { activeZone: string | null; ch
       style={{
         transform: zone ? `scale(${CAMERA_SCALE})` : "scale(1)",
         transformOrigin: `${originX}% ${originY}%`,
-        transition: `transform 500ms ${CAMERA_EASE}, transform-origin 500ms ${CAMERA_EASE}`,
+        transition: `transform 700ms ${CAMERA_EASE}, transform-origin 700ms ${CAMERA_EASE}`,
         willChange: "transform",
       }}
     >
