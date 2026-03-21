@@ -158,6 +158,20 @@ function SitePlan({
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
+        <filter id="mp-zone-active" x="-10%" y="-10%" width="125%" height="130%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="shadow-blur" />
+          <feFlood floodColor="hsl(0 0% 0%)" floodOpacity="0.25" result="shadow-color" />
+          <feComposite in="shadow-color" in2="shadow-blur" operator="in" result="shadow" />
+          <feOffset in="shadow" dx="1.5" dy="2.5" result="shadow-offset" />
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="glow-blur" />
+          <feFlood floodColor="hsl(var(--accent))" floodOpacity="0.12" result="glow-color" />
+          <feComposite in="glow-color" in2="glow-blur" operator="in" result="glow" />
+          <feMerge>
+            <feMergeNode in="shadow-offset" />
+            <feMergeNode in="glow" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
         {/* Architectural drop shadow — light from top-left */}
         <filter id="mp-shadow-lg" x="-5%" y="-5%" width="115%" height="120%">
           <feDropShadow dx="2.5" dy="3.5" stdDeviation="4" floodColor="hsl(0 0% 0%)" floodOpacity="0.18" />
