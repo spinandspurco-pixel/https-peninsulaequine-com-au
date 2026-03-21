@@ -32,8 +32,8 @@ export default function ProductDetail() {
   }
 
   const addOns = getAddOnsByTier(product.tier);
-  const isPro = product.tier === "pro";
-  const isComplete = product.tier === "complete";
+  const isPerformance = product.tier === "performance";
+  const isEstate = product.tier === "estate";
 
   return (
     <Layout>
