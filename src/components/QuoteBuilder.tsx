@@ -31,6 +31,9 @@ interface Quote {
   client_email: string;
   project_type: string;
   location: string;
+  property_name: string;
+  project_overview: string;
+  groundlock_included: boolean;
   scope_summary: string;
   exclusions: string;
   internal_notes: string;
@@ -39,6 +42,7 @@ interface Quote {
   total: number;
   status: string;
   expiry_date: string;
+  share_token?: string;
 }
 
 interface Template {
