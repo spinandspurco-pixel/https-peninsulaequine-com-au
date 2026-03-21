@@ -347,44 +347,59 @@ export type Database = {
       }
       client_followups: {
         Row: {
+          assigned_to: string | null
           client_email: string
           client_name: string
           completed_at: string | null
           created_at: string
+          deal_stage: string | null
+          deal_value: number | null
           due_date: string
           followup_type: string
           id: string
           inquiry_id: string | null
           job_id: string | null
           notes: string | null
+          project_name: string | null
+          quote_status: string | null
           status: string
           updated_at: string
         }
         Insert: {
+          assigned_to?: string | null
           client_email: string
           client_name: string
           completed_at?: string | null
           created_at?: string
+          deal_stage?: string | null
+          deal_value?: number | null
           due_date: string
           followup_type?: string
           id?: string
           inquiry_id?: string | null
           job_id?: string | null
           notes?: string | null
+          project_name?: string | null
+          quote_status?: string | null
           status?: string
           updated_at?: string
         }
         Update: {
+          assigned_to?: string | null
           client_email?: string
           client_name?: string
           completed_at?: string | null
           created_at?: string
+          deal_stage?: string | null
+          deal_value?: number | null
           due_date?: string
           followup_type?: string
           id?: string
           inquiry_id?: string | null
           job_id?: string | null
           notes?: string | null
+          project_name?: string | null
+          quote_status?: string | null
           status?: string
           updated_at?: string
         }
