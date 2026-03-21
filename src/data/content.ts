@@ -73,8 +73,8 @@ export const services = [
   {
     id: "infrastructure",
     title: "Site Infrastructure",
-    shortDescription: "Complete property development from grading to utilities.",
-    description: "Transform raw land into a fully functional equine property. We handle everything from initial grading to final landscaping.",
+    shortDescription: "Grading, drainage, access, and utility infrastructure.",
+    description: "Raw land to fully functional equine property.",
     features: [
       "Land clearing and grading",
       "Drainage solutions",
