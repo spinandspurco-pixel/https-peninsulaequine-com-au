@@ -121,10 +121,13 @@ export function GroundLockCrossSection() {
           </p>
           <div className="w-6 h-px bg-accent/20" />
         </div>
+        <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/30 italic max-w-md mx-auto leading-relaxed">
+          Built and installed in real projects
+        </p>
       </div>
 
       {/* View toggle */}
-      <div className="flex items-center justify-center gap-1 sm:gap-2 mb-10">
+      <div className="flex items-center justify-center gap-1 sm:gap-2 mb-3">
         {([
           { key: "system" as ViewMode, label: "System View" },
           { key: "realworld" as ViewMode, label: "Real World" },
@@ -153,6 +156,9 @@ export function GroundLockCrossSection() {
           );
         })}
       </div>
+      <p className="text-[10px] text-muted-foreground/25 font-mono text-center mb-10 tracking-wide">
+        Used under arenas, access routes, and high-traffic zones where failure isn't an option.
+      </p>
 
       <div className="relative" style={{ aspectRatio: "700 / 420" }}>
         {/* System View */}
