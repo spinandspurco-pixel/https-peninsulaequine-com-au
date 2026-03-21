@@ -304,7 +304,7 @@ export default function Forge() {
                 </Button>
                 <Button asChild variant="outline-light" size="lg">
                   <Link to="/contact">
-                    Enquire About Forge
+                    Enquire About Systems
                   </Link>
                 </Button>
               </div>

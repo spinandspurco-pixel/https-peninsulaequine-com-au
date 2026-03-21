@@ -33,9 +33,9 @@ const DIVISIONS = [
   },
   {
     num: "03",
-    title: "Equus Forge",
-    role: "Product Division",
-    body: "Hardware, estate elements, and GroundLock configurations — fabricated to Peninsula Equine tolerances, available as standalone products.",
+    title: "GroundLock Systems",
+    role: "Systems Division",
+    body: "Ground stabilisation systems, hardware, and GroundLock configurations — fabricated to Peninsula Equine tolerances, available as standalone products.",
     cta: "Explore Forge",
     href: "/forge",
   },
