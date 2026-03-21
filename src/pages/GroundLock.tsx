@@ -222,7 +222,7 @@ export default function GroundLock() {
             {/* Authority statement */}
             <RevealOnScroll direction="none" delay={200}>
               <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/25 italic leading-[1.9] text-center mt-14 sm:mt-20 max-w-sm mx-auto">
-                Designed to interlock in opposing rhythm — stronger by geometry, not by mass.
+                Stronger by geometry, not by mass.
               </p>
             </RevealOnScroll>
           </div>
