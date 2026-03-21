@@ -14,6 +14,8 @@ import { WalkTheProject } from "@/components/WalkTheProject";
 import { BuildIntelligence } from "@/components/BuildIntelligence";
 import { DetailMatters } from "@/components/DetailMatters";
 import { ViewingLine } from "@/components/ViewingLine";
+import { ProjectQualification, type ProjectType } from "@/components/ProjectQualification";
+import { GuidedEnquiryFlow } from "@/components/GuidedEnquiryFlow";
 
 // ── 2. FEATURE PROJECT (Private Client) ──
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
@@ -167,6 +169,7 @@ export default function Gallery() {
   const searchInputRef = useRef<HTMLInputElement>();
   const [selectMode, setSelectMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [enquiryType, setEnquiryType] = useState<ProjectType | null>(null);
 
   const parallax = useParallax<HTMLDivElement>({ speed: 0.25 });
 
@@ -468,7 +471,14 @@ export default function Gallery() {
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
-          10. THE VIEWING LINE — cinematic closer / sole CTA
+          10. PROJECT QUALIFICATION — guided intake selector
+          ═══════════════════════════════════════════════════ */}
+      <ProjectQualification onSelect={(type) => setEnquiryType(type)} />
+
+      <ChapterDivider />
+
+      {/* ═══════════════════════════════════════════════════
+          11. THE VIEWING LINE — cinematic closer / sole CTA
           ═══════════════════════════════════════════════════ */}
       <ViewingLine />
 
@@ -485,6 +495,14 @@ export default function Gallery() {
         allItems={allNavigableItems}
         onNavigateTo={(index) => setLightboxItem(allNavigableItems[index])}
       />
+
+      {/* Guided Enquiry Overlay */}
+      {enquiryType && (
+        <GuidedEnquiryFlow
+          projectType={enquiryType}
+          onClose={() => setEnquiryType(null)}
+        />
+      )}
     </Layout>
   );
 }
