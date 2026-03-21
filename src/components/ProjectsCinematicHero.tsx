@@ -51,7 +51,7 @@ function BlueprintLinework() {
       />
       <line
         x1="1600" y1="0" x2="1200" y2="300"
-        stroke="#C6A86B" strokeWidth="0.4" opacity="0"
+        stroke="#C6A86B" strokeWidth="0.5" opacity="0"
         strokeDasharray="500" strokeDashoffset="500"
         style={{ animation: "blueprintDraw 1.8s 1.3s ease-out forwards" }}
       />
