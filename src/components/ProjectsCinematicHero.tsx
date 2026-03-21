@@ -207,7 +207,7 @@ export function ProjectsCinematicHero() {
             {/* Label */}
             <div
               className="flex items-center gap-4 mb-8 opacity-0"
-              style={{ animation: "blueprintFade 0.8s 2.4s ease-out forwards" }}
+              style={{ animation: "blueprintFade 0.6s 1.4s ease-out forwards" }}
             >
               <div className="w-8 h-px" style={{ backgroundColor: "#C6A86B", opacity: 0.5 }} />
               <p
