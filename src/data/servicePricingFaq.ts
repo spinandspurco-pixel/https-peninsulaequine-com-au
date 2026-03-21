@@ -31,8 +31,8 @@ export const servicePricingTiers: Record<string, PricingTier[]> = {
   ],
   "infrastructure": [
     { name: "Essentials", price: "$35,000+", description: "Basic site preparation", features: ["Land clearing & levelling", "Access road (up to 100m)", "Basic ag-pipe drainage"] },
-    { name: "Full Site", price: "$100,000+", description: "Complete site infrastructure", features: ["Cut-and-fill grading & contouring", "Engineered drainage network", "Water supply & trough lines", "Electrical conduit runs", "Gravel/compacted access roads"], popular: true },
-    { name: "Turnkey", price: "$220,000+", description: "End-to-end property setup", features: ["All Full Site features", "Bore/well installation", "Landscaping & revegetation", "Site-wide LED lighting", "Waste management systems", "Full council & engineering management"] },
+    { name: "Full Site", price: "$100,000+", description: "Complete site infrastructure", features: ["Cut-and-fill grading & contouring", "Ground stabilisation system for high-traffic zones", "Water supply & trough lines", "Electrical conduit runs", "Gravel/compacted access roads"], popular: true },
+    { name: "Turnkey", price: "$220,000+", description: "End-to-end property setup", features: ["All Full Site features", "Full GroundLock\u2122 system across all zones", "Bore/well installation", "Landscaping & revegetation", "Site-wide LED lighting", "Waste management systems", "Full council & engineering management"] },
   ],
   "round-pens": [
     { name: "Portable", price: "$12,000+", description: "Portable panel round pen", features: ["15m diameter", "Heavy-duty steel panel construction", "Single gate", "Portable / relocatable"] },
