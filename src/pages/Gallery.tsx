@@ -207,6 +207,11 @@ export default function Gallery() {
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
+          1b. INTERACTIVE MASTERPLAN
+          ═══════════════════════════════════════════════════ */}
+      <InteractiveMasterplan />
+
+      {/* ═══════════════════════════════════════════════════
           2. FEATURE PROJECT — Private Client — Mornington Peninsula
           ═══════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
