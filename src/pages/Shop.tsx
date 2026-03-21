@@ -120,11 +120,11 @@ export default function Shop() {
                   <div className="p-6 md:p-8 pt-0 space-y-3">
                     <Button asChild className={`w-full uppercase tracking-[0.12em] text-xs ${isPro ? "bg-accent hover:bg-accent/90 text-accent-foreground" : ""}`} size="lg">
                       <Link to={`/shop/${product.handle}`}>
-                        View System <ArrowRight className="ml-2 h-4 w-4" />
+                        View Specification <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
                     <Button asChild variant="ghost" className="w-full text-xs text-muted-foreground hover:text-accent" size="sm">
-                      <Link to="/site-assessment">Get Build Ready</Link>
+                      <Link to="/site-assessment">Request Site Assessment</Link>
                     </Button>
                   </div>
                 </div>
