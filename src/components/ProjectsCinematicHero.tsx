@@ -78,7 +78,7 @@ function BlueprintLinework() {
         x1="200" y1="640" x2="1400" y2="640"
         stroke="#C6A86B" strokeWidth="0.3" opacity="0"
         strokeDasharray="6 8" strokeDashoffset="1200"
-        style={{ animation: "blueprintDraw 2s 2.5s ease-out forwards" }}
+        style={{ animation: "blueprintDraw 1.5s 1.4s ease-out forwards" }}
       />
 
       {/* Corner registration marks */}
