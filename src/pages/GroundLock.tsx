@@ -289,7 +289,7 @@ export default function GroundLock() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={160}>
                 <p className="font-serif text-[13px] text-muted-foreground/28 italic max-w-sm mx-auto leading-[1.7]">
-                  Tap each feature to see how the horseshoe form creates structural advantage.
+                  Tap each feature to explore the system logic.
                 </p>
               </RevealOnScroll>
             </div>
