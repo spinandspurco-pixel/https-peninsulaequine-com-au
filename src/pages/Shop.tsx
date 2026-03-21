@@ -36,8 +36,13 @@ export default function Shop() {
             className="text-sm text-muted-foreground/40 max-w-md mx-auto opacity-0 animate-fade-in leading-[1.9]"
             style={{ animationDelay: "1000ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
-            We don't sell products.<br />
-            We provide access to systems and components used across our builds.
+            What sits underneath determines how everything performs.
+          </p>
+          <p
+            className="text-[13px] text-muted-foreground/30 max-w-md mx-auto opacity-0 animate-fade-in leading-[1.9]"
+            style={{ animationDelay: "1300ms", animationFillMode: "both", animationDuration: "1000ms" }}
+          >
+            We provide access to the systems and components used across our builds.
           </p>
         </div>
       </section>
@@ -53,20 +58,20 @@ export default function Shop() {
               {[
                 {
                   title: "GroundLock System",
-                  description: "The foundation system used under all Peninsula Equine builds.",
-                  cta: "Request Assessment",
+                  description: "The foundation system used under every Peninsula Equine build.",
+                  cta: "Assess My Site",
                   href: "/site-assessment",
                 },
                 {
                   title: "Ground Systems & Access",
-                  description: "Driveways, float access, and stabilisation designed for long-term use.",
+                  description: "Designed to handle movement, load, and long-term use without failure.",
                   cta: "Discuss Project",
                   href: "/contact",
                 },
                 {
                   title: "Select Components",
-                  description: "Limited components available for approved projects and builds.",
-                  cta: "View Options",
+                  description: "Available only where they support a complete, properly structured build.",
+                  cta: "View Specifications",
                   href: "/groundlock-systems",
                 },
               ].map((card, i) => (
@@ -95,6 +100,18 @@ export default function Shop() {
                 </RevealOnScroll>
               ))}
             </div>
+
+            {/* Access filter line */}
+            <RevealOnScroll direction="up" delay={500}>
+              <div className="text-center max-w-md mx-auto mt-16 space-y-1">
+                <p className="text-[13px] text-muted-foreground/30 leading-[1.9]">
+                  Access to systems is provided per project.
+                </p>
+                <p className="text-[13px] text-muted-foreground/25 leading-[1.9]">
+                  We assess each site to ensure it's implemented properly.
+                </p>
+              </div>
+            </RevealOnScroll>
           </div>
         </div>
       </section>
@@ -117,11 +134,11 @@ export default function Shop() {
                 </h2>
 
                 <p className="text-sm text-muted-foreground/40 leading-[1.9]">
-                  GroundLock is available for select builders and projects.
+                  GroundLock is used across our builds and available to select partners.
                 </p>
 
                 <p className="text-[13px] text-muted-foreground/30 leading-[1.9] max-w-sm">
-                  We provide system supply, guidance, and structured implementation for approved partners.
+                  We provide system supply, guidance, and structured implementation to ensure it's done properly.
                 </p>
 
                 <div className="w-10 h-px bg-border/20 my-2" />
@@ -184,7 +201,14 @@ export default function Shop() {
                 </Button>
 
                 <p className="text-[10px] font-mono uppercase tracking-[0.12em] text-muted-foreground/20">
-                  No obligation. No pricing until specification is confirmed.
+                  No obligation · No pricing until specification is confirmed
+                </p>
+
+                <div className="w-12 h-px bg-border/10 mt-8" />
+
+                <p className="text-[13px] text-muted-foreground/25 leading-[1.9] max-w-sm italic font-serif mt-4">
+                  Everything we build is structured from the ground up.<br />
+                  If it's not done properly underneath, nothing on top lasts.
                 </p>
               </div>
             </RevealOnScroll>
