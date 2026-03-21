@@ -49,9 +49,9 @@ export default function Shop() {
         <div className="section-container">
           <div className="text-center max-w-xl mx-auto mb-14 space-y-3">
             <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60">GroundLock™ Systems</p>
-            <h2 className="font-serif text-2xl md:text-3xl">Choose Your Configuration</h2>
+            <h2 className="font-serif text-2xl md:text-3xl">System Integration Levels</h2>
             <p className="text-muted-foreground text-sm max-w-md mx-auto">
-              Three tiers. One engineered standard. Select the system that matches your arena and your goals.
+              Every Peninsula Equine build includes engineered ground stabilisation. The level of integration is matched to your project.
             </p>
           </div>
 
@@ -93,7 +93,7 @@ export default function Shop() {
 
                     <div className="pt-2">
                       <p className="text-sm text-muted-foreground italic">
-                        Project-based pricing
+                        Specified per project
                       </p>
                     </div>
 
@@ -120,11 +120,11 @@ export default function Shop() {
                   <div className="p-6 md:p-8 pt-0 space-y-3">
                     <Button asChild className={`w-full uppercase tracking-[0.12em] text-xs ${isPro ? "bg-accent hover:bg-accent/90 text-accent-foreground" : ""}`} size="lg">
                       <Link to={`/shop/${product.handle}`}>
-                        View System <ArrowRight className="ml-2 h-4 w-4" />
+                        View Specification <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
                     <Button asChild variant="ghost" className="w-full text-xs text-muted-foreground hover:text-accent" size="sm">
-                      <Link to="/site-assessment">Get Build Ready</Link>
+                      <Link to="/site-assessment">Request Site Assessment</Link>
                     </Button>
                   </div>
                 </div>
@@ -134,12 +134,12 @@ export default function Shop() {
         </div>
       </section>
 
-      {/* Add-Ons Strip */}
+      {/* Extended Integration */}
       <section className="py-16 bg-card border-y border-border">
         <div className="section-container">
           <div className="text-center max-w-xl mx-auto mb-10 space-y-3">
-            <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60">Optional</p>
-            <h2 className="font-serif text-xl md:text-2xl">System Add-Ons</h2>
+            <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60">Extended Integration</p>
+            <h2 className="font-serif text-xl md:text-2xl">System Extensions</h2>
           </div>
           <div className="grid sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {GROUNDLOCK_ADDONS.map((addon) => (
@@ -150,33 +150,33 @@ export default function Shop() {
                 </div>
                 <h3 className="font-serif text-lg">{addon.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{addon.description}</p>
-                <p className="text-sm text-muted-foreground/60 italic">Available on request</p>
+                <p className="text-sm text-muted-foreground/60 italic">Integrated as part of system specification</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Cross-System CTA */}
+      {/* Full Build Integration CTA */}
       <section className="py-20 bg-primary text-primary-foreground relative overflow-hidden">
         <BlueprintScene preset="barn" className="absolute inset-0" />
         <div className="section-container relative z-10 text-center max-w-lg mx-auto space-y-5">
-          <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/40">Beyond the system</p>
+          <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/40">Full Project Integration</p>
           <h2 className="font-serif text-2xl md:text-3xl">
-            Ready for a full <span className="text-accent">managed build?</span>
+            GroundLock is part of the <span className="text-accent">build — not separate from it.</span>
           </h2>
           <p className="text-primary-foreground/60 text-sm max-w-md mx-auto">
-            GroundLock™ integrates with Peninsula Equine's arena, stable, and infrastructure services. Move from system to project.
+            Ground stabilisation is integrated into every Peninsula Equine project. Start with a site assessment to determine the right system specification.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
             <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.12em] text-xs">
-              <Link to="/contact">
-                Request Specification <ArrowRight className="ml-2 h-4 w-4" />
+              <Link to="/site-assessment">
+                Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="border-accent/30 text-accent hover:bg-accent/10 uppercase tracking-[0.12em] text-xs">
               <Link to="/services">
-                Explore Services
+                View Capabilities
               </Link>
             </Button>
           </div>

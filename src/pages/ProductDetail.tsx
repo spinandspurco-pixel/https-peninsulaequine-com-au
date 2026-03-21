@@ -127,12 +127,12 @@ export default function ProductDetail() {
         </div>
       </section>
 
-      {/* Add-Ons */}
+      {/* System Extensions */}
       {addOns.length > 0 && (
         <section className="py-20 bg-card border-b border-border">
           <div className="section-container max-w-4xl mx-auto">
-            <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60 mb-3">Optional</p>
-            <h2 className="font-serif text-2xl md:text-3xl mb-10">System Add-Ons</h2>
+            <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60 mb-3">Extended Integration</p>
+            <h2 className="font-serif text-2xl md:text-3xl mb-10">System Extensions</h2>
             <div className="grid sm:grid-cols-3 gap-6">
               {addOns.map((addon) => (
                 <div key={addon.handle} className="border border-border rounded-sm p-6 space-y-3 hover:border-accent/30 transition-colors">
@@ -149,51 +149,45 @@ export default function ProductDetail() {
         </section>
       )}
 
-      {/* Pricing + CTA */}
+      {/* Site Assessment CTA */}
       <section className="py-24 relative overflow-hidden">
         <BlueprintScene preset="barn" className="absolute inset-0" />
         <div className="absolute inset-0 bg-primary/85" />
         <div className="section-container relative z-10 max-w-2xl mx-auto text-center space-y-6">
           <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60">Next Step</p>
           <p className="font-serif text-3xl md:text-4xl text-primary-foreground">
-            Request a System Assessment
+            Start With a Site Assessment
           </p>
           <p className="text-primary-foreground/60 text-sm max-w-md mx-auto">
-            Every site is different. We assess ground conditions, usage, and load requirements before recommending the right GroundLock specification.
+            We assess ground conditions, usage patterns, and load requirements — then recommend the right system specification for your project.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.12em] text-xs">
-              <Link to="/contact">
-                {product.ctaPrimary} <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="border-accent/30 text-accent hover:bg-accent/10 uppercase tracking-[0.12em] text-xs">
               <Link to="/site-assessment">
-                {product.ctaSecondary}
+                {product.ctaPrimary} <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </div>
 
-          {/* Durability assurance */}
           <p className="text-primary-foreground/25 text-[10px] uppercase tracking-[0.2em] pt-4">
-            Engineered for long-term performance · Backed by Peninsula Equine
+            System specification is determined during assessment · Integrated into your project scope
           </p>
         </div>
       </section>
 
-      {/* Cross-System Flow */}
+      {/* Integrated Build Flow */}
       <section className="py-16 border-t border-border">
         <div className="section-container max-w-3xl mx-auto text-center space-y-5">
-          <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted-foreground">Beyond the system</p>
+          <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted-foreground">Integrated System</p>
           <h2 className="font-serif text-xl md:text-2xl">
-            Need a full <span className="text-accent">managed build?</span>
+            GroundLock is part of the <span className="text-accent">build — not separate from it.</span>
           </h2>
           <p className="text-muted-foreground text-sm max-w-lg mx-auto">
-            GroundLock™ systems integrate with Peninsula Equine's full arena, stable, and infrastructure builds. Move from product to project seamlessly.
+            Ground stabilisation is engineered into every Peninsula Equine project. The system level is specified during the site assessment process.
           </p>
           <Button asChild variant="outline" size="lg" className="uppercase tracking-[0.12em] text-xs">
             <Link to="/services">
-              Explore Peninsula Equine Services <ArrowRight className="ml-2 h-4 w-4" />
+              View Build Capabilities <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>
