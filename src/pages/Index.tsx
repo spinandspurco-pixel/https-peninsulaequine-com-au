@@ -132,11 +132,18 @@ export default function Index() {
           >
             <source src={heroVideo} type="video/mp4" />
           </video>
-          <div className="absolute inset-0 bg-background/65" />
+          <div className="absolute inset-0 bg-background/70" />
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: "radial-gradient(ellipse 55% 40% at 50% 48%, transparent 5%, hsl(222 20% 4% / 0.9) 55%, hsl(222 20% 4%) 100%)",
+              background: "radial-gradient(ellipse 50% 35% at 50% 46%, transparent 0%, hsl(222 20% 4% / 0.85) 45%, hsl(222 20% 4%) 100%)",
+            }}
+          />
+          {/* Extra shadow at edges to kill bright spots */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: "linear-gradient(to bottom, hsl(222 20% 4% / 0.4) 0%, transparent 30%, transparent 70%, hsl(222 20% 4% / 0.6) 100%)",
             }}
           />
         </div>
