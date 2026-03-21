@@ -2,6 +2,11 @@ import { useState, useCallback } from "react";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { DURATION, EASE } from "@/lib/motion";
 
+import foundationPour from "@/assets/main-ridge-foundation-pour.jpg";
+import rebarDeep from "@/assets/rebar-foundation-deep.jpg";
+
+type ViewMode = "system" | "realworld";
+
 /* ── Layer data (bottom → top) ────────────────────────── */
 interface Layer {
   id: string;
@@ -107,6 +112,8 @@ export function GroundLockCrossSection() {
     setActiveLayer((prev) => (prev === id ? null : id));
   }, []);
 
+  const [viewMode, setViewMode] = useState<ViewMode>("system");
+
   const activeData = layers.find((l) => l.id === activeLayer) || null;
 
   return (
@@ -132,13 +139,55 @@ export function GroundLockCrossSection() {
           </div>
         </RevealOnScroll>
 
+        {/* View toggle */}
+        <RevealOnScroll direction="up" duration={DURATION.normal} delay={80}>
+          <div className="flex items-center justify-center gap-1 sm:gap-2 mb-14 sm:mb-16">
+            {([
+              { key: "system" as ViewMode, label: "System View" },
+              { key: "realworld" as ViewMode, label: "Real World" },
+            ]).map((v) => {
+              const isActive = viewMode === v.key;
+              return (
+                <button
+                  key={v.key}
+                  onClick={() => setViewMode(v.key)}
+                  className="relative px-5 sm:px-7 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-mono cursor-pointer bg-transparent border-0"
+                  style={{
+                    color: isActive ? "hsl(var(--accent) / 0.7)" : "hsl(var(--accent) / 0.25)",
+                    transition: `color ${DURATION.fast}ms ${EASE.interactive}`,
+                  }}
+                >
+                  {v.label}
+                  <span
+                    className="absolute bottom-0 left-1/2 -translate-x-1/2 h-px"
+                    style={{
+                      width: isActive ? "60%" : "0%",
+                      backgroundColor: "hsl(var(--accent) / 0.35)",
+                      transition: `width ${DURATION.fast}ms ${EASE.interactive}`,
+                    }}
+                  />
+                </button>
+              );
+            })}
+          </div>
+        </RevealOnScroll>
+
         <RevealOnScroll direction="up" duration={DURATION.normal} delay={100}>
-          <div className="max-w-2xl mx-auto">
-            <svg
-              viewBox="0 0 700 420"
-              className="w-full h-auto"
-              aria-label="GroundLock cross-section diagram"
+          <div className="max-w-2xl mx-auto relative" style={{ aspectRatio: "700 / 420" }}>
+            {/* System View */}
+            <div
+              className="absolute inset-0"
+              style={{
+                opacity: viewMode === "system" ? 1 : 0,
+                pointerEvents: viewMode === "system" ? "auto" : "none",
+                transition: `opacity ${DURATION.normal}ms ${EASE.default}`,
+              }}
             >
+              <svg
+                viewBox="0 0 700 420"
+                className="w-full h-full"
+                aria-label="GroundLock cross-section diagram"
+              >
               <LayerPatterns />
 
               {/* Background grid */}
@@ -279,7 +328,51 @@ export function GroundLockCrossSection() {
                   Hover or tap a layer to explore
                 </text>
               )}
-            </svg>
+              </svg>
+            </div>
+
+            {/* Real World View */}
+            <div
+              className="absolute inset-0"
+              style={{
+                opacity: viewMode === "realworld" ? 1 : 0,
+                pointerEvents: viewMode === "realworld" ? "auto" : "none",
+                transition: `opacity ${DURATION.normal}ms ${EASE.default}`,
+              }}
+            >
+              <div className="w-full h-full grid grid-cols-2 gap-3">
+                <div className="relative overflow-hidden rounded-sm">
+                  <img
+                    src={foundationPour}
+                    alt="Foundation pour — real build"
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{ background: "linear-gradient(to top, hsl(var(--background) / 0.6) 0%, transparent 50%)" }}
+                  />
+                  <div className="absolute bottom-3 left-3">
+                    <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-accent/50">Base & Foundation</p>
+                  </div>
+                </div>
+                <div className="relative overflow-hidden rounded-sm">
+                  <img
+                    src={rebarDeep}
+                    alt="GroundLock grid installation"
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{ background: "linear-gradient(to top, hsl(var(--background) / 0.6) 0%, transparent 50%)" }}
+                  />
+                  <div className="absolute bottom-3 left-3">
+                    <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-accent/50">Grid & Reinforcement</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </RevealOnScroll>
       </div>
