@@ -367,7 +367,7 @@ export default function GroundLock() {
       {/* ═══ 7. CTA ═══════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-32 sm:py-44 relative">
+        <div className="py-28 sm:py-36 relative">
           <div className="absolute inset-0 engineering-grid" />
           <div className="absolute inset-0 grain-texture" />
           <div

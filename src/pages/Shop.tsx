@@ -159,7 +159,7 @@ export default function Shop() {
       {/* ─── SECTION 4 — TRUST + ACCESS CTA ─── */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-24 sm:py-32 bg-card relative">
+        <div className="py-28 sm:py-36 bg-card relative">
           <div className="absolute inset-0 grain-texture" />
 
           <div className="section-container relative z-[1]">
