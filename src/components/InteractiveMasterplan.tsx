@@ -22,6 +22,7 @@ interface Zone {
   label: string;
   shortLabel: string;
   description: string;
+  features: string[];
   path: string;
 }
 
@@ -30,35 +31,40 @@ const zones: Zone[] = [
     id: "indoor-arena",
     label: "Indoor Arena",
     shortLabel: "Arena",
-    description: "24 × 48m fully enclosed riding space with store below — designed for year-round consistency under load.",
+    description: "Fully enclosed riding space — year-round consistency under load.",
+    features: ["24 × 48m clear span", "Arena store below", "Column-free interior"],
     path: "M 195 430 L 545 430 L 545 590 L 195 590 Z",
   },
   {
     id: "stables",
     label: "Stable Block",
     shortLabel: "Stables",
-    description: "Six stables across two wings with float/garage access at each entry — structured for airflow and daily workflow.",
+    description: "Two wings with central corridor — structured for airflow and workflow.",
+    features: ["Six stables across two wings", "Float access at each entry", "Cross-ventilation design"],
     path: "M 195 120 L 545 120 L 545 260 L 195 260 Z",
   },
   {
     id: "courtyard",
     label: "Central Courtyard",
     shortLabel: "Courtyard",
-    description: "The operational spine connecting stables, service areas, and arena through one controlled axis.",
+    description: "The operational spine connecting every zone through one controlled axis.",
+    features: ["Tie-up stations", "Direct arena access", "Wash bay adjacent"],
     path: "M 270 260 L 470 260 L 470 380 L 270 380 Z",
   },
   {
     id: "viewing-area",
-    label: "Upstairs Viewing Area",
+    label: "Upstairs Viewing",
     shortLabel: "Viewing",
-    description: "Elevated mezzanine overlooking the arena — with dormer windows positioned for natural light and oversight.",
+    description: "Elevated mezzanine overlooking the arena with natural light.",
+    features: ["Full arena oversight", "Dormer windows", "Internal stair access"],
     path: "M 470 260 L 545 260 L 545 380 L 470 380 Z",
   },
   {
     id: "service-wing",
-    label: "Tack & Service Rooms",
+    label: "Tack & Service",
     shortLabel: "Tack / WC",
-    description: "Tack rooms, wash bay, WC, and storage — positioned between stables and arena for efficient daily operations.",
+    description: "Positioned between stables and arena for efficient daily operations.",
+    features: ["Dual tack rooms", "WC and storage", "Direct courtyard access"],
     path: "M 195 260 L 270 260 L 270 430 L 195 430 Z",
   },
 ];
@@ -75,36 +81,46 @@ function usePreloadImages(srcs: string[]) {
 
 /* ── Detail card ─────────────────────────────────── */
 function DetailCard({ zone, visible }: { zone: Zone | null; visible: boolean }) {
-  const imgSrc = zone ? ZONE_IMAGES[zone.id] : null;
-  const [imgError, setImgError] = useState(false);
-  useEffect(() => { setImgError(false); }, [zone?.id]);
-
   return (
     <div
       className="pointer-events-none"
       style={{
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : `translateY(${DISTANCE.sm}px)`,
-        transition: `opacity ${DURATION.fast}ms ${EASE.interactive}, transform ${DURATION.fast}ms ${EASE.interactive}`,
+        transition: `opacity 350ms cubic-bezier(0.25, 0.1, 0.25, 1), transform 350ms cubic-bezier(0.25, 0.1, 0.25, 1)`,
         willChange: "opacity, transform",
       }}
     >
       {zone && (
-        <div
-          className="border border-accent/12 bg-card/85 backdrop-blur-md rounded-sm p-5 sm:p-6 max-w-[260px]"
-          style={{ boxShadow: "0 8px 32px -8px hsl(var(--accent) / 0.08), 0 2px 8px -2px hsl(var(--background) / 0.4)" }}
-        >
-          <div className="w-full aspect-[16/10] bg-accent/[0.03] border border-accent/8 rounded-sm mb-3.5 overflow-hidden relative">
-            {imgSrc && !imgError ? (
-              <img src={imgSrc} alt={zone.label} className="absolute inset-0 w-full h-full object-cover" onError={() => setImgError(true)} loading="eager" />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center bg-muted/30">
-                <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/25">{zone.label}</span>
-              </div>
-            )}
+        <div className="max-w-[280px]">
+          {/* Zone label tag */}
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-5 h-px bg-accent/30" />
+            <span className="text-[9px] font-mono uppercase tracking-[0.35em] text-accent/35">Zone</span>
           </div>
-          <h3 className="font-serif text-base sm:text-lg text-foreground/90 tracking-[0.02em] mb-1.5">{zone.label}</h3>
-          <p className="text-xs sm:text-[13px] text-muted-foreground/40 leading-relaxed font-serif italic">{zone.description}</p>
+
+          {/* Zone name */}
+          <h3 className="font-serif text-xl sm:text-2xl text-foreground/90 tracking-[0.02em] leading-tight mb-2.5">
+            {zone.label}
+          </h3>
+
+          {/* Purpose statement */}
+          <p className="text-[13px] text-muted-foreground/40 font-serif italic leading-relaxed mb-5">
+            {zone.description}
+          </p>
+
+          {/* Divider */}
+          <div className="w-8 h-px bg-accent/12 mb-4" />
+
+          {/* Feature points */}
+          <ul className="space-y-2.5">
+            {zone.features.map((f, i) => (
+              <li key={i} className="flex items-start gap-2.5">
+                <span className="w-1 h-1 rounded-full bg-accent/25 mt-[7px] shrink-0" />
+                <span className="text-xs text-muted-foreground/35 font-mono tracking-wide leading-relaxed">{f}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
