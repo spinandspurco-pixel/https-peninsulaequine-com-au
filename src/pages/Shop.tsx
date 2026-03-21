@@ -91,15 +91,9 @@ export default function Shop() {
                       <p className="text-sm text-muted-foreground leading-relaxed">{product.headline}</p>
                     </div>
 
-                    <div className="space-y-1">
-                      {product.compareAtPrice && (
-                        <p className="text-sm text-muted-foreground line-through">
-                          ${product.compareAtPrice.toLocaleString("en-AU")}
-                        </p>
-                      )}
-                      <p className="text-3xl font-serif text-accent">
-                        ${product.price.toLocaleString("en-AU")}
-                        <span className="text-sm text-muted-foreground ml-1">AUD</span>
+                    <div className="pt-2">
+                      <p className="text-sm text-muted-foreground italic">
+                        Project-based pricing
                       </p>
                     </div>
 
