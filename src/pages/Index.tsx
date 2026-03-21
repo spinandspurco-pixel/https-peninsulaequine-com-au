@@ -123,7 +123,7 @@ export default function Index() {
         <video
           autoPlay muted loop playsInline
           preload="auto"
-          className="absolute inset-0 w-full h-full object-cover brightness-[0.2] contrast-[1.2] saturate-[0.35]"
+          className="absolute inset-0 w-full h-full object-cover img-hero"
           style={{ width: '100%', height: '100%' }}
         >
           <source src={heroVideo} type="video/mp4" />
