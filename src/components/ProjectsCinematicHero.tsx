@@ -15,7 +15,7 @@ function BlueprintLinework() {
       {/* Horizontal structural lines */}
       <line
         x1="0" y1="300" x2="1600" y2="300"
-        stroke="#C6A86B" strokeWidth="0.5" opacity="0"
+        stroke="#C6A86B" strokeWidth="0.6" opacity="0"
         className="animate-[blueprintDraw_2.4s_0.3s_ease-out_forwards]"
         strokeDasharray="1600" strokeDashoffset="1600"
         style={{ animation: "blueprintDraw 2.4s 0.3s ease-out forwards" }}
