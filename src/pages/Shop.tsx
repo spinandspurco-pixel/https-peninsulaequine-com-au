@@ -201,7 +201,14 @@ export default function Shop() {
                 </Button>
 
                 <p className="text-[10px] font-mono uppercase tracking-[0.12em] text-muted-foreground/20">
-                  No obligation. No pricing until specification is confirmed.
+                  No obligation · No pricing until specification is confirmed
+                </p>
+
+                <div className="w-12 h-px bg-border/10 mt-8" />
+
+                <p className="text-[13px] text-muted-foreground/25 leading-[1.9] max-w-sm italic font-serif mt-4">
+                  Everything we build is structured from the ground up.<br />
+                  If it's not done properly underneath, nothing on top lasts.
                 </p>
               </div>
             </RevealOnScroll>
