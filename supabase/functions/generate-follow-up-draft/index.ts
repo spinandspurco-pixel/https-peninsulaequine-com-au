@@ -148,18 +148,20 @@ Return JSON with: { "subject_line": "...", "message": "..." }`;
       // Rotate quote follow-up angles
       const angleIndex = days <= 3 ? 0 : days <= 7 ? 1 : 2;
       const angles = [
-        // Angle 1: Clarification prompt
-        `They received the quote ${days} days ago. ${viewed ? "They've viewed it." : "They haven't opened it yet."}
-Ask if they have questions about the scope or specification. Reference the project type naturally.
-${!viewed ? "Mention you can walk through it over a quick call." : "Reference a specific aspect of the scope they may want to discuss."}`,
-        // Angle 2: Value reinforcement  
-        `It's been ${days} days since the proposal was sent. ${viewed ? "They've reviewed it." : "No view recorded."}
-Reinforce the long-term value: engineered infrastructure, reduced maintenance, site-specific design.
-Position the investment as performance — not cost. Reference their project type.`,
-        // Angle 3: Close the loop
-        `${days} days since the proposal. Time to close the loop.
-Be direct: "If the scope aligns, the next step is confirming the schedule." 
-Reference that build slots are allocated per season. No fake urgency — just operational reality.`,
+        // Day 3: Calm check-in
+        `It's been ${days} days since the project brief was sent. ${viewed ? "They've viewed it." : "They haven't opened it yet."}
+Tone: calm, no urgency. Simply check in. Example angle: "Just checking in — let me know if you'd like to move forward or if timing has shifted."
+Do NOT ask if they have questions. Do NOT reference specific scope items. Keep it to 2 sentences max.
+${!viewed ? "Mention you're available for a brief walkthrough if helpful." : ""}`,
+        // Day 7: Controlled scarcity
+        `It's been ${days} days since the project brief was sent. ${viewed ? "They've reviewed it." : "No view recorded."}
+Tone: measured, authoritative. Reference build schedule. Example angle: "We're finalising upcoming builds this week — let me know if this is something you want to secure."
+Do NOT discount. Do NOT sound desperate. One clear line about locking in schedule. 2-3 sentences max.`,
+        // Day 10+: Close the loop
+        `${days} days since the proposal. Time to close the loop respectfully.
+Be direct but composed: "If the scope aligns, we can lock this into schedule and move into planning."
+Reference that build slots are allocated per season — operational reality, not pressure.
+If no response expected, leave on a professional note. 2 sentences max.`,
       ];
 
       userPrompt = `Write a follow-up email for a sent quote:
