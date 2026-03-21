@@ -111,14 +111,14 @@ export default function GroundLock() {
                 className="text-sm sm:text-[15px] text-muted-foreground/50 leading-[1.7] mb-2 opacity-0 animate-fade-in"
                 style={{ animationDelay: "800ms", animationFillMode: "both", animationDuration: "1000ms" }}
               >
-                Engineered Ground Systems for Equine Infrastructure
+                Alternating Interlock Ground Stabilisation
               </p>
 
               <p
                 className="text-[13px] text-muted-foreground/35 leading-[1.7] mb-10 opacity-0 animate-fade-in"
                 style={{ animationDelay: "1000ms", animationFillMode: "both", animationDuration: "1000ms" }}
               >
-                Built to stabilise movement, manage load, and last.
+                Opposing horseshoe panels lock in alternating rhythm — distributing load, resisting lateral movement, and creating a structurally intelligent surface.
               </p>
 
               <div
