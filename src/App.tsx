@@ -60,6 +60,7 @@ const EquusRidge = lazy(() => import("./pages/EquusRidge"));
 const InstallerAccess = lazy(() => import("./pages/InstallerAccess"));
 const SiteAssessment = lazy(() => import("./pages/SiteAssessment"));
 const SignatureSystems = lazy(() => import("./pages/SignatureSystems"));
+const GroundLockSetup = lazy(() => import("./pages/GroundLockSetup"));
 
 const queryClient = new QueryClient();
 
