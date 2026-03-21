@@ -6,9 +6,9 @@ import { DURATION, EASE, crossfadeStyle } from "@/lib/motion";
 type LayerKey = "structure" | "envelope" | "finished";
 
 const layers: { key: LayerKey; label: string; description: string }[] = [
-  { key: "structure", label: "Structure", description: "Steel + timber framework — the skeleton of every build" },
-  { key: "envelope", label: "Envelope", description: "Cladding, openings + weatherproofing — the protective shell" },
-  { key: "finished", label: "Finished", description: "Materials, landscaping + final detail — the resolved form" },
+  { key: "structure", label: "Structure", description: "The load paths, framing, and foundational logic that define the build." },
+  { key: "envelope", label: "Envelope", description: "The external shell — materials, protection, and environmental response." },
+  { key: "finished", label: "Finished", description: "The final form — where function and aesthetic resolve into one." },
 ];
 
 /* ── SVG Layer: Structure ─────────────────────────────── */
