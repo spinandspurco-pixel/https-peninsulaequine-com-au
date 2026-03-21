@@ -409,36 +409,19 @@ export function GroundLockSystemLayout() {
           </svg>
         </div>
 
-        {/* Real World View */}
+        {/* Panel System View */}
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 overflow-y-auto"
           style={{
-            opacity: viewMode === "realworld" ? 1 : 0,
-            pointerEvents: viewMode === "realworld" ? "auto" : "none",
+            opacity: viewMode === "panels" ? 1 : 0,
+            pointerEvents: viewMode === "panels" ? "auto" : "none",
             transition: `opacity ${DURATION.normal}ms ${EASE.default}`,
           }}
         >
-          <div className="relative w-full h-full overflow-hidden rounded-sm">
-            <img
-              src={horseshoeRealworld}
-              alt="GroundLock horseshoe system — aerial site visualisation"
-              className="absolute inset-0 w-full h-full object-cover"
-              loading="eager"
-            />
-            <div
-              className="absolute inset-0"
-              style={{ background: "linear-gradient(to top, hsl(var(--background) / 0.5) 0%, transparent 40%)" }}
-            />
-            {/* Zone labels over image */}
-            <div className="absolute inset-0 flex flex-col items-center justify-end pb-4 pointer-events-none">
-              <div className="flex items-center gap-4 flex-wrap justify-center">
-                {["Arena", "Stables", "Courtyard", "Entry", "Service"].map((label) => (
-                  <span key={label} className="text-[8px] sm:text-[9px] font-mono uppercase tracking-[0.2em] text-accent/35 px-2 py-1 border border-accent/10 rounded-sm bg-background/40 backdrop-blur-sm">
-                    {label}
-                  </span>
-                ))}
-              </div>
-            </div>
+          <div className="space-y-10 py-4">
+            <PanelSpecimen />
+            <PanelArray />
+            <PanelSiteLayout />
           </div>
         </div>
       </div>
