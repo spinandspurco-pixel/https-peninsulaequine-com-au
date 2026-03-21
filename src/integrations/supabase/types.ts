@@ -345,6 +345,66 @@ export type Database = {
           },
         ]
       }
+      client_followups: {
+        Row: {
+          client_email: string
+          client_name: string
+          completed_at: string | null
+          created_at: string
+          due_date: string
+          followup_type: string
+          id: string
+          inquiry_id: string | null
+          job_id: string | null
+          notes: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          client_email: string
+          client_name: string
+          completed_at?: string | null
+          created_at?: string
+          due_date: string
+          followup_type?: string
+          id?: string
+          inquiry_id?: string | null
+          job_id?: string | null
+          notes?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          client_email?: string
+          client_name?: string
+          completed_at?: string | null
+          created_at?: string
+          due_date?: string
+          followup_type?: string
+          id?: string
+          inquiry_id?: string | null
+          job_id?: string | null
+          notes?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_followups_inquiry_id_fkey"
+            columns: ["inquiry_id"]
+            isOneToOne: false
+            referencedRelation: "inquiries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_followups_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       employee_tasks: {
         Row: {
           assigned_to: string | null

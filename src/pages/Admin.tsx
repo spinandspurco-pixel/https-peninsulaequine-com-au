@@ -19,6 +19,7 @@ import { TodaysPlan } from "@/components/TodaysPlan";
 import { OperationsCommandCentre } from "@/components/OperationsCommandCentre";
 import { FollowUpEngine } from "@/components/FollowUpEngine";
 import { AdminSystemSettings } from "@/components/AdminSystemSettings";
+import { ClientExperiencePanel } from "@/components/ClientExperiencePanel";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -453,6 +454,9 @@ export default function Admin() {
 
           {/* Project Profit Tracker — Founder only */}
           {viewMode === "founder" && <ProjectProfitTracker />}
+
+          {/* Client Experience — Founder + Operations */}
+          {(viewMode === "founder" || viewMode === "operations") && <ClientExperiencePanel />}
 
           {/* Financial Control — Founder only */}
           {viewMode === "founder" && <FinancialDashboard />}
