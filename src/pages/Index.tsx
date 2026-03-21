@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { Button } from "@/components/ui/button";
@@ -115,6 +115,24 @@ function ProjectsScroll() {
 }
 
 export default function Index() {
+  /* Scroll-driven hero fade */
+  const heroContentRef = useRef<HTMLDivElement>(null);
+  const [heroFade, setHeroFade] = useState(1);
+
+  const handleScroll = useCallback(() => {
+    const el = heroContentRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const vh = window.innerHeight;
+    // Start fading when top of hero content reaches 80% of viewport, fully gone by 30%
+    const progress = Math.max(0, Math.min(1, (rect.top - vh * 0.3) / (vh * 0.5)));
+    setHeroFade(progress);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   return (
     <Layout>
@@ -149,8 +167,12 @@ export default function Index() {
         </div>
         <div className="absolute inset-0 pointer-events-none grain-hero" />
 
-        {/* Content — staged reveals */}
-        <div className="relative z-10 section-container text-center max-w-5xl mx-auto">
+        {/* Content — staged reveals, fades on scroll */}
+        <div
+          ref={heroContentRef}
+          className="relative z-10 section-container text-center max-w-5xl mx-auto"
+          style={{ opacity: heroFade, willChange: "opacity" }}
+        >
           <div className="flex flex-col items-center gap-10 sm:gap-14 lg:gap-16">
             {/* Brand tag — 900ms (stillness after backdrop settles) */}
             <div
@@ -225,10 +247,18 @@ export default function Index() {
             />
           </div>
         </div>
+
+        {/* Bottom bleed — dissolves hero into next section */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-32 sm:h-40 pointer-events-none z-20"
+          style={{
+            background: "linear-gradient(to bottom, transparent 0%, hsl(var(--card)) 100%)",
+          }}
+        />
       </section>
 
       {/* ═══ 2. GROUNDLOCK — SIGNATURE SYSTEM ══════════════ */}
-      <section className="relative overflow-hidden cv-auto">
+      <section className="relative overflow-hidden cv-auto -mt-px">
         <div className="py-32 sm:py-40 lg:py-48 bg-card relative">
           <div className="absolute inset-0 engineering-grid" />
           <div className="absolute inset-0 grain-texture opacity-30" />
