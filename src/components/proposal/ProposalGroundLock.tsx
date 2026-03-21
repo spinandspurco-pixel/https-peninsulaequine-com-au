@@ -50,9 +50,9 @@ export function ProposalGroundLock({ included, groundlockOn, onToggle }: Props) 
                 className="w-full max-w-xs p-8 flex flex-col items-center transition-opacity duration-700"
                 style={{ background: "rgba(255,255,255,0.4)" }}
               >
-                <svg viewBox="0 0 100 120" className="w-44 h-auto mb-7" style={{ opacity: 0.75 }}>
+                <svg viewBox="0 0 100 110" className="w-44 h-auto mb-7" style={{ opacity: 0.75 }}>
                   <PanelDefs id="pq" />
-                  <GroundLockPanelSVG active showTabs defsId="pq" />
+                  <GroundLockPanelSVG active showTabs defsId="pq" direction="up" />
                 </svg>
                 <div className="space-y-2 w-full">
                   {["Controlled geometry", "Directional stability", "Drainage management", "Clean finish"].map((t) => (
