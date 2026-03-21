@@ -145,34 +145,34 @@ export default function Index() {
         {/* Content — staged reveals */}
         <div className="relative z-10 section-container text-center max-w-5xl mx-auto">
           <div className="flex flex-col items-center gap-10 sm:gap-14 lg:gap-16">
-            {/* Brand tag — 500ms */}
+            {/* Brand tag — 900ms (stillness after backdrop settles) */}
             <div
               className="flex items-center justify-center gap-5"
-              style={{ opacity: 0, animation: "heroFadeIn 700ms ease-out 500ms forwards" }}
+              style={{ opacity: 0, animation: "heroFadeIn 800ms ease-out 900ms forwards" }}
             >
               <div className="w-12 h-px bg-accent/20" />
               <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/50">Peninsula Equine</p>
               <div className="w-12 h-px bg-accent/20" />
             </div>
 
-            {/* Headline — 800ms */}
+            {/* Headline — 1200ms */}
             <div className="space-y-5 sm:space-y-6">
               <h1
                 className="font-serif font-bold text-foreground leading-[0.88] tracking-[-0.01em]"
                 style={{
                   opacity: 0,
-                  animation: "heroFadeIn 700ms ease-out 800ms forwards",
+                  animation: "heroFadeIn 800ms ease-out 1200ms forwards",
                   fontSize: "clamp(3rem, 1.6rem + 6.5vw, 7.5rem)",
                 }}
               >
                 Built from the<br className="hidden sm:block" /> ground up.
               </h1>
-              {/* Sub-headline — 1100ms */}
+              {/* Sub-headline — 1600ms */}
               <p
                 className="font-serif font-light text-foreground/25 leading-[0.95] tracking-[0.02em]"
                 style={{
                   opacity: 0,
-                  animation: "heroFadeIn 700ms ease-out 1100ms forwards",
+                  animation: "heroFadeIn 800ms ease-out 1600ms forwards",
                   fontSize: "clamp(1.5rem, 0.75rem + 3.2vw, 3.5rem)",
                 }}
               >
@@ -180,18 +180,18 @@ export default function Index() {
               </p>
             </div>
 
-            {/* Supporting text — 1500ms */}
+            {/* Supporting text — 2000ms */}
             <p
               className="text-muted-foreground/30 text-[11px] sm:text-[12px] tracking-[0.2em] uppercase max-w-lg leading-[2.2]"
-              style={{ opacity: 0, animation: "heroFadeIn 700ms ease-out 1500ms forwards" }}
+              style={{ opacity: 0, animation: "heroFadeIn 800ms ease-out 2000ms forwards" }}
             >
               Premium equine infrastructure engineered for performance, longevity, and legacy.
             </p>
 
-            {/* CTA — 1900ms */}
+            {/* CTA — 2500ms */}
             <div
               className="flex flex-col sm:flex-row gap-4 justify-center pt-4"
-              style={{ opacity: 0, animation: "heroFadeIn 700ms ease-out 1900ms forwards" }}
+              style={{ opacity: 0, animation: "heroFadeIn 800ms ease-out 2500ms forwards" }}
             >
               <Button asChild variant="gold" size="lg" className="px-8">
                 <Link to="/site-assessment">
@@ -205,15 +205,15 @@ export default function Index() {
           </div>
         </div>
 
-        {/* Scroll indicator — 2400ms */}
+        {/* Scroll indicator — 3000ms */}
         <div
           className="absolute bottom-10 left-1/2 -translate-x-1/2"
-          style={{ opacity: 0, animation: "heroFadeIn 700ms ease-out 2400ms forwards" }}
+          style={{ opacity: 0, animation: "heroFadeIn 800ms ease-out 3000ms forwards" }}
         >
           <div className="w-px h-14 bg-accent/8 relative overflow-hidden">
             <div
               className="absolute top-0 w-full h-4 bg-accent/25"
-              style={{ animation: "scrollPulse 3s ease-in-out infinite 3s" }}
+              style={{ animation: "scrollPulse 3s ease-in-out infinite 3.8s" }}
             />
           </div>
         </div>
