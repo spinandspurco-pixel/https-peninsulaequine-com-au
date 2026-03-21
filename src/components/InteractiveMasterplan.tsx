@@ -12,10 +12,11 @@ const ZONE_IMAGES: Record<string, string> = {
   "indoor-arena": imgIndoor,
   stables: imgStables,
   courtyard: imgCourtyard,
-  "service-wing": imgLoft,
+  "viewing-area": imgLoft,
+  "service-wing": imgCourtyard,
 };
 
-/* ── Zone data — based on real Main Ridge architectural plans ── */
+/* ── Zone data — Main Ridge architectural plans A01–A14 ── */
 interface Zone {
   id: string;
   label: string;
@@ -29,33 +30,40 @@ const zones: Zone[] = [
     id: "indoor-arena",
     label: "Indoor Arena",
     shortLabel: "Arena",
-    description: "A fully enclosed performance arena positioned at the south of the complex — designed for year-round consistency.",
-    path: "M 180 420 L 560 420 L 560 560 L 180 560 Z",
+    description: "24 × 48m fully enclosed riding space with store below — designed for year-round consistency under load.",
+    path: "M 195 430 L 545 430 L 545 590 L 195 590 Z",
   },
   {
     id: "stables",
     label: "Stable Block",
     shortLabel: "Stables",
-    description: "Six stables across two wings flanking the central corridor — structured for airflow, access, and daily workflow.",
-    path: "M 180 140 L 560 140 L 560 280 L 180 280 Z",
+    description: "Six stables across two wings with float/garage access at each entry — structured for airflow and daily workflow.",
+    path: "M 195 120 L 545 120 L 545 260 L 195 260 Z",
   },
   {
     id: "courtyard",
     label: "Central Courtyard",
     shortLabel: "Courtyard",
-    description: "The operational spine — connecting stables, arena, and service areas through one controlled axis.",
-    path: "M 260 280 L 480 280 L 480 420 L 260 420 Z",
+    description: "The operational spine connecting stables, service areas, and arena through one controlled axis.",
+    path: "M 270 260 L 470 260 L 470 380 L 270 380 Z",
+  },
+  {
+    id: "viewing-area",
+    label: "Upstairs Viewing Area",
+    shortLabel: "Viewing",
+    description: "Elevated mezzanine overlooking the arena — with dormer windows positioned for natural light and oversight.",
+    path: "M 470 260 L 545 260 L 545 380 L 470 380 Z",
   },
   {
     id: "service-wing",
-    label: "Service Wing",
-    shortLabel: "Services",
-    description: "Tack rooms, wash bay, veterinary access, and storage — positioned for efficient daily operations.",
-    path: "M 180 280 L 260 280 L 260 420 L 180 420 Z",
+    label: "Tack & Service Rooms",
+    shortLabel: "Tack / WC",
+    description: "Tack rooms, wash bay, WC, and storage — positioned between stables and arena for efficient daily operations.",
+    path: "M 195 260 L 270 260 L 270 430 L 195 430 Z",
   },
 ];
 
-/* ── Preload zone images on mount ─────────────────── */
+/* ── Preload ─────────────────────────────────────── */
 function usePreloadImages(srcs: string[]) {
   const loaded = useRef(false);
   useEffect(() => {
@@ -65,7 +73,7 @@ function usePreloadImages(srcs: string[]) {
   }, []);
 }
 
-/* ── Floating detail card ─────────────────────────── */
+/* ── Detail card ─────────────────────────────────── */
 function DetailCard({ zone, visible }: { zone: Zone | null; visible: boolean }) {
   const imgSrc = zone ? ZONE_IMAGES[zone.id] : null;
   const [imgError, setImgError] = useState(false);
@@ -105,10 +113,7 @@ function DetailCard({ zone, visible }: { zone: Zone | null; visible: boolean }) 
 
 /* ── Architectural plan SVG ──────────────────────────── */
 function SitePlan({
-  activeZone,
-  onHover,
-  onLeave,
-  onTap,
+  activeZone, onHover, onLeave, onTap,
 }: {
   activeZone: string | null;
   onHover: (id: string) => void;
@@ -116,55 +121,100 @@ function SitePlan({
   onTap: (id: string) => void;
 }) {
   return (
-    <svg viewBox="0 0 740 640" className="w-full h-auto max-w-[560px] mx-auto" aria-label="Main Ridge Estate — ground floor plan">
+    <svg viewBox="0 0 740 680" className="w-full h-auto max-w-[560px] mx-auto" aria-label="Main Ridge Estate — ground floor plan">
       <defs>
-        <pattern id="masterplan-grid" width="20" height="20" patternUnits="userSpaceOnUse">
-          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.05" />
+        <pattern id="mp-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.05" />
         </pattern>
-        <pattern id="masterplan-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-          <line x1="0" y1="0" x2="0" y2="6" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.04" />
+        <pattern id="mp-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="5" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.035" />
+        </pattern>
+        <pattern id="mp-hatch-dense" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="3" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.04" />
         </pattern>
       </defs>
 
       {/* Background grid */}
-      <rect width="740" height="640" fill="url(#masterplan-grid)" />
+      <rect width="740" height="680" fill="url(#mp-grid)" />
 
       {/* Property boundary */}
-      <rect x="140" y="100" width="460" height="500" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.4" opacity="0.08" strokeDasharray="8 4" />
+      <rect x="155" y="80" width="430" height="560" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.35" opacity="0.07" strokeDasharray="8 4" />
 
-      {/* Float/Garage entries — top left and right */}
-      <rect x="180" y="108" width="60" height="32" fill="url(#masterplan-hatch)" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.12" />
-      <rect x="500" y="108" width="60" height="32" fill="url(#masterplan-hatch)" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.12" />
-      <text x="210" y="128" textAnchor="middle" fontSize="6" fill="hsl(var(--accent))" opacity="0.18" fontFamily="monospace" letterSpacing="0.12em">FLOAT</text>
-      <text x="530" y="128" textAnchor="middle" fontSize="6" fill="hsl(var(--accent))" opacity="0.18" fontFamily="monospace" letterSpacing="0.12em">FLOAT</text>
+      {/* ── STABLES WING (top) ── */}
+      {/* Left float/garage */}
+      <rect x="195" y="95" width="55" height="25" fill="url(#mp-hatch)" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.15" />
+      <text x="222" y="111" textAnchor="middle" fontSize="5" fill="hsl(var(--accent))" opacity="0.15" fontFamily="monospace" letterSpacing="0.1em">FLOAT</text>
+
+      {/* Right float/garage */}
+      <rect x="490" y="95" width="55" height="25" fill="url(#mp-hatch)" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.15" />
+      <text x="517" y="111" textAnchor="middle" fontSize="5" fill="hsl(var(--accent))" opacity="0.15" fontFamily="monospace" letterSpacing="0.1em">FLOAT</text>
+
+      {/* Entry marker */}
+      <text x="370" y="110" textAnchor="middle" fontSize="5" fill="hsl(var(--accent))" opacity="0.12" fontFamily="monospace" letterSpacing="0.15em">ENTRY</text>
 
       {/* Central corridor axis */}
-      <line x1="370" y1="140" x2="370" y2="420" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.06" strokeDasharray="4 4" />
+      <line x1="370" y1="120" x2="370" y2="430" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.05" strokeDasharray="3 3" />
 
-      {/* Stable dividers — left wing */}
-      {[0, 1, 2].map((i) => (
-        <line key={`sl${i}`} x1={230 + i * 45} y1="140" x2={230 + i * 45} y2="280" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.06" />
+      {/* Stable dividers — left wing (S1–S3) */}
+      {[0, 1, 2, 3].map((i) => (
+        <line key={`sl${i}`} x1={245 + i * 40} y1="120" x2={245 + i * 40} y2="260" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.05" />
       ))}
-      {/* Stable dividers — right wing */}
-      {[0, 1, 2].map((i) => (
-        <line key={`sr${i}`} x1={415 + i * 45} y1="140" x2={415 + i * 45} y2="280" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.06" />
+      {/* Stable dividers — right wing (S4–S6) */}
+      {[0, 1, 2, 3].map((i) => (
+        <line key={`sr${i}`} x1={405 + i * 40} y1="120" x2={405 + i * 40} y2="260" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.05" />
       ))}
 
-      {/* Right service column */}
-      <rect x="480" y="280" width="80" height="140" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.06" />
-      <text x="520" y="355" textAnchor="middle" fontSize="6" fill="hsl(var(--accent))" opacity="0.12" fontFamily="monospace" letterSpacing="0.1em">WASH / STORE</text>
+      {/* Stable number labels */}
+      {[1, 2, 3].map((n, i) => (
+        <text key={`sln${n}`} x={265 + i * 40} y="195" textAnchor="middle" fontSize="4.5" fill="hsl(var(--accent))" opacity="0.08" fontFamily="monospace">S{n}</text>
+      ))}
+      {[4, 5, 6].map((n, i) => (
+        <text key={`srn${n}`} x={425 + i * 40} y="195" textAnchor="middle" fontSize="4.5" fill="hsl(var(--accent))" opacity="0.08" fontFamily="monospace">S{n}</text>
+      ))}
 
-      {/* Zone shapes — interactive */}
+      {/* ── SERVICE WING (left middle) ── */}
+      {/* Internal room dividers */}
+      <line x1="195" y1="310" x2="270" y2="310" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.05" />
+      <line x1="195" y1="350" x2="270" y2="350" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.05" />
+      <line x1="195" y1="390" x2="270" y2="390" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.05" />
+      <text x="232" y="290" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.08" fontFamily="monospace">TACK 1</text>
+      <text x="232" y="335" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.08" fontFamily="monospace">WC</text>
+      <text x="232" y="375" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.08" fontFamily="monospace">STORE</text>
+      <text x="232" y="415" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.08" fontFamily="monospace">TACK 2</text>
+
+      {/* ── VIEWING AREA (right middle) ── */}
+      {/* Upstairs viewing loft indicator — dormer hatching */}
+      <rect x="475" y="265" width="65" height="50" fill="url(#mp-hatch-dense)" stroke="none" opacity="0.3" />
+      {/* Stair indicator */}
+      {[0, 1, 2, 3, 4].map((i) => (
+        <line key={`stair${i}`} x1={475} y1={325 + i * 8} x2={540} y2={325 + i * 8} stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.06" />
+      ))}
+      <text x="507" y="290" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.08" fontFamily="monospace">VIEWING</text>
+      <text x="507" y="296" textAnchor="middle" fontSize="3.5" fill="hsl(var(--accent))" opacity="0.06" fontFamily="monospace">UPSTAIRS</text>
+
+      {/* ── WASH / TIE-UP (right of courtyard) ── */}
+      <rect x="470" y="380" width="75" height="50" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.05" />
+      <text x="507" y="408" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.08" fontFamily="monospace">WASH BAY</text>
+
+      {/* ── ARENA STORE (below arena) ── */}
+      <rect x="195" y="590" width="350" height="35" fill="url(#mp-hatch)" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.1" />
+      <text x="370" y="611" textAnchor="middle" fontSize="5" fill="hsl(var(--accent))" opacity="0.12" fontFamily="monospace" letterSpacing="0.1em">ARENA STORE</text>
+
+      {/* ── ARENA WALKWAY markers ── */}
+      <line x1="270" y1="380" x2="270" y2="430" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.04" strokeDasharray="2 2" />
+      <line x1="470" y1="380" x2="470" y2="430" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.04" strokeDasharray="2 2" />
+
+      {/* ── INTERACTIVE ZONE SHAPES ── */}
       {zones.map((z) => {
         const isActive = activeZone === z.id;
         const isDimmed = activeZone !== null && !isActive;
         return (
-          <g key={z.id} style={{ opacity: isDimmed ? 0.35 : 1, transition: `opacity ${DURATION.fast}ms ${EASE.interactive}` }}>
+          <g key={z.id} style={{ opacity: isDimmed ? 0.3 : 1, transition: `opacity ${DURATION.fast}ms ${EASE.interactive}` }}>
             <path
               d={z.path}
-              fill={isActive ? "hsl(var(--accent) / 0.08)" : "hsl(var(--accent) / 0.015)"}
-              stroke={isActive ? "hsl(var(--accent) / 0.5)" : "hsl(var(--accent) / 0.1)"}
-              strokeWidth={isActive ? "1" : "0.5"}
+              fill={isActive ? "hsl(var(--accent) / 0.08)" : "hsl(var(--accent) / 0.012)"}
+              stroke={isActive ? "hsl(var(--accent) / 0.5)" : "hsl(var(--accent) / 0.08)"}
+              strokeWidth={isActive ? "1" : "0.4"}
               style={{ transition: `fill ${DURATION.fast}ms ${EASE.interactive}, stroke ${DURATION.fast}ms ${EASE.interactive}` }}
               className="cursor-pointer"
               onMouseEnter={() => onHover(z.id)}
@@ -176,12 +226,12 @@ function SitePlan({
               y={getCenter(z.path).y}
               textAnchor="middle"
               dominantBaseline="central"
-              fontSize="8"
+              fontSize="7"
               fontFamily="monospace"
               letterSpacing="0.12em"
               fill="hsl(var(--accent))"
               className="pointer-events-none uppercase"
-              style={{ opacity: isActive ? 0.55 : 0.18, transition: `opacity ${DURATION.fast}ms ${EASE.interactive}` }}
+              style={{ opacity: isActive ? 0.5 : 0.15, transition: `opacity ${DURATION.fast}ms ${EASE.interactive}` }}
             >
               {z.shortLabel}
             </text>
@@ -189,28 +239,65 @@ function SitePlan({
         );
       })}
 
-      {/* Dimension annotations */}
-      <g opacity="0.1" fontSize="6" fontFamily="monospace" fill="hsl(var(--accent))">
-        <line x1="180" y1="575" x2="560" y2="575" stroke="hsl(var(--accent))" strokeWidth="0.3" />
-        <line x1="180" y1="572" x2="180" y2="578" stroke="hsl(var(--accent))" strokeWidth="0.3" />
-        <line x1="560" y1="572" x2="560" y2="578" stroke="hsl(var(--accent))" strokeWidth="0.3" />
-        <line x1="155" y1="140" x2="155" y2="560" stroke="hsl(var(--accent))" strokeWidth="0.3" />
-        <line x1="152" y1="140" x2="158" y2="140" stroke="hsl(var(--accent))" strokeWidth="0.3" />
-        <line x1="152" y1="560" x2="158" y2="560" stroke="hsl(var(--accent))" strokeWidth="0.3" />
+      {/* ── STRUCTURAL COLUMNS — from A07 axonometric ── */}
+      {/* Arena columns — left row */}
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <rect key={`cal${i}`} x={193} y={440 + i * 25} width="2.5" height="2.5" fill="hsl(var(--accent))" opacity="0.06" />
+      ))}
+      {/* Arena columns — right row */}
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <rect key={`car${i}`} x={544} y={440 + i * 25} width="2.5" height="2.5" fill="hsl(var(--accent))" opacity="0.06" />
+      ))}
+      {/* Stable columns */}
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+        <rect key={`cst${i}`} x={210 + i * 45} y={118} width="2" height="2" fill="hsl(var(--accent))" opacity="0.05" />
+      ))}
+
+      {/* ── DIMENSION ANNOTATIONS ── */}
+      <g opacity="0.08" fontSize="5" fontFamily="monospace" fill="hsl(var(--accent))">
+        {/* Arena width dimension */}
+        <line x1="195" y1="605" x2="545" y2="605" stroke="hsl(var(--accent))" strokeWidth="0.25" />
+        <line x1="195" y1="602" x2="195" y2="608" stroke="hsl(var(--accent))" strokeWidth="0.25" />
+        <line x1="545" y1="602" x2="545" y2="608" stroke="hsl(var(--accent))" strokeWidth="0.25" />
+
+        {/* Overall height */}
+        <line x1="170" y1="120" x2="170" y2="590" stroke="hsl(var(--accent))" strokeWidth="0.25" />
+        <line x1="167" y1="120" x2="173" y2="120" stroke="hsl(var(--accent))" strokeWidth="0.25" />
+        <line x1="167" y1="590" x2="173" y2="590" stroke="hsl(var(--accent))" strokeWidth="0.25" />
       </g>
 
-      {/* Drawing reference */}
-      <g opacity="0.12" transform="translate(560, 600)">
+      {/* ── ROOF LINE HINTS — from elevations A06 ── */}
+      <path
+        d="M 195 115 L 370 98 L 545 115"
+        fill="none" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.06" strokeDasharray="4 3"
+      />
+
+      {/* ── DRAWING REFERENCE ── */}
+      <g opacity="0.1" transform="translate(545, 645)">
         <text x="0" y="0" fontSize="6" fill="hsl(var(--accent))" fontFamily="monospace" letterSpacing="0.08em">MAIN RIDGE</text>
-        <text x="0" y="10" fontSize="5" fill="hsl(var(--accent))" fontFamily="monospace" opacity="0.6">PROPOSED GROUND FLOOR</text>
+        <text x="0" y="10" fontSize="4.5" fill="hsl(var(--accent))" fontFamily="monospace" opacity="0.6">PROPOSED GROUND FLOOR</text>
+        <text x="0" y="18" fontSize="4" fill="hsl(var(--accent))" fontFamily="monospace" opacity="0.4">A 03</text>
       </g>
 
-      {/* Compass */}
-      <g opacity="0.1" transform="translate(660, 140)">
-        <line x1="0" y1="-16" x2="0" y2="16" stroke="hsl(var(--accent))" strokeWidth="0.4" />
-        <line x1="-16" y1="0" x2="16" y2="0" stroke="hsl(var(--accent))" strokeWidth="0.4" />
-        <text x="0" y="-20" textAnchor="middle" fontSize="7" fill="hsl(var(--accent))" fontFamily="monospace">N</text>
+      {/* ── COMPASS ── */}
+      <g opacity="0.08" transform="translate(660, 130)">
+        <line x1="0" y1="-16" x2="0" y2="16" stroke="hsl(var(--accent))" strokeWidth="0.35" />
+        <line x1="-16" y1="0" x2="16" y2="0" stroke="hsl(var(--accent))" strokeWidth="0.35" />
+        <polygon points="0,-18 -3,-12 3,-12" fill="hsl(var(--accent))" opacity="0.3" />
+        <text x="0" y="-22" textAnchor="middle" fontSize="6" fill="hsl(var(--accent))" fontFamily="monospace">N</text>
       </g>
+
+      {/* ── PADDOCK ACCESS (left) ── */}
+      <text x="182" y="350" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.07" fontFamily="monospace" transform="rotate(-90, 182, 350)">PADDOCK</text>
+
+      {/* ── TIE-UP AREA markers ── */}
+      <g opacity="0.06">
+        <circle cx="290" cy="415" r="1.5" fill="hsl(var(--accent))" />
+        <circle cx="310" cy="415" r="1.5" fill="hsl(var(--accent))" />
+        <circle cx="430" cy="415" r="1.5" fill="hsl(var(--accent))" />
+        <circle cx="450" cy="415" r="1.5" fill="hsl(var(--accent))" />
+      </g>
+      <text x="370" y="422" textAnchor="middle" fontSize="3.5" fill="hsl(var(--accent))" opacity="0.06" fontFamily="monospace">TIE-UP</text>
     </svg>
   );
 }
@@ -223,14 +310,14 @@ function getCenter(path: string): { x: number; y: number } {
   return { x: (Math.min(...xs) + Math.max(...xs)) / 2, y: (Math.min(...ys) + Math.max(...ys)) / 2 };
 }
 
-/* ── Touch detection ──────────────────────────────────── */
+/* ── Touch detection ── */
 function useIsTouchDevice() {
   const [isTouch, setIsTouch] = useState(false);
   useEffect(() => { setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0); }, []);
   return isTouch;
 }
 
-/* ── Main export ──────────────────────────────────────── */
+/* ── Main export ── */
 export function InteractiveMasterplan() {
   usePreloadImages(Object.values(ZONE_IMAGES));
   const [activeZone, setActiveZone] = useState<string | null>(null);
