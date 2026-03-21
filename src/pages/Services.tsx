@@ -165,12 +165,7 @@ export default function Services() {
             <RevealOnScroll direction="up" delay={200}>
               <div className="space-y-6 text-sm text-muted-foreground/50 leading-[2]">
                 <p>
-                  We don't work from templates. Every property is different —
-                  different soil, different drainage, different needs.
-                </p>
-                <p className="text-muted-foreground/30 italic text-[13px]">
-                  Following assessment, a structured project brief
-                  and system specification is prepared.
+                  No templates. Every property is different — different soil, different drainage, different needs.
                 </p>
               </div>
             </RevealOnScroll>
