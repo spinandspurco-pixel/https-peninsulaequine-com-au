@@ -32,14 +32,14 @@ const HQ = lazy(() => import("./pages/HQ"));
 const EmployeeDashboard = lazy(() => import("./pages/EmployeeDashboard"));
 const BookLesson = lazy(() => import("./pages/BookLesson"));
 const Lessons = lazy(() => import("./pages/Lessons"));
-const BrandGuide = lazy(() => import("./pages/BrandGuide"));
+
 const Shop = lazy(() => import("./pages/Shop"));
 
 const Forge = lazy(() => import("./pages/Forge"));
 const Events = lazy(() => import("./pages/Events"));
 const Process = lazy(() => import("./pages/Process"));
 const BookingsDashboard = lazy(() => import("./pages/BookingsDashboard"));
-const StudentSpotlight = lazy(() => import("./pages/StudentSpotlight"));
+
 const RoundPens = lazy(() => import("./pages/RoundPens"));
 const Schedule = lazy(() => import("./pages/Schedule"));
 const ThankYou = lazy(() => import("./pages/ThankYou"));
@@ -51,7 +51,7 @@ const AdminDocuments = lazy(() => import("./pages/AdminDocuments"));
 const StaffDocumentPortal = lazy(() => import("./pages/StaffDocumentPortal"));
 const TrainerDocumentPortal = lazy(() => import("./pages/TrainerDocumentPortal"));
 const TrainerProfile = lazy(() => import("./pages/TrainerProfile"));
-const MLPGSPage = lazy(() => import("./pages/MLPGS"));
+
 const GroundLock = lazy(() => import("./pages/GroundLock"));
 const CaseStudy = lazy(() => import("./pages/CaseStudy"));
 const GroundLockSystems = lazy(() => import("./pages/GroundLockSystems"));
@@ -108,14 +108,14 @@ function AppContent() {
           <Route path="/employee" element={<EmployeeDashboard />} />
           <Route path="/lessons" element={<Lessons />} />
           <Route path="/book-lesson" element={<ProtectedRoute><BookLesson /></ProtectedRoute>} />
-          <Route path="/brand" element={<BrandGuide />} />
+          
           <Route path="/shop" element={<Shop />} />
           
           <Route path="/forge" element={<Forge />} />
           <Route path="/events" element={<Events />} />
           <Route path="/process" element={<Process />} />
           <Route path="/bookings" element={<BookingsDashboard />} />
-          <Route path="/student-spotlight" element={<StudentSpotlight />} />
+          
           <Route path="/schedule" element={<Schedule />} />
           <Route path="/thank-you" element={<ThankYou />} />
           <Route path="/pricing" element={<Pricing />} />
@@ -126,7 +126,7 @@ function AppContent() {
           <Route path="/trainer/documents" element={<TrainerDocumentPortal />} />
           <Route path="/admin/documents" element={<AdminDocuments />} />
           <Route path="/trainers/:slug" element={<TrainerProfile />} />
-           <Route path="/mlpgs" element={<MLPGSPage />} />
+           
           <Route path="/groundlock" element={<GroundLock />} />
           <Route path="/groundlock-systems" element={<GroundLockSystems />} />
           <Route path="/equus-ridge" element={<EquusRidge />} />
