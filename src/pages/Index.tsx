@@ -247,10 +247,18 @@ export default function Index() {
             />
           </div>
         </div>
+
+        {/* Bottom bleed — dissolves hero into next section */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-32 sm:h-40 pointer-events-none z-20"
+          style={{
+            background: "linear-gradient(to bottom, transparent 0%, hsl(var(--card)) 100%)",
+          }}
+        />
       </section>
 
       {/* ═══ 2. GROUNDLOCK — SIGNATURE SYSTEM ══════════════ */}
-      <section className="relative overflow-hidden cv-auto">
+      <section className="relative overflow-hidden cv-auto -mt-px">
         <div className="py-32 sm:py-40 lg:py-48 bg-card relative">
           <div className="absolute inset-0 engineering-grid" />
           <div className="absolute inset-0 grain-texture opacity-30" />
