@@ -45,60 +45,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 
-interface Inquiry {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  name: string;
-  email: string;
-  phone: string | null;
-  services: string[];
-  preferred_service: string | null;
-  project_details: string | null;
-  project_vision: string | null;
-  budget_range: string | null;
-  preferred_start: string | null;
-  preferred_contact: string | null;
-  horse_name: string | null;
-  horse_age: string | null;
-  horse_breed: string | null;
-  experience_level: string | null;
-  status: string;
-  notes: string | null;
-  lead_tier: string | null;
-  lead_tags: string[] | null;
-  attachment_urls: string[] | null;
-  deal_value: number | null;
-  probability: number | null;
-  expected_value: number | null;
-  deal_stage: string | null;
-  last_contact_at: string | null;
-}
-
-const TIER_COLORS: Record<string, string> = {
-  premium: "bg-accent text-accent-foreground",
-  high: "bg-accent/70 text-accent-foreground",
-  standard: "bg-muted text-muted-foreground",
-  starter: "bg-muted text-muted-foreground",
-};
-
-const statusOptions = [
-  { value: "new", label: "New", color: "bg-accent/80" },
-  { value: "contacted", label: "Contacted", color: "bg-muted-foreground/60" },
-  { value: "in_progress", label: "In Progress", color: "bg-accent" },
-  { value: "quoted", label: "Quoted", color: "bg-accent/60" },
-  { value: "won", label: "Won", color: "bg-emerald-600" },
-  { value: "lost", label: "Lost", color: "bg-destructive" },
-];
-
-function getStatusBadge(status: string) {
-  const cfg = statusOptions.find((s) => s.value === status) || statusOptions[0];
-  return (
-    <Badge variant="secondary" className={`${cfg.color} text-white text-[10px] uppercase tracking-wider font-medium`}>
-      {cfg.label}
-    </Badge>
-  );
-}
+type ViewMode = "founder" | "admin" | "operations";
 
 type ViewMode = "founder" | "admin" | "operations";
 
