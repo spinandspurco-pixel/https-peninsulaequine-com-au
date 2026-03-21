@@ -132,6 +132,16 @@ function SitePlan({
         <pattern id="mp-hatch-dense" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <line x1="0" y1="0" x2="0" y2="3" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.04" />
         </pattern>
+        <filter id="mp-glow">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feFlood floodColor="hsl(var(--accent))" floodOpacity="0.15" result="color" />
+          <feComposite in="color" in2="blur" operator="in" result="glow" />
+          <feMerge>
+            <feMergeNode in="glow" />
+            <feMergeNode in="glow" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
       </defs>
 
       {/* Background grid */}
