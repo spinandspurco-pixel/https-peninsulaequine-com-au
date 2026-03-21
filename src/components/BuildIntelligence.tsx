@@ -81,7 +81,21 @@ function FinishedLayer() {
 /* ── Main export ──────────────────────────────────────── */
 export function BuildIntelligence() {
   const [active, setActive] = useState<LayerKey>("structure");
+  const [transitioning, setTransitioning] = useState(false);
+  const pendingRef = useRef<LayerKey | null>(null);
   const activeLayer = layers.find((l) => l.key === active)!;
+
+  const handleSwitch = useCallback((key: LayerKey) => {
+    if (key === active || transitioning) return;
+    setTransitioning(true);
+    pendingRef.current = key;
+    // Brief opacity dip before switching
+    setTimeout(() => {
+      setActive(key);
+      pendingRef.current = null;
+      setTimeout(() => setTransitioning(false), 80);
+    }, 70);
+  }, [active, transitioning]);
 
   return (
     <section className="relative py-28 sm:py-36 lg:py-44 overflow-hidden">
