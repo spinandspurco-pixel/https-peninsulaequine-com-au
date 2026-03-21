@@ -15,14 +15,14 @@ function BlueprintLinework() {
       {/* Horizontal structural lines */}
       <line
         x1="0" y1="300" x2="1600" y2="300"
-        stroke="#C6A86B" strokeWidth="0.5" opacity="0"
+        stroke="#C6A86B" strokeWidth="0.6" opacity="0"
         className="animate-[blueprintDraw_2.4s_0.3s_ease-out_forwards]"
         strokeDasharray="1600" strokeDashoffset="1600"
         style={{ animation: "blueprintDraw 2.4s 0.3s ease-out forwards" }}
       />
       <line
         x1="0" y1="600" x2="1600" y2="600"
-        stroke="#C6A86B" strokeWidth="0.5" opacity="0"
+        stroke="#C6A86B" strokeWidth="0.6" opacity="0"
         className="animate-[blueprintDraw_2.4s_0.6s_ease-out_forwards]"
         strokeDasharray="1600" strokeDashoffset="1600"
         style={{ animation: "blueprintDraw 2.4s 0.6s ease-out forwards" }}
@@ -31,13 +31,13 @@ function BlueprintLinework() {
       {/* Vertical structural lines */}
       <line
         x1="400" y1="0" x2="400" y2="900"
-        stroke="#C6A86B" strokeWidth="0.3" opacity="0"
+        stroke="#C6A86B" strokeWidth="0.4" opacity="0"
         strokeDasharray="900" strokeDashoffset="900"
         style={{ animation: "blueprintDraw 2s 0.8s ease-out forwards" }}
       />
       <line
         x1="1200" y1="0" x2="1200" y2="900"
-        stroke="#C6A86B" strokeWidth="0.3" opacity="0"
+        stroke="#C6A86B" strokeWidth="0.4" opacity="0"
         strokeDasharray="900" strokeDashoffset="900"
         style={{ animation: "blueprintDraw 2s 1s ease-out forwards" }}
       />
@@ -45,13 +45,13 @@ function BlueprintLinework() {
       {/* Diagonal structural braces */}
       <line
         x1="0" y1="0" x2="400" y2="300"
-        stroke="#C6A86B" strokeWidth="0.4" opacity="0"
+        stroke="#C6A86B" strokeWidth="0.5" opacity="0"
         strokeDasharray="500" strokeDashoffset="500"
         style={{ animation: "blueprintDraw 1.8s 1.2s ease-out forwards" }}
       />
       <line
         x1="1600" y1="0" x2="1200" y2="300"
-        stroke="#C6A86B" strokeWidth="0.4" opacity="0"
+        stroke="#C6A86B" strokeWidth="0.5" opacity="0"
         strokeDasharray="500" strokeDashoffset="500"
         style={{ animation: "blueprintDraw 1.8s 1.3s ease-out forwards" }}
       />
@@ -60,7 +60,7 @@ function BlueprintLinework() {
       <path
         d="M 200 600 L 800 200 L 1400 600"
         fill="none"
-        stroke="#C6A86B" strokeWidth="0.6" opacity="0"
+        stroke="#C6A86B" strokeWidth="0.7" opacity="0"
         strokeDasharray="1400" strokeDashoffset="1400"
         style={{ animation: "blueprintDraw 2.8s 1.5s ease-out forwards" }}
       />
@@ -87,8 +87,8 @@ function BlueprintLinework() {
         { x: 80, y: 800 }, { x: 1520, y: 800 },
       ].map((p, i) => (
         <g key={i} opacity="0" style={{ animation: `blueprintFade 0.8s ${2.8 + i * 0.1}s ease-out forwards` }}>
-          <line x1={p.x - 12} y1={p.y} x2={p.x + 12} y2={p.y} stroke="#C6A86B" strokeWidth="0.5" />
-          <line x1={p.x} y1={p.y - 12} x2={p.x} y2={p.y + 12} stroke="#C6A86B" strokeWidth="0.5" />
+          <line x1={p.x - 12} y1={p.y} x2={p.x + 12} y2={p.y} stroke="#C6A86B" strokeWidth="0.6" />
+          <line x1={p.x} y1={p.y - 12} x2={p.x} y2={p.y + 12} stroke="#C6A86B" strokeWidth="0.6" />
         </g>
       ))}
 
@@ -173,7 +173,7 @@ export function ProjectsCinematicHero() {
         style={{
           opacity: ready ? 0.12 : 0,
           transitionDelay: "3s",
-          transform: `translate(${mouse.x * 0.5}px, ${mouse.y * 0.5}px) scale(1.05)`,
+          transform: `translate(${mouse.x * 0.5}px, ${mouse.y * 0.5}px) scale(1.09)`,
         }}
       >
         <img
@@ -192,7 +192,12 @@ export function ProjectsCinematicHero() {
         background: "linear-gradient(to bottom, hsl(var(--background) / 0.3) 0%, hsl(var(--background) / 0.1) 50%, hsl(var(--background) / 0.9) 100%)",
       }} />
 
-      {/* Layer 4: Grain */}
+      {/* Layer 4: Vignette */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: "radial-gradient(ellipse 70% 60% at 50% 50%, transparent 0%, hsl(var(--background) / 0.35) 100%)",
+      }} />
+
+      {/* Layer 5: Grain */}
       <div className="absolute inset-0 pointer-events-none grain-texture" />
 
       {/* Layer 5: Content — center-left */}
@@ -202,7 +207,7 @@ export function ProjectsCinematicHero() {
             {/* Label */}
             <div
               className="flex items-center gap-4 mb-8 opacity-0"
-              style={{ animation: "blueprintFade 0.8s 2s ease-out forwards" }}
+              style={{ animation: "blueprintFade 0.8s 2.4s ease-out forwards" }}
             >
               <div className="w-8 h-px" style={{ backgroundColor: "#C6A86B", opacity: 0.5 }} />
               <p
@@ -218,7 +223,7 @@ export function ProjectsCinematicHero() {
               className="font-serif text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.05] tracking-[0.02em] mb-6 opacity-0"
               style={{
                 color: "#F5F0E8",
-                animation: "heroHeadingReveal 1.2s 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards",
+                animation: "heroHeadingReveal 1.2s 2.8s cubic-bezier(0.22, 1, 0.36, 1) forwards",
               }}
             >
               Main Ridge
@@ -231,7 +236,7 @@ export function ProjectsCinematicHero() {
               className="text-sm sm:text-base font-serif italic leading-relaxed mb-3 opacity-0"
               style={{
                 color: "rgba(198,168,107,0.45)",
-                animation: "blueprintFade 1s 3s ease-out forwards",
+                animation: "blueprintFade 1s 3.4s ease-out forwards",
               }}
             >
               A private equine facility engineered for performance, flow, and long-term durability.
@@ -242,7 +247,7 @@ export function ProjectsCinematicHero() {
               className="text-[11px] sm:text-xs font-mono uppercase tracking-[0.2em] mb-10 opacity-0"
               style={{
                 color: "rgba(198,168,107,0.3)",
-                animation: "blueprintFade 0.8s 3.3s ease-out forwards",
+                animation: "blueprintFade 0.8s 3.7s ease-out forwards",
               }}
             >
               Designed from the ground up. Built to hold up.
@@ -253,7 +258,7 @@ export function ProjectsCinematicHero() {
               className="text-[10px] sm:text-[11px] font-serif italic mb-10 opacity-0"
               style={{
                 color: "rgba(198,168,107,0.2)",
-                animation: "blueprintFade 0.8s 3.6s ease-out forwards",
+                animation: "blueprintFade 0.8s 4s ease-out forwards",
               }}
             >
               Private projects. Discreet builds. Built for long-term ownership.
@@ -263,7 +268,7 @@ export function ProjectsCinematicHero() {
             <button
               onClick={scrollToContent}
               className="group inline-flex items-center gap-3 opacity-0 cursor-pointer bg-transparent border-0"
-              style={{ animation: "blueprintFade 0.8s 3.4s ease-out forwards" }}
+              style={{ animation: "blueprintFade 0.8s 3.8s ease-out forwards" }}
             >
               <span
                 className="text-xs sm:text-sm uppercase tracking-[0.25em] font-mono transition-colors duration-300"
