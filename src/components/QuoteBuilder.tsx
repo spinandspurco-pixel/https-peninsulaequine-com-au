@@ -135,6 +135,10 @@ export function QuoteBuilder({ quoteId, inquiryId, onSaved, onClose }: QuoteBuil
       setQuote({
         ...qRes.data,
         expiry_date: qRes.data.expiry_date || "",
+        property_name: qRes.data.property_name || "",
+        project_overview: qRes.data.project_overview || "",
+        groundlock_included: qRes.data.groundlock_included || false,
+        share_token: qRes.data.share_token || undefined,
       });
     }
     if (liRes.data) {
