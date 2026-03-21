@@ -81,13 +81,33 @@ export default function ProposalTemplate() {
   const data = SAMPLE;
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const handlePrint = useCallback(() => {
+    window.print();
+  }, []);
+
   return (
     <div
       ref={containerRef}
-      className="min-h-screen relative"
+      className="min-h-screen relative proposal-root"
       style={{ background: "hsl(var(--background))" }}
     >
       <GrainOverlay />
+
+      {/* Print / Export button — top right, hidden in print */}
+      <button
+        onClick={handlePrint}
+        className="no-print fixed top-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 text-[9px] font-sans uppercase tracking-[0.18em] font-medium transition-opacity duration-300 hover:opacity-80"
+        style={{
+          background: "hsl(var(--card))",
+          border: "1px solid hsl(var(--border))",
+          color: "hsl(var(--foreground))",
+          opacity: 0.5,
+        }}
+        aria-label="Export as PDF"
+      >
+        <Download className="w-3 h-3" />
+        Export PDF
+      </button>
 
       {/* Content container */}
       <div className="relative z-[2] max-w-3xl mx-auto px-8 sm:px-12 lg:px-16">
@@ -95,7 +115,7 @@ export default function ProposalTemplate() {
         {/* ════════════════════════════════════════════
             1. COVER / HERO — Cinematic
         ════════════════════════════════════════════ */}
-        <section className="min-h-screen flex flex-col relative">
+        <section className="min-h-screen flex flex-col relative proposal-cover">
 
           {/* Architectural background texture — radial vignette + grid */}
           <div
