@@ -273,12 +273,10 @@ export default function Index() {
                     P.E. GroundLock™
                   </h2>
                   <p className="text-[14px] text-muted-foreground/45 leading-[2] mb-6 max-w-[360px]">
-                    An engineered entry system built for equine and rural properties —
-                    designed for floats, trucks, and repeated front-gate arrivals
-                    where standard surfaces fail within seasons.
+                    Interlocking ground stabilisation for entries, laneways, and arrival zones where standard surfaces fail.
                   </p>
                   <p className="text-[11px] text-muted-foreground/20 italic tracking-[0.04em] mb-10">
-                    What sits beneath determines what lasts above.
+                    Designed to perform under load.
                   </p>
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" delay={200}>
