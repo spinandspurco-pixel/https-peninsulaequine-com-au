@@ -158,6 +158,20 @@ function SitePlan({
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
+        <filter id="mp-zone-active" x="-10%" y="-10%" width="125%" height="130%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="shadow-blur" />
+          <feFlood floodColor="hsl(0 0% 0%)" floodOpacity="0.25" result="shadow-color" />
+          <feComposite in="shadow-color" in2="shadow-blur" operator="in" result="shadow" />
+          <feOffset in="shadow" dx="1.5" dy="2.5" result="shadow-offset" />
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="glow-blur" />
+          <feFlood floodColor="hsl(var(--accent))" floodOpacity="0.12" result="glow-color" />
+          <feComposite in="glow-color" in2="glow-blur" operator="in" result="glow" />
+          <feMerge>
+            <feMergeNode in="shadow-offset" />
+            <feMergeNode in="glow" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
         {/* Architectural drop shadow — light from top-left */}
         <filter id="mp-shadow-lg" x="-5%" y="-5%" width="115%" height="120%">
           <feDropShadow dx="2.5" dy="3.5" stdDeviation="4" floodColor="hsl(0 0% 0%)" floodOpacity="0.18" />
@@ -239,21 +253,24 @@ function SitePlan({
       {zones.map((z) => {
         const isActive = activeZone === z.id;
         const isDimmed = activeZone !== null && !isActive;
+        const center = getCenter(z.path);
         return (
           <g
             key={z.id}
             style={{
               opacity: isDimmed ? 0.2 : 1,
-              transition: "opacity 350ms cubic-bezier(0.25, 0.1, 0.25, 1)",
-              willChange: "opacity",
+              transform: isActive ? `scale(1.015)` : "scale(1)",
+              transformOrigin: `${center.x}px ${center.y}px`,
+              transition: "opacity 350ms cubic-bezier(0.25, 0.1, 0.25, 1), transform 350ms cubic-bezier(0.25, 0.1, 0.25, 1)",
+              willChange: "opacity, transform",
             }}
-            filter={isActive ? "url(#mp-glow)" : undefined}
+            filter={isActive ? "url(#mp-zone-active)" : undefined}
           >
             <path
               d={z.path}
-              fill={isActive ? "hsl(var(--accent) / 0.1)" : "hsl(var(--accent) / 0.012)"}
-              stroke={isActive ? "hsl(var(--accent) / 0.6)" : "hsl(var(--accent) / 0.1)"}
-              strokeWidth={isActive ? "1.2" : "0.6"}
+              fill={isActive ? "hsl(var(--accent) / 0.12)" : "hsl(var(--accent) / 0.012)"}
+              stroke={isActive ? "hsl(var(--accent) / 0.65)" : "hsl(var(--accent) / 0.1)"}
+              strokeWidth={isActive ? "1.4" : "0.6"}
               style={{ transition: "fill 350ms ease, stroke 350ms ease, stroke-width 350ms ease" }}
               className="cursor-pointer"
               onMouseEnter={() => onHover(z.id)}
@@ -264,22 +281,22 @@ function SitePlan({
               <path
                 d={z.path}
                 fill="none"
-                stroke="hsl(var(--accent) / 0.12)"
-                strokeWidth="4"
+                stroke="hsl(var(--accent) / 0.08)"
+                strokeWidth="6"
                 className="pointer-events-none"
               />
             )}
             <text
-              x={getCenter(z.path).x}
-              y={getCenter(z.path).y}
+              x={center.x}
+              y={center.y}
               textAnchor="middle"
               dominantBaseline="central"
-              fontSize="7"
+              fontSize={isActive ? "7.5" : "7"}
               fontFamily="monospace"
               letterSpacing="0.12em"
               fill="hsl(var(--accent))"
               className="pointer-events-none uppercase"
-              style={{ opacity: isActive ? 0.6 : 0.15, transition: "opacity 350ms ease" }}
+              style={{ opacity: isActive ? 0.7 : 0.15, transition: "opacity 350ms ease, font-size 350ms ease" }}
             >
               {z.shortLabel}
             </text>
