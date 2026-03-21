@@ -108,7 +108,7 @@ function AppContent() {
           <Route path="/employee" element={<EmployeeDashboard />} />
           <Route path="/lessons" element={<Lessons />} />
           <Route path="/book-lesson" element={<ProtectedRoute><BookLesson /></ProtectedRoute>} />
-          <Route path="/brand" element={<BrandGuide />} />
+          
           <Route path="/shop" element={<Shop />} />
           
           <Route path="/forge" element={<Forge />} />
