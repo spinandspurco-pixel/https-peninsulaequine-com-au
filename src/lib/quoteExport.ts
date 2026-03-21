@@ -484,7 +484,7 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
 
   y = 38;
 
-  drawSectionLabel(doc, "03 — Visual Reference", ml, y);
+  drawSectionLabel(doc, "04 — Visual Reference", ml, y);
   y += 10;
 
   doc.setFont("helvetica", "bold");
