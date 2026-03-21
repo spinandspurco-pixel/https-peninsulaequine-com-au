@@ -29,7 +29,7 @@ const HOTSPOTS: Hotspot[] = [
       "The signature U-shape isn't decorative — it's structural. The curved crown distributes compressive force while open legs allow directional water flow and interlocking with adjacent units.",
     highlight: (
       <path
-        d="M 78 100 L 78 45 A 28 28 0 0 0 22 45 L 22 100 L 30 100 L 30 50 A 20 20 0 0 1 70 50 L 70 100 Z"
+        d="M 74 105 L 74 97 L 80 97 L 80 105 L 80 97 L 78 80 L 76 60 A 30 32 0 0 0 24 60 L 22 80 L 20 97 L 20 105 L 26 105 L 26 97 L 30 80 L 32 62 A 20 22 0 0 1 68 62 L 70 80 L 74 97 L 74 105 Z"
         fill="hsl(var(--accent) / 0.12)"
         stroke="hsl(var(--accent) / 0.5)"
         strokeWidth="1.5"
