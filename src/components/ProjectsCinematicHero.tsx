@@ -258,7 +258,7 @@ export function ProjectsCinematicHero() {
               className="text-[10px] sm:text-[11px] font-serif italic mb-10 opacity-0"
               style={{
                 color: "rgba(198,168,107,0.2)",
-                animation: "blueprintFade 0.8s 4s ease-out forwards",
+                animation: "blueprintFade 0.6s 2.6s ease-out forwards",
               }}
             >
               Private projects. Discreet builds. Built for long-term ownership.
