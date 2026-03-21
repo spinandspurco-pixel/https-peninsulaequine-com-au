@@ -118,8 +118,8 @@ export const services = [
   {
     id: "full-facility",
     title: "Full Facility Design & Build",
-    shortDescription: "Complete equine property design from concept to keys in hand.",
-    description: "End-to-end facility planning and construction. We coordinate every trade—from initial site survey through barn, arena, paddocks, and landscaping—delivering a turnkey equine property.",
+    shortDescription: "Complete property design — concept to keys in hand.",
+    description: "Every trade coordinated. Arena, barn, paddocks, and landscaping — delivered as one system.",
     features: [
       "Master site planning & 3-D concept renders",
       "All permits, engineering & council liaison",
