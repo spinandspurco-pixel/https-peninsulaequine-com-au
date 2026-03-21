@@ -34,7 +34,6 @@ function Panel({
   const [visible, setVisible] = useState(false);
   const [parallaxY, setParallaxY] = useState(0);
 
-  /* Intersection observer for fade-in */
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -46,7 +45,6 @@ function Panel({
     return () => io.disconnect();
   }, []);
 
-  /* Parallax scroll — subtle background shift */
   useEffect(() => {
     if (reducedMotion) return;
     let ticking = false;
@@ -76,7 +74,7 @@ function Panel({
     >
       {/* Background image with parallax */}
       <div
-        className="absolute inset-0 scale-[1.08] transition-transform duration-[100ms] ease-out will-change-transform"
+        className="absolute inset-0 scale-[1.08] will-change-transform"
         style={{
           transform: reducedMotion
             ? "scale(1.08)"
@@ -96,7 +94,7 @@ function Panel({
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(13,13,13,0.35) 0%, rgba(13,13,13,0.55) 50%, rgba(13,13,13,0.75) 100%)",
+            "linear-gradient(to bottom, rgba(13,13,13,0.3) 0%, rgba(13,13,13,0.5) 50%, rgba(13,13,13,0.75) 100%)",
         }}
       />
 
@@ -107,26 +105,25 @@ function Panel({
       <div className="absolute inset-0 flex items-end z-10">
         <div className="section-container pb-14 sm:pb-20 lg:pb-24">
           <div
-            className="max-w-md transition-all ease-out"
+            className="max-w-md"
             style={{
               opacity: visible ? 1 : 0,
-              transform: visible ? "translateY(0)" : "translateY(12px)",
-              transitionDuration: "600ms",
-              transitionDelay: "100ms",
+              transform: visible ? "translateY(0)" : "translateY(10px)",
+              transition: "opacity 600ms ease-out 100ms, transform 600ms ease-out 100ms",
             }}
           >
             {/* Step counter + label */}
             <div className="flex items-center gap-4 mb-4">
               <span
                 className="text-[10px] font-mono tracking-[0.2em] uppercase"
-                style={{ color: "rgba(198,168,107,0.35)" }}
+                style={{ color: "rgba(198,168,107,0.3)" }}
               >
                 {String(index + 1).padStart(2, "0")}
               </span>
-              <div className="w-6 h-px" style={{ backgroundColor: "rgba(198,168,107,0.2)" }} />
+              <div className="w-6 h-px" style={{ backgroundColor: "rgba(198,168,107,0.15)" }} />
               <span
                 className="text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase"
-                style={{ color: "rgba(198,168,107,0.5)" }}
+                style={{ color: "rgba(198,168,107,0.45)" }}
               >
                 {label}
               </span>
@@ -135,7 +132,7 @@ function Panel({
             {/* Description */}
             <p
               className="font-serif text-lg sm:text-xl lg:text-2xl italic leading-relaxed tracking-[0.01em]"
-              style={{ color: "rgba(245,240,232,0.65)" }}
+              style={{ color: "rgba(245,240,232,0.6)" }}
             >
               "{line}"
             </p>
@@ -154,14 +151,14 @@ export function WalkTheProject() {
     <section>
       {/* Section intro */}
       <div className="py-20 sm:py-28 text-center">
-        <div className="flex items-center justify-center gap-5 mb-6">
-          <div className="w-8 h-px bg-accent/30" />
-          <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/40 font-mono">
+        <div className="flex items-center justify-center gap-5 mb-5">
+          <div className="w-8 h-px bg-accent/25" />
+          <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/35 font-mono">
             Walk the Project
           </p>
-          <div className="w-8 h-px bg-accent/30" />
+          <div className="w-8 h-px bg-accent/25" />
         </div>
-        <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground tracking-[0.03em]">
+        <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/90 tracking-[0.03em]">
           Main Ridge Estate
         </h2>
       </div>
