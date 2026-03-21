@@ -8,6 +8,7 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { GroundLockSystemDiagram } from "@/components/GroundLockSystemDiagram";
 import { GroundLockSystemLayout } from "@/components/GroundLockSystemLayout";
 import { GroundLockComparison } from "@/components/GroundLockComparison";
+import { GroundLockCrossSection } from "@/components/GroundLockCrossSection";
 import {
   Truck,
   Calendar,
