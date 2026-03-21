@@ -37,7 +37,7 @@ function BlueprintLinework() {
       />
       <line
         x1="1200" y1="0" x2="1200" y2="900"
-        stroke="#C6A86B" strokeWidth="0.3" opacity="0"
+        stroke="#C6A86B" strokeWidth="0.4" opacity="0"
         strokeDasharray="900" strokeDashoffset="900"
         style={{ animation: "blueprintDraw 2s 1s ease-out forwards" }}
       />
