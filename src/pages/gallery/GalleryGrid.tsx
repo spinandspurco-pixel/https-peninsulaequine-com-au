@@ -76,7 +76,7 @@ function CinematicImage({
         <img
           src={item.src}
           alt={item.alt}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ease-out group-hover:opacity-90"
           loading="lazy"
           decoding="async"
           onLoad={() => setLoaded(true)}
