@@ -246,7 +246,7 @@ export default function RoundPens() {
                 <img
                   src={img.src}
                   alt={img.alt}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover img-gallery hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                 />
               </div>

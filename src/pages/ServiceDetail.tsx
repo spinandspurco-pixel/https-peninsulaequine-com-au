@@ -171,7 +171,7 @@ function GalleryLightbox({
           <img
             src={images[currentIndex].src}
             alt={images[currentIndex].caption}
-            className="w-full h-full object-cover transition-opacity duration-300"
+            className="w-full h-full object-cover img-feature transition-opacity duration-300"
           />
           <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-primary/80 to-transparent p-4">
             <p className="text-sm text-primary-foreground/90">{images[currentIndex].caption}</p>

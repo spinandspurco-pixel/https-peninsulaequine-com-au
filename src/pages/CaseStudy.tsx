@@ -187,7 +187,7 @@ export default function CaseStudy() {
                   <img
                     src={img.src}
                     alt={img.alt}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                    className="absolute inset-0 w-full h-full object-cover img-gallery transition-transform duration-700 ease-out group-hover:scale-[1.02]"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/30 transition-colors duration-500" />
