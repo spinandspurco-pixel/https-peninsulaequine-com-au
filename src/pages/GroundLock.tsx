@@ -2,14 +2,12 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
-import { GroundLockSystemLayout } from "@/components/GroundLockSystemLayout";
 import { GroundLockCrossSection } from "@/components/GroundLockCrossSection";
+import { GroundLockProductEducation } from "@/components/groundlock/GroundLockProductEducation";
+import { PanelSpecimen, PanelArray, PanelSiteLayout } from "@/components/groundlock/GroundLockSystemSVG";
 import { ArrowRight, Layers } from "lucide-react";
 
 import groundlockHero from "@/assets/groundlock-hero-system.jpg";
-import foundationPour from "@/assets/main-ridge-foundation-pour.jpg";
-import rebarDeep from "@/assets/rebar-foundation-deep.jpg";
-import sitePrep from "@/assets/main-ridge-site-prep.jpg";
 
 /* ── Data ─────────────────────────────────────────── */
 const PROBLEMS = [
@@ -28,7 +26,7 @@ const STEPS = [
   {
     number: "02",
     title: "Distribute Load",
-    description: "Interlocking GroundLock grid distributes weight and prevents lateral movement.",
+    description: "Interlocking GroundLock panels distribute weight and prevent lateral movement.",
   },
   {
     number: "03",
@@ -38,16 +36,30 @@ const STEPS = [
 ];
 
 const APPLICATIONS = [
-  "Performance Arenas",
-  "Stable Surrounds & Wash Bays",
-  "Access Roads & Laneways",
-  "High-Traffic Arrival Zones",
-];
-
-const PROOF_IMAGES = [
-  { src: foundationPour, alt: "Foundation pour — GroundLock base preparation", label: "Base Preparation" },
-  { src: rebarDeep, alt: "Reinforcement grid installation", label: "Grid Installation" },
-  { src: sitePrep, alt: "Site preparation and grading", label: "Site Grading" },
+  {
+    title: "Stable Approach Zones",
+    description: "High-traffic transition areas where horses move between stables, wash bays, and paddocks.",
+  },
+  {
+    title: "Float & Trailer Access",
+    description: "Reinforced access routes designed for vehicle load without surface degradation.",
+  },
+  {
+    title: "Wash Bay Surrounds",
+    description: "Draining, stable surfaces that eliminate pooling and mud around daily use areas.",
+  },
+  {
+    title: "Service & Movement Paths",
+    description: "Laneways, walkways, and circulation corridors where consistent footing is essential.",
+  },
+  {
+    title: "Parking & Arrival Zones",
+    description: "Stabilised ground for vehicles and foot traffic — resolving entry presentation.",
+  },
+  {
+    title: "Paddock Gateway Transitions",
+    description: "High-wear gateway zones where ground failure is most visible and most disruptive.",
+  },
 ];
 
 /* ── Page ─────────────────────────────────────────── */
@@ -56,11 +68,10 @@ export default function GroundLock() {
     <Layout>
       {/* ═══ 1. OPENING ═══════════════════════════════════ */}
       <section className="relative pt-44 sm:pt-52 pb-28 sm:pb-36 overflow-hidden">
-        {/* Hero system image background */}
         <div className="absolute inset-0">
           <img
             src={groundlockHero}
-            alt="GroundLock engineered horseshoe panel system cross-section"
+            alt="GroundLock engineered horseshoe panel system"
             className="w-full h-full object-cover object-center"
             loading="eager"
           />
@@ -142,10 +153,7 @@ export default function GroundLock() {
             <RevealOnScroll direction="up" delay={200}>
               <ul className="space-y-4 text-left max-w-xs mx-auto">
                 {PROBLEMS.map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-center gap-4 text-sm text-muted-foreground/45 leading-[1.8]"
-                  >
+                  <li key={item} className="flex items-center gap-4 text-sm text-muted-foreground/45 leading-[1.8]">
                     <span className="w-1.5 h-1.5 rounded-full bg-accent/30 shrink-0" />
                     {item}
                   </li>
@@ -156,19 +164,83 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ 3. UNIFIED SYSTEM — Layout → Cross-Section → Toggle ═ */}
+      {/* ═══ 3. THE PRODUCT — Interactive Education ═══════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-28 sm:py-36 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
-            {/* Shared section header */}
             <div className="text-center mb-20 sm:mb-28">
               <RevealOnScroll direction="up">
                 <RevealLine className="mx-auto mb-12" width="w-10" />
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={80}>
-                <p className="text-overline mb-6">The System</p>
+                <p className="text-overline mb-6">The Product</p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={120}>
+                <h2 className="heading-section text-foreground mb-4">
+                  A Proprietary Panel System
+                </h2>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={160}>
+                <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/30 italic max-w-md mx-auto leading-relaxed">
+                  Hover or tap each feature to understand why the horseshoe form matters.
+                </p>
+              </RevealOnScroll>
+            </div>
+
+            <RevealOnScroll direction="up" delay={200}>
+              <GroundLockProductEducation />
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 4. PANEL HIERARCHY — Panel → System → Layout ═ */}
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-28 sm:py-36 bg-card relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-4xl mx-auto relative z-[1]">
+            <div className="text-center mb-20 sm:mb-28">
+              <RevealOnScroll direction="up">
+                <RevealLine className="mx-auto mb-12" width="w-10" />
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={80}>
+                <p className="text-overline mb-6">System Architecture</p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={120}>
+                <h2 className="heading-section text-foreground">
+                  Panel → System → Layout
+                </h2>
+              </RevealOnScroll>
+            </div>
+
+            <RevealOnScroll direction="up" delay={200}>
+              <div className="space-y-16">
+                <PanelSpecimen />
+                <div className="w-12 h-px bg-accent/10 mx-auto" />
+                <PanelArray />
+                <div className="w-12 h-px bg-accent/10 mx-auto" />
+                <PanelSiteLayout />
+              </div>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 5. CROSS-SECTION ═════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-28 sm:py-36 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-5xl mx-auto relative z-[1]">
+            <div className="text-center mb-20 sm:mb-28">
+              <RevealOnScroll direction="up">
+                <RevealLine className="mx-auto mb-12" width="w-10" />
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={80}>
+                <p className="text-overline mb-6">The Layers</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={120}>
                 <h2 className="heading-section text-foreground mb-4">
@@ -182,21 +254,14 @@ export default function GroundLock() {
               </RevealOnScroll>
             </div>
 
-            {/* Layout → Cross-Section in continuous flow */}
-            <div className="space-y-24 sm:space-y-32">
-              <RevealOnScroll direction="up" delay={200}>
-                <GroundLockSystemLayout />
-              </RevealOnScroll>
-
-              <RevealOnScroll direction="up" delay={100}>
-                <GroundLockCrossSection />
-              </RevealOnScroll>
-            </div>
+            <RevealOnScroll direction="up" delay={200}>
+              <GroundLockCrossSection />
+            </RevealOnScroll>
           </div>
         </div>
       </section>
 
-      {/* ═══ 4. HOW IT WORKS — 3 STEPS ═══════════════════ */}
+      {/* ═══ 6. HOW IT WORKS — 3 STEPS ═══════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-28 sm:py-36 bg-card relative">
@@ -237,72 +302,34 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ 5. APPLICATIONS ═══════════════════════════════ */}
+      {/* ═══ 7. APPLICATIONS ═══════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-28 sm:py-36 relative">
           <div className="absolute inset-0 grain-texture" />
-          <div className="section-container max-w-3xl mx-auto relative z-[1]">
+          <div className="section-container max-w-4xl mx-auto relative z-[1]">
             <div className="text-center mb-16 sm:mb-24">
               <RevealOnScroll direction="up">
-                <p className="text-overline mb-6">Applications</p>
+                <p className="text-overline mb-6">Intended Applications</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={80}>
-                <h2 className="heading-section text-foreground">
-                  Built for Real Properties
+                <h2 className="heading-section text-foreground mb-4">
+                  Where GroundLock Belongs
                 </h2>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={120}>
+                <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/30 italic max-w-md mx-auto leading-relaxed">
+                  Designed for equine infrastructure where ground failure isn't an option.
+                </p>
               </RevealOnScroll>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border/10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border/10">
               {APPLICATIONS.map((app, i) => (
-                <RevealOnScroll key={app} direction="up" delay={i * 80}>
-                  <div className="bg-card p-8 sm:p-10">
-                    <p className="font-serif text-[15px] text-foreground/80">{app}</p>
-                  </div>
-                </RevealOnScroll>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ 6. PROOF ═════════════════════════════════════ */}
-      <section className="relative overflow-hidden">
-        <div className="divider-grid" />
-        <div className="py-28 sm:py-36 bg-card relative">
-          <div className="absolute inset-0 grain-texture" />
-          <div className="section-container max-w-5xl mx-auto relative z-[1]">
-            <div className="text-center mb-16 sm:mb-24">
-              <RevealOnScroll direction="up">
-                <p className="text-overline mb-6">From the Field</p>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={80}>
-                <h2 className="heading-section text-foreground">
-                  Not Theoretical. Built.
-                </h2>
-              </RevealOnScroll>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {PROOF_IMAGES.map((img, i) => (
-                <RevealOnScroll key={img.label} direction="up" delay={i * 100}>
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-sm">
-                    <img
-                      src={img.src}
-                      alt={img.alt}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                    <div
-                      className="absolute inset-0"
-                      style={{ background: "linear-gradient(to top, hsl(var(--background) / 0.7) 0%, transparent 50%)" }}
-                    />
-                    <div className="absolute bottom-3 left-3">
-                      <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-accent/50">
-                        {img.label}
-                      </p>
-                    </div>
+                <RevealOnScroll key={app.title} direction="up" delay={i * 60}>
+                  <div className="bg-card p-8 sm:p-10 h-full">
+                    <p className="font-serif text-[15px] text-foreground/80 mb-2">{app.title}</p>
+                    <p className="text-[12px] text-muted-foreground/30 leading-[1.8]">{app.description}</p>
                   </div>
                 </RevealOnScroll>
               ))}
@@ -373,7 +400,7 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ 7. CTA ═══════════════════════════════════════ */}
+      {/* ═══ CTA ═══════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-28 sm:py-36 relative">
@@ -411,7 +438,6 @@ export default function GroundLock() {
               </Button>
             </RevealOnScroll>
 
-            {/* Trust line */}
             <RevealOnScroll direction="up" delay={350}>
               <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/20 mt-16">
                 We use GroundLock under all Peninsula Equine builds.
