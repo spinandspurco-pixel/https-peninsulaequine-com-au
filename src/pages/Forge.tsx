@@ -258,7 +258,7 @@ export default function Forge() {
             <RevealOnScroll>
               <p className="text-overline text-foreground/20 mb-10">Future Scope</p>
               <p className="text-[12px] sm:text-[13px] text-muted-foreground/25 leading-[2.2] mb-10">
-                As Peninsula Equine's project library grows, Forge will expand
+                As Peninsula Equine's project library grows, GroundLock Systems will expand
                 to include entry kits, gate automation packages, signage systems,
                 stable forecourt products, and threshold hardware — each one
                 validated through real-world builds before release.
