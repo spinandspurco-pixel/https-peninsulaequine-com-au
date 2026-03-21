@@ -82,10 +82,12 @@ function SitePlan({
   activeZone,
   onHover,
   onLeave,
+  onTap,
 }: {
   activeZone: string | null;
   onHover: (id: string) => void;
   onLeave: () => void;
+  onTap: (id: string) => void;
 }) {
   return (
     <svg viewBox="0 0 740 560" className="w-full h-auto max-w-[560px] mx-auto" aria-label="Main Ridge Estate site plan">
