@@ -496,6 +496,18 @@ export default function Gallery() {
 
       <ChapterDivider />
 
+      {/* ─── Bridge to GroundLock ─── */}
+      <section className="relative overflow-hidden">
+        <div className="py-12 sm:py-16 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
+            <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/25 italic leading-relaxed">
+              What sits underneath every project determines how it performs.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* ═══════════════════════════════════════════════════
           11. THE VIEWING LINE — cinematic closer / sole CTA
           ═══════════════════════════════════════════════════ */}
