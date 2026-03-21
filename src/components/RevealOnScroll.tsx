@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 
-type RevealDirection = "up" | "down" | "left" | "right" | "none" | "scale";
+type RevealDirection = "up" | "down" | "left" | "right" | "none";
 
 interface RevealOnScrollProps {
   children: ReactNode;
