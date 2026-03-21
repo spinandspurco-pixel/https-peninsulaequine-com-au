@@ -1,5 +1,5 @@
-import { useRef } from "react";
-import { ArrowRight, MessageSquare, Phone } from "lucide-react";
+import { useRef, useCallback } from "react";
+import { ArrowRight, MessageSquare, Download } from "lucide-react";
 import { GroundLockPanelSVG, PanelDefs } from "@/components/groundlock/GroundLockPanelSVG";
 
 /* ─── Placeholder data shape ─── */
@@ -38,7 +38,7 @@ const SAMPLE: ProposalData = {
 function GrainOverlay() {
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-[1]"
+      className="pointer-events-none fixed inset-0 z-[1] grain-overlay"
       style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
         opacity: 0.028,
@@ -81,13 +81,33 @@ export default function ProposalTemplate() {
   const data = SAMPLE;
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const handlePrint = useCallback(() => {
+    window.print();
+  }, []);
+
   return (
     <div
       ref={containerRef}
-      className="min-h-screen relative"
+      className="min-h-screen relative proposal-root"
       style={{ background: "hsl(var(--background))" }}
     >
       <GrainOverlay />
+
+      {/* Print / Export button — top right, hidden in print */}
+      <button
+        onClick={handlePrint}
+        className="no-print fixed top-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 text-[9px] font-sans uppercase tracking-[0.18em] font-medium transition-opacity duration-300 hover:opacity-80"
+        style={{
+          background: "hsl(var(--card))",
+          border: "1px solid hsl(var(--border))",
+          color: "hsl(var(--foreground))",
+          opacity: 0.5,
+        }}
+        aria-label="Export as PDF"
+      >
+        <Download className="w-3 h-3" />
+        Export PDF
+      </button>
 
       {/* Content container */}
       <div className="relative z-[2] max-w-3xl mx-auto px-8 sm:px-12 lg:px-16">
@@ -95,7 +115,7 @@ export default function ProposalTemplate() {
         {/* ════════════════════════════════════════════
             1. COVER / HERO — Cinematic
         ════════════════════════════════════════════ */}
-        <section className="min-h-screen flex flex-col relative">
+        <section className="min-h-screen flex flex-col relative proposal-cover">
 
           {/* Architectural background texture — radial vignette + grid */}
           <div
@@ -288,7 +308,7 @@ export default function ProposalTemplate() {
         {/* ════════════════════════════════════════════
             2. PROJECT OVERVIEW
         ════════════════════════════════════════════ */}
-        <section className="pt-32 sm:pt-40 pb-28 sm:pb-36">
+        <section className="pt-32 sm:pt-40 pb-28 sm:pb-36 proposal-section print-avoid-break">
           {/* Accent rule entry */}
           <div className="flex items-center gap-5 mb-16 sm:mb-20">
             <div className="h-px w-8" style={{ background: "hsl(var(--accent))", opacity: 0.25 }} />
@@ -357,7 +377,7 @@ export default function ProposalTemplate() {
         {/* ════════════════════════════════════════════
             3. THE GROUNDLOCK SYSTEM
         ════════════════════════════════════════════ */}
-        <section className="py-28 sm:py-36">
+        <section className="py-28 sm:py-36 proposal-section print-page-break">
           <div className="flex items-center gap-5 mb-16 sm:mb-20">
             <div className="h-px w-8" style={{ background: "hsl(var(--accent))", opacity: 0.25 }} />
             <SectionLabel number="02">The GroundLock System</SectionLabel>
@@ -470,7 +490,7 @@ export default function ProposalTemplate() {
         {/* ════════════════════════════════════════════
             4. PROPOSED LAYOUT
         ════════════════════════════════════════════ */}
-        <section className="py-28 sm:py-36">
+        <section className="py-28 sm:py-36 proposal-section print-page-break">
           <div className="flex items-center gap-5 mb-16 sm:mb-20">
             <div className="h-px w-8" style={{ background: "hsl(var(--accent))", opacity: 0.25 }} />
             <SectionLabel number="03">Proposed Layout</SectionLabel>
@@ -541,7 +561,7 @@ export default function ProposalTemplate() {
         {/* ════════════════════════════════════════════
             5. SCOPE OF WORK
         ════════════════════════════════════════════ */}
-        <section className="py-28 sm:py-36">
+        <section className="py-28 sm:py-36 proposal-section print-avoid-break">
           <div className="flex items-center gap-5 mb-16 sm:mb-20">
             <div className="h-px w-8" style={{ background: "hsl(var(--accent))", opacity: 0.25 }} />
             <SectionLabel number="04">Scope of Work</SectionLabel>
@@ -601,7 +621,7 @@ export default function ProposalTemplate() {
         {/* ════════════════════════════════════════════
             6. INVESTMENT
         ════════════════════════════════════════════ */}
-        <section className="py-28 sm:py-36">
+        <section className="py-28 sm:py-36 proposal-section print-page-break">
           <div className="flex items-center gap-5 mb-20 sm:mb-28">
             <div className="h-px w-8" style={{ background: "hsl(var(--accent))", opacity: 0.25 }} />
             <SectionLabel number="05">Investment</SectionLabel>
@@ -679,7 +699,7 @@ export default function ProposalTemplate() {
         {/* ════════════════════════════════════════════
             7. NEXT STEPS
         ════════════════════════════════════════════ */}
-        <section className="py-28 sm:py-36">
+        <section className="py-28 sm:py-36 proposal-section print-page-break">
           <div className="flex items-center gap-5 mb-16 sm:mb-20">
             <div className="h-px w-8" style={{ background: "hsl(var(--accent))", opacity: 0.25 }} />
             <SectionLabel number="06">Next Steps</SectionLabel>
@@ -821,7 +841,7 @@ export default function ProposalTemplate() {
             CLOSING
         ════════════════════════════════════════════ */}
         <section
-          className="relative py-32 sm:py-40 -mx-6 sm:-mx-10 lg:-mx-16 px-6 sm:px-10 lg:px-16 mt-10"
+          className="relative py-32 sm:py-40 -mx-6 sm:-mx-10 lg:-mx-16 px-6 sm:px-10 lg:px-16 mt-10 proposal-closing"
           style={{
             background: "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--card)) 100%)",
             borderTop: "1px solid hsl(var(--border))",
