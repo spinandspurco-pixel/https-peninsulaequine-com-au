@@ -58,8 +58,8 @@ export const services = [
   {
     id: "fencing",
     title: "Equine Fencing",
-    shortDescription: "Safe, durable fencing systems that protect your investment.",
-    description: "Proper fencing is the first line of safety for your horses. We install fencing systems designed specifically for equine properties—no sharp edges, no weak points.",
+    shortDescription: "Fencing configured for equine safety and property flow.",
+    description: "Designed for equine properties — no sharp edges, no weak points.",
     features: [
       "No-climb and flex fencing",
       "Wood post and rail",
