@@ -27,29 +27,20 @@ import { useAuth } from "@/hooks/useAuth";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
-} from "@/components/ui/table";
-import {
-  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
+  Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
-  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import {
-  LogOut, Eye, Trash2, RefreshCw, Search, Mail, Phone, Calendar,
-  Filter, MessageSquare, Users, Clock, CheckCircle, Download,
-  Settings, Zap, Save, ExternalLink, CalendarDays, BarChart3, UserCog, FileText,
+  LogOut, RefreshCw, Calendar, Settings, Zap, Save,
+  ExternalLink, CalendarDays, Download, MessageSquare,
   Crown, Shield, HardHat,
 } from "lucide-react";
 import { format } from "date-fns";
