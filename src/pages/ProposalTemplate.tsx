@@ -491,6 +491,9 @@ export default function ProposalTemplate() {
             4. PROPOSED LAYOUT
         ════════════════════════════════════════════ */}
         <section className="py-28 sm:py-36 proposal-section print-page-break">
+          <div className="flex items-center gap-5 mb-16 sm:mb-20">
+            <div className="h-px w-8" style={{ background: "hsl(var(--accent))", opacity: 0.25 }} />
+            <SectionLabel number="03">Proposed Layout</SectionLabel>
           </div>
 
           {/* Layout visual zone */}
