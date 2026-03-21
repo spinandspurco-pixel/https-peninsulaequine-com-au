@@ -400,6 +400,17 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
     drawLine(doc, ml, y, pw - mr, DIVIDER, 0.3);
     y += 8;
 
+    // Investment disclaimer
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7);
+    doc.setTextColor(SLATE);
+    const disclaimer = "Final cost will depend on site conditions, material selections, and confirmed scope.";
+    doc.text(disclaimer, ml, y);
+    y += 8;
+
+    drawLine(doc, ml, y, pw - mr, DIVIDER, 0.3);
+    y += 8;
+
     doc.setFont("helvetica", "italic");
     doc.setFontSize(8);
     doc.setTextColor(SLATE);
