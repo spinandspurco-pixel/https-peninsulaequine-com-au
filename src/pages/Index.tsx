@@ -301,7 +301,7 @@ export default function Index() {
       />
 
       {/* ═══ 4. SERVICES — WHAT WE BUILD ═══════════════════ */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden cv-auto">
         <div className="py-32 sm:py-40 lg:py-48 bg-card relative">
           <div className="absolute inset-0 grain-texture opacity-30" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
