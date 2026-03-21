@@ -217,6 +217,10 @@ export default function Gallery() {
 
       <ChapterDivider />
 
+      <BuildIntelligence />
+
+      <ChapterDivider />
+
       {/* ═══════════════════════════════════════════════════
           2. FEATURE PROJECT — Private Client — Mornington Peninsula
           ═══════════════════════════════════════════════════ */}
