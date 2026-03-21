@@ -44,12 +44,15 @@ const HOTSPOTS: Hotspot[] = [
       "Side tabs key into adjacent panels. Alternating rows nest inversely — creating a continuous surface that resists lateral movement under equine and vehicle traffic.",
     highlight: (
       <>
-        {/* Highlight the tab zones */}
-        <rect x="14" y="66" width="10" height="20" rx="1" fill="hsl(var(--accent) / 0.15)" stroke="hsl(var(--accent) / 0.5)" strokeWidth="1.2" />
-        <rect x="76" y="66" width="10" height="20" rx="1" fill="hsl(var(--accent) / 0.15)" stroke="hsl(var(--accent) / 0.5)" strokeWidth="1.2" />
-        {/* Arrow indicators */}
-        <line x1="10" y1="76" x2="16" y2="76" stroke="hsl(var(--accent) / 0.6)" strokeWidth="0.8" markerEnd="url(#edu-arrow)" />
-        <line x1="90" y1="76" x2="84" y2="76" stroke="hsl(var(--accent) / 0.6)" strokeWidth="0.8" markerEnd="url(#edu-arrow)" />
+        {/* Heel calk zones */}
+        <rect x="18" y="86" width="10" height="14" rx="1" fill="hsl(var(--accent) / 0.15)" stroke="hsl(var(--accent) / 0.5)" strokeWidth="1.2" />
+        <rect x="72" y="86" width="10" height="14" rx="1" fill="hsl(var(--accent) / 0.15)" stroke="hsl(var(--accent) / 0.5)" strokeWidth="1.2" />
+        {/* Toe clip zone */}
+        <path d="M 44 30 L 50 18 L 56 30 Z" fill="hsl(var(--accent) / 0.15)" stroke="hsl(var(--accent) / 0.5)" strokeWidth="1.2" />
+        {/* Connection arrows */}
+        <line x1="10" y1="93" x2="18" y2="93" stroke="hsl(var(--accent) / 0.6)" strokeWidth="0.8" markerEnd="url(#edu-arrow)" />
+        <line x1="90" y1="93" x2="82" y2="93" stroke="hsl(var(--accent) / 0.6)" strokeWidth="0.8" markerEnd="url(#edu-arrow)" />
+        <line x1="50" y1="12" x2="50" y2="20" stroke="hsl(var(--accent) / 0.6)" strokeWidth="0.8" markerEnd="url(#edu-arrow)" />
       </>
     ),
   },
