@@ -34,7 +34,7 @@ const BookLesson = lazy(() => import("./pages/BookLesson"));
 const Lessons = lazy(() => import("./pages/Lessons"));
 const BrandGuide = lazy(() => import("./pages/BrandGuide"));
 const Shop = lazy(() => import("./pages/Shop"));
-const ProductDetail = lazy(() => import("./pages/ProductDetail"));
+
 const Forge = lazy(() => import("./pages/Forge"));
 const Events = lazy(() => import("./pages/Events"));
 const Process = lazy(() => import("./pages/Process"));
