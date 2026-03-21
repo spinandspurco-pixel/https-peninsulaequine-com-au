@@ -65,7 +65,7 @@ export default function Services() {
             src={equitanaArena}
             alt=""
             aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover brightness-[0.2] saturate-[0.5] contrast-[1.1]"
+            className="absolute inset-0 w-full h-full object-cover img-hero"
           />
         </div>
         <div className="absolute inset-0 bg-background/50" />
