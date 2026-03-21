@@ -131,7 +131,7 @@ export function BuildIntelligence() {
               return (
                 <button
                   key={l.key}
-                  onClick={() => setActive(l.key)}
+                  onClick={() => handleSwitch(l.key)}
                   className="relative px-5 sm:px-7 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-mono cursor-pointer bg-transparent border-0"
                   style={{
                     color: isActive ? "hsl(var(--accent) / 0.7)" : "hsl(var(--accent) / 0.25)",
