@@ -226,7 +226,7 @@ export default function Services() {
             <RevealOnScroll direction="up" delay={250}>
               <Button asChild variant="gold" size="lg">
                 <Link to="/contact">
-                  Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                  Discuss Project <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </RevealOnScroll>

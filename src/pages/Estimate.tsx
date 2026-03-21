@@ -345,7 +345,7 @@ export default function Estimate() {
       <EstimateCTA />
 
       <StickySubpageCTA
-        ctaLabel="Request Assessment"
+        ctaLabel="Discuss Project"
         ctaHref="/contact"
         hideSecondary
       />
