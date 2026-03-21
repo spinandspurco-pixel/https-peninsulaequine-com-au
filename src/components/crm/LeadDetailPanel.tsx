@@ -457,7 +457,64 @@ export function LeadDetailPanel({ record, onClose, onUpdated, onCreateQuote }: P
             />
           </section>
 
-          {/* ═══ INTERNAL NOTES ═══ */}
+          {/* ═══ AI DRAFT RESPONDER ═══ */}
+          <section>
+            <p className="text-[10px] font-sans uppercase tracking-[0.2em] text-accent/40 mb-3">AI Response Draft</p>
+            {!aiDraft ? (
+              <Button
+                variant="outline"
+                onClick={handleGenerateDraft}
+                disabled={generatingDraft}
+                className="w-full text-[11px] uppercase tracking-[0.12em] border-accent/20 text-accent hover:bg-accent/5"
+              >
+                <Sparkles className="h-3.5 w-3.5 mr-2" />
+                {generatingDraft ? "Generating…" : "Generate AI Draft"}
+              </Button>
+            ) : (
+              <div className="space-y-3">
+                <div className="p-3 rounded-sm border border-accent/15 bg-accent/[0.02]">
+                  <p className="text-[10px] text-muted-foreground/40 mb-1">Subject</p>
+                  <p className="text-[12px] text-foreground/70 font-medium">{aiDraft.subject_line}</p>
+                </div>
+                <div className="p-3 rounded-sm border border-border/20 bg-background/40">
+                  <p className="text-[10px] text-muted-foreground/40 mb-2">Draft</p>
+                  <p className="text-[13px] text-foreground/70 leading-[1.8] whitespace-pre-wrap">{aiDraft.draft_message}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCopyDraft}
+                    className="flex-1 text-[10px] uppercase tracking-wider h-8 border-border/30"
+                  >
+                    {draftCopied ? <Check className="h-3 w-3 mr-1.5" /> : <Copy className="h-3 w-3 mr-1.5" />}
+                    {draftCopied ? "Copied" : "Copy"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleSendViaMail}
+                    className="flex-1 text-[10px] uppercase tracking-wider h-8 border-accent/20 text-accent hover:bg-accent/5"
+                  >
+                    <Send className="h-3 w-3 mr-1.5" />
+                    Open in Mail
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleGenerateDraft}
+                    disabled={generatingDraft}
+                    className="text-[10px] uppercase tracking-wider h-8 text-muted-foreground/50 hover:text-foreground/70"
+                  >
+                    <Sparkles className="h-3 w-3 mr-1.5" />
+                    Redo
+                  </Button>
+                </div>
+              </div>
+            )}
+          </section>
+
+
           <section>
             <p className="text-[10px] font-sans uppercase tracking-[0.2em] text-accent/40 mb-3">Internal Notes</p>
             <Textarea
