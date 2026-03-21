@@ -1,215 +1,234 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Layers, Shield, Wrench } from "lucide-react";
+import { ArrowRight, Shield, Truck, Droplets, Gem } from "lucide-react";
+import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { InteractiveLayerStack } from "@/components/InteractiveLayerStack";
 
-import { RevealOnScroll } from "@/components/RevealOnScroll";
+import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
+
+const APPLICATIONS = [
+  { title: "Front Gate Entries", desc: "Engineered for the first 20 metres — where floats, trucks, and daily traffic meet the property." },
+  { title: "Float & Truck Access", desc: "Stabilised surfaces designed for repeated heavy vehicle turning and braking loads." },
+  { title: "Estate Driveways", desc: "Premium arrival zones that perform under load while maintaining architectural finish." },
+  { title: "High-Traffic Zones", desc: "Stable entries, wash bays, and service paths built for continuous daily use." },
+];
+
+const PROOF = [
+  { icon: Truck, title: "Traffic-Ready", body: "Built for floats, trucks, and repeated front-entry movement where ordinary surfaces break down." },
+  { icon: Droplets, title: "Drainage-Led", body: "Supports water movement beneath the finish to reduce rutting and long-term surface instability." },
+  { icon: Gem, title: "Architectural Finish", body: "Pairs engineered performance with a resolved entry outcome — stone, gravel, or cobble specification." },
+];
 
 export default function Shop() {
   return (
     <Layout>
-      {/* ─── SECTION 1 — INTRO ─── */}
-      <section className="relative pt-44 sm:pt-56 pb-28 sm:pb-36 overflow-hidden">
-        <div className="absolute inset-0 bg-background" />
-        <div className="absolute inset-0 engineering-grid" />
+      {/* ═══ 1. CINEMATIC HERO ═══════════════════════════════ */}
+      <section className="relative min-h-[80vh] overflow-hidden flex items-center justify-center">
+        <video
+          autoPlay muted loop playsInline
+          className="absolute inset-0 w-full h-full object-cover brightness-[0.18] contrast-[1.15] saturate-[0.3]"
+        >
+          <source src={heroVideo} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-background/60" />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse 50% 45% at 50% 50%, transparent 10%, hsl(var(--background)) 100%)" }}
+        />
         <div className="absolute inset-0 grain-texture" />
 
-        <div className="section-container relative z-10 text-center max-w-xl mx-auto flex flex-col items-center gap-6">
-          <div
-            className="flex items-center gap-5 opacity-0 animate-fade-in"
-            style={{ animationDelay: "300ms", animationFillMode: "both", animationDuration: "1200ms" }}
-          >
-            <div className="w-8 h-px bg-accent/30" />
-            <Layers className="w-3.5 h-3.5 text-accent/50" strokeWidth={1.25} />
-            <p className="text-overline text-accent/60">Equus Forge</p>
-            <div className="w-8 h-px bg-accent/30" />
+        <div className="relative z-10 section-container text-center max-w-3xl mx-auto">
+          <div className="flex flex-col items-center gap-8 sm:gap-10">
+            <div
+              className="flex items-center gap-5"
+              style={{ opacity: 0, animation: "heroFadeIn 300ms ease-out 100ms forwards" }}
+            >
+              <div className="w-10 h-px bg-accent/20" />
+              <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/50">GroundLock Systems</p>
+              <div className="w-10 h-px bg-accent/20" />
+            </div>
+
+            <h1
+              className="font-serif font-bold text-foreground leading-[0.9] tracking-[-0.01em]"
+              style={{
+                opacity: 0,
+                animation: "heroFadeIn 300ms ease-out 250ms forwards",
+                fontSize: "clamp(2.5rem, 1.2rem + 5.5vw, 5.5rem)",
+              }}
+            >
+              Engineered Ground<br className="hidden sm:block" /> Systems
+            </h1>
+
+            <p
+              className="text-muted-foreground/30 text-[11px] sm:text-[12px] tracking-[0.2em] uppercase max-w-md leading-[2.2]"
+              style={{ opacity: 0, animation: "heroFadeIn 300ms ease-out 450ms forwards" }}
+            >
+              Proprietary infrastructure for entries, driveways, and high-traffic zones — specified per project.
+            </p>
+
+            <div
+              className="flex flex-col sm:flex-row gap-4 pt-2"
+              style={{ opacity: 0, animation: "heroFadeIn 300ms ease-out 600ms forwards" }}
+            >
+              <Button asChild variant="gold" size="lg" className="px-8">
+                <Link to="/site-assessment">
+                  Request a Quote <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild size="lg" className="bg-transparent border border-foreground/10 text-foreground/50 hover:text-foreground hover:border-foreground/25 hover:bg-foreground/[0.03] transition-all duration-700 px-8">
+                <Link to="/groundlock">How It Works</Link>
+              </Button>
+            </div>
           </div>
-
-          <h1
-            className="heading-display text-foreground opacity-0 animate-fade-in"
-            style={{ animationDelay: "600ms", animationFillMode: "both", animationDuration: "1400ms" }}
-          >
-            System Access
-          </h1>
-
-          <p
-            className="font-serif text-[15px] sm:text-base text-foreground/50 max-w-md mx-auto opacity-0 animate-fade-in leading-[1.9]"
-            style={{ animationDelay: "1000ms", animationFillMode: "both", animationDuration: "1000ms" }}
-          >
-            What sits underneath determines how everything performs.
-          </p>
-          <p
-            className="text-[13px] text-muted-foreground/30 max-w-md mx-auto opacity-0 animate-fade-in leading-[1.9]"
-            style={{ animationDelay: "1300ms", animationFillMode: "both", animationDuration: "1000ms" }}
-          >
-            We provide access to the systems used across our builds — applied where performance matters.
-          </p>
         </div>
       </section>
 
-      {/* ─── SECTION 2 — SYSTEM ACCESS ─── */}
+      {/* ═══ 2. SYSTEM BREAKDOWN ═════════════════════════════ */}
       <section className="relative overflow-hidden">
-        <div className="divider-grid" />
-        <div className="py-28 sm:py-36 bg-card relative">
+        <div className="py-32 sm:py-40 lg:py-48 bg-card relative">
+          <div className="absolute inset-0 engineering-grid" />
+          <div className="absolute inset-0 grain-texture opacity-30" />
+
+          <div className="section-container relative z-10 max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-center">
+              {/* Visual */}
+              <RevealOnScroll direction="up">
+                <InteractiveLayerStack />
+              </RevealOnScroll>
+
+              {/* Copy */}
+              <div>
+                <RevealOnScroll direction="up" delay={100}>
+                  <RevealLine className="mb-8" width="w-8" />
+                  <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-5">The System</p>
+                  <h2 className="heading-section text-foreground mb-6 leading-[1.15]">
+                    Five Layers.<br />One Resolved Surface.
+                  </h2>
+                  <p className="text-[14px] text-muted-foreground/45 leading-[2] mb-6 max-w-[360px]">
+                    GroundLock is a multi-layer ground stabilisation system — engineered
+                    beneath the surface for drainage, load distribution, and long-term performance
+                    under real daily use.
+                  </p>
+                  <p className="text-[11px] text-muted-foreground/20 italic tracking-[0.04em]">
+                    What sits underneath determines what lasts above.
+                  </p>
+                </RevealOnScroll>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 3. PROOF — WHY IT WORKS ═════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="py-32 sm:py-40 lg:py-48 relative">
           <div className="absolute inset-0 grain-texture" />
 
-          <div className="section-container relative z-[1]">
-            <div className="grid md:grid-cols-3 gap-px bg-border/15 max-w-5xl mx-auto">
-              {[
-                {
-                  title: "GroundLock System",
-                  description: "The foundation system used under every Peninsula Equine build.",
-                  cta: "Assess My Site",
-                  href: "/site-assessment",
-                },
-                {
-                  title: "Ground Systems & Access",
-                  description: "Designed to handle movement, load, and long-term use without failure.",
-                  cta: "Discuss Project",
-                  href: "/contact",
-                },
-                {
-                  title: "Select Components",
-                  description: "Available only where they support a complete, properly structured build.",
-                  cta: "View Specifications",
-                  href: "/groundlock-systems",
-                },
-              ].map((card, i) => (
-                <RevealOnScroll key={card.title} direction="up" delay={i * 150}>
-                  <div className="flex flex-col bg-card p-8 sm:p-10 lg:p-12 h-full transition-shadow duration-500 hover:shadow-lg hover:shadow-accent/[0.03]">
-                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent/40 mb-6">
-                      0{i + 1}
-                    </span>
+          <div className="section-container relative z-[1] max-w-5xl mx-auto">
+            <div className="text-center mb-16 sm:mb-20">
+              <RevealOnScroll direction="up">
+                <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/40 mb-4">Performance</p>
+                <h2 className="font-serif text-2xl sm:text-3xl font-light text-foreground/80 leading-[1.25] max-w-lg mx-auto">
+                  Engineered for the Way Properties Actually Work
+                </h2>
+              </RevealOnScroll>
+            </div>
 
-                    <h3 className="font-serif text-xl md:text-2xl text-foreground/85 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-border/8">
+              {PROOF.map((card, i) => (
+                <RevealOnScroll key={card.title} direction="up" stagger={i} staggerInterval={100}>
+                  <div className="bg-background p-8 sm:p-10 min-h-[240px] flex flex-col">
+                    <card.icon className="w-[18px] h-[18px] text-muted-foreground/20 mb-7" strokeWidth={1.5} />
+                    <h3 className="font-serif text-[15px] font-medium text-foreground/60 tracking-[0.02em] mb-4">
                       {card.title}
                     </h3>
-
-                    <p className="text-[13px] text-muted-foreground/35 leading-[1.9] mb-10 flex-1">
-                      {card.description}
+                    <p className="text-[12px] text-muted-foreground/30 leading-[2] max-w-[260px]">
+                      {card.body}
                     </p>
-
-                    <Link
-                      to={card.href}
-                      className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.15em] text-accent/50 hover:text-accent transition-colors group"
-                    >
-                      {card.cta}
-                      <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
-                    </Link>
                   </div>
                 </RevealOnScroll>
               ))}
             </div>
-
-            {/* Access filter line */}
-            <RevealOnScroll direction="up" delay={500}>
-              <div className="text-center max-w-md mx-auto mt-16 space-y-1">
-                <p className="text-[13px] text-muted-foreground/30 leading-[1.9]">
-                  Access to systems is provided per project.
-                </p>
-                <p className="text-[13px] text-muted-foreground/25 leading-[1.9]">
-                  We assess each site to ensure it's implemented properly.
-                </p>
-              </div>
-            </RevealOnScroll>
           </div>
         </div>
       </section>
 
-      {/* ─── SECTION 3 — FOR BUILDERS ─── */}
+      {/* ═══ 4. APPLICATIONS ═════════════════════════════════ */}
       <section className="relative overflow-hidden">
-        <div className="divider-grid" />
-        <div className="py-28 sm:py-36 bg-background relative">
-          <div className="absolute inset-0 grain-texture" />
+        <div className="py-32 sm:py-40 lg:py-48 bg-card relative">
+          <div className="absolute inset-0 grain-texture opacity-20" />
 
-          <div className="section-container relative z-[1]">
-            <RevealOnScroll direction="up">
-              <div className="text-center max-w-md mx-auto flex flex-col items-center gap-6">
-                <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/30">
-                  Partner Access
-                </p>
-
-                <h2 className="font-serif text-2xl md:text-3xl text-foreground/85">
-                  For Builders
+          <div className="section-container relative z-[1] max-w-5xl mx-auto">
+            <div className="mb-16 sm:mb-20">
+              <RevealOnScroll direction="up">
+                <RevealLine className="mb-8" width="w-8" />
+                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-4">Applications</p>
+                <h2 className="font-serif text-2xl sm:text-3xl font-light text-foreground/80 leading-[1.25] max-w-lg">
+                  Where GroundLock Is Specified
                 </h2>
+              </RevealOnScroll>
+            </div>
 
-                <p className="text-sm text-muted-foreground/40 leading-[1.9]">
-                  GroundLock is used across our builds and available to select partners.
-                </p>
-
-                <p className="text-[13px] text-muted-foreground/30 leading-[1.9] max-w-sm">
-                  We provide system supply, guidance, and structured implementation to ensure it's done properly.
-                </p>
-
-                <div className="w-10 h-px bg-border/20 my-2" />
-
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.15em] text-muted-foreground/40 hover:text-accent/60 transition-colors group"
-                >
-                  Enquire About GroundLock Use
-                  <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
-                </Link>
-              </div>
-            </RevealOnScroll>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {APPLICATIONS.map((app, i) => (
+                <RevealOnScroll key={app.title} direction="up" stagger={i} staggerInterval={80}>
+                  <div className="p-8 sm:p-10 border border-border/15">
+                    <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/25 mb-5 block">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <h3 className="font-serif text-[17px] font-medium text-foreground/65 tracking-[0.02em] mb-4">
+                      {app.title}
+                    </h3>
+                    <p className="text-[12px] text-muted-foreground/30 leading-[2] max-w-[300px]">
+                      {app.desc}
+                    </p>
+                  </div>
+                </RevealOnScroll>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ─── SECTION 4 — TRUST + ACCESS CTA ─── */}
+      {/* ═══ 5. CTA ══════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
-        <div className="divider-grid" />
-        <div className="py-28 sm:py-36 bg-card relative">
+        <div className="py-32 sm:py-40 lg:py-48 relative">
           <div className="absolute inset-0 grain-texture" />
 
-          <div className="section-container relative z-[1]">
+          <div className="section-container relative z-10 text-center max-w-lg mx-auto">
             <RevealOnScroll direction="up">
-              <div className="text-center max-w-md mx-auto flex flex-col items-center gap-8">
-                {/* Trust markers */}
-                <div className="flex flex-wrap items-center justify-center gap-6">
-                  {[
-                    "Used in every Peninsula Equine build",
-                    "Engineered for decades, not seasons",
-                    "Project-assessed before specification",
-                  ].map((line) => (
-                    <div key={line} className="flex items-center gap-2">
-                      <Shield className="w-3 h-3 text-accent/30" strokeWidth={1.5} />
-                      <span className="text-[10px] font-mono uppercase tracking-[0.12em] text-muted-foreground/30">
-                        {line}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+              <RevealLine className="mx-auto mb-12" width="w-8" />
+              <h2 className="heading-section text-foreground mb-6 leading-[1.1]">
+                Start with a Site Assessment.
+              </h2>
+              <p className="text-[13px] text-muted-foreground/30 mb-10 leading-[2] max-w-[360px] mx-auto">
+                Every GroundLock specification begins on site. We assess conditions,
+                usage, and requirements before recommending a system.
+              </p>
+            </RevealOnScroll>
 
-                <div className="w-12 h-px bg-accent/15" />
-
-                <p className="text-sm text-muted-foreground/40 leading-[1.9] max-w-sm">
-                  System access begins with a site assessment.<br />
-                  We review conditions, usage, and requirements before recommending specification.
-                </p>
-
-                <Button
-                  asChild
-                  variant="gold"
-                  size="lg"
-                  className="uppercase tracking-[0.12em] text-xs"
-                >
-                   <Link to="/site-assessment">
-                    Assess My Site
-                    <ArrowRight className="ml-2 h-4 w-4" />
+            <RevealOnScroll direction="up" delay={150}>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
+                <Button asChild variant="gold" size="lg" className="px-8">
+                  <Link to="/site-assessment">
+                    Start a Project <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
+                <Button asChild size="lg" className="bg-transparent border border-foreground/10 text-foreground/50 hover:text-foreground hover:border-foreground/25 hover:bg-foreground/[0.03] transition-all duration-700 px-8">
+                  <Link to="/contact">Talk to Us</Link>
+                </Button>
+              </div>
+            </RevealOnScroll>
 
-                <p className="text-[10px] font-mono uppercase tracking-[0.12em] text-muted-foreground/20">
-                  No obligation · No pricing until specification is confirmed
-                </p>
-
-                <div className="w-12 h-px bg-border/10 mt-8" />
-
-                <p className="text-[13px] text-muted-foreground/25 leading-[1.9] max-w-sm italic font-serif mt-4">
-                  Everything we build is structured from the ground up.<br />
-                  If it's not done properly underneath, nothing on top lasts.
-                </p>
+            <RevealOnScroll direction="up" delay={250}>
+              <div className="flex flex-wrap items-center justify-center gap-6">
+                {["No obligation", "Project-assessed specification", "Engineered for decades"].map((line) => (
+                  <div key={line} className="flex items-center gap-2">
+                    <Shield className="w-3 h-3 text-accent/25" strokeWidth={1.5} />
+                    <span className="text-[9px] font-mono uppercase tracking-[0.15em] text-muted-foreground/25">{line}</span>
+                  </div>
+                ))}
               </div>
             </RevealOnScroll>
           </div>
