@@ -216,7 +216,7 @@ export function InteractiveMasterplan() {
                 }}
               >
                 <p className="text-xs font-mono uppercase tracking-[0.3em] text-accent/25">
-                  Hover a zone to explore
+                  Tap or hover a zone to explore
                 </p>
               </div>
               <DetailCard zone={activeZoneData} visible={!!activeZone} />
