@@ -80,7 +80,7 @@ export function RevealLine({
       className={cn(width, "h-px bg-accent origin-left", className)}
       style={{
         transform: isVisible ? "scaleX(1)" : "scaleX(0)",
-        transition: `transform 800ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms`,
+        transition: `transform ${DURATION.parallax}ms ${EASE.default} ${delay}ms`,
       }}
     />
   );

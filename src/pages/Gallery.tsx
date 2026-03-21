@@ -423,7 +423,7 @@ export default function Gallery() {
             </RevealOnScroll>
 
             {showFilters && (
-              <RevealOnScroll direction="up" duration={500}>
+              <RevealOnScroll direction="up" duration={DURATION.normal}>
                 <GalleryFilters
                   activeProject={activeProject}
                   setActiveProject={setActiveProject}
