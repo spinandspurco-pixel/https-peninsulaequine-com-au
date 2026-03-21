@@ -47,13 +47,13 @@ function BlueprintLinework() {
         x1="0" y1="0" x2="400" y2="300"
         stroke="#C6A86B" strokeWidth="0.5" opacity="0"
         strokeDasharray="500" strokeDashoffset="500"
-        style={{ animation: "blueprintDraw 1.8s 1.2s ease-out forwards" }}
+        style={{ animation: "blueprintDraw 1.4s 0.6s ease-out forwards" }}
       />
       <line
         x1="1600" y1="0" x2="1200" y2="300"
         stroke="#C6A86B" strokeWidth="0.5" opacity="0"
         strokeDasharray="500" strokeDashoffset="500"
-        style={{ animation: "blueprintDraw 1.8s 1.3s ease-out forwards" }}
+        style={{ animation: "blueprintDraw 1.4s 0.7s ease-out forwards" }}
       />
 
       {/* Roof pitch lines */}
