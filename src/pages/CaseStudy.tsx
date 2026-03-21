@@ -116,7 +116,7 @@ export default function CaseStudy() {
         <img
           src={study.hero}
           alt={study.title}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover img-header"
         />
         <div className="absolute inset-0 bg-primary/60" />
         <div className="absolute bottom-0 left-0 right-0 p-8 sm:p-12 z-10">
@@ -187,7 +187,7 @@ export default function CaseStudy() {
                   <img
                     src={img.src}
                     alt={img.alt}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                    className="absolute inset-0 w-full h-full object-cover img-gallery transition-transform duration-700 ease-out group-hover:scale-[1.02]"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/30 transition-colors duration-500" />

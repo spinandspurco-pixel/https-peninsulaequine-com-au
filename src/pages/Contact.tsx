@@ -209,7 +209,7 @@ export default function Contact() {
       <section className="relative pt-40 sm:pt-48 pb-24 sm:pb-32 overflow-hidden">
         <video
           autoPlay muted loop playsInline
-          className="absolute inset-0 w-full h-full object-cover brightness-[0.3] contrast-[1.1] saturate-[0.6]"
+          className="absolute inset-0 w-full h-full object-cover img-header"
         >
           <source src={heroVideo} type="video/mp4" />
         </video>

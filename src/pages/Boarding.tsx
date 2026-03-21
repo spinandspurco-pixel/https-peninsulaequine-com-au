@@ -143,7 +143,7 @@ function AmenitiesGallery() {
                 <img
                   src={item.image}
                   alt={item.alt}
-                  className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-110 relative z-[1]"
+                  className="w-full h-full object-cover img-portfolio transition-all duration-500 group-hover:scale-105 relative z-[1]"
                   loading="lazy"
                   onLoad={(e) => {
                     const skeleton = (e.currentTarget.parentElement?.querySelector('.animate-pulse') as HTMLElement);

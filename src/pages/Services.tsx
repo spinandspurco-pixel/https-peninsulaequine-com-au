@@ -65,7 +65,7 @@ export default function Services() {
             src={equitanaArena}
             alt=""
             aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover brightness-[0.2] saturate-[0.5] contrast-[1.1]"
+            className="absolute inset-0 w-full h-full object-cover img-hero"
           />
         </div>
         <div className="absolute inset-0 bg-background/50" />
@@ -141,7 +141,7 @@ export default function Services() {
             <img
               src={stoneworkStables}
               alt="Barn frame structure"
-              className="absolute inset-0 w-full h-full object-cover brightness-[0.55] saturate-[0.7]"
+              className="absolute inset-0 w-full h-full object-cover img-feature"
               loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/20" />

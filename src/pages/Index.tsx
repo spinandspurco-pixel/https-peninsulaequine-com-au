@@ -87,7 +87,7 @@ function ProjectsScroll() {
             <img
               src={project.src}
               alt={project.alt}
-              className="absolute inset-0 w-full h-full object-cover img-immersive brightness-[0.8] group-hover:brightness-[0.88] transition-[filter] duration-700"
+              className="absolute inset-0 w-full h-full object-cover img-immersive img-portfolio"
               loading="lazy"
               decoding="async"
             />
@@ -123,7 +123,7 @@ export default function Index() {
         <video
           autoPlay muted loop playsInline
           preload="auto"
-          className="absolute inset-0 w-full h-full object-cover brightness-[0.2] contrast-[1.2] saturate-[0.35]"
+          className="absolute inset-0 w-full h-full object-cover img-hero"
           style={{ width: '100%', height: '100%' }}
         >
           <source src={heroVideo} type="video/mp4" />
@@ -379,7 +379,7 @@ export default function Index() {
           aria-hidden="true"
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 w-full h-full object-cover brightness-[0.35] saturate-[0.6] contrast-[1.15]"
+          className="absolute inset-0 w-full h-full object-cover img-cta"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/30" />
         <div className="absolute inset-0 grain-texture" />

@@ -23,7 +23,7 @@ export default function About() {
           <img
             src={horseAction}
             alt=""
-            className="absolute inset-0 w-full h-full object-cover brightness-[0.25] contrast-[1.1] saturate-[0.5]"
+            className="absolute inset-0 w-full h-full object-cover img-header"
           />
         </div>
         <div className="absolute inset-0 bg-background/60" />

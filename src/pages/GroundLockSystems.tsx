@@ -11,7 +11,7 @@ export default function GroundLockSystems() {
       {/* Background video */}
       <video
         autoPlay muted loop playsInline
-        className="absolute inset-0 w-full h-full object-cover brightness-[0.7] contrast-[1.05]"
+        className="absolute inset-0 w-full h-full object-cover img-feature"
       >
         <source src={heroVideo} type="video/mp4" />
       </video>

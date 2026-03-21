@@ -195,7 +195,7 @@ export default function Forge() {
                   alt={img.alt}
                   loading="lazy"
                   decoding="async"
-                  className="absolute inset-0 w-full h-full object-cover brightness-[0.45] saturate-[0.55] contrast-[1.12] group-hover:brightness-[0.6] transition-all duration-[900ms]"
+                  className="absolute inset-0 w-full h-full object-cover img-portfolio transition-all duration-[900ms]"
                 />
               </div>
             ))}

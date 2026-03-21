@@ -84,7 +84,7 @@ function EditorialImage({
         <img
           src={src}
           alt={alt}
-          className={`absolute inset-0 w-full h-full object-cover will-change-transform ${
+          className={`absolute inset-0 w-full h-full object-cover will-change-transform img-gallery ${
             loaded ? "opacity-100" : "opacity-0"
           }`}
           style={{ transition: `opacity ${DURATION.slow}ms ${EASE.default}, transform ${DURATION.parallax}ms ${EASE.default}` }}

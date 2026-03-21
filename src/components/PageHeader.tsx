@@ -35,7 +35,7 @@ export function PageHeader({
           <img
             src={backgroundImage}
             alt=""
-            className="absolute inset-0 w-full h-full object-cover brightness-[0.3] contrast-[1.1] saturate-[0.6]"
+            className="absolute inset-0 w-full h-full object-cover img-header"
           />
         </div>
       )}

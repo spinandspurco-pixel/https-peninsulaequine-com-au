@@ -27,7 +27,7 @@ export default function Shop() {
       <section className="relative min-h-[80vh] overflow-hidden flex items-center justify-center">
         <video
           autoPlay muted loop playsInline
-          className="absolute inset-0 w-full h-full object-cover brightness-[0.18] contrast-[1.15] saturate-[0.3]"
+          className="absolute inset-0 w-full h-full object-cover img-hero"
         >
           <source src={heroVideo} type="video/mp4" />
         </video>
