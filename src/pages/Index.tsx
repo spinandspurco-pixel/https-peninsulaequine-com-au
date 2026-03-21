@@ -382,7 +382,7 @@ export default function Index() {
           className="absolute inset-0 w-full h-full object-cover img-cta"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/30" />
-        <div className="absolute inset-0 grain-texture" />
+        <div className="absolute inset-0 grain-hero" />
 
         <div className="absolute inset-0 flex items-center justify-center z-10">
           <div className="section-container text-center max-w-lg mx-auto">
