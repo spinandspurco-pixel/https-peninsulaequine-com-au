@@ -206,7 +206,7 @@ export default function Index() {
       </section>
 
       {/* ═══ 2. GROUNDLOCK — SIGNATURE SYSTEM ══════════════ */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden cv-auto">
         <div className="py-32 sm:py-40 lg:py-48 bg-card relative">
           <div className="absolute inset-0 engineering-grid" />
           <div className="absolute inset-0 grain-texture opacity-30" />
