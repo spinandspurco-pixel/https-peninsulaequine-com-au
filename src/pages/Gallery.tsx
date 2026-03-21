@@ -471,7 +471,14 @@ export default function Gallery() {
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
-          10. THE VIEWING LINE — cinematic closer / sole CTA
+          10. PROJECT QUALIFICATION — guided intake selector
+          ═══════════════════════════════════════════════════ */}
+      <ProjectQualification onSelect={(type) => setEnquiryType(type)} />
+
+      <ChapterDivider />
+
+      {/* ═══════════════════════════════════════════════════
+          11. THE VIEWING LINE — cinematic closer / sole CTA
           ═══════════════════════════════════════════════════ */}
       <ViewingLine />
 
