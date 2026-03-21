@@ -633,6 +633,86 @@ export type Database = {
         }
         Relationships: []
       }
+      groundlock_proposals: {
+        Row: {
+          attachment_urls: string[] | null
+          client_email: string | null
+          client_name: string
+          created_at: string
+          created_by: string | null
+          id: string
+          inquiry_id: string | null
+          investment_note: string | null
+          investment_total: string | null
+          layout_notes: string | null
+          location: string | null
+          overview: string | null
+          project_size: string | null
+          project_type: string | null
+          property_name: string | null
+          proposal_date: string
+          proposal_ref: string
+          scope_items: Json
+          status: string
+          system_notes: string | null
+          updated_at: string
+        }
+        Insert: {
+          attachment_urls?: string[] | null
+          client_email?: string | null
+          client_name: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          inquiry_id?: string | null
+          investment_note?: string | null
+          investment_total?: string | null
+          layout_notes?: string | null
+          location?: string | null
+          overview?: string | null
+          project_size?: string | null
+          project_type?: string | null
+          property_name?: string | null
+          proposal_date?: string
+          proposal_ref: string
+          scope_items?: Json
+          status?: string
+          system_notes?: string | null
+          updated_at?: string
+        }
+        Update: {
+          attachment_urls?: string[] | null
+          client_email?: string | null
+          client_name?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          inquiry_id?: string | null
+          investment_note?: string | null
+          investment_total?: string | null
+          layout_notes?: string | null
+          location?: string | null
+          overview?: string | null
+          project_size?: string | null
+          project_type?: string | null
+          property_name?: string | null
+          proposal_date?: string
+          proposal_ref?: string
+          scope_items?: Json
+          status?: string
+          system_notes?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "groundlock_proposals_inquiry_id_fkey"
+            columns: ["inquiry_id"]
+            isOneToOne: false
+            referencedRelation: "inquiries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       inquiries: {
         Row: {
           attachment_urls: string[] | null
