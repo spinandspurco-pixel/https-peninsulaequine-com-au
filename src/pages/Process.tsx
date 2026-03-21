@@ -92,8 +92,7 @@ export default function Process() {
             className="mt-8 text-muted-foreground/45 text-sm sm:text-base max-w-md mx-auto leading-relaxed opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
-            A structured approach — from initial assessment<br />
-            through to long-term outcome.
+            Assessment through to long-term outcome.
           </p>
         </div>
       </section>
