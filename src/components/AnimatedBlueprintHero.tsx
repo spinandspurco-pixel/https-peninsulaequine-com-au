@@ -248,11 +248,7 @@ function MeasurementNodes() {
 
 /* ── Main export ──────────────────────────────────── */
 export function AnimatedBlueprintHero({ className }: { className?: string }) {
-  const [reducedMotion, setReducedMotion] = useState(false);
-
-  useEffect(() => {
-    setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  }, []);
+  const reducedMotion = useReducedMotion();
 
   if (reducedMotion) {
     return (
