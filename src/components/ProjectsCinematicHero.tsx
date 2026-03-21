@@ -153,7 +153,7 @@ export function ProjectsCinematicHero() {
   return (
     <section
       className="relative h-[92vh] sm:h-[95vh] overflow-hidden"
-      style={{ backgroundColor: "#0D0D0D" }}
+      style={{ backgroundColor: "hsl(var(--background))" }}
     >
       {/* Layer 1: Blueprint linework with mouse parallax */}
       <div
