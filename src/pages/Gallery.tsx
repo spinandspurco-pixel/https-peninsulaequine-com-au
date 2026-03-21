@@ -10,7 +10,7 @@ import { useParallax } from "@/hooks/useParallax";
 import { ProjectsCinematicHero } from "@/components/ProjectsCinematicHero";
 
 // ── 1. HERO ──
-import projectsHeroDrone from "@/assets/projects-hero-drone-goldenhour.jpg";
+// Hero image now handled by ProjectsCinematicHero component
 
 // ── 2. FEATURE PROJECT (Private Client) ──
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
