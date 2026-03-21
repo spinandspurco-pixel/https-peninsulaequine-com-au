@@ -137,11 +137,12 @@ export function GroundLockPanelSVG({
         filter={active ? `url(#${defsId}-glow)` : undefined}
       />
 
-      {/* Interlocking tabs */}
+      {/* Interlocking tabs + toe clip */}
       {showTabs && (
         <>
           <path d={TAB_LEFT} fill={`url(#${defsId}-panel-${active ? "active" : "idle"})`} stroke={strokeColor} strokeWidth={0.5} />
           <path d={TAB_RIGHT} fill={`url(#${defsId}-panel-${active ? "active" : "idle"})`} stroke={strokeColor} strokeWidth={0.5} />
+          <path d={TOE_CLIP} fill={`url(#${defsId}-panel-${active ? "active" : "idle"})`} stroke={strokeColor} strokeWidth={0.5} />
         </>
       )}
 
