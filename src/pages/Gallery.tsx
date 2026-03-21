@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { useParallax } from "@/hooks/useParallax";
 import { ProjectsCinematicHero } from "@/components/ProjectsCinematicHero";
 import { InteractiveMasterplan } from "@/components/InteractiveMasterplan";
+import { WalkTheProject } from "@/components/WalkTheProject";
 
 // ── 1. HERO ──
 // Hero image now handled by ProjectsCinematicHero component
