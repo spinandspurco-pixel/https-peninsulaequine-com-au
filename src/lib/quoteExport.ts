@@ -684,7 +684,7 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
   doc.setTextColor("#3e424d");
   doc.text("Private projects  ·  Discreet builds  ·  Designed for long-term ownership", ml, ph - 30);
 
-  drawPageNumber(doc, pw, ph, 6, totalPages);
+  drawPageNumber(doc, pw, ph, 7, totalPages);
 
   // ─── Save ──────────────────────────────────────────────────
   const filename = `${quote.quote_number || "PE-ProjectPack"}-${quote.client_name.replace(/\s+/g, "-")}.pdf`;
