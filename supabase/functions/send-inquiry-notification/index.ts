@@ -318,94 +318,42 @@ const handler = async (req: Request): Promise<Response> => {
     const ctaText = isLessons ? "Browse Lesson Programs" : "Schedule a Follow-Up Call";
     const ctaEmoji = isLessons ? "🐴" : "📅";
 
-    // Build the confirmation email HTML for the submitter
+    // Build the premium confirmation email — calm, controlled, authority-positioned
     const confirmationHtml = `
       <!DOCTYPE html>
       <html>
       <head>
         <style>
-          body { font-family: 'Georgia', serif; line-height: 1.6; color: #2d2418; }
-          .container { max-width: 600px; margin: 0 auto; }
+          body { font-family: 'Georgia', serif; line-height: 1.7; color: #2d2418; margin: 0; padding: 0; }
+          .container { max-width: 560px; margin: 0 auto; }
         </style>
       </head>
       <body>
         <div class="container">
-          <div style="background: #2d2418; padding: 28px; text-align: center;">
-            <h1 style="color: #f5f0e8; margin: 0; font-size: 22px; font-family: Georgia, serif;">Peninsula Equine</h1>
-            <p style="color: #c9a227; margin: 6px 0 0; font-size: 12px; letter-spacing: 3px; text-transform: uppercase;">Inquiry Received ✓</p>
+          <div style="background: #1a1d26; padding: 32px; text-align: center;">
+            <h1 style="color: #f5f0e8; margin: 0; font-size: 20px; font-family: Georgia, serif; letter-spacing: 0.5px;">Peninsula Equine</h1>
+            <p style="color: #c9a227; margin: 8px 0 0; font-size: 10px; letter-spacing: 3px; text-transform: uppercase;">Engineered Infrastructure</p>
           </div>
           
-          <div style="padding: 32px 24px; background: #faf8f4;">
-            <p style="font-size: 16px;">Hi ${inquiry.name},</p>
+          <div style="padding: 36px 28px; background: #faf8f4;">
+            <p style="font-size: 15px; color: #2d2418; margin: 0 0 20px;">Hi ${inquiry.name.split(" ")[0]},</p>
             
-            <p>Thank you for reaching out to Peninsula Equine. We're glad you're considering us for your equestrian ${isConstruction ? "project" : isLessons ? "journey" : "needs"} — you're in great hands.</p>
+            <p style="font-size: 15px; color: #444; margin: 0 0 18px;">Thanks for sending through your project.</p>
             
-            <div style="background: white; border: 1px solid #e8e2d6; border-radius: 8px; padding: 20px; margin: 20px 0;">
-              <p style="margin: 0 0 10px; font-weight: 600; color: #2d2418; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Your Inquiry Summary</p>
-              <table style="width: 100%; border-collapse: collapse;">
-                <tr>
-                  <td style="padding: 8px 0; font-weight: 600; color: #888; width: 130px; font-size: 14px;">Services</td>
-                  <td style="padding: 8px 0; color: #2d2418; font-size: 14px;">${formattedServices.join(", ")}</td>
-                </tr>
-                ${inquiry.budgetRange ? `
-                <tr>
-                  <td style="padding: 8px 0; font-weight: 600; color: #888; font-size: 14px;">Budget</td>
-                  <td style="padding: 8px 0; color: #2d2418; font-size: 14px;">${budgetDisplay}</td>
-                </tr>
-                ` : ""}
-                ${inquiry.experienceLevel ? `
-                <tr>
-                  <td style="padding: 8px 0; font-weight: 600; color: #888; font-size: 14px;">Experience</td>
-                  <td style="padding: 8px 0; color: #2d2418; font-size: 14px;">${inquiry.experienceLevel.replace(/\b\w/g, (c: string) => c.toUpperCase())}</td>
-                </tr>
-                ` : ""}
-                ${inquiry.horseName ? `
-                <tr>
-                  <td style="padding: 8px 0; font-weight: 600; color: #888; font-size: 14px;">Horse</td>
-                  <td style="padding: 8px 0; color: #2d2418; font-size: 14px;">${inquiry.horseName}${inquiry.horseBreed ? ` (${inquiry.horseBreed})` : ""}</td>
-                </tr>
-                ` : ""}
-              </table>
+            <p style="font-size: 15px; color: #444; margin: 0 0 18px;">We've received the details and will review it against our current build schedule and scope.</p>
+            
+            <p style="font-size: 15px; color: #444; margin: 0 0 18px;">If it aligns, we'll organise a time to speak and walk through the next steps properly.</p>
+            
+            <p style="font-size: 15px; color: #444; margin: 0 0 28px;">In the meantime, feel free to gather any reference material or site details you think are relevant.</p>
+            
+            <div style="border-top: 1px solid #e8e2d6; padding-top: 24px; margin-top: 8px;">
+              <p style="margin: 0; font-size: 14px; color: #2d2418; font-weight: 600;">— Peninsula Equine</p>
+              <p style="margin: 6px 0 0; font-size: 12px; color: #999; letter-spacing: 0.3px;">Private projects · Discreet builds · Built for long-term ownership</p>
             </div>
-
-            <div style="background: white; border: 1px solid #e8e2d6; border-radius: 8px; padding: 20px; margin: 20px 0;">
-              ${nextStepsHtml}
-            </div>
-
-            <div style="text-align: center; margin: 28px 0;">
-              <a href="${ctaUrl}" style="background: #c9a227; color: white; padding: 14px 32px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600; font-size: 15px;">${ctaEmoji} ${ctaText}</a>
-            </div>
-
-            <!-- Calendar invite callout -->
-            <div style="background: #fff; border: 1px solid #c9a227; border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center;">
-              <p style="margin: 0 0 8px; font-weight: 600; color: #2d2418; font-size: 15px;">📅 Suggested Consultation</p>
-              <p style="margin: 0 0 4px; font-size: 14px; color: #555;">${suggestedConsultDate} at 10:00 AM (Melbourne)</p>
-              <p style="margin: 0; font-size: 12px; color: #888;">Open the attached <strong>consultation.ics</strong> file to add this to your calendar. Reply to reschedule.</p>
-            </div>
-
-            <div style="background: #f0ede6; border-radius: 8px; padding: 20px; margin: 24px 0; text-align: center;">
-              <p style="margin: 0 0 10px; font-weight: 600; color: #2d2418; font-size: 14px;">Need to reach us sooner?</p>
-              <p style="margin: 0; font-size: 14px; color: #555;">
-                📞 <a href="tel:+61418585489" style="color: #c9a227; text-decoration: none;">0418 585 489</a>
-                &nbsp;&nbsp;·&nbsp;&nbsp;
-                📧 <a href="mailto:info@peninsulaequine.org" style="color: #c9a227; text-decoration: none;">info@peninsulaequine.org</a>
-              </p>
-            </div>
-
-            <p style="font-size: 14px; color: #555;">In the meantime, explore our <a href="https://peninsulaequine.lovable.app/gallery" style="color: #c9a227;">project gallery</a> to see recent builds and transformations.</p>
-
-            <p style="margin-top: 24px;">
-              We look forward to working with you!<br/>
-              <strong>— Ciro & The Peninsula Equine Team</strong>
-            </p>
           </div>
           
-          <div style="background: #2d2418; padding: 16px; text-align: center;">
-            <p style="color: #8a7e6a; margin: 0; font-size: 11px;">Peninsula Equine · Mornington Peninsula, VIC</p>
-            <p style="color: #6a6050; margin: 6px 0 0; font-size: 11px;">
-              <a href="https://instagram.com/peninsulaequine" style="color: #8a7e6a; text-decoration: none;">Instagram</a> ·
-              <a href="https://facebook.com/peninsulaequine" style="color: #8a7e6a; text-decoration: none;">Facebook</a>
-            </p>
+          <div style="background: #1a1d26; padding: 16px; text-align: center;">
+            <p style="color: #6a6050; margin: 0; font-size: 10px; letter-spacing: 1px;">peninsulaequine.org</p>
           </div>
         </div>
       </body>
@@ -439,15 +387,8 @@ const handler = async (req: Request): Promise<Response> => {
       resend.emails.send({
         from: FROM_EMAIL,
         to: [inquiry.email],
-        subject: "Thank You for Your Inquiry - Peninsula Equine",
+        subject: "Project Received — Peninsula Equine",
         html: confirmationHtml,
-        attachments: [
-          {
-            filename: "consultation.ics",
-            content: icsBase64,
-            content_type: "text/calendar; method=REQUEST",
-          },
-        ],
       }),
     ]);
 

@@ -24,13 +24,14 @@ interface QuoteData {
   expiry_date: string;
 }
 
-const NAVY = "#171A23";
+const NAVY = "#1a1d26";
 const GOLD = "#E8C067";
 const GOLD_DARK = "#C49A3C";
 const SLATE = "#6B7280";
 const LIGHT_BG = "#F8F6F0";
 const WHITE = "#FFFFFF";
 const DIVIDER = "#D4CFC4";
+const CHARCOAL = "#2d2418";
 
 const fmt = (v: number) =>
   `$${v.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -63,98 +64,117 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
   const ml = 22;
   const mr = 22;
   const cw = pw - ml - mr;
-  let y = 0;
 
-  // ─── Navy header band ─────────────────────────────────────
+  // ═══════════════════════════════════════════════════════════
+  // PAGE 1 — COVER PAGE
+  // ═══════════════════════════════════════════════════════════
+  
+  // Full navy background
   doc.setFillColor(NAVY);
-  doc.rect(0, 0, pw, 52, "F");
+  doc.rect(0, 0, pw, ph, "F");
 
-  // Gold accent line under header
+  // Gold accent line
   doc.setFillColor(GOLD);
-  doc.rect(0, 52, pw, 1.2, "F");
+  doc.rect(ml, 60, 40, 0.8, "F");
 
   // Brand name
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(11);
+  doc.setFontSize(10);
   doc.setTextColor(GOLD);
-  doc.text("PENINSULA EQUINE", ml, 18);
+  doc.text("PENINSULA EQUINE", ml, 72);
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(6.5);
-  doc.setTextColor("#9CA3AF");
-  doc.text("ENGINEERED INFRASTRUCTURE", ml, 23.5);
+  doc.setTextColor("#7a7f8c");
+  doc.text("ENGINEERED INFRASTRUCTURE", ml, 77);
 
-  // Quote number + date right side
+  // Project name — large
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(18);
+  doc.setFontSize(28);
   doc.setTextColor(WHITE);
-  doc.text("INVESTMENT OVERVIEW", pw - mr, 18, { align: "right" });
+  const projectLines = doc.splitTextToSize(quote.project_type || "Project Brief", cw);
+  doc.text(projectLines, ml, 110);
 
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(8);
-  doc.setTextColor(GOLD);
-  doc.text(quote.quote_number || "DRAFT", pw - mr, 26, { align: "right" });
-
-  // Expiry
-  if (quote.expiry_date) {
-    doc.setFontSize(7);
+  // Location
+  if (quote.location) {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
     doc.setTextColor("#9CA3AF");
-    doc.text(`Valid until ${quote.expiry_date}`, pw - mr, 31, { align: "right" });
+    doc.text(quote.location, ml, 110 + projectLines.length * 12 + 6);
   }
 
-  // Contact details in header
-  doc.setFontSize(6.5);
-  doc.setTextColor("#9CA3AF");
-  doc.text("peninsulaequine.org  ·  info@peninsulaequine.org", ml, 44);
-
-  y = 62;
-
-  // ─── Client + Project info ─────────────────────────────────
-  const colW = cw / 2 - 4;
-
-  // Left column - Client
+  // Client name
+  const clientY = 180;
   doc.setFont("helvetica", "normal");
   doc.setFontSize(6);
   doc.setTextColor(GOLD_DARK);
-  doc.text("PREPARED FOR", ml, y);
+  doc.text("PREPARED FOR", ml, clientY);
 
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(11);
-  doc.setTextColor(NAVY);
-  doc.text(quote.client_name || "—", ml, y + 6);
+  doc.setFontSize(14);
+  doc.setTextColor(WHITE);
+  doc.text(quote.client_name || "—", ml, clientY + 8);
 
   if (quote.client_email) {
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(7.5);
-    doc.setTextColor(SLATE);
-    doc.text(quote.client_email, ml, y + 11);
+    doc.setFontSize(8);
+    doc.setTextColor("#7a7f8c");
+    doc.text(quote.client_email, ml, clientY + 14);
   }
 
-  // Right column - Project
-  const rx = ml + colW + 8;
+  // Quote number + date
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7);
+  doc.setTextColor("#7a7f8c");
+  doc.text(quote.quote_number || "DRAFT", ml, clientY + 26);
+  if (quote.expiry_date) {
+    doc.text(`Valid until ${quote.expiry_date}`, ml, clientY + 31);
+  }
+
+  // Cover footer
+  const coverFooterY = ph - 24;
+  doc.setFillColor(GOLD);
+  doc.rect(ml, coverFooterY, 40, 0.5, "F");
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(6);
+  doc.setTextColor("#7a7f8c");
+  doc.text("peninsulaequine.org  ·  info@peninsulaequine.org", ml, coverFooterY + 6);
+  doc.setFontSize(5.5);
+  doc.setTextColor("#555b66");
+  doc.text("Private projects · Discreet builds · Built for long-term ownership", ml, coverFooterY + 11);
+
+  // ═══════════════════════════════════════════════════════════
+  // PAGE 2 — CONCEPT SUMMARY
+  // ═══════════════════════════════════════════════════════════
+  doc.addPage();
+  let y = 32;
+
+  // Concept header
   doc.setFont("helvetica", "normal");
   doc.setFontSize(6);
   doc.setTextColor(GOLD_DARK);
-  doc.text("PROJECT", rx, y);
+  doc.text("PROJECT OVERVIEW", ml, y);
+  y += 8;
 
   doc.setFont("helvetica", "bold");
+  doc.setFontSize(16);
+  doc.setTextColor(CHARCOAL);
+  doc.text("Concept Summary", ml, y);
+  y += 10;
+
+  drawLine(doc, ml, y, pw - mr, GOLD, 0.5);
+  y += 10;
+
+  // Concept intro text
+  doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
-  doc.setTextColor(NAVY);
-  const projLines = doc.splitTextToSize(quote.project_type || "—", colW);
-  doc.text(projLines, rx, y + 6);
+  doc.setTextColor(CHARCOAL);
+  const conceptIntro = "This project is structured around performance, access, and longevity. Every element is engineered for the specific conditions of the site — not adapted from a generic template.";
+  const conceptLines = doc.splitTextToSize(conceptIntro, cw);
+  doc.text(conceptLines, ml, y);
+  y += conceptLines.length * 4.2 + 8;
 
-  if (quote.location) {
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(7.5);
-    doc.setTextColor(SLATE);
-    doc.text(quote.location, rx, y + 6 + projLines.length * 4);
-  }
-
-  y += 22;
-  drawLine(doc, ml, y, pw - mr, DIVIDER, 0.3);
-  y += 6;
-
-  // ─── Scope Summary ────────────────────────────────────────
+  // Scope of works
   if (quote.scope_summary) {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(6);
@@ -163,22 +183,56 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
     y += 5;
 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(8);
-    doc.setTextColor(NAVY);
+    doc.setFontSize(8.5);
+    doc.setTextColor(CHARCOAL);
     const scopeLines = doc.splitTextToSize(quote.scope_summary, cw);
     doc.text(scopeLines, ml, y);
-    y += scopeLines.length * 3.8 + 4;
-    drawLine(doc, ml, y, pw - mr, DIVIDER, 0.3);
-    y += 6;
+    y += scopeLines.length * 3.8 + 10;
   }
 
-  // ─── Line Items Table ──────────────────────────────────────
-  if (lineItems.length > 0) {
+  // Exclusions on concept page
+  if (quote.exclusions) {
+    drawLine(doc, ml, y, pw - mr, DIVIDER, 0.3);
+    y += 6;
+
     doc.setFont("helvetica", "normal");
     doc.setFontSize(6);
     doc.setTextColor(GOLD_DARK);
-    doc.text("ITEMISED BREAKDOWN", ml, y);
-    y += 6;
+    doc.text("EXCLUSIONS & ASSUMPTIONS", ml, y);
+    y += 5;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7);
+    doc.setTextColor(SLATE);
+    const exLines = doc.splitTextToSize(quote.exclusions, cw);
+    doc.text(exLines, ml, y);
+    y += exLines.length * 3.2 + 10;
+  }
+
+  // Page 2 footer
+  drawPageFooter(doc, pw, ph, ml, mr);
+
+  // ═══════════════════════════════════════════════════════════
+  // PAGE 3 — ITEMISED SCOPE + INVESTMENT
+  // ═══════════════════════════════════════════════════════════
+  if (lineItems.length > 0) {
+    doc.addPage();
+    y = 32;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6);
+    doc.setTextColor(GOLD_DARK);
+    doc.text("SCOPE BREAKDOWN", ml, y);
+    y += 8;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.setTextColor(CHARCOAL);
+    doc.text("Itemised Specification", ml, y);
+    y += 10;
+
+    drawLine(doc, ml, y, pw - mr, GOLD, 0.5);
+    y += 8;
 
     // Table header
     doc.setFillColor(NAVY);
@@ -215,8 +269,8 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
       y += 7;
 
       items.forEach((item) => {
-        // Check page break
         if (y > ph - 60) {
+          drawPageFooter(doc, pw, ph, ml, mr);
           doc.addPage();
           y = 20;
         }
@@ -229,7 +283,7 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(7.5);
-        doc.setTextColor(NAVY);
+        doc.setTextColor(CHARCOAL);
 
         const titleLines = doc.splitTextToSize(item.title || "—", cw - 76);
         doc.text(titleLines, ml + 2, y + 2);
@@ -241,7 +295,7 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
         doc.text(fmt(item.unit_price), ml + cw - 28, y + 2, { align: "right" });
 
         doc.setFont("helvetica", "bold");
-        doc.setTextColor(NAVY);
+        doc.setTextColor(CHARCOAL);
         doc.text(fmt(item.quantity * item.unit_price), ml + cw - 2, y + 2, { align: "right" });
 
         const rowH = Math.max(7, titleLines.length * 4 + 3);
@@ -261,93 +315,95 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
       y += 2;
     });
 
-    y += 2;
-  }
+    y += 6;
 
-  // ─── Totals Box ────────────────────────────────────────────
-  if (y > ph - 70) {
-    doc.addPage();
-    y = 20;
-  }
-
-  const totalsX = ml + cw - 68;
-  const totalsW = 68;
-
-  // Totals background
-  doc.setFillColor(LIGHT_BG);
-  doc.rect(totalsX, y, totalsW, 26, "F");
-
-  // Gold top accent on totals box
-  doc.setFillColor(GOLD);
-  doc.rect(totalsX, y, totalsW, 0.8, "F");
-
-  y += 5;
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(7);
-  doc.setTextColor(SLATE);
-  doc.text("Subtotal", totalsX + 3, y + 2);
-  doc.setTextColor(NAVY);
-  doc.text(fmt(quote.subtotal), totalsX + totalsW - 3, y + 2, { align: "right" });
-
-  y += 6;
-  doc.setTextColor(SLATE);
-  doc.text("GST (10%)", totalsX + 3, y + 2);
-  doc.setTextColor(NAVY);
-  doc.text(fmt(quote.gst), totalsX + totalsW - 3, y + 2, { align: "right" });
-
-  drawLine(doc, totalsX + 3, y + 5.5, totalsX + totalsW - 3, NAVY, 0.3);
-  y += 9;
-
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(9);
-  doc.setTextColor(NAVY);
-  doc.text("Total (inc. GST)", totalsX + 3, y + 2);
-  doc.setTextColor(GOLD_DARK);
-  doc.text(fmt(quote.total), totalsX + totalsW - 3, y + 2, { align: "right" });
-
-  y += 14;
-
-  // ─── Exclusions ────────────────────────────────────────────
-  if (quote.exclusions) {
-    if (y > ph - 50) {
+    // ─── Investment Box ─────────────────────────────────────
+    if (y > ph - 80) {
+      drawPageFooter(doc, pw, ph, ml, mr);
       doc.addPage();
-      y = 20;
+      y = 32;
     }
 
-    drawLine(doc, ml, y, pw - mr, DIVIDER, 0.3);
-    y += 6;
+    drawLine(doc, ml, y, pw - mr, GOLD, 0.5);
+    y += 10;
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(6);
     doc.setTextColor(GOLD_DARK);
-    doc.text("EXCLUSIONS & ASSUMPTIONS", ml, y);
-    y += 5;
+    doc.text("ESTIMATED INVESTMENT", ml, y);
+    y += 8;
 
+    const totalsX = ml + cw - 80;
+    const totalsW = 80;
+
+    // Subtle background
+    doc.setFillColor(LIGHT_BG);
+    doc.rect(totalsX, y - 2, totalsW, 30, "F");
+    doc.setFillColor(GOLD);
+    doc.rect(totalsX, y - 2, totalsW, 0.8, "F");
+
+    y += 3;
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(7);
+    doc.setFontSize(7.5);
     doc.setTextColor(SLATE);
-    const exLines = doc.splitTextToSize(quote.exclusions, cw);
-    doc.text(exLines, ml, y);
-    y += exLines.length * 3.2 + 6;
+    doc.text("Subtotal", totalsX + 4, y + 2);
+    doc.setTextColor(CHARCOAL);
+    doc.text(fmt(quote.subtotal), totalsX + totalsW - 4, y + 2, { align: "right" });
+
+    y += 7;
+    doc.setTextColor(SLATE);
+    doc.text("GST (10%)", totalsX + 4, y + 2);
+    doc.setTextColor(CHARCOAL);
+    doc.text(fmt(quote.gst), totalsX + totalsW - 4, y + 2, { align: "right" });
+
+    drawLine(doc, totalsX + 4, y + 6, totalsX + totalsW - 4, CHARCOAL, 0.3);
+    y += 10;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(CHARCOAL);
+    doc.text("Total (inc. GST)", totalsX + 4, y + 2);
+    doc.setTextColor(GOLD_DARK);
+    doc.text(fmt(quote.total), totalsX + totalsW - 4, y + 2, { align: "right" });
+
+    y += 20;
+
+    // ─── Close line ──────────────────────────────────────────
+    if (y > ph - 40) {
+      drawPageFooter(doc, pw, ph, ml, mr);
+      doc.addPage();
+      y = 32;
+    }
+
+    drawLine(doc, ml, y, pw - mr, DIVIDER, 0.3);
+    y += 8;
+
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(8);
+    doc.setTextColor(SLATE);
+    const closeLine = "We take on a limited number of builds each year to maintain quality and delivery standards. If you'd like to move forward, we can lock this into schedule and move into planning.";
+    const closeLines = doc.splitTextToSize(closeLine, cw);
+    doc.text(closeLines, ml, y);
+
+    drawPageFooter(doc, pw, ph, ml, mr);
   }
 
-  // ─── Footer ────────────────────────────────────────────────
-  const fy = ph - 16;
+  // ─── Save ──────────────────────────────────────────────────
+  const filename = `${quote.quote_number || "PE-Brief"}-${quote.client_name.replace(/\s+/g, "-")}.pdf`;
+  doc.save(filename);
+}
+
+function drawPageFooter(doc: jsPDF, pw: number, ph: number, ml: number, mr: number) {
+  const fy = ph - 14;
   doc.setFillColor(NAVY);
-  doc.rect(0, fy - 2, pw, 20, "F");
+  doc.rect(0, fy - 2, pw, 18, "F");
   doc.setFillColor(GOLD);
-  doc.rect(0, fy - 2, pw, 0.6, "F");
+  doc.rect(0, fy - 2, pw, 0.5, "F");
 
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(6);
-  doc.setTextColor("#9CA3AF");
-  doc.text("Peninsula Equine  ·  Engineered Infrastructure  ·  ABN XX XXX XXX XXX", ml, fy + 5);
-  doc.text("peninsulaequine.org", pw - mr, fy + 5, { align: "right" });
-
   doc.setFontSize(5.5);
-  doc.text("This document is confidential. Pricing valid for 30 days unless otherwise stated.", ml, fy + 9);
-
-  // ─── Save ──────────────────────────────────────────────────
-  const filename = `${quote.quote_number || "PE-Quote"}-${quote.client_name.replace(/\s+/g, "-")}.pdf`;
-  doc.save(filename);
+  doc.setTextColor("#7a7f8c");
+  doc.text("Peninsula Equine  ·  Engineered Infrastructure  ·  peninsulaequine.org", ml, fy + 4);
+  doc.setFontSize(5);
+  doc.text("This document is confidential. Pricing valid for 30 days unless otherwise stated.", ml, fy + 8);
 }
