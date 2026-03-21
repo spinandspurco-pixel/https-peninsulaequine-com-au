@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { CRMRecord, PIPELINE_STAGES, PipelineStage, TEAM_MEMBERS } from "./crmTypes";
 import { supabase } from "@/integrations/supabase/client";
 import { format, differenceInDays } from "date-fns";
@@ -11,7 +12,7 @@ import { toast } from "sonner";
 import {
   X, Phone, Mail, MapPin, DollarSign, Calendar,
   FileText, ArrowRight, CheckCircle, Zap, Lightbulb,
-  Briefcase, Shield, Sparkles, Copy, Check, Send,
+  Briefcase, Shield, Sparkles, Copy, Check, Send, FileUp,
 } from "lucide-react";
 import { CommunicationTimeline } from "@/components/CommunicationTimeline";
 import { scheduleLeadFollowUps } from "@/lib/autoSendScheduler";
