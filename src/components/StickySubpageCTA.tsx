@@ -128,9 +128,9 @@ export function StickySubpageCTA({
               <Link
                 to={ctaHref}
                 className={cn(
-                  "inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium",
-                  "bg-accent text-accent-foreground hover:bg-accent/90",
-                  "transition-all duration-300 hover:scale-105 hover:shadow-[0_4px_16px_hsl(var(--accent)/0.4)]",
+                  "inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium",
+                  "bg-accent text-accent-foreground hover:opacity-90",
+                  "transition-opacity duration-300",
                   "whitespace-nowrap",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
                 )}
