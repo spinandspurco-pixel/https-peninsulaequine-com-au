@@ -155,7 +155,7 @@ export default function Forge() {
           >
             <div className="w-8 h-px bg-accent/30" />
             <Flame className="w-3.5 h-3.5 text-accent/50" strokeWidth={1.25} />
-            <p className="text-overline text-accent/60">Product Division</p>
+            <p className="text-overline text-accent/60">Systems Division</p>
             <div className="w-8 h-px bg-accent/30" />
           </div>
 
