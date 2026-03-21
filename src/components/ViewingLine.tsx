@@ -89,7 +89,7 @@ export function ViewingLine() {
             className="font-serif text-sm sm:text-base italic text-muted-foreground/40 leading-relaxed mb-12"
             style={{
               opacity: visible ? 1 : 0,
-              transition: "opacity 1200ms ease-out 700ms",
+              transition: `opacity ${DURATION.slow}ms ${EASE.default} 700ms`,
             }}
           >
             Every line, every movement, every decision — visible from here.
