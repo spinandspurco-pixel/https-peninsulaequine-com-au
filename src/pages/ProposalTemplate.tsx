@@ -1,5 +1,5 @@
-import { useRef } from "react";
-import { ArrowRight, MessageSquare, Phone } from "lucide-react";
+import { useRef, useCallback } from "react";
+import { ArrowRight, MessageSquare, Download } from "lucide-react";
 import { GroundLockPanelSVG, PanelDefs } from "@/components/groundlock/GroundLockPanelSVG";
 
 /* ─── Placeholder data shape ─── */

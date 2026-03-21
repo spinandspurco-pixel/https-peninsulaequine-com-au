@@ -954,3 +954,78 @@ img[loading="lazy"],
   from { opacity: 0; transform: translateY(20px); letter-spacing: 0.08em; }
   to   { opacity: 1; transform: translateY(0); letter-spacing: 0.02em; }
 }
+
+/* ══════════════════════════════════════════
+   PROPOSAL PRINT / PDF STYLES
+   ══════════════════════════════════════════ */
+@media print {
+  /* Reset page */
+  @page {
+    size: A4;
+    margin: 18mm 16mm 20mm 16mm;
+  }
+
+  /* Hide non-print elements */
+  .no-print,
+  .grain-overlay {
+    display: none !important;
+  }
+
+  /* Force background colours */
+  body,
+  .proposal-root {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Prevent awkward breaks */
+  .print-avoid-break {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Force page breaks */
+  .print-page-break {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  /* Cover fills the first page */
+  .proposal-cover {
+    min-height: 100vh;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  /* Keep sections together */
+  .proposal-section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Closing section always on its own page */
+  .proposal-closing {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  /* Typography — ensure readability */
+  .proposal-root {
+    font-size: 10pt !important;
+  }
+
+  /* Remove sticky positioning */
+  .sticky {
+    position: static !important;
+  }
+
+  /* Tighten vertical spacing for print */
+  .proposal-section {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+}
+}
