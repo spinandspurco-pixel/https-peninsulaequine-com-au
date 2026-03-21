@@ -268,7 +268,7 @@ export function ProjectsCinematicHero() {
             <button
               onClick={scrollToContent}
               className="group inline-flex items-center gap-3 opacity-0 cursor-pointer bg-transparent border-0"
-              style={{ animation: "blueprintFade 0.8s 3.4s ease-out forwards" }}
+              style={{ animation: "blueprintFade 0.8s 3.8s ease-out forwards" }}
             >
               <span
                 className="text-xs sm:text-sm uppercase tracking-[0.25em] font-mono transition-colors duration-300"
