@@ -284,7 +284,7 @@ export default function GroundLock() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={120}>
                 <h2 className="heading-section text-foreground mb-3">
-                  Engineered, Not Decorative
+                  Engineered, Not Arranged
                 </h2>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={160}>
