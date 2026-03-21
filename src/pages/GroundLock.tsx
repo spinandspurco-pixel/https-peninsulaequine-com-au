@@ -438,19 +438,7 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ SECTION 6 — INTEGRATION ══════════════════════ */}
-      <section className="relative overflow-hidden">
-        <div className="py-10 sm:py-14 relative">
-          <div className="absolute inset-0 grain-texture" />
-          <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
-            <RevealOnScroll direction="none">
-              <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/28 italic leading-[1.9]">
-                Specified as part of complete site planning — not added later.
-              </p>
-            </RevealOnScroll>
-          </div>
-        </div>
-      </section>
+      {/* integration line removed — redundant */}
 
       {/* ═══ SECTION 7 — Start Your Project ═════════════ */}
       <section className="relative overflow-hidden">
