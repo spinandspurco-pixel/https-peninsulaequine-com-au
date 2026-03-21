@@ -60,6 +60,7 @@ const EquusRidge = lazy(() => import("./pages/EquusRidge"));
 const InstallerAccess = lazy(() => import("./pages/InstallerAccess"));
 const SiteAssessment = lazy(() => import("./pages/SiteAssessment"));
 const SignatureSystems = lazy(() => import("./pages/SignatureSystems"));
+const GroundLockSetup = lazy(() => import("./pages/GroundLockSetup"));
 
 const queryClient = new QueryClient();
 
@@ -132,6 +133,7 @@ function AppContent() {
            <Route path="/installer" element={<InstallerAccess />} />
            <Route path="/site-assessment" element={<SiteAssessment />} />
            <Route path="/systems" element={<SignatureSystems />} />
+           <Route path="/groundlock-setup" element={<ProtectedRoute><GroundLockSetup /></ProtectedRoute>} />
           <Route path="/project/:slug" element={<CaseStudy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
