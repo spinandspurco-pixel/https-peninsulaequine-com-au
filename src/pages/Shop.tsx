@@ -58,20 +58,20 @@ export default function Shop() {
               {[
                 {
                   title: "GroundLock System",
-                  description: "The foundation system used under all Peninsula Equine builds.",
-                  cta: "Request Assessment",
+                  description: "The foundation system used under every Peninsula Equine build.",
+                  cta: "Assess My Site",
                   href: "/site-assessment",
                 },
                 {
                   title: "Ground Systems & Access",
-                  description: "Driveways, float access, and stabilisation designed for long-term use.",
+                  description: "Designed to handle movement, load, and long-term use without failure.",
                   cta: "Discuss Project",
                   href: "/contact",
                 },
                 {
                   title: "Select Components",
-                  description: "Limited components available for approved projects and builds.",
-                  cta: "View Options",
+                  description: "Available only where they support a complete, properly structured build.",
+                  cta: "View Specifications",
                   href: "/groundlock-systems",
                 },
               ].map((card, i) => (
