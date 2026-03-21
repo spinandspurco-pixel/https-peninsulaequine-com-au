@@ -170,6 +170,7 @@ export default function Index() {
                   opacity: 0,
                   animation: "heroFadeIn 800ms ease-out 1200ms forwards",
                   fontSize: "clamp(3rem, 1.6rem + 6.5vw, 7.5rem)",
+                  textShadow: "0 2px 40px hsl(222 20% 4% / 0.6)",
                 }}
               >
                 Built from the<br className="hidden sm:block" /> ground up.
