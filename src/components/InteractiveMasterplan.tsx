@@ -393,7 +393,7 @@ function useIsTouchDevice() {
 
 /* ── Camera wrapper — subtle zoom toward active zone ── */
 const CAMERA_SCALE = 1.06;
-const CAMERA_EASE = "cubic-bezier(0.25, 0.1, 0.25, 1)";
+const CAMERA_EASE = "cubic-bezier(0.22, 0.61, 0.36, 1)";
 const SVG_W = 740;
 const SVG_H = 680;
 
