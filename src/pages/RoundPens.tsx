@@ -96,7 +96,7 @@ function PricingCard({ tier }: { tier: typeof PRICING_TIERS[number] }) {
         ))}
       </ul>
       <Button asChild className="w-full" variant={tier.popular ? "default" : "outline"}>
-        <Link to={`/contact?services=round-pens`}>Request Assessment</Link>
+        <Link to={`/contact?services=round-pens`}>Discuss Project</Link>
       </Button>
     </div>
   );
@@ -138,7 +138,7 @@ export default function RoundPens() {
   return (
     <Layout>
       <StickySubpageCTA
-        ctaLabel="Request Assessment"
+        ctaLabel="Discuss Project"
         ctaIcon={<Phone className="h-4 w-4" />}
         onCtaClick={() => (window.location.href = `/contact?services=round-pens`)}
       />

@@ -194,8 +194,8 @@ export default function Shop() {
                   size="lg"
                   className="uppercase tracking-[0.12em] text-xs"
                 >
-                  <Link to="/site-assessment">
-                    Request Site Assessment
+                   <Link to="/site-assessment">
+                    Assess My Site
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>

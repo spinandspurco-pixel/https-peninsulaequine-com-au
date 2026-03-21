@@ -307,7 +307,7 @@ export default function ServiceDetail() {
   return (
     <Layout>
       <StickySubpageCTA
-        ctaLabel="Request Assessment"
+        ctaLabel="Discuss Project"
         ctaIcon={<Phone className="h-4 w-4" />}
         onCtaClick={() => (window.location.href = `/contact?services=${service.id}`)}
       />
@@ -448,7 +448,7 @@ export default function ServiceDetail() {
                       )}
                     >
                       <Link to={`/contact?services=${service.id}&ref=tier-${tier.name.toLowerCase()}`}>
-                        Request Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                        Discuss Project <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
                   </div>
@@ -649,7 +649,7 @@ export default function ServiceDetail() {
         title="Ready to Start a Project?"
         description="Tell us about your project and we'll prepare a personalised quote within 1–2 business days."
         backgroundImage={mainRidgeBarnFrame}
-        primaryButtonText="Request Assessment"
+        primaryButtonText="Discuss Project"
         primaryButtonLink={`/contact?services=${service.id}`}
         showPhoneButton={true}
       />

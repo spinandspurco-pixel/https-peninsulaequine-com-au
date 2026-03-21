@@ -356,7 +356,7 @@ export default function GroundLock() {
             <RevealOnScroll direction="up" delay={340}>
               <Button asChild variant="outline-light" size="lg">
                 <Link to="/contact">
-                  Enquire About GroundLock Integration <ArrowRight className="ml-2 h-4 w-4" />
+                  Enquire About GroundLock Use <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </RevealOnScroll>
@@ -381,7 +381,7 @@ export default function GroundLock() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={80}>
               <h2 className="heading-section text-foreground mb-4">
-                Request GroundLock Assessment
+                Assess My Site
               </h2>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
@@ -397,7 +397,7 @@ export default function GroundLock() {
             <RevealOnScroll direction="up" delay={250}>
               <Button asChild variant="gold" size="lg">
                 <Link to="/site-assessment">
-                  Request Assessment <ArrowRight className="ml-2 h-4 w-4" />
+                  Assess My Site <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </RevealOnScroll>

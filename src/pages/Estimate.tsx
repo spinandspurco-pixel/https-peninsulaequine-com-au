@@ -71,7 +71,7 @@ function TierCard({ tier, delay }: { tier: PricingTier; delay: number }) {
       </ul>
       <Button asChild variant={tier.popular ? "default" : "outline"} className="w-full">
         <Link to="/contact">
-          Request Assessment <ArrowRight className="ml-2 h-4 w-4" />
+          Discuss Project <ArrowRight className="ml-2 h-4 w-4" />
         </Link>
       </Button>
     </div>
@@ -345,7 +345,7 @@ export default function Estimate() {
       <EstimateCTA />
 
       <StickySubpageCTA
-        ctaLabel="Request Assessment"
+        ctaLabel="Discuss Project"
         ctaHref="/contact"
         hideSecondary
       />
