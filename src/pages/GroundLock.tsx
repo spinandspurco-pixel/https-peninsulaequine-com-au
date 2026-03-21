@@ -339,14 +339,24 @@ export default function GroundLock() {
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={220}>
-              <p className="text-sm text-muted-foreground/35 leading-[1.9] mb-12">
-                We provide system supply, guidance, and support to ensure GroundLock is implemented correctly.
+              <ul className="space-y-3 text-left max-w-xs mx-auto mb-6">
+                {["System Supply — components and specification", "System Usage — per-project integration", "Project Support — guidance and commissioning"].map((item) => (
+                  <li key={item} className="flex items-center gap-3 text-sm text-muted-foreground/35 leading-[1.8]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent/25 shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={260}>
+              <p className="text-[13px] text-muted-foreground/30 leading-[1.9] mb-12 italic font-serif">
+                Approval is project-based. We ensure the system is implemented to specification.
               </p>
             </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={300}>
+            <RevealOnScroll direction="up" delay={340}>
               <Button asChild variant="outline-light" size="lg">
                 <Link to="/contact">
-                  Enquire About GroundLock Use <ArrowRight className="ml-2 h-4 w-4" />
+                  Enquire About GroundLock Integration <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </RevealOnScroll>

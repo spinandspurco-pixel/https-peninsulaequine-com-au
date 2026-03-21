@@ -157,26 +157,26 @@ export default function Shop() {
         </div>
       </section>
 
-      {/* Cross-System CTA */}
+      {/* Full Build Integration CTA */}
       <section className="py-20 bg-primary text-primary-foreground relative overflow-hidden">
         <BlueprintScene preset="barn" className="absolute inset-0" />
         <div className="section-container relative z-10 text-center max-w-lg mx-auto space-y-5">
-          <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/40">Beyond the system</p>
+          <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/40">Full Project Integration</p>
           <h2 className="font-serif text-2xl md:text-3xl">
-            Ready for a full <span className="text-accent">managed build?</span>
+            GroundLock is part of the <span className="text-accent">build — not separate from it.</span>
           </h2>
           <p className="text-primary-foreground/60 text-sm max-w-md mx-auto">
-            GroundLock™ integrates with Peninsula Equine's arena, stable, and infrastructure services. Move from system to project.
+            Ground stabilisation is integrated into every Peninsula Equine project. Start with a site assessment to determine the right system specification.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
             <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.12em] text-xs">
-              <Link to="/contact">
-                Request Specification <ArrowRight className="ml-2 h-4 w-4" />
+              <Link to="/site-assessment">
+                Request Site Assessment <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="border-accent/30 text-accent hover:bg-accent/10 uppercase tracking-[0.12em] text-xs">
               <Link to="/services">
-                Explore Services
+                View Capabilities
               </Link>
             </Button>
           </div>

@@ -175,19 +175,19 @@ export default function ProductDetail() {
         </div>
       </section>
 
-      {/* Cross-System Flow */}
+      {/* Integrated Build Flow */}
       <section className="py-16 border-t border-border">
         <div className="section-container max-w-3xl mx-auto text-center space-y-5">
-          <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted-foreground">Beyond the system</p>
+          <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted-foreground">Integrated System</p>
           <h2 className="font-serif text-xl md:text-2xl">
-            Need a full <span className="text-accent">managed build?</span>
+            GroundLock is part of the <span className="text-accent">build — not separate from it.</span>
           </h2>
           <p className="text-muted-foreground text-sm max-w-lg mx-auto">
-            GroundLock™ systems integrate with Peninsula Equine's full arena, stable, and infrastructure builds. Move from product to project seamlessly.
+            Ground stabilisation is engineered into every Peninsula Equine project. The system level is specified during the site assessment process.
           </p>
           <Button asChild variant="outline" size="lg" className="uppercase tracking-[0.12em] text-xs">
             <Link to="/services">
-              Explore Peninsula Equine Services <ArrowRight className="ml-2 h-4 w-4" />
+              View Build Capabilities <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>
