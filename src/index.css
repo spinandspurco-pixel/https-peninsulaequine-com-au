@@ -897,9 +897,9 @@ img[loading="lazy"],
   filter: saturate(0.82) contrast(1.06) sepia(0.04);
 }
 
-/* Hero backgrounds — deep, moody, warm */
+/* Hero backgrounds — deep, moody, warm highlights */
 .img-hero {
-  filter: brightness(0.22) contrast(1.12) saturate(0.4) sepia(0.06);
+  filter: brightness(0.18) contrast(1.18) saturate(0.35) sepia(0.08);
 }
 
 /* Page header / section backgrounds — dark overlay feel */
