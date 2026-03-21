@@ -391,6 +391,35 @@ function useIsTouchDevice() {
   return isTouch;
 }
 
+/* ── Camera wrapper — subtle zoom toward active zone ── */
+const CAMERA_SCALE = 1.06;
+const CAMERA_EASE = "cubic-bezier(0.25, 0.1, 0.25, 1)";
+const SVG_W = 740;
+const SVG_H = 680;
+
+function CameraWrapper({ activeZone, children }: { activeZone: string | null; children: React.ReactNode }) {
+  const zone = activeZone ? zones.find((z) => z.id === activeZone) : null;
+  const center = zone ? getCenter(zone.path) : null;
+
+  // Convert zone centre to percentage of viewBox for transform-origin
+  const originX = center ? (center.x / SVG_W) * 100 : 50;
+  const originY = center ? (center.y / SVG_H) * 100 : 50;
+
+  return (
+    <div
+      className="w-full max-w-[560px]"
+      style={{
+        transform: zone ? `scale(${CAMERA_SCALE})` : "scale(1)",
+        transformOrigin: `${originX}% ${originY}%`,
+        transition: `transform 500ms ${CAMERA_EASE}, transform-origin 500ms ${CAMERA_EASE}`,
+        willChange: "transform",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 /* ── Tour sequence order ── */
 const TOUR_ORDER = ["stables", "courtyard", "service-wing", "viewing-area", "indoor-arena"];
 const TOUR_HOLD = 2800;
