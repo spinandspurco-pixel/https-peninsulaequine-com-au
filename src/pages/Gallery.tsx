@@ -469,6 +469,9 @@ export default function Gallery() {
         </div>
       </section>
 
+      {/* ── THE VIEWING LINE — cinematic closer ── */}
+      <ViewingLine />
+
       {/* Lightbox */}
       <GalleryLightbox
         item={lightboxItem}
