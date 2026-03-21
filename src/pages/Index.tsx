@@ -115,6 +115,24 @@ function ProjectsScroll() {
 }
 
 export default function Index() {
+  /* Scroll-driven hero fade */
+  const heroContentRef = useRef<HTMLDivElement>(null);
+  const [heroFade, setHeroFade] = useState(1);
+
+  const handleScroll = useCallback(() => {
+    const el = heroContentRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const vh = window.innerHeight;
+    // Start fading when top of hero content reaches 80% of viewport, fully gone by 30%
+    const progress = Math.max(0, Math.min(1, (rect.top - vh * 0.3) / (vh * 0.5)));
+    setHeroFade(progress);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   return (
     <Layout>
