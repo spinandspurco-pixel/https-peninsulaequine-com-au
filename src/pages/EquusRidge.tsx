@@ -2,7 +2,7 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import equusRidgeHero from "@/assets/equus-ridge-hero.jpg";
-import coveredArenaBlackExterior from "@/assets/covered-arena-black-exterior.jpg";
+
 
 const EquusRidge = () => {
   return (
