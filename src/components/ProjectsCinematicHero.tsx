@@ -247,7 +247,7 @@ export function ProjectsCinematicHero() {
               className="text-[11px] sm:text-xs font-mono uppercase tracking-[0.2em] mb-10 opacity-0"
               style={{
                 color: "rgba(198,168,107,0.3)",
-                animation: "blueprintFade 0.8s 3.7s ease-out forwards",
+                animation: "blueprintFade 0.6s 2.4s ease-out forwards",
               }}
             >
               Designed from the ground up. Built to hold up.
