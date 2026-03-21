@@ -54,7 +54,7 @@ export default function About() {
             className="mt-8 text-muted-foreground/45 text-sm sm:text-base max-w-md mx-auto leading-relaxed opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
-            Construction expertise meets genuine horsemanship.
+            Construction expertise shaped by horsemanship.
           </p>
         </div>
       </section>
