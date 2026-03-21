@@ -171,6 +171,9 @@ export function InteractiveMasterplan() {
 
   const handleHover = useCallback((id: string) => setActiveZone(id), []);
   const handleLeave = useCallback(() => setActiveZone(null), []);
+  const handleTap = useCallback((id: string) => {
+    setActiveZone((prev) => (prev === id ? null : id));
+  }, []);
 
   return (
     <section className="relative py-28 sm:py-36 lg:py-44 overflow-hidden">
