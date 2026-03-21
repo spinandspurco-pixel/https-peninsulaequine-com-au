@@ -144,9 +144,9 @@ export default {
           to: { opacity: "1" },
         },
         "ken-burns": {
-          "0%": { transform: "scale(1) translate(0, 0)" },
-          "50%": { transform: "scale(1.04) translate(-0.3%, -0.3%)" },
-          "100%": { transform: "scale(1.08) translate(-0.6%, 0)" },
+          "0%": { opacity: "1" },
+          "50%": { opacity: "0.97" },
+          "100%": { opacity: "1" },
         },
         "pulse-subtle": {
           "0%, 100%": { opacity: "1" },
