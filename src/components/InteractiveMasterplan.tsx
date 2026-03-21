@@ -148,6 +148,23 @@ function SitePlan({
         <pattern id="mp-hatch-dense" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <line x1="0" y1="0" x2="0" y2="3" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.04" />
         </pattern>
+        {/* Material fills — arena sand texture */}
+        <pattern id="mp-sand" width="4" height="4" patternUnits="userSpaceOnUse">
+          <rect width="4" height="4" fill="hsl(35 20% 18% / 0.4)" />
+          <circle cx="1" cy="1" r="0.3" fill="hsl(35 15% 25% / 0.15)" />
+          <circle cx="3" cy="3" r="0.25" fill="hsl(35 15% 22% / 0.1)" />
+        </pattern>
+        {/* Material fills — building solid warm */}
+        <pattern id="mp-building" width="8" height="8" patternUnits="userSpaceOnUse">
+          <rect width="8" height="8" fill="hsl(30 12% 16% / 0.5)" />
+          <line x1="0" y1="8" x2="8" y2="8" stroke="hsl(30 10% 22% / 0.06)" strokeWidth="0.3" />
+        </pattern>
+        {/* Material fills — courtyard paving */}
+        <pattern id="mp-paving" width="6" height="6" patternUnits="userSpaceOnUse">
+          <rect width="6" height="6" fill="hsl(25 8% 15% / 0.35)" />
+          <line x1="3" y1="0" x2="3" y2="6" stroke="hsl(25 8% 20% / 0.04)" strokeWidth="0.2" />
+          <line x1="0" y1="3" x2="6" y2="3" stroke="hsl(25 8% 20% / 0.04)" strokeWidth="0.2" />
+        </pattern>
         <filter id="mp-glow">
           <feGaussianBlur stdDeviation="3" result="blur" />
           <feFlood floodColor="hsl(var(--accent))" floodOpacity="0.15" result="color" />
@@ -187,14 +204,24 @@ function SitePlan({
       {/* Background grid */}
       <rect width="740" height="680" fill="url(#mp-grid)" />
 
-      {/* ── Ground plane elevation shadows (rendered first, behind structures) ── */}
-      {/* Arena shadow — largest structure, deepest shadow */}
+      {/* ── Material zone fills (rendered behind everything) ── */}
+      {/* Arena — sand texture, warm */}
+      <rect x="195" y="430" width="350" height="160" fill="url(#mp-sand)" rx="1" />
+      {/* Stables — solid building tone */}
+      <rect x="195" y="120" width="350" height="140" fill="url(#mp-building)" rx="1" />
+      {/* Service wing — building tone */}
+      <rect x="195" y="260" width="75" height="170" fill="url(#mp-building)" rx="0.5" />
+      {/* Viewing area — building tone */}
+      <rect x="470" y="260" width="75" height="120" fill="url(#mp-building)" rx="0.5" />
+      {/* Courtyard — paving */}
+      <rect x="270" y="260" width="200" height="120" fill="url(#mp-paving)" rx="0.5" />
+      {/* Central corridor — pathway contrast */}
+      <rect x="350" y="120" width="40" height="140" fill="hsl(25 8% 14% / 0.25)" />
+
+      {/* ── Ground plane elevation shadows ── */}
       <rect x="195" y="430" width="350" height="160" fill="hsl(0 0% 0% / 0.06)" filter="url(#mp-shadow-lg)" rx="1" />
-      {/* Stables shadow */}
       <rect x="195" y="120" width="350" height="140" fill="hsl(0 0% 0% / 0.04)" filter="url(#mp-shadow-md)" rx="1" />
-      {/* Service wing shadow */}
       <rect x="195" y="260" width="75" height="170" fill="hsl(0 0% 0% / 0.03)" filter="url(#mp-shadow-sm)" rx="0.5" />
-      {/* Viewing area shadow */}
       <rect x="470" y="260" width="75" height="120" fill="hsl(0 0% 0% / 0.03)" filter="url(#mp-shadow-sm)" rx="0.5" />
 
       {/* Property boundary */}
