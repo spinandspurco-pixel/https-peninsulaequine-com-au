@@ -120,15 +120,8 @@ const VIEW_MODES: { value: ViewMode; label: string; icon: typeof Crown; desc: st
 export default function Admin() {
   const { user, isAdmin, loading, signOut } = useAuth();
   const navigate = useNavigate();
-  const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [bookings, setBookings] = useState<any[]>([]);
   const [isLoadingData, setIsLoadingData] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [selectedInquiry, setSelectedInquiry] = useState<Inquiry | null>(null);
-  const [deleteInquiry, setDeleteInquiry] = useState<Inquiry | null>(null);
-  const [editNotes, setEditNotes] = useState("");
-  const [editStatus, setEditStatus] = useState("");
   const [hubspotApiKey, setHubspotApiKey] = useState("");
   const [hubspotEnabled, setHubspotEnabled] = useState(false);
   const [isSavingCrm, setIsSavingCrm] = useState(false);
