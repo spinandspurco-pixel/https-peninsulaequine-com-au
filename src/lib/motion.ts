@@ -25,15 +25,15 @@ export const EASE = {
 /* ── Duration (ms) ──────────────────────────────────── */
 export const DURATION = {
   /** Micro interactions — toggle active state, hover glow */
-  fast: 250,
+  fast: 200,
   /** Standard reveal — section entrance, card fade */
-  normal: 600,
+  normal: 450,
   /** Hero-level reveals — heading, cinematic layers */
-  slow: 900,
+  slow: 700,
   /** SVG line drawing, atmospheric fades */
-  cinematic: 1400,
+  cinematic: 1000,
   /** Parallax image transitions */
-  parallax: 800,
+  parallax: 600,
 } as const;
 
 /* ── Stagger interval (ms) ──────────────────────────── */
