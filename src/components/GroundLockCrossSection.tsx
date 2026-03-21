@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { DURATION, EASE } from "@/lib/motion";
 
 import foundationPour from "@/assets/main-ridge-foundation-pour.jpg";
@@ -65,6 +65,49 @@ const layers: Layer[] = [
   },
 ];
 
+/* ── Stable hover hook ────────────────────────────────── */
+function useStableHover() {
+  const [active, setActive] = useState<string | null>(null);
+  const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const onEnter = useCallback((id: string) => {
+    if (leaveTimer.current) {
+      clearTimeout(leaveTimer.current);
+      leaveTimer.current = null;
+    }
+    setActive(id);
+  }, []);
+
+  const onLeave = useCallback(() => {
+    leaveTimer.current = setTimeout(() => {
+      setActive(null);
+      leaveTimer.current = null;
+    }, 60);
+  }, []);
+
+  const onTap = useCallback((id: string) => {
+    setActive((prev) => (prev === id ? null : id));
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (leaveTimer.current) clearTimeout(leaveTimer.current);
+    };
+  }, []);
+
+  return { active, onEnter, onLeave, onTap };
+}
+
+/* ── Preload images ───────────────────────────────────── */
+function usePreloadImages(srcs: string[]) {
+  const loaded = useRef(false);
+  useEffect(() => {
+    if (loaded.current) return;
+    loaded.current = true;
+    srcs.forEach((s) => { const img = new Image(); img.src = s; });
+  }, []);
+}
+
 /* ── Pattern renderers ────────────────────────────────── */
 function LayerPatterns() {
   return (
@@ -99,14 +142,10 @@ const patternMap: Record<string, string> = {
 
 /* ── Main component ───────────────────────────────────── */
 export function GroundLockCrossSection() {
-  const [activeLayer, setActiveLayer] = useState<string | null>(null);
+  const { active: activeLayer, onEnter: onHover, onLeave, onTap } = useStableHover();
   const [viewMode, setViewMode] = useState<ViewMode>("system");
 
-  const onHover = useCallback((id: string) => setActiveLayer(id), []);
-  const onLeave = useCallback(() => setActiveLayer(null), []);
-  const onTap = useCallback((id: string) => {
-    setActiveLayer((prev) => (prev === id ? null : id));
-  }, []);
+  usePreloadImages([foundationPour, rebarDeep]);
 
   const activeData = layers.find((l) => l.id === activeLayer) || null;
 
@@ -204,8 +243,8 @@ export function GroundLockCrossSection() {
                 <g
                   key={layer.id}
                   className="cursor-pointer"
-                  onMouseEnter={() => onHover(layer.id)}
-                  onMouseLeave={onLeave}
+                  onPointerEnter={() => onHover(layer.id)}
+                  onPointerLeave={onLeave}
                   onClick={() => onTap(layer.id)}
                   style={{
                     opacity: isDimmed ? 0.35 : 1,
@@ -264,6 +303,7 @@ export function GroundLockCrossSection() {
                   opacity: activeLayer ? 1 : 0,
                   transition: `opacity ${DURATION.fast}ms ${EASE.interactive}`,
                 }}
+                className="pointer-events-none"
               >
                 <line
                   x1="620" y1={activeData.y + activeData.height / 2}
@@ -301,7 +341,7 @@ export function GroundLockCrossSection() {
                 textAnchor="middle" dominantBaseline="central"
                 fontSize="7" fontFamily="monospace" letterSpacing="0.2em"
                 fill="hsl(var(--accent))" fillOpacity="0.2"
-                className="uppercase"
+                className="uppercase pointer-events-none"
               >
                 Hover or tap a layer to explore
               </text>
@@ -324,7 +364,7 @@ export function GroundLockCrossSection() {
                 src={foundationPour}
                 alt="Foundation pour — real build"
                 className="w-full h-full object-cover"
-                loading="lazy"
+                loading="eager"
               />
               <div
                 className="absolute inset-0"
@@ -339,7 +379,7 @@ export function GroundLockCrossSection() {
                 src={rebarDeep}
                 alt="GroundLock grid installation"
                 className="w-full h-full object-cover"
-                loading="lazy"
+                loading="eager"
               />
               <div
                 className="absolute inset-0"

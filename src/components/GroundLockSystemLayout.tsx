@@ -1,5 +1,9 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { DURATION, EASE } from "@/lib/motion";
+
+import horseshoeRealworld from "@/assets/groundlock-horseshoe-realworld.jpg";
+
+type ViewMode = "system" | "realworld";
 
 /* ── Zone data ────────────────────────────────────────── */
 interface Zone {
@@ -16,6 +20,47 @@ const zones: Zone[] = [
   { id: "exit", label: "Service Exit", sublabel: "Egress & utility access" },
 ];
 
+/* ── Preload the real-world image ─────────────────────── */
+function usePreload(src: string) {
+  useEffect(() => {
+    const img = new Image();
+    img.src = src;
+  }, [src]);
+}
+
+/* ── Stable hover hook (debounced leave) ──────────────── */
+function useStableHover() {
+  const [active, setActive] = useState<string | null>(null);
+  const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const onEnter = useCallback((id: string) => {
+    if (leaveTimer.current) {
+      clearTimeout(leaveTimer.current);
+      leaveTimer.current = null;
+    }
+    setActive(id);
+  }, []);
+
+  const onLeave = useCallback(() => {
+    leaveTimer.current = setTimeout(() => {
+      setActive(null);
+      leaveTimer.current = null;
+    }, 60);
+  }, []);
+
+  const onTap = useCallback((id: string) => {
+    setActive((prev) => (prev === id ? null : id));
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (leaveTimer.current) clearTimeout(leaveTimer.current);
+    };
+  }, []);
+
+  return { active, onEnter, onLeave, onTap };
+}
+
 /* ── Floating label ───────────────────────────────────── */
 function FloatingLabel({ zone, x, y, visible }: { zone: Zone | null; x: number; y: number; visible: boolean }) {
   if (!zone) return null;
@@ -26,6 +71,7 @@ function FloatingLabel({ zone, x, y, visible }: { zone: Zone | null; x: number; 
         opacity: visible ? 1 : 0,
         transition: `opacity ${DURATION.fast}ms ${EASE.interactive}`,
       }}
+      className="pointer-events-none"
     >
       <rect
         x="-70" y="-32" width="140" height="38" rx="2"
@@ -61,14 +107,11 @@ const labelPositions: Record<string, { x: number; y: number }> = {
 
 /* ── Main export ──────────────────────────────────────── */
 export function GroundLockSystemLayout() {
-  const [activeZone, setActiveZone] = useState<string | null>(null);
+  const { active: activeZone, onEnter: onHover, onLeave, onTap } = useStableHover();
+  const [viewMode, setViewMode] = useState<ViewMode>("system");
   const activeData = zones.find((z) => z.id === activeZone) || null;
 
-  const onHover = useCallback((id: string) => setActiveZone(id), []);
-  const onLeave = useCallback(() => setActiveZone(null), []);
-  const onTap = useCallback((id: string) => {
-    setActiveZone((prev) => (prev === id ? null : id));
-  }, []);
+  usePreload(horseshoeRealworld);
 
   const isActive = (id: string) => activeZone === id;
   const isDimmed = (id: string) => activeZone !== null && activeZone !== id;
@@ -95,248 +138,328 @@ export function GroundLockSystemLayout() {
         </p>
       </div>
 
-      <div className="max-w-lg mx-auto">
-        <svg
-          viewBox="0 0 600 500"
-          className="w-full h-auto"
-          aria-label="GroundLock system layout diagram"
+      {/* View toggle */}
+      <div className="flex items-center justify-center gap-1 sm:gap-2 mb-3">
+        {([
+          { key: "system" as ViewMode, label: "System View" },
+          { key: "realworld" as ViewMode, label: "Real World" },
+        ]).map((v) => {
+          const active = viewMode === v.key;
+          return (
+            <button
+              key={v.key}
+              onClick={() => setViewMode(v.key)}
+              className="relative px-5 sm:px-7 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-mono cursor-pointer bg-transparent border-0"
+              style={{
+                color: active ? "hsl(var(--accent) / 0.7)" : "hsl(var(--accent) / 0.25)",
+                transition: `color ${DURATION.fast}ms ${EASE.interactive}`,
+              }}
+            >
+              {v.label}
+              <span
+                className="absolute bottom-0 left-1/2 -translate-x-1/2 h-px"
+                style={{
+                  width: active ? "60%" : "0%",
+                  backgroundColor: "hsl(var(--accent) / 0.35)",
+                  transition: `width ${DURATION.fast}ms ${EASE.interactive}`,
+                }}
+              />
+            </button>
+          );
+        })}
+      </div>
+      <p className="text-[10px] text-muted-foreground/25 font-mono text-center mb-10 tracking-wide">
+        {viewMode === "system" ? "Hover or tap zones to explore" : "As designed and built on site"}
+      </p>
+
+      <div className="max-w-lg mx-auto relative" style={{ aspectRatio: "600 / 500" }}>
+        {/* System View */}
+        <div
+          className="absolute inset-0"
+          style={{
+            opacity: viewMode === "system" ? 1 : 0,
+            pointerEvents: viewMode === "system" ? "auto" : "none",
+            transition: `opacity ${DURATION.normal}ms ${EASE.default}`,
+          }}
         >
-          <defs>
-            <pattern id="gl-grid" width="30" height="30" patternUnits="userSpaceOnUse">
-              <path d="M 30 0 L 0 0 0 30" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.05" />
-            </pattern>
-            <marker id="gl-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-              <path d="M 0 0 L 6 3 L 0 6" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.6" strokeOpacity="0.3" />
-            </marker>
-          </defs>
-
-          <style>{`
-            @keyframes gl-flow {
-              from { stroke-dashoffset: 24; }
-              to { stroke-dashoffset: 0; }
-            }
-            .gl-flow-line {
-              animation: gl-flow 3s linear infinite;
-            }
-            @media (prefers-reduced-motion: reduce) {
-              .gl-flow-line { animation: none; }
-            }
-          `}</style>
-
-          {/* Background grid */}
-          <rect width="600" height="500" fill="url(#gl-grid)" />
-
-          {/* Property boundary */}
-          <rect
-            x="60" y="60" width="480" height="380" rx="4"
-            fill="none" stroke="hsl(var(--accent))" strokeWidth="0.4" strokeOpacity="0.08"
-            strokeDasharray="8 5"
-          />
-
-          {/* Animated flow paths */}
-          <path
-            d="M 300 440 L 300 310 L 300 210 L 200 155 Q 170 140 170 180 L 130 270 L 180 340 L 300 350"
-            fill="none" stroke="hsl(var(--accent))" strokeWidth="0.6"
-            strokeOpacity="0.12" strokeDasharray="4 20"
-            className="gl-flow-line pointer-events-none"
-          />
-          <path
-            d="M 300 440 L 300 310 L 400 310 L 470 270 L 470 200 Q 470 180 440 155 L 400 155"
-            fill="none" stroke="hsl(var(--accent))" strokeWidth="0.6"
-            strokeOpacity="0.1" strokeDasharray="4 20"
-            className="gl-flow-line pointer-events-none"
-            style={{ animationDelay: "-1.5s" }}
-          />
-
-          {/* Static flow connectors */}
-          <path
-            d="M 300 420 L 300 340"
-            fill="none" stroke="hsl(var(--accent))" strokeWidth="0.8"
-            strokeOpacity={activeZone === "entry" || activeZone === "courtyard" ? 0.5 : 0.15}
-            strokeDasharray="4 3"
-            markerEnd="url(#gl-arrow)"
-            style={{ transition: `stroke-opacity ${DURATION.fast}ms ${EASE.interactive}` }}
-          />
-          <path
-            d="M 240 300 L 170 270"
-            fill="none" stroke="hsl(var(--accent))" strokeWidth="0.8"
-            strokeOpacity={activeZone === "courtyard" || activeZone === "stables" ? 0.5 : 0.15}
-            strokeDasharray="4 3"
-            style={{ transition: `stroke-opacity ${DURATION.fast}ms ${EASE.interactive}` }}
-          />
-          <path
-            d="M 300 280 L 300 220"
-            fill="none" stroke="hsl(var(--accent))" strokeWidth="0.8"
-            strokeOpacity={activeZone === "courtyard" || activeZone === "arena" ? 0.5 : 0.15}
-            strokeDasharray="4 3"
-            style={{ transition: `stroke-opacity ${DURATION.fast}ms ${EASE.interactive}` }}
-          />
-          <path
-            d="M 360 300 L 430 270"
-            fill="none" stroke="hsl(var(--accent))" strokeWidth="0.8"
-            strokeOpacity={activeZone === "courtyard" || activeZone === "exit" ? 0.5 : 0.15}
-            strokeDasharray="4 3"
-            style={{ transition: `stroke-opacity ${DURATION.fast}ms ${EASE.interactive}` }}
-          />
-
-          {/* ARENA */}
-          <g style={zoneStyle("arena")}
-            onMouseEnter={() => onHover("arena")}
-            onMouseLeave={onLeave}
-            onClick={() => onTap("arena")}
+          <svg
+            viewBox="0 0 600 500"
+            className="w-full h-auto"
+            aria-label="GroundLock system layout diagram"
           >
+            <defs>
+              <pattern id="gl-grid" width="30" height="30" patternUnits="userSpaceOnUse">
+                <path d="M 30 0 L 0 0 0 30" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.05" />
+              </pattern>
+              <marker id="gl-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                <path d="M 0 0 L 6 3 L 0 6" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.6" strokeOpacity="0.3" />
+              </marker>
+            </defs>
+
+            <style>{`
+              @keyframes gl-flow {
+                from { stroke-dashoffset: 24; }
+                to { stroke-dashoffset: 0; }
+              }
+              .gl-flow-line {
+                animation: gl-flow 3s linear infinite;
+              }
+              @media (prefers-reduced-motion: reduce) {
+                .gl-flow-line { animation: none; }
+              }
+            `}</style>
+
+            {/* Background grid */}
+            <rect width="600" height="500" fill="url(#gl-grid)" />
+
+            {/* Property boundary */}
             <rect
-              x="170" y="100" width="260" height="110" rx="3"
-              fill={isActive("arena") ? "hsl(var(--accent) / 0.06)" : "hsl(var(--accent) / 0.015)"}
-              stroke={isActive("arena") ? "hsl(var(--accent) / 0.4)" : "hsl(var(--accent) / 0.1)"}
-              strokeWidth={isActive("arena") ? "1" : "0.5"}
+              x="60" y="60" width="480" height="380" rx="4"
+              fill="none" stroke="hsl(var(--accent))" strokeWidth="0.4" strokeOpacity="0.08"
+              strokeDasharray="8 5"
             />
-            <line x1="190" y1="130" x2="410" y2="130" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.06" />
-            <line x1="190" y1="155" x2="410" y2="155" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.06" />
-            <line x1="190" y1="180" x2="410" y2="180" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.06" />
-            <text x="300" y="155" textAnchor="middle" dominantBaseline="central"
-              fontSize="7" fontFamily="monospace" letterSpacing="0.15em"
-              fill="hsl(var(--accent))" className="pointer-events-none uppercase"
-              style={{ opacity: isActive("arena") ? 0.55 : 0.18, transition: `opacity ${DURATION.fast}ms ${EASE.interactive}` }}
-            >
-              Arena
-            </text>
-          </g>
 
-          {/* STABLES */}
-          <g style={zoneStyle("stables")}
-            onMouseEnter={() => onHover("stables")}
-            onMouseLeave={onLeave}
-            onClick={() => onTap("stables")}
-          >
-            <rect
-              x="80" y="200" width="100" height="140" rx="2"
-              fill={isActive("stables") ? "hsl(var(--accent) / 0.06)" : "hsl(var(--accent) / 0.015)"}
-              stroke={isActive("stables") ? "hsl(var(--accent) / 0.4)" : "hsl(var(--accent) / 0.1)"}
-              strokeWidth={isActive("stables") ? "1" : "0.5"}
+            {/* Animated flow paths */}
+            <path
+              d="M 300 440 L 300 310 L 300 210 L 200 155 Q 170 140 170 180 L 130 270 L 180 340 L 300 350"
+              fill="none" stroke="hsl(var(--accent))" strokeWidth="0.6"
+              strokeOpacity="0.12" strokeDasharray="4 20"
+              className="gl-flow-line pointer-events-none"
             />
-            {[225, 250, 275, 300, 325].map((y) => (
-              <line key={y} x1="85" y1={y} x2="175" y2={y} stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.06" />
-            ))}
-            <text x="130" y="270" textAnchor="middle" dominantBaseline="central"
-              fontSize="7" fontFamily="monospace" letterSpacing="0.15em"
-              fill="hsl(var(--accent))" className="pointer-events-none uppercase"
-              style={{ opacity: isActive("stables") ? 0.55 : 0.18, transition: `opacity ${DURATION.fast}ms ${EASE.interactive}` }}
-            >
-              Stables
-            </text>
-          </g>
-
-          {/* EXIT */}
-          <g style={zoneStyle("exit")}
-            onMouseEnter={() => onHover("exit")}
-            onMouseLeave={onLeave}
-            onClick={() => onTap("exit")}
-          >
-            <rect
-              x="420" y="200" width="100" height="140" rx="2"
-              fill={isActive("exit") ? "hsl(var(--accent) / 0.06)" : "hsl(var(--accent) / 0.015)"}
-              stroke={isActive("exit") ? "hsl(var(--accent) / 0.4)" : "hsl(var(--accent) / 0.1)"}
-              strokeWidth={isActive("exit") ? "1" : "0.5"}
+            <path
+              d="M 300 440 L 300 310 L 400 310 L 470 270 L 470 200 Q 470 180 440 155 L 400 155"
+              fill="none" stroke="hsl(var(--accent))" strokeWidth="0.6"
+              strokeOpacity="0.1" strokeDasharray="4 20"
+              className="gl-flow-line pointer-events-none"
+              style={{ animationDelay: "-1.5s" }}
             />
-            <line x1="425" y1="250" x2="515" y2="250" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.06" />
-            <line x1="425" y1="290" x2="515" y2="290" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.06" />
-            <text x="470" y="270" textAnchor="middle" dominantBaseline="central"
-              fontSize="7" fontFamily="monospace" letterSpacing="0.15em"
-              fill="hsl(var(--accent))" className="pointer-events-none uppercase"
-              style={{ opacity: isActive("exit") ? 0.55 : 0.18, transition: `opacity ${DURATION.fast}ms ${EASE.interactive}` }}
-            >
-              Service
-            </text>
-          </g>
 
-          {/* COURTYARD */}
-          <g style={zoneStyle("courtyard")}
-            onMouseEnter={() => onHover("courtyard")}
-            onMouseLeave={onLeave}
-            onClick={() => onTap("courtyard")}
-          >
-            <rect
-              x="210" y="270" width="180" height="80" rx="2"
-              fill={isActive("courtyard") ? "hsl(var(--accent) / 0.06)" : "hsl(var(--accent) / 0.01)"}
-              stroke={isActive("courtyard") ? "hsl(var(--accent) / 0.4)" : "hsl(var(--accent) / 0.08)"}
-              strokeWidth={isActive("courtyard") ? "1" : "0.4"}
+            {/* Static flow connectors */}
+            <path
+              d="M 300 420 L 300 340"
+              fill="none" stroke="hsl(var(--accent))" strokeWidth="0.8"
+              strokeOpacity={activeZone === "entry" || activeZone === "courtyard" ? 0.5 : 0.15}
+              strokeDasharray="4 3"
+              markerEnd="url(#gl-arrow)"
+              style={{ transition: `stroke-opacity ${DURATION.fast}ms ${EASE.interactive}` }}
             />
-            <line x1="300" y1="275" x2="300" y2="345" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.08" strokeDasharray="2 3" />
-            <text x="300" y="310" textAnchor="middle" dominantBaseline="central"
-              fontSize="6.5" fontFamily="monospace" letterSpacing="0.15em"
-              fill="hsl(var(--accent))" className="pointer-events-none uppercase"
-              style={{ opacity: isActive("courtyard") ? 0.55 : 0.15, transition: `opacity ${DURATION.fast}ms ${EASE.interactive}` }}
-            >
-              Courtyard
-            </text>
-          </g>
-
-          {/* ENTRY */}
-          <g style={zoneStyle("entry")}
-            onMouseEnter={() => onHover("entry")}
-            onMouseLeave={onLeave}
-            onClick={() => onTap("entry")}
-          >
-            <rect
-              x="240" y="390" width="120" height="50" rx="2"
-              fill={isActive("entry") ? "hsl(var(--accent) / 0.06)" : "hsl(var(--accent) / 0.01)"}
-              stroke={isActive("entry") ? "hsl(var(--accent) / 0.4)" : "hsl(var(--accent) / 0.08)"}
-              strokeWidth={isActive("entry") ? "1" : "0.4"}
+            <path
+              d="M 240 300 L 170 270"
+              fill="none" stroke="hsl(var(--accent))" strokeWidth="0.8"
+              strokeOpacity={activeZone === "courtyard" || activeZone === "stables" ? 0.5 : 0.15}
+              strokeDasharray="4 3"
+              style={{ transition: `stroke-opacity ${DURATION.fast}ms ${EASE.interactive}` }}
             />
-            <line x1="280" y1="390" x2="280" y2="440" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.08" />
-            <line x1="320" y1="390" x2="320" y2="440" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.08" />
-            <text x="300" y="415" textAnchor="middle" dominantBaseline="central"
-              fontSize="6.5" fontFamily="monospace" letterSpacing="0.15em"
-              fill="hsl(var(--accent))" className="pointer-events-none uppercase"
-              style={{ opacity: isActive("entry") ? 0.55 : 0.15, transition: `opacity ${DURATION.fast}ms ${EASE.interactive}` }}
+            <path
+              d="M 300 280 L 300 220"
+              fill="none" stroke="hsl(var(--accent))" strokeWidth="0.8"
+              strokeOpacity={activeZone === "courtyard" || activeZone === "arena" ? 0.5 : 0.15}
+              strokeDasharray="4 3"
+              style={{ transition: `stroke-opacity ${DURATION.fast}ms ${EASE.interactive}` }}
+            />
+            <path
+              d="M 360 300 L 430 270"
+              fill="none" stroke="hsl(var(--accent))" strokeWidth="0.8"
+              strokeOpacity={activeZone === "courtyard" || activeZone === "exit" ? 0.5 : 0.15}
+              strokeDasharray="4 3"
+              style={{ transition: `stroke-opacity ${DURATION.fast}ms ${EASE.interactive}` }}
+            />
+
+            {/* ARENA */}
+            <g style={zoneStyle("arena")}
+              onPointerEnter={() => onHover("arena")}
+              onPointerLeave={onLeave}
+              onClick={() => onTap("arena")}
             >
-              Entry
-            </text>
-          </g>
+              <rect
+                x="170" y="100" width="260" height="110" rx="3"
+                fill={isActive("arena") ? "hsl(var(--accent) / 0.06)" : "hsl(var(--accent) / 0.015)"}
+                stroke={isActive("arena") ? "hsl(var(--accent) / 0.4)" : "hsl(var(--accent) / 0.1)"}
+                strokeWidth={isActive("arena") ? "1" : "0.5"}
+              />
+              <line x1="190" y1="130" x2="410" y2="130" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.06" />
+              <line x1="190" y1="155" x2="410" y2="155" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.06" />
+              <line x1="190" y1="180" x2="410" y2="180" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.06" />
+              <text x="300" y="155" textAnchor="middle" dominantBaseline="central"
+                fontSize="7" fontFamily="monospace" letterSpacing="0.15em"
+                fill="hsl(var(--accent))" className="pointer-events-none uppercase"
+                style={{ opacity: isActive("arena") ? 0.55 : 0.18, transition: `opacity ${DURATION.fast}ms ${EASE.interactive}` }}
+              >
+                Arena
+              </text>
+            </g>
 
-          {/* Horseshoe connectors */}
-          <line
-            x1="130" y1="200" x2="170" y2="210"
-            stroke="hsl(var(--accent))" strokeWidth="0.5"
-            strokeOpacity={activeZone === "stables" || activeZone === "arena" ? 0.35 : 0.08}
-            style={{ transition: `stroke-opacity ${DURATION.fast}ms ${EASE.interactive}` }}
-          />
-          <line
-            x1="470" y1="200" x2="430" y2="210"
-            stroke="hsl(var(--accent))" strokeWidth="0.5"
-            strokeOpacity={activeZone === "exit" || activeZone === "arena" ? 0.35 : 0.08}
-            style={{ transition: `stroke-opacity ${DURATION.fast}ms ${EASE.interactive}` }}
-          />
+            {/* STABLES */}
+            <g style={zoneStyle("stables")}
+              onPointerEnter={() => onHover("stables")}
+              onPointerLeave={onLeave}
+              onClick={() => onTap("stables")}
+            >
+              <rect
+                x="80" y="200" width="100" height="140" rx="2"
+                fill={isActive("stables") ? "hsl(var(--accent) / 0.06)" : "hsl(var(--accent) / 0.015)"}
+                stroke={isActive("stables") ? "hsl(var(--accent) / 0.4)" : "hsl(var(--accent) / 0.1)"}
+                strokeWidth={isActive("stables") ? "1" : "0.5"}
+              />
+              {[225, 250, 275, 300, 325].map((y) => (
+                <line key={y} x1="85" y1={y} x2="175" y2={y} stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.06" />
+              ))}
+              <text x="130" y="270" textAnchor="middle" dominantBaseline="central"
+                fontSize="7" fontFamily="monospace" letterSpacing="0.15em"
+                fill="hsl(var(--accent))" className="pointer-events-none uppercase"
+                style={{ opacity: isActive("stables") ? 0.55 : 0.18, transition: `opacity ${DURATION.fast}ms ${EASE.interactive}` }}
+              >
+                Stables
+              </text>
+            </g>
 
-          {/* Compass */}
-          <g opacity="0.1" transform="translate(545, 80)">
-            <line x1="0" y1="-14" x2="0" y2="14" stroke="hsl(var(--accent))" strokeWidth="0.4" />
-            <line x1="-14" y1="0" x2="14" y2="0" stroke="hsl(var(--accent))" strokeWidth="0.4" />
-            <text x="0" y="-18" textAnchor="middle" fontSize="6" fill="hsl(var(--accent))" fontFamily="monospace">N</text>
-          </g>
+            {/* EXIT */}
+            <g style={zoneStyle("exit")}
+              onPointerEnter={() => onHover("exit")}
+              onPointerLeave={onLeave}
+              onClick={() => onTap("exit")}
+            >
+              <rect
+                x="420" y="200" width="100" height="140" rx="2"
+                fill={isActive("exit") ? "hsl(var(--accent) / 0.06)" : "hsl(var(--accent) / 0.015)"}
+                stroke={isActive("exit") ? "hsl(var(--accent) / 0.4)" : "hsl(var(--accent) / 0.1)"}
+                strokeWidth={isActive("exit") ? "1" : "0.5"}
+              />
+              <line x1="425" y1="250" x2="515" y2="250" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.06" />
+              <line x1="425" y1="290" x2="515" y2="290" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.06" />
+              <text x="470" y="270" textAnchor="middle" dominantBaseline="central"
+                fontSize="7" fontFamily="monospace" letterSpacing="0.15em"
+                fill="hsl(var(--accent))" className="pointer-events-none uppercase"
+                style={{ opacity: isActive("exit") ? 0.55 : 0.18, transition: `opacity ${DURATION.fast}ms ${EASE.interactive}` }}
+              >
+                Service
+              </text>
+            </g>
 
-          {/* Floating label */}
-          <FloatingLabel
-            zone={activeData}
-            x={activeZone ? labelPositions[activeZone]?.x ?? 300 : 300}
-            y={activeZone ? labelPositions[activeZone]?.y ?? 300 : 300}
-            visible={!!activeZone}
-          />
-        </svg>
+            {/* COURTYARD */}
+            <g style={zoneStyle("courtyard")}
+              onPointerEnter={() => onHover("courtyard")}
+              onPointerLeave={onLeave}
+              onClick={() => onTap("courtyard")}
+            >
+              <rect
+                x="210" y="270" width="180" height="80" rx="2"
+                fill={isActive("courtyard") ? "hsl(var(--accent) / 0.06)" : "hsl(var(--accent) / 0.01)"}
+                stroke={isActive("courtyard") ? "hsl(var(--accent) / 0.4)" : "hsl(var(--accent) / 0.08)"}
+                strokeWidth={isActive("courtyard") ? "1" : "0.4"}
+              />
+              <line x1="300" y1="275" x2="300" y2="345" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.08" strokeDasharray="2 3" />
+              <text x="300" y="310" textAnchor="middle" dominantBaseline="central"
+                fontSize="6.5" fontFamily="monospace" letterSpacing="0.15em"
+                fill="hsl(var(--accent))" className="pointer-events-none uppercase"
+                style={{ opacity: isActive("courtyard") ? 0.55 : 0.15, transition: `opacity ${DURATION.fast}ms ${EASE.interactive}` }}
+              >
+                Courtyard
+              </text>
+            </g>
 
-        {/* Prompt */}
-        <div className="text-center mt-6">
-          <p
-            className="text-[10px] font-mono uppercase tracking-[0.3em]"
-            style={{
-              color: activeZone ? "hsl(var(--accent) / 0.15)" : "hsl(var(--accent) / 0.25)",
-              transition: `color ${DURATION.fast}ms ${EASE.interactive}`,
-            }}
-          >
-            {activeZone ? (activeData?.sublabel ?? "") : "Hover or tap a zone to explore"}
-          </p>
+            {/* ENTRY */}
+            <g style={zoneStyle("entry")}
+              onPointerEnter={() => onHover("entry")}
+              onPointerLeave={onLeave}
+              onClick={() => onTap("entry")}
+            >
+              <rect
+                x="240" y="390" width="120" height="50" rx="2"
+                fill={isActive("entry") ? "hsl(var(--accent) / 0.06)" : "hsl(var(--accent) / 0.01)"}
+                stroke={isActive("entry") ? "hsl(var(--accent) / 0.4)" : "hsl(var(--accent) / 0.08)"}
+                strokeWidth={isActive("entry") ? "1" : "0.4"}
+              />
+              <line x1="280" y1="390" x2="280" y2="440" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.08" />
+              <line x1="320" y1="390" x2="320" y2="440" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.08" />
+              <text x="300" y="415" textAnchor="middle" dominantBaseline="central"
+                fontSize="6.5" fontFamily="monospace" letterSpacing="0.15em"
+                fill="hsl(var(--accent))" className="pointer-events-none uppercase"
+                style={{ opacity: isActive("entry") ? 0.55 : 0.15, transition: `opacity ${DURATION.fast}ms ${EASE.interactive}` }}
+              >
+                Entry
+              </text>
+            </g>
+
+            {/* Horseshoe connectors */}
+            <line
+              x1="130" y1="200" x2="170" y2="210"
+              stroke="hsl(var(--accent))" strokeWidth="0.5"
+              strokeOpacity={activeZone === "stables" || activeZone === "arena" ? 0.35 : 0.08}
+              style={{ transition: `stroke-opacity ${DURATION.fast}ms ${EASE.interactive}` }}
+            />
+            <line
+              x1="470" y1="200" x2="430" y2="210"
+              stroke="hsl(var(--accent))" strokeWidth="0.5"
+              strokeOpacity={activeZone === "exit" || activeZone === "arena" ? 0.35 : 0.08}
+              style={{ transition: `stroke-opacity ${DURATION.fast}ms ${EASE.interactive}` }}
+            />
+
+            {/* Compass */}
+            <g opacity="0.1" transform="translate(545, 80)">
+              <line x1="0" y1="-14" x2="0" y2="14" stroke="hsl(var(--accent))" strokeWidth="0.4" />
+              <line x1="-14" y1="0" x2="14" y2="0" stroke="hsl(var(--accent))" strokeWidth="0.4" />
+              <text x="0" y="-18" textAnchor="middle" fontSize="6" fill="hsl(var(--accent))" fontFamily="monospace">N</text>
+            </g>
+
+            {/* Floating label */}
+            <FloatingLabel
+              zone={activeData}
+              x={activeZone ? labelPositions[activeZone]?.x ?? 300 : 300}
+              y={activeZone ? labelPositions[activeZone]?.y ?? 300 : 300}
+              visible={!!activeZone}
+            />
+          </svg>
         </div>
+
+        {/* Real World View */}
+        <div
+          className="absolute inset-0"
+          style={{
+            opacity: viewMode === "realworld" ? 1 : 0,
+            pointerEvents: viewMode === "realworld" ? "auto" : "none",
+            transition: `opacity ${DURATION.normal}ms ${EASE.default}`,
+          }}
+        >
+          <div className="relative w-full h-full overflow-hidden rounded-sm">
+            <img
+              src={horseshoeRealworld}
+              alt="GroundLock horseshoe system — aerial site visualisation"
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="eager"
+            />
+            <div
+              className="absolute inset-0"
+              style={{ background: "linear-gradient(to top, hsl(var(--background) / 0.5) 0%, transparent 40%)" }}
+            />
+            {/* Zone labels over image */}
+            <div className="absolute inset-0 flex flex-col items-center justify-end pb-4 pointer-events-none">
+              <div className="flex items-center gap-4 flex-wrap justify-center">
+                {["Arena", "Stables", "Courtyard", "Entry", "Service"].map((label) => (
+                  <span key={label} className="text-[8px] sm:text-[9px] font-mono uppercase tracking-[0.2em] text-accent/35 px-2 py-1 border border-accent/10 rounded-sm bg-background/40 backdrop-blur-sm">
+                    {label}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Prompt */}
+      <div className="text-center mt-6">
+        <p
+          className="text-[10px] font-mono uppercase tracking-[0.3em]"
+          style={{
+            color: activeZone && viewMode === "system" ? "hsl(var(--accent) / 0.15)" : "hsl(var(--accent) / 0.25)",
+            transition: `color ${DURATION.fast}ms ${EASE.interactive}`,
+          }}
+        >
+          {viewMode === "system"
+            ? (activeZone ? (activeData?.sublabel ?? "") : "Hover or tap a zone to explore")
+            : "Used under arenas, access routes, and high-traffic zones"
+          }
+        </p>
       </div>
     </div>
   );
