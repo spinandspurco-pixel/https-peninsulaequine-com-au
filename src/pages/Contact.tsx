@@ -239,8 +239,7 @@ export default function Contact() {
             className="mt-8 text-muted-foreground/45 text-sm sm:text-base max-w-lg mx-auto leading-relaxed opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
-            Each project is assessed individually to ensure correct<br />
-            system specification and long-term performance.
+            Tell us about your site. We'll scope the right system.
           </p>
         </div>
       </section>
