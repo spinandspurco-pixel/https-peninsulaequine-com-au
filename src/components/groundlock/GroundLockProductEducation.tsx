@@ -64,11 +64,11 @@ const HOTSPOTS: Hotspot[] = [
     highlight: (
       <>
         {/* Inner channel highlight */}
-        <rect x="32" y="52" width="36" height="46" rx="2" fill="hsl(var(--accent) / 0.08)" stroke="hsl(var(--accent) / 0.4)" strokeWidth="0.8" strokeDasharray="3 2" />
+        <rect x="34" y="64" width="32" height="32" rx="2" fill="hsl(var(--accent) / 0.08)" stroke="hsl(var(--accent) / 0.4)" strokeWidth="0.8" strokeDasharray="3 2" />
         {/* Flow indicators */}
-        <line x1="50" y1="55" x2="50" y2="93" stroke="hsl(var(--accent) / 0.35)" strokeWidth="0.6" strokeDasharray="2 3" />
-        <line x1="42" y1="55" x2="42" y2="93" stroke="hsl(var(--accent) / 0.2)" strokeWidth="0.4" strokeDasharray="2 3" />
-        <line x1="58" y1="55" x2="58" y2="93" stroke="hsl(var(--accent) / 0.2)" strokeWidth="0.4" strokeDasharray="2 3" />
+        <line x1="50" y1="65" x2="50" y2="93" stroke="hsl(var(--accent) / 0.35)" strokeWidth="0.6" strokeDasharray="2 3" />
+        <line x1="42" y1="65" x2="42" y2="93" stroke="hsl(var(--accent) / 0.2)" strokeWidth="0.4" strokeDasharray="2 3" />
+        <line x1="58" y1="65" x2="58" y2="93" stroke="hsl(var(--accent) / 0.2)" strokeWidth="0.4" strokeDasharray="2 3" />
       </>
     ),
   },
