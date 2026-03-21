@@ -13,32 +13,32 @@ interface Zone {
 const zones: Zone[] = [
   {
     id: "indoor-arena",
-    label: "Indoor Arena",
-    description: "24×64 enclosed performance arena engineered for all-weather riding.",
+    label: "Indoor Performance Arena",
+    description: "A fully enclosed 24 × 64m riding space designed for consistency, safety, and year-round use.",
     path: "M 120 140 L 340 140 L 340 310 L 120 310 Z",
   },
   {
     id: "outdoor-arena",
     label: "Outdoor Arena",
-    description: "60×30 competition-grade surface with engineered drainage and GroundLock base.",
+    description: "A 70 × 30m open arena positioned for drainage, light, and natural riding conditions.",
     path: "M 380 100 L 620 100 L 620 290 L 380 290 Z",
   },
   {
     id: "stables",
-    label: "Stables",
-    description: "Six premium loose boxes with breezeway aisle and automated ventilation.",
+    label: "Stable Block",
+    description: "A structured, breathable environment with integrated drainage, access, and daily workflow efficiency.",
     path: "M 120 350 L 310 350 L 310 480 L 120 480 Z",
   },
   {
     id: "courtyard",
-    label: "Courtyard",
-    description: "Central hardscape courtyard connecting all facilities with flush drainage.",
+    label: "Central Courtyard Spine",
+    description: "The operational core — connecting stables, movement, and access through one controlled axis.",
     path: "M 340 310 L 460 310 L 460 440 L 340 440 Z",
   },
   {
     id: "viewing-loft",
     label: "Viewing Loft",
-    description: "Elevated observation lounge with full arena sightlines and climate control.",
+    description: "An elevated perspective across the arena — built for oversight, atmosphere, and experience.",
     path: "M 490 320 L 620 320 L 620 420 L 490 420 Z",
   },
 ];
