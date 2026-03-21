@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, useRef } from "react";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { DURATION, EASE, crossfadeStyle } from "@/lib/motion";
 
