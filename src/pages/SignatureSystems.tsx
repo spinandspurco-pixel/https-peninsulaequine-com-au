@@ -50,12 +50,12 @@ const PLANNED: SystemEntry[] = [
       "High-traffic surface solutions for stable entries, wash bays, and daily-use zones where drainage and durability are non-negotiable.",
   },
   {
-    title: "Forge-Integrated Entry Details",
+    title: "Integrated Entry Details",
     status: "planned",
     description:
-      "Custom forged hardware, gate elements, and threshold details that complete the entry system with architectural precision.",
+      "Custom hardware, gate elements, and threshold details that complete the entry system with architectural precision.",
     href: "/forge",
-    cta: "Explore Equus Forge",
+    cta: "Explore GroundLock Systems",
   },
 ];
 
