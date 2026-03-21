@@ -11,6 +11,7 @@ import { ProjectsCinematicHero } from "@/components/ProjectsCinematicHero";
 import { InteractiveMasterplan } from "@/components/InteractiveMasterplan";
 import { WalkTheProject } from "@/components/WalkTheProject";
 import { BuildIntelligence } from "@/components/BuildIntelligence";
+import { DetailMatters } from "@/components/DetailMatters";
 
 // ── 1. HERO ──
 // Hero image now handled by ProjectsCinematicHero component
