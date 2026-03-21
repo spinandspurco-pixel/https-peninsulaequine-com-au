@@ -194,7 +194,7 @@ export function TrainerVideoPlaylist({ videos, trainerName }: Props) {
                       />
                     ) : null}
                     <div className="absolute inset-0 bg-black/40" />
-                    <div className="relative w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg z-10">
+                    <div className="relative w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center transition-opacity duration-300 group-hover:opacity-80 shadow-lg z-10">
                       <Play className="h-7 w-7 text-accent-foreground ml-0.5" />
                     </div>
                   </button>

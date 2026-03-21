@@ -26,7 +26,6 @@ const transforms: Record<RevealDirection, (distance: number) => string> = {
   left: (d) => `translateX(${d}px)`,
   right: (d) => `translateX(-${d}px)`,
   none: () => "none",
-  scale: () => "scale(0.92)",
 };
 
 export function RevealOnScroll({

@@ -104,11 +104,10 @@ export function crossfadeStyle(
 }
 
 /**
- * Hover image zoom style (for editorial cards).
- * Apply to the <img> element with group-hover.
+ * Hover style — opacity only, no scale or transform.
  */
-export const IMAGE_HOVER_DURATION = `${DURATION.parallax}ms`;
-export const IMAGE_HOVER_SCALE = "1.03";
+export const IMAGE_HOVER_DURATION = `${DURATION.fast}ms`;
+export const IMAGE_HOVER_SCALE = "1"; // No scale on hover
 
 /**
  * SVG stroke-draw animation CSS class name.
