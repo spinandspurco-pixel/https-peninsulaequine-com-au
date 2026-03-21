@@ -133,6 +133,7 @@ function AppContent() {
            <Route path="/installer" element={<InstallerAccess />} />
            <Route path="/site-assessment" element={<SiteAssessment />} />
            <Route path="/systems" element={<SignatureSystems />} />
+           <Route path="/groundlock-setup" element={<ProtectedRoute><GroundLockSetup /></ProtectedRoute>} />
           <Route path="/project/:slug" element={<CaseStudy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
