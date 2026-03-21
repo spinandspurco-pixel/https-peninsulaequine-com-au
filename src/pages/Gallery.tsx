@@ -212,6 +212,10 @@ export default function Gallery() {
           ═══════════════════════════════════════════════════ */}
       <InteractiveMasterplan />
 
+      <WalkTheProject />
+
+      <ChapterDivider />
+
       {/* ═══════════════════════════════════════════════════
           2. FEATURE PROJECT — Private Client — Mornington Peninsula
           ═══════════════════════════════════════════════════ */}
