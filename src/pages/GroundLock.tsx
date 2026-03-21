@@ -255,19 +255,7 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ TRUST LINE 1 ════════════════════════════════ */}
-      <section className="relative overflow-hidden">
-        <div className="py-8 sm:py-12 relative">
-          <div className="absolute inset-0 grain-texture" />
-          <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
-            <RevealOnScroll direction="none">
-              <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/28 italic leading-[1.9]">
-                Standard flat grids sit on the ground. GroundLock™ locks into it.
-              </p>
-            </RevealOnScroll>
-          </div>
-        </div>
-      </section>
+      {/* trust line removed — system section carries authority */}
 
       {/* ═══ SECTION 3 — INTERACTIVE EDUCATION ════════════ */}
       <section className="relative overflow-hidden">
