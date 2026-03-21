@@ -43,8 +43,8 @@ export const services = [
   {
     id: "barn-construction",
     title: "Barn & Stable Building",
-    shortDescription: "Functional, beautiful barns designed for horse health and operational efficiency.",
-    description: "We build barns that work as hard as you do. Ventilation, natural light, workflow—every detail is considered from a horseman's perspective.",
+    shortDescription: "Structures designed around equine behaviour — airflow, sightlines, and workflow.",
+    description: "Ventilation, natural light, workflow — every detail considered from a horseman's perspective.",
     features: [
       "Custom stall configurations",
       "Optimal ventilation design",
