@@ -139,7 +139,7 @@ export function GroundLockSystemLayout() {
       <div className="flex items-center justify-center gap-1 sm:gap-2 mb-3">
         {([
           { key: "system" as ViewMode, label: "System View" },
-          { key: "realworld" as ViewMode, label: "Real World" },
+          { key: "panels" as ViewMode, label: "Panel System" },
         ]).map((v) => {
           const active = viewMode === v.key;
           return (
