@@ -113,7 +113,8 @@ function ChapterDivider() {
         style={{
           transform: isVisible ? "scaleY(1)" : "scaleY(0)",
           opacity: isVisible ? 1 : 0,
-          transition: "transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 100ms, opacity 600ms ease 100ms",
+          transition: `transform ${DURATION.parallax}ms ${EASE.default} 100ms, opacity ${DURATION.normal}ms ${EASE.default} 100ms`,
+          willChange: "transform, opacity",
         }}
       />
     </div>
