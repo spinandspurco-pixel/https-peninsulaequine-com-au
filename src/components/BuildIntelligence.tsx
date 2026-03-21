@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, useRef } from "react";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { DURATION, EASE, crossfadeStyle } from "@/lib/motion";
 
@@ -81,7 +81,21 @@ function FinishedLayer() {
 /* ── Main export ──────────────────────────────────────── */
 export function BuildIntelligence() {
   const [active, setActive] = useState<LayerKey>("structure");
+  const [transitioning, setTransitioning] = useState(false);
+  const pendingRef = useRef<LayerKey | null>(null);
   const activeLayer = layers.find((l) => l.key === active)!;
+
+  const handleSwitch = useCallback((key: LayerKey) => {
+    if (key === active || transitioning) return;
+    setTransitioning(true);
+    pendingRef.current = key;
+    // Brief opacity dip before switching
+    setTimeout(() => {
+      setActive(key);
+      pendingRef.current = null;
+      setTimeout(() => setTransitioning(false), 80);
+    }, 70);
+  }, [active, transitioning]);
 
   return (
     <section className="relative py-28 sm:py-36 lg:py-44 overflow-hidden">
@@ -97,11 +111,11 @@ export function BuildIntelligence() {
               </p>
               <div className="w-8 h-px bg-accent/25" />
             </div>
-            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/90 tracking-[0.03em] mb-4">
+            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/90 tracking-[0.03em] mb-3">
               What You Don't See Matters Most
             </h2>
-            <p className="font-serif text-sm sm:text-base italic text-muted-foreground/35 max-w-lg mx-auto leading-relaxed mb-2">
-              Every build is engineered before it is seen.
+            <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/30 italic tracking-wide mb-4">
+              What you don't see is what makes it last.
             </p>
             <p className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.25em] text-accent/25">
               Structure first. Finish second. Longevity always.
@@ -117,7 +131,7 @@ export function BuildIntelligence() {
               return (
                 <button
                   key={l.key}
-                  onClick={() => setActive(l.key)}
+                  onClick={() => handleSwitch(l.key)}
                   className="relative px-5 sm:px-7 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-mono cursor-pointer bg-transparent border-0"
                   style={{
                     color: isActive ? "hsl(var(--accent) / 0.7)" : "hsl(var(--accent) / 0.25)",
@@ -140,7 +154,14 @@ export function BuildIntelligence() {
           </div>
 
           {/* SVG illustration */}
-          <div className="relative max-w-2xl mx-auto" style={{ color: "hsl(var(--accent))" }}>
+          <div
+            className="relative max-w-2xl mx-auto"
+            style={{
+              color: "hsl(var(--accent))",
+              opacity: transitioning ? 0.6 : 1,
+              transition: `opacity 80ms ${EASE.interactive}`,
+            }}
+          >
             <svg viewBox="0 0 800 460" className="w-full h-auto" aria-label={`Building ${active} layer view`}>
               <defs>
                 <pattern id="bi-grid" width="40" height="40" patternUnits="userSpaceOnUse">
