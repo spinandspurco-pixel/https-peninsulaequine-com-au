@@ -99,7 +99,7 @@ export function ViewingLine() {
           <div
             style={{
               opacity: visible ? 1 : 0,
-              transition: "opacity 1000ms ease-out 1000ms",
+              transition: `opacity ${DURATION.slow}ms ${EASE.default} 1000ms`,
             }}
           >
             <Button asChild variant="gold" size="lg">
