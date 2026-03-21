@@ -169,6 +169,7 @@ export default function Gallery() {
   const searchInputRef = useRef<HTMLInputElement>();
   const [selectMode, setSelectMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [enquiryType, setEnquiryType] = useState<ProjectType | null>(null);
 
   const parallax = useParallax<HTMLDivElement>({ speed: 0.25 });
 
