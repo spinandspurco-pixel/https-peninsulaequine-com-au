@@ -120,7 +120,7 @@ export default function GroundLock() {
                 className="text-[13px] text-muted-foreground/35 leading-[1.7] mb-10 opacity-0 animate-fade-in"
                 style={{ animationDelay: "1000ms", animationFillMode: "both", animationDuration: "1000ms" }}
               >
-                Opposing horseshoe panels lock in alternating rhythm — distributing load, resisting lateral movement, and creating a structurally intelligent surface.
+                Opposing horseshoe panels lock in alternating rhythm — distributing load and resisting lateral movement.
               </p>
 
               <div
