@@ -10,14 +10,14 @@ import { GroundLockPanelSVG, PanelDefs } from "./GroundLockPanelSVG";
 export function PanelSpecimen({ className }: { className?: string }) {
   return (
     <div className={className}>
-      <p className="text-2xs font-mono uppercase tracking-[0.25em] text-accent/30 mb-6">
+      <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent/28 mb-5">
         The Panel
       </p>
-      <svg viewBox="0 0 140 180" className="w-full max-w-[220px] h-auto mx-auto">
+      <svg viewBox="0 0 140 180" className="w-full max-w-[200px] h-auto mx-auto">
         <PanelDefs id="sp" />
         <GroundLockPanelSVG x={20} y={28} scale={1.07} active showTabs defsId="sp" />
       </svg>
-      <p className="text-2xs font-mono text-muted-foreground/20 text-center mt-5 tracking-wider">
+      <p className="text-[10px] font-mono text-muted-foreground/18 text-center mt-4 tracking-[0.12em]">
         Horseshoe geometry · Interlocking tabs
       </p>
     </div>
@@ -26,24 +26,19 @@ export function PanelSpecimen({ className }: { className?: string }) {
 
 /* ── 02 — The System (tight tessellation) ─────────────── */
 export function PanelArray({ className }: { className?: string }) {
-  // Panel native bounds: x 20–80 (w=60), y 20–105 (h=85), center ~(50,65)
   const s = 0.42;
-  // Tight horizontal spacing: panel width * scale with slight overlap for tab connection
-  const colW = 56 * s;        // ~23.5 — panels nearly touching via heel calks
-  const rowH = 40 * s;        // ~16.8 — inverted crowns nest into U-openings
+  const colW = 56 * s;
+  const rowH = 40 * s;
 
   const panels: { x: number; y: number; rot: number; row: number }[] = [];
 
-  // 3 upright rows with 2 inverted rows between them
   const uprightCols = 7;
   const invertedCols = 6;
 
   for (let r = 0; r < 3; r++) {
-    // Upright row
     for (let c = 0; c < uprightCols; c++) {
       panels.push({ x: 4 + c * colW, y: 4 + r * rowH * 2, rot: 0, row: r * 2 });
     }
-    // Inverted row (except after last upright)
     if (r < 2) {
       for (let c = 0; c < invertedCols; c++) {
         panels.push({
@@ -61,7 +56,7 @@ export function PanelArray({ className }: { className?: string }) {
 
   return (
     <div className={className}>
-      <p className="text-2xs font-mono uppercase tracking-[0.25em] text-accent/30 mb-6">
+      <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent/28 mb-5">
         The System
       </p>
       <svg viewBox={`0 0 ${Math.round(svgW)} ${Math.round(svgH)}`} className="w-full max-w-md h-auto mx-auto">
@@ -79,7 +74,7 @@ export function PanelArray({ className }: { className?: string }) {
           />
         ))}
       </svg>
-      <p className="text-2xs font-mono text-muted-foreground/20 text-center mt-5 tracking-wider">
+      <p className="text-[10px] font-mono text-muted-foreground/18 text-center mt-4 tracking-[0.12em]">
         Alternating rows nest and interlock into continuous surface
       </p>
     </div>
@@ -88,24 +83,21 @@ export function PanelArray({ className }: { className?: string }) {
 
 /* ── 03 — The Layout (dense modular installation grid) ── */
 export function PanelSiteLayout({ className }: { className?: string }) {
-  // Smaller scale for site-level view, same tight tessellation logic
   const s = 0.20;
-  const colW = 56 * s;        // ~11.2
-  const rowH = 40 * s;        // ~8
+  const colW = 56 * s;
+  const rowH = 40 * s;
 
   const uprightCols = 15;
   const invertedCols = 14;
-  const rowPairs = 5;         // 5 upright + 4 inverted = 9 rows total
+  const rowPairs = 5;
 
   const panels: { x: number; y: number; rot: number; isHero: boolean; row: number; col: number }[] = [];
 
   for (let pair = 0; pair < rowPairs; pair++) {
     const baseY = 6 + pair * rowH * 2;
-    // Upright row
     for (let c = 0; c < uprightCols; c++) {
       panels.push({ x: 6 + c * colW, y: baseY, rot: 0, isHero: false, row: pair * 2, col: c });
     }
-    // Inverted row
     if (pair < rowPairs - 1) {
       for (let c = 0; c < invertedCols; c++) {
         panels.push({
@@ -120,7 +112,6 @@ export function PanelSiteLayout({ className }: { className?: string }) {
     }
   }
 
-  // Hero: centre of middle upright row
   const midRow = 4;
   const midCol = Math.floor(uprightCols / 2);
   const heroIdx = panels.findIndex((p) => p.row === midRow && p.col === midCol);
@@ -131,7 +122,7 @@ export function PanelSiteLayout({ className }: { className?: string }) {
 
   return (
     <div className={className}>
-      <p className="text-2xs font-mono uppercase tracking-[0.25em] text-accent/30 mb-6">
+      <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent/28 mb-5">
         The Layout
       </p>
       <svg
@@ -152,7 +143,7 @@ export function PanelSiteLayout({ className }: { className?: string }) {
           />
         ))}
       </svg>
-      <p className="text-2xs font-mono text-muted-foreground/20 text-center mt-5 tracking-wider">
+      <p className="text-[10px] font-mono text-muted-foreground/18 text-center mt-4 tracking-[0.12em]">
         Modular surface coverage · Repeatable installation grid
       </p>
     </div>
