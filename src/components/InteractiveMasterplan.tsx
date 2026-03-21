@@ -56,16 +56,18 @@ function DetailCard({ zone, visible }: { zone: Zone | null; visible: boolean }) 
       }}
     >
       {zone && (
-        <div className="border border-accent/10 bg-card/80 backdrop-blur-sm rounded-sm p-5 sm:p-6 max-w-[280px]">
-          {/* Image placeholder */}
-          <div className="w-full aspect-[16/10] bg-accent/[0.03] border border-accent/8 rounded-sm mb-4 flex items-center justify-center">
+        <div
+          className="border border-accent/12 bg-card/85 backdrop-blur-md rounded-sm p-5 sm:p-6 max-w-[260px]"
+          style={{ boxShadow: "0 8px 32px -8px hsl(var(--accent) / 0.08), 0 2px 8px -2px hsl(var(--background) / 0.4)" }}
+        >
+          <div className="w-full aspect-[16/10] bg-accent/[0.03] border border-accent/8 rounded-sm mb-3.5 flex items-center justify-center">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.8" className="text-accent/15">
               <rect x="3" y="3" width="18" height="18" rx="1" />
               <circle cx="8.5" cy="8.5" r="1.5" />
               <path d="M21 15l-5-5L5 21" />
             </svg>
           </div>
-          <h3 className="font-serif text-base sm:text-lg text-foreground/90 tracking-[0.02em] mb-2">
+          <h3 className="font-serif text-base sm:text-lg text-foreground/90 tracking-[0.02em] mb-1.5">
             {zone.label}
           </h3>
           <p className="text-xs sm:text-[13px] text-muted-foreground/40 leading-relaxed font-serif italic">
