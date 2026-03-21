@@ -289,7 +289,7 @@ export default function Forge() {
             <RevealOnScroll>
               <RevealLine className="mx-auto mb-16" width="w-8" />
               <h2 className="heading-section text-foreground mb-8">
-                Work With Forge
+                Work With Us
               </h2>
               <p className="text-sm text-muted-foreground/35 mb-12 leading-[1.9]">
                 Whether you're configuring a GroundLock system, specifying
