@@ -10,49 +10,52 @@
 
 import { cn } from "@/lib/utils";
 
+/*
+ * Geometry system — mathematically consistent horseshoe
+ *
+ * Centre axis:  x = 50
+ * Arc baseline: y = 55
+ * Outer edges:  x = 22, x = 78  (width 56)   → outer arc rx/ry = 28
+ * Inner edges:  x = 28, x = 72  (width 44)   → inner arc rx/ry = 22
+ * Wall thickness: 6 px uniform on all sides
+ * Base (open end): y = 90 (up) / y = 20 (down)
+ */
+
 /* ── Panel path — horseshoe open at bottom ── */
 const PANEL_UP = [
-  "M 20 90", "L 20 70", "L 22 55",
-  "A 28 30 0 0 1 78 55",
-  "L 80 70", "L 80 90",
-  "L 74 90", "L 74 72", "L 72 58",
-  "A 20 22 0 0 0 28 58",
-  "L 26 72", "L 26 90", "Z",
+  "M 22 90", "L 22 55",
+  "A 28 28 0 0 1 78 55",
+  "L 78 90",
+  "L 72 90", "L 72 55",
+  "A 22 22 0 0 0 28 55",
+  "L 28 90", "Z",
 ].join(" ");
 
 /* ── Panel path — horseshoe open at top (inverted) ── */
 const PANEL_DOWN = [
-  "M 20 20", "L 20 40", "L 22 55",
-  "A 28 30 0 0 0 78 55",
-  "L 80 40", "L 80 20",
-  "L 74 20", "L 74 38", "L 72 52",
-  "A 20 22 0 0 1 28 52",
-  "L 26 38", "L 26 20", "Z",
+  "M 22 20", "L 22 55",
+  "A 28 28 0 0 0 78 55",
+  "L 78 20",
+  "L 72 20", "L 72 55",
+  "A 22 22 0 0 1 28 55",
+  "L 28 20", "Z",
 ].join(" ");
 
-/* ── Interlocking tabs — thicker for visibility ── */
-const TAB_UP_LEFT = "M 20 76 L 13 76 L 13 84 L 20 84 Z";
-const TAB_UP_RIGHT = "M 80 76 L 87 76 L 87 84 L 80 84 Z";
-const TAB_DOWN_LEFT = "M 20 26 L 13 26 L 13 34 L 20 34 Z";
-const TAB_DOWN_RIGHT = "M 80 26 L 87 26 L 87 34 L 80 34 Z";
-const TOE_UP = "M 44 32 L 50 22 L 56 32 Z";
+/* ── Interlocking tabs ── */
+const TAB_UP_LEFT  = "M 22 76 L 15 76 L 15 84 L 22 84 Z";
+const TAB_UP_RIGHT = "M 78 76 L 85 76 L 85 84 L 78 84 Z";
+const TAB_DOWN_LEFT  = "M 22 26 L 15 26 L 15 34 L 22 34 Z";
+const TAB_DOWN_RIGHT = "M 78 26 L 85 26 L 85 34 L 78 34 Z";
+const TOE_UP   = "M 44 32 L 50 22 L 56 32 Z";
 const TOE_DOWN = "M 44 78 L 50 88 L 56 78 Z";
 
-/* ── Join-point markers — small circles at lock locations ── */
-const JOIN_UP = [
-  { cx: 13, cy: 80 },
-  { cx: 87, cy: 80 },
-  { cx: 50, cy: 24 },
-];
-const JOIN_DOWN = [
-  { cx: 13, cy: 30 },
-  { cx: 87, cy: 30 },
-  { cx: 50, cy: 86 },
-];
+/* ── Join-point markers ── */
+const JOIN_UP   = [{ cx: 15, cy: 80 }, { cx: 85, cy: 80 }, { cx: 50, cy: 24 }];
+const JOIN_DOWN = [{ cx: 15, cy: 30 }, { cx: 85, cy: 30 }, { cx: 50, cy: 86 }];
 
-/* ── Inner groove for curvature ── */
-const GROOVE_UP = "M 32 59 A 16 18 0 0 1 68 59";
-const GROOVE_DOWN = "M 32 51 A 16 18 0 0 0 68 51";
+/* ── Inner groove — traces inner arc for curvature detail ── */
+const GROOVE_UP   = "M 28 55 A 22 22 0 0 1 72 55";
+const GROOVE_DOWN = "M 28 55 A 22 22 0 0 0 72 55";
 
 /* ── Shared gradient defs ── */
 export function PanelDefs({ id = "gl" }: { id?: string }) {
