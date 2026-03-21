@@ -14,6 +14,8 @@ import { WalkTheProject } from "@/components/WalkTheProject";
 import { BuildIntelligence } from "@/components/BuildIntelligence";
 import { DetailMatters } from "@/components/DetailMatters";
 import { ViewingLine } from "@/components/ViewingLine";
+import { ProjectQualification, type ProjectType } from "@/components/ProjectQualification";
+import { GuidedEnquiryFlow } from "@/components/GuidedEnquiryFlow";
 
 // ── 2. FEATURE PROJECT (Private Client) ──
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
