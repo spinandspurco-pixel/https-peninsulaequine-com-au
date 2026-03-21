@@ -90,6 +90,26 @@ export default function GroundLock() {
         </div>
       </section>
 
+      {/* ═══ CONSEQUENCE ══════════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="py-20 sm:py-28 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
+            <RevealOnScroll direction="up">
+              <div className="space-y-6">
+                <p className="text-sm text-muted-foreground/40 leading-[2]">
+                  Ground failure doesn't show up immediately.<br />
+                  It shows up later — as movement, drainage issues, and surface breakdown.
+                </p>
+                <p className="text-sm text-foreground/55 leading-[2]">
+                  GroundLock prevents it before it starts.
+                </p>
+              </div>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ 2. PROBLEM ═══════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
