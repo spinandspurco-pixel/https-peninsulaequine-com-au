@@ -97,8 +97,8 @@ export function GroundLockSystemLayout() {
             <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/90 tracking-[0.03em] mb-3">
               GroundLock™ Integration
             </h2>
-            <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/30 italic max-w-md mx-auto leading-relaxed">
-              How ground stabilisation connects across the property system.
+            <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/30 italic max-w-lg mx-auto leading-relaxed">
+              The horseshoe layout is designed to control movement, reduce congestion, and maintain consistent ground performance across all traffic zones.
             </p>
           </div>
         </RevealOnScroll>
