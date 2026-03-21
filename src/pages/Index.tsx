@@ -350,7 +350,7 @@ export default function Index() {
       </section>
 
       {/* ── Trust Strip ──────────────────────────── */}
-      <section className="py-16 sm:py-20 border-t border-border/10">
+      <section className="py-16 sm:py-20 border-t border-border/10 cv-auto">
         <div className="section-container max-w-4xl mx-auto">
           <RevealOnScroll direction="up">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-10 sm:gap-16 text-center">
