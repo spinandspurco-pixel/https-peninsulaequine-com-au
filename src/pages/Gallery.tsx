@@ -223,6 +223,13 @@ export default function Gallery() {
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
+          1e. DETAIL MATTERS — editorial craftsmanship cards
+          ═══════════════════════════════════════════════════ */}
+      <DetailMatters />
+
+      <ChapterDivider />
+
+      {/* ═══════════════════════════════════════════════════
           2. FEATURE PROJECT — Private Client — Mornington Peninsula
           ═══════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
