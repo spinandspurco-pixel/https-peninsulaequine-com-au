@@ -13,37 +13,37 @@ const CAPABILITY_DETAILS = [
   {
     num: "01",
     title: "Performance Arenas",
-    desc: "Precision-graded surfaces engineered for consistency, drainage, and long-term footing integrity. Every arena begins with soil analysis and ends with surfaces that perform.",
+    desc: "Precision-graded surfaces engineered for consistent footing and drainage performance.",
     outcome: "Consistent footing. Zero drainage failure.",
   },
   {
     num: "02",
     title: "Stables & Barn Infrastructure",
-    desc: "Structures designed around equine behaviour — airflow, sightlines, movement, and durability. Not decoration. Function.",
+    desc: "Airflow, sightlines, movement — designed around equine behaviour.",
     outcome: "Horse-informed design. Built once.",
   },
   {
     num: "03",
     title: "Drainage & Ground Preparation",
-    desc: "The invisible layer that determines whether everything above it succeeds or fails. Sub-base engineering, water management, and compaction profiles — specified for durability.",
+    desc: "Sub-base engineering, water management, and compaction profiles.",
     outcome: "Performance starts below the surface.",
   },
   {
     num: "04",
     title: "Performance Surfaces",
-    desc: "Surface materials, stabilisation, and site-specific footing systems — including our proprietary GroundLock™ interlocking ground stabilisation.",
+    desc: "Site-specific footing systems including GroundLock™ ground stabilisation.",
     outcome: "Engineered footing. Long-term performance.",
   },
   {
     num: "05",
     title: "Site Planning & Equine Layouts",
-    desc: "Property-wide planning informed by terrain, water flow, horse movement, and long-term operational efficiency.",
+    desc: "Property-wide planning informed by terrain, water flow, and horse movement.",
     outcome: "Intelligent layout. Future-proof design.",
   },
   {
     num: "06",
     title: "Integrated System Design",
-    desc: "Complete infrastructure integration — laneways, drainage corridors, access, utility runs, and paddock systems designed as one connected system.",
+    desc: "Laneways, drainage corridors, access, and paddock systems — designed as one connected system.",
     outcome: "One system. No weak points.",
   },
 ];
