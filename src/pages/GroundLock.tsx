@@ -6,6 +6,7 @@ import { GroundLockProductEducation } from "@/components/groundlock/GroundLockPr
 import { PanelSpecimen, SystemDiagram, LockSequence } from "@/components/groundlock/GroundLockSystemSVG";
 import { GroundLockPanelSVG, PanelDefs } from "@/components/groundlock/GroundLockPanelSVG";
 import { GroundLockComparison } from "@/components/groundlock/GroundLockComparison";
+import { GroundLockProjectForm } from "@/components/groundlock/GroundLockProjectForm";
 import { ArrowRight, Shield, Droplets, Grid3X3, Wrench, Sparkles } from "lucide-react";
 
 /* ── Data ─────────────────────────────────────────── */
@@ -498,7 +499,7 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ SECTION 7 — CTA ══════════════════════════════ */}
+      {/* ═══ SECTION 7 — Start Your Project ═════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-20 sm:py-28 bg-card relative">
@@ -509,38 +510,22 @@ export default function GroundLock() {
             style={{ background: "radial-gradient(ellipse 60% 45% at 50% 50%, transparent 15%, hsl(var(--background) / 0.5) 100%)" }}
           />
 
-          <div className="section-container relative z-10 text-center max-w-md mx-auto">
+          <div className="section-container relative z-10 max-w-lg mx-auto">
             <RevealOnScroll direction="up">
-              <RevealLine className="mx-auto mb-12" width="w-8" />
+              <RevealLine className="mx-auto mb-10" width="w-8" />
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={80}>
-              <h2 className="heading-section text-foreground mb-3">
-                Specify GroundLock for Your Build
+              <h2 className="heading-section text-foreground mb-2 text-center">
+                Start Your Project
               </h2>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
-              <p className="text-[13px] text-muted-foreground/38 leading-[1.8] mb-9">
-                We assess ground conditions, usage, and load requirements before recommending a system.
+              <p className="text-[13px] text-muted-foreground/38 leading-[1.8] mb-10 text-center">
+                Tell us about your site. We'll recommend the right system.
               </p>
             </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={250}>
-              <div className="flex flex-wrap justify-center gap-4 mb-8">
-                <Button asChild variant="gold" size="lg">
-                  <Link to="/contact">
-                    Specify GroundLock <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline-light" size="lg">
-                  <Link to="/contact">
-                    Request System Details
-                  </Link>
-                </Button>
-              </div>
-            </RevealOnScroll>
-            <RevealOnScroll direction="none" delay={350}>
-              <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/18">
-                Used within Peninsula Equine builds and available for standalone specification
-              </p>
+            <RevealOnScroll direction="up" delay={220}>
+              <GroundLockProjectForm />
             </RevealOnScroll>
           </div>
         </div>
