@@ -368,7 +368,7 @@ export default function ClientQuote() {
         <section className="pt-8 border-t border-border/10">
           {accepted ? (
             <div className="text-center py-8">
-              <Check className="w-8 h-8 text-green-400/60 mx-auto mb-3" />
+              <Check className="w-8 h-8 text-accent/60 mx-auto mb-3" />
               <p className="font-serif text-lg text-foreground/80 mb-1">Quote Accepted</p>
               <p className="text-[13px] text-muted-foreground/35">
                 {quote.accepted_at && `Accepted ${format(new Date(quote.accepted_at), "d MMMM yyyy")}`}
