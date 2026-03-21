@@ -192,7 +192,12 @@ export function ProjectsCinematicHero() {
         background: "linear-gradient(to bottom, hsl(var(--background) / 0.3) 0%, hsl(var(--background) / 0.1) 50%, hsl(var(--background) / 0.9) 100%)",
       }} />
 
-      {/* Layer 4: Grain */}
+      {/* Layer 4: Vignette */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: "radial-gradient(ellipse 70% 60% at 50% 50%, transparent 0%, hsl(var(--background) / 0.35) 100%)",
+      }} />
+
+      {/* Layer 5: Grain */}
       <div className="absolute inset-0 pointer-events-none grain-texture" />
 
       {/* Layer 5: Content — center-left */}
