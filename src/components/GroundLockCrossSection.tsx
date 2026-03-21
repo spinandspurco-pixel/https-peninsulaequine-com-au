@@ -328,7 +328,51 @@ export function GroundLockCrossSection() {
                   Hover or tap a layer to explore
                 </text>
               )}
-            </svg>
+              </svg>
+            </div>
+
+            {/* Real World View */}
+            <div
+              className="absolute inset-0"
+              style={{
+                opacity: viewMode === "realworld" ? 1 : 0,
+                pointerEvents: viewMode === "realworld" ? "auto" : "none",
+                transition: `opacity ${DURATION.normal}ms ${EASE.default}`,
+              }}
+            >
+              <div className="w-full h-full grid grid-cols-2 gap-3">
+                <div className="relative overflow-hidden rounded-sm">
+                  <img
+                    src={foundationPour}
+                    alt="Foundation pour — real build"
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{ background: "linear-gradient(to top, hsl(var(--background) / 0.6) 0%, transparent 50%)" }}
+                  />
+                  <div className="absolute bottom-3 left-3">
+                    <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-accent/50">Base & Foundation</p>
+                  </div>
+                </div>
+                <div className="relative overflow-hidden rounded-sm">
+                  <img
+                    src={rebarDeep}
+                    alt="GroundLock grid installation"
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{ background: "linear-gradient(to top, hsl(var(--background) / 0.6) 0%, transparent 50%)" }}
+                  />
+                  <div className="absolute bottom-3 left-3">
+                    <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-accent/50">Grid & Reinforcement</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </RevealOnScroll>
       </div>
