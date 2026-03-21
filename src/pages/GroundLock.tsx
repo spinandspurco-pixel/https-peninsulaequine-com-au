@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
-import { GroundLockSystemLayout } from "@/components/GroundLockSystemLayout";
 import { GroundLockCrossSection } from "@/components/GroundLockCrossSection";
 import { GroundLockProductEducation } from "@/components/groundlock/GroundLockProductEducation";
 import { PanelSpecimen, PanelArray, PanelSiteLayout } from "@/components/groundlock/GroundLockSystemSVG";
