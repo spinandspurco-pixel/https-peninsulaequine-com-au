@@ -189,6 +189,27 @@ export default function Admin() {
           </div>
         </div>
 
+        {/* ── Action Strip ── */}
+        <div className="border-b border-border/20 bg-card/30">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-6 overflow-x-auto">
+            {[
+              { label: "New Enquiry", action: () => navigate("/contact") },
+              { label: "Create Quote", action: () => setQuoteForInquiryId("new") },
+              { label: "View Follow-Ups", action: () => document.getElementById("follow-ups-section")?.scrollIntoView({ behavior: "smooth" }) },
+              { label: "Open Pipeline", action: () => document.getElementById("pipeline-section")?.scrollIntoView({ behavior: "smooth" }) },
+              { label: "Convert to Project", action: () => document.getElementById("pipeline-section")?.scrollIntoView({ behavior: "smooth" }) },
+            ].map((item) => (
+              <button
+                key={item.label}
+                onClick={item.action}
+                className="text-[11px] uppercase tracking-[0.15em] font-medium text-muted-foreground/60 hover:text-foreground/90 transition-opacity duration-300 whitespace-nowrap flex-shrink-0"
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
 
           {/* ═══════════════════════════════════════════════════════ */}
@@ -213,11 +234,15 @@ export default function Admin() {
 
           {/* ═══ CRM PIPELINE — replaces old stats + inquiry table ═══ */}
           {viewMode !== "operations" && (
+          <div id="pipeline-section">
             <CRMPipeline onCreateQuote={(id) => setQuoteForInquiryId(id)} />
+          </div>
           )}
 
           {/* Follow-Up Command View */}
-          <FollowUpCommandView />
+          <div id="follow-ups-section">
+            <FollowUpCommandView />
+          </div>
 
           {/* Today's Plan */}
           <TodaysPlan />
