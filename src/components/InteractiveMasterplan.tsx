@@ -203,7 +203,7 @@ export function InteractiveMasterplan() {
         <RevealOnScroll direction="up" duration={DURATION.normal} delay={100}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             <div className="lg:col-span-8 flex justify-center">
-              <SitePlan activeZone={activeZone} onHover={handleHover} onLeave={handleLeave} />
+              <SitePlan activeZone={activeZone} onHover={handleHover} onLeave={handleLeave} onTap={handleTap} />
             </div>
             <div className="lg:col-span-4 flex flex-col justify-start pt-4 lg:pt-10">
               <div
