@@ -1,7 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { DURATION, EASE } from "@/lib/motion";
-
-import horseshoeRealworld from "@/assets/groundlock-horseshoe-realworld.jpg";
+import { PanelSpecimen, PanelArray, PanelSiteLayout } from "@/components/groundlock/GroundLockSystemSVG";
 
 type ViewMode = "system" | "realworld";
 
