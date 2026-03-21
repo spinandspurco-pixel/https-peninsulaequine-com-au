@@ -47,9 +47,8 @@ export function RevealOnScroll({
 
   const style: CSSProperties = {
     opacity: isVisible ? 1 : 0,
-    transform: isVisible ? "translate(0, 0) scale(1)" : transforms[direction](distance),
+    transform: isVisible ? "translate3d(0,0,0)" : transforms[direction](distance),
     transition: `opacity ${duration}ms ${EASE.default} ${computedDelay}ms, transform ${duration}ms ${EASE.default} ${computedDelay}ms`,
-    willChange: "opacity, transform",
   };
 
   return (

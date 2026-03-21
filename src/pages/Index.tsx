@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useLayoutEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { Button } from "@/components/ui/button";
@@ -115,15 +115,6 @@ function ProjectsScroll() {
 }
 
 export default function Index() {
-  useLayoutEffect(() => {
-    if (document.querySelector('link[data-hero-preload]')) return;
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'video';
-    link.href = heroVideo;
-    link.setAttribute('data-hero-preload', '');
-    document.head.appendChild(link);
-  }, []);
 
   return (
     <Layout>
@@ -131,7 +122,9 @@ export default function Index() {
       <section className="relative min-h-[100dvh] overflow-hidden flex items-center justify-center">
         <video
           autoPlay muted loop playsInline
+          preload="auto"
           className="absolute inset-0 w-full h-full object-cover brightness-[0.2] contrast-[1.2] saturate-[0.35]"
+          style={{ width: '100%', height: '100%' }}
         >
           <source src={heroVideo} type="video/mp4" />
         </video>
@@ -215,7 +208,7 @@ export default function Index() {
       </section>
 
       {/* ═══ 2. GROUNDLOCK — SIGNATURE SYSTEM ══════════════ */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden cv-auto">
         <div className="py-32 sm:py-40 lg:py-48 bg-card relative">
           <div className="absolute inset-0 engineering-grid" />
           <div className="absolute inset-0 grain-texture opacity-30" />
@@ -265,7 +258,7 @@ export default function Index() {
       />
 
       {/* ═══ 3. PROJECTS — HORIZONTAL SCROLL ═══════════════ */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden cv-auto">
         <div className="py-32 sm:py-40 lg:py-48 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-7xl mx-auto relative z-[1]">
@@ -310,7 +303,7 @@ export default function Index() {
       />
 
       {/* ═══ 4. SERVICES — WHAT WE BUILD ═══════════════════ */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden cv-auto">
         <div className="py-32 sm:py-40 lg:py-48 bg-card relative">
           <div className="absolute inset-0 grain-texture opacity-30" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
@@ -359,7 +352,7 @@ export default function Index() {
       </section>
 
       {/* ── Trust Strip ──────────────────────────── */}
-      <section className="py-16 sm:py-20 border-t border-border/10">
+      <section className="py-16 sm:py-20 border-t border-border/10 cv-auto">
         <div className="section-container max-w-4xl mx-auto">
           <RevealOnScroll direction="up">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-10 sm:gap-16 text-center">

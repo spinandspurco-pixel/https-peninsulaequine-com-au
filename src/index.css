@@ -191,7 +191,11 @@
   .section-padding-sm  { @apply py-section-sm sm:py-section lg:py-section-md; }
   .section-padding-lg  { @apply py-section-lg sm:py-section-xl; }
 
-  /* ── Grid utilities ──────────────────────────────────── */
+  /* ── Content-visibility for below-fold performance ── */
+  .cv-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 600px;
+  }
   .grid-gutter    { @apply gap-5 sm:gap-8 lg:gap-10; }
   .grid-gutter-sm { @apply gap-3 sm:gap-5 lg:gap-8; }
 
