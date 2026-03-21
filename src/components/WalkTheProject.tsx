@@ -17,6 +17,15 @@ const panels = [
   { label: "Viewing Loft", line: "Where the entire system becomes visible.", image: walkLoft },
 ];
 
+/* ── Per-panel emphasis config ─────────────────────────── */
+const panelEmphasis = [
+  { brightness: 0.75, scale: 1.06, revealDelay: 100, overlayOpacity: 0.45 },   // Arrival — quiet intro
+  { brightness: 0.78, scale: 1.06, revealDelay: 80, overlayOpacity: 0.42 },    // Courtyard — building
+  { brightness: 0.88, scale: 1.09, revealDelay: 200, overlayOpacity: 0.35 },   // Arena — PEAK
+  { brightness: 0.76, scale: 1.06, revealDelay: 100, overlayOpacity: 0.45 },   // Stables — resolve
+  { brightness: 0.72, scale: 1.05, revealDelay: 100, overlayOpacity: 0.48 },   // Loft — settle
+];
+
 /* ── Single panel ─────────────────────────────────────── */
 function Panel({
   label,
@@ -34,6 +43,7 @@ function Panel({
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [parallaxY, setParallaxY] = useState(0);
+  const emphasis = panelEmphasis[index] || panelEmphasis[0];
 
   useEffect(() => {
     const el = ref.current;
@@ -78,8 +88,8 @@ function Panel({
         className="absolute inset-0 will-change-transform"
         style={{
           transform: reducedMotion
-            ? "scale(1.06)"
-            : `translateY(${parallaxY}px) scale(1.06)`,
+            ? `scale(${emphasis.scale})`
+            : `translateY(${parallaxY}px) scale(${emphasis.scale})`,
           transition: `transform ${DURATION.parallax}ms ${EASE.default}`,
         }}
       >
@@ -87,6 +97,7 @@ function Panel({
           src={image}
           alt={label}
           className="w-full h-full object-cover"
+          style={{ filter: `brightness(${emphasis.brightness})` }}
           loading={index < 2 ? "eager" : "lazy"}
           decoding="async"
         />
@@ -97,7 +108,7 @@ function Panel({
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(to bottom, hsl(var(--background) / 0.25) 0%, hsl(var(--background) / 0.45) 50%, hsl(var(--background) / 0.7) 100%)",
+            `linear-gradient(to bottom, hsl(var(--background) / 0.25) 0%, hsl(var(--background) / ${emphasis.overlayOpacity}) 50%, hsl(var(--background) / 0.7) 100%)`,
         }}
       />
 
@@ -112,7 +123,7 @@ function Panel({
             style={{
               opacity: visible ? 1 : 0,
               transform: visible ? "translateY(0)" : `translateY(${DISTANCE.md}px)`,
-              transition: `opacity ${DURATION.normal}ms ${EASE.default} 100ms, transform ${DURATION.normal}ms ${EASE.default} 100ms`,
+              transition: `opacity ${DURATION.normal}ms ${EASE.default} ${emphasis.revealDelay}ms, transform ${DURATION.normal}ms ${EASE.default} ${emphasis.revealDelay}ms`,
               willChange: "opacity, transform",
             }}
           >
