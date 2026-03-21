@@ -119,7 +119,7 @@ export function GroundLockProductEducation() {
             </defs>
 
             {/* Base panel */}
-            <GroundLockPanelSVG active={!activeId} showTabs defsId="edu" />
+            <GroundLockPanelSVG active={!activeId} showTabs defsId="edu" direction="up" />
 
             {/* Active highlight overlay — opacity-only transition */}
             <g

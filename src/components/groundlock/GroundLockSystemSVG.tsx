@@ -1,151 +1,170 @@
 /**
- * GroundLockSystemSVG — premium product presentation.
+ * GroundLock™ System Visuals — Three modes:
  *
- * Three stages: The Panel → The System → The Layout
+ * 1. PanelSpecimen    — Hero / beauty visual (cinematic single panel)
+ * 2. LockSequence     — Step-by-step: single → approach → locked → extended
+ * 3. SystemDiagram    — Full interlocking system showing alternating rhythm
  */
 
 import { GroundLockPanelSVG, PanelDefs } from "./GroundLockPanelSVG";
 
-/* ── 01 — The Panel (Hero) ────────────────────────────── */
+/* ── 01 — Hero / Beauty Visual ─────────────────────────── */
 export function PanelSpecimen({ className }: { className?: string }) {
   return (
     <div className={className}>
       <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent/28 mb-5">
         The Panel
       </p>
-      <svg viewBox="0 0 140 180" className="w-full max-w-[200px] h-auto mx-auto">
+      <svg viewBox="0 0 140 130" className="w-full max-w-[220px] h-auto mx-auto">
         <PanelDefs id="sp" />
-        <GroundLockPanelSVG x={20} y={28} scale={1.07} active showTabs defsId="sp" />
+        <GroundLockPanelSVG x={20} y={10} scale={1.1} active showTabs defsId="sp" direction="up" />
       </svg>
       <p className="text-[10px] font-mono text-muted-foreground/18 text-center mt-4 tracking-[0.12em]">
-        Horseshoe geometry · Interlocking tabs
+        Horseshoe geometry · Directional interlock
       </p>
     </div>
   );
 }
 
-/* ── 02 — The System (tight tessellation) ─────────────── */
-export function PanelArray({ className }: { className?: string }) {
-  const s = 0.42;
-  const colW = 56 * s;
-  const rowH = 40 * s;
+/* ── 02 — Lock Sequence (step-by-step) ─────────────────── */
+export function LockSequence({ className }: { className?: string }) {
+  /*
+   * Four steps shown left-to-right:
+   * Step 1: Single panel A (up)
+   * Step 2: Panel B (down) approaching
+   * Step 3: Panels A+B locked together
+   * Step 4: Extended system A-B-A-B
+   */
 
-  const panels: { x: number; y: number; rot: number; row: number }[] = [];
+  const s = 0.38;
+  const panelW = 100 * s; // ~38
+  const gap = 6;
+  const stepW = panelW + gap;
+  const stageGap = 28;
 
-  const uprightCols = 7;
-  const invertedCols = 6;
+  // Each stage gets its own group
+  return (
+    <div className={className}>
+      <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent/28 mb-5">
+        The Lock Sequence
+      </p>
+      <svg viewBox="0 0 420 120" className="w-full max-w-xl h-auto mx-auto">
+        <PanelDefs id="ls" />
 
-  for (let r = 0; r < 3; r++) {
-    for (let c = 0; c < uprightCols; c++) {
-      panels.push({ x: 4 + c * colW, y: 4 + r * rowH * 2, rot: 0, row: r * 2 });
-    }
-    if (r < 2) {
-      for (let c = 0; c < invertedCols; c++) {
-        panels.push({
-          x: 4 + colW * 0.5 + c * colW,
-          y: 4 + r * rowH * 2 + rowH,
-          rot: 180,
-          row: r * 2 + 1,
-        });
-      }
+        {/* Step 1 — Single panel A */}
+        <g>
+          <GroundLockPanelSVG x={4} y={10} scale={s} direction="up" active showTabs defsId="ls" />
+          <text x={4 + panelW / 2} y={108} textAnchor="middle" className="fill-muted-foreground/20" style={{ fontSize: "6px", fontFamily: "monospace", letterSpacing: "0.08em" }}>
+            1 · Panel A
+          </text>
+        </g>
+
+        {/* Step 2 — Panel B approaching (offset, with gap showing approach) */}
+        <g>
+          <GroundLockPanelSVG x={4 + stageGap + stepW} y={10} scale={s} direction="up" showTabs defsId="ls" />
+          <GroundLockPanelSVG x={4 + stageGap + stepW + panelW * 0.55} y={14} scale={s} direction="down" active showTabs defsId="ls" opacity={0.7} />
+          <text x={4 + stageGap + stepW + panelW * 0.6} y={108} textAnchor="middle" className="fill-muted-foreground/20" style={{ fontSize: "6px", fontFamily: "monospace", letterSpacing: "0.08em" }}>
+            2 · Opposing
+          </text>
+        </g>
+
+        {/* Step 3 — Locked pair */}
+        <g>
+          {(() => {
+            const ox = 4 + (stageGap + stepW) * 2 + panelW * 0.3;
+            return (
+              <>
+                <GroundLockPanelSVG x={ox} y={10} scale={s} direction="up" active showTabs defsId="ls" />
+                <GroundLockPanelSVG x={ox + panelW * 0.52} y={10} scale={s} direction="down" active showTabs defsId="ls" />
+              </>
+            );
+          })()}
+          <text x={4 + (stageGap + stepW) * 2 + panelW * 0.9} y={108} textAnchor="middle" className="fill-muted-foreground/20" style={{ fontSize: "6px", fontFamily: "monospace", letterSpacing: "0.08em" }}>
+            3 · Interlocked
+          </text>
+        </g>
+
+        {/* Step 4 — Extended A-B-A-B */}
+        <g>
+          {(() => {
+            const ox = 4 + (stageGap + stepW) * 3 + panelW * 0.1;
+            const offset = panelW * 0.48;
+            return (
+              <>
+                <GroundLockPanelSVG x={ox} y={10} scale={s * 0.85} direction="up" active showTabs defsId="ls" />
+                <GroundLockPanelSVG x={ox + offset * 0.85} y={10} scale={s * 0.85} direction="down" active showTabs defsId="ls" />
+                <GroundLockPanelSVG x={ox + offset * 0.85 * 2} y={10} scale={s * 0.85} direction="up" active showTabs defsId="ls" />
+                <GroundLockPanelSVG x={ox + offset * 0.85 * 3} y={10} scale={s * 0.85} direction="down" active showTabs defsId="ls" />
+              </>
+            );
+          })()}
+          <text x={4 + (stageGap + stepW) * 3 + panelW * 0.9} y={108} textAnchor="middle" className="fill-muted-foreground/20" style={{ fontSize: "6px", fontFamily: "monospace", letterSpacing: "0.08em" }}>
+            4 · System
+          </text>
+        </g>
+      </svg>
+      <p className="text-[10px] font-mono text-muted-foreground/18 text-center mt-4 tracking-[0.12em]">
+        Opposing panels nest and lock into a continuous surface
+      </p>
+    </div>
+  );
+}
+
+/* ── 03 — Full System Diagram (alternating A↑ B↓ rhythm) ── */
+export function SystemDiagram({ className }: { className?: string }) {
+  const s = 0.32;
+  const panelW = 100 * s;
+  const nestOffset = panelW * 0.50; // horizontal nesting distance
+  const rowH = 110 * s * 0.65;     // vertical row spacing
+
+  const cols = 8;
+  const rows = 4;
+
+  const panels: { x: number; y: number; dir: "up" | "down"; isCenter: boolean }[] = [];
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const dir: "up" | "down" = (r + c) % 2 === 0 ? "up" : "down";
+      const x = 8 + c * nestOffset;
+      const y = 6 + r * rowH;
+      const isCenter = r >= 1 && r <= 2 && c >= 2 && c <= 5;
+      panels.push({ x, y, dir, isCenter });
     }
   }
 
-  const svgW = 4 + uprightCols * colW + 10;
-  const svgH = 4 + 4 * rowH + 42 * s + 4;
+  const svgW = Math.round(8 + cols * nestOffset + panelW * 0.5 + 8);
+  const svgH = Math.round(6 + rows * rowH + 110 * s * 0.4 + 6);
 
   return (
     <div className={className}>
       <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent/28 mb-5">
         The System
       </p>
-      <svg viewBox={`0 0 ${Math.round(svgW)} ${Math.round(svgH)}`} className="w-full max-w-md h-auto mx-auto">
-        <PanelDefs id="ar" />
-        {panels.map((p, i) => (
-          <GroundLockPanelSVG
-            key={i}
-            x={p.x}
-            y={p.y}
-            scale={s}
-            rotation={p.rot}
-            active={p.row === 1 || p.row === 2}
-            showTabs
-            defsId="ar"
-          />
-        ))}
-      </svg>
-      <p className="text-[10px] font-mono text-muted-foreground/18 text-center mt-4 tracking-[0.12em]">
-        Alternating rows nest and interlock into continuous surface
-      </p>
-    </div>
-  );
-}
-
-/* ── 03 — The Layout (dense modular installation grid) ── */
-export function PanelSiteLayout({ className }: { className?: string }) {
-  const s = 0.20;
-  const colW = 56 * s;
-  const rowH = 40 * s;
-
-  const uprightCols = 15;
-  const invertedCols = 14;
-  const rowPairs = 5;
-
-  const panels: { x: number; y: number; rot: number; isHero: boolean; row: number; col: number }[] = [];
-
-  for (let pair = 0; pair < rowPairs; pair++) {
-    const baseY = 6 + pair * rowH * 2;
-    for (let c = 0; c < uprightCols; c++) {
-      panels.push({ x: 6 + c * colW, y: baseY, rot: 0, isHero: false, row: pair * 2, col: c });
-    }
-    if (pair < rowPairs - 1) {
-      for (let c = 0; c < invertedCols; c++) {
-        panels.push({
-          x: 6 + colW * 0.5 + c * colW,
-          y: baseY + rowH,
-          rot: 180,
-          isHero: false,
-          row: pair * 2 + 1,
-          col: c,
-        });
-      }
-    }
-  }
-
-  const midRow = 4;
-  const midCol = Math.floor(uprightCols / 2);
-  const heroIdx = panels.findIndex((p) => p.row === midRow && p.col === midCol);
-  if (heroIdx >= 0) panels[heroIdx].isHero = true;
-
-  const svgW = Math.round(6 + uprightCols * colW + 12);
-  const svgH = Math.round(6 + (rowPairs * 2 - 1) * rowH + 20 * s + 6);
-
-  return (
-    <div className={className}>
-      <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent/28 mb-5">
-        The Layout
-      </p>
       <svg
         viewBox={`0 0 ${svgW} ${svgH}`}
-        className="w-full max-w-xl h-auto mx-auto"
+        className="w-full max-w-lg h-auto mx-auto"
       >
-        <PanelDefs id="sl" />
+        <PanelDefs id="sd" />
         {panels.map((p, i) => (
           <GroundLockPanelSVG
             key={i}
             x={p.x}
             y={p.y}
             scale={s}
-            rotation={p.rot}
-            active={p.isHero}
+            direction={p.dir}
+            active={p.isCenter}
             showTabs
-            defsId="sl"
+            defsId="sd"
           />
         ))}
       </svg>
       <p className="text-[10px] font-mono text-muted-foreground/18 text-center mt-4 tracking-[0.12em]">
-        Modular surface coverage · Repeatable installation grid
+        Alternating interlock · Continuous stabilisation surface
       </p>
     </div>
   );
 }
+
+/* ── Legacy exports for backward compatibility ── */
+export const PanelArray = SystemDiagram;
+export const PanelSiteLayout = LockSequence;

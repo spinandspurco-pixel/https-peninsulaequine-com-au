@@ -3,7 +3,7 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { GroundLockProductEducation } from "@/components/groundlock/GroundLockProductEducation";
-import { PanelSpecimen, PanelArray, PanelSiteLayout } from "@/components/groundlock/GroundLockSystemSVG";
+import { PanelSpecimen, SystemDiagram, LockSequence } from "@/components/groundlock/GroundLockSystemSVG";
 import { GroundLockPanelSVG, PanelDefs } from "@/components/groundlock/GroundLockPanelSVG";
 import { ArrowRight, Shield, Droplets, Grid3X3, Wrench, Sparkles } from "lucide-react";
 
@@ -146,7 +146,7 @@ export default function GroundLock() {
               >
                 <PanelDefs id="hero" />
                 {/* Subtle top-edge bevel highlight */}
-                <GroundLockPanelSVG x={8} y={6} scale={1.22} active showTabs defsId="hero" />
+                <GroundLockPanelSVG x={8} y={6} scale={1.22} active showTabs defsId="hero" direction="up" />
                 <path
                   d="M 32 28 A 34 36 0 0 1 88 28"
                   fill="none"
@@ -210,9 +210,9 @@ export default function GroundLock() {
               <div className="space-y-14">
                 <PanelSpecimen />
                 <div className="w-10 h-px bg-accent/8 mx-auto" />
-                <PanelArray />
+                <LockSequence />
                 <div className="w-10 h-px bg-accent/8 mx-auto" />
-                <PanelSiteLayout />
+                <SystemDiagram />
               </div>
             </RevealOnScroll>
           </div>
