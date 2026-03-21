@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 import { ArrowRight } from "lucide-react";
 import viewingLineBg from "@/assets/viewing-line-bg.jpg";
 
@@ -62,7 +63,7 @@ export function ViewingLine() {
             className="flex items-center justify-center gap-5 mb-8"
             style={{
               opacity: visible ? 1 : 0,
-              transition: "opacity 1000ms ease-out 200ms",
+              transition: `opacity ${DURATION.slow}ms ${EASE.default} 200ms`,
             }}
           >
             <div className="w-8 h-px bg-accent/25" />
@@ -77,7 +78,7 @@ export function ViewingLine() {
             className="font-serif text-3xl sm:text-4xl lg:text-5xl text-foreground/90 tracking-[0.03em] mb-5"
             style={{
               opacity: visible ? 1 : 0,
-              transition: "opacity 1200ms ease-out 400ms",
+              transition: `opacity ${DURATION.slow}ms ${EASE.default} 400ms`,
             }}
           >
             Stand above it all.
@@ -88,7 +89,7 @@ export function ViewingLine() {
             className="font-serif text-sm sm:text-base italic text-muted-foreground/40 leading-relaxed mb-12"
             style={{
               opacity: visible ? 1 : 0,
-              transition: "opacity 1200ms ease-out 700ms",
+              transition: `opacity ${DURATION.slow}ms ${EASE.default} 700ms`,
             }}
           >
             Every line, every movement, every decision — visible from here.
@@ -98,7 +99,7 @@ export function ViewingLine() {
           <div
             style={{
               opacity: visible ? 1 : 0,
-              transition: "opacity 1000ms ease-out 1000ms",
+              transition: `opacity ${DURATION.slow}ms ${EASE.default} 1000ms`,
             }}
           >
             <Button asChild variant="gold" size="lg">

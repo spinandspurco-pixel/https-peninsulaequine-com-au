@@ -7,6 +7,7 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { ArrowRight, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useParallax } from "@/hooks/useParallax";
+import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 import { ProjectsCinematicHero } from "@/components/ProjectsCinematicHero";
 import { InteractiveMasterplan } from "@/components/InteractiveMasterplan";
 import { WalkTheProject } from "@/components/WalkTheProject";
@@ -80,12 +81,15 @@ function EditorialImage({
         <img
           src={src}
           alt={alt}
-          className={`absolute inset-0 w-full h-full object-cover transition-all duration-[900ms] ease-out group-hover:scale-[1.03] ${
+          className={`absolute inset-0 w-full h-full object-cover will-change-transform ${
             loaded ? "opacity-100" : "opacity-0"
           }`}
+          style={{ transition: `opacity ${DURATION.slow}ms ${EASE.default}, transform ${DURATION.parallax}ms ${EASE.default}` }}
           loading="lazy"
           decoding="async"
           onLoad={() => setLoaded(true)}
+          onMouseEnter={(e) => { if (onClick) (e.currentTarget as HTMLImageElement).style.transform = "scale(1.03)"; }}
+          onMouseLeave={(e) => { if (onClick) (e.currentTarget as HTMLImageElement).style.transform = "scale(1)"; }}
         />
       )}
     </div>
@@ -105,7 +109,8 @@ function ChapterDivider() {
         style={{
           transform: isVisible ? "scaleY(1)" : "scaleY(0)",
           opacity: isVisible ? 1 : 0,
-          transition: "transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 100ms, opacity 600ms ease 100ms",
+          transition: `transform ${DURATION.parallax}ms ${EASE.default} 100ms, opacity ${DURATION.normal}ms ${EASE.default} 100ms`,
+          willChange: "transform, opacity",
         }}
       />
     </div>

@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 
 /* ── Zone data ────────────────────────────────────────── */
 interface Zone {
@@ -46,10 +47,12 @@ const zones: Zone[] = [
 function DetailCard({ zone, visible }: { zone: Zone | null; visible: boolean }) {
   return (
     <div
-      className="pointer-events-none transition-all duration-300 ease-out"
+      className="pointer-events-none"
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(6px)",
+        transform: visible ? "translateY(0)" : `translateY(${DISTANCE.sm}px)`,
+        transition: `opacity ${DURATION.fast}ms ${EASE.interactive}, transform ${DURATION.fast}ms ${EASE.interactive}`,
+        willChange: "opacity, transform",
       }}
     >
       {zone && (
@@ -110,10 +113,11 @@ function SitePlan({
           <g key={z.id}>
             <path
               d={z.path}
-              fill={isActive ? "rgba(198,168,107,0.07)" : "rgba(198,168,107,0.015)"}
-              stroke={isActive ? "rgba(198,168,107,0.45)" : "rgba(198,168,107,0.1)"}
+              fill={isActive ? "hsl(var(--accent) / 0.07)" : "hsl(var(--accent) / 0.015)"}
+              stroke={isActive ? "hsl(var(--accent) / 0.45)" : "hsl(var(--accent) / 0.1)"}
               strokeWidth={isActive ? "1" : "0.5"}
-              className="transition-all duration-300 ease-out cursor-pointer"
+              style={{ transition: `fill ${DURATION.fast}ms ${EASE.interactive}, stroke ${DURATION.fast}ms ${EASE.interactive}, stroke-width ${DURATION.fast}ms ${EASE.interactive}` }}
+              className="cursor-pointer"
               onMouseEnter={() => onHover(z.id)}
               onMouseLeave={onLeave}
             />
@@ -126,8 +130,11 @@ function SitePlan({
               fontFamily="monospace"
               letterSpacing="0.1em"
               fill="hsl(var(--accent))"
-              className="pointer-events-none uppercase transition-opacity duration-300"
-              opacity={isActive ? 0.6 : 0.2}
+              className="pointer-events-none uppercase"
+              style={{
+                opacity: isActive ? 0.6 : 0.2,
+                transition: `opacity ${DURATION.fast}ms ${EASE.interactive}`,
+              }}
             >
               {z.label}
             </text>
@@ -170,7 +177,7 @@ export function InteractiveMasterplan() {
 
       <div className="section-container relative z-10">
         {/* Section header */}
-        <RevealOnScroll direction="up" duration={700}>
+        <RevealOnScroll direction="up" duration={DURATION.normal}>
           <div className="text-center mb-14 sm:mb-18 lg:mb-20">
             <div className="flex items-center justify-center gap-5 mb-5">
               <div className="w-8 h-px bg-accent/25" />
@@ -189,19 +196,19 @@ export function InteractiveMasterplan() {
         </RevealOnScroll>
 
         {/* Plan + Card layout */}
-        <RevealOnScroll direction="up" duration={800} delay={100}>
+        <RevealOnScroll direction="up" duration={DURATION.normal} delay={100}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             <div className="lg:col-span-8 flex justify-center">
               <SitePlan activeZone={activeZone} onHover={handleHover} onLeave={handleLeave} />
             </div>
             <div className="lg:col-span-4 flex flex-col justify-start pt-4 lg:pt-10">
               <div
-                className="transition-all duration-300 ease-out"
                 style={{
                   opacity: activeZone ? 0 : 0.35,
-                  transform: activeZone ? "translateY(-4px)" : "translateY(0)",
+                  transform: activeZone ? `translateY(-${DISTANCE.sm}px)` : "translateY(0)",
                   position: activeZone ? "absolute" : "relative",
                   pointerEvents: "none",
+                  transition: `opacity ${DURATION.fast}ms ${EASE.interactive}, transform ${DURATION.fast}ms ${EASE.interactive}`,
                 }}
               >
                 <p className="text-xs font-mono uppercase tracking-[0.3em] text-accent/25">

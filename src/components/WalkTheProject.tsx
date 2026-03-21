@@ -6,6 +6,7 @@ import walkCourtyard from "@/assets/walk-courtyard.jpg";
 import walkArena from "@/assets/walk-arena.jpg";
 import walkStables from "@/assets/walk-stables.jpg";
 import walkLoft from "@/assets/walk-loft.jpg";
+import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 
 /* ── Panel data ───────────────────────────────────────── */
 const panels = [
@@ -39,7 +40,7 @@ function Panel({
     if (!el) return;
     const io = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) setVisible(true); },
-      { threshold: 0.25 }
+      { threshold: 0.2 }
     );
     io.observe(el);
     return () => io.disconnect();
@@ -57,7 +58,7 @@ function Panel({
           const rect = el.getBoundingClientRect();
           const center = rect.top + rect.height / 2;
           const viewCenter = window.innerHeight / 2;
-          setParallaxY((center - viewCenter) * 0.08);
+          setParallaxY((center - viewCenter) * 0.06);
         }
         ticking = false;
       });
@@ -74,11 +75,12 @@ function Panel({
     >
       {/* Background image with parallax */}
       <div
-        className="absolute inset-0 scale-[1.08] will-change-transform"
+        className="absolute inset-0 will-change-transform"
         style={{
           transform: reducedMotion
-            ? "scale(1.08)"
-            : `translateY(${parallaxY}px) scale(1.08)`,
+            ? "scale(1.06)"
+            : `translateY(${parallaxY}px) scale(1.06)`,
+          transition: `transform ${DURATION.parallax}ms ${EASE.default}`,
         }}
       >
         <img
@@ -86,6 +88,7 @@ function Panel({
           alt={label}
           className="w-full h-full object-cover"
           loading={index < 2 ? "eager" : "lazy"}
+          decoding="async"
         />
       </div>
 
@@ -94,7 +97,7 @@ function Panel({
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(13,13,13,0.3) 0%, rgba(13,13,13,0.5) 50%, rgba(13,13,13,0.75) 100%)",
+            "linear-gradient(to bottom, hsl(222 20% 6% / 0.25) 0%, hsl(222 20% 6% / 0.45) 50%, hsl(222 20% 6% / 0.7) 100%)",
         }}
       />
 
@@ -108,32 +111,24 @@ function Panel({
             className="max-w-md"
             style={{
               opacity: visible ? 1 : 0,
-              transform: visible ? "translateY(0)" : "translateY(10px)",
-              transition: "opacity 600ms ease-out 100ms, transform 600ms ease-out 100ms",
+              transform: visible ? "translateY(0)" : `translateY(${DISTANCE.md}px)`,
+              transition: `opacity ${DURATION.normal}ms ${EASE.default} 100ms, transform ${DURATION.normal}ms ${EASE.default} 100ms`,
+              willChange: "opacity, transform",
             }}
           >
             {/* Step counter + label */}
             <div className="flex items-center gap-4 mb-4">
-              <span
-                className="text-[10px] font-mono tracking-[0.2em] uppercase"
-                style={{ color: "rgba(198,168,107,0.3)" }}
-              >
+              <span className="text-[10px] font-mono tracking-[0.2em] uppercase text-accent/30">
                 {String(index + 1).padStart(2, "0")}
               </span>
-              <div className="w-6 h-px" style={{ backgroundColor: "rgba(198,168,107,0.15)" }} />
-              <span
-                className="text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase"
-                style={{ color: "rgba(198,168,107,0.45)" }}
-              >
+              <div className="w-6 h-px bg-accent/15" />
+              <span className="text-[10px] sm:text-[11px] font-mono tracking-[0.3em] uppercase text-accent/45">
                 {label}
               </span>
             </div>
 
             {/* Description */}
-            <p
-              className="font-serif text-lg sm:text-xl lg:text-2xl italic leading-relaxed tracking-[0.01em]"
-              style={{ color: "rgba(245,240,232,0.6)" }}
-            >
+            <p className="font-serif text-lg sm:text-xl lg:text-2xl italic leading-relaxed tracking-[0.01em] text-foreground/60">
               "{line}"
             </p>
           </div>

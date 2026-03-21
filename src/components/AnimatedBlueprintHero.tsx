@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 /**
  * AnimatedBlueprintHero — A fully procedural, self-drawing architectural
@@ -247,11 +248,7 @@ function MeasurementNodes() {
 
 /* ── Main export ──────────────────────────────────── */
 export function AnimatedBlueprintHero({ className }: { className?: string }) {
-  const [reducedMotion, setReducedMotion] = useState(false);
-
-  useEffect(() => {
-    setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  }, []);
+  const reducedMotion = useReducedMotion();
 
   if (reducedMotion) {
     return (
