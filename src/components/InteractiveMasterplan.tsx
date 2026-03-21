@@ -214,14 +214,30 @@ function getCenter(path: string): { x: number; y: number } {
   };
 }
 
+/* ── Touch detection ──────────────────────────────────── */
+function useIsTouchDevice() {
+  const [isTouch, setIsTouch] = useState(false);
+  useEffect(() => {
+    setIsTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
+  }, []);
+  return isTouch;
+}
+
 /* ── Main export ──────────────────────────────────────── */
 export function InteractiveMasterplan() {
   usePreloadImages(Object.values(ZONE_IMAGES));
   const [activeZone, setActiveZone] = useState<string | null>(null);
   const activeZoneData = zones.find((z) => z.id === activeZone) || null;
+  const isTouch = useIsTouchDevice();
 
-  const handleHover = useCallback((id: string) => setActiveZone(id), []);
-  const handleLeave = useCallback(() => setActiveZone(null), []);
+  const handleHover = useCallback((id: string) => {
+    if (!isTouch) setActiveZone(id);
+  }, [isTouch]);
+
+  const handleLeave = useCallback(() => {
+    if (!isTouch) setActiveZone(null);
+  }, [isTouch]);
+
   const handleTap = useCallback((id: string) => {
     setActiveZone((prev) => (prev === id ? null : id));
   }, []);
@@ -267,7 +283,7 @@ export function InteractiveMasterplan() {
                 }}
               >
                 <p className="text-xs font-mono uppercase tracking-[0.3em] text-accent/25">
-                  Tap or hover a zone to explore
+                  {isTouch ? "Tap a zone to explore" : "Hover a zone to explore"}
                 </p>
               </div>
               <DetailCard zone={activeZoneData} visible={!!activeZone} />
