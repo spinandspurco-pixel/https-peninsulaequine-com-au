@@ -410,9 +410,11 @@ export function GroundLockSystemLayout() {
             transition: `opacity ${DURATION.normal}ms ${EASE.default}`,
           }}
         >
-          <div className="space-y-10 py-4">
+          <div className="space-y-14 py-6">
             <PanelSpecimen />
+            <div className="w-12 h-px bg-accent/10 mx-auto" />
             <PanelArray />
+            <div className="w-12 h-px bg-accent/10 mx-auto" />
             <PanelSiteLayout />
           </div>
         </div>
