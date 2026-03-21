@@ -168,7 +168,7 @@ export default function Process() {
 
             <RevealOnScroll direction="up" delay={400}>
               <p className="text-center text-[11px] text-muted-foreground/25 italic mt-14">
-                Every project is unique. Timelines vary by scope and specification.
+                Timelines vary by scope and specification.
               </p>
             </RevealOnScroll>
           </div>
