@@ -92,8 +92,7 @@ export default function Services() {
             className="mt-8 text-muted-foreground/45 text-sm sm:text-base max-w-md mx-auto leading-relaxed opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
-            Projects range from focused infrastructure builds<br />
-            to fully integrated property systems.
+            Focused builds to fully integrated property systems.
           </p>
         </div>
       </section>
