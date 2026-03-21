@@ -6,7 +6,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LoadingSplash } from "@/components/LoadingSplash";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-import { useCartSync } from "./hooks/useCartSync";
 import { IntroContext } from "./hooks/useIntroState";
 
 // Eagerly load the homepage for fastest FCP
@@ -68,7 +67,7 @@ const queryClient = new QueryClient();
 function AppContent() {
   const [splashDone, setSplashDone] = useState(false);
   const [headerLogoReady, setHeaderLogoReady] = useState(false);
-  useCartSync();
+  
 
   const handleLogoSettled = useCallback(() => {
     // Wait until splash has fully faded out before revealing header logo
