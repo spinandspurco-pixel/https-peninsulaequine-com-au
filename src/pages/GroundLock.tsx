@@ -315,7 +315,140 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ SECTION 4 — APPLICATIONS ═════════════════════ */}
+      {/* ═══ COMPARISON — Standard vs GroundLock ══════════ */}
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-28 sm:py-36 lg:py-44 bg-primary relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-5xl mx-auto relative z-[1]">
+            {/* Heading */}
+            <div className="text-center mb-16 sm:mb-20">
+              <RevealOnScroll direction="up">
+                <RevealLine className="mx-auto mb-10" width="w-10" />
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={80}>
+                <p className="text-overline text-primary-foreground/30 mb-5">Positioning</p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={120}>
+                <h2 className="heading-section text-primary-foreground">
+                  A Different Kind of System
+                </h2>
+              </RevealOnScroll>
+            </div>
+
+            {/* Two-column comparison */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0 relative">
+              {/* Vertical divider — desktop only */}
+              <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-primary-foreground/6" />
+
+              {/* LEFT — Standard Systems */}
+              <RevealOnScroll direction="none" delay={100}>
+                <div className="p-8 sm:p-10 lg:p-12 md:pr-14">
+                  {/* Flat grid visual — desaturated, softened */}
+                  <div className="mb-8 flex justify-center">
+                    <svg viewBox="0 0 160 100" className="w-full max-w-[200px] h-auto" style={{ filter: "blur(0.4px)" }}>
+                      <defs>
+                        <linearGradient id="std-fill" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="hsl(var(--primary-foreground))" stopOpacity="0.06" />
+                          <stop offset="100%" stopColor="hsl(var(--primary-foreground))" stopOpacity="0.02" />
+                        </linearGradient>
+                      </defs>
+                      {/* Repetitive identical rectangles — flat grid */}
+                      {Array.from({ length: 4 }).map((_, r) =>
+                        Array.from({ length: 5 }).map((_, c) => (
+                          <rect
+                            key={`${r}-${c}`}
+                            x={4 + c * 31}
+                            y={4 + r * 24}
+                            width={28}
+                            height={20}
+                            rx={1.5}
+                            fill="url(#std-fill)"
+                            stroke="hsl(var(--primary-foreground) / 0.08)"
+                            strokeWidth={0.5}
+                          />
+                        ))
+                      )}
+                    </svg>
+                  </div>
+
+                  <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-primary-foreground/25 mb-6">
+                    Standard Systems
+                  </p>
+
+                  <div className="space-y-4">
+                    {[
+                      "Repetitive grid layout",
+                      "Limited structural intelligence",
+                      "Surface-level modularity",
+                    ].map((point) => (
+                      <div key={point} className="flex items-start gap-3">
+                        <span className="w-1 h-1 rounded-full bg-primary-foreground/12 mt-1.5 shrink-0" />
+                        <p className="text-[11px] sm:text-xs text-primary-foreground/25 leading-[1.6]">
+                          {point}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </RevealOnScroll>
+
+              {/* Horizontal divider — mobile only */}
+              <div className="md:hidden w-3/4 mx-auto h-px bg-primary-foreground/6" />
+
+              {/* RIGHT — GroundLock System */}
+              <RevealOnScroll direction="none" delay={300}>
+                <div className="p-8 sm:p-10 lg:p-12 md:pl-14">
+                  {/* Interlocking system visual — full contrast */}
+                  <div className="mb-8 flex justify-center">
+                    <svg viewBox="0 0 180 100" className="w-full max-w-[220px] h-auto">
+                      <PanelDefs id="cmp" />
+                      {[0, 1, 2, 3].map((c) =>
+                        [0, 1].map((r) => {
+                          const dir: "up" | "down" = (r + c) % 2 === 0 ? "up" : "down";
+                          return (
+                            <GroundLockPanelSVG
+                              key={`${r}-${c}`}
+                              x={6 + c * 38}
+                              y={4 + r * 42}
+                              scale={0.42}
+                              direction={dir}
+                              active
+                              showTabs
+                              showJoins
+                              defsId="cmp"
+                            />
+                          );
+                        })
+                      )}
+                    </svg>
+                  </div>
+
+                  <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-accent/50 mb-6">
+                    GroundLock™ System
+                  </p>
+
+                  <div className="space-y-4">
+                    {[
+                      "Alternating interlock geometry",
+                      "Engineered load distribution",
+                      "Designed for system integrity",
+                    ].map((point) => (
+                      <div key={point} className="flex items-start gap-3">
+                        <span className="w-1 h-1 rounded-full bg-accent/35 mt-1.5 shrink-0" />
+                        <p className="text-[11px] sm:text-xs text-primary-foreground/45 leading-[1.6]">
+                          {point}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </RevealOnScroll>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-20 sm:py-28 bg-card relative">
