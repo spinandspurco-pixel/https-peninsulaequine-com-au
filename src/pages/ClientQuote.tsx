@@ -187,7 +187,7 @@ export default function ClientQuote() {
             <p className="text-[10px] font-mono text-muted-foreground/25 tracking-wider">{quote.quote_number}</p>
           </div>
           {accepted ? (
-            <div className="flex items-center gap-2 text-green-400/70">
+            <div className="flex items-center gap-2 text-accent/70">
               <Check className="w-3.5 h-3.5" />
               <span className="text-[10px] font-mono uppercase tracking-[0.15em]">Accepted</span>
             </div>
