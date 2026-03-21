@@ -12,6 +12,7 @@ import { InteractiveMasterplan } from "@/components/InteractiveMasterplan";
 import { WalkTheProject } from "@/components/WalkTheProject";
 import { BuildIntelligence } from "@/components/BuildIntelligence";
 import { DetailMatters } from "@/components/DetailMatters";
+import { ViewingLine } from "@/components/ViewingLine";
 
 // ── 1. HERO ──
 // Hero image now handled by ProjectsCinematicHero component
@@ -467,6 +468,9 @@ export default function Gallery() {
           </div>
         </div>
       </section>
+
+      {/* ── THE VIEWING LINE — cinematic closer ── */}
+      <ViewingLine />
 
       {/* Lightbox */}
       <GalleryLightbox
