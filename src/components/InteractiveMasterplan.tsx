@@ -148,6 +148,23 @@ function SitePlan({
         <pattern id="mp-hatch-dense" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <line x1="0" y1="0" x2="0" y2="3" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.04" />
         </pattern>
+        {/* Material fills — arena sand texture */}
+        <pattern id="mp-sand" width="4" height="4" patternUnits="userSpaceOnUse">
+          <rect width="4" height="4" fill="hsl(35 20% 18% / 0.4)" />
+          <circle cx="1" cy="1" r="0.3" fill="hsl(35 15% 25% / 0.15)" />
+          <circle cx="3" cy="3" r="0.25" fill="hsl(35 15% 22% / 0.1)" />
+        </pattern>
+        {/* Material fills — building solid warm */}
+        <pattern id="mp-building" width="8" height="8" patternUnits="userSpaceOnUse">
+          <rect width="8" height="8" fill="hsl(30 12% 16% / 0.5)" />
+          <line x1="0" y1="8" x2="8" y2="8" stroke="hsl(30 10% 22% / 0.06)" strokeWidth="0.3" />
+        </pattern>
+        {/* Material fills — courtyard paving */}
+        <pattern id="mp-paving" width="6" height="6" patternUnits="userSpaceOnUse">
+          <rect width="6" height="6" fill="hsl(25 8% 15% / 0.35)" />
+          <line x1="3" y1="0" x2="3" y2="6" stroke="hsl(25 8% 20% / 0.04)" strokeWidth="0.2" />
+          <line x1="0" y1="3" x2="6" y2="3" stroke="hsl(25 8% 20% / 0.04)" strokeWidth="0.2" />
+        </pattern>
         <filter id="mp-glow">
           <feGaussianBlur stdDeviation="3" result="blur" />
           <feFlood floodColor="hsl(var(--accent))" floodOpacity="0.15" result="color" />
