@@ -218,7 +218,7 @@ export default function Forge() {
                 rural properties.
               </p>
               <p className="mt-8 text-[12px] text-muted-foreground/20 leading-[2] italic font-serif">
-                Not a catalogue. A product division.
+                Not a catalogue. A systems division.
               </p>
             </RevealOnScroll>
           </div>
