@@ -157,7 +157,7 @@ export function GroundLockCrossSection() {
         })}
       </div>
       <p className="text-[10px] text-muted-foreground/25 font-mono text-center mb-10 tracking-wide">
-        Used under arenas, access routes, and high-traffic zones where failure isn't an option.
+        Built and installed in real projects
       </p>
 
       <div className="relative" style={{ aspectRatio: "700 / 420" }}>
