@@ -48,8 +48,8 @@ interface Template {
   items: any[];
 }
 
-const CATEGORIES = ["earthworks", "groundlock", "fencing", "construction", "drainage", "surface", "services", "logistics", "general"];
-const UNITS = ["m²", "m³", "lm", "each", "stall", "allow", "hour", "day", "lot"];
+const CATEGORIES = ["earthworks", "ground-systems", "fencing", "construction", "drainage", "surface", "services", "logistics", "general"];
+const UNITS = ["system", "zone", "lm", "each", "stall", "allow", "hour", "day", "lot"];
 const STATUSES = [
   { value: "draft", label: "Draft" },
   { value: "internal_review", label: "Internal Review" },

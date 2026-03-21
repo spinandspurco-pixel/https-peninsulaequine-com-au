@@ -58,8 +58,8 @@ export default function Shop() {
           <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
             {GROUNDLOCK_PRODUCTS.map((product) => {
               const tierMeta = GROUNDLOCK_TIERS[product.tier];
-              const isPro = product.tier === "pro";
-              const isComplete = product.tier === "complete";
+              const isPro = product.tier === "performance";
+              const isComplete = product.tier === "estate";
 
               return (
                 <div
@@ -91,15 +91,9 @@ export default function Shop() {
                       <p className="text-sm text-muted-foreground leading-relaxed">{product.headline}</p>
                     </div>
 
-                    <div className="space-y-1">
-                      {product.compareAtPrice && (
-                        <p className="text-sm text-muted-foreground line-through">
-                          ${product.compareAtPrice.toLocaleString("en-AU")}
-                        </p>
-                      )}
-                      <p className="text-3xl font-serif text-accent">
-                        ${product.price.toLocaleString("en-AU")}
-                        <span className="text-sm text-muted-foreground ml-1">AUD</span>
+                    <div className="pt-2">
+                      <p className="text-sm text-muted-foreground italic">
+                        Project-based pricing
                       </p>
                     </div>
 
@@ -156,7 +150,7 @@ export default function Shop() {
                 </div>
                 <h3 className="font-serif text-lg">{addon.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{addon.description}</p>
-                <p className="font-semibold text-accent">${addon.price.toLocaleString("en-AU")} AUD</p>
+                <p className="text-sm text-muted-foreground/60 italic">Available on request</p>
               </div>
             ))}
           </div>

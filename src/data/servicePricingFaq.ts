@@ -16,8 +16,8 @@ export interface ServiceFaq {
 export const servicePricingTiers: Record<string, PricingTier[]> = {
   "arena-construction": [
     { name: "Essential", price: "$65,000+", description: "Outdoor arena with quality footing", features: ["Up to 20×40m arena", "Engineered base preparation & grading", "Quality sand footing blend", "Ag-pipe drainage network"] },
-    { name: "Professional", price: "$150,000+", description: "Full-spec training arena", features: ["Up to 40×60m arena", "Engineered drainage system", "Premium footing blend", "Dust control system", "Timber perimeter fencing", "LED lighting"], popular: true },
-    { name: "Competition", price: "$350,000+", description: "Competition-grade covered arena", features: ["60×80m+ covered arena structure", "All-weather premium footing", "Full LED lighting & PA infrastructure", "Spectator viewing areas", "Warm-up zone integration", "Council approvals managed"] },
+    { name: "Professional", price: "$150,000+", description: "Full-spec training arena", features: ["Up to 40×60m arena", "Ground stabilisation system integrated across key zones", "Premium footing blend", "Dust control system", "Timber perimeter fencing", "LED lighting"], popular: true },
+    { name: "Competition", price: "$350,000+", description: "Competition-grade covered arena", features: ["60×80m+ covered arena structure", "Full GroundLock\u2122 system integration", "All-weather premium footing", "Full LED lighting & PA infrastructure", "Spectator viewing areas", "Warm-up zone integration", "Council approvals managed"] },
   ],
   "barn-construction": [
     { name: "Starter", price: "$95,000+", description: "Functional 4-stall barn", features: ["4 stalls (3.6×3.6m)", "Central breezeway aisle", "Basic tack room", "Natural cross-ventilation", "Rubber stall matting"] },
@@ -31,8 +31,8 @@ export const servicePricingTiers: Record<string, PricingTier[]> = {
   ],
   "infrastructure": [
     { name: "Essentials", price: "$35,000+", description: "Basic site preparation", features: ["Land clearing & levelling", "Access road (up to 100m)", "Basic ag-pipe drainage"] },
-    { name: "Full Site", price: "$100,000+", description: "Complete site infrastructure", features: ["Cut-and-fill grading & contouring", "Engineered drainage network", "Water supply & trough lines", "Electrical conduit runs", "Gravel/compacted access roads"], popular: true },
-    { name: "Turnkey", price: "$220,000+", description: "End-to-end property setup", features: ["All Full Site features", "Bore/well installation", "Landscaping & revegetation", "Site-wide LED lighting", "Waste management systems", "Full council & engineering management"] },
+    { name: "Full Site", price: "$100,000+", description: "Complete site infrastructure", features: ["Cut-and-fill grading & contouring", "Ground stabilisation system for high-traffic zones", "Water supply & trough lines", "Electrical conduit runs", "Gravel/compacted access roads"], popular: true },
+    { name: "Turnkey", price: "$220,000+", description: "End-to-end property setup", features: ["All Full Site features", "Full GroundLock\u2122 system across all zones", "Bore/well installation", "Landscaping & revegetation", "Site-wide LED lighting", "Waste management systems", "Full council & engineering management"] },
   ],
   "round-pens": [
     { name: "Portable", price: "$12,000+", description: "Portable panel round pen", features: ["15m diameter", "Heavy-duty steel panel construction", "Single gate", "Portable / relocatable"] },
