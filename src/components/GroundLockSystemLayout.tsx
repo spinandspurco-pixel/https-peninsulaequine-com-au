@@ -1,9 +1,8 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { DURATION, EASE } from "@/lib/motion";
+import { PanelSpecimen, PanelArray, PanelSiteLayout } from "@/components/groundlock/GroundLockSystemSVG";
 
-import horseshoeRealworld from "@/assets/groundlock-horseshoe-realworld.jpg";
-
-type ViewMode = "system" | "realworld";
+type ViewMode = "system" | "panels";
 
 /* ── Zone data ────────────────────────────────────────── */
 interface Zone {
@@ -19,14 +18,6 @@ const zones: Zone[] = [
   { id: "courtyard", label: "Central Spine", sublabel: "Connective axis" },
   { id: "exit", label: "Service Exit", sublabel: "Egress & utility access" },
 ];
-
-/* ── Preload the real-world image ─────────────────────── */
-function usePreload(src: string) {
-  useEffect(() => {
-    const img = new Image();
-    img.src = src;
-  }, [src]);
-}
 
 /* ── Stable hover hook (debounced leave) ──────────────── */
 function useStableHover() {
@@ -111,8 +102,6 @@ export function GroundLockSystemLayout() {
   const [viewMode, setViewMode] = useState<ViewMode>("system");
   const activeData = zones.find((z) => z.id === activeZone) || null;
 
-  usePreload(horseshoeRealworld);
-
   const isActive = (id: string) => activeZone === id;
   const isDimmed = (id: string) => activeZone !== null && activeZone !== id;
 
@@ -142,7 +131,7 @@ export function GroundLockSystemLayout() {
       <div className="flex items-center justify-center gap-1 sm:gap-2 mb-3">
         {([
           { key: "system" as ViewMode, label: "System View" },
-          { key: "realworld" as ViewMode, label: "Real World" },
+          { key: "panels" as ViewMode, label: "Panel System" },
         ]).map((v) => {
           const active = viewMode === v.key;
           return (
@@ -169,7 +158,7 @@ export function GroundLockSystemLayout() {
         })}
       </div>
       <p className="text-[10px] text-muted-foreground/25 font-mono text-center mb-10 tracking-wide">
-        {viewMode === "system" ? "Hover or tap zones to explore" : "As designed and built on site"}
+        {viewMode === "system" ? "Hover or tap zones to explore" : "Panel → Array → System"}
       </p>
 
       <div className="max-w-lg mx-auto relative" style={{ aspectRatio: "600 / 500" }}>
@@ -412,36 +401,19 @@ export function GroundLockSystemLayout() {
           </svg>
         </div>
 
-        {/* Real World View */}
+        {/* Panel System View */}
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 overflow-y-auto"
           style={{
-            opacity: viewMode === "realworld" ? 1 : 0,
-            pointerEvents: viewMode === "realworld" ? "auto" : "none",
+            opacity: viewMode === "panels" ? 1 : 0,
+            pointerEvents: viewMode === "panels" ? "auto" : "none",
             transition: `opacity ${DURATION.normal}ms ${EASE.default}`,
           }}
         >
-          <div className="relative w-full h-full overflow-hidden rounded-sm">
-            <img
-              src={horseshoeRealworld}
-              alt="GroundLock horseshoe system — aerial site visualisation"
-              className="absolute inset-0 w-full h-full object-cover"
-              loading="eager"
-            />
-            <div
-              className="absolute inset-0"
-              style={{ background: "linear-gradient(to top, hsl(var(--background) / 0.5) 0%, transparent 40%)" }}
-            />
-            {/* Zone labels over image */}
-            <div className="absolute inset-0 flex flex-col items-center justify-end pb-4 pointer-events-none">
-              <div className="flex items-center gap-4 flex-wrap justify-center">
-                {["Arena", "Stables", "Courtyard", "Entry", "Service"].map((label) => (
-                  <span key={label} className="text-[8px] sm:text-[9px] font-mono uppercase tracking-[0.2em] text-accent/35 px-2 py-1 border border-accent/10 rounded-sm bg-background/40 backdrop-blur-sm">
-                    {label}
-                  </span>
-                ))}
-              </div>
-            </div>
+          <div className="space-y-10 py-4">
+            <PanelSpecimen />
+            <PanelArray />
+            <PanelSiteLayout />
           </div>
         </div>
       </div>
@@ -457,7 +429,7 @@ export function GroundLockSystemLayout() {
         >
           {viewMode === "system"
             ? (activeZone ? (activeData?.sublabel ?? "") : "Hover or tap a zone to explore")
-            : "Used under arenas, access routes, and high-traffic zones"
+            : "Horseshoe panels — engineered to interlock"
           }
         </p>
       </div>
