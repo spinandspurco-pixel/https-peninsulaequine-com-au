@@ -36,8 +36,13 @@ export default function Shop() {
             className="text-sm text-muted-foreground/40 max-w-md mx-auto opacity-0 animate-fade-in leading-[1.9]"
             style={{ animationDelay: "1000ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
-            We don't sell products.<br />
-            We provide access to systems and components used across our builds.
+            What sits underneath determines how everything performs.
+          </p>
+          <p
+            className="text-[13px] text-muted-foreground/30 max-w-md mx-auto opacity-0 animate-fade-in leading-[1.9]"
+            style={{ animationDelay: "1300ms", animationFillMode: "both", animationDuration: "1000ms" }}
+          >
+            We provide access to the systems and components used across our builds.
           </p>
         </div>
       </section>
