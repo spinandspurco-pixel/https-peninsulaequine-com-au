@@ -3,14 +3,14 @@ import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 
 /* ── Zone images ──────────────────────────────────── */
-import imgArena from "@/assets/main-ridge-arena-grading.jpg";
+import imgIndoor from "@/assets/walk-arena.jpg";
 import imgStables from "@/assets/walk-stables.jpg";
 import imgCourtyard from "@/assets/walk-courtyard.jpg";
 import imgLoft from "@/assets/walk-loft.jpg";
-import imgOutdoor from "@/assets/walk-arena.jpg";
+import imgOutdoor from "@/assets/walk-outdoor-arena.jpg";
 
 const ZONE_IMAGES: Record<string, string> = {
-  "indoor-arena": imgArena,
+  "indoor-arena": imgIndoor,
   "outdoor-arena": imgOutdoor,
   stables: imgStables,
   courtyard: imgCourtyard,
