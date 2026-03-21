@@ -12,7 +12,6 @@ const navigation = [
   { name: "Services", href: "/services" },
   { name: "GroundLock™", href: "/groundlock" },
   { name: "About", href: "/about" },
-  { name: "Contact", href: "/contact" },
   { name: "Equus Ridge", href: "/equus-ridge", subtle: true },
 ];
 
@@ -103,13 +102,19 @@ export function Header() {
           </div>
 
           {/* CTA */}
-          <div className="hidden lg:flex items-center gap-5">
+          <div className="hidden lg:flex items-center gap-4">
+            <Link
+              to="/contact"
+              className="text-[10px] uppercase tracking-[0.18em] text-[hsl(var(--header-foreground))]/50 hover:text-[hsl(var(--header-foreground))] transition-opacity duration-300"
+            >
+              Contact
+            </Link>
             <Button
               asChild
               variant="gold"
               size="sm"
             >
-              <Link to="/contact">Discuss Project</Link>
+              <Link to="/site-assessment">Start a Project</Link>
             </Button>
           </div>
 

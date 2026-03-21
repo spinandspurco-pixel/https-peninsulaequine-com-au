@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Layers, Fence, Home, Mountain, Shovel, Wrench, ChevronRight } from "lucide-react";
 import { InteractiveLayerStack } from "@/components/InteractiveLayerStack";
+import { ConversionBridge } from "@/components/ConversionBridge";
 import { cn } from "@/lib/utils";
 
 // Video
@@ -253,6 +254,16 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ── Conversion Bridge 1 ──────────────────── */}
+      <ConversionBridge
+        label="Every project starts here"
+        heading="Book a complimentary site reading."
+        subtext="We assess your property's terrain, drainage, and access before recommending any system or build."
+        ctaLabel="Assess My Site"
+        ctaHref="/site-assessment"
+        trustLine="50+ properties assessed across the Mornington Peninsula"
+      />
+
       {/* ═══ 3. PROJECTS — HORIZONTAL SCROLL ═══════════════ */}
       <section className="relative overflow-hidden">
         <div className="py-32 sm:py-40 lg:py-48 relative">
@@ -286,6 +297,17 @@ export default function Index() {
           </div>
         </div>
       </section>
+
+      {/* ── Conversion Bridge 2 ──────────────────── */}
+      <ConversionBridge
+        variant="accent"
+        label="From concept to completion"
+        heading="Discuss your project with our team."
+        subtext="Whether it's a single arena or a full property build — we scope it properly before quoting."
+        ctaLabel="Discuss Project"
+        ctaHref="/contact"
+        trustLine="Limited projects accepted per season"
+      />
 
       {/* ═══ 4. SERVICES — WHAT WE BUILD ═══════════════════ */}
       <section className="relative overflow-hidden">
@@ -333,6 +355,26 @@ export default function Index() {
               </div>
             </RevealOnScroll>
           </div>
+        </div>
+      </section>
+
+      {/* ── Trust Strip ──────────────────────────── */}
+      <section className="py-16 sm:py-20 border-t border-border/10">
+        <div className="section-container max-w-4xl mx-auto">
+          <RevealOnScroll direction="up">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-10 sm:gap-16 text-center">
+              {[
+                { stat: "50+", label: "Properties Built" },
+                { stat: "15+", label: "Years Experience" },
+                { stat: "100%", label: "Owner-Operated" },
+              ].map((item) => (
+                <div key={item.label} className="flex flex-col items-center gap-2">
+                  <span className="font-serif text-2xl sm:text-3xl font-light text-foreground/60">{item.stat}</span>
+                  <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-muted-foreground/30">{item.label}</span>
+                </div>
+              ))}
+            </div>
+          </RevealOnScroll>
         </div>
       </section>
 
