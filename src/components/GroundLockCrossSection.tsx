@@ -2,6 +2,11 @@ import { useState, useCallback } from "react";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { DURATION, EASE } from "@/lib/motion";
 
+import foundationPour from "@/assets/main-ridge-foundation-pour.jpg";
+import rebarDeep from "@/assets/rebar-foundation-deep.jpg";
+
+type ViewMode = "system" | "realworld";
+
 /* ── Layer data (bottom → top) ────────────────────────── */
 interface Layer {
   id: string;
