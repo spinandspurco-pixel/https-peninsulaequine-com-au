@@ -1,8 +1,23 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 
-/* ── Zone data ────────────────────────────────────────── */
+/* ── Zone images ──────────────────────────────────── */
+import imgArena from "@/assets/main-ridge-arena-grading.jpg";
+import imgStables from "@/assets/walk-stables.jpg";
+import imgCourtyard from "@/assets/walk-courtyard.jpg";
+import imgLoft from "@/assets/walk-loft.jpg";
+import imgOutdoor from "@/assets/walk-arena.jpg";
+
+const ZONE_IMAGES: Record<string, string> = {
+  "indoor-arena": imgArena,
+  "outdoor-arena": imgOutdoor,
+  stables: imgStables,
+  courtyard: imgCourtyard,
+  "viewing-loft": imgLoft,
+};
+
+/* ── Zone data ────────────────────────────────────── */
 interface Zone {
   id: string;
   label: string;
@@ -43,8 +58,27 @@ const zones: Zone[] = [
   },
 ];
 
-/* ── Floating detail card ─────────────────────────────── */
+/* ── Preload zone images on mount ─────────────────── */
+function usePreloadImages(srcs: string[]) {
+  const loaded = useRef(false);
+  useEffect(() => {
+    if (loaded.current) return;
+    loaded.current = true;
+    srcs.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+}
+
+/* ── Floating detail card ─────────────────────────── */
 function DetailCard({ zone, visible }: { zone: Zone | null; visible: boolean }) {
+  const imgSrc = zone ? ZONE_IMAGES[zone.id] : null;
+  const [imgError, setImgError] = useState(false);
+
+  // Reset error state when zone changes
+  useEffect(() => { setImgError(false); }, [zone?.id]);
+
   return (
     <div
       className="pointer-events-none"
@@ -60,12 +94,20 @@ function DetailCard({ zone, visible }: { zone: Zone | null; visible: boolean }) 
           className="border border-accent/12 bg-card/85 backdrop-blur-md rounded-sm p-5 sm:p-6 max-w-[260px]"
           style={{ boxShadow: "0 8px 32px -8px hsl(var(--accent) / 0.08), 0 2px 8px -2px hsl(var(--background) / 0.4)" }}
         >
-          <div className="w-full aspect-[16/10] bg-accent/[0.03] border border-accent/8 rounded-sm mb-3.5 flex items-center justify-center">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.8" className="text-accent/15">
-              <rect x="3" y="3" width="18" height="18" rx="1" />
-              <circle cx="8.5" cy="8.5" r="1.5" />
-              <path d="M21 15l-5-5L5 21" />
-            </svg>
+          <div className="w-full aspect-[16/10] bg-accent/[0.03] border border-accent/8 rounded-sm mb-3.5 overflow-hidden relative">
+            {imgSrc && !imgError ? (
+              <img
+                src={imgSrc}
+                alt={zone.label}
+                className="absolute inset-0 w-full h-full object-cover"
+                onError={() => setImgError(true)}
+                loading="eager"
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center bg-muted/30">
+                <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/25">{zone.label}</span>
+              </div>
+            )}
           </div>
           <h3 className="font-serif text-base sm:text-lg text-foreground/90 tracking-[0.02em] mb-1.5">
             {zone.label}
@@ -174,6 +216,7 @@ function getCenter(path: string): { x: number; y: number } {
 
 /* ── Main export ──────────────────────────────────────── */
 export function InteractiveMasterplan() {
+  usePreloadImages(Object.values(ZONE_IMAGES));
   const [activeZone, setActiveZone] = useState<string | null>(null);
   const activeZoneData = zones.find((z) => z.id === activeZone) || null;
 
