@@ -645,7 +645,7 @@ export function InteractiveMasterplan() {
               )}
             </div>
           </div>
-        </RevealOnScroll>
+        </div>
       </div>
     </section>
   );
