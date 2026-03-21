@@ -99,38 +99,42 @@ export default function Shop() {
         </div>
       </section>
 
-      {/* ─── SECTION 3 — SYSTEM EXTENSIONS ─── */}
+      {/* ─── SECTION 3 — FOR BUILDERS ─── */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-24 sm:py-32 bg-background relative">
+        <div className="py-28 sm:py-36 bg-background relative">
           <div className="absolute inset-0 grain-texture" />
 
           <div className="section-container relative z-[1]">
             <RevealOnScroll direction="up">
-              <div className="text-center max-w-md mx-auto mb-16 space-y-4">
-                <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/50">Components</p>
-                <h2 className="font-serif text-2xl md:text-3xl text-foreground/90">
-                  System Extensions
-                </h2>
-                <p className="text-sm text-muted-foreground/35 leading-[1.9]">
-                  Integrated as part of the system specification — not sold separately.
+              <div className="text-center max-w-md mx-auto flex flex-col items-center gap-6">
+                <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/30">
+                  Partner Access
                 </p>
+
+                <h2 className="font-serif text-2xl md:text-3xl text-foreground/85">
+                  For Builders
+                </h2>
+
+                <p className="text-sm text-muted-foreground/40 leading-[1.9]">
+                  GroundLock is available for select builders and projects.
+                </p>
+
+                <p className="text-[13px] text-muted-foreground/30 leading-[1.9] max-w-sm">
+                  We provide system supply, guidance, and structured implementation for approved partners.
+                </p>
+
+                <div className="w-10 h-px bg-border/20 my-2" />
+
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.15em] text-muted-foreground/40 hover:text-accent/60 transition-colors group"
+                >
+                  Enquire About GroundLock Use
+                  <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
+                </Link>
               </div>
             </RevealOnScroll>
-
-            <div className="grid sm:grid-cols-3 gap-8 max-w-3xl mx-auto">
-              {GROUNDLOCK_ADDONS.map((addon, i) => (
-                <RevealOnScroll key={addon.handle} direction="up" delay={i * 120}>
-                  <div className="space-y-4">
-                    <Wrench className="w-4 h-4 text-accent/30" strokeWidth={1.25} />
-                    <h3 className="font-serif text-base text-foreground/80">{addon.title}</h3>
-                    <p className="text-[13px] text-muted-foreground/35 leading-[1.8]">
-                      {addon.description}
-                    </p>
-                  </div>
-                </RevealOnScroll>
-              ))}
-            </div>
           </div>
         </div>
       </section>
