@@ -36,7 +36,7 @@ const DIVISIONS = [
     title: "GroundLock Systems",
     role: "Systems Division",
     body: "Ground stabilisation systems, hardware, and GroundLock configurations — fabricated to Peninsula Equine tolerances, available as standalone products.",
-    cta: "Explore Forge",
+    cta: "Explore Systems",
     href: "/forge",
   },
 ];
