@@ -146,7 +146,7 @@ export default function GroundLock() {
               >
                 <PanelDefs id="hero" />
                 {/* Subtle top-edge bevel highlight */}
-                <GroundLockPanelSVG x={8} y={6} scale={1.22} active showTabs defsId="hero" direction="up" />
+                <GroundLockPanelSVG x={8} y={6} scale={1.22} active showTabs showJoins defsId="hero" direction="up" />
                 <path
                   d="M 32 28 A 34 36 0 0 1 88 28"
                   fill="none"
@@ -206,15 +206,13 @@ export default function GroundLock() {
               </RevealOnScroll>
             </div>
 
-            <RevealOnScroll direction="up" delay={200}>
-              <div className="space-y-14">
-                <PanelSpecimen />
-                <div className="w-10 h-px bg-accent/8 mx-auto" />
-                <LockSequence />
-                <div className="w-10 h-px bg-accent/8 mx-auto" />
-                <SystemDiagram />
-              </div>
-            </RevealOnScroll>
+            <div className="space-y-16 sm:space-y-20">
+              <PanelSpecimen />
+              <div className="w-10 h-px bg-accent/8 mx-auto" />
+              <LockSequence />
+              <div className="w-10 h-px bg-accent/8 mx-auto" />
+              <SystemDiagram />
+            </div>
           </div>
         </div>
       </section>
