@@ -88,8 +88,8 @@ export const services = [
   {
     id: "round-pens",
     title: "Round Pens & Paddocks",
-    shortDescription: "Training spaces that support natural horsemanship.",
-    description: "Purpose-built round pens and paddocks for groundwork, turnout, and rehabilitation. Sized and surfaced to your specific needs.",
+    shortDescription: "Round pens and paddocks configured for groundwork and turnout.",
+    description: "Sized and surfaced to your specific needs.",
     features: [
       "Custom diameter options",
       "Portable and permanent designs",
