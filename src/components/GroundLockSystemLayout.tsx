@@ -19,14 +19,6 @@ const zones: Zone[] = [
   { id: "exit", label: "Service Exit", sublabel: "Egress & utility access" },
 ];
 
-/* ── Preload the real-world image ─────────────────────── */
-function usePreload(src: string) {
-  useEffect(() => {
-    const img = new Image();
-    img.src = src;
-  }, [src]);
-}
-
 /* ── Stable hover hook (debounced leave) ──────────────── */
 function useStableHover() {
   const [active, setActive] = useState<string | null>(null);
