@@ -34,12 +34,12 @@ const PROJECTS = [
 ];
 
 const SERVICES = [
-  { icon: Mountain, title: "Arenas", desc: "Precision-graded surfaces engineered for consistent footing, drainage performance, and long-term use.", href: "/services" },
-  { icon: Fence, title: "Fencing & Yards", desc: "Post-and-rail, steel, and custom configurations shaped around horse movement and property flow.", href: "/services" },
-  { icon: Home, title: "Stables & Barns", desc: "Structures designed around equine behaviour — airflow, sightlines, workflow, and longevity.", href: "/services" },
-  { icon: Layers, title: "GroundLock Entry Systems", desc: "Interlocking ground stabilisation for entries, laneways, and high-traffic arrival zones.", href: "/groundlock" },
-  { icon: Shovel, title: "Earthworks & Drainage", desc: "Sub-base profiling and drainage mapping shaped by how the site actually moves water.", href: "/services" },
-  { icon: Wrench, title: "Custom Infrastructure", desc: "Wash bays, float hardstands, pavilions, and bespoke rural builds for real daily use.", href: "/services" },
+  { icon: Mountain, title: "Arenas", desc: "Engineered surfaces. Consistent footing. Zero drainage failure.", href: "/services" },
+  { icon: Fence, title: "Fencing & Yards", desc: "Configured around horse movement and property flow.", href: "/services" },
+  { icon: Home, title: "Stables & Barns", desc: "Airflow, sightlines, and workflow — designed for horses.", href: "/services" },
+  { icon: Layers, title: "GroundLock Entry Systems", desc: "Interlocking ground stabilisation for high-traffic zones.", href: "/groundlock" },
+  { icon: Shovel, title: "Earthworks & Drainage", desc: "Sub-base profiling shaped by how your site moves water.", href: "/services" },
+  { icon: Wrench, title: "Custom Infrastructure", desc: "Wash bays, hardstands, pavilions — built for daily use.", href: "/services" },
 ];
 
 /* ── Service Icon ───── */
