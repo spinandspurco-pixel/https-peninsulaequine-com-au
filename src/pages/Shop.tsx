@@ -36,7 +36,7 @@ export default function Shop() {
           className="absolute inset-0 pointer-events-none"
           style={{ background: "radial-gradient(ellipse 50% 45% at 50% 50%, transparent 10%, hsl(var(--background)) 100%)" }}
         />
-        <div className="absolute inset-0 grain-texture" />
+        <div className="absolute inset-0 grain-hero" />
 
         <div className="relative z-10 section-container text-center max-w-3xl mx-auto">
           <div className="flex flex-col items-center gap-8 sm:gap-10">

@@ -38,7 +38,7 @@ const EquusRidge = () => {
 
       {/* SECTION 2 — ATMOSPHERE (dark editorial, no video) */}
       <section className="py-44 sm:py-64 bg-primary relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.02]" />
+        <div className="absolute inset-0 pointer-events-none grain-hero" />
 
         {/* Faint blueprint linework — single subtle brand callback */}
         <div className="absolute inset-0 opacity-[0.04]">

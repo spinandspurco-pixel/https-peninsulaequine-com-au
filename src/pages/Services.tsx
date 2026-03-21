@@ -69,7 +69,7 @@ export default function Services() {
           />
         </div>
         <div className="absolute inset-0 bg-background/50" />
-        <div className="absolute inset-0 grain-texture" />
+        <div className="absolute inset-0 grain-hero" />
 
         <div className="section-container relative z-10 text-center max-w-2xl mx-auto">
           <div

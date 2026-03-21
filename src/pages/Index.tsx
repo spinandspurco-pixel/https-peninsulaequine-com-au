@@ -135,7 +135,7 @@ export default function Index() {
             background: "radial-gradient(ellipse 55% 40% at 50% 48%, transparent 5%, hsl(222 20% 4% / 0.9) 55%, hsl(222 20% 4%) 100%)",
           }}
         />
-        <div className="absolute inset-0 pointer-events-none grain-texture" />
+        <div className="absolute inset-0 pointer-events-none grain-hero" />
 
         <div className="relative z-10 section-container text-center max-w-5xl mx-auto">
           <div className="flex flex-col items-center gap-10 sm:gap-14 lg:gap-16">
@@ -382,7 +382,7 @@ export default function Index() {
           className="absolute inset-0 w-full h-full object-cover img-cta"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/30" />
-        <div className="absolute inset-0 grain-texture" />
+        <div className="absolute inset-0 grain-hero" />
 
         <div className="absolute inset-0 flex items-center justify-center z-10">
           <div className="section-container text-center max-w-lg mx-auto">
