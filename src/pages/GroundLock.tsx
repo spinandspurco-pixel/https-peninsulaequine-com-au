@@ -8,6 +8,7 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { GroundLockSystemDiagram } from "@/components/GroundLockSystemDiagram";
 import { GroundLockSystemLayout } from "@/components/GroundLockSystemLayout";
 import { GroundLockComparison } from "@/components/GroundLockComparison";
+import { GroundLockCrossSection } from "@/components/GroundLockCrossSection";
 import {
   Truck,
   Calendar,
@@ -400,7 +401,10 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ COMPARISON ═══════════════════════════════════ */}
+      {/* ═══ CROSS-SECTION ══════════════════════════════ */}
+      <GroundLockCrossSection />
+
+
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-32 sm:py-48 relative">
