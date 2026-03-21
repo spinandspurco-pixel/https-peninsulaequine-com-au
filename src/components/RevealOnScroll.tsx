@@ -1,6 +1,7 @@
 import { ReactNode, CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 
 type RevealDirection = "up" | "down" | "left" | "right" | "none" | "scale";
 
@@ -32,8 +33,8 @@ export function RevealOnScroll({
   children,
   direction = "up",
   delay = 0,
-  duration = 700,
-  distance = 20,
+  duration = DURATION.normal,
+  distance = DISTANCE.md,
   className,
   as: Tag = "div",
   threshold = 0.15,
@@ -48,7 +49,7 @@ export function RevealOnScroll({
   const style: CSSProperties = {
     opacity: isVisible ? 1 : 0,
     transform: isVisible ? "translate(0, 0) scale(1)" : transforms[direction](distance),
-    transition: `opacity ${duration}ms cubic-bezier(0.22, 1, 0.36, 1) ${computedDelay}ms, transform ${duration}ms cubic-bezier(0.22, 1, 0.36, 1) ${computedDelay}ms`,
+    transition: `opacity ${duration}ms ${EASE.default} ${computedDelay}ms, transform ${duration}ms ${EASE.default} ${computedDelay}ms`,
     willChange: "opacity, transform",
   };
 
@@ -79,7 +80,7 @@ export function RevealLine({
       className={cn(width, "h-px bg-accent origin-left", className)}
       style={{
         transform: isVisible ? "scaleX(1)" : "scaleX(0)",
-        transition: `transform 800ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms`,
+        transition: `transform ${DURATION.parallax}ms ${EASE.default} ${delay}ms`,
       }}
     />
   );

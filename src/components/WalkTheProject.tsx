@@ -97,7 +97,7 @@ function Panel({
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(to bottom, hsl(222 20% 6% / 0.25) 0%, hsl(222 20% 6% / 0.45) 50%, hsl(222 20% 6% / 0.7) 100%)",
+            "linear-gradient(to bottom, hsl(var(--background) / 0.25) 0%, hsl(var(--background) / 0.45) 50%, hsl(var(--background) / 0.7) 100%)",
         }}
       />
 

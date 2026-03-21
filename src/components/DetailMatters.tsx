@@ -109,15 +109,15 @@ export function DetailMatters() {
 
       <div className="section-container relative z-10">
         <RevealOnScroll direction="up" duration={DURATION.normal} distance={DISTANCE.md}>
-          <div className="text-center mb-16 sm:mb-20">
-            <div className="flex items-center justify-center gap-5 mb-6">
-              <div className="w-8 h-px bg-accent/30" />
-              <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/40 font-mono">
+          <div className="text-center mb-14 sm:mb-18 lg:mb-20">
+            <div className="flex items-center justify-center gap-5 mb-5">
+              <div className="w-8 h-px bg-accent/25" />
+              <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/35 font-mono">
                 Craftsmanship
               </p>
-              <div className="w-8 h-px bg-accent/30" />
+              <div className="w-8 h-px bg-accent/25" />
             </div>
-            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground tracking-[0.03em]">
+            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/90 tracking-[0.03em]">
               Detail Matters
             </h2>
           </div>

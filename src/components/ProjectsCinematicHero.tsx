@@ -153,7 +153,7 @@ export function ProjectsCinematicHero() {
   return (
     <section
       className="relative h-[92vh] sm:h-[95vh] overflow-hidden"
-      style={{ backgroundColor: "#0D0D0D" }}
+      style={{ backgroundColor: "hsl(var(--background))" }}
     >
       {/* Layer 1: Blueprint linework with mouse parallax */}
       <div
@@ -186,10 +186,10 @@ export function ProjectsCinematicHero() {
 
       {/* Layer 3: Gradient overlays */}
       <div className="absolute inset-0" style={{
-        background: "linear-gradient(to right, rgba(13,13,13,0.85) 0%, rgba(13,13,13,0.4) 60%, rgba(13,13,13,0.7) 100%)",
+        background: "linear-gradient(to right, hsl(var(--background) / 0.85) 0%, hsl(var(--background) / 0.4) 60%, hsl(var(--background) / 0.7) 100%)",
       }} />
       <div className="absolute inset-0" style={{
-        background: "linear-gradient(to bottom, rgba(13,13,13,0.3) 0%, rgba(13,13,13,0.1) 50%, rgba(13,13,13,0.9) 100%)",
+        background: "linear-gradient(to bottom, hsl(var(--background) / 0.3) 0%, hsl(var(--background) / 0.1) 50%, hsl(var(--background) / 0.9) 100%)",
       }} />
 
       {/* Layer 4: Grain */}

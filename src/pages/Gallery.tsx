@@ -282,7 +282,7 @@ export default function Gallery() {
         <div className="absolute inset-0 grain-texture" />
         <div className="py-28 sm:py-36 lg:py-44 relative">
           <div className="section-container relative z-[1]">
-            <RevealOnScroll direction="up" duration={700}>
+            <RevealOnScroll direction="up" duration={DURATION.normal}>
               <SectionHeader label="Featured Project" heading="Private Client — Mornington Peninsula" />
 
               {/* Hero + details row */}
@@ -333,12 +333,12 @@ export default function Gallery() {
         <div className="absolute inset-0 grain-texture" />
         <div className="py-28 sm:py-36 lg:py-44 relative">
           <div className="section-container relative z-[1]">
-            <RevealOnScroll direction="up" duration={700}>
+            <RevealOnScroll direction="up" duration={DURATION.normal}>
               <SectionHeader label="Completed Work" heading="The Finished Result" />
             </RevealOnScroll>
 
             {/* Row 1 — wide deck + tall stable facade */}
-            <RevealOnScroll direction="up" duration={800}>
+            <RevealOnScroll direction="up" duration={DURATION.slow}>
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-5 mb-3 sm:mb-5">
                 <div className="lg:col-span-7">
                   <EditorialImage src={aberdeenDeck} alt="Private client — outdoor deck" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenDeck)} />
@@ -350,7 +350,7 @@ export default function Gallery() {
             </RevealOnScroll>
 
             {/* Row 2 — wide arena exterior */}
-            <RevealOnScroll direction="up" duration={700} delay={80}>
+            <RevealOnScroll direction="up" duration={DURATION.normal} delay={80}>
               <EditorialImage src={westernEntertainingZone} alt="Western entertaining zone — timber and stone" aspect="aspect-[21/9]" onClick={() => openLightbox(westernEntertainingZone)} />
             </RevealOnScroll>
           </div>
@@ -366,12 +366,12 @@ export default function Gallery() {
         <div className="absolute inset-0 grain-texture" />
         <div className="py-28 sm:py-36 lg:py-44 relative">
           <div className="section-container relative z-[1]">
-            <RevealOnScroll direction="up" duration={700}>
+            <RevealOnScroll direction="up" duration={DURATION.normal}>
               <SectionHeader label="Custom Builds" heading="Steel & Timber — Built to Brief" />
             </RevealOnScroll>
 
             {/* Row 1 — wide steel shed + tall timber cubby */}
-            <RevealOnScroll direction="up" duration={800} delay={80}>
+            <RevealOnScroll direction="up" duration={DURATION.slow} delay={80}>
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-5 mb-3 sm:mb-5">
                 <div className="lg:col-span-7">
                   <EditorialImage src={steelShedDramatic} alt="Custom colorbond barn with dramatic sky" aspect="aspect-[16/10]" onClick={() => openLightbox(steelShedDramatic)} />
@@ -383,7 +383,7 @@ export default function Gallery() {
             </RevealOnScroll>
 
             {/* Row 2 — craft detail */}
-            <RevealOnScroll direction="up" duration={700} delay={120}>
+            <RevealOnScroll direction="up" duration={DURATION.normal} delay={120}>
               <EditorialImage src={aberdeenStonework} alt="Aberdeen — hand-laid natural stonework detail" aspect="aspect-[21/9]" onClick={() => openLightbox(aberdeenStonework)} />
             </RevealOnScroll>
           </div>
@@ -399,7 +399,7 @@ export default function Gallery() {
         <div className="absolute inset-0 grain-texture" />
         <div className="py-28 sm:py-36 lg:py-44 relative">
           <div className="section-container relative z-[1]">
-            <RevealOnScroll direction="up" duration={600}>
+            <RevealOnScroll direction="up" duration={DURATION.normal}>
               <div className="flex items-center justify-between mb-14 sm:mb-18 lg:mb-20">
                 <div>
                   <div className="flex items-center gap-5 mb-5">
@@ -423,7 +423,7 @@ export default function Gallery() {
             </RevealOnScroll>
 
             {showFilters && (
-              <RevealOnScroll direction="up" duration={500}>
+              <RevealOnScroll direction="up" duration={DURATION.normal}>
                 <GalleryFilters
                   activeProject={activeProject}
                   setActiveProject={setActiveProject}

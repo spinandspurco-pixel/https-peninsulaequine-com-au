@@ -82,10 +82,12 @@ function SitePlan({
   activeZone,
   onHover,
   onLeave,
+  onTap,
 }: {
   activeZone: string | null;
   onHover: (id: string) => void;
   onLeave: () => void;
+  onTap: (id: string) => void;
 }) {
   return (
     <svg viewBox="0 0 740 560" className="w-full h-auto max-w-[560px] mx-auto" aria-label="Main Ridge Estate site plan">
@@ -120,6 +122,7 @@ function SitePlan({
               className="cursor-pointer"
               onMouseEnter={() => onHover(z.id)}
               onMouseLeave={onLeave}
+              onClick={() => onTap(z.id)}
             />
             <text
               x={getCenter(z.path).x}
@@ -170,6 +173,9 @@ export function InteractiveMasterplan() {
 
   const handleHover = useCallback((id: string) => setActiveZone(id), []);
   const handleLeave = useCallback(() => setActiveZone(null), []);
+  const handleTap = useCallback((id: string) => {
+    setActiveZone((prev) => (prev === id ? null : id));
+  }, []);
 
   return (
     <section className="relative py-28 sm:py-36 lg:py-44 overflow-hidden">
@@ -199,7 +205,7 @@ export function InteractiveMasterplan() {
         <RevealOnScroll direction="up" duration={DURATION.normal} delay={100}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             <div className="lg:col-span-8 flex justify-center">
-              <SitePlan activeZone={activeZone} onHover={handleHover} onLeave={handleLeave} />
+              <SitePlan activeZone={activeZone} onHover={handleHover} onLeave={handleLeave} onTap={handleTap} />
             </div>
             <div className="lg:col-span-4 flex flex-col justify-start pt-4 lg:pt-10">
               <div
@@ -212,7 +218,7 @@ export function InteractiveMasterplan() {
                 }}
               >
                 <p className="text-xs font-mono uppercase tracking-[0.3em] text-accent/25">
-                  Hover a zone to explore
+                  Tap or hover a zone to explore
                 </p>
               </div>
               <DetailCard zone={activeZoneData} visible={!!activeZone} />
