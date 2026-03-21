@@ -378,6 +378,9 @@ export default function ProposalTemplate() {
             3. THE GROUNDLOCK SYSTEM
         ════════════════════════════════════════════ */}
         <section className="py-28 sm:py-36 proposal-section print-page-break">
+          <div className="flex items-center gap-5 mb-16 sm:mb-20">
+            <div className="h-px w-8" style={{ background: "hsl(var(--accent))", opacity: 0.25 }} />
+            <SectionLabel number="02">The GroundLock System</SectionLabel>
           </div>
 
           {/* Full-width visual hero for system */}
