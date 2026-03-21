@@ -206,15 +206,13 @@ export default function GroundLock() {
               </RevealOnScroll>
             </div>
 
-            <RevealOnScroll direction="up" delay={200}>
-              <div className="space-y-14">
-                <PanelSpecimen />
-                <div className="w-10 h-px bg-accent/8 mx-auto" />
-                <LockSequence />
-                <div className="w-10 h-px bg-accent/8 mx-auto" />
-                <SystemDiagram />
-              </div>
-            </RevealOnScroll>
+            <div className="space-y-16 sm:space-y-20">
+              <PanelSpecimen />
+              <div className="w-10 h-px bg-accent/8 mx-auto" />
+              <LockSequence />
+              <div className="w-10 h-px bg-accent/8 mx-auto" />
+              <SystemDiagram />
+            </div>
           </div>
         </div>
       </section>
