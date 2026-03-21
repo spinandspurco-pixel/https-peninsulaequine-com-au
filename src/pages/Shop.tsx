@@ -33,7 +33,7 @@ export default function Shop() {
           </h1>
 
           <p
-            className="text-sm text-muted-foreground/40 max-w-md mx-auto opacity-0 animate-fade-in leading-[1.9]"
+            className="font-serif text-[15px] sm:text-base text-foreground/50 max-w-md mx-auto opacity-0 animate-fade-in leading-[1.9]"
             style={{ animationDelay: "1000ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
             What sits underneath determines how everything performs.
@@ -42,7 +42,7 @@ export default function Shop() {
             className="text-[13px] text-muted-foreground/30 max-w-md mx-auto opacity-0 animate-fade-in leading-[1.9]"
             style={{ animationDelay: "1300ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
-            We provide access to the systems and components used across our builds.
+            We provide access to the systems used across our builds — applied where performance matters.
           </p>
         </div>
       </section>
