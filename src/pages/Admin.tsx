@@ -455,6 +455,9 @@ export default function Admin() {
           {/* Project Profit Tracker — Founder only */}
           {viewMode === "founder" && <ProjectProfitTracker />}
 
+          {/* Client Experience — Founder + Operations */}
+          {(viewMode === "founder" || viewMode === "operations") && <ClientExperiencePanel />}
+
           {/* Financial Control — Founder only */}
           {viewMode === "founder" && <FinancialDashboard />}
 
