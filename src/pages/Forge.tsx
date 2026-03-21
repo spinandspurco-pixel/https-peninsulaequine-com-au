@@ -142,7 +142,7 @@ function FamilyCard({ family, delay = 0 }: { family: FamilyEntry; delay?: number
 export default function Forge() {
   return (
     <Layout>
-      <StickySubpageCTA ctaLabel="Enquire About Forge" ctaHref="/contact" showAfter={600} hideSecondary />
+      <StickySubpageCTA ctaLabel="Enquire About GroundLock" ctaHref="/contact" showAfter={600} hideSecondary />
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="relative pt-44 sm:pt-56 pb-28 sm:pb-36 overflow-hidden">
         <div className="absolute inset-0 bg-background" />
@@ -155,7 +155,7 @@ export default function Forge() {
           >
             <div className="w-8 h-px bg-accent/30" />
             <Flame className="w-3.5 h-3.5 text-accent/50" strokeWidth={1.25} />
-            <p className="text-overline text-accent/60">Product Division</p>
+            <p className="text-overline text-accent/60">Systems Division</p>
             <div className="w-8 h-px bg-accent/30" />
           </div>
 
@@ -163,7 +163,7 @@ export default function Forge() {
             className="heading-display text-foreground opacity-0 animate-fade-in"
             style={{ animationDelay: "400ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
-            Equus Forge
+            GroundLock Systems
           </h1>
 
           <p
@@ -177,8 +177,8 @@ export default function Forge() {
             className="mt-10 text-sm sm:text-[15px] text-muted-foreground/40 max-w-[420px] mx-auto leading-[1.9] opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
-            The engineering and product arm of Peninsula Equine.
-            Purpose-built systems, hardware, and estate elements —
+            The systems and product division of Peninsula Equine.
+            Purpose-built ground stabilisation systems, hardware, and estate elements —
             designed for equine properties, fabricated by the people who build them.
           </p>
         </div>
@@ -212,13 +212,13 @@ export default function Forge() {
             <RevealOnScroll>
               <RevealLine className="mx-auto mb-14" width="w-8" />
               <p className="text-[13px] sm:text-[14px] text-muted-foreground/30 leading-[2.2]">
-                Forge exists to give Peninsula Equine clients access to the same
+                GroundLock Systems gives Peninsula Equine clients access to the same
                 engineered components we use in our own builds — heavy gauge,
                 hot-dip galvanised, and specified to the tolerances of working
                 rural properties.
               </p>
               <p className="mt-8 text-[12px] text-muted-foreground/20 leading-[2] italic font-serif">
-                Not a catalogue. A product division.
+                Not a catalogue. A systems division.
               </p>
             </RevealOnScroll>
           </div>
@@ -258,7 +258,7 @@ export default function Forge() {
             <RevealOnScroll>
               <p className="text-overline text-foreground/20 mb-10">Future Scope</p>
               <p className="text-[12px] sm:text-[13px] text-muted-foreground/25 leading-[2.2] mb-10">
-                As Peninsula Equine's project library grows, Forge will expand
+                As Peninsula Equine's project library grows, GroundLock Systems will expand
                 to include entry kits, gate automation packages, signage systems,
                 stable forecourt products, and threshold hardware — each one
                 validated through real-world builds before release.
@@ -289,7 +289,7 @@ export default function Forge() {
             <RevealOnScroll>
               <RevealLine className="mx-auto mb-16" width="w-8" />
               <h2 className="heading-section text-foreground mb-8">
-                Work With Forge
+                Work With Us
               </h2>
               <p className="text-sm text-muted-foreground/35 mb-12 leading-[1.9]">
                 Whether you're configuring a GroundLock system, specifying
@@ -304,7 +304,7 @@ export default function Forge() {
                 </Button>
                 <Button asChild variant="outline-light" size="lg">
                   <Link to="/contact">
-                    Enquire About Forge
+                    Enquire About Systems
                   </Link>
                 </Button>
               </div>

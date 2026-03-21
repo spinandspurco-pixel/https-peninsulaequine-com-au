@@ -6,9 +6,14 @@ import logoPeMark from "@/assets/logo-pe-mark.webp";
 const navLinks = [
   { name: "Projects", href: "/gallery" },
   { name: "GroundLock™", href: "/groundlock" },
-  { name: "Equus Forge", href: "/forge" },
+  { name: "GroundLock Systems", href: "/forge" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
+];
+
+const ecosystemLinks = [
+  { name: "Equus Ridge", desc: "Destination" },
+  { name: "Spin & Spur", desc: "Lifestyle" },
 ];
 
 export function Footer() {
@@ -117,15 +122,19 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Equus Ridge — Brand Seed */}
+      {/* Ecosystem */}
       <div className="border-t border-border/10">
-        <div className="section-container py-16 text-center">
-          <p className="font-serif text-sm tracking-[0.15em] text-muted-foreground/40 italic">
-            Equus Ridge&trade;
-          </p>
-          <p className="text-[10px] text-muted-foreground/20 tracking-[0.12em] mt-3 font-sans">
-            The home of Peninsula Equine
-          </p>
+        <div className="section-container py-16 flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16">
+          {ecosystemLinks.map((link) => (
+            <div key={link.name} className="text-center">
+              <p className="font-serif text-sm tracking-[0.15em] text-muted-foreground/40 italic">
+                {link.name}
+              </p>
+              <p className="text-[10px] text-muted-foreground/20 tracking-[0.12em] mt-2 font-sans">
+                {link.desc}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
 

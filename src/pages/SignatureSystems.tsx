@@ -50,12 +50,12 @@ const PLANNED: SystemEntry[] = [
       "High-traffic surface solutions for stable entries, wash bays, and daily-use zones where drainage and durability are non-negotiable.",
   },
   {
-    title: "Forge-Integrated Entry Details",
+    title: "Integrated Entry Details",
     status: "planned",
     description:
-      "Custom forged hardware, gate elements, and threshold details that complete the entry system with architectural precision.",
+      "Custom hardware, gate elements, and threshold details that complete the entry system with architectural precision.",
     href: "/forge",
-    cta: "Explore Equus Forge",
+    cta: "Explore GroundLock Systems",
   },
 ];
 
@@ -225,7 +225,7 @@ export default function SignatureSystems() {
         </div>
       </section>
 
-      {/* ── Forge cross-link ─────────────────────────── */}
+      {/* ── Systems cross-link ────────────────────────── */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-24 sm:py-32 relative">
@@ -233,17 +233,17 @@ export default function SignatureSystems() {
           <div className="section-container max-w-xl mx-auto relative z-[1] text-center">
             <RevealOnScroll>
               <RevealLine className="mx-auto mb-14" width="w-8" />
-              <p className="text-overline text-foreground/20 mb-6">Product Division</p>
+              <p className="text-overline text-foreground/20 mb-6">Systems Division</p>
               <p className="text-[13px] sm:text-[14px] text-muted-foreground/30 leading-[2.2] mb-10">
                 Signature Systems are developed and distributed through
-                Equus Forge — Peninsula Equine's product engineering arm,
+                GroundLock Systems — Peninsula Equine's product and engineering division,
                 housing GroundLock, custom hardware, and future property elements.
               </p>
               <Link
                 to="/forge"
                 className="inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] uppercase text-accent/40 hover:text-accent/70 transition-colors duration-500"
               >
-                Explore Equus Forge <ArrowRight className="w-3 h-3" />
+                Explore GroundLock Systems <ArrowRight className="w-3 h-3" />
               </Link>
             </RevealOnScroll>
           </div>

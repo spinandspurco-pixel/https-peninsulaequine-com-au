@@ -13,6 +13,7 @@ const navigation = [
   { name: "GroundLock™", href: "/groundlock" },
   { name: "About", href: "/about" },
   { name: "Equus Ridge", href: "/equus-ridge", subtle: true },
+  { name: "Spin & Spur", href: "/spin-and-spur", subtle: true },
 ];
 
 export function Header() {

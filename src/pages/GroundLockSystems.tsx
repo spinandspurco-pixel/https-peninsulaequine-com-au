@@ -57,7 +57,7 @@ export default function GroundLockSystems() {
             className="bg-accent text-accent-foreground hover:bg-accent/90 uppercase tracking-[0.14em] text-xs font-medium btn-hover-lift px-10 py-3"
           >
             <Link to="/forge">
-              Explore Equus Forge <ArrowRight className="ml-2 h-4 w-4" />
+              Explore GroundLock Systems <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
           <p className="text-primary-foreground/25 text-[10px] tracking-[0.15em]">
