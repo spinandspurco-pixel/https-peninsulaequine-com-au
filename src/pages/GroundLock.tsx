@@ -6,6 +6,7 @@ import { GroundLockSystemLayout } from "@/components/GroundLockSystemLayout";
 import { GroundLockCrossSection } from "@/components/GroundLockCrossSection";
 import { ArrowRight, Layers } from "lucide-react";
 
+import groundlockHero from "@/assets/groundlock-hero-system.jpg";
 import foundationPour from "@/assets/main-ridge-foundation-pour.jpg";
 import rebarDeep from "@/assets/rebar-foundation-deep.jpg";
 import sitePrep from "@/assets/main-ridge-site-prep.jpg";
@@ -55,13 +56,21 @@ export default function GroundLock() {
     <Layout>
       {/* ═══ 1. OPENING ═══════════════════════════════════ */}
       <section className="relative pt-44 sm:pt-52 pb-28 sm:pb-36 overflow-hidden">
-        <div className="absolute inset-0 bg-background" />
-        <div className="absolute inset-0 engineering-grid" />
+        {/* Hero system image background */}
+        <div className="absolute inset-0">
+          <img
+            src={groundlockHero}
+            alt="GroundLock engineered horseshoe panel system cross-section"
+            className="w-full h-full object-cover object-center"
+            loading="eager"
+          />
+          <div className="absolute inset-0 bg-background/70" />
+          <div
+            className="absolute inset-0"
+            style={{ background: "linear-gradient(to top, hsl(var(--background)) 0%, transparent 40%, transparent 60%, hsl(var(--background) / 0.8) 100%)" }}
+          />
+        </div>
         <div className="absolute inset-0 grain-texture" />
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 55% 45% at 50% 50%, hsl(var(--accent) / 0.02) 0%, transparent 65%)" }}
-        />
 
         <div className="section-container relative z-10 text-center max-w-2xl mx-auto flex flex-col items-center gap-8">
           <div
@@ -82,7 +91,7 @@ export default function GroundLock() {
           </h1>
 
           <p
-            className="text-muted-foreground/40 text-sm sm:text-[15px] max-w-lg mx-auto opacity-0 animate-fade-in leading-[1.9]"
+            className="text-muted-foreground/50 text-sm sm:text-[15px] max-w-lg mx-auto opacity-0 animate-fade-in leading-[1.9]"
             style={{ animationDelay: "1200ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
             Most arena and access issues don't start on the surface — they start underneath.
