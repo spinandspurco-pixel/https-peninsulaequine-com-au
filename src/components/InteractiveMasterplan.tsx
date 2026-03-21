@@ -216,6 +216,7 @@ function getCenter(path: string): { x: number; y: number } {
 
 /* ── Main export ──────────────────────────────────────── */
 export function InteractiveMasterplan() {
+  usePreloadImages(Object.values(ZONE_IMAGES));
   const [activeZone, setActiveZone] = useState<string | null>(null);
   const activeZoneData = zones.find((z) => z.id === activeZone) || null;
 
