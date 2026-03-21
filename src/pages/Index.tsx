@@ -115,15 +115,6 @@ function ProjectsScroll() {
 }
 
 export default function Index() {
-  useLayoutEffect(() => {
-    if (document.querySelector('link[data-hero-preload]')) return;
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'video';
-    link.href = heroVideo;
-    link.setAttribute('data-hero-preload', '');
-    document.head.appendChild(link);
-  }, []);
 
   return (
     <Layout>
