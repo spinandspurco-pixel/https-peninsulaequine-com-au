@@ -16,6 +16,13 @@ import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
 import coveredArenaFinishedLit from "@/assets/covered-arena-finished-lit.jpg";
 import westernEntertainingZone from "@/assets/western-entertaining-zone.jpg";
 
+// Premium portfolio visuals
+import portfolioArenaSymmetry from "@/assets/portfolio-arena-symmetry.jpg";
+import portfolioFencingDetail from "@/assets/portfolio-fencing-detail.jpg";
+import portfolioTimberJoinery from "@/assets/portfolio-timber-joinery.jpg";
+import portfolioPropertyAerial from "@/assets/portfolio-property-aerial.jpg";
+import portfolioGradingCinematic from "@/assets/portfolio-grading-cinematic.jpg";
+
 export type GalleryItem = {
   id: number;
   src: string;
