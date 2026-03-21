@@ -346,56 +346,10 @@ export default function Admin() {
           {/* FOUNDER + ADMIN: Quote System */}
           {viewMode !== "operations" && <QuotesDashboard />}
 
-          {/* ═══════════════════════════════════════════════════════ */}
-          {/* SUPPORTING SECTIONS — filtered by view mode              */}
-          {/* ═══════════════════════════════════════════════════════ */}
-
-          {/* Stats — Admin + Founder */}
+          {/* ═══ CRM PIPELINE — replaces old stats + inquiry table ═══ */}
           {viewMode !== "operations" && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                { label: "Total Inquiries", value: stats.total, icon: Users },
-                { label: "New", value: stats.new, icon: MessageSquare },
-                { label: "In Progress", value: stats.inProgress, icon: Clock },
-                { label: "Completed", value: stats.completed, icon: CheckCircle },
-              ].map((stat) => (
-                <Card key={stat.label} className="bg-card/80 border-border/40">
-                  <CardHeader className="pb-1 pt-4 px-4">
-                    <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">{stat.label}</p>
-                  </CardHeader>
-                  <CardContent className="px-4 pb-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-2xl font-serif font-semibold text-foreground">{stat.value}</span>
-                      <stat.icon className="h-4 w-4 text-accent/60" />
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            <CRMPipeline onCreateQuote={(id) => setQuoteForInquiryId(id)} />
           )}
-
-          {/* Quick Links — filtered per view */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-            {([
-              { to: "/admin/services", label: "Services", desc: "Content", icon: Settings, views: ["founder", "admin"] },
-              { to: "/admin/testimonials", label: "Testimonials", desc: "Content", icon: MessageSquare, views: ["founder", "admin"] },
-              { to: "/admin/events", label: "Events", desc: "Content", icon: Calendar, views: ["founder", "admin"] },
-              { to: "/bookings", label: "Bookings", desc: "Operations", icon: CalendarDays, views: ["founder", "admin", "operations"] },
-              { to: "/admin/documents", label: "Documents", desc: "Compliance", icon: Download, views: ["founder", "admin", "operations"] },
-            ] as const).filter((link) => (link.views as readonly string[]).includes(viewMode)).map((link) => (
-              <Link key={link.to} to={link.to}>
-                <Card className="bg-card/60 border-border/30 hover:border-accent/30 transition-all duration-200 cursor-pointer group h-full">
-                  <CardHeader className="p-4">
-                    <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/60">{link.desc}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <link.icon className="h-4 w-4 text-muted-foreground group-hover:text-accent transition-colors" />
-                      <span className="text-sm font-medium text-foreground group-hover:text-accent transition-colors">{link.label}</span>
-                    </div>
-                  </CardHeader>
-                </Card>
-              </Link>
-            ))}
-          </div>
 
           {/* Today's Plan */}
           <TodaysPlan />
