@@ -22,6 +22,7 @@ interface Zone {
   label: string;
   shortLabel: string;
   description: string;
+  features: string[];
   path: string;
 }
 
