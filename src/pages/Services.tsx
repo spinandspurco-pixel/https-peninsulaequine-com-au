@@ -173,25 +173,7 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ═══ TRAINING MENTION ═════════════════════════════ */}
-      <section className="relative border-t border-border/5">
-        <div className="py-6 sm:py-8">
-          <div className="section-container relative z-10 text-center max-w-md mx-auto">
-            <p className="text-[9px] uppercase tracking-[0.35em] text-muted-foreground/12 font-mono mb-2">
-              On-site training
-            </p>
-            <p className="text-[11px] sm:text-[12px] text-muted-foreground/18 leading-[1.85] font-serif italic">
-              Training sessions with Glenn Browitt are available on select days. Submit a request and we'll coordinate availability.
-            </p>
-            <a
-              href="mailto:info@peninsulaequine.org?subject=Training%20Session%20Request"
-              className="inline-block mt-5 text-[10px] uppercase tracking-[0.2em] text-muted-foreground/25 hover:text-accent/60 transition-colors duration-500 font-sans font-medium"
-            >
-              Request Training Session →
-            </a>
-          </div>
-        </div>
-      </section>
+      {/* training mention removed — available via lessons page */}
 
       {/* ═══ CTA ═══════════════════════════════════════ */}
       <section className="relative overflow-hidden">
