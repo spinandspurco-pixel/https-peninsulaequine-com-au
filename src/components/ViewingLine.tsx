@@ -63,7 +63,7 @@ export function ViewingLine() {
             className="flex items-center justify-center gap-5 mb-8"
             style={{
               opacity: visible ? 1 : 0,
-              transition: "opacity 1000ms ease-out 200ms",
+              transition: `opacity ${DURATION.slow}ms ${EASE.default} 200ms`,
             }}
           >
             <div className="w-8 h-px bg-accent/25" />
