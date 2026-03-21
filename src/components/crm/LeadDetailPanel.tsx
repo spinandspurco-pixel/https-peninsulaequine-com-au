@@ -115,6 +115,9 @@ export function LeadDetailPanel({ record, onClose, onUpdated, onCreateQuote }: P
   const [linkedQuote, setLinkedQuote] = useState<any | null>(null);
   const [dealValue, setDealValue] = useState(record.deal_value?.toString() || "");
   const [probability, setProbability] = useState(record.probability?.toString() || "");
+  const [aiDraft, setAiDraft] = useState<{ draft_message: string; subject_line: string } | null>(null);
+  const [generatingDraft, setGeneratingDraft] = useState(false);
+  const [draftCopied, setDraftCopied] = useState(false);
 
   // Fetch linked quote
   useEffect(() => {
