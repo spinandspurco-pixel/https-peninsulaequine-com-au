@@ -330,7 +330,7 @@ export default function Admin() {
           {viewMode !== "operations" && <AdminStaffOnboarding />}
 
           {/* AI Operations Assistant — Founder only */}
-          {viewMode === "founder" && <AIOperationsAssistant inquiries={inquiries} />}
+          {viewMode === "founder" && <AIOperationsAssistant inquiries={[]} />}
 
           {/* Site Assessment Manager — Founder + Operations */}
           {(viewMode === "founder" || viewMode === "operations") && <AssessmentAvailabilityManager />}
