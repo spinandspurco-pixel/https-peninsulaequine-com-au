@@ -387,19 +387,19 @@ export const aboutCiro = {
   values: [
     {
       title: "Horseman First",
-      description: "We build from a rider's perspective, not just a contractor's blueprint.",
+      description: "Built from a rider's perspective, not a contractor's blueprint.",
     },
     {
-      title: "Uncompromising Quality",
-      description: "Every material, every technique, every finish meets our exacting standards.",
+      title: "Specified for Performance",
+      description: "Every material and technique selected for long-term outcome.",
     },
     {
-      title: "Personal Involvement",
-      description: "Ciro is on-site for every project, from first survey to final walkthrough.",
+      title: "Owner-Operated",
+      description: "Ciro is on-site — from first survey to final walkthrough.",
     },
     {
-      title: "Long-Term Relationships",
-      description: "We build facilities that last decades and relationships that last longer.",
+      title: "Built Once",
+      description: "Facilities engineered to last decades without rework.",
     },
   ],
   philosophy: {
