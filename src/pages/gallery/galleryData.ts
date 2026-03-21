@@ -1,7 +1,6 @@
 // Main Ridge images
 import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
 import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
-import mainRidgeCiroWoodwork1 from "@/assets/main-ridge-ciro-woodwork-1.jpg";
 
 // Private Client — Mornington Peninsula images
 import aberdeenAisle from "@/assets/aberdeen-aisle.jpg";
@@ -12,11 +11,9 @@ import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
 
 // Custom Builds
 import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
-import timberCubbyFront from "@/assets/timber-cubby-front.webp";
 
 // Curated portfolio additions
 import coveredArenaFinishedLit from "@/assets/covered-arena-finished-lit.jpg";
-import premiumStableFacade from "@/assets/premium-stable-facade.png";
 import westernEntertainingZone from "@/assets/western-entertaining-zone.jpg";
 
 export type GalleryItem = {
