@@ -79,8 +79,7 @@ const EquusRidge = () => {
                 <img
                   src={coveredArenaBlackExterior}
                   alt="Completed barn exterior — Mornington Peninsula"
-                  className="absolute inset-0 w-full h-full object-cover"
-                  style={{ filter: "brightness(0.7) contrast(1.05)" }}
+                  className="absolute inset-0 w-full h-full object-cover img-feature"
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />

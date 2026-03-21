@@ -116,7 +116,7 @@ export default function CaseStudy() {
         <img
           src={study.hero}
           alt={study.title}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover img-header"
         />
         <div className="absolute inset-0 bg-primary/60" />
         <div className="absolute bottom-0 left-0 right-0 p-8 sm:p-12 z-10">

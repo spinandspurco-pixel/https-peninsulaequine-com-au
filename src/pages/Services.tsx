@@ -141,7 +141,7 @@ export default function Services() {
             <img
               src={stoneworkStables}
               alt="Barn frame structure"
-              className="absolute inset-0 w-full h-full object-cover brightness-[0.55] saturate-[0.7]"
+              className="absolute inset-0 w-full h-full object-cover img-feature"
               loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/20" />

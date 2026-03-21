@@ -379,7 +379,7 @@ export default function Index() {
           aria-hidden="true"
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 w-full h-full object-cover brightness-[0.35] saturate-[0.6] contrast-[1.15]"
+          className="absolute inset-0 w-full h-full object-cover img-cta"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/30" />
         <div className="absolute inset-0 grain-texture" />
