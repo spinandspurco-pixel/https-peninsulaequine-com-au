@@ -274,8 +274,7 @@ export default function Contact() {
                       ))}
                     </div>
                     <p className="text-muted-foreground/40 italic pt-2">
-                      Assessment fees apply and are credited<br />
-                      toward your project investment if you proceed.
+                      Assessment fees apply and are credited toward your project if you proceed.
                     </p>
                   </div>
                 </RevealOnScroll>
