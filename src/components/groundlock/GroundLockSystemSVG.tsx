@@ -166,6 +166,5 @@ export function SystemDiagram({ className }: { className?: string }) {
 }
 
 /* ── Legacy exports for backward compatibility ── */
-export { PanelSpecimen };
 export const PanelArray = SystemDiagram;
 export const PanelSiteLayout = LockSequence;
