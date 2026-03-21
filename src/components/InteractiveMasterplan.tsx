@@ -116,8 +116,9 @@ function SitePlan({
       {/* Zone shapes */}
       {zones.map((z) => {
         const isActive = activeZone === z.id;
+        const isDimmed = activeZone !== null && !isActive;
         return (
-          <g key={z.id}>
+          <g key={z.id} style={{ opacity: isDimmed ? 0.4 : 1, transition: `opacity ${DURATION.fast}ms ${EASE.interactive}` }}>
             <path
               d={z.path}
               fill={isActive ? "hsl(var(--accent) / 0.07)" : "hsl(var(--accent) / 0.015)"}
