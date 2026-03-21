@@ -204,14 +204,24 @@ function SitePlan({
       {/* Background grid */}
       <rect width="740" height="680" fill="url(#mp-grid)" />
 
-      {/* ── Ground plane elevation shadows (rendered first, behind structures) ── */}
-      {/* Arena shadow — largest structure, deepest shadow */}
+      {/* ── Material zone fills (rendered behind everything) ── */}
+      {/* Arena — sand texture, warm */}
+      <rect x="195" y="430" width="350" height="160" fill="url(#mp-sand)" rx="1" />
+      {/* Stables — solid building tone */}
+      <rect x="195" y="120" width="350" height="140" fill="url(#mp-building)" rx="1" />
+      {/* Service wing — building tone */}
+      <rect x="195" y="260" width="75" height="170" fill="url(#mp-building)" rx="0.5" />
+      {/* Viewing area — building tone */}
+      <rect x="470" y="260" width="75" height="120" fill="url(#mp-building)" rx="0.5" />
+      {/* Courtyard — paving */}
+      <rect x="270" y="260" width="200" height="120" fill="url(#mp-paving)" rx="0.5" />
+      {/* Central corridor — pathway contrast */}
+      <rect x="350" y="120" width="40" height="140" fill="hsl(25 8% 14% / 0.25)" />
+
+      {/* ── Ground plane elevation shadows ── */}
       <rect x="195" y="430" width="350" height="160" fill="hsl(0 0% 0% / 0.06)" filter="url(#mp-shadow-lg)" rx="1" />
-      {/* Stables shadow */}
       <rect x="195" y="120" width="350" height="140" fill="hsl(0 0% 0% / 0.04)" filter="url(#mp-shadow-md)" rx="1" />
-      {/* Service wing shadow */}
       <rect x="195" y="260" width="75" height="170" fill="hsl(0 0% 0% / 0.03)" filter="url(#mp-shadow-sm)" rx="0.5" />
-      {/* Viewing area shadow */}
       <rect x="470" y="260" width="75" height="120" fill="hsl(0 0% 0% / 0.03)" filter="url(#mp-shadow-sm)" rx="0.5" />
 
       {/* Property boundary */}
