@@ -216,8 +216,7 @@ export default function About() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <p className="text-sm text-muted-foreground/40 mb-10 leading-relaxed">
-                Each project is assessed individually to ensure correct<br />
-                system specification and long-term performance.
+                Every project begins with a site assessment.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={200}>

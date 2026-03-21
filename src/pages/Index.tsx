@@ -442,8 +442,7 @@ export default function Index() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <p className="text-[13px] text-muted-foreground/30 mb-10 leading-[2] max-w-[360px] mx-auto">
-                From arenas and stables to signature entry systems —
-                projects begin with a site reading.
+                Every project begins with a site assessment.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={200}>

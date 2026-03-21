@@ -462,7 +462,7 @@ export default function GroundLock() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <p className="text-[13px] text-muted-foreground/38 leading-[1.8] mb-10 text-center">
-                Tell us about your site. We'll recommend the right system.
+                Tell us your space. We'll map the system.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={220}>

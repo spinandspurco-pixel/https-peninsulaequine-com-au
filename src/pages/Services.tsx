@@ -195,8 +195,7 @@ export default function Services() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <p className="text-sm text-muted-foreground/40 mb-10 leading-relaxed">
-                Projects are assessed prior to engagement to ensure<br />
-                correct specification and long-term value.
+                Every project begins with a site assessment.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={250}>

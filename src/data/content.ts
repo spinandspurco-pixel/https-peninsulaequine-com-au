@@ -133,8 +133,8 @@ export const services = [
   {
     id: "clinics-events",
     title: "Clinics & Event Facilities",
-    shortDescription: "Purpose-built spaces for clinics, competitions, and equestrian events.",
-    description: "Design and build venues that host everything from weekend clinics to multi-day competitions. We handle spectator amenities, warm-up areas, and all the infrastructure an event demands.",
+    shortDescription: "Venues for clinics, competitions, and equestrian events.",
+    description: "From weekend clinics to multi-day competitions — all infrastructure included.",
     features: [
       "Competition-grade arena builds",
       "Warm-up rings & holding yards",

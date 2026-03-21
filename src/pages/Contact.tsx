@@ -312,11 +312,7 @@ export default function Contact() {
                 ))}
               </div>
             </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={250}>
-              <p className="text-center text-[11px] text-muted-foreground/25 italic mt-8">
-                Projects are carefully planned prior to commencement.
-              </p>
-            </RevealOnScroll>
+            {/* removed — redundant with steps above */}
           </div>
         </div>
       </section>
