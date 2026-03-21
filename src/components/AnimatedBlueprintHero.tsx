@@ -118,7 +118,7 @@ function StructuralWireframe() {
         strokeWidth="0.5"
         opacity="0.1"
         strokeDasharray="4 8"
-        className="animate-[drawLine_1s_2s_ease-out_forwards]"
+        className="animate-[drawLine_0.7s_1.1s_ease-out_forwards]"
       />
       {/* Stall dividers */}
       {[350, 500, 650, 800].map((x, i) => (
