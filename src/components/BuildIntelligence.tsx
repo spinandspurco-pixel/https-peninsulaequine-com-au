@@ -111,11 +111,11 @@ export function BuildIntelligence() {
               </p>
               <div className="w-8 h-px bg-accent/25" />
             </div>
-            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/90 tracking-[0.03em] mb-4">
+            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/90 tracking-[0.03em] mb-3">
               What You Don't See Matters Most
             </h2>
-            <p className="font-serif text-sm sm:text-base italic text-muted-foreground/35 max-w-lg mx-auto leading-relaxed mb-2">
-              Every build is engineered before it is seen.
+            <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/30 italic tracking-wide mb-4">
+              What you don't see is what makes it last.
             </p>
             <p className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.25em] text-accent/25">
               Structure first. Finish second. Longevity always.
