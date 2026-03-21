@@ -134,12 +134,12 @@ export default function Shop() {
         </div>
       </section>
 
-      {/* Add-Ons Strip */}
+      {/* Extended Integration */}
       <section className="py-16 bg-card border-y border-border">
         <div className="section-container">
           <div className="text-center max-w-xl mx-auto mb-10 space-y-3">
-            <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60">Optional</p>
-            <h2 className="font-serif text-xl md:text-2xl">System Add-Ons</h2>
+            <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60">Extended Integration</p>
+            <h2 className="font-serif text-xl md:text-2xl">System Extensions</h2>
           </div>
           <div className="grid sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {GROUNDLOCK_ADDONS.map((addon) => (
@@ -150,7 +150,7 @@ export default function Shop() {
                 </div>
                 <h3 className="font-serif text-lg">{addon.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{addon.description}</p>
-                <p className="text-sm text-muted-foreground/60 italic">Available on request</p>
+                <p className="text-sm text-muted-foreground/60 italic">Integrated as part of system specification</p>
               </div>
             ))}
           </div>
