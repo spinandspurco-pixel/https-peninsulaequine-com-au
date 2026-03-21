@@ -223,7 +223,7 @@ export function ProjectsCinematicHero() {
               className="font-serif text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.05] tracking-[0.02em] mb-6 opacity-0"
               style={{
                 color: "#F5F0E8",
-                animation: "heroHeadingReveal 1.2s 2.8s cubic-bezier(0.22, 1, 0.36, 1) forwards",
+                animation: "heroHeadingReveal 0.9s 1.7s cubic-bezier(0.22, 1, 0.36, 1) forwards",
               }}
             >
               Main Ridge
