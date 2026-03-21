@@ -89,7 +89,7 @@ export function ContentCard({
             alt={imageAlt}
             loading="lazy"
             decoding="async"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+            className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-90"
           />
           {/* Subtle overlay on hover */}
           <div
