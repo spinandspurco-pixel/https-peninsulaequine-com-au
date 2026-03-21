@@ -44,7 +44,8 @@ const fmt = (v: number) =>
 function categoryLabel(cat: string): string {
   const labels: Record<string, string> = {
     earthworks: "Earthworks",
-    groundlock: "GroundLock™ Systems",
+    "ground-systems": "Ground Stabilisation Systems",
+    groundlock: "Ground Stabilisation Systems",
     fencing: "Fencing & Boundaries",
     construction: "Construction",
     drainage: "Drainage & Water Management",
