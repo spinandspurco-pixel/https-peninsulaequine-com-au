@@ -233,7 +233,7 @@ export function LeadDetailPanel({ record, onClose, onUpdated, onCreateQuote }: P
     const body = encodeURIComponent(aiDraft.draft_message);
     window.open(`mailto:${record.email}?subject=${subject}&body=${body}`, "_blank");
   }, [aiDraft, record.email]);
-
+  const daysSinceCreated = differenceInDays(new Date(), new Date(record.created_at));
 
 
   // Automation prompts
