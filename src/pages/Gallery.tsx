@@ -8,6 +8,7 @@ import { ArrowRight, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useParallax } from "@/hooks/useParallax";
 import { ProjectsCinematicHero } from "@/components/ProjectsCinematicHero";
+import { InteractiveMasterplan } from "@/components/InteractiveMasterplan";
 
 // ── 1. HERO ──
 // Hero image now handled by ProjectsCinematicHero component
@@ -204,6 +205,11 @@ export default function Gallery() {
       <ProjectsCinematicHero />
 
       <ChapterDivider />
+
+      {/* ═══════════════════════════════════════════════════
+          1b. INTERACTIVE MASTERPLAN
+          ═══════════════════════════════════════════════════ */}
+      <InteractiveMasterplan />
 
       {/* ═══════════════════════════════════════════════════
           2. FEATURE PROJECT — Private Client — Mornington Peninsula
