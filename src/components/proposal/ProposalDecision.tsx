@@ -85,7 +85,10 @@ export function ProposalDecision({ quote, accepted, isExpired, onAccept }: Props
           </a>
         </div>
 
-        <p className="text-[10px] font-sans mt-6" style={{ color: "#2B2B2B", opacity: 0.15 }}>
+        <p className="text-[11px] font-sans italic mt-8 mb-2" style={{ color: "#8C6A3B", opacity: 0.6 }}>
+          GroundLock™ is specified where long-term performance matters.
+        </p>
+        <p className="text-[10px] font-sans" style={{ color: "#2B2B2B", opacity: 0.15 }}>
           By accepting, you agree to the scope and investment outlined above.
         </p>
       </div>
