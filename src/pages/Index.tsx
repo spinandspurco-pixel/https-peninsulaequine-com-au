@@ -254,6 +254,16 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ── Conversion Bridge 1 ──────────────────── */}
+      <ConversionBridge
+        label="Every project starts here"
+        heading="Book a complimentary site reading."
+        subtext="We assess your property's terrain, drainage, and access before recommending any system or build."
+        ctaLabel="Assess My Site"
+        ctaHref="/site-assessment"
+        trustLine="50+ properties assessed across the Mornington Peninsula"
+      />
+
       {/* ═══ 3. PROJECTS — HORIZONTAL SCROLL ═══════════════ */}
       <section className="relative overflow-hidden">
         <div className="py-32 sm:py-40 lg:py-48 relative">
