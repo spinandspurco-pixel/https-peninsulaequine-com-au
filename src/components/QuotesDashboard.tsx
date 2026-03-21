@@ -7,6 +7,7 @@ import { Plus, FileText, Clock, CheckCircle, XCircle, Send, Eye, RefreshCw, Doll
 import { toast } from "sonner";
 import { format, formatDistanceToNow } from "date-fns";
 import { QuoteBuilder } from "./QuoteBuilder";
+import { scheduleQuoteFollowUps, cancelScheduledMessages } from "@/lib/autoSendScheduler";
 
 interface QuoteRow {
   id: string;
