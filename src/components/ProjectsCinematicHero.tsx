@@ -171,8 +171,8 @@ export function ProjectsCinematicHero() {
       <div
         className="absolute inset-0 transition-all duration-[2000ms] ease-out"
         style={{
-          opacity: ready ? 0.12 : 0,
-          transitionDelay: "3s",
+          opacity: ready ? 0.18 : 0,
+          transitionDelay: "2s",
           transform: `translate(${mouse.x * 0.5}px, ${mouse.y * 0.5}px) scale(1.09)`,
         }}
       >
