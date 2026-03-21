@@ -711,7 +711,10 @@ export default function GroundLock() {
         </div>
       </section>
 
-      
+      {/* ═══ SYSTEM LAYOUT ════════════════════════════════ */}
+      <GroundLockSystemLayout />
+
+
     </Layout>
   );
 }
