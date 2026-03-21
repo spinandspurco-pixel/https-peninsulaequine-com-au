@@ -236,7 +236,7 @@ export function ProjectsCinematicHero() {
               className="text-sm sm:text-base font-serif italic leading-relaxed mb-3 opacity-0"
               style={{
                 color: "rgba(198,168,107,0.45)",
-                animation: "blueprintFade 1s 3s ease-out forwards",
+                animation: "blueprintFade 1s 3.4s ease-out forwards",
               }}
             >
               A private equine facility engineered for performance, flow, and long-term durability.
