@@ -86,7 +86,7 @@ function BlueprintLinework() {
         { x: 80, y: 100 }, { x: 1520, y: 100 },
         { x: 80, y: 800 }, { x: 1520, y: 800 },
       ].map((p, i) => (
-        <g key={i} opacity="0" style={{ animation: `blueprintFade 0.8s ${2.8 + i * 0.1}s ease-out forwards` }}>
+        <g key={i} opacity="0" style={{ animation: `blueprintFade 0.6s ${1.6 + i * 0.08}s ease-out forwards` }}>
           <line x1={p.x - 12} y1={p.y} x2={p.x + 12} y2={p.y} stroke="#C6A86B" strokeWidth="0.6" />
           <line x1={p.x} y1={p.y - 12} x2={p.x} y2={p.y + 12} stroke="#C6A86B" strokeWidth="0.6" />
         </g>
