@@ -216,6 +216,9 @@ export default function Admin() {
             <CRMPipeline onCreateQuote={(id) => setQuoteForInquiryId(id)} />
           )}
 
+          {/* Follow-Up Command View */}
+          <FollowUpCommandView />
+
           {/* Today's Plan */}
           <TodaysPlan />
 
