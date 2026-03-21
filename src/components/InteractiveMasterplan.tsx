@@ -361,16 +361,69 @@ function useIsTouchDevice() {
   return isTouch;
 }
 
+/* ── Tour sequence order ── */
+const TOUR_ORDER = ["stables", "courtyard", "service-wing", "viewing-area", "indoor-arena"];
+const TOUR_HOLD = 2800;
+
 /* ── Main export ── */
 export function InteractiveMasterplan() {
   usePreloadImages(Object.values(ZONE_IMAGES));
   const [activeZone, setActiveZone] = useState<string | null>(null);
+  const [tourActive, setTourActive] = useState(false);
+  const [tourStep, setTourStep] = useState(0);
+  const tourTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const activeZoneData = zones.find((z) => z.id === activeZone) || null;
   const isTouch = useIsTouchDevice();
 
-  const handleHover = useCallback((id: string) => { if (!isTouch) setActiveZone(id); }, [isTouch]);
-  const handleLeave = useCallback(() => { if (!isTouch) setActiveZone(null); }, [isTouch]);
-  const handleTap = useCallback((id: string) => { setActiveZone((prev) => (prev === id ? null : id)); }, []);
+  /* Tour logic */
+  const stopTour = useCallback(() => {
+    setTourActive(false);
+    if (tourTimer.current) clearTimeout(tourTimer.current);
+    tourTimer.current = null;
+  }, []);
+
+  const startTour = useCallback(() => {
+    setTourStep(0);
+    setActiveZone(TOUR_ORDER[0]);
+    setTourActive(true);
+  }, []);
+
+  useEffect(() => {
+    if (!tourActive) return;
+    tourTimer.current = setTimeout(() => {
+      const next = tourStep + 1;
+      if (next >= TOUR_ORDER.length) {
+        stopTour();
+        setActiveZone(null);
+      } else {
+        setTourStep(next);
+        setActiveZone(TOUR_ORDER[next]);
+      }
+    }, TOUR_HOLD);
+    return () => { if (tourTimer.current) clearTimeout(tourTimer.current); };
+  }, [tourActive, tourStep, stopTour]);
+
+  const handleHover = useCallback((id: string) => {
+    if (tourActive) return;
+    if (!isTouch) setActiveZone(id);
+  }, [isTouch, tourActive]);
+
+  const handleLeave = useCallback(() => {
+    if (tourActive) return;
+    if (!isTouch) setActiveZone(null);
+  }, [isTouch, tourActive]);
+
+  const handleTap = useCallback((id: string) => {
+    if (tourActive) stopTour();
+    setActiveZone((prev) => (prev === id ? null : id));
+  }, [tourActive, stopTour]);
+
+  const jumpToStep = useCallback((idx: number) => {
+    setTourStep(idx);
+    setActiveZone(TOUR_ORDER[idx]);
+    // Reset timer
+    if (tourTimer.current) clearTimeout(tourTimer.current);
+  }, []);
 
   return (
     <section className="relative py-28 sm:py-36 lg:py-44 overflow-hidden">
@@ -399,20 +452,73 @@ export function InteractiveMasterplan() {
               <SitePlan activeZone={activeZone} onHover={handleHover} onLeave={handleLeave} onTap={handleTap} />
             </div>
             <div className="lg:col-span-4 flex flex-col justify-start pt-4 lg:pt-10">
+              {/* Idle state / tour trigger */}
               <div
                 style={{
-                  opacity: activeZone ? 0 : 0.35,
-                  transform: activeZone ? `translateY(-${DISTANCE.sm}px)` : "translateY(0)",
+                  opacity: activeZone ? 0 : 1,
                   position: activeZone ? "absolute" : "relative",
-                  pointerEvents: "none",
-                  transition: `opacity ${DURATION.fast}ms ${EASE.interactive}, transform ${DURATION.fast}ms ${EASE.interactive}`,
+                  pointerEvents: activeZone ? "none" : "auto",
+                  transition: "opacity 350ms ease",
                 }}
               >
-                <p className="text-xs font-mono uppercase tracking-[0.3em] text-accent/25">
+                <p className="text-xs font-mono uppercase tracking-[0.3em] text-accent/25 mb-5">
                   {isTouch ? "Tap a zone to explore" : "Hover a zone to explore"}
                 </p>
+                {!tourActive && (
+                  <button
+                    onClick={startTour}
+                    className="group flex items-center gap-3 text-[11px] font-mono uppercase tracking-[0.25em] text-accent/30 transition-opacity duration-300 hover:text-accent/50"
+                  >
+                    <span className="w-6 h-px bg-accent/20 group-hover:bg-accent/40 transition-colors duration-300" />
+                    Explore the Ridge
+                  </button>
+                )}
               </div>
+
+              {/* Zone detail card */}
               <DetailCard zone={activeZoneData} visible={!!activeZone} />
+
+              {/* Tour progress / controls */}
+              {tourActive && (
+                <div
+                  className="mt-6"
+                  style={{ opacity: 1, transition: "opacity 350ms ease" }}
+                >
+                  {/* Step indicators */}
+                  <div className="flex items-center gap-2 mb-4">
+                    {TOUR_ORDER.map((id, idx) => (
+                      <button
+                        key={id}
+                        onClick={() => jumpToStep(idx)}
+                        className="relative h-1 flex-1 rounded-full overflow-hidden"
+                        style={{ background: "hsl(var(--accent) / 0.08)" }}
+                        aria-label={`Go to ${zones.find(z => z.id === id)?.label}`}
+                      >
+                        <div
+                          className="absolute inset-y-0 left-0 rounded-full"
+                          style={{
+                            width: idx < tourStep ? "100%" : idx === tourStep ? "100%" : "0%",
+                            background: idx <= tourStep ? "hsl(var(--accent) / 0.3)" : "transparent",
+                            transition: "width 350ms ease, background 350ms ease",
+                          }}
+                        />
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-accent/20">
+                      {tourStep + 1} / {TOUR_ORDER.length}
+                    </span>
+                    <button
+                      onClick={() => { stopTour(); setActiveZone(null); }}
+                      className="text-[9px] font-mono uppercase tracking-[0.25em] text-accent/20 transition-opacity duration-300 hover:text-accent/40"
+                    >
+                      Exit tour
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </RevealOnScroll>
