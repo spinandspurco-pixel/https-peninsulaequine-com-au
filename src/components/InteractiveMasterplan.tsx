@@ -132,6 +132,16 @@ function SitePlan({
         <pattern id="mp-hatch-dense" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <line x1="0" y1="0" x2="0" y2="3" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.04" />
         </pattern>
+        <filter id="mp-glow">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feFlood floodColor="hsl(var(--accent))" floodOpacity="0.15" result="color" />
+          <feComposite in="color" in2="blur" operator="in" result="glow" />
+          <feMerge>
+            <feMergeNode in="glow" />
+            <feMergeNode in="glow" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
       </defs>
 
       {/* Background grid */}
@@ -209,18 +219,36 @@ function SitePlan({
         const isActive = activeZone === z.id;
         const isDimmed = activeZone !== null && !isActive;
         return (
-          <g key={z.id} style={{ opacity: isDimmed ? 0.3 : 1, transition: `opacity ${DURATION.fast}ms ${EASE.interactive}` }}>
+          <g
+            key={z.id}
+            style={{
+              opacity: isDimmed ? 0.2 : 1,
+              transition: "opacity 350ms cubic-bezier(0.25, 0.1, 0.25, 1)",
+              willChange: "opacity",
+            }}
+            filter={isActive ? "url(#mp-glow)" : undefined}
+          >
             <path
               d={z.path}
-              fill={isActive ? "hsl(var(--accent) / 0.08)" : "hsl(var(--accent) / 0.012)"}
-              stroke={isActive ? "hsl(var(--accent) / 0.5)" : "hsl(var(--accent) / 0.08)"}
-              strokeWidth={isActive ? "1" : "0.4"}
-              style={{ transition: `fill ${DURATION.fast}ms ${EASE.interactive}, stroke ${DURATION.fast}ms ${EASE.interactive}` }}
+              fill={isActive ? "hsl(var(--accent) / 0.1)" : "hsl(var(--accent) / 0.012)"}
+              stroke={isActive ? "hsl(var(--accent) / 0.6)" : "hsl(var(--accent) / 0.08)"}
+              strokeWidth={isActive ? "1.2" : "0.4"}
+              style={{ transition: "fill 350ms ease, stroke 350ms ease, stroke-width 350ms ease" }}
               className="cursor-pointer"
               onMouseEnter={() => onHover(z.id)}
               onMouseLeave={onLeave}
               onClick={() => onTap(z.id)}
             />
+            {isActive && (
+              <path
+                d={z.path}
+                fill="none"
+                stroke="hsl(var(--accent) / 0.12)"
+                strokeWidth="4"
+                style={{ transition: "opacity 350ms ease" }}
+                className="pointer-events-none"
+              />
+            )}
             <text
               x={getCenter(z.path).x}
               y={getCenter(z.path).y}
@@ -231,7 +259,7 @@ function SitePlan({
               letterSpacing="0.12em"
               fill="hsl(var(--accent))"
               className="pointer-events-none uppercase"
-              style={{ opacity: isActive ? 0.5 : 0.15, transition: `opacity ${DURATION.fast}ms ${EASE.interactive}` }}
+              style={{ opacity: isActive ? 0.6 : 0.15, transition: "opacity 350ms ease" }}
             >
               {z.shortLabel}
             </text>
