@@ -316,6 +316,44 @@ export default function GroundLock() {
         </div>
       </section>
 
+      {/* ═══ FOR BUILDERS ═════════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="divider-grid" />
+        <div className="py-28 sm:py-40 bg-card relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
+            <RevealOnScroll direction="up">
+              <RevealLine className="mx-auto mb-12" width="w-8" />
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={80}>
+              <p className="text-overline mb-6">Select Partners</p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={120}>
+              <h2 className="heading-section text-foreground mb-6">
+                For Builders
+              </h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={180}>
+              <p className="text-sm text-muted-foreground/45 leading-[1.9] mb-4">
+                GroundLock is available for select projects and partners who want to build to a higher standard.
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={220}>
+              <p className="text-sm text-muted-foreground/35 leading-[1.9] mb-12">
+                We provide system supply, guidance, and support to ensure GroundLock is implemented correctly.
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={300}>
+              <Button asChild variant="outline-light" size="lg">
+                <Link to="/contact">
+                  Enquire About GroundLock Use <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ 7. CTA ═══════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
