@@ -49,7 +49,7 @@ export default function ProductDetail() {
             <TierBadge tier={product.tier} />
             {product.badge && (
               <span className={`inline-block px-3 py-1 rounded-sm text-[10px] font-mono uppercase tracking-[0.2em] ${
-                isPro ? "bg-accent text-accent-foreground" : "bg-foreground/10 text-foreground/60"
+                isPerformance ? "bg-accent text-accent-foreground" : "bg-foreground/10 text-foreground/60"
               }`}>
                 {product.badge}
               </span>
