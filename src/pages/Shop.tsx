@@ -58,8 +58,8 @@ export default function Shop() {
           <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
             {GROUNDLOCK_PRODUCTS.map((product) => {
               const tierMeta = GROUNDLOCK_TIERS[product.tier];
-              const isPro = product.tier === "pro";
-              const isComplete = product.tier === "complete";
+              const isPro = product.tier === "performance";
+              const isComplete = product.tier === "estate";
 
               return (
                 <div
