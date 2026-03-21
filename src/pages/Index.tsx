@@ -298,8 +298,7 @@ export default function Index() {
       {/* ── Conversion Bridge 1 ──────────────────── */}
       <ConversionBridge
         label="Every project starts here"
-        heading="Book a complimentary site reading."
-        subtext="We assess your property's terrain, drainage, and access before recommending any system or build."
+        heading="Book a site assessment."
         ctaLabel="Assess My Site"
         ctaHref="/site-assessment"
         trustLine="50+ properties assessed across the Mornington Peninsula"
