@@ -173,7 +173,7 @@ export function ProjectsCinematicHero() {
         style={{
           opacity: ready ? 0.12 : 0,
           transitionDelay: "3s",
-          transform: `translate(${mouse.x * 0.5}px, ${mouse.y * 0.5}px) scale(1.05)`,
+          transform: `translate(${mouse.x * 0.5}px, ${mouse.y * 0.5}px) scale(1.09)`,
         }}
       >
         <img
