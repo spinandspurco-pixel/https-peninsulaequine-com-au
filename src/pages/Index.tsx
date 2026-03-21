@@ -368,15 +368,15 @@ export default function Index() {
                 <RevealOnScroll key={svc.title} direction="up" stagger={i} staggerInterval={80}>
                   <Link
                     to={svc.href}
-                    className="group relative flex flex-col p-8 sm:p-10 min-h-[240px] border border-border/20 hover:border-border/40 bg-card/40 hover:bg-card/70 transition-all duration-700 ease-out"
+                    className="group relative flex flex-col p-8 sm:p-10 min-h-[240px] border border-border/20 hover:border-border/40 bg-card/40 hover:bg-card/70 transition-opacity duration-300 ease-out"
                   >
-                    <div className="absolute top-0 left-0 w-8 h-px bg-accent/20 group-hover:w-14 group-hover:bg-accent/40 transition-all duration-700" />
+                    <div className="absolute top-0 left-0 w-8 h-px bg-accent/20 group-hover:w-14 group-hover:bg-accent/40 transition-opacity duration-300" />
                     <ServiceIcon icon={svc.icon} className="mb-6" />
-                    <h3 className="font-serif text-[15px] font-medium text-foreground/65 mb-4 tracking-[0.02em] group-hover:text-foreground/90 transition-colors duration-500">
+                    <h3 className="font-serif text-[15px] font-medium text-foreground/65 mb-4 tracking-[0.02em] group-hover:text-foreground/90 transition-opacity duration-300">
                       {svc.title}
                     </h3>
                     <p className="text-[12px] text-muted-foreground/25 leading-[2.1] max-w-[260px] flex-1">{svc.desc}</p>
-                    <div className="flex items-center gap-2 mt-6 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0">
+                    <div className="flex items-center gap-2 mt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <ArrowRight className="w-3 h-3 text-accent/40" />
                     </div>
                   </Link>
