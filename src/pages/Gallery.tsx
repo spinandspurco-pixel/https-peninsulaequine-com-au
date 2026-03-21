@@ -338,7 +338,7 @@ export default function Gallery() {
             </RevealOnScroll>
 
             {/* Row 1 — wide deck + tall stable facade */}
-            <RevealOnScroll direction="up" duration={800}>
+            <RevealOnScroll direction="up" duration={DURATION.slow}>
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-5 mb-3 sm:mb-5">
                 <div className="lg:col-span-7">
                   <EditorialImage src={aberdeenDeck} alt="Private client — outdoor deck" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenDeck)} />
