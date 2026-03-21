@@ -399,7 +399,7 @@ export default function Gallery() {
         <div className="absolute inset-0 grain-texture" />
         <div className="py-28 sm:py-36 lg:py-44 relative">
           <div className="section-container relative z-[1]">
-            <RevealOnScroll direction="up" duration={600}>
+            <RevealOnScroll direction="up" duration={DURATION.normal}>
               <div className="flex items-center justify-between mb-14 sm:mb-18 lg:mb-20">
                 <div>
                   <div className="flex items-center gap-5 mb-5">
