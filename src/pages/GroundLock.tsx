@@ -90,6 +90,26 @@ export default function GroundLock() {
         </div>
       </section>
 
+      {/* ═══ CONSEQUENCE ══════════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="py-20 sm:py-28 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
+            <RevealOnScroll direction="up">
+              <div className="space-y-6">
+                <p className="text-sm text-muted-foreground/40 leading-[2]">
+                  Ground failure doesn't show up immediately.<br />
+                  It shows up later — as movement, drainage issues, and surface breakdown.
+                </p>
+                <p className="text-sm text-foreground/55 leading-[2]">
+                  GroundLock prevents it before it starts.
+                </p>
+              </div>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ 2. PROBLEM ═══════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
@@ -282,6 +302,20 @@ export default function GroundLock() {
         </div>
       </section>
 
+      {/* ═══ BRIDGE ═══════════════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="py-16 sm:py-20 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
+            <RevealOnScroll direction="up">
+              <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/30 italic leading-relaxed">
+                Used across arenas, access routes, and high-traffic zones where ground failure isn't an option.
+              </p>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ 7. CTA ═══════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
@@ -303,9 +337,14 @@ export default function GroundLock() {
               </h2>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
-              <p className="text-sm text-muted-foreground/35 mb-12 leading-[1.9]">
-                We'll review your site and recommend the right system.
-              </p>
+              <div className="space-y-4 mb-12">
+                <p className="text-sm text-muted-foreground/40 leading-[1.9]">
+                  Every site is different.
+                </p>
+                <p className="text-sm text-muted-foreground/35 leading-[1.9]">
+                  We assess ground conditions, usage, and load requirements before recommending a system.
+                </p>
+              </div>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={250}>
               <Button asChild variant="gold" size="lg">
@@ -313,6 +352,13 @@ export default function GroundLock() {
                   Request Assessment <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
+            </RevealOnScroll>
+
+            {/* Trust line */}
+            <RevealOnScroll direction="up" delay={350}>
+              <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/20 mt-16">
+                We use GroundLock under all Peninsula Equine builds.
+              </p>
             </RevealOnScroll>
           </div>
         </div>
