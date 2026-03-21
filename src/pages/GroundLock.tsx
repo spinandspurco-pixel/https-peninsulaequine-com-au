@@ -9,11 +9,11 @@ import { ArrowRight, Shield, Droplets, Grid3X3, Wrench, Sparkles } from "lucide-
 
 /* ── Data ─────────────────────────────────────────── */
 const SPECS = [
-  { icon: Shield, label: "Load Stability", detail: "Equine + vehicle traffic" },
-  { icon: Droplets, label: "Drainage", detail: "Open-base water management" },
-  { icon: Grid3X3, label: "Installation", detail: "Modular, repeatable placement" },
-  { icon: Wrench, label: "Maintenance", detail: "Reduced surface degradation" },
-  { icon: Sparkles, label: "Finish", detail: "Clean, stable appearance" },
+  { icon: Shield, label: "Load Distribution", detail: "Alternating geometry shares force across panels" },
+  { icon: Droplets, label: "Drainage", detail: "Open-base architecture manages sub-surface water" },
+  { icon: Grid3X3, label: "Modular Install", detail: "Repeatable placement — no specialist tools" },
+  { icon: Wrench, label: "Longevity", detail: "Interlocking rhythm resists lateral shift" },
+  { icon: Sparkles, label: "Finish", detail: "Resolved surface — clean, stable, permanent" },
 ];
 
 const APPLICATIONS = [
@@ -111,14 +111,14 @@ export default function GroundLock() {
                 className="text-sm sm:text-[15px] text-muted-foreground/50 leading-[1.7] mb-2 opacity-0 animate-fade-in"
                 style={{ animationDelay: "800ms", animationFillMode: "both", animationDuration: "1000ms" }}
               >
-                Engineered Ground Systems for Equine Infrastructure
+                Alternating Interlock Ground Stabilisation
               </p>
 
               <p
                 className="text-[13px] text-muted-foreground/35 leading-[1.7] mb-10 opacity-0 animate-fade-in"
                 style={{ animationDelay: "1000ms", animationFillMode: "both", animationDuration: "1000ms" }}
               >
-                Built to stabilise movement, manage load, and last.
+                Opposing horseshoe panels lock in alternating rhythm — distributing load, resisting lateral movement, and creating a structurally intelligent surface.
               </p>
 
               <div
@@ -200,9 +200,14 @@ export default function GroundLock() {
                 <p className="text-overline mb-5">System Architecture</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={120}>
-                <h2 className="heading-section text-foreground">
-                  The Panel → The System → The Result
+                <h2 className="heading-section text-foreground mb-4">
+                  The Panel → The Lock → The System
                 </h2>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={160}>
+                <p className="text-[13px] text-muted-foreground/32 leading-[1.7] max-w-md mx-auto">
+                  Each panel interlocks in opposing orientation — crown into opening, tab into slot. The result is a unified field that resists movement in every direction.
+                </p>
               </RevealOnScroll>
             </div>
 
@@ -213,6 +218,13 @@ export default function GroundLock() {
               <div className="w-10 h-px bg-accent/8 mx-auto" />
               <SystemDiagram />
             </div>
+
+            {/* Authority statement */}
+            <RevealOnScroll direction="none" delay={200}>
+              <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/25 italic leading-[1.9] text-center mt-14 sm:mt-20 max-w-sm mx-auto">
+                Designed to interlock in opposing rhythm — stronger by geometry, not by mass.
+              </p>
+            </RevealOnScroll>
           </div>
         </div>
       </section>
@@ -250,7 +262,7 @@ export default function GroundLock() {
           <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
             <RevealOnScroll direction="none">
               <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/28 italic leading-[1.9]">
-                Designed for long-term ownership — not short-term fixes.
+                Standard flat grids sit on the ground. GroundLock™ locks into it.
               </p>
             </RevealOnScroll>
           </div>
@@ -272,12 +284,12 @@ export default function GroundLock() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={120}>
                 <h2 className="heading-section text-foreground mb-3">
-                  Engineered, Not Decorative
+                  Engineered, Not Arranged
                 </h2>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={160}>
                 <p className="font-serif text-[13px] text-muted-foreground/28 italic max-w-sm mx-auto leading-[1.7]">
-                  Hover or tap each feature to understand the horseshoe form.
+                  Tap each feature to see how the horseshoe form creates structural advantage.
                 </p>
               </RevealOnScroll>
             </div>
@@ -296,7 +308,7 @@ export default function GroundLock() {
           <div className="section-container max-w-lg mx-auto text-center relative z-[1]">
             <RevealOnScroll direction="none">
               <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/28 italic leading-[1.9]">
-                Built to handle real equine movement, not light-use assumptions.
+                Built for real equine movement — not light-use assumptions.
               </p>
             </RevealOnScroll>
           </div>
