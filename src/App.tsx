@@ -62,6 +62,7 @@ const SignatureSystems = lazy(() => import("./pages/SignatureSystems"));
 const GroundLockSetup = lazy(() => import("./pages/GroundLockSetup"));
 const GroundLockOnboarding = lazy(() => import("./pages/GroundLockOnboarding"));
 const ClientQuote = lazy(() => import("./pages/ClientQuote"));
+const ProposalTemplate = lazy(() => import("./pages/ProposalTemplate"));
 
 const queryClient = new QueryClient();
 
