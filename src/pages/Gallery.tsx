@@ -244,6 +244,17 @@ export default function Gallery() {
 
   return (
     <Layout>
+      {/* Global architectural texture — felt, not seen */}
+      <div className="fixed inset-0 pointer-events-none z-[1]">
+        <div className="absolute inset-0 grain-texture" style={{ opacity: 0.6 }} />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: "radial-gradient(ellipse 80% 60% at 50% 40%, transparent 0%, hsl(var(--background) / 0.04) 100%)",
+            mixBlendMode: "multiply",
+          }}
+        />
+      </div>
       {/* ═══════════════════════════════════════════════════
           1. HERO — cinematic blueprint with gold linework
           ═══════════════════════════════════════════════════ */}
