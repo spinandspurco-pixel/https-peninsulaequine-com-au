@@ -94,8 +94,23 @@ export function GroundLockProjectForm() {
       });
 
       if (error) throw error;
+
+      // Send email notification
+      supabase.functions.invoke("send-groundlock-enquiry", {
+        body: {
+          name: form.name,
+          email: form.email,
+          phone: form.phone || undefined,
+          propertyType: form.propertyType || undefined,
+          projectType: form.projectType || undefined,
+          size: form.size || undefined,
+          message: form.message || undefined,
+          attachmentUrls: attachmentUrls.length ? attachmentUrls : undefined,
+        },
+      }).catch((err) => console.error("Email notification failed:", err));
+
       setSubmitted(true);
-      toast.success("Your project request has been submitted.");
+      toast.success("Thanks — we've received your project. We'll be in touch shortly.");
     } catch {
       toast.error("Something went wrong. Please try again.");
     } finally {
