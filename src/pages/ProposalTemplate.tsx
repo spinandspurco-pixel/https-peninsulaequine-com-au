@@ -602,114 +602,76 @@ export default function ProposalTemplate() {
             6. INVESTMENT
         ════════════════════════════════════════════ */}
         <section className="py-28 sm:py-36">
-          <div className="flex items-center gap-5 mb-16 sm:mb-20">
+          <div className="flex items-center gap-5 mb-20 sm:mb-28">
             <div className="h-px w-8" style={{ background: "hsl(var(--accent))", opacity: 0.25 }} />
             <SectionLabel number="05">Investment</SectionLabel>
           </div>
 
-          <p
-            className="text-[13px] font-sans leading-[2] max-w-lg mb-16"
-            style={{ color: "hsl(var(--foreground))", opacity: 0.35 }}
-          >
-            This proposal reflects a complete GroundLock system approach tailored to your site.
-          </p>
-
-          {/* Investment hero block */}
-          <div
-            className="relative py-16 sm:py-20 px-10 sm:px-14 text-center overflow-hidden"
-            style={{
-              background: "hsl(var(--card))",
-              border: "1px solid hsl(var(--border))",
-            }}
-          >
-            {/* Subtle corner marks */}
-            {[
-              { top: 16, left: 16 },
-              { top: 16, right: 16 },
-              { bottom: 16, left: 16 },
-              { bottom: 16, right: 16 },
-            ].map((pos, i) => (
-              <div
-                key={i}
-                className="absolute w-4 h-4"
-                style={{
-                  ...pos as any,
-                  borderTop: pos.top !== undefined ? `1px solid hsl(var(--accent))` : undefined,
-                  borderBottom: pos.bottom !== undefined ? `1px solid hsl(var(--accent))` : undefined,
-                  borderLeft: pos.left !== undefined ? `1px solid hsl(var(--accent))` : undefined,
-                  borderRight: pos.right !== undefined ? `1px solid hsl(var(--accent))` : undefined,
-                  opacity: 0.12,
-                }}
-              />
-            ))}
-
+          {/* Centred price presentation */}
+          <div className="max-w-2xl mx-auto text-center py-20 sm:py-28">
             <p
-              className="text-[8px] font-sans uppercase tracking-[0.3em] mb-8"
-              style={{ color: "hsl(var(--accent))", opacity: 0.4 }}
+              className="text-[8px] font-sans uppercase tracking-[0.35em] mb-12"
+              style={{ color: "hsl(var(--accent))", opacity: 0.35 }}
             >
               Total Investment
             </p>
 
             <p
-              className="font-serif text-[2.5rem] sm:text-[3.5rem] lg:text-[4rem] font-semibold mb-8"
+              className="font-serif text-[3rem] sm:text-[4rem] lg:text-[5rem] font-semibold"
               style={{
                 color: "hsl(var(--foreground))",
-                letterSpacing: "0.02em",
+                letterSpacing: "0.015em",
                 lineHeight: 1,
-                opacity: 0.85,
+                opacity: 0.9,
               }}
             >
               {data.investmentTotal}
             </p>
 
             <div
-              className="w-10 h-px mx-auto mb-8"
-              style={{ background: "hsl(var(--accent))", opacity: 0.2 }}
+              className="w-12 h-px mx-auto mt-12 mb-12"
+              style={{ background: "hsl(var(--accent))", opacity: 0.18 }}
             />
 
             <p
-              className="text-[11px] font-sans leading-[1.9] max-w-sm mx-auto"
-              style={{ color: "hsl(var(--foreground))", opacity: 0.25 }}
+              className="text-[12px] font-sans leading-[2] max-w-md mx-auto"
+              style={{ color: "hsl(var(--foreground))", opacity: 0.28 }}
             >
-              {data.investmentNote}
+              Detailed breakdowns can be provided if required, however the system is designed and delivered as a complete solution rather than individual components.
             </p>
           </div>
 
-          {/* Includes strip */}
-          <div
-            className="mt-14 pt-8"
-            style={{ borderTop: "1px solid hsl(var(--border))" }}
-          >
-            <p
-              className="text-[7px] font-sans uppercase tracking-[0.28em] mb-6"
-              style={{ color: "hsl(var(--accent))", opacity: 0.25 }}
+          {/* Supporting context — quiet, minimal */}
+          <div className="max-w-2xl mx-auto">
+            <div
+              className="pt-10"
+              style={{ borderTop: "1px solid hsl(var(--border))" }}
             >
-              Includes
-            </p>
-            <div className="grid grid-cols-2 gap-x-8 gap-y-3">
-              {["Site preparation & base formation", "GroundLock panel installation", "System alignment & integration", "Surface preparation & completion"].map((inc) => (
-                <div key={inc} className="flex items-start gap-3">
-                  <span
-                    className="w-1 h-1 rounded-full mt-1.5 shrink-0"
-                    style={{ background: "hsl(var(--accent))", opacity: 0.3 }}
-                  />
-                  <p
-                    className="text-[11px] font-sans leading-[1.75]"
-                    style={{ color: "hsl(var(--foreground))", opacity: 0.32 }}
-                  >
-                    {inc}
-                  </p>
-                </div>
-              ))}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-10">
+                {["Site preparation & base formation", "GroundLock panel installation", "System alignment & integration", "Surface preparation & completion"].map((inc) => (
+                  <div key={inc} className="flex items-start gap-3">
+                    <span
+                      className="w-1 h-1 rounded-full mt-[7px] shrink-0"
+                      style={{ background: "hsl(var(--accent))", opacity: 0.25 }}
+                    />
+                    <p
+                      className="text-[11px] font-sans leading-[1.8]"
+                      style={{ color: "hsl(var(--foreground))", opacity: 0.28 }}
+                    >
+                      {inc}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <p
-            className="text-[9px] font-sans mt-10 leading-[1.8]"
-            style={{ color: "hsl(var(--foreground))", opacity: 0.13 }}
-          >
-            Final pricing confirmed following site assessment. All figures include GST where applicable.
-          </p>
+            <p
+              className="text-[9px] font-sans mt-12 leading-[1.8]"
+              style={{ color: "hsl(var(--foreground))", opacity: 0.12 }}
+            >
+              Final pricing confirmed following site assessment. All figures include GST where applicable.
+            </p>
+          </div>
         </section>
 
         <Divider />
