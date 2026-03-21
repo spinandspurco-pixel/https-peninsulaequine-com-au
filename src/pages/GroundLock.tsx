@@ -9,11 +9,11 @@ import { ArrowRight, Shield, Droplets, Grid3X3, Wrench, Sparkles } from "lucide-
 
 /* ── Data ─────────────────────────────────────────── */
 const SPECS = [
-  { icon: Shield, label: "Load Stability", detail: "Equine + vehicle traffic" },
-  { icon: Droplets, label: "Drainage", detail: "Open-base water management" },
-  { icon: Grid3X3, label: "Installation", detail: "Modular, repeatable placement" },
-  { icon: Wrench, label: "Maintenance", detail: "Reduced surface degradation" },
-  { icon: Sparkles, label: "Finish", detail: "Clean, stable appearance" },
+  { icon: Shield, label: "Load Distribution", detail: "Alternating geometry shares force across panels" },
+  { icon: Droplets, label: "Drainage", detail: "Open-base architecture manages sub-surface water" },
+  { icon: Grid3X3, label: "Modular Install", detail: "Repeatable placement — no specialist tools" },
+  { icon: Wrench, label: "Longevity", detail: "Interlocking rhythm resists lateral shift" },
+  { icon: Sparkles, label: "Finish", detail: "Resolved surface — clean, stable, permanent" },
 ];
 
 const APPLICATIONS = [
