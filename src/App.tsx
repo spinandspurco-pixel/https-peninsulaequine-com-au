@@ -32,7 +32,7 @@ const HQ = lazy(() => import("./pages/HQ"));
 const EmployeeDashboard = lazy(() => import("./pages/EmployeeDashboard"));
 const BookLesson = lazy(() => import("./pages/BookLesson"));
 const Lessons = lazy(() => import("./pages/Lessons"));
-const BrandGuide = lazy(() => import("./pages/BrandGuide"));
+
 const Shop = lazy(() => import("./pages/Shop"));
 
 const Forge = lazy(() => import("./pages/Forge"));
