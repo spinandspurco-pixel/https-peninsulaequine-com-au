@@ -184,71 +184,56 @@ function SitePlan({
       <rect x="470" y="260" width="75" height="120" fill="hsl(0 0% 0% / 0.03)" filter="url(#mp-shadow-sm)" rx="0.5" />
 
       {/* Property boundary */}
-      <rect x="155" y="80" width="430" height="560" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.35" opacity="0.07" strokeDasharray="8 4" />
+      <rect x="155" y="80" width="430" height="560" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.5" opacity="0.06" strokeDasharray="10 5" />
 
       {/* ── STABLES WING (top) ── */}
-      {/* Left float/garage */}
-      <rect x="195" y="95" width="55" height="25" fill="url(#mp-hatch)" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.15" />
+      {/* Float bays */}
+      <rect x="195" y="95" width="55" height="25" fill="url(#mp-hatch)" stroke="hsl(var(--accent))" strokeWidth="0.5" opacity="0.12" />
       <text x="222" y="111" textAnchor="middle" fontSize="5" fill="hsl(var(--accent))" opacity="0.15" fontFamily="monospace" letterSpacing="0.1em">FLOAT</text>
-
-      {/* Right float/garage */}
-      <rect x="490" y="95" width="55" height="25" fill="url(#mp-hatch)" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.15" />
+      <rect x="490" y="95" width="55" height="25" fill="url(#mp-hatch)" stroke="hsl(var(--accent))" strokeWidth="0.5" opacity="0.12" />
       <text x="517" y="111" textAnchor="middle" fontSize="5" fill="hsl(var(--accent))" opacity="0.15" fontFamily="monospace" letterSpacing="0.1em">FLOAT</text>
 
       {/* Entry marker */}
       <text x="370" y="110" textAnchor="middle" fontSize="5" fill="hsl(var(--accent))" opacity="0.12" fontFamily="monospace" letterSpacing="0.15em">ENTRY</text>
 
       {/* Central corridor axis */}
-      <line x1="370" y1="120" x2="370" y2="430" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.05" strokeDasharray="3 3" />
+      <line x1="370" y1="125" x2="370" y2="255" stroke="hsl(var(--accent))" strokeWidth="0.4" opacity="0.06" strokeDasharray="4 4" />
 
-      {/* Stable dividers — left wing (S1–S3) */}
-      {[0, 1, 2, 3].map((i) => (
-        <line key={`sl${i}`} x1={245 + i * 40} y1="120" x2={245 + i * 40} y2="260" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.05" />
+      {/* Stable dividers — left wing */}
+      {[0, 1, 2].map((i) => (
+        <line key={`sl${i}`} x1={245 + i * 45} y1="125" x2={245 + i * 45} y2="255" stroke="hsl(var(--accent))" strokeWidth="0.4" opacity="0.06" />
       ))}
-      {/* Stable dividers — right wing (S4–S6) */}
-      {[0, 1, 2, 3].map((i) => (
-        <line key={`sr${i}`} x1={405 + i * 40} y1="120" x2={405 + i * 40} y2="260" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.05" />
+      {/* Stable dividers — right wing */}
+      {[0, 1, 2].map((i) => (
+        <line key={`sr${i}`} x1={415 + i * 45} y1="125" x2={415 + i * 45} y2="255" stroke="hsl(var(--accent))" strokeWidth="0.4" opacity="0.06" />
       ))}
 
       {/* Stable number labels */}
       {[1, 2, 3].map((n, i) => (
-        <text key={`sln${n}`} x={265 + i * 40} y="195" textAnchor="middle" fontSize="4.5" fill="hsl(var(--accent))" opacity="0.08" fontFamily="monospace">S{n}</text>
+        <text key={`sln${n}`} x={267 + i * 45} y="195" textAnchor="middle" fontSize="4.5" fill="hsl(var(--accent))" opacity="0.1" fontFamily="monospace">S{n}</text>
       ))}
       {[4, 5, 6].map((n, i) => (
-        <text key={`srn${n}`} x={425 + i * 40} y="195" textAnchor="middle" fontSize="4.5" fill="hsl(var(--accent))" opacity="0.08" fontFamily="monospace">S{n}</text>
+        <text key={`srn${n}`} x={437 + i * 45} y="195" textAnchor="middle" fontSize="4.5" fill="hsl(var(--accent))" opacity="0.1" fontFamily="monospace">S{n}</text>
       ))}
 
       {/* ── SERVICE WING (left middle) ── */}
-      {/* Internal room dividers */}
-      <line x1="195" y1="310" x2="270" y2="310" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.05" />
-      <line x1="195" y1="350" x2="270" y2="350" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.05" />
-      <line x1="195" y1="390" x2="270" y2="390" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.05" />
-      <text x="232" y="290" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.08" fontFamily="monospace">TACK 1</text>
-      <text x="232" y="335" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.08" fontFamily="monospace">WC</text>
-      <text x="232" y="375" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.08" fontFamily="monospace">STORE</text>
-      <text x="232" y="415" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.08" fontFamily="monospace">TACK 2</text>
+      <line x1="197" y1="320" x2="268" y2="320" stroke="hsl(var(--accent))" strokeWidth="0.4" opacity="0.06" />
+      <line x1="197" y1="380" x2="268" y2="380" stroke="hsl(var(--accent))" strokeWidth="0.4" opacity="0.06" />
+      <text x="232" y="295" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.1" fontFamily="monospace">TACK</text>
+      <text x="232" y="350" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.1" fontFamily="monospace">WC</text>
+      <text x="232" y="410" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.1" fontFamily="monospace">STORE</text>
 
       {/* ── VIEWING AREA (right middle) ── */}
-      {/* Upstairs viewing loft indicator — dormer hatching */}
-      <rect x="475" y="265" width="65" height="50" fill="url(#mp-hatch-dense)" stroke="none" opacity="0.3" />
-      {/* Stair indicator */}
-      {[0, 1, 2, 3, 4].map((i) => (
-        <line key={`stair${i}`} x1={475} y1={325 + i * 8} x2={540} y2={325 + i * 8} stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.06" />
-      ))}
-      <text x="507" y="290" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.08" fontFamily="monospace">VIEWING</text>
-      <text x="507" y="296" textAnchor="middle" fontSize="3.5" fill="hsl(var(--accent))" opacity="0.06" fontFamily="monospace">UPSTAIRS</text>
+      <rect x="475" y="265" width="65" height="50" fill="url(#mp-hatch-dense)" stroke="none" opacity="0.25" />
+      <text x="507" y="292" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.1" fontFamily="monospace">VIEWING</text>
 
-      {/* ── WASH / TIE-UP (right of courtyard) ── */}
-      <rect x="470" y="380" width="75" height="50" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.05" />
-      <text x="507" y="408" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.08" fontFamily="monospace">WASH BAY</text>
+      {/* ── WASH BAY ── */}
+      <rect x="470" y="380" width="75" height="50" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.4" opacity="0.06" />
+      <text x="507" y="408" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.1" fontFamily="monospace">WASH BAY</text>
 
       {/* ── ARENA STORE (below arena) ── */}
-      <rect x="195" y="590" width="350" height="35" fill="url(#mp-hatch)" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.1" />
+      <rect x="195" y="590" width="350" height="35" fill="url(#mp-hatch)" stroke="hsl(var(--accent))" strokeWidth="0.5" opacity="0.08" />
       <text x="370" y="611" textAnchor="middle" fontSize="5" fill="hsl(var(--accent))" opacity="0.12" fontFamily="monospace" letterSpacing="0.1em">ARENA STORE</text>
-
-      {/* ── ARENA WALKWAY markers ── */}
-      <line x1="270" y1="380" x2="270" y2="430" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.04" strokeDasharray="2 2" />
-      <line x1="470" y1="380" x2="470" y2="430" stroke="hsl(var(--accent))" strokeWidth="0.2" opacity="0.04" strokeDasharray="2 2" />
 
       {/* ── INTERACTIVE ZONE SHAPES ── */}
       {zones.map((z) => {
@@ -267,8 +252,8 @@ function SitePlan({
             <path
               d={z.path}
               fill={isActive ? "hsl(var(--accent) / 0.1)" : "hsl(var(--accent) / 0.012)"}
-              stroke={isActive ? "hsl(var(--accent) / 0.6)" : "hsl(var(--accent) / 0.08)"}
-              strokeWidth={isActive ? "1.2" : "0.4"}
+              stroke={isActive ? "hsl(var(--accent) / 0.6)" : "hsl(var(--accent) / 0.1)"}
+              strokeWidth={isActive ? "1.2" : "0.6"}
               style={{ transition: "fill 350ms ease, stroke 350ms ease, stroke-width 350ms ease" }}
               className="cursor-pointer"
               onMouseEnter={() => onHover(z.id)}
@@ -281,7 +266,6 @@ function SitePlan({
                 fill="none"
                 stroke="hsl(var(--accent) / 0.12)"
                 strokeWidth="4"
-                style={{ transition: "opacity 350ms ease" }}
                 className="pointer-events-none"
               />
             )}
@@ -303,65 +287,47 @@ function SitePlan({
         );
       })}
 
-      {/* ── STRUCTURAL COLUMNS — from A07 axonometric ── */}
-      {/* Arena columns — left row */}
+      {/* ── STRUCTURAL COLUMNS ── */}
       {[0, 1, 2, 3, 4, 5].map((i) => (
-        <rect key={`cal${i}`} x={193} y={440 + i * 25} width="2.5" height="2.5" fill="hsl(var(--accent))" opacity="0.06" />
+        <rect key={`cal${i}`} x={193} y={440 + i * 25} width="3" height="3" fill="hsl(var(--accent))" opacity="0.08" rx="0.5" />
       ))}
-      {/* Arena columns — right row */}
       {[0, 1, 2, 3, 4, 5].map((i) => (
-        <rect key={`car${i}`} x={544} y={440 + i * 25} width="2.5" height="2.5" fill="hsl(var(--accent))" opacity="0.06" />
-      ))}
-      {/* Stable columns */}
-      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
-        <rect key={`cst${i}`} x={210 + i * 45} y={118} width="2" height="2" fill="hsl(var(--accent))" opacity="0.05" />
+        <rect key={`car${i}`} x={544} y={440 + i * 25} width="3" height="3" fill="hsl(var(--accent))" opacity="0.08" rx="0.5" />
       ))}
 
       {/* ── DIMENSION ANNOTATIONS ── */}
       <g opacity="0.08" fontSize="5" fontFamily="monospace" fill="hsl(var(--accent))">
-        {/* Arena width dimension */}
-        <line x1="195" y1="605" x2="545" y2="605" stroke="hsl(var(--accent))" strokeWidth="0.25" />
-        <line x1="195" y1="602" x2="195" y2="608" stroke="hsl(var(--accent))" strokeWidth="0.25" />
-        <line x1="545" y1="602" x2="545" y2="608" stroke="hsl(var(--accent))" strokeWidth="0.25" />
-
-        {/* Overall height */}
-        <line x1="170" y1="120" x2="170" y2="590" stroke="hsl(var(--accent))" strokeWidth="0.25" />
-        <line x1="167" y1="120" x2="173" y2="120" stroke="hsl(var(--accent))" strokeWidth="0.25" />
-        <line x1="167" y1="590" x2="173" y2="590" stroke="hsl(var(--accent))" strokeWidth="0.25" />
+        <line x1="195" y1="635" x2="545" y2="635" stroke="hsl(var(--accent))" strokeWidth="0.4" />
+        <line x1="195" y1="631" x2="195" y2="639" stroke="hsl(var(--accent))" strokeWidth="0.4" />
+        <line x1="545" y1="631" x2="545" y2="639" stroke="hsl(var(--accent))" strokeWidth="0.4" />
+        <line x1="165" y1="120" x2="165" y2="590" stroke="hsl(var(--accent))" strokeWidth="0.4" />
+        <line x1="161" y1="120" x2="169" y2="120" stroke="hsl(var(--accent))" strokeWidth="0.4" />
+        <line x1="161" y1="590" x2="169" y2="590" stroke="hsl(var(--accent))" strokeWidth="0.4" />
       </g>
 
-      {/* ── ROOF LINE HINTS — from elevations A06 ── */}
+      {/* ── ROOF LINE ── */}
       <path
-        d="M 195 115 L 370 98 L 545 115"
-        fill="none" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.06" strokeDasharray="4 3"
+        d="M 195 115 L 370 100 L 545 115"
+        fill="none" stroke="hsl(var(--accent))" strokeWidth="0.5" opacity="0.06" strokeDasharray="6 4"
       />
 
       {/* ── DRAWING REFERENCE ── */}
-      <g opacity="0.1" transform="translate(545, 645)">
+      <g opacity="0.1" transform="translate(545, 650)">
         <text x="0" y="0" fontSize="6" fill="hsl(var(--accent))" fontFamily="monospace" letterSpacing="0.08em">MAIN RIDGE</text>
         <text x="0" y="10" fontSize="4.5" fill="hsl(var(--accent))" fontFamily="monospace" opacity="0.6">PROPOSED GROUND FLOOR</text>
         <text x="0" y="18" fontSize="4" fill="hsl(var(--accent))" fontFamily="monospace" opacity="0.4">A 03</text>
       </g>
 
       {/* ── COMPASS ── */}
-      <g opacity="0.08" transform="translate(660, 130)">
-        <line x1="0" y1="-16" x2="0" y2="16" stroke="hsl(var(--accent))" strokeWidth="0.35" />
-        <line x1="-16" y1="0" x2="16" y2="0" stroke="hsl(var(--accent))" strokeWidth="0.35" />
+      <g opacity="0.1" transform="translate(660, 130)">
+        <line x1="0" y1="-16" x2="0" y2="16" stroke="hsl(var(--accent))" strokeWidth="0.5" />
+        <line x1="-16" y1="0" x2="16" y2="0" stroke="hsl(var(--accent))" strokeWidth="0.5" />
         <polygon points="0,-18 -3,-12 3,-12" fill="hsl(var(--accent))" opacity="0.3" />
         <text x="0" y="-22" textAnchor="middle" fontSize="6" fill="hsl(var(--accent))" fontFamily="monospace">N</text>
       </g>
 
-      {/* ── PADDOCK ACCESS (left) ── */}
-      <text x="182" y="350" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.07" fontFamily="monospace" transform="rotate(-90, 182, 350)">PADDOCK</text>
-
-      {/* ── TIE-UP AREA markers ── */}
-      <g opacity="0.06">
-        <circle cx="290" cy="415" r="1.5" fill="hsl(var(--accent))" />
-        <circle cx="310" cy="415" r="1.5" fill="hsl(var(--accent))" />
-        <circle cx="430" cy="415" r="1.5" fill="hsl(var(--accent))" />
-        <circle cx="450" cy="415" r="1.5" fill="hsl(var(--accent))" />
-      </g>
-      <text x="370" y="422" textAnchor="middle" fontSize="3.5" fill="hsl(var(--accent))" opacity="0.06" fontFamily="monospace">TIE-UP</text>
+      {/* ── PADDOCK ACCESS ── */}
+      <text x="178" y="350" textAnchor="middle" fontSize="4" fill="hsl(var(--accent))" opacity="0.08" fontFamily="monospace" transform="rotate(-90, 178, 350)">PADDOCK</text>
     </svg>
   );
 }
