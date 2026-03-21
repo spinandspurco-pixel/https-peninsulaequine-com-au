@@ -234,11 +234,15 @@ export default function Admin() {
 
           {/* ═══ CRM PIPELINE — replaces old stats + inquiry table ═══ */}
           {viewMode !== "operations" && (
+          <div id="pipeline-section">
             <CRMPipeline onCreateQuote={(id) => setQuoteForInquiryId(id)} />
+          </div>
           )}
 
           {/* Follow-Up Command View */}
-          <FollowUpCommandView />
+          <div id="follow-ups-section">
+            <FollowUpCommandView />
+          </div>
 
           {/* Today's Plan */}
           <TodaysPlan />
