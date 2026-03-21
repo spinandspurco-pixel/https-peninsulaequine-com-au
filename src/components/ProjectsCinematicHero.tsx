@@ -161,7 +161,7 @@ export function ProjectsCinematicHero() {
         style={{
           transform: `translate(${mouse.x}px, ${mouse.y}px)`,
           opacity: ready ? 1 : 0,
-          transition: "opacity 1.2s ease-out, transform 800ms ease-out",
+          transition: "opacity 0.6s ease-out, transform 800ms ease-out",
         }}
       >
         <BlueprintLinework />
