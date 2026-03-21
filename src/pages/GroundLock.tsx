@@ -146,7 +146,7 @@ export default function GroundLock() {
               >
                 <PanelDefs id="hero" />
                 {/* Subtle top-edge bevel highlight */}
-                <GroundLockPanelSVG x={8} y={6} scale={1.22} active showTabs defsId="hero" direction="up" />
+                <GroundLockPanelSVG x={8} y={6} scale={1.22} active showTabs showJoins defsId="hero" direction="up" />
                 <path
                   d="M 32 28 A 34 36 0 0 1 88 28"
                   fill="none"
