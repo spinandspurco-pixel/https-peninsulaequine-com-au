@@ -93,67 +93,191 @@ export default function ProposalTemplate() {
       <div className="relative z-[2] max-w-3xl mx-auto px-8 sm:px-12 lg:px-16">
 
         {/* ════════════════════════════════════════════
-            1. COVER / HERO
+            1. COVER / HERO — Cinematic
         ════════════════════════════════════════════ */}
-        <section className="min-h-screen flex flex-col justify-between pt-16 pb-12">
-          {/* Top bar */}
-          <div className="flex items-center justify-between">
+        <section className="min-h-screen flex flex-col relative">
+
+          {/* Architectural background texture — radial vignette + grid */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: `
+                radial-gradient(ellipse 70% 55% at 50% 45%, transparent 0%, hsl(var(--background)) 100%),
+                radial-gradient(ellipse 90% 80% at 50% 50%, hsla(var(--accent) / 0.02) 0%, transparent 70%)
+              `,
+            }}
+          />
+
+          {/* Faint engineering grid */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage: `
+                linear-gradient(hsla(var(--accent) / 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, hsla(var(--accent) / 0.03) 1px, transparent 1px)
+              `,
+              backgroundSize: "80px 80px",
+              maskImage: "radial-gradient(ellipse 60% 50% at 50% 50%, black 0%, transparent 80%)",
+              WebkitMaskImage: "radial-gradient(ellipse 60% 50% at 50% 50%, black 0%, transparent 80%)",
+            }}
+          />
+
+          {/* Top strip — branding + reference */}
+          <div className="relative z-10 flex items-center justify-between pt-14 pb-6">
             <p
-              className="text-[10px] font-sans uppercase tracking-[0.25em] font-medium"
-              style={{ color: "hsl(var(--accent))", opacity: 0.5 }}
+              className="text-[9px] font-sans uppercase tracking-[0.3em] font-medium"
+              style={{ color: "hsl(var(--accent))", opacity: 0.35 }}
             >
               Peninsula Equine
             </p>
             <p
-              className="text-[9px] font-sans tabular-nums"
-              style={{ color: "hsl(var(--foreground))", opacity: 0.2 }}
+              className="text-[8px] font-sans tabular-nums tracking-wider"
+              style={{ color: "hsl(var(--foreground))", opacity: 0.12 }}
             >
               {data.quoteNumber}
             </p>
           </div>
 
-          {/* Central hero block */}
-          <div className="flex-1 flex flex-col justify-center py-24 sm:py-32">
+          {/* ─── Central composition ─── */}
+          <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center py-20 sm:py-28">
+
+            {/* PE Monogram — static, resolved state */}
+            <div className="mb-14 sm:mb-18">
+              <svg
+                viewBox="0 0 120 120"
+                className="w-20 h-20 sm:w-24 sm:h-24 mx-auto"
+              >
+                {/* Outer circle */}
+                <circle
+                  cx="60" cy="60" r="54"
+                  fill="none"
+                  stroke="hsl(var(--accent))"
+                  strokeWidth="0.6"
+                  style={{ opacity: 0.15 }}
+                />
+                {/* Inner circle */}
+                <circle
+                  cx="60" cy="60" r="46"
+                  fill="none"
+                  stroke="hsl(var(--accent))"
+                  strokeWidth="0.4"
+                  style={{ opacity: 0.08 }}
+                />
+                {/* P letterform */}
+                <path
+                  d="M38 85 V35 H55 C62 35 68 38 68 46 C68 54 62 57 55 57 H38"
+                  fill="none"
+                  stroke="hsl(var(--foreground))"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{ opacity: 0.7 }}
+                />
+                {/* E letterform */}
+                <path
+                  d="M74 85 H56 V35 H74 M56 60 H70"
+                  fill="none"
+                  stroke="hsl(var(--foreground))"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{ opacity: 0.7 }}
+                />
+              </svg>
+            </div>
+
+            {/* Title — large, dominant */}
             <h1
-              className="font-serif text-4xl sm:text-5xl lg:text-6xl font-semibold mb-6"
+              className="font-serif text-[2.5rem] sm:text-[3.5rem] lg:text-[4.25rem] font-semibold mb-8"
               style={{
                 color: "hsl(var(--foreground))",
-                lineHeight: 1.05,
-                letterSpacing: "0.01em",
+                lineHeight: 1.02,
+                letterSpacing: "0.015em",
               }}
             >
               GroundLock System<br />Proposal
             </h1>
+
+            {/* Accent rule */}
+            <div
+              className="w-10 h-px mx-auto mb-8"
+              style={{ background: "hsl(var(--accent))", opacity: 0.25 }}
+            />
+
+            {/* Subline — refined, understated */}
             <p
-              className="text-[13px] sm:text-[14px] font-sans max-w-md leading-[1.9]"
-              style={{ color: "hsl(var(--foreground))", opacity: 0.32 }}
+              className="text-[12px] sm:text-[13px] font-sans tracking-wide max-w-sm leading-[1.9]"
+              style={{ color: "hsl(var(--foreground))", opacity: 0.28 }}
             >
               Designed for performance, stability, and long-term integrity.
             </p>
           </div>
 
-          {/* Bottom details */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
-            {[
-              { label: "Prepared For", value: data.clientName },
-              { label: "Property", value: data.propertyName },
-              { label: "Date", value: data.date },
-            ].map((item) => (
-              <div key={item.label}>
-                <p
-                  className="text-[8px] font-sans uppercase tracking-[0.22em] mb-1.5"
-                  style={{ color: "hsl(var(--accent))", opacity: 0.35 }}
-                >
-                  {item.label}
-                </p>
-                <p
-                  className="text-[12px] font-sans"
-                  style={{ color: "hsl(var(--foreground))", opacity: 0.55 }}
-                >
-                  {item.value}
-                </p>
+          {/* ─── Bottom metadata strip ─── */}
+          <div className="relative z-10 pb-14">
+            {/* Thin rule */}
+            <div
+              className="h-px mb-8"
+              style={{ background: "hsl(var(--border))", opacity: 0.25 }}
+            />
+
+            <div className="flex items-end justify-between">
+              {/* Left — client + property */}
+              <div className="space-y-4">
+                {data.clientName && (
+                  <div>
+                    <p
+                      className="text-[7px] font-sans uppercase tracking-[0.28em] mb-1"
+                      style={{ color: "hsl(var(--accent))", opacity: 0.3 }}
+                    >
+                      Prepared For
+                    </p>
+                    <p
+                      className="text-[12px] font-sans"
+                      style={{ color: "hsl(var(--foreground))", opacity: 0.5 }}
+                    >
+                      {data.clientName}
+                    </p>
+                  </div>
+                )}
+                {data.propertyName && (
+                  <div>
+                    <p
+                      className="text-[7px] font-sans uppercase tracking-[0.28em] mb-1"
+                      style={{ color: "hsl(var(--accent))", opacity: 0.3 }}
+                    >
+                      Property
+                    </p>
+                    <p
+                      className="text-[12px] font-sans"
+                      style={{ color: "hsl(var(--foreground))", opacity: 0.5 }}
+                    >
+                      {data.propertyName}
+                    </p>
+                  </div>
+                )}
               </div>
-            ))}
+
+              {/* Right — date */}
+              <div className="text-right">
+                {data.date && (
+                  <div>
+                    <p
+                      className="text-[7px] font-sans uppercase tracking-[0.28em] mb-1"
+                      style={{ color: "hsl(var(--accent))", opacity: 0.3 }}
+                    >
+                      Date
+                    </p>
+                    <p
+                      className="text-[12px] font-sans"
+                      style={{ color: "hsl(var(--foreground))", opacity: 0.5 }}
+                    >
+                      {data.date}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </section>
 
