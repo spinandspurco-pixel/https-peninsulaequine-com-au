@@ -126,7 +126,7 @@ function AppContent() {
           <Route path="/trainer/documents" element={<TrainerDocumentPortal />} />
           <Route path="/admin/documents" element={<AdminDocuments />} />
           <Route path="/trainers/:slug" element={<TrainerProfile />} />
-           <Route path="/mlpgs" element={<MLPGSPage />} />
+           
           <Route path="/groundlock" element={<GroundLock />} />
           <Route path="/groundlock-systems" element={<GroundLockSystems />} />
           <Route path="/equus-ridge" element={<EquusRidge />} />
