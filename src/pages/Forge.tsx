@@ -163,7 +163,7 @@ export default function Forge() {
             className="heading-display text-foreground opacity-0 animate-fade-in"
             style={{ animationDelay: "400ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
-            Equus Forge
+            GroundLock Systems
           </h1>
 
           <p
