@@ -167,8 +167,12 @@ export default function Index() {
         </div>
         <div className="absolute inset-0 pointer-events-none grain-hero" />
 
-        {/* Content — staged reveals */}
-        <div className="relative z-10 section-container text-center max-w-5xl mx-auto">
+        {/* Content — staged reveals, fades on scroll */}
+        <div
+          ref={heroContentRef}
+          className="relative z-10 section-container text-center max-w-5xl mx-auto"
+          style={{ opacity: heroFade, willChange: "opacity" }}
+        >
           <div className="flex flex-col items-center gap-10 sm:gap-14 lg:gap-16">
             {/* Brand tag — 900ms (stillness after backdrop settles) */}
             <div
