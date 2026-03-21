@@ -14,8 +14,7 @@ const EquusRidge = () => {
           <img
             src={equusRidgeHero}
             alt="Luxury equine estate at golden hour — sculpted arena with rolling hills"
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ filter: "brightness(0.35) contrast(1.1)" }}
+            className="absolute inset-0 w-full h-full object-cover img-cta"
             loading="eager"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background" />
