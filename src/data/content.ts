@@ -103,8 +103,8 @@ export const services = [
   {
     id: "renovations",
     title: "Renovations & Repairs",
-    shortDescription: "Breathing new life into existing equine facilities.",
-    description: "Upgrade your current facility without starting from scratch. We assess, repair, and modernize existing structures to meet today's standards.",
+    shortDescription: "Upgrades and repairs for existing equine facilities.",
+    description: "Assess, repair, and modernise — without starting from scratch.",
     features: [
       "Structural assessments",
       "Arena resurfacing",
