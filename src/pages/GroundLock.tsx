@@ -6,6 +6,7 @@ import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { GroundLockSystemDiagram } from "@/components/GroundLockSystemDiagram";
+import { GroundLockSystemLayout } from "@/components/GroundLockSystemLayout";
 import { GroundLockComparison } from "@/components/GroundLockComparison";
 import {
   Truck,
@@ -710,7 +711,10 @@ export default function GroundLock() {
         </div>
       </section>
 
-      
+      {/* ═══ SYSTEM LAYOUT ════════════════════════════════ */}
+      <GroundLockSystemLayout />
+
+
     </Layout>
   );
 }
