@@ -42,67 +42,58 @@ export default function Shop() {
         </div>
       </section>
 
-      {/* ─── SECTION 2 — SYSTEM TIERS ─── */}
+      {/* ─── SECTION 2 — SYSTEM ACCESS ─── */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-24 sm:py-32 bg-card relative">
+        <div className="py-28 sm:py-36 bg-card relative">
           <div className="absolute inset-0 grain-texture" />
 
           <div className="section-container relative z-[1]">
-            <RevealOnScroll direction="up">
-              <div className="text-center max-w-md mx-auto mb-16 space-y-4">
-                <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/50">GroundLock™</p>
-                <h2 className="font-serif text-2xl md:text-3xl text-foreground/90">
-                  System Integration Levels
-                </h2>
-                <p className="text-sm text-muted-foreground/35 leading-[1.9]">
-                  The level of ground stabilisation is matched to the project — not sold as a standalone product.
-                </p>
-              </div>
-            </RevealOnScroll>
+            <div className="grid md:grid-cols-3 gap-px bg-border/15 max-w-5xl mx-auto">
+              {[
+                {
+                  title: "GroundLock System",
+                  description: "The foundation system used under all Peninsula Equine builds.",
+                  cta: "Request Assessment",
+                  href: "/site-assessment",
+                },
+                {
+                  title: "Ground Systems & Access",
+                  description: "Driveways, float access, and stabilisation designed for long-term use.",
+                  cta: "Discuss Project",
+                  href: "/contact",
+                },
+                {
+                  title: "Select Components",
+                  description: "Limited components available for approved projects and builds.",
+                  cta: "View Options",
+                  href: "/groundlock-systems",
+                },
+              ].map((card, i) => (
+                <RevealOnScroll key={card.title} direction="up" delay={i * 150}>
+                  <div className="flex flex-col bg-card p-10 md:p-12 lg:p-14 h-full transition-shadow duration-500 hover:shadow-lg hover:shadow-accent/[0.03]">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent/40 mb-6">
+                      0{i + 1}
+                    </span>
 
-            <div className="grid md:grid-cols-3 gap-px bg-border/20 max-w-4xl mx-auto">
-              {GROUNDLOCK_PRODUCTS.map((product, i) => {
-                const tierMeta = GROUNDLOCK_TIERS[product.tier];
-                const isPro = product.tier === "performance";
+                    <h3 className="font-serif text-xl md:text-2xl text-foreground/85 mb-4">
+                      {card.title}
+                    </h3>
 
-                return (
-                  <RevealOnScroll key={product.handle} direction="up" delay={i * 150}>
-                    <div className={`flex flex-col bg-card p-8 md:p-10 h-full ${isPro ? "ring-1 ring-accent/15" : ""}`}>
-                      {/* Tier label */}
-                      <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-accent/50 mb-3">
-                        {tierMeta.label}
-                      </p>
+                    <p className="text-[13px] text-muted-foreground/35 leading-[1.9] mb-10 flex-1">
+                      {card.description}
+                    </p>
 
-                      <h3 className="font-serif text-lg md:text-xl text-foreground/80 mb-2">
-                        {product.title}
-                      </h3>
-
-                      <p className="text-[13px] text-muted-foreground/35 leading-[1.8] mb-6 flex-1">
-                        {tierMeta.description}
-                      </p>
-
-                      {/* Key includes — max 4 */}
-                      <ul className="space-y-2.5 mb-8">
-                        {product.includes.slice(0, 4).map((item, idx) => (
-                          <li key={idx} className="flex items-start gap-2.5">
-                            <span className="w-1 h-1 rounded-full bg-accent/30 mt-2 shrink-0" />
-                            <span className="text-xs text-muted-foreground/40 leading-[1.7]">{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-
-                      <Link
-                        to={`/shop/${product.handle}`}
-                        className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.15em] text-accent/50 hover:text-accent transition-colors group"
-                      >
-                        View Specification
-                        <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
-                      </Link>
-                    </div>
-                  </RevealOnScroll>
-                );
-              })}
+                    <Link
+                      to={card.href}
+                      className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.15em] text-accent/50 hover:text-accent transition-colors group"
+                    >
+                      {card.cta}
+                      <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
+                    </Link>
+                  </div>
+                </RevealOnScroll>
+              ))}
             </div>
           </div>
         </div>
