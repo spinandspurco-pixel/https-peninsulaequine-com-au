@@ -154,20 +154,12 @@ export default function ProductDetail() {
         <BlueprintScene preset="barn" className="absolute inset-0" />
         <div className="absolute inset-0 bg-primary/85" />
         <div className="section-container relative z-10 max-w-2xl mx-auto text-center space-y-6">
-          <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60">Investment Overview</p>
-          <div className="space-y-1">
-            {product.compareAtPrice && (
-              <p className="text-muted-foreground line-through text-lg">
-                ${product.compareAtPrice.toLocaleString("en-AU")} AUD
-              </p>
-            )}
-            <p className="font-serif text-4xl md:text-5xl text-accent">
-              ${product.price.toLocaleString("en-AU")}
-              <span className="text-lg text-muted-foreground ml-2">AUD</span>
-            </p>
-          </div>
+          <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60">Next Step</p>
+          <p className="font-serif text-3xl md:text-4xl text-primary-foreground">
+            Request a System Assessment
+          </p>
           <p className="text-primary-foreground/60 text-sm max-w-md mx-auto">
-            Includes full system specification, warranty, and documentation. Site-specific configuration available on request.
+            Every site is different. We assess ground conditions, usage, and load requirements before recommending the right GroundLock specification.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.12em] text-xs">
