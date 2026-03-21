@@ -85,7 +85,7 @@ function CopyButton({ text }: { text: string }) {
   };
   return (
     <Button variant="ghost" size="sm" onClick={handleCopy} className="text-[10px] uppercase tracking-wider text-muted-foreground hover:text-accent">
-      {copied ? <Check className="h-3 w-3 mr-1 text-emerald-500" /> : <Copy className="h-3 w-3 mr-1" />}
+      {copied ? <Check className="h-3 w-3 mr-1 text-emerald-500/80" /> : <Copy className="h-3 w-3 mr-1" />}
       {copied ? "Copied" : "Copy"}
     </Button>
   );
