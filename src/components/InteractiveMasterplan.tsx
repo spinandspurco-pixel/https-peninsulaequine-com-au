@@ -158,10 +158,30 @@ function SitePlan({
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
+        {/* Architectural drop shadow — light from top-left */}
+        <filter id="mp-shadow-lg" x="-5%" y="-5%" width="115%" height="120%">
+          <feDropShadow dx="2.5" dy="3.5" stdDeviation="4" floodColor="hsl(0 0% 0%)" floodOpacity="0.18" />
+        </filter>
+        <filter id="mp-shadow-md" x="-5%" y="-5%" width="115%" height="118%">
+          <feDropShadow dx="1.5" dy="2" stdDeviation="2.5" floodColor="hsl(0 0% 0%)" floodOpacity="0.12" />
+        </filter>
+        <filter id="mp-shadow-sm" x="-5%" y="-5%" width="115%" height="115%">
+          <feDropShadow dx="1" dy="1.2" stdDeviation="1.5" floodColor="hsl(0 0% 0%)" floodOpacity="0.08" />
+        </filter>
       </defs>
 
       {/* Background grid */}
       <rect width="740" height="680" fill="url(#mp-grid)" />
+
+      {/* ── Ground plane elevation shadows (rendered first, behind structures) ── */}
+      {/* Arena shadow — largest structure, deepest shadow */}
+      <rect x="195" y="430" width="350" height="160" fill="hsl(0 0% 0% / 0.06)" filter="url(#mp-shadow-lg)" rx="1" />
+      {/* Stables shadow */}
+      <rect x="195" y="120" width="350" height="140" fill="hsl(0 0% 0% / 0.04)" filter="url(#mp-shadow-md)" rx="1" />
+      {/* Service wing shadow */}
+      <rect x="195" y="260" width="75" height="170" fill="hsl(0 0% 0% / 0.03)" filter="url(#mp-shadow-sm)" rx="0.5" />
+      {/* Viewing area shadow */}
+      <rect x="470" y="260" width="75" height="120" fill="hsl(0 0% 0% / 0.03)" filter="url(#mp-shadow-sm)" rx="0.5" />
 
       {/* Property boundary */}
       <rect x="155" y="80" width="430" height="560" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.35" opacity="0.07" strokeDasharray="8 4" />
