@@ -20,7 +20,7 @@ function BlueprintGrid() {
   return (
     <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
       {/* Major grid */}
-      <svg className="absolute inset-0 w-full h-full opacity-0 animate-[gridFadeIn_2s_0.3s_ease-out_forwards]">
+      <svg className="absolute inset-0 w-full h-full opacity-0 animate-[gridFadeIn_1.2s_0.1s_ease-out_forwards]">
         <defs>
           <pattern id="hero-grid-major" width="120" height="120" patternUnits="userSpaceOnUse">
             <path d="M 120 0 L 0 0 0 120" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.5" opacity="0.12" />
@@ -67,7 +67,7 @@ function StructuralWireframe() {
         stroke="hsl(var(--accent))"
         strokeWidth="1.5"
         opacity="0.25"
-        className="animate-[drawLine_1.8s_0.5s_cubic-bezier(0.22,1,0.36,1)_forwards]"
+        className="animate-[drawLine_1.2s_0.2s_cubic-bezier(0.22,1,0.36,1)_forwards]"
       />
       {/* Left wall */}
       <path
@@ -77,7 +77,7 @@ function StructuralWireframe() {
         stroke="hsl(var(--accent))"
         strokeWidth="1"
         opacity="0.2"
-        className="animate-[drawLine_1.2s_1s_cubic-bezier(0.22,1,0.36,1)_forwards]"
+        className="animate-[drawLine_0.9s_0.5s_cubic-bezier(0.22,1,0.36,1)_forwards]"
       />
       {/* Right wall */}
       <path
@@ -87,7 +87,7 @@ function StructuralWireframe() {
         stroke="hsl(var(--accent))"
         strokeWidth="1"
         opacity="0.2"
-        className="animate-[drawLine_1.2s_1.1s_cubic-bezier(0.22,1,0.36,1)_forwards]"
+        className="animate-[drawLine_0.9s_0.6s_cubic-bezier(0.22,1,0.36,1)_forwards]"
       />
       {/* Roof left */}
       <path
@@ -97,7 +97,7 @@ function StructuralWireframe() {
         stroke="hsl(var(--accent))"
         strokeWidth="1.2"
         opacity="0.22"
-        className="animate-[drawLine_1.4s_1.6s_cubic-bezier(0.22,1,0.36,1)_forwards]"
+        className="animate-[drawLine_1s_0.8s_cubic-bezier(0.22,1,0.36,1)_forwards]"
       />
       {/* Roof right */}
       <path
@@ -107,7 +107,7 @@ function StructuralWireframe() {
         stroke="hsl(var(--accent))"
         strokeWidth="1.2"
         opacity="0.22"
-        className="animate-[drawLine_1.4s_1.7s_cubic-bezier(0.22,1,0.36,1)_forwards]"
+        className="animate-[drawLine_1s_0.9s_cubic-bezier(0.22,1,0.36,1)_forwards]"
       />
       {/* Ridge beam */}
       <path
@@ -118,7 +118,7 @@ function StructuralWireframe() {
         strokeWidth="0.5"
         opacity="0.1"
         strokeDasharray="4 8"
-        className="animate-[drawLine_1s_2s_ease-out_forwards]"
+        className="animate-[drawLine_0.7s_1.1s_ease-out_forwards]"
       />
       {/* Stall dividers */}
       {[350, 500, 650, 800].map((x, i) => (
@@ -130,8 +130,8 @@ function StructuralWireframe() {
           stroke="hsl(var(--accent))"
           strokeWidth="0.6"
           opacity="0.12"
-          className="animate-[drawLine_0.8s_ease-out_forwards]"
-          style={{ animationDelay: `${2.2 + i * 0.15}s` }}
+          className="animate-[drawLine_0.6s_ease-out_forwards]"
+          style={{ animationDelay: `${1.3 + i * 0.1}s` }}
         />
       ))}
       {/* Cross bracing */}
@@ -142,7 +142,7 @@ function StructuralWireframe() {
         stroke="hsl(var(--accent))"
         strokeWidth="0.6"
         opacity="0.1"
-        className="animate-[drawLine_1.2s_2.5s_ease-out_forwards]"
+        className="animate-[drawLine_0.9s_1.5s_ease-out_forwards]"
       />
       {/* Truss details */}
       {[300, 450, 750, 900].map((x, i) => (
@@ -154,8 +154,8 @@ function StructuralWireframe() {
           stroke="hsl(var(--accent))"
           strokeWidth="0.4"
           opacity="0.08"
-          className="animate-[drawLine_0.6s_ease-out_forwards]"
-          style={{ animationDelay: `${2.8 + i * 0.12}s` }}
+          className="animate-[drawLine_0.5s_ease-out_forwards]"
+          style={{ animationDelay: `${1.7 + i * 0.08}s` }}
         />
       ))}
       {/* Door opening */}
@@ -165,7 +165,7 @@ function StructuralWireframe() {
         stroke="hsl(var(--accent))"
         strokeWidth="0.8"
         opacity="0"
-        className="animate-[fadeElement_0.6s_3s_ease-out_forwards]"
+        className="animate-[fadeElement_0.5s_1.8s_ease-out_forwards]"
       />
     </svg>
   );
@@ -174,11 +174,11 @@ function StructuralWireframe() {
 /* ── Dimension annotations ────────────────────────── */
 function DimensionAnnotations() {
   const annotations = [
-    { x: "17%", y: "86%", label: "12.0m", delay: 2.8 },
-    { x: "78%", y: "16%", label: "RIDGE: 8.4m", delay: 3.2 },
-    { x: "88%", y: "50%", label: "EAVE: 4.2m", delay: 3.0 },
-    { x: "8%", y: "50%", label: "SEC A-A", delay: 3.4 },
-    { x: "50%", y: "92%", label: "FLOOR: FRL 100.00", delay: 3.6 },
+    { x: "17%", y: "86%", label: "12.0m", delay: 1.6 },
+    { x: "78%", y: "16%", label: "RIDGE: 8.4m", delay: 1.9 },
+    { x: "88%", y: "50%", label: "EAVE: 4.2m", delay: 1.8 },
+    { x: "8%", y: "50%", label: "SEC A-A", delay: 2.0 },
+    { x: "50%", y: "92%", label: "FLOOR: FRL 100.00", delay: 2.1 },
   ];
 
   return (
@@ -221,11 +221,11 @@ function ScanLine() {
 /* ── Floating measurement nodes ───────────────────── */
 function MeasurementNodes() {
   const nodes = [
-    { x: "17%", y: "42%", delay: 3.5 },
-    { x: "83%", y: "42%", delay: 3.7 },
-    { x: "50%", y: "15%", delay: 3.9 },
-    { x: "29%", y: "82%", delay: 4.1 },
-    { x: "71%", y: "82%", delay: 4.3 },
+    { x: "17%", y: "42%", delay: 2.0 },
+    { x: "83%", y: "42%", delay: 2.1 },
+    { x: "50%", y: "15%", delay: 2.2 },
+    { x: "29%", y: "82%", delay: 2.3 },
+    { x: "71%", y: "82%", delay: 2.4 },
   ];
 
   return (

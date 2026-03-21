@@ -131,7 +131,7 @@ function PEMonogramSVG({
  * Phases: enter → grid → structure → resolve → drift → exit → done
  */
 export function LoadingSplash({
-  minDuration = 4400,
+  minDuration = 3200,
   onComplete,
   onLogoSettled,
 }: LoadingSplashProps) {
@@ -167,14 +167,14 @@ export function LoadingSplash({
     });
 
     // Phase timeline
-    const t1 = setTimeout(() => setPhase("grid"), 150);
-    const t2 = setTimeout(() => setPhase("structure"), 800);
-    const t3 = setTimeout(() => setPhase("resolve"), 2600);
+    const t1 = setTimeout(() => setPhase("grid"), 100);
+    const t2 = setTimeout(() => setPhase("structure"), 500);
+    const t3 = setTimeout(() => setPhase("resolve"), 1800);
     const t4 = setTimeout(() => {
       setPhase("drift");
       onLogoSettled?.();
-    }, 3500);
-    const t5 = setTimeout(() => setPhase("exit"), minDuration - 600);
+    }, 2500);
+    const t5 = setTimeout(() => setPhase("exit"), minDuration - 500);
     const t6 = setTimeout(() => {
       setPhase("done");
       onComplete?.();
