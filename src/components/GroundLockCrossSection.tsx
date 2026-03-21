@@ -22,7 +22,7 @@ const layers: Layer[] = [
   {
     id: "subgrade",
     label: "Natural Subgrade",
-    description: "Undisturbed ground — prepared and graded to fall",
+    description: "Prepared to eliminate instability at source",
     y: 300, height: 70,
     fill: "hsl(var(--accent) / 0.03)",
     activeFill: "hsl(var(--accent) / 0.07)",
@@ -31,7 +31,7 @@ const layers: Layer[] = [
   {
     id: "base",
     label: "Compacted Base",
-    description: "Stabilised foundation for long-term durability",
+    description: "Compacted for controlled load transfer",
     y: 240, height: 60,
     fill: "hsl(var(--accent) / 0.04)",
     activeFill: "hsl(var(--accent) / 0.09)",
@@ -40,7 +40,7 @@ const layers: Layer[] = [
   {
     id: "groundlock",
     label: "GroundLock™ Grid",
-    description: "Distributes load and prevents lateral movement",
+    description: "Prevents movement under load",
     y: 200, height: 40,
     fill: "hsl(var(--accent) / 0.06)",
     activeFill: "hsl(var(--accent) / 0.12)",
@@ -49,7 +49,7 @@ const layers: Layer[] = [
   {
     id: "infill",
     label: "Aggregate Infill",
-    description: "Locks cells and provides drainage continuity",
+    description: "Locks structure in place",
     y: 165, height: 35,
     fill: "hsl(var(--accent) / 0.04)",
     activeFill: "hsl(var(--accent) / 0.09)",
@@ -58,7 +58,7 @@ const layers: Layer[] = [
   {
     id: "surface",
     label: "Finished Surface",
-    description: "Final presentation layer — stone, gravel, or cobble",
+    description: "Maintains consistent performance",
     y: 140, height: 25,
     fill: "hsl(var(--accent) / 0.05)",
     activeFill: "hsl(var(--accent) / 0.1)",
