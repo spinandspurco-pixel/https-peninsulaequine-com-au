@@ -166,7 +166,7 @@ export function GroundLockSystemLayout() {
         })}
       </div>
       <p className="text-[10px] text-muted-foreground/25 font-mono text-center mb-10 tracking-wide">
-        {viewMode === "system" ? "Hover or tap zones to explore" : "As designed and built on site"}
+        {viewMode === "system" ? "Hover or tap zones to explore" : "Panel → Array → System"}
       </p>
 
       <div className="max-w-lg mx-auto relative" style={{ aspectRatio: "600 / 500" }}>
