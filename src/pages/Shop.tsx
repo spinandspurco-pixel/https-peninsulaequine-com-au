@@ -93,7 +93,7 @@ export default function Shop() {
 
                     <div className="pt-2">
                       <p className="text-sm text-muted-foreground italic">
-                        Project-based pricing
+                        Specified per project
                       </p>
                     </div>
 
