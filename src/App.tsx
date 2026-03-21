@@ -140,6 +140,7 @@ function AppContent() {
            <Route path="/groundlock-onboarding" element={<ProtectedRoute><GroundLockOnboarding /></ProtectedRoute>} />
           <Route path="/project/:slug" element={<CaseStudy />} />
           <Route path="/quote/:token" element={<ClientQuote />} />
+          <Route path="/proposal" element={<ProposalTemplate />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
