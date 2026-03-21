@@ -100,6 +100,18 @@ export default function Shop() {
                 </RevealOnScroll>
               ))}
             </div>
+
+            {/* Access filter line */}
+            <RevealOnScroll direction="up" delay={500}>
+              <div className="text-center max-w-md mx-auto mt-16 space-y-1">
+                <p className="text-[13px] text-muted-foreground/30 leading-[1.9]">
+                  Access to systems is provided per project.
+                </p>
+                <p className="text-[13px] text-muted-foreground/25 leading-[1.9]">
+                  We assess each site to ensure it's implemented properly.
+                </p>
+              </div>
+            </RevealOnScroll>
           </div>
         </div>
       </section>
