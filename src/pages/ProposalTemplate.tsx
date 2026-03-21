@@ -687,10 +687,7 @@ export default function ProposalTemplate() {
         {/* ════════════════════════════════════════════
             7. NEXT STEPS
         ════════════════════════════════════════════ */}
-        <section className="py-28 sm:py-36">
-          <div className="flex items-center gap-5 mb-16 sm:mb-20">
-            <div className="h-px w-8" style={{ background: "hsl(var(--accent))", opacity: 0.25 }} />
-            <SectionLabel number="06">Next Steps</SectionLabel>
+        <section className="py-28 sm:py-36 proposal-section print-page-break">
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16">
