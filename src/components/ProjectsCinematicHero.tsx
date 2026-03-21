@@ -142,7 +142,7 @@ export function ProjectsCinematicHero() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const t = setTimeout(() => setReady(true), 200);
+    const t = setTimeout(() => setReady(true), 50);
     return () => clearTimeout(t);
   }, []);
 
