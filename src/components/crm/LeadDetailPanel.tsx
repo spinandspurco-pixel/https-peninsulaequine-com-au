@@ -110,6 +110,7 @@ function getAutoPrompts(
 /* ------------------------------------------------------------------ */
 
 export function LeadDetailPanel({ record, onClose, onUpdated, onCreateQuote }: Props) {
+  const navigate = useNavigate();
   const [stage, setStage] = useState(record.deal_stage || "new");
   const [notes, setNotes] = useState(record.notes || "");
   const [saving, setSaving] = useState(false);
