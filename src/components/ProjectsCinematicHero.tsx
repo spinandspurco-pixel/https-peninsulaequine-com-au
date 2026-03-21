@@ -60,7 +60,7 @@ function BlueprintLinework() {
       <path
         d="M 200 600 L 800 200 L 1400 600"
         fill="none"
-        stroke="#C6A86B" strokeWidth="0.6" opacity="0"
+        stroke="#C6A86B" strokeWidth="0.7" opacity="0"
         strokeDasharray="1400" strokeDashoffset="1400"
         style={{ animation: "blueprintDraw 2.8s 1.5s ease-out forwards" }}
       />
