@@ -108,7 +108,7 @@ serve(async (req: Request) => {
     });
     console.log("Customer auto-response sent:", customerResult);
 
-    console.log("GroundLock enquiry email sent:", result);
+    console.log("GroundLock enquiry emails sent:", { adminResult, customerResult });
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
