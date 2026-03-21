@@ -154,7 +154,14 @@ export function BuildIntelligence() {
           </div>
 
           {/* SVG illustration */}
-          <div className="relative max-w-2xl mx-auto" style={{ color: "hsl(var(--accent))" }}>
+          <div
+            className="relative max-w-2xl mx-auto"
+            style={{
+              color: "hsl(var(--accent))",
+              opacity: transitioning ? 0.6 : 1,
+              transition: `opacity 80ms ${EASE.interactive}`,
+            }}
+          >
             <svg viewBox="0 0 800 460" className="w-full h-auto" aria-label={`Building ${active} layer view`}>
               <defs>
                 <pattern id="bi-grid" width="40" height="40" patternUnits="userSpaceOnUse">
