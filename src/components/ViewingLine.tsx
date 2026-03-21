@@ -81,18 +81,29 @@ export function ViewingLine() {
               transition: `opacity ${DURATION.slow}ms ${EASE.default} 400ms`,
             }}
           >
-            Stand above it all.
+            Stand Above It All.
           </h2>
 
           {/* Subtext */}
           <p
-            className="font-serif text-sm sm:text-base italic text-muted-foreground/40 leading-relaxed mb-12"
+            className="font-serif text-base sm:text-lg italic text-muted-foreground/45 leading-relaxed mb-4"
             style={{
               opacity: visible ? 1 : 0,
               transition: `opacity ${DURATION.slow}ms ${EASE.default} 700ms`,
             }}
           >
-            Every line, every movement, every decision — visible from here.
+            Then build it properly.
+          </p>
+
+          {/* Soft filter */}
+          <p
+            className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.25em] text-accent/20 mb-12"
+            style={{
+              opacity: visible ? 1 : 0,
+              transition: `opacity ${DURATION.slow}ms ${EASE.default} 900ms`,
+            }}
+          >
+            We take on a limited number of projects each year.
           </p>
 
           {/* CTA */}
@@ -107,6 +118,16 @@ export function ViewingLine() {
                 Start Your Project <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
+            {/* Quiet closer */}
+            <p
+              className="mt-6 text-[10px] sm:text-[11px] font-serif italic text-muted-foreground/20"
+              style={{
+                opacity: visible ? 1 : 0,
+                transition: `opacity ${DURATION.slow}ms ${EASE.default} 1200ms`,
+              }}
+            >
+              We design for people who expect it to last.
+            </p>
           </div>
         </div>
       </div>

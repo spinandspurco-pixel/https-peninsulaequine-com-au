@@ -10,11 +10,11 @@ import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 
 /* ── Panel data ───────────────────────────────────────── */
 const panels = [
-  { label: "Arrival", line: "A property shaped by movement.", image: walkArrival },
-  { label: "Courtyard", line: "Designed to centre the experience.", image: walkCourtyard },
-  { label: "Arena", line: "Engineered for performance.", image: walkArena },
-  { label: "Stables", line: "Where craftsmanship meets comfort.", image: walkStables },
-  { label: "Viewing Loft", line: "Built to watch everything unfold.", image: walkLoft },
+  { label: "Arrival", line: "A property shaped by movement — not just layout.", image: walkArrival },
+  { label: "Courtyard", line: "Everything connects here — clean, controlled, intentional.", image: walkCourtyard },
+  { label: "Arena", line: "Built for performance. Engineered for consistency.", image: walkArena },
+  { label: "Stables", line: "Daily function, simplified — for both horse and handler.", image: walkStables },
+  { label: "Viewing Loft", line: "Where the entire system becomes visible.", image: walkLoft },
 ];
 
 /* ── Single panel ─────────────────────────────────────── */

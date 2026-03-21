@@ -6,9 +6,9 @@ import { DURATION, EASE, crossfadeStyle } from "@/lib/motion";
 type LayerKey = "structure" | "envelope" | "finished";
 
 const layers: { key: LayerKey; label: string; description: string }[] = [
-  { key: "structure", label: "Structure", description: "Steel + timber framework — the skeleton of every build" },
-  { key: "envelope", label: "Envelope", description: "Cladding, openings + weatherproofing — the protective shell" },
-  { key: "finished", label: "Finished", description: "Materials, landscaping + final detail — the resolved form" },
+  { key: "structure", label: "Structure", description: "The load paths, framing, and foundational logic that define the build." },
+  { key: "envelope", label: "Envelope", description: "The external shell — materials, protection, and environmental response." },
+  { key: "finished", label: "Finished", description: "The final form — where function and aesthetic resolve into one." },
 ];
 
 /* ── SVG Layer: Structure ─────────────────────────────── */
@@ -97,8 +97,14 @@ export function BuildIntelligence() {
               </p>
               <div className="w-8 h-px bg-accent/25" />
             </div>
-            <p className="font-serif text-lg sm:text-xl lg:text-2xl italic text-muted-foreground/35 max-w-lg mx-auto leading-relaxed">
-              "Every build is engineered before it is seen."
+            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/90 tracking-[0.03em] mb-4">
+              What You Don't See Matters Most
+            </h2>
+            <p className="font-serif text-sm sm:text-base italic text-muted-foreground/35 max-w-lg mx-auto leading-relaxed mb-2">
+              Every build is engineered before it is seen.
+            </p>
+            <p className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.25em] text-accent/25">
+              Structure first. Finish second. Longevity always.
             </p>
           </div>
         </RevealOnScroll>
