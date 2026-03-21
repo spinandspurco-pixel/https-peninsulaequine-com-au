@@ -115,7 +115,7 @@ function AppContent() {
           <Route path="/events" element={<Events />} />
           <Route path="/process" element={<Process />} />
           <Route path="/bookings" element={<BookingsDashboard />} />
-          <Route path="/student-spotlight" element={<StudentSpotlight />} />
+          
           <Route path="/schedule" element={<Schedule />} />
           <Route path="/thank-you" element={<ThankYou />} />
           <Route path="/pricing" element={<Pricing />} />
