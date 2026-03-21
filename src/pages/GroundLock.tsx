@@ -200,9 +200,14 @@ export default function GroundLock() {
                 <p className="text-overline mb-5">System Architecture</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={120}>
-                <h2 className="heading-section text-foreground">
-                  The Panel → The System → The Result
+                <h2 className="heading-section text-foreground mb-4">
+                  The Panel → The Lock → The System
                 </h2>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={160}>
+                <p className="text-[13px] text-muted-foreground/32 leading-[1.7] max-w-md mx-auto">
+                  Each panel interlocks in opposing orientation — crown into opening, tab into slot. The result is a unified field that resists movement in every direction.
+                </p>
               </RevealOnScroll>
             </div>
 
@@ -213,6 +218,13 @@ export default function GroundLock() {
               <div className="w-10 h-px bg-accent/8 mx-auto" />
               <SystemDiagram />
             </div>
+
+            {/* Authority statement */}
+            <RevealOnScroll direction="none" delay={200}>
+              <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/25 italic leading-[1.9] text-center mt-14 sm:mt-20 max-w-sm mx-auto">
+                Designed to interlock in opposing rhythm — stronger by geometry, not by mass.
+              </p>
+            </RevealOnScroll>
           </div>
         </div>
       </section>
