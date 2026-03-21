@@ -190,7 +190,7 @@ export default function GroundLock() {
       {/* ═══ 4. HOW IT WORKS — 3 STEPS ═══════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-32 sm:py-48 bg-card relative">
+        <div className="py-28 sm:py-36 bg-card relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-4xl mx-auto relative z-[1]">
             <div className="text-center mb-20 sm:mb-28">
