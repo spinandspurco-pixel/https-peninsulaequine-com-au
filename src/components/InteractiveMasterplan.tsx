@@ -422,7 +422,8 @@ function CameraWrapper({ activeZone, children }: { activeZone: string | null; ch
 
 /* ── Tour sequence order ── */
 const TOUR_ORDER = ["stables", "courtyard", "service-wing", "viewing-area", "indoor-arena"];
-const TOUR_HOLD = 2800;
+const TOUR_DWELL = 3200;    // time spent on each zone
+const TOUR_DISSOLVE = 600;  // fade gap between zones
 
 /* ── Main export ── */
 export function InteractiveMasterplan() {
@@ -430,37 +431,57 @@ export function InteractiveMasterplan() {
   const [activeZone, setActiveZone] = useState<string | null>(null);
   const [tourActive, setTourActive] = useState(false);
   const [tourStep, setTourStep] = useState(0);
+  const [tourTransitioning, setTourTransitioning] = useState(false);
   const tourTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const activeZoneData = zones.find((z) => z.id === activeZone) || null;
   const isTouch = useIsTouchDevice();
 
-  /* Tour logic */
+  const clearTimer = useCallback(() => {
+    if (tourTimer.current) { clearTimeout(tourTimer.current); tourTimer.current = null; }
+  }, []);
+
   const stopTour = useCallback(() => {
     setTourActive(false);
-    if (tourTimer.current) clearTimeout(tourTimer.current);
-    tourTimer.current = null;
-  }, []);
+    setTourTransitioning(false);
+    clearTimer();
+  }, [clearTimer]);
 
   const startTour = useCallback(() => {
     setTourStep(0);
     setActiveZone(TOUR_ORDER[0]);
     setTourActive(true);
+    setTourTransitioning(false);
   }, []);
 
   useEffect(() => {
     if (!tourActive) return;
+
+    // Phase 1: dwell on current zone, then start dissolve
     tourTimer.current = setTimeout(() => {
       const next = tourStep + 1;
       if (next >= TOUR_ORDER.length) {
-        stopTour();
+        // End of tour — fade out gracefully
+        setTourTransitioning(true);
         setActiveZone(null);
-      } else {
+        tourTimer.current = setTimeout(() => {
+          stopTour();
+        }, TOUR_DISSOLVE);
+        return;
+      }
+
+      // Phase 2: brief dissolve — clear zone, pause, then reveal next
+      setTourTransitioning(true);
+      setActiveZone(null);
+
+      tourTimer.current = setTimeout(() => {
         setTourStep(next);
         setActiveZone(TOUR_ORDER[next]);
-      }
-    }, TOUR_HOLD);
-    return () => { if (tourTimer.current) clearTimeout(tourTimer.current); };
-  }, [tourActive, tourStep, stopTour]);
+        setTourTransitioning(false);
+      }, TOUR_DISSOLVE);
+    }, TOUR_DWELL);
+
+    return clearTimer;
+  }, [tourActive, tourStep, stopTour, clearTimer]);
 
   const handleHover = useCallback((id: string) => {
     if (tourActive) return;
