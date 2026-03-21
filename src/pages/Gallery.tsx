@@ -15,6 +15,7 @@ import { BuildIntelligence } from "@/components/BuildIntelligence";
 import { DetailMatters } from "@/components/DetailMatters";
 import { ViewingLine } from "@/components/ViewingLine";
 import { ProjectQualification, type ProjectType } from "@/components/ProjectQualification";
+import { BuildOptions } from "@/components/BuildOptions";
 import { GuidedEnquiryFlow } from "@/components/GuidedEnquiryFlow";
 
 // ── 2. FEATURE PROJECT (Private Client) ──
@@ -474,6 +475,13 @@ export default function Gallery() {
           10. PROJECT QUALIFICATION — guided intake selector
           ═══════════════════════════════════════════════════ */}
       <ProjectQualification onSelect={(type) => setEnquiryType(type)} />
+
+      <ChapterDivider />
+
+      {/* ═══════════════════════════════════════════════════
+          10b. BUILD OPTIONS — tiered positioning
+          ═══════════════════════════════════════════════════ */}
+      <BuildOptions onSelect={() => setEnquiryType("full-property")} />
 
       <ChapterDivider />
 
