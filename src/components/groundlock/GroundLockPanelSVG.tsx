@@ -182,4 +182,4 @@ export function GroundLockPanelPreview({ className }: { className?: string }) {
   );
 }
 
-export { PANEL_PATH };
+export { PANEL_PATH, TOE_CLIP };

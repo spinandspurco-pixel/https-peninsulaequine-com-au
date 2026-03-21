@@ -123,7 +123,7 @@ export function GroundLockProductEducation() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
         {/* Panel visual with highlight overlays */}
         <div className="flex justify-center">
-          <svg viewBox="0 0 100 120" className="w-full max-w-[280px] h-auto">
+          <svg viewBox="0 0 100 120" className="w-full max-w-[300px] h-auto">
             <PanelDefs id="edu" />
             <defs>
               <marker id="edu-arrow" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
