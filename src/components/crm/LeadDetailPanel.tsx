@@ -13,6 +13,8 @@ import {
   FileText, ArrowRight, CheckCircle, Zap, Lightbulb,
   Briefcase, Shield,
 } from "lucide-react";
+import { CommunicationTimeline } from "@/components/CommunicationTimeline";
+import { scheduleLeadFollowUps } from "@/lib/autoSendScheduler";
 
 interface Props {
   record: CRMRecord;
