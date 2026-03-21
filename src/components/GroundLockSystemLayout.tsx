@@ -114,7 +114,23 @@ export function GroundLockSystemLayout() {
                 <pattern id="gl-grid" width="30" height="30" patternUnits="userSpaceOnUse">
                   <path d="M 30 0 L 0 0 0 30" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.05" />
                 </pattern>
+                <marker id="gl-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                  <path d="M 0 0 L 6 3 L 0 6" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.6" strokeOpacity="0.3" />
+                </marker>
               </defs>
+
+              <style>{`
+                @keyframes gl-flow {
+                  from { stroke-dashoffset: 24; }
+                  to { stroke-dashoffset: 0; }
+                }
+                .gl-flow-line {
+                  animation: gl-flow 3s linear infinite;
+                }
+                @media (prefers-reduced-motion: reduce) {
+                  .gl-flow-line { animation: none; }
+                }
+              `}</style>
 
               {/* Background grid */}
               <rect width="600" height="500" fill="url(#gl-grid)" />
@@ -126,7 +142,24 @@ export function GroundLockSystemLayout() {
                 strokeDasharray="8 5"
               />
 
-              {/* ── Flow arrows (gold accent paths) ─────── */}
+              {/* ── Animated flow paths ─────────────────── */}
+              {/* Primary horseshoe flow: Entry → Courtyard → Arena → loop back */}
+              <path
+                d="M 300 440 L 300 310 L 300 210 L 200 155 Q 170 140 170 180 L 130 270 L 180 340 L 300 350"
+                fill="none" stroke="hsl(var(--accent))" strokeWidth="0.6"
+                strokeOpacity="0.12" strokeDasharray="4 20"
+                className="gl-flow-line pointer-events-none"
+              />
+              {/* Secondary flow: Entry → Courtyard → Exit */}
+              <path
+                d="M 300 440 L 300 310 L 400 310 L 470 270 L 470 200 Q 470 180 440 155 L 400 155"
+                fill="none" stroke="hsl(var(--accent))" strokeWidth="0.6"
+                strokeOpacity="0.1" strokeDasharray="4 20"
+                className="gl-flow-line pointer-events-none"
+                style={{ animationDelay: "-1.5s" }}
+              />
+
+              {/* ── Static flow connectors (interactive) ── */}
               {/* Entry → Courtyard */}
               <path
                 d="M 300 420 L 300 340"
@@ -160,13 +193,6 @@ export function GroundLockSystemLayout() {
                 strokeDasharray="4 3"
                 style={{ transition: `stroke-opacity ${DURATION.fast}ms ${EASE.interactive}` }}
               />
-
-              {/* Arrow marker */}
-              <defs>
-                <marker id="gl-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-                  <path d="M 0 0 L 6 3 L 0 6" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.6" strokeOpacity="0.3" />
-                </marker>
-              </defs>
 
               {/* ── ARENA — horseshoe form ─────────────── */}
               <g style={zoneStyle("arena")}
