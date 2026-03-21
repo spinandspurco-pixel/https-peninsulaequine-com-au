@@ -29,7 +29,7 @@ const HOTSPOTS: Hotspot[] = [
       "The signature U-shape isn't decorative — it's structural. The curved crown distributes compressive force while open legs allow directional water flow and interlocking with adjacent units.",
     highlight: (
       <path
-        d="M 78 100 L 78 45 A 28 28 0 0 0 22 45 L 22 100 L 30 100 L 30 50 A 20 20 0 0 1 70 50 L 70 100 Z"
+        d="M 74 105 L 74 97 L 80 97 L 80 105 L 80 97 L 78 80 L 76 60 A 30 32 0 0 0 24 60 L 22 80 L 20 97 L 20 105 L 26 105 L 26 97 L 30 80 L 32 62 A 20 22 0 0 1 68 62 L 70 80 L 74 97 L 74 105 Z"
         fill="hsl(var(--accent) / 0.12)"
         stroke="hsl(var(--accent) / 0.5)"
         strokeWidth="1.5"
@@ -44,12 +44,15 @@ const HOTSPOTS: Hotspot[] = [
       "Side tabs key into adjacent panels. Alternating rows nest inversely — creating a continuous surface that resists lateral movement under equine and vehicle traffic.",
     highlight: (
       <>
-        {/* Highlight the tab zones */}
-        <rect x="14" y="66" width="10" height="20" rx="1" fill="hsl(var(--accent) / 0.15)" stroke="hsl(var(--accent) / 0.5)" strokeWidth="1.2" />
-        <rect x="76" y="66" width="10" height="20" rx="1" fill="hsl(var(--accent) / 0.15)" stroke="hsl(var(--accent) / 0.5)" strokeWidth="1.2" />
-        {/* Arrow indicators */}
-        <line x1="10" y1="76" x2="16" y2="76" stroke="hsl(var(--accent) / 0.6)" strokeWidth="0.8" markerEnd="url(#edu-arrow)" />
-        <line x1="90" y1="76" x2="84" y2="76" stroke="hsl(var(--accent) / 0.6)" strokeWidth="0.8" markerEnd="url(#edu-arrow)" />
+        {/* Heel calk zones */}
+        <rect x="18" y="86" width="10" height="14" rx="1" fill="hsl(var(--accent) / 0.15)" stroke="hsl(var(--accent) / 0.5)" strokeWidth="1.2" />
+        <rect x="72" y="86" width="10" height="14" rx="1" fill="hsl(var(--accent) / 0.15)" stroke="hsl(var(--accent) / 0.5)" strokeWidth="1.2" />
+        {/* Toe clip zone */}
+        <path d="M 44 30 L 50 18 L 56 30 Z" fill="hsl(var(--accent) / 0.15)" stroke="hsl(var(--accent) / 0.5)" strokeWidth="1.2" />
+        {/* Connection arrows */}
+        <line x1="10" y1="93" x2="18" y2="93" stroke="hsl(var(--accent) / 0.6)" strokeWidth="0.8" markerEnd="url(#edu-arrow)" />
+        <line x1="90" y1="93" x2="82" y2="93" stroke="hsl(var(--accent) / 0.6)" strokeWidth="0.8" markerEnd="url(#edu-arrow)" />
+        <line x1="50" y1="12" x2="50" y2="20" stroke="hsl(var(--accent) / 0.6)" strokeWidth="0.8" markerEnd="url(#edu-arrow)" />
       </>
     ),
   },
@@ -61,11 +64,11 @@ const HOTSPOTS: Hotspot[] = [
     highlight: (
       <>
         {/* Inner channel highlight */}
-        <rect x="32" y="52" width="36" height="46" rx="2" fill="hsl(var(--accent) / 0.08)" stroke="hsl(var(--accent) / 0.4)" strokeWidth="0.8" strokeDasharray="3 2" />
+        <rect x="34" y="64" width="32" height="32" rx="2" fill="hsl(var(--accent) / 0.08)" stroke="hsl(var(--accent) / 0.4)" strokeWidth="0.8" strokeDasharray="3 2" />
         {/* Flow indicators */}
-        <line x1="50" y1="55" x2="50" y2="93" stroke="hsl(var(--accent) / 0.35)" strokeWidth="0.6" strokeDasharray="2 3" />
-        <line x1="42" y1="55" x2="42" y2="93" stroke="hsl(var(--accent) / 0.2)" strokeWidth="0.4" strokeDasharray="2 3" />
-        <line x1="58" y1="55" x2="58" y2="93" stroke="hsl(var(--accent) / 0.2)" strokeWidth="0.4" strokeDasharray="2 3" />
+        <line x1="50" y1="65" x2="50" y2="93" stroke="hsl(var(--accent) / 0.35)" strokeWidth="0.6" strokeDasharray="2 3" />
+        <line x1="42" y1="65" x2="42" y2="93" stroke="hsl(var(--accent) / 0.2)" strokeWidth="0.4" strokeDasharray="2 3" />
+        <line x1="58" y1="65" x2="58" y2="93" stroke="hsl(var(--accent) / 0.2)" strokeWidth="0.4" strokeDasharray="2 3" />
       </>
     ),
   },
@@ -78,14 +81,14 @@ const HOTSPOTS: Hotspot[] = [
       <>
         {/* Surface fill overlay */}
         <path
-          d="M 78 100 L 78 45 A 28 28 0 0 0 22 45 L 22 100 L 30 100 L 30 50 A 20 20 0 0 1 70 50 L 70 100 Z"
+          d="M 74 105 L 74 97 L 80 97 L 80 105 L 80 97 L 78 80 L 76 60 A 30 32 0 0 0 24 60 L 22 80 L 20 97 L 20 105 L 26 105 L 26 97 L 30 80 L 32 62 A 20 22 0 0 1 68 62 L 70 80 L 74 97 L 74 105 Z"
           fill="hsl(var(--accent) / 0.06)"
           stroke="none"
         />
         {/* Aggregate dots */}
         {[
-          [35, 60], [45, 55], [55, 58], [65, 62], [40, 70], [50, 68], [60, 72],
-          [37, 80], [47, 78], [57, 82], [63, 88], [42, 90], [52, 92],
+          [35, 70], [45, 65], [55, 68], [65, 72], [40, 78], [50, 76], [60, 80],
+          [37, 88], [47, 86], [57, 90], [63, 94], [42, 96], [52, 93],
         ].map(([cx, cy], i) => (
           <circle key={i} cx={cx} cy={cy} r="1.2" fill="hsl(var(--accent) / 0.25)" />
         ))}
@@ -120,7 +123,7 @@ export function GroundLockProductEducation() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
         {/* Panel visual with highlight overlays */}
         <div className="flex justify-center">
-          <svg viewBox="0 0 100 120" className="w-full max-w-[280px] h-auto">
+          <svg viewBox="0 0 100 120" className="w-full max-w-[300px] h-auto">
             <PanelDefs id="edu" />
             <defs>
               <marker id="edu-arrow" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">

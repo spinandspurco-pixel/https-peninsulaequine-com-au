@@ -10,31 +10,44 @@
 
 import { cn } from "@/lib/utils";
 
-/* ── The horseshoe path — open at bottom, curved crown ── */
+/* ── The horseshoe path — true farrier horseshoe silhouette ── */
 const PANEL_PATH = [
-  // Outer right leg (bottom-right → top-right)
-  "M 78 100",
-  "L 78 45",
-  // Crown arc (top-right → top-left)
-  "A 28 28 0 0 0 22 45",
-  // Outer left leg (top-left → bottom-left)
-  "L 22 100",
-  // Bottom-left inward step (foot/tab)
-  "L 30 100",
-  // Inner left leg (bottom-left inside → top-left inside)
-  "L 30 50",
-  // Inner arc (top-left inside → top-right inside)
-  "A 20 20 0 0 1 70 50",
-  // Inner right leg (top-right inside → bottom-right inside)
-  "L 70 100",
-  // Bottom-right inward step
-  "L 78 100",
+  // Start at right heel calk (bottom-right)
+  "M 74 105",
+  // Right heel calk notch
+  "L 74 97",
+  "L 80 97",
+  "L 80 105",
+  "L 80 97",
+  // Outer right leg — slight taper inward toward crown
+  "L 78 80",
+  "L 76 60",
+  // Wide crown arc (top-right → top-left)
+  "A 30 32 0 0 0 24 60",
+  // Outer left leg — tapers outward toward heel
+  "L 22 80",
+  "L 20 97",
+  // Left heel calk notch
+  "L 20 105",
+  "L 26 105",
+  "L 26 97",
+  // Inner left leg (rises back up)
+  "L 30 80",
+  "L 32 62",
+  // Inner crown arc
+  "A 20 22 0 0 1 68 62",
+  // Inner right leg (descends)
+  "L 70 80",
+  "L 74 97",
+  // Close back at right heel
+  "L 74 105",
   "Z",
 ].join(" ");
 
-/* ── Interlocking tab paths ──────────────────────────── */
-const TAB_LEFT = "M 22 70 L 16 70 L 16 82 L 22 82 Z";
-const TAB_RIGHT = "M 78 70 L 84 70 L 84 82 L 78 82 Z";
+/* ── Interlocking tab paths (heel calks + toe clip) ─── */
+const TAB_LEFT = "M 20 88 L 14 88 L 14 97 L 20 97 Z";
+const TAB_RIGHT = "M 80 88 L 86 88 L 86 97 L 80 97 Z";
+const TOE_CLIP = "M 46 28 L 50 20 L 54 28 Z";
 
 /* ── Shared gradient defs (rendered once per SVG) ───── */
 export function PanelDefs({ id = "gl" }: { id?: string }) {
@@ -124,11 +137,12 @@ export function GroundLockPanelSVG({
         filter={active ? `url(#${defsId}-glow)` : undefined}
       />
 
-      {/* Interlocking tabs */}
+      {/* Interlocking tabs + toe clip */}
       {showTabs && (
         <>
           <path d={TAB_LEFT} fill={`url(#${defsId}-panel-${active ? "active" : "idle"})`} stroke={strokeColor} strokeWidth={0.5} />
           <path d={TAB_RIGHT} fill={`url(#${defsId}-panel-${active ? "active" : "idle"})`} stroke={strokeColor} strokeWidth={0.5} />
+          <path d={TOE_CLIP} fill={`url(#${defsId}-panel-${active ? "active" : "idle"})`} stroke={strokeColor} strokeWidth={0.5} />
         </>
       )}
 
@@ -168,4 +182,4 @@ export function GroundLockPanelPreview({ className }: { className?: string }) {
   );
 }
 
-export { PANEL_PATH };
+export { PANEL_PATH, TOE_CLIP };
