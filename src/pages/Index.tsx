@@ -256,7 +256,7 @@ export default function Index() {
       />
 
       {/* ═══ 3. PROJECTS — HORIZONTAL SCROLL ═══════════════ */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden cv-auto">
         <div className="py-32 sm:py-40 lg:py-48 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-7xl mx-auto relative z-[1]">
