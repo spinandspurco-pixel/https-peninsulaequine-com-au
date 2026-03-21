@@ -7,6 +7,7 @@ import { Plus, FileText, Clock, CheckCircle, XCircle, Send, Eye, RefreshCw, Doll
 import { toast } from "sonner";
 import { format, formatDistanceToNow } from "date-fns";
 import { QuoteBuilder } from "./QuoteBuilder";
+import { scheduleQuoteFollowUps, cancelScheduledMessages } from "@/lib/autoSendScheduler";
 
 interface QuoteRow {
   id: string;
@@ -89,8 +90,29 @@ export function QuotesDashboard() {
     if (status === "sent") updates.sent_at = new Date().toISOString();
 
     const { error } = await supabase.from("quotes").update(updates).eq("id", id);
-    if (error) toast.error("Failed to update status");
-    else { toast.success(`Quote ${status.replace("_", " ")}`); fetchData(); }
+    if (error) { toast.error("Failed to update status"); return; }
+
+    // Auto-schedule follow-up sequence when quote is sent
+    if (status === "sent") {
+      const quote = quotes.find((q) => q.id === id);
+      if (quote) {
+        await scheduleQuoteFollowUps({
+          quoteId: id,
+          clientName: quote.client_name,
+          clientEmail: null, // Will be fetched from quote record
+          projectRef: quote.project_type,
+        });
+        toast.success("Quote sent — follow-up sequence scheduled");
+      }
+    }
+
+    // Cancel scheduled messages when quote is accepted or declined
+    if (status === "accepted" || status === "declined") {
+      await cancelScheduledMessages("quote", id);
+    }
+
+    toast.success(`Quote ${status.replace("_", " ")}`);
+    fetchData();
   };
 
   const completeFollowUp = async (id: string) => {

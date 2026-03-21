@@ -1155,6 +1155,45 @@ export type Database = {
         }
         Relationships: []
       }
+      message_templates: {
+        Row: {
+          active: boolean
+          body: string
+          channel: string
+          created_at: string
+          flow_type: string
+          id: string
+          step_number: number
+          subject: string | null
+          template_key: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          body: string
+          channel?: string
+          created_at?: string
+          flow_type?: string
+          id?: string
+          step_number?: number
+          subject?: string | null
+          template_key: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          body?: string
+          channel?: string
+          created_at?: string
+          flow_type?: string
+          id?: string
+          step_number?: number
+          subject?: string | null
+          template_key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       mlpgs_interest: {
         Row: {
           company: string | null
@@ -1527,6 +1566,84 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      scheduled_messages: {
+        Row: {
+          assigned_to: string | null
+          automation_mode: string
+          cancelled_at: string | null
+          channel: string
+          client_email: string | null
+          client_name: string
+          client_phone: string | null
+          created_at: string
+          entity_id: string
+          entity_type: string
+          id: string
+          message_body: string | null
+          notes: string | null
+          original_scheduled_at: string
+          paused_at: string | null
+          scheduled_at: string
+          sent_at: string | null
+          skipped_at: string | null
+          status: string
+          step_number: number
+          subject_line: string | null
+          template_type: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          automation_mode?: string
+          cancelled_at?: string | null
+          channel?: string
+          client_email?: string | null
+          client_name: string
+          client_phone?: string | null
+          created_at?: string
+          entity_id: string
+          entity_type?: string
+          id?: string
+          message_body?: string | null
+          notes?: string | null
+          original_scheduled_at: string
+          paused_at?: string | null
+          scheduled_at: string
+          sent_at?: string | null
+          skipped_at?: string | null
+          status?: string
+          step_number?: number
+          subject_line?: string | null
+          template_type: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          automation_mode?: string
+          cancelled_at?: string | null
+          channel?: string
+          client_email?: string | null
+          client_name?: string
+          client_phone?: string | null
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          message_body?: string | null
+          notes?: string | null
+          original_scheduled_at?: string
+          paused_at?: string | null
+          scheduled_at?: string
+          sent_at?: string | null
+          skipped_at?: string | null
+          status?: string
+          step_number?: number
+          subject_line?: string | null
+          template_type?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       site_assessments: {
         Row: {

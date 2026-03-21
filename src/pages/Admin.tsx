@@ -22,6 +22,7 @@ import { FollowUpEngine } from "@/components/FollowUpEngine";
 import { AdminSystemSettings } from "@/components/AdminSystemSettings";
 import { FollowUpCommandView } from "@/components/FollowUpCommandView";
 import { ClientExperiencePanel } from "@/components/ClientExperiencePanel";
+import { AutoSendOverviewPanel, AutoSendSettingsPanel } from "@/components/AutoSendTimingPanel";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -223,6 +224,9 @@ export default function Admin() {
           {/* FOUNDER + ADMIN: Follow-Up Engine */}
           {viewMode !== "operations" && <FollowUpEngine />}
 
+          {/* FOUNDER + ADMIN: Auto-Send Overview */}
+          {viewMode !== "operations" && <AutoSendOverviewPanel />}
+
           {/* FOUNDER + ADMIN: Communications Hub */}
           {viewMode !== "operations" && <CommunicationsHub />}
 
@@ -317,6 +321,9 @@ export default function Admin() {
 
           {/* System Settings — Founder only */}
           {viewMode === "founder" && <AdminSystemSettings />}
+
+          {/* FOUNDER: Auto-Send Timing Settings */}
+          {viewMode === "founder" && <AutoSendSettingsPanel />}
 
           {/* CRM Settings — Founder only */}
           {viewMode === "founder" && (

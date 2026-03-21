@@ -13,6 +13,8 @@ import {
   FileText, ArrowRight, CheckCircle, Zap, Lightbulb,
   Briefcase, Shield,
 } from "lucide-react";
+import { CommunicationTimeline } from "@/components/CommunicationTimeline";
+import { scheduleLeadFollowUps } from "@/lib/autoSendScheduler";
 
 interface Props {
   record: CRMRecord;
@@ -129,6 +131,8 @@ export function LeadDetailPanel({ record, onClose, onUpdated, onCreateQuote }: P
 
   const handleSave = useCallback(async () => {
     setSaving(true);
+    const previousStage = record.deal_stage || "new";
+
     const { error } = await supabase
       .from("inquiries")
       .update({
@@ -142,11 +146,22 @@ export function LeadDetailPanel({ record, onClose, onUpdated, onCreateQuote }: P
 
     if (error) toast.error("Failed to save");
     else {
-      toast.success("Record updated");
+      // Auto-schedule lead follow-ups when moving to qualified (and no quote exists)
+      if (stage === "qualified" && previousStage !== "qualified" && !linkedQuote) {
+        await scheduleLeadFollowUps({
+          inquiryId: record.id,
+          clientName: record.name,
+          clientEmail: record.email,
+          clientPhone: record.phone,
+        });
+        toast.success("Record updated — lead follow-up sequence scheduled");
+      } else {
+        toast.success("Record updated");
+      }
       onUpdated();
     }
     setSaving(false);
-  }, [stage, notes, dealValue, probability, record.id, onUpdated]);
+  }, [stage, notes, dealValue, probability, record.id, record.deal_stage, record.name, record.email, record.phone, linkedQuote, onUpdated]);
 
   const handleConvertToProject = useCallback(async () => {
     // Create job from inquiry + quote data
@@ -388,6 +403,15 @@ export function LeadDetailPanel({ record, onClose, onUpdated, onCreateQuote }: P
                 ))}
               </SelectContent>
             </Select>
+          </section>
+
+          {/* ═══ COMMUNICATION TIMELINE ═══ */}
+          <section>
+            <CommunicationTimeline
+              entityType={linkedQuote ? "quote" : "lead"}
+              entityId={linkedQuote ? linkedQuote.id : record.id}
+              clientName={record.name}
+            />
           </section>
 
           {/* ═══ INTERNAL NOTES ═══ */}
