@@ -146,7 +146,7 @@ function CinematicVideo({
           <img
             src={item.thumbnail || item.src}
             alt={item.alt}
-            className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${isHovering ? "opacity-0 scale-[1.03]" : "opacity-100"}`}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${isHovering ? "opacity-0" : "opacity-100"}`}
             loading="lazy"
             decoding="async"
           />
