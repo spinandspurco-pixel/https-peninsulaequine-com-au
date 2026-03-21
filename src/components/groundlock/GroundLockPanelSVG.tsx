@@ -1,81 +1,102 @@
 /**
  * GroundLock horseshoe panel — a single reusable SVG unit.
  *
- * The panel silhouette is an unmistakable horseshoe / U-shape:
- *   - wide open base
- *   - curved top
- *   - visible thickness on inner and outer walls
- *   - interlocking tabs on outer edges
+ * 3D-engineered appearance with visible depth, curvature,
+ * and thickness — reads as a physical cast product, not a flat diagram.
  */
 
 import { cn } from "@/lib/utils";
 
-/* ── The horseshoe path — true farrier horseshoe silhouette ── */
-const PANEL_PATH = [
-  // Start at right heel calk (bottom-right)
-  "M 74 105",
-  // Right heel calk notch
-  "L 74 97",
-  "L 80 97",
-  "L 80 105",
-  "L 80 97",
-  // Outer right leg — slight taper inward toward crown
-  "L 78 80",
-  "L 76 60",
-  // Wide crown arc (top-right → top-left)
-  "A 30 32 0 0 0 24 60",
-  // Outer left leg — tapers outward toward heel
-  "L 22 80",
-  "L 20 97",
-  // Left heel calk notch
-  "L 20 105",
-  "L 26 105",
-  "L 26 97",
-  // Inner left leg (rises back up)
-  "L 30 80",
-  "L 32 62",
-  // Inner crown arc
-  "A 20 22 0 0 1 68 62",
-  // Inner right leg (descends)
-  "L 70 80",
-  "L 74 97",
-  // Close back at right heel
-  "L 74 105",
+/* ── Top face — horseshoe silhouette (viewed slightly from above) ── */
+const TOP_FACE = [
+  "M 74 95",
+  "L 80 95",
+  "L 80 87",
+  "L 78 70",
+  "L 76 52",
+  "A 30 32 0 0 0 24 52",
+  "L 22 70",
+  "L 20 87",
+  "L 20 95",
+  "L 26 95",
+  "L 26 87",
+  "L 30 70",
+  "L 32 54",
+  "A 20 22 0 0 1 68 54",
+  "L 70 70",
+  "L 74 87",
   "Z",
 ].join(" ");
 
-/* ── Interlocking tab paths (heel calks + toe clip) ─── */
-const TAB_LEFT = "M 20 88 L 14 88 L 14 97 L 20 97 Z";
-const TAB_RIGHT = "M 80 88 L 86 88 L 86 97 L 80 97 Z";
-const TOE_CLIP = "M 46 28 L 50 20 L 54 28 Z";
+/* ── Side/depth face — extruded bottom edge for 3D thickness ── */
+const DEPTH = 8;
+const SIDE_LEFT = `M 20 87 L 20 95 L 20 ${95 + DEPTH} L 14 ${88 + DEPTH} L 14 88 L 20 88 L 20 87 Z`;
+const SIDE_RIGHT = `M 80 87 L 80 95 L 80 ${95 + DEPTH} L 86 ${88 + DEPTH} L 86 88 L 80 88 L 80 87 Z`;
+const SIDE_BOTTOM = `M 20 95 L 26 95 L 26 ${95 + DEPTH} L 20 ${95 + DEPTH} Z`;
+const SIDE_BOTTOM_R = `M 74 95 L 80 95 L 80 ${95 + DEPTH} L 74 ${95 + DEPTH} Z`;
+const SIDE_OUTER = [
+  `M 20 95 L 20 ${95 + DEPTH}`,
+  `L 22 ${70 + DEPTH} L 24 ${52 + DEPTH}`,
+  `A 30 32 0 0 1 76 ${52 + DEPTH}`,
+  `L 78 ${70 + DEPTH} L 80 ${95 + DEPTH}`,
+  "L 80 95",
+  "L 78 70 L 76 52",
+  "A 30 32 0 0 0 24 52",
+  "L 22 70 L 20 95 Z",
+].join(" ");
 
-/* ── Shared gradient defs (rendered once per SVG) ───── */
+/* ── Interlocking tabs ─── */
+const TAB_LEFT = "M 20 82 L 14 82 L 14 88 L 20 88 Z";
+const TAB_RIGHT = "M 80 82 L 86 82 L 86 88 L 80 88 Z";
+const TOE_CLIP = "M 46 24 L 50 16 L 54 24 Z";
+
+/* ── Inner groove lines for curvature detail ── */
+const INNER_GROOVE = [
+  "M 34 56 A 16 18 0 0 1 66 56",
+].join(" ");
+const OUTER_GROOVE = [
+  "M 25 54 A 27 29 0 0 1 75 54",
+].join(" ");
+
+/* ── Shared gradient defs ───── */
 export function PanelDefs({ id = "gl" }: { id?: string }) {
   return (
     <defs>
-      {/* Active panel body */}
-      <linearGradient id={`${id}-panel-active`} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.24" />
-        <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.10" />
+      {/* Top face active */}
+      <linearGradient id={`${id}-top-active`} x1="0" y1="0" x2="0.3" y2="1">
+        <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.30" />
+        <stop offset="40%" stopColor="hsl(var(--accent))" stopOpacity="0.18" />
+        <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.08" />
       </linearGradient>
-      {/* Idle panel body */}
-      <linearGradient id={`${id}-panel-idle`} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.10" />
-        <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.04" />
+      {/* Top face idle */}
+      <linearGradient id={`${id}-top-idle`} x1="0" y1="0" x2="0.3" y2="1">
+        <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.14" />
+        <stop offset="40%" stopColor="hsl(var(--accent))" stopOpacity="0.08" />
+        <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.03" />
       </linearGradient>
-      {/* Top bevel */}
+      {/* Side depth — darker */}
+      <linearGradient id={`${id}-side`} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.12" />
+        <stop offset="100%" stopColor="hsl(var(--background))" stopOpacity="0.8" />
+      </linearGradient>
+      <linearGradient id={`${id}-side-active`} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.22" />
+        <stop offset="100%" stopColor="hsl(var(--background))" stopOpacity="0.6" />
+      </linearGradient>
+      {/* Top edge highlight — beveled look */}
       <linearGradient id={`${id}-bevel`} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.16" />
-        <stop offset="50%" stopColor="hsl(var(--accent))" stopOpacity="0" />
+        <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.25" />
+        <stop offset="30%" stopColor="hsl(var(--accent))" stopOpacity="0.06" />
+        <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0" />
       </linearGradient>
       {/* Drop shadow */}
-      <filter id={`${id}-shadow`} x="-15%" y="-15%" width="140%" height="140%">
-        <feDropShadow dx="1.5" dy="2" stdDeviation="3" floodColor="hsl(var(--background))" floodOpacity="0.65" />
+      <filter id={`${id}-shadow`} x="-20%" y="-10%" width="150%" height="150%">
+        <feDropShadow dx="2" dy="3" stdDeviation="4" floodColor="hsl(var(--background))" floodOpacity="0.7" />
       </filter>
       {/* Active glow */}
-      <filter id={`${id}-glow`} x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur" />
-        <feFlood floodColor="hsl(var(--accent))" floodOpacity="0.10" />
+      <filter id={`${id}-glow`} x="-25%" y="-20%" width="150%" height="150%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur" />
+        <feFlood floodColor="hsl(var(--accent))" floodOpacity="0.12" />
         <feComposite in2="blur" operator="in" />
         <feMerge>
           <feMergeNode />
@@ -109,60 +130,85 @@ export function GroundLockPanelSVG({
   showTabs = false,
   defsId = "gl",
 }: PanelProps) {
-  const strokeColor = active ? "hsl(var(--accent) / 0.5)" : "hsl(var(--accent) / 0.18)";
-  const strokeW = active ? 1.2 : 0.7;
+  const strokeColor = active ? "hsl(var(--accent) / 0.55)" : "hsl(var(--accent) / 0.18)";
+  const strokeW = active ? 1.0 : 0.6;
+  const sideGrad = active ? `${defsId}-side-active` : `${defsId}-side`;
+  const topGrad = active ? `${defsId}-top-active` : `${defsId}-top-idle`;
 
   return (
     <g
-      transform={`translate(${x}, ${y}) rotate(${rotation}, 50, 65) scale(${scale})`}
+      transform={`translate(${x}, ${y}) rotate(${rotation}, 50, 60) scale(${scale})`}
       opacity={opacity}
-      className={cn("transition-opacity duration-300", className)}
+      className={cn(className)}
     >
-      {/* Shadow */}
+      {/* Shadow beneath */}
       <path
-        d={PANEL_PATH}
+        d={TOP_FACE}
         fill="hsl(var(--background))"
-        opacity={0.4}
-        transform="translate(1.2, 1.8)"
+        opacity={0.35}
+        transform="translate(1.5, 2.5)"
         filter={`url(#${defsId}-shadow)`}
       />
 
-      {/* Body */}
+      {/* Side depth — extruded walls for 3D thickness */}
+      <path d={SIDE_OUTER} fill={`url(#${sideGrad})`} stroke={strokeColor} strokeWidth={0.3} strokeLinejoin="round" />
+      <path d={SIDE_LEFT} fill={`url(#${sideGrad})`} stroke={strokeColor} strokeWidth={0.3} />
+      <path d={SIDE_RIGHT} fill={`url(#${sideGrad})`} stroke={strokeColor} strokeWidth={0.3} />
+      <path d={SIDE_BOTTOM} fill={`url(#${sideGrad})`} stroke={strokeColor} strokeWidth={0.3} />
+      <path d={SIDE_BOTTOM_R} fill={`url(#${sideGrad})`} stroke={strokeColor} strokeWidth={0.3} />
+
+      {/* Top face — main horseshoe body */}
       <path
-        d={PANEL_PATH}
-        fill={`url(#${defsId}-panel-${active ? "active" : "idle"})`}
+        d={TOP_FACE}
+        fill={`url(#${topGrad})`}
         stroke={strokeColor}
         strokeWidth={strokeW}
         strokeLinejoin="round"
         filter={active ? `url(#${defsId}-glow)` : undefined}
       />
 
+      {/* Bevel highlight on top face */}
+      <path
+        d={TOP_FACE}
+        fill={`url(#${defsId}-bevel)`}
+        stroke="none"
+        transform="translate(0, -0.4) scale(0.97)"
+        style={{ transformOrigin: "50px 60px" }}
+      />
+
+      {/* Inner curvature grooves — show the horseshoe curve */}
+      <path
+        d={INNER_GROOVE}
+        fill="none"
+        stroke={active ? "hsl(var(--accent) / 0.25)" : "hsl(var(--accent) / 0.08)"}
+        strokeWidth={0.5}
+        strokeLinecap="round"
+      />
+      <path
+        d={OUTER_GROOVE}
+        fill="none"
+        stroke={active ? "hsl(var(--accent) / 0.18)" : "hsl(var(--accent) / 0.06)"}
+        strokeWidth={0.4}
+        strokeLinecap="round"
+      />
+
       {/* Interlocking tabs + toe clip */}
       {showTabs && (
         <>
-          <path d={TAB_LEFT} fill={`url(#${defsId}-panel-${active ? "active" : "idle"})`} stroke={strokeColor} strokeWidth={0.5} />
-          <path d={TAB_RIGHT} fill={`url(#${defsId}-panel-${active ? "active" : "idle"})`} stroke={strokeColor} strokeWidth={0.5} />
-          <path d={TOE_CLIP} fill={`url(#${defsId}-panel-${active ? "active" : "idle"})`} stroke={strokeColor} strokeWidth={0.5} />
+          <path d={TAB_LEFT} fill={`url(#${topGrad})`} stroke={strokeColor} strokeWidth={0.5} />
+          <path d={TAB_RIGHT} fill={`url(#${topGrad})`} stroke={strokeColor} strokeWidth={0.5} />
+          <path d={TOE_CLIP} fill={`url(#${topGrad})`} stroke={strokeColor} strokeWidth={0.5} />
         </>
       )}
 
-      {/* Bevel highlight */}
+      {/* Inner edge detail line for depth */}
       <path
-        d={PANEL_PATH}
-        fill={`url(#${defsId}-bevel)`}
-        stroke="none"
-        transform="translate(0, -0.5) scale(0.97)"
-        style={{ transformOrigin: "50px 65px" }}
-      />
-
-      {/* Inner edge detail */}
-      <path
-        d={PANEL_PATH}
+        d={TOP_FACE}
         fill="none"
-        stroke={active ? "hsl(var(--accent) / 0.18)" : "hsl(var(--accent) / 0.05)"}
-        strokeWidth={0.35}
-        transform="translate(0, -0.3) scale(0.96)"
-        style={{ transformOrigin: "50px 65px" }}
+        stroke={active ? "hsl(var(--accent) / 0.12)" : "hsl(var(--accent) / 0.04)"}
+        strokeWidth={0.3}
+        transform="translate(0, -0.3) scale(0.95)"
+        style={{ transformOrigin: "50px 60px" }}
       />
     </g>
   );
@@ -182,4 +228,4 @@ export function GroundLockPanelPreview({ className }: { className?: string }) {
   );
 }
 
-export { PANEL_PATH, TOE_CLIP };
+export { TOP_FACE as PANEL_PATH, TOE_CLIP };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 
 const LAYERS = [
@@ -42,6 +42,10 @@ const LAYERS = [
 export function InteractiveLayerStack() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
+  const handleClick = useCallback((i: number) => {
+    setActiveIndex((prev) => (prev === i ? null : i));
+  }, []);
+
   return (
     <div className="space-y-2">
       {LAYERS.map((layer, i) => {
@@ -51,37 +55,29 @@ export function InteractiveLayerStack() {
             key={i}
             type="button"
             className={cn(
-              "w-full text-left flex items-center gap-4 p-4 border transition-all duration-500 cursor-pointer",
+              "w-full text-left flex items-center gap-4 p-4 border cursor-pointer",
               isActive ? layer.activeColor : layer.color,
-              isActive && "scale-[1.01] shadow-lg shadow-accent/10"
             )}
-            onMouseEnter={() => setActiveIndex(i)}
-            onMouseLeave={() => setActiveIndex(null)}
-            onClick={() => setActiveIndex(isActive ? null : i)}
+            onClick={() => handleClick(i)}
           >
             <span className="text-[10px] font-mono text-muted-foreground/50 w-20 tabular-nums shrink-0">
               {layer.depth}
             </span>
             <div className="flex-1 min-w-0">
               <p className={cn(
-                "text-xs font-semibold uppercase tracking-wider transition-colors duration-500",
+                "text-xs font-semibold uppercase tracking-wider",
                 isActive ? "text-accent" : "text-foreground"
               )}>
                 {layer.label}
               </p>
-              <div
-                className={cn(
-                  "overflow-hidden transition-all duration-500",
-                  isActive ? "max-h-20 opacity-100 mt-1.5" : "max-h-0 opacity-0"
-                )}
-              >
-                <p className="text-[11px] text-muted-foreground/50 leading-relaxed">
+              {isActive && (
+                <p className="text-[11px] text-muted-foreground/50 leading-relaxed mt-1.5">
                   {layer.desc}
                 </p>
-              </div>
+              )}
             </div>
             <div className={cn(
-              "w-1 h-8 rounded-full transition-all duration-500 shrink-0",
+              "w-1 h-8 rounded-full shrink-0",
               isActive ? "bg-accent" : "bg-border"
             )} />
           </button>
