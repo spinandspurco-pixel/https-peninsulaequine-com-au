@@ -20,7 +20,7 @@ function BlueprintGrid() {
   return (
     <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
       {/* Major grid */}
-      <svg className="absolute inset-0 w-full h-full opacity-0 animate-[gridFadeIn_2s_0.3s_ease-out_forwards]">
+      <svg className="absolute inset-0 w-full h-full opacity-0 animate-[gridFadeIn_1.2s_0.1s_ease-out_forwards]">
         <defs>
           <pattern id="hero-grid-major" width="120" height="120" patternUnits="userSpaceOnUse">
             <path d="M 120 0 L 0 0 0 120" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.5" opacity="0.12" />
