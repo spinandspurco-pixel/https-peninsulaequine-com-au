@@ -3,8 +3,8 @@
 
 export const siteConfig = {
   name: "Peninsula Equine",
-  tagline: "Crafting World-Class Equine Facilities",
-  description: "Expert equine facility construction by a horseman who understands what your horses need. Premium arenas, barns, and infrastructure built to the highest standards.",
+  tagline: "Equine Infrastructure, Engineered Properly",
+  description: "Equine facility construction by a horseman. Arenas, barns, and infrastructure — engineered for performance and longevity.",
   phone: "0418 585 489",
   email: "info@peninsulaequine.org",
   address: {
