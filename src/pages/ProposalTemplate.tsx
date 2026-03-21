@@ -1,6 +1,8 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { ArrowRight, MessageSquare, Download } from "lucide-react";
 import { GroundLockPanelSVG, PanelDefs } from "@/components/groundlock/GroundLockPanelSVG";
+import { supabase } from "@/integrations/supabase/client";
 
 /* ─── Placeholder data shape ─── */
 interface ProposalData {
@@ -13,6 +15,7 @@ interface ProposalData {
   scopeItems: { phase: string; description: string }[];
   investmentTotal: string;
   investmentNote: string;
+  layoutNotes?: string;
 }
 
 const SAMPLE: ProposalData = {
@@ -78,7 +81,39 @@ function SectionLabel({ children, number }: { children: string; number: string }
 }
 
 export default function ProposalTemplate() {
-  const data = SAMPLE;
+  const [searchParams] = useSearchParams();
+  const proposalId = searchParams.get("proposalId");
+  const [data, setData] = useState<ProposalData>(SAMPLE);
+  const [loadingProposal, setLoadingProposal] = useState(!!proposalId);
+
+  useEffect(() => {
+    if (!proposalId) return;
+    (async () => {
+      const { data: p } = await supabase
+        .from("groundlock_proposals")
+        .select("*")
+        .eq("id", proposalId)
+        .single();
+      if (p) {
+        const scopeItems = Array.isArray(p.scope_items)
+          ? (p.scope_items as unknown as { phase: string; description: string }[])
+          : SAMPLE.scopeItems;
+        setData({
+          clientName: p.client_name || "Client Name",
+          propertyName: p.property_name || "",
+          location: p.location || "Mornington Peninsula, VIC",
+          date: new Date(p.proposal_date).toLocaleDateString("en-AU", { month: "long", year: "numeric" }),
+          quoteNumber: p.proposal_ref,
+          overview: p.overview || SAMPLE.overview,
+          scopeItems,
+          investmentTotal: p.investment_total || "[INSERT PRICE]",
+          investmentNote: p.investment_note || SAMPLE.investmentNote,
+          layoutNotes: p.layout_notes || undefined,
+        });
+      }
+      setLoadingProposal(false);
+    })();
+  }, [proposalId]);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = useCallback(() => {

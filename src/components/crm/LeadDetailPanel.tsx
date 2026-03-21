@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { CRMRecord, PIPELINE_STAGES, PipelineStage, TEAM_MEMBERS } from "./crmTypes";
 import { supabase } from "@/integrations/supabase/client";
 import { format, differenceInDays } from "date-fns";
@@ -11,7 +12,7 @@ import { toast } from "sonner";
 import {
   X, Phone, Mail, MapPin, DollarSign, Calendar,
   FileText, ArrowRight, CheckCircle, Zap, Lightbulb,
-  Briefcase, Shield, Sparkles, Copy, Check, Send,
+  Briefcase, Shield, Sparkles, Copy, Check, Send, FileUp,
 } from "lucide-react";
 import { CommunicationTimeline } from "@/components/CommunicationTimeline";
 import { scheduleLeadFollowUps } from "@/lib/autoSendScheduler";
@@ -109,6 +110,7 @@ function getAutoPrompts(
 /* ------------------------------------------------------------------ */
 
 export function LeadDetailPanel({ record, onClose, onUpdated, onCreateQuote }: Props) {
+  const navigate = useNavigate();
   const [stage, setStage] = useState(record.deal_stage || "new");
   const [notes, setNotes] = useState(record.notes || "");
   const [saving, setSaving] = useState(false);
@@ -543,6 +545,33 @@ export function LeadDetailPanel({ record, onClose, onUpdated, onCreateQuote }: P
               >
                 <FileText className="h-3.5 w-3.5 mr-2" />
                 Create Quote
+            </Button>
+            )}
+
+            {/* Generate GroundLock Proposal */}
+            {(record.preferred_service === "groundlock" ||
+              record.services?.some((s) => s.toLowerCase().includes("arena") || s.toLowerCase().includes("groundlock"))) && (
+              <Button
+                variant="outline"
+                onClick={async () => {
+                  const toastId = toast.loading("Generating proposal draft...");
+                  try {
+                    const { data, error } = await supabase.functions.invoke("generate-groundlock-proposal", {
+                      body: { inquiry_id: record.id },
+                    });
+                    if (error || data?.error) throw new Error(data?.error || "Failed");
+                    toast.dismiss(toastId);
+                    toast.success("Proposal draft generated");
+                    navigate(`/proposal-editor/${data.proposal.id}`);
+                  } catch (err: any) {
+                    toast.dismiss(toastId);
+                    toast.error(err.message || "Failed to generate proposal");
+                  }
+                }}
+                className="w-full text-[11px] uppercase tracking-[0.12em] border-amber-500/20 text-amber-600 hover:bg-amber-50/50"
+              >
+                <FileUp className="h-3.5 w-3.5 mr-2" />
+                Generate GroundLock Proposal
               </Button>
             )}
 

@@ -63,6 +63,7 @@ const GroundLockSetup = lazy(() => import("./pages/GroundLockSetup"));
 const GroundLockOnboarding = lazy(() => import("./pages/GroundLockOnboarding"));
 const ClientQuote = lazy(() => import("./pages/ClientQuote"));
 const ProposalTemplate = lazy(() => import("./pages/ProposalTemplate"));
+const ProposalEditor = lazy(() => import("./pages/ProposalEditor"));
 
 const queryClient = new QueryClient();
 
@@ -141,6 +142,7 @@ function AppContent() {
           <Route path="/project/:slug" element={<CaseStudy />} />
           <Route path="/quote/:token" element={<ClientQuote />} />
           <Route path="/proposal" element={<ProposalTemplate />} />
+          <Route path="/proposal-editor/:id" element={<ProposalEditor />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
