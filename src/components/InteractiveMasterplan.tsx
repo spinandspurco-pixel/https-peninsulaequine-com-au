@@ -92,7 +92,10 @@ function SitePlan({
   onTap: (id: string) => void;
 }) {
   return (
-    <svg viewBox="0 0 740 560" className="w-full h-auto max-w-[560px] mx-auto" aria-label="Main Ridge Estate site plan">
+    <svg viewBox="0 0 740 560" className="w-full h-auto max-w-[560px] mx-auto" aria-label="Main Ridge Estate site plan" style={{
+      filter: activeZone ? "none" : "none",
+      transition: `filter ${DURATION.fast}ms ${EASE.interactive}`,
+    }}>
       <defs>
         <pattern id="masterplan-grid" width="40" height="40" patternUnits="userSpaceOnUse">
           <path d="M 40 0 L 0 0 0 40" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.06" />
