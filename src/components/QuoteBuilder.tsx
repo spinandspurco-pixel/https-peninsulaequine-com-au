@@ -31,6 +31,9 @@ interface Quote {
   client_email: string;
   project_type: string;
   location: string;
+  property_name: string;
+  project_overview: string;
+  groundlock_included: boolean;
   scope_summary: string;
   exclusions: string;
   internal_notes: string;
@@ -39,6 +42,7 @@ interface Quote {
   total: number;
   status: string;
   expiry_date: string;
+  share_token?: string;
 }
 
 interface Template {
@@ -88,6 +92,9 @@ export function QuoteBuilder({ quoteId, inquiryId, onSaved, onClose }: QuoteBuil
     client_email: "",
     project_type: "",
     location: "",
+    property_name: "",
+    project_overview: "",
+    groundlock_included: false,
     scope_summary: "",
     exclusions: "• Access to site assumed available\n• Council permits not included\n• Rock removal not included unless specified\n• Variations require written approval and updated pricing",
     internal_notes: "",
@@ -128,6 +135,10 @@ export function QuoteBuilder({ quoteId, inquiryId, onSaved, onClose }: QuoteBuil
       setQuote({
         ...qRes.data,
         expiry_date: qRes.data.expiry_date || "",
+        property_name: qRes.data.property_name || "",
+        project_overview: qRes.data.project_overview || "",
+        groundlock_included: qRes.data.groundlock_included || false,
+        share_token: qRes.data.share_token || undefined,
       });
     }
     if (liRes.data) {
@@ -338,8 +349,49 @@ export function QuoteBuilder({ quoteId, inquiryId, onSaved, onClose }: QuoteBuil
             <label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60">Expiry Date</label>
             <Input type="date" value={quote.expiry_date} onChange={(e) => setQuote({ ...quote, expiry_date: e.target.value })} className="h-8 bg-background/60 border-border/50 text-sm" />
           </div>
+          <div className="space-y-1">
+            <label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60">Property Name</label>
+            <Input value={quote.property_name} onChange={(e) => setQuote({ ...quote, property_name: e.target.value })} className="h-8 bg-background/60 border-border/50 text-sm" placeholder="e.g. Willowbrook Estate" />
+          </div>
+          <div className="space-y-1 flex items-center gap-3 pt-4">
+            <input type="checkbox" id="groundlock-toggle" checked={quote.groundlock_included} onChange={(e) => setQuote({ ...quote, groundlock_included: e.target.checked })} className="accent-accent" />
+            <label htmlFor="groundlock-toggle" className="text-[11px] text-muted-foreground/60 cursor-pointer">Include GroundLock™ System</label>
+          </div>
         </CardContent>
       </Card>
+
+      {/* Project Overview */}
+      <Card className="bg-card/80 border-border/40">
+        <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Project Overview</CardTitle></CardHeader>
+        <CardContent>
+          <Textarea value={quote.project_overview} onChange={(e) => setQuote({ ...quote, project_overview: e.target.value })} rows={3} className="bg-background/60 border-border/50 text-sm" placeholder="High-level project description for client..." />
+        </CardContent>
+      </Card>
+
+      {/* Share Link */}
+      {quote.id && quote.share_token && (
+        <Card className="bg-card/80 border-border/40">
+          <CardContent className="py-3 flex items-center justify-between">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60 mb-0.5">Client Link</p>
+              <p className="text-[11px] text-muted-foreground/40 font-mono truncate max-w-[300px]">
+                {window.location.origin}/quote/{quote.share_token}
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-[11px] uppercase tracking-wider border-border/40"
+              onClick={() => {
+                navigator.clipboard.writeText(`${window.location.origin}/quote/${quote.share_token}`);
+                toast.success("Link copied");
+              }}
+            >
+              <Copy className="h-3.5 w-3.5 mr-1" /> Copy Link
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Scope Summary */}
       <Card className="bg-card/80 border-border/40">

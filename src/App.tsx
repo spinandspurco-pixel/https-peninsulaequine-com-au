@@ -61,6 +61,7 @@ const SiteAssessment = lazy(() => import("./pages/SiteAssessment"));
 const SignatureSystems = lazy(() => import("./pages/SignatureSystems"));
 const GroundLockSetup = lazy(() => import("./pages/GroundLockSetup"));
 const GroundLockOnboarding = lazy(() => import("./pages/GroundLockOnboarding"));
+const ClientQuote = lazy(() => import("./pages/ClientQuote"));
 
 const queryClient = new QueryClient();
 
@@ -136,6 +137,7 @@ function AppContent() {
            <Route path="/groundlock-setup" element={<ProtectedRoute><GroundLockSetup /></ProtectedRoute>} />
            <Route path="/groundlock-onboarding" element={<ProtectedRoute><GroundLockOnboarding /></ProtectedRoute>} />
           <Route path="/project/:slug" element={<CaseStudy />} />
+          <Route path="/quote/:token" element={<ClientQuote />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
