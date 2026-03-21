@@ -573,22 +573,7 @@ export default function Contact() {
 
                 <div className="w-12 h-px bg-border mx-auto" />
 
-                {/* Before You Submit */}
-                <RevealOnScroll direction="up" delay={250}>
-                  <div className="bg-background rounded-lg border border-border p-6 sm:p-8 text-center space-y-4">
-                    <h3 className="font-serif text-lg font-medium text-foreground">
-                      Before You Submit
-                    </h3>
-                    <p className="text-sm text-muted-foreground leading-[1.8] max-w-md mx-auto">
-                      We approach every project as a long-term investment —<br />
-                      designed properly, built once, and specified for durability.
-                    </p>
-                    <p className="text-sm text-foreground/50 italic">
-                      If that aligns with how you want to build,<br />
-                      we look forward to hearing from you.
-                    </p>
-                  </div>
-                </RevealOnScroll>
+                {/* removed — form is direct enough */}
 
                 {/* Submit */}
                 <div className="text-center space-y-3">
