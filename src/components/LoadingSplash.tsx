@@ -131,7 +131,7 @@ function PEMonogramSVG({
  * Phases: enter → grid → structure → resolve → drift → exit → done
  */
 export function LoadingSplash({
-  minDuration = 4400,
+  minDuration = 3200,
   onComplete,
   onLogoSettled,
 }: LoadingSplashProps) {
