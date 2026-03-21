@@ -358,6 +358,26 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ── Trust Strip ──────────────────────────── */}
+      <section className="py-16 sm:py-20 border-t border-border/10">
+        <div className="section-container max-w-4xl mx-auto">
+          <RevealOnScroll direction="up">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-10 sm:gap-16 text-center">
+              {[
+                { stat: "50+", label: "Properties Built" },
+                { stat: "15+", label: "Years Experience" },
+                { stat: "100%", label: "Owner-Operated" },
+              ].map((item) => (
+                <div key={item.label} className="flex flex-col items-center gap-2">
+                  <span className="font-serif text-2xl sm:text-3xl font-light text-foreground/60">{item.stat}</span>
+                  <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-muted-foreground/30">{item.label}</span>
+                </div>
+              ))}
+            </div>
+          </RevealOnScroll>
+        </div>
+      </section>
+
       {/* ═══ 5. FINAL CTA — cinematic sunset ═══════════════ */}
       <section className="relative h-[70vh] sm:h-[80vh] overflow-hidden">
         <img
