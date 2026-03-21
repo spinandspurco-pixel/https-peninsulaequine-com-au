@@ -215,7 +215,7 @@ export default function Index() {
               className="text-muted-foreground/30 text-[11px] sm:text-[12px] tracking-[0.2em] uppercase max-w-lg leading-[2.2]"
               style={{ opacity: 0, animation: "heroFadeIn 800ms ease-out 2000ms forwards" }}
             >
-              Premium equine infrastructure engineered for performance, longevity, and legacy.
+              Equine infrastructure engineered for performance and longevity.
             </p>
 
             {/* CTA — 2500ms */}
