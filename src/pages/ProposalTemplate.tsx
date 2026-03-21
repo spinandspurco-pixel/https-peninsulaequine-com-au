@@ -612,10 +612,7 @@ export default function ProposalTemplate() {
         {/* ════════════════════════════════════════════
             6. INVESTMENT
         ════════════════════════════════════════════ */}
-        <section className="py-28 sm:py-36">
-          <div className="flex items-center gap-5 mb-20 sm:mb-28">
-            <div className="h-px w-8" style={{ background: "hsl(var(--accent))", opacity: 0.25 }} />
-            <SectionLabel number="05">Investment</SectionLabel>
+        <section className="py-28 sm:py-36 proposal-section print-page-break">
           </div>
 
           {/* Centred price presentation */}
