@@ -1,7 +1,7 @@
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
-import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
+import equusRidgeHero from "@/assets/equus-ridge-hero.jpg";
 import coveredArenaBlackExterior from "@/assets/covered-arena-black-exterior.jpg";
 
 const EquusRidge = () => {
@@ -11,16 +11,13 @@ const EquusRidge = () => {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background video */}
         <div className="absolute inset-0">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
+          <img
+            src={equusRidgeHero}
+            alt="Luxury equine estate at golden hour — sculpted arena with rolling hills"
             className="absolute inset-0 w-full h-full object-cover"
             style={{ filter: "brightness(0.35) contrast(1.1)" }}
-          >
-            <source src={heroVideo} type="video/mp4" />
-          </video>
+            loading="eager"
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background" />
         </div>
 
