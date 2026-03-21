@@ -381,7 +381,7 @@ export default function GroundLock() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={80}>
               <h2 className="heading-section text-foreground mb-4">
-                Request GroundLock Assessment
+                Assess My Site
               </h2>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
