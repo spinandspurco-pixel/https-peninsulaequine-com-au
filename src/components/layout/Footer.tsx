@@ -6,9 +6,14 @@ import logoPeMark from "@/assets/logo-pe-mark.webp";
 const navLinks = [
   { name: "Projects", href: "/gallery" },
   { name: "GroundLock™", href: "/groundlock" },
-  { name: "Equus Forge", href: "/forge" },
+  { name: "GroundLock Systems", href: "/forge" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
+];
+
+const ecosystemLinks = [
+  { name: "Equus Ridge", desc: "Destination" },
+  { name: "Spin & Spur", desc: "Lifestyle" },
 ];
 
 export function Footer() {
