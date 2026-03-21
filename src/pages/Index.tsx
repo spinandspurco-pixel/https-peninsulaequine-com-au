@@ -342,8 +342,7 @@ export default function Index() {
       <ConversionBridge
         variant="accent"
         label="From concept to completion"
-        heading="Discuss your project with our team."
-        subtext="Whether it's a single arena or a full property build — we scope it properly before quoting."
+        heading="Discuss your project."
         ctaLabel="Discuss Project"
         ctaHref="/contact"
         trustLine="Limited projects accepted per season"
