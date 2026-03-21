@@ -45,7 +45,7 @@ function BlueprintLinework() {
       {/* Diagonal structural braces */}
       <line
         x1="0" y1="0" x2="400" y2="300"
-        stroke="#C6A86B" strokeWidth="0.4" opacity="0"
+        stroke="#C6A86B" strokeWidth="0.5" opacity="0"
         strokeDasharray="500" strokeDashoffset="500"
         style={{ animation: "blueprintDraw 1.8s 1.2s ease-out forwards" }}
       />
