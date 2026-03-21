@@ -62,7 +62,7 @@ function BlueprintLinework() {
         fill="none"
         stroke="#C6A86B" strokeWidth="0.7" opacity="0"
         strokeDasharray="1400" strokeDashoffset="1400"
-        style={{ animation: "blueprintDraw 2.8s 1.5s ease-out forwards" }}
+        style={{ animation: "blueprintDraw 2s 0.8s ease-out forwards" }}
       />
 
       {/* Ridge beam */}
