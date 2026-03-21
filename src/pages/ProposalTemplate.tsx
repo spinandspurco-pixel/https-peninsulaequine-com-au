@@ -308,7 +308,7 @@ export default function ProposalTemplate() {
         {/* ════════════════════════════════════════════
             2. PROJECT OVERVIEW
         ════════════════════════════════════════════ */}
-        <section className="pt-32 sm:pt-40 pb-28 sm:pb-36">
+        <section className="pt-32 sm:pt-40 pb-28 sm:pb-36 proposal-section print-avoid-break">
           {/* Accent rule entry */}
           <div className="flex items-center gap-5 mb-16 sm:mb-20">
             <div className="h-px w-8" style={{ background: "hsl(var(--accent))", opacity: 0.25 }} />
