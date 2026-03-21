@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Layers, Shield, Wrench } from "lucide-react";
-import { GROUNDLOCK_PRODUCTS, GROUNDLOCK_ADDONS, GROUNDLOCK_TIERS } from "@/data/groundlockProducts";
+
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 
 export default function Shop() {
