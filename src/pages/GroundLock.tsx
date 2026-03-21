@@ -6,6 +6,7 @@ import { GroundLockSystemLayout } from "@/components/GroundLockSystemLayout";
 import { GroundLockCrossSection } from "@/components/GroundLockCrossSection";
 import { ArrowRight, Layers } from "lucide-react";
 
+import groundlockHero from "@/assets/groundlock-hero-system.jpg";
 import foundationPour from "@/assets/main-ridge-foundation-pour.jpg";
 import rebarDeep from "@/assets/rebar-foundation-deep.jpg";
 import sitePrep from "@/assets/main-ridge-site-prep.jpg";
