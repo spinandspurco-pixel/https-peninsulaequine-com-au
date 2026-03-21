@@ -142,7 +142,7 @@ export function ProjectsCinematicHero() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const t = setTimeout(() => setReady(true), 200);
+    const t = setTimeout(() => setReady(true), 50);
     return () => clearTimeout(t);
   }, []);
 
@@ -161,7 +161,7 @@ export function ProjectsCinematicHero() {
         style={{
           transform: `translate(${mouse.x}px, ${mouse.y}px)`,
           opacity: ready ? 1 : 0,
-          transition: "opacity 1.2s ease-out, transform 800ms ease-out",
+          transition: "opacity 0.6s ease-out, transform 800ms ease-out",
         }}
       >
         <BlueprintLinework />
@@ -171,8 +171,8 @@ export function ProjectsCinematicHero() {
       <div
         className="absolute inset-0 transition-all duration-[2000ms] ease-out"
         style={{
-          opacity: ready ? 0.12 : 0,
-          transitionDelay: "3s",
+          opacity: ready ? 0.18 : 0,
+          transitionDelay: "2s",
           transform: `translate(${mouse.x * 0.5}px, ${mouse.y * 0.5}px) scale(1.09)`,
         }}
       >
