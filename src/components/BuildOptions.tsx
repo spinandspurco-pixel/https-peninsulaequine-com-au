@@ -52,8 +52,7 @@ export function BuildOptions({ onSelect }: Props) {
               Choose Your Build Level
             </h2>
             <p className="text-sm text-muted-foreground/35 font-serif italic max-w-lg mx-auto leading-relaxed">
-              Three tiers, one standard. Every option is engineered to the same
-              specification — the difference is scope and finish.
+              We typically structure builds in three ways depending on how far you want to take it.
             </p>
           </div>
         </RevealOnScroll>
