@@ -517,6 +517,11 @@ export function InteractiveMasterplan() {
 
   useEffect(() => {
     if (!sectionRef.current || entranceDone.current) return;
+    const ENTRANCE_ZONES = ["indoor-arena", "stable-block", "main-paddock"];
+    const FADE_IN = 1100;
+    const ZONE_HOLD = 1800;
+    const ZONE_GAP = 400;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -524,15 +529,25 @@ export function InteractiveMasterplan() {
           observer.disconnect();
           // Phase 1: fade in the plan
           setPlanVisible(true);
-          // Phase 2: after plan fades in, briefly highlight the arena
-          setTimeout(() => {
-            setActiveZone("indoor-arena");
-            setHasEntered(true);
-          }, 1100);
-          // Phase 3: return to neutral
+
+          // Phase 2: cycle through entrance zones
+          let offset = FADE_IN;
+          ENTRANCE_ZONES.forEach((zoneId, i) => {
+            setTimeout(() => {
+              setActiveZone(zoneId);
+              if (i === 0) setHasEntered(true);
+            }, offset);
+            offset += ZONE_HOLD;
+            setTimeout(() => {
+              setActiveZone(null);
+            }, offset);
+            offset += ZONE_GAP;
+          });
+
+          // Phase 3: return to neutral after all zones
           setTimeout(() => {
             setActiveZone(null);
-          }, 3200);
+          }, offset);
         }
       },
       { threshold: 0.25 }
