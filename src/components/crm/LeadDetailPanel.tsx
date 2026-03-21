@@ -194,7 +194,47 @@ export function LeadDetailPanel({ record, onClose, onUpdated, onCreateQuote }: P
     onUpdated();
   }, [record, linkedQuote, onUpdated]);
 
-  const daysSinceCreated = differenceInDays(new Date(), new Date(record.created_at));
+  const handleGenerateDraft = useCallback(async () => {
+    setGeneratingDraft(true);
+    setAiDraft(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-enquiry-response", {
+        body: { inquiry_id: record.id },
+      });
+      if (error) throw error;
+      if (data?.draft) {
+        setAiDraft({
+          draft_message: data.draft.draft_message || data.draft,
+          subject_line: data.draft.subject_line || "Re: Your project",
+        });
+        toast.success("Draft generated");
+      } else if (data?.error) {
+        toast.error(data.error);
+      }
+    } catch (err: any) {
+      toast.error("Failed to generate draft");
+      console.error(err);
+    } finally {
+      setGeneratingDraft(false);
+    }
+  }, [record.id]);
+
+  const handleCopyDraft = useCallback(() => {
+    if (!aiDraft) return;
+    navigator.clipboard.writeText(aiDraft.draft_message);
+    setDraftCopied(true);
+    toast.success("Draft copied to clipboard");
+    setTimeout(() => setDraftCopied(false), 2000);
+  }, [aiDraft]);
+
+  const handleSendViaMail = useCallback(() => {
+    if (!aiDraft) return;
+    const subject = encodeURIComponent(aiDraft.subject_line);
+    const body = encodeURIComponent(aiDraft.draft_message);
+    window.open(`mailto:${record.email}?subject=${subject}&body=${body}`, "_blank");
+  }, [aiDraft, record.email]);
+
+
 
   // Automation prompts
   const autoPrompts = getAutoPrompts(
