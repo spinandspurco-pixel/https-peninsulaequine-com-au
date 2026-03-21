@@ -163,20 +163,18 @@ export default function GroundLock() {
 
       {/* ═══ SPEC SNAPSHOT STRIP ══════════════════════════ */}
       <section className="relative overflow-hidden border-t border-b border-border/10">
-        <div className="py-8 sm:py-10 bg-card/50 relative">
+        <div className="py-10 sm:py-12 bg-card/50 relative">
           <div className="absolute inset-0 grain-texture" />
-          <div className="section-container relative z-[1]">
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-10 lg:gap-6">
+          <div className="section-container max-w-5xl mx-auto relative z-[1]">
+            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-y-8 gap-x-6">
               {SPECS.map((spec, i) => (
                 <RevealOnScroll key={spec.label} direction="none" delay={i * 80}>
-                  <div className="text-center lg:text-left">
-                    <div className="flex items-center justify-center lg:justify-start gap-2 mb-1.5">
-                      <spec.icon className="w-3 h-3 text-accent/35" strokeWidth={1.5} />
-                      <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-foreground/45">
-                        {spec.label}
-                      </p>
-                    </div>
-                    <p className="text-[10px] text-muted-foreground/28 leading-[1.6]">
+                  <div className="flex flex-col items-center text-center">
+                    <spec.icon className="w-4 h-4 text-accent/30 mb-3" strokeWidth={1.5} />
+                    <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-foreground/45 mb-1.5">
+                      {spec.label}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground/28 leading-[1.7] max-w-[200px]">
                       {spec.detail}
                     </p>
                   </div>
