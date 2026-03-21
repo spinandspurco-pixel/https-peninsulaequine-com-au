@@ -122,7 +122,9 @@ export default function Index() {
       <section className="relative min-h-[100dvh] overflow-hidden flex items-center justify-center">
         <video
           autoPlay muted loop playsInline
+          preload="auto"
           className="absolute inset-0 w-full h-full object-cover brightness-[0.2] contrast-[1.2] saturate-[0.35]"
+          style={{ width: '100%', height: '100%' }}
         >
           <source src={heroVideo} type="video/mp4" />
         </video>
