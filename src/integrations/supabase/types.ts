@@ -549,10 +549,13 @@ export type Database = {
       groundlock_project_setups: {
         Row: {
           attachment_urls: string[] | null
+          completed_at: string | null
+          completion_photo_urls: string[] | null
           created_at: string
           estimated_area: string | null
           ground_conditions: string
           id: string
+          key_notes: string | null
           notes: string | null
           primary_use: string
           project_location: string
@@ -560,16 +563,22 @@ export type Database = {
           reviewed_at: string | null
           reviewed_by: string | null
           status: string
+          system_summary: string | null
+          system_zones: string[] | null
           traffic_level: string
           updated_at: string
           user_id: string
+          workflow_step: string
         }
         Insert: {
           attachment_urls?: string[] | null
+          completed_at?: string | null
+          completion_photo_urls?: string[] | null
           created_at?: string
           estimated_area?: string | null
           ground_conditions: string
           id?: string
+          key_notes?: string | null
           notes?: string | null
           primary_use?: string
           project_location: string
@@ -577,16 +586,22 @@ export type Database = {
           reviewed_at?: string | null
           reviewed_by?: string | null
           status?: string
+          system_summary?: string | null
+          system_zones?: string[] | null
           traffic_level?: string
           updated_at?: string
           user_id: string
+          workflow_step?: string
         }
         Update: {
           attachment_urls?: string[] | null
+          completed_at?: string | null
+          completion_photo_urls?: string[] | null
           created_at?: string
           estimated_area?: string | null
           ground_conditions?: string
           id?: string
+          key_notes?: string | null
           notes?: string | null
           primary_use?: string
           project_location?: string
@@ -594,9 +609,12 @@ export type Database = {
           reviewed_at?: string | null
           reviewed_by?: string | null
           status?: string
+          system_summary?: string | null
+          system_zones?: string[] | null
           traffic_level?: string
           updated_at?: string
           user_id?: string
+          workflow_step?: string
         }
         Relationships: []
       }
