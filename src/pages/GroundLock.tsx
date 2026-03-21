@@ -150,7 +150,7 @@ export default function GroundLock() {
       {/* ═══ 3. UNIFIED SYSTEM — Layout → Cross-Section → Toggle ═ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-32 sm:py-48 relative">
+        <div className="py-28 sm:py-36 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
             {/* Shared section header */}
