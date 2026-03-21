@@ -49,9 +49,9 @@ export default function Shop() {
         <div className="section-container">
           <div className="text-center max-w-xl mx-auto mb-14 space-y-3">
             <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60">GroundLock™ Systems</p>
-            <h2 className="font-serif text-2xl md:text-3xl">Choose Your Configuration</h2>
+            <h2 className="font-serif text-2xl md:text-3xl">System Integration Levels</h2>
             <p className="text-muted-foreground text-sm max-w-md mx-auto">
-              Three tiers. One engineered standard. Select the system that matches your arena and your goals.
+              Every Peninsula Equine build includes engineered ground stabilisation. The level of integration is matched to your project.
             </p>
           </div>
 
