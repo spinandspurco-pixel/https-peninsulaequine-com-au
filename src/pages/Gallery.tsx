@@ -333,7 +333,7 @@ export default function Gallery() {
         <div className="absolute inset-0 grain-texture" />
         <div className="py-28 sm:py-36 lg:py-44 relative">
           <div className="section-container relative z-[1]">
-            <RevealOnScroll direction="up" duration={700}>
+            <RevealOnScroll direction="up" duration={DURATION.normal}>
               <SectionHeader label="Completed Work" heading="The Finished Result" />
             </RevealOnScroll>
 
