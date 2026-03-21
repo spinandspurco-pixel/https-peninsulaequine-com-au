@@ -90,8 +90,6 @@ function EditorialImage({
           onLoad={() => setLoaded(true)}
           onMouseEnter={(e) => { if (onClick) (e.currentTarget as HTMLImageElement).style.transform = "scale(1.03)"; }}
           onMouseLeave={(e) => { if (onClick) (e.currentTarget as HTMLImageElement).style.transform = "scale(1)"; }}
-          decoding="async"
-          onLoad={() => setLoaded(true)}
         />
       )}
     </div>
