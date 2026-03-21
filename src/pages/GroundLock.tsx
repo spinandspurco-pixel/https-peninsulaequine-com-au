@@ -338,6 +338,13 @@ export default function GroundLock() {
             </div>
 
             <GroundLockComparison />
+
+            {/* Authority statement */}
+            <div className="mt-16 sm:mt-20 text-center">
+              <p className="font-serif text-lg sm:text-xl md:text-2xl text-primary-foreground/40 italic tracking-wide leading-relaxed">
+                Most systems repeat. This one locks.
+              </p>
+            </div>
           </div>
         </div>
       </section>
