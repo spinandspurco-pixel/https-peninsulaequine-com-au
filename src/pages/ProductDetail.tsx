@@ -149,34 +149,28 @@ export default function ProductDetail() {
         </section>
       )}
 
-      {/* Pricing + CTA */}
+      {/* Site Assessment CTA */}
       <section className="py-24 relative overflow-hidden">
         <BlueprintScene preset="barn" className="absolute inset-0" />
         <div className="absolute inset-0 bg-primary/85" />
         <div className="section-container relative z-10 max-w-2xl mx-auto text-center space-y-6">
           <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/60">Next Step</p>
           <p className="font-serif text-3xl md:text-4xl text-primary-foreground">
-            Request a System Assessment
+            Start With a Site Assessment
           </p>
           <p className="text-primary-foreground/60 text-sm max-w-md mx-auto">
-            Every site is different. We assess ground conditions, usage, and load requirements before recommending the right GroundLock specification.
+            We assess ground conditions, usage patterns, and load requirements — then recommend the right system specification for your project.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground uppercase tracking-[0.12em] text-xs">
-              <Link to="/contact">
-                {product.ctaPrimary} <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="border-accent/30 text-accent hover:bg-accent/10 uppercase tracking-[0.12em] text-xs">
               <Link to="/site-assessment">
-                {product.ctaSecondary}
+                {product.ctaPrimary} <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </div>
 
-          {/* Durability assurance */}
           <p className="text-primary-foreground/25 text-[10px] uppercase tracking-[0.2em] pt-4">
-            Engineered for long-term performance · Backed by Peninsula Equine
+            System specification is determined during assessment · Integrated into your project scope
           </p>
         </div>
       </section>
