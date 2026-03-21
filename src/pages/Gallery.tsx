@@ -8,8 +8,6 @@ import { ArrowRight, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useParallax } from "@/hooks/useParallax";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
-import { Link } from "react-router-dom";
-import { useParallax } from "@/hooks/useParallax";
 import { ProjectsCinematicHero } from "@/components/ProjectsCinematicHero";
 import { InteractiveMasterplan } from "@/components/InteractiveMasterplan";
 import { WalkTheProject } from "@/components/WalkTheProject";
