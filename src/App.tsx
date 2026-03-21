@@ -67,7 +67,7 @@ const queryClient = new QueryClient();
 function AppContent() {
   const [splashDone, setSplashDone] = useState(false);
   const [headerLogoReady, setHeaderLogoReady] = useState(false);
-  useCartSync();
+  
 
   const handleLogoSettled = useCallback(() => {
     // Wait until splash has fully faded out before revealing header logo
