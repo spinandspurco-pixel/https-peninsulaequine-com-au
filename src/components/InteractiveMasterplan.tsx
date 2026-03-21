@@ -120,6 +120,7 @@ function SitePlan({
               className="cursor-pointer"
               onMouseEnter={() => onHover(z.id)}
               onMouseLeave={onLeave}
+              onClick={() => onTap(z.id)}
             />
             <text
               x={getCenter(z.path).x}
