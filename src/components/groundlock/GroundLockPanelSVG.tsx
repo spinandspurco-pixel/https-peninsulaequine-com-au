@@ -44,7 +44,7 @@ export function PanelDefs({ id = "gl" }: { id?: string }) {
       </linearGradient>
       {/* Soft drop shadow filter */}
       <filter id={`${id}-shadow`} x="-10%" y="-10%" width="130%" height="130%">
-        <feDropShadow dx="1.5" dy="2" stdDeviation="2.5" floodColor="hsl(var(--background))" floodOpacity="0.55" />
+        <feDropShadow dx="2" dy="2.5" stdDeviation="3.5" floodColor="hsl(var(--background))" floodOpacity="0.7" />
       </filter>
       {/* Subtle inner glow for active */}
       <filter id={`${id}-glow`} x="-20%" y="-20%" width="140%" height="140%">

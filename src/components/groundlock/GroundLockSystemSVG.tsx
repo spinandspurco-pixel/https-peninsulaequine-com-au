@@ -1,8 +1,7 @@
 /**
  * GroundLockSystemSVG — premium product presentation.
  *
- * Three stages: Hero Panel → Interlocking System → Site Layout
- * Minimal, confident, engineered.
+ * Three stages: The Panel → The System → The Layout
  */
 
 import { GroundLockPanelSVG, PanelDefs } from "./GroundLockPanelSVG";
@@ -25,16 +24,16 @@ function arcPositions(
   return positions;
 }
 
-/* ── 01 — Hero Panel ─────────────────────────────────── */
+/* ── 01 — The Panel (Hero) ────────────────────────────── */
 export function PanelSpecimen({ className }: { className?: string }) {
   return (
     <div className={className}>
       <p className="text-2xs font-mono uppercase tracking-[0.25em] text-accent/30 mb-6">
         The Panel
       </p>
-      <svg viewBox="0 0 160 200" className="w-full max-w-[200px] h-auto mx-auto">
+      <svg viewBox="0 0 140 180" className="w-full max-w-[220px] h-auto mx-auto">
         <PanelDefs id="sp" />
-        <GroundLockPanelSVG x={30} y={40} scale={1} active defsId="sp" />
+        <GroundLockPanelSVG x={20} y={28} scale={1.07} active defsId="sp" />
       </svg>
       <p className="text-2xs font-mono text-muted-foreground/20 text-center mt-5 tracking-wider">
         Horseshoe geometry · Engineered to interlock
@@ -43,11 +42,11 @@ export function PanelSpecimen({ className }: { className?: string }) {
   );
 }
 
-/* ── 02 — Interlocking System ─────────────────────────── */
+/* ── 02 — The System ──────────────────────────────────── */
 export function PanelArray({ className }: { className?: string }) {
   const s = 0.4;
-  const gapX = 42;
-  const gapY = 32;
+  const gapX = 40;
+  const gapY = 28;
 
   const panels: { x: number; y: number; rot: number; row: number }[] = [];
 
@@ -55,7 +54,7 @@ export function PanelArray({ className }: { className?: string }) {
     panels.push({ x: 20 + c * gapX, y: 10, rot: 0, row: 0 });
   }
   for (let c = 0; c < 4; c++) {
-    panels.push({ x: 41 + c * gapX, y: 10 + gapY, rot: 180, row: 1 });
+    panels.push({ x: 40 + c * gapX, y: 10 + gapY, rot: 180, row: 1 });
   }
   for (let c = 0; c < 5; c++) {
     panels.push({ x: 20 + c * gapX, y: 10 + gapY * 2, rot: 0, row: 2 });
@@ -66,7 +65,7 @@ export function PanelArray({ className }: { className?: string }) {
       <p className="text-2xs font-mono uppercase tracking-[0.25em] text-accent/30 mb-6">
         The System
       </p>
-      <svg viewBox="0 0 240 120" className="w-full max-w-sm h-auto mx-auto">
+      <svg viewBox="0 0 230 110" className="w-full max-w-sm h-auto mx-auto">
         <PanelDefs id="ar" />
         {panels.map((p, i) => (
           <GroundLockPanelSVG
@@ -87,11 +86,11 @@ export function PanelArray({ className }: { className?: string }) {
   );
 }
 
-/* ── 03 — Site Layout ─────────────────────────────────── */
+/* ── 03 — The Layout ──────────────────────────────────── */
 export function PanelSiteLayout({ className }: { className?: string }) {
   const cx = 200;
   const cy = 160;
-  const s = 0.22;
+  const s = 0.24;
 
   const panels: { x: number; y: number; rot: number; zone: string }[] = [];
 
