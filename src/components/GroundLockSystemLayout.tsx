@@ -110,8 +110,6 @@ export function GroundLockSystemLayout() {
   const [viewMode, setViewMode] = useState<ViewMode>("system");
   const activeData = zones.find((z) => z.id === activeZone) || null;
 
-  usePreload(horseshoeRealworld);
-
   const isActive = (id: string) => activeZone === id;
   const isDimmed = (id: string) => activeZone !== null && activeZone !== id;
 
