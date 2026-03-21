@@ -154,8 +154,8 @@ function StructuralWireframe() {
           stroke="hsl(var(--accent))"
           strokeWidth="0.4"
           opacity="0.08"
-          className="animate-[drawLine_0.6s_ease-out_forwards]"
-          style={{ animationDelay: `${2.8 + i * 0.12}s` }}
+          className="animate-[drawLine_0.5s_ease-out_forwards]"
+          style={{ animationDelay: `${1.7 + i * 0.08}s` }}
         />
       ))}
       {/* Door opening */}
