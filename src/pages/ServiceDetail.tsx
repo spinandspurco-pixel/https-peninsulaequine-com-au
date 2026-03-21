@@ -649,7 +649,7 @@ export default function ServiceDetail() {
         title="Ready to Start a Project?"
         description="Tell us about your project and we'll prepare a personalised quote within 1–2 business days."
         backgroundImage={mainRidgeBarnFrame}
-        primaryButtonText="Request Assessment"
+        primaryButtonText="Discuss Project"
         primaryButtonLink={`/contact?services=${service.id}`}
         showPhoneButton={true}
       />
