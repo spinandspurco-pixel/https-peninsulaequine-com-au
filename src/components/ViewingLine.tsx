@@ -78,7 +78,7 @@ export function ViewingLine() {
             className="font-serif text-3xl sm:text-4xl lg:text-5xl text-foreground/90 tracking-[0.03em] mb-5"
             style={{
               opacity: visible ? 1 : 0,
-              transition: "opacity 1200ms ease-out 400ms",
+              transition: `opacity ${DURATION.slow}ms ${EASE.default} 400ms`,
             }}
           >
             Stand above it all.
