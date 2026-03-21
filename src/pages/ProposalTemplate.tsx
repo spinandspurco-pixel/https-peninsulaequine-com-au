@@ -818,32 +818,65 @@ export default function ProposalTemplate() {
         </section>
 
         {/* ════════════════════════════════════════════
-            FOOTER
+            CLOSING
         ════════════════════════════════════════════ */}
-        <footer className="pt-10 pb-14" style={{ borderTop: "1px solid hsl(var(--border))" }}>
-          <div className="flex items-center justify-between mb-12">
+        <section
+          className="relative py-32 sm:py-40 -mx-6 sm:-mx-10 lg:-mx-16 px-6 sm:px-10 lg:px-16 mt-10"
+          style={{
+            background: "linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--card)) 100%)",
+            borderTop: "1px solid hsl(var(--border))",
+          }}
+        >
+          <div className="max-w-2xl mx-auto text-center">
+            {/* Signature line */}
             <p
-              className="text-[8px] font-sans uppercase tracking-[0.25em]"
-              style={{ color: "hsl(var(--accent))", opacity: 0.25 }}
+              className="font-serif text-[1.5rem] sm:text-[1.85rem] lg:text-[2.15rem] font-semibold italic leading-[1.3]"
+              style={{ color: "hsl(var(--foreground))", opacity: 0.7 }}
             >
-              Peninsula Equine
+              Built to interlock.<br />
+              Not just sit in place.
             </p>
+
+            <div
+              className="w-10 h-px mx-auto mt-12 mb-12"
+              style={{ background: "hsl(var(--accent))", opacity: 0.2 }}
+            />
+
+            {/* Contact details */}
+            <div className="space-y-2 mb-14">
+              {[
+                { label: "Email", value: "info@peninsulaequine.org" },
+                { label: "Phone", value: "By arrangement" },
+                { label: "Web", value: "peninsulaequine.com.au" },
+              ].map((c) => (
+                <div key={c.label} className="flex items-baseline justify-center gap-4">
+                  <p
+                    className="text-[8px] font-sans uppercase tracking-[0.2em] w-12 text-right"
+                    style={{ color: "hsl(var(--foreground))", opacity: 0.15 }}
+                  >
+                    {c.label}
+                  </p>
+                  <p
+                    className="text-[12px] font-sans"
+                    style={{ color: "hsl(var(--foreground))", opacity: 0.4 }}
+                  >
+                    {c.value}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Branding */}
             <p
-              className="text-[8px] font-sans"
-              style={{ color: "hsl(var(--foreground))", opacity: 0.1 }}
+              className="text-[8px] font-sans uppercase tracking-[0.35em]"
+              style={{ color: "hsl(var(--accent))", opacity: 0.22 }}
             >
-              peninsulaequine.com.au
+              Peninsula Equine · Mornington Peninsula, VIC
             </p>
           </div>
-          <p
-            className="text-center font-serif text-[13px] italic"
-            style={{ color: "hsl(var(--accent))", opacity: 0.18 }}
-          >
-            Built properly, from the ground up.
-          </p>
-        </footer>
+        </section>
 
-        <div className="h-12" />
+        <div className="h-8" />
       </div>
     </div>
   );
