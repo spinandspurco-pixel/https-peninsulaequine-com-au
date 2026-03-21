@@ -20,6 +20,7 @@ import { TodaysPlan } from "@/components/TodaysPlan";
 import { OperationsCommandCentre } from "@/components/OperationsCommandCentre";
 import { FollowUpEngine } from "@/components/FollowUpEngine";
 import { AdminSystemSettings } from "@/components/AdminSystemSettings";
+import { FollowUpCommandView } from "@/components/FollowUpCommandView";
 import { ClientExperiencePanel } from "@/components/ClientExperiencePanel";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
