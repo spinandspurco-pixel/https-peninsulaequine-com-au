@@ -177,8 +177,8 @@ export default function Forge() {
             className="mt-10 text-sm sm:text-[15px] text-muted-foreground/40 max-w-[420px] mx-auto leading-[1.9] opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
-            The engineering and product arm of Peninsula Equine.
-            Purpose-built systems, hardware, and estate elements —
+            The systems and product division of Peninsula Equine.
+            Purpose-built ground stabilisation systems, hardware, and estate elements —
             designed for equine properties, fabricated by the people who build them.
           </p>
         </div>
