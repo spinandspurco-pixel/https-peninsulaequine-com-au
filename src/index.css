@@ -485,6 +485,11 @@
   to   { opacity: 1; }
 }
 
+@keyframes heroHeadlineReveal {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 @keyframes heroBackdropReveal {
   from { opacity: 0; }
   to   { opacity: 1; }
