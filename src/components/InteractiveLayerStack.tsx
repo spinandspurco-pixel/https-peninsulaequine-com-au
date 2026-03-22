@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 const LAYERS = [
@@ -41,22 +41,58 @@ const LAYERS = [
 
 export function InteractiveLayerStack() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [visibleCount, setVisibleCount] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const handleClick = useCallback((i: number) => {
     setActiveIndex((prev) => (prev === i ? null : i));
   }, []);
 
+  // Scroll-triggered sequential reveal: bottom layer first, top layer last
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          // Reveal layers from bottom (Subgrade) to top (Panel + Infill)
+          const reversed = LAYERS.length;
+          let count = 0;
+          const interval = setInterval(() => {
+            count++;
+            setVisibleCount(count);
+            if (count >= reversed) clearInterval(interval);
+          }, 180);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.25 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="space-y-2">
+    <div ref={containerRef} className="space-y-2">
       {LAYERS.map((layer, i) => {
         const isActive = activeIndex === i;
+        // Reverse order: bottom layer (index 4) appears first
+        const revealIndex = LAYERS.length - 1 - i;
+        const isVisible = visibleCount > revealIndex;
+
         return (
           <button
             key={i}
             type="button"
             className={cn(
               "w-full text-left flex items-center gap-4 p-4 border cursor-pointer",
+              "transition-all duration-700 ease-out",
               isActive ? layer.activeColor : layer.color,
+              isVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-3"
             )}
             onClick={() => handleClick(i)}
           >
