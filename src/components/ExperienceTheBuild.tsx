@@ -425,7 +425,11 @@ export function ExperienceTheBuild() {
 
       {/* ACT 1 — Masterplan */}
       <div id="etb-masterplan">
-        <InteractiveMasterplan />
+        <InteractiveMasterplan
+          onZoneHover={playHoverTone}
+          onZoneLeave={stopHoverTone}
+          onLayerToggle={playToggleTone}
+        />
       </div>
 
       {/* Transition into Act 2 */}
