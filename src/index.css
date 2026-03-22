@@ -318,9 +318,8 @@
                 0 0 0 1px hsl(var(--accent) / 0.08);
   }
 
-  .image-card-glow:hover {
-    box-shadow: 0 0 30px -10px hsl(var(--accent) / 0.2);
-  }
+
+
 
   .card-interactive:hover {
     @apply -translate-y-0.5;
