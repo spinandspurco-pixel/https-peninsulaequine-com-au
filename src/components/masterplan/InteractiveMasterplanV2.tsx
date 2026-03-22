@@ -70,26 +70,26 @@ function useIsTouchDevice() {
 /* ── Mobile zone list ── */
 function MobileZoneList({ activeZone, onTap }: { activeZone: string | null; onTap: (id: string) => void }) {
   return (
-    <div className="space-y-1 mt-6">
+    <div className="space-y-0.5 mt-6">
       {zones.map(z => {
         const isActive = activeZone === z.id;
         return (
           <button
             key={z.id}
             onClick={() => onTap(z.id)}
-            className={`w-full text-left py-3 px-4 transition-opacity duration-300 ${
-              isActive ? "opacity-100" : "opacity-40"
+            className={`w-full text-left py-2.5 px-4 transition-opacity duration-300 ${
+              isActive ? "opacity-100" : "opacity-35"
             }`}
           >
             <div className="flex items-center gap-3">
-              <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-accent/30 w-14 shrink-0">{z.shortLabel}</span>
-              <div className="w-3 h-px bg-accent/10" />
-              <span className={`text-[11px] font-serif italic text-muted-foreground/30 transition-colors duration-300 ${isActive ? "text-foreground/50" : ""}`}>
+              <span className="text-[8px] font-mono uppercase tracking-[0.25em] text-accent/22 w-14 shrink-0">{z.shortLabel}</span>
+              <div className="w-2.5 h-px bg-accent/8" />
+              <span className={`text-[10px] font-serif italic text-muted-foreground/22 transition-colors duration-300 ${isActive ? "text-foreground/40" : ""}`}>
                 {z.tagline}
               </span>
             </div>
             {isActive && (
-              <p className="mt-2 ml-[4.5rem] text-[11px] text-muted-foreground/25 font-serif leading-relaxed">
+              <p className="mt-1.5 ml-[4.5rem] text-[10px] text-muted-foreground/18 font-serif leading-relaxed">
                 {z.description}
               </p>
             )}
