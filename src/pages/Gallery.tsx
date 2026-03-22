@@ -285,6 +285,13 @@ export default function Gallery() {
       <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
+          4b. BUILD TIMELINE — construction sequence
+          ═══════════════════════════════════════════════════ */}
+      <BuildTimeline />
+
+      <ChapterDivider />
+
+      {/* ═══════════════════════════════════════════════════
           5. DETAIL MATTERS — editorial craftsmanship cards
           ═══════════════════════════════════════════════════ */}
       <DetailMatters />
