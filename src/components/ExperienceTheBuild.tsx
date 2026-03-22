@@ -36,7 +36,7 @@ function ActNav({ activeAct }: { activeAct: string }) {
             aria-label={act.label}
           >
             <span
-              className="text-[8px] font-mono uppercase tracking-[0.3em] transition-opacity duration-500"
+              className="text-[8px] font-mono uppercase tracking-[0.3em] transition-opacity duration-700"
               style={{
                 opacity: isActive ? 0.4 : 0,
                 color: "hsl(var(--accent))",
