@@ -336,6 +336,11 @@ export function InteractiveMasterplan() {
                   onToggleFlow={toggleFlow}
                 />
               </div>
+
+              {/* Authority micro-moment */}
+              <p className="mt-8 text-[10px] font-mono text-accent/12 tracking-[0.15em] uppercase leading-relaxed">
+                Built to perform. Planned to last.
+              </p>
             </div>
           </div>
 
