@@ -249,7 +249,7 @@ function WalkScene({
               transform: visible
                 ? "translateY(0)"
                 : `translateY(${DISTANCE.lg}px)`,
-              transition: `opacity ${DURATION.slow}ms ${EASE.default} ${revealDelay}ms, transform ${DURATION.slow}ms ${EASE.default} ${revealDelay}ms`,
+              transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} ${revealDelay}ms, transform ${DURATION.cinematic}ms ${EASE.cinematic} ${revealDelay}ms`,
               willChange: "opacity, transform",
             }}
           >
