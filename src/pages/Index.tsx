@@ -207,7 +207,7 @@ export default function Index() {
                   fontSize: "clamp(1.5rem, 0.75rem + 3.2vw, 3.5rem)",
                 }}
               >
-                Designed to last generations.
+                Held to perform. Built to last.
               </p>
             </div>
 
