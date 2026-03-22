@@ -217,10 +217,10 @@ export function InteractiveMasterplan() {
               <div className="w-6 h-px bg-accent/12" />
             </div>
             <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/75 tracking-[0.04em] leading-tight">
-              The Layout Defines Everything
+              Main Ridge — Ground Floor
             </h2>
             <p className="mt-4 text-[13px] text-muted-foreground/22 font-serif italic max-w-sm mx-auto leading-relaxed tracking-[0.02em]">
-              Consistency is designed long before it is ridden.
+              Movement resolved before construction
             </p>
           </div>
         </RevealOnScroll>
