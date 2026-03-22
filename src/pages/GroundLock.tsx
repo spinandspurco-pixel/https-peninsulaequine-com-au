@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import groundlockHero from "@/assets/groundlock-hero-arena.jpg";
 import groundlockCutaway from "@/assets/groundlock-cutaway.jpg";
@@ -12,11 +13,93 @@ import { PanelSpecimen, SystemDiagram, LockSequence } from "@/components/groundl
 import { GroundLockPanelSVG, PanelDefs } from "@/components/groundlock/GroundLockPanelSVG";
 import { GroundLockProjectForm } from "@/components/groundlock/GroundLockProjectForm";
 import { ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+/* ── Scroll Progress Indicator ─────────────────── */
+const STEPS = [
+  { id: "step-plan", label: "Plan" },
+  { id: "step-kit", label: "Kit" },
+  { id: "step-delivery", label: "Delivery" },
+];
+
+function StepProgressIndicator() {
+  const [activeStep, setActiveStep] = useState(-1);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const els = STEPS.map((s) => document.getElementById(s.id));
+      const viewMid = window.innerHeight * 0.45;
+
+      // Show indicator only when first step is approaching
+      const first = els[0];
+      const last = els[els.length - 1];
+      if (first && last) {
+        const firstTop = first.getBoundingClientRect().top;
+        const lastBottom = last.getBoundingClientRect().bottom;
+        setVisible(firstTop < window.innerHeight * 0.8 && lastBottom > 0);
+      }
+
+      let current = -1;
+      els.forEach((el, i) => {
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.top < viewMid + 100) current = i;
+      });
+      setActiveStep(current);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <div
+      className={cn(
+        "fixed right-4 sm:right-6 top-1/2 -translate-y-1/2 z-40 flex flex-col items-end gap-3 transition-opacity duration-500",
+        visible ? "opacity-100" : "opacity-0 pointer-events-none"
+      )}
+    >
+      {STEPS.map((step, i) => (
+        <button
+          key={step.id}
+          onClick={() => document.getElementById(step.id)?.scrollIntoView({ behavior: "smooth", block: "start" })}
+          className="group flex items-center gap-2.5"
+        >
+          <span
+            className={cn(
+              "text-[9px] font-mono uppercase tracking-[0.25em] transition-all duration-300",
+              i === activeStep
+                ? "text-accent/60 translate-x-0"
+                : i < activeStep
+                  ? "text-accent/20 translate-x-0"
+                  : "text-muted-foreground/15 translate-x-1 group-hover:translate-x-0 group-hover:text-muted-foreground/30"
+            )}
+          >
+            {step.label}
+          </span>
+          <span
+            className={cn(
+              "rounded-full transition-all duration-300",
+              i === activeStep
+                ? "w-2 h-2 bg-accent/50"
+                : i < activeStep
+                  ? "w-1.5 h-1.5 bg-accent/20"
+                  : "w-1.5 h-1.5 bg-muted-foreground/12 group-hover:bg-muted-foreground/25"
+            )}
+          />
+        </button>
+      ))}
+    </div>
+  );
+}
 
 /* ── Page ─────────────────────────────────────────── */
 export default function GroundLock() {
   return (
     <Layout>
+      <StepProgressIndicator />
       {/* ═══ SECTION 1 — HERO ═════════════════════════════ */}
       <section className="relative pt-36 sm:pt-44 pb-20 sm:pb-28 overflow-hidden">
         <div className="absolute inset-0">
@@ -187,7 +270,7 @@ export default function GroundLock() {
       </section>
 
       {/* ═══ COMPARISON — Standard vs GroundLock — #8 ══════ */}
-      <section className="relative overflow-hidden">
+      <section id="step-plan" className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-28 sm:py-36 bg-primary relative">
           <div className="absolute inset-0 grain-texture" />
@@ -269,7 +352,7 @@ export default function GroundLock() {
       </section>
 
       {/* ═══ GROUNDLOCK SYSTEM PLAN — #6 ═══════════════════ */}
-      <section className="relative overflow-hidden">
+      <section id="step-kit" className="relative overflow-hidden">
         <div className="py-24 sm:py-32 relative">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container relative z-10 max-w-3xl mx-auto">
@@ -317,7 +400,7 @@ export default function GroundLock() {
       </section>
 
       {/* ═══ GROUNDLOCK SYSTEM KIT — #6 ═══════════════════ */}
-      <section className="relative overflow-hidden">
+      <section id="step-delivery" className="relative overflow-hidden">
         <div className="py-24 sm:py-32 relative border-t border-border/6">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container relative z-10">
