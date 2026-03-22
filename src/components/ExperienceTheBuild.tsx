@@ -185,7 +185,7 @@ function ExperienceHero() {
 }
 
 /* ── Final synthesis + CTA ───────────────────────────── */
-function Synthesis() {
+function Synthesis({ onPressTone }: { onPressTone?: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
@@ -259,7 +259,7 @@ function Synthesis() {
             opacity: visible ? 1 : 0,
             transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1400ms, transform 250ms cubic-bezier(0.45, 0, 0.15, 1), border-color 500ms cubic-bezier(0.45, 0, 0.15, 1), color 500ms cubic-bezier(0.45, 0, 0.15, 1), background-color 500ms cubic-bezier(0.45, 0, 0.15, 1)`,
           }}
-          onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.97)")}
+          onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.97)"; onPressTone?.(); }}
           onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
@@ -346,7 +346,15 @@ const TIMELINE_PHASE_MAP: Record<string, AmbientScene> = {
 /* ── Main export ─────────────────────────────────────── */
 export function ExperienceTheBuild() {
   const [activeAct, setActiveAct] = useState("hero");
-  const { enabled: soundEnabled, toggle: toggleSound, transitionTo } = useAmbientSound();
+  const {
+    enabled: soundEnabled,
+    toggle: toggleSound,
+    transitionTo,
+    playHoverTone,
+    stopHoverTone,
+    playToggleTone,
+    playPressTone,
+  } = useAmbientSound();
 
   /* Track which act is in view */
   useEffect(() => {
@@ -417,7 +425,11 @@ export function ExperienceTheBuild() {
 
       {/* ACT 1 — Masterplan */}
       <div id="etb-masterplan">
-        <InteractiveMasterplan />
+        <InteractiveMasterplan
+          onZoneHover={playHoverTone}
+          onZoneLeave={stopHoverTone}
+          onLayerToggle={playToggleTone}
+        />
       </div>
 
       {/* Transition into Act 2 */}
@@ -437,7 +449,7 @@ export function ExperienceTheBuild() {
       </div>
 
       {/* Final synthesis */}
-      <Synthesis />
+      <Synthesis onPressTone={playPressTone} />
     </div>
   );
 }

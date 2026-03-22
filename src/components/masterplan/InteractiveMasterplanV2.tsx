@@ -101,7 +101,13 @@ function MobileZoneList({ activeZone, onTap }: { activeZone: string | null; onTa
 }
 
 /* ── Main export ── */
-export function InteractiveMasterplan() {
+interface MasterplanProps {
+  onZoneHover?: () => void;
+  onZoneLeave?: () => void;
+  onLayerToggle?: () => void;
+}
+
+export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onLayerToggle }: MasterplanProps = {}) {
   usePreloadImages(PRELOAD);
   const isMobile = useIsMobile();
   const reducedMotion = useReducedMotion();
@@ -165,14 +171,18 @@ export function InteractiveMasterplan() {
   const handleHover = useCallback((id: string) => {
     if (tourActive || isTouch) return;
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
-    hoverTimer.current = setTimeout(() => setActiveZone(id), 150);
-  }, [isTouch, tourActive]);
+    hoverTimer.current = setTimeout(() => {
+      setActiveZone(id);
+      onZoneHover?.();
+    }, 150);
+  }, [isTouch, tourActive, onZoneHover]);
 
   const handleLeave = useCallback(() => {
     if (tourActive || isTouch) return;
     if (hoverTimer.current) { clearTimeout(hoverTimer.current); hoverTimer.current = null; }
     setActiveZone(null);
-  }, [isTouch, tourActive]);
+    onZoneLeave?.();
+  }, [isTouch, tourActive, onZoneLeave]);
 
   const handleTap = useCallback((id: string) => {
     if (tourActive) stopTour();
@@ -181,7 +191,8 @@ export function InteractiveMasterplan() {
 
   const toggleFlow = useCallback((id: string) => {
     setActiveFlows(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
-  }, []);
+    onLayerToggle?.();
+  }, [onLayerToggle]);
 
   /* ── Entrance ── */
   const sectionRef = useRef<HTMLElement>(null);
