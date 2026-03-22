@@ -12,6 +12,7 @@ import { ProjectsCinematicHero } from "@/components/ProjectsCinematicHero";
 import { InteractiveMasterplan } from "@/components/masterplan/InteractiveMasterplanV2";
 import { WalkTheProject } from "@/components/WalkTheProject";
 import { BuildIntelligence } from "@/components/BuildIntelligence";
+import { BuildTimeline } from "@/components/BuildTimeline";
 import { DetailMatters } from "@/components/DetailMatters";
 import { ViewingLine } from "@/components/ViewingLine";
 import { ProjectQualification, type ProjectType } from "@/components/ProjectQualification";
