@@ -517,10 +517,10 @@ export function InteractiveMasterplan() {
 
   useEffect(() => {
     if (!sectionRef.current || entranceDone.current) return;
-    const ENTRANCE_ZONES = ["indoor-arena", "stable-block", "main-paddock"];
-    const FADE_IN = 1100;
-    const ZONE_HOLD = 1800;
-    const ZONE_GAP = 400;
+    const ENTRANCE_ZONES = ["indoor-arena", "stables"];
+    const FADE_IN = 1200;
+    const ZONE_DWELL = 2600;
+    const DISSOLVE = 700;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -530,24 +530,24 @@ export function InteractiveMasterplan() {
           // Phase 1: fade in the plan
           setPlanVisible(true);
 
-          // Phase 2: cycle through entrance zones
+          // Phase 2: deliberate two-zone introduction
           let offset = FADE_IN;
-          ENTRANCE_ZONES.forEach((zoneId, i) => {
-            setTimeout(() => {
-              setActiveZone(zoneId);
-              if (i === 0) setHasEntered(true);
-            }, offset);
-            offset += ZONE_HOLD;
-            setTimeout(() => {
-              setActiveZone(null);
-            }, offset);
-            offset += ZONE_GAP;
-          });
 
-          // Phase 3: return to neutral after all zones
+          // First zone
           setTimeout(() => {
-            setActiveZone(null);
+            setActiveZone(ENTRANCE_ZONES[0]);
+            setHasEntered(true);
           }, offset);
+          offset += ZONE_DWELL;
+
+          // Dissolve to second zone
+          setTimeout(() => setActiveZone(null), offset);
+          offset += DISSOLVE;
+          setTimeout(() => setActiveZone(ENTRANCE_ZONES[1]), offset);
+          offset += ZONE_DWELL;
+
+          // Phase 3: dissolve to neutral and stop
+          setTimeout(() => setActiveZone(null), offset);
         }
       },
       { threshold: 0.25 }
