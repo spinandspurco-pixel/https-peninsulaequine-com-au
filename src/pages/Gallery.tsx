@@ -258,35 +258,14 @@ export default function Gallery() {
           ═══════════════════════════════════════════════════ */}
       <ProjectsCinematicHero />
 
-      <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
-          2. INTERACTIVE MASTERPLAN
+          2. EXPERIENCE THE BUILD — unified Main Ridge journey
           ═══════════════════════════════════════════════════ */}
-      <InteractiveMasterplan />
+      <ExperienceTheBuild />
 
       <ChapterDivider />
 
-      {/* ═══════════════════════════════════════════════════
-          3. WALK THE PROJECT — cinematic scroll panels
-          ═══════════════════════════════════════════════════ */}
-      <WalkTheProject />
-
-      <ChapterDivider />
-
-      {/* ═══════════════════════════════════════════════════
-          4. BUILD INTELLIGENCE — interactive layer toggle
-          ═══════════════════════════════════════════════════ */}
-      <BuildIntelligence />
-
-      <ChapterDivider />
-
-      {/* ═══════════════════════════════════════════════════
-          4b. BUILD TIMELINE — construction sequence
-          ═══════════════════════════════════════════════════ */}
-      <BuildTimeline />
-
-      <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
           5. DETAIL MATTERS — editorial craftsmanship cards
