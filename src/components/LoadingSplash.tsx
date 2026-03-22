@@ -234,14 +234,15 @@ export function LoadingSplash({
           }}
         >
           <p
-            className="text-center font-mono uppercase text-muted-foreground"
+            className="text-center font-mono uppercase"
             style={{
               fontSize: "10px",
-              letterSpacing: "0.38em",
-              opacity: 0.3,
+              letterSpacing: "0.42em",
+              color: "hsl(var(--accent))",
+              opacity: 0.28,
             }}
           >
-            From Blueprint to Built Form
+            From Dirt to Dynasty
           </p>
         </div>
       </div>
