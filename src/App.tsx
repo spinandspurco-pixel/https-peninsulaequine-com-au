@@ -133,6 +133,7 @@ function AppContent() {
           <Route path="/trainers/:slug" element={<TrainerProfile />} />
            
           <Route path="/groundlock" element={<GroundLock />} />
+          <Route path="/groundlock/how-it-works" element={<GroundLockHowItWorks />} />
           <Route path="/groundlock-systems" element={<GroundLockSystems />} />
           <Route path="/equus-ridge" element={<EquusRidge />} />
            <Route path="/installer" element={<InstallerAccess />} />
