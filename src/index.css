@@ -332,17 +332,8 @@
                 0 0 20px -8px hsl(var(--accent) / 0.2);
   }
 
-  .link-glow::after {
-    content: '';
-    @apply absolute bottom-0 left-0 w-full h-px bg-accent/60 scale-x-0 origin-right transition-transform duration-500;
-  }
-  .link-glow:hover::after {
-    @apply scale-x-100 origin-left;
-  }
 
-  .icon-glow:hover {
-    filter: drop-shadow(0 0 8px hsl(var(--accent) / 0.35));
-  }
+
 
   /* ═══════════════════════════════════════════════════════
      ANIMATION UTILITIES
