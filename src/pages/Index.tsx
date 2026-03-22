@@ -239,7 +239,7 @@ export default function Index() {
         {/* Scroll indicator — 5000ms */}
         <div
           className="absolute bottom-10 left-1/2 -translate-x-1/2"
-          style={{ opacity: 0, animation: "heroFadeIn 800ms ease-out 5000ms forwards" }}
+          style={{ opacity: 0, animation: "heroFadeIn 800ms ease-out 4600ms forwards" }}
         >
           <div className="w-px h-14 bg-accent/8 relative overflow-hidden">
             <div
