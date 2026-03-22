@@ -502,7 +502,145 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ SECTION 7 — Start Your Project ═════════════ */}
+      {/* ═══ GROUNDLOCK SYSTEM KITS ════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="py-28 sm:py-36 lg:py-44 relative border-t border-border/6">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container relative z-10">
+
+            <RevealOnScroll direction="up">
+              <div className="text-center mb-14 sm:mb-18 lg:mb-20">
+                <div className="flex items-center justify-center gap-5 mb-5">
+                  <div className="w-8 h-px bg-accent/20" />
+                  <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/30 font-mono">System Kits</p>
+                  <div className="w-8 h-px bg-accent/20" />
+                </div>
+                <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/90 tracking-[0.03em] leading-tight">
+                  GroundLock System Kit
+                </h2>
+                <p className="mt-5 text-[13px] text-muted-foreground/35 font-serif italic max-w-lg mx-auto leading-relaxed">
+                  Pre-configured panel sets designed for specific use cases. A complete system — not individual parts.
+                </p>
+              </div>
+            </RevealOnScroll>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 max-w-4xl mx-auto">
+              {[
+                {
+                  name: "Yard / High-Traffic Pack",
+                  tag: "Most Common",
+                  useCase: "Stable entries, wash bays, gateway transitions, and daily movement corridors.",
+                  coverage: "Covers approximately 20–40m² depending on configuration.",
+                  includes: ["Interlocking panel set", "Entry zone layout guide", "Drainage orientation plan"],
+                },
+                {
+                  name: "Arena Pack",
+                  tag: "Performance",
+                  useCase: "Arena perimeter entries, warm-up zones, and high-wear transition points around riding surfaces.",
+                  coverage: "Covers approximately 30–60m² of threshold and perimeter zones.",
+                  includes: ["Extended panel set", "Perimeter layout specification", "Load distribution guide"],
+                },
+                {
+                  name: "Custom Configuration",
+                  tag: "Tailored",
+                  useCase: "Estate arrivals, float access routes, service paths, or any project requiring a site-specific system design.",
+                  coverage: "Coverage determined by site assessment and system plan.",
+                  includes: ["Site-matched panel quantity", "Full layout specification", "Installation guidance"],
+                },
+              ].map((kit, idx) => (
+                <RevealOnScroll key={kit.name} direction="up" delay={idx * 80}>
+                  <div className="bg-card/60 border border-border/10 rounded-sm p-7 sm:p-8 flex flex-col h-full">
+                    {/* Kit tag */}
+                    <div className="flex items-center gap-3 mb-5">
+                      <div className="w-4 h-px bg-accent/20" />
+                      <span className="text-[9px] font-mono uppercase tracking-[0.35em] text-accent/30">{kit.tag}</span>
+                    </div>
+
+                    {/* Kit name */}
+                    <h3 className="font-serif text-lg sm:text-xl text-foreground/80 tracking-[0.02em] leading-tight mb-4">
+                      {kit.name}
+                    </h3>
+
+                    {/* Use case */}
+                    <p className="text-[12px] text-muted-foreground/30 leading-relaxed mb-5 flex-grow">
+                      {kit.useCase}
+                    </p>
+
+                    {/* Coverage */}
+                    <div className="bg-background/40 rounded-sm px-4 py-3 mb-5">
+                      <p className="text-[11px] font-mono text-accent/35 tracking-wide leading-relaxed">
+                        {kit.coverage}
+                      </p>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="w-6 h-px bg-accent/10 mb-4" />
+
+                    {/* Includes */}
+                    <ul className="space-y-2 mb-6">
+                      {kit.includes.map((item) => (
+                        <li key={item} className="flex items-start gap-2.5">
+                          <span className="w-1 h-1 rounded-full bg-accent/20 shrink-0 mt-[6px]" />
+                          <span className="text-[11px] text-muted-foreground/28 font-mono tracking-wide leading-relaxed">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Visual: inline panel diagram */}
+                    <div className="mt-auto pt-4 border-t border-border/6">
+                      <svg viewBox="0 0 200 40" className="w-full h-auto opacity-[0.15]" aria-hidden="true">
+                        <defs>
+                          <PanelDefs />
+                        </defs>
+                        {[0, 1, 2, 3, 4, 5].map((i) => (
+                          <g key={i} transform={`translate(${8 + i * 32}, ${i % 2 === 0 ? 2 : 6})`}>
+                            <rect
+                              width="24" height="28" rx="1.5"
+                              fill="none"
+                              stroke="hsl(var(--accent))"
+                              strokeWidth="0.8"
+                            />
+                            <path
+                              d={i % 2 === 0
+                                ? "M 6 4 L 6 20 Q 6 24, 12 24 Q 18 24, 18 20 L 18 4"
+                                : "M 6 24 L 6 8 Q 6 4, 12 4 Q 18 4, 18 8 L 18 24"
+                              }
+                              fill="none"
+                              stroke="hsl(var(--accent))"
+                              strokeWidth="0.6"
+                            />
+                          </g>
+                        ))}
+                      </svg>
+                    </div>
+                  </div>
+                </RevealOnScroll>
+              ))}
+            </div>
+
+            {/* CTA */}
+            <RevealOnScroll direction="up" delay={300}>
+              <div className="text-center mt-14 sm:mt-18">
+                <p className="text-[11px] text-muted-foreground/22 font-mono tracking-wide mb-6">
+                  All kits include layout guidance and installation specification.
+                </p>
+                <Link to="/site-assessment">
+                  <Button
+                    variant="outline"
+                    className="group border-accent/15 text-accent/60 hover:bg-accent/5 hover:border-accent/25 transition-opacity duration-300 text-xs tracking-[0.2em] uppercase font-mono h-12 px-8"
+                  >
+                    Request System Kit
+                    <ArrowRight className="ml-2 h-3.5 w-3.5 transition-opacity duration-300 opacity-40 group-hover:opacity-70" />
+                  </Button>
+                </Link>
+              </div>
+            </RevealOnScroll>
+
+          </div>
+        </div>
+      </section>
+
+
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-20 sm:py-28 bg-card relative">
