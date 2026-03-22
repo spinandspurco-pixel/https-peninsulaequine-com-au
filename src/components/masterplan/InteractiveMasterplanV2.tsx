@@ -51,7 +51,7 @@ function CameraWrapper({ activeZone, children }: { activeZone: string | null; ch
       style={{
         transform: zone ? `scale(${CAMERA_SCALE})` : "scale(1)",
         transformOrigin: `${originX}% ${originY}%`,
-        transition: "transform 600ms cubic-bezier(0.22, 0.61, 0.36, 1), transform-origin 600ms cubic-bezier(0.22, 0.61, 0.36, 1)",
+        transition: "transform 700ms cubic-bezier(0.45, 0, 0.15, 1), transform-origin 700ms cubic-bezier(0.45, 0, 0.15, 1)",
         willChange: "transform",
       }}
     >
@@ -159,14 +159,18 @@ export function InteractiveMasterplan() {
     }, TOUR_DISSOLVE / 2);
   }, [clearTimer]);
 
-  /* ── Interaction ── */
+  /* ── Interaction — delayed hover for weighted feel ── */
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const handleHover = useCallback((id: string) => {
     if (tourActive || isTouch) return;
-    setActiveZone(id);
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    hoverTimer.current = setTimeout(() => setActiveZone(id), 150);
   }, [isTouch, tourActive]);
 
   const handleLeave = useCallback(() => {
     if (tourActive || isTouch) return;
+    if (hoverTimer.current) { clearTimeout(hoverTimer.current); hoverTimer.current = null; }
     setActiveZone(null);
   }, [isTouch, tourActive]);
 

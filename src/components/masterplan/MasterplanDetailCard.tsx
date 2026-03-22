@@ -25,8 +25,9 @@ export function MasterplanDetailCard({ zone, visible }: { zone: Zone | null; vis
       className="pointer-events-none"
       style={{
         opacity: visible ? 1 : 0,
-        transition: `opacity ${DURATION.normal}ms ${EASE.default}`,
-        willChange: "opacity",
+        transform: visible ? "translateY(0)" : "translateY(2px)",
+        transition: `opacity 500ms cubic-bezier(0.45, 0, 0.15, 1) ${visible ? '180ms' : '0ms'}, transform 500ms cubic-bezier(0.45, 0, 0.15, 1) ${visible ? '180ms' : '0ms'}`,
+        willChange: "opacity, transform",
       }}
     >
       {zone && (

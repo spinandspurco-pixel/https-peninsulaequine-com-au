@@ -243,11 +243,14 @@ function Synthesis() {
 
         <button
           onClick={() => navigate("/contact")}
-          className="px-10 py-4 border border-accent/15 text-[11px] font-mono uppercase tracking-[0.3em] text-foreground/65 transition-all duration-500 hover:border-accent/30 hover:text-foreground/85 hover:bg-accent/5"
+          className="px-10 py-4 border border-accent/15 text-[11px] font-mono uppercase tracking-[0.3em] text-foreground/65 hover:border-accent/30 hover:text-foreground/85 hover:bg-accent/5"
           style={{
             opacity: visible ? 1 : 0,
-            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1400ms`,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1400ms, transform 250ms cubic-bezier(0.45, 0, 0.15, 1), border-color 500ms cubic-bezier(0.45, 0, 0.15, 1), color 500ms cubic-bezier(0.45, 0, 0.15, 1), background-color 500ms cubic-bezier(0.45, 0, 0.15, 1)`,
           }}
+          onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.97)")}
+          onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
           Start Your Project
         </button>

@@ -258,7 +258,13 @@ function WalkScene({
               <div className="flex flex-col items-center gap-8">
                 <button
                   onClick={() => navigate("/contact")}
-                  className="px-8 py-3.5 border border-accent/15 text-[11px] font-mono uppercase tracking-[0.3em] text-foreground/70 transition-all duration-500 hover:border-accent/30 hover:text-foreground/90 hover:bg-accent/5"
+                  className="px-8 py-3.5 border border-accent/15 text-[11px] font-mono uppercase tracking-[0.3em] text-foreground/70 hover:border-accent/30 hover:text-foreground/90 hover:bg-accent/5"
+                  style={{
+                    transition: "transform 250ms cubic-bezier(0.45, 0, 0.15, 1), border-color 500ms cubic-bezier(0.45, 0, 0.15, 1), color 500ms cubic-bezier(0.45, 0, 0.15, 1), background-color 500ms cubic-bezier(0.45, 0, 0.15, 1)",
+                  }}
+                  onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.97)")}
+                  onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
                 >
                   Start Your Project
                 </button>

@@ -25,7 +25,8 @@ interface Props {
 
 export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLeave, onTap }: Props) {
   const ls = layerStyles[buildLayer];
-  const T = "400ms";
+  const T = "500ms";
+  const T_EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
   const isViewing = activeZone === "viewing-loft";
 
   return (
@@ -305,13 +306,13 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         })}
       </g>
 
-      {/* ── INTERACTIVE ZONES — fade + focus, no glow ── */}
+      {/* ── INTERACTIVE ZONES — fade + focus, weighted hover ── */}
       {zones.map(z => {
         const isActive = activeZone === z.id;
         const isDimmed = activeZone !== null && !isActive;
         const center = getCenter(z.path);
-        const elevShift = isActive ? z.elevation * -1.2 : 0;
-        const dimOpacity = (isViewing && !isActive) ? 0.12 : 0.18;
+        const elevShift = isActive ? z.elevation * -1.5 : 0;
+        const dimOpacity = (isViewing && !isActive) ? 0.08 : 0.12;
         const isViewingZone = z.id === "viewing-loft";
 
         return (
@@ -320,7 +321,7 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
             style={{
               opacity: isDimmed ? dimOpacity : 1,
               transform: `translateY(${elevShift}px)`,
-              transition: `opacity ${T} ${EASE.default}, transform ${T} ${EASE.default}`,
+              transition: `opacity ${T} ${T_EASE} ${isDimmed ? '0ms' : '150ms'}, transform ${T} ${T_EASE} ${isActive ? '150ms' : '0ms'}`,
               willChange: "opacity, transform",
             }}
             filter={isActive ? (isViewingZone ? "url(#mp-viewing)" : "url(#mp-active)") : undefined}
@@ -330,20 +331,20 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
               <path
                 d={z.path}
                 fill="none"
-                stroke="hsl(var(--accent) / 0.12)"
-                strokeWidth="0.8"
+                stroke="hsl(var(--accent) / 0.14)"
+                strokeWidth="0.9"
                 strokeDasharray="400"
                 strokeDashoffset="0"
                 className="pointer-events-none"
-                style={{ animation: "mp-trace 0.6s ease-out forwards" }}
+                style={{ animation: "mp-trace 0.7s cubic-bezier(0.45, 0, 0.15, 1) forwards" }}
               />
             )}
             <path
               d={z.path}
-              fill={isActive ? "hsl(var(--accent) / 0.05)" : `hsl(var(--accent) / ${ls.fillAlpha})`}
+              fill={isActive ? "hsl(var(--accent) / 0.06)" : `hsl(var(--accent) / ${ls.fillAlpha})`}
               stroke={isActive ? "hsl(var(--accent) / 0.35)" : `hsl(var(--accent) / ${ls.zoneOpacity})`}
               strokeWidth={isActive ? ls.strokeW * 1.6 : ls.strokeW}
-              style={{ transition: `fill ${T} ease, stroke ${T} ease, stroke-width ${T} ease`, cursor: "pointer" }}
+              style={{ transition: `fill ${T} ${T_EASE}, stroke ${T} ${T_EASE}, stroke-width ${T} ${T_EASE}`, cursor: "pointer" }}
               onMouseEnter={() => onHover(z.id)}
               onMouseLeave={onLeave}
               onClick={() => onTap(z.id)}
@@ -358,7 +359,7 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
               letterSpacing="0.15em"
               fill="hsl(var(--accent))"
               className="pointer-events-none uppercase"
-              style={{ opacity: isActive ? (isViewingZone ? 0.55 : 0.4) : ls.labelOpacity * 0.5, transition: `opacity ${T} ease, font-size ${T} ease` }}
+              style={{ opacity: isActive ? (isViewingZone ? 0.55 : 0.4) : ls.labelOpacity * 0.5, transition: `opacity ${T} ${T_EASE} ${isActive ? '180ms' : '0ms'}, font-size ${T} ${T_EASE}` }}
             >
               {z.shortLabel}
             </text>
