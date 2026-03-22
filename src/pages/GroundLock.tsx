@@ -270,7 +270,7 @@ export default function GroundLock() {
       </section>
 
       {/* ═══ COMPARISON — Standard vs GroundLock — #8 ══════ */}
-      <section className="relative overflow-hidden">
+      <section id="step-plan" className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-28 sm:py-36 bg-primary relative">
           <div className="absolute inset-0 grain-texture" />
