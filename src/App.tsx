@@ -149,7 +149,7 @@ function AppContent() {
           <Route path="/equus-ridge" element={<EquusRidge />} />
            <Route path="/installer" element={<InstallerAccess />} />
            <Route path="/site-assessment" element={<SiteAssessment />} />
-           <Route path="/systems" element={<SignatureSystems />} />
+           <Route path="/signature-systems" element={<SignatureSystems />} />
            <Route path="/groundlock-setup" element={<ProtectedRoute><GroundLockSetup /></ProtectedRoute>} />
            <Route path="/groundlock-onboarding" element={<ProtectedRoute><GroundLockOnboarding /></ProtectedRoute>} />
           <Route path="/project/:slug" element={<CaseStudy />} />
