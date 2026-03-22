@@ -275,7 +275,7 @@ function BeforeAfter({ reducedMotion }: { reducedMotion: boolean }) {
             {showAfter ? "After" : "Before"}
           </p>
           <p className="font-serif text-xl sm:text-2xl italic text-foreground/50 leading-relaxed mb-8">
-            "From raw ground to resolved system."
+            "Ground to system"
           </p>
 
           {/* Toggle */}
