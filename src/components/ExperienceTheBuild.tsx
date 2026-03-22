@@ -176,8 +176,7 @@ function ExperienceHero() {
             transition: `opacity ${DURATION.slow}ms ${EASE.default} 700ms`,
           }}
         >
-          Architecture, movement, and construction intelligence — resolved as
-          one system.
+          Architecture. Movement. Construction. One system.
         </p>
       </div>
     </div>
