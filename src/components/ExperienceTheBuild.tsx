@@ -148,7 +148,7 @@ function ExperienceHero() {
           className="flex items-center justify-center gap-5 mb-8"
           style={{
             opacity: visible ? 1 : 0,
-            transition: `opacity ${DURATION.slow}ms ${EASE.default} 200ms`,
+            transition: `opacity ${DURATION.slow}ms ${EASE.cinematic} 800ms`,
           }}
         >
           <div className="w-10 h-px bg-accent/12" />
@@ -163,7 +163,7 @@ function ExperienceHero() {
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : `translateY(${DISTANCE.lg}px)`,
-            transition: `opacity ${DURATION.slow}ms ${EASE.default} 400ms, transform ${DURATION.slow}ms ${EASE.default} 400ms`,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1200ms, transform ${DURATION.cinematic}ms ${EASE.cinematic} 1200ms`,
           }}
         >
           Experience the Build
@@ -173,7 +173,7 @@ function ExperienceHero() {
           className="mt-6 text-[11px] sm:text-[12px] text-muted-foreground/25 font-serif italic max-w-xs mx-auto leading-relaxed tracking-[0.02em]"
           style={{
             opacity: visible ? 1 : 0,
-            transition: `opacity ${DURATION.slow}ms ${EASE.default} 700ms`,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1800ms`,
           }}
         >
           Architecture. Movement. Construction. One system.
