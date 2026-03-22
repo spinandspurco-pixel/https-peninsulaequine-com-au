@@ -99,6 +99,7 @@ function StepProgressIndicator() {
 export default function GroundLock() {
   return (
     <Layout>
+      <StepProgressIndicator />
       {/* ═══ SECTION 1 — HERO ═════════════════════════════ */}
       <section className="relative pt-36 sm:pt-44 pb-20 sm:pb-28 overflow-hidden">
         <div className="absolute inset-0">
