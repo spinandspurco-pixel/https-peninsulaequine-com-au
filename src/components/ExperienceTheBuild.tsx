@@ -1,7 +1,8 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
+import { useAmbientSound, type AmbientScene } from "@/hooks/useAmbientSound";
 
 import { InteractiveMasterplan } from "@/components/masterplan/InteractiveMasterplanV2";
 import { WalkTheProject } from "@/components/WalkTheProject";
