@@ -88,6 +88,10 @@ export default function GroundLock() {
     <Layout>
       {/* ═══ SECTION 1 — HERO ═════════════════════════════ */}
       <section className="relative pt-36 sm:pt-44 pb-16 sm:pb-24 overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={groundlockHero} alt="" className="w-full h-full object-cover" loading="eager" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/60" />
+        </div>
         <div className="absolute inset-0 grain-texture" />
         <div className="section-container relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
