@@ -345,6 +345,7 @@ const TIMELINE_PHASE_MAP: Record<string, AmbientScene> = {
 
 /* ── Main export ─────────────────────────────────────── */
 export function ExperienceTheBuild() {
+  const [activeAct, setActiveAct] = useState("hero");
   const {
     enabled: soundEnabled,
     toggle: toggleSound,
