@@ -159,14 +159,18 @@ export function InteractiveMasterplan() {
     }, TOUR_DISSOLVE / 2);
   }, [clearTimer]);
 
-  /* ── Interaction ── */
+  /* ── Interaction — delayed hover for weighted feel ── */
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const handleHover = useCallback((id: string) => {
     if (tourActive || isTouch) return;
-    setActiveZone(id);
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    hoverTimer.current = setTimeout(() => setActiveZone(id), 150);
   }, [isTouch, tourActive]);
 
   const handleLeave = useCallback(() => {
     if (tourActive || isTouch) return;
+    if (hoverTimer.current) { clearTimeout(hoverTimer.current); hoverTimer.current = null; }
     setActiveZone(null);
   }, [isTouch, tourActive]);
 
