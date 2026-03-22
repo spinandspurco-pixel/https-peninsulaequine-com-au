@@ -210,16 +210,16 @@ export function InteractiveMasterplan() {
       <div className="section-container relative z-10">
         {/* Header */}
         <RevealOnScroll direction="up" duration={DURATION.normal}>
-          <div className="text-center mb-14 sm:mb-20">
+          <div className="text-center mb-16 sm:mb-22">
             <div className="flex items-center justify-center gap-5 mb-5">
-              <div className="w-8 h-px bg-accent/20" />
-              <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/30 font-mono">Masterplan</p>
-              <div className="w-8 h-px bg-accent/20" />
+              <div className="w-6 h-px bg-accent/12" />
+              <p className="text-[8px] sm:text-[9px] uppercase tracking-[0.5em] text-accent/18 font-mono">Masterplan</p>
+              <div className="w-6 h-px bg-accent/12" />
             </div>
-            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/85 tracking-[0.03em] leading-tight">
+            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/75 tracking-[0.04em] leading-tight">
               The Layout Defines Everything
             </h2>
-            <p className="mt-4 text-sm text-muted-foreground/30 font-serif italic max-w-md mx-auto leading-relaxed">
+            <p className="mt-4 text-[13px] text-muted-foreground/22 font-serif italic max-w-sm mx-auto leading-relaxed tracking-[0.02em]">
               Consistency is designed long before it is ridden.
             </p>
           </div>
