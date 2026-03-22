@@ -177,7 +177,7 @@ export default function Index() {
             {/* Brand tag — 1800ms (atmosphere settles first) */}
             <div
               className="flex items-center justify-center gap-5"
-              style={{ opacity: 0, animation: "heroFadeIn 900ms ease-out 1800ms forwards" }}
+              style={{ opacity: 0, animation: "heroFadeIn 900ms ease-out 1600ms forwards" }}
             >
               <div className="w-12 h-px bg-accent/20" />
               <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/50">Peninsula Equine</p>
