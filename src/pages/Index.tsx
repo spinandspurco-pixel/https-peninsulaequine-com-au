@@ -191,7 +191,7 @@ export default function Index() {
                 style={{
                   opacity: 0,
                   transform: "translateY(2px)",
-                  animation: "heroHeadlineReveal 950ms cubic-bezier(0.45, 0, 0.15, 1) 2800ms forwards",
+                  animation: "heroHeadlineReveal 950ms cubic-bezier(0.45, 0, 0.15, 1) 2400ms forwards",
                   fontSize: "clamp(3rem, 1.6rem + 6.5vw, 7.5rem)",
                   textShadow: "0 2px 40px hsl(222 20% 4% / 0.6)",
                 }}
