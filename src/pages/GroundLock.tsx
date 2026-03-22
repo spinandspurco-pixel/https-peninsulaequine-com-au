@@ -548,6 +548,17 @@ export default function GroundLock() {
               </div>
             </RevealOnScroll>
 
+            <RevealOnScroll direction="up" delay={80}>
+              <div className="max-w-2xl mx-auto mb-14 sm:mb-18">
+                <img
+                  src={groundlockKit}
+                  alt="GroundLock panel system kit — stacked horseshoe panels ready for deployment"
+                  className="w-full h-auto rounded-sm"
+                  loading="lazy"
+                />
+              </div>
+            </RevealOnScroll>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 max-w-4xl mx-auto">
               {[
                 {
