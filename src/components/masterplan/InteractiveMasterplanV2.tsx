@@ -101,7 +101,13 @@ function MobileZoneList({ activeZone, onTap }: { activeZone: string | null; onTa
 }
 
 /* ── Main export ── */
-export function InteractiveMasterplan() {
+interface MasterplanProps {
+  onZoneHover?: () => void;
+  onZoneLeave?: () => void;
+  onLayerToggle?: () => void;
+}
+
+export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onLayerToggle }: MasterplanProps = {}) {
   usePreloadImages(PRELOAD);
   const isMobile = useIsMobile();
   const reducedMotion = useReducedMotion();
