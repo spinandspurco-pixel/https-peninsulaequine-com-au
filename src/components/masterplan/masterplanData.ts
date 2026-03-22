@@ -47,11 +47,11 @@ export interface Zone {
 export const zones: Zone[] = [
   {
     id: "stable-row",
-    label: "Stable Row S1–S4",
-    shortLabel: "Stables",
-    tagline: "Six stables across two wings. Central entry. Cross-ventilation by design.",
+    label: "Stable Wing — S1–S4",
+    shortLabel: "S1–S4",
+    tagline: "Four stables. Central entry. Cross-ventilation resolved.",
     description:
-      "Four stables (S1–S4) span the northern wing with a central breezeway entry. Float garages flank each end for direct vehicle access. Cross-ventilation is engineered through the corridor axis.",
+      "S1–S4 span the northern wing with a central breezeway entry. Float bays flank each end. Cross-ventilation engineered through the corridor axis.",
     features: [
       "S1–S4 with central breezeway",
       "Float / garage bays at each end",
@@ -62,11 +62,11 @@ export const zones: Zone[] = [
   },
   {
     id: "west-wing",
-    label: "West Wing — S5 & S6",
+    label: "Stable Wing — S5 & S6",
     shortLabel: "S5–S6",
-    tagline: "The quieter wing. Direct paddock connection.",
+    tagline: "Quieter wing. Direct paddock connection.",
     description:
-      "Stables 5 and 6 form the western arm of the courtyard. Positioned for paddock access and separation from the service side, with passive ventilation along the outer wall.",
+      "Stables 5 and 6 form the western courtyard arm. Positioned for paddock access and separation from the service side.",
     features: [
       "Two oversized stables",
       "Paddock entry at ground level",
@@ -79,9 +79,9 @@ export const zones: Zone[] = [
     id: "courtyard",
     label: "Central Courtyard",
     shortLabel: "Courtyard",
-    tagline: "The operational centre. Every movement passes through here.",
+    tagline: "All movement converges here.",
     description:
-      "An enclosed courtyard formed by the stable wings on three sides. This is the circulation spine — connecting stables, tack rooms, wash bay, tie-up area, and the arena walkway below.",
+      "Horse. Rider. Service. Resolved. An enclosed courtyard formed by the stable wings — the circulation spine connecting all zones.",
     features: [
       "Enclosed by stable wings",
       "Central tie-up and handling",
@@ -92,11 +92,11 @@ export const zones: Zone[] = [
   },
   {
     id: "service-wing",
-    label: "Service Wing",
+    label: "Tack / Service Core",
     shortLabel: "Service",
-    tagline: "Wash bay, WC, and tie-up — positioned for daily efficiency.",
+    tagline: "Wash bay. WC. Tie-up. Positioned for efficiency.",
     description:
-      "The eastern arm houses the wash bay, WC, and tie-up area. Positioned opposite the paddock stables to separate clean and dirty workflows, with direct courtyard access.",
+      "The eastern arm houses wash bay, WC, and tie-up area. Separated from paddock stables to resolve clean and dirty workflows.",
     features: [
       "Wash bay with engineered drainage",
       "WC and utility rooms",
@@ -109,9 +109,9 @@ export const zones: Zone[] = [
     id: "tack-rooms",
     label: "Tack & Accommodation",
     shortLabel: "Tack / Rooms",
-    tagline: "Support spaces and upper-level accommodation resolved beneath the viewing loft.",
+    tagline: "Support spaces resolved beneath the viewing loft.",
     description:
-      "The ground-level bar contains Tack Room 1 and 2 flanking the arena walkway, with Rooms 1, 3, and service spaces at each end. The upper level above houses the Viewing Loft, Rooms 3–4, WC, and store room.",
+      "Tack Room 1 and 2 flank the arena walkway. Rooms 1, 3, and service spaces at ground level. Upper level: Viewing Loft, Rooms 3–4, WC, store.",
     features: [
       "Tack Room 1 & 2 flanking walkway",
       "Rooms 1 & 3 at ground level",
@@ -122,11 +122,11 @@ export const zones: Zone[] = [
   },
   {
     id: "viewing-loft",
-    label: "Upstairs Viewing Area",
+    label: "Viewing Loft (Above)",
     shortLabel: "Viewing",
-    tagline: "The vantage point where the full system becomes legible.",
+    tagline: "The system, understood from above.",
     description:
-      "Positioned on the first floor above the arena walkway, the Viewing Loft provides full arena oversight. Accessed via internal stair, it connects to upper-level accommodation, store room, and WC.",
+      "First floor above the arena walkway. Full arena oversight. Internal stair access from courtyard, connected to upper accommodation.",
     features: [
       "Full arena oversight from upper level",
       "Internal stair access from courtyard",
@@ -137,11 +137,11 @@ export const zones: Zone[] = [
   },
   {
     id: "indoor-arena",
-    label: "Indoor Arena",
+    label: "Indoor Arena — 24 × 48",
     shortLabel: "Arena",
-    tagline: "24 × 48 metres. Clear-span. Engineered for performance under load.",
+    tagline: "Clear-span. Engineered for performance under load.",
     description:
-      "A fully enclosed riding arena connected to the stable complex via a covered walkway and corridor. Clear-span steel structure with no internal columns. GroundLock surface system beneath.",
+      "Fully enclosed riding arena connected via covered corridor. Clear-span steel structure, no internal columns. GroundLock surface system beneath.",
     features: [
       "24 × 48 m clear-span structure",
       "GroundLock surface system",

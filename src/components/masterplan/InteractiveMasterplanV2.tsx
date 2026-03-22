@@ -338,7 +338,7 @@ export function InteractiveMasterplan() {
 
               {/* Authority */}
               <p className="mt-8 text-[9px] font-mono text-accent/8 tracking-[0.2em] uppercase leading-relaxed">
-                Every movement resolved before the first post goes in.
+                All circulation resolved at plan level
               </p>
             </div>
           </div>

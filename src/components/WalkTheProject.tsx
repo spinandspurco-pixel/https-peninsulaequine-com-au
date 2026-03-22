@@ -382,10 +382,10 @@ export function WalkTheProject() {
           <div className="w-10 h-px bg-accent/15" />
         </div>
         <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/85 tracking-[0.04em]">
-          Main Ridge Estate
+          Walk the Build
         </h2>
         <p className="mt-4 text-[11px] sm:text-[12px] text-muted-foreground/25 font-serif italic max-w-xs mx-auto leading-relaxed tracking-[0.02em]">
-          A guided sequence through design, structure, and resolution.
+          A guided sequence through space, structure, and resolution
         </p>
       </div>
 

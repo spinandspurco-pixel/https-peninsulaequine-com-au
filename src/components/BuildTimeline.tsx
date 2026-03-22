@@ -413,7 +413,7 @@ export function BuildTimeline() {
       {/* Authority close */}
       <div className="py-20 sm:py-28 text-center">
         <p className="text-[9px] font-mono uppercase tracking-[0.3em] text-accent/12 leading-relaxed">
-          Built properly. From the ground up.
+          Performance held in every layer
         </p>
       </div>
     </section>
