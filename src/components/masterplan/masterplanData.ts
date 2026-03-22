@@ -74,16 +74,6 @@ export const zones: Zone[] = [
     path: "M 465 390 L 540 390 L 540 440 L 465 440 Z",
     elevation: 0,
   },
-  {
-    id: "arena-store",
-    label: "Arena Store",
-    shortLabel: "Store",
-    tagline: "Equipment access without disrupting the arena space.",
-    description: "Below-arena storage for equipment, surface maintenance tools, and seasonal items.",
-    features: ["Direct arena access", "Surface tools storage", "Below-grade entry"],
-    path: "M 200 600 L 540 600 L 540 635 L 200 635 Z",
-    elevation: 0,
-  },
 ];
 
 /* ── Movement flow paths ─────────────────────────── */
@@ -98,35 +88,35 @@ export interface FlowPath {
 export const flowPaths: FlowPath[] = [
   {
     id: "horse",
-    label: "Horse Movement",
+    label: "Horse",
     color: "hsl(38 50% 50%)",
-    d: "M 370 105 L 370 200 L 370 280 Q 370 320 370 380 L 370 440 L 370 520",
+    d: "M 370 105 L 370 200 L 370 330 L 370 440 L 370 520",
   },
   {
     id: "rider",
-    label: "Rider / Handler",
-    color: "hsl(200 40% 55%)",
-    d: "M 310 105 L 310 200 L 310 330 Q 310 360 275 390 L 240 420 M 310 330 L 420 330 L 500 330",
+    label: "Rider",
+    color: "hsl(200 35% 50%)",
+    d: "M 310 105 L 310 200 L 310 330 L 275 370 L 240 420 M 310 330 L 420 330 L 500 330",
   },
   {
     id: "vehicle",
-    label: "Float / Vehicle",
-    color: "hsl(0 0% 55%)",
-    d: "M 225 80 L 225 105 L 225 125 M 515 80 L 515 105 L 515 125",
+    label: "Vehicle",
+    color: "hsl(0 0% 50%)",
+    d: "M 225 80 L 225 128 M 515 80 L 515 128",
   },
 ];
 
 /* ── Build layer definitions ─────────────────────── */
 export type BuildLayer = "structure" | "envelope" | "finished";
 
-export const buildLayers: { id: BuildLayer; label: string; description: string }[] = [
-  { id: "structure", label: "Structure", description: "Framing, load paths, foundational geometry" },
-  { id: "envelope", label: "Envelope", description: "Walls, roof forms, enclosure logic" },
-  { id: "finished", label: "Finished", description: "Resolved premium presentation" },
+export const buildLayers: { id: BuildLayer; label: string; desc: string }[] = [
+  { id: "structure", label: "Structure", desc: "Load paths · column grid · foundational geometry" },
+  { id: "envelope", label: "Envelope", desc: "Wall lines · roof form · enclosure logic" },
+  { id: "finished", label: "Finished", desc: "Resolved presentation" },
 ];
 
 /* ── Tour sequence ─────────────────────────────────── */
-export const TOUR_ORDER = ["stables", "courtyard", "service-wing", "wash-bay", "viewing-area", "indoor-arena"];
+export const TOUR_ORDER = ["stables", "courtyard", "service-wing", "viewing-area", "indoor-arena"];
 export const TOUR_DWELL = 3200;
 export const TOUR_DISSOLVE = 600;
 
