@@ -266,9 +266,73 @@ function Synthesis() {
   );
 }
 
+/* ── Sound toggle ────────────────────────────────────── */
+function SoundToggle({ enabled, onToggle }: { enabled: boolean; onToggle: () => void }) {
+  return (
+    <button
+      onClick={onToggle}
+      className="fixed left-4 sm:left-6 bottom-6 z-50 flex items-center gap-2 group"
+      aria-label={enabled ? "Mute ambient sound" : "Enable ambient sound"}
+    >
+      {/* Speaker icon */}
+      <div className="relative w-4 h-4">
+        <svg
+          viewBox="0 0 16 16"
+          fill="none"
+          className="w-full h-full"
+          style={{ opacity: 0.2 }}
+        >
+          <path
+            d="M3 5.5h2l3-2.5v10l-3-2.5H3a.5.5 0 01-.5-.5V6a.5.5 0 01.5-.5z"
+            fill="currentColor"
+            className="text-accent"
+          />
+          {enabled && (
+            <>
+              <path d="M10 5.5c.8.6 1.3 1.5 1.3 2.5s-.5 1.9-1.3 2.5" stroke="currentColor" strokeWidth="1" className="text-accent" strokeLinecap="round" />
+              <path d="M11.5 3.8c1.2.9 2 2.3 2 3.7 0 1.5-.8 2.9-2 3.8" stroke="currentColor" strokeWidth="1" className="text-accent" strokeLinecap="round" opacity="0.5" />
+            </>
+          )}
+          {!enabled && (
+            <path d="M10 5l4 6M14 5l-4 6" stroke="currentColor" strokeWidth="1" className="text-accent" strokeLinecap="round" />
+          )}
+        </svg>
+      </div>
+      <span
+        className="text-[8px] font-mono uppercase tracking-[0.3em] text-accent/12 transition-opacity duration-500 group-hover:text-accent/25"
+      >
+        {enabled ? "Sound on" : "Sound off"}
+      </span>
+    </button>
+  );
+}
+
+/* ── Scene-to-ambient mapping ────────────────────────── */
+const WALK_SCENE_MAP: Record<string, AmbientScene> = {
+  arrival: "walk-arrival",
+  entry: "walk-entry",
+  courtyard: "walk-courtyard",
+  stables: "walk-stables",
+  structure: "walk-structure",
+  corridor: "walk-corridor",
+  arena: "walk-arena",
+  viewing: "walk-viewing",
+  system: "walk-system",
+  cta: "walk-cta",
+};
+
+const TIMELINE_PHASE_MAP: Record<string, AmbientScene> = {
+  "site-prep": "timeline-site",
+  groundlock: "timeline-ground",
+  structure: "timeline-structure",
+  envelope: "timeline-envelope",
+  finished: "timeline-finished",
+};
+
 /* ── Main export ─────────────────────────────────────── */
 export function ExperienceTheBuild() {
   const [activeAct, setActiveAct] = useState("hero");
+  const { enabled: soundEnabled, toggle: toggleSound, transitionTo } = useAmbientSound();
 
   /* Track which act is in view */
   useEffect(() => {
@@ -293,8 +357,41 @@ export function ExperienceTheBuild() {
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
+  /* Ambient sound: act-level transitions */
+  useEffect(() => {
+    const actToScene: Record<string, AmbientScene> = {
+      hero: "hero",
+      masterplan: "masterplan",
+      synthesis: "synthesis",
+    };
+    if (actToScene[activeAct]) {
+      transitionTo(actToScene[activeAct]);
+    }
+  }, [activeAct, transitionTo]);
+
+  /* Ambient sound: Walk scene tracking */
+  const handleWalkScene = useCallback(
+    (sceneId: string) => {
+      const scene = WALK_SCENE_MAP[sceneId];
+      if (scene) transitionTo(scene);
+    },
+    [transitionTo]
+  );
+
+  /* Ambient sound: Timeline phase tracking */
+  const handleTimelinePhase = useCallback(
+    (phaseId: string) => {
+      const scene = TIMELINE_PHASE_MAP[phaseId];
+      if (scene) transitionTo(scene);
+    },
+    [transitionTo]
+  );
+
   return (
     <div className="relative">
+      {/* Sound toggle */}
+      <SoundToggle enabled={soundEnabled} onToggle={toggleSound} />
+
       {/* Side nav */}
       <ActNav activeAct={activeAct} />
 
@@ -314,7 +411,7 @@ export function ExperienceTheBuild() {
 
       {/* ACT 2 — Walk the Build */}
       <div id="etb-walk">
-        <WalkTheProject />
+        <WalkTheProject onSceneChange={handleWalkScene} />
       </div>
 
       {/* Transition into Act 3 */}
@@ -322,7 +419,7 @@ export function ExperienceTheBuild() {
 
       {/* ACT 3 — Build Timeline */}
       <div id="etb-timeline">
-        <BuildTimeline />
+        <BuildTimeline onPhaseChange={handleTimelinePhase} />
       </div>
 
       {/* Final synthesis */}
