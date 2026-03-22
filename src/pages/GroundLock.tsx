@@ -640,6 +640,87 @@ export default function GroundLock() {
         </div>
       </section>
 
+      {/* ═══ GROUNDLOCK SYSTEM DELIVERY ════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="py-28 sm:py-36 lg:py-44 relative border-t border-border/6">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container relative z-10 max-w-3xl mx-auto">
+
+            <RevealOnScroll direction="up">
+              <div className="text-center mb-14 sm:mb-18">
+                <div className="flex items-center justify-center gap-5 mb-5">
+                  <div className="w-8 h-px bg-accent/20" />
+                  <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/30 font-mono">Premium</p>
+                  <div className="w-8 h-px bg-accent/20" />
+                </div>
+                <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/90 tracking-[0.03em] leading-tight">
+                  GroundLock System Delivery
+                </h2>
+                <p className="mt-5 text-[13px] text-muted-foreground/35 font-serif italic max-w-md mx-auto leading-relaxed">
+                  Full system supply with optional installation or guided implementation.
+                </p>
+              </div>
+            </RevealOnScroll>
+
+            <RevealOnScroll direction="up" delay={80}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:gap-6 max-w-2xl mx-auto mb-12">
+
+                {/* Supply + Layout */}
+                <div className="bg-card/60 border border-border/10 rounded-sm p-7 sm:p-8">
+                  <p className="text-overline mb-6 text-accent/35">Included</p>
+                  <ul className="space-y-4">
+                    {[
+                      { title: "System Supply", detail: "Complete panel set configured to your site specification." },
+                      { title: "Layout Confirmation", detail: "Final orientation, nesting pattern, and zone mapping verified before dispatch." },
+                    ].map((item) => (
+                      <li key={item.title}>
+                        <p className="text-sm text-foreground/70 font-medium leading-tight mb-1">{item.title}</p>
+                        <p className="text-[12px] text-muted-foreground/28 leading-relaxed">{item.detail}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Optional Install */}
+                <div className="bg-card/40 border border-accent/8 rounded-sm p-7 sm:p-8">
+                  <p className="text-overline mb-6 text-accent/25">Optional</p>
+                  <div className="mb-5">
+                    <p className="text-sm text-foreground/70 font-medium leading-tight mb-1">Install Support</p>
+                    <p className="text-[12px] text-muted-foreground/28 leading-relaxed">
+                      On-site installation by our team, or guided implementation with technical supervision and handover.
+                    </p>
+                  </div>
+                  <div className="w-6 h-px bg-accent/10 mb-4" />
+                  <p className="text-[11px] text-muted-foreground/22 font-mono tracking-wide leading-relaxed">
+                    Available for projects within our service region. Remote guidance available nationally.
+                  </p>
+                </div>
+
+              </div>
+            </RevealOnScroll>
+
+            {/* Positioning + CTA */}
+            <RevealOnScroll direction="up" delay={160}>
+              <div className="text-center max-w-md mx-auto">
+                <p className="text-[11px] text-muted-foreground/22 font-mono tracking-wide leading-relaxed mb-8">
+                  For clients who want the system delivered and implemented professionally — without managing the build themselves.
+                </p>
+                <Link to="/contact">
+                  <Button
+                    variant="outline"
+                    className="group border-accent/15 text-accent/60 hover:bg-accent/5 hover:border-accent/25 transition-opacity duration-300 text-xs tracking-[0.2em] uppercase font-mono h-12 px-8"
+                  >
+                    Discuss System Delivery
+                    <ArrowRight className="ml-2 h-3.5 w-3.5 transition-opacity duration-300 opacity-40 group-hover:opacity-70" />
+                  </Button>
+                </Link>
+              </div>
+            </RevealOnScroll>
+
+          </div>
+        </div>
+      </section>
+
 
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
