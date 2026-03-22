@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import groundlockHero from "@/assets/groundlock-hero-arena.jpg";
 import groundlockCutaway from "@/assets/groundlock-cutaway.jpg";
 import groundlockKit from "@/assets/groundlock-kit-product.jpg";
+import groundlockComparison from "@/assets/groundlock-surface-comparison.jpg";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
@@ -342,7 +343,23 @@ export default function GroundLock() {
               </p>
             </div>
 
-            {/* removed — comparison visual carries this */}
+            {/* Surface comparison visual */}
+            <RevealOnScroll direction="up" delay={100}>
+              <div className="mt-14 sm:mt-18 max-w-3xl mx-auto">
+                <div className="relative">
+                  <img
+                    src={groundlockComparison}
+                    alt="Surface comparison — standard ground versus GroundLock stabilised surface"
+                    className="w-full h-auto rounded-sm"
+                    loading="lazy"
+                  />
+                  <div className="flex justify-between mt-4 px-2">
+                    <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-primary-foreground/25">Standard Surface</p>
+                    <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-primary-foreground/25">GroundLock™ System</p>
+                  </div>
+                </div>
+              </div>
+            </RevealOnScroll>
           </div>
         </div>
       </section>
