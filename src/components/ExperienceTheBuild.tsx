@@ -36,7 +36,7 @@ function ActNav({ activeAct }: { activeAct: string }) {
             aria-label={act.label}
           >
             <span
-              className="text-[8px] font-mono uppercase tracking-[0.3em] transition-opacity duration-500"
+              className="text-[8px] font-mono uppercase tracking-[0.3em] transition-opacity duration-700"
               style={{
                 opacity: isActive ? 0.4 : 0,
                 color: "hsl(var(--accent))",
@@ -45,7 +45,7 @@ function ActNav({ activeAct }: { activeAct: string }) {
               {act.label}
             </span>
             <div
-              className="transition-all duration-500"
+              className="transition-all duration-700"
               style={{
                 width: "1px",
                 height: isActive ? "24px" : "8px",
@@ -80,13 +80,13 @@ function ActTransition({ line }: { line: string }) {
   }, []);
 
   return (
-    <div ref={ref} className="py-24 sm:py-36 lg:py-44 text-center">
+    <div ref={ref} className="py-28 sm:py-40 lg:py-52 text-center">
       <p
         className="font-serif text-sm sm:text-base lg:text-lg italic text-foreground/20 max-w-sm mx-auto leading-relaxed tracking-[0.02em] px-6"
         style={{
           opacity: visible ? 1 : 0,
           transform: visible ? "translateY(0)" : `translateY(${DISTANCE.md}px)`,
-          transition: `opacity ${DURATION.slow}ms ${EASE.default} 200ms, transform ${DURATION.slow}ms ${EASE.default} 200ms`,
+          transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 300ms, transform ${DURATION.cinematic}ms ${EASE.cinematic} 300ms`,
         }}
       >
         {line}
@@ -148,7 +148,7 @@ function ExperienceHero() {
           className="flex items-center justify-center gap-5 mb-8"
           style={{
             opacity: visible ? 1 : 0,
-            transition: `opacity ${DURATION.slow}ms ${EASE.default} 200ms`,
+            transition: `opacity ${DURATION.slow}ms ${EASE.cinematic} 800ms`,
           }}
         >
           <div className="w-10 h-px bg-accent/12" />
@@ -163,7 +163,7 @@ function ExperienceHero() {
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : `translateY(${DISTANCE.lg}px)`,
-            transition: `opacity ${DURATION.slow}ms ${EASE.default} 400ms, transform ${DURATION.slow}ms ${EASE.default} 400ms`,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1200ms, transform ${DURATION.cinematic}ms ${EASE.cinematic} 1200ms`,
           }}
         >
           Experience the Build
@@ -173,7 +173,7 @@ function ExperienceHero() {
           className="mt-6 text-[11px] sm:text-[12px] text-muted-foreground/25 font-serif italic max-w-xs mx-auto leading-relaxed tracking-[0.02em]"
           style={{
             opacity: visible ? 1 : 0,
-            transition: `opacity ${DURATION.slow}ms ${EASE.default} 700ms`,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1800ms`,
           }}
         >
           Architecture. Movement. Construction. One system.
@@ -213,10 +213,16 @@ function Synthesis() {
         style={{
           opacity: visible ? 1 : 0,
           transform: visible ? "translateY(0)" : `translateY(${DISTANCE.lg}px)`,
-          transition: `opacity ${DURATION.slow}ms ${EASE.default} 200ms, transform ${DURATION.slow}ms ${EASE.default} 200ms`,
+          transition: `opacity ${DURATION.extended}ms ${EASE.cinematic} 400ms, transform ${DURATION.extended}ms ${EASE.cinematic} 400ms`,
         }}
       >
-        <div className="flex items-center justify-center gap-5 mb-8">
+        <div
+          className="flex items-center justify-center gap-5 mb-8"
+          style={{
+            opacity: visible ? 1 : 0,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 400ms`,
+          }}
+        >
           <div className="w-8 h-px bg-accent/10" />
           <p className="text-[8px] font-mono uppercase tracking-[0.4em] text-accent/15">
             One System
@@ -224,18 +230,34 @@ function Synthesis() {
           <div className="w-8 h-px bg-accent/10" />
         </div>
 
-        <p className="font-serif text-xl sm:text-2xl lg:text-3xl italic text-foreground/45 leading-relaxed tracking-[0.01em] mb-12">
+        <p
+          className="font-serif text-xl sm:text-2xl lg:text-3xl italic text-foreground/45 leading-relaxed tracking-[0.01em] mb-12"
+          style={{
+            opacity: visible ? 1 : 0,
+            transition: `opacity ${DURATION.extended}ms ${EASE.cinematic} 900ms`,
+          }}
+        >
           "Built properly. From the ground up."
         </p>
 
         <button
           onClick={() => navigate("/contact")}
           className="px-10 py-4 border border-accent/15 text-[11px] font-mono uppercase tracking-[0.3em] text-foreground/65 transition-all duration-500 hover:border-accent/30 hover:text-foreground/85 hover:bg-accent/5"
+          style={{
+            opacity: visible ? 1 : 0,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1400ms`,
+          }}
         >
           Start Your Project
         </button>
 
-        <p className="mt-10 text-[9px] font-mono uppercase tracking-[0.3em] text-accent/8 leading-relaxed">
+        <p
+          className="mt-10 text-[9px] font-mono uppercase tracking-[0.3em] text-accent/8 leading-relaxed"
+          style={{
+            opacity: visible ? 1 : 0,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1900ms`,
+          }}
+        >
           Performance held in every layer
         </p>
       </div>

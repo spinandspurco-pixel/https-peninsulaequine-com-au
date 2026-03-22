@@ -181,7 +181,7 @@ function WalkScene({
     return () => window.removeEventListener("scroll", onScroll);
   }, [reducedMotion]);
 
-  const revealDelay = isCTA ? 400 : 150 + index * 30;
+  const revealDelay = isCTA ? 600 : 400 + index * 50;
 
   return (
     <div
@@ -197,7 +197,7 @@ function WalkScene({
           transform: reducedMotion
             ? `scale(${scene.scale})`
             : `translateY(${parallaxY}px) scale(${scene.scale})`,
-          transition: `transform ${DURATION.parallax}ms ${EASE.default}`,
+          transition: `transform ${DURATION.parallax}ms ${EASE.cinematic}`,
         }}
       >
         <img
@@ -249,7 +249,7 @@ function WalkScene({
               transform: visible
                 ? "translateY(0)"
                 : `translateY(${DISTANCE.lg}px)`,
-              transition: `opacity ${DURATION.slow}ms ${EASE.default} ${revealDelay}ms, transform ${DURATION.slow}ms ${EASE.default} ${revealDelay}ms`,
+              transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} ${revealDelay}ms, transform ${DURATION.cinematic}ms ${EASE.cinematic} ${revealDelay}ms`,
               willChange: "opacity, transform",
             }}
           >
@@ -278,6 +278,10 @@ function WalkScene({
                       ? "justify-end"
                       : ""
                   }`}
+                  style={{
+                    opacity: visible ? 1 : 0,
+                    transition: `opacity ${DURATION.slow}ms ${EASE.cinematic} ${revealDelay}ms`,
+                  }}
                 >
                   <span className="text-[10px] font-mono tracking-[0.2em] uppercase text-accent/20">
                     {String(index + 1).padStart(2, "0")}
@@ -289,7 +293,14 @@ function WalkScene({
                 </div>
 
                 {/* Quote */}
-                <p className="font-serif text-xl sm:text-2xl lg:text-3xl italic leading-relaxed tracking-[0.01em] text-foreground/55">
+                <p
+                  className="font-serif text-xl sm:text-2xl lg:text-3xl italic leading-relaxed tracking-[0.01em] text-foreground/55"
+                  style={{
+                    opacity: visible ? 1 : 0,
+                    transform: visible ? "translateY(0)" : `translateY(${DISTANCE.sm}px)`,
+                    transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} ${revealDelay + 450}ms, transform ${DURATION.cinematic}ms ${EASE.cinematic} ${revealDelay + 450}ms`,
+                  }}
+                >
                   "{scene.line}"
                 </p>
               </>

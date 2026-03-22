@@ -229,7 +229,7 @@ export function InteractiveMasterplan() {
         <div
           style={{
             opacity: planVisible ? 1 : 0,
-            transition: `opacity 1000ms ${EASE.default}`,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic}`,
             willChange: "opacity",
           }}
         >
