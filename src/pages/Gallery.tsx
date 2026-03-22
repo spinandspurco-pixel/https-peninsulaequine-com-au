@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { useParallax } from "@/hooks/useParallax";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 import { ProjectsCinematicHero } from "@/components/ProjectsCinematicHero";
-import { InteractiveMasterplan } from "@/components/InteractiveMasterplan";
+import { InteractiveMasterplan } from "@/components/masterplan/InteractiveMasterplanV2";
 import { WalkTheProject } from "@/components/WalkTheProject";
 import { BuildIntelligence } from "@/components/BuildIntelligence";
 import { DetailMatters } from "@/components/DetailMatters";
