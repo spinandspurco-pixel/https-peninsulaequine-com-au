@@ -557,34 +557,8 @@
   100% { transform: translateY(200%); opacity: 0; }
 }
 
-@keyframes heroWordReveal {
-  from {
-    opacity: 0;
-    transform: translateY(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
 
-@keyframes lineDraw {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
-}
-
-
-@keyframes clipRevealUp {
-  from { clip-path: inset(100% 0 0 0); }
-  to   { clip-path: inset(0 0 0 0); }
-}
-
-
-@keyframes gentleFloat {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-4px); }
-}
 
 
 /* Reduced motion */
