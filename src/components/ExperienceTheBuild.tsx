@@ -213,10 +213,16 @@ function Synthesis() {
         style={{
           opacity: visible ? 1 : 0,
           transform: visible ? "translateY(0)" : `translateY(${DISTANCE.lg}px)`,
-          transition: `opacity ${DURATION.slow}ms ${EASE.default} 200ms, transform ${DURATION.slow}ms ${EASE.default} 200ms`,
+          transition: `opacity ${DURATION.extended}ms ${EASE.cinematic} 400ms, transform ${DURATION.extended}ms ${EASE.cinematic} 400ms`,
         }}
       >
-        <div className="flex items-center justify-center gap-5 mb-8">
+        <div
+          className="flex items-center justify-center gap-5 mb-8"
+          style={{
+            opacity: visible ? 1 : 0,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 400ms`,
+          }}
+        >
           <div className="w-8 h-px bg-accent/10" />
           <p className="text-[8px] font-mono uppercase tracking-[0.4em] text-accent/15">
             One System
@@ -224,18 +230,34 @@ function Synthesis() {
           <div className="w-8 h-px bg-accent/10" />
         </div>
 
-        <p className="font-serif text-xl sm:text-2xl lg:text-3xl italic text-foreground/45 leading-relaxed tracking-[0.01em] mb-12">
+        <p
+          className="font-serif text-xl sm:text-2xl lg:text-3xl italic text-foreground/45 leading-relaxed tracking-[0.01em] mb-12"
+          style={{
+            opacity: visible ? 1 : 0,
+            transition: `opacity ${DURATION.extended}ms ${EASE.cinematic} 900ms`,
+          }}
+        >
           "Built properly. From the ground up."
         </p>
 
         <button
           onClick={() => navigate("/contact")}
           className="px-10 py-4 border border-accent/15 text-[11px] font-mono uppercase tracking-[0.3em] text-foreground/65 transition-all duration-500 hover:border-accent/30 hover:text-foreground/85 hover:bg-accent/5"
+          style={{
+            opacity: visible ? 1 : 0,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1400ms`,
+          }}
         >
           Start Your Project
         </button>
 
-        <p className="mt-10 text-[9px] font-mono uppercase tracking-[0.3em] text-accent/8 leading-relaxed">
+        <p
+          className="mt-10 text-[9px] font-mono uppercase tracking-[0.3em] text-accent/8 leading-relaxed"
+          style={{
+            opacity: visible ? 1 : 0,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1900ms`,
+          }}
+        >
           Performance held in every layer
         </p>
       </div>

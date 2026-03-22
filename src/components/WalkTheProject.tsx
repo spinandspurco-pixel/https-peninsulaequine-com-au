@@ -278,6 +278,10 @@ function WalkScene({
                       ? "justify-end"
                       : ""
                   }`}
+                  style={{
+                    opacity: visible ? 1 : 0,
+                    transition: `opacity ${DURATION.slow}ms ${EASE.cinematic} ${revealDelay}ms`,
+                  }}
                 >
                   <span className="text-[10px] font-mono tracking-[0.2em] uppercase text-accent/20">
                     {String(index + 1).padStart(2, "0")}
@@ -289,7 +293,14 @@ function WalkScene({
                 </div>
 
                 {/* Quote */}
-                <p className="font-serif text-xl sm:text-2xl lg:text-3xl italic leading-relaxed tracking-[0.01em] text-foreground/55">
+                <p
+                  className="font-serif text-xl sm:text-2xl lg:text-3xl italic leading-relaxed tracking-[0.01em] text-foreground/55"
+                  style={{
+                    opacity: visible ? 1 : 0,
+                    transform: visible ? "translateY(0)" : `translateY(${DISTANCE.sm}px)`,
+                    transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} ${revealDelay + 450}ms, transform ${DURATION.cinematic}ms ${EASE.cinematic} ${revealDelay + 450}ms`,
+                  }}
+                >
                   "{scene.line}"
                 </p>
               </>

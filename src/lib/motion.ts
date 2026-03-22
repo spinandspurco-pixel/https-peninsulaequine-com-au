@@ -16,6 +16,8 @@
 export const EASE = {
   /** Standard cinematic ease — smooth deceleration */
   default: "cubic-bezier(0.22, 1, 0.36, 1)",
+  /** Cinematic ease-in-out for scene transitions */
+  cinematic: "cubic-bezier(0.45, 0, 0.15, 1)",
   /** Slightly snappier for interactive feedback */
   interactive: "cubic-bezier(0.25, 0.8, 0.25, 1)",
   /** Linear for opacity-only fades */
@@ -29,11 +31,15 @@ export const DURATION = {
   /** Standard reveal — section entrance, card fade */
   normal: 450,
   /** Hero-level reveals — heading, cinematic layers */
-  slow: 700,
+  slow: 800,
   /** SVG line drawing, atmospheric fades */
-  cinematic: 1000,
+  cinematic: 1200,
   /** Parallax image transitions */
-  parallax: 600,
+  parallax: 800,
+  /** Scene crossfade — Walk the Build / Timeline */
+  crossfade: 1100,
+  /** Extended hold reveals — structure, arena */
+  extended: 1400,
 } as const;
 
 /* ── Stagger interval (ms) ──────────────────────────── */
@@ -42,16 +48,18 @@ export const STAGGER = {
   card: 100,
   /** Wider stagger for section-level children */
   section: 150,
+  /** Cinematic stagger for scene text reveals */
+  scene: 400,
 } as const;
 
 /* ── Transform distances (px) ───────────────────────── */
 export const DISTANCE = {
   /** Subtle — cards, captions */
-  sm: 8,
+  sm: 6,
   /** Standard — section reveals */
-  md: 14,
+  md: 12,
   /** Hero / cinematic text */
-  lg: 20,
+  lg: 18,
 } as const;
 
 /* ── Reusable inline style builders ─────────────────── */

@@ -275,7 +275,7 @@ function BeforeAfter({ reducedMotion }: { reducedMotion: boolean }) {
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : `translateY(${DISTANCE.md}px)`,
-            transition: `opacity ${DURATION.slow}ms ${EASE.default} 300ms, transform ${DURATION.slow}ms ${EASE.default} 300ms`,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 400ms, transform ${DURATION.cinematic}ms ${EASE.cinematic} 400ms`,
           }}
         >
           <p className="text-[9px] font-mono uppercase tracking-[0.4em] text-accent/20 mb-6">
