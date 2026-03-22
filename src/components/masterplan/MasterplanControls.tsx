@@ -10,34 +10,34 @@ interface Props {
 
 export function MasterplanControls({ buildLayer, onBuildLayerChange, activeFlows, onToggleFlow }: Props) {
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {/* Build layer */}
       <div>
-        <p className="text-[9px] font-mono uppercase tracking-[0.25em] text-accent/20 mb-2.5">Build Layer</p>
+        <p className="text-[8px] font-mono uppercase tracking-[0.3em] text-accent/14 mb-2">Build Layer</p>
         <div className="flex gap-px">
           {buildLayers.map(l => (
             <button
               key={l.id}
               onClick={() => onBuildLayerChange(l.id)}
               className={cn(
-                "flex-1 py-1.5 px-2 text-[10px] font-mono uppercase tracking-[0.12em] transition-opacity duration-300",
+                "flex-1 py-1.5 px-2 text-[9px] font-mono uppercase tracking-[0.14em] transition-opacity duration-300",
                 buildLayer === l.id
-                  ? "text-accent/50 border-b border-accent/20"
-                  : "text-accent/15 border-b border-transparent hover:text-accent/25"
+                  ? "text-accent/40 border-b border-accent/15"
+                  : "text-accent/10 border-b border-transparent hover:text-accent/18"
               )}
             >
               {l.label}
             </button>
           ))}
         </div>
-        <p className="mt-1.5 text-[10px] text-muted-foreground/20 font-mono">
+        <p className="mt-1.5 text-[9px] text-muted-foreground/14 font-mono tracking-[0.04em]">
           {buildLayers.find(l => l.id === buildLayer)?.desc}
         </p>
       </div>
 
       {/* Movement */}
       <div>
-        <p className="text-[9px] font-mono uppercase tracking-[0.25em] text-accent/20 mb-2.5">Movement</p>
+        <p className="text-[8px] font-mono uppercase tracking-[0.3em] text-accent/14 mb-2">Movement</p>
         <div className="flex gap-3">
           {flowPaths.map(f => {
             const isActive = activeFlows.includes(f.id);
@@ -48,16 +48,16 @@ export function MasterplanControls({ buildLayer, onBuildLayerChange, activeFlows
                 className="flex items-center gap-2 transition-opacity duration-300"
               >
                 <div
-                  className="w-3 h-px rounded-full shrink-0"
+                  className="w-2.5 h-px rounded-full shrink-0"
                   style={{
                     backgroundColor: f.color,
-                    opacity: isActive ? 0.5 : 0.15,
+                    opacity: isActive ? 0.4 : 0.1,
                     transition: "opacity 300ms ease",
                   }}
                 />
                 <span className={cn(
-                  "text-[10px] font-mono uppercase tracking-[0.1em] transition-colors duration-300",
-                  isActive ? "text-accent/40" : "text-accent/15"
+                  "text-[9px] font-mono uppercase tracking-[0.12em] transition-colors duration-300",
+                  isActive ? "text-accent/30" : "text-accent/10"
                 )}>
                   {f.label}
                 </span>
