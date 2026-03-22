@@ -176,8 +176,7 @@ function ExperienceHero() {
             transition: `opacity ${DURATION.slow}ms ${EASE.default} 700ms`,
           }}
         >
-          Architecture, movement, and construction intelligence — resolved as
-          one system.
+          Architecture. Movement. Construction. One system.
         </p>
       </div>
     </div>
@@ -226,7 +225,7 @@ function Synthesis() {
         </div>
 
         <p className="font-serif text-xl sm:text-2xl lg:text-3xl italic text-foreground/45 leading-relaxed tracking-[0.01em] mb-12">
-          "Planned to move. Engineered to last. Built to perform."
+          "Built properly. From the ground up."
         </p>
 
         <button
@@ -237,7 +236,7 @@ function Synthesis() {
         </button>
 
         <p className="mt-10 text-[9px] font-mono uppercase tracking-[0.3em] text-accent/8 leading-relaxed">
-          Every movement resolved before the first post goes in.
+          Performance held in every layer
         </p>
       </div>
     </div>

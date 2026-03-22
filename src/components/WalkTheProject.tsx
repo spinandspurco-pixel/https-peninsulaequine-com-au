@@ -31,7 +31,7 @@ const scenes: Scene[] = [
   {
     id: "arrival",
     label: "Arrival",
-    line: "A property shaped by movement.",
+    line: "A property shaped by movement",
     image: imgArrival,
     brightness: 0.7,
     scale: 1.08,
@@ -40,8 +40,8 @@ const scenes: Scene[] = [
   },
   {
     id: "entry",
-    label: "Entry Logic",
-    line: "Every path resolved before it's built.",
+    label: "Entry",
+    line: "Paths resolved before use",
     image: imgEntry,
     brightness: 0.72,
     scale: 1.06,
@@ -51,7 +51,7 @@ const scenes: Scene[] = [
   {
     id: "courtyard",
     label: "Courtyard",
-    line: "Everything connects here.",
+    line: "Everything connects here",
     image: imgCourtyard,
     brightness: 0.78,
     scale: 1.06,
@@ -60,8 +60,8 @@ const scenes: Scene[] = [
   },
   {
     id: "stables",
-    label: "Stable Function",
-    line: "Daily function. Simplified.",
+    label: "Stable Wing",
+    line: "Daily function. Simplified",
     image: imgStables,
     brightness: 0.76,
     scale: 1.05,
@@ -71,7 +71,7 @@ const scenes: Scene[] = [
   {
     id: "structure",
     label: "Structure",
-    line: "What you don't see is what lasts.",
+    line: "What carries the load",
     image: imgStructure,
     brightness: 0.82,
     scale: 1.07,
@@ -80,8 +80,8 @@ const scenes: Scene[] = [
   },
   {
     id: "corridor",
-    label: "Arena Connection",
-    line: "Built for flow. Not interruption.",
+    label: "Connection",
+    line: "No interruption in flow",
     image: imgCorridor,
     brightness: 0.8,
     scale: 1.06,
@@ -91,7 +91,7 @@ const scenes: Scene[] = [
   {
     id: "arena",
     label: "Arena",
-    line: "Consistency, under load.",
+    line: "Consistency, under load",
     image: imgArena,
     brightness: 0.88,
     scale: 1.09,
@@ -101,7 +101,7 @@ const scenes: Scene[] = [
   {
     id: "viewing",
     label: "Viewing Loft",
-    line: "Where the system becomes visible.",
+    line: "The system, understood",
     image: imgLoft,
     brightness: 0.72,
     scale: 1.05,
@@ -110,8 +110,8 @@ const scenes: Scene[] = [
   },
   {
     id: "system",
-    label: "System",
-    line: "Built properly. From the ground up.",
+    label: "Whole System",
+    line: "Every element aligned",
     image: imgDusk,
     brightness: 0.68,
     scale: 1.04,
@@ -256,15 +256,15 @@ function WalkScene({
             {isCTA ? (
               /* ── CTA Scene ── */
               <div className="flex flex-col items-center gap-8">
-                <p className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.5em] text-accent/25">
-                  Main Ridge Estate
-                </p>
                 <button
                   onClick={() => navigate("/contact")}
                   className="px-8 py-3.5 border border-accent/15 text-[11px] font-mono uppercase tracking-[0.3em] text-foreground/70 transition-all duration-500 hover:border-accent/30 hover:text-foreground/90 hover:bg-accent/5"
                 >
                   Start Your Project
                 </button>
+                <p className="text-[9px] font-mono uppercase tracking-[0.3em] text-accent/12">
+                  Limited builds each year
+                </p>
               </div>
             ) : (
               /* ── Narrative Scene ── */
@@ -382,10 +382,10 @@ export function WalkTheProject() {
           <div className="w-10 h-px bg-accent/15" />
         </div>
         <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/85 tracking-[0.04em]">
-          Main Ridge Estate
+          Walk the Build
         </h2>
         <p className="mt-4 text-[11px] sm:text-[12px] text-muted-foreground/25 font-serif italic max-w-xs mx-auto leading-relaxed tracking-[0.02em]">
-          A guided sequence through design, structure, and resolution.
+          A guided sequence through space, structure, and resolution
         </p>
       </div>
 

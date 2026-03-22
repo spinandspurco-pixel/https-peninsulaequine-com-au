@@ -28,7 +28,7 @@ const phases: Phase[] = [
     id: "site-prep",
     label: "Site Preparation",
     step: "01",
-    line: "Everything starts below the surface.",
+    line: "Starts below the surface",
     image: imgSitePrep,
     brightness: 0.72,
     scale: 1.06,
@@ -38,7 +38,7 @@ const phases: Phase[] = [
     id: "groundlock",
     label: "Ground System",
     step: "02",
-    line: "Stability isn't added later. It's built in.",
+    line: "Stability, locked in early",
     image: imgGroundlock,
     brightness: 0.78,
     scale: 1.05,
@@ -48,7 +48,7 @@ const phases: Phase[] = [
     id: "structure",
     label: "Structure",
     step: "03",
-    line: "Every load accounted for.",
+    line: "Load paths defined",
     image: imgStructure,
     brightness: 0.82,
     scale: 1.07,
@@ -58,7 +58,7 @@ const phases: Phase[] = [
     id: "envelope",
     label: "Envelope",
     step: "04",
-    line: "The structure takes shape.",
+    line: "Form takes shape",
     image: imgEnvelope,
     brightness: 0.75,
     scale: 1.06,
@@ -68,7 +68,7 @@ const phases: Phase[] = [
     id: "finished",
     label: "Finished System",
     step: "05",
-    line: "Performance, built into every layer.",
+    line: "Ready for use. Built to last",
     image: imgFinished,
     brightness: 0.68,
     scale: 1.04,
@@ -275,7 +275,7 @@ function BeforeAfter({ reducedMotion }: { reducedMotion: boolean }) {
             {showAfter ? "After" : "Before"}
           </p>
           <p className="font-serif text-xl sm:text-2xl italic text-foreground/50 leading-relaxed mb-8">
-            "From raw ground to resolved system."
+            "Ground to system"
           </p>
 
           {/* Toggle */}
@@ -384,10 +384,10 @@ export function BuildTimeline() {
           <div className="w-10 h-px bg-accent/15" />
         </div>
         <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/85 tracking-[0.04em]">
-          From Ground to System
+          Construction Sequence
         </h2>
         <p className="mt-4 text-[11px] sm:text-[12px] text-muted-foreground/25 font-serif italic max-w-xs mx-auto leading-relaxed tracking-[0.02em]">
-          How Main Ridge was engineered, layer by layer.
+          Engineered layer by layer
         </p>
       </div>
 
@@ -413,7 +413,7 @@ export function BuildTimeline() {
       {/* Authority close */}
       <div className="py-20 sm:py-28 text-center">
         <p className="text-[9px] font-mono uppercase tracking-[0.3em] text-accent/12 leading-relaxed">
-          Built properly. From the ground up.
+          Performance held in every layer
         </p>
       </div>
     </section>
