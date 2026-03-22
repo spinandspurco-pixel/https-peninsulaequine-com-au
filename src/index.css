@@ -321,24 +321,8 @@
 
 
 
-  .card-interactive:hover {
-    @apply -translate-y-0.5;
-    box-shadow: 0 0 30px -10px hsl(var(--accent) / 0.12),
-                0 0 0 1px hsl(var(--accent) / 0.06);
-  }
-  .card-interactive:active {
-    @apply translate-y-0;
-  }
 
-  .border-glow::before {
-    content: '';
-    @apply absolute inset-0 rounded-[inherit] opacity-0 transition-opacity duration-500 pointer-events-none;
-    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.3),
-                0 0 20px -4px hsl(var(--accent) / 0.2);
-  }
-  .border-glow:hover::before {
-    @apply opacity-100;
-  }
+
 
   .input-glow {
     @apply transition-all duration-500;
