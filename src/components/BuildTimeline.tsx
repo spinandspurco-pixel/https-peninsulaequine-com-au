@@ -244,7 +244,7 @@ function BeforeAfter({ reducedMotion }: { reducedMotion: boolean }) {
         className="absolute inset-0"
         style={{
           opacity: showAfter ? 1 : 0,
-          transition: `opacity ${reducedMotion ? 300 : 1400}ms ${EASE.default}`,
+          transition: `opacity ${reducedMotion ? 300 : 1200}ms ${EASE.cinematic}`,
         }}
       >
         <img
