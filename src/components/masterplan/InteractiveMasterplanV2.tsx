@@ -70,26 +70,26 @@ function useIsTouchDevice() {
 /* ── Mobile zone list ── */
 function MobileZoneList({ activeZone, onTap }: { activeZone: string | null; onTap: (id: string) => void }) {
   return (
-    <div className="space-y-1 mt-6">
+    <div className="space-y-0.5 mt-6">
       {zones.map(z => {
         const isActive = activeZone === z.id;
         return (
           <button
             key={z.id}
             onClick={() => onTap(z.id)}
-            className={`w-full text-left py-3 px-4 transition-opacity duration-300 ${
-              isActive ? "opacity-100" : "opacity-40"
+            className={`w-full text-left py-2.5 px-4 transition-opacity duration-300 ${
+              isActive ? "opacity-100" : "opacity-35"
             }`}
           >
             <div className="flex items-center gap-3">
-              <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-accent/30 w-14 shrink-0">{z.shortLabel}</span>
-              <div className="w-3 h-px bg-accent/10" />
-              <span className={`text-[11px] font-serif italic text-muted-foreground/30 transition-colors duration-300 ${isActive ? "text-foreground/50" : ""}`}>
+              <span className="text-[8px] font-mono uppercase tracking-[0.25em] text-accent/22 w-14 shrink-0">{z.shortLabel}</span>
+              <div className="w-2.5 h-px bg-accent/8" />
+              <span className={`text-[10px] font-serif italic text-muted-foreground/22 transition-colors duration-300 ${isActive ? "text-foreground/40" : ""}`}>
                 {z.tagline}
               </span>
             </div>
             {isActive && (
-              <p className="mt-2 ml-[4.5rem] text-[11px] text-muted-foreground/25 font-serif leading-relaxed">
+              <p className="mt-1.5 ml-[4.5rem] text-[10px] text-muted-foreground/18 font-serif leading-relaxed">
                 {z.description}
               </p>
             )}
@@ -210,16 +210,16 @@ export function InteractiveMasterplan() {
       <div className="section-container relative z-10">
         {/* Header */}
         <RevealOnScroll direction="up" duration={DURATION.normal}>
-          <div className="text-center mb-14 sm:mb-20">
+          <div className="text-center mb-16 sm:mb-22">
             <div className="flex items-center justify-center gap-5 mb-5">
-              <div className="w-8 h-px bg-accent/20" />
-              <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/30 font-mono">Masterplan</p>
-              <div className="w-8 h-px bg-accent/20" />
+              <div className="w-6 h-px bg-accent/12" />
+              <p className="text-[8px] sm:text-[9px] uppercase tracking-[0.5em] text-accent/18 font-mono">Masterplan</p>
+              <div className="w-6 h-px bg-accent/12" />
             </div>
-            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/85 tracking-[0.03em] leading-tight">
+            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/75 tracking-[0.04em] leading-tight">
               The Layout Defines Everything
             </h2>
-            <p className="mt-4 text-sm text-muted-foreground/30 font-serif italic max-w-md mx-auto leading-relaxed">
+            <p className="mt-4 text-[13px] text-muted-foreground/22 font-serif italic max-w-sm mx-auto leading-relaxed tracking-[0.02em]">
               Consistency is designed long before it is ridden.
             </p>
           </div>
@@ -261,7 +261,7 @@ export function InteractiveMasterplan() {
             </div>
 
             {/* Right panel */}
-            <div className="lg:col-span-4 flex flex-col justify-start pt-4 lg:pt-8">
+            <div className="lg:col-span-4 flex flex-col justify-start pt-4 lg:pt-10">
               {/* Idle state */}
               <div
                 style={{
@@ -271,15 +271,15 @@ export function InteractiveMasterplan() {
                   transition: `opacity ${DURATION.normal}ms ${EASE.default}`,
                 }}
               >
-                <p className="text-[11px] font-mono uppercase tracking-[0.25em] text-accent/20 mb-4">
+                <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/15 mb-4">
                   {isTouch ? "Tap a zone" : "Hover to explore"}
                 </p>
                 {!tourActive && (
                   <button
                     onClick={startTour}
-                    className="group flex items-center gap-3 text-[11px] font-mono uppercase tracking-[0.2em] text-accent/25 transition-opacity duration-300 hover:text-accent/40"
+                    className="group flex items-center gap-3 text-[10px] font-mono uppercase tracking-[0.25em] text-accent/18 transition-opacity duration-300 hover:text-accent/30"
                   >
-                    <span className="w-5 h-px bg-accent/15 group-hover:bg-accent/30 transition-colors duration-300" />
+                    <span className="w-4 h-px bg-accent/10 group-hover:bg-accent/20 transition-colors duration-300" />
                     Explore the Ridge
                   </button>
                 )}
@@ -327,7 +327,7 @@ export function InteractiveMasterplan() {
               )}
 
               {/* Controls */}
-              <div className="mt-8 pt-5 border-t border-border/15">
+              <div className="mt-8 pt-4 border-t border-border/8">
                 <MasterplanControls
                   buildLayer={buildLayer}
                   onBuildLayerChange={setBuildLayer}
@@ -336,9 +336,9 @@ export function InteractiveMasterplan() {
                 />
               </div>
 
-              {/* Authority micro-moment */}
-              <p className="mt-8 text-[10px] font-mono text-accent/12 tracking-[0.15em] uppercase leading-relaxed">
-                Built to perform. Planned to last.
+              {/* Authority */}
+              <p className="mt-8 text-[9px] font-mono text-accent/8 tracking-[0.2em] uppercase leading-relaxed">
+                Every movement resolved before the first post goes in.
               </p>
             </div>
           </div>
