@@ -197,7 +197,7 @@ function WalkScene({
           transform: reducedMotion
             ? `scale(${scene.scale})`
             : `translateY(${parallaxY}px) scale(${scene.scale})`,
-          transition: `transform ${DURATION.parallax}ms ${EASE.default}`,
+          transition: `transform ${DURATION.parallax}ms ${EASE.cinematic}`,
         }}
       >
         <img
