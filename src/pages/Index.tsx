@@ -244,7 +244,7 @@ export default function Index() {
           <div className="w-px h-14 bg-accent/8 relative overflow-hidden">
             <div
               className="absolute top-0 w-full h-4 bg-accent/25"
-              style={{ animation: "scrollPulse 3s ease-in-out infinite 5.8s" }}
+              style={{ animation: "scrollPulse 3s ease-in-out infinite 5.4s" }}
             />
           </div>
         </div>
