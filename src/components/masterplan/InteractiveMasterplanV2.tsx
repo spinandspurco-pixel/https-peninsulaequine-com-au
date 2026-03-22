@@ -191,7 +191,8 @@ export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onLayerToggle 
 
   const toggleFlow = useCallback((id: string) => {
     setActiveFlows(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
-  }, []);
+    onLayerToggle?.();
+  }, [onLayerToggle]);
 
   /* ── Entrance ── */
   const sectionRef = useRef<HTMLElement>(null);
