@@ -25,7 +25,8 @@ interface Props {
 
 export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLeave, onTap }: Props) {
   const ls = layerStyles[buildLayer];
-  const T = "400ms";
+  const T = "500ms";
+  const T_EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
   const isViewing = activeZone === "viewing-loft";
 
   return (
