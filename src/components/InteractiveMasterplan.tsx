@@ -583,13 +583,24 @@ export function InteractiveMasterplan() {
             willChange: "opacity",
           }}
         >
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-0 items-start">
             <div className="lg:col-span-8 flex justify-center overflow-hidden rounded-sm">
               <CameraWrapper activeZone={activeZone}>
                 <SitePlan activeZone={activeZone} onHover={handleHover} onLeave={handleLeave} onTap={handleTap} />
               </CameraWrapper>
             </div>
-            <div className="lg:col-span-4 flex flex-col justify-start pt-4 lg:pt-10">
+            {/* Architectural connector line */}
+            <div className="hidden lg:flex items-stretch justify-center">
+              <div
+                className="w-px"
+                style={{
+                  background: `linear-gradient(to bottom, transparent 10%, hsl(var(--accent) / ${activeZone ? 0.12 : 0.04}) 30%, hsl(var(--accent) / ${activeZone ? 0.12 : 0.04}) 70%, transparent 90%)`,
+                  transition: "background 450ms cubic-bezier(0.25, 0.1, 0.25, 1)",
+                  minHeight: "200px",
+                }}
+              />
+            </div>
+            <div className="lg:col-span-3 flex flex-col justify-start pt-4 lg:pt-10">
               {/* Idle state / tour trigger */}
               <div
                 style={{
