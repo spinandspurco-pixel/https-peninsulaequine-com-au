@@ -445,7 +445,7 @@ export function ExperienceTheBuild() {
       </div>
 
       {/* Final synthesis */}
-      <Synthesis />
+      <Synthesis onPressTone={playPressTone} />
     </div>
   );
 }
