@@ -646,9 +646,10 @@ export function InteractiveMasterplan() {
                         <div
                           className="absolute inset-y-0 left-0 rounded-full"
                           style={{
-                            width: idx < tourStep ? "100%" : idx === tourStep ? "100%" : "0%",
+                            transform: idx < tourStep ? "scaleX(1)" : idx === tourStep ? "scaleX(1)" : "scaleX(0)",
+                            transformOrigin: "left",
                             background: idx <= tourStep ? "hsl(var(--accent) / 0.3)" : "transparent",
-                            transition: "width 350ms ease, background 350ms ease",
+                            transition: `transform ${DURATION.normal}ms ${EASE.default}, background ${DURATION.normal}ms ${EASE.default}`,
                           }}
                         />
                       </button>
