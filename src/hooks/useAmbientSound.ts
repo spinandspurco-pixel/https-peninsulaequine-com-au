@@ -2,10 +2,18 @@
  * Procedural ambient sound engine for Experience the Build.
  *
  * Uses Web Audio API to generate continuous, non-looping
- * atmospheric textures that respond to scroll position.
+ * atmospheric textures that respond to scroll position and interaction.
  *
- * All sound is OFF by default. Crossfades between scenes
- * use 700ms gain ramps for smooth transitions.
+ * All sound is OFF by default. Asymmetric crossfades between scenes:
+ * outgoing fades faster (~450ms), incoming fades slower (~800ms).
+ *
+ * Four priority levels control volume by scene type:
+ *   L1 (near silence): masterplan, viewing, synthesis
+ *   L2 (light): arrival, entry, courtyard
+ *   L3 (moderate): stables, arena
+ *   L4 (emphasis): structure reveal, ground system
+ *
+ * Slow ambient modulation (8–12s cycles) prevents loop perception.
  */
 
 import { useRef, useCallback, useEffect, useState } from "react";
@@ -33,57 +41,72 @@ export type AmbientScene =
   | "silent";
 
 interface SceneProfile {
-  /** Base volume 0–1 (will be scaled by master) */
   volume: number;
-  /** Wind noise level */
   wind: number;
-  /** Low tonal hum level */
   hum: number;
-  /** Hum frequency */
   humFreq: number;
-  /** High-pass filter cutoff for wind (higher = thinner) */
   windHighpass: number;
-  /** Low-pass filter cutoff for wind (lower = muffled) */
   windLowpass: number;
-  /** Resonance tone level */
   resonance: number;
-  /** Resonance frequency */
   resonanceFreq: number;
 }
 
 const MASTER_VOLUME = 0.12;
-const FADE_MS = 700;
 
+/* Asymmetric fade durations */
+const FADE_OUT_MS = 450;
+const FADE_IN_MS = 800;
+
+/*
+ * Priority mixing levels:
+ *   L1 ≈ 0.18–0.25   (near silence)
+ *   L2 ≈ 0.35–0.45   (light ambient)
+ *   L3 ≈ 0.50–0.55   (moderate)
+ *   L4 ≈ 0.60–0.65   (emphasis moments)
+ */
 const profiles: Record<AmbientScene, SceneProfile> = {
-  hero:              { volume: 0.6, wind: 0.5,  hum: 0,    humFreq: 80,  windHighpass: 200, windLowpass: 2000, resonance: 0,    resonanceFreq: 220 },
-  masterplan:        { volume: 0.35, wind: 0.4, hum: 0,    humFreq: 80,  windHighpass: 300, windLowpass: 1800, resonance: 0,    resonanceFreq: 220 },
-  "walk-arrival":    { volume: 0.6, wind: 0.6,  hum: 0,    humFreq: 80,  windHighpass: 150, windLowpass: 2200, resonance: 0,    resonanceFreq: 220 },
-  "walk-entry":      { volume: 0.5, wind: 0.35, hum: 0,    humFreq: 80,  windHighpass: 400, windLowpass: 1600, resonance: 0.15, resonanceFreq: 180 },
-  "walk-courtyard":  { volume: 0.5, wind: 0.3,  hum: 0,    humFreq: 80,  windHighpass: 250, windLowpass: 1800, resonance: 0.1,  resonanceFreq: 200 },
-  "walk-stables":    { volume: 0.45, wind: 0.2, hum: 0.08, humFreq: 90,  windHighpass: 350, windLowpass: 1400, resonance: 0.12, resonanceFreq: 165 },
-  "walk-structure":  { volume: 0.55, wind: 0.15,hum: 0.2,  humFreq: 65,  windHighpass: 300, windLowpass: 1200, resonance: 0.08, resonanceFreq: 130 },
-  "walk-corridor":   { volume: 0.45, wind: 0.25,hum: 0.05, humFreq: 75,  windHighpass: 300, windLowpass: 1500, resonance: 0.1,  resonanceFreq: 175 },
-  "walk-arena":      { volume: 0.55, wind: 0.45,hum: 0,    humFreq: 80,  windHighpass: 150, windLowpass: 2400, resonance: 0,    resonanceFreq: 220 },
-  "walk-viewing":    { volume: 0.3, wind: 0.2,  hum: 0,    humFreq: 80,  windHighpass: 400, windLowpass: 1600, resonance: 0,    resonanceFreq: 220 },
-  "walk-system":     { volume: 0.45, wind: 0.35,hum: 0.06, humFreq: 70,  windHighpass: 200, windLowpass: 2000, resonance: 0.05, resonanceFreq: 200 },
-  "walk-cta":        { volume: 0.3, wind: 0.25, hum: 0,    humFreq: 80,  windHighpass: 300, windLowpass: 1800, resonance: 0,    resonanceFreq: 220 },
-  "timeline-site":   { volume: 0.5, wind: 0.3,  hum: 0.05, humFreq: 55,  windHighpass: 200, windLowpass: 1800, resonance: 0.1,  resonanceFreq: 140 },
-  "timeline-ground": { volume: 0.45, wind: 0.2, hum: 0.12, humFreq: 60,  windHighpass: 300, windLowpass: 1400, resonance: 0.15, resonanceFreq: 120 },
-  "timeline-structure":{ volume: 0.5, wind: 0.15,hum: 0.1, humFreq: 70,  windHighpass: 350, windLowpass: 1200, resonance: 0.2,  resonanceFreq: 155 },
-  "timeline-envelope": { volume: 0.45, wind: 0.35,hum: 0,  humFreq: 80,  windHighpass: 200, windLowpass: 2000, resonance: 0.05, resonanceFreq: 200 },
-  "timeline-finished": { volume: 0.5, wind: 0.4, hum: 0,   humFreq: 80,  windHighpass: 200, windLowpass: 2200, resonance: 0,    resonanceFreq: 220 },
-  synthesis:         { volume: 0.35, wind: 0.3, hum: 0,    humFreq: 80,  windHighpass: 300, windLowpass: 1800, resonance: 0,    resonanceFreq: 220 },
-  silent:            { volume: 0,   wind: 0,    hum: 0,    humFreq: 80,  windHighpass: 300, windLowpass: 1800, resonance: 0,    resonanceFreq: 220 },
+  // L2 — light
+  hero:                { volume: 0.40, wind: 0.45, hum: 0,    humFreq: 80,  windHighpass: 200, windLowpass: 2000, resonance: 0,    resonanceFreq: 220 },
+  // L1 — near silence
+  masterplan:          { volume: 0.20, wind: 0.25, hum: 0,    humFreq: 80,  windHighpass: 350, windLowpass: 1600, resonance: 0,    resonanceFreq: 220 },
+  // L2
+  "walk-arrival":      { volume: 0.42, wind: 0.50, hum: 0,    humFreq: 80,  windHighpass: 150, windLowpass: 2200, resonance: 0,    resonanceFreq: 220 },
+  "walk-entry":        { volume: 0.38, wind: 0.30, hum: 0,    humFreq: 80,  windHighpass: 400, windLowpass: 1600, resonance: 0.08, resonanceFreq: 180 },
+  "walk-courtyard":    { volume: 0.40, wind: 0.28, hum: 0,    humFreq: 80,  windHighpass: 250, windLowpass: 1800, resonance: 0.06, resonanceFreq: 200 },
+  // L3
+  "walk-stables":      { volume: 0.50, wind: 0.20, hum: 0.08, humFreq: 90,  windHighpass: 350, windLowpass: 1400, resonance: 0.10, resonanceFreq: 165 },
+  // L4 — emphasis
+  "walk-structure":    { volume: 0.62, wind: 0.15, hum: 0.22, humFreq: 65,  windHighpass: 300, windLowpass: 1200, resonance: 0.12, resonanceFreq: 130 },
+  // L2
+  "walk-corridor":     { volume: 0.38, wind: 0.22, hum: 0.04, humFreq: 75,  windHighpass: 300, windLowpass: 1500, resonance: 0.08, resonanceFreq: 175 },
+  // L3
+  "walk-arena":        { volume: 0.52, wind: 0.42, hum: 0,    humFreq: 80,  windHighpass: 150, windLowpass: 2400, resonance: 0,    resonanceFreq: 220 },
+  // L1
+  "walk-viewing":      { volume: 0.22, wind: 0.15, hum: 0,    humFreq: 80,  windHighpass: 400, windLowpass: 1600, resonance: 0,    resonanceFreq: 220 },
+  // L2
+  "walk-system":       { volume: 0.38, wind: 0.30, hum: 0.05, humFreq: 70,  windHighpass: 200, windLowpass: 2000, resonance: 0.04, resonanceFreq: 200 },
+  "walk-cta":          { volume: 0.25, wind: 0.20, hum: 0,    humFreq: 80,  windHighpass: 300, windLowpass: 1800, resonance: 0,    resonanceFreq: 220 },
+  // L2
+  "timeline-site":     { volume: 0.42, wind: 0.28, hum: 0.05, humFreq: 55,  windHighpass: 200, windLowpass: 1800, resonance: 0.08, resonanceFreq: 140 },
+  // L4 — emphasis
+  "timeline-ground":   { volume: 0.60, wind: 0.18, hum: 0.15, humFreq: 60,  windHighpass: 300, windLowpass: 1400, resonance: 0.18, resonanceFreq: 120 },
+  // L4
+  "timeline-structure":{ volume: 0.62, wind: 0.14, hum: 0.12, humFreq: 70,  windHighpass: 350, windLowpass: 1200, resonance: 0.22, resonanceFreq: 155 },
+  // L2
+  "timeline-envelope": { volume: 0.40, wind: 0.32, hum: 0,    humFreq: 80,  windHighpass: 200, windLowpass: 2000, resonance: 0.04, resonanceFreq: 200 },
+  "timeline-finished": { volume: 0.42, wind: 0.35, hum: 0,    humFreq: 80,  windHighpass: 200, windLowpass: 2200, resonance: 0,    resonanceFreq: 220 },
+  // L1
+  synthesis:           { volume: 0.18, wind: 0.20, hum: 0,    humFreq: 80,  windHighpass: 350, windLowpass: 1600, resonance: 0,    resonanceFreq: 220 },
+  silent:              { volume: 0,    wind: 0,    hum: 0,    humFreq: 80,  windHighpass: 300, windLowpass: 1800, resonance: 0,    resonanceFreq: 220 },
 };
 
-/* ── Noise buffer generator ─────────────────────────── */
-function createNoiseBuffer(ctx: AudioContext, seconds = 4): AudioBuffer {
+/* ── Noise buffer generator (Brownian) ──────────────── */
+function createNoiseBuffer(ctx: AudioContext, seconds = 6): AudioBuffer {
   const sr = ctx.sampleRate;
   const length = sr * seconds;
   const buffer = ctx.createBuffer(1, length, sr);
   const data = buffer.getChannelData(0);
 
-  // Brownian noise for natural wind texture
   let last = 0;
   for (let i = 0; i < length; i++) {
     const white = Math.random() * 2 - 1;
@@ -105,6 +128,13 @@ export function useAmbientSound() {
   const humGainRef = useRef<GainNode | null>(null);
   const resOscRef = useRef<OscillatorNode | null>(null);
   const resGainRef = useRef<GainNode | null>(null);
+  /* Modulation LFO for wind variation */
+  const modLfoRef = useRef<OscillatorNode | null>(null);
+  const modGainRef = useRef<GainNode | null>(null);
+  /* Interaction tone oscillator */
+  const interOscRef = useRef<OscillatorNode | null>(null);
+  const interGainRef = useRef<GainNode | null>(null);
+
   const initRef = useRef(false);
   const [enabled, setEnabled] = useState(false);
   const currentScene = useRef<AmbientScene>("silent");
@@ -151,6 +181,20 @@ export function useAmbientSound() {
     noiseGain.connect(master);
     source.start();
 
+    // Slow modulation LFO for wind variation (8–12s cycle)
+    const modLfo = ctx.createOscillator();
+    modLfo.type = "sine";
+    modLfo.frequency.value = 0.1; // ~10s cycle
+    modLfoRef.current = modLfo;
+
+    const modGain = ctx.createGain();
+    modGain.gain.value = 60; // modulates lowpass ±60Hz
+    modGainRef.current = modGain;
+
+    modLfo.connect(modGain);
+    modGain.connect(lp.frequency);
+    modLfo.start();
+
     // Hum oscillator
     const humOsc = ctx.createOscillator();
     humOsc.type = "sine";
@@ -178,12 +222,28 @@ export function useAmbientSound() {
     resOsc.connect(resGain);
     resGain.connect(master);
     resOsc.start();
+
+    // Interaction tone oscillator (high-frequency, very quiet)
+    const interOsc = ctx.createOscillator();
+    interOsc.type = "sine";
+    interOsc.frequency.value = 2800;
+    interOscRef.current = interOsc;
+
+    const interGain = ctx.createGain();
+    interGain.gain.value = 0;
+    interGainRef.current = interGain;
+
+    interOsc.connect(interGain);
+    interGain.connect(master);
+    interOsc.start();
   }, []);
 
+  /* Asymmetric ramp: specify fade direction */
   const rampTo = useCallback(
-    (param: AudioParam, value: number, ms = FADE_MS) => {
+    (param: AudioParam, value: number, direction: "in" | "out" | "neutral" = "neutral") => {
       const ctx = ctxRef.current;
       if (!ctx) return;
+      const ms = direction === "out" ? FADE_OUT_MS : direction === "in" ? FADE_IN_MS : (value > param.value ? FADE_IN_MS : FADE_OUT_MS);
       param.cancelScheduledValues(ctx.currentTime);
       param.setValueAtTime(param.value, ctx.currentTime);
       param.linearRampToValueAtTime(value, ctx.currentTime + ms / 1000);
@@ -191,52 +251,116 @@ export function useAmbientSound() {
     []
   );
 
+  const applyProfile = useCallback(
+    (p: SceneProfile) => {
+      if (!ctxRef.current) return;
+      const vol = p.volume * MASTER_VOLUME;
+
+      // Master volume uses asymmetric fading
+      const currentVol = masterGainRef.current!.gain.value;
+      rampTo(masterGainRef.current!.gain, vol, vol > currentVol ? "in" : "out");
+
+      // Wind: outgoing layers fade fast, incoming layers fade slow
+      const currentWind = noiseGainRef.current!.gain.value;
+      rampTo(noiseGainRef.current!.gain, p.wind, p.wind > currentWind ? "in" : "out");
+
+      rampTo(highpassRef.current!.frequency, p.windHighpass, "in");
+      rampTo(lowpassRef.current!.frequency, p.windLowpass, "in");
+
+      const currentHum = humGainRef.current!.gain.value;
+      rampTo(humGainRef.current!.gain, p.hum, p.hum > currentHum ? "in" : "out");
+      rampTo(humOscRef.current!.frequency, p.humFreq, "in");
+
+      const currentRes = resGainRef.current!.gain.value;
+      rampTo(resGainRef.current!.gain, p.resonance, p.resonance > currentRes ? "in" : "out");
+      rampTo(resOscRef.current!.frequency, p.resonanceFreq, "in");
+    },
+    [rampTo]
+  );
+
   const transitionTo = useCallback(
     (scene: AmbientScene) => {
       currentScene.current = scene;
-      const p = profiles[scene];
-      const ctx = ctxRef.current;
-      if (!ctx || !enabled) return;
-
-      const vol = p.volume * MASTER_VOLUME;
-      rampTo(masterGainRef.current!.gain, vol);
-      rampTo(noiseGainRef.current!.gain, p.wind);
-      rampTo(highpassRef.current!.frequency, p.windHighpass);
-      rampTo(lowpassRef.current!.frequency, p.windLowpass);
-      rampTo(humGainRef.current!.gain, p.hum);
-      rampTo(humOscRef.current!.frequency, p.humFreq);
-      rampTo(resGainRef.current!.gain, p.resonance);
-      rampTo(resOscRef.current!.frequency, p.resonanceFreq);
+      if (!ctxRef.current || !enabled) return;
+      applyProfile(profiles[scene]);
     },
-    [enabled, rampTo]
+    [enabled, applyProfile]
   );
+
+  /* ── Interaction micro-tones ───────────────────────── */
+
+  /** Hover tone: very soft high-frequency ping, ~200ms */
+  const playHoverTone = useCallback(() => {
+    const ctx = ctxRef.current;
+    if (!ctx || !enabled || !interGainRef.current) return;
+    const g = interGainRef.current.gain;
+    g.cancelScheduledValues(ctx.currentTime);
+    g.setValueAtTime(0, ctx.currentTime);
+    g.linearRampToValueAtTime(0.04, ctx.currentTime + 0.06);
+    g.linearRampToValueAtTime(0, ctx.currentTime + 0.2);
+  }, [enabled]);
+
+  /** Hover end: ensure tone fades */
+  const stopHoverTone = useCallback(() => {
+    const ctx = ctxRef.current;
+    if (!ctx || !interGainRef.current) return;
+    const g = interGainRef.current.gain;
+    g.cancelScheduledValues(ctx.currentTime);
+    g.setValueAtTime(g.value, ctx.currentTime);
+    g.linearRampToValueAtTime(0, ctx.currentTime + 0.15);
+  }, []);
+
+  /** Layer toggle: subtle tonal shift ~150ms */
+  const playToggleTone = useCallback(() => {
+    const ctx = ctxRef.current;
+    if (!ctx || !enabled || !interOscRef.current || !interGainRef.current) return;
+    const osc = interOscRef.current;
+    const g = interGainRef.current.gain;
+    // Briefly shift frequency for tonal character
+    osc.frequency.setValueAtTime(3200, ctx.currentTime);
+    osc.frequency.linearRampToValueAtTime(2800, ctx.currentTime + 0.15);
+    g.cancelScheduledValues(ctx.currentTime);
+    g.setValueAtTime(0, ctx.currentTime);
+    g.linearRampToValueAtTime(0.025, ctx.currentTime + 0.04);
+    g.linearRampToValueAtTime(0, ctx.currentTime + 0.15);
+  }, [enabled]);
+
+  /** Button press: low-pressure tone, not a click */
+  const playPressTone = useCallback(() => {
+    const ctx = ctxRef.current;
+    if (!ctx || !enabled || !interOscRef.current || !interGainRef.current) return;
+    const osc = interOscRef.current;
+    const g = interGainRef.current.gain;
+    osc.frequency.setValueAtTime(440, ctx.currentTime);
+    osc.frequency.linearRampToValueAtTime(380, ctx.currentTime + 0.2);
+    g.cancelScheduledValues(ctx.currentTime);
+    g.setValueAtTime(0, ctx.currentTime);
+    g.linearRampToValueAtTime(0.03, ctx.currentTime + 0.05);
+    g.linearRampToValueAtTime(0, ctx.currentTime + 0.25);
+  }, [enabled]);
+
+  /** Intro handoff: begin ambient wind before UI appears */
+  const beginIntroHandoff = useCallback(() => {
+    if (!ctxRef.current || !enabled) return;
+    // Start with hero-level wind, seamless into first scene
+    applyProfile(profiles.hero);
+  }, [enabled, applyProfile]);
 
   const toggle = useCallback(() => {
     setEnabled((prev) => {
       const next = !prev;
       if (next) {
         initAudio();
-        // Resume context (browser autoplay policy)
         ctxRef.current?.resume();
-        // Apply current scene
         setTimeout(() => {
-          const p = profiles[currentScene.current];
-          const vol = p.volume * MASTER_VOLUME;
-          rampTo(masterGainRef.current!.gain, vol);
-          rampTo(noiseGainRef.current!.gain, p.wind);
-          rampTo(highpassRef.current!.frequency, p.windHighpass);
-          rampTo(lowpassRef.current!.frequency, p.windLowpass);
-          rampTo(humGainRef.current!.gain, p.hum);
-          rampTo(humOscRef.current!.frequency, p.humFreq);
-          rampTo(resGainRef.current!.gain, p.resonance);
-          rampTo(resOscRef.current!.frequency, p.resonanceFreq);
+          applyProfile(profiles[currentScene.current]);
         }, 50);
       } else {
-        rampTo(masterGainRef.current!.gain, 0);
+        rampTo(masterGainRef.current!.gain, 0, "out");
       }
       return next;
     });
-  }, [initAudio, rampTo]);
+  }, [initAudio, rampTo, applyProfile]);
 
   // Cleanup
   useEffect(() => {
@@ -247,5 +371,14 @@ export function useAmbientSound() {
     };
   }, []);
 
-  return { enabled, toggle, transitionTo };
+  return {
+    enabled,
+    toggle,
+    transitionTo,
+    playHoverTone,
+    stopHoverTone,
+    playToggleTone,
+    playPressTone,
+    beginIntroHandoff,
+  };
 }
