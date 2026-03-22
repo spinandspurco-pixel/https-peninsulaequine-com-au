@@ -45,7 +45,7 @@ function ActNav({ activeAct }: { activeAct: string }) {
               {act.label}
             </span>
             <div
-              className="transition-all duration-500"
+              className="transition-all duration-700"
               style={{
                 width: "1px",
                 height: isActive ? "24px" : "8px",
