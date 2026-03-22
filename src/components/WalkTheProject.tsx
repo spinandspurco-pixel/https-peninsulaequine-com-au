@@ -256,15 +256,15 @@ function WalkScene({
             {isCTA ? (
               /* ── CTA Scene ── */
               <div className="flex flex-col items-center gap-8">
-                <p className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.5em] text-accent/25">
-                  Main Ridge Estate
-                </p>
                 <button
                   onClick={() => navigate("/contact")}
                   className="px-8 py-3.5 border border-accent/15 text-[11px] font-mono uppercase tracking-[0.3em] text-foreground/70 transition-all duration-500 hover:border-accent/30 hover:text-foreground/90 hover:bg-accent/5"
                 >
                   Start Your Project
                 </button>
+                <p className="text-[9px] font-mono uppercase tracking-[0.3em] text-accent/12">
+                  Limited builds each year
+                </p>
               </div>
             ) : (
               /* ── Narrative Scene ── */
