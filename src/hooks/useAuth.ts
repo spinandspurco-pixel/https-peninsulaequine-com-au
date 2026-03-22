@@ -47,7 +47,7 @@ export function useAuth() {
 
     // Hard safety timeout — never hang longer than 2s
     const timeout = setTimeout(() => {
-      console.log("[useAuth] Safety timeout — resolving loading");
+      
       resolve();
     }, 2000);
 
