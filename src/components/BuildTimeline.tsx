@@ -134,7 +134,7 @@ function PhaseScene({
           transform: reducedMotion
             ? `scale(${phase.scale})`
             : `translateY(${parallaxY}px) scale(${phase.scale})`,
-          transition: `transform ${DURATION.parallax}ms ${EASE.default}`,
+          transition: `transform ${DURATION.parallax}ms ${EASE.cinematic}`,
         }}
       >
         <img
@@ -161,17 +161,16 @@ function PhaseScene({
       {/* Content */}
       <div className="absolute inset-0 z-10 flex items-end">
         <div className="section-container pb-16 sm:pb-24 lg:pb-28">
-          <div
-            className="max-w-lg"
-            style={{
-              opacity: visible ? 1 : 0,
-              transform: visible ? "translateY(0)" : `translateY(${DISTANCE.lg}px)`,
-              transition: `opacity ${DURATION.slow}ms ${EASE.default} 200ms, transform ${DURATION.slow}ms ${EASE.default} 200ms`,
-              willChange: "opacity, transform",
-            }}
-          >
+          <div className="max-w-lg">
             {/* Phase label */}
-            <div className="flex items-center gap-4 mb-5">
+            <div
+              className="flex items-center gap-4 mb-5"
+              style={{
+                opacity: visible ? 1 : 0,
+                transition: `opacity ${DURATION.slow}ms ${EASE.cinematic} 400ms`,
+                willChange: "opacity",
+              }}
+            >
               <span className="text-[10px] font-mono tracking-[0.2em] uppercase text-accent/20">
                 {phase.step}
               </span>
@@ -182,7 +181,15 @@ function PhaseScene({
             </div>
 
             {/* Quote */}
-            <p className="font-serif text-xl sm:text-2xl lg:text-3xl italic leading-relaxed tracking-[0.01em] text-foreground/55">
+            <p
+              className="font-serif text-xl sm:text-2xl lg:text-3xl italic leading-relaxed tracking-[0.01em] text-foreground/55"
+              style={{
+                opacity: visible ? 1 : 0,
+                transform: visible ? "translateY(0)" : `translateY(${DISTANCE.sm}px)`,
+                transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 800ms, transform ${DURATION.cinematic}ms ${EASE.cinematic} 800ms`,
+                willChange: "opacity, transform",
+              }}
+            >
               "{phase.line}"
             </p>
           </div>
