@@ -86,38 +86,37 @@ function DetailCard({ zone, visible }: { zone: Zone | null; visible: boolean }) 
       className="pointer-events-none"
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : `translateY(${DISTANCE.sm}px)`,
-        transition: `opacity 350ms cubic-bezier(0.25, 0.1, 0.25, 1), transform 350ms cubic-bezier(0.25, 0.1, 0.25, 1)`,
-        willChange: "opacity, transform",
+        transition: `opacity 450ms cubic-bezier(0.25, 0.1, 0.25, 1)`,
+        willChange: "opacity",
       }}
     >
       {zone && (
         <div className="max-w-[280px]">
           {/* Zone label tag */}
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-5 h-px bg-accent/30" />
-            <span className="text-[9px] font-mono uppercase tracking-[0.35em] text-accent/35">Zone</span>
+            <div className="w-5 h-px bg-accent/20" />
+            <span className="text-[9px] font-mono uppercase tracking-[0.35em] text-accent/25">Zone</span>
           </div>
 
           {/* Zone name */}
-          <h3 className="font-serif text-xl sm:text-2xl text-foreground/90 tracking-[0.02em] leading-tight mb-2.5">
+          <h3 className="font-serif text-xl sm:text-2xl text-foreground/70 tracking-[0.02em] leading-tight mb-2.5">
             {zone.label}
           </h3>
 
           {/* Purpose statement */}
-          <p className="text-[13px] text-muted-foreground/40 font-serif italic leading-relaxed mb-5">
+          <p className="text-[13px] text-muted-foreground/30 font-serif italic leading-relaxed mb-5">
             {zone.description}
           </p>
 
           {/* Divider */}
-          <div className="w-8 h-px bg-accent/12 mb-4" />
+          <div className="w-8 h-px bg-accent/8 mb-4" />
 
           {/* Feature points */}
           <ul className="space-y-2.5">
             {zone.features.map((f, i) => (
               <li key={i} className="flex items-start gap-2.5">
-                <span className="w-1 h-1 rounded-full bg-accent/25 mt-[7px] shrink-0" />
-                <span className="text-xs text-muted-foreground/35 font-mono tracking-wide leading-relaxed">{f}</span>
+                <span className="w-1 h-1 rounded-full bg-accent/18 mt-[7px] shrink-0" />
+                <span className="text-xs text-muted-foreground/28 font-mono tracking-wide leading-relaxed">{f}</span>
               </li>
             ))}
           </ul>
