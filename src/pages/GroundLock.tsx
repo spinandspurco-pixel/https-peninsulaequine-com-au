@@ -232,6 +232,23 @@ export default function GroundLock() {
         </div>
       </section>
 
+      {/* ═══ CUTAWAY VISUAL ═════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="py-16 sm:py-24 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-3xl mx-auto relative z-[1]">
+            <RevealOnScroll direction="up">
+              <img
+                src={groundlockCutaway}
+                alt="GroundLock system cutaway — surface layer, interlocking panel system, and prepared sub-base"
+                className="w-full h-auto rounded-sm"
+                loading="lazy"
+              />
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ SYSTEM IN USE — MICRO VISUALS ════════════════ */}
       <section className="relative overflow-hidden">
         <div className="py-12 sm:py-16 relative">
