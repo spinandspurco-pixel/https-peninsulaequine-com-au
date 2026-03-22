@@ -3,6 +3,7 @@ import groundlockHero from "@/assets/groundlock-hero-arena.jpg";
 import groundlockCutaway from "@/assets/groundlock-cutaway.jpg";
 import groundlockKit from "@/assets/groundlock-kit-product.jpg";
 import groundlockComparison from "@/assets/groundlock-surface-comparison.jpg";
+import groundlockInstall from "@/assets/groundlock-installation.jpg";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
@@ -711,6 +712,17 @@ export default function GroundLock() {
                 <p className="mt-5 text-[13px] text-muted-foreground/35 font-serif italic max-w-md mx-auto leading-relaxed">
                   Full system supply with optional installation or guided implementation.
                 </p>
+              </div>
+            </RevealOnScroll>
+
+            <RevealOnScroll direction="up" delay={60}>
+              <div className="mb-14 sm:mb-18">
+                <img
+                  src={groundlockInstall}
+                  alt="Professional GroundLock panel installation at an equestrian gateway"
+                  className="w-full h-auto rounded-sm"
+                  loading="lazy"
+                />
               </div>
             </RevealOnScroll>
 
