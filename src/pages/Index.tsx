@@ -214,7 +214,7 @@ export default function Index() {
             {/* Supporting text — 3900ms */}
             <p
               className="text-muted-foreground/30 text-[11px] sm:text-[12px] tracking-[0.2em] uppercase max-w-lg leading-[2.2]"
-              style={{ opacity: 0, animation: "heroFadeIn 800ms ease-out 3900ms forwards" }}
+              style={{ opacity: 0, animation: "heroFadeIn 800ms ease-out 3500ms forwards" }}
             >
               Equine infrastructure engineered for performance and longevity.
             </p>
