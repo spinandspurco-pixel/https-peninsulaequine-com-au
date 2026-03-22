@@ -185,9 +185,9 @@ export default function Index() {
             </div>
 
             {/* Headline — 2800ms (tension hold, then gentle reveal) */}
-            <div className="space-y-5 sm:space-y-6">
+            <div className="space-y-6 sm:space-y-7">
               <h1
-                className="font-serif font-bold text-foreground leading-[0.88] tracking-[-0.01em]"
+                className="font-serif font-extrabold text-foreground leading-[0.98] tracking-[-0.018em]"
                 style={{
                   opacity: 0,
                   transform: "translateY(2px)",
@@ -198,38 +198,44 @@ export default function Index() {
               >
                 Built from the<br className="hidden sm:block" /> ground up.
               </h1>
-              {/* Sub-headline — 3400ms */}
+              {/* Sub-headline */}
               <p
-                className="font-serif font-light text-foreground/25 leading-[0.95] tracking-[0.02em]"
+                className="font-serif font-light leading-[1.2] tracking-[0.04em]"
                 style={{
                   opacity: 0,
                   animation: "heroFadeIn 800ms ease-out 3000ms forwards",
                   fontSize: "clamp(1.5rem, 0.75rem + 3.2vw, 3.5rem)",
+                  color: "hsl(var(--foreground) / 0.2)",
                 }}
               >
                 Held to perform. Built to last.
               </p>
             </div>
 
-            {/* Supporting text — 3900ms */}
+            {/* Supporting text */}
             <p
-              className="text-muted-foreground/30 text-[11px] sm:text-[12px] tracking-[0.2em] uppercase max-w-lg leading-[2.2]"
-              style={{ opacity: 0, animation: "heroFadeIn 800ms ease-out 3500ms forwards" }}
+              className="text-[11px] sm:text-[12px] uppercase max-w-lg leading-[2.2]"
+              style={{
+                opacity: 0,
+                animation: "heroFadeIn 800ms ease-out 3500ms forwards",
+                letterSpacing: "0.28em",
+                color: "hsl(var(--muted-foreground) / 0.22)",
+              }}
             >
               Equine infrastructure engineered for performance and longevity.
             </p>
 
-            {/* CTA — 4400ms */}
+            {/* CTA */}
             <div
-              className="flex flex-col sm:flex-row gap-4 justify-center pt-4"
+              className="flex flex-col sm:flex-row gap-4 justify-center pt-6"
               style={{ opacity: 0, animation: "heroFadeIn 800ms ease-out 4000ms forwards" }}
             >
-              <Button asChild variant="gold" size="lg" className="px-8">
+              <Button asChild variant="gold" size="lg" className="px-8 tracking-[0.08em]">
                 <Link to="/site-assessment">
                   Start a Project <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild size="lg" className="bg-transparent border border-foreground/10 text-foreground/50 hover:text-foreground hover:border-foreground/25 hover:bg-foreground/[0.03] transition-all duration-700 px-8">
+              <Button asChild size="lg" className="bg-transparent border border-foreground/10 text-foreground/50 hover:text-foreground hover:border-foreground/25 hover:bg-foreground/[0.03] transition-all duration-700 px-8 tracking-[0.08em]">
                 <Link to="/gallery">View Projects</Link>
               </Button>
             </div>
