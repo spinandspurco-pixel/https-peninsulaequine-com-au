@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import groundlockHero from "@/assets/groundlock-hero-arena.jpg";
 import groundlockCutaway from "@/assets/groundlock-cutaway.jpg";
 import groundlockKit from "@/assets/groundlock-kit-product.jpg";
+import groundlockComparison from "@/assets/groundlock-surface-comparison.jpg";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
