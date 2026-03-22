@@ -9,10 +9,7 @@ import { Link } from "react-router-dom";
 import { useParallax } from "@/hooks/useParallax";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 import { ProjectsCinematicHero } from "@/components/ProjectsCinematicHero";
-import { InteractiveMasterplan } from "@/components/masterplan/InteractiveMasterplanV2";
-import { WalkTheProject } from "@/components/WalkTheProject";
-import { BuildIntelligence } from "@/components/BuildIntelligence";
-import { BuildTimeline } from "@/components/BuildTimeline";
+import { ExperienceTheBuild } from "@/components/ExperienceTheBuild";
 import { DetailMatters } from "@/components/DetailMatters";
 import { ViewingLine } from "@/components/ViewingLine";
 import { ProjectQualification, type ProjectType } from "@/components/ProjectQualification";
@@ -261,35 +258,14 @@ export default function Gallery() {
           ═══════════════════════════════════════════════════ */}
       <ProjectsCinematicHero />
 
-      <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
-          2. INTERACTIVE MASTERPLAN
+          2. EXPERIENCE THE BUILD — unified Main Ridge journey
           ═══════════════════════════════════════════════════ */}
-      <InteractiveMasterplan />
+      <ExperienceTheBuild />
 
       <ChapterDivider />
 
-      {/* ═══════════════════════════════════════════════════
-          3. WALK THE PROJECT — cinematic scroll panels
-          ═══════════════════════════════════════════════════ */}
-      <WalkTheProject />
-
-      <ChapterDivider />
-
-      {/* ═══════════════════════════════════════════════════
-          4. BUILD INTELLIGENCE — interactive layer toggle
-          ═══════════════════════════════════════════════════ */}
-      <BuildIntelligence />
-
-      <ChapterDivider />
-
-      {/* ═══════════════════════════════════════════════════
-          4b. BUILD TIMELINE — construction sequence
-          ═══════════════════════════════════════════════════ */}
-      <BuildTimeline />
-
-      <ChapterDivider />
 
       {/* ═══════════════════════════════════════════════════
           5. DETAIL MATTERS — editorial craftsmanship cards
