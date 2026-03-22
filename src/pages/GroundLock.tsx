@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import groundlockHero from "@/assets/groundlock-hero-arena.jpg";
 import groundlockCutaway from "@/assets/groundlock-cutaway.jpg";
+import groundlockKit from "@/assets/groundlock-kit-product.jpg";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
@@ -544,6 +545,17 @@ export default function GroundLock() {
                 <p className="mt-5 text-[13px] text-muted-foreground/35 font-serif italic max-w-lg mx-auto leading-relaxed">
                   Pre-configured panel sets designed for specific use cases. A complete system — not individual parts.
                 </p>
+              </div>
+            </RevealOnScroll>
+
+            <RevealOnScroll direction="up" delay={80}>
+              <div className="max-w-2xl mx-auto mb-14 sm:mb-18">
+                <img
+                  src={groundlockKit}
+                  alt="GroundLock panel system kit — stacked horseshoe panels ready for deployment"
+                  className="w-full h-auto rounded-sm"
+                  loading="lazy"
+                />
               </div>
             </RevealOnScroll>
 
