@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import groundlockHero from "@/assets/groundlock-hero-arena.jpg";
+import groundlockCutaway from "@/assets/groundlock-cutaway.jpg";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
@@ -226,6 +227,23 @@ export default function GroundLock() {
               <p className="font-serif text-[13px] sm:text-sm text-muted-foreground/25 italic leading-[1.9] text-center mt-14 sm:mt-20 max-w-sm mx-auto">
                 Stronger by geometry, not by mass.
               </p>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ CUTAWAY VISUAL ═════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="py-16 sm:py-24 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-3xl mx-auto relative z-[1]">
+            <RevealOnScroll direction="up">
+              <img
+                src={groundlockCutaway}
+                alt="GroundLock system cutaway — surface layer, interlocking panel system, and prepared sub-base"
+                className="w-full h-auto rounded-sm"
+                loading="lazy"
+              />
             </RevealOnScroll>
           </div>
         </div>
