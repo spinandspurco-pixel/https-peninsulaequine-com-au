@@ -146,7 +146,7 @@ export function GroundLockProjectForm() {
             value={form.name}
             onChange={(e) => set("name", e.target.value)}
             placeholder="Your name"
-            className="bg-background/60 border-border/40 text-foreground placeholder:text-muted-foreground/25 text-sm h-11"
+            className="bg-background/80 border-border/50 text-foreground placeholder:text-muted-foreground/35 text-sm h-11 focus:border-accent/40 focus:ring-1 focus:ring-accent/20"
             required
           />
         </div>
