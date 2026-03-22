@@ -607,7 +607,7 @@ export function InteractiveMasterplan() {
                   opacity: activeZone ? 0 : 1,
                   position: activeZone ? "absolute" : "relative",
                   pointerEvents: activeZone ? "none" : "auto",
-                  transition: "opacity 350ms ease",
+                  transition: `opacity ${DURATION.normal}ms ${EASE.default}`,
                 }}
               >
                 <p className="text-xs font-mono uppercase tracking-[0.3em] text-accent/25 mb-5">
