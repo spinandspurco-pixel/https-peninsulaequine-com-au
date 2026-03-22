@@ -146,7 +146,7 @@ export function GroundLockProjectForm() {
             value={form.name}
             onChange={(e) => set("name", e.target.value)}
             placeholder="Your name"
-            className="bg-background/60 border-border/40 text-foreground placeholder:text-muted-foreground/25 text-sm h-11"
+            className="bg-background/80 border-border/50 text-foreground placeholder:text-muted-foreground/35 text-sm h-11 focus:border-accent/40 focus:ring-1 focus:ring-accent/20"
             required
           />
         </div>
@@ -159,7 +159,7 @@ export function GroundLockProjectForm() {
             value={form.email}
             onChange={(e) => set("email", e.target.value)}
             placeholder="your@email.com"
-            className="bg-background/60 border-border/40 text-foreground placeholder:text-muted-foreground/25 text-sm h-11"
+            className="bg-background/80 border-border/50 text-foreground placeholder:text-muted-foreground/35 text-sm h-11 focus:border-accent/40 focus:ring-1 focus:ring-accent/20"
             required
           />
         </div>
@@ -175,7 +175,7 @@ export function GroundLockProjectForm() {
           value={form.phone}
           onChange={(e) => set("phone", e.target.value)}
           placeholder="Optional"
-          className="bg-background/60 border-border/40 text-foreground placeholder:text-muted-foreground/25 text-sm h-11"
+          className="bg-background/80 border-border/50 text-foreground placeholder:text-muted-foreground/35 text-sm h-11 focus:border-accent/40 focus:ring-1 focus:ring-accent/20"
         />
       </div>
 
@@ -260,7 +260,7 @@ export function GroundLockProjectForm() {
           onChange={(e) => set("message", e.target.value)}
           placeholder="Ground conditions, usage patterns, goals..."
           rows={3}
-          className="bg-background/60 border-border/40 text-foreground placeholder:text-muted-foreground/25 text-sm resize-none"
+          className="bg-background/80 border-border/50 text-foreground placeholder:text-muted-foreground/35 text-sm resize-none focus:border-accent/40 focus:ring-1 focus:ring-accent/20"
         />
       </div>
 
