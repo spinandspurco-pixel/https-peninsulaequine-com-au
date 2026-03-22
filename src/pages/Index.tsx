@@ -222,7 +222,7 @@ export default function Index() {
             {/* CTA — 4400ms */}
             <div
               className="flex flex-col sm:flex-row gap-4 justify-center pt-4"
-              style={{ opacity: 0, animation: "heroFadeIn 800ms ease-out 4400ms forwards" }}
+              style={{ opacity: 0, animation: "heroFadeIn 800ms ease-out 4000ms forwards" }}
             >
               <Button asChild variant="gold" size="lg" className="px-8">
                 <Link to="/site-assessment">
