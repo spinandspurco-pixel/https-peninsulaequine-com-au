@@ -435,7 +435,72 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* integration line removed — redundant */}
+
+      {/* ═══ GROUNDLOCK SYSTEM PLAN ═════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="py-28 sm:py-36 lg:py-44 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container relative z-10 max-w-3xl mx-auto">
+
+            <RevealOnScroll direction="up">
+              <div className="text-center mb-14 sm:mb-18">
+                <div className="flex items-center justify-center gap-5 mb-5">
+                  <div className="w-8 h-px bg-accent/20" />
+                  <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/30 font-mono">Product</p>
+                  <div className="w-8 h-px bg-accent/20" />
+                </div>
+                <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/90 tracking-[0.03em] leading-tight">
+                  GroundLock System Plan
+                </h2>
+                <p className="mt-5 text-[13px] text-muted-foreground/35 font-serif italic max-w-md mx-auto leading-relaxed">
+                  A tailored system layout and configuration based on your site, usage, and requirements.
+                </p>
+              </div>
+            </RevealOnScroll>
+
+            <RevealOnScroll direction="up" delay={80}>
+              <div className="bg-card/60 border border-border/10 rounded-sm p-8 sm:p-10 lg:p-12 max-w-lg mx-auto">
+                <p className="text-overline mb-8 text-accent/40">What's Included</p>
+
+                <ul className="space-y-5 mb-10">
+                  {[
+                    { title: "Site-Based System Recommendation", detail: "Panel type, configuration, and placement logic matched to your ground conditions." },
+                    { title: "Layout Guidance", detail: "Zone mapping for traffic flow, drainage direction, and system boundaries." },
+                    { title: "Panel Configuration Overview", detail: "Orientation, nesting pattern, and coverage specification for your project." },
+                  ].map((item) => (
+                    <li key={item.title} className="group">
+                      <div className="flex items-start gap-3.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-accent/25 shrink-0 mt-2" />
+                        <div>
+                          <p className="text-sm text-foreground/70 font-medium leading-tight mb-1">{item.title}</p>
+                          <p className="text-[12px] text-muted-foreground/30 leading-relaxed">{item.detail}</p>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="w-8 h-px bg-accent/10 mb-8" />
+
+                <p className="text-[11px] text-muted-foreground/25 font-mono tracking-wide leading-relaxed mb-8">
+                  This is the first step in designing a GroundLock system — not a generic consultation.
+                </p>
+
+                <Link to="/site-assessment">
+                  <Button
+                    variant="outline"
+                    className="w-full group border-accent/15 text-accent/60 hover:bg-accent/5 hover:border-accent/25 transition-opacity duration-300 text-xs tracking-[0.2em] uppercase font-mono h-12"
+                  >
+                    Request System Plan
+                    <ArrowRight className="ml-2 h-3.5 w-3.5 transition-opacity duration-300 opacity-40 group-hover:opacity-70" />
+                  </Button>
+                </Link>
+              </div>
+            </RevealOnScroll>
+
+          </div>
+        </div>
+      </section>
 
       {/* ═══ SECTION 7 — Start Your Project ═════════════ */}
       <section className="relative overflow-hidden">
