@@ -345,8 +345,15 @@ const TIMELINE_PHASE_MAP: Record<string, AmbientScene> = {
 
 /* ── Main export ─────────────────────────────────────── */
 export function ExperienceTheBuild() {
-  const [activeAct, setActiveAct] = useState("hero");
-  const { enabled: soundEnabled, toggle: toggleSound, transitionTo } = useAmbientSound();
+  const {
+    enabled: soundEnabled,
+    toggle: toggleSound,
+    transitionTo,
+    playHoverTone,
+    stopHoverTone,
+    playToggleTone,
+    playPressTone,
+  } = useAmbientSound();
 
   /* Track which act is in view */
   useEffect(() => {
