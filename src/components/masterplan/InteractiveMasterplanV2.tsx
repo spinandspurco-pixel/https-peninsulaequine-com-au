@@ -28,7 +28,7 @@ function usePreloadImages(srcs: string[]) {
 
 /* ── Camera wrapper ── */
 const SVG_W = 740;
-const SVG_H = 700;
+const SVG_H = 820;
 const CAMERA_SCALE = 1.028;
 
 function getCenter(path: string): { x: number; y: number } {
@@ -193,7 +193,6 @@ export function InteractiveMasterplan() {
           observer.disconnect();
           setPlanVisible(true);
           if (reducedMotion) return;
-          // Quiet entrance — flash arena, then settle
           setTimeout(() => setActiveZone("indoor-arena"), 1000);
           setTimeout(() => setActiveZone(null), 3200);
         }

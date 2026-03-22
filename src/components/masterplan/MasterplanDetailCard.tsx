@@ -1,7 +1,7 @@
 import { DURATION, EASE } from "@/lib/motion";
 import type { Zone } from "./masterplanData";
 
-/* Zone images */
+/* Zone images — mapped to new zone IDs */
 import imgIndoor from "@/assets/walk-arena.jpg";
 import imgStables from "@/assets/walk-stables.jpg";
 import imgCourtyard from "@/assets/walk-courtyard.jpg";
@@ -9,11 +9,12 @@ import imgLoft from "@/assets/walk-loft.jpg";
 
 const ZONE_IMAGES: Record<string, string> = {
   "indoor-arena": imgIndoor,
-  stables: imgStables,
+  "stable-row": imgStables,
+  "west-wing": imgStables,
   courtyard: imgCourtyard,
-  "viewing-area": imgLoft,
+  "viewing-loft": imgLoft,
   "service-wing": imgCourtyard,
-  "wash-bay": imgCourtyard,
+  "tack-rooms": imgCourtyard,
 };
 
 export function MasterplanDetailCard({ zone, visible }: { zone: Zone | null; visible: boolean }) {
@@ -30,7 +31,7 @@ export function MasterplanDetailCard({ zone, visible }: { zone: Zone | null; vis
     >
       {zone && (
         <div className="max-w-[280px]">
-          {/* Zone image — restrained aspect */}
+          {/* Zone image */}
           {img && (
             <div className="relative w-full aspect-[2/1] mb-4 overflow-hidden">
               <img
