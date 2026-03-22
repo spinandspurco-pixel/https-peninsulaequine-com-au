@@ -261,7 +261,7 @@ export function InteractiveMasterplan() {
             </div>
 
             {/* Right panel */}
-            <div className="lg:col-span-4 flex flex-col justify-start pt-4 lg:pt-8">
+            <div className="lg:col-span-4 flex flex-col justify-start pt-4 lg:pt-10">
               {/* Idle state */}
               <div
                 style={{
@@ -271,15 +271,15 @@ export function InteractiveMasterplan() {
                   transition: `opacity ${DURATION.normal}ms ${EASE.default}`,
                 }}
               >
-                <p className="text-[11px] font-mono uppercase tracking-[0.25em] text-accent/20 mb-4">
+                <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/15 mb-4">
                   {isTouch ? "Tap a zone" : "Hover to explore"}
                 </p>
                 {!tourActive && (
                   <button
                     onClick={startTour}
-                    className="group flex items-center gap-3 text-[11px] font-mono uppercase tracking-[0.2em] text-accent/25 transition-opacity duration-300 hover:text-accent/40"
+                    className="group flex items-center gap-3 text-[10px] font-mono uppercase tracking-[0.25em] text-accent/18 transition-opacity duration-300 hover:text-accent/30"
                   >
-                    <span className="w-5 h-px bg-accent/15 group-hover:bg-accent/30 transition-colors duration-300" />
+                    <span className="w-4 h-px bg-accent/10 group-hover:bg-accent/20 transition-colors duration-300" />
                     Explore the Ridge
                   </button>
                 )}
