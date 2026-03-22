@@ -715,6 +715,17 @@ export default function GroundLock() {
               </div>
             </RevealOnScroll>
 
+            <RevealOnScroll direction="up" delay={60}>
+              <div className="mb-14 sm:mb-18">
+                <img
+                  src={groundlockInstall}
+                  alt="Professional GroundLock panel installation at an equestrian gateway"
+                  className="w-full h-auto rounded-sm"
+                  loading="lazy"
+                />
+              </div>
+            </RevealOnScroll>
+
             <RevealOnScroll direction="up" delay={80}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:gap-6 max-w-2xl mx-auto mb-12">
 
