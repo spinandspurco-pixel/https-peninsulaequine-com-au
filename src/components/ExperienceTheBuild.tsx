@@ -80,13 +80,13 @@ function ActTransition({ line }: { line: string }) {
   }, []);
 
   return (
-    <div ref={ref} className="py-24 sm:py-36 lg:py-44 text-center">
+    <div ref={ref} className="py-28 sm:py-40 lg:py-52 text-center">
       <p
         className="font-serif text-sm sm:text-base lg:text-lg italic text-foreground/20 max-w-sm mx-auto leading-relaxed tracking-[0.02em] px-6"
         style={{
           opacity: visible ? 1 : 0,
           transform: visible ? "translateY(0)" : `translateY(${DISTANCE.md}px)`,
-          transition: `opacity ${DURATION.slow}ms ${EASE.default} 200ms, transform ${DURATION.slow}ms ${EASE.default} 200ms`,
+          transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 300ms, transform ${DURATION.cinematic}ms ${EASE.cinematic} 300ms`,
         }}
       >
         {line}
