@@ -203,7 +203,7 @@ export default function Index() {
                 className="font-serif font-light text-foreground/25 leading-[0.95] tracking-[0.02em]"
                 style={{
                   opacity: 0,
-                  animation: "heroFadeIn 800ms ease-out 3400ms forwards",
+                  animation: "heroFadeIn 800ms ease-out 3000ms forwards",
                   fontSize: "clamp(1.5rem, 0.75rem + 3.2vw, 3.5rem)",
                 }}
               >
