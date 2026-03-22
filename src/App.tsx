@@ -126,7 +126,6 @@ function AppContent() {
           <Route path="/book-lesson" element={<ProtectedRoute><BookLesson /></ProtectedRoute>} />
           
           <Route path="/systems" element={<Shop />} />
-          <Route path="/shop" element={<Shop />} />
           
           <Route path="/forge" element={<Forge />} />
           <Route path="/events" element={<Events />} />
