@@ -181,7 +181,7 @@ function WalkScene({
     return () => window.removeEventListener("scroll", onScroll);
   }, [reducedMotion]);
 
-  const revealDelay = isCTA ? 400 : 150 + index * 30;
+  const revealDelay = isCTA ? 600 : 400 + index * 50;
 
   return (
     <div
