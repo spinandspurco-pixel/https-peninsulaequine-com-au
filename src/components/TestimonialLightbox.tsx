@@ -138,7 +138,7 @@ export function TestimonialLightbox({ items, initialIndex, onClose }: Testimonia
 
       <div id="testimonial-lightbox-media" className="relative max-w-4xl w-full mx-4 sm:mx-8" onClick={(e) => e.stopPropagation()} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
         {current.type === "image" ? (
-          <img src={current.src} alt={current.caption || "Testimonial photo"} className="w-full max-h-[80vh] object-contain rounded-lg" />
+          <img src={current.src} alt={current.caption || "Testimonial photo"} className="w-full max-h-[80vh] object-contain rounded-lg" loading="lazy" decoding="async" />
         ) : /\.(mp4|mov|webm|ogg)(\?.*)?$/i.test(current.src) ? (
           <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-black">
             <video
@@ -165,7 +165,7 @@ export function TestimonialLightbox({ items, initialIndex, onClose }: Testimonia
             {items.map((item, i) => (
               <button key={i} onClick={() => setIndex(i)} className={`flex-shrink-0 w-14 h-14 rounded-md overflow-hidden border-2 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${i === index ? "border-accent scale-110" : "border-white/20 opacity-60 hover:opacity-100"}`} aria-label={`View ${item.type} ${i + 1}${item.caption ? `: ${item.caption}` : ""}`}>
                 {item.type === "image" ? (
-                  <img src={item.src} alt="" className="w-full h-full object-cover" />
+                  <img src={item.src} alt="" className="w-full h-full object-cover"  loading="lazy" decoding="async" />
                 ) : (
                   <div className="w-full h-full bg-primary/80 flex items-center justify-center"><Play className="h-5 w-5 text-white" /></div>
                 )}
@@ -184,7 +184,7 @@ export function TestimonialMediaBadge({ type, src, onClick }: { type: "image" | 
   return (
     <button onClick={onClick} className="group relative mt-4 w-full aspect-video rounded-md overflow-hidden bg-muted border border-border hover:border-accent/50 transition-opacity duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2" aria-label={type === "image" ? "View photo" : "Play video"}>
       {type === "image" ? (
-        <img src={src} alt="" className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-90" />
+        <img src={src} alt="" className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-90" loading="lazy" decoding="async" />
       ) : (
         <div className="w-full h-full bg-primary/90 flex items-center justify-center">
           <Play className="h-8 w-8 text-white/80 group-hover:text-accent transition-opacity duration-300" />

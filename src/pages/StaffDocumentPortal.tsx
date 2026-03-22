@@ -100,7 +100,7 @@ export default function StaffDocumentPortal() {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                <img src={logoPeMark} alt="PE" className="h-8 w-8 object-contain" />
+                <img src={logoPeMark} alt="PE" className="h-8 w-8 object-contain" loading="lazy" decoding="async" />
               </div>
               <div>
                 <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Staff Document Repository</h1>

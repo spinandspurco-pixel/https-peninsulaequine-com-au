@@ -108,7 +108,7 @@ export default function HQ() {
             style={{ animationDelay: "150ms", animationFillMode: "both" }}
           >
             <div className="inline-flex items-center justify-center w-14 h-14 border border-accent/20 bg-accent/5 mb-8">
-              <img src={logoPeMark} alt="P.E" className="h-7 w-7 object-contain" />
+              <img src={logoPeMark} alt="P.E" className="h-7 w-7 object-contain" loading="lazy" decoding="async" />
             </div>
           </div>
 

@@ -242,7 +242,7 @@ export function TrainerVideoPlaylist({ videos, trainerName }: Props) {
               {/* Now playing info */}
               <div className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card">
                 {profile && (
-                  <img src={profile.portrait} alt={trainerName} className="w-10 h-10 rounded-full object-cover border border-border flex-shrink-0" />
+                  <img src={profile.portrait} alt={trainerName} className="w-10 h-10 rounded-full object-cover border border-border flex-shrink-0" loading="lazy" decoding="async" />
                 )}
                 <div className="min-w-0">
                   <p className="font-serif font-semibold text-foreground truncate">{current.name}</p>

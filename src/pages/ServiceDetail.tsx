@@ -210,7 +210,7 @@ function GalleryLightbox({
                     : "opacity-50 hover:opacity-100"
                 }`}
               >
-                <img src={img.src} alt={img.caption} className="w-full h-full object-cover" />
+                <img src={img.src} alt={img.caption} className="w-full h-full object-cover"  loading="lazy" decoding="async" />
               </button>
             ))}
           </div>
