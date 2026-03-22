@@ -336,7 +336,7 @@ function TimelineNav({
 }
 
 /* ── Main export ─────────────────────────────────────── */
-export function BuildTimeline() {
+export function BuildTimeline({ onPhaseChange }: { onPhaseChange?: (phaseId: string) => void }) {
   const reducedMotion = useReducedMotion();
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [activePhase, setActivePhase] = useState(0);
@@ -349,7 +349,12 @@ export function BuildTimeline() {
       if (!el) return;
       const io = new IntersectionObserver(
         ([entry]) => {
-          if (entry.isIntersecting) setActivePhase(idx);
+          if (entry.isIntersecting) {
+            setActivePhase(idx);
+            if (idx < phases.length) {
+              onPhaseChange?.(phases[idx].id);
+            }
+          }
         },
         { threshold: 0.5 }
       );
@@ -357,7 +362,7 @@ export function BuildTimeline() {
       observers.push(io);
     });
     return () => observers.forEach((o) => o.disconnect());
-  }, []);
+  }, [onPhaseChange]);
 
   const setRef = useCallback(
     (idx: number) => (el: HTMLDivElement | null) => {

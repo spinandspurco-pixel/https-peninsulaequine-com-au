@@ -342,7 +342,7 @@ function WalkProgress({
 }
 
 /* ── Main export ─────────────────────────────────────── */
-export function WalkTheProject() {
+export function WalkTheProject({ onSceneChange }: { onSceneChange?: (sceneId: string) => void }) {
   const reducedMotion = useReducedMotion();
   const sceneRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [activeScene, setActiveScene] = useState(0);
@@ -355,7 +355,10 @@ export function WalkTheProject() {
       if (!el) return;
       const io = new IntersectionObserver(
         ([entry]) => {
-          if (entry.isIntersecting) setActiveScene(idx);
+          if (entry.isIntersecting) {
+            setActiveScene(idx);
+            onSceneChange?.(scenes[idx]?.id);
+          }
         },
         { threshold: 0.5 }
       );
@@ -364,7 +367,7 @@ export function WalkTheProject() {
     });
 
     return () => observers.forEach((o) => o.disconnect());
-  }, []);
+  }, [onSceneChange]);
 
   const setSceneRef = useCallback(
     (idx: number) => (el: HTMLDivElement | null) => {
