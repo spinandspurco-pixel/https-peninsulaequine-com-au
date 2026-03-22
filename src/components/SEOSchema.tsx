@@ -176,8 +176,8 @@ export function SEOSchema() {
       document.head.appendChild(script);
     });
 
-    // Log confirmation for verification
-    console.log("[SEO] Schema markup injected:", schemas.map(s => s["@type"]));
+
+
 
     return () => {
       // Cleanup on unmount
