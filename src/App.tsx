@@ -92,7 +92,7 @@ function AppContent() {
 
   return (
     <IntroContext.Provider value={{ headerLogoReady }}>
-      {!splashDone && (
+      {showSplash && !splashDone && (
         <LoadingSplash
           onComplete={() => setSplashDone(true)}
           onLogoSettled={handleLogoSettled}
