@@ -232,13 +232,24 @@ function Synthesis() {
         </div>
 
         <p
-          className="font-serif text-xl sm:text-2xl lg:text-3xl italic text-foreground/45 leading-relaxed tracking-[0.01em] mb-12"
+          className="font-serif text-xl sm:text-2xl lg:text-3xl italic text-foreground/45 leading-relaxed tracking-[0.01em]"
           style={{
             opacity: visible ? 1 : 0,
             transition: `opacity ${DURATION.extended}ms ${EASE.cinematic} 900ms`,
           }}
         >
-          "Built properly. From the ground up."
+          Built properly. From the ground up.
+        </p>
+
+        <p
+          className="mt-4 mb-12 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.42em]"
+          style={{
+            color: "hsl(var(--accent))",
+            opacity: visible ? 0.22 : 0,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1500ms`,
+          }}
+        >
+          From Dirt to Dynasty
         </p>
 
         <button
