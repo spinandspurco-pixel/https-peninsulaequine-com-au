@@ -137,7 +137,7 @@ export default function Index() {
   return (
     <Layout>
       {/* ═══ 1. HERO — CINEMATIC ARRIVAL ═══════════════ */}
-      <section className="relative min-h-[100dvh] overflow-hidden flex items-center justify-center bg-[hsl(222_20%_4%)]">
+      <section className="relative min-h-[100dvh] overflow-hidden flex items-center justify-center bg-[hsl(222_20%_4%)] hero-center-light">
         {/* Background — slow emergence from near-black */}
         <div
           style={{ opacity: 0, animation: "heroBackdropReveal 1400ms ease-out 200ms forwards" }}
