@@ -53,6 +53,7 @@ const TrainerDocumentPortal = lazy(() => import("./pages/TrainerDocumentPortal")
 const TrainerProfile = lazy(() => import("./pages/TrainerProfile"));
 
 const GroundLock = lazy(() => import("./pages/GroundLock"));
+const GroundLockHowItWorks = lazy(() => import("./pages/GroundLockHowItWorks"));
 const CaseStudy = lazy(() => import("./pages/CaseStudy"));
 const GroundLockSystems = lazy(() => import("./pages/GroundLockSystems"));
 const EquusRidge = lazy(() => import("./pages/EquusRidge"));
@@ -132,6 +133,7 @@ function AppContent() {
           <Route path="/trainers/:slug" element={<TrainerProfile />} />
            
           <Route path="/groundlock" element={<GroundLock />} />
+          <Route path="/groundlock/how-it-works" element={<GroundLockHowItWorks />} />
           <Route path="/groundlock-systems" element={<GroundLockSystems />} />
           <Route path="/equus-ridge" element={<EquusRidge />} />
            <Route path="/installer" element={<InstallerAccess />} />
