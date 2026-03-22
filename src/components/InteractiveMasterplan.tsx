@@ -595,7 +595,7 @@ export function InteractiveMasterplan() {
                 className="w-px"
                 style={{
                   background: `linear-gradient(to bottom, transparent 10%, hsl(var(--accent) / ${activeZone ? 0.12 : 0.04}) 30%, hsl(var(--accent) / ${activeZone ? 0.12 : 0.04}) 70%, transparent 90%)`,
-                  transition: "background 450ms cubic-bezier(0.25, 0.1, 0.25, 1)",
+                  transition: `background ${DURATION.normal}ms ${EASE.default}`,
                   minHeight: "200px",
                 }}
               />
