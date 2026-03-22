@@ -400,7 +400,7 @@ export default function GroundLock() {
       </section>
 
       {/* ═══ GROUNDLOCK SYSTEM KIT — #6 ═══════════════════ */}
-      <section className="relative overflow-hidden">
+      <section id="step-delivery" className="relative overflow-hidden">
         <div className="py-24 sm:py-32 relative border-t border-border/6">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container relative z-10">
