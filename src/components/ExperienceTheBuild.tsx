@@ -259,7 +259,7 @@ function Synthesis({ onPressTone }: { onPressTone?: () => void }) {
             opacity: visible ? 1 : 0,
             transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1400ms, transform 250ms cubic-bezier(0.45, 0, 0.15, 1), border-color 500ms cubic-bezier(0.45, 0, 0.15, 1), color 500ms cubic-bezier(0.45, 0, 0.15, 1), background-color 500ms cubic-bezier(0.45, 0, 0.15, 1)`,
           }}
-          onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.97)")}
+          onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.97)"; onPressTone?.(); }}
           onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
