@@ -68,19 +68,31 @@ const ProposalEditor = lazy(() => import("./pages/ProposalEditor"));
 
 const queryClient = new QueryClient();
 
+/** Show splash only on first visit per session (or after 30 min inactivity) */
+function shouldShowSplash(): boolean {
+  try {
+    const key = "pe-splash-seen";
+    const last = sessionStorage.getItem(key);
+    if (last && Date.now() - Number(last) < 30 * 60 * 1000) return false;
+    sessionStorage.setItem(key, String(Date.now()));
+    return true;
+  } catch {
+    return true;
+  }
+}
+
 function AppContent() {
-  const [splashDone, setSplashDone] = useState(false);
-  const [headerLogoReady, setHeaderLogoReady] = useState(false);
-  
+  const [showSplash] = useState(shouldShowSplash);
+  const [splashDone, setSplashDone] = useState(!showSplash);
+  const [headerLogoReady, setHeaderLogoReady] = useState(!showSplash);
 
   const handleLogoSettled = useCallback(() => {
-    // Wait until splash has fully faded out before revealing header logo
     setTimeout(() => setHeaderLogoReady(true), 1400);
   }, []);
 
   return (
     <IntroContext.Provider value={{ headerLogoReady }}>
-      {!splashDone && (
+      {showSplash && !splashDone && (
         <LoadingSplash
           onComplete={() => setSplashDone(true)}
           onLogoSettled={handleLogoSettled}
