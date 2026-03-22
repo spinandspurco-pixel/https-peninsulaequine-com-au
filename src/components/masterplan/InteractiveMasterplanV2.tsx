@@ -171,14 +171,18 @@ export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onLayerToggle 
   const handleHover = useCallback((id: string) => {
     if (tourActive || isTouch) return;
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
-    hoverTimer.current = setTimeout(() => setActiveZone(id), 150);
-  }, [isTouch, tourActive]);
+    hoverTimer.current = setTimeout(() => {
+      setActiveZone(id);
+      onZoneHover?.();
+    }, 150);
+  }, [isTouch, tourActive, onZoneHover]);
 
   const handleLeave = useCallback(() => {
     if (tourActive || isTouch) return;
     if (hoverTimer.current) { clearTimeout(hoverTimer.current); hoverTimer.current = null; }
     setActiveZone(null);
-  }, [isTouch, tourActive]);
+    onZoneLeave?.();
+  }, [isTouch, tourActive, onZoneLeave]);
 
   const handleTap = useCallback((id: string) => {
     if (tourActive) stopTour();
