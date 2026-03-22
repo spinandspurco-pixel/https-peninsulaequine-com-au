@@ -219,7 +219,7 @@ export default function Index() {
                 opacity: 0,
                 animation: "heroFadeIn 800ms ease-out 3500ms forwards",
                 letterSpacing: "0.28em",
-                color: "hsl(var(--muted-foreground) / 0.22)",
+                color: "hsl(var(--muted-foreground) / 0.38)",
               }}
             >
               Equine infrastructure engineered for performance and longevity.
