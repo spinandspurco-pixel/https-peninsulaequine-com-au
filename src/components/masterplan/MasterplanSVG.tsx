@@ -7,11 +7,11 @@ const SVG_H = 700;
 /* ── Per-layer visual tuning ── */
 const layerStyles: Record<BuildLayer, {
   zoneOpacity: number; labelOpacity: number; fillAlpha: string; strokeW: number;
-  materialAlpha: number; shadowAlpha: number;
+  materialAlpha: number; shadowAlpha: number; gridAlpha: number; terrainAlpha: number;
 }> = {
-  structure: { zoneOpacity: 0.06, labelOpacity: 0.14, fillAlpha: "0.012", strokeW: 0.7, materialAlpha: 0.5, shadowAlpha: 0.35 },
-  envelope:  { zoneOpacity: 0.09, labelOpacity: 0.16, fillAlpha: "0.02",  strokeW: 0.55, materialAlpha: 0.75, shadowAlpha: 0.65 },
-  finished:  { zoneOpacity: 0.12, labelOpacity: 0.18, fillAlpha: "0.035", strokeW: 0.45, materialAlpha: 1, shadowAlpha: 1 },
+  structure: { zoneOpacity: 0.06, labelOpacity: 0.14, fillAlpha: "0.012", strokeW: 0.7, materialAlpha: 0.2, shadowAlpha: 0.15, gridAlpha: 0.06, terrainAlpha: 0.3 },
+  envelope:  { zoneOpacity: 0.09, labelOpacity: 0.16, fillAlpha: "0.02",  strokeW: 0.55, materialAlpha: 0.6, shadowAlpha: 0.5, gridAlpha: 0.035, terrainAlpha: 0.5 },
+  finished:  { zoneOpacity: 0.12, labelOpacity: 0.18, fillAlpha: "0.035", strokeW: 0.45, materialAlpha: 1, shadowAlpha: 1, gridAlpha: 0.025, terrainAlpha: 0.7 },
 };
 
 interface Props {
@@ -26,6 +26,7 @@ interface Props {
 export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLeave, onTap }: Props) {
   const ls = layerStyles[buildLayer];
   const T = "350ms";
+  const isViewing = activeZone === "viewing-area";
 
   return (
     <svg
@@ -35,9 +36,29 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
       style={{ maxWidth: 560 }}
     >
       <defs>
+        {/* Base grid */}
         <pattern id="mp-grid" width="20" height="20" patternUnits="userSpaceOnUse">
-          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.18" opacity="0.025" />
+          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.18" opacity={ls.gridAlpha} />
         </pattern>
+
+        {/* Terrain textures */}
+        <pattern id="mp-terrain" width="60" height="60" patternUnits="userSpaceOnUse">
+          <rect width="60" height="60" fill="none" />
+          <circle cx="15" cy="12" r="0.4" fill="hsl(35 15% 30%)" opacity="0.03" />
+          <circle cx="42" cy="28" r="0.3" fill="hsl(35 12% 28%)" opacity="0.025" />
+          <circle cx="8" cy="45" r="0.35" fill="hsl(35 18% 25%)" opacity="0.02" />
+          <circle cx="52" cy="50" r="0.25" fill="hsl(35 10% 32%)" opacity="0.02" />
+          <circle cx="30" cy="8" r="0.2" fill="hsl(35 14% 27%)" opacity="0.015" />
+          <circle cx="48" cy="42" r="0.3" fill="hsl(35 12% 30%)" opacity="0.02" />
+        </pattern>
+
+        {/* Contour suggestion */}
+        <pattern id="mp-contour" width="120" height="120" patternUnits="userSpaceOnUse">
+          <path d="M 0 60 Q 30 55, 60 58 T 120 56" fill="none" stroke="hsl(35 10% 35%)" strokeWidth="0.2" opacity="0.025" />
+          <path d="M 0 90 Q 40 84, 80 87 T 120 85" fill="none" stroke="hsl(35 10% 35%)" strokeWidth="0.15" opacity="0.018" />
+        </pattern>
+
+        {/* Material fills */}
         <pattern id="mp-sand" width="4" height="4" patternUnits="userSpaceOnUse">
           <rect width="4" height="4" fill="hsl(35 20% 18% / 0.25)" />
           <circle cx="1" cy="1" r="0.25" fill="hsl(35 15% 25% / 0.06)" />
@@ -55,6 +76,7 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         <pattern id="mp-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <line x1="0" y1="0" x2="0" y2="5" stroke="hsl(var(--accent))" strokeWidth="0.18" opacity="0.018" />
         </pattern>
+
         {/* Active zone — elevation + subtle warm glow */}
         <filter id="mp-active" x="-8%" y="-8%" width="120%" height="125%">
           <feGaussianBlur in="SourceAlpha" stdDeviation="3.5" result="sb" />
@@ -70,17 +92,71 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
+
+        {/* Viewing zone — stronger elevation for hero axis */}
+        <filter id="mp-viewing-active" x="-10%" y="-10%" width="125%" height="130%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="4.5" result="sb" />
+          <feFlood floodColor="hsl(0 0% 0%)" floodOpacity="0.22" result="sc" />
+          <feComposite in="sc" in2="sb" operator="in" result="s" />
+          <feOffset in="s" dx="1.5" dy="2.5" result="so" />
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="gb" />
+          <feFlood floodColor="hsl(var(--accent))" floodOpacity="0.12" result="gc" />
+          <feComposite in="gc" in2="gb" operator="in" result="g" />
+          <feMerge>
+            <feMergeNode in="so" />
+            <feMergeNode in="g" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+
         {/* Architectural elevation shadow */}
         <filter id="mp-elev" x="-4%" y="-4%" width="112%" height="116%">
           <feDropShadow dx="1.5" dy="2.5" stdDeviation="3" floodColor="hsl(0 0% 0%)" floodOpacity="0.12" />
         </filter>
+
+        {/* Ground anchor shadow beneath structures */}
+        <filter id="mp-ground" x="-6%" y="-2%" width="115%" height="115%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="blur" />
+          <feFlood floodColor="hsl(0 0% 0%)" floodOpacity="0.06" result="color" />
+          <feComposite in="color" in2="blur" operator="in" result="shadow" />
+          <feOffset in="shadow" dx="0" dy="3" result="offset" />
+          <feMerge>
+            <feMergeNode in="offset" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+
+        {/* Flow line gradient fade ends */}
+        <linearGradient id="flow-fade-v" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="white" stopOpacity="0" />
+          <stop offset="12%" stopColor="white" stopOpacity="1" />
+          <stop offset="88%" stopColor="white" stopOpacity="1" />
+          <stop offset="100%" stopColor="white" stopOpacity="0" />
+        </linearGradient>
+        <mask id="flow-mask-v">
+          <rect x="0" y="80" width={SVG_W} height="560" fill="url(#flow-fade-v)" />
+        </mask>
       </defs>
+
+      {/* ── Terrain base — site grounding ── */}
+      <g style={{ opacity: ls.terrainAlpha, transition: "opacity 600ms ease" }}>
+        <rect width={SVG_W} height={SVG_H} fill="url(#mp-terrain)" />
+        <rect width={SVG_W} height={SVG_H} fill="url(#mp-contour)" />
+        {/* Subtle grade — slightly darker at bottom to suggest terrain fall */}
+        <rect width={SVG_W} height={SVG_H} fill="url(#grad-terrain)" opacity="0.015" />
+        <defs>
+          <linearGradient id="grad-terrain" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="hsl(35 12% 40%)" stopOpacity="0" />
+            <stop offset="100%" stopColor="hsl(35 8% 20%)" stopOpacity="1" />
+          </linearGradient>
+        </defs>
+      </g>
 
       {/* Background grid */}
       <rect width={SVG_W} height={SVG_H} fill="url(#mp-grid)" />
 
       {/* ── Material fills — opacity tied to build layer ── */}
-      <g style={{ opacity: ls.materialAlpha, transition: `opacity 500ms ease` }}>
+      <g style={{ opacity: ls.materialAlpha, transition: "opacity 500ms ease" }}>
         <rect x="200" y="440" width="340" height="160" fill="url(#mp-sand)" rx="1" />
         <rect x="200" y="130" width="340" height="140" fill="url(#mp-bldg)" rx="1" />
         <rect x="200" y="270" width="75" height="170" fill="url(#mp-bldg)" rx="0.5" />
@@ -91,10 +167,16 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         <rect x="200" y="600" width="340" height="32" fill="url(#mp-hatch)" />
       </g>
 
-      {/* ── Depth shadows ── */}
-      <g style={{ opacity: ls.shadowAlpha, transition: `opacity 500ms ease` }}>
+      {/* ── Depth shadows — ground anchoring ── */}
+      <g style={{ opacity: ls.shadowAlpha, transition: "opacity 500ms ease" }}>
+        {/* Primary structure shadows */}
         <rect x="200" y="440" width="340" height="160" fill="none" filter="url(#mp-elev)" rx="1" />
         <rect x="200" y="130" width="340" height="140" fill="none" filter="url(#mp-elev)" rx="1" />
+        {/* Ground contact shadows — softer, wider spread */}
+        <rect x="196" y="596" width="348" height="8" fill="hsl(0 0% 0% / 0.04)" rx="2" />
+        <rect x="196" y="266" width="348" height="6" fill="hsl(0 0% 0% / 0.025)" rx="2" />
+        {/* Service wing ground shadow */}
+        <rect x="198" y="436" width="79" height="6" fill="hsl(0 0% 0% / 0.02)" rx="1" />
       </g>
 
       {/* Property boundary */}
@@ -146,69 +228,109 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
       {/* ── Structure layer: column grid + load paths ── */}
       {buildLayer === "structure" && (
         <g style={{ opacity: 1, animation: "fade-in 0.3s ease-out" }}>
+          {/* Column grid — stables */}
           {[0, 1, 2, 3, 4, 5, 6].map(i => (
             <g key={`col${i}`}>
-              <rect x={198} y={445 + i * 22} width="2.5" height="2.5" fill="hsl(var(--accent))" opacity="0.12" rx="0.4" />
-              <rect x={539.5} y={445 + i * 22} width="2.5" height="2.5" fill="hsl(var(--accent))" opacity="0.12" rx="0.4" />
+              <rect x={198} y={445 + i * 22} width="2.5" height="2.5" fill="hsl(var(--accent))" opacity="0.15" rx="0.4" />
+              <rect x={539.5} y={445 + i * 22} width="2.5" height="2.5" fill="hsl(var(--accent))" opacity="0.15" rx="0.4" />
             </g>
           ))}
-          <line x1="200" y1="445" x2="200" y2="598" stroke="hsl(var(--accent))" strokeWidth="0.5" opacity="0.06" strokeDasharray="2 3" />
-          <line x1="540" y1="445" x2="540" y2="598" stroke="hsl(var(--accent))" strokeWidth="0.5" opacity="0.06" strokeDasharray="2 3" />
-          <line x1="370" y1="134" x2="370" y2="266" stroke="hsl(var(--accent))" strokeWidth="0.5" opacity="0.06" strokeDasharray="2 3" />
+          {/* Load path lines — more visible in structure mode */}
+          <line x1="200" y1="445" x2="200" y2="598" stroke="hsl(var(--accent))" strokeWidth="0.6" opacity="0.1" strokeDasharray="2 3" />
+          <line x1="540" y1="445" x2="540" y2="598" stroke="hsl(var(--accent))" strokeWidth="0.6" opacity="0.1" strokeDasharray="2 3" />
+          <line x1="370" y1="134" x2="370" y2="266" stroke="hsl(var(--accent))" strokeWidth="0.6" opacity="0.1" strokeDasharray="2 3" />
+          {/* Stable structure columns */}
+          {[0, 1, 2, 3].map(i => (
+            <g key={`sc${i}`}>
+              <rect x={198} y={132 + i * 35} width="2" height="2" fill="hsl(var(--accent))" opacity="0.12" rx="0.3" />
+              <rect x={540} y={132 + i * 35} width="2" height="2" fill="hsl(var(--accent))" opacity="0.12" rx="0.3" />
+            </g>
+          ))}
+          {/* Cross-bracing suggestion */}
+          <line x1="200" y1="445" x2="540" y2="445" stroke="hsl(var(--accent))" strokeWidth="0.4" opacity="0.06" strokeDasharray="4 6" />
+          <line x1="200" y1="520" x2="540" y2="520" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.04" strokeDasharray="4 6" />
         </g>
       )}
 
       {/* ── Envelope layer: roof + wall outlines ── */}
       {buildLayer === "envelope" && (
         <g style={{ opacity: 1, animation: "fade-in 0.3s ease-out" }}>
-          <path d="M 200 126 L 370 110 L 540 126" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.5" opacity="0.08" strokeDasharray="6 4" />
-          <path d="M 200 436 L 370 426 L 540 436" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.5" opacity="0.08" strokeDasharray="6 4" />
-          <rect x="200" y="130" width="340" height="140" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.6" opacity="0.06" />
-          <rect x="200" y="440" width="340" height="160" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.6" opacity="0.06" />
+          {/* Roof ridge lines */}
+          <path d="M 200 126 L 370 110 L 540 126" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.6" opacity="0.12" strokeDasharray="6 4" />
+          <path d="M 200 436 L 370 426 L 540 436" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.6" opacity="0.12" strokeDasharray="6 4" />
+          {/* Wall outlines — stronger definition */}
+          <rect x="200" y="130" width="340" height="140" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.8" opacity="0.1" />
+          <rect x="200" y="440" width="340" height="160" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.8" opacity="0.1" />
+          {/* Service wing enclosure */}
+          <rect x="200" y="270" width="75" height="170" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.5" opacity="0.06" />
+          <rect x="465" y="270" width="75" height="120" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.5" opacity="0.06" />
+          {/* Eave overhangs */}
+          <line x1="195" y1="130" x2="545" y2="130" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.04" />
+          <line x1="195" y1="440" x2="545" y2="440" stroke="hsl(var(--accent))" strokeWidth="0.3" opacity="0.04" />
         </g>
       )}
 
       {/* ── Movement flow overlays ── */}
-      {showFlows.map(flowId => {
-        const flow = flowPaths.find(f => f.id === flowId);
-        if (!flow) return null;
-        return (
-          <g key={flow.id} style={{ animation: "fade-in 0.3s ease-out" }}>
-            <path d={flow.d} fill="none" stroke={flow.color} strokeWidth="3" opacity="0.04" strokeLinecap="round" />
-            <path
-              d={flow.d}
-              fill="none"
-              stroke={flow.color}
-              strokeWidth="1.4"
-              opacity="0.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeDasharray="5 4"
-            >
-              <animate attributeName="stroke-dashoffset" from="18" to="0" dur="2.5s" repeatCount="indefinite" />
-            </path>
-          </g>
-        );
-      })}
+      <g mask="url(#flow-mask-v)">
+        {showFlows.map(flowId => {
+          const flow = flowPaths.find(f => f.id === flowId);
+          if (!flow) return null;
+          return (
+            <g key={flow.id} style={{ animation: "fade-in 0.3s ease-out" }}>
+              {/* Soft glow underneath */}
+              <path d={flow.d} fill="none" stroke={flow.color} strokeWidth="4" opacity="0.03" strokeLinecap="round" />
+              {/* Main flow line — tapered feel via varying width */}
+              <path
+                d={flow.d}
+                fill="none"
+                stroke={flow.color}
+                strokeWidth="1.2"
+                opacity="0.18"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray="6 5"
+              >
+                <animate attributeName="stroke-dashoffset" from="22" to="0" dur="3s" repeatCount="indefinite" />
+              </path>
+              {/* Direction indicator dots */}
+              <path
+                d={flow.d}
+                fill="none"
+                stroke={flow.color}
+                strokeWidth="2.2"
+                opacity="0.08"
+                strokeLinecap="round"
+                strokeDasharray="0.5 16"
+              >
+                <animate attributeName="stroke-dashoffset" from="33" to="0" dur="3s" repeatCount="indefinite" />
+              </path>
+            </g>
+          );
+        })}
+      </g>
 
       {/* ── Interactive zone shapes ── */}
       {zones.map(z => {
         const isActive = activeZone === z.id;
         const isDimmed = activeZone !== null && !isActive;
+        const isViewingActive = isViewing && !isActive;
         const center = getCenter(z.path);
         const elevShift = isActive ? z.elevation * -1.5 : 0;
+
+        // Stronger dimming when viewing zone is active
+        const dimOpacity = isViewingActive ? 0.14 : 0.2;
 
         return (
           <g
             key={z.id}
             style={{
-              opacity: isDimmed ? 0.2 : 1,
-              transform: `translate(0, ${elevShift}px) scale(${isActive ? 1.008 : 1})`,
+              opacity: isDimmed ? dimOpacity : 1,
+              transform: `translate(0, ${elevShift}px) scale(${isActive ? (z.id === "viewing-area" ? 1.012 : 1.008) : 1})`,
               transformOrigin: `${center.x}px ${center.y}px`,
               transition: `opacity ${T} ${EASE.default}, transform ${T} ${EASE.default}`,
               willChange: "opacity, transform",
             }}
-            filter={isActive ? "url(#mp-active)" : undefined}
+            filter={isActive ? (z.id === "viewing-area" ? "url(#mp-viewing-active)" : "url(#mp-active)") : undefined}
           >
             <path
               d={z.path}
@@ -228,12 +350,12 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
               y={center.y}
               textAnchor="middle"
               dominantBaseline="central"
-              fontSize={isActive ? "6.5" : "5.5"}
+              fontSize={isActive ? (z.id === "viewing-area" ? "7" : "6.5") : "5.5"}
               fontFamily="monospace"
               letterSpacing="0.12em"
               fill="hsl(var(--accent))"
               className="pointer-events-none uppercase"
-              style={{ opacity: isActive ? 0.55 : ls.labelOpacity * 0.7, transition: `opacity ${T} ease` }}
+              style={{ opacity: isActive ? (z.id === "viewing-area" ? 0.65 : 0.55) : ls.labelOpacity * 0.7, transition: `opacity ${T} ease, font-size ${T} ease` }}
             >
               {z.shortLabel}
             </text>
