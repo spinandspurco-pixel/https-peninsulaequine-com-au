@@ -327,7 +327,7 @@ export function InteractiveMasterplan() {
               )}
 
               {/* Controls */}
-              <div className="mt-8 pt-5 border-t border-border/15">
+              <div className="mt-8 pt-4 border-t border-border/8">
                 <MasterplanControls
                   buildLayer={buildLayer}
                   onBuildLayerChange={setBuildLayer}
@@ -336,9 +336,9 @@ export function InteractiveMasterplan() {
                 />
               </div>
 
-              {/* Authority micro-moment */}
-              <p className="mt-8 text-[10px] font-mono text-accent/12 tracking-[0.15em] uppercase leading-relaxed">
-                Built to perform. Planned to last.
+              {/* Authority */}
+              <p className="mt-8 text-[9px] font-mono text-accent/8 tracking-[0.2em] uppercase leading-relaxed">
+                Every movement resolved before the first post goes in.
               </p>
             </div>
           </div>
