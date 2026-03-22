@@ -644,7 +644,7 @@ export function InteractiveMasterplan() {
                         aria-label={`Go to ${zones.find(z => z.id === id)?.label}`}
                       >
                         <div
-                          className="absolute inset-y-0 left-0 rounded-full"
+                          className="absolute inset-y-0 left-0 w-full rounded-full"
                           style={{
                             transform: idx < tourStep ? "scaleX(1)" : idx === tourStep ? "scaleX(1)" : "scaleX(0)",
                             transformOrigin: "left",
