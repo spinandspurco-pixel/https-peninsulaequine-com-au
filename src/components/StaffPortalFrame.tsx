@@ -48,7 +48,7 @@ export function StaffPortalFrame({ title, subtitle, children }: StaffPortalFrame
           }}
         >
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-sm bg-accent/10 border border-accent/20 mb-5">
-            <img src={logoPeMark} alt="P.E" className="h-8 w-8 object-contain" />
+            <img src={logoPeMark} alt="P.E" className="h-8 w-8 object-contain" loading="lazy" decoding="async" />
           </div>
           <p className="text-[10px] uppercase tracking-[0.25em] text-accent font-sans mb-3">
             Peninsula Equine

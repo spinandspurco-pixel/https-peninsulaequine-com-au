@@ -100,7 +100,7 @@ function FormDataDisplay({ data }: { data: any }) {
               const url = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/staff-document-photos/${path}`;
               return (
                 <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="block rounded-lg overflow-hidden border border-border aspect-square">
-                  <img src={url} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" />
+                  <img src={url} alt={`Photo ${i + 1}`} className="w-full h-full object-cover"  loading="lazy" decoding="async" />
                 </a>
               );
             })}
@@ -307,7 +307,7 @@ export default function AdminDocuments() {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                <img src={logoPeMark} alt="PE" className="h-8 w-8 object-contain" />
+                <img src={logoPeMark} alt="PE" className="h-8 w-8 object-contain" loading="lazy" decoding="async" />
               </div>
               <div>
                 <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Document Portal</h1>

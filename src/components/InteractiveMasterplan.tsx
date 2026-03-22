@@ -86,7 +86,7 @@ function DetailCard({ zone, visible }: { zone: Zone | null; visible: boolean }) 
       className="pointer-events-none"
       style={{
         opacity: visible ? 1 : 0,
-        transition: `opacity 450ms cubic-bezier(0.25, 0.1, 0.25, 1)`,
+        transition: `opacity ${DURATION.normal}ms ${EASE.default}`,
         willChange: "opacity",
       }}
     >
@@ -595,7 +595,7 @@ export function InteractiveMasterplan() {
                 className="w-px"
                 style={{
                   background: `linear-gradient(to bottom, transparent 10%, hsl(var(--accent) / ${activeZone ? 0.12 : 0.04}) 30%, hsl(var(--accent) / ${activeZone ? 0.12 : 0.04}) 70%, transparent 90%)`,
-                  transition: "background 450ms cubic-bezier(0.25, 0.1, 0.25, 1)",
+                  transition: `background ${DURATION.normal}ms ${EASE.default}`,
                   minHeight: "200px",
                 }}
               />
@@ -607,7 +607,7 @@ export function InteractiveMasterplan() {
                   opacity: activeZone ? 0 : 1,
                   position: activeZone ? "absolute" : "relative",
                   pointerEvents: activeZone ? "none" : "auto",
-                  transition: "opacity 350ms ease",
+                  transition: `opacity ${DURATION.normal}ms ${EASE.default}`,
                 }}
               >
                 <p className="text-xs font-mono uppercase tracking-[0.3em] text-accent/25 mb-5">
@@ -644,11 +644,12 @@ export function InteractiveMasterplan() {
                         aria-label={`Go to ${zones.find(z => z.id === id)?.label}`}
                       >
                         <div
-                          className="absolute inset-y-0 left-0 rounded-full"
+                          className="absolute inset-y-0 left-0 w-full rounded-full"
                           style={{
-                            width: idx < tourStep ? "100%" : idx === tourStep ? "100%" : "0%",
+                            transform: idx < tourStep ? "scaleX(1)" : idx === tourStep ? "scaleX(1)" : "scaleX(0)",
+                            transformOrigin: "left",
                             background: idx <= tourStep ? "hsl(var(--accent) / 0.3)" : "transparent",
-                            transition: "width 350ms ease, background 350ms ease",
+                            transition: `transform ${DURATION.normal}ms ${EASE.default}, background ${DURATION.normal}ms ${EASE.default}`,
                           }}
                         />
                       </button>

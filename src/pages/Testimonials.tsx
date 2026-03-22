@@ -265,7 +265,7 @@ function VideoGallerySection({ testimonials }: { testimonials: TestimonialItem[]
                   }`}
                 >
                   {profile && (
-                    <img src={profile.portrait} alt={name} className="w-5 h-5 rounded-full object-cover" />
+                    <img src={profile.portrait} alt={name} className="w-5 h-5 rounded-full object-cover" loading="lazy" decoding="async" />
                   )}
                   {name}
                 </button>
@@ -321,7 +321,7 @@ function VideoGallerySection({ testimonials }: { testimonials: TestimonialItem[]
                     {/* Trainer portrait tag */}
                     {profile && (
                       <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm rounded-full pl-1 pr-2.5 py-1">
-                        <img src={profile.portrait} alt={video.trainer!} className="w-5 h-5 rounded-full object-cover" />
+                        <img src={profile.portrait} alt={video.trainer!} className="w-5 h-5 rounded-full object-cover" loading="lazy" decoding="async" />
                         <span className="text-[10px] text-white font-medium">{video.trainer}</span>
                       </div>
                     )}
@@ -600,7 +600,7 @@ export default function Testimonials() {
                       <img
                         src={profile.portrait}
                         alt={trainer}
-                        className="w-5 h-5 rounded-full object-cover"
+                        className="w-5 h-5 rounded-full object-cover" loading="lazy" decoding="async"
                       />
                     )}
                     {trainer}
