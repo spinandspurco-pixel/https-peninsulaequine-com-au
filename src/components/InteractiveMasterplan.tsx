@@ -86,7 +86,7 @@ function DetailCard({ zone, visible }: { zone: Zone | null; visible: boolean }) 
       className="pointer-events-none"
       style={{
         opacity: visible ? 1 : 0,
-        transition: `opacity 450ms cubic-bezier(0.25, 0.1, 0.25, 1)`,
+        transition: `opacity ${DURATION.normal}ms ${EASE.default}`,
         willChange: "opacity",
       }}
     >
