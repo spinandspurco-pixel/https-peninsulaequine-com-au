@@ -154,14 +154,20 @@ export default function Index() {
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: "radial-gradient(ellipse 50% 35% at 50% 46%, transparent 0%, hsl(222 20% 4% / 0.85) 45%, hsl(222 20% 4%) 100%)",
+              background: "radial-gradient(ellipse 48% 33% at 50% 46%, transparent 0%, hsl(222 20% 4% / 0.88) 42%, hsl(222 20% 4%) 100%)",
             }}
           />
-          {/* Extra shadow at edges to kill bright spots */}
+          {/* Edge + corner vignette */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: "linear-gradient(to bottom, hsl(222 20% 4% / 0.4) 0%, transparent 30%, transparent 70%, hsl(222 20% 4% / 0.6) 100%)",
+              background: "linear-gradient(to bottom, hsl(222 20% 4% / 0.45) 0%, transparent 28%, transparent 72%, hsl(222 20% 4% / 0.65) 100%)",
+            }}
+          />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: "radial-gradient(circle at 0% 0%, hsl(222 20% 4% / 0.4) 0%, transparent 35%), radial-gradient(circle at 100% 0%, hsl(222 20% 4% / 0.4) 0%, transparent 35%), radial-gradient(circle at 0% 100%, hsl(222 20% 4% / 0.35) 0%, transparent 35%), radial-gradient(circle at 100% 100%, hsl(222 20% 4% / 0.35) 0%, transparent 35%)",
             }}
           />
         </div>
