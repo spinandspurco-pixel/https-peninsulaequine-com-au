@@ -131,6 +131,14 @@ export default function GroundLock() {
               <div className="w-10 h-px bg-accent/8 mx-auto" />
               <SystemDiagram />
             </div>
+
+            <RevealOnScroll direction="up" delay={200}>
+              <div className="text-center mt-14">
+                <Link to="/groundlock/how-it-works" className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.25em] text-accent/35 hover:text-accent/60 transition-colors">
+                  Explore full technical detail <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+            </RevealOnScroll>
           </div>
         </div>
       </section>
