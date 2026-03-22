@@ -221,7 +221,7 @@ export function InteractiveMasterplan() {
               The Layout Defines Everything
             </h2>
             <p className="mt-4 text-sm text-muted-foreground/30 font-serif italic max-w-md mx-auto leading-relaxed">
-              Every movement — horse, rider, vehicle — is resolved before a single post goes in the ground.
+              Consistency is designed long before it is ridden.
             </p>
           </div>
         </RevealOnScroll>
