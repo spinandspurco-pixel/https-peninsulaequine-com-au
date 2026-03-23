@@ -16,9 +16,8 @@ import { ProjectQualification, type ProjectType } from "@/components/ProjectQual
 import { BuildOptions } from "@/components/BuildOptions";
 import { GuidedEnquiryFlow } from "@/components/GuidedEnquiryFlow";
 
-// ── Project imagery (hero + optional supporting per project) ──
+// ── Project imagery (hero per project) ──
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
-import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
 import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
 import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
 
