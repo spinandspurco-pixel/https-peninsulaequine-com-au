@@ -135,6 +135,18 @@ export function MainRidgeLivingOutcome() {
           >
             Main Ridge Estate — Mornington Peninsula
           </p>
+
+          {/* Legacy thread */}
+          <p
+            className="mt-8 font-mono text-[9px] uppercase tracking-[0.3em]"
+            style={{
+              color: "hsl(var(--accent) / 0.1)",
+              opacity: visible ? 1 : 0,
+              transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 2800ms`,
+            }}
+          >
+            Built to perform — year after year.
+          </p>
         </div>
       </div>
     </section>
