@@ -1,47 +1,22 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Eye, EyeOff, Loader2, Lock, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import logoPeMark from "@/assets/logo-pe-mark.webp";
 
-/* ── Division data ────────────────────────────────── */
-
-const DIVISIONS = [
-  {
-    num: "01",
-    title: "Build",
-    role: "Project Delivery",
-    body: "Site-to-handover execution across arenas, stables, barns, and rural infrastructure. Every project managed on-property, on-schedule.",
-    cta: "Start a Project",
-    href: "/site-assessment",
-  },
-  {
-    num: "02",
-    title: "Signature Systems",
-    role: "Proprietary Engineering",
-    body: "GroundLock and future engineered systems — developed in-house, validated through builds, designed for how properties actually perform.",
-    cta: "Enquire About Systems",
-    href: "/systems",
-  },
-  {
-    num: "03",
-    title: "GroundLock Systems",
-    role: "Systems Division",
-    body: "Ground stabilisation systems, hardware, and GroundLock configurations — fabricated to Peninsula Equine tolerances, available as standalone products.",
-    cta: "Explore Systems",
-    href: "/forge",
-  },
+const SYSTEM_LINES = [
+  { label: "Track", statement: "Every project mapped from enquiry to handover." },
+  { label: "Analyse", statement: "Land conditions assessed before a single post is set." },
+  { label: "Design", statement: "System-led decisions — not guesswork." },
 ];
-
-/* ── Page ──────────────────────────────────────────── */
 
 export default function HQ() {
   const [email, setEmail] = useState("");
@@ -100,14 +75,28 @@ export default function HQ() {
     <Layout>
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="relative pt-44 sm:pt-56 pb-20 sm:pb-28 overflow-hidden">
-        <div className="absolute inset-0 grain-texture opacity-15" />
+        <div className="absolute inset-0 grain-texture opacity-[0.025]" />
+        {/* Blueprint grid overlay */}
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          preserveAspectRatio="none"
+          style={{ opacity: 0.03 }}
+        >
+          <defs>
+            <pattern id="hq-grid" width="80" height="80" patternUnits="userSpaceOnUse">
+              <line x1="80" y1="0" x2="80" y2="80" stroke="hsl(var(--accent))" strokeWidth="0.5" />
+              <line x1="0" y1="80" x2="80" y2="80" stroke="hsl(var(--accent))" strokeWidth="0.5" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#hq-grid)" />
+        </svg>
 
         <div className="section-container relative z-10 max-w-2xl mx-auto text-center">
           <div
             className="opacity-0 animate-fade-in"
             style={{ animationDelay: "150ms", animationFillMode: "both" }}
           >
-            <div className="inline-flex items-center justify-center w-14 h-14 border border-accent/20 bg-accent/5 mb-8">
+            <div className="inline-flex items-center justify-center w-14 h-14 border border-accent/15 bg-accent/[0.03] mb-8">
               <img src={logoPeMark} alt="P.E" className="h-7 w-7 object-contain" loading="lazy" decoding="async" />
             </div>
           </div>
@@ -131,83 +120,101 @@ export default function HQ() {
           </h1>
 
           <p
-            className="mt-8 text-[13px] sm:text-[14px] text-muted-foreground/50 max-w-sm mx-auto leading-[2] opacity-0 animate-fade-in"
-            style={{ animationDelay: "600ms", animationFillMode: "both" }}
+            className="mt-8 font-mono text-[10px] uppercase tracking-[0.4em] opacity-0 animate-fade-in"
+            style={{
+              animationDelay: "700ms",
+              animationFillMode: "both",
+              color: "hsl(var(--muted-foreground) / 0.2)",
+            }}
           >
-            Three divisions. One standard.<br />
-            Build. Engineer. Deliver.
+            Controlled process. Engineered outcome.
           </p>
         </div>
       </section>
 
-      {/* ── Division Blocks ──────────────────────────── */}
-      <section className="pb-24 sm:pb-32">
-        <div className="section-container max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-5">
-            {DIVISIONS.map((div, i) => (
-              <RevealOnScroll key={div.title} direction="up" stagger={i} staggerInterval={120}>
-                <Link
-                  to={div.href}
-                  className="group relative flex flex-col p-8 sm:p-10 lg:p-12 min-h-[300px] border border-border/30 hover:border-border/40 bg-card/40 hover:bg-card/60 transition-all duration-700"
-                >
-                  <div className="absolute top-0 left-0 w-8 h-px bg-accent/30 group-hover:w-14 group-hover:bg-accent/40 transition-all duration-700" />
+      {/* ── The System Behind Every Build ─────────────── */}
+      <section className="relative overflow-hidden">
+        <div className="py-32 sm:py-40 lg:py-48 bg-card relative">
+          <div className="absolute inset-0 grain-texture opacity-[0.02]" />
+          {/* Subtle engineering lines */}
+          <svg
+            className="absolute inset-0 w-full h-full pointer-events-none"
+            preserveAspectRatio="none"
+            style={{ opacity: 0.025 }}
+          >
+            <line x1="25%" y1="0" x2="25%" y2="100%" stroke="hsl(var(--accent))" strokeWidth="0.5" />
+            <line x1="50%" y1="0" x2="50%" y2="100%" stroke="hsl(var(--accent))" strokeWidth="0.5" />
+            <line x1="75%" y1="0" x2="75%" y2="100%" stroke="hsl(var(--accent))" strokeWidth="0.5" />
+          </svg>
 
-                  <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3 block">
-                    {div.num}
-                  </span>
+          <div className="section-container max-w-3xl mx-auto relative z-10">
+            <RevealOnScroll direction="up">
+              <p
+                className="font-mono text-[9px] uppercase tracking-[0.35em] text-center mb-16 sm:mb-20"
+                style={{ color: "hsl(var(--accent) / 0.3)" }}
+              >
+                The System Behind Every Build
+              </p>
+            </RevealOnScroll>
 
-                  <p className="font-mono text-[8px] uppercase tracking-[0.25em] text-muted-foreground/35 mb-8">
-                    {div.role}
-                  </p>
-
-                  <h3 className="font-serif text-[17px] sm:text-[18px] font-medium text-foreground/80 tracking-[0.02em] mb-5 group-hover:text-foreground/90 transition-colors duration-500">
-                    {div.title}
-                  </h3>
-
-                  <p className="text-[12px] text-muted-foreground/45 leading-[2.1] max-w-[280px] flex-1">
-                    {div.body}
-                  </p>
-
-                  <div className="flex items-center gap-2 mt-8 opacity-60 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-700 translate-y-0 sm:translate-y-1 sm:group-hover:translate-y-0">
-                    <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-accent/60">{div.cta}</span>
-                    <ArrowRight className="w-3 h-3 text-accent/50" />
+            <div className="space-y-0">
+              {SYSTEM_LINES.map((item, i) => (
+                <RevealOnScroll key={item.label} direction="up" stagger={i} staggerInterval={140}>
+                  <div className="flex items-start gap-6 sm:gap-10 py-8 sm:py-10 border-b border-border/8 last:border-b-0">
+                    <span
+                      className="font-mono text-[9px] uppercase tracking-[0.3em] shrink-0 pt-1"
+                      style={{ color: "hsl(var(--accent) / 0.25)", minWidth: "60px" }}
+                    >
+                      {item.label}
+                    </span>
+                    <p
+                      className="font-serif text-[15px] sm:text-[17px] tracking-[0.02em] leading-[1.5]"
+                      style={{ color: "hsl(var(--foreground) / 0.3)" }}
+                    >
+                      {item.statement}
+                    </p>
                   </div>
-                </Link>
-              </RevealOnScroll>
-            ))}
+                </RevealOnScroll>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Horizon ──────────────────────────────────── */}
-      <section className="py-16 sm:py-20 border-t border-border/15">
-        <div className="section-container max-w-md mx-auto text-center">
-          <RevealOnScroll>
-            <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/40 mb-6">
-              Expanding
-            </p>
-            <p className="text-[12px] sm:text-[13px] text-muted-foreground/40 leading-[2.2]">
-              Planning tools, entry automation, forecourt products, and
-              estate hardware — validated through builds before release.
-            </p>
-          </RevealOnScroll>
+      {/* ── Filter line ──────────────────────────────── */}
+      <section className="relative overflow-hidden">
+        <div className="py-24 sm:py-32 relative">
+          <div className="absolute inset-0 grain-texture opacity-[0.02]" />
+          <div className="section-container max-w-2xl mx-auto text-center relative z-10">
+            <RevealOnScroll direction="up">
+              <p
+                className="font-serif font-light italic tracking-[0.04em]"
+                style={{
+                  fontSize: "clamp(1rem, 0.5rem + 1.8vw, 1.5rem)",
+                  color: "hsl(var(--foreground) / 0.14)",
+                }}
+              >
+                Not a portal. A process.
+              </p>
+            </RevealOnScroll>
+          </div>
         </div>
       </section>
 
       {/* ── Staff Sign-In ────────────────────────────── */}
-      <section className="py-24 sm:py-32 border-t border-border/15">
+      <section className="py-24 sm:py-32 border-t border-border/10">
         <div className="section-container max-w-md mx-auto">
           <RevealOnScroll>
             <div className="text-center mb-10">
               <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/45 mb-4">
                 Staff Access
               </p>
-              <p className="text-[12px] text-muted-foreground/45 leading-relaxed">
-                Secure portal for Peninsula Equine team members.
+              <p className="text-[12px] text-muted-foreground/35 leading-relaxed">
+                Authorised team members only.
               </p>
             </div>
 
-            <div className="bg-card/60 border border-border/30 p-6 sm:p-8 space-y-6">
+            <div className="bg-card/60 border border-border/20 p-6 sm:p-8 space-y-6">
               <form onSubmit={handleSignIn} className="space-y-5">
                 <div className="space-y-1.5">
                   <Label htmlFor="hq-email" className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground font-sans">
@@ -305,9 +312,9 @@ export default function HQ() {
                 Sign in with Google
               </Button>
 
-              <p className="text-[11px] text-muted-foreground/40 text-center leading-relaxed">
+              <p className="text-[11px] text-muted-foreground/35 text-center leading-relaxed">
                 Staff accounts are managed by your administrator.{" "}
-                <a href="mailto:info@peninsulaequine.org" className="text-accent/60 hover:text-accent transition-colors">
+                <a href="mailto:info@peninsulaequine.org" className="text-accent/50 hover:text-accent transition-colors">
                   Request access
                 </a>
               </p>
