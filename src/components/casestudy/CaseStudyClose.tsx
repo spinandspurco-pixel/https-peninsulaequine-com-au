@@ -40,15 +40,7 @@ export function CaseStudyClose({ closingLine }: Props) {
               transition: "opacity 600ms cubic-bezier(0.45, 0, 0.15, 1)",
             }}
           >
-            <Button
-              asChild
-              className="bg-accent text-accent-foreground hover:bg-accent/90 uppercase tracking-[0.14em] text-xs font-medium btn-hover-lift"
-              onClick={() => trackCtaClick("case_study_start_project")}
-            >
-              <Link to="/contact">
-                Start Your Project <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+            <StartProjectButton />
             <Button asChild variant="outline" className="uppercase tracking-[0.1em] text-xs">
               <Link to="/gallery">
                 <ArrowLeft className="mr-2 h-3 w-3" /> Selected Work
