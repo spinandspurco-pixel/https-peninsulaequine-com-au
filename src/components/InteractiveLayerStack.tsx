@@ -164,7 +164,7 @@ export function InteractiveLayerStack() {
                 !showLockAnimation && "transition-all duration-700 ease-out"
               )}
               style={showLockAnimation ? {
-                animation: "gl-lock-settle 480ms cubic-bezier(0.32, 0, 0.15, 1) forwards",
+                animation: `gl-lock-settle 480ms cubic-bezier(0.32, 0, 0.15, 1) forwards${panelResolved ? ', gl-resolve 600ms ease-out 0ms forwards' : ''}`,
               } : undefined}
               onClick={() => handleClick(i)}
             >
