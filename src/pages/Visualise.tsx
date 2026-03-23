@@ -12,6 +12,11 @@ import imgSmall from "@/assets/estate-small.jpg";
 import imgMedium from "@/assets/estate-medium.jpg";
 import imgLarge from "@/assets/estate-large.jpg";
 
+/* ── Terrain variant imagery ─────────────────────────── */
+import imgTerrainFlat from "@/assets/terrain-flat.jpg";
+import imgTerrainGentle from "@/assets/terrain-gentle.jpg";
+import imgTerrainComplex from "@/assets/terrain-complex.jpg";
+
 /* ── Configuration types ─────────────────────────────── */
 type Terrain = "flat" | "gentle" | "complex";
 type Discipline = "performance" | "reining" | "mixed";
