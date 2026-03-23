@@ -40,12 +40,14 @@ function EditorialImage({
   className = "",
   aspect = "aspect-[4/3]",
   onClick,
+  hoverLabel,
 }: {
   src: string;
   alt: string;
   className?: string;
   aspect?: string;
   onClick?: () => void;
+  hoverLabel?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
@@ -75,13 +77,35 @@ function EditorialImage({
           className={`absolute inset-0 w-full h-full object-cover will-change-transform img-gallery ${
             loaded ? "opacity-100" : "opacity-0"
           }`}
-          style={{ transition: `opacity ${DURATION.slow}ms ${EASE.default}, transform ${DURATION.parallax}ms ${EASE.default}` }}
+          style={{
+            transition: `opacity ${DURATION.slow}ms ${EASE.default}, transform 700ms cubic-bezier(0.45, 0, 0.15, 1)`,
+            transform: "scale(1)",
+          }}
           loading="lazy"
           decoding="async"
           onLoad={() => setLoaded(true)}
-          onMouseEnter={(e) => { if (onClick) (e.currentTarget as HTMLImageElement).style.transform = "scale(1.03)"; }}
-          onMouseLeave={(e) => { if (onClick) (e.currentTarget as HTMLImageElement).style.transform = "scale(1)"; }}
         />
+      )}
+      {/* Hover zoom */}
+      <div
+        className="absolute inset-0 transition-transform duration-700 ease-[cubic-bezier(0.45,0,0.15,1)] group-hover:scale-[1.03]"
+        style={{ pointerEvents: "none" }}
+      />
+      {/* Hover overlay with label */}
+      {hoverLabel && (
+        <div className="absolute inset-0 flex items-end justify-start p-8 sm:p-10 z-10 pointer-events-none">
+          <div
+            className="opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          >
+            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-primary-foreground/60">
+              {hoverLabel}
+            </p>
+          </div>
+        </div>
+      )}
+      {/* Hover dimming */}
+      {hoverLabel && (
+        <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/30 transition-colors duration-500 pointer-events-none" />
       )}
     </div>
   );
