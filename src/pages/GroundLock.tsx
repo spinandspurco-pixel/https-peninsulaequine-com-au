@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { GroundLockProductEducation } from "@/components/groundlock/GroundLockProductEducation";
 import { PanelSpecimen, SystemDiagram, LockSequence } from "@/components/groundlock/GroundLockSystemSVG";
-import { GroundLockPanelSVG, PanelDefs } from "@/components/groundlock/GroundLockPanelSVG";
+import { GroundLockHero } from "@/components/groundlock/GroundLockHero";
 import { GroundLockProjectForm } from "@/components/groundlock/GroundLockProjectForm";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
