@@ -156,7 +156,8 @@ function AppContent() {
           <Route path="/project/:slug" element={<CaseStudy />} />
           <Route path="/quote/:token" element={<ClientQuote />} />
           <Route path="/proposal" element={<ProposalTemplate />} />
-          <Route path="/proposal-editor/:id" element={<ProposalEditor />} />
+           <Route path="/proposal-editor/:id" element={<ProposalEditor />} />
+           <Route path="/visualise" element={<Visualise />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
