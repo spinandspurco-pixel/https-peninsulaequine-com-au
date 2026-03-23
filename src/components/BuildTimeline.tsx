@@ -179,9 +179,30 @@ function PhaseScene({
 
   return (
     <div ref={ref} className="relative w-full h-[75vh] sm:h-[85vh] overflow-hidden">
-      {/* Background */}
+      {/* Previous scene bleed — faint prior phase persists briefly */}
+      {index > 0 && (
+        <div
+          className="absolute inset-0 z-[1]"
+          style={{
+            opacity: visible ? 0 : 0.25,
+            transition: `opacity 2200ms ${EASE.cinematic} 200ms`,
+          }}
+        >
+          <img
+            src={phases[index - 1].image}
+            alt=""
+            aria-hidden="true"
+            className="w-full h-full object-cover"
+            style={{ filter: `brightness(${phases[index - 1].brightness * 0.7})` }}
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      )}
+
+      {/* Background — current phase */}
       <div
-        className="absolute inset-0 will-change-transform"
+        className="absolute inset-0 z-[2] will-change-transform"
         style={{
           transform: reducedMotion
             ? `scale(${phase.scale})`
@@ -199,22 +220,34 @@ function PhaseScene({
         />
       </div>
 
+      {/* Consistent light direction — warm from upper-left */}
+      <div
+        className="absolute inset-0 z-[3] pointer-events-none"
+        style={{
+          background: `radial-gradient(ellipse 120% 100% at 15% 20%, transparent 0%, hsl(var(--background) / 0.12) 70%)`,
+        }}
+      />
+
+      {/* Dust carry-over */}
+      {!reducedMotion && (
+        <DustCarryOver active={visible} direction={index % 2 === 0 ? "right" : "left"} />
+      )}
+
       {/* Overlay */}
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 z-[6]"
         style={{
           background: `linear-gradient(to bottom, hsl(var(--background) / 0.15) 0%, hsl(var(--background) / ${phase.overlayOpacity}) 45%, hsl(var(--background) / 0.8) 100%)`,
         }}
       />
 
       {/* Grain */}
-      <div className="absolute inset-0 pointer-events-none grain-texture" />
+      <div className="absolute inset-0 pointer-events-none grain-texture z-[7]" />
 
       {/* Content */}
       <div className="absolute inset-0 z-10 flex items-end">
         <div className="section-container pb-16 sm:pb-24 lg:pb-28">
           <div className="max-w-lg">
-            {/* Phase label */}
             <div
               className="flex items-center gap-4 mb-5"
               style={{
@@ -232,7 +265,6 @@ function PhaseScene({
               </span>
             </div>
 
-            {/* Quote */}
             <p
               className="font-serif text-xl sm:text-2xl lg:text-3xl italic leading-relaxed tracking-[0.01em] text-foreground/55"
               style={{
