@@ -100,34 +100,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* ═══ APPROACH ═════════════════════════════════ */}
-      <section className="relative overflow-hidden">
-        <div className="divider-grid" />
-        <div className="py-28 sm:py-40 bg-card relative">
-          <div className="absolute inset-0 contour-texture" />
-          <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
-            <RevealOnScroll direction="up">
-              <RevealLine className="mx-auto mb-14" width="w-10" />
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={80}>
-              <p className="text-overline mb-6">Our Approach</p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={120}>
-              <h2 className="heading-section text-foreground mb-12">
-                Design and Construction<br />as One System
-              </h2>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={200}>
-              <div className="space-y-6 text-sm text-muted-foreground/50 leading-[2]">
-                <p>
-                  Design and construction as one system. Every decision considered as a whole — built to reduce maintenance over time.
-                </p>
-              </div>
-            </RevealOnScroll>
-          </div>
-        </div>
-      </section>
-
       {/* ═══ VALUES ═══════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
