@@ -9,7 +9,7 @@ import { WalkTheProject } from "@/components/WalkTheProject";
 import { BuildTimeline } from "@/components/BuildTimeline";
 import { MainRidgeLivingOutcome } from "@/components/MainRidgeLivingOutcome";
 
-import imgHero from "@/assets/mainridge-aerial-hero.jpg";
+import imgHero from "@/assets/masterplan-aerial-hero.jpg";
 
 /* ── Act labels for the side nav ─────────────────────── */
 const acts = [

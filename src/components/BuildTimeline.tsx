@@ -3,13 +3,13 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 
 /* ── Assets ──────────────────────────────────────────── */
-import imgSitePrep from "@/assets/mainridge-phase-site.jpg";
-import imgGroundlock from "@/assets/mainridge-phase-ground.jpg";
-import imgStructure from "@/assets/mainridge-phase-structure.jpg";
-import imgEnvelope from "@/assets/mainridge-phase-envelope.jpg";
-import imgFinished from "@/assets/mainridge-phase-finished.jpg";
-import imgBefore from "@/assets/mainridge-phase-site.jpg";
-import imgAfter from "@/assets/mainridge-phase-finished.jpg";
+import imgSitePrep from "@/assets/etb-scene1-raw-land.jpg";
+import imgGroundlock from "@/assets/etb-scene3-system-install.jpg";
+import imgStructure from "@/assets/etb-scene4-structural.jpg";
+import imgEnvelope from "@/assets/etb-scene4-structural.jpg";
+import imgFinished from "@/assets/etb-scene5-living.jpg";
+import imgBefore from "@/assets/etb-scene1-raw-land.jpg";
+import imgAfter from "@/assets/etb-scene5-living.jpg";
 
 /* ── Phase data ──────────────────────────────────────── */
 interface Phase {
