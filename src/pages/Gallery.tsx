@@ -258,117 +258,81 @@ export default function Gallery() {
 
 
       {/* ═══════════════════════════════════════════════════
-          5. DETAIL MATTERS — editorial craftsmanship cards
-          ═══════════════════════════════════════════════════ */}
-      <DetailMatters />
-
-      <ChapterDivider />
-
-      {/* ═══════════════════════════════════════════════════
-          6. FEATURE PROJECT — Private Client
+          SELECTED WORK — curated project blocks
           ═══════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grain-texture" />
-        <div className="py-28 sm:py-36 lg:py-44 relative">
+        <div className="py-32 sm:py-40 lg:py-48 relative">
           <div className="section-container relative z-[1]">
             <RevealOnScroll direction="up" duration={DURATION.normal}>
-              <SectionHeader label="Featured Project" heading="Private Client — Mornington Peninsula" />
-
-              {/* Hero + details row */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 items-start mb-6 sm:mb-8">
-                <div className="lg:col-span-8">
-                  <EditorialImage
-                    src={aberdeenBarnInterior}
-                    alt="Private Client — Mornington Peninsula — luxury barn interior"
-                    aspect="aspect-[16/10]"
-                    onClick={() => openLightbox(aberdeenBarnInterior)}
-                  />
-                </div>
-                <div className="lg:col-span-4 py-2 lg:py-6">
-                  <div className="w-10 h-px bg-accent/20 mb-6" />
-                  <dl className="space-y-4 mb-8">
-                    <div>
-                      <dt className="text-[9px] uppercase tracking-[0.3em] text-muted-foreground/25 font-mono">Location</dt>
-                      <dd className="text-sm text-muted-foreground/50 mt-1">Mornington Peninsula, Victoria</dd>
-                    </div>
-                    <div>
-                      <dt className="text-[9px] uppercase tracking-[0.3em] text-muted-foreground/25 font-mono">Scope</dt>
-                      <dd className="text-sm text-muted-foreground/50 mt-1">Stables, stonework, timber joinery</dd>
-                    </div>
-                  </dl>
-                  <p className="text-xs text-muted-foreground/30 leading-[1.8] font-serif italic">
-                    Premium equine facility featuring hand-laid stonework, bespoke stall systems, and architectural timber detailing throughout.
+              <div className="mb-20 sm:mb-28 lg:mb-32">
+                <div className="flex items-center gap-5 mb-5">
+                  <div className="w-8 h-px bg-accent/25" />
+                  <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/35 font-mono">
+                    Selected Work
                   </p>
                 </div>
               </div>
-
-              {/* Supporting — detail + outcome */}
-              <div className="grid grid-cols-2 gap-3 sm:gap-5">
-                <EditorialImage src={aberdeenStalls} alt="Private client — custom stalls" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenStalls)} />
-                <EditorialImage src={aberdeenExterior} alt="Private client — completed exterior" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenExterior)} />
-              </div>
-            </RevealOnScroll>
-          </div>
-        </div>
-      </section>
-
-      <ChapterDivider />
-
-      {/* ═══════════════════════════════════════════════════
-          7. FINISHED RESULTS — editorial mixed grid
-          ═══════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 grain-texture" />
-        <div className="py-28 sm:py-36 lg:py-44 relative">
-          <div className="section-container relative z-[1]">
-            <RevealOnScroll direction="up" duration={DURATION.normal}>
-              <SectionHeader label="Completed Work" heading="The Finished Result" />
             </RevealOnScroll>
 
-            {/* Two strong results — hero pair */}
-            <RevealOnScroll direction="up" duration={DURATION.slow}>
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-5">
-                <div className="lg:col-span-7">
-                  <EditorialImage src={aberdeenDeck} alt="Private client — outdoor deck" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenDeck)} />
+            {/* ── Project 1: Private Client ── */}
+            <div className="mb-32 sm:mb-40 lg:mb-48">
+              <RevealOnScroll direction="up" duration={DURATION.normal}>
+                <EditorialImage
+                  src={aberdeenBarnInterior}
+                  alt="Private Client — luxury barn interior"
+                  aspect="aspect-[16/10]"
+                  onClick={() => openLightbox(aberdeenBarnInterior)}
+                />
+                <div className="mt-6 sm:mt-8">
+                  <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/25 mb-2">Private Client</p>
+                  <p className="font-serif text-[13px] sm:text-sm text-foreground/25 italic">Stonework, stalls, and timber throughout.</p>
                 </div>
-                <div className="lg:col-span-5">
-                  <EditorialImage src={premiumStableFacade} alt="Premium stable — architectural facade" aspect="aspect-[3/4]" className="h-full" onClick={() => openLightbox(premiumStableFacade)} />
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" duration={DURATION.slow} delay={200}>
+                <div className="mt-8 sm:mt-10 max-w-2xl">
+                  <EditorialImage
+                    src={aberdeenExterior}
+                    alt="Private Client — completed exterior"
+                    aspect="aspect-[16/10]"
+                    onClick={() => openLightbox(aberdeenExterior)}
+                  />
                 </div>
-              </div>
-            </RevealOnScroll>
-          </div>
-        </div>
-      </section>
+              </RevealOnScroll>
+            </div>
 
-      <ChapterDivider />
-
-      {/* ═══════════════════════════════════════════════════
-          8. CUSTOM BUILDS — steel sheds & bespoke timber
-          ═══════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 grain-texture" />
-        <div className="py-28 sm:py-36 lg:py-44 relative">
-          <div className="section-container relative z-[1]">
-            <RevealOnScroll direction="up" duration={DURATION.normal}>
-              <SectionHeader label="Custom Builds" heading="Steel & Timber — Built to Brief" />
-            </RevealOnScroll>
-
-            {/* Row 1 — wide steel shed + tall timber cubby */}
-            <RevealOnScroll direction="up" duration={DURATION.slow} delay={80}>
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-5 mb-3 sm:mb-5">
-                <div className="lg:col-span-7">
-                  <EditorialImage src={steelShedDramatic} alt="Custom colorbond barn with dramatic sky" aspect="aspect-[16/10]" onClick={() => openLightbox(steelShedDramatic)} />
+            {/* ── Project 2: Custom Steel ── */}
+            <div className="mb-32 sm:mb-40 lg:mb-48">
+              <RevealOnScroll direction="up" duration={DURATION.normal}>
+                <EditorialImage
+                  src={steelShedDramatic}
+                  alt="Custom colorbond barn"
+                  aspect="aspect-[16/10]"
+                  onClick={() => openLightbox(steelShedDramatic)}
+                />
+                <div className="mt-6 sm:mt-8">
+                  <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/25 mb-2">Custom Build</p>
+                  <p className="font-serif text-[13px] sm:text-sm text-foreground/25 italic">Steel structure, resolved to brief.</p>
                 </div>
-                <div className="lg:col-span-5">
-                  <EditorialImage src={timberCubbyFront} alt="Western-style bespoke timber cubby" aspect="aspect-[3/4]" className="h-full" onClick={() => openLightbox(timberCubbyFront)} />
-                </div>
-              </div>
-            </RevealOnScroll>
+              </RevealOnScroll>
+            </div>
 
-            {/* Row 2 — craft detail */}
-            <RevealOnScroll direction="up" duration={DURATION.normal} delay={120}>
-              <EditorialImage src={aberdeenStonework} alt="Aberdeen — hand-laid natural stonework detail" aspect="aspect-[21/9]" onClick={() => openLightbox(aberdeenStonework)} />
-            </RevealOnScroll>
+            {/* ── Project 3: Craft Detail ── */}
+            <div>
+              <RevealOnScroll direction="up" duration={DURATION.normal}>
+                <EditorialImage
+                  src={aberdeenStonework}
+                  alt="Hand-laid natural stonework detail"
+                  aspect="aspect-[21/9]"
+                  onClick={() => openLightbox(aberdeenStonework)}
+                />
+                <div className="mt-6 sm:mt-8">
+                  <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/25 mb-2">Craft Detail</p>
+                  <p className="font-serif text-[13px] sm:text-sm text-foreground/25 italic">Hand-laid stone. No shortcuts.</p>
+                </div>
+              </RevealOnScroll>
+            </div>
+
           </div>
         </div>
       </section>
