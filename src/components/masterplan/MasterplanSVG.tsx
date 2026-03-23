@@ -348,6 +348,10 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         <polygon points="472,232 468,228 468,232" fill="hsl(200 40% 50%)" opacity="0.5" />
         <polygon points="370,337 368,332 372,332" fill="hsl(200 40% 50%)" opacity="0.5" />
         <text x="370" y="265" textAnchor="middle" fontSize="2.5" fontFamily="monospace" fill="hsl(200 40% 50%)" opacity="0.5" letterSpacing="0.12em">GRADED FALL</text>
+        <text x="370" y="280" textAnchor="middle" fontSize="2.4" fontFamily="monospace" fill="hsl(var(--accent))" letterSpacing="0.1em"
+          style={{ opacity: activeZone === "courtyard" ? 0.13 : 0, transition: `opacity 260ms ${T_EASE} 200ms` }}>
+          Water moves. Surface holds.
+        </text>
       </g>
 
       {/* Access: path highlighting with direction */}
