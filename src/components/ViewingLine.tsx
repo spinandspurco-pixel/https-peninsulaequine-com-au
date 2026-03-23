@@ -1,9 +1,7 @@
 import { useRef, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
-import { ArrowRight } from "lucide-react";
 import viewingLineBg from "@/assets/viewing-line-bg.jpg";
+import { StartProjectButton } from "@/components/StartProjectButton";
 
 export function ViewingLine() {
   const ref = useRef<HTMLDivElement>(null);
@@ -113,11 +111,7 @@ export function ViewingLine() {
               transition: `opacity ${DURATION.slow}ms ${EASE.default} 1000ms`,
             }}
           >
-            <Button asChild variant="gold" size="lg">
-              <Link to="/contact">
-                Start Your Project <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+            <StartProjectButton />
             {/* Quiet closer */}
             <p
               className="mt-6 text-[10px] sm:text-[11px] font-serif italic text-muted-foreground/20"
