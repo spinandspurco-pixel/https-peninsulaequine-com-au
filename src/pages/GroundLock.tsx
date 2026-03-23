@@ -162,22 +162,7 @@ export default function GroundLock() {
               className="hidden lg:flex justify-end opacity-0 animate-fade-in"
               style={{ animationDelay: "700ms", animationFillMode: "both", animationDuration: "1400ms" }}
             >
-              <svg
-                viewBox="0 0 120 140"
-                className="w-full max-w-[360px] h-auto drop-shadow-2xl"
-                aria-label="GroundLock horseshoe panel — hero product"
-                style={{ transform: "perspective(800px) rotateY(-6deg) rotateX(4deg)", filter: "drop-shadow(0 20px 40px hsl(var(--accent) / 0.12))" }}
-              >
-                <PanelDefs id="hero" />
-                <GroundLockPanelSVG x={8} y={6} scale={1.22} active showTabs showJoins defsId="hero" direction="up" />
-                <path
-                  d="M 32 28 A 34 36 0 0 1 88 28"
-                  fill="none"
-                  stroke="hsl(var(--accent) / 0.15)"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                />
-              </svg>
+              <GroundLockHero size="max-w-[360px]" opacity={0.85} perspective />
             </div>
           </div>
         </div>
