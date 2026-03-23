@@ -21,6 +21,12 @@ import imgTerrainComplex from "@/assets/terrain-complex.jpg";
 import imgDisciplinePerformance from "@/assets/discipline-performance.jpg";
 import imgDisciplineReining from "@/assets/discipline-reining.jpg";
 import imgDisciplineMixed from "@/assets/discipline-mixed.jpg";
+
+/* ── Budget variant imagery ──────────────────────────── */
+import imgBudgetStandard from "@/assets/budget-standard.jpg";
+import imgBudgetMid from "@/assets/budget-mid.jpg";
+import imgBudgetPremium from "@/assets/budget-premium.jpg";
+
 /* ── Configuration types ─────────────────────────────── */
 type Terrain = "flat" | "gentle" | "complex";
 type Discipline = "performance" | "reining" | "mixed";
