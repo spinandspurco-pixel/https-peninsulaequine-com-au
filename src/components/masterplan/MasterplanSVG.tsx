@@ -402,6 +402,10 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         <polygon points="163,210 168,208 168,212" fill="hsl(120 20% 45%)" opacity="0.5" />
         <polygon points="163,295 168,293 168,297" fill="hsl(120 20% 45%)" opacity="0.5" />
         <text x="157" y="253" textAnchor="middle" fontSize="2.2" fontFamily="monospace" fill="hsl(120 20% 45%)" opacity="0.5" letterSpacing="0.1em" transform="rotate(-90, 157, 253)">PADDOCK ACCESS</text>
+        <text x="230" y="225" textAnchor="middle" fontSize="2.4" fontFamily="monospace" fill="hsl(var(--accent))" letterSpacing="0.1em"
+          style={{ opacity: activeZone === "west-wing" ? 0.14 : 0, transition: `opacity 260ms ${T_EASE} 200ms` }}>
+          Movement designed, not forced.
+        </text>
       </g>
 
       {/* Service wing: function zones */}
