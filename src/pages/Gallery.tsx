@@ -16,18 +16,10 @@ import { ProjectQualification, type ProjectType } from "@/components/ProjectQual
 import { BuildOptions } from "@/components/BuildOptions";
 import { GuidedEnquiryFlow } from "@/components/GuidedEnquiryFlow";
 
-// ── 2. FEATURE PROJECT (Private Client) ──
+// ── Project imagery (hero + optional supporting per project) ──
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
-import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
 import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
-
-// ── 3. FINISHED RESULTS ──
-import aberdeenDeck from "@/assets/aberdeen-deck.jpg";
-import premiumStableFacade from "@/assets/premium-stable-facade.png";
-
-// ── 4. CUSTOM BUILDS ──
 import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
-import timberCubbyFront from "@/assets/timber-cubby-front.webp";
 import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
 
 import {
