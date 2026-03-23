@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LoadingSplash } from "@/components/LoadingSplash";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { IntroContext } from "./hooks/useIntroState";
+import { IntakeProvider } from "./hooks/useIntake";
+import { GuidedIntake } from "./components/GuidedIntake";
 
 // Eagerly load the homepage for fastest FCP
 import Index from "./pages/Index";
