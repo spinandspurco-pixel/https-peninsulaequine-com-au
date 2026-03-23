@@ -17,6 +17,10 @@ import imgTerrainFlat from "@/assets/terrain-flat.jpg";
 import imgTerrainGentle from "@/assets/terrain-gentle.jpg";
 import imgTerrainComplex from "@/assets/terrain-complex.jpg";
 
+/* ── Discipline variant imagery ──────────────────────── */
+import imgDisciplinePerformance from "@/assets/discipline-performance.jpg";
+import imgDisciplineReining from "@/assets/discipline-reining.jpg";
+import imgDisciplineMixed from "@/assets/discipline-mixed.jpg";
 /* ── Configuration types ─────────────────────────────── */
 type Terrain = "flat" | "gentle" | "complex";
 type Discipline = "performance" | "reining" | "mixed";
