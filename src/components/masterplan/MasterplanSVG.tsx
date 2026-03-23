@@ -323,6 +323,10 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
           <line key={`ag-v${i}`} x1={255 + i * 20.9} y1="480" x2={255 + i * 20.9} y2="690" stroke="hsl(38 50% 50%)" strokeWidth="0.3" />
         ))}
         <text x="370" y="608" textAnchor="middle" fontSize="3" fontFamily="monospace" fill="hsl(38 50% 50%)" opacity="0.6" letterSpacing="0.15em">GROUNDLOCK SURFACE SYSTEM</text>
+        <text x="370" y="665" textAnchor="middle" fontSize="2.6" fontFamily="monospace" fill="hsl(var(--accent))" letterSpacing="0.1em"
+          style={{ opacity: activeZone === "indoor-arena" ? 0.14 : 0, transition: `opacity 260ms ${T_EASE} 200ms` }}>
+          Consistent footing. Reduced fatigue.
+        </text>
       </g>
 
       {/* Drainage: contour flow lines */}
@@ -344,6 +348,10 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         <polygon points="472,232 468,228 468,232" fill="hsl(200 40% 50%)" opacity="0.5" />
         <polygon points="370,337 368,332 372,332" fill="hsl(200 40% 50%)" opacity="0.5" />
         <text x="370" y="265" textAnchor="middle" fontSize="2.5" fontFamily="monospace" fill="hsl(200 40% 50%)" opacity="0.5" letterSpacing="0.12em">GRADED FALL</text>
+        <text x="370" y="280" textAnchor="middle" fontSize="2.4" fontFamily="monospace" fill="hsl(var(--accent))" letterSpacing="0.1em"
+          style={{ opacity: activeZone === "courtyard" ? 0.13 : 0, transition: `opacity 260ms ${T_EASE} 200ms` }}>
+          Water moves. Surface holds.
+        </text>
       </g>
 
       {/* Access: path highlighting with direction */}
@@ -368,6 +376,10 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         {/* Directional chevrons */}
         <polygon points="370,167 367,160 373,160" fill="hsl(0 0% 65%)" opacity="0.4" />
         <text x="370" y="84" textAnchor="middle" fontSize="2.5" fontFamily="monospace" fill="hsl(0 0% 65%)" opacity="0.45" letterSpacing="0.12em">ENTRY FLOW</text>
+        <text x="370" y="96" textAnchor="middle" fontSize="2.4" fontFamily="monospace" fill="hsl(var(--accent))" letterSpacing="0.1em"
+          style={{ opacity: activeZone === "stable-row" ? 0.13 : 0, transition: `opacity 260ms ${T_EASE} 200ms` }}>
+          Flow without congestion.
+        </text>
       </g>
 
       {/* Stables west wing: layout outline emphasis */}
@@ -390,6 +402,10 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         <polygon points="163,210 168,208 168,212" fill="hsl(120 20% 45%)" opacity="0.5" />
         <polygon points="163,295 168,293 168,297" fill="hsl(120 20% 45%)" opacity="0.5" />
         <text x="157" y="253" textAnchor="middle" fontSize="2.2" fontFamily="monospace" fill="hsl(120 20% 45%)" opacity="0.5" letterSpacing="0.1em" transform="rotate(-90, 157, 253)">PADDOCK ACCESS</text>
+        <text x="230" y="225" textAnchor="middle" fontSize="2.4" fontFamily="monospace" fill="hsl(var(--accent))" letterSpacing="0.1em"
+          style={{ opacity: activeZone === "west-wing" ? 0.14 : 0, transition: `opacity 260ms ${T_EASE} 200ms` }}>
+          Movement designed, not forced.
+        </text>
       </g>
 
       {/* Service wing: function zones */}
