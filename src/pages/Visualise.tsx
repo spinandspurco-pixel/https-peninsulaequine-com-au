@@ -299,45 +299,39 @@ function EstateVisualisation({ config }: { config: Config }) {
         }} />
         <div className={cn("absolute inset-0 grain-texture", viewMode === "oblique" ? "opacity-30" : "opacity-35")} />
 
-        {/* Oblique annotations — only if asset present */}
-        {hasAsset && (
-          <div className="absolute bottom-0 left-0 p-8 sm:p-10" style={{
-            opacity: viewMode === "oblique" ? 1 : 0,
-            transition: `opacity ${T.baseCrossfade}ms ${EASE.cinematic}`,
-          }}>
-            <p className="font-serif text-xl sm:text-2xl lg:text-3xl text-foreground/40 tracking-[-0.01em]">
-              {estate.arenaLabel}
+        {/* Oblique annotations */}
+        <div className="absolute bottom-0 left-0 p-8 sm:p-10" style={{
+          opacity: viewMode === "oblique" ? 1 : 0,
+          transition: `opacity ${T.baseCrossfade}ms ${EASE.cinematic}`,
+        }}>
+          <p className="font-serif text-xl sm:text-2xl lg:text-3xl text-foreground/40 tracking-[-0.01em]">
+            {estate.arenaLabel}
+          </p>
+          <div className="flex items-center gap-3 mt-2">
+            <div className="w-5 h-px bg-accent/8" />
+            <p className="font-mono text-[8px] uppercase tracking-[0.3em] text-accent/12">
+              {estate.stableCount} stall · {estate.stableLayout}
             </p>
-            <div className="flex items-center gap-3 mt-2">
-              <div className="w-5 h-px bg-accent/8" />
-              <p className="font-mono text-[8px] uppercase tracking-[0.3em] text-accent/12">
-                {estate.stableCount} stall · {estate.stableLayout}
-              </p>
-            </div>
           </div>
-        )}
+        </div>
 
-        {/* Topdown annotations — only if asset present */}
-        {hasAsset && (
-          <>
-            <div className="absolute top-0 left-0 p-6" style={{
-              opacity: viewMode === "topdown" ? 1 : 0,
-              transition: `opacity ${T.terrainFade}ms ${EASE.cinematic}`,
-            }}>
-              <p className="font-mono text-[7px] uppercase tracking-[0.4em] text-accent/15">
-                {TERRAIN_LABELS[config.terrain]}
-              </p>
-            </div>
-            <div className="absolute bottom-0 right-0 p-6" style={{
-              opacity: viewMode === "topdown" ? 1 : 0,
-              transition: `opacity ${T.budgetTone}ms ${EASE.cinematic}`,
-            }}>
-              <p className="font-mono text-[7px] uppercase tracking-[0.3em] text-accent/10 text-right">
-                {estate.surfaceType}
-              </p>
-            </div>
-          </>
-        )}
+        {/* Topdown annotations */}
+        <div className="absolute top-0 left-0 p-6" style={{
+          opacity: viewMode === "topdown" ? 1 : 0,
+          transition: `opacity ${T.terrainFade}ms ${EASE.cinematic}`,
+        }}>
+          <p className="font-mono text-[7px] uppercase tracking-[0.4em] text-accent/15">
+            {TERRAIN_LABELS[config.terrain]}
+          </p>
+        </div>
+        <div className="absolute bottom-0 right-0 p-6" style={{
+          opacity: viewMode === "topdown" ? 1 : 0,
+          transition: `opacity ${T.budgetTone}ms ${EASE.cinematic}`,
+        }}>
+          <p className="font-mono text-[7px] uppercase tracking-[0.3em] text-accent/10 text-right">
+            {estate.surfaceType}
+          </p>
+        </div>
       </div>
 
       {/* ── Planning summary — always active ── */}
