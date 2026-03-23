@@ -12,6 +12,7 @@ const navigation = [
   { name: "Services", href: "/services" },
   { name: "GroundLock™", href: "/groundlock" },
   { name: "About", href: "/about" },
+  { name: "Visualise", href: "/visualise", subtle: true },
   { name: "Equus Ridge", href: "/equus-ridge", subtle: true },
   
 ];
