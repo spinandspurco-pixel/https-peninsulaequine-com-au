@@ -97,7 +97,22 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ═══ CAPABILITY PILLARS ═════════════════════════ */}
+      {/* ═══ BUILD IMAGE — VISUAL PROOF ════════════════════ */}
+      <section className="relative overflow-hidden">
+        <RevealOnScroll direction="up" duration={800}>
+          <div className="relative aspect-[21/9]">
+            <img
+              src={stoneworkStables}
+              alt="Barn frame structure"
+              className="absolute inset-0 w-full h-full object-cover img-feature"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/20" />
+          </div>
+        </RevealOnScroll>
+      </section>
+
+      {/* ═══ CAPABILITY PILLARS ═════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
         <div className="py-32 sm:py-40 lg:py-48 relative">
@@ -133,41 +148,21 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ═══ BUILD IMAGE BREAK ═════════════════════════ */}
+      {/* ═══ AUTHORITY LINE ════════════════════════════════ */}
       <section className="relative overflow-hidden">
-        <RevealOnScroll direction="up" duration={800}>
-          <div className="relative aspect-[21/9]">
-            <img
-              src={stoneworkStables}
-              alt="Barn frame structure"
-              className="absolute inset-0 w-full h-full object-cover img-feature"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/20" />
-          </div>
-        </RevealOnScroll>
-      </section>
-
-      {/* ═══ APPROACH ══════════════════════════════════ */}
-      <section className="relative overflow-hidden">
-        <div className="divider-grid" />
-        <div className="py-32 sm:py-40 lg:py-48 bg-card relative">
-          <div className="absolute inset-0 grain-texture" />
-          <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
+        <div className="py-24 sm:py-32 bg-card relative">
+          <div className="absolute inset-0 grain-texture opacity-[0.02]" />
+          <div className="section-container max-w-2xl mx-auto text-center relative z-[1]">
             <RevealOnScroll direction="up">
-              <RevealLine className="mx-auto mb-14" width="w-10" />
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={100}>
-              <h2 className="heading-section text-foreground mb-10">
-                Every Project Is Custom
-              </h2>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={200}>
-              <div className="space-y-6 text-sm text-muted-foreground/50 leading-[2]">
-                <p>
-                  No templates. Every property is different — different soil, different drainage, different needs.
-                </p>
-              </div>
+              <p
+                className="font-serif font-light italic tracking-[0.04em]"
+                style={{
+                  fontSize: "clamp(1rem, 0.5rem + 1.8vw, 1.5rem)",
+                  color: "hsl(var(--foreground) / 0.15)",
+                }}
+              >
+                No templates. Every property is different.
+              </p>
             </RevealOnScroll>
           </div>
         </div>
