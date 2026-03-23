@@ -19,13 +19,11 @@ import { GuidedEnquiryFlow } from "@/components/GuidedEnquiryFlow";
 // ── 2. FEATURE PROJECT (Private Client) ──
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
 import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
-import aberdeenAisle from "@/assets/aberdeen-aisle.jpg";
 import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
 
 // ── 3. FINISHED RESULTS ──
 import aberdeenDeck from "@/assets/aberdeen-deck.jpg";
 import premiumStableFacade from "@/assets/premium-stable-facade.png";
-import westernEntertainingZone from "@/assets/western-entertaining-zone.jpg";
 
 // ── 4. CUSTOM BUILDS ──
 import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
@@ -312,10 +310,9 @@ export default function Gallery() {
                 </div>
               </div>
 
-              {/* Supporting images — 3 across */}
-              <div className="grid grid-cols-3 gap-3 sm:gap-5">
+              {/* Supporting — detail + outcome */}
+              <div className="grid grid-cols-2 gap-3 sm:gap-5">
                 <EditorialImage src={aberdeenStalls} alt="Private client — custom stalls" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenStalls)} />
-                <EditorialImage src={aberdeenAisle} alt="Private client — stone aisle" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenAisle)} />
                 <EditorialImage src={aberdeenExterior} alt="Private client — completed exterior" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenExterior)} />
               </div>
             </RevealOnScroll>
@@ -336,9 +333,9 @@ export default function Gallery() {
               <SectionHeader label="Completed Work" heading="The Finished Result" />
             </RevealOnScroll>
 
-            {/* Row 1 — wide deck + tall stable facade */}
+            {/* Two strong results — hero pair */}
             <RevealOnScroll direction="up" duration={DURATION.slow}>
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-5 mb-3 sm:mb-5">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-5">
                 <div className="lg:col-span-7">
                   <EditorialImage src={aberdeenDeck} alt="Private client — outdoor deck" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenDeck)} />
                 </div>
@@ -346,11 +343,6 @@ export default function Gallery() {
                   <EditorialImage src={premiumStableFacade} alt="Premium stable — architectural facade" aspect="aspect-[3/4]" className="h-full" onClick={() => openLightbox(premiumStableFacade)} />
                 </div>
               </div>
-            </RevealOnScroll>
-
-            {/* Row 2 — wide arena exterior */}
-            <RevealOnScroll direction="up" duration={DURATION.normal} delay={80}>
-              <EditorialImage src={westernEntertainingZone} alt="Western entertaining zone — timber and stone" aspect="aspect-[21/9]" onClick={() => openLightbox(westernEntertainingZone)} />
             </RevealOnScroll>
           </div>
         </div>
