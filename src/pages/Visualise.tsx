@@ -209,6 +209,25 @@ function EstateVisualisation({ config }: { config: Config }) {
           />
         ))}
 
+        {/* Budget overlay layer — blended on top */}
+        {budgetImages.map((variant) => (
+          <img
+            key={variant.key}
+            src={variant.src}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{
+              opacity: config.budget === variant.key ? 0.25 : 0,
+              mixBlendMode: "overlay",
+              filter: `brightness(0.6) saturate(0.6)`,
+              transition: `opacity ${DURATION.crossfade}ms ${EASE.cinematic}`,
+            }}
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
+
         {/* Atmospheric overlay */}
         <div
           className="absolute inset-0"
