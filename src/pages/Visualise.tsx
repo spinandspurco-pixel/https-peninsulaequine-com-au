@@ -186,11 +186,40 @@ function Chip({ label, active, onClick }: { label: string; active: boolean; onCl
   );
 }
 
+/* ── View toggle ──────────────────────────────────────── */
+type ViewMode = "oblique" | "topdown";
+
+function ViewToggle({ mode, onChange }: { mode: ViewMode; onChange: (m: ViewMode) => void }) {
+  return (
+    <div className="flex items-center gap-4 justify-end mb-6">
+      <div className="flex items-center gap-1">
+        {(["oblique", "topdown"] as ViewMode[]).map((m) => (
+          <button
+            key={m}
+            type="button"
+            onClick={() => onChange(m)}
+            className={cn(
+              "px-3 py-1.5 font-mono text-[7px] uppercase tracking-[0.3em] border transition-all",
+              mode === m
+                ? "border-accent/15 text-foreground/40 bg-accent/[0.03]"
+                : "border-transparent text-muted-foreground/15 hover:text-muted-foreground/30"
+            )}
+            style={{ transition: `all ${T.budgetTone}ms ${EASE.cinematic}` }}
+          >
+            {m === "oblique" ? "Perspective" : "Plan"}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ── Visualisation panel ─────────────────────────────── */
 function EstateVisualisation({ config }: { config: Config }) {
   const estate = useMemo(() => deriveEstate(config), [config]);
   const summary = useMemo(() => deriveSummary(config), [config]);
   const [summaryKey, setSummaryKey] = useState(0);
+  const [viewMode, setViewMode] = useState<ViewMode>("oblique");
 
   const stateKey = getStateKey(config.landSize, config.discipline);
   const isFallback = stateKey === FALLBACK_KEY && `${getSizeKey(config.landSize)}_${config.discipline}` !== FALLBACK_KEY;
@@ -205,8 +234,15 @@ function EstateVisualisation({ config }: { config: Config }) {
 
   return (
     <div className="relative space-y-10">
-      {/* ── Hero view: oblique (emotional read) ── */}
-      <div className="relative aspect-[16/10] overflow-hidden">
+      <ViewToggle mode={viewMode} onChange={setViewMode} />
+
+      {/* ── Primary view ── */}
+      <div className={cn(
+        "relative overflow-hidden",
+        viewMode === "oblique" ? "aspect-[16/10]" : "aspect-square"
+      )} style={{ transition: `aspect-ratio 500ms ${EASE.cinematic}` }}>
+
+        {/* Oblique layer */}
         {ALL_STATE_KEYS.map((key) => (
           <img
             key={`oblique-${key}`}
@@ -214,7 +250,7 @@ function EstateVisualisation({ config }: { config: Config }) {
             alt=""
             className="absolute inset-0 w-full h-full object-cover img-immersive"
             style={{
-              opacity: key === stateKey ? 1 : 0,
+              opacity: viewMode === "oblique" && key === stateKey ? 1 : 0,
               transform: key === stateKey ? "scale(1.0)" : "scale(1.02)",
               filter: `brightness(${budgetBrightness}) saturate(${budgetSaturate})`,
               transition: `opacity ${T.baseCrossfade}ms ${EASE.cinematic}, transform ${T.baseScale}ms ${EASE.cinematic}, filter ${T.budgetTone}ms ${EASE.cinematic}`,
@@ -224,13 +260,54 @@ function EstateVisualisation({ config }: { config: Config }) {
           />
         ))}
 
-        <div className="absolute inset-0" style={{
-          background: `radial-gradient(ellipse 80% 70% at 50% 45%, transparent 0%, hsl(var(--background) / 0.5) 100%)`,
-        }} />
-        <div className="absolute inset-0 grain-texture opacity-30" />
+        {/* Topdown layer */}
+        {ALL_STATE_KEYS.map((key) => (
+          <img
+            key={`topdown-${key}`}
+            src={STATE_MAP[key].topdown}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover img-immersive"
+            style={{
+              opacity: viewMode === "topdown" && key === stateKey ? 1 : 0,
+              filter: `brightness(0.36) saturate(0.65)`,
+              transition: `opacity ${T.baseCrossfade}ms ${EASE.cinematic}`,
+            }}
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
 
-        {/* Annotation — bottom left */}
-        <div className="absolute bottom-0 left-0 p-8 sm:p-10">
+        {/* Terrain overlay — only visible in topdown mode */}
+        {(["flat", "gentle", "complex"] as Terrain[]).map((t) => (
+          <img
+            key={`terrain-${t}`}
+            src={TERRAIN_MAP[t]}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+            style={{
+              opacity: viewMode === "topdown" && config.terrain === t ? 0.08 : 0,
+              mixBlendMode: "screen",
+              filter: "brightness(0.5) saturate(0.4)",
+              transition: `opacity ${T.terrainFade}ms ${EASE.cinematic}`,
+            }}
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
+
+        <div className="absolute inset-0" style={{
+          background: viewMode === "oblique"
+            ? `radial-gradient(ellipse 80% 70% at 50% 45%, transparent 0%, hsl(var(--background) / 0.5) 100%)`
+            : `radial-gradient(ellipse 85% 85% at 50% 50%, transparent 0%, hsl(var(--background) / 0.45) 100%)`,
+        }} />
+        <div className={cn("absolute inset-0 grain-texture", viewMode === "oblique" ? "opacity-30" : "opacity-35")} />
+
+        {/* Oblique annotations */}
+        <div className="absolute bottom-0 left-0 p-8 sm:p-10" style={{
+          opacity: viewMode === "oblique" ? 1 : 0,
+          transition: `opacity ${T.baseCrossfade}ms ${EASE.cinematic}`,
+        }}>
           <p className="font-serif text-xl sm:text-2xl lg:text-3xl text-foreground/40 tracking-[-0.01em]"
             style={{ transition: `all ${T.baseCrossfade}ms ${EASE.cinematic}` }}>
             {estate.arenaLabel}
@@ -244,71 +321,29 @@ function EstateVisualisation({ config }: { config: Config }) {
           </div>
         </div>
 
+        {/* Topdown annotations */}
+        <div className="absolute top-0 left-0 p-6" style={{
+          opacity: viewMode === "topdown" ? 1 : 0,
+          transition: `opacity ${T.terrainFade}ms ${EASE.cinematic}`,
+        }}>
+          <p className="font-mono text-[7px] uppercase tracking-[0.4em] text-accent/15">
+            {TERRAIN_LABELS[config.terrain]}
+          </p>
+        </div>
+        <div className="absolute bottom-0 right-0 p-6" style={{
+          opacity: viewMode === "topdown" ? 1 : 0,
+          transition: `opacity ${T.budgetTone}ms ${EASE.cinematic}`,
+        }}>
+          <p className="font-mono text-[7px] uppercase tracking-[0.3em] text-accent/10 text-right">
+            {estate.surfaceType}
+          </p>
+        </div>
+
         {isFallback && (
           <div className="absolute top-0 right-0 p-4">
             <p className="font-mono text-[7px] uppercase tracking-[0.3em] text-accent/10">Preview mode</p>
           </div>
         )}
-      </div>
-
-      {/* ── Plan view: topdown + terrain overlay ── */}
-      <div className="relative aspect-square overflow-hidden">
-        {/* Base topdown — crossfade on land/discipline change only */}
-        {ALL_STATE_KEYS.map((key) => (
-          <img
-            key={`topdown-${key}`}
-            src={STATE_MAP[key].topdown}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover img-immersive"
-            style={{
-              opacity: key === stateKey ? 1 : 0,
-              filter: `brightness(0.36) saturate(0.65)`,
-              transition: `opacity ${T.baseCrossfade}ms ${EASE.cinematic}`,
-            }}
-            loading="lazy"
-            decoding="async"
-          />
-        ))}
-
-        {/* Terrain overlay — 6-10% opacity, fast fade, screen-blended */}
-        {(["flat", "gentle", "complex"] as Terrain[]).map((t) => (
-          <img
-            key={`terrain-${t}`}
-            src={TERRAIN_MAP[t]}
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-            style={{
-              opacity: config.terrain === t ? 0.08 : 0,
-              mixBlendMode: "screen",
-              filter: "brightness(0.5) saturate(0.4)",
-              transition: `opacity ${T.terrainFade}ms ${EASE.cinematic}`,
-            }}
-            loading="lazy"
-            decoding="async"
-          />
-        ))}
-
-        <div className="absolute inset-0" style={{
-          background: `radial-gradient(ellipse 85% 85% at 50% 50%, transparent 0%, hsl(var(--background) / 0.45) 100%)`,
-        }} />
-        <div className="absolute inset-0 grain-texture opacity-35" />
-
-        {/* Terrain label */}
-        <div className="absolute top-0 left-0 p-6">
-          <p className="font-mono text-[7px] uppercase tracking-[0.4em] text-accent/15"
-            style={{ transition: `opacity ${T.terrainFade}ms ${EASE.cinematic}` }}>
-            {TERRAIN_LABELS[config.terrain]}
-          </p>
-        </div>
-
-        {/* Surface type */}
-        <div className="absolute bottom-0 right-0 p-6">
-          <p className="font-mono text-[7px] uppercase tracking-[0.3em] text-accent/10 text-right"
-            style={{ transition: `all ${T.budgetTone}ms ${EASE.cinematic}` }}>
-            {estate.surfaceType}
-          </p>
-        </div>
       </div>
 
       {/* ── Planning summary ── */}
