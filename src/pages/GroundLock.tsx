@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { GroundLockCrossSection } from "@/components/groundlock/GroundLockCrossSection";
 import groundlockHero from "@/assets/groundlock-hero-arena.jpg";
 import groundlockCutaway from "@/assets/groundlock-cutaway.jpg";
 import groundlockKit from "@/assets/groundlock-kit-product.jpg";
