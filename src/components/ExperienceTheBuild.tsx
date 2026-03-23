@@ -287,13 +287,18 @@ function Synthesis({ onPressTone }: { onPressTone?: () => void }) {
           }}
         />
 
-        {/* CTA */}
+        {/* CTA — readiness delay: muted first, activates after pause */}
         <button
           onClick={() => navigate("/contact")}
-          className="px-12 py-4 border border-accent/15 text-[11px] font-mono uppercase tracking-[0.3em] text-foreground/65 hover:border-accent/25 hover:text-foreground/80 hover:bg-accent/[0.03]"
+          className="px-12 py-4 border text-[11px] font-mono uppercase tracking-[0.3em] hover:bg-accent/[0.03]"
           style={{
             opacity: visible ? 1 : 0,
-            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1200ms, border-color 600ms ${EASE.cinematic}, color 600ms ${EASE.cinematic}, background-color 600ms ${EASE.cinematic}`,
+            borderColor: "hsl(var(--accent) / 0.08)",
+            color: "hsl(var(--foreground) / 0.35)",
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1200ms, border-color 600ms ${EASE.cinematic}, color 600ms ${EASE.cinematic}, background-color 600ms ${EASE.cinematic}, box-shadow 800ms ${EASE.cinematic}`,
+            animation: visible
+              ? `etb-cta-ready 800ms ${EASE.cinematic} 2000ms forwards`
+              : "none",
           }}
           onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.97)"; onPressTone?.(); }}
           onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
