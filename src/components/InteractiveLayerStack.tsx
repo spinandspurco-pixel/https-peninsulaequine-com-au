@@ -67,6 +67,11 @@ function ensureLockStyles() {
       0%   { transform: translate(0, 0) scale(1); opacity: 0.25; }
       100% { transform: translate(8px, -3px) scale(0.3); opacity: 0; }
     }
+    @keyframes gl-resolve {
+      0%   { box-shadow: inset 0 1px 0 hsl(var(--accent) / 0); }
+      60%  { box-shadow: inset 0 1px 0 hsl(var(--accent) / 0.08); }
+      100% { box-shadow: inset 0 1px 0 hsl(var(--accent) / 0.04); }
+    }
   `;
   document.head.appendChild(style);
 }
