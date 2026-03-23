@@ -276,15 +276,6 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ── Conversion Bridge 1 ──────────────────── */}
-      <ConversionBridge
-        label="Every project starts here"
-        heading="Book a site assessment."
-        ctaLabel="Assess My Site"
-        ctaHref="/site-assessment"
-        trustLine="50+ properties assessed across the Mornington Peninsula"
-      />
-
       {/* ═══ 3. PROJECTS — HORIZONTAL SCROLL ═══════════════ */}
       <section className="relative overflow-hidden cv-auto">
         <div className="py-32 sm:py-40 lg:py-48 relative">
@@ -318,16 +309,6 @@ export default function Index() {
           </div>
         </div>
       </section>
-
-      {/* ── Conversion Bridge 2 ──────────────────── */}
-      <ConversionBridge
-        variant="accent"
-        label="From concept to completion"
-        heading="Discuss your project."
-        ctaLabel="Discuss Project"
-        ctaHref="/contact"
-        trustLine="Limited projects accepted per season"
-      />
 
       {/* ═══ 4. SERVICES — WHAT WE BUILD ═══════════════════ */}
       <section className="relative overflow-hidden cv-auto">
