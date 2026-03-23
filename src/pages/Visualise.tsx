@@ -7,13 +7,10 @@ import { Button } from "@/components/ui/button";
 import { EASE, DURATION } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
-/* ── Background imagery — zone-based overlays ───────── */
-import imgBase from "@/assets/masterplan-topdown.jpg";
-import imgArena from "@/assets/zone-arena.jpg";
-import imgStables from "@/assets/zone-stables.jpg";
-import imgAccess from "@/assets/zone-access.jpg";
-import imgDrainage from "@/assets/zone-drainage.jpg";
-import imgLandscape from "@/assets/zone-landscape.jpg";
+/* ── Estate variant imagery — land-size responsive ──── */
+import imgSmall from "@/assets/estate-small.jpg";
+import imgMedium from "@/assets/estate-medium.jpg";
+import imgLarge from "@/assets/estate-large.jpg";
 
 /* ── Configuration types ─────────────────────────────── */
 type Terrain = "flat" | "gentle" | "complex";
@@ -107,60 +104,46 @@ function Chip({
 function EstateVisualisation({ config }: { config: Config }) {
   const estate = useMemo(() => deriveEstate(config), [config]);
 
-  // Determine dominant zone image based on config emphasis
-  const zoneImages = useMemo(() => {
-    const base = [
-      { src: imgArena, opacity: 0.6, label: "Arena" },
-      { src: imgStables, opacity: 0.4, label: "Stables" },
-      { src: imgAccess, opacity: 0.3, label: "Access" },
-      { src: imgDrainage, opacity: config.terrain === "complex" ? 0.5 : 0.25, label: "Drainage" },
-      { src: imgLandscape, opacity: config.landSize >= 12000 ? 0.4 : 0.2, label: "Landscape" },
-    ];
-    return base;
-  }, [config]);
+  // Select variant image based on land size
+  const variants = useMemo(() => {
+    const { landSize } = config;
+    // Determine which is the "active" variant and crossfade
+    if (landSize < 6000) return { active: "small" as const };
+    if (landSize < 14000) return { active: "medium" as const };
+    return { active: "large" as const };
+  }, [config.landSize]);
+
+  const variantImages = [
+    { key: "small" as const, src: imgSmall },
+    { key: "medium" as const, src: imgMedium },
+    { key: "large" as const, src: imgLarge },
+  ];
 
   return (
     <div className="relative">
-      {/* Base masterplan image */}
+      {/* Estate imagery — crossfade between variants */}
       <div className="relative aspect-[4/5] sm:aspect-[3/4] lg:aspect-square overflow-hidden">
-        <img
-          src={imgBase}
-          alt="Estate masterplan base"
-          className="absolute inset-0 w-full h-full object-cover img-immersive"
-          style={{
-            filter: `brightness(0.35) saturate(0.7)`,
-            transition: `filter ${DURATION.slow}ms ${EASE.cinematic}`,
-          }}
-        />
-
-        {/* Zone overlays — fade based on configuration */}
-        {zoneImages.map((zone, i) => (
-          <div
-            key={zone.label}
-            className="absolute inset-0"
+        {variantImages.map((variant) => (
+          <img
+            key={variant.key}
+            src={variant.src}
+            alt={`${variant.key} estate configuration`}
+            className="absolute inset-0 w-full h-full object-cover img-immersive"
             style={{
-              opacity: zone.opacity,
-              mixBlendMode: "screen",
-              transition: `opacity ${DURATION.slow}ms ${EASE.cinematic}`,
+              opacity: variants.active === variant.key ? 1 : 0,
+              filter: `brightness(0.45) saturate(0.75)`,
+              transition: `opacity ${DURATION.crossfade}ms ${EASE.cinematic}`,
             }}
-          >
-            <img
-              src={zone.src}
-              alt=""
-              aria-hidden="true"
-              className="w-full h-full object-cover"
-              style={{ filter: "brightness(0.5) saturate(0.6)" }}
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
+            loading="lazy"
+            decoding="async"
+          />
         ))}
 
         {/* Atmospheric overlay */}
         <div
           className="absolute inset-0"
           style={{
-            background: `radial-gradient(ellipse 70% 60% at 50% 45%, transparent 0%, hsl(var(--background) / 0.7) 100%)`,
+            background: `radial-gradient(ellipse 70% 60% at 50% 45%, transparent 0%, hsl(var(--background) / 0.65) 100%)`,
           }}
         />
         <div className="absolute inset-0 grain-texture opacity-40" />
@@ -168,15 +151,15 @@ function EstateVisualisation({ config }: { config: Config }) {
         {/* Floating annotations */}
         <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-8 lg:p-10">
           {/* Top: estate overview */}
-          <div
-            className="space-y-2"
-            style={{ transition: `opacity ${DURATION.slow}ms ${EASE.cinematic}` }}
-          >
+          <div className="space-y-2">
             <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/25">
               Configured Estate
             </p>
-            <p className="font-serif text-lg sm:text-xl text-foreground/50 leading-tight">
-              {(config.landSize / 1000).toFixed(1)} hectares
+            <p
+              className="font-serif text-lg sm:text-xl text-foreground/50 leading-tight"
+              style={{ transition: `all ${DURATION.slow}ms ${EASE.cinematic}` }}
+            >
+              {(config.landSize / 10000).toFixed(1)} hectares
             </p>
           </div>
 
