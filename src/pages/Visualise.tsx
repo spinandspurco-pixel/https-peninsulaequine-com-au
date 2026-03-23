@@ -199,6 +199,20 @@ function ViewToggle({ mode, onChange }: { mode: ViewMode; onChange: (m: ViewMode
   );
 }
 
+/* ── Preload all images ── */
+function usePreloadImages() {
+  useEffect(() => {
+    ALL_STATE_KEYS.forEach((key) => {
+      const pair = ASSET_REGISTRY[key];
+      new Image().src = pair.topdown;
+      new Image().src = pair.oblique;
+    });
+    Object.values(TERRAIN_REGISTRY).forEach((src) => {
+      new Image().src = src;
+    });
+  }, []);
+}
+
 /* ── Visualisation panel ─────────────────────────────── */
 function EstateVisualisation({ config }: { config: Config }) {
   const estate = useMemo(() => deriveEstate(config), [config]);
@@ -207,14 +221,13 @@ function EstateVisualisation({ config }: { config: Config }) {
   const [viewMode, setViewMode] = useState<ViewMode>("oblique");
 
   const stateKey = getStateKey(config.landSize, config.discipline);
-  const hasAsset = !!ASSET_REGISTRY[stateKey];
 
-  /* Re-key summary on config change */
-  const prevConfigRef = useState(() => JSON.stringify(config))[0];
-  useMemo(() => {
-    const cur = JSON.stringify(config);
-    if (cur !== prevConfigRef) setSummaryKey((k) => k + 1);
-  }, [config, prevConfigRef]);
+  useEffect(() => {
+    setSummaryKey((k) => k + 1);
+  }, [config.landSize, config.terrain, config.discipline, config.budget]);
+
+  const budgetBrightness = config.budget === "signature" ? 0.42 : config.budget === "essential" ? 0.34 : 0.38;
+  const budgetSaturate = config.budget === "signature" ? 0.76 : config.budget === "essential" ? 0.62 : 0.68;
 
   return (
     <div className="relative space-y-10">
@@ -226,59 +239,59 @@ function EstateVisualisation({ config }: { config: Config }) {
         viewMode === "oblique" ? "aspect-[16/10]" : "aspect-square"
       )} style={{ transition: `aspect-ratio 500ms ${EASE.cinematic}` }}>
 
-        {hasAsset ? (
-          <>
-            {/* Verified oblique */}
-            <img
-              src={ASSET_REGISTRY[stateKey].oblique}
-              alt={`${stateKey} oblique view`}
-              className="absolute inset-0 w-full h-full object-cover img-immersive"
-              style={{
-                opacity: viewMode === "oblique" ? 1 : 0,
-                transition: `opacity ${T.baseCrossfade}ms ${EASE.cinematic}`,
-              }}
-            />
-            {/* Verified topdown */}
-            <img
-              src={ASSET_REGISTRY[stateKey].topdown}
-              alt={`${stateKey} topdown view`}
-              className="absolute inset-0 w-full h-full object-cover img-immersive"
-              style={{
-                opacity: viewMode === "topdown" ? 1 : 0,
-                filter: "brightness(0.36) saturate(0.65)",
-                transition: `opacity ${T.baseCrossfade}ms ${EASE.cinematic}`,
-              }}
-            />
-            {/* Terrain overlay — only if verified */}
-            {viewMode === "topdown" && TERRAIN_REGISTRY[config.terrain] && (
-              <img
-                src={TERRAIN_REGISTRY[config.terrain]}
-                alt=""
-                aria-hidden="true"
-                className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-                style={{
-                  opacity: 0.08,
-                  mixBlendMode: "screen",
-                  filter: "brightness(0.5) saturate(0.4)",
-                  transition: `opacity ${T.terrainFade}ms ${EASE.cinematic}`,
-                }}
-              />
-            )}
-          </>
-        ) : (
-          /* ── Awaiting assets placeholder ── */
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-card/50">
-            <div className="w-12 h-px bg-border/10 mb-6" />
-            <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-muted-foreground/18 mb-2">
-              Awaiting verified assets
-            </p>
-            <p className="font-mono text-[7px] tracking-[0.2em] text-muted-foreground/10">
-              {stateKey} · {viewMode}
-            </p>
-            <div className="w-12 h-px bg-border/10 mt-6" />
-          </div>
-        )}
+        {/* Oblique layers — all rendered, opacity-switched for crossfade */}
+        {ALL_STATE_KEYS.map((key) => (
+          <img
+            key={`oblique-${key}`}
+            src={ASSET_REGISTRY[key].oblique}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover img-immersive"
+            style={{
+              opacity: viewMode === "oblique" && key === stateKey ? 1 : 0,
+              transform: key === stateKey ? "scale(1.0)" : "scale(1.02)",
+              filter: `brightness(${budgetBrightness}) saturate(${budgetSaturate})`,
+              transition: `opacity ${T.baseCrossfade}ms ${EASE.cinematic}, transform ${T.baseScale}ms ${EASE.cinematic}, filter ${T.budgetTone}ms ${EASE.cinematic}`,
+            }}
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
 
+        {/* Topdown layers */}
+        {ALL_STATE_KEYS.map((key) => (
+          <img
+            key={`topdown-${key}`}
+            src={ASSET_REGISTRY[key].topdown}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover img-immersive"
+            style={{
+              opacity: viewMode === "topdown" && key === stateKey ? 1 : 0,
+              filter: "brightness(0.36) saturate(0.65)",
+              transition: `opacity ${T.baseCrossfade}ms ${EASE.cinematic}`,
+            }}
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
+
+        {/* Terrain overlays — topdown only */}
+        {(["flat", "gentle", "complex"] as const).map((t) => (
+          <img
+            key={`terrain-${t}`}
+            src={TERRAIN_REGISTRY[t]}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+            style={{
+              opacity: viewMode === "topdown" && config.terrain === t ? 0.08 : 0,
+              mixBlendMode: "screen",
+              filter: "brightness(0.5) saturate(0.4)",
+              transition: `opacity ${T.terrainFade}ms ${EASE.cinematic}`,
+            }}
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
         <div className="absolute inset-0" style={{
           background: viewMode === "oblique"
             ? `radial-gradient(ellipse 80% 70% at 50% 45%, transparent 0%, hsl(var(--background) / 0.5) 100%)`
