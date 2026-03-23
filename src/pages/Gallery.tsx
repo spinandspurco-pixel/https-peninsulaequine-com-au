@@ -19,13 +19,11 @@ import { GuidedEnquiryFlow } from "@/components/GuidedEnquiryFlow";
 // ── 2. FEATURE PROJECT (Private Client) ──
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
 import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
-import aberdeenAisle from "@/assets/aberdeen-aisle.jpg";
 import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
 
 // ── 3. FINISHED RESULTS ──
 import aberdeenDeck from "@/assets/aberdeen-deck.jpg";
 import premiumStableFacade from "@/assets/premium-stable-facade.png";
-import westernEntertainingZone from "@/assets/western-entertaining-zone.jpg";
 
 // ── 4. CUSTOM BUILDS ──
 import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
