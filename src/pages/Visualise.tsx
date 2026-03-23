@@ -109,19 +109,23 @@ function Chip({
 function EstateVisualisation({ config }: { config: Config }) {
   const estate = useMemo(() => deriveEstate(config), [config]);
 
-  // Select variant image based on land size
-  const variants = useMemo(() => {
-    const { landSize } = config;
-    // Determine which is the "active" variant and crossfade
-    if (landSize < 6000) return { active: "small" as const };
-    if (landSize < 14000) return { active: "medium" as const };
-    return { active: "large" as const };
+  // Select variant images — land size drives the base, terrain overlays on top
+  const sizeKey = useMemo(() => {
+    if (config.landSize < 6000) return "small" as const;
+    if (config.landSize < 14000) return "medium" as const;
+    return "large" as const;
   }, [config.landSize]);
 
-  const variantImages = [
+  const sizeImages = [
     { key: "small" as const, src: imgSmall },
     { key: "medium" as const, src: imgMedium },
     { key: "large" as const, src: imgLarge },
+  ];
+
+  const terrainImages = [
+    { key: "flat" as const, src: imgTerrainFlat },
+    { key: "gentle" as const, src: imgTerrainGentle },
+    { key: "complex" as const, src: imgTerrainComplex },
   ];
 
   return (
