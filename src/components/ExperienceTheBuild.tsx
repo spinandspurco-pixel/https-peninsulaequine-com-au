@@ -449,6 +449,9 @@ export function ExperienceTheBuild() {
         <BuildTimeline onPhaseChange={handleTimelinePhase} />
       </div>
 
+      {/* Living Outcome — emotional resolution */}
+      <MainRidgeLivingOutcome />
+
       {/* Final synthesis */}
       <Synthesis onPressTone={playPressTone} />
     </div>
