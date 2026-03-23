@@ -161,6 +161,7 @@ function AppContent() {
           <Route path="/proposal" element={<ProposalTemplate />} />
            <Route path="/proposal-editor/:id" element={<ProposalEditor />} />
            <Route path="/visualise" element={<Visualise />} />
+           <Route path="/the-standard" element={<TheStandard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
