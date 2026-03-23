@@ -68,6 +68,7 @@ const ClientQuote = lazy(() => import("./pages/ClientQuote"));
 const ProposalTemplate = lazy(() => import("./pages/ProposalTemplate"));
 const ProposalEditor = lazy(() => import("./pages/ProposalEditor"));
 const Visualise = lazy(() => import("./pages/Visualise"));
+const TheStandard = lazy(() => import("./pages/TheStandard"));
 
 const queryClient = new QueryClient();
 
