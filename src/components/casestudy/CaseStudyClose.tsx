@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { trackCtaClick } from "@/hooks/useCtaTracking";
+import { StartProjectButton } from "@/components/StartProjectButton";
 
 interface Props {
   closingLine: string;
