@@ -144,6 +144,12 @@ function EstateVisualisation({ config }: { config: Config }) {
     { key: "complex" as const, src: imgTerrainComplex },
   ];
 
+  const budgetImages = [
+    { key: "standard" as const, src: imgBudgetStandard },
+    { key: "mid" as const, src: imgBudgetMid },
+    { key: "premium" as const, src: imgBudgetPremium },
+  ];
+
   return (
     <div className="relative">
       {/* Estate imagery — land-size base + terrain overlay */}
