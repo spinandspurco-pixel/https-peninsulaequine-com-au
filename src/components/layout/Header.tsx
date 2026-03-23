@@ -14,6 +14,7 @@ const navigation = [
   { name: "About", href: "/about" },
   { name: "Visualise", href: "/visualise", subtle: true },
   { name: "Equus Ridge", href: "/equus-ridge", subtle: true },
+  { name: "The Standard", href: "/the-standard", subtle: true },
   
 ];
 
