@@ -323,6 +323,10 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
           <line key={`ag-v${i}`} x1={255 + i * 20.9} y1="480" x2={255 + i * 20.9} y2="690" stroke="hsl(38 50% 50%)" strokeWidth="0.3" />
         ))}
         <text x="370" y="608" textAnchor="middle" fontSize="3" fontFamily="monospace" fill="hsl(38 50% 50%)" opacity="0.6" letterSpacing="0.15em">GROUNDLOCK SURFACE SYSTEM</text>
+        <text x="370" y="665" textAnchor="middle" fontSize="2.6" fontFamily="monospace" fill="hsl(var(--accent))" letterSpacing="0.1em"
+          style={{ opacity: activeZone === "indoor-arena" ? 0.14 : 0, transition: `opacity 260ms ${T_EASE} 200ms` }}>
+          Consistent footing. Reduced fatigue.
+        </text>
       </g>
 
       {/* Drainage: contour flow lines */}
