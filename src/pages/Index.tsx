@@ -256,40 +256,22 @@ export default function Index() {
         />
       </section>
 
-      {/* ═══ 2. GROUNDLOCK — SIGNATURE SYSTEM ══════════════ */}
+      {/* ═══ 2. BREATHING STATEMENT ══════════════════════ */}
       <section className="relative overflow-hidden cv-auto -mt-px">
-        <div className="py-32 sm:py-40 lg:py-48 bg-card relative">
-          <div className="absolute inset-0 engineering-grid" />
-          <div className="absolute inset-0 grain-texture opacity-30" />
-          <div className="section-container relative z-10 max-w-5xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-center">
-              <div>
-                <RevealOnScroll direction="up">
-                  <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/50 mb-6">
-                    Signature Ground System
-                  </p>
-                  <h2 className="heading-section text-foreground mb-8 leading-[1.1]">
-                    P.E. GroundLock™
-                  </h2>
-                  <p className="text-[14px] text-muted-foreground/45 leading-[2] mb-6 max-w-[360px]">
-                    Interlocking ground stabilisation for entries, laneways, and arrival zones where standard surfaces fail.
-                  </p>
-                  <p className="text-[11px] text-muted-foreground/20 italic tracking-[0.04em] mb-10">
-                    Designed to perform under load.
-                  </p>
-                </RevealOnScroll>
-                <RevealOnScroll direction="up" delay={200}>
-                  <Button asChild variant="outline-light" size="default">
-                    <Link to="/groundlock">
-                      See How It Works <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </RevealOnScroll>
-              </div>
-              <RevealOnScroll direction="up" delay={150}>
-                <InteractiveLayerStack />
-              </RevealOnScroll>
-            </div>
+        <div className="py-40 sm:py-52 lg:py-64 bg-card relative">
+          <div className="absolute inset-0 grain-texture opacity-20" />
+          <div className="section-container relative z-10 max-w-4xl mx-auto text-center">
+            <RevealOnScroll direction="up">
+              <p
+                className="font-serif font-light tracking-[0.06em] leading-[1.6]"
+                style={{
+                  fontSize: "clamp(1.1rem, 0.6rem + 2vw, 1.75rem)",
+                  color: "hsl(var(--foreground) / 0.18)",
+                }}
+              >
+                No two builds are the same. Every surface is considered.
+              </p>
+            </RevealOnScroll>
           </div>
         </div>
       </section>
