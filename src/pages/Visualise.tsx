@@ -4,7 +4,7 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { EASE, DURATION } from "@/lib/motion";
+import { EASE } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 /* ═══════════════════════════════════════════════════════
@@ -64,11 +64,16 @@ const DEFAULT: Config = {
   budget: "elevated",
 };
 
+/* ── Timing constants (per spec) ─────────────────────── */
+const T = {
+  baseCrossfade: 350,   // 250-400ms per spec
+  baseScale: 500,
+  terrainFade: 150,     // 120-200ms per spec
+  budgetTone: 300,
+} as const;
+
 /* ── State key → image pair lookup ───────────────────── */
-interface StatePair {
-  topdown: string;
-  oblique: string;
-}
+interface StatePair { topdown: string; oblique: string; }
 
 const STATE_MAP: Record<string, StatePair> = {
   "small_performance":  { topdown: sim_small_performance_topdown,  oblique: sim_small_performance_oblique },
@@ -82,6 +87,9 @@ const STATE_MAP: Record<string, StatePair> = {
   "large_mixed":        { topdown: sim_large_mixed_topdown,        oblique: sim_large_mixed_oblique },
 };
 
+const FALLBACK_KEY = "medium_mixed";
+const ALL_STATE_KEYS = Object.keys(STATE_MAP);
+
 const TERRAIN_MAP: Record<Terrain, string> = {
   flat: sim_terrain_flat,
   gentle: sim_terrain_gentle,
@@ -94,13 +102,31 @@ function getSizeKey(landSize: number): LandSize {
   return "large";
 }
 
+function getStateKey(landSize: number, discipline: Discipline): string {
+  const key = `${getSizeKey(landSize)}_${discipline}`;
+  return STATE_MAP[key] ? key : FALLBACK_KEY;
+}
+
+/* ── Preload all 18 base + 3 terrain images ──────────── */
+function usePreloadImages() {
+  useEffect(() => {
+    ALL_STATE_KEYS.forEach((key) => {
+      const pair = STATE_MAP[key];
+      new Image().src = pair.topdown;
+      new Image().src = pair.oblique;
+    });
+    Object.values(TERRAIN_MAP).forEach((src) => {
+      new Image().src = src;
+    });
+  }, []);
+}
+
 /* ── Derived estate specs ────────────────────────────── */
 function deriveEstate(config: Config) {
   const { landSize, discipline } = config;
   const arenaW = landSize >= 12000 ? 24 : landSize >= 6000 ? 20 : 16;
   const arenaL = discipline === "reining" ? arenaW * 1.5 : arenaW * 2;
   const stableCount = landSize >= 15000 ? 8 : landSize >= 8000 ? 6 : 4;
-
   return {
     arenaLabel: `${arenaW} × ${arenaL}m`,
     stableCount,
@@ -109,40 +135,34 @@ function deriveEstate(config: Config) {
   };
 }
 
-/* ── Planning summary — budget + context driven ──────── */
+/* ── Budget-specific planning summaries (per spec) ───── */
+const BUDGET_SUMMARIES: Record<Budget, string> = {
+  essential: "Smartly prioritised layout with disciplined circulation.",
+  elevated: "Expanded presence with refined circulation and stable adjacency.",
+  signature: "Full expression: arrival sequence, landscape framing, and support depth.",
+};
+
 function deriveSummary(config: Config): string {
   const { landSize, terrain, discipline, budget } = config;
-
-  // Budget-first framing
-  const budgetFrame = budget === "signature"
-    ? "Full premium expression — architectural presence and elevated craft."
-    : budget === "essential"
-    ? "Smart prioritisation — disciplined, efficient, no compromise."
-    : "Enhanced spatial generosity with refined material detailing.";
-
-  // Context-specific insight
+  const budgetLine = BUDGET_SUMMARIES[budget];
   if (discipline === "performance" && landSize >= 14000)
-    return "Arena-led estate with expanded training circuit. " + budgetFrame;
+    return "Arena-led estate with expanded training circuit. " + budgetLine;
   if (discipline === "reining")
-    return "Configured for movement — rider flow and arena practicality. " + budgetFrame;
+    return "Configured for movement — rider flow and arena practicality. " + budgetLine;
   if (terrain === "complex")
-    return "Engineered land response with elegant grading logic. " + budgetFrame;
+    return "Engineered land response with elegant grading logic. " + budgetLine;
   if (landSize < 6000)
-    return "Compact planning with premium circulation. " + budgetFrame;
+    return "Compact planning with premium circulation. " + budgetLine;
   if (landSize >= 14000)
-    return "Expanded estate presence with greater arrival depth. " + budgetFrame;
-
-  return "Balanced spatial composition with clear separation. " + budgetFrame;
+    return "Expanded estate presence with greater arrival depth. " + budgetLine;
+  return budgetLine;
 }
 
-/* ── Budget tone class ───────────────────────────────── */
-function budgetToneClass(budget: Budget): string {
-  switch (budget) {
-    case "signature": return "brightness-[0.42] saturate-[0.78]";
-    case "essential": return "brightness-[0.35] saturate-[0.62]";
-    default: return "brightness-[0.38] saturate-[0.68]";
-  }
-}
+const TERRAIN_LABELS: Record<Terrain, string> = {
+  flat: "Level ground",
+  gentle: "Gentle slope",
+  complex: "Complex grade",
+};
 
 /* ═══════════════════════════════════════════════════════
    COMPONENTS
@@ -159,7 +179,7 @@ function Chip({ label, active, onClick }: { label: string; active: boolean; onCl
           ? "border-accent/20 text-foreground/55 bg-accent/[0.03]"
           : "border-border/10 text-muted-foreground/20 hover:border-border/20 hover:text-muted-foreground/35"
       )}
-      style={{ transition: `all ${DURATION.slow}ms ${EASE.cinematic}` }}
+      style={{ transition: `all ${T.budgetTone}ms ${EASE.cinematic}` }}
     >
       {label}
     </button>
@@ -172,19 +192,22 @@ function EstateVisualisation({ config }: { config: Config }) {
   const summary = useMemo(() => deriveSummary(config), [config]);
   const [summaryKey, setSummaryKey] = useState(0);
 
+  const stateKey = getStateKey(config.landSize, config.discipline);
+  const isFallback = stateKey === FALLBACK_KEY && `${getSizeKey(config.landSize)}_${config.discipline}` !== FALLBACK_KEY;
+
   useEffect(() => {
     setSummaryKey((k) => k + 1);
   }, [config.landSize, config.terrain, config.discipline, config.budget]);
 
-  const sizeKey = getSizeKey(config.landSize);
-  const stateKey = `${sizeKey}_${config.discipline}`;
-  const allStateKeys = Object.keys(STATE_MAP);
+  /* Budget tone — subtle filter shift, no image change */
+  const budgetBrightness = config.budget === "signature" ? 0.42 : config.budget === "essential" ? 0.34 : 0.38;
+  const budgetSaturate = config.budget === "signature" ? 0.76 : config.budget === "essential" ? 0.62 : 0.68;
 
   return (
     <div className="relative space-y-10">
       {/* ── Hero view: oblique (emotional read) ── */}
       <div className="relative aspect-[16/10] overflow-hidden">
-        {allStateKeys.map((key) => (
+        {ALL_STATE_KEYS.map((key) => (
           <img
             key={`oblique-${key}`}
             src={STATE_MAP[key].oblique}
@@ -192,43 +215,46 @@ function EstateVisualisation({ config }: { config: Config }) {
             className="absolute inset-0 w-full h-full object-cover img-immersive"
             style={{
               opacity: key === stateKey ? 1 : 0,
-              transform: key === stateKey ? "scale(1.0)" : "scale(1.04)",
-              filter: `brightness(${config.budget === "signature" ? 0.42 : config.budget === "essential" ? 0.34 : 0.38}) saturate(${config.budget === "signature" ? 0.76 : 0.68})`,
-              transition: `opacity ${DURATION.crossfade}ms ${EASE.cinematic}, transform 1400ms ${EASE.cinematic}, filter 800ms ${EASE.cinematic}`,
+              transform: key === stateKey ? "scale(1.0)" : "scale(1.02)",
+              filter: `brightness(${budgetBrightness}) saturate(${budgetSaturate})`,
+              transition: `opacity ${T.baseCrossfade}ms ${EASE.cinematic}, transform ${T.baseScale}ms ${EASE.cinematic}, filter ${T.budgetTone}ms ${EASE.cinematic}`,
             }}
             loading="lazy"
             decoding="async"
           />
         ))}
 
-        {/* Vignette */}
         <div className="absolute inset-0" style={{
           background: `radial-gradient(ellipse 80% 70% at 50% 45%, transparent 0%, hsl(var(--background) / 0.5) 100%)`,
         }} />
         <div className="absolute inset-0 grain-texture opacity-30" />
 
-        {/* Minimal annotation — bottom left */}
+        {/* Annotation — bottom left */}
         <div className="absolute bottom-0 left-0 p-8 sm:p-10">
-          <p
-            className="font-serif text-xl sm:text-2xl lg:text-3xl text-foreground/40 tracking-[-0.01em]"
-            style={{ transition: `all ${DURATION.crossfade}ms ${EASE.cinematic}` }}
-          >
+          <p className="font-serif text-xl sm:text-2xl lg:text-3xl text-foreground/40 tracking-[-0.01em]"
+            style={{ transition: `all ${T.baseCrossfade}ms ${EASE.cinematic}` }}>
             {estate.arenaLabel}
           </p>
           <div className="flex items-center gap-3 mt-2">
             <div className="w-5 h-px bg-accent/8" />
             <p className="font-mono text-[8px] uppercase tracking-[0.3em] text-accent/12"
-              style={{ transition: `all ${DURATION.crossfade}ms ${EASE.cinematic}` }}>
+              style={{ transition: `all ${T.baseCrossfade}ms ${EASE.cinematic}` }}>
               {estate.stableCount} stall · {estate.stableLayout}
             </p>
           </div>
         </div>
+
+        {isFallback && (
+          <div className="absolute top-0 right-0 p-4">
+            <p className="font-mono text-[7px] uppercase tracking-[0.3em] text-accent/10">Preview mode</p>
+          </div>
+        )}
       </div>
 
-      {/* ── Plan view: topdown (masterplan read) with terrain overlay ── */}
+      {/* ── Plan view: topdown + terrain overlay ── */}
       <div className="relative aspect-square overflow-hidden">
-        {/* Base topdown for current state */}
-        {allStateKeys.map((key) => (
+        {/* Base topdown — crossfade on land/discipline change only */}
+        {ALL_STATE_KEYS.map((key) => (
           <img
             key={`topdown-${key}`}
             src={STATE_MAP[key].topdown}
@@ -237,33 +263,32 @@ function EstateVisualisation({ config }: { config: Config }) {
             style={{
               opacity: key === stateKey ? 1 : 0,
               filter: `brightness(0.36) saturate(0.65)`,
-              transition: `opacity ${DURATION.crossfade}ms ${EASE.cinematic}`,
+              transition: `opacity ${T.baseCrossfade}ms ${EASE.cinematic}`,
             }}
             loading="lazy"
             decoding="async"
           />
         ))}
 
-        {/* Terrain overlay — screen-blended on top of topdown */}
+        {/* Terrain overlay — 6-10% opacity, fast fade, screen-blended */}
         {(["flat", "gentle", "complex"] as Terrain[]).map((t) => (
           <img
             key={`terrain-${t}`}
             src={TERRAIN_MAP[t]}
             alt=""
             aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
             style={{
-              opacity: config.terrain === t ? 0.3 : 0,
+              opacity: config.terrain === t ? 0.08 : 0,
               mixBlendMode: "screen",
-              filter: "brightness(0.45) saturate(0.5)",
-              transition: `opacity ${DURATION.crossfade}ms ${EASE.cinematic}`,
+              filter: "brightness(0.5) saturate(0.4)",
+              transition: `opacity ${T.terrainFade}ms ${EASE.cinematic}`,
             }}
             loading="lazy"
             decoding="async"
           />
         ))}
 
-        {/* Vignette */}
         <div className="absolute inset-0" style={{
           background: `radial-gradient(ellipse 85% 85% at 50% 50%, transparent 0%, hsl(var(--background) / 0.45) 100%)`,
         }} />
@@ -272,15 +297,15 @@ function EstateVisualisation({ config }: { config: Config }) {
         {/* Terrain label */}
         <div className="absolute top-0 left-0 p-6">
           <p className="font-mono text-[7px] uppercase tracking-[0.4em] text-accent/15"
-            style={{ transition: `all ${DURATION.crossfade}ms ${EASE.cinematic}` }}>
-            {config.terrain === "flat" ? "Level ground" : config.terrain === "gentle" ? "Gentle slope" : "Complex grade"}
+            style={{ transition: `opacity ${T.terrainFade}ms ${EASE.cinematic}` }}>
+            {TERRAIN_LABELS[config.terrain]}
           </p>
         </div>
 
-        {/* Surface type — bottom right */}
+        {/* Surface type */}
         <div className="absolute bottom-0 right-0 p-6">
           <p className="font-mono text-[7px] uppercase tracking-[0.3em] text-accent/10 text-right"
-            style={{ transition: `all ${DURATION.crossfade}ms ${EASE.cinematic}` }}>
+            style={{ transition: `all ${T.budgetTone}ms ${EASE.cinematic}` }}>
             {estate.surfaceType}
           </p>
         </div>
@@ -293,7 +318,7 @@ function EstateVisualisation({ config }: { config: Config }) {
           className="font-serif text-[13px] sm:text-[14px] italic text-foreground/16 leading-[1.9]"
           style={{
             opacity: 0,
-            animation: `fadeInUp 600ms ${EASE.cinematic} 150ms forwards`,
+            animation: `fadeInUp 500ms ${EASE.cinematic} 100ms forwards`,
           }}
         >
           {summary}
@@ -309,6 +334,7 @@ function EstateVisualisation({ config }: { config: Config }) {
 
 export default function Visualise() {
   const [config, setConfig] = useState<Config>(DEFAULT);
+  usePreloadImages();
 
   const updateConfig = useCallback(
     <K extends keyof Config>(key: K, value: Config[K]) => {
@@ -344,18 +370,14 @@ export default function Visualise() {
         <div className="absolute inset-0 grain-texture opacity-25" />
         <div className="section-container max-w-6xl mx-auto relative z-[1]">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-12 lg:gap-16">
-            {/* ── Image-led output ── */}
             <div className="order-2 lg:order-1">
               <EstateVisualisation config={config} />
             </div>
 
-            {/* ── Quiet inputs ── */}
             <div className="order-1 lg:order-2 space-y-12 lg:pt-4">
               {/* Land Size */}
               <div>
-                <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/20 mb-5">
-                  Land Size
-                </p>
+                <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/20 mb-5">Land Size</p>
                 <div className="space-y-3">
                   <input
                     type="range"
@@ -374,9 +396,7 @@ export default function Visualise() {
 
               {/* Terrain */}
               <div>
-                <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/20 mb-5">
-                  Terrain
-                </p>
+                <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/20 mb-5">Terrain</p>
                 <div className="flex flex-col gap-2">
                   {([
                     { key: "flat" as Terrain, label: "Flat" },
@@ -390,9 +410,7 @@ export default function Visualise() {
 
               {/* Discipline */}
               <div>
-                <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/20 mb-5">
-                  Discipline
-                </p>
+                <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/20 mb-5">Discipline</p>
                 <div className="flex flex-col gap-2">
                   {([
                     { key: "performance" as Discipline, label: "Performance" },
@@ -406,9 +424,7 @@ export default function Visualise() {
 
               {/* Budget */}
               <div>
-                <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/20 mb-5">
-                  Budget
-                </p>
+                <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/20 mb-5">Budget</p>
                 <div className="flex flex-col gap-2">
                   {([
                     { key: "essential" as Budget, label: "Essential" },
