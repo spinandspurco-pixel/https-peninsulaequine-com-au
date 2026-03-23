@@ -21,6 +21,12 @@ import imgTerrainComplex from "@/assets/terrain-complex.jpg";
 import imgDisciplinePerformance from "@/assets/discipline-performance.jpg";
 import imgDisciplineReining from "@/assets/discipline-reining.jpg";
 import imgDisciplineMixed from "@/assets/discipline-mixed.jpg";
+
+/* ── Budget variant imagery ──────────────────────────── */
+import imgBudgetStandard from "@/assets/budget-standard.jpg";
+import imgBudgetMid from "@/assets/budget-mid.jpg";
+import imgBudgetPremium from "@/assets/budget-premium.jpg";
+
 /* ── Configuration types ─────────────────────────────── */
 type Terrain = "flat" | "gentle" | "complex";
 type Discipline = "performance" | "reining" | "mixed";
@@ -138,6 +144,12 @@ function EstateVisualisation({ config }: { config: Config }) {
     { key: "complex" as const, src: imgTerrainComplex },
   ];
 
+  const budgetImages = [
+    { key: "standard" as const, src: imgBudgetStandard },
+    { key: "mid" as const, src: imgBudgetMid },
+    { key: "premium" as const, src: imgBudgetPremium },
+  ];
+
   return (
     <div className="relative">
       {/* Estate imagery — land-size base + terrain overlay */}
@@ -190,6 +202,25 @@ function EstateVisualisation({ config }: { config: Config }) {
               opacity: config.discipline === variant.key ? 0.3 : 0,
               mixBlendMode: "soft-light",
               filter: `brightness(0.55) saturate(0.65)`,
+              transition: `opacity ${DURATION.crossfade}ms ${EASE.cinematic}`,
+            }}
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
+
+        {/* Budget overlay layer — blended on top */}
+        {budgetImages.map((variant) => (
+          <img
+            key={variant.key}
+            src={variant.src}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{
+              opacity: config.budget === variant.key ? 0.25 : 0,
+              mixBlendMode: "overlay",
+              filter: `brightness(0.6) saturate(0.6)`,
               transition: `opacity ${DURATION.crossfade}ms ${EASE.cinematic}`,
             }}
             loading="lazy"
