@@ -10,7 +10,7 @@ import { useParallax } from "@/hooks/useParallax";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 import { ProjectsCinematicHero } from "@/components/ProjectsCinematicHero";
 import { ExperienceTheBuild } from "@/components/ExperienceTheBuild";
-import { DetailMatters } from "@/components/DetailMatters";
+
 import { ViewingLine } from "@/components/ViewingLine";
 import { ProjectQualification, type ProjectType } from "@/components/ProjectQualification";
 import { BuildOptions } from "@/components/BuildOptions";
