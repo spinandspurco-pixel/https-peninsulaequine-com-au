@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Layers, Fence, Home, Mountain, Shovel, Wrench, ChevronRight } from "lucide-react";
 import { InteractiveLayerStack } from "@/components/InteractiveLayerStack";
-import { ConversionBridge } from "@/components/ConversionBridge";
+import { cn } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
 // Video
