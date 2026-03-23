@@ -1,8 +1,7 @@
 import { useRef, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
-import { ArrowRight } from "lucide-react";
+import viewingLineBg from "@/assets/viewing-line-bg.jpg";
+import { StartProjectButton } from "@/components/StartProjectButton";
 import viewingLineBg from "@/assets/viewing-line-bg.jpg";
 
 export function ViewingLine() {
