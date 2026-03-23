@@ -1,79 +1,88 @@
 /**
- * GroundLock™ Interlocking Panel System
+ * GroundLock™ Interlocking Panel — Canonical Geometry
  *
- * True alternating-direction horseshoe panels that mechanically
- * interlock: Panel A faces up, Panel B faces down and nests into A.
+ * True horseshoe (U-shaped) panel with:
+ * - Clear negative space in the open end
+ * - Crisp, engineering-grade edge definition
+ * - Consistent wall thickness
+ * - Flat stable base geometry
+ * - Visible interlocking tab logic
  *
- * Optimised for mobile legibility: thicker strokes, higher contrast,
- * simplified linework with prominent join-point markers.
+ * This file is the SINGLE SOURCE OF TRUTH for panel geometry.
  */
 
 import { cn } from "@/lib/utils";
 
 /*
- * Geometry system — mathematically consistent horseshoe
+ * Geometry — precision horseshoe
  *
  * Centre axis:  x = 50
- * Arc baseline: y = 55
- * Outer edges:  x = 22, x = 78  (width 56)   → outer arc rx/ry = 28
- * Inner edges:  x = 28, x = 72  (width 44)   → inner arc rx/ry = 22
- * Wall thickness: 6 px uniform on all sides
- * Base (open end): y = 90 (up) / y = 20 (down)
+ * Arc centre:   y = 48 (raised slightly for better negative-space read)
+ * Outer edges:  x = 18, x = 82  (width 64)   → outer arc rx/ry = 32
+ * Inner edges:  x = 26, x = 74  (width 48)   → inner arc rx/ry = 24
+ * Wall thickness: 8 px uniform
+ * Base (open end): y = 92 (up) / y = 18 (down)
+ * Arc sweep top:  y = 16 (up) / y = 94 (down)
  */
 
 /* ── Panel path — horseshoe open at bottom ── */
 const PANEL_UP = [
-  "M 22 90", "L 22 55",
-  "A 28 28 0 0 1 78 55",
-  "L 78 90",
-  "L 72 90", "L 72 55",
-  "A 22 22 0 0 0 28 55",
-  "L 28 90", "Z",
+  "M 18 92",       // outer-left base
+  "L 18 48",       // up outer-left wall
+  "A 32 32 0 0 1 82 48", // outer arc (top of U)
+  "L 82 92",       // down outer-right wall
+  "L 74 92",       // step inward (right base)
+  "L 74 48",       // up inner-right wall
+  "A 24 24 0 0 0 26 48", // inner arc
+  "L 26 92",       // down inner-left wall
+  "Z",
 ].join(" ");
 
 /* ── Panel path — horseshoe open at top (inverted) ── */
 const PANEL_DOWN = [
-  "M 22 20", "L 22 55",
-  "A 28 28 0 0 0 78 55",
-  "L 78 20",
-  "L 72 20", "L 72 55",
-  "A 22 22 0 0 1 28 55",
-  "L 28 20", "Z",
+  "M 18 18",       // outer-left base
+  "L 18 62",       // down outer-left wall
+  "A 32 32 0 0 0 82 62", // outer arc (bottom of inverted U)
+  "L 82 18",       // up outer-right wall
+  "L 74 18",       // step inward (right base)
+  "L 74 62",       // down inner-right wall
+  "A 24 24 0 0 1 26 62", // inner arc
+  "L 26 18",       // up inner-left wall
+  "Z",
 ].join(" ");
 
-/* ── Interlocking tabs ── */
-const TAB_UP_LEFT  = "M 22 76 L 15 76 L 15 84 L 22 84 Z";
-const TAB_UP_RIGHT = "M 78 76 L 85 76 L 85 84 L 78 84 Z";
-const TAB_DOWN_LEFT  = "M 22 26 L 15 26 L 15 34 L 22 34 Z";
-const TAB_DOWN_RIGHT = "M 78 26 L 85 26 L 85 34 L 78 34 Z";
-const TOE_UP   = "M 44 32 L 50 22 L 56 32 Z";
-const TOE_DOWN = "M 44 78 L 50 88 L 56 78 Z";
+/* ── Interlocking tabs — crisp rectangular geometry ── */
+const TAB_UP_LEFT   = "M 18 74 L 10 74 L 10 84 L 18 84 Z";
+const TAB_UP_RIGHT  = "M 82 74 L 90 74 L 90 84 L 82 84 Z";
+const TAB_DOWN_LEFT  = "M 18 26 L 10 26 L 10 36 L 18 36 Z";
+const TAB_DOWN_RIGHT = "M 82 26 L 90 26 L 90 36 L 82 36 Z";
+
+/* ── Crown interlock — triangular key ── */
+const TOE_UP   = "M 43 26 L 50 14 L 57 26 Z";
+const TOE_DOWN = "M 43 84 L 50 96 L 57 84 Z";
 
 /* ── Join-point markers ── */
-const JOIN_UP   = [{ cx: 15, cy: 80 }, { cx: 85, cy: 80 }, { cx: 50, cy: 24 }];
-const JOIN_DOWN = [{ cx: 15, cy: 30 }, { cx: 85, cy: 30 }, { cx: 50, cy: 86 }];
+const JOIN_UP   = [{ cx: 10, cy: 79 }, { cx: 90, cy: 79 }, { cx: 50, cy: 16 }];
+const JOIN_DOWN = [{ cx: 10, cy: 31 }, { cx: 90, cy: 31 }, { cx: 50, cy: 94 }];
 
-/* ── Inner groove — traces inner arc for curvature detail ── */
-const GROOVE_UP   = "M 28 55 A 22 22 0 0 1 72 55";
-const GROOVE_DOWN = "M 28 55 A 22 22 0 0 0 72 55";
+/* ── Inner groove — traces inner arc ── */
+const GROOVE_UP   = "M 26 48 A 24 24 0 0 1 74 48";
+const GROOVE_DOWN = "M 26 62 A 24 24 0 0 0 74 62";
 
 /* ── Shared gradient defs ── */
 export function PanelDefs({ id = "gl" }: { id?: string }) {
   return (
     <defs>
-      {/* Active fill — stronger opacity for mobile */}
       <linearGradient id={`${id}-top-active`} x1="0" y1="0" x2="0.3" y2="1">
         <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.35" />
         <stop offset="40%" stopColor="hsl(var(--accent))" stopOpacity="0.22" />
         <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.10" />
       </linearGradient>
-      {/* Idle fill */}
       <linearGradient id={`${id}-top-idle`} x1="0" y1="0" x2="0.3" y2="1">
         <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.18" />
         <stop offset="40%" stopColor="hsl(var(--accent))" stopOpacity="0.10" />
         <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.04" />
       </linearGradient>
-      {/* Depth side */}
       <linearGradient id={`${id}-side`} x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.14" />
         <stop offset="100%" stopColor="hsl(var(--background))" stopOpacity="0.7" />
@@ -82,7 +91,6 @@ export function PanelDefs({ id = "gl" }: { id?: string }) {
         <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.26" />
         <stop offset="100%" stopColor="hsl(var(--background))" stopOpacity="0.5" />
       </linearGradient>
-      {/* Shadow — simpler, less GPU-heavy */}
       <filter id={`${id}-shadow`} x="-15%" y="-10%" width="140%" height="140%">
         <feDropShadow dx="1" dy="2" stdDeviation="2.5" floodColor="hsl(var(--background))" floodOpacity="0.5" />
       </filter>
@@ -92,7 +100,6 @@ export function PanelDefs({ id = "gl" }: { id?: string }) {
 
 interface PanelProps {
   className?: string;
-  /** "up" = open at bottom (default), "down" = open at top */
   direction?: "up" | "down";
   x?: number;
   y?: number;
@@ -101,7 +108,6 @@ interface PanelProps {
   active?: boolean;
   showTabs?: boolean;
   defsId?: string;
-  /** Show join-point markers */
   showJoins?: boolean;
 }
 
@@ -125,9 +131,8 @@ export function GroundLockPanelSVG({
   const toe = isUp ? TOE_UP : TOE_DOWN;
   const joins = isUp ? JOIN_UP : JOIN_DOWN;
 
-  /* Higher contrast strokes for mobile legibility */
   const strokeColor = active ? "hsl(var(--accent) / 0.65)" : "hsl(var(--accent) / 0.25)";
-  const strokeW = active ? 1.2 : 0.8;
+  const strokeW = active ? 1.4 : 0.9;
   const topGrad = active ? `${defsId}-top-active` : `${defsId}-top-idle`;
   const depthOffset = isUp ? 4 : -4;
 
@@ -162,7 +167,8 @@ export function GroundLockPanelSVG({
         fill={`url(#${topGrad})`}
         stroke={strokeColor}
         strokeWidth={strokeW}
-        strokeLinejoin="round"
+        strokeLinejoin="miter"
+        strokeLinecap="square"
       />
 
       {/* Inner curvature groove */}
@@ -170,20 +176,20 @@ export function GroundLockPanelSVG({
         d={groove}
         fill="none"
         stroke={active ? "hsl(var(--accent) / 0.30)" : "hsl(var(--accent) / 0.12)"}
-        strokeWidth={0.6}
-        strokeLinecap="round"
+        strokeWidth={0.7}
+        strokeLinecap="square"
       />
 
-      {/* Interlocking tabs — thicker strokes */}
+      {/* Interlocking tabs */}
       {showTabs && (
         <>
-          <path d={tabL} fill={`url(#${topGrad})`} stroke={strokeColor} strokeWidth={0.7} />
-          <path d={tabR} fill={`url(#${topGrad})`} stroke={strokeColor} strokeWidth={0.7} />
-          <path d={toe} fill={`url(#${topGrad})`} stroke={strokeColor} strokeWidth={0.7} />
+          <path d={tabL} fill={`url(#${topGrad})`} stroke={strokeColor} strokeWidth={0.8} strokeLinejoin="miter" />
+          <path d={tabR} fill={`url(#${topGrad})`} stroke={strokeColor} strokeWidth={0.8} strokeLinejoin="miter" />
+          <path d={toe} fill={`url(#${topGrad})`} stroke={strokeColor} strokeWidth={0.8} strokeLinejoin="miter" />
         </>
       )}
 
-      {/* Join-point markers — small dots at lock locations */}
+      {/* Join-point markers */}
       {showJoins && showTabs && joins.map((j, i) => (
         <circle
           key={i}
@@ -195,20 +201,6 @@ export function GroundLockPanelSVG({
         />
       ))}
     </g>
-  );
-}
-
-/** Standalone preview — single panel */
-export function GroundLockPanelPreview({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 100 110"
-      className={cn("w-full h-auto", className)}
-      aria-label="GroundLock horseshoe panel — single unit"
-    >
-      <PanelDefs id="gl" />
-      <GroundLockPanelSVG active showTabs showJoins />
-    </svg>
   );
 }
 
