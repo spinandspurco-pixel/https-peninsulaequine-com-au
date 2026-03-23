@@ -246,6 +246,27 @@ export function LoadingSplash({
           </p>
         </div>
       </div>
+
+      {/* ── Location stamp ───────────────────────────── */}
+      <div
+        className="absolute bottom-8 sm:bottom-10 left-0 right-0 z-10 text-center pointer-events-none"
+        style={{
+          opacity: isHoldOrAfter && !isExit ? 1 : 0,
+          transition: `opacity ${isExit ? 200 : 400}ms ${EASE_ARCH}`,
+        }}
+      >
+        <p
+          className="font-mono uppercase"
+          style={{
+            fontSize: "9px",
+            letterSpacing: "0.45em",
+            color: "hsl(var(--accent))",
+            opacity: 0.12,
+          }}
+        >
+          Main Ridge Estate — Mornington Peninsula
+        </p>
+      </div>
     </div>
   );
 }
