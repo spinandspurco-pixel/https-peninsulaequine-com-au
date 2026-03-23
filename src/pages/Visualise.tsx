@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
@@ -8,28 +8,61 @@ import { EASE } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 /* ═══════════════════════════════════════════════════════
-   ASSET STATUS
-   ─────────────────────────────────────────────────────
-   All 21 placeholder images have been DISABLED.
-   Visual rendering is blocked until proper state-based
-   assets are assigned per the simulator spec.
-
-   When assets are ready, populate ASSET_REGISTRY below
-   with verified image imports keyed by state.
+   VERIFIED ASSET IMPORTS — 9 states × 2 views = 18 core
+   + 3 terrain overlays = 21 total
    ═══════════════════════════════════════════════════════ */
 
-/**
- * ASSET_REGISTRY — when a state has a verified asset pair,
- * add it here. Only registered states will render visually.
- * Everything else shows the "awaiting assets" placeholder.
- */
-const ASSET_REGISTRY: Record<string, { topdown: string; oblique: string }> = {
-  // Example when assets are ready:
-  // "medium_mixed": { topdown: sim_medium_mixed_topdown, oblique: sim_medium_mixed_oblique },
+// Small × Discipline
+import sim_small_performance_topdown from "@/assets/sim/sim_small_performance_topdown.jpg";
+import sim_small_performance_oblique from "@/assets/sim/sim_small_performance_oblique.jpg";
+import sim_small_reining_topdown from "@/assets/sim/sim_small_reining_topdown.jpg";
+import sim_small_reining_oblique from "@/assets/sim/sim_small_reining_oblique.jpg";
+import sim_small_mixed_topdown from "@/assets/sim/sim_small_mixed_topdown.jpg";
+import sim_small_mixed_oblique from "@/assets/sim/sim_small_mixed_oblique.jpg";
+
+// Medium × Discipline
+import sim_medium_performance_topdown from "@/assets/sim/sim_medium_performance_topdown.jpg";
+import sim_medium_performance_oblique from "@/assets/sim/sim_medium_performance_oblique.jpg";
+import sim_medium_reining_topdown from "@/assets/sim/sim_medium_reining_topdown.jpg";
+import sim_medium_reining_oblique from "@/assets/sim/sim_medium_reining_oblique.jpg";
+import sim_medium_mixed_topdown from "@/assets/sim/sim_medium_mixed_topdown.jpg";
+import sim_medium_mixed_oblique from "@/assets/sim/sim_medium_mixed_oblique.jpg";
+
+// Large × Discipline
+import sim_large_performance_topdown from "@/assets/sim/sim_large_performance_topdown.jpg";
+import sim_large_performance_oblique from "@/assets/sim/sim_large_performance_oblique.jpg";
+import sim_large_reining_topdown from "@/assets/sim/sim_large_reining_topdown.jpg";
+import sim_large_reining_oblique from "@/assets/sim/sim_large_reining_oblique.jpg";
+import sim_large_mixed_topdown from "@/assets/sim/sim_large_mixed_topdown.jpg";
+import sim_large_mixed_oblique from "@/assets/sim/sim_large_mixed_oblique.jpg";
+
+// Terrain overlays
+import sim_terrain_flat from "@/assets/sim/sim_terrain_flat.jpg";
+import sim_terrain_gentle from "@/assets/sim/sim_terrain_gentle.jpg";
+import sim_terrain_complex from "@/assets/sim/sim_terrain_complex.jpg";
+
+/* ═══════════════════════════════════════════════════════ */
+
+type StatePair = { topdown: string; oblique: string };
+
+const ASSET_REGISTRY: Record<string, StatePair> = {
+  "small_performance":  { topdown: sim_small_performance_topdown,  oblique: sim_small_performance_oblique },
+  "small_reining":      { topdown: sim_small_reining_topdown,      oblique: sim_small_reining_oblique },
+  "small_mixed":        { topdown: sim_small_mixed_topdown,        oblique: sim_small_mixed_oblique },
+  "medium_performance": { topdown: sim_medium_performance_topdown, oblique: sim_medium_performance_oblique },
+  "medium_reining":     { topdown: sim_medium_reining_topdown,     oblique: sim_medium_reining_oblique },
+  "medium_mixed":       { topdown: sim_medium_mixed_topdown,       oblique: sim_medium_mixed_oblique },
+  "large_performance":  { topdown: sim_large_performance_topdown,  oblique: sim_large_performance_oblique },
+  "large_reining":      { topdown: sim_large_reining_topdown,      oblique: sim_large_reining_oblique },
+  "large_mixed":        { topdown: sim_large_mixed_topdown,        oblique: sim_large_mixed_oblique },
 };
 
+const ALL_STATE_KEYS = Object.keys(ASSET_REGISTRY);
+
 const TERRAIN_REGISTRY: Record<string, string> = {
-  // "flat": sim_terrain_flat,
+  flat: sim_terrain_flat,
+  gentle: sim_terrain_gentle,
+  complex: sim_terrain_complex,
 };
 
 /* ═══════════════════════════════════════════════════════
