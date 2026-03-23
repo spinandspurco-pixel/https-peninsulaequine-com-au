@@ -67,6 +67,11 @@ function ensureLockStyles() {
       0%   { transform: translate(0, 0) scale(1); opacity: 0.25; }
       100% { transform: translate(8px, -3px) scale(0.3); opacity: 0; }
     }
+    @keyframes gl-resolve {
+      0%   { box-shadow: inset 0 1px 0 hsl(var(--accent) / 0); }
+      60%  { box-shadow: inset 0 1px 0 hsl(var(--accent) / 0.08); }
+      100% { box-shadow: inset 0 1px 0 hsl(var(--accent) / 0.04); }
+    }
   `;
   document.head.appendChild(style);
 }
@@ -75,6 +80,7 @@ export function InteractiveLayerStack() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [visibleCount, setVisibleCount] = useState(0);
   const [panelLocked, setPanelLocked] = useState(false);
+  const [panelResolved, setPanelResolved] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { ensureLockStyles(); }, []);
@@ -100,6 +106,8 @@ export function InteractiveLayerStack() {
               clearInterval(interval);
               // Trigger lock moment after panel settles
               setTimeout(() => setPanelLocked(true), 80);
+              // Resolution moment: stillness hold then subtle highlight
+              setTimeout(() => setPanelResolved(true), 580);
             }
           }, 180);
           observer.disconnect();
@@ -156,7 +164,7 @@ export function InteractiveLayerStack() {
                 !showLockAnimation && "transition-all duration-700 ease-out"
               )}
               style={showLockAnimation ? {
-                animation: "gl-lock-settle 480ms cubic-bezier(0.32, 0, 0.15, 1) forwards",
+                animation: `gl-lock-settle 480ms cubic-bezier(0.32, 0, 0.15, 1) forwards${panelResolved ? ', gl-resolve 600ms ease-out 0ms forwards' : ''}`,
               } : undefined}
               onClick={() => handleClick(i)}
             >
