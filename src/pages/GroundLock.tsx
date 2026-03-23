@@ -103,11 +103,8 @@ export default function GroundLock() {
       <StepProgressIndicator />
       {/* ═══ SECTION 1 — HERO ═════════════════════════════ */}
       <section className="relative pt-36 sm:pt-44 pb-20 sm:pb-28 overflow-hidden">
-        <div className="absolute inset-0">
-          <img src={groundlockHero} alt="" className="w-full h-full object-cover" loading="eager" />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/60" />
-        </div>
-        <div className="absolute inset-0 grain-texture" />
+        <div className="absolute inset-0 bg-background" />
+        <div className="absolute inset-0 grain-texture opacity-[0.025]" />
         <div className="section-container relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div className="max-w-md">
@@ -120,29 +117,19 @@ export default function GroundLock() {
               </div>
 
               <h1
-                className="heading-display text-foreground mb-4 opacity-0 animate-fade-in"
+                className="heading-display text-foreground mb-5 opacity-0 animate-fade-in"
                 style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "1200ms", lineHeight: "0.95" }}
               >
-                GroundLock™
+                Stops damage<br />before it starts.
               </h1>
 
-              {/* Positioning hook — #1 */}
               <p
-                className="font-serif text-lg sm:text-xl text-foreground/70 leading-[1.5] mb-3 opacity-0 animate-fade-in"
-                style={{ animationDelay: "700ms", animationFillMode: "both", animationDuration: "1000ms" }}
+                className="text-[13px] text-muted-foreground/35 leading-[1.8] mb-10 max-w-[340px] opacity-0 animate-fade-in"
+                style={{ animationDelay: "800ms", animationFillMode: "both", animationDuration: "1000ms" }}
               >
-                Most systems sit in place. This one locks together.
+                GroundLock is a structural system designed to stabilise, protect, and extend the life of equine surfaces.
               </p>
 
-              {/* Authority line — #2 */}
-              <p
-                className="text-[13px] text-muted-foreground/40 leading-[1.7] mb-10 opacity-0 animate-fade-in"
-                style={{ animationDelay: "900ms", animationFillMode: "both", animationDuration: "1000ms" }}
-              >
-                Designed to perform under load — not just on install.
-              </p>
-
-              {/* Early CTA — #3 */}
               <div
                 className="opacity-0 animate-fade-in"
                 style={{ animationDelay: "1100ms", animationFillMode: "both", animationDuration: "1000ms" }}
@@ -152,9 +139,6 @@ export default function GroundLock() {
                     Request GroundLock System Plan <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
-                <p className="text-[11px] text-muted-foreground/30 mt-3 font-mono tracking-wide">
-                  Tell us your space. We'll map the system.
-                </p>
               </div>
             </div>
 
@@ -164,6 +148,75 @@ export default function GroundLock() {
             >
               <GroundLockHero size="max-w-[360px]" opacity={0.85} perspective />
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ PROBLEM vs SOLUTION SPLIT ═════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="py-28 sm:py-36 lg:py-44 bg-card relative">
+          <div className="absolute inset-0 grain-texture opacity-[0.02]" />
+          <div className="section-container max-w-4xl mx-auto relative z-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border/8">
+              {/* LEFT — The Problem */}
+              <RevealOnScroll direction="up">
+                <div className="bg-background p-8 sm:p-10 lg:p-12 min-h-[260px] flex flex-col justify-center">
+                  <p
+                    className="font-mono text-[9px] uppercase tracking-[0.35em] mb-8"
+                    style={{ color: "hsl(var(--muted-foreground) / 0.2)" }}
+                  >
+                    Without GroundLock
+                  </p>
+                  <ul className="space-y-5">
+                    {["Mud.", "Rutting.", "Heavy vehicle damage."].map((line) => (
+                      <li
+                        key={line}
+                        className="font-serif text-[15px] sm:text-[17px] tracking-[0.02em]"
+                        style={{ color: "hsl(var(--foreground) / 0.2)" }}
+                      >
+                        {line}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </RevealOnScroll>
+
+              {/* RIGHT — The Solution */}
+              <RevealOnScroll direction="up" delay={120}>
+                <div className="bg-background p-8 sm:p-10 lg:p-12 min-h-[260px] flex flex-col justify-center">
+                  <p
+                    className="font-mono text-[9px] uppercase tracking-[0.35em] mb-8"
+                    style={{ color: "hsl(var(--accent) / 0.35)" }}
+                  >
+                    With GroundLock
+                  </p>
+                  <ul className="space-y-5">
+                    {["Clean system.", "Structured base.", "Stable surface."].map((line) => (
+                      <li
+                        key={line}
+                        className="font-serif text-[15px] sm:text-[17px] font-medium tracking-[0.02em]"
+                        style={{ color: "hsl(var(--foreground) / 0.45)" }}
+                      >
+                        {line}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </RevealOnScroll>
+            </div>
+
+            {/* Caption */}
+            <RevealOnScroll direction="up" delay={200}>
+              <p
+                className="text-center mt-10 font-serif italic tracking-[0.04em]"
+                style={{
+                  fontSize: "clamp(0.95rem, 0.5rem + 1.5vw, 1.3rem)",
+                  color: "hsl(var(--foreground) / 0.15)",
+                }}
+              >
+                One holds. One fails.
+              </p>
+            </RevealOnScroll>
           </div>
         </div>
       </section>
