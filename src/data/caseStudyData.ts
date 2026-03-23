@@ -17,9 +17,9 @@ import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
 import equitanaArena2 from "@/assets/equitana-arena-2.jpg";
 import equitanaArena4 from "@/assets/equitana-arena-4.jpg";
 
-// System / GroundLock
-import groundlockInstallation from "@/assets/groundlock-installation.jpg";
-import groundlockInsitu from "@/assets/groundlock-insitu-mainridge.jpg";
+// System / GroundLock — canonical horseshoe
+import groundlockInstallation from "@/assets/groundlock-horseshoe-canonical.jpg";
+import groundlockInsitu from "@/assets/groundlock-horseshoe-canonical.jpg";
 
 export interface CaseStudyAct {
   image: string;
