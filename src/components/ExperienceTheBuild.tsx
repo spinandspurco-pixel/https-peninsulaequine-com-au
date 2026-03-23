@@ -63,10 +63,12 @@ function ActNav({ activeAct }: { activeAct: string }) {
   );
 }
 
-/* ── Cinematic transition between acts ───────────────── */
+/* ── Cinematic transition between acts — crossfade + motion ── */
 function ActTransition({ line }: { line: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     const el = ref.current;
@@ -75,20 +77,56 @@ function ActTransition({ line }: { line: string }) {
       ([entry]) => {
         if (entry.isIntersecting) setVisible(true);
       },
-      { threshold: 0.4 }
+      { threshold: 0.3 }
     );
     io.observe(el);
     return () => io.disconnect();
   }, []);
 
+  /* Subtle parallax drift for motion continuation */
+  useEffect(() => {
+    if (reducedMotion) return;
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const el = ref.current;
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          const center = rect.top + rect.height / 2;
+          const viewCenter = window.innerHeight / 2;
+          setScrollY((center - viewCenter) * 0.015);
+        }
+        ticking = false;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [reducedMotion]);
+
   return (
-    <div ref={ref} className="py-28 sm:py-40 lg:py-52 text-center">
+    <div ref={ref} className="relative py-28 sm:py-40 lg:py-52 text-center overflow-hidden">
+      {/* Soft environmental gradient — bridges adjacent scene tones */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(ellipse 80% 60% at 50% 50%, hsl(var(--accent) / 0.02), transparent)`,
+          opacity: visible ? 1 : 0,
+          transition: `opacity 2000ms ${EASE.cinematic}`,
+        }}
+      />
+
       <p
-        className="font-serif text-sm sm:text-base lg:text-lg italic text-foreground/20 max-w-sm mx-auto leading-relaxed tracking-[0.02em] px-6"
+        className="relative z-10 font-serif text-sm sm:text-base lg:text-lg italic text-foreground/20 max-w-sm mx-auto leading-relaxed tracking-[0.02em] px-6"
         style={{
           opacity: visible ? 1 : 0,
-          transform: visible ? "translateY(0)" : `translateY(${DISTANCE.md}px)`,
-          transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 300ms, transform ${DURATION.cinematic}ms ${EASE.cinematic} 300ms`,
+          transform: visible
+            ? `translateY(${reducedMotion ? 0 : scrollY}px)`
+            : `translateY(${DISTANCE.md}px)`,
+          transition: visible
+            ? `transform ${DURATION.parallax}ms ${EASE.cinematic}`
+            : `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 300ms, transform ${DURATION.cinematic}ms ${EASE.cinematic} 300ms`,
         }}
       >
         {line}
