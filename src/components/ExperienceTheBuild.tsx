@@ -267,12 +267,23 @@ function Synthesis({ onPressTone }: { onPressTone?: () => void }) {
           Every build begins with understanding the ground.
         </p>
 
+        {/* Authority line */}
+        <p
+          className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.35em] text-accent/15 mb-14"
+          style={{
+            opacity: visible ? 1 : 0,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 800ms`,
+          }}
+        >
+          Every detail resolved before it's built
+        </p>
+
         {/* Divider */}
         <div
           className="w-10 h-px bg-accent/12 mx-auto mb-12"
           style={{
             opacity: visible ? 1 : 0,
-            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 900ms`,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1000ms`,
           }}
         />
 
@@ -282,7 +293,7 @@ function Synthesis({ onPressTone }: { onPressTone?: () => void }) {
           className="px-12 py-4 border border-accent/15 text-[11px] font-mono uppercase tracking-[0.3em] text-foreground/65 hover:border-accent/25 hover:text-foreground/80 hover:bg-accent/[0.03]"
           style={{
             opacity: visible ? 1 : 0,
-            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1100ms, border-color 600ms ${EASE.cinematic}, color 600ms ${EASE.cinematic}, background-color 600ms ${EASE.cinematic}`,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1200ms, border-color 600ms ${EASE.cinematic}, color 600ms ${EASE.cinematic}, background-color 600ms ${EASE.cinematic}`,
           }}
           onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.97)"; onPressTone?.(); }}
           onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
@@ -296,7 +307,7 @@ function Synthesis({ onPressTone }: { onPressTone?: () => void }) {
           className="mt-8 font-serif text-[13px] sm:text-[14px] italic text-foreground/20 tracking-[0.01em]"
           style={{
             opacity: visible ? 1 : 0,
-            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1500ms`,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1600ms`,
           }}
         >
           Built properly. From the ground up.
