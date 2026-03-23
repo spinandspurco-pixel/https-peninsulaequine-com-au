@@ -130,17 +130,37 @@ function EstateVisualisation({ config }: { config: Config }) {
 
   return (
     <div className="relative">
-      {/* Estate imagery — crossfade between variants */}
+      {/* Estate imagery — land-size base + terrain overlay */}
       <div className="relative aspect-[4/5] sm:aspect-[3/4] lg:aspect-square overflow-hidden">
-        {variantImages.map((variant) => (
+        {/* Land-size base layer */}
+        {sizeImages.map((variant) => (
           <img
             key={variant.key}
             src={variant.src}
             alt={`${variant.key} estate configuration`}
             className="absolute inset-0 w-full h-full object-cover img-immersive"
             style={{
-              opacity: variants.active === variant.key ? 1 : 0,
+              opacity: sizeKey === variant.key ? 1 : 0,
               filter: `brightness(0.45) saturate(0.75)`,
+              transition: `opacity ${DURATION.crossfade}ms ${EASE.cinematic}`,
+            }}
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
+
+        {/* Terrain overlay layer — blended on top */}
+        {terrainImages.map((variant) => (
+          <img
+            key={variant.key}
+            src={variant.src}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{
+              opacity: config.terrain === variant.key ? 0.35 : 0,
+              mixBlendMode: "screen",
+              filter: `brightness(0.5) saturate(0.6)`,
               transition: `opacity ${DURATION.crossfade}ms ${EASE.cinematic}`,
             }}
             loading="lazy"
