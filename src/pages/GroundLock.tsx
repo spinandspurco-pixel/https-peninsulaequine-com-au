@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { GroundLockCrossSection } from "@/components/groundlock/GroundLockCrossSection";
 import groundlockHero from "@/assets/groundlock-hero-arena.jpg";
 import groundlockCutaway from "@/assets/groundlock-cutaway.jpg";
 import groundlockKit from "@/assets/groundlock-kit-product.jpg";
@@ -226,9 +227,38 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ CUTAWAY VISUAL (immediately after system) ═════ */}
+      {/* ═══ CROSS-SECTION — Technical Authority Layer ═══ */}
       <section className="relative overflow-hidden">
-        <div className="py-16 sm:py-24 relative">
+        <div className="py-20 sm:py-28 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-4xl mx-auto relative z-[1]">
+            <div className="text-center mb-14 sm:mb-20">
+              <RevealOnScroll direction="up">
+                <RevealLine className="mx-auto mb-10" width="w-10" />
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={80}>
+                <p className="text-overline mb-5">System Cross-Section</p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={120}>
+                <h2 className="heading-section text-foreground mb-4">
+                  Built from the Subgrade Up
+                </h2>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={160}>
+                <p className="text-[13px] text-muted-foreground/32 leading-[1.7] max-w-md mx-auto">
+                  Every layer engineered to perform under load — not just sit in place.
+                </p>
+              </RevealOnScroll>
+            </div>
+
+            <GroundLockCrossSection />
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ CUTAWAY VISUAL ═════════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="py-16 sm:py-24 relative border-t border-border/8">
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container max-w-3xl mx-auto relative z-[1]">
             <RevealOnScroll direction="up">
