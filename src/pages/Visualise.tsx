@@ -88,12 +88,12 @@ const DEFAULT: Config = {
   budget: "elevated",
 };
 
-/* ── Timing constants ── */
+/* ── Timing constants (per spec: 250–400ms crossfade) ── */
 const T = {
-  baseCrossfade: 1100,
-  baseScale: 1400,
-  terrainFade: 180,
-  budgetTone: 600,
+  baseCrossfade: 350,
+  baseScale: 500,
+  terrainFade: 160,
+  budgetTone: 400,
 };
 
 function getSizeKey(landSize: number): LandSize {
