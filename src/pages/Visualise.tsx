@@ -126,6 +126,12 @@ function EstateVisualisation({ config }: { config: Config }) {
     { key: "large" as const, src: imgLarge },
   ];
 
+  const disciplineImages = [
+    { key: "performance" as const, src: imgDisciplinePerformance },
+    { key: "reining" as const, src: imgDisciplineReining },
+    { key: "mixed" as const, src: imgDisciplineMixed },
+  ];
+
   const terrainImages = [
     { key: "flat" as const, src: imgTerrainFlat },
     { key: "gentle" as const, src: imgTerrainGentle },
