@@ -7,6 +7,7 @@ import { useAmbientSound, type AmbientScene } from "@/hooks/useAmbientSound";
 import { InteractiveMasterplan } from "@/components/masterplan/InteractiveMasterplanV2";
 import { WalkTheProject } from "@/components/WalkTheProject";
 import { BuildTimeline } from "@/components/BuildTimeline";
+import { MainRidgeLivingOutcome } from "@/components/MainRidgeLivingOutcome";
 
 import imgHero from "@/assets/mainridge-aerial-hero.jpg";
 
@@ -447,6 +448,9 @@ export function ExperienceTheBuild() {
       <div id="etb-timeline">
         <BuildTimeline onPhaseChange={handleTimelinePhase} />
       </div>
+
+      {/* Living Outcome — emotional resolution */}
+      <MainRidgeLivingOutcome />
 
       {/* Final synthesis */}
       <Synthesis onPressTone={playPressTone} />
