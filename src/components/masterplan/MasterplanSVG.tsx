@@ -376,6 +376,10 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         {/* Directional chevrons */}
         <polygon points="370,167 367,160 373,160" fill="hsl(0 0% 65%)" opacity="0.4" />
         <text x="370" y="84" textAnchor="middle" fontSize="2.5" fontFamily="monospace" fill="hsl(0 0% 65%)" opacity="0.45" letterSpacing="0.12em">ENTRY FLOW</text>
+        <text x="370" y="96" textAnchor="middle" fontSize="2.4" fontFamily="monospace" fill="hsl(var(--accent))" letterSpacing="0.1em"
+          style={{ opacity: activeZone === "stable-row" ? 0.13 : 0, transition: `opacity 260ms ${T_EASE} 200ms` }}>
+          Flow without congestion.
+        </text>
       </g>
 
       {/* Stables west wing: layout outline emphasis */}
