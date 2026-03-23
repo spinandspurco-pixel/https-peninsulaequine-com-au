@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Layers, Fence, Home, Mountain, Shovel, Wrench, ChevronRight } from "lucide-react";
 import { InteractiveLayerStack } from "@/components/InteractiveLayerStack";
 import { cn } from "@/lib/utils";
-import { cn } from "@/lib/utils";
 
 // Video
 import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
