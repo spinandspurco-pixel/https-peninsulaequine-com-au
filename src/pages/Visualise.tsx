@@ -178,6 +178,25 @@ function EstateVisualisation({ config }: { config: Config }) {
           />
         ))}
 
+        {/* Discipline overlay layer — blended on top */}
+        {disciplineImages.map((variant) => (
+          <img
+            key={variant.key}
+            src={variant.src}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{
+              opacity: config.discipline === variant.key ? 0.3 : 0,
+              mixBlendMode: "soft-light",
+              filter: `brightness(0.55) saturate(0.65)`,
+              transition: `opacity ${DURATION.crossfade}ms ${EASE.cinematic}`,
+            }}
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
+
         {/* Atmospheric overlay */}
         <div
           className="absolute inset-0"
