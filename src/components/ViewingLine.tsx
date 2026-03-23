@@ -2,7 +2,6 @@ import { useRef, useState, useEffect } from "react";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 import viewingLineBg from "@/assets/viewing-line-bg.jpg";
 import { StartProjectButton } from "@/components/StartProjectButton";
-import viewingLineBg from "@/assets/viewing-line-bg.jpg";
 
 export function ViewingLine() {
   const ref = useRef<HTMLDivElement>(null);
