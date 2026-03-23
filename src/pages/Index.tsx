@@ -180,7 +180,7 @@ export default function Index() {
           style={{ opacity: heroFade, willChange: "opacity" }}
         >
           <div className="flex flex-col items-center gap-10 sm:gap-14 lg:gap-16">
-            {/* Brand tag — 1800ms (atmosphere settles first) */}
+            {/* Brand tag — 1600ms */}
             <div
               className="flex items-center justify-center gap-5"
               style={{ opacity: 0, animation: "heroFadeIn 900ms ease-out 1600ms forwards" }}
@@ -190,45 +190,31 @@ export default function Index() {
               <div className="w-12 h-px bg-accent/20" />
             </div>
 
-            {/* Headline — 2800ms (tension hold, then gentle reveal) */}
-            <div className="space-y-6 sm:space-y-7">
-              <h1
-                className="font-serif font-extrabold text-foreground leading-[0.98] tracking-[-0.018em]"
-                style={{
-                  opacity: 0,
-                  transform: "translateY(2px)",
-                  animation: "heroHeadlineReveal 950ms cubic-bezier(0.45, 0, 0.15, 1) 2400ms forwards",
-                  fontSize: "clamp(3rem, 1.6rem + 6.5vw, 7.5rem)",
-                  textShadow: "0 2px 40px hsl(222 20% 4% / 0.6)",
-                }}
-              >
-                Built from the<br className="hidden sm:block" /> ground up.
-              </h1>
-              {/* Sub-headline */}
-              <p
-                className="font-serif font-light leading-[1.2] tracking-[0.04em]"
-                style={{
-                  opacity: 0,
-                  animation: "heroFadeIn 800ms ease-out 3000ms forwards",
-                  fontSize: "clamp(1.5rem, 0.75rem + 3.2vw, 3.5rem)",
-                  color: "hsl(var(--foreground) / 0.2)",
-                }}
-              >
-                Held to perform. Built to last.
-              </p>
-            </div>
+            {/* Primary — single authority statement */}
+            <h1
+              className="font-serif font-extrabold text-foreground leading-[0.98] tracking-[-0.018em]"
+              style={{
+                opacity: 0,
+                transform: "translateY(2px)",
+                animation: "heroHeadlineReveal 950ms cubic-bezier(0.45, 0, 0.15, 1) 2400ms forwards",
+                fontSize: "clamp(3rem, 1.6rem + 6.5vw, 7.5rem)",
+                textShadow: "0 2px 40px hsl(222 20% 4% / 0.6)",
+              }}
+            >
+              From Dirt<br className="hidden sm:block" /> to Dynasty.
+            </h1>
 
-            {/* Supporting text */}
+            {/* Supporting line — subdued, non-competing */}
             <p
               className="text-[11px] sm:text-[12px] uppercase max-w-lg leading-[2.2]"
               style={{
                 opacity: 0,
-                animation: "heroFadeIn 800ms ease-out 3500ms forwards",
+                animation: "heroFadeIn 800ms ease-out 3200ms forwards",
                 letterSpacing: "0.28em",
-                color: "hsl(var(--muted-foreground) / 0.38)",
+                color: "hsl(var(--muted-foreground) / 0.25)",
               }}
             >
-              Equine infrastructure engineered for performance and longevity.
+              Precision-built equine environments designed to perform, endure, and elevate.
             </p>
 
             {/* CTA */}
