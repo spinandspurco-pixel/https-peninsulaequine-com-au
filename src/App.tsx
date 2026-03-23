@@ -172,7 +172,10 @@ function AppContent() {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <AppContent />
+      <IntakeProvider>
+        <AppContent />
+        <GuidedIntake />
+      </IntakeProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
