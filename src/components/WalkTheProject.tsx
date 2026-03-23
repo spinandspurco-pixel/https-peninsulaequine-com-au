@@ -4,16 +4,16 @@ import { useNavigate } from "react-router-dom";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 
 /* ── Assets ──────────────────────────────────────────── */
-import imgArrival from "@/assets/mainridge-aerial-hero.jpg";
-import imgEntry from "@/assets/mainridge-entry-logic.jpg";
-import imgCourtyard from "@/assets/mainridge-courtyard-hero.jpg";
-import imgStables from "@/assets/mainridge-stable-detail.jpg";
-import imgStructure from "@/assets/mainridge-structure-reveal.jpg";
-import imgCorridor from "@/assets/mainridge-arena-corridor.jpg";
-import imgArena from "@/assets/walk-arena.jpg";
-import imgLoft from "@/assets/walk-loft.jpg";
-import imgDusk from "@/assets/mainridge-dusk-exterior.jpg";
-import imgConnection from "@/assets/mainridge-arena-connection.jpg";
+import imgArrival from "@/assets/masterplan-aerial-hero.jpg";
+import imgEntry from "@/assets/living-stable-edge.jpg";
+import imgCourtyard from "@/assets/living-hero-wide.jpg";
+import imgStables from "@/assets/living-stable-edge.jpg";
+import imgStructure from "@/assets/etb-scene4-structural.jpg";
+import imgCorridor from "@/assets/living-arena-performance.jpg";
+import imgArena from "@/assets/living-arena-performance.jpg";
+import imgLoft from "@/assets/living-dust-light.jpg";
+import imgDusk from "@/assets/etb-scene5-living.jpg";
+import imgConnection from "@/assets/living-dust-light.jpg";
 
 /* ── Scene data ──────────────────────────────────────── */
 interface Scene {
