@@ -7,6 +7,7 @@ import { useAmbientSound, type AmbientScene } from "@/hooks/useAmbientSound";
 import { InteractiveMasterplan } from "@/components/masterplan/InteractiveMasterplanV2";
 import { WalkTheProject } from "@/components/WalkTheProject";
 import { BuildTimeline } from "@/components/BuildTimeline";
+import { MainRidgeLivingOutcome } from "@/components/MainRidgeLivingOutcome";
 
 import imgHero from "@/assets/mainridge-aerial-hero.jpg";
 
