@@ -313,6 +313,9 @@ export function GuidedIntake() {
                 <p className="text-xs text-destructive/70">{errors.form}</p>
               )}
             </div>
+            <p className="font-serif text-[10px] text-foreground/15 italic text-center mt-6">
+              We take on a limited number of projects each season.
+            </p>
             <button
               onClick={handleSubmit}
               disabled={submitting}
