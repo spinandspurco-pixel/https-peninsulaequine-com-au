@@ -80,6 +80,7 @@ export function InteractiveLayerStack() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [visibleCount, setVisibleCount] = useState(0);
   const [panelLocked, setPanelLocked] = useState(false);
+  const [panelResolved, setPanelResolved] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { ensureLockStyles(); }, []);
