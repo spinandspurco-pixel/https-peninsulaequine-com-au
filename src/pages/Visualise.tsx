@@ -357,6 +357,7 @@ function EstateVisualisation({ config }: { config: Config }) {
 
 export default function Visualise() {
   const [config, setConfig] = useState<Config>(DEFAULT);
+  usePreloadImages();
 
   const updateConfig = useCallback(
     <K extends keyof Config>(key: K, value: Config[K]) => {
