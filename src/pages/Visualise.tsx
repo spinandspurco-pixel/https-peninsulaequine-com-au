@@ -7,13 +7,10 @@ import { Button } from "@/components/ui/button";
 import { EASE, DURATION } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
-/* ── Background imagery — zone-based overlays ───────── */
-import imgBase from "@/assets/masterplan-topdown.jpg";
-import imgArena from "@/assets/zone-arena.jpg";
-import imgStables from "@/assets/zone-stables.jpg";
-import imgAccess from "@/assets/zone-access.jpg";
-import imgDrainage from "@/assets/zone-drainage.jpg";
-import imgLandscape from "@/assets/zone-landscape.jpg";
+/* ── Estate variant imagery — land-size responsive ──── */
+import imgSmall from "@/assets/estate-small.jpg";
+import imgMedium from "@/assets/estate-medium.jpg";
+import imgLarge from "@/assets/estate-large.jpg";
 
 /* ── Configuration types ─────────────────────────────── */
 type Terrain = "flat" | "gentle" | "complex";
