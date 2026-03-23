@@ -1,5 +1,5 @@
 import { Switch } from "@/components/ui/switch";
-import { GroundLockPanelSVG, PanelDefs } from "@/components/groundlock/GroundLockPanelSVG";
+import { GroundLockHero } from "@/components/groundlock/GroundLockHero";
 
 interface Props {
   included: boolean | null;
