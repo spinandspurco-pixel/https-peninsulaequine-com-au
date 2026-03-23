@@ -208,7 +208,7 @@ function Synthesis({ onPressTone }: { onPressTone?: () => void }) {
     <div
       ref={ref}
       id="etb-synthesis"
-      className="py-32 sm:py-44 lg:py-56 text-center"
+      className="py-36 sm:py-48 lg:py-60 text-center"
     >
       <div
         className="max-w-md mx-auto px-6"
@@ -218,47 +218,33 @@ function Synthesis({ onPressTone }: { onPressTone?: () => void }) {
           transition: `opacity ${DURATION.extended}ms ${EASE.cinematic} 400ms, transform ${DURATION.extended}ms ${EASE.cinematic} 400ms`,
         }}
       >
+        {/* Contextual line */}
+        <p
+          className="font-serif text-[15px] sm:text-[16px] italic text-foreground/30 leading-relaxed tracking-[0.02em] mb-12"
+          style={{
+            opacity: visible ? 1 : 0,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 600ms`,
+          }}
+        >
+          Every build begins with understanding the ground.
+        </p>
+
+        {/* Divider */}
         <div
-          className="flex items-center justify-center gap-5 mb-8"
+          className="w-10 h-px bg-accent/12 mx-auto mb-12"
           style={{
             opacity: visible ? 1 : 0,
-            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 400ms`,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 900ms`,
           }}
-        >
-          <div className="w-8 h-px bg-accent/10" />
-          <p className="text-[8px] font-mono uppercase tracking-[0.4em] text-accent/15">
-            One System
-          </p>
-          <div className="w-8 h-px bg-accent/10" />
-        </div>
+        />
 
-        <p
-          className="font-serif text-xl sm:text-2xl lg:text-3xl italic text-foreground/45 leading-relaxed tracking-[0.01em]"
-          style={{
-            opacity: visible ? 1 : 0,
-            transition: `opacity ${DURATION.extended}ms ${EASE.cinematic} 900ms`,
-          }}
-        >
-          Built properly. From the ground up.
-        </p>
-
-        <p
-          className="mt-4 mb-12 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.42em]"
-          style={{
-            color: "hsl(var(--accent))",
-            opacity: visible ? 0.22 : 0,
-            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1500ms`,
-          }}
-        >
-          From Dirt to Dynasty
-        </p>
-
+        {/* CTA */}
         <button
           onClick={() => navigate("/contact")}
-          className="px-10 py-4 border border-accent/15 text-[11px] font-mono uppercase tracking-[0.3em] text-foreground/65 hover:border-accent/30 hover:text-foreground/85 hover:bg-accent/5"
+          className="px-12 py-4 border border-accent/15 text-[11px] font-mono uppercase tracking-[0.3em] text-foreground/65 hover:border-accent/25 hover:text-foreground/80 hover:bg-accent/[0.03]"
           style={{
             opacity: visible ? 1 : 0,
-            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1400ms, transform 250ms cubic-bezier(0.45, 0, 0.15, 1), border-color 500ms cubic-bezier(0.45, 0, 0.15, 1), color 500ms cubic-bezier(0.45, 0, 0.15, 1), background-color 500ms cubic-bezier(0.45, 0, 0.15, 1)`,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1100ms, border-color 600ms ${EASE.cinematic}, color 600ms ${EASE.cinematic}, background-color 600ms ${EASE.cinematic}`,
           }}
           onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.97)"; onPressTone?.(); }}
           onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
@@ -267,14 +253,15 @@ function Synthesis({ onPressTone }: { onPressTone?: () => void }) {
           Start Your Project
         </button>
 
+        {/* Supporting line */}
         <p
-          className="mt-10 text-[9px] font-mono uppercase tracking-[0.3em] text-accent/8 leading-relaxed"
+          className="mt-8 font-serif text-[13px] sm:text-[14px] italic text-foreground/20 tracking-[0.01em]"
           style={{
             opacity: visible ? 1 : 0,
-            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1900ms`,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1500ms`,
           }}
         >
-          Performance held in every layer
+          Built properly. From the ground up.
         </p>
       </div>
     </div>
