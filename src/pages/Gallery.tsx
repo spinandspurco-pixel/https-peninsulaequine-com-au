@@ -310,10 +310,9 @@ export default function Gallery() {
                 </div>
               </div>
 
-              {/* Supporting images — 3 across */}
-              <div className="grid grid-cols-3 gap-3 sm:gap-5">
+              {/* Supporting — detail + outcome */}
+              <div className="grid grid-cols-2 gap-3 sm:gap-5">
                 <EditorialImage src={aberdeenStalls} alt="Private client — custom stalls" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenStalls)} />
-                <EditorialImage src={aberdeenAisle} alt="Private client — stone aisle" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenAisle)} />
                 <EditorialImage src={aberdeenExterior} alt="Private client — completed exterior" aspect="aspect-[4/3]" onClick={() => openLightbox(aberdeenExterior)} />
               </div>
             </RevealOnScroll>
