@@ -12,6 +12,11 @@ import imgSmall from "@/assets/estate-small.jpg";
 import imgMedium from "@/assets/estate-medium.jpg";
 import imgLarge from "@/assets/estate-large.jpg";
 
+/* ── Terrain variant imagery ─────────────────────────── */
+import imgTerrainFlat from "@/assets/terrain-flat.jpg";
+import imgTerrainGentle from "@/assets/terrain-gentle.jpg";
+import imgTerrainComplex from "@/assets/terrain-complex.jpg";
+
 /* ── Configuration types ─────────────────────────────── */
 type Terrain = "flat" | "gentle" | "complex";
 type Discipline = "performance" | "reining" | "mixed";
@@ -104,34 +109,58 @@ function Chip({
 function EstateVisualisation({ config }: { config: Config }) {
   const estate = useMemo(() => deriveEstate(config), [config]);
 
-  // Select variant image based on land size
-  const variants = useMemo(() => {
-    const { landSize } = config;
-    // Determine which is the "active" variant and crossfade
-    if (landSize < 6000) return { active: "small" as const };
-    if (landSize < 14000) return { active: "medium" as const };
-    return { active: "large" as const };
+  // Select variant images — land size drives the base, terrain overlays on top
+  const sizeKey = useMemo(() => {
+    if (config.landSize < 6000) return "small" as const;
+    if (config.landSize < 14000) return "medium" as const;
+    return "large" as const;
   }, [config.landSize]);
 
-  const variantImages = [
+  const sizeImages = [
     { key: "small" as const, src: imgSmall },
     { key: "medium" as const, src: imgMedium },
     { key: "large" as const, src: imgLarge },
   ];
 
+  const terrainImages = [
+    { key: "flat" as const, src: imgTerrainFlat },
+    { key: "gentle" as const, src: imgTerrainGentle },
+    { key: "complex" as const, src: imgTerrainComplex },
+  ];
+
   return (
     <div className="relative">
-      {/* Estate imagery — crossfade between variants */}
+      {/* Estate imagery — land-size base + terrain overlay */}
       <div className="relative aspect-[4/5] sm:aspect-[3/4] lg:aspect-square overflow-hidden">
-        {variantImages.map((variant) => (
+        {/* Land-size base layer */}
+        {sizeImages.map((variant) => (
           <img
             key={variant.key}
             src={variant.src}
             alt={`${variant.key} estate configuration`}
             className="absolute inset-0 w-full h-full object-cover img-immersive"
             style={{
-              opacity: variants.active === variant.key ? 1 : 0,
+              opacity: sizeKey === variant.key ? 1 : 0,
               filter: `brightness(0.45) saturate(0.75)`,
+              transition: `opacity ${DURATION.crossfade}ms ${EASE.cinematic}`,
+            }}
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
+
+        {/* Terrain overlay layer — blended on top */}
+        {terrainImages.map((variant) => (
+          <img
+            key={variant.key}
+            src={variant.src}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{
+              opacity: config.terrain === variant.key ? 0.35 : 0,
+              mixBlendMode: "screen",
+              filter: `brightness(0.5) saturate(0.6)`,
               transition: `opacity ${DURATION.crossfade}ms ${EASE.cinematic}`,
             }}
             loading="lazy"
