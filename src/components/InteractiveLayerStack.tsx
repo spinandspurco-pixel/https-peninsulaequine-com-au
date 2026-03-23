@@ -106,6 +106,8 @@ export function InteractiveLayerStack() {
               clearInterval(interval);
               // Trigger lock moment after panel settles
               setTimeout(() => setPanelLocked(true), 80);
+              // Resolution moment: stillness hold then subtle highlight
+              setTimeout(() => setPanelResolved(true), 580);
             }
           }, 180);
           observer.disconnect();
