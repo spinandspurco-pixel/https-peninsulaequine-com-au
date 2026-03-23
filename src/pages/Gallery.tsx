@@ -108,41 +108,6 @@ function ChapterDivider() {
   );
 }
 
-/* ────────────────────────────────────────────────────────
-   SECTION HEADER — consistent label + heading pattern
-   ──────────────────────────────────────────────────────── */
-function SectionHeader({
-  label,
-  heading,
-  subtitle,
-  align = "center",
-}: {
-  label: string;
-  heading: string;
-  subtitle?: string;
-  align?: "center" | "left";
-}) {
-  const isCenter = align === "center";
-  return (
-    <div className={`${isCenter ? "text-center" : ""} mb-14 sm:mb-18 lg:mb-20`}>
-      <div className={`flex items-center gap-5 mb-5 ${isCenter ? "justify-center" : ""}`}>
-        <div className="w-8 h-px bg-accent/25" />
-        <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/35 font-mono">
-          {label}
-        </p>
-        {isCenter && <div className="w-8 h-px bg-accent/25" />}
-      </div>
-      <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/90 tracking-[0.03em] leading-tight">
-        {heading}
-      </h2>
-      {subtitle && (
-        <p className="mt-4 text-sm text-muted-foreground/35 font-serif italic max-w-md mx-auto">
-          {subtitle}
-        </p>
-      )}
-    </div>
-  );
-}
 
 /* ────────────────────────────────────────────────────────
    MAIN GALLERY PAGE
