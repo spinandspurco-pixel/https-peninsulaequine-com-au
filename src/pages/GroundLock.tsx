@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { GroundLockCrossSection } from "@/components/groundlock/GroundLockCrossSection";
-import groundlockHero from "@/assets/groundlock-insitu-mainridge.jpg";
-import groundlockCutaway from "@/assets/groundlock-hero-system.jpg";
-import groundlockKit from "@/assets/groundlock-exploded-layers.jpg";
-import groundlockComparison from "@/assets/groundlock-interlock-detail.jpg";
-import groundlockInstall from "@/assets/groundlock-insitu-mainridge.jpg";
+import groundlockHero from "@/assets/groundlock-horseshoe-canonical.jpg";
+import groundlockCutaway from "@/assets/groundlock-horseshoe-canonical.jpg";
+import groundlockKit from "@/assets/groundlock-horseshoe-canonical.jpg";
+import groundlockComparison from "@/assets/groundlock-horseshoe-canonical.jpg";
+import groundlockInstall from "@/assets/groundlock-horseshoe-canonical.jpg";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";

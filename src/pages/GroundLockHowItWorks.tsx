@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { GroundLockProductEducation } from "@/components/groundlock/GroundLockProductEducation";
 import { PanelSpecimen, SystemDiagram, LockSequence } from "@/components/groundlock/GroundLockSystemSVG";
-import groundlockCutaway from "@/assets/groundlock-hero-system.jpg";
+import groundlockCutaway from "@/assets/groundlock-horseshoe-canonical.jpg";
 import { ArrowRight } from "lucide-react";
 
 export default function GroundLockHowItWorks() {
