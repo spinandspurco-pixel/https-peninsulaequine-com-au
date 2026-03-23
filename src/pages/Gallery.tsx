@@ -265,46 +265,36 @@ export default function Gallery() {
             </RevealOnScroll>
 
             {/* ── Project 1: Private Client ── */}
-            <div className="mb-32 sm:mb-40 lg:mb-48">
+            <Link to="/project/aberdeen-farm" className="block mb-32 sm:mb-40 lg:mb-48">
               <RevealOnScroll direction="up" duration={DURATION.normal}>
                 <EditorialImage
                   src={aberdeenBarnInterior}
                   alt="Private Client — luxury barn interior"
                   aspect="aspect-[16/10]"
-                  onClick={() => openLightbox(aberdeenBarnInterior)}
+                  hoverLabel="View Project"
                 />
                 <div className="mt-6 sm:mt-8">
                   <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/25 mb-2">Private Client</p>
                   <p className="font-serif text-[13px] sm:text-sm text-foreground/25 italic">Stonework, stalls, and timber throughout.</p>
                 </div>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" duration={DURATION.slow} delay={200}>
-                <div className="mt-8 sm:mt-10 max-w-2xl">
-                  <EditorialImage
-                    src={aberdeenExterior}
-                    alt="Private Client — completed exterior"
-                    aspect="aspect-[16/10]"
-                    onClick={() => openLightbox(aberdeenExterior)}
-                  />
-                </div>
-              </RevealOnScroll>
-            </div>
+            </Link>
 
-            {/* ── Project 2: Custom Steel ── */}
-            <div className="mb-32 sm:mb-40 lg:mb-48">
+            {/* ── Project 2: Main Ridge ── */}
+            <Link to="/project/main-ridge" className="block mb-32 sm:mb-40 lg:mb-48">
               <RevealOnScroll direction="up" duration={DURATION.normal}>
                 <EditorialImage
                   src={steelShedDramatic}
-                  alt="Custom colorbond barn"
+                  alt="Main Ridge — barn and arena"
                   aspect="aspect-[16/10]"
-                  onClick={() => openLightbox(steelShedDramatic)}
+                  hoverLabel="View Project"
                 />
                 <div className="mt-6 sm:mt-8">
-                  <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/25 mb-2">Custom Build</p>
-                  <p className="font-serif text-[13px] sm:text-sm text-foreground/25 italic">Steel structure, resolved to brief.</p>
+                  <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/25 mb-2">Main Ridge</p>
+                  <p className="font-serif text-[13px] sm:text-sm text-foreground/25 italic">Arena, barn, and ground systems.</p>
                 </div>
               </RevealOnScroll>
-            </div>
+            </Link>
 
             {/* ── Project 3: Craft Detail ── */}
             <div>
