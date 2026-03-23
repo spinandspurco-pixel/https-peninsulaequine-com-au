@@ -11,6 +11,58 @@ import imgFinished from "@/assets/etb-scene5-living.jpg";
 import imgBefore from "@/assets/etb-scene1-raw-land.jpg";
 import imgAfter from "@/assets/etb-scene5-living.jpg";
 
+/* ── Persistent dust carry-over styles ───────────────── */
+const dustKeyframes = `
+@keyframes etb-dust-drift {
+  0%   { transform: translate(0, 0) scale(1); opacity: 0; }
+  15%  { opacity: 0.06; }
+  60%  { opacity: 0.04; }
+  100% { transform: translate(40px, -20px) scale(0.7); opacity: 0; }
+}
+@keyframes etb-dust-drift-2 {
+  0%   { transform: translate(0, 0) scale(0.8); opacity: 0; }
+  20%  { opacity: 0.05; }
+  70%  { opacity: 0.03; }
+  100% { transform: translate(-30px, -15px) scale(0.5); opacity: 0; }
+}
+`;
+
+/* Inject once */
+if (typeof document !== "undefined" && !document.getElementById("etb-dust-styles")) {
+  const style = document.createElement("style");
+  style.id = "etb-dust-styles";
+  style.textContent = dustKeyframes;
+  document.head.appendChild(style);
+}
+
+/* ── Environmental dust overlay ──────────────────────── */
+function DustCarryOver({ active, direction }: { active: boolean; direction: "left" | "right" }) {
+  return (
+    <div
+      className="absolute inset-0 pointer-events-none z-[5] overflow-hidden"
+      style={{
+        opacity: active ? 1 : 0,
+        transition: `opacity 1800ms ${EASE.cinematic}`,
+      }}
+    >
+      {[...Array(6)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute rounded-full"
+          style={{
+            width: `${3 + i * 2}px`,
+            height: `${3 + i * 2}px`,
+            background: "hsl(var(--accent) / 0.08)",
+            top: `${25 + i * 10}%`,
+            left: direction === "right" ? `${10 + i * 12}%` : `${60 - i * 8}%`,
+            animation: `${i % 2 === 0 ? "etb-dust-drift" : "etb-dust-drift-2"} ${3 + i * 0.8}s ${EASE.cinematic} ${i * 0.4}s infinite`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 /* ── Phase data ──────────────────────────────────────── */
 interface Phase {
   id: string;
