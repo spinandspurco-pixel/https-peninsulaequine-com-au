@@ -16,9 +16,8 @@ import { ProjectQualification, type ProjectType } from "@/components/ProjectQual
 import { BuildOptions } from "@/components/BuildOptions";
 import { GuidedEnquiryFlow } from "@/components/GuidedEnquiryFlow";
 
-// ── Project imagery (hero + optional supporting per project) ──
+// ── Project imagery (hero per project) ──
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
-import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
 import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
 import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
 
@@ -40,12 +39,14 @@ function EditorialImage({
   className = "",
   aspect = "aspect-[4/3]",
   onClick,
+  hoverLabel,
 }: {
   src: string;
   alt: string;
   className?: string;
   aspect?: string;
   onClick?: () => void;
+  hoverLabel?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
@@ -75,13 +76,35 @@ function EditorialImage({
           className={`absolute inset-0 w-full h-full object-cover will-change-transform img-gallery ${
             loaded ? "opacity-100" : "opacity-0"
           }`}
-          style={{ transition: `opacity ${DURATION.slow}ms ${EASE.default}, transform ${DURATION.parallax}ms ${EASE.default}` }}
+          style={{
+            transition: `opacity ${DURATION.slow}ms ${EASE.default}, transform 700ms cubic-bezier(0.45, 0, 0.15, 1)`,
+            transform: "scale(1)",
+          }}
           loading="lazy"
           decoding="async"
           onLoad={() => setLoaded(true)}
-          onMouseEnter={(e) => { if (onClick) (e.currentTarget as HTMLImageElement).style.transform = "scale(1.03)"; }}
-          onMouseLeave={(e) => { if (onClick) (e.currentTarget as HTMLImageElement).style.transform = "scale(1)"; }}
         />
+      )}
+      {/* Hover zoom */}
+      <div
+        className="absolute inset-0 transition-transform duration-700 ease-[cubic-bezier(0.45,0,0.15,1)] group-hover:scale-[1.03]"
+        style={{ pointerEvents: "none" }}
+      />
+      {/* Hover overlay with label */}
+      {hoverLabel && (
+        <div className="absolute inset-0 flex items-end justify-start p-8 sm:p-10 z-10 pointer-events-none">
+          <div
+            className="opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          >
+            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-primary-foreground/60">
+              {hoverLabel}
+            </p>
+          </div>
+        </div>
+      )}
+      {/* Hover dimming */}
+      {hoverLabel && (
+        <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/30 transition-colors duration-500 pointer-events-none" />
       )}
     </div>
   );
@@ -241,46 +264,36 @@ export default function Gallery() {
             </RevealOnScroll>
 
             {/* ── Project 1: Private Client ── */}
-            <div className="mb-32 sm:mb-40 lg:mb-48">
+            <Link to="/project/aberdeen-farm" className="block mb-32 sm:mb-40 lg:mb-48">
               <RevealOnScroll direction="up" duration={DURATION.normal}>
                 <EditorialImage
                   src={aberdeenBarnInterior}
                   alt="Private Client — luxury barn interior"
                   aspect="aspect-[16/10]"
-                  onClick={() => openLightbox(aberdeenBarnInterior)}
+                  hoverLabel="View Project"
                 />
                 <div className="mt-6 sm:mt-8">
                   <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/25 mb-2">Private Client</p>
                   <p className="font-serif text-[13px] sm:text-sm text-foreground/25 italic">Stonework, stalls, and timber throughout.</p>
                 </div>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" duration={DURATION.slow} delay={200}>
-                <div className="mt-8 sm:mt-10 max-w-2xl">
-                  <EditorialImage
-                    src={aberdeenExterior}
-                    alt="Private Client — completed exterior"
-                    aspect="aspect-[16/10]"
-                    onClick={() => openLightbox(aberdeenExterior)}
-                  />
-                </div>
-              </RevealOnScroll>
-            </div>
+            </Link>
 
-            {/* ── Project 2: Custom Steel ── */}
-            <div className="mb-32 sm:mb-40 lg:mb-48">
+            {/* ── Project 2: Main Ridge ── */}
+            <Link to="/project/main-ridge" className="block mb-32 sm:mb-40 lg:mb-48">
               <RevealOnScroll direction="up" duration={DURATION.normal}>
                 <EditorialImage
                   src={steelShedDramatic}
-                  alt="Custom colorbond barn"
+                  alt="Main Ridge — barn and arena"
                   aspect="aspect-[16/10]"
-                  onClick={() => openLightbox(steelShedDramatic)}
+                  hoverLabel="View Project"
                 />
                 <div className="mt-6 sm:mt-8">
-                  <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/25 mb-2">Custom Build</p>
-                  <p className="font-serif text-[13px] sm:text-sm text-foreground/25 italic">Steel structure, resolved to brief.</p>
+                  <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/25 mb-2">Main Ridge</p>
+                  <p className="font-serif text-[13px] sm:text-sm text-foreground/25 italic">Arena, barn, and ground systems.</p>
                 </div>
               </RevealOnScroll>
-            </div>
+            </Link>
 
             {/* ── Project 3: Craft Detail ── */}
             <div>
