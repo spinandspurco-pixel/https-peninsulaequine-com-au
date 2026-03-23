@@ -228,6 +228,23 @@ function PhaseScene({
         }}
       />
 
+      {/* ── Identity thread: horizon ridge silhouette ── */}
+      <svg
+        className="absolute top-0 left-0 w-full z-[4] pointer-events-none"
+        viewBox="0 0 1440 120"
+        preserveAspectRatio="none"
+        style={{
+          height: "14%",
+          opacity: visible ? 0.045 : 0,
+          transition: `opacity 1800ms ${EASE.cinematic} 600ms`,
+        }}
+      >
+        <path
+          d="M0 95 Q80 72 180 78 Q260 82 340 60 Q400 47 460 52 Q530 58 600 44 Q660 34 720 38 Q800 44 880 30 Q940 22 1000 28 Q1080 36 1140 24 Q1200 16 1280 22 Q1360 30 1440 18 L1440 0 L0 0 Z"
+          fill="hsl(var(--background))"
+        />
+      </svg>
+
       {/* Dust carry-over */}
       {!reducedMotion && (
         <DustCarryOver active={visible} direction={index % 2 === 0 ? "right" : "left"} />
