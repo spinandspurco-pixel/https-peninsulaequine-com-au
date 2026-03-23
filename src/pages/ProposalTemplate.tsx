@@ -1,7 +1,7 @@
 import { useRef, useCallback, useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Download } from "lucide-react";
-import { GroundLockPanelSVG, PanelDefs } from "@/components/groundlock/GroundLockPanelSVG";
+import { GroundLockHero } from "@/components/groundlock/GroundLockHero";
 import { supabase } from "@/integrations/supabase/client";
 
 /* ─── Data shape ─── */
