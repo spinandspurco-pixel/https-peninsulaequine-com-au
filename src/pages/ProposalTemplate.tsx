@@ -1,7 +1,7 @@
 import { useRef, useCallback, useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Download } from "lucide-react";
-import { GroundLockPanelSVG, PanelDefs } from "@/components/groundlock/GroundLockPanelSVG";
+import { GroundLockHero } from "@/components/groundlock/GroundLockHero";
 import { supabase } from "@/integrations/supabase/client";
 
 /* ─── Data shape ─── */
@@ -253,10 +253,7 @@ export default function ProposalTemplate() {
             className="w-full py-16 sm:py-20 mb-16 sm:mb-20 flex flex-col items-center text-center"
             style={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))" }}
           >
-            <svg viewBox="0 0 100 110" className="w-32 sm:w-40 h-auto mb-8" style={{ opacity: 0.55 }}>
-              <PanelDefs id="prop" />
-              <GroundLockPanelSVG active showTabs defsId="prop" direction="up" />
-            </svg>
+            <GroundLockHero size="max-w-[160px]" opacity={0.55} className="mb-8" />
             <p className="text-[8px] font-sans uppercase tracking-[0.25em]" style={{ color: "hsl(var(--accent))", opacity: 0.35 }}>
               GroundLock™ Panel Unit
             </p>
