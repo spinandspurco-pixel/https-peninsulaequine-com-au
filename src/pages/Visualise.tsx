@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
@@ -8,41 +8,32 @@ import { EASE } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 /* ═══════════════════════════════════════════════════════
-   VARIANT IMAGE IMPORTS — 9 states × 2 views = 18 core
-   + 3 terrain education images = 21 total
+   ASSET STATUS
+   ─────────────────────────────────────────────────────
+   All 21 placeholder images have been DISABLED.
+   Visual rendering is blocked until proper state-based
+   assets are assigned per the simulator spec.
+
+   When assets are ready, populate ASSET_REGISTRY below
+   with verified image imports keyed by state.
    ═══════════════════════════════════════════════════════ */
 
-// Small × Discipline
-import sim_small_performance_topdown from "@/assets/sim/sim_small_performance_topdown.jpg";
-import sim_small_performance_oblique from "@/assets/sim/sim_small_performance_oblique.jpg";
-import sim_small_reining_topdown from "@/assets/sim/sim_small_reining_topdown.jpg";
-import sim_small_reining_oblique from "@/assets/sim/sim_small_reining_oblique.jpg";
-import sim_small_mixed_topdown from "@/assets/sim/sim_small_mixed_topdown.jpg";
-import sim_small_mixed_oblique from "@/assets/sim/sim_small_mixed_oblique.jpg";
+/**
+ * ASSET_REGISTRY — when a state has a verified asset pair,
+ * add it here. Only registered states will render visually.
+ * Everything else shows the "awaiting assets" placeholder.
+ */
+const ASSET_REGISTRY: Record<string, { topdown: string; oblique: string }> = {
+  // Example when assets are ready:
+  // "medium_mixed": { topdown: sim_medium_mixed_topdown, oblique: sim_medium_mixed_oblique },
+};
 
-// Medium × Discipline
-import sim_medium_performance_topdown from "@/assets/sim/sim_medium_performance_topdown.jpg";
-import sim_medium_performance_oblique from "@/assets/sim/sim_medium_performance_oblique.jpg";
-import sim_medium_reining_topdown from "@/assets/sim/sim_medium_reining_topdown.jpg";
-import sim_medium_reining_oblique from "@/assets/sim/sim_medium_reining_oblique.jpg";
-import sim_medium_mixed_topdown from "@/assets/sim/sim_medium_mixed_topdown.jpg";
-import sim_medium_mixed_oblique from "@/assets/sim/sim_medium_mixed_oblique.jpg";
-
-// Large × Discipline
-import sim_large_performance_topdown from "@/assets/sim/sim_large_performance_topdown.jpg";
-import sim_large_performance_oblique from "@/assets/sim/sim_large_performance_oblique.jpg";
-import sim_large_reining_topdown from "@/assets/sim/sim_large_reining_topdown.jpg";
-import sim_large_reining_oblique from "@/assets/sim/sim_large_reining_oblique.jpg";
-import sim_large_mixed_topdown from "@/assets/sim/sim_large_mixed_topdown.jpg";
-import sim_large_mixed_oblique from "@/assets/sim/sim_large_mixed_oblique.jpg";
-
-// Terrain education (medium × mixed base)
-import sim_terrain_flat from "@/assets/sim/sim_terrain_flat.jpg";
-import sim_terrain_gentle from "@/assets/sim/sim_terrain_gentle.jpg";
-import sim_terrain_complex from "@/assets/sim/sim_terrain_complex.jpg";
+const TERRAIN_REGISTRY: Record<string, string> = {
+  // "flat": sim_terrain_flat,
+};
 
 /* ═══════════════════════════════════════════════════════
-   STATE ENGINE
+   TYPES & CONFIG
    ═══════════════════════════════════════════════════════ */
 
 type LandSize = "small" | "medium" | "large";
@@ -59,41 +50,17 @@ interface Config {
 
 const DEFAULT: Config = {
   landSize: 8000,
-  terrain: "gentle",
+  terrain: "flat",
   discipline: "mixed",
   budget: "elevated",
 };
 
-/* ── Timing constants (per spec) ─────────────────────── */
+/* ── Timing constants ── */
 const T = {
-  baseCrossfade: 350,   // 250-400ms per spec
-  baseScale: 500,
-  terrainFade: 150,     // 120-200ms per spec
-  budgetTone: 300,
-} as const;
-
-/* ── State key → image pair lookup ───────────────────── */
-interface StatePair { topdown: string; oblique: string; }
-
-const STATE_MAP: Record<string, StatePair> = {
-  "small_performance":  { topdown: sim_small_performance_topdown,  oblique: sim_small_performance_oblique },
-  "small_reining":      { topdown: sim_small_reining_topdown,      oblique: sim_small_reining_oblique },
-  "small_mixed":        { topdown: sim_small_mixed_topdown,        oblique: sim_small_mixed_oblique },
-  "medium_performance": { topdown: sim_medium_performance_topdown, oblique: sim_medium_performance_oblique },
-  "medium_reining":     { topdown: sim_medium_reining_topdown,     oblique: sim_medium_reining_oblique },
-  "medium_mixed":       { topdown: sim_medium_mixed_topdown,       oblique: sim_medium_mixed_oblique },
-  "large_performance":  { topdown: sim_large_performance_topdown,  oblique: sim_large_performance_oblique },
-  "large_reining":      { topdown: sim_large_reining_topdown,      oblique: sim_large_reining_oblique },
-  "large_mixed":        { topdown: sim_large_mixed_topdown,        oblique: sim_large_mixed_oblique },
-};
-
-const FALLBACK_KEY = "medium_mixed";
-const ALL_STATE_KEYS = Object.keys(STATE_MAP);
-
-const TERRAIN_MAP: Record<Terrain, string> = {
-  flat: sim_terrain_flat,
-  gentle: sim_terrain_gentle,
-  complex: sim_terrain_complex,
+  baseCrossfade: 1100,
+  baseScale: 1400,
+  terrainFade: 180,
+  budgetTone: 600,
 };
 
 function getSizeKey(landSize: number): LandSize {
@@ -103,22 +70,7 @@ function getSizeKey(landSize: number): LandSize {
 }
 
 function getStateKey(landSize: number, discipline: Discipline): string {
-  const key = `${getSizeKey(landSize)}_${discipline}`;
-  return STATE_MAP[key] ? key : FALLBACK_KEY;
-}
-
-/* ── Preload all 18 base + 3 terrain images ──────────── */
-function usePreloadImages() {
-  useEffect(() => {
-    ALL_STATE_KEYS.forEach((key) => {
-      const pair = STATE_MAP[key];
-      new Image().src = pair.topdown;
-      new Image().src = pair.oblique;
-    });
-    Object.values(TERRAIN_MAP).forEach((src) => {
-      new Image().src = src;
-    });
-  }, []);
+  return `${getSizeKey(landSize)}_${discipline}`;
 }
 
 /* ── Derived estate specs ────────────────────────────── */
@@ -135,7 +87,7 @@ function deriveEstate(config: Config) {
   };
 }
 
-/* ── Budget-specific planning summaries (per spec) ───── */
+/* ── Budget-specific planning summaries ───── */
 const BUDGET_SUMMARIES: Record<Budget, string> = {
   essential: "Smartly prioritised layout with disciplined circulation.",
   elevated: "Expanded presence with refined circulation and stable adjacency.",
@@ -222,15 +174,14 @@ function EstateVisualisation({ config }: { config: Config }) {
   const [viewMode, setViewMode] = useState<ViewMode>("oblique");
 
   const stateKey = getStateKey(config.landSize, config.discipline);
-  const isFallback = stateKey === FALLBACK_KEY && `${getSizeKey(config.landSize)}_${config.discipline}` !== FALLBACK_KEY;
+  const hasAsset = !!ASSET_REGISTRY[stateKey];
 
-  useEffect(() => {
-    setSummaryKey((k) => k + 1);
-  }, [config.landSize, config.terrain, config.discipline, config.budget]);
-
-  /* Budget tone — subtle filter shift, no image change */
-  const budgetBrightness = config.budget === "signature" ? 0.42 : config.budget === "essential" ? 0.34 : 0.38;
-  const budgetSaturate = config.budget === "signature" ? 0.76 : config.budget === "essential" ? 0.62 : 0.68;
+  /* Re-key summary on config change */
+  const prevConfigRef = useState(() => JSON.stringify(config))[0];
+  useMemo(() => {
+    const cur = JSON.stringify(config);
+    if (cur !== prevConfigRef) setSummaryKey((k) => k + 1);
+  }, [config, prevConfigRef]);
 
   return (
     <div className="relative space-y-10">
@@ -242,59 +193,58 @@ function EstateVisualisation({ config }: { config: Config }) {
         viewMode === "oblique" ? "aspect-[16/10]" : "aspect-square"
       )} style={{ transition: `aspect-ratio 500ms ${EASE.cinematic}` }}>
 
-        {/* Oblique layer */}
-        {ALL_STATE_KEYS.map((key) => (
-          <img
-            key={`oblique-${key}`}
-            src={STATE_MAP[key].oblique}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover img-immersive"
-            style={{
-              opacity: viewMode === "oblique" && key === stateKey ? 1 : 0,
-              transform: key === stateKey ? "scale(1.0)" : "scale(1.02)",
-              filter: `brightness(${budgetBrightness}) saturate(${budgetSaturate})`,
-              transition: `opacity ${T.baseCrossfade}ms ${EASE.cinematic}, transform ${T.baseScale}ms ${EASE.cinematic}, filter ${T.budgetTone}ms ${EASE.cinematic}`,
-            }}
-            loading="lazy"
-            decoding="async"
-          />
-        ))}
-
-        {/* Topdown layer */}
-        {ALL_STATE_KEYS.map((key) => (
-          <img
-            key={`topdown-${key}`}
-            src={STATE_MAP[key].topdown}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover img-immersive"
-            style={{
-              opacity: viewMode === "topdown" && key === stateKey ? 1 : 0,
-              filter: `brightness(0.36) saturate(0.65)`,
-              transition: `opacity ${T.baseCrossfade}ms ${EASE.cinematic}`,
-            }}
-            loading="lazy"
-            decoding="async"
-          />
-        ))}
-
-        {/* Terrain overlay — only visible in topdown mode */}
-        {(["flat", "gentle", "complex"] as Terrain[]).map((t) => (
-          <img
-            key={`terrain-${t}`}
-            src={TERRAIN_MAP[t]}
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-            style={{
-              opacity: viewMode === "topdown" && config.terrain === t ? 0.08 : 0,
-              mixBlendMode: "screen",
-              filter: "brightness(0.5) saturate(0.4)",
-              transition: `opacity ${T.terrainFade}ms ${EASE.cinematic}`,
-            }}
-            loading="lazy"
-            decoding="async"
-          />
-        ))}
+        {hasAsset ? (
+          <>
+            {/* Verified oblique */}
+            <img
+              src={ASSET_REGISTRY[stateKey].oblique}
+              alt={`${stateKey} oblique view`}
+              className="absolute inset-0 w-full h-full object-cover img-immersive"
+              style={{
+                opacity: viewMode === "oblique" ? 1 : 0,
+                transition: `opacity ${T.baseCrossfade}ms ${EASE.cinematic}`,
+              }}
+            />
+            {/* Verified topdown */}
+            <img
+              src={ASSET_REGISTRY[stateKey].topdown}
+              alt={`${stateKey} topdown view`}
+              className="absolute inset-0 w-full h-full object-cover img-immersive"
+              style={{
+                opacity: viewMode === "topdown" ? 1 : 0,
+                filter: "brightness(0.36) saturate(0.65)",
+                transition: `opacity ${T.baseCrossfade}ms ${EASE.cinematic}`,
+              }}
+            />
+            {/* Terrain overlay — only if verified */}
+            {viewMode === "topdown" && TERRAIN_REGISTRY[config.terrain] && (
+              <img
+                src={TERRAIN_REGISTRY[config.terrain]}
+                alt=""
+                aria-hidden="true"
+                className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+                style={{
+                  opacity: 0.08,
+                  mixBlendMode: "screen",
+                  filter: "brightness(0.5) saturate(0.4)",
+                  transition: `opacity ${T.terrainFade}ms ${EASE.cinematic}`,
+                }}
+              />
+            )}
+          </>
+        ) : (
+          /* ── Awaiting assets placeholder ── */
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-card/50">
+            <div className="w-12 h-px bg-border/10 mb-6" />
+            <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-muted-foreground/18 mb-2">
+              Awaiting verified assets
+            </p>
+            <p className="font-mono text-[7px] tracking-[0.2em] text-muted-foreground/10">
+              {stateKey} · {viewMode}
+            </p>
+            <div className="w-12 h-px bg-border/10 mt-6" />
+          </div>
+        )}
 
         <div className="absolute inset-0" style={{
           background: viewMode === "oblique"
@@ -303,50 +253,48 @@ function EstateVisualisation({ config }: { config: Config }) {
         }} />
         <div className={cn("absolute inset-0 grain-texture", viewMode === "oblique" ? "opacity-30" : "opacity-35")} />
 
-        {/* Oblique annotations */}
-        <div className="absolute bottom-0 left-0 p-8 sm:p-10" style={{
-          opacity: viewMode === "oblique" ? 1 : 0,
-          transition: `opacity ${T.baseCrossfade}ms ${EASE.cinematic}`,
-        }}>
-          <p className="font-serif text-xl sm:text-2xl lg:text-3xl text-foreground/40 tracking-[-0.01em]"
-            style={{ transition: `all ${T.baseCrossfade}ms ${EASE.cinematic}` }}>
-            {estate.arenaLabel}
-          </p>
-          <div className="flex items-center gap-3 mt-2">
-            <div className="w-5 h-px bg-accent/8" />
-            <p className="font-mono text-[8px] uppercase tracking-[0.3em] text-accent/12"
-              style={{ transition: `all ${T.baseCrossfade}ms ${EASE.cinematic}` }}>
-              {estate.stableCount} stall · {estate.stableLayout}
+        {/* Oblique annotations — only if asset present */}
+        {hasAsset && (
+          <div className="absolute bottom-0 left-0 p-8 sm:p-10" style={{
+            opacity: viewMode === "oblique" ? 1 : 0,
+            transition: `opacity ${T.baseCrossfade}ms ${EASE.cinematic}`,
+          }}>
+            <p className="font-serif text-xl sm:text-2xl lg:text-3xl text-foreground/40 tracking-[-0.01em]">
+              {estate.arenaLabel}
             </p>
+            <div className="flex items-center gap-3 mt-2">
+              <div className="w-5 h-px bg-accent/8" />
+              <p className="font-mono text-[8px] uppercase tracking-[0.3em] text-accent/12">
+                {estate.stableCount} stall · {estate.stableLayout}
+              </p>
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Topdown annotations */}
-        <div className="absolute top-0 left-0 p-6" style={{
-          opacity: viewMode === "topdown" ? 1 : 0,
-          transition: `opacity ${T.terrainFade}ms ${EASE.cinematic}`,
-        }}>
-          <p className="font-mono text-[7px] uppercase tracking-[0.4em] text-accent/15">
-            {TERRAIN_LABELS[config.terrain]}
-          </p>
-        </div>
-        <div className="absolute bottom-0 right-0 p-6" style={{
-          opacity: viewMode === "topdown" ? 1 : 0,
-          transition: `opacity ${T.budgetTone}ms ${EASE.cinematic}`,
-        }}>
-          <p className="font-mono text-[7px] uppercase tracking-[0.3em] text-accent/10 text-right">
-            {estate.surfaceType}
-          </p>
-        </div>
-
-        {isFallback && (
-          <div className="absolute top-0 right-0 p-4">
-            <p className="font-mono text-[7px] uppercase tracking-[0.3em] text-accent/10">Preview mode</p>
-          </div>
+        {/* Topdown annotations — only if asset present */}
+        {hasAsset && (
+          <>
+            <div className="absolute top-0 left-0 p-6" style={{
+              opacity: viewMode === "topdown" ? 1 : 0,
+              transition: `opacity ${T.terrainFade}ms ${EASE.cinematic}`,
+            }}>
+              <p className="font-mono text-[7px] uppercase tracking-[0.4em] text-accent/15">
+                {TERRAIN_LABELS[config.terrain]}
+              </p>
+            </div>
+            <div className="absolute bottom-0 right-0 p-6" style={{
+              opacity: viewMode === "topdown" ? 1 : 0,
+              transition: `opacity ${T.budgetTone}ms ${EASE.cinematic}`,
+            }}>
+              <p className="font-mono text-[7px] uppercase tracking-[0.3em] text-accent/10 text-right">
+                {estate.surfaceType}
+              </p>
+            </div>
+          </>
         )}
       </div>
 
-      {/* ── Planning summary ── */}
+      {/* ── Planning summary — always active ── */}
       <div className="px-1">
         <p
           key={summaryKey}
@@ -369,7 +317,6 @@ function EstateVisualisation({ config }: { config: Config }) {
 
 export default function Visualise() {
   const [config, setConfig] = useState<Config>(DEFAULT);
-  usePreloadImages();
 
   const updateConfig = useCallback(
     <K extends keyof Config>(key: K, value: Config[K]) => {
