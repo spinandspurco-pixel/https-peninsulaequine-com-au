@@ -311,7 +311,7 @@
 
   /* Card hover — refined */
   .card-hover-glow {
-    @apply transition-all duration-700;
+    @apply transition-all duration-300 ease-in-out;
   }
   .card-hover-glow:hover {
     box-shadow: 0 0 40px -12px hsl(var(--accent) / 0.15),
