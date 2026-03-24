@@ -132,10 +132,10 @@
     @apply font-bold;
   }
   h2 {
-    font-size: clamp(1.75rem, 1.1rem + 2.2vw, 2.75rem);
-    line-height: 1.15;
-    letter-spacing: 0.03em;
-    @apply font-medium;
+    font-size: clamp(1.875rem, 1.2rem + 2.4vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: 0.025em;
+    @apply font-semibold;
   }
   h3 {
     font-size: clamp(1.25rem, 1rem + 0.8vw, 1.625rem);
