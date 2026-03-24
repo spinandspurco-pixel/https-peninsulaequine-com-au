@@ -285,8 +285,8 @@
      INTERACTIVE EFFECTS — slower, more luxurious
      ═══════════════════════════════════════════════════════ */
   .btn-hover-lift {
-    @apply transition-all ease-out;
-    transition-duration: 700ms;
+    @apply transition-all ease-in-out;
+    transition-duration: 300ms;
   }
   .btn-hover-lift:hover {
     transform: translateY(-2px);
