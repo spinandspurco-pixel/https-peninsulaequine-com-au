@@ -114,7 +114,7 @@ export function crossfadeStyle(
 /**
  * Hover style — opacity only, no scale or transform.
  */
-export const IMAGE_HOVER_DURATION = `${DURATION.fast}ms`;
+export const IMAGE_HOVER_DURATION = "300ms";
 export const IMAGE_HOVER_SCALE = "1"; // No scale on hover
 
 /**

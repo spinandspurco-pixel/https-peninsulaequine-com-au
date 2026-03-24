@@ -661,7 +661,7 @@ img[loading="lazy"],
 /* Gallery grid items — unified late-afternoon warmth */
 .img-gallery {
   filter: brightness(0.85) contrast(1.04) saturate(0.82) sepia(0.06);
-  transition: filter 500ms ease-out;
+  transition: filter 300ms ease-in-out;
 }
 .img-gallery:hover,
 .group:hover .img-gallery {
