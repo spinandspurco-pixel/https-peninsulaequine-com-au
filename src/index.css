@@ -114,8 +114,8 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
-    font-size: 15px;
-    line-height: 1.8;
+    font-size: 14px;
+    line-height: 1.85;
   }
 
   /* ── Typography Scale — fluid clamp() ─────────────── */
