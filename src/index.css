@@ -368,7 +368,7 @@
 
   /* Dark surface warmth on hover */
   .surface-warm-hover {
-    transition: filter 500ms ease-in-out, background-color 600ms ease-in-out;
+    transition: filter 300ms ease-in-out, background-color 300ms ease-in-out;
   }
   .surface-warm-hover:hover {
     filter: brightness(1.03) sepia(0.015);
