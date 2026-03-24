@@ -194,10 +194,10 @@
      ═══════════════════════════════════════════════════════ */
   .heading-display {
     font-family: var(--font-serif);
-    font-size: clamp(3rem, 1.8rem + 4.5vw, 6rem);
-    line-height: 1.02;
-    letter-spacing: 0.035em;
-    @apply font-semibold;
+    font-size: clamp(3.25rem, 2rem + 5vw, 6.5rem);
+    line-height: 0.98;
+    letter-spacing: 0.025em;
+    @apply font-bold;
   }
 
   .heading-section {
