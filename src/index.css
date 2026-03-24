@@ -101,7 +101,7 @@
   }
 
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
   }
 
   /* ── Global Lucide icon defaults — architectural, understated ── */

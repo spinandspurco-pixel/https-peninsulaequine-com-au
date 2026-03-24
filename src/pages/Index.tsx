@@ -74,14 +74,14 @@ function ProjectsScroll() {
     <div className="relative">
       <div
         ref={scrollRef}
-        className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 -mx-4 px-4 lg:-mx-0 lg:px-0 scrollbar-hide"
+        className="flex gap-4 sm:gap-6 overflow-x-auto scroll-smooth pb-4 -mx-4 px-4 lg:-mx-0 lg:px-0 scrollbar-hide"
         style={{ scrollbarWidth: "none" }}
       >
         {PROJECTS.map((project, i) => (
           <Link
             key={i}
             to={`/project/${project.slug}`}
-            className="group relative flex-shrink-0 w-[80vw] sm:w-[50vw] lg:w-[36vw] aspect-[4/5] overflow-hidden snap-start"
+            className="group relative flex-shrink-0 w-[80vw] sm:w-[50vw] lg:w-[36vw] aspect-[4/5] overflow-hidden"
           >
             <img
               src={project.src}
