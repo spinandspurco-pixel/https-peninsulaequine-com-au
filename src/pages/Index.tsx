@@ -74,7 +74,7 @@ function ProjectsScroll() {
     <div className="relative">
       <div
         ref={scrollRef}
-        className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 -mx-4 px-4 lg:-mx-0 lg:px-0 scrollbar-hide"
+        className="flex gap-4 sm:gap-6 overflow-x-auto scroll-smooth pb-4 -mx-4 px-4 lg:-mx-0 lg:px-0 scrollbar-hide"
         style={{ scrollbarWidth: "none" }}
       >
         {PROJECTS.map((project, i) => (
