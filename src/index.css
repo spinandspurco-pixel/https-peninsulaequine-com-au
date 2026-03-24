@@ -416,7 +416,7 @@
   stroke-dasharray: 200;
   stroke-dashoffset: 0;
   opacity: 0.25;
-  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 300ms ease-in-out;
 }
 
 .blueprint-icon:hover .bp-line,
@@ -426,8 +426,8 @@
 
 .blueprint-icon .bp-line {
   stroke-dashoffset: 0;
-  transition: stroke-dashoffset 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-              opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: stroke-dashoffset 300ms ease-in-out,
+              opacity 300ms ease-in-out;
 }
 
 .blueprint-icon.bp-draw-in .bp-line {
