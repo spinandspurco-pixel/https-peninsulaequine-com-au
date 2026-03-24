@@ -401,11 +401,11 @@
   /* Scene ambient temperature modifiers */
   .scene-technical {
     filter: brightness(0.98) saturate(0.95) sepia(0);
-    transition: filter 1000ms ease-in-out;
+    transition: filter 500ms ease-in-out;
   }
   .scene-material {
     filter: brightness(1.02) saturate(1.03) sepia(0.015);
-    transition: filter 1000ms ease-in-out;
+    transition: filter 500ms ease-in-out;
   }
 }
 
