@@ -377,11 +377,11 @@
   /* Masterplan zone temperature states */
   .zone-warm {
     filter: brightness(1.04) sepia(0.02);
-    transition: filter 500ms ease-in-out;
+    transition: filter 300ms ease-in-out;
   }
   .zone-cool {
     filter: brightness(0.97) saturate(0.94);
-    transition: filter 500ms ease-in-out;
+    transition: filter 300ms ease-in-out;
   }
 
   /* Hero center illumination bias */
