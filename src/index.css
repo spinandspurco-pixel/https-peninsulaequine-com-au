@@ -359,7 +359,7 @@
 
   /* Gold / accent hover — brushed metal catching light */
   .btn-temp-gold {
-    transition: filter 500ms ease-in-out, box-shadow 500ms ease-in-out;
+    transition: filter 300ms ease-in-out, box-shadow 300ms ease-in-out;
   }
   .btn-temp-gold:hover {
     filter: brightness(1.06) saturate(1.08) sepia(0.03);
