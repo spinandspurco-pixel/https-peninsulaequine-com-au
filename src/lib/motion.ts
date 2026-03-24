@@ -27,7 +27,7 @@ export const EASE = {
 /* ── Duration (ms) ──────────────────────────────────── */
 export const DURATION = {
   /** Micro interactions — toggle active state, hover glow */
-  fast: 200,
+  fast: 300,
   /** Standard reveal — section entrance, card fade */
   normal: 450,
   /** Hero-level reveals — heading, cinematic layers */
