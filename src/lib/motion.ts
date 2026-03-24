@@ -19,7 +19,7 @@ export const EASE = {
   /** Cinematic ease-in-out for scene transitions */
   cinematic: "cubic-bezier(0.45, 0, 0.15, 1)",
   /** Slightly snappier for interactive feedback */
-  interactive: "cubic-bezier(0.25, 0.8, 0.25, 1)",
+  interactive: "ease-in-out",
   /** Linear for opacity-only fades */
   linear: "linear",
 } as const;
