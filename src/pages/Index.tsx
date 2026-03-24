@@ -225,12 +225,12 @@ export default function Index() {
 
             {/* 3.8s — Supporting line (max 0.25 opacity) */}
             <p
-              className="text-[11px] sm:text-[12px] uppercase max-w-lg leading-[2.2]"
+              className="text-[10px] sm:text-[11px] uppercase max-w-lg leading-[2.4]"
               style={{
                 opacity: 0,
                 animation: "heroSupportReveal 900ms cubic-bezier(0.45,0,0.15,1) 3800ms forwards",
-                letterSpacing: "0.28em",
-                color: "hsl(var(--muted-foreground) / 0.25)",
+                letterSpacing: "0.32em",
+                color: "hsl(var(--muted-foreground) / 0.20)",
               }}
             >
               Precision-built equine environments designed to perform, endure, and elevate.
