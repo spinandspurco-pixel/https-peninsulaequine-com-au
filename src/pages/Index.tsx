@@ -211,12 +211,12 @@ export default function Index() {
 
             {/* 2.6s — Hero headline: fade + subtle upward drift over 1.2s */}
             <h1
-              className="font-serif font-extrabold text-foreground leading-[0.98] tracking-[-0.018em]"
+              className="font-serif font-black text-foreground leading-[0.95] tracking-[-0.02em]"
               style={{
                 opacity: 0,
                 transform: "translateY(8px)",
                 animation: "heroHeadlineReveal 1200ms cubic-bezier(0.45,0,0.15,1) 2600ms forwards",
-                fontSize: "clamp(3rem, 1.6rem + 6.5vw, 7.5rem)",
+                fontSize: "clamp(3.25rem, 1.8rem + 7vw, 8rem)",
                 textShadow: "0 2px 40px hsl(222 20% 4% / 0.6)",
               }}
             >
