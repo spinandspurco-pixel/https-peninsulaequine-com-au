@@ -81,7 +81,7 @@ function ProjectsScroll() {
           <Link
             key={i}
             to={`/project/${project.slug}`}
-            className="group relative flex-shrink-0 w-[80vw] sm:w-[50vw] lg:w-[36vw] aspect-[4/5] overflow-hidden snap-start"
+            className="group relative flex-shrink-0 w-[80vw] sm:w-[50vw] lg:w-[36vw] aspect-[4/5] overflow-hidden"
           >
             <img
               src={project.src}
