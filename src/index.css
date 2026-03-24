@@ -151,9 +151,9 @@
   }
 
   p {
-    font-size: 0.9375rem;
-    line-height: 1.9;
-    @apply text-muted-foreground;
+    font-size: 0.875rem;
+    line-height: 1.95;
+    color: hsl(var(--muted-foreground) / 0.7);
   }
 
   small, .text-caption {
