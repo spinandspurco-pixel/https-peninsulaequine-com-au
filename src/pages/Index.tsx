@@ -139,7 +139,7 @@ export default function Index() {
       <section className="relative min-h-[100dvh] overflow-hidden flex items-center justify-center bg-[hsl(222_20%_4%)] hero-center-light">
         {/* Background — slow emergence from near-black */}
         <div
-          style={{ opacity: 0, animation: "heroBackdropReveal 1400ms ease-out 200ms forwards" }}
+          style={{ opacity: 0, animation: "heroBackdropReveal 1200ms cubic-bezier(0.45,0,0.15,1) 400ms forwards" }}
         >
           <video
             autoPlay muted loop playsInline
@@ -179,23 +179,43 @@ export default function Index() {
           style={{ opacity: heroFade, willChange: "opacity" }}
         >
           <div className="flex flex-col items-center gap-10 sm:gap-14 lg:gap-16">
-            {/* Brand tag — 1600ms */}
+            {/* 0.6s — Logo / brand mark fades in */}
+            <div
+              style={{ opacity: 0, animation: "heroFadeIn 800ms cubic-bezier(0.45,0,0.15,1) 600ms forwards" }}
+            >
+              <img
+                src="/lovable-uploads/pe-logo-gold.png"
+                alt="Peninsula Equine"
+                className="h-10 sm:h-12 w-auto mx-auto"
+                style={{ filter: "brightness(0.85) saturate(0.9)" }}
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+              />
+            </div>
+
+            {/* 1.2s — Divider lines appear */}
             <div
               className="flex items-center justify-center gap-5"
-              style={{ opacity: 0, animation: "heroFadeIn 900ms ease-out 1600ms forwards" }}
+              style={{ opacity: 0, animation: "heroFadeIn 600ms cubic-bezier(0.45,0,0.15,1) 1200ms forwards" }}
             >
               <div className="w-12 h-px bg-accent/20" />
-              <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/50">Peninsula Equine</p>
               <div className="w-12 h-px bg-accent/20" />
             </div>
 
-            {/* Primary — single authority statement */}
+            {/* 1.8s — "PENINSULA EQUINE" text */}
+            <p
+              className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.42em] text-accent/40"
+              style={{ opacity: 0, animation: "heroFadeIn 700ms cubic-bezier(0.45,0,0.15,1) 1800ms forwards" }}
+            >
+              Peninsula Equine
+            </p>
+
+            {/* 2.6s — Hero headline: fade + subtle upward drift over 1.2s */}
             <h1
               className="font-serif font-extrabold text-foreground leading-[0.98] tracking-[-0.018em]"
               style={{
                 opacity: 0,
-                transform: "translateY(2px)",
-                animation: "heroHeadlineReveal 950ms cubic-bezier(0.45, 0, 0.15, 1) 2400ms forwards",
+                transform: "translateY(8px)",
+                animation: "heroHeadlineReveal 1200ms cubic-bezier(0.45,0,0.15,1) 2600ms forwards",
                 fontSize: "clamp(3rem, 1.6rem + 6.5vw, 7.5rem)",
                 textShadow: "0 2px 40px hsl(222 20% 4% / 0.6)",
               }}
@@ -203,12 +223,12 @@ export default function Index() {
               From Dirt<br className="hidden sm:block" /> to Dynasty.
             </h1>
 
-            {/* Supporting line — subdued, non-competing */}
+            {/* 3.8s — Supporting line (max 0.25 opacity) */}
             <p
               className="text-[11px] sm:text-[12px] uppercase max-w-lg leading-[2.2]"
               style={{
                 opacity: 0,
-                animation: "heroFadeIn 800ms ease-out 3200ms forwards",
+                animation: "heroSupportReveal 900ms cubic-bezier(0.45,0,0.15,1) 3800ms forwards",
                 letterSpacing: "0.28em",
                 color: "hsl(var(--muted-foreground) / 0.25)",
               }}
@@ -216,32 +236,32 @@ export default function Index() {
               Precision-built equine environments designed to perform, endure, and elevate.
             </p>
 
-            {/* CTA */}
+            {/* 5.0s — CTA buttons fade in (no movement, just opacity) */}
             <div
               className="flex flex-col sm:flex-row gap-4 justify-center pt-6"
-              style={{ opacity: 0, animation: "heroFadeIn 800ms ease-out 4000ms forwards" }}
+              style={{ opacity: 0, animation: "heroFadeIn 800ms cubic-bezier(0.45,0,0.15,1) 5000ms forwards" }}
             >
               <Button asChild variant="gold" size="lg" className="px-8 tracking-[0.08em]">
                 <Link to="/site-assessment">
                   Start a Project <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild size="lg" className="bg-transparent border border-foreground/10 text-foreground/50 hover:text-foreground hover:border-foreground/25 hover:bg-foreground/[0.03] transition-all duration-700 px-8 tracking-[0.08em]">
+              <Button asChild size="lg" className="bg-transparent border border-foreground/10 text-foreground/50 hover:text-foreground hover:border-foreground/25 hover:bg-foreground/[0.03] transition-all duration-300 ease-in-out px-8 tracking-[0.08em]">
                 <Link to="/gallery">View Projects</Link>
               </Button>
             </div>
           </div>
         </div>
 
-        {/* Scroll indicator — 5000ms */}
+        {/* Scroll indicator — 6.0s */}
         <div
           className="absolute bottom-10 left-1/2 -translate-x-1/2"
-          style={{ opacity: 0, animation: "heroFadeIn 800ms ease-out 4600ms forwards" }}
+          style={{ opacity: 0, animation: "heroFadeIn 800ms cubic-bezier(0.45,0,0.15,1) 6000ms forwards" }}
         >
           <div className="w-px h-14 bg-accent/8 relative overflow-hidden">
             <div
               className="absolute top-0 w-full h-4 bg-accent/25"
-              style={{ animation: "scrollPulse 3s ease-in-out infinite 5.4s" }}
+              style={{ animation: "scrollPulse 3s ease-in-out infinite 7s" }}
             />
           </div>
         </div>
