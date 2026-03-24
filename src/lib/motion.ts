@@ -19,7 +19,7 @@ export const EASE = {
   /** Cinematic ease-in-out for scene transitions */
   cinematic: "cubic-bezier(0.45, 0, 0.15, 1)",
   /** Slightly snappier for interactive feedback */
-  interactive: "cubic-bezier(0.25, 0.8, 0.25, 1)",
+  interactive: "ease-in-out",
   /** Linear for opacity-only fades */
   linear: "linear",
 } as const;
@@ -27,7 +27,7 @@ export const EASE = {
 /* ── Duration (ms) ──────────────────────────────────── */
 export const DURATION = {
   /** Micro interactions — toggle active state, hover glow */
-  fast: 200,
+  fast: 300,
   /** Standard reveal — section entrance, card fade */
   normal: 450,
   /** Hero-level reveals — heading, cinematic layers */
@@ -114,7 +114,7 @@ export function crossfadeStyle(
 /**
  * Hover style — opacity only, no scale or transform.
  */
-export const IMAGE_HOVER_DURATION = `${DURATION.fast}ms`;
+export const IMAGE_HOVER_DURATION = "300ms";
 export const IMAGE_HOVER_SCALE = "1"; // No scale on hover
 
 /**
