@@ -107,7 +107,7 @@
   /* ── Global Lucide icon defaults — architectural, understated ── */
   svg.lucide {
     stroke-width: 1.5;
-    @apply transition-colors duration-700 ease-out;
+    @apply transition-colors duration-300 ease-in-out;
     color: inherit;
   }
 
