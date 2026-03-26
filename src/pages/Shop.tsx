@@ -119,6 +119,18 @@ export default function Shop() {
           <div className="section-container max-w-5xl mx-auto relative z-10">
             <RevealOnScroll direction="up">
               <p
+                className="font-serif font-light italic tracking-[0.04em] mb-16 sm:mb-20 text-center"
+                style={{
+                  fontSize: "clamp(1rem, 0.5rem + 1.8vw, 1.4rem)",
+                  color: "hsl(var(--foreground) / 0.15)",
+                }}
+              >
+                Built into the process.
+              </p>
+            </RevealOnScroll>
+
+            <RevealOnScroll direction="up" delay={80}>
+              <p
                 className="font-mono text-[9px] uppercase tracking-[0.35em] mb-16 sm:mb-20"
                 style={{ color: "hsl(var(--accent) / 0.3)" }}
               >
@@ -129,48 +141,70 @@ export default function Shop() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border/8">
               {ARTIFACTS.map((item, i) => (
                 <RevealOnScroll key={item.title} direction="up" stagger={i} staggerInterval={100}>
-                  <div className="bg-background p-8 sm:p-10 lg:p-12 min-h-[280px] flex flex-col justify-between group">
-                    {/* Top labels */}
-                    <div>
-                      <div className="flex items-center gap-4 mb-8">
-                        <span
-                          className="font-mono text-[8px] uppercase tracking-[0.3em]"
-                          style={{ color: "hsl(var(--accent) / 0.25)" }}
-                        >
-                          {item.edition}
-                        </span>
-                        <span className="w-px h-3 bg-border/20" />
-                        <span
-                          className="font-mono text-[8px] uppercase tracking-[0.25em]"
-                          style={{ color: "hsl(var(--muted-foreground) / 0.2)" }}
-                        >
-                          {item.tag}
-                        </span>
-                      </div>
-
-                      <h3
-                        className="font-serif text-[17px] sm:text-[19px] font-medium tracking-[0.02em] mb-4 group-hover:text-foreground/70 transition-colors duration-500"
-                        style={{ color: "hsl(var(--foreground) / 0.5)" }}
+                  <div className="bg-background p-8 sm:p-10 lg:p-12 min-h-[280px] flex flex-col justify-between group relative overflow-hidden cursor-pointer">
+                    {/* Hover overlay */}
+                    <div
+                      className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+                      style={{ background: "hsl(var(--background) / 0.6)" }}
+                    >
+                      <span
+                        className="font-mono text-[10px] uppercase tracking-[0.3em]"
+                        style={{ color: "hsl(var(--accent) / 0.6)" }}
                       >
-                        {item.title}
-                      </h3>
-
-                      <p
-                        className="text-[12px] leading-[2] max-w-[280px]"
-                        style={{ color: "hsl(var(--muted-foreground) / 0.25)" }}
-                      >
-                        {item.desc}
-                      </p>
+                        View Piece
+                      </span>
                     </div>
 
-                    {/* Bottom series label */}
-                    <div className="mt-8 pt-6 border-t border-border/6">
-                      <span
-                        className="font-mono text-[8px] uppercase tracking-[0.3em]"
-                        style={{ color: "hsl(var(--muted-foreground) / 0.12)" }}
-                      >
-                        {item.series}
-                      </span>
+                    {/* Content with hover zoom */}
+                    <div className="transition-transform duration-300 ease-in-out group-hover:scale-[1.03]">
+                      {/* Top labels */}
+                      <div>
+                        <div className="flex items-center gap-4 mb-8">
+                          <span
+                            className="font-mono text-[8px] uppercase tracking-[0.3em]"
+                            style={{ color: "hsl(var(--accent) / 0.25)" }}
+                          >
+                            {item.edition}
+                          </span>
+                          <span className="w-px h-3 bg-border/20" />
+                          <span
+                            className="font-mono text-[8px] uppercase tracking-[0.25em]"
+                            style={{ color: "hsl(var(--muted-foreground) / 0.2)" }}
+                          >
+                            {item.tag}
+                          </span>
+                        </div>
+
+                        <h3
+                          className="font-serif text-[17px] sm:text-[19px] font-medium tracking-[0.02em] mb-4 group-hover:text-foreground/70 transition-colors duration-300"
+                          style={{ color: "hsl(var(--foreground) / 0.5)" }}
+                        >
+                          {item.edition} — {item.title}
+                        </h3>
+
+                        <p
+                          className="text-[12px] leading-[2] max-w-[280px]"
+                          style={{ color: "hsl(var(--muted-foreground) / 0.25)" }}
+                        >
+                          {item.desc}
+                        </p>
+                      </div>
+
+                      {/* Bottom — Limited release */}
+                      <div className="mt-8 pt-6 border-t border-border/6 flex items-center justify-between">
+                        <span
+                          className="font-mono text-[8px] uppercase tracking-[0.3em]"
+                          style={{ color: "hsl(var(--muted-foreground) / 0.12)" }}
+                        >
+                          {item.series}
+                        </span>
+                        <span
+                          className="font-mono text-[8px] uppercase tracking-[0.25em]"
+                          style={{ color: "hsl(var(--muted-foreground) / 0.1)" }}
+                        >
+                          Limited release
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </RevealOnScroll>
