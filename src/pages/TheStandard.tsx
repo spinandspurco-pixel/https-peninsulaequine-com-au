@@ -119,7 +119,19 @@ export default function TheStandard() {
               </p>
             </RevealOnScroll>
 
-            <RevealOnScroll direction="up" delay={250}>
+            <RevealOnScroll direction="up" delay={200}>
+              <p
+                className="mt-20 sm:mt-28 font-serif tracking-[0.03em]"
+                style={{
+                  fontSize: "clamp(0.95rem, 0.55rem + 1.5vw, 1.3rem)",
+                  color: "hsl(var(--foreground) / 0.12)",
+                }}
+              >
+                If you're looking for standard, we're not it.
+              </p>
+            </RevealOnScroll>
+
+            <RevealOnScroll direction="up" delay={350}>
               <div className="mt-16 sm:mt-20">
                 <Button asChild variant="gold" size="lg" className="px-10 tracking-[0.08em]">
                   <Link to="/site-assessment">
