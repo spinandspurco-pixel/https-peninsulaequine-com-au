@@ -106,6 +106,7 @@ function AppContent() {
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <SoundLayer />
         <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<Index />} />
