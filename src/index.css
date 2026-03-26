@@ -282,32 +282,34 @@
   }
 
   /* ═══════════════════════════════════════════════════════
-     INTERACTIVE EFFECTS — slower, more luxurious
+     INTERACTIVE EFFECTS — engineered, not animated
      ═══════════════════════════════════════════════════════ */
+
+  /* Global interaction baseline */
+  a, button, [role="button"] {
+    @apply transition-all ease-in-out;
+    transition-duration: 300ms;
+  }
+
   .btn-hover-lift {
     @apply transition-all ease-in-out;
     transition-duration: 300ms;
   }
   .btn-hover-lift:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 32px -12px hsl(var(--accent) / 0.3);
+    filter: brightness(1.12);
   }
 
   .btn-glow:hover {
-    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.3),
-                0 0 24px -6px hsl(var(--accent) / 0.2);
+    filter: brightness(1.1);
+    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.2);
   }
   .btn-glow:active {
-    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.4),
-                0 0 12px -3px hsl(var(--accent) / 0.15);
+    filter: brightness(1.05);
   }
   .btn-glow:focus-visible {
     box-shadow: 0 0 0 2px hsl(var(--background)),
                 0 0 0 4px hsl(var(--ring));
   }
-
-
-
 
   /* Card hover — refined */
   .card-hover-glow {
@@ -317,12 +319,6 @@
     box-shadow: 0 0 40px -12px hsl(var(--accent) / 0.15),
                 0 0 0 1px hsl(var(--accent) / 0.08);
   }
-
-
-
-
-
-
 
   .input-glow {
     @apply transition-all duration-300 ease-in-out;
