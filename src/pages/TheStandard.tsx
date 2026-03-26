@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
 const DONT = [
-  "We don't build volume projects.",
-  "We don't replicate designs.",
-  "We don't compromise ground systems.",
+  "We don't build at scale.",
+  "No two builds are repeated.",
+  "Ground integrity is never negotiated.",
 ];
 
 const DO = [
