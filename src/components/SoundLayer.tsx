@@ -9,7 +9,7 @@
  * All sounds are barely perceptible. Silent fallback if blocked.
  */
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useSoundSystem } from "@/hooks/useSoundSystem";
 
@@ -54,5 +54,3 @@ export function SoundLayer() {
 
   return null;
 }
-
-import { useRef } from "react";
