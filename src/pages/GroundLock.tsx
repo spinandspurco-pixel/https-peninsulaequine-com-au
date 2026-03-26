@@ -4,6 +4,8 @@ import { GroundLockCrossSection } from "@/components/groundlock/GroundLockCrossS
 import groundlockCutaway from "@/assets/groundlock-horseshoe-canonical.jpg";
 import groundlockComparison from "@/assets/groundlock-horseshoe-canonical.jpg";
 import groundlockInstall from "@/assets/groundlock-horseshoe-canonical.jpg";
+import impactFailure from "@/assets/groundlock-impact-failure.jpg";
+import impactSuccess from "@/assets/groundlock-impact-success.jpg";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
