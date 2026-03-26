@@ -4,6 +4,8 @@ import { GroundLockCrossSection } from "@/components/groundlock/GroundLockCrossS
 import groundlockCutaway from "@/assets/groundlock-horseshoe-canonical.jpg";
 import groundlockComparison from "@/assets/groundlock-horseshoe-canonical.jpg";
 import groundlockInstall from "@/assets/groundlock-horseshoe-canonical.jpg";
+import impactFailure from "@/assets/groundlock-impact-failure.jpg";
+import impactSuccess from "@/assets/groundlock-impact-success.jpg";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
@@ -150,66 +152,63 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ PROBLEM vs SOLUTION SPLIT ═════════════════════ */}
+      {/* ═══ IMPACT LAYER — Visual Contrast ═════════════ */}
       <section className="relative overflow-hidden">
-        <div className="py-28 sm:py-36 lg:py-44 bg-card relative">
-          <div className="absolute inset-0 grain-texture opacity-[0.02]" />
-          <div className="section-container max-w-4xl mx-auto relative z-10">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border/8">
-              {/* LEFT — The Problem */}
-              <RevealOnScroll direction="up">
-                <div className="bg-background p-8 sm:p-10 lg:p-12 min-h-[260px] flex flex-col justify-center">
-                  <p
-                    className="font-mono text-[9px] uppercase tracking-[0.35em] mb-8"
-                    style={{ color: "hsl(var(--muted-foreground) / 0.2)" }}
-                  >
-                    Without GroundLock
-                  </p>
-                  <ul className="space-y-5">
-                    {["Mud.", "Rutting.", "Heavy vehicle damage."].map((line) => (
-                      <li
-                        key={line}
-                        className="font-serif text-[15px] sm:text-[17px] tracking-[0.02em]"
-                        style={{ color: "hsl(var(--foreground) / 0.2)" }}
-                      >
-                        {line}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </RevealOnScroll>
+        <div className="relative w-full" style={{ minHeight: "clamp(320px, 50vw, 560px)" }}>
+          {/* Split images */}
+          <div className="absolute inset-0 grid grid-cols-2">
+            {/* LEFT — Failure */}
+            <RevealOnScroll direction="up" delay={0}>
+              <div className="relative w-full h-full overflow-hidden">
+                <img
+                  src={impactFailure}
+                  alt="Destroyed muddy ground — rutting and water damage"
+                  className="w-full h-full object-cover"
+                  style={{ filter: "saturate(0.6) brightness(0.7)" }}
+                  loading="lazy"
+                  width={960}
+                  height={640}
+                />
+                <div
+                  className="absolute inset-0"
+                  style={{ background: "linear-gradient(to right, transparent 60%, hsl(var(--background)) 100%)" }}
+                />
+              </div>
+            </RevealOnScroll>
 
-              {/* RIGHT — The Solution */}
-              <RevealOnScroll direction="up" delay={120}>
-                <div className="bg-background p-8 sm:p-10 lg:p-12 min-h-[260px] flex flex-col justify-center">
-                  <p
-                    className="font-mono text-[9px] uppercase tracking-[0.35em] mb-8"
-                    style={{ color: "hsl(var(--accent) / 0.35)" }}
-                  >
-                    With GroundLock
-                  </p>
-                  <ul className="space-y-5">
-                    {["Clean system.", "Structured base.", "Stable surface."].map((line) => (
-                      <li
-                        key={line}
-                        className="font-serif text-[15px] sm:text-[17px] font-medium tracking-[0.02em]"
-                        style={{ color: "hsl(var(--foreground) / 0.45)" }}
-                      >
-                        {line}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </RevealOnScroll>
-            </div>
+            {/* RIGHT — Success */}
+            <RevealOnScroll direction="up" delay={400}>
+              <div className="relative w-full h-full overflow-hidden">
+                <img
+                  src={impactSuccess}
+                  alt="Clean GroundLock stabilised surface"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  width={960}
+                  height={640}
+                />
+                <div
+                  className="absolute inset-0"
+                  style={{ background: "linear-gradient(to left, transparent 60%, hsl(var(--background)) 100%)" }}
+                />
+              </div>
+            </RevealOnScroll>
+          </div>
 
-            {/* Caption */}
-            <RevealOnScroll direction="up" delay={200}>
+          {/* Dark overlay for text legibility */}
+          <div className="absolute inset-0 bg-background/40" />
+
+          {/* Center divider */}
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-foreground/8 z-10" />
+
+          {/* Text overlay */}
+          <div className="absolute inset-0 flex items-center justify-center z-20">
+            <RevealOnScroll direction="up" delay={800}>
               <p
-                className="text-center mt-10 font-serif italic tracking-[0.04em]"
+                className="font-serif italic tracking-[0.04em] text-center"
                 style={{
-                  fontSize: "clamp(0.95rem, 0.5rem + 1.5vw, 1.3rem)",
-                  color: "hsl(var(--foreground) / 0.15)",
+                  fontSize: "clamp(1.1rem, 0.6rem + 2vw, 1.6rem)",
+                  color: "hsl(var(--foreground) / 0.55)",
                 }}
               >
                 One holds. One fails.
