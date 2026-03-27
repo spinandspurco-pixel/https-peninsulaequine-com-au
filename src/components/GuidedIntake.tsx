@@ -114,7 +114,8 @@ export function GuidedIntake() {
   useEffect(() => {
     if (!isOpen) {
       const timer = setTimeout(() => {
-        setStep(0);
+        setStep(-1);
+        setGateReady(false);
         setIntent("");
         setLand("");
         setStage("");
@@ -128,6 +129,10 @@ export function GuidedIntake() {
         setSubmitted(false);
       }, 500);
       return () => clearTimeout(timer);
+    } else {
+      // 1.5s pause before interaction is enabled on the gate
+      const t = setTimeout(() => setGateReady(true), 1500);
+      return () => clearTimeout(t);
     }
   }, [isOpen]);
 
