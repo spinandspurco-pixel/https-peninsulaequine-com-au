@@ -378,6 +378,23 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ═══ INVISIBLE FLEX ═══════════════════════════════ */}
+      <div className="py-28 sm:py-36 relative overflow-hidden">
+        <div className="absolute inset-0 grain-texture opacity-10" />
+        <RevealOnScroll direction="none" duration={1200} delay={200}>
+          <p
+            className="text-center font-mono italic leading-none"
+            style={{
+              fontSize: "clamp(0.55rem, 0.4rem + 0.5vw, 0.7rem)",
+              letterSpacing: "0.35em",
+              color: "hsl(var(--muted-foreground) / 0.10)",
+            }}
+          >
+            Designed to be experienced, not explained.
+          </p>
+        </RevealOnScroll>
+      </div>
+
       {/* ── Trust Strip ──────────────────────────── */}
       <section className="py-16 sm:py-20 border-t border-border/10 cv-auto">
         <div className="section-container max-w-4xl mx-auto">
