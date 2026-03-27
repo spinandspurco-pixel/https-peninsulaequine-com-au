@@ -586,7 +586,10 @@ export default function GroundLock() {
           <div className="absolute inset-0 grain-texture" />
           <div className="section-container relative z-[1] text-center max-w-lg mx-auto">
             <RevealOnScroll direction="up">
-              <p className="font-serif text-xl sm:text-2xl text-primary-foreground/50 italic tracking-wide leading-relaxed mb-8">
+              <p className="font-serif text-xl sm:text-2xl text-primary-foreground/50 italic tracking-wide leading-relaxed mb-4">
+                Once installed, everything else feels outdated.
+              </p>
+              <p className="text-[11px] text-primary-foreground/18 font-mono tracking-[0.2em] uppercase mb-10">
                 Every project starts with a system plan.
               </p>
               <Link to="/site-assessment">
