@@ -3,6 +3,7 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { GroundLockProductEducation } from "@/components/groundlock/GroundLockProductEducation";
+import { VisualMechanics } from "@/components/groundlock/VisualMechanics";
 import { PanelSpecimen, SystemDiagram, LockSequence } from "@/components/groundlock/GroundLockSystemSVG";
 import groundlockCutaway from "@/assets/groundlock-horseshoe-canonical.jpg";
 import { ArrowRight } from "lucide-react";
@@ -36,6 +37,24 @@ export default function GroundLockHowItWorks() {
           >
             Stronger by geometry, not by mass. Explore the engineering behind the GroundLock™ system.
           </p>
+        </div>
+      </section>
+
+      {/* Visual Mechanics Sequence */}
+      <section className="relative overflow-hidden">
+        <div className="py-24 sm:py-36 bg-primary relative">
+          <div className="absolute inset-0 grain-texture opacity-[0.02]" />
+          <div className="section-container max-w-xl mx-auto relative z-[1]">
+            <RevealOnScroll direction="up">
+              <div className="text-center mb-20">
+                <div className="w-8 h-px bg-accent/25 mx-auto mb-10" />
+                <p className="text-overline text-accent/40">Visual Mechanics</p>
+              </div>
+            </RevealOnScroll>
+            <div className="[&_svg_text]:fill-primary-foreground [&_p]:text-primary-foreground/40 [&_span]:text-accent/30">
+              <VisualMechanics />
+            </div>
+          </div>
         </div>
       </section>
 
