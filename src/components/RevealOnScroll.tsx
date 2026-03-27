@@ -37,7 +37,7 @@ export function RevealOnScroll({
   children,
   direction = "up",
   delay = 0,
-  duration = DURATION.normal,
+  duration = DURATION.normal, // 800ms arrival
   distance = DISTANCE.md,
   className,
   as: Tag = "div",
