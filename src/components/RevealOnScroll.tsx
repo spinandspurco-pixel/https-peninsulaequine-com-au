@@ -30,8 +30,8 @@ const transforms: Record<RevealDirection, (distance: number, scale: boolean) => 
   none: (_, s) => s ? "scale(1.02)" : "none",
 };
 
-/** Base entrance delay — creates intentional pacing */
-const BASE_REVEAL_DELAY = 400;
+/** Base entrance delay — creates intentional pause before arrival */
+const BASE_REVEAL_DELAY = 600;
 
 export function RevealOnScroll({
   children,
