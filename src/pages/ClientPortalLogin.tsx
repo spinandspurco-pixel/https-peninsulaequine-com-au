@@ -96,7 +96,7 @@ export default function ClientPortalLogin() {
                 className="w-full bg-transparent border border-primary-foreground/[0.08] px-5 py-3.5 text-sm text-primary-foreground/60 placeholder:text-primary-foreground/15 focus:border-accent/25 focus:outline-none transition-colors duration-500 rounded-sm"
               />
               {error && (
-                <p className="text-[11px] text-red-400/60">{error}</p>
+                <p className="text-[11px] text-destructive/60">{error}</p>
               )}
               <button
                 type="submit"
