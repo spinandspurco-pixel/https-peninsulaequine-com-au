@@ -76,7 +76,7 @@ export function RevealImage({
   children,
   className,
   delay = 0,
-  duration = 600,
+  duration = 800,
   threshold = 0.12,
 }: {
   children: ReactNode;
