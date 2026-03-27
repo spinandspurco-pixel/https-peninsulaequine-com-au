@@ -27,7 +27,7 @@ export function SectionTransition({
   children,
   variant = "fade-up",
   delay = 0,
-  duration = 700,
+  duration = 800,
   threshold = 0.15,
   className,
   once = true,
