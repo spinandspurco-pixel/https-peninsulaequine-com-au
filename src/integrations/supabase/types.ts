@@ -420,6 +420,148 @@ export type Database = {
           },
         ]
       }
+      client_portal_projects: {
+        Row: {
+          active: boolean
+          build_stage: string
+          client_email: string
+          client_name: string
+          contact_note: string | null
+          created_at: string
+          groundlock_included: boolean | null
+          id: string
+          job_id: string | null
+          project_name: string
+          property_layout_notes: string | null
+          quote_id: string | null
+          stage_label: string | null
+          system_notes: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          build_stage?: string
+          client_email: string
+          client_name: string
+          contact_note?: string | null
+          created_at?: string
+          groundlock_included?: boolean | null
+          id?: string
+          job_id?: string | null
+          project_name: string
+          property_layout_notes?: string | null
+          quote_id?: string | null
+          stage_label?: string | null
+          system_notes?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          build_stage?: string
+          client_email?: string
+          client_name?: string
+          contact_note?: string | null
+          created_at?: string
+          groundlock_included?: boolean | null
+          id?: string
+          job_id?: string | null
+          project_name?: string
+          property_layout_notes?: string | null
+          quote_id?: string | null
+          stage_label?: string | null
+          system_notes?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_portal_projects_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_portal_projects_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_portal_updates: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          note: string | null
+          project_id: string
+          update_type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          note?: string | null
+          project_id: string
+          update_type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          note?: string | null
+          project_id?: string
+          update_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_portal_updates_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "client_portal_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_portal_zones: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          project_id: string
+          sort_order: number
+          zone_name: string
+          zone_type: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          project_id: string
+          sort_order?: number
+          zone_name: string
+          zone_type?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          project_id?: string
+          sort_order?: number
+          zone_name?: string
+          zone_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_portal_zones_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "client_portal_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       employee_tasks: {
         Row: {
           assigned_to: string | null
