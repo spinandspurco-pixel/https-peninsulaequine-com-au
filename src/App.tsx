@@ -71,6 +71,8 @@ const ProposalEditor = lazy(() => import("./pages/ProposalEditor"));
 const Visualise = lazy(() => import("./pages/Visualise"));
 const TheStandard = lazy(() => import("./pages/TheStandard"));
 const WhyWeExist = lazy(() => import("./pages/WhyWeExist"));
+const ClientPortal = lazy(() => import("./pages/ClientPortal"));
+const ClientPortalLogin = lazy(() => import("./pages/ClientPortalLogin"));
 
 const queryClient = new QueryClient();
 
