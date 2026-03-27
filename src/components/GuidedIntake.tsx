@@ -210,8 +210,33 @@ export function GuidedIntake() {
 
       {/* Steps container */}
       <div className="relative w-full h-full max-w-lg mx-auto">
+        {/* Step -1 — Qualification Gate */}
+        <StepWrapper visible={step === -1 && isOpen}>
+          <div className="w-full text-center space-y-8 max-w-md">
+            <p className="font-serif text-xl sm:text-2xl text-foreground/70 tracking-tight leading-[1.3]">
+              Not every project is the right fit.
+            </p>
+            <div className="w-8 h-px bg-accent/20 mx-auto" />
+            <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-foreground/15 leading-relaxed">
+              We work with a limited number of clients each season.
+            </p>
+            <button
+              onClick={() => setStep(0)}
+              disabled={!gateReady}
+              className={cn(
+                "mt-6 px-10 py-4 text-xs uppercase tracking-[0.2em] font-medium transition-all duration-700",
+                gateReady
+                  ? "bg-accent text-accent-foreground hover:bg-accent/90 opacity-100"
+                  : "bg-accent/10 text-accent-foreground/20 cursor-default opacity-0"
+              )}
+            >
+              Continue
+            </button>
+          </div>
+        </StepWrapper>
+
         {/* Step 0 — Intent */}
-        <StepWrapper visible={step === 0 && isOpen}>
+        <StepWrapper visible={step === 0}>
           <div className="w-full space-y-8">
             <p className="font-serif text-lg sm:text-xl text-foreground/70 tracking-tight">
               What are you looking to create?
