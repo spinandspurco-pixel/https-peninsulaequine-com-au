@@ -1,5 +1,7 @@
+import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { Button } from "@/components/ui/button";
 import equusRidgeHero from "@/assets/equus-ridge-hero.jpg";
 
 const FRAGMENTS = ["Performance", "Community", "Land", "Experience"];
