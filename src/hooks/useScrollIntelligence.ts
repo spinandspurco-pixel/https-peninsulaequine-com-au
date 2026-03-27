@@ -62,10 +62,10 @@ export function useScrollIntelligence(): ScrollIntelligence {
     [scrollDepths]
   );
 
-  // CTA text evolves subtly
+  // CTA text evolves subtly — shifts to exclusivity at deep engagement
   const ctaLabel =
     phase === "engaged"
-      ? "Begin Your Build"
+      ? "Apply to Build"
       : phase === "exploring"
         ? "Start a Project"
         : "Start Your Project";
