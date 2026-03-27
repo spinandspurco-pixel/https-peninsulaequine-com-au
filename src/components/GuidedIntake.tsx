@@ -95,7 +95,8 @@ function StepWrapper({
 /* ── Main overlay ── */
 export function GuidedIntake() {
   const { isOpen, close } = useIntake();
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(-1); // -1 = qualification gate
+  const [gateReady, setGateReady] = useState(false);
   const [intent, setIntent] = useState("");
   const [land, setLand] = useState("");
   const [stage, setStage] = useState("");
@@ -113,7 +114,8 @@ export function GuidedIntake() {
   useEffect(() => {
     if (!isOpen) {
       const timer = setTimeout(() => {
-        setStep(0);
+        setStep(-1);
+        setGateReady(false);
         setIntent("");
         setLand("");
         setStage("");
@@ -127,6 +129,10 @@ export function GuidedIntake() {
         setSubmitted(false);
       }, 500);
       return () => clearTimeout(timer);
+    } else {
+      // 1.5s pause before interaction is enabled on the gate
+      const t = setTimeout(() => setGateReady(true), 1500);
+      return () => clearTimeout(t);
     }
   }, [isOpen]);
 
@@ -204,8 +210,33 @@ export function GuidedIntake() {
 
       {/* Steps container */}
       <div className="relative w-full h-full max-w-lg mx-auto">
+        {/* Step -1 — Qualification Gate */}
+        <StepWrapper visible={step === -1 && isOpen}>
+          <div className="w-full text-center space-y-8 max-w-md">
+            <p className="font-serif text-xl sm:text-2xl text-foreground/70 tracking-tight leading-[1.3]">
+              Not every project is the right fit.
+            </p>
+            <div className="w-8 h-px bg-accent/20 mx-auto" />
+            <p className="font-mono text-[9px] uppercase tracking-[0.25em] text-foreground/15 leading-relaxed">
+              We work with a limited number of clients each season.
+            </p>
+            <button
+              onClick={() => setStep(0)}
+              disabled={!gateReady}
+              className={cn(
+                "mt-6 px-10 py-4 text-xs uppercase tracking-[0.2em] font-medium transition-all duration-700",
+                gateReady
+                  ? "bg-accent text-accent-foreground hover:bg-accent/90 opacity-100"
+                  : "bg-accent/10 text-accent-foreground/20 cursor-default opacity-0"
+              )}
+            >
+              Continue
+            </button>
+          </div>
+        </StepWrapper>
+
         {/* Step 0 — Intent */}
-        <StepWrapper visible={step === 0 && isOpen}>
+        <StepWrapper visible={step === 0}>
           <div className="w-full space-y-8">
             <p className="font-serif text-lg sm:text-xl text-foreground/70 tracking-tight">
               What are you looking to create?
@@ -326,7 +357,7 @@ export function GuidedIntake() {
                   : "bg-accent text-accent-foreground hover:bg-accent/90"
               )}
             >
-              {submitting ? "Submitting…" : "Submit"}
+              {submitting ? "Submitting…" : "Apply for Consideration"}
             </button>
           </div>
         </StepWrapper>
@@ -335,14 +366,11 @@ export function GuidedIntake() {
         <StepWrapper visible={step === 5}>
           <div className="w-full text-center space-y-6 max-w-md">
             <p className="font-serif text-xl sm:text-2xl text-foreground/70 tracking-tight">
-              Your project has been received.
+              Application received.
             </p>
             <div className="w-8 h-px bg-accent/25 mx-auto" />
             <p className="font-serif text-[13px] sm:text-sm text-foreground/30 italic leading-relaxed">
-              We review each project carefully before moving forward.
-            </p>
-            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/25">
-              If aligned, we'll reach out to discuss next steps.
+              We'll review your project and respond if aligned.
             </p>
           </div>
         </StepWrapper>
