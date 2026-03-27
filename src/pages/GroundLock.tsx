@@ -308,28 +308,55 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ WHY IT MATTERS — #5 ═══════════════════════════ */}
+      {/* ═══ THE COST OF FAILURE ═══════════════════════════ */}
       <section className="relative overflow-hidden">
-        <div className="py-16 sm:py-24 bg-card/50 relative border-t border-border/8">
+        <div className="py-24 sm:py-32 bg-primary relative border-t border-primary-foreground/[0.04]">
           <div className="absolute inset-0 grain-texture" />
-          <div className="section-container max-w-md mx-auto text-center relative z-[1]">
-            <RevealOnScroll direction="up">
-              <p className="text-overline mb-8">Why It Matters</p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={80}>
-              <ul className="space-y-4 text-left">
-                {[
-                  "More consistent performance under load",
-                  "Reduced long-term movement",
-                  "More stable surface behaviour",
-                ].map((item) => (
-                  <li key={item} className="flex items-center gap-4 text-[13px] text-foreground/55 leading-[1.7]">
-                    <span className="w-4 h-px bg-accent/25 shrink-0" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </RevealOnScroll>
+          <div className="section-container max-w-3xl mx-auto relative z-[1]">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-20 items-start">
+              {/* Left — Cost of Failure */}
+              <div>
+                <RevealOnScroll direction="up">
+                  <p className="text-overline mb-8 text-primary-foreground/20">The Cost of Failure</p>
+                </RevealOnScroll>
+                <RevealOnScroll direction="up" delay={80}>
+                  <ul className="space-y-5">
+                    {[
+                      "Surface damage",
+                      "Rework costs",
+                      "Downtime",
+                      "Weather impact",
+                    ].map((item) => (
+                      <li key={item} className="flex items-center gap-4 text-[13px] text-primary-foreground/30 leading-[1.7]">
+                        <span className="w-5 h-px bg-primary-foreground/10 shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </RevealOnScroll>
+              </div>
+
+              {/* Right — The New Standard */}
+              <div>
+                <RevealOnScroll direction="up" delay={200}>
+                  <p className="text-overline mb-8 text-accent/40">The New Standard</p>
+                </RevealOnScroll>
+                <RevealOnScroll direction="up" delay={280}>
+                  <ul className="space-y-5">
+                    {[
+                      "Structural integrity",
+                      "Load distribution",
+                      "Long-term performance",
+                    ].map((item) => (
+                      <li key={item} className="flex items-center gap-4 text-[13px] text-primary-foreground/55 leading-[1.7] font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-accent/35 shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </RevealOnScroll>
+              </div>
+            </div>
           </div>
         </div>
       </section>
