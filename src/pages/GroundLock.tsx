@@ -120,14 +120,14 @@ export default function GroundLock() {
                 className="heading-display text-foreground mb-5 opacity-0 animate-fade-in"
                 style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "1200ms", lineHeight: "0.95" }}
               >
-                Stops damage<br />before it starts.
+                This is what ground<br />should have always been.
               </h1>
 
               <p
-                className="text-[13px] text-muted-foreground/35 leading-[1.8] mb-10 max-w-[340px] opacity-0 animate-fade-in"
+                className="text-[13px] text-muted-foreground/35 leading-[1.8] mb-10 max-w-[380px] opacity-0 animate-fade-in"
                 style={{ animationDelay: "800ms", animationFillMode: "both", animationDuration: "1000ms" }}
               >
-                GroundLock is a structural system designed to stabilise, protect, and extend the life of equine surfaces.
+                GroundLock replaces unstable, temporary, and failure-prone footing systems.
               </p>
 
               <div
