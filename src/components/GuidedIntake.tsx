@@ -366,14 +366,11 @@ export function GuidedIntake() {
         <StepWrapper visible={step === 5}>
           <div className="w-full text-center space-y-6 max-w-md">
             <p className="font-serif text-xl sm:text-2xl text-foreground/70 tracking-tight">
-              Your project has been received.
+              Application received.
             </p>
             <div className="w-8 h-px bg-accent/25 mx-auto" />
             <p className="font-serif text-[13px] sm:text-sm text-foreground/30 italic leading-relaxed">
-              We review each project carefully before moving forward.
-            </p>
-            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/25">
-              If aligned, we'll reach out to discuss next steps.
+              We'll review your project and respond if aligned.
             </p>
           </div>
         </StepWrapper>
