@@ -32,6 +32,15 @@ export function CaseStudyClose({ closingLine }: Props) {
           </p>
         </RevealOnScroll>
 
+        <RevealOnScroll direction="none" duration={1200} delay={600}>
+          <p
+            className="font-mono text-[10px] uppercase tracking-[0.35em] italic"
+            style={{ color: "hsl(var(--muted-foreground) / 0.12)" }}
+          >
+            From Dirt to Dynasty
+          </p>
+        </RevealOnScroll>
+
         <RevealOnScroll direction="up" delay={400}>
           <div
             className="flex flex-col sm:flex-row gap-3 justify-center"
