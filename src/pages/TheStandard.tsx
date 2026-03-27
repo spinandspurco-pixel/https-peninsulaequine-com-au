@@ -32,7 +32,7 @@ export default function TheStandard() {
               className="font-serif font-extrabold text-foreground leading-[0.95] tracking-[-0.02em]"
               style={{ fontSize: "clamp(2.8rem, 1.4rem + 6vw, 6.5rem)" }}
             >
-              From Dirt<br />to Dynasty.
+              The Standard.
             </h1>
           </div>
 
