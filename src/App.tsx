@@ -70,6 +70,7 @@ const ProposalTemplate = lazy(() => import("./pages/ProposalTemplate"));
 const ProposalEditor = lazy(() => import("./pages/ProposalEditor"));
 const Visualise = lazy(() => import("./pages/Visualise"));
 const TheStandard = lazy(() => import("./pages/TheStandard"));
+const WhyWeExist = lazy(() => import("./pages/WhyWeExist"));
 
 const queryClient = new QueryClient();
 
@@ -164,6 +165,7 @@ function AppContent() {
            <Route path="/proposal-editor/:id" element={<ProposalEditor />} />
            <Route path="/visualise" element={<Visualise />} />
            <Route path="/the-standard" element={<TheStandard />} />
+           <Route path="/why" element={<WhyWeExist />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
