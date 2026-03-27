@@ -1,100 +1,72 @@
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
-import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import equusRidgeHero from "@/assets/equus-ridge-hero.jpg";
 
+const FRAGMENTS = ["Performance", "Community", "Land", "Experience"];
 
 const EquusRidge = () => {
   return (
     <Layout>
-      {/* SECTION 1 — HERO */}
+      {/* ═══ HERO ═══════════════════════════════════════ */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background video */}
         <div className="absolute inset-0">
           <img
             src={equusRidgeHero}
-            alt="Luxury equine estate at golden hour — sculpted arena with rolling hills"
-            className="absolute inset-0 w-full h-full object-cover img-cta"
+            alt="Luxury equine estate at golden hour"
+            className="absolute inset-0 w-full h-full object-cover"
             loading="eager"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/20 to-background" />
         </div>
 
         <div className="relative z-10 text-center px-6 max-w-2xl mx-auto">
-          <h1
-            className="font-serif text-5xl sm:text-6xl md:text-7xl font-bold text-foreground/95 tracking-tight leading-[1.05] mb-8 opacity-0 animate-fade-in"
-            style={{ animationDelay: "400ms", animationFillMode: "both" }}
+          <p
+            className="text-[10px] font-mono uppercase tracking-[0.35em] text-muted-foreground/30 mb-10 opacity-0 animate-fade-in"
+            style={{ animationDelay: "300ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
             Equus Ridge
+          </p>
+          <h1
+            className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground/90 tracking-tight leading-[1.05] mb-6 opacity-0 animate-fade-in"
+            style={{ animationDelay: "700ms", animationFillMode: "both", animationDuration: "1200ms" }}
+          >
+            A new standard for<br />equine experience.
           </h1>
           <p
-            className="text-sm sm:text-[15px] text-muted-foreground/50 leading-relaxed max-w-md mx-auto opacity-0 animate-fade-in"
-            style={{ animationDelay: "800ms", animationFillMode: "both" }}
+            className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground/20 opacity-0 animate-fade-in"
+            style={{ animationDelay: "1200ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
-            A destination for design, performance, and environment.
+            Coming soon.
           </p>
         </div>
       </section>
 
-      {/* SECTION 2 — ATMOSPHERE (dark editorial, no video) */}
-      <section className="py-44 sm:py-64 bg-primary relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none grain-hero" />
-
-        {/* Faint blueprint linework — single subtle brand callback */}
-        <div className="absolute inset-0 opacity-[0.04]">
-          <BlueprintLineOverlay variant="dimensions" color="light" />
-        </div>
-
-        <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
-          <RevealOnScroll direction="up">
-            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/50 mb-10">
-              Atmosphere
-            </p>
-          </RevealOnScroll>
-
-          <RevealOnScroll direction="up" delay={100}>
-            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold text-primary-foreground/90 leading-[1.25] mb-10">
-              A Place Designed<br />
-              to Work Properly
-            </h2>
-          </RevealOnScroll>
-
-          <RevealOnScroll direction="up" delay={200}>
-            <p className="text-sm sm:text-[15px] text-primary-foreground/40 leading-[2] max-w-md mx-auto">
-              Every detail — from ground to structure —<br />
-              is considered as part of a complete system.
-            </p>
-          </RevealOnScroll>
+      {/* ═══ FRAGMENTS ═══════════════════════════════════ */}
+      <section className="py-36 sm:py-48 bg-primary relative overflow-hidden">
+        <div className="absolute inset-0 grain-texture opacity-[0.02]" />
+        <div className="section-container max-w-xs mx-auto relative z-[1]">
+          <div className="space-y-10">
+            {FRAGMENTS.map((word, i) => (
+              <RevealOnScroll key={word} direction="up" delay={i * 150}>
+                <p className="text-[13px] text-primary-foreground/35 tracking-[0.2em] uppercase font-mono text-center">
+                  {word}
+                </p>
+              </RevealOnScroll>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* SECTION 3 — PRIVATE VIEWING (text only) */}
-      <section className="py-44 sm:py-64 bg-background relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none grain-texture opacity-[0.025]" />
-        <div className="section-container max-w-lg mx-auto relative z-[1] text-center">
+      {/* ═══ FINAL LINE ══════════════════════════════════ */}
+      <section className="py-36 sm:py-48 bg-background relative overflow-hidden">
+        <div className="absolute inset-0 grain-texture opacity-[0.025]" />
+        <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
           <RevealOnScroll direction="up">
-            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/50 mb-8">
-              Private Viewing
-            </p>
-          </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={100}>
-            <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-foreground/90 leading-[1.25] mb-6">
-              Equus Ridge
-            </h2>
+            <div className="w-8 h-px bg-accent/20 mx-auto mb-14" />
           </RevealOnScroll>
           <RevealOnScroll direction="up" delay={200}>
-            <p className="text-sm sm:text-[15px] text-muted-foreground/50 leading-[2] mb-8">
-              A first look at Equus Ridge.<br />
-              By invitation.
-            </p>
-          </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={300}>
-            <div className="w-8 h-px bg-accent/30 mx-auto mb-10" />
-          </RevealOnScroll>
-          <RevealOnScroll direction="up" delay={400}>
-            <p className="text-xs text-muted-foreground/25 italic tracking-wide">
-              Not everything is built to last.<br />
-              This is.
+            <p className="font-serif text-xl sm:text-2xl text-foreground/50 italic tracking-wide leading-[1.4]">
+              Built on the same principles.<br />Expanded.
             </p>
           </RevealOnScroll>
         </div>
