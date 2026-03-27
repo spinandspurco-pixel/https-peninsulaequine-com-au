@@ -168,6 +168,8 @@ function AppContent() {
            <Route path="/visualise" element={<Visualise />} />
            <Route path="/the-standard" element={<TheStandard />} />
            <Route path="/why" element={<WhyWeExist />} />
+           <Route path="/portal" element={<ProtectedRoute><ClientPortal /></ProtectedRoute>} />
+           <Route path="/portal/login" element={<ClientPortalLogin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
