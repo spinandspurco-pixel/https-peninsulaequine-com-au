@@ -3,6 +3,7 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { GroundLockProductEducation } from "@/components/groundlock/GroundLockProductEducation";
+import { VisualMechanics } from "@/components/groundlock/VisualMechanics";
 import { PanelSpecimen, SystemDiagram, LockSequence } from "@/components/groundlock/GroundLockSystemSVG";
 import groundlockCutaway from "@/assets/groundlock-horseshoe-canonical.jpg";
 import { ArrowRight } from "lucide-react";
