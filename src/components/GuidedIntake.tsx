@@ -357,7 +357,7 @@ export function GuidedIntake() {
                   : "bg-accent text-accent-foreground hover:bg-accent/90"
               )}
             >
-              {submitting ? "Submitting…" : "Submit"}
+              {submitting ? "Submitting…" : "Apply for Consideration"}
             </button>
           </div>
         </StepWrapper>
