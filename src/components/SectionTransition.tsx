@@ -173,9 +173,9 @@ interface StaggeredTransitionProps {
 export function StaggeredTransition({
   children,
   variant = "fade-up",
-  staggerDelay = 100,
+  staggerDelay = 120,
   baseDelay = 0,
-  duration = 600,
+  duration = 800,
   threshold = 0.1,
   className,
   childClassName,
