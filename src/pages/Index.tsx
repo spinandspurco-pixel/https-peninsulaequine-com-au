@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Layers, Fence, Home, Mountain, Shovel, Wrench, ChevronRight } from "lucide-react";
 import { InteractiveLayerStack } from "@/components/InteractiveLayerStack";
+import { LandIntelligence } from "@/components/LandIntelligence";
 import { cn } from "@/lib/utils";
 
 // Video
@@ -294,6 +295,9 @@ export default function Index() {
           </div>
         </div>
       </section>
+
+      {/* ═══ LAND INTELLIGENCE ═══════════════════════════ */}
+      <LandIntelligence />
 
       {/* ═══ 3. PROJECTS — HORIZONTAL SCROLL ═══════════════ */}
       <section className="relative overflow-hidden cv-auto">
