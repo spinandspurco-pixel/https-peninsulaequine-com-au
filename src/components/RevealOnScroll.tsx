@@ -30,14 +30,14 @@ const transforms: Record<RevealDirection, (distance: number, scale: boolean) => 
   none: (_, s) => s ? "scale(1.02)" : "none",
 };
 
-/** Base entrance delay — creates intentional pacing */
-const BASE_REVEAL_DELAY = 400;
+/** Base entrance delay — creates intentional pause before arrival */
+const BASE_REVEAL_DELAY = 600;
 
 export function RevealOnScroll({
   children,
   direction = "up",
   delay = 0,
-  duration = DURATION.normal,
+  duration = DURATION.normal, // 800ms arrival
   distance = DISTANCE.md,
   className,
   as: Tag = "div",
@@ -76,7 +76,7 @@ export function RevealImage({
   children,
   className,
   delay = 0,
-  duration = 600,
+  duration = 800,
   threshold = 0.12,
 }: {
   children: ReactNode;

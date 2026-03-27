@@ -24,14 +24,15 @@ export const EASE = {
   linear: "linear",
 } as const;
 
-/* ── Duration (ms) ──────────────────────────────────── */
+/* ── Duration (ms) — 3-Phase Motion Language ────────── */
+/*  ARRIVE: 800–1200ms  |  HOLD: ≥1500ms  |  EXIT: 400–600ms  */
 export const DURATION = {
   /** Micro interactions — toggle active state, hover glow */
   fast: 300,
-  /** Standard reveal — section entrance, card fade */
-  normal: 450,
-  /** Hero-level reveals — heading, cinematic layers */
-  slow: 800,
+  /** Standard arrival — section entrance, card fade */
+  normal: 800,
+  /** Hero-level arrivals — heading, cinematic layers */
+  slow: 1200,
   /** SVG line drawing, atmospheric fades */
   cinematic: 1200,
   /** Parallax image transitions */
@@ -40,16 +41,21 @@ export const DURATION = {
   crossfade: 1100,
   /** Extended hold reveals — structure, arena */
   extended: 1400,
+  /** Exit phase — soft fade only */
+  exit: 500,
 } as const;
+
+/** Hold gap — minimum stillness between sequential reveals (ms) */
+export const HOLD = 1500;
 
 /* ── Stagger interval (ms) ──────────────────────────── */
 export const STAGGER = {
   /** Tight stagger for cards in a grid */
-  card: 100,
+  card: 120,
   /** Wider stagger for section-level children */
-  section: 150,
-  /** Cinematic stagger for scene text reveals */
-  scene: 400,
+  section: 200,
+  /** Cinematic stagger for scene text reveals — intentional pause */
+  scene: 500,
 } as const;
 
 /* ── Transform distances (px) ───────────────────────── */
