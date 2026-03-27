@@ -95,7 +95,8 @@ function StepWrapper({
 /* ── Main overlay ── */
 export function GuidedIntake() {
   const { isOpen, close } = useIntake();
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(-1); // -1 = qualification gate
+  const [gateReady, setGateReady] = useState(false);
   const [intent, setIntent] = useState("");
   const [land, setLand] = useState("");
   const [stage, setStage] = useState("");
