@@ -296,6 +296,9 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ═══ LAND INTELLIGENCE ═══════════════════════════ */}
+      <LandIntelligence />
+
       {/* ═══ 3. PROJECTS — HORIZONTAL SCROLL ═══════════════ */}
       <section className="relative overflow-hidden cv-auto">
         <div className="py-32 sm:py-40 lg:py-48 relative">
