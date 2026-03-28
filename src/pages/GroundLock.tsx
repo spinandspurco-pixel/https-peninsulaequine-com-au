@@ -339,6 +339,9 @@ export default function GroundLock() {
             <p className="text-[13px] text-foreground/40 leading-[1.9]">
               Protects turf, stabilises ground, and removes post-event remediation.
             </p>
+            <p className="text-[9px] font-mono uppercase tracking-[0.3em] text-foreground/15 mt-6">
+              Reduces ground remediation, protects venue assets, and enables repeatable event infrastructure.
+            </p>
           </div>
 
           {/* Micro points */}
