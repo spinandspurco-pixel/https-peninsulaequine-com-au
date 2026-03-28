@@ -375,6 +375,69 @@ export default function GroundLock() {
         </div>
       </section>
 
+      {/* ═══ AT A GLANCE — Full Surface Pattern ═══════════ */}
+      <section className="py-24 sm:py-36 bg-background relative overflow-hidden">
+        <div className="absolute inset-0 grain-texture opacity-[0.02]" />
+        <div className="section-container max-w-4xl mx-auto relative z-[1]">
+          <div className="text-center mb-16">
+            <div className="w-8 h-px bg-accent/20 mx-auto mb-10" />
+            <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted-foreground/30">At a Glance</p>
+          </div>
+
+          <svg viewBox="0 0 800 360" className="w-full h-auto opacity-0 animate-fade-in" style={{ animationDelay: "300ms", animationFillMode: "both", animationDuration: "1400ms" }} aria-label="GroundLock repeating interlocked arena surface pattern">
+            <defs>
+              <linearGradient id="aag-u" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(var(--foreground))" stopOpacity="0.12" />
+                <stop offset="100%" stopColor="hsl(var(--foreground))" stopOpacity="0.04" />
+              </linearGradient>
+              <linearGradient id="aag-d" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0%" stopColor="hsl(var(--foreground))" stopOpacity="0.16" />
+                <stop offset="100%" stopColor="hsl(var(--foreground))" stopOpacity="0.06" />
+              </linearGradient>
+            </defs>
+
+            {/* Arena boundary */}
+            <rect x="30" y="20" width="740" height="280" rx="3" fill="none" stroke="hsl(var(--foreground))" strokeWidth="0.5" strokeOpacity="0.06" />
+            <text x="400" y="14" textAnchor="middle" fontSize="7" fontFamily="monospace" fill="hsl(var(--muted-foreground))" opacity="0.2" letterSpacing="0.2em">ARENA SURFACE</text>
+
+            {/* Row 1 — Upright panels (open down) */}
+            {[0, 1, 2, 3, 4, 5, 6, 7].map(i => (
+              <g key={`u1-${i}`} transform={`translate(${50 + i * 88}, 35)`}>
+                <path d="M0,0 L70,0 L70,110 L54,110 L54,16 L16,16 L16,110 L0,110 Z" fill="url(#aag-u)" stroke="hsl(var(--foreground))" strokeWidth="0.5" strokeOpacity="0.1" />
+                <rect x="22" y="0" width="26" height="3" rx="1" fill="hsl(var(--accent))" opacity="0.18" />
+                <polygon points="31,100 35,108 39,100" fill="hsl(var(--accent))" opacity="0.15" />
+              </g>
+            ))}
+
+            {/* Row 2 — Inverted panels (open up), offset */}
+            {[0, 1, 2, 3, 4, 5, 6, 7].map(i => (
+              <g key={`d1-${i}`} transform={`translate(${94 + i * 88}, 150)`}>
+                <path d="M0,110 L70,110 L70,0 L54,0 L54,94 L16,94 L16,0 L0,0 Z" fill="url(#aag-d)" stroke="hsl(var(--foreground))" strokeWidth="0.5" strokeOpacity="0.1" />
+                <rect x="22" y="107" width="26" height="3" rx="1" fill="hsl(var(--accent))" opacity="0.18" />
+                <polygon points="31,10 35,2 39,10" fill="hsl(var(--accent))" opacity="0.15" />
+              </g>
+            ))}
+
+            {/* Load distribution arrows */}
+            {[180, 360, 540].map(x => (
+              <g key={`ld-${x}`}>
+                <line x1={x} y1="30" x2={x} y2="290" stroke="hsl(var(--accent))" strokeWidth="0.6" strokeOpacity="0.1" strokeDasharray="6 5" />
+                <polygon points={`${x - 3},285 ${x},296 ${x + 3},285`} fill="hsl(var(--accent))" opacity="0.15" />
+                <line x1={x} y1="296" x2={x - 25} y2="310" stroke="hsl(var(--accent))" strokeWidth="0.4" strokeOpacity="0.07" strokeDasharray="3 3" />
+                <line x1={x} y1="296" x2={x + 25} y2="310" stroke="hsl(var(--accent))" strokeWidth="0.4" strokeOpacity="0.07" strokeDasharray="3 3" />
+              </g>
+            ))}
+
+            {/* Direction labels */}
+            <text x="400" y="350" textAnchor="middle" fontSize="7" fontFamily="monospace" fill="hsl(var(--accent))" opacity="0.2" letterSpacing="0.15em">LOAD DISTRIBUTION</text>
+          </svg>
+
+          <p className="text-[12px] sm:text-[13px] text-muted-foreground/35 text-center leading-[1.8] mt-14 max-w-lg mx-auto opacity-0 animate-fade-in" style={{ animationDelay: "600ms", animationFillMode: "both", animationDuration: "1200ms" }}>
+            A repeatable interlocking system designed to stabilise the entire surface.
+          </p>
+        </div>
+      </section>
+
       {/* ═══ SECTION 2 — THE SYSTEM (single explanation) ═══ */}
       <section id="system" className="relative overflow-hidden">
         <div className="divider-grid" />
