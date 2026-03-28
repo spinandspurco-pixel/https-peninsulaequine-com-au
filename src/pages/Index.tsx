@@ -178,10 +178,8 @@ export default function Index() {
           style={{ opacity: heroFade, willChange: "opacity" }}
         >
           <div className="flex flex-col items-center gap-10 sm:gap-14 lg:gap-16">
-            {/* 0.6s — Logo / brand mark fades in */}
-            <div
-              style={{ opacity: 0, animation: "heroFadeIn 800ms cubic-bezier(0.45,0,0.15,1) 600ms forwards" }}
-            >
+            {/* Logo — visible immediately */}
+            <div>
               <img
                 src="/lovable-uploads/pe-logo-gold.png"
                 alt="Peninsula Equine"
@@ -191,30 +189,21 @@ export default function Index() {
               />
             </div>
 
-            {/* 1.2s — Divider lines appear */}
-            <div
-              className="flex items-center justify-center gap-5"
-              style={{ opacity: 0, animation: "heroFadeIn 600ms cubic-bezier(0.45,0,0.15,1) 1200ms forwards" }}
-            >
+            {/* Divider lines — visible immediately */}
+            <div className="flex items-center justify-center gap-5">
               <div className="w-12 h-px bg-accent/20" />
               <div className="w-12 h-px bg-accent/20" />
             </div>
 
-            {/* 1.8s — "PENINSULA EQUINE" text */}
-            <p
-              className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.42em] text-accent/40"
-              style={{ opacity: 0, animation: "heroFadeIn 700ms cubic-bezier(0.45,0,0.15,1) 1800ms forwards" }}
-            >
+            {/* "PENINSULA EQUINE" — visible immediately */}
+            <p className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.42em] text-accent/40">
               Peninsula Equine
             </p>
 
-            {/* 2.6s — Hero headline: fade + subtle upward drift over 1.2s */}
+            {/* Headline — visible immediately, no animation */}
             <h1
               className="font-serif font-black text-foreground leading-[0.95] tracking-[-0.02em]"
               style={{
-                opacity: 0,
-                transform: "translateY(8px)",
-                animation: "heroHeadlineReveal 1200ms cubic-bezier(0.45,0,0.15,1) 2600ms forwards",
                 fontSize: "clamp(3.25rem, 1.8rem + 7vw, 8rem)",
                 textShadow: "0 2px 40px hsl(222 20% 4% / 0.6)",
               }}
@@ -222,24 +211,21 @@ export default function Index() {
               From Dirt<br className="hidden sm:block" /> to Dynasty.
             </h1>
 
-            {/* 3.8s — Supporting line (max 0.25 opacity) */}
+            {/* Secondary line — only animated element, fades in at 0.7s */}
             <p
               className="text-[10px] sm:text-[11px] uppercase max-w-lg leading-[2.4]"
               style={{
                 opacity: 0,
-                animation: "heroSupportReveal 900ms cubic-bezier(0.45,0,0.15,1) 3800ms forwards",
+                animation: "heroFadeIn 800ms cubic-bezier(0.45,0,0.15,1) 700ms forwards",
                 letterSpacing: "0.32em",
                 color: "hsl(var(--muted-foreground) / 0.20)",
               }}
             >
-              Precision-built equine environments designed to perform, endure, and elevate.
+              Built for load. Built for drainage. Built to last.
             </p>
 
-            {/* 5.0s — CTA buttons fade in (no movement, just opacity) */}
-            <div
-              className="flex flex-col sm:flex-row gap-4 justify-center pt-6"
-              style={{ opacity: 0, animation: "heroFadeIn 800ms cubic-bezier(0.45,0,0.15,1) 5000ms forwards" }}
-            >
+            {/* CTA buttons — visible immediately */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
               <Button asChild variant="gold" size="lg" className="px-8 tracking-[0.08em]">
                 <Link to="/site-assessment">
                   Start a Project <ArrowRight className="ml-2 h-4 w-4" />
