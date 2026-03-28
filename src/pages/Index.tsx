@@ -143,6 +143,7 @@ export default function Index() {
           <video
             autoPlay muted loop playsInline
             preload="auto"
+            poster={heroVideo}
             className="absolute inset-0 w-full h-full object-cover img-hero"
             style={{ width: '100%', height: '100%' }}
           >
