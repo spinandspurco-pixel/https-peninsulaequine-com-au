@@ -149,9 +149,14 @@ export function VisualMechanics() {
   return (
     <div className="space-y-20 sm:space-y-24">
       {/* Top label */}
-      <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/25 text-center">
-        System Breakdown
-      </p>
+      <div className="text-center">
+        <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/25 mb-3">
+          Installation Sequence
+        </p>
+        <p className="text-[11px] text-accent/15 tracking-wide">
+          From ground prep to final surface
+        </p>
+      </div>
 
       {STEPS.map((step, i) => {
         const Visual = STEP_VISUALS[step.id];
