@@ -18,6 +18,32 @@ export default function GroundLock() {
   const [gateOpen, setGateOpen] = useState(false);
   const navigate = useNavigate();
 
+  return (
+    <>
+    <Dialog open={gateOpen} onOpenChange={setGateOpen}>
+      <DialogContent className="bg-primary border-accent/10 max-w-md text-center p-10 sm:p-14">
+        <div className="space-y-6">
+          <p className="font-serif text-base sm:text-lg text-primary-foreground/60 italic leading-relaxed">
+            GroundLock projects are assessed based on site conditions, scale, and intended use.
+          </p>
+          <p className="text-[11px] text-primary-foreground/25 leading-relaxed">
+            This ensures every installation performs as intended.
+          </p>
+          <Button
+            variant="gold"
+            size="lg"
+            className="mt-4"
+            onClick={() => {
+              setGateOpen(false);
+              navigate("/site-assessment");
+            }}
+          >
+            Continue <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+
     <Layout>
       {/* ═══ PRE-HERO MICRO LINE ═════════════════════════ */}
       <section className="bg-primary py-16 sm:py-20">
