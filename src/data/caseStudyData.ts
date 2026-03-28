@@ -87,7 +87,7 @@ export const CASE_STUDIES: CaseStudyData[] = [
       image: groundlockInsitu,
       alt: "GroundLock system installed beneath arena surface",
       label: "GroundLock",
-      line: "Engineered from the ground up.",
+      line: "From Dirt to Dynasty.",
     },
     outcome: {
       image: livingHeroWide,
