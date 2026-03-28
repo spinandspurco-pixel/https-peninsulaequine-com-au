@@ -15,7 +15,7 @@ import imgHero from "@/assets/masterplan-aerial-hero.jpg";
 const acts = [
   { id: "hero", label: "Introduction" },
   { id: "masterplan", label: "Understand" },
-  { id: "walk", label: "Experience" },
+  
   { id: "timeline", label: "Construction" },
   { id: "synthesis", label: "Resolution" },
 ];
