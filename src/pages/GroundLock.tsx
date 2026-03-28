@@ -949,6 +949,32 @@ export default function GroundLock() {
           </div>
         </div>
       </section>
+
+      {/* ═══ CLOSING STATEMENT ═══════════════════════════════ */}
+      <section className="py-32 sm:py-44 bg-primary relative overflow-hidden">
+        <div className="absolute inset-0 grain-texture opacity-[0.02]" />
+        <div className="relative z-[1] text-center max-w-xl mx-auto px-6">
+          <p className="font-serif text-xl sm:text-2xl md:text-3xl text-primary-foreground/50 italic tracking-wide leading-[1.3] mb-4">
+            Once installed, everything else feels outdated.
+          </p>
+          <p className="text-[10px] font-mono uppercase tracking-[0.35em] text-primary-foreground/15 mb-14">
+            Not optional. Foundational.
+          </p>
+          <Link to="/site-assessment">
+            <Button variant="gold" size="lg">
+              Apply to Build <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+          <div className="mt-8">
+            <Link
+              to="/groundlock/how-it-works"
+              className="text-[10px] font-mono uppercase tracking-[0.3em] text-primary-foreground/15 hover:text-primary-foreground/30 transition-colors"
+            >
+              Request System Specs
+            </Link>
+          </div>
+        </div>
+      </section>
     </Layout>
   );
 }
