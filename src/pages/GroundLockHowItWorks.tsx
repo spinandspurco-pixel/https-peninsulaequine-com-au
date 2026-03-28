@@ -40,6 +40,99 @@ export default function GroundLockHowItWorks() {
         </div>
       </section>
 
+      {/* At a Glance — Full System Diagram */}
+      <section className="py-24 sm:py-36 bg-primary relative overflow-hidden">
+        <div className="absolute inset-0 grain-texture opacity-[0.02]" />
+        <div className="section-container max-w-4xl mx-auto relative z-[1]">
+          <RevealOnScroll direction="up">
+            <div className="text-center mb-16">
+              <div className="w-8 h-px bg-accent/25 mx-auto mb-10" />
+              <p className="text-overline text-accent/40">At a Glance</p>
+            </div>
+          </RevealOnScroll>
+
+          <RevealOnScroll direction="up" delay={100}>
+            <svg viewBox="0 0 720 340" className="w-full h-auto" aria-label="GroundLock repeating interlocked surface pattern with load distribution">
+              <defs>
+                <linearGradient id="aag-up" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="hsl(var(--primary-foreground))" stopOpacity="0.14" />
+                  <stop offset="100%" stopColor="hsl(var(--primary-foreground))" stopOpacity="0.05" />
+                </linearGradient>
+                <linearGradient id="aag-down" x1="0" y1="1" x2="0" y2="0">
+                  <stop offset="0%" stopColor="hsl(var(--primary-foreground))" stopOpacity="0.10" />
+                  <stop offset="100%" stopColor="hsl(var(--primary-foreground))" stopOpacity="0.04" />
+                </linearGradient>
+              </defs>
+
+              {/* Row labels */}
+              <text x="12" y="78" fontSize="7" fontFamily="monospace" fill="hsl(var(--accent))" opacity="0.25" transform="rotate(-90,12,78)">ROW A</text>
+              <text x="12" y="198" fontSize="7" fontFamily="monospace" fill="hsl(var(--accent))" opacity="0.25" transform="rotate(-90,12,198)">ROW B</text>
+
+              {/* === ROW 1 — Upright panels === */}
+              {[0, 1, 2, 3, 4, 5].map(i => {
+                const x = 40 + i * 110;
+                return (
+                  <g key={`r1-${i}`} transform={`translate(${x}, 20)`}>
+                    <path d="M0,0 L80,0 L80,120 L62,120 L62,18 L18,18 L18,120 L0,120 Z" fill="url(#aag-up)" stroke="hsl(var(--primary-foreground))" strokeWidth="0.6" strokeOpacity="0.1" />
+                    <rect x="24" y="0" width="32" height="3" rx="1" fill="hsl(var(--accent))" opacity="0.18" />
+                    {/* Tabs */}
+                    <rect x="5" y="42" width="4" height="10" rx="1" fill="hsl(var(--primary-foreground))" opacity="0.06" />
+                    <rect x="71" y="42" width="4" height="10" rx="1" fill="hsl(var(--primary-foreground))" opacity="0.06" />
+                    <rect x="5" y="80" width="4" height="10" rx="1" fill="hsl(var(--primary-foreground))" opacity="0.06" />
+                    <rect x="71" y="80" width="4" height="10" rx="1" fill="hsl(var(--primary-foreground))" opacity="0.06" />
+                  </g>
+                );
+              })}
+
+              {/* === ROW 2 — Inverted panels (offset) === */}
+              {[0, 1, 2, 3, 4, 5].map(i => {
+                const x = 95 + i * 110;
+                return (
+                  <g key={`r2-${i}`} transform={`translate(${x}, 145)`}>
+                    <path d="M0,120 L80,120 L80,0 L62,0 L62,102 L18,102 L18,0 L0,0 Z" fill="url(#aag-down)" stroke="hsl(var(--primary-foreground))" strokeWidth="0.6" strokeOpacity="0.1" />
+                    <rect x="24" y="117" width="32" height="3" rx="1" fill="hsl(var(--accent))" opacity="0.18" />
+                    {/* Tabs */}
+                    <rect x="5" y="30" width="4" height="10" rx="1" fill="hsl(var(--primary-foreground))" opacity="0.06" />
+                    <rect x="71" y="30" width="4" height="10" rx="1" fill="hsl(var(--primary-foreground))" opacity="0.06" />
+                    <rect x="5" y="68" width="4" height="10" rx="1" fill="hsl(var(--primary-foreground))" opacity="0.06" />
+                    <rect x="71" y="68" width="4" height="10" rx="1" fill="hsl(var(--primary-foreground))" opacity="0.06" />
+                  </g>
+                );
+              })}
+
+              {/* === Load distribution arrows === */}
+              {[150, 310, 470].map(x => (
+                <g key={`arrow-${x}`}>
+                  <line x1={x} y1="8" x2={x} y2="300" stroke="hsl(var(--accent))" strokeWidth="0.7" strokeOpacity="0.12" strokeDasharray="5 4" />
+                  <polygon points={`${x - 3},300 ${x + 3},300 ${x},308`} fill="hsl(var(--accent))" opacity="0.18" />
+                  {/* Spread lines at base */}
+                  <line x1={x} y1="308" x2={x - 30} y2="330" stroke="hsl(var(--accent))" strokeWidth="0.5" strokeOpacity="0.08" strokeDasharray="3 3" />
+                  <line x1={x} y1="308" x2={x + 30} y2="330" stroke="hsl(var(--accent))" strokeWidth="0.5" strokeOpacity="0.08" strokeDasharray="3 3" />
+                </g>
+              ))}
+
+              {/* Load label */}
+              <text x="360" y="338" textAnchor="middle" fontSize="7" fontFamily="monospace" fill="hsl(var(--accent))" opacity="0.2">LOAD DISTRIBUTION</text>
+
+              {/* Direction indicators */}
+              <g opacity="0.2">
+                <text x="80" y="158" fontSize="6" fontFamily="monospace" fill="hsl(var(--accent))">↑</text>
+                <text x="190" y="278" fontSize="6" fontFamily="monospace" fill="hsl(var(--accent))">↓</text>
+                <text x="300" y="158" fontSize="6" fontFamily="monospace" fill="hsl(var(--accent))">↑</text>
+                <text x="410" y="278" fontSize="6" fontFamily="monospace" fill="hsl(var(--accent))">↓</text>
+                <text x="520" y="158" fontSize="6" fontFamily="monospace" fill="hsl(var(--accent))">↑</text>
+              </g>
+            </svg>
+          </RevealOnScroll>
+
+          <RevealOnScroll direction="up" delay={200}>
+            <p className="text-[12px] sm:text-[13px] text-primary-foreground/30 text-center leading-[1.8] mt-14 max-w-lg mx-auto">
+              A repeatable interlocking system built to stabilise the entire ground plane.
+            </p>
+          </RevealOnScroll>
+        </div>
+      </section>
+
       {/* Visual Mechanics Sequence */}
       <section className="relative overflow-hidden">
         <div className="py-24 sm:py-36 bg-primary relative">
