@@ -8,7 +8,7 @@ import horseMotion from "@/assets/groundlock-horse-motion.jpg";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
-import { GroundLockProjectForm } from "@/components/groundlock/GroundLockProjectForm";
+
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
