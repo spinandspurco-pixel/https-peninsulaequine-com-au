@@ -389,7 +389,8 @@ export default function GroundLock() {
         <div className="section-container max-w-4xl mx-auto relative z-[1]">
           <div className="text-center mb-16">
             <div className="w-8 h-px bg-accent/20 mx-auto mb-10" />
-            <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted-foreground/30">At a Glance</p>
+            <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted-foreground/30 mb-3">Full System Behaviour</p>
+            <p className="text-[11px] text-muted-foreground/20 tracking-wide">How the full system behaves</p>
           </div>
 
           <svg viewBox="0 0 800 360" className="w-full h-auto opacity-0 animate-fade-in" style={{ animationDelay: "300ms", animationFillMode: "both", animationDuration: "1400ms" }} aria-label="GroundLock repeating interlocked arena surface pattern">
