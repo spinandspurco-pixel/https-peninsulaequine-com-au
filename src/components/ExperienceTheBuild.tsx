@@ -5,7 +5,7 @@ import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 import { useAmbientSound, type AmbientScene } from "@/hooks/useAmbientSound";
 
 import { InteractiveMasterplan } from "@/components/masterplan/InteractiveMasterplanV2";
-import { WalkTheProject } from "@/components/WalkTheProject";
+
 import { BuildTimeline } from "@/components/BuildTimeline";
 import { MainRidgeLivingOutcome } from "@/components/MainRidgeLivingOutcome";
 
@@ -15,7 +15,7 @@ import imgHero from "@/assets/masterplan-aerial-hero.jpg";
 const acts = [
   { id: "hero", label: "Introduction" },
   { id: "masterplan", label: "Understand" },
-  { id: "walk", label: "Experience" },
+  
   { id: "timeline", label: "Construction" },
   { id: "synthesis", label: "Resolution" },
 ];
@@ -363,19 +363,6 @@ function SoundToggle({ enabled, onToggle }: { enabled: boolean; onToggle: () => 
   );
 }
 
-/* ── Scene-to-ambient mapping ────────────────────────── */
-const WALK_SCENE_MAP: Record<string, AmbientScene> = {
-  arrival: "walk-arrival",
-  entry: "walk-entry",
-  courtyard: "walk-courtyard",
-  stables: "walk-stables",
-  structure: "walk-structure",
-  corridor: "walk-corridor",
-  arena: "walk-arena",
-  viewing: "walk-viewing",
-  system: "walk-system",
-  cta: "walk-cta",
-};
 
 const TIMELINE_PHASE_MAP: Record<string, AmbientScene> = {
   "site-prep": "timeline-site",
@@ -433,14 +420,6 @@ export function ExperienceTheBuild() {
     }
   }, [activeAct, transitionTo]);
 
-  /* Ambient sound: Walk scene tracking */
-  const handleWalkScene = useCallback(
-    (sceneId: string) => {
-      const scene = WALK_SCENE_MAP[sceneId];
-      if (scene) transitionTo(scene);
-    },
-    [transitionTo]
-  );
 
   /* Ambient sound: Timeline phase tracking */
   const handleTimelinePhase = useCallback(
@@ -472,14 +451,6 @@ export function ExperienceTheBuild() {
           onZoneLeave={stopHoverTone}
           onLayerToggle={playToggleTone}
         />
-      </div>
-
-      {/* Transition into Act 2 */}
-      <ActTransition line="Now walk through it." />
-
-      {/* ACT 2 — Walk the Build */}
-      <div id="etb-walk">
-        <WalkTheProject onSceneChange={handleWalkScene} />
       </div>
 
       {/* Transition into Act 3 */}
