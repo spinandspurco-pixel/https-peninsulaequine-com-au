@@ -363,19 +363,6 @@ function SoundToggle({ enabled, onToggle }: { enabled: boolean; onToggle: () => 
   );
 }
 
-/* ── Scene-to-ambient mapping ────────────────────────── */
-const WALK_SCENE_MAP: Record<string, AmbientScene> = {
-  arrival: "walk-arrival",
-  entry: "walk-entry",
-  courtyard: "walk-courtyard",
-  stables: "walk-stables",
-  structure: "walk-structure",
-  corridor: "walk-corridor",
-  arena: "walk-arena",
-  viewing: "walk-viewing",
-  system: "walk-system",
-  cta: "walk-cta",
-};
 
 const TIMELINE_PHASE_MAP: Record<string, AmbientScene> = {
   "site-prep": "timeline-site",
