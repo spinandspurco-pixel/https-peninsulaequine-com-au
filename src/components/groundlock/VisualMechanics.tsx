@@ -7,27 +7,27 @@ const STEPS = [
   {
     id: "panel",
     label: "01",
-    text: "Horseshoe-formed structural panel",
+    text: "Structural horseshoe panel",
   },
   {
     id: "interlock",
     label: "02",
-    text: "Interlocking load distribution",
+    text: "Opposing directional interlock",
   },
   {
     id: "layering",
     label: "03",
-    text: "Integrated base and drainage system",
+    text: "Layered base integration",
   },
   {
     id: "load",
     label: "04",
-    text: "Engineered for weight and movement",
+    text: "Load distribution across system",
   },
   {
     id: "surface",
     label: "05",
-    text: "Performance-ready surface above",
+    text: "Stabilised finished surface",
   },
 ] as const;
 
@@ -46,17 +46,31 @@ function StepPanel() {
 
 function StepInterlock() {
   return (
-    <svg viewBox="0 0 220 130" className="w-full h-auto max-w-[220px]" aria-hidden>
+    <svg viewBox="0 0 260 160" className="w-full h-auto max-w-[260px]" aria-hidden>
       <PanelDefs id="vm-i" />
+      {/* Panel A — direction UP (open top) */}
       <g transform="translate(0,0)">
         <GroundLockPanelSVG active showTabs showJoins defsId="vm-i" direction="up" />
       </g>
+      {/* Panel B — direction DOWN (open bottom, inverted) */}
       <g transform="translate(100,0)">
         <GroundLockPanelSVG active showTabs showJoins defsId="vm-i" direction="down" />
       </g>
-      {/* connection indicators */}
+      {/* Connection indicators */}
       <line x1="95" y1="55" x2="105" y2="55" stroke="hsl(var(--accent))" strokeWidth="1.5" opacity="0.35" strokeDasharray="3 2" />
       <line x1="95" y1="75" x2="105" y2="75" stroke="hsl(var(--accent))" strokeWidth="1.5" opacity="0.35" strokeDasharray="3 2" />
+      {/* Direction arrows — clearly opposing */}
+      <g opacity="0.35">
+        {/* Arrow UP on panel A */}
+        <line x1="50" y1="130" x2="50" y2="118" stroke="hsl(var(--accent))" strokeWidth="1" />
+        <polygon points="46,120 50,112 54,120" fill="hsl(var(--accent))" />
+        {/* Arrow DOWN on panel B */}
+        <line x1="150" y1="118" x2="150" y2="130" stroke="hsl(var(--accent))" strokeWidth="1" />
+        <polygon points="146,128 150,136 154,128" fill="hsl(var(--accent))" />
+      </g>
+      {/* Direction labels */}
+      <text x="50" y="150" textAnchor="middle" fontSize="6" fontFamily="monospace" fill="hsl(var(--accent))" opacity="0.3">↑</text>
+      <text x="150" y="150" textAnchor="middle" fontSize="6" fontFamily="monospace" fill="hsl(var(--accent))" opacity="0.3">↓</text>
     </svg>
   );
 }
@@ -133,11 +147,16 @@ const STEP_VISUALS: Record<string, () => JSX.Element> = {
 
 export function VisualMechanics() {
   return (
-    <div className="space-y-24 sm:space-y-32">
+    <div className="space-y-20 sm:space-y-24">
+      {/* Top label */}
+      <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/25 text-center">
+        System Breakdown
+      </p>
+
       {STEPS.map((step, i) => {
         const Visual = STEP_VISUALS[step.id];
         return (
-          <RevealOnScroll key={step.id} direction="up" delay={i * 80}>
+          <RevealOnScroll key={step.id} direction="up" delay={i * 56}>
             <div className="flex flex-col items-center text-center gap-8">
               {/* Step number */}
               <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/30">
