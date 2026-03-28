@@ -178,23 +178,12 @@ export default function Index() {
           className="relative z-10 section-container max-w-5xl mx-auto flex flex-col min-h-[100dvh] justify-center"
           style={{ opacity: heroFade, willChange: "opacity" }}
         >
-          {/* Logo — small, top center, restrained */}
-          <div className="absolute top-8 left-1/2 -translate-x-1/2">
-            <img
-              src="/lovable-uploads/pe-logo-gold.png"
-              alt="Peninsula Equine"
-              className="h-7 sm:h-8 w-auto"
-              style={{ filter: "brightness(0.75) saturate(0.85)", opacity: 0.5 }}
-              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-            />
-          </div>
-
           <div className="text-center flex flex-col items-center gap-8 sm:gap-10">
             {/* Headline — dominant focal point */}
             <h1
-              className="font-serif font-black text-foreground leading-[0.95] tracking-[-0.02em]"
+              className="font-serif font-black text-foreground leading-[0.93] tracking-[-0.025em]"
               style={{
-                fontSize: "clamp(2.8rem, 1.5rem + 6.5vw, 7rem)",
+                fontSize: "clamp(3rem, 1.6rem + 7vw, 7.5rem)",
                 textShadow: "0 2px 40px hsl(222 20% 4% / 0.6)",
               }}
             >
