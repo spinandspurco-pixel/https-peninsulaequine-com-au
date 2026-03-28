@@ -8,7 +8,7 @@ import horseMotion from "@/assets/groundlock-horse-motion.jpg";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
-import { GroundLockProjectForm } from "@/components/groundlock/GroundLockProjectForm";
+
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -314,37 +314,6 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ FORM ══════════════════════════════════════════ */}
-      <section className="relative overflow-hidden">
-        <div className="divider-grid" />
-        <div className="py-20 sm:py-28 bg-card relative">
-          <div className="absolute inset-0 engineering-grid" />
-          <div className="absolute inset-0 grain-texture" />
-          <div
-            className="absolute inset-0"
-            style={{ background: "radial-gradient(ellipse 60% 45% at 50% 50%, transparent 15%, hsl(var(--background) / 0.5) 100%)" }}
-          />
-
-          <div className="section-container relative z-10 max-w-lg mx-auto">
-            <RevealOnScroll direction="up">
-              <RevealLine className="mx-auto mb-10" width="w-8" />
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={80}>
-              <h2 className="heading-section text-foreground mb-2 text-center">
-                Request GroundLock System Plan
-              </h2>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={150}>
-              <p className="text-[13px] text-muted-foreground/38 leading-[1.8] mb-10 text-center">
-                Tell us your space. We'll map the system.
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={220}>
-              <GroundLockProjectForm />
-            </RevealOnScroll>
-          </div>
-        </div>
-      </section>
 
       {/* ═══ CLOSING STATEMENT ═══════════════════════════════ */}
       <section className="py-32 sm:py-44 bg-primary relative overflow-hidden">
