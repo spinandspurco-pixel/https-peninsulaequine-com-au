@@ -438,9 +438,9 @@ export default function GroundLock() {
               This is what replaces it.
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-20 items-start">
-              {/* Right — The New Standard */}
-              <div className="md:col-start-2">
+            <div>
+              {/* The New Standard */}
+              <div>
                 <RevealOnScroll direction="up" delay={200}>
                   <p className="text-overline mb-8 text-accent/40">The New Standard</p>
                 </RevealOnScroll>
