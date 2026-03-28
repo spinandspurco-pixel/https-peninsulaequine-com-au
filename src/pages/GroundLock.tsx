@@ -813,6 +813,15 @@ export default function GroundLock() {
             <RevealOnScroll direction="up" delay={220}>
               <GroundLockProjectForm />
             </RevealOnScroll>
+
+            <div className="text-center mt-14">
+              <Link
+                to="/groundlock/how-it-works"
+                className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted-foreground/20 hover:text-muted-foreground/40 transition-colors"
+              >
+                Request System Specs
+              </Link>
+            </div>
           </div>
         </div>
       </section>
