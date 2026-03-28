@@ -7,27 +7,27 @@ const STEPS = [
   {
     id: "panel",
     label: "01",
-    text: "Horseshoe-formed structural panel",
+    text: "Structural horseshoe panel",
   },
   {
     id: "interlock",
     label: "02",
-    text: "Interlocking load distribution",
+    text: "Opposing directional interlock",
   },
   {
     id: "layering",
     label: "03",
-    text: "Integrated base and drainage system",
+    text: "Layered base integration",
   },
   {
     id: "load",
     label: "04",
-    text: "Engineered for weight and movement",
+    text: "Load distribution across system",
   },
   {
     id: "surface",
     label: "05",
-    text: "Performance-ready surface above",
+    text: "Stabilised finished surface",
   },
 ] as const;
 
