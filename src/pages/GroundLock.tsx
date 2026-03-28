@@ -102,52 +102,56 @@ export default function GroundLock() {
     <Layout>
       <StepProgressIndicator />
       {/* ═══ SECTION 1 — HERO ═════════════════════════════ */}
-      <section className="relative pt-36 sm:pt-44 pb-20 sm:pb-28 overflow-hidden">
-        <div className="absolute inset-0 bg-background" />
-        <div className="absolute inset-0 grain-texture opacity-[0.025]" />
-        <div className="section-container relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <div className="max-w-md">
-              <div
-                className="flex items-center gap-4 mb-8 opacity-0 animate-fade-in"
-                style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "1000ms" }}
-              >
-                <div className="w-8 h-px bg-accent/30" />
-                <p className="text-overline text-accent/50">P.E. GroundLock™</p>
-              </div>
+      <section className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-primary" />
+        <div className="absolute inset-0 grain-texture opacity-[0.02]" />
+        <div className="relative z-10 text-center max-w-2xl mx-auto px-6">
+          {/* Micro label */}
+          <div
+            className="flex items-center justify-center gap-4 mb-10 opacity-0 animate-fade-in"
+            style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "1000ms" }}
+          >
+            <div className="w-8 h-px bg-accent/20" />
+            <span className="text-[10px] font-mono uppercase tracking-[0.35em] text-accent/35">
+              P.E. GroundLock™
+            </span>
+            <div className="w-8 h-px bg-accent/20" />
+          </div>
 
-              <h1
-                className="heading-display text-foreground mb-5 opacity-0 animate-fade-in"
-                style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "1200ms", lineHeight: "0.95" }}
-              >
-                This is what ground<br />should have always been.
-              </h1>
+          {/* Headline */}
+          <h1
+            className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold text-primary-foreground/90 tracking-tight leading-[1.05] mb-6 opacity-0 animate-fade-in"
+            style={{ animationDelay: "400ms", animationFillMode: "both", animationDuration: "1200ms" }}
+          >
+            This is what ground<br />should have always been.
+          </h1>
 
-              <p
-                className="text-[13px] text-muted-foreground/35 leading-[1.8] mb-10 max-w-[380px] opacity-0 animate-fade-in"
-                style={{ animationDelay: "800ms", animationFillMode: "both", animationDuration: "1000ms" }}
-              >
-                GroundLock replaces unstable, temporary, and failure-prone footing systems.
-              </p>
+          {/* Subtext */}
+          <p
+            className="text-[13px] text-primary-foreground/30 leading-[1.8] mb-3 opacity-0 animate-fade-in"
+            style={{ animationDelay: "600ms", animationFillMode: "both", animationDuration: "1000ms" }}
+          >
+            Every temporary system is a compromise. This removes it.
+          </p>
 
-              <div
-                className="opacity-0 animate-fade-in"
-                style={{ animationDelay: "1100ms", animationFillMode: "both", animationDuration: "1000ms" }}
-              >
-                <Link to="/site-assessment">
-                  <Button variant="gold" size="lg" className="w-full sm:w-auto">
-                    Request GroundLock System Plan <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
+          {/* Secondary line */}
+          <p
+            className="text-[12px] font-mono uppercase tracking-[0.2em] text-accent/25 mb-14 opacity-0 animate-fade-in"
+            style={{ animationDelay: "800ms", animationFillMode: "both", animationDuration: "1200ms" }}
+          >
+            Built for load. Built for drainage. Built to last.
+          </p>
 
-            <div
-              className="hidden lg:flex justify-end opacity-0 animate-fade-in"
-              style={{ animationDelay: "700ms", animationFillMode: "both", animationDuration: "1400ms" }}
-            >
-              <GroundLockHero size="max-w-[360px]" opacity={0.85} perspective />
-            </div>
+          {/* CTA */}
+          <div
+            className="opacity-0 animate-fade-in"
+            style={{ animationDelay: "1000ms", animationFillMode: "both", animationDuration: "1000ms" }}
+          >
+            <Link to="/site-assessment">
+              <Button variant="gold" size="lg">
+                Request GroundLock System Plan <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
