@@ -438,13 +438,20 @@ export function ExperienceTheBuild() {
       {/* Side nav */}
       <ActNav activeAct={activeAct} />
 
-      {/* ACT 0 — Hero */}
+      {/* TIER 1 — Hero (single dominant visual) */}
       <ExperienceHero />
 
-      {/* Transition into Act 1 */}
-      <ActTransition line="Understand how every space connects — before anything is built." />
+      {/* TIER 2 — Supporting stills (construction sequence) */}
+      <ActTransition line="See how it's built — layer by layer, from the ground up." />
+      <div id="etb-timeline">
+        <BuildTimeline onPhaseChange={handleTimelinePhase} />
+      </div>
 
-      {/* ACT 1 — Masterplan */}
+      {/* Living Outcome — emotional resolution */}
+      <MainRidgeLivingOutcome />
+
+      {/* TIER 3 — Optional interaction (secondary) */}
+      <ActTransition line="Explore how every space connects." />
       <div id="etb-masterplan">
         <InteractiveMasterplan
           onZoneHover={playHoverTone}
@@ -452,17 +459,6 @@ export function ExperienceTheBuild() {
           onLayerToggle={playToggleTone}
         />
       </div>
-
-      {/* Transition into Act 3 */}
-      <ActTransition line="See how it's built — layer by layer, from the ground up." />
-
-      {/* ACT 3 — Build Timeline */}
-      <div id="etb-timeline">
-        <BuildTimeline onPhaseChange={handleTimelinePhase} />
-      </div>
-
-      {/* Living Outcome — emotional resolution */}
-      <MainRidgeLivingOutcome />
 
       {/* Final synthesis */}
       <Synthesis onPressTone={playPressTone} />
