@@ -108,8 +108,8 @@ export default function GroundLock() {
             </div>
             <div className="relative overflow-hidden">
               <img
-                src={impactSuccess}
-                alt="GroundLock stabilised surface"
+                src={fieldScale}
+                alt="GroundLock stabilised arena surface at scale"
                 className="absolute inset-0 w-full h-full object-cover"
                 loading="lazy"
               />
