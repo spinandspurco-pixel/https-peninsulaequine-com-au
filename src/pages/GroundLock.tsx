@@ -354,11 +354,9 @@ export default function GroundLock() {
           <p className="text-[10px] font-mono uppercase tracking-[0.35em] text-primary-foreground/15 mb-14">
             Not optional. Foundational.
           </p>
-          <Link to="/site-assessment">
-            <Button variant="gold" size="lg">
-              Apply to Build <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+          <Button variant="gold" size="lg" onClick={() => setGateOpen(true)}>
+            Apply to Build <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
           <div className="mt-8">
             <Link
               to="/groundlock/how-it-works"
