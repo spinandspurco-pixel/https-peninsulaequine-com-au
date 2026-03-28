@@ -493,37 +493,35 @@ export default function GroundLock() {
 
       {/* ═══ BUILT IN REAL CONDITIONS ═══════════════════════ */}
       <section className="py-24 sm:py-32 bg-primary relative overflow-hidden">
-        <div className="absolute inset-0 grain-texture opacity-[0.02]" />
         <div className="section-container max-w-5xl mx-auto relative z-[1]">
           <div className="text-center mb-14">
-            <div className="w-8 h-px bg-accent/20 mx-auto mb-10" />
             <p className="text-overline text-accent/40">Built in Real Conditions</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-14">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 mb-14">
             <div className="sm:col-span-2">
               <img
                 src={arenaWide}
-                alt="Installed GroundLock arena surface — wide shot"
-                className="w-full h-full object-cover rounded-sm"
+                alt="Installed arena surface"
+                className="w-full h-full object-cover"
                 loading="lazy"
                 width={1280}
                 height={768}
               />
             </div>
-            <div className="flex flex-col gap-3 sm:gap-4">
+            <div className="flex flex-col gap-2 sm:gap-3">
               <img
                 src={closeupInterlock}
-                alt="Close-up of GroundLock interlocking system in ground"
-                className="w-full h-full object-cover rounded-sm"
+                alt="Interlocking system in ground"
+                className="w-full h-full object-cover"
                 loading="lazy"
                 width={768}
                 height={768}
               />
               <img
                 src={horseMotion}
-                alt="Horse performing reining stop on GroundLock stabilised surface"
-                className="w-full h-full object-cover rounded-sm"
+                alt="Horse in motion on stabilised surface"
+                className="w-full h-full object-cover"
                 loading="lazy"
                 width={768}
                 height={768}
