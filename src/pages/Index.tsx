@@ -138,10 +138,8 @@ export default function Index() {
     <Layout>
       {/* ═══ 1. HERO — CINEMATIC ARRIVAL ═══════════════ */}
       <section className="relative min-h-[100dvh] overflow-hidden flex items-center justify-center bg-[hsl(222_20%_4%)] hero-center-light">
-        {/* Background — slow emergence from near-black */}
-        <div
-          style={{ opacity: 0, animation: "heroBackdropReveal 1200ms cubic-bezier(0.45,0,0.15,1) 400ms forwards" }}
-        >
+        {/* Background — visible immediately */}
+        <div style={{ opacity: 1 }}>
           <video
             autoPlay muted loop playsInline
             preload="auto"
@@ -150,24 +148,24 @@ export default function Index() {
           >
             <source src={heroVideo} type="video/mp4" />
           </video>
-          <div className="absolute inset-0 bg-background/70" />
+          <div className="absolute inset-0 bg-background/55" />
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: "radial-gradient(ellipse 48% 33% at 50% 46%, transparent 0%, hsl(222 20% 4% / 0.88) 42%, hsl(222 20% 4%) 100%)",
+              background: "radial-gradient(ellipse 48% 33% at 50% 46%, transparent 0%, hsl(222 20% 4% / 0.72) 42%, hsl(222 20% 4% / 0.92) 100%)",
             }}
           />
-          {/* Edge + corner vignette */}
+          {/* Edge + corner vignette — reduced */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: "linear-gradient(to bottom, hsl(222 20% 4% / 0.45) 0%, transparent 28%, transparent 72%, hsl(222 20% 4% / 0.65) 100%)",
+              background: "linear-gradient(to bottom, hsl(222 20% 4% / 0.30) 0%, transparent 28%, transparent 72%, hsl(222 20% 4% / 0.50) 100%)",
             }}
           />
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: "radial-gradient(circle at 0% 0%, hsl(222 20% 4% / 0.4) 0%, transparent 35%), radial-gradient(circle at 100% 0%, hsl(222 20% 4% / 0.4) 0%, transparent 35%), radial-gradient(circle at 0% 100%, hsl(222 20% 4% / 0.35) 0%, transparent 35%), radial-gradient(circle at 100% 100%, hsl(222 20% 4% / 0.35) 0%, transparent 35%)",
+              background: "radial-gradient(circle at 0% 0%, hsl(222 20% 4% / 0.25) 0%, transparent 35%), radial-gradient(circle at 100% 0%, hsl(222 20% 4% / 0.25) 0%, transparent 35%), radial-gradient(circle at 0% 100%, hsl(222 20% 4% / 0.20) 0%, transparent 35%), radial-gradient(circle at 100% 100%, hsl(222 20% 4% / 0.20) 0%, transparent 35%)",
             }}
           />
         </div>
