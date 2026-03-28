@@ -323,13 +323,6 @@ function Synthesis() {
 
 
 
-const TIMELINE_PHASE_MAP: Record<string, AmbientScene> = {
-  "site-prep": "timeline-site",
-  groundlock: "timeline-ground",
-  structure: "timeline-structure",
-  envelope: "timeline-envelope",
-  finished: "timeline-finished",
-};
 
 /* ── Main export ─────────────────────────────────────── */
 export function ExperienceTheBuild() {
