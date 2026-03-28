@@ -152,17 +152,6 @@ export default function GroundLock() {
             Built for load. Built for drainage. Built to last.
           </p>
 
-          {/* CTA */}
-          <div
-            className="opacity-0 animate-fade-in"
-            style={{ animationDelay: "1000ms", animationFillMode: "both", animationDuration: "1000ms" }}
-          >
-            <Link to="/site-assessment">
-              <Button variant="gold" size="lg">
-                Request GroundLock System Plan <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
         </div>
       </section>
 
