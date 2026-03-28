@@ -314,7 +314,7 @@ function Synthesis({ onPressTone }: { onPressTone?: () => void }) {
             transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1600ms`,
           }}
         >
-          Built properly. From the ground up.
+          From Dirt to Dynasty.
         </p>
       </div>
     </div>
