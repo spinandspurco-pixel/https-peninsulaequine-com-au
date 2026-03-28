@@ -174,44 +174,33 @@ export default function Index() {
         {/* Content — staged reveals, fades on scroll */}
         <div
           ref={heroContentRef}
-          className="relative z-10 section-container text-center max-w-5xl mx-auto"
+          className="relative z-10 section-container max-w-5xl mx-auto flex flex-col min-h-[100dvh] justify-center"
           style={{ opacity: heroFade, willChange: "opacity" }}
         >
-          <div className="flex flex-col items-center gap-10 sm:gap-14 lg:gap-16">
-            {/* Logo — visible immediately */}
-            <div>
-              <img
-                src="/lovable-uploads/pe-logo-gold.png"
-                alt="Peninsula Equine"
-                className="h-10 sm:h-12 w-auto mx-auto"
-                style={{ filter: "brightness(0.85) saturate(0.9)" }}
-                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-              />
-            </div>
+          {/* Logo — small, top center, restrained */}
+          <div className="absolute top-8 left-1/2 -translate-x-1/2">
+            <img
+              src="/lovable-uploads/pe-logo-gold.png"
+              alt="Peninsula Equine"
+              className="h-7 sm:h-8 w-auto"
+              style={{ filter: "brightness(0.75) saturate(0.85)", opacity: 0.5 }}
+              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+            />
+          </div>
 
-            {/* Divider lines — visible immediately */}
-            <div className="flex items-center justify-center gap-5">
-              <div className="w-12 h-px bg-accent/20" />
-              <div className="w-12 h-px bg-accent/20" />
-            </div>
-
-            {/* "PENINSULA EQUINE" — visible immediately */}
-            <p className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.42em] text-accent/40">
-              Peninsula Equine
-            </p>
-
-            {/* Headline — visible immediately, no animation */}
+          <div className="text-center flex flex-col items-center gap-8 sm:gap-10">
+            {/* Headline — dominant focal point */}
             <h1
               className="font-serif font-black text-foreground leading-[0.95] tracking-[-0.02em]"
               style={{
-                fontSize: "clamp(3.25rem, 1.8rem + 7vw, 8rem)",
+                fontSize: "clamp(2.8rem, 1.5rem + 6.5vw, 7rem)",
                 textShadow: "0 2px 40px hsl(222 20% 4% / 0.6)",
               }}
             >
-              From Dirt<br className="hidden sm:block" /> to Dynasty.
+              This is what ground<br className="hidden sm:block" /> should have always been.
             </h1>
 
-            {/* Secondary line — only animated element, fades in at 0.7s */}
+            {/* Secondary line — subtle fade in at 0.7s */}
             <p
               className="text-[10px] sm:text-[11px] uppercase max-w-lg leading-[2.4]"
               style={{
@@ -224,8 +213,8 @@ export default function Index() {
               Built for load. Built for drainage. Built to last.
             </p>
 
-            {/* CTA buttons — visible immediately */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
+            {/* CTA buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Button asChild variant="gold" size="lg" className="px-8 tracking-[0.08em]">
                 <Link to="/site-assessment">
                   Start a Project <ArrowRight className="ml-2 h-4 w-4" />
