@@ -35,7 +35,7 @@ const EMAILS = [
       <p>Hi ${name},</p>
       <p>Most ground issues aren't surface problems.</p>
       <p>They start underneath — with poor drainage, unstable base layers, or incorrect build-up.</p>
-      <p>That's why we approach every project from the ground up.</p>
+      <p>From Dirt to Dynasty — that's how we approach every project.</p>
       <p>When it's done properly, the surface holds.<br/>
       When it's not, problems keep returning.</p>
       <p style="margin-top:28px;">
