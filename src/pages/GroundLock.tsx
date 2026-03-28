@@ -933,15 +933,6 @@ export default function GroundLock() {
               </div>
             </RevealOnScroll>
 
-            <RevealOnScroll direction="up" delay={160}>
-              <div className="text-center">
-                <Link to="/contact">
-                  <Button variant="outline" className="group border-accent/15 text-accent/60 hover:bg-accent/5 hover:border-accent/25 text-xs tracking-[0.2em] uppercase font-mono h-12 px-8">
-                    Discuss System Delivery <ArrowRight className="ml-2 h-3.5 w-3.5 opacity-40 group-hover:opacity-70" />
-                  </Button>
-                </Link>
-              </div>
-            </RevealOnScroll>
 
           </div>
         </div>
