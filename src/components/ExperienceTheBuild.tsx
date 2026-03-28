@@ -223,7 +223,7 @@ function ExperienceHero() {
 }
 
 /* ── Final synthesis + CTA ───────────────────────────── */
-function Synthesis({ onPressTone }: { onPressTone?: () => void }) {
+function Synthesis() {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
