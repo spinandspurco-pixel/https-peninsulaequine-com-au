@@ -294,6 +294,75 @@ export default function GroundLock() {
         </div>
       </section>
 
+      {/* ═══ EVENT SYSTEMS ═══════════════════════════════ */}
+      <section className="py-24 sm:py-32 relative overflow-hidden border-t border-border/6">
+        <div className="absolute inset-0 grain-texture opacity-[0.015]" />
+        <div className="section-container max-w-5xl mx-auto relative z-[1]">
+          <div className="text-center mb-14 sm:mb-16">
+            <p className="text-[9px] font-mono uppercase tracking-[0.35em] text-accent/30 mb-6">
+              Event Systems
+            </p>
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-foreground/85 tracking-[0.02em] leading-[1.15]">
+              Built for temporary scale.<br className="hidden sm:block" /> Designed for permanent protection.
+            </h2>
+          </div>
+
+          {/* Visuals */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 mb-14">
+            <div className="sm:col-span-2">
+              <img
+                src={eventAerial}
+                alt="Large-scale event ground stabilisation system — aerial view"
+                className="w-full h-full object-cover"
+                loading="lazy"
+                width={1280}
+                height={720}
+              />
+            </div>
+            <div>
+              <img
+                src={eventCloseup}
+                alt="Ground protection system under temporary event infrastructure"
+                className="w-full h-full object-cover"
+                loading="lazy"
+                width={768}
+                height={768}
+              />
+            </div>
+          </div>
+
+          {/* Copy */}
+          <div className="text-center max-w-xl mx-auto mb-12">
+            <p className="text-[13px] text-foreground/40 leading-[1.9] mb-1">
+              Rapid deployment systems engineered for high-traffic equine and event environments.
+            </p>
+            <p className="text-[13px] text-foreground/40 leading-[1.9]">
+              Protects turf, stabilises ground, and removes post-event remediation.
+            </p>
+          </div>
+
+          {/* Micro points */}
+          <div className="flex flex-wrap justify-center gap-x-10 gap-y-3 mb-14">
+            {["Fast install / removal", "Protects underlying ground", "Built for repeat use"].map((point) => (
+              <div key={point} className="flex items-center gap-2.5">
+                <span className="w-1 h-1 rounded-full bg-accent/30" />
+                <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-foreground/30">{point}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <div className="text-center">
+            <Link
+              to="/contact"
+              className="text-[11px] font-mono uppercase tracking-[0.25em] text-accent/35 hover:text-accent/60 transition-colors inline-flex items-center gap-2"
+            >
+              Enquire about event deployment <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ SCALE — Materials & Delivery ══════════════════ */}
       <section className="relative overflow-hidden">
         <div className="py-24 sm:py-32 relative border-t border-border/6">
