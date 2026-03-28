@@ -474,14 +474,6 @@ export function ExperienceTheBuild() {
         />
       </div>
 
-      {/* Transition into Act 2 */}
-      <ActTransition line="Now walk through it." />
-
-      {/* ACT 2 — Walk the Build */}
-      <div id="etb-walk">
-        <WalkTheProject onSceneChange={handleWalkScene} />
-      </div>
-
       {/* Transition into Act 3 */}
       <ActTransition line="See how it's built — layer by layer, from the ground up." />
 
