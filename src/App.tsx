@@ -1,10 +1,10 @@
-import { useState, useCallback, lazy, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { LoadingSplash } from "@/components/LoadingSplash";
+
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { IntroContext } from "./hooks/useIntroState";
 import { IntakeProvider } from "./hooks/useIntake";
@@ -77,36 +77,10 @@ const ClientPortalLogin = lazy(() => import("./pages/ClientPortalLogin"));
 
 const queryClient = new QueryClient();
 
-/** Show splash only on first visit per session (or after 30 min inactivity) */
-function shouldShowSplash(): boolean {
-  try {
-    const key = "pe-splash-seen";
-    const last = sessionStorage.getItem(key);
-    if (last && Date.now() - Number(last) < 30 * 60 * 1000) return false;
-    sessionStorage.setItem(key, String(Date.now()));
-    return true;
-  } catch {
-    return true;
-  }
-}
 
 function AppContent() {
-  const [showSplash] = useState(shouldShowSplash);
-  const [splashDone, setSplashDone] = useState(!showSplash);
-  const [headerLogoReady, setHeaderLogoReady] = useState(!showSplash);
-
-  const handleLogoSettled = useCallback(() => {
-    setTimeout(() => setHeaderLogoReady(true), 1400);
-  }, []);
-
   return (
-    <IntroContext.Provider value={{ headerLogoReady }}>
-      {showSplash && !splashDone && (
-        <LoadingSplash
-          onComplete={() => setSplashDone(true)}
-          onLogoSettled={handleLogoSettled}
-        />
-      )}
+    <IntroContext.Provider value={{ headerLogoReady: true }}>
       <Toaster />
       <Sonner />
       <BrowserRouter>
