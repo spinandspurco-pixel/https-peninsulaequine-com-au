@@ -299,7 +299,7 @@ function Synthesis() {
               ? `etb-cta-ready 800ms ${EASE.cinematic} 2000ms forwards`
               : "none",
           }}
-          onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.97)"; onPressTone?.(); }}
+          onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.97)"; }}
           onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
