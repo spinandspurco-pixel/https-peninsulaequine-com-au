@@ -9,7 +9,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { IntroContext } from "./hooks/useIntroState";
 import { IntakeProvider } from "./hooks/useIntake";
 import { GuidedIntake } from "./components/GuidedIntake";
-import { SoundLayer } from "./components/SoundLayer";
+
 
 // Eagerly load the homepage for fastest FCP
 import Index from "./pages/Index";
@@ -110,7 +110,7 @@ function AppContent() {
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <SoundLayer />
+        
         <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<Index />} />

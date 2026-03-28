@@ -2,7 +2,7 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
-import { useAmbientSound, type AmbientScene } from "@/hooks/useAmbientSound";
+
 
 import { InteractiveMasterplan } from "@/components/masterplan/InteractiveMasterplanV2";
 
@@ -223,7 +223,7 @@ function ExperienceHero() {
 }
 
 /* ── Final synthesis + CTA ───────────────────────────── */
-function Synthesis({ onPressTone }: { onPressTone?: () => void }) {
+function Synthesis() {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
@@ -299,7 +299,7 @@ function Synthesis({ onPressTone }: { onPressTone?: () => void }) {
               ? `etb-cta-ready 800ms ${EASE.cinematic} 2000ms forwards`
               : "none",
           }}
-          onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.97)"; onPressTone?.(); }}
+          onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.97)"; }}
           onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
@@ -321,68 +321,12 @@ function Synthesis({ onPressTone }: { onPressTone?: () => void }) {
   );
 }
 
-/* ── Sound toggle ────────────────────────────────────── */
-function SoundToggle({ enabled, onToggle }: { enabled: boolean; onToggle: () => void }) {
-  return (
-    <button
-      onClick={onToggle}
-      className="fixed left-4 sm:left-6 bottom-6 z-50 flex items-center gap-2 group"
-      aria-label={enabled ? "Mute ambient sound" : "Enable ambient sound"}
-    >
-      {/* Speaker icon */}
-      <div className="relative w-4 h-4">
-        <svg
-          viewBox="0 0 16 16"
-          fill="none"
-          className="w-full h-full"
-          style={{ opacity: 0.2 }}
-        >
-          <path
-            d="M3 5.5h2l3-2.5v10l-3-2.5H3a.5.5 0 01-.5-.5V6a.5.5 0 01.5-.5z"
-            fill="currentColor"
-            className="text-accent"
-          />
-          {enabled && (
-            <>
-              <path d="M10 5.5c.8.6 1.3 1.5 1.3 2.5s-.5 1.9-1.3 2.5" stroke="currentColor" strokeWidth="1" className="text-accent" strokeLinecap="round" />
-              <path d="M11.5 3.8c1.2.9 2 2.3 2 3.7 0 1.5-.8 2.9-2 3.8" stroke="currentColor" strokeWidth="1" className="text-accent" strokeLinecap="round" opacity="0.5" />
-            </>
-          )}
-          {!enabled && (
-            <path d="M10 5l4 6M14 5l-4 6" stroke="currentColor" strokeWidth="1" className="text-accent" strokeLinecap="round" />
-          )}
-        </svg>
-      </div>
-      <span
-        className="text-[8px] font-mono uppercase tracking-[0.3em] text-accent/12 transition-opacity duration-500 group-hover:text-accent/25"
-      >
-        {enabled ? "Sound on" : "Sound off"}
-      </span>
-    </button>
-  );
-}
 
 
-const TIMELINE_PHASE_MAP: Record<string, AmbientScene> = {
-  "site-prep": "timeline-site",
-  groundlock: "timeline-ground",
-  structure: "timeline-structure",
-  envelope: "timeline-envelope",
-  finished: "timeline-finished",
-};
 
 /* ── Main export ─────────────────────────────────────── */
 export function ExperienceTheBuild() {
   const [activeAct, setActiveAct] = useState("hero");
-  const {
-    enabled: soundEnabled,
-    toggle: toggleSound,
-    transitionTo,
-    playHoverTone,
-    stopHoverTone,
-    playToggleTone,
-    playPressTone,
-  } = useAmbientSound();
 
   /* Track which act is in view */
   useEffect(() => {
@@ -407,33 +351,8 @@ export function ExperienceTheBuild() {
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
-  /* Ambient sound: act-level transitions */
-  useEffect(() => {
-    const actToScene: Record<string, AmbientScene> = {
-      hero: "hero",
-      masterplan: "masterplan",
-      synthesis: "synthesis",
-    };
-    if (actToScene[activeAct]) {
-      transitionTo(actToScene[activeAct]);
-    }
-  }, [activeAct, transitionTo]);
-
-
-  /* Ambient sound: Timeline phase tracking */
-  const handleTimelinePhase = useCallback(
-    (phaseId: string) => {
-      const scene = TIMELINE_PHASE_MAP[phaseId];
-      if (scene) transitionTo(scene);
-    },
-    [transitionTo]
-  );
-
   return (
     <div className="relative">
-      {/* Sound toggle */}
-      <SoundToggle enabled={soundEnabled} onToggle={toggleSound} />
-
       {/* Side nav */}
       <ActNav activeAct={activeAct} />
 
@@ -443,7 +362,7 @@ export function ExperienceTheBuild() {
       {/* TIER 2 — Supporting stills (construction sequence) */}
       <ActTransition line="See how it's built — layer by layer." />
       <div id="etb-timeline">
-        <BuildTimeline onPhaseChange={handleTimelinePhase} />
+        <BuildTimeline />
       </div>
 
       {/* Living Outcome — emotional resolution */}
@@ -452,15 +371,11 @@ export function ExperienceTheBuild() {
       {/* TIER 3 — Optional interaction (secondary) */}
       <ActTransition line="Explore how every space connects." />
       <div id="etb-masterplan">
-        <InteractiveMasterplan
-          onZoneHover={playHoverTone}
-          onZoneLeave={stopHoverTone}
-          onLayerToggle={playToggleTone}
-        />
+        <InteractiveMasterplan />
       </div>
 
       {/* Final synthesis */}
-      <Synthesis onPressTone={playPressTone} />
+      <Synthesis />
     </div>
   );
 }
