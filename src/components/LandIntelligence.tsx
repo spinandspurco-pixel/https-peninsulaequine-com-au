@@ -131,6 +131,7 @@ export function LandIntelligence() {
   const activeData = ZONES.find((z) => z.id === activeZone);
 
   return (
+    <>
     <section className="relative overflow-hidden cv-auto">
       <div className="py-32 sm:py-40 lg:py-52 relative">
         <div className="absolute inset-0 grain-texture opacity-15" />
@@ -310,5 +311,24 @@ export function LandIntelligence() {
         </div>
       </div>
     </section>
+
+      {/* Transition anchor */}
+      <div className="py-20 sm:py-28 bg-background relative overflow-hidden">
+        <div className="absolute inset-0 grain-texture opacity-[0.02]" />
+        <div className="flex flex-col items-center gap-8 relative z-[1]">
+          <RevealOnScroll direction="up">
+            <p className="font-serif italic text-lg sm:text-xl text-foreground/40 tracking-wide">
+              Every decision leads here.
+            </p>
+          </RevealOnScroll>
+          <RevealOnScroll direction="up" delay={200}>
+            <div className="flex flex-col items-center gap-1">
+              <div className="w-px h-12 bg-accent/15" />
+              <div className="w-1.5 h-1.5 rounded-full bg-accent/25" />
+            </div>
+          </RevealOnScroll>
+        </div>
+      </div>
+    </>
   );
 }
