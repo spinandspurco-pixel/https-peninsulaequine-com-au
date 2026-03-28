@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import impactFailure from "@/assets/groundlock-impact-failure.jpg";
 import impactSuccess from "@/assets/groundlock-impact-success.jpg";
 import arenaWide from "@/assets/groundlock-arena-wide.jpg";
@@ -14,7 +15,35 @@ import { cn } from "@/lib/utils";
 
 /* ── Page ─────────────────────────────────────────── */
 export default function GroundLock() {
+  const [gateOpen, setGateOpen] = useState(false);
+  const navigate = useNavigate();
+
   return (
+    <>
+    <Dialog open={gateOpen} onOpenChange={setGateOpen}>
+      <DialogContent className="bg-primary border-accent/10 max-w-md text-center p-10 sm:p-14">
+        <div className="space-y-6">
+          <p className="font-serif text-base sm:text-lg text-primary-foreground/60 italic leading-relaxed">
+            GroundLock projects are assessed based on site conditions, scale, and intended use.
+          </p>
+          <p className="text-[11px] text-primary-foreground/25 leading-relaxed">
+            This ensures every installation performs as intended.
+          </p>
+          <Button
+            variant="gold"
+            size="lg"
+            className="mt-4"
+            onClick={() => {
+              setGateOpen(false);
+              navigate("/site-assessment");
+            }}
+          >
+            Continue <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+
     <Layout>
       {/* ═══ PRE-HERO MICRO LINE ═════════════════════════ */}
       <section className="bg-primary py-16 sm:py-20">
@@ -325,11 +354,9 @@ export default function GroundLock() {
           <p className="text-[10px] font-mono uppercase tracking-[0.35em] text-primary-foreground/15 mb-14">
             Not optional. Foundational.
           </p>
-          <Link to="/site-assessment">
-            <Button variant="gold" size="lg">
-              Apply to Build <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+          <Button variant="gold" size="lg" onClick={() => setGateOpen(true)}>
+            Apply to Build <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
           <div className="mt-8">
             <Link
               to="/groundlock/how-it-works"
@@ -341,5 +368,6 @@ export default function GroundLock() {
         </div>
       </section>
     </Layout>
+    </>
   );
 }
