@@ -14,9 +14,8 @@ import imgHero from "@/assets/masterplan-aerial-hero.jpg";
 /* ── Act labels for the side nav ─────────────────────── */
 const acts = [
   { id: "hero", label: "Introduction" },
-  { id: "masterplan", label: "Understand" },
-  
   { id: "timeline", label: "Construction" },
+  { id: "masterplan", label: "Explore" },
   { id: "synthesis", label: "Resolution" },
 ];
 
