@@ -758,13 +758,6 @@ export default function GroundLock() {
                   </li>
                 ))}
               </ul>
-              <div className="text-center">
-                <Link to="/site-assessment">
-                  <Button variant="gold" size="lg">
-                    Request System Plan <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </div>
             </RevealOnScroll>
 
           </div>
