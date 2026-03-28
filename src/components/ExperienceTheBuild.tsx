@@ -433,14 +433,6 @@ export function ExperienceTheBuild() {
     }
   }, [activeAct, transitionTo]);
 
-  /* Ambient sound: Walk scene tracking */
-  const handleWalkScene = useCallback(
-    (sceneId: string) => {
-      const scene = WALK_SCENE_MAP[sceneId];
-      if (scene) transitionTo(scene);
-    },
-    [transitionTo]
-  );
 
   /* Ambient sound: Timeline phase tracking */
   const handleTimelinePhase = useCallback(
