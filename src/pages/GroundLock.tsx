@@ -138,6 +138,9 @@ export default function GroundLock() {
             </RevealOnScroll>
           </div>
         </div>
+        <p className="text-[9px] font-mono uppercase tracking-[0.35em] text-foreground/10 text-center py-6">
+          Each unit depends on the next.
+        </p>
       </section>
 
       {/* ═══ THE COST OF FAILURE / THE NEW STANDARD ════════ */}
