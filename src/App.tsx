@@ -91,22 +91,8 @@ function shouldShowSplash(): boolean {
 }
 
 function AppContent() {
-  const [showSplash] = useState(shouldShowSplash);
-  const [splashDone, setSplashDone] = useState(!showSplash);
-  const [headerLogoReady, setHeaderLogoReady] = useState(!showSplash);
-
-  const handleLogoSettled = useCallback(() => {
-    setTimeout(() => setHeaderLogoReady(true), 1400);
-  }, []);
-
   return (
-    <IntroContext.Provider value={{ headerLogoReady }}>
-      {showSplash && !splashDone && (
-        <LoadingSplash
-          onComplete={() => setSplashDone(true)}
-          onLogoSettled={handleLogoSettled}
-        />
-      )}
+    <IntroContext.Provider value={{ headerLogoReady: true }}>
       <Toaster />
       <Sonner />
       <BrowserRouter>
