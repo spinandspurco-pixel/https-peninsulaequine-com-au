@@ -152,17 +152,6 @@ export default function GroundLock() {
             Built for load. Built for drainage. Built to last.
           </p>
 
-          {/* CTA */}
-          <div
-            className="opacity-0 animate-fade-in"
-            style={{ animationDelay: "1000ms", animationFillMode: "both", animationDuration: "1000ms" }}
-          >
-            <Link to="/site-assessment">
-              <Button variant="gold" size="lg">
-                Request GroundLock System Plan <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
         </div>
       </section>
 
@@ -769,13 +758,6 @@ export default function GroundLock() {
                   </li>
                 ))}
               </ul>
-              <div className="text-center">
-                <Link to="/site-assessment">
-                  <Button variant="gold" size="lg">
-                    Request System Plan <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </div>
             </RevealOnScroll>
 
           </div>
@@ -880,14 +862,6 @@ export default function GroundLock() {
               <p className="font-serif text-xl sm:text-2xl text-primary-foreground/50 italic tracking-wide leading-relaxed mb-4">
                 Once installed, everything else feels outdated.
               </p>
-              <p className="text-[11px] text-primary-foreground/18 font-mono tracking-[0.2em] uppercase mb-10">
-                Every project starts with a system plan.
-              </p>
-              <Link to="/site-assessment">
-                <Button variant="gold" size="lg">
-                  Request System Plan <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
             </RevealOnScroll>
           </div>
         </div>
@@ -959,15 +933,6 @@ export default function GroundLock() {
               </div>
             </RevealOnScroll>
 
-            <RevealOnScroll direction="up" delay={160}>
-              <div className="text-center">
-                <Link to="/contact">
-                  <Button variant="outline" className="group border-accent/15 text-accent/60 hover:bg-accent/5 hover:border-accent/25 text-xs tracking-[0.2em] uppercase font-mono h-12 px-8">
-                    Discuss System Delivery <ArrowRight className="ml-2 h-3.5 w-3.5 opacity-40 group-hover:opacity-70" />
-                  </Button>
-                </Link>
-              </div>
-            </RevealOnScroll>
 
           </div>
         </div>
