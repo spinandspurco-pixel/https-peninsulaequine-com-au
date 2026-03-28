@@ -77,18 +77,6 @@ const ClientPortalLogin = lazy(() => import("./pages/ClientPortalLogin"));
 
 const queryClient = new QueryClient();
 
-/** Show splash only on first visit per session (or after 30 min inactivity) */
-function shouldShowSplash(): boolean {
-  try {
-    const key = "pe-splash-seen";
-    const last = sessionStorage.getItem(key);
-    if (last && Date.now() - Number(last) < 30 * 60 * 1000) return false;
-    sessionStorage.setItem(key, String(Date.now()));
-    return true;
-  } catch {
-    return true;
-  }
-}
 
 function AppContent() {
   return (
