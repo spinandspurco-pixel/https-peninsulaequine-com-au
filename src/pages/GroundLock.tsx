@@ -822,7 +822,6 @@ export default function GroundLock() {
                 Request System Specs
               </Link>
             </div>
-            </RevealOnScroll>
           </div>
         </div>
       </section>
