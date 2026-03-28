@@ -6,6 +6,8 @@ import impactSuccess from "@/assets/groundlock-impact-success.jpg";
 import arenaWide from "@/assets/groundlock-arena-wide.jpg";
 import closeupInterlock from "@/assets/groundlock-closeup-interlock.jpg";
 import horseMotion from "@/assets/groundlock-horse-motion.jpg";
+import eventAerial from "@/assets/groundlock-event-aerial.jpg";
+import eventCloseup from "@/assets/groundlock-event-closeup.jpg";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
