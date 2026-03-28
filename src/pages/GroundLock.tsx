@@ -104,6 +104,13 @@ export default function GroundLock() {
   return (
     <Layout>
       <StepProgressIndicator />
+      {/* ═══ PRE-HERO MICRO LINE ═════════════════════════ */}
+      <section className="bg-primary py-16 sm:py-20">
+        <p className="text-[10px] font-mono uppercase tracking-[0.35em] text-primary-foreground/12 text-center">
+          Ground conditions decide everything.
+        </p>
+      </section>
+
       {/* ═══ SECTION 1 — HERO ═════════════════════════════ */}
       <section className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-primary" />
