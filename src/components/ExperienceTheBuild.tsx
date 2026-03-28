@@ -327,15 +327,6 @@ function Synthesis() {
 /* ── Main export ─────────────────────────────────────── */
 export function ExperienceTheBuild() {
   const [activeAct, setActiveAct] = useState("hero");
-  const {
-    enabled: soundEnabled,
-    toggle: toggleSound,
-    transitionTo,
-    playHoverTone,
-    stopHoverTone,
-    playToggleTone,
-    playPressTone,
-  } = useAmbientSound();
 
   /* Track which act is in view */
   useEffect(() => {
@@ -360,33 +351,8 @@ export function ExperienceTheBuild() {
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
-  /* Ambient sound: act-level transitions */
-  useEffect(() => {
-    const actToScene: Record<string, AmbientScene> = {
-      hero: "hero",
-      masterplan: "masterplan",
-      synthesis: "synthesis",
-    };
-    if (actToScene[activeAct]) {
-      transitionTo(actToScene[activeAct]);
-    }
-  }, [activeAct, transitionTo]);
-
-
-  /* Ambient sound: Timeline phase tracking */
-  const handleTimelinePhase = useCallback(
-    (phaseId: string) => {
-      const scene = TIMELINE_PHASE_MAP[phaseId];
-      if (scene) transitionTo(scene);
-    },
-    [transitionTo]
-  );
-
   return (
     <div className="relative">
-      {/* Sound toggle */}
-      <SoundToggle enabled={soundEnabled} onToggle={toggleSound} />
-
       {/* Side nav */}
       <ActNav activeAct={activeAct} />
 
@@ -396,7 +362,7 @@ export function ExperienceTheBuild() {
       {/* TIER 2 — Supporting stills (construction sequence) */}
       <ActTransition line="See how it's built — layer by layer." />
       <div id="etb-timeline">
-        <BuildTimeline onPhaseChange={handleTimelinePhase} />
+        <BuildTimeline />
       </div>
 
       {/* Living Outcome — emotional resolution */}
@@ -405,15 +371,11 @@ export function ExperienceTheBuild() {
       {/* TIER 3 — Optional interaction (secondary) */}
       <ActTransition line="Explore how every space connects." />
       <div id="etb-masterplan">
-        <InteractiveMasterplan
-          onZoneHover={playHoverTone}
-          onZoneLeave={stopHoverTone}
-          onLayerToggle={playToggleTone}
-        />
+        <InteractiveMasterplan />
       </div>
 
       {/* Final synthesis */}
-      <Synthesis onPressTone={playPressTone} />
+      <Synthesis />
     </div>
   );
 }
