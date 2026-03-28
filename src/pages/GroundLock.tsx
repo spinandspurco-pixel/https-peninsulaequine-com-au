@@ -152,6 +152,102 @@ export default function GroundLock() {
         </div>
       </section>
 
+      {/* ═══ SYSTEM OVERVIEW — Interlock Diagram ═══════ */}
+      <section className="py-24 sm:py-32 bg-background relative overflow-hidden">
+        <div className="absolute inset-0 grain-texture opacity-[0.02]" />
+        <div className="section-container max-w-3xl mx-auto relative z-[1]">
+          <p
+            className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted-foreground/30 text-center mb-16 opacity-0 animate-fade-in"
+            style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "1200ms" }}
+          >
+            System Overview
+          </p>
+
+          {/* Diagram: single panel → interlocking pair → lock detail */}
+          <div
+            className="opacity-0 animate-fade-in"
+            style={{ animationDelay: "400ms", animationFillMode: "both", animationDuration: "1400ms" }}
+          >
+            <svg viewBox="0 0 800 280" className="w-full h-auto" aria-label="GroundLock directional interlock system diagram">
+              <defs>
+                <linearGradient id="sov-panel" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="hsl(var(--foreground))" stopOpacity="0.12" />
+                  <stop offset="100%" stopColor="hsl(var(--foreground))" stopOpacity="0.04" />
+                </linearGradient>
+                <linearGradient id="sov-panel-dark" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="hsl(var(--foreground))" stopOpacity="0.18" />
+                  <stop offset="100%" stopColor="hsl(var(--foreground))" stopOpacity="0.08" />
+                </linearGradient>
+              </defs>
+
+              {/* ── Single Panel (left) ── */}
+              <g transform="translate(40, 40)">
+                <text x="65" y="-8" textAnchor="middle" fontSize="8" fontFamily="monospace" fill="hsl(var(--muted-foreground))" opacity="0.3">SINGLE PANEL</text>
+                {/* Horseshoe U-form */}
+                <path d="M30,0 L100,0 L100,160 L80,160 L80,20 L50,20 L50,160 L30,160 Z" fill="url(#sov-panel)" stroke="hsl(var(--foreground))" strokeWidth="0.8" strokeOpacity="0.15" />
+                {/* Tab indicators */}
+                <rect x="38" y="55" width="4" height="12" rx="1" fill="hsl(var(--foreground))" opacity="0.1" />
+                <rect x="88" y="55" width="4" height="12" rx="1" fill="hsl(var(--foreground))" opacity="0.1" />
+                <rect x="38" y="110" width="4" height="12" rx="1" fill="hsl(var(--foreground))" opacity="0.1" />
+                <rect x="88" y="110" width="4" height="12" rx="1" fill="hsl(var(--foreground))" opacity="0.1" />
+                {/* Crown */}
+                <rect x="55" y="0" width="20" height="4" rx="1" fill="hsl(var(--accent))" opacity="0.2" />
+              </g>
+
+              {/* ── Interlocking Pair (center) ── */}
+              <g transform="translate(260, 30)">
+                <text x="120" y="-2" textAnchor="middle" fontSize="8" fontFamily="monospace" fill="hsl(var(--muted-foreground))" opacity="0.3">DIRECTIONAL INTERLOCK</text>
+                {/* Panel A — upright */}
+                <path d="M30,10 L100,10 L100,170 L80,170 L80,30 L50,30 L50,170 L30,170 Z" fill="url(#sov-panel)" stroke="hsl(var(--foreground))" strokeWidth="0.8" strokeOpacity="0.15" />
+                <rect x="55" y="10" width="20" height="4" rx="1" fill="hsl(var(--accent))" opacity="0.2" />
+                {/* Panel B — inverted, offset */}
+                <path d="M140,180 L210,180 L210,20 L190,20 L190,160 L160,160 L160,20 L140,20 Z" fill="url(#sov-panel-dark)" stroke="hsl(var(--foreground))" strokeWidth="0.8" strokeOpacity="0.15" />
+                <rect x="165" y="176" width="20" height="4" rx="1" fill="hsl(var(--accent))" opacity="0.2" />
+                {/* Connection zone highlight */}
+                <rect x="95" y="60" width="50" height="70" rx="2" fill="hsl(var(--accent))" opacity="0.04" stroke="hsl(var(--accent))" strokeWidth="0.5" strokeOpacity="0.15" strokeDasharray="4 3" />
+                {/* Lock arrows */}
+                <line x1="105" y1="95" x2="135" y2="95" stroke="hsl(var(--accent))" strokeWidth="1" strokeOpacity="0.25" />
+                <polygon points="133,92 140,95 133,98" fill="hsl(var(--accent))" opacity="0.3" />
+              </g>
+
+              {/* ── Lock Detail (right) ── */}
+              <g transform="translate(570, 30)">
+                <text x="100" y="-2" textAnchor="middle" fontSize="8" fontFamily="monospace" fill="hsl(var(--muted-foreground))" opacity="0.3">LOCK POINT</text>
+                {/* Zoomed connection */}
+                <rect x="20" y="20" width="160" height="160" rx="3" fill="hsl(var(--foreground))" opacity="0.02" stroke="hsl(var(--foreground))" strokeWidth="0.5" strokeOpacity="0.08" />
+                {/* Panel edge A */}
+                <rect x="40" y="40" width="50" height="120" rx="2" fill="url(#sov-panel)" stroke="hsl(var(--foreground))" strokeWidth="0.8" strokeOpacity="0.12" />
+                {/* Tab protruding */}
+                <rect x="90" y="75" width="16" height="14" rx="2" fill="hsl(var(--accent))" opacity="0.12" stroke="hsl(var(--accent))" strokeWidth="0.5" strokeOpacity="0.2" />
+                {/* Panel edge B */}
+                <rect x="110" y="40" width="50" height="120" rx="2" fill="url(#sov-panel-dark)" stroke="hsl(var(--foreground))" strokeWidth="0.8" strokeOpacity="0.12" />
+                {/* Slot receiving */}
+                <rect x="96" y="78" width="16" height="8" rx="1" fill="hsl(var(--foreground))" opacity="0.06" />
+                {/* Lock indicator */}
+                <circle cx="106" cy="82" r="2" fill="hsl(var(--accent))" opacity="0.35" />
+                {/* Zoom lines */}
+                <line x1="20" y1="20" x2="10" y2="10" stroke="hsl(var(--foreground))" strokeWidth="0.5" strokeOpacity="0.08" />
+                <line x1="180" y1="20" x2="190" y2="10" stroke="hsl(var(--foreground))" strokeWidth="0.5" strokeOpacity="0.08" />
+                <line x1="20" y1="180" x2="10" y2="190" stroke="hsl(var(--foreground))" strokeWidth="0.5" strokeOpacity="0.08" />
+                <line x1="180" y1="180" x2="190" y2="190" stroke="hsl(var(--foreground))" strokeWidth="0.5" strokeOpacity="0.08" />
+              </g>
+
+              {/* Connector lines between groups */}
+              <line x1="175" y1="140" x2="255" y2="140" stroke="hsl(var(--foreground))" strokeWidth="0.5" strokeOpacity="0.08" strokeDasharray="4 4" />
+              <line x1="510" y1="140" x2="565" y2="140" stroke="hsl(var(--foreground))" strokeWidth="0.5" strokeOpacity="0.08" strokeDasharray="4 4" />
+            </svg>
+          </div>
+
+          {/* Description */}
+          <p
+            className="text-[12px] sm:text-[13px] text-muted-foreground/35 text-center leading-[1.8] mt-14 max-w-lg mx-auto opacity-0 animate-fade-in"
+            style={{ animationDelay: "700ms", animationFillMode: "both", animationDuration: "1200ms" }}
+          >
+            Directional interlock system designed for load distribution,<br className="hidden sm:inline" /> drainage, and surface stability.
+          </p>
+        </div>
+      </section>
+
       {/* ═══ IMPACT LAYER — Visual Contrast ═════════════ */}
       <section className="relative overflow-hidden">
         <div className="relative w-full" style={{ minHeight: "clamp(320px, 50vw, 560px)" }}>
