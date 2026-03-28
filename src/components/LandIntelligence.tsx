@@ -131,6 +131,7 @@ export function LandIntelligence() {
   const activeData = ZONES.find((z) => z.id === activeZone);
 
   return (
+    <>
     <section className="relative overflow-hidden cv-auto">
       <div className="py-32 sm:py-40 lg:py-52 relative">
         <div className="absolute inset-0 grain-texture opacity-15" />
