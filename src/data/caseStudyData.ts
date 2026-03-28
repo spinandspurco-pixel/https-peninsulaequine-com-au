@@ -62,7 +62,7 @@ export const CASE_STUDIES: CaseStudyData[] = [
       image: aberdeenStalls,
       alt: "Custom timber stalls with engineered ventilation",
       label: "System",
-      line: "Engineered from the ground up.",
+      line: "From Dirt to Dynasty.",
     },
     outcome: {
       image: aberdeenExterior,
