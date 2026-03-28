@@ -482,7 +482,57 @@ export default function GroundLock() {
         </div>
       </section>
 
-      {/* ═══ CROSS-SECTION — Technical Authority Layer ═══ */}
+      {/* ═══ BUILT IN REAL CONDITIONS ═══════════════════════ */}
+      <section className="py-24 sm:py-32 bg-primary relative overflow-hidden">
+        <div className="absolute inset-0 grain-texture opacity-[0.02]" />
+        <div className="section-container max-w-5xl mx-auto relative z-[1]">
+          <div className="text-center mb-14">
+            <div className="w-8 h-px bg-accent/20 mx-auto mb-10" />
+            <p className="text-overline text-accent/40">Built in Real Conditions</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-14">
+            <div className="sm:col-span-2">
+              <img
+                src={arenaWide}
+                alt="Installed GroundLock arena surface — wide shot"
+                className="w-full h-full object-cover rounded-sm"
+                loading="lazy"
+                width={1280}
+                height={768}
+              />
+            </div>
+            <div className="flex flex-col gap-3 sm:gap-4">
+              <img
+                src={closeupInterlock}
+                alt="Close-up of GroundLock interlocking system in ground"
+                className="w-full h-full object-cover rounded-sm"
+                loading="lazy"
+                width={768}
+                height={768}
+              />
+              <img
+                src={horseMotion}
+                alt="Horse performing reining stop on GroundLock stabilised surface"
+                className="w-full h-full object-cover rounded-sm"
+                loading="lazy"
+                width={768}
+                height={768}
+              />
+            </div>
+          </div>
+
+          <div className="text-center max-w-md mx-auto">
+            <p className="text-[13px] text-primary-foreground/35 leading-[1.8]">
+              No overlays. No theory.
+            </p>
+            <p className="text-[13px] text-primary-foreground/50 leading-[1.8] font-medium">
+              This is the system in use.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section className="relative overflow-hidden">
         <div className="py-20 sm:py-28 relative">
           <div className="absolute inset-0 grain-texture" />
