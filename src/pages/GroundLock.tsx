@@ -255,30 +255,30 @@ export default function GroundLock() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 mb-14">
             <div className="sm:col-span-2">
               <img
-                src={arenaWide}
-                alt="Installed arena surface"
+                src={underLoad}
+                alt="Horse in motion on GroundLock stabilised surface — system under force"
                 className="w-full h-full object-cover"
                 loading="lazy"
                 width={1280}
-                height={768}
+                height={720}
               />
             </div>
             <div className="flex flex-col gap-2 sm:gap-3">
               <img
-                src={closeupInterlock}
-                alt="Interlocking system in ground"
+                src={lockingDetail}
+                alt="Close-up of interlocking panels — opposing direction connection"
                 className="w-full h-full object-cover"
                 loading="lazy"
-                width={768}
+                width={1024}
                 height={768}
               />
               <img
-                src={horseMotion}
-                alt="Horse in motion on stabilised surface"
+                src={crossSection}
+                alt="Cross-section showing sub-base, stabilisation grid, and surface layers"
                 className="w-full h-full object-cover"
                 loading="lazy"
-                width={768}
-                height={768}
+                width={1024}
+                height={720}
               />
             </div>
           </div>
