@@ -238,10 +238,9 @@ export default function Index() {
           </div>
         </div>
 
-        {/* Scroll indicator — 6.0s */}
+        {/* Scroll indicator — visible immediately */}
         <div
           className="absolute bottom-10 left-1/2 -translate-x-1/2"
-          style={{ opacity: 0, animation: "heroFadeIn 800ms cubic-bezier(0.45,0,0.15,1) 6000ms forwards" }}
         >
           <div className="w-px h-14 bg-accent/8 relative overflow-hidden">
             <div
