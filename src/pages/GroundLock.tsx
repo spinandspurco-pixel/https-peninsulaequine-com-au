@@ -163,12 +163,17 @@ export default function GroundLock() {
       <section className="py-24 sm:py-36 bg-background relative overflow-hidden">
         <div className="absolute inset-0 grain-texture opacity-[0.02]" />
         <div className="section-container max-w-4xl mx-auto relative z-[1]">
-          <p
-            className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted-foreground/30 text-center mb-16 opacity-0 animate-fade-in"
+          <div
+            className="text-center mb-16 opacity-0 animate-fade-in"
             style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "1200ms" }}
           >
-            System Overview
-          </p>
+            <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted-foreground/30 mb-3">
+              Single Connection Logic
+            </p>
+            <p className="text-[11px] text-muted-foreground/20 tracking-wide">
+              How one connection works
+            </p>
+          </div>
 
           <div
             className="opacity-0 animate-fade-in"
