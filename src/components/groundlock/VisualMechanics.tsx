@@ -147,11 +147,16 @@ const STEP_VISUALS: Record<string, () => JSX.Element> = {
 
 export function VisualMechanics() {
   return (
-    <div className="space-y-24 sm:space-y-32">
+    <div className="space-y-20 sm:space-y-24">
+      {/* Top label */}
+      <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/25 text-center">
+        System Breakdown
+      </p>
+
       {STEPS.map((step, i) => {
         const Visual = STEP_VISUALS[step.id];
         return (
-          <RevealOnScroll key={step.id} direction="up" delay={i * 80}>
+          <RevealOnScroll key={step.id} direction="up" delay={i * 56}>
             <div className="flex flex-col items-center text-center gap-8">
               {/* Step number */}
               <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/30">
