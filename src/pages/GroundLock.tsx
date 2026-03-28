@@ -15,7 +15,9 @@ import { cn } from "@/lib/utils";
 
 /* ── Page ─────────────────────────────────────────── */
 export default function GroundLock() {
-  return (
+  const [gateOpen, setGateOpen] = useState(false);
+  const navigate = useNavigate();
+
     <Layout>
       {/* ═══ PRE-HERO MICRO LINE ═════════════════════════ */}
       <section className="bg-primary py-16 sm:py-20">
