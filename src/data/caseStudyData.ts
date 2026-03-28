@@ -62,7 +62,7 @@ export const CASE_STUDIES: CaseStudyData[] = [
       image: aberdeenStalls,
       alt: "Custom timber stalls with engineered ventilation",
       label: "System",
-      line: "Engineered from the ground up.",
+      line: "From Dirt to Dynasty.",
     },
     outcome: {
       image: aberdeenExterior,
@@ -87,7 +87,7 @@ export const CASE_STUDIES: CaseStudyData[] = [
       image: groundlockInsitu,
       alt: "GroundLock system installed beneath arena surface",
       label: "GroundLock",
-      line: "Engineered from the ground up.",
+      line: "From Dirt to Dynasty.",
     },
     outcome: {
       image: livingHeroWide,
@@ -112,7 +112,7 @@ export const CASE_STUDIES: CaseStudyData[] = [
       image: groundlockInstallation,
       alt: "GroundLock panel installation at competition scale",
       label: "System",
-      line: "Engineered from the ground up.",
+      line: "From Dirt to Dynasty.",
     },
     outcome: {
       image: equitanaArena4,

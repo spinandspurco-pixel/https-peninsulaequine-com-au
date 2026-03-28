@@ -45,7 +45,7 @@ export function ProposalHeader({ quote, accepted, isExpired }: Props) {
               className="text-[13px] sm:text-[14px] font-sans mt-5 max-w-lg leading-[1.85]"
               style={{ color: "#2B2B2B", opacity: 0.38 }}
             >
-              Engineered equine infrastructure — built properly from the ground up.
+              From Dirt to Dynasty.
             </p>
           </div>
 

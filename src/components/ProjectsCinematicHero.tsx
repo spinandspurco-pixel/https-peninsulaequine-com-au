@@ -250,7 +250,7 @@ export function ProjectsCinematicHero() {
                 animation: "blueprintFade 0.6s 2.4s ease-out forwards",
               }}
             >
-              Designed from the ground up. Built to hold up.
+              From Dirt to Dynasty.
             </p>
 
             {/* Trust signal */}

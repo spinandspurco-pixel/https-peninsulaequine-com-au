@@ -314,7 +314,7 @@ function Synthesis({ onPressTone }: { onPressTone?: () => void }) {
             transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1600ms`,
           }}
         >
-          Built properly. From the ground up.
+          From Dirt to Dynasty.
         </p>
       </div>
     </div>
@@ -441,7 +441,7 @@ export function ExperienceTheBuild() {
       <ExperienceHero />
 
       {/* TIER 2 — Supporting stills (construction sequence) */}
-      <ActTransition line="See how it's built — layer by layer, from the ground up." />
+      <ActTransition line="See how it's built — layer by layer." />
       <div id="etb-timeline">
         <BuildTimeline onPhaseChange={handleTimelinePhase} />
       </div>

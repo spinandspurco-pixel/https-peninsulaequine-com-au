@@ -42,7 +42,7 @@ const PROGRAM_LEVELS = [
     value: "beginner",
     label: "Foundation",
     icon: Star,
-    tagline: "Build confidence from the ground up",
+    tagline: "From Dirt to Dynasty",
     description: "Perfect for newcomers or riders returning after a break. Focus on seat, balance, and building a trusting relationship with your horse.",
     topics: ["Mounting & dismounting safely", "Walk & rising trot fundamentals", "Groundwork & horse handling", "Basic arena etiquette"],
     price: "$95",
