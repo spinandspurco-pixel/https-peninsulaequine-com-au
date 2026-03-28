@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import impactFailure from "@/assets/groundlock-impact-failure.jpg";
-import impactSuccess from "@/assets/groundlock-impact-success.jpg";
-import arenaWide from "@/assets/groundlock-arena-wide.jpg";
-import closeupInterlock from "@/assets/groundlock-closeup-interlock.jpg";
-import horseMotion from "@/assets/groundlock-horse-motion.jpg";
+import lockingDetail from "@/assets/groundlock-locking-detail.jpg";
+import underLoad from "@/assets/groundlock-under-load.jpg";
+import fieldScale from "@/assets/groundlock-field-scale.jpg";
+import crossSection from "@/assets/groundlock-cross-section.jpg";
 import eventAerial from "@/assets/groundlock-event-aerial.jpg";
 import eventCloseup from "@/assets/groundlock-event-closeup.jpg";
 import { Layout } from "@/components/layout/Layout";
@@ -108,8 +108,8 @@ export default function GroundLock() {
             </div>
             <div className="relative overflow-hidden">
               <img
-                src={impactSuccess}
-                alt="GroundLock stabilised surface"
+                src={fieldScale}
+                alt="GroundLock stabilised arena surface at scale"
                 className="absolute inset-0 w-full h-full object-cover"
                 loading="lazy"
               />
@@ -255,30 +255,30 @@ export default function GroundLock() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 mb-14">
             <div className="sm:col-span-2">
               <img
-                src={arenaWide}
-                alt="Installed arena surface"
+                src={underLoad}
+                alt="Horse in motion on GroundLock stabilised surface — system under force"
                 className="w-full h-full object-cover"
                 loading="lazy"
                 width={1280}
-                height={768}
+                height={720}
               />
             </div>
             <div className="flex flex-col gap-2 sm:gap-3">
               <img
-                src={closeupInterlock}
-                alt="Interlocking system in ground"
+                src={lockingDetail}
+                alt="Close-up of interlocking panels — opposing direction connection"
                 className="w-full h-full object-cover"
                 loading="lazy"
-                width={768}
+                width={1024}
                 height={768}
               />
               <img
-                src={horseMotion}
-                alt="Horse in motion on stabilised surface"
+                src={crossSection}
+                alt="Cross-section showing sub-base, stabilisation grid, and surface layers"
                 className="w-full h-full object-cover"
                 loading="lazy"
-                width={768}
-                height={768}
+                width={1024}
+                height={720}
               />
             </div>
           </div>
