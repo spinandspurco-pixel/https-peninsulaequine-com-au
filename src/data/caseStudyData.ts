@@ -112,7 +112,7 @@ export const CASE_STUDIES: CaseStudyData[] = [
       image: groundlockInstallation,
       alt: "GroundLock panel installation at competition scale",
       label: "System",
-      line: "Engineered from the ground up.",
+      line: "From Dirt to Dynasty.",
     },
     outcome: {
       image: equitanaArena4,

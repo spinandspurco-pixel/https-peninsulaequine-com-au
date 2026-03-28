@@ -145,7 +145,7 @@ export function Footer() {
             © {new Date().getFullYear()} Peninsula Equine. All rights reserved.
           </p>
           <p className="text-[10px] text-muted-foreground/20 italic tracking-[0.12em]">
-            Built properly. From the ground up.
+            From Dirt to Dynasty.
           </p>
           <div className="flex gap-8">
             <Link to="/privacy" className="text-[10px] text-muted-foreground/30 hover:text-accent/60 transition-colors duration-500">Privacy</Link>
