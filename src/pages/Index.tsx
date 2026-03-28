@@ -206,9 +206,9 @@ export default function Index() {
               className="text-[10px] sm:text-[11px] uppercase max-w-lg leading-[2.4]"
               style={{
                 opacity: 0,
-                animation: "heroFadeIn 800ms cubic-bezier(0.45,0,0.15,1) 700ms forwards",
+                animation: "heroFadeIn 600ms cubic-bezier(0.45,0,0.15,1) 500ms forwards",
                 letterSpacing: "0.32em",
-                color: "hsl(var(--muted-foreground) / 0.20)",
+                color: "hsl(var(--muted-foreground) / 0.28)",
               }}
             >
               Built for load. Built for drainage. Built to last.
