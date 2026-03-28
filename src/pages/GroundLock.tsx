@@ -431,8 +431,15 @@ export default function GroundLock() {
                   </ul>
                 </RevealOnScroll>
               </div>
+            </div>
 
-              {/* Right — The New Standard */}
+            {/* Micro-line */}
+            <p className="text-[10px] font-mono uppercase tracking-[0.35em] text-primary-foreground/10 text-center my-16">
+              This is what replaces it.
+            </p>
+
+            <div>
+              {/* The New Standard */}
               <div>
                 <RevealOnScroll direction="up" delay={200}>
                   <p className="text-overline mb-8 text-accent/40">The New Standard</p>
