@@ -226,28 +226,25 @@ export default function Index() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden cv-auto">
-        <div className="py-32 sm:py-40 lg:py-48 relative">
-          <div className="absolute inset-0 grain-texture" />
-          <div className="section-container max-w-7xl mx-auto relative z-[1]">
-            <div className="mb-14 sm:mb-18">
-              <RevealOnScroll direction="up">
-                <RevealLine className="mb-6" width="w-10" />
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={80}>
-                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">Portfolio</p>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={120}>
-                <h2 className="heading-section text-foreground">
-                  Selected Work
-                </h2>
-              </RevealOnScroll>
-            </div>
+      <section className="py-28 sm:py-36 relative overflow-hidden">
+        <div className="section-container max-w-6xl mx-auto relative z-[1]">
+          <h2
+            className="font-serif text-2xl sm:text-3xl text-foreground/80 tracking-tight mb-10 sm:mb-14 opacity-0 animate-fade-in"
+            style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
+          >
+            Selected Work
+          </h2>
 
-            <RevealOnScroll direction="up" delay={200}>
-              <ProjectsScroll />
-            </RevealOnScroll>
-
+          <div
+            className="ml-4 sm:ml-10 lg:ml-16 opacity-0 animate-fade-in"
+            style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "800ms" }}
+          >
+            <img
+              src={portfolioArenaSymmetry}
+              alt="Precision-groomed arena at golden hour"
+              className="w-full aspect-[16/9] object-cover"
+              loading="lazy"
+            />
           </div>
         </div>
       </section>
