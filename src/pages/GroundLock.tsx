@@ -255,7 +255,7 @@ export default function GroundLock() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 mb-14">
             <div className="sm:col-span-2">
               <img
-                src={underLoad}
+                src={glMidInstall}
                 alt="Horse in motion on GroundLock stabilised surface — system under force"
                 className="w-full h-full object-cover"
                 loading="lazy"
