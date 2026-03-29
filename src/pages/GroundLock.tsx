@@ -96,7 +96,7 @@ export default function GroundLock() {
           <div className="absolute inset-0 grid grid-cols-2">
             <div className="relative overflow-hidden">
               <img
-                src={impactFailure}
+                src={glFailure}
                 alt="Failed ground surface"
                 className="absolute inset-0 w-full h-full object-cover"
                 loading="lazy"
