@@ -177,6 +177,30 @@ export default function Index() {
           </div>
         </section>
 
+        {/* ═══ EVENT SCALE ═════════════════════════════ */}
+        <section className="py-28 sm:py-36 relative overflow-hidden">
+          <div className="section-container max-w-6xl mx-auto">
+            <div
+              className="opacity-0 animate-fade-in"
+              style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
+            >
+              <img
+                src={systemEvent}
+                alt="Indoor equestrian arena — event scale"
+                className="w-full aspect-[21/9] object-cover"
+                loading="lazy"
+                style={{ objectPosition: "50% 55%" }}
+              />
+            </div>
+            <p
+              className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/15 text-center opacity-0 animate-fade-in"
+              style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "800ms" }}
+            >
+              Built for performance at any scale.
+            </p>
+          </div>
+        </section>
+
         {/* ═══ TRANSFORMATION (slider exception) ═══════════ */}
         <section className="py-28 sm:py-36 relative overflow-hidden">
           <div className="section-container max-w-5xl mx-auto">
