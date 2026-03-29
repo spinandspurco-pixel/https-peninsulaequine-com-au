@@ -85,19 +85,24 @@ export default function GroundLock() {
           </div>
         </section>
 
-        {/* ═══ 2. DETAIL — Tactile ════════════════════════ */}
+        {/* ═══ 2. DETAIL — Pair Lock ═══════════════════════ */}
         <section className="py-32 sm:py-44 lg:py-52 relative overflow-hidden">
-          <div className="section-container max-w-4xl mx-auto">
-            <div
-              className="opacity-0 animate-fade-in"
-              style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
-            >
-              <img
-                src={glDetail}
-                alt="GroundLock interlock connection — macro detail"
-                className="w-full aspect-square sm:aspect-[4/3] object-cover max-w-xl"
-                loading="lazy"
-              />
+          <div className="section-container max-w-3xl mx-auto px-6">
+            <img
+              src={glDetail}
+              alt="GroundLock directional pair lock — macro detail of interlocking mechanism"
+              className="w-full aspect-[4/3] object-cover"
+              loading="lazy"
+              width={1280}
+              height={960}
+            />
+            <div className="mt-10 sm:mt-14">
+              <h2 className="font-serif text-lg sm:text-xl text-foreground/70 tracking-tight">
+                Directional Pair Lock
+              </h2>
+              <p className="mt-3 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-foreground/25">
+                Engineered dependency between modules.
+              </p>
             </div>
           </div>
         </section>
