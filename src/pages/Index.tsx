@@ -244,7 +244,34 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ HOW WE BUILD — SPLIT ═══════════════════════ */}
+      {/* ═══ FEATURED PROJECT ═════════════════════════════ */}
+      <section className="py-28 sm:py-36 relative overflow-hidden">
+        <div className="section-container max-w-6xl mx-auto">
+          <div
+            className="opacity-0 animate-fade-in"
+            style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
+          >
+            <img
+              src={steelShedDramatic}
+              alt="Main Ridge estate build"
+              className="w-full aspect-[16/9] object-cover"
+              loading="lazy"
+            />
+          </div>
+          <div
+            className="mt-6 opacity-0 animate-fade-in"
+            style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "800ms" }}
+          >
+            <h3 className="font-serif text-xl sm:text-2xl text-foreground/75 tracking-tight">
+              Main Ridge
+            </h3>
+            <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/15">
+              Private commission.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section className="py-28 sm:py-36 relative overflow-hidden">
         <div className="section-container max-w-6xl mx-auto relative z-[1]">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-center">
