@@ -10,6 +10,7 @@ import glPattern from "@/assets/gl-system-pattern.jpg";
 import glDetail from "@/assets/gl-system-detail.jpg";
 import glInstall from "@/assets/gl-system-install.jpg";
 import systemEvent from "@/assets/system-event.jpg";
+import glUnderside from "@/assets/gl-system-underside.jpg";
 
 export default function GroundLock() {
   const [gateOpen, setGateOpen] = useState(false);
