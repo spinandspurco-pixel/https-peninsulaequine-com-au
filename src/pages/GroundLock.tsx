@@ -5,10 +5,8 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
-// Locked 3-image product flow
-import glPattern from "@/assets/gl-system-pattern.jpg";
-import glDetail from "@/assets/gl-system-detail.jpg";
-import glUnderside from "@/assets/gl-system-underside.jpg";
+import glIconHero from "@/assets/gl-icon-hero.jpg";
+import glAbstractPattern from "@/assets/gl-abstract-pattern.jpg";
 
 export default function GroundLock() {
   const [gateOpen, setGateOpen] = useState(false);
@@ -41,100 +39,67 @@ export default function GroundLock() {
       </Dialog>
 
       <Layout>
-        {/* ═══ 1. HERO — System Pattern ═══════════════════ */}
-        <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden">
+        {/* ═══ 1. HERO — System Identity ══════════════════ */}
+        <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden bg-black">
           <img
-            src={glPattern}
-            alt="GroundLock directional interlock tessellation pattern"
+            src={glIconHero}
+            alt="GroundLock system mark"
             className="absolute inset-0 w-full h-full object-cover"
             width={1920}
             height={1080}
             loading="eager"
-            style={{ objectPosition: "48% 45%" }}
           />
 
           <div className="relative z-10 text-center px-6" style={{ marginTop: "-8vh" }}>
             <h1
-              className="font-serif font-semibold text-white tracking-tight leading-[1.15] opacity-0 animate-fade-in"
+              className="font-serif font-semibold text-white tracking-tight leading-[1.1] opacity-0 animate-fade-in"
               style={{
                 fontSize: "clamp(1.6rem, 0.8rem + 4vw, 3.5rem)",
                 animationDelay: "300ms",
                 animationFillMode: "both",
                 animationDuration: "1200ms",
-                textShadow: "0 2px 40px rgba(0,0,0,0.6)",
               }}
             >
-              GroundLock™<br />
-              <span className="font-light" style={{ fontSize: "0.6em" }}>
-                Directional Interlock System
-              </span>
+              GroundLock™
             </h1>
 
             <p
-              className="mt-10 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-white/30 opacity-0 animate-fade-in"
+              className="mt-10 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.4em] text-white/25 opacity-0 animate-fade-in"
               style={{
                 animationDelay: "800ms",
                 animationFillMode: "both",
                 animationDuration: "1200ms",
-                textShadow: "0 1px 10px rgba(0,0,0,0.4)",
               }}
             >
-              Engineered for performance. Built for scale.
+              Directional Interlock System
             </p>
           </div>
         </section>
 
-        {/* ═══ 2. DETAIL — Pair Lock ═══════════════════════ */}
-        <section className="py-32 sm:py-44 lg:py-52 relative overflow-hidden">
-          <div className="section-container max-w-3xl mx-auto px-6">
+        {/* ═══ 2. SYSTEM PATTERN — Abstract ═══════════════ */}
+        <section className="py-36 sm:py-48 lg:py-56 relative overflow-hidden bg-black">
+          <div className="section-container max-w-5xl mx-auto px-6">
             <img
-              src={glDetail}
-              alt="GroundLock directional pair lock — macro detail of interlocking mechanism"
-              className="w-full aspect-[4/3] object-cover"
+              src={glAbstractPattern}
+              alt="GroundLock system pattern"
+              className="w-full aspect-[21/9] object-cover opacity-60"
               loading="lazy"
-              width={1280}
-              height={960}
+              width={1920}
+              height={1080}
             />
-            <div className="mt-10 sm:mt-14">
-              <h2 className="font-serif text-lg sm:text-xl text-foreground/70 tracking-tight">
-                Directional Pair Lock
-              </h2>
-              <p className="mt-3 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-foreground/25">
-                Engineered dependency between modules.
+            <div className="mt-14 sm:mt-18">
+              <p className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.35em] text-white/15 text-center">
+                Engineered for performance. Built for scale.
               </p>
             </div>
           </div>
         </section>
-
-        {/* ═══ 2B. UNDERSIDE — Structure ═════════════════ */}
-        <section className="py-32 sm:py-44 lg:py-52 relative overflow-hidden">
-          <div className="section-container max-w-3xl mx-auto px-6">
-            <img
-              src={glUnderside}
-              alt="GroundLock structural underside showing load distribution ribbing and anti-shear geometry"
-              className="w-full aspect-[4/3] object-cover"
-              loading="lazy"
-              width={1280}
-              height={960}
-            />
-            <div className="mt-10 sm:mt-14">
-              <h2 className="font-serif text-lg sm:text-xl text-foreground/70 tracking-tight">
-                Structural Underside
-              </h2>
-              <p className="mt-3 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-foreground/25">
-                Engineered load distribution and anti-shear design.
-              </p>
-            </div>
-          </div>
-        </section>
-
 
         {/* ═══ CLOSING ═══════════════════════════════════ */}
-        <section className="py-36 sm:py-48 lg:py-56 relative overflow-hidden">
-          <div className="absolute inset-0 grain-texture opacity-[0.02]" />
+        <section className="py-36 sm:py-48 lg:py-56 relative overflow-hidden bg-black">
           <div className="relative z-[1] text-center max-w-md mx-auto px-6">
             <p
-              className="font-serif text-xl sm:text-2xl text-foreground/40 italic tracking-wide leading-[1.4] mb-14"
+              className="font-serif text-xl sm:text-2xl text-white/30 italic tracking-wide leading-[1.4] mb-14"
             >
               Not optional. Foundational.
             </p>
@@ -144,7 +109,7 @@ export default function GroundLock() {
             <div className="mt-10">
               <Link
                 to="/groundlock/how-it-works"
-                className="text-[10px] font-mono uppercase tracking-[0.3em] text-foreground/15 hover:text-foreground/30 transition-colors"
+                className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/12 hover:text-white/25 transition-colors"
               >
                 Request System Specs
               </Link>
