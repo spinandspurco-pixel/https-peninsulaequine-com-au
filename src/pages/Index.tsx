@@ -303,52 +303,28 @@ export default function Index() {
         </p>
       </section>
 
-      {/* ═══ 5. FINAL CTA — cinematic sunset ═══════════════ */}
-      <section className="relative h-[70vh] sm:h-[80vh] overflow-hidden">
-        <img
-          src={heroSunset}
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 w-full h-full object-cover img-cta"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/30" />
-        <div className="absolute inset-0 grain-hero" />
-
-        <div className="absolute inset-0 flex items-center justify-center z-10">
-          <div className="section-container text-center max-w-lg mx-auto">
-            <RevealOnScroll direction="up">
-              <RevealLine className="mx-auto mb-12" width="w-8" />
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={80}>
-              <h2 className="heading-section text-foreground mb-6 leading-[1.1]">
-                Let's build it properly.
-              </h2>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={150}>
-              <p className="text-[13px] text-muted-foreground/30 mb-10 leading-[2] max-w-[360px] mx-auto">
-                Every project begins with a site assessment.
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={200}>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button asChild variant="gold" size="lg" className="px-8">
-                  <Link to="/site-assessment">
-                    Apply to Build <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button asChild size="lg" className="bg-transparent border border-foreground/10 text-foreground/50 hover:text-foreground hover:border-foreground/25 hover:bg-foreground/[0.03] transition-all duration-700 px-8">
-                  <Link to="/contact">Talk to Us</Link>
-                </Button>
-              </div>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={350}>
-              <p className="text-muted-foreground/12 text-[9px] tracking-[0.3em] uppercase mt-10">
-                Limited projects per season
-              </p>
-            </RevealOnScroll>
-          </div>
+      {/* ═══ FINAL CTA ═══════════════════════════════════ */}
+      <section className="py-36 sm:py-48 lg:py-56 relative">
+        <div className="text-center">
+          <Link
+            to="/contact"
+            className="inline-block px-12 py-4 border text-[11px] font-mono uppercase tracking-[0.3em] hover:bg-accent/[0.03] transition-colors duration-500 opacity-0 animate-fade-in"
+            style={{
+              borderColor: "hsl(var(--accent) / 0.08)",
+              color: "hsl(var(--foreground) / 0.35)",
+              animationDelay: "200ms",
+              animationFillMode: "both",
+              animationDuration: "800ms",
+            }}
+          >
+            Apply to Build →
+          </Link>
+          <p
+            className="mt-5 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/10 opacity-0 animate-fade-in"
+            style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "800ms" }}
+          >
+            Selected projects only.
+          </p>
         </div>
       </section>
     </Layout>
