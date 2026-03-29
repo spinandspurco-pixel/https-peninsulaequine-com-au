@@ -7,7 +7,9 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 
 import equitanaArena from "@/assets/equitana-arena-1.jpg";
-import stoneworkStables from "@/assets/stonework-stables-1.jpg";
+import imgFullSite from "@/assets/services-full-site.jpg";
+import imgGroundlock from "@/assets/services-groundlock.jpg";
+import imgEvent from "@/assets/services-event.jpg";
 
 
 export default function Services() {
@@ -50,20 +52,6 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ═══ BUILD IMAGE — VISUAL PROOF ════════════════════ */}
-      <section className="relative overflow-hidden">
-        <RevealOnScroll direction="up" duration={800}>
-          <div className="relative aspect-[21/9]">
-            <img
-              src={stoneworkStables}
-              alt="Barn frame structure"
-              className="absolute inset-0 w-full h-full object-cover img-feature"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/20" />
-          </div>
-        </RevealOnScroll>
-      </section>
 
       {/* ═══ FULL SITE BUILDS ═══════════════════════════════ */}
       <section className="relative overflow-hidden">
@@ -84,6 +72,10 @@ export default function Services() {
               <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/10">
                 Selected projects only.
               </p>
+              <div className="mt-12 relative overflow-hidden aspect-[21/9]">
+                <img src={imgFullSite} alt="Completed equestrian arena" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(0.7) saturate(0.85)" }} />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
+              </div>
             </RevealOnScroll>
           </div>
         </div>
@@ -125,9 +117,12 @@ export default function Services() {
               <p className="text-[13px] sm:text-sm text-foreground/35 leading-[1.8] max-w-lg mb-8">
                 Engineered ground stabilisation systems for permanent and temporary environments.
               </p>
+              <div className="mt-12 relative overflow-hidden aspect-[3/2] max-w-xl">
+                <img src={imgGroundlock} alt="GroundLock panel interlock detail" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(0.75) saturate(0.85)" }} />
+              </div>
               <Link
                 to="/groundlock"
-                className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-accent/50 hover:text-accent/80 transition-colors duration-500"
+                className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-accent/50 hover:text-accent/80 transition-colors duration-500 mt-8"
               >
                 Explore GroundLock <ArrowRight className="w-3.5 h-3.5" />
               </Link>
@@ -155,9 +150,13 @@ export default function Services() {
               <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/10 mb-8">
                 Designed for repeatable large-scale use.
               </p>
+              <div className="mt-4 relative overflow-hidden aspect-[21/9]">
+                <img src={imgEvent} alt="Large-scale event ground system deployment" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(0.65) saturate(0.85)" }} />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
+              </div>
               <Link
                 to="/contact"
-                className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-accent/50 hover:text-accent/80 transition-colors duration-500"
+                className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-accent/50 hover:text-accent/80 transition-colors duration-500 mt-8"
               >
                 Enquire about event systems <ArrowRight className="w-3.5 h-3.5" />
               </Link>
