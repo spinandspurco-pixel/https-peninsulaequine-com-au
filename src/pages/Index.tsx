@@ -10,6 +10,7 @@ import systemHero from "@/assets/system-hero.jpg";
 import systemStructure from "@/assets/system-structure.jpg";
 import systemProcess from "@/assets/system-process.jpg";
 import systemOutcome from "@/assets/system-outcome.jpg";
+import systemEvent from "@/assets/system-event.jpg";
 
 // Transformation (slider exception)
 import transformBefore from "@/assets/transform-before.jpg";
