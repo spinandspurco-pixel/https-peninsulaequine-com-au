@@ -322,7 +322,7 @@ export default function GroundLock() {
             </div>
             <div>
               <img
-                src={glCloseup}
+                src={glEngineerClose}
                 alt="Ground protection system under temporary event infrastructure"
                 className="w-full h-full object-cover"
                 loading="lazy"
