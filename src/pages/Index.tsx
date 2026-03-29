@@ -216,6 +216,9 @@ export default function Index() {
                 <Link to="/gallery">View Projects</Link>
               </Button>
             </div>
+            <p className="text-[9px] font-mono uppercase tracking-[0.35em] text-foreground/10 text-center mt-6">
+              Selected projects only.
+            </p>
           </div>
         </div>
 
