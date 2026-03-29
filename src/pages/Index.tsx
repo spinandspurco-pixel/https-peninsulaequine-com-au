@@ -137,7 +137,7 @@ export default function Index() {
                   alt="Telehandler auger drilling into earth"
                   className="w-full aspect-[4/5] object-cover"
                   loading="lazy"
-                  style={{ objectPosition: "50% 60%", filter: "brightness(1.05) contrast(1.1)" }}
+                  style={{ objectPosition: "50% 60%", filter: "brightness(1.12) contrast(1.08)" }}
                 />
               </div>
               <div
