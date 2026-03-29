@@ -111,7 +111,7 @@ export default function Index() {
             alt="Steel frame structure under construction"
             className="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
-            style={{ objectPosition: "50% 38%", filter: "brightness(1.1) contrast(1.1)" }}
+            style={{ objectPosition: "50% 38%", filter: "brightness(1.25) contrast(1.1)" }}
           />
           <div className="absolute inset-x-0 bottom-0 h-[25%] bg-gradient-to-t from-black/40 to-transparent" />
           <div className="relative z-10 section-container max-w-6xl mx-auto pb-16 sm:pb-20">
@@ -137,7 +137,7 @@ export default function Index() {
                   alt="Telehandler auger drilling into earth"
                   className="w-full aspect-[4/5] object-cover"
                   loading="lazy"
-                  style={{ objectPosition: "50% 60%", filter: "brightness(1.12) contrast(1.08)" }}
+                  style={{ objectPosition: "50% 60%", filter: "brightness(1.2) contrast(1.08)" }}
                 />
               </div>
               <div
@@ -167,7 +167,7 @@ export default function Index() {
                 alt="Completed equestrian property — aerial view"
                 className="w-full aspect-[21/9] object-cover"
                 loading="lazy"
-                style={{ filter: "brightness(1.1) contrast(1.04) saturate(1.06) sepia(0.03)" }}
+                style={{ filter: "brightness(1.18) contrast(1.04) saturate(1.06) sepia(0.03)" }}
               />
             </div>
             <p
@@ -191,7 +191,7 @@ export default function Index() {
                 alt="Indoor equestrian arena — event scale"
                 className="w-full aspect-[21/9] object-cover"
                 loading="lazy"
-                style={{ objectPosition: "50% 55%", filter: "brightness(1.1) contrast(1.06)" }}
+                style={{ objectPosition: "50% 55%", filter: "brightness(1.18) contrast(1.06)" }}
               />
             </div>
             <p
