@@ -502,6 +502,11 @@
   to   { opacity: 1; }
 }
 
+@keyframes heroSlowZoom {
+  from { transform: scale(1); }
+  to   { transform: scale(1.06); }
+}
+
 @keyframes heroHeadlineReveal {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
