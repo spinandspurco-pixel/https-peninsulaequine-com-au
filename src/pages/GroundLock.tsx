@@ -52,11 +52,11 @@ export default function GroundLock() {
             style={{ objectPosition: "52% 48%" }}
           />
 
-          <div className="relative z-10 text-center px-6" style={{ marginTop: "-10vh" }}>
+          <div className="relative z-10 text-center px-6" style={{ marginTop: "-10vh", marginLeft: "3vw" }}>
             <h1
               className="font-serif font-semibold text-white tracking-tight leading-[1.1] opacity-0 animate-fade-in"
               style={{
-                fontSize: "clamp(1.6rem, 0.8rem + 4vw, 3.5rem)",
+                fontSize: "clamp(1.8rem, 0.9rem + 4.5vw, 4rem)",
                 animationDelay: "300ms",
                 animationFillMode: "both",
                 animationDuration: "1200ms",
@@ -85,6 +85,17 @@ export default function GroundLock() {
               }}
             >
               Built for load. Designed for control.
+            </p>
+
+            <p
+              className="mt-8 font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.3em] text-white/8 opacity-0 animate-fade-in"
+              style={{
+                animationDelay: "1600ms",
+                animationFillMode: "both",
+                animationDuration: "1200ms",
+              }}
+            >
+              System in development
             </p>
           </div>
         </section>
