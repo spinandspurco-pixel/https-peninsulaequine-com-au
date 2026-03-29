@@ -17,7 +17,7 @@ export default function Shop() {
   return (
     <Layout>
       {/* ═══ HERO ═══════════════════════════════════════ */}
-      <section className="pt-40 sm:pt-52 pb-20 sm:pb-28">
+      <section className="pt-40 sm:pt-52 pb-20 sm:pb-28" style={{ backgroundColor: "#0b0b0b" }}>
         <div className="section-container max-w-2xl mx-auto text-center">
           <h1
             className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground/85 tracking-tight leading-[1.05] opacity-0 animate-fade-in"
