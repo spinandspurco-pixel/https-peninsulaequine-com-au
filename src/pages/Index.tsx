@@ -104,18 +104,18 @@ export default function Index() {
         </section>
 
         {/* ═══ 2. STRUCTURE — Selected Work ════════════════ */}
-        <section className="relative min-h-[70vh] sm:min-h-[75vh] flex items-end overflow-hidden bg-black">
+        <section className="relative min-h-[70vh] sm:min-h-[75vh] flex items-end overflow-hidden" style={{ background: "#050505" }}>
           <img
             src={systemStructure}
             alt="Steel frame structure under construction"
             className="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
-            style={{ objectPosition: "50% 40%" }}
+            style={{ objectPosition: "50% 38%", filter: "contrast(1.08)" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-[30%] bg-gradient-to-t from-black/50 to-transparent" />
           <div className="relative z-10 section-container max-w-6xl mx-auto pb-16 sm:pb-20">
             <h2
-              className="font-serif text-2xl sm:text-3xl text-white/80 tracking-tight opacity-0 animate-fade-in"
+              className="font-serif text-2xl sm:text-3xl text-white/85 tracking-tight opacity-0 animate-fade-in"
               style={{ animationDelay: "300ms", animationFillMode: "both", animationDuration: "800ms" }}
             >
               Selected Work
