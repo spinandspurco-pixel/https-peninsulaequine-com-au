@@ -357,11 +357,43 @@ export default function Gallery() {
         </div>
       </section>
 
-      <ChapterDivider />
-
       {/* ═══════════════════════════════════════════════════
-          9. BROWSE ALL — expandable filter grid
+          TRANSFORMATION — before / after
           ═══════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 grain-texture opacity-20" />
+        <div className="py-28 sm:py-36 relative">
+          <div className="section-container max-w-5xl mx-auto relative z-[1]">
+            <RevealOnScroll direction="up" duration={DURATION.normal}>
+              <div className="mb-12 sm:mb-16">
+                <div className="flex items-center gap-5 mb-5">
+                  <div className="w-8 h-px bg-accent/25" />
+                  <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/35 font-mono">
+                    Transformation
+                  </p>
+                </div>
+              </div>
+            </RevealOnScroll>
+
+            <RevealOnScroll direction="up" delay={100} duration={DURATION.normal}>
+              <TransformationSlider
+                before={transformBefore}
+                after={transformAfter}
+                beforeAlt="Raw paddock before construction"
+                afterAlt="Completed equine arena and barn"
+              />
+            </RevealOnScroll>
+
+            <RevealOnScroll direction="up" delay={200}>
+              <p className="text-[9px] font-mono uppercase tracking-[0.35em] text-foreground/10 text-center mt-8">
+                From Dirt to Dynasty.
+              </p>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
+      <ChapterDivider />
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grain-texture" />
         <div className="py-28 sm:py-36 lg:py-44 relative">
