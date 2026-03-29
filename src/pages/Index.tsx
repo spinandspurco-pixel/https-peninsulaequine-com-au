@@ -59,9 +59,9 @@ export default function Index() {
             style={{ opacity: heroFade, willChange: "opacity", marginTop: "-12vh" }}
           >
             <h1
-              className="font-serif font-semibold text-white tracking-tight leading-[1.05] opacity-0 animate-fade-in"
+              className="font-serif font-semibold text-white tracking-tight leading-[0.95] opacity-0 animate-fade-in"
               style={{
-                fontSize: "clamp(2rem, 1rem + 5vw, 4.5rem)",
+                fontSize: "clamp(2.4rem, 1.2rem + 5.5vw, 5.2rem)",
                 animationDelay: "300ms",
                 animationFillMode: "both",
                 animationDuration: "800ms",
