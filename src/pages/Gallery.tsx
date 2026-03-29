@@ -21,6 +21,8 @@ import { GuidedEnquiryFlow } from "@/components/GuidedEnquiryFlow";
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
 import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
 import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
+import transformBefore from "@/assets/transform-before.jpg";
+import transformAfter from "@/assets/transform-after.jpg";
 
 import {
   type GalleryItem,
