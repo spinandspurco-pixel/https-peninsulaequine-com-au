@@ -56,30 +56,29 @@ export default function Index() {
           <div
             ref={heroContentRef}
             className="relative z-10 text-center"
-            style={{ opacity: heroFade, willChange: "opacity", marginTop: "-12vh" }}
+            style={{ opacity: heroFade, willChange: "opacity", marginTop: "-16vh" }}
           >
             <h1
-              className="font-serif font-semibold text-white tracking-tight leading-[0.95] opacity-0 animate-fade-in"
+              className="font-serif font-semibold text-white tracking-tight leading-[0.9] opacity-0 animate-fade-in"
               style={{
-                fontSize: "clamp(2.4rem, 1.2rem + 5.5vw, 5.2rem)",
+                fontSize: "clamp(2.6rem, 1.2rem + 6vw, 5.8rem)",
                 animationDelay: "300ms",
                 animationFillMode: "both",
                 animationDuration: "800ms",
-                textShadow: "0 2px 30px rgba(0,0,0,0.4)",
+                textShadow: "0 2px 30px rgba(0,0,0,0.35)",
               }}
             >
               From Dirt to Dynasty.
             </h1>
             <p
-              className="mt-8 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.45em] text-white/40 opacity-0 animate-fade-in"
+              className="mt-10 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.5em] text-white/35 opacity-0 animate-fade-in"
               style={{
                 animationDelay: "700ms",
                 animationFillMode: "both",
                 animationDuration: "800ms",
-                textShadow: "0 1px 10px rgba(0,0,0,0.3)",
               }}
             >
-              Built environments for equine performance.
+              Built environments for equine performance
             </p>
           </div>
         </section>
