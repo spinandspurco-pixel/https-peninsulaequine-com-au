@@ -136,6 +136,7 @@ export default function Index() {
                   alt="Telehandler auger drilling into earth"
                   className="w-full aspect-[4/5] object-cover"
                   loading="lazy"
+                  style={{ objectPosition: "50% 60%" }}
                 />
               </div>
               <div
