@@ -249,44 +249,35 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ 4. SERVICES — WHAT WE BUILD ═══════════════════ */}
-      <section className="relative overflow-hidden cv-auto">
-        <div className="py-32 sm:py-40 lg:py-48 bg-card relative">
-          <div className="absolute inset-0 grain-texture opacity-30" />
-          <div className="section-container max-w-5xl mx-auto relative z-[1]">
-            <div className="text-center mb-20 sm:mb-24">
-              <RevealOnScroll direction="up">
-                <div className="flex items-center justify-center gap-5 mb-10">
-                  <div className="w-10 h-px bg-accent/20" />
-                  <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/40">Capabilities</p>
-                  <div className="w-10 h-px bg-accent/20" />
-                </div>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={100}>
-                <h2 className="font-serif text-2xl sm:text-3xl md:text-[2.25rem] font-light text-foreground/80 leading-[1.25] max-w-xl mx-auto">
-                  Equine Construction &amp; Rural Infrastructure
-                </h2>
-              </RevealOnScroll>
+      {/* ═══ HOW WE BUILD — SPLIT ═══════════════════════ */}
+      <section className="py-28 sm:py-36 relative overflow-hidden">
+        <div className="section-container max-w-6xl mx-auto relative z-[1]">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-center">
+            {/* Left — dominant image */}
+            <div
+              className="lg:col-span-3 opacity-0 animate-fade-in"
+              style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
+            >
+              <img
+                src={mainRidgeFinishedExterior}
+                alt="Completed equine build at dusk"
+                className="w-full aspect-[4/3] object-cover"
+                loading="lazy"
+              />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-5">
-              {SERVICES.map((svc, i) => (
-                <RevealOnScroll key={svc.title} direction="up" stagger={i} staggerInterval={80}>
-                  <Link
-                    to={svc.href}
-                    className="group relative flex flex-col p-8 sm:p-10 min-h-[220px] border border-border/20 hover:border-border/40 bg-card/40 transition-opacity duration-300 ease-out"
-                  >
-                    <div className="absolute top-0 left-0 w-8 h-px bg-accent/20" />
-                    <ServiceIcon icon={svc.icon} className="mb-6" />
-                    <h3 className="font-serif text-[15px] font-medium text-foreground/65 mb-4 tracking-[0.02em] group-hover:text-foreground/90 transition-opacity duration-300">
-                      {svc.title}
-                    </h3>
-                    <p className="text-[12px] text-muted-foreground/25 leading-[2.1] max-w-[260px] flex-1">{svc.desc}</p>
-                  </Link>
-                </RevealOnScroll>
-              ))}
+            {/* Right — text */}
+            <div
+              className="lg:col-span-2 opacity-0 animate-fade-in"
+              style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "800ms" }}
+            >
+              <h2 className="font-serif text-2xl sm:text-3xl text-foreground/80 tracking-tight mb-5">
+                How We Build
+              </h2>
+              <p className="text-[13px] text-foreground/30 leading-[1.8]">
+                Engineered from the ground up.
+              </p>
             </div>
-
           </div>
         </div>
       </section>
