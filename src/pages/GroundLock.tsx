@@ -10,6 +10,7 @@ import glPattern from "@/assets/gl-system-pattern.jpg";
 import glDetail from "@/assets/gl-system-detail.jpg";
 import glInstall from "@/assets/gl-system-install.jpg";
 import systemEvent from "@/assets/system-event.jpg";
+import glUnderside from "@/assets/gl-system-underside.jpg";
 
 export default function GroundLock() {
   const [gateOpen, setGateOpen] = useState(false);
@@ -102,6 +103,28 @@ export default function GroundLock() {
               </h2>
               <p className="mt-3 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-foreground/25">
                 Engineered dependency between modules.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ 2B. UNDERSIDE — Structure ═════════════════ */}
+        <section className="py-32 sm:py-44 lg:py-52 relative overflow-hidden">
+          <div className="section-container max-w-3xl mx-auto px-6">
+            <img
+              src={glUnderside}
+              alt="GroundLock structural underside showing load distribution ribbing and anti-shear geometry"
+              className="w-full aspect-[4/3] object-cover"
+              loading="lazy"
+              width={1280}
+              height={960}
+            />
+            <div className="mt-10 sm:mt-14">
+              <h2 className="font-serif text-lg sm:text-xl text-foreground/70 tracking-tight">
+                Structural Underside
+              </h2>
+              <p className="mt-3 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-foreground/25">
+                Engineered load distribution and anti-shear design.
               </p>
             </div>
           </div>
