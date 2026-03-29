@@ -144,7 +144,7 @@ export default function GroundLock() {
         <section className="py-40 sm:py-52 lg:py-64 relative overflow-hidden bg-black">
           <div className="relative z-[1] text-center max-w-md mx-auto px-6">
             <Button variant="gold" size="lg" onClick={() => setGateOpen(true)}>
-              Enquire About GroundLock <ArrowRight className="ml-2 h-4 w-4" />
+              Request Access <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             <p className="mt-8 font-mono text-[9px] uppercase tracking-[0.35em] text-white/12">
               Limited deployment availability
