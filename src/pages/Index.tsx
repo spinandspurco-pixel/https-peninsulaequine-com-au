@@ -306,13 +306,6 @@ export default function Index() {
               <ProjectsScroll />
             </RevealOnScroll>
 
-            <RevealOnScroll direction="up" delay={300}>
-              <div className="mt-12">
-                <Button asChild variant="outline-light" size="default">
-                  <Link to="/gallery">View All Projects <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
-                </Button>
-              </div>
-            </RevealOnScroll>
           </div>
         </div>
       </section>
@@ -355,13 +348,6 @@ export default function Index() {
               ))}
             </div>
 
-            <RevealOnScroll direction="up" delay={300}>
-              <div className="text-center mt-14">
-                <Button asChild variant="outline-light" size="default">
-                  <Link to="/services">View All Services <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
-                </Button>
-              </div>
-            </RevealOnScroll>
           </div>
         </div>
       </section>
@@ -435,7 +421,7 @@ export default function Index() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button asChild variant="gold" size="lg" className="px-8">
                   <Link to="/site-assessment">
-                    Start Your Project <ArrowRight className="ml-2 h-4 w-4" />
+                    Apply to Build <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
                 <Button asChild size="lg" className="bg-transparent border border-foreground/10 text-foreground/50 hover:text-foreground hover:border-foreground/25 hover:bg-foreground/[0.03] transition-all duration-700 px-8">
