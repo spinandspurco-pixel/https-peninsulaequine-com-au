@@ -56,7 +56,7 @@ export default function Index() {
           <div
             ref={heroContentRef}
             className="relative z-10 text-center"
-            style={{ opacity: heroFade, willChange: "opacity", marginTop: "-6vh" }}
+            style={{ opacity: heroFade, willChange: "opacity", marginTop: "-12vh" }}
           >
             <h1
               className="font-serif font-semibold text-white tracking-tight leading-[1.05] opacity-0 animate-fade-in"
