@@ -8,7 +8,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
-import livingImg from "@/assets/living-hero-wide.jpg";
+import livingImg from "@/assets/masterplan-aerial-hero.jpg";
 
 export function MainRidgeLivingOutcome() {
   const sectionRef = useRef<HTMLDivElement>(null);
