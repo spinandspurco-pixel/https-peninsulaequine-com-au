@@ -34,7 +34,7 @@ export default function About() {
             className="mt-12 text-[13px] sm:text-[14px] text-foreground/30 leading-[1.9] max-w-lg mx-auto opacity-0 animate-fade-in"
             style={{ animationDelay: "600ms", animationFillMode: "both", animationDuration: "800ms" }}
           >
-            Peninsula Equine creates equine environments with a focus on structure, performance, and long-term durability. Every decision is made to serve the land, the build, and the way the space will be used over time.
+            Peninsula Equine creates equine environments with a focus on structure, performance, and long-term durability. Every build is informed not just by construction, but by an understanding of how horses move, load, and interact with the ground beneath them.
           </p>
           <p
             className="mt-14 font-mono text-[9px] uppercase tracking-[0.45em] text-foreground/12 opacity-0 animate-fade-in"
