@@ -150,9 +150,13 @@ export default function Services() {
               <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/10 mb-8">
                 Designed for repeatable large-scale use.
               </p>
+              <div className="mt-4 relative overflow-hidden aspect-[21/9]">
+                <img src={imgEvent} alt="Large-scale event ground system deployment" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(0.65) saturate(0.85)" }} />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
+              </div>
               <Link
                 to="/contact"
-                className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-accent/50 hover:text-accent/80 transition-colors duration-500"
+                className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-accent/50 hover:text-accent/80 transition-colors duration-500 mt-8"
               >
                 Enquire about event systems <ArrowRight className="w-3.5 h-3.5" />
               </Link>
