@@ -111,7 +111,7 @@ export default function Index() {
             alt="Steel frame structure under construction"
             className="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
-            style={{ objectPosition: "50% 38%", filter: "contrast(1.08)" }}
+            style={{ objectPosition: "50% 38%", filter: "brightness(1.1) contrast(1.1)" }}
           />
           <div className="absolute inset-x-0 bottom-0 h-[30%] bg-gradient-to-t from-black/50 to-transparent" />
           <div className="relative z-10 section-container max-w-6xl mx-auto pb-16 sm:pb-20">
