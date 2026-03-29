@@ -4,8 +4,6 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 
 
-import { InteractiveMasterplan } from "@/components/masterplan/InteractiveMasterplanV2";
-
 import { BuildTimeline } from "@/components/BuildTimeline";
 import { MainRidgeLivingOutcome } from "@/components/MainRidgeLivingOutcome";
 
