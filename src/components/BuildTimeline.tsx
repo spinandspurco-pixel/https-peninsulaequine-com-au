@@ -102,6 +102,11 @@ function PhaseScene({ phase, index }: { phase: Phase; index: number }) {
 export function BuildTimeline() {
   return (
     <div className="relative">
+      <div className="py-10 sm:py-14 text-center">
+        <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/10">
+          Built exactly as planned.
+        </p>
+      </div>
       {phases.map((phase, i) => (
         <PhaseScene key={phase.id} phase={phase} index={i} />
       ))}
