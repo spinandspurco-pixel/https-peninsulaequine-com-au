@@ -274,7 +274,7 @@ export default function GroundLock() {
                 height={768}
               />
               <img
-                src={glCloseup}
+                 src={glCutaway}
                 alt="Cross-section showing sub-base, stabilisation grid, and surface layers"
                 className="w-full h-full object-cover"
                 loading="lazy"
