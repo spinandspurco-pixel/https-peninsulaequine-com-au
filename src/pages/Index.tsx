@@ -266,7 +266,24 @@ export default function Index() {
       {/* ═══ LAND INTELLIGENCE ═══════════════════════════ */}
       <LandIntelligence />
 
-      {/* ═══ 3. PROJECTS — HORIZONTAL SCROLL ═══════════════ */}
+      {/* ═══ BRAND SPINE ═══════════════════════════════ */}
+      <section className="py-28 sm:py-36 relative overflow-hidden">
+        <div className="absolute inset-0 grain-texture opacity-[0.015]" />
+        <div className="relative z-10 text-center">
+          <RevealOnScroll direction="up">
+            <p
+              className="font-serif italic tracking-[0.06em]"
+              style={{
+                fontSize: "clamp(1rem, 0.5rem + 2vw, 1.5rem)",
+                color: "hsl(var(--foreground) / 0.12)",
+              }}
+            >
+              From Dirt to Dynasty.
+            </p>
+          </RevealOnScroll>
+        </div>
+      </section>
+
       <section className="relative overflow-hidden cv-auto">
         <div className="py-32 sm:py-40 lg:py-48 relative">
           <div className="absolute inset-0 grain-texture" />
