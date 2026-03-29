@@ -7,7 +7,9 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 
 import equitanaArena from "@/assets/equitana-arena-1.jpg";
-import stoneworkStables from "@/assets/stonework-stables-1.jpg";
+import imgFullSite from "@/assets/services-full-site.jpg";
+import imgGroundlock from "@/assets/services-groundlock.jpg";
+import imgEvent from "@/assets/services-event.jpg";
 
 
 export default function Services() {
