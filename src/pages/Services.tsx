@@ -178,22 +178,20 @@ export default function Services() {
             <RevealOnScroll direction="up">
               <RevealLine className="mx-auto mb-14" width="w-10" />
             </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={80}>
-              <h2 className="heading-section text-foreground mb-8">
-                Discuss Your Project
-              </h2>
-            </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
-              <p className="text-sm text-muted-foreground/40 mb-10 leading-relaxed">
-                Every project begins with a site assessment.
+              <Link
+                to="/contact"
+                className="inline-block px-12 py-4 border text-[11px] font-mono uppercase tracking-[0.3em] hover:bg-accent/[0.03] transition-colors duration-500"
+                style={{
+                  borderColor: "hsl(var(--accent) / 0.08)",
+                  color: "hsl(var(--foreground) / 0.35)",
+                }}
+              >
+                Apply to Build →
+              </Link>
+              <p className="mt-4 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/10">
+                Selected projects only.
               </p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={250}>
-              <Button asChild variant="gold" size="lg">
-                <Link to="/contact">
-                  Discuss Project <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
             </RevealOnScroll>
           </div>
         </div>
