@@ -13,7 +13,7 @@ import imgHero from "@/assets/masterplan-aerial-hero.jpg";
 const acts = [
   { id: "hero", label: "Introduction" },
   { id: "timeline", label: "Construction" },
-  { id: "masterplan", label: "Explore" },
+  { id: "masterplan", label: "Layout" },
   { id: "synthesis", label: "Resolution" },
 ];
 
