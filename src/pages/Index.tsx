@@ -49,6 +49,7 @@ export default function Index() {
             loading="eager"
             style={{
               objectPosition: "50% 72%",
+              filter: "brightness(0.92) contrast(1.05)",
               animation: "heroSlowZoom 25s ease-out forwards",
             }}
           />
