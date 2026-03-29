@@ -242,6 +242,45 @@ export default function Gallery() {
           ═══════════════════════════════════════════════════ */}
       <ExperienceTheBuild />
 
+      {/* ═══════════════════════════════════════════════════
+          FEATURED PROJECT — statement piece
+          ═══════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 grain-texture opacity-20" />
+        <div className="py-28 sm:py-36 lg:py-44 relative">
+          <div className="section-container max-w-6xl mx-auto relative z-[1]">
+            <RevealOnScroll direction="up" duration={DURATION.normal}>
+              <Link to="/project/main-ridge" className="block group">
+                <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-8 lg:gap-14 items-center">
+                  {/* Left — large image */}
+                  <div className="relative overflow-hidden aspect-[4/3]">
+                    <img
+                      src={steelShedDramatic}
+                      alt="Main Ridge — complete arena transformation"
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.45,0,0.15,1)] group-hover:scale-[1.02]"
+                      loading="lazy"
+                    />
+                  </div>
+
+                  {/* Right — minimal text */}
+                  <div className="lg:py-8">
+                    <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/85 tracking-[0.02em] leading-[1.15] mb-5">
+                      Main Ridge
+                    </h2>
+                    <p className="text-[13px] text-foreground/35 leading-[1.8] mb-8">
+                      Private arena engineered for high-load performance.
+                    </p>
+                    <p className="text-[9px] font-mono uppercase tracking-[0.35em] text-foreground/12">
+                      Mornington Peninsula, VIC
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
       <ChapterDivider />
 
 
