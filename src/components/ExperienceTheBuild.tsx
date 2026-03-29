@@ -4,8 +4,6 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
 
 
-import { InteractiveMasterplan } from "@/components/masterplan/InteractiveMasterplanV2";
-
 import { BuildTimeline } from "@/components/BuildTimeline";
 import { MainRidgeLivingOutcome } from "@/components/MainRidgeLivingOutcome";
 
@@ -15,7 +13,7 @@ import imgHero from "@/assets/masterplan-aerial-hero.jpg";
 const acts = [
   { id: "hero", label: "Introduction" },
   { id: "timeline", label: "Construction" },
-  { id: "masterplan", label: "Explore" },
+  { id: "masterplan", label: "Layout" },
   { id: "synthesis", label: "Resolution" },
 ];
 
@@ -368,10 +366,25 @@ export function ExperienceTheBuild() {
       {/* Living Outcome — emotional resolution */}
       <MainRidgeLivingOutcome />
 
-      {/* TIER 3 — Optional interaction (secondary) */}
+      {/* TIER 3 — Static aerial (precision over interaction) */}
       <ActTransition line="Explore how every space connects." />
-      <div id="etb-masterplan">
-        <InteractiveMasterplan />
+      <div id="etb-masterplan" className="relative">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="relative overflow-hidden aspect-[16/10]">
+            <img
+              src={imgHero}
+              alt="Main Ridge Estate — aerial masterplan view"
+              className="w-full h-full object-cover"
+              style={{ filter: "brightness(0.55)" }}
+              loading="lazy"
+              decoding="async"
+            />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(to top, hsl(var(--background) / 0.6) 0%, transparent 40%)" }} />
+            <div className="absolute bottom-6 left-6 sm:bottom-8 sm:left-8">
+              <p className="text-[8px] font-mono uppercase tracking-[0.35em] text-foreground/20">Site Layout — Main Ridge</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Final synthesis */}
