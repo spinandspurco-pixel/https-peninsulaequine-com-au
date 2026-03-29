@@ -9,44 +9,6 @@ import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 import equitanaArena from "@/assets/equitana-arena-1.jpg";
 import stoneworkStables from "@/assets/stonework-stables-1.jpg";
 
-const CAPABILITY_DETAILS = [
-  {
-    num: "01",
-    title: "Performance Arenas",
-    desc: "Precision-graded surfaces engineered for consistent footing and drainage performance.",
-    outcome: "Consistent footing. Zero drainage failure.",
-  },
-  {
-    num: "02",
-    title: "Stables & Barn Infrastructure",
-    desc: "Airflow, sightlines, movement — designed around equine behaviour.",
-    outcome: "Horse-informed design. Built once.",
-  },
-  {
-    num: "03",
-    title: "Drainage & Ground Preparation",
-    desc: "Sub-base engineering, water management, and compaction profiles.",
-    outcome: "Performance starts below the surface.",
-  },
-  {
-    num: "04",
-    title: "Performance Surfaces",
-    desc: "Site-specific footing systems including GroundLock™ ground stabilisation.",
-    outcome: "Engineered footing. Long-term performance.",
-  },
-  {
-    num: "05",
-    title: "Site Planning & Equine Layouts",
-    desc: "Property-wide planning informed by terrain, water flow, and horse movement.",
-    outcome: "Intelligent layout. Future-proof design.",
-  },
-  {
-    num: "06",
-    title: "Integrated System Design",
-    desc: "Laneways, drainage corridors, access, and paddock systems — designed as one connected system.",
-    outcome: "One system. No weak points.",
-  },
-];
 
 export default function Services() {
   useEffect(() => {
