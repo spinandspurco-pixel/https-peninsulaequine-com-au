@@ -313,7 +313,7 @@ export default function Gallery() {
                 />
                 <div className="mt-6 sm:mt-8">
                   <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/25 mb-2">Private Client</p>
-                  <p className="font-serif text-[13px] sm:text-sm text-foreground/25 italic">Stonework, stalls, and timber throughout.</p>
+                  <p className="font-serif text-[13px] sm:text-sm text-foreground/25 italic">Full-site transformation with integrated footing system.</p>
                 </div>
               </RevealOnScroll>
             </Link>
@@ -329,7 +329,7 @@ export default function Gallery() {
                 />
                 <div className="mt-6 sm:mt-8">
                   <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/25 mb-2">Main Ridge</p>
-                  <p className="font-serif text-[13px] sm:text-sm text-foreground/25 italic">Arena, barn, and ground systems.</p>
+                  <p className="font-serif text-[13px] sm:text-sm text-foreground/25 italic">Performance arena built for consistent load conditions.</p>
                 </div>
               </RevealOnScroll>
             </Link>
@@ -345,7 +345,7 @@ export default function Gallery() {
                 />
                 <div className="mt-6 sm:mt-8">
                   <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/25 mb-2">Craft Detail</p>
-                  <p className="font-serif text-[13px] sm:text-sm text-foreground/25 italic">Hand-laid stone. No shortcuts.</p>
+                  <p className="font-serif text-[13px] sm:text-sm text-foreground/25 italic">Natural stonework laid by hand to structural tolerances.</p>
                 </div>
               </RevealOnScroll>
             </div>
