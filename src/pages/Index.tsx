@@ -282,41 +282,25 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ INVISIBLE FLEX ═══════════════════════════════ */}
-      <div className="py-28 sm:py-36 relative overflow-hidden">
-        <div className="absolute inset-0 grain-texture opacity-10" />
-        <RevealOnScroll direction="none" duration={1200} delay={200}>
-          <p
-            className="text-center font-mono italic leading-none"
-            style={{
-              fontSize: "clamp(0.55rem, 0.4rem + 0.5vw, 0.7rem)",
-              letterSpacing: "0.35em",
-              color: "hsl(var(--muted-foreground) / 0.10)",
-            }}
-          >
-            Designed to be experienced, not explained.
-          </p>
-        </RevealOnScroll>
-      </div>
-
-      {/* ── Trust Strip ──────────────────────────── */}
-      <section className="py-16 sm:py-20 border-t border-border/10 cv-auto">
-        <div className="section-container max-w-4xl mx-auto">
-          <RevealOnScroll direction="up">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-10 sm:gap-16 text-center">
-              {[
-                { stat: "50+", label: "Properties Built" },
-                { stat: "15+", label: "Years Experience" },
-                { stat: "100%", label: "Owner-Operated" },
-              ].map((item) => (
-                <div key={item.label} className="flex flex-col items-center gap-2">
-                  <span className="font-serif text-2xl sm:text-3xl font-light text-foreground/60">{item.stat}</span>
-                  <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-muted-foreground/30">{item.label}</span>
-                </div>
-              ))}
-            </div>
-          </RevealOnScroll>
+      {/* ═══ FULL-WIDTH OUTCOME ═══════════════════════════ */}
+      <section className="py-20 sm:py-28">
+        <div
+          className="opacity-0 animate-fade-in"
+          style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
+        >
+          <img
+            src={portfolioPropertyAerial}
+            alt="Completed equine property aerial"
+            className="w-full aspect-[21/9] object-cover"
+            loading="lazy"
+          />
         </div>
+        <p
+          className="text-center font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.35em] text-muted-foreground/20 mt-8 opacity-0 animate-fade-in"
+          style={{ animationDelay: "600ms", animationFillMode: "both", animationDuration: "800ms" }}
+        >
+          The outcome speaks for itself.
+        </p>
       </section>
 
       {/* ═══ 5. FINAL CTA — cinematic sunset ═══════════════ */}
