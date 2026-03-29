@@ -27,6 +27,11 @@ import seqBase from "@/assets/seq-base.jpg";
 import seqStructure from "@/assets/seq-structure.jpg";
 import seqCompletion from "@/assets/seq-completion.jpg";
 
+// Transformation
+import transformBefore from "@/assets/transform-before.jpg";
+import transformAfter from "@/assets/transform-after.jpg";
+import { BeforeAfterSlider } from "@/components/BeforeAfterSlider";
+
 // CTA closer
 import heroSunset from "@/assets/hero-sunset.webp";
 
