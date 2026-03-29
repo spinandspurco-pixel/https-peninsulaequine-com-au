@@ -202,7 +202,7 @@ export default function Index() {
                 color: "hsl(var(--muted-foreground) / 0.28)",
               }}
             >
-              Built for load. Built for drainage. Built to last.
+              Engineered for load. Designed for permanence.
             </p>
 
             {/* CTA buttons */}
