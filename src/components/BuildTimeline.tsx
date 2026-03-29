@@ -1,534 +1,110 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { DURATION, EASE, DISTANCE } from "@/lib/motion";
+import { DURATION, EASE } from "@/lib/motion";
 
-/* ── Assets ──────────────────────────────────────────── */
-import imgSitePrep from "@/assets/etb-scene1-raw-land.jpg";
-import imgGroundlock from "@/assets/etb-scene3-system-install.jpg";
-import imgStructure from "@/assets/etb-scene4-structural.jpg";
-import imgEnvelope from "@/assets/etb-scene4-structural.jpg";
-import imgFinished from "@/assets/etb-scene5-living.jpg";
-import imgBefore from "@/assets/etb-scene1-raw-land.jpg";
-import imgAfter from "@/assets/etb-scene5-living.jpg";
+/* ── Sequence assets — same site, same angle, 4 phases ── */
+import imgStep1 from "@/assets/sequence-1-bare-ground.jpg";
+import imgStep2 from "@/assets/sequence-2-base-formation.jpg";
+import imgStep3 from "@/assets/sequence-3-system-install.jpg";
+import imgStep4 from "@/assets/sequence-4-completed.jpg";
 
-/* ── Persistent dust carry-over styles ───────────────── */
-const dustKeyframes = `
-@keyframes etb-dust-drift {
-  0%   { transform: translate(0, 0) scale(1); opacity: 0; }
-  15%  { opacity: 0.06; }
-  60%  { opacity: 0.04; }
-  100% { transform: translate(40px, -20px) scale(0.7); opacity: 0; }
-}
-@keyframes etb-dust-drift-2 {
-  0%   { transform: translate(0, 0) scale(0.8); opacity: 0; }
-  20%  { opacity: 0.05; }
-  70%  { opacity: 0.03; }
-  100% { transform: translate(-30px, -15px) scale(0.5); opacity: 0; }
-}
-`;
-
-/* Inject once */
-if (typeof document !== "undefined" && !document.getElementById("etb-dust-styles")) {
-  const style = document.createElement("style");
-  style.id = "etb-dust-styles";
-  style.textContent = dustKeyframes;
-  document.head.appendChild(style);
-}
-
-/* ── Environmental dust overlay ──────────────────────── */
-function DustCarryOver({ active, direction }: { active: boolean; direction: "left" | "right" }) {
-  return (
-    <div
-      className="absolute inset-0 pointer-events-none z-[5] overflow-hidden"
-      style={{
-        opacity: active ? 1 : 0,
-        transition: `opacity 1800ms ${EASE.cinematic}`,
-      }}
-    >
-      {[...Array(6)].map((_, i) => (
-        <div
-          key={i}
-          className="absolute rounded-full"
-          style={{
-            width: `${3 + i * 2}px`,
-            height: `${3 + i * 2}px`,
-            background: "hsl(var(--accent) / 0.08)",
-            top: `${25 + i * 10}%`,
-            left: direction === "right" ? `${10 + i * 12}%` : `${60 - i * 8}%`,
-            animation: `${i % 2 === 0 ? "etb-dust-drift" : "etb-dust-drift-2"} ${3 + i * 0.8}s ${EASE.cinematic} ${i * 0.4}s infinite`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-/* ── Phase data ──────────────────────────────────────── */
 interface Phase {
   id: string;
   label: string;
   step: string;
-  line: string;
   image: string;
-  brightness: number;
-  scale: number;
-  overlayOpacity: number;
 }
 
 const phases: Phase[] = [
-  {
-    id: "site-prep",
-    label: "Site Preparation",
-    step: "01",
-    line: "Starts below the surface",
-    image: imgSitePrep,
-    brightness: 0.72,
-    scale: 1.06,
-    overlayOpacity: 0.5,
-  },
-  {
-    id: "groundlock",
-    label: "Ground System",
-    step: "02",
-    line: "Stability, locked in early",
-    image: imgGroundlock,
-    brightness: 0.78,
-    scale: 1.05,
-    overlayOpacity: 0.45,
-  },
-  {
-    id: "structure",
-    label: "Structure",
-    step: "03",
-    line: "Load paths defined",
-    image: imgStructure,
-    brightness: 0.82,
-    scale: 1.07,
-    overlayOpacity: 0.4,
-  },
-  {
-    id: "envelope",
-    label: "Envelope",
-    step: "04",
-    line: "Form takes shape",
-    image: imgEnvelope,
-    brightness: 0.75,
-    scale: 1.06,
-    overlayOpacity: 0.45,
-  },
-  {
-    id: "finished",
-    label: "Finished System",
-    step: "05",
-    line: "Ready for use. Built to last",
-    image: imgFinished,
-    brightness: 0.68,
-    scale: 1.04,
-    overlayOpacity: 0.52,
-  },
+  { id: "site-prep", label: "Site Preparation", step: "01", image: imgStep1 },
+  { id: "base", label: "Base Formation", step: "02", image: imgStep2 },
+  { id: "system", label: "System Installation", step: "03", image: imgStep3 },
+  { id: "complete", label: "Surface Completion", step: "04", image: imgStep4 },
 ];
 
-/* ── Phase scene ─────────────────────────────────────── */
-function PhaseScene({
-  phase,
-  index,
-  reducedMotion,
-}: {
-  phase: Phase;
-  index: number;
-  reducedMotion: boolean;
-}) {
+/* ── Phase scene ── */
+function PhaseScene({ phase, index }: { phase: Phase; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-  const [parallaxY, setParallaxY] = useState(0);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setVisible(true);
-      },
-      { threshold: 0.25 }
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); io.disconnect(); } },
+      { threshold: 0.2 }
     );
     io.observe(el);
     return () => io.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (reducedMotion) return;
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const el = ref.current;
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          const center = rect.top + rect.height / 2;
-          const viewCenter = window.innerHeight / 2;
-          setParallaxY((center - viewCenter) * 0.04);
-        }
-        ticking = false;
-      });
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [reducedMotion]);
-
   return (
-    <div ref={ref} className="relative w-full h-[75vh] sm:h-[85vh] overflow-hidden">
-      {/* Previous scene bleed — faint prior phase persists briefly */}
-      {index > 0 && (
-        <div
-          className="absolute inset-0 z-[1]"
-          style={{
-            opacity: visible ? 0 : 0.25,
-            transition: `opacity 2200ms ${EASE.cinematic} 200ms`,
-          }}
-        >
-          <img
-            src={phases[index - 1].image}
-            alt=""
-            aria-hidden="true"
-            className="w-full h-full object-cover"
-            style={{ filter: `brightness(${phases[index - 1].brightness * 0.7})` }}
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-      )}
-
-      {/* Background — current phase */}
-      <div
-        className="absolute inset-0 z-[2] will-change-transform"
-        style={{
-          transform: reducedMotion
-            ? `scale(${phase.scale})`
-            : `translateY(${parallaxY}px) scale(${phase.scale})`,
-          transition: `transform ${DURATION.parallax}ms ${EASE.cinematic}`,
-        }}
-      >
+    <div
+      ref={ref}
+      className="relative w-full overflow-hidden"
+      style={{ minHeight: "75vh" }}
+    >
+      {/* Image */}
+      <div className="absolute inset-0">
         <img
           src={phase.image}
           alt={phase.label}
           className="w-full h-full object-cover"
-          style={{ filter: `brightness(${phase.brightness})` }}
-          loading={index < 2 ? "eager" : "lazy"}
+          loading="lazy"
           decoding="async"
+          style={{
+            filter: "brightness(0.6) saturate(0.85)",
+            opacity: visible ? 1 : 0,
+            transform: visible ? "scale(1)" : "scale(1.04)",
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} ${index * 100}ms, transform ${DURATION.cinematic}ms ${EASE.cinematic} ${index * 100}ms`,
+          }}
         />
       </div>
 
-      {/* Consistent light direction — warm from upper-left */}
+      {/* Gradient overlay */}
       <div
-        className="absolute inset-0 z-[3] pointer-events-none"
+        className="absolute inset-0"
         style={{
-          background: `radial-gradient(ellipse 120% 100% at 15% 20%, transparent 0%, hsl(var(--background) / 0.12) 70%)`,
-        }}
-      />
-
-      {/* ── Identity thread: horizon ridge silhouette ── */}
-      <svg
-        className="absolute top-0 left-0 w-full z-[4] pointer-events-none"
-        viewBox="0 0 1440 120"
-        preserveAspectRatio="none"
-        style={{
-          height: "14%",
-          opacity: visible ? 0.045 : 0,
-          transition: `opacity 1800ms ${EASE.cinematic} 600ms`,
-        }}
-      >
-        <path
-          d="M0 95 Q80 72 180 78 Q260 82 340 60 Q400 47 460 52 Q530 58 600 44 Q660 34 720 38 Q800 44 880 30 Q940 22 1000 28 Q1080 36 1140 24 Q1200 16 1280 22 Q1360 30 1440 18 L1440 0 L0 0 Z"
-          fill="hsl(var(--background))"
-        />
-      </svg>
-
-      {/* Dust carry-over */}
-      {!reducedMotion && (
-        <DustCarryOver active={visible} direction={index % 2 === 0 ? "right" : "left"} />
-      )}
-
-      {/* Overlay */}
-      <div
-        className="absolute inset-0 z-[6]"
-        style={{
-          background: `linear-gradient(to bottom, hsl(var(--background) / 0.15) 0%, hsl(var(--background) / ${phase.overlayOpacity}) 45%, hsl(var(--background) / 0.8) 100%)`,
+          background: "linear-gradient(to top, hsl(var(--background) / 0.75) 0%, hsl(var(--background) / 0.2) 40%, transparent 70%)",
         }}
       />
 
       {/* Grain */}
-      <div className="absolute inset-0 pointer-events-none grain-texture z-[7]" />
+      <div className="absolute inset-0 grain-texture pointer-events-none" style={{ opacity: 0.4 }} />
 
-      {/* Content */}
-      <div className="absolute inset-0 z-10 flex items-end">
-        <div className="section-container pb-16 sm:pb-24 lg:pb-28">
-          <div className="max-w-lg">
-            <div
-              className="flex items-center gap-4 mb-5"
-              style={{
-                opacity: visible ? 1 : 0,
-                transition: `opacity ${DURATION.slow}ms ${EASE.cinematic} 400ms`,
-                willChange: "opacity",
-              }}
-            >
-              <span className="text-[10px] font-mono tracking-[0.2em] uppercase text-accent/20">
-                {phase.step}
-              </span>
-              <div className="w-8 h-px bg-accent/10" />
-              <span className="text-[9px] sm:text-[10px] font-mono tracking-[0.35em] uppercase text-accent/30">
-                {phase.label}
-              </span>
-            </div>
-
-            <p
-              className="font-serif text-xl sm:text-2xl lg:text-3xl italic leading-relaxed tracking-[0.01em] text-foreground/55"
-              style={{
-                opacity: visible ? 1 : 0,
-                transform: visible ? "translateY(0)" : `translateY(${DISTANCE.sm}px)`,
-                transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 800ms, transform ${DURATION.cinematic}ms ${EASE.cinematic} 800ms`,
-                willChange: "opacity, transform",
-              }}
-            >
-              "{phase.line}"
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ── Before/After comparison ─────────────────────────── */
-function BeforeAfter({ reducedMotion }: { reducedMotion: boolean }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-  const [showAfter, setShowAfter] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setVisible(true);
-      },
-      { threshold: 0.3 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  /* Auto-toggle after becoming visible */
-  useEffect(() => {
-    if (!visible) return;
-    const timer = setTimeout(() => setShowAfter(true), 1800);
-    return () => clearTimeout(timer);
-  }, [visible]);
-
-  return (
-    <div ref={ref} className="relative w-full h-[65vh] sm:h-[75vh] overflow-hidden">
-      {/* Before image */}
-      <div className="absolute inset-0">
-        <img
-          src={imgBefore}
-          alt="Raw site before construction"
-          className="w-full h-full object-cover"
-          style={{ filter: "brightness(0.65)" }}
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-
-      {/* After image crossfade */}
-      <div
-        className="absolute inset-0"
-        style={{
-          opacity: showAfter ? 1 : 0,
-          transition: `opacity ${reducedMotion ? 300 : 1200}ms ${EASE.cinematic}`,
-        }}
-      >
-        <img
-          src={imgAfter}
-          alt="Finished Main Ridge Estate"
-          className="w-full h-full object-cover"
-          style={{ filter: "brightness(0.7)" }}
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-
-      {/* Overlay */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `linear-gradient(to bottom, hsl(var(--background) / 0.2) 0%, hsl(var(--background) / 0.55) 50%, hsl(var(--background) / 0.8) 100%)`,
-        }}
-      />
-
-      {/* Grain */}
-      <div className="absolute inset-0 pointer-events-none grain-texture" />
-
-      {/* Content */}
-      <div className="absolute inset-0 z-10 flex items-center justify-center">
-        <div
-          className="text-center max-w-md px-6"
+      {/* Step label — bottom left, minimal */}
+      <div className="absolute bottom-8 left-6 sm:bottom-12 sm:left-10 z-10">
+        <p
+          className="font-mono text-[9px] uppercase tracking-[0.4em] text-foreground/15 mb-2"
           style={{
             opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : `translateY(${DISTANCE.md}px)`,
-            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 400ms, transform ${DURATION.cinematic}ms ${EASE.cinematic} 400ms`,
+            transition: `opacity ${DURATION.slow}ms ${EASE.cinematic} 600ms`,
           }}
         >
-          <p className="text-[9px] font-mono uppercase tracking-[0.4em] text-accent/20 mb-6">
-            {showAfter ? "After" : "Before"}
-          </p>
-          <p className="font-serif text-xl sm:text-2xl italic text-foreground/50 leading-relaxed mb-8">
-            "Ground to system"
-          </p>
-
-          {/* Toggle */}
-          <button
-            onClick={() => setShowAfter((v) => !v)}
-            className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/25 transition-opacity duration-300 hover:text-accent/40"
-          >
-            {showAfter ? "View Before" : "View After"}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ── Step navigation ─────────────────────────────────── */
-function TimelineNav({
-  activeIndex,
-  total,
-  onNavigate,
-}: {
-  activeIndex: number;
-  total: number;
-  onNavigate: (idx: number) => void;
-}) {
-  return (
-    <div className="fixed right-4 sm:right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-2">
-      {Array.from({ length: total }).map((_, i) => (
-        <button
-          key={i}
-          onClick={() => onNavigate(i)}
-          className="group flex items-center gap-2"
-          aria-label={`Go to phase ${i + 1}`}
+          {phase.step}
+        </p>
+        <p
+          className="font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.25em] text-foreground/40"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(8px)",
+            transition: `opacity ${DURATION.slow}ms ${EASE.cinematic} 800ms, transform ${DURATION.slow}ms ${EASE.cinematic} 800ms`,
+          }}
         >
-          <div
-            className="w-px transition-all duration-500"
-            style={{
-              height: i === activeIndex ? "22px" : "8px",
-              background:
-                i === activeIndex
-                  ? "hsl(var(--accent) / 0.35)"
-                  : i < activeIndex
-                  ? "hsl(var(--accent) / 0.12)"
-                  : "hsl(var(--accent) / 0.05)",
-            }}
-          />
-        </button>
-      ))}
+          {phase.label}
+        </p>
+      </div>
     </div>
   );
 }
 
-/* ── Main export ─────────────────────────────────────── */
-export function BuildTimeline({ onPhaseChange }: { onPhaseChange?: (phaseId: string) => void }) {
-  const reducedMotion = useReducedMotion();
-  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [activePhase, setActivePhase] = useState(0);
-  const totalSections = phases.length + 1; // +1 for before/after
-
-  /* Track active section */
-  useEffect(() => {
-    const observers: IntersectionObserver[] = [];
-    sectionRefs.current.forEach((el, idx) => {
-      if (!el) return;
-      const io = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setActivePhase(idx);
-            if (idx < phases.length) {
-              onPhaseChange?.(phases[idx].id);
-            }
-          }
-        },
-        { threshold: 0.5 }
-      );
-      io.observe(el);
-      observers.push(io);
-    });
-    return () => observers.forEach((o) => o.disconnect());
-  }, [onPhaseChange]);
-
-  const setRef = useCallback(
-    (idx: number) => (el: HTMLDivElement | null) => {
-      sectionRefs.current[idx] = el;
-    },
-    []
-  );
-
-  const navigateTo = useCallback((idx: number) => {
-    const el = sectionRefs.current[idx];
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, []);
-
-  /* Preload first 2 */
-  useEffect(() => {
-    phases.slice(0, 2).forEach((p) => {
-      const img = new Image();
-      img.src = p.image;
-    });
-  }, []);
-
+/* ── Main export ── */
+export function BuildTimeline() {
   return (
-    <section className="relative">
-      {/* Header */}
-      <div className="py-24 sm:py-32 text-center">
-        <div className="flex items-center justify-center gap-5 mb-5">
-          <div className="w-10 h-px bg-accent/15" />
-          <p className="text-[8px] sm:text-[9px] uppercase tracking-[0.5em] text-accent/22 font-mono">
-            Build Timeline
-          </p>
-          <div className="w-10 h-px bg-accent/15" />
-        </div>
-        <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/85 tracking-[0.04em]">
-          Construction Sequence
-        </h2>
-        <p className="mt-4 text-[11px] sm:text-[12px] text-muted-foreground/25 font-serif italic max-w-xs mx-auto leading-relaxed tracking-[0.02em]">
-          Engineered layer by layer
-        </p>
-      </div>
-
-      {/* Progress nav */}
-      <TimelineNav
-        activeIndex={activePhase}
-        total={totalSections}
-        onNavigate={navigateTo}
-      />
-
-      {/* Phase scenes */}
+    <div className="relative">
       {phases.map((phase, i) => (
-        <div key={phase.id} ref={setRef(i)}>
-          <PhaseScene phase={phase} index={i} reducedMotion={reducedMotion} />
-        </div>
+        <PhaseScene key={phase.id} phase={phase} index={i} />
       ))}
-
-      {/* Before/After */}
-      <div ref={setRef(phases.length)}>
-        <BeforeAfter reducedMotion={reducedMotion} />
-      </div>
-
-      {/* Authority close */}
-      <div className="py-20 sm:py-28 text-center">
-        <p className="text-[9px] font-mono uppercase tracking-[0.3em] text-accent/12 leading-relaxed">
-          Performance held in every layer
-        </p>
-      </div>
-    </section>
+    </div>
   );
 }
