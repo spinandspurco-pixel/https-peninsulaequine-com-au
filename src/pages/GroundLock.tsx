@@ -5,11 +5,9 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
-// 4-image system — each distinct in purpose
+// Locked 3-image product flow
 import glPattern from "@/assets/gl-system-pattern.jpg";
 import glDetail from "@/assets/gl-system-detail.jpg";
-import glInstall from "@/assets/gl-system-install.jpg";
-import systemEvent from "@/assets/system-event.jpg";
 import glUnderside from "@/assets/gl-system-underside.jpg";
 
 export default function GroundLock() {
