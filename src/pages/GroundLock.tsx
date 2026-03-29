@@ -128,39 +128,6 @@ export default function GroundLock() {
           </div>
         </section>
 
-        {/* ═══ 3. INSTALLATION — Process ══════════════════ */}
-        <section className="py-32 sm:py-44 lg:py-52 relative overflow-hidden">
-          <div className="section-container max-w-6xl mx-auto">
-            <div
-              className="opacity-0 animate-fade-in"
-              style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
-            >
-              <img
-                src={glInstall}
-                alt="GroundLock system installation in progress"
-                className="w-full aspect-[21/9] object-cover"
-                loading="lazy"
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* ═══ 4. EVENT — Scale ═══════════════════════════ */}
-        <section className="py-32 sm:py-44 lg:py-52 relative overflow-hidden">
-          <div className="section-container max-w-6xl mx-auto">
-            <div
-              className="opacity-0 animate-fade-in"
-              style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
-            >
-              <img
-                src={systemEvent}
-                alt="GroundLock deployed at event scale"
-                className="w-full aspect-[21/9] object-cover"
-                loading="lazy"
-              />
-            </div>
-          </div>
-        </section>
 
         {/* ═══ CLOSING ═══════════════════════════════════ */}
         <section className="py-36 sm:py-48 lg:py-56 relative overflow-hidden">
