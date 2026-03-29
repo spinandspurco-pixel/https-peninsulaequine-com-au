@@ -9,8 +9,8 @@ import { InteractiveLayerStack } from "@/components/InteractiveLayerStack";
 import { LandIntelligence } from "@/components/LandIntelligence";
 import { cn } from "@/lib/utils";
 
-// Video
-import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
+// Hero
+import heroFullbleed from "@/assets/hero-home-fullbleed.jpg";
 
 // Portfolio imagery
 import garageInterior from "@/assets/garage-interior-flake.webp";
