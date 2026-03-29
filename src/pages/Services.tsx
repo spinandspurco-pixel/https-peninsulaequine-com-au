@@ -1,16 +1,15 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 
-import equitanaArena from "@/assets/equitana-arena-1.jpg";
-import imgFullSite from "@/assets/services-full-site.jpg";
-import imgGroundlock from "@/assets/services-groundlock.jpg";
-import imgEvent from "@/assets/services-event.jpg";
-
+// Locked image system
+import systemHero from "@/assets/system-hero.jpg";
+import systemStructure from "@/assets/system-structure.jpg";
+import systemProcess from "@/assets/system-process.jpg";
+import systemEvent from "@/assets/system-event.jpg";
 
 export default function Services() {
   useEffect(() => {
@@ -26,10 +25,10 @@ export default function Services() {
       <section className="relative pt-40 sm:pt-52 pb-28 sm:pb-36 overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src={equitanaArena}
+            src={systemHero}
             alt=""
             aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover img-hero"
+            className="absolute inset-0 w-full h-full object-cover"
           />
         </div>
         <div className="absolute inset-0 bg-background/50" />
@@ -42,7 +41,6 @@ export default function Services() {
           >
             How We Build
           </h1>
-
           <p
             className="mt-8 font-mono text-[10px] uppercase tracking-[0.35em] text-foreground/20 opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both" }}
@@ -52,8 +50,7 @@ export default function Services() {
         </div>
       </section>
 
-
-      {/* ═══ FULL SITE BUILDS ═══════════════════════════════ */}
+      {/* ═══ FULL SITE BUILDS ═══════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="py-32 sm:py-40 lg:py-48 relative">
           <div className="absolute inset-0 grain-texture" />
@@ -73,8 +70,7 @@ export default function Services() {
                 Selected projects only.
               </p>
               <div className="mt-12 relative overflow-hidden aspect-[21/9]">
-                <img src={imgFullSite} alt="Completed equestrian arena" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(0.7) saturate(0.85)" }} />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
+                <img src={systemStructure} alt="Steel frame construction" className="w-full h-full object-cover" loading="lazy" />
               </div>
             </RevealOnScroll>
           </div>
@@ -117,8 +113,8 @@ export default function Services() {
               <p className="text-[13px] sm:text-sm text-foreground/35 leading-[1.8] max-w-lg mb-8">
                 Engineered ground stabilisation systems for permanent and temporary environments.
               </p>
-              <div className="mt-12 relative overflow-hidden aspect-[3/2] max-w-xl">
-                <img src={imgGroundlock} alt="GroundLock panel interlock detail" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(0.75) saturate(0.85)" }} />
+              <div className="mt-12 relative overflow-hidden aspect-[4/5] max-w-xl">
+                <img src={systemProcess} alt="Ground engineering process" className="w-full h-full object-cover" loading="lazy" />
               </div>
               <Link
                 to="/groundlock"
@@ -151,8 +147,7 @@ export default function Services() {
                 Designed for repeatable large-scale use.
               </p>
               <div className="mt-4 relative overflow-hidden aspect-[21/9]">
-                <img src={imgEvent} alt="Large-scale event ground system deployment" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(0.65) saturate(0.85)" }} />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
+                <img src={systemEvent} alt="Large-scale indoor event arena" className="w-full h-full object-cover" loading="lazy" />
               </div>
               <Link
                 to="/contact"

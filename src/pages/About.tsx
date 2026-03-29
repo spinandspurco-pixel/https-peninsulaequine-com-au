@@ -2,14 +2,15 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 
-import aboutGround from "@/assets/about-ground.jpg";
-import aboutLayers from "@/assets/about-layers.jpg";
-import aboutPerform from "@/assets/about-perform.jpg";
+// Locked image system — 3 distinct images, no repeats from hero
+import systemProcess from "@/assets/system-process.jpg";
+import systemStructure from "@/assets/system-structure.jpg";
+import systemOutcome from "@/assets/system-outcome.jpg";
 
 const SECTIONS = [
-  { src: aboutGround, line: "Built by those who understand the ground." },
-  { src: aboutLayers, line: "Precision in every layer." },
-  { src: aboutPerform, line: "Environments designed to perform." },
+  { src: systemProcess, line: "Built by those who understand the ground.", aspect: "aspect-[4/5]" },
+  { src: systemStructure, line: "Precision in every layer.", aspect: "aspect-[21/9]" },
+  { src: systemOutcome, line: "Environments designed to perform.", aspect: "aspect-[16/9]" },
 ];
 
 export default function About() {
@@ -53,7 +54,7 @@ export default function About() {
               <img
                 src={section.src}
                 alt={section.line}
-                className="w-full aspect-[4/3] object-cover"
+                className={`w-full ${section.aspect} object-cover`}
                 loading="lazy"
               />
             </div>
