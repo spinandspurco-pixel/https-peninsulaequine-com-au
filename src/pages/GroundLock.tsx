@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import impactFailure from "@/assets/groundlock-impact-failure.jpg";
-import lockingDetail from "@/assets/groundlock-locking-detail.jpg";
-import underLoad from "@/assets/groundlock-under-load.jpg";
-import fieldScale from "@/assets/groundlock-field-scale.jpg";
-import crossSection from "@/assets/groundlock-cross-section.jpg";
-import eventAerial from "@/assets/groundlock-event-aerial.jpg";
-import eventCloseup from "@/assets/groundlock-event-closeup.jpg";
+import glFailure from "@/assets/gl-failure-raw.jpg";
+import glCloseup from "@/assets/gl-closeup-raw.jpg";
+import glMidInstall from "@/assets/gl-mid-install.jpg";
+import glWideArena from "@/assets/gl-wide-arena.jpg";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
