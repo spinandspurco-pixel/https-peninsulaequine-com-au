@@ -306,13 +306,6 @@ export default function Index() {
               <ProjectsScroll />
             </RevealOnScroll>
 
-            <RevealOnScroll direction="up" delay={300}>
-              <div className="mt-12">
-                <Button asChild variant="outline-light" size="default">
-                  <Link to="/gallery">View All Projects <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
-                </Button>
-              </div>
-            </RevealOnScroll>
           </div>
         </div>
       </section>
