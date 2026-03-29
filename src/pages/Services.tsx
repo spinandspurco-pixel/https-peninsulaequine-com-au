@@ -72,6 +72,10 @@ export default function Services() {
               <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/10">
                 Selected projects only.
               </p>
+              <div className="mt-12 relative overflow-hidden aspect-[21/9]">
+                <img src={imgFullSite} alt="Completed equestrian arena" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(0.7) saturate(0.85)" }} />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
+              </div>
             </RevealOnScroll>
           </div>
         </div>
