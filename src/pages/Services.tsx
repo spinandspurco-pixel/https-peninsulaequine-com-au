@@ -136,6 +136,36 @@ export default function Services() {
         </div>
       </section>
 
+      {/* ═══ EVENT INFRASTRUCTURE ══════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="py-32 sm:py-40 lg:py-48 relative">
+          <div className="absolute inset-0 grain-texture" />
+          <div className="section-container max-w-4xl mx-auto relative z-[1]">
+            <RevealOnScroll direction="up">
+              <div className="flex items-center gap-5 mb-5">
+                <div className="w-8 h-px bg-accent/25" />
+                <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/35 font-mono">03</p>
+              </div>
+              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/85 tracking-[0.02em] mb-6">
+                Event Infrastructure
+              </h2>
+              <p className="text-[13px] sm:text-sm text-foreground/35 leading-[1.8] max-w-lg mb-4">
+                Rapid deployment systems for high-traffic equine and event environments.
+              </p>
+              <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/10 mb-8">
+                Designed for repeatable large-scale use.
+              </p>
+              <Link
+                to="/contact"
+                className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-accent/50 hover:text-accent/80 transition-colors duration-500"
+              >
+                Enquire about event systems <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </RevealOnScroll>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ CTA ═══════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
