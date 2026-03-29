@@ -432,5 +432,6 @@ export default function Index() {
         </div>
       </section>
     </Layout>
+    </>
   );
 }
