@@ -117,9 +117,12 @@ export default function Services() {
               <p className="text-[13px] sm:text-sm text-foreground/35 leading-[1.8] max-w-lg mb-8">
                 Engineered ground stabilisation systems for permanent and temporary environments.
               </p>
+              <div className="mt-12 relative overflow-hidden aspect-[3/2] max-w-xl">
+                <img src={imgGroundlock} alt="GroundLock panel interlock detail" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(0.75) saturate(0.85)" }} />
+              </div>
               <Link
                 to="/groundlock"
-                className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-accent/50 hover:text-accent/80 transition-colors duration-500"
+                className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-accent/50 hover:text-accent/80 transition-colors duration-500 mt-8"
               >
                 Explore GroundLock <ArrowRight className="w-3.5 h-3.5" />
               </Link>
