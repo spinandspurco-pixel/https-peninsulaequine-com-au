@@ -12,6 +12,7 @@ import { ProjectsCinematicHero } from "@/components/ProjectsCinematicHero";
 import { ExperienceTheBuild } from "@/components/ExperienceTheBuild";
 
 import { ViewingLine } from "@/components/ViewingLine";
+import { TransformationSlider } from "@/components/TransformationSlider";
 import { ProjectQualification, type ProjectType } from "@/components/ProjectQualification";
 import { BuildOptions } from "@/components/BuildOptions";
 import { GuidedEnquiryFlow } from "@/components/GuidedEnquiryFlow";
