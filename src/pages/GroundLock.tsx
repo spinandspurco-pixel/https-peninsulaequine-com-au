@@ -55,7 +55,7 @@ export default function GroundLock() {
 
           <div className="relative z-10 text-center px-6" style={{ marginTop: "-10vh", marginLeft: "3vw" }}>
             <h1
-              className="font-serif font-semibold text-white tracking-tight leading-[1.1] opacity-0 animate-fade-in"
+              className="font-serif font-semibold text-white/90 tracking-tight leading-[1.1] opacity-0 animate-fade-in"
               style={{
                 fontSize: "clamp(1.8rem, 0.9rem + 4.5vw, 4rem)",
                 animationDelay: "300ms",
