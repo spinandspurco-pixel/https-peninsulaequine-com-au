@@ -72,27 +72,18 @@ export default function Services() {
         <div className="absolute inset-0 grain-hero" />
 
         <div className="section-container relative z-10 text-center max-w-2xl mx-auto">
-          <div
-            className="flex items-center justify-center gap-5 mb-10 opacity-0 animate-fade-in"
-            style={{ animationDelay: "200ms", animationFillMode: "both" }}
-          >
-            <div className="w-8 h-px bg-accent/40" />
-            <p className="text-overline text-accent/70">What We Build</p>
-            <div className="w-8 h-px bg-accent/40" />
-          </div>
-
           <h1
             className="heading-display text-foreground opacity-0 animate-fade-in"
             style={{ animationDelay: "400ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
-            Capabilities
+            How We Build
           </h1>
 
           <p
-            className="mt-8 text-muted-foreground/45 text-sm sm:text-base max-w-md mx-auto leading-relaxed opacity-0 animate-fade-in"
+            className="mt-8 font-mono text-[10px] uppercase tracking-[0.35em] text-foreground/20 opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
-            Focused builds to fully integrated property systems.
+            From Dirt to Dynasty.
           </p>
         </div>
       </section>
