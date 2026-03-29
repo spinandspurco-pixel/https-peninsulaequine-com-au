@@ -102,7 +102,7 @@ export default function GroundLock() {
         </section>
 
         {/* ═══ 2. SYSTEM PRESENCE — Abstract ══════════════ */}
-        <section className="py-40 sm:py-52 lg:py-64 relative overflow-hidden bg-black">
+        <section className="py-52 sm:py-64 lg:py-80 relative overflow-hidden bg-black">
           <div className="section-container max-w-5xl mx-auto px-6">
             <img
               src={glAbstractPattern}
@@ -111,10 +111,10 @@ export default function GroundLock() {
               loading="lazy"
               width={1920}
               height={1080}
-              style={{ opacity: 0.5 }}
+              style={{ opacity: 0.3, filter: "blur(2px)" }}
             />
-            <p className="mt-16 font-serif text-base sm:text-lg text-white/20 text-center tracking-wide italic">
-              Engineered as a system, not a surface.
+            <p className="mt-20 font-serif text-base sm:text-lg text-white/15 text-center tracking-wide italic">
+              Directional logic. Structural intent.
             </p>
           </div>
         </section>
