@@ -284,7 +284,7 @@ function Synthesis() {
           }}
         />
 
-        {/* CTA — readiness delay: muted first, activates after pause */}
+        {/* CTA */}
         <button
           onClick={() => navigate("/contact")}
           className="px-12 py-4 border text-[11px] font-mono uppercase tracking-[0.3em] hover:bg-accent/[0.03]"
@@ -292,17 +292,22 @@ function Synthesis() {
             opacity: visible ? 1 : 0,
             borderColor: "hsl(var(--accent) / 0.08)",
             color: "hsl(var(--foreground) / 0.35)",
-            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1200ms, border-color 600ms ${EASE.cinematic}, color 600ms ${EASE.cinematic}, background-color 600ms ${EASE.cinematic}, box-shadow 800ms ${EASE.cinematic}`,
-            animation: visible
-              ? `etb-cta-ready 800ms ${EASE.cinematic} 2000ms forwards`
-              : "none",
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1200ms, border-color 600ms ${EASE.cinematic}, color 600ms ${EASE.cinematic}, background-color 600ms ${EASE.cinematic}`,
           }}
-          onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.97)"; }}
-          onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
-          Start Your Project
+          Apply to Build →
         </button>
+
+        {/* Micro exclusivity line */}
+        <p
+          className="mt-4 text-[9px] font-mono text-foreground/10 tracking-[0.2em]"
+          style={{
+            opacity: visible ? 1 : 0,
+            transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic} 1500ms`,
+          }}
+        >
+          Selected projects only.
+        </p>
 
         {/* Supporting line */}
         <p
