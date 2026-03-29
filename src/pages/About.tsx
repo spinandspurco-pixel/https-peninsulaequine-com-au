@@ -42,6 +42,12 @@ export default function About() {
           >
             Engineered infrastructure. Considered execution.
           </p>
+          <p
+            className="mt-10 font-mono text-[8px] uppercase tracking-[0.5em] text-foreground/8 opacity-0 animate-fade-in"
+            style={{ animationDelay: "1200ms", animationFillMode: "both", animationDuration: "800ms" }}
+          >
+            Ground. Structure. Horse.
+          </p>
         </div>
       </section>
 
