@@ -150,7 +150,7 @@ export default function Index() {
     <>
       <BrandIntro onComplete={() => {}} />
       <Layout>
-      <section className="relative min-h-[100dvh] overflow-hidden flex items-center justify-center">
+      <section className="relative min-h-[100dvh] overflow-hidden flex items-center justify-center" style={{ paddingBottom: "8vh" }}>
         {/* Full-bleed image — no overlays, no filters, no blur */}
         <img
           src={heroFullbleed}
