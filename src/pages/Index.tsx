@@ -160,6 +160,7 @@ export default function Index() {
           height={1080}
           loading="eager"
           style={{
+            objectPosition: "50% 62%",
             animation: "heroSlowZoom 25s ease-out forwards",
           }}
         />
