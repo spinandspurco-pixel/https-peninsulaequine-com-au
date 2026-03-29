@@ -47,7 +47,7 @@ export default function About() {
 
       {/* ═══ IMAGE-LED SECTIONS ═══════════════════════════ */}
       {SECTIONS.map((section, i) => (
-        <section key={i} className="py-20 sm:py-28">
+        <section key={i} className="py-28 sm:py-36">
           <div className="section-container max-w-5xl mx-auto">
             <div
               className="opacity-0 animate-fade-in"
@@ -62,6 +62,7 @@ export default function About() {
                 alt={section.line}
                 className={`w-full ${section.aspect} object-cover`}
                 loading="lazy"
+                style={{ filter: "brightness(1.06) contrast(1.08)" }}
               />
             </div>
             <p
