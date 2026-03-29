@@ -204,64 +204,26 @@ export function ProjectsCinematicHero() {
       <div className="absolute inset-0 flex items-center z-10">
         <div className="section-container max-w-5xl">
           <div className="max-w-xl">
-            {/* Label */}
-            <div
-              className="flex items-center gap-4 mb-8 opacity-0"
-              style={{ animation: "blueprintFade 0.6s 1.4s ease-out forwards" }}
-            >
-              <div className="w-8 h-px" style={{ backgroundColor: "#C6A86B", opacity: 0.5 }} />
-              <p
-                className="text-[10px] sm:text-[11px] uppercase tracking-[0.35em] font-mono"
-                style={{ color: "rgba(198,168,107,0.6)" }}
-              >
-                Current Project
-              </p>
-            </div>
-
             {/* Heading */}
             <h1
               className="font-serif text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.05] tracking-[0.02em] mb-6 opacity-0"
               style={{
                 color: "#F5F0E8",
-                animation: "heroHeadingReveal 0.9s 1.7s cubic-bezier(0.22, 1, 0.36, 1) forwards",
+                animation: "heroHeadingReveal 0.9s 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards",
               }}
             >
-              Main Ridge
-              <br />
-              Estate
+              Selected Work
             </h1>
 
             {/* Subtext */}
             <p
-              className="text-sm sm:text-base font-serif italic leading-relaxed mb-3 opacity-0"
-              style={{
-                color: "rgba(198,168,107,0.45)",
-                animation: "blueprintFade 0.8s 2.2s ease-out forwards",
-              }}
-            >
-              A private equine facility engineered for performance, flow, and long-term durability.
-            </p>
-
-            {/* Micro line */}
-            <p
               className="text-[11px] sm:text-xs font-mono uppercase tracking-[0.2em] mb-10 opacity-0"
               style={{
                 color: "rgba(198,168,107,0.3)",
-                animation: "blueprintFade 0.6s 2.4s ease-out forwards",
+                animation: "blueprintFade 0.6s 2s ease-out forwards",
               }}
             >
               From Dirt to Dynasty.
-            </p>
-
-            {/* Trust signal */}
-            <p
-              className="text-[10px] sm:text-[11px] font-serif italic mb-10 opacity-0"
-              style={{
-                color: "rgba(198,168,107,0.2)",
-                animation: "blueprintFade 0.6s 2.6s ease-out forwards",
-              }}
-            >
-              Private projects. Discreet builds. Built for long-term ownership.
             </p>
 
             {/* CTA */}
