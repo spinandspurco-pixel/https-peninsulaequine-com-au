@@ -310,7 +310,35 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ═══ FULL-WIDTH OUTCOME ═══════════════════════════ */}
+      {/* ═══ BUILD SEQUENCE ═══════════════════════════════ */}
+      <section className="py-28 sm:py-36 relative overflow-hidden">
+        <div className="section-container max-w-6xl mx-auto">
+          <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/15 mb-10">
+            Built exactly as planned.
+          </p>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            {[
+              { src: seqGround, title: "Ground" },
+              { src: seqBase, title: "Base" },
+              { src: seqStructure, title: "Structure" },
+              { src: seqCompletion, title: "Completion" },
+            ].map((step) => (
+              <div key={step.title}>
+                <img
+                  src={step.src}
+                  alt={step.title}
+                  className="w-full aspect-[4/5] object-cover"
+                  loading="lazy"
+                />
+                <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/25">
+                  {step.title}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="py-20 sm:py-28">
         <div
           className="opacity-0 animate-fade-in"
