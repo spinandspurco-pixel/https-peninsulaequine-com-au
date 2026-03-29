@@ -51,7 +51,7 @@ export default function GroundLock() {
             loading="eager"
             style={{ objectPosition: "52% 48%", transform: "scale(1.15)", filter: "brightness(0.85)" }}
           />
-          />
+
 
           <div className="relative z-10 text-center px-6" style={{ marginTop: "-10vh", marginLeft: "3vw" }}>
             <h1
