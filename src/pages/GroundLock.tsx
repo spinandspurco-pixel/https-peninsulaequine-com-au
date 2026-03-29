@@ -266,7 +266,7 @@ export default function GroundLock() {
             </div>
             <div className="flex flex-col gap-2 sm:gap-3">
               <img
-                src={glCloseup}
+                 src={glEngineerClose}
                 alt="Close-up of interlocking panels — opposing direction connection"
                 className="w-full h-full object-cover"
                 loading="lazy"
