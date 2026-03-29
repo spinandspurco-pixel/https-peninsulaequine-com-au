@@ -62,7 +62,7 @@ export default function About() {
                 alt={section.line}
                 className={`w-full ${section.aspect} object-cover`}
                 loading="lazy"
-                style={{ filter: "brightness(1.06) contrast(1.08)" }}
+                style={{ filter: "brightness(1.15) contrast(1.08)" }}
               />
             </div>
             <p
