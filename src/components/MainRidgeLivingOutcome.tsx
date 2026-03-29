@@ -8,7 +8,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
-import livingImg from "@/assets/living-hero-wide.jpg";
+import livingImg from "@/assets/masterplan-aerial-hero.jpg";
 
 export function MainRidgeLivingOutcome() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -65,11 +65,11 @@ export function MainRidgeLivingOutcome() {
       >
         <img
           src={livingImg}
-          alt="Horses in motion at golden hour — Main Ridge Estate, completed equestrian facility"
+          alt="Main Ridge Estate aerial — completed equestrian facility"
           className="w-full h-full object-cover"
           loading="lazy"
           style={{
-            filter: "saturate(0.85) contrast(1.04) sepia(0.03)",
+            filter: "saturate(0.8) contrast(1.05) brightness(0.85) sepia(0.06)",
           }}
         />
       </div>
