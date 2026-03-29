@@ -10,6 +10,7 @@ import systemHero from "@/assets/system-hero.jpg";
 import systemStructure from "@/assets/system-structure.jpg";
 import systemProcess from "@/assets/system-process.jpg";
 import systemOutcome from "@/assets/system-outcome.jpg";
+import systemEvent from "@/assets/system-event.jpg";
 
 // Transformation (slider exception)
 import transformBefore from "@/assets/transform-before.jpg";
@@ -47,7 +48,7 @@ export default function Index() {
             height={1080}
             loading="eager"
             style={{
-              objectPosition: "50% 62%",
+              objectPosition: "50% 72%",
               animation: "heroSlowZoom 25s ease-out forwards",
             }}
           />
@@ -135,6 +136,7 @@ export default function Index() {
                   alt="Telehandler auger drilling into earth"
                   className="w-full aspect-[4/5] object-cover"
                   loading="lazy"
+                  style={{ objectPosition: "50% 60%" }}
                 />
               </div>
               <div
@@ -171,6 +173,30 @@ export default function Index() {
               style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "800ms" }}
             >
               The outcome speaks for itself.
+            </p>
+          </div>
+        </section>
+
+        {/* ═══ EVENT SCALE ═════════════════════════════ */}
+        <section className="py-28 sm:py-36 relative overflow-hidden">
+          <div className="section-container max-w-6xl mx-auto">
+            <div
+              className="opacity-0 animate-fade-in"
+              style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
+            >
+              <img
+                src={systemEvent}
+                alt="Indoor equestrian arena — event scale"
+                className="w-full aspect-[21/9] object-cover"
+                loading="lazy"
+                style={{ objectPosition: "50% 55%" }}
+              />
+            </div>
+            <p
+              className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/15 text-center opacity-0 animate-fade-in"
+              style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "800ms" }}
+            >
+              Built for performance at any scale.
             </p>
           </div>
         </section>

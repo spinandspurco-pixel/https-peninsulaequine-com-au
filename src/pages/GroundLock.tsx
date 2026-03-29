@@ -5,11 +5,9 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
-// 4-image system — each distinct in purpose
+// Locked 3-image product flow
 import glPattern from "@/assets/gl-system-pattern.jpg";
 import glDetail from "@/assets/gl-system-detail.jpg";
-import glInstall from "@/assets/gl-system-install.jpg";
-import systemEvent from "@/assets/system-event.jpg";
 import glUnderside from "@/assets/gl-system-underside.jpg";
 
 export default function GroundLock() {
@@ -130,39 +128,6 @@ export default function GroundLock() {
           </div>
         </section>
 
-        {/* ═══ 3. INSTALLATION — Process ══════════════════ */}
-        <section className="py-32 sm:py-44 lg:py-52 relative overflow-hidden">
-          <div className="section-container max-w-6xl mx-auto">
-            <div
-              className="opacity-0 animate-fade-in"
-              style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
-            >
-              <img
-                src={glInstall}
-                alt="GroundLock system installation in progress"
-                className="w-full aspect-[21/9] object-cover"
-                loading="lazy"
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* ═══ 4. EVENT — Scale ═══════════════════════════ */}
-        <section className="py-32 sm:py-44 lg:py-52 relative overflow-hidden">
-          <div className="section-container max-w-6xl mx-auto">
-            <div
-              className="opacity-0 animate-fade-in"
-              style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
-            >
-              <img
-                src={systemEvent}
-                alt="GroundLock deployed at event scale"
-                className="w-full aspect-[21/9] object-cover"
-                loading="lazy"
-              />
-            </div>
-          </div>
-        </section>
 
         {/* ═══ CLOSING ═══════════════════════════════════ */}
         <section className="py-36 sm:py-48 lg:py-56 relative overflow-hidden">
