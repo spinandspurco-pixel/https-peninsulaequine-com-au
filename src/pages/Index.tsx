@@ -421,7 +421,7 @@ export default function Index() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button asChild variant="gold" size="lg" className="px-8">
                   <Link to="/site-assessment">
-                    Start Your Project <ArrowRight className="ml-2 h-4 w-4" />
+                    Apply to Build <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
                 <Button asChild size="lg" className="bg-transparent border border-foreground/10 text-foreground/50 hover:text-foreground hover:border-foreground/25 hover:bg-foreground/[0.03] transition-all duration-700 px-8">
