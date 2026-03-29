@@ -71,7 +71,7 @@ export default function Index() {
               From Dirt to Dynasty.
             </h1>
             <p
-              className="mt-6 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.35em] text-white/50 opacity-0 animate-fade-in"
+              className="mt-8 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.45em] text-white/40 opacity-0 animate-fade-in"
               style={{
                 animationDelay: "700ms",
                 animationFillMode: "both",
