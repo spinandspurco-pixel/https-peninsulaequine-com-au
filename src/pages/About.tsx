@@ -22,22 +22,22 @@ export default function About() {
   return (
     <Layout>
       {/* ═══ HERO ═══════════════════════════════════════ */}
-      <section className="pt-44 sm:pt-56 pb-24 sm:pb-32">
+      <section className="pt-48 sm:pt-64 pb-28 sm:pb-40">
         <div className="section-container max-w-2xl mx-auto text-center">
           <h1
-            className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground/85 tracking-tight leading-[1.05] opacity-0 animate-fade-in"
+            className="font-serif text-4xl sm:text-5xl md:text-6xl text-foreground/90 tracking-tight leading-[0.95] opacity-0 animate-fade-in"
             style={{ animationDelay: "300ms", animationFillMode: "both", animationDuration: "800ms" }}
           >
             Built with intent.
           </h1>
           <p
-            className="mt-10 text-[13px] sm:text-[14px] text-foreground/30 leading-[1.9] max-w-lg mx-auto opacity-0 animate-fade-in"
+            className="mt-12 text-[13px] sm:text-[14px] text-foreground/30 leading-[1.9] max-w-lg mx-auto opacity-0 animate-fade-in"
             style={{ animationDelay: "600ms", animationFillMode: "both", animationDuration: "800ms" }}
           >
             Peninsula Equine creates equine environments with a focus on structure, performance, and long-term durability. Every decision is made to serve the land, the build, and the way the space will be used over time.
           </p>
           <p
-            className="mt-8 font-mono text-[10px] uppercase tracking-[0.4em] text-foreground/15 opacity-0 animate-fade-in"
+            className="mt-14 font-mono text-[9px] uppercase tracking-[0.45em] text-foreground/12 opacity-0 animate-fade-in"
             style={{ animationDelay: "900ms", animationFillMode: "both", animationDuration: "800ms" }}
           >
             Engineered infrastructure. Considered execution.
