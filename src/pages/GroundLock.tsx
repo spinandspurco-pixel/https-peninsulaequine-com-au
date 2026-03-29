@@ -51,38 +51,32 @@ export default function GroundLock() {
             width={1920}
             height={1080}
             loading="eager"
+            style={{ objectPosition: "48% 45%" }}
           />
 
-          <div className="relative z-10 text-center" style={{ marginTop: "-4vh" }}>
-            <p
-              className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/30 mb-8 opacity-0 animate-fade-in"
-              style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "1000ms" }}
-            >
-              P.E. Systems Division
-            </p>
-
+          <div className="relative z-10 text-center px-6" style={{ marginTop: "-8vh" }}>
             <h1
-              className="font-serif font-semibold text-white tracking-tight leading-[1.1] opacity-0 animate-fade-in"
+              className="font-serif font-semibold text-white tracking-tight leading-[1.15] opacity-0 animate-fade-in"
               style={{
                 fontSize: "clamp(1.6rem, 0.8rem + 4vw, 3.5rem)",
-                animationDelay: "400ms",
+                animationDelay: "300ms",
                 animationFillMode: "both",
-                animationDuration: "1000ms",
+                animationDuration: "1200ms",
                 textShadow: "0 2px 40px rgba(0,0,0,0.6)",
               }}
             >
               GroundLock™<br />
-              <span className="font-light" style={{ fontSize: "0.65em" }}>
+              <span className="font-light" style={{ fontSize: "0.6em" }}>
                 Directional Interlock System
               </span>
             </h1>
 
             <p
-              className="mt-8 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-white/35 opacity-0 animate-fade-in"
+              className="mt-10 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-white/30 opacity-0 animate-fade-in"
               style={{
-                animationDelay: "700ms",
+                animationDelay: "800ms",
                 animationFillMode: "both",
-                animationDuration: "1000ms",
+                animationDuration: "1200ms",
                 textShadow: "0 1px 10px rgba(0,0,0,0.4)",
               }}
             >
