@@ -344,24 +344,21 @@ export default function Index() {
         </div>
       </section>
 
-      <section className="py-20 sm:py-28">
-        <div
-          className="opacity-0 animate-fade-in"
-          style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
-        >
-          <img
-            src={portfolioPropertyAerial}
-            alt="Completed equine property aerial"
-            className="w-full aspect-[21/9] object-cover"
-            loading="lazy"
+      {/* ═══ TRANSFORMATION ═════════════════════════════ */}
+      <section className="py-28 sm:py-36 relative overflow-hidden">
+        <div className="section-container max-w-5xl mx-auto">
+          <h2 className="font-serif text-2xl sm:text-3xl text-foreground/80 tracking-tight mb-10 sm:mb-14">
+            Transformation
+          </h2>
+          <BeforeAfterSlider
+            before={transformBefore}
+            after={transformAfter}
+            alt="Site transformation"
           />
+          <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/15 text-center">
+            From Dirt to Dynasty.
+          </p>
         </div>
-        <p
-          className="text-center font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.35em] text-muted-foreground/20 mt-8 opacity-0 animate-fade-in"
-          style={{ animationDelay: "600ms", animationFillMode: "both", animationDuration: "800ms" }}
-        >
-          The outcome speaks for itself.
-        </p>
       </section>
 
       {/* ═══ FINAL CTA ═══════════════════════════════════ */}
