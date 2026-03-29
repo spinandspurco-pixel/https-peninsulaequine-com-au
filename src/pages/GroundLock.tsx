@@ -106,7 +106,7 @@ export default function GroundLock() {
             </div>
             <div className="relative overflow-hidden">
               <img
-                src={glWideArena}
+                 src={glWideScale}
                 alt="GroundLock stabilised arena surface at scale"
                 className="absolute inset-0 w-full h-full object-cover"
                 loading="lazy"
