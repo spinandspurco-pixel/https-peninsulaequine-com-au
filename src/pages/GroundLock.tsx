@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import glFailure from "@/assets/gl-failure-raw.jpg";
-import glCloseup from "@/assets/gl-closeup-raw.jpg";
-import glMidInstall from "@/assets/gl-mid-install.jpg";
-import glWideArena from "@/assets/gl-wide-arena.jpg";
+import glEngineerClose from "@/assets/gl-1-engineer-close.jpg";
+import glSitePerspective from "@/assets/gl-2-site-perspective.jpg";
+import glWideScale from "@/assets/gl-3-wide-scale.jpg";
+import glCutaway from "@/assets/gl-4-cutaway.jpg";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
@@ -105,7 +106,7 @@ export default function GroundLock() {
             </div>
             <div className="relative overflow-hidden">
               <img
-                src={glWideArena}
+                 src={glWideScale}
                 alt="GroundLock stabilised arena surface at scale"
                 className="absolute inset-0 w-full h-full object-cover"
                 loading="lazy"
@@ -255,7 +256,7 @@ export default function GroundLock() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 mb-14">
             <div className="sm:col-span-2">
               <img
-                src={glMidInstall}
+                src={glSitePerspective}
                 alt="Horse in motion on GroundLock stabilised surface — system under force"
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -265,7 +266,7 @@ export default function GroundLock() {
             </div>
             <div className="flex flex-col gap-2 sm:gap-3">
               <img
-                src={glCloseup}
+                 src={glEngineerClose}
                 alt="Close-up of interlocking panels — opposing direction connection"
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -273,7 +274,7 @@ export default function GroundLock() {
                 height={768}
               />
               <img
-                src={glCloseup}
+                 src={glCutaway}
                 alt="Cross-section showing sub-base, stabilisation grid, and surface layers"
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -311,7 +312,7 @@ export default function GroundLock() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 mb-14">
             <div className="sm:col-span-2">
               <img
-                src={glWideArena}
+                src={glWideScale}
                 alt="Large-scale event ground stabilisation system — aerial view"
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -321,7 +322,7 @@ export default function GroundLock() {
             </div>
             <div>
               <img
-                src={glCloseup}
+                src={glEngineerClose}
                 alt="Ground protection system under temporary event infrastructure"
                 className="w-full h-full object-cover"
                 loading="lazy"
