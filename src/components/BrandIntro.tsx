@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 const SESSION_KEY = "pe-brand-intro-seen";
 
 export function BrandIntro({ onComplete }: { onComplete: () => void }) {
-  const [phase, setPhase] = useState<"black" | "title" | "sub" | "exit" | "done">("black");
+  const [phase, setPhase] = useState<"black" | "title" | "sub" | "done">("black");
 
   useEffect(() => {
     if (sessionStorage.getItem(SESSION_KEY)) {
@@ -12,16 +12,16 @@ export function BrandIntro({ onComplete }: { onComplete: () => void }) {
       return;
     }
 
-    // Step 1: Black screen 1000ms
+    // Step 1: Black screen — 1000ms silence
     const t1 = setTimeout(() => setPhase("title"), 1000);
-    // Step 2: Title fades in, hold 1200ms then show subtext
-    const t2 = setTimeout(() => setPhase("sub"), 2200);
-    // Step 3: Subtext visible, hold 1000ms then hard cut
+    // Step 2: Title fades in, hold 1400ms then reveal subtext
+    const t2 = setTimeout(() => setPhase("sub"), 2400);
+    // Step 3: Subtext holds 1200ms then hard cut (instant removal)
     const t3 = setTimeout(() => {
       setPhase("done");
       sessionStorage.setItem(SESSION_KEY, "1");
       onComplete();
-    }, 3400);
+    }, 3600);
 
     return () => {
       clearTimeout(t1);
@@ -37,35 +37,36 @@ export function BrandIntro({ onComplete }: { onComplete: () => void }) {
       className="fixed inset-0 z-[9999] flex flex-col items-center justify-center pointer-events-none select-none"
       style={{ background: "#000" }}
     >
-      {/* Faint GroundLock pattern — emerges at low opacity */}
+      {/* Faint structural linework — subliminal, not decorative */}
       <div
         className="absolute inset-0"
         style={{
-          opacity: phase === "sub" ? 0.03 : 0,
-          transition: "opacity 1200ms ease-in",
+          opacity: phase === "sub" ? 0.025 : 0,
+          transition: "opacity 1400ms ease-in",
           backgroundImage: `repeating-linear-gradient(
             0deg,
             transparent,
-            transparent 38px,
-            hsl(var(--accent) / 0.15) 38px,
-            hsl(var(--accent) / 0.15) 40px
+            transparent 44px,
+            hsl(var(--accent) / 0.12) 44px,
+            hsl(var(--accent) / 0.12) 45px
           ),
           repeating-linear-gradient(
             90deg,
             transparent,
-            transparent 38px,
-            hsl(var(--accent) / 0.15) 38px,
-            hsl(var(--accent) / 0.15) 40px
+            transparent 44px,
+            hsl(var(--accent) / 0.12) 44px,
+            hsl(var(--accent) / 0.12) 45px
           )`,
         }}
         aria-hidden
       />
 
-      {/* Title: Peninsula Equine */}
+      {/* Brand name — warm off-white, restrained */}
       <h1
-        className="font-serif font-light tracking-[0.12em] text-white/80"
+        className="font-serif font-light tracking-[0.1em]"
         style={{
-          fontSize: "clamp(1.2rem, 0.6rem + 2.5vw, 2.2rem)",
+          fontSize: "clamp(1.15rem, 0.5rem + 2.5vw, 2rem)",
+          color: "hsl(36 10% 85%)",
           opacity: phase === "black" ? 0 : 1,
           transition: "opacity 800ms ease-in",
         }}
@@ -73,11 +74,13 @@ export function BrandIntro({ onComplete }: { onComplete: () => void }) {
         Peninsula Equine
       </h1>
 
-      {/* Subtext: Engineered Infrastructure */}
+      {/* Subtext — architectural, barely there */}
       <p
-        className="mt-4 font-mono uppercase tracking-[0.35em] text-white/20"
+        className="mt-4 font-mono uppercase"
         style={{
-          fontSize: "clamp(0.55rem, 0.4rem + 0.5vw, 0.7rem)",
+          fontSize: "clamp(0.5rem, 0.35rem + 0.45vw, 0.65rem)",
+          letterSpacing: "0.4em",
+          color: "hsl(36 8% 45%)",
           opacity: phase === "sub" ? 1 : 0,
           transition: "opacity 600ms ease-in",
         }}
