@@ -167,6 +167,7 @@ export default function Index() {
                 alt="Completed equestrian property — aerial view"
                 className="w-full aspect-[21/9] object-cover"
                 loading="lazy"
+                style={{ filter: "brightness(1.03) contrast(1.04) saturate(1.06) sepia(0.03)" }}
               />
             </div>
             <p
