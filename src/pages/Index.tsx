@@ -136,8 +136,9 @@ export default function Index() {
   }, [handleScroll]);
 
   return (
-    <Layout>
-      {/* ═══ 1. HERO — CINEMATIC ARRIVAL ═══════════════ */}
+    <>
+      <BrandIntro onComplete={() => {}} />
+      <Layout>
       <section className="relative min-h-[100dvh] overflow-hidden flex items-center justify-center bg-[hsl(222_20%_4%)] hero-center-light">
         {/* Background — visible immediately */}
         <div style={{ opacity: 1 }}>
