@@ -21,6 +21,12 @@ import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
 import portfolioArenaSymmetry from "@/assets/portfolio-arena-symmetry.jpg";
 import portfolioPropertyAerial from "@/assets/portfolio-property-aerial.jpg";
 
+// Build sequence
+import seqGround from "@/assets/seq-ground.jpg";
+import seqBase from "@/assets/seq-base.jpg";
+import seqStructure from "@/assets/seq-structure.jpg";
+import seqCompletion from "@/assets/seq-completion.jpg";
+
 // CTA closer
 import heroSunset from "@/assets/hero-sunset.webp";
 
