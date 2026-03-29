@@ -9,8 +9,8 @@ import { InteractiveLayerStack } from "@/components/InteractiveLayerStack";
 import { LandIntelligence } from "@/components/LandIntelligence";
 import { cn } from "@/lib/utils";
 
-// Video
-import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
+// Hero
+import heroFullbleed from "@/assets/hero-home-fullbleed.jpg";
 
 // Portfolio imagery
 import garageInterior from "@/assets/garage-interior-flake.webp";
@@ -139,108 +139,50 @@ export default function Index() {
     <>
       <BrandIntro onComplete={() => {}} />
       <Layout>
-      <section className="relative min-h-[100dvh] overflow-hidden flex items-center justify-center bg-[hsl(222_20%_4%)] hero-center-light">
-        {/* Background — visible immediately */}
-        <div style={{ opacity: 1 }}>
-          <video
-            autoPlay muted loop playsInline
-            preload="auto"
-            poster={heroVideo}
-            className="absolute inset-0 w-full h-full object-cover img-hero"
-            style={{ width: '100%', height: '100%' }}
-          >
-            <source src={heroVideo} type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-background/55" />
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: "radial-gradient(ellipse 48% 33% at 50% 46%, transparent 0%, hsl(222 20% 4% / 0.72) 42%, hsl(222 20% 4% / 0.92) 100%)",
-            }}
-          />
-          {/* Edge + corner vignette — reduced */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: "linear-gradient(to bottom, hsl(222 20% 4% / 0.30) 0%, transparent 28%, transparent 72%, hsl(222 20% 4% / 0.50) 100%)",
-            }}
-          />
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: "radial-gradient(circle at 0% 0%, hsl(222 20% 4% / 0.25) 0%, transparent 35%), radial-gradient(circle at 100% 0%, hsl(222 20% 4% / 0.25) 0%, transparent 35%), radial-gradient(circle at 0% 100%, hsl(222 20% 4% / 0.20) 0%, transparent 35%), radial-gradient(circle at 100% 100%, hsl(222 20% 4% / 0.20) 0%, transparent 35%)",
-            }}
-          />
-        </div>
-        <div className="absolute inset-0 pointer-events-none grain-hero" />
-
-        {/* Content — staged reveals, fades on scroll */}
-        <div
-          ref={heroContentRef}
-          className="relative z-10 section-container max-w-5xl mx-auto flex flex-col min-h-[100dvh] justify-center"
-          style={{ opacity: heroFade, willChange: "opacity" }}
-        >
-          <div className="text-center flex flex-col items-center gap-8 sm:gap-10">
-            {/* Headline — dominant focal point */}
-            <h1
-              className="font-serif font-black text-foreground leading-[0.93] tracking-[-0.025em]"
-              style={{
-                fontSize: "clamp(3rem, 1.6rem + 7vw, 7.5rem)",
-                textShadow: "0 2px 40px hsl(222 20% 4% / 0.6)",
-              }}
-            >
-              This is what ground<br className="hidden sm:block" /> should have always been.
-            </h1>
-
-            {/* Secondary line — subtle fade in at 0.7s */}
-            <p
-              className="text-[10px] sm:text-[11px] uppercase max-w-lg leading-[2.4]"
-              style={{
-                opacity: 0,
-                animation: "heroFadeIn 600ms cubic-bezier(0.45,0,0.15,1) 500ms forwards",
-                letterSpacing: "0.32em",
-                color: "hsl(var(--muted-foreground) / 0.28)",
-              }}
-            >
-              Engineered for load. Designed for permanence.
-            </p>
-
-            {/* CTA buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <Button asChild variant="gold" size="lg" className="px-8 tracking-[0.08em]">
-                <Link to="/site-assessment">
-                  Apply to Build <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button asChild size="lg" className="bg-transparent border border-foreground/10 text-foreground/50 hover:text-foreground hover:border-foreground/25 hover:bg-foreground/[0.03] transition-all duration-300 ease-in-out px-8 tracking-[0.08em]">
-                <Link to="/gallery">View Projects</Link>
-              </Button>
-            </div>
-            <p className="text-[9px] font-mono uppercase tracking-[0.35em] text-foreground/10 text-center mt-6">
-              Selected projects only.
-            </p>
-          </div>
-        </div>
-
-        {/* Scroll indicator — visible immediately */}
-        <div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
-        >
-          <div className="w-px h-14 bg-accent/8 relative overflow-hidden">
-            <div
-              className="absolute top-0 w-full h-4 bg-accent/25"
-              style={{ animation: "scrollPulse 3s ease-in-out infinite 7s" }}
-            />
-          </div>
-        </div>
-
-        {/* Bottom bleed — dissolves hero into next section */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-40 sm:h-52 pointer-events-none z-20"
+      <section className="relative min-h-[100dvh] overflow-hidden flex items-center justify-center">
+        {/* Full-bleed image — no overlays, no filters, no blur */}
+        <img
+          src={heroFullbleed}
+          alt="Luxury equestrian arena at golden hour"
+          className="absolute inset-0 w-full h-full object-cover"
+          width={1920}
+          height={1080}
+          loading="eager"
           style={{
-            background: "linear-gradient(to bottom, transparent 0%, hsl(var(--card)) 100%)",
+            animation: "heroSlowZoom 25s ease-out forwards",
           }}
         />
+
+        {/* Content */}
+        <div
+          ref={heroContentRef}
+          className="relative z-10 text-center"
+          style={{ opacity: heroFade, willChange: "opacity" }}
+        >
+          <h1
+            className="font-serif font-semibold text-white tracking-tight leading-[1.05] opacity-0 animate-fade-in"
+            style={{
+              fontSize: "clamp(2rem, 1rem + 5vw, 4.5rem)",
+              animationDelay: "300ms",
+              animationFillMode: "both",
+              animationDuration: "800ms",
+              textShadow: "0 2px 30px rgba(0,0,0,0.4)",
+            }}
+          >
+            From Dirt to Dynasty.
+          </h1>
+          <p
+            className="mt-6 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.35em] text-white/50 opacity-0 animate-fade-in"
+            style={{
+              animationDelay: "700ms",
+              animationFillMode: "both",
+              animationDuration: "800ms",
+              textShadow: "0 1px 10px rgba(0,0,0,0.3)",
+            }}
+          >
+            Built environments for equine performance.
+          </p>
+        </div>
       </section>
 
       {/* ═══ 2. BREATHING STATEMENT ══════════════════════ */}
