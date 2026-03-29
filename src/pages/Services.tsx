@@ -52,20 +52,6 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ═══ BUILD IMAGE — VISUAL PROOF ════════════════════ */}
-      <section className="relative overflow-hidden">
-        <RevealOnScroll direction="up" duration={800}>
-          <div className="relative aspect-[21/9]">
-            <img
-              src={stoneworkStables}
-              alt="Barn frame structure"
-              className="absolute inset-0 w-full h-full object-cover img-feature"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/20" />
-          </div>
-        </RevealOnScroll>
-      </section>
 
       {/* ═══ FULL SITE BUILDS ═══════════════════════════════ */}
       <section className="relative overflow-hidden">
