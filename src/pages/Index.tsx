@@ -112,7 +112,7 @@ export default function Index() {
             loading="lazy"
             style={{ objectPosition: "50% 40%" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
           <div className="relative z-10 section-container max-w-6xl mx-auto pb-16 sm:pb-20">
             <h2
               className="font-serif text-2xl sm:text-3xl text-white/80 tracking-tight opacity-0 animate-fade-in"
