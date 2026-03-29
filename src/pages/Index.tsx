@@ -348,13 +348,6 @@ export default function Index() {
               ))}
             </div>
 
-            <RevealOnScroll direction="up" delay={300}>
-              <div className="text-center mt-14">
-                <Button asChild variant="outline-light" size="default">
-                  <Link to="/services">View All Services <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
-                </Button>
-              </div>
-            </RevealOnScroll>
           </div>
         </div>
       </section>
