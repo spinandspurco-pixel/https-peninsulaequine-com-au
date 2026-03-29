@@ -7,6 +7,7 @@ import { ArrowRight } from "lucide-react";
 
 import glIconHero from "@/assets/gl-icon-hero.jpg";
 import glAbstractPattern from "@/assets/gl-abstract-pattern.jpg";
+import glApplicationHint from "@/assets/gl-application-hint.jpg";
 
 export default function GroundLock() {
   const [gateOpen, setGateOpen] = useState(false);
@@ -48,9 +49,10 @@ export default function GroundLock() {
             width={1920}
             height={1080}
             loading="eager"
+            style={{ objectPosition: "52% 48%" }}
           />
 
-          <div className="relative z-10 text-center px-6" style={{ marginTop: "-8vh" }}>
+          <div className="relative z-10 text-center px-6" style={{ marginTop: "-10vh" }}>
             <h1
               className="font-serif font-semibold text-white tracking-tight leading-[1.1] opacity-0 animate-fade-in"
               style={{
@@ -64,56 +66,77 @@ export default function GroundLock() {
             </h1>
 
             <p
-              className="mt-10 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.4em] text-white/25 opacity-0 animate-fade-in"
+              className="mt-8 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.4em] text-white/25 opacity-0 animate-fade-in"
               style={{
-                animationDelay: "800ms",
+                animationDelay: "700ms",
                 animationFillMode: "both",
                 animationDuration: "1200ms",
               }}
             >
               Directional Interlock System
             </p>
+
+            <p
+              className="mt-16 font-serif text-[12px] sm:text-[13px] italic text-white/15 opacity-0 animate-fade-in"
+              style={{
+                animationDelay: "1200ms",
+                animationFillMode: "both",
+                animationDuration: "1200ms",
+              }}
+            >
+              Built for load. Designed for control.
+            </p>
           </div>
         </section>
 
-        {/* ═══ 2. SYSTEM PATTERN — Abstract ═══════════════ */}
-        <section className="py-36 sm:py-48 lg:py-56 relative overflow-hidden bg-black">
+        {/* ═══ 2. SYSTEM PRESENCE — Abstract ══════════════ */}
+        <section className="py-40 sm:py-52 lg:py-64 relative overflow-hidden bg-black">
           <div className="section-container max-w-5xl mx-auto px-6">
             <img
               src={glAbstractPattern}
               alt="GroundLock system pattern"
-              className="w-full aspect-[21/9] object-cover opacity-60"
+              className="w-full aspect-[21/9] object-cover"
+              loading="lazy"
+              width={1920}
+              height={1080}
+              style={{ opacity: 0.5 }}
+            />
+            <p className="mt-16 font-serif text-base sm:text-lg text-white/20 text-center tracking-wide italic">
+              Engineered as a system, not a surface.
+            </p>
+          </div>
+        </section>
+
+        {/* ═══ 3. APPLICATION HINT ════════════════════════ */}
+        <section className="py-40 sm:py-52 lg:py-64 relative overflow-hidden bg-black">
+          <div className="section-container max-w-5xl mx-auto px-6">
+            <img
+              src={glApplicationHint}
+              alt="Arena surface — GroundLock application"
+              className="w-full aspect-[21/9] object-cover"
               loading="lazy"
               width={1920}
               height={1080}
             />
-            <div className="mt-14 sm:mt-18">
-              <p className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.35em] text-white/15 text-center">
-                Engineered for performance. Built for scale.
+            <div className="mt-16 text-center">
+              <p className="font-serif text-base sm:text-lg text-white/20 tracking-wide italic leading-[1.6]">
+                Permanent where you need it.
+                <br />
+                Deployable where you don't.
               </p>
             </div>
           </div>
         </section>
 
-        {/* ═══ CLOSING ═══════════════════════════════════ */}
-        <section className="py-36 sm:py-48 lg:py-56 relative overflow-hidden bg-black">
+        {/* ═══ CLOSING CTA ═══════════════════════════════ */}
+        <section className="py-40 sm:py-52 lg:py-64 relative overflow-hidden bg-black">
           <div className="relative z-[1] text-center max-w-md mx-auto px-6">
-            <p
-              className="font-serif text-xl sm:text-2xl text-white/30 italic tracking-wide leading-[1.4] mb-14"
-            >
-              Not optional. Foundational.
-            </p>
             <Button variant="gold" size="lg" onClick={() => setGateOpen(true)}>
-              Apply to Build <ArrowRight className="ml-2 h-4 w-4" />
+              Enquire About GroundLock <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            <div className="mt-10">
-              <Link
-                to="/groundlock/how-it-works"
-                className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/12 hover:text-white/25 transition-colors"
-              >
-                Request System Specs
-              </Link>
-            </div>
+            <p className="mt-8 font-mono text-[9px] uppercase tracking-[0.35em] text-white/12">
+              Limited deployment availability
+            </p>
           </div>
         </section>
       </Layout>
