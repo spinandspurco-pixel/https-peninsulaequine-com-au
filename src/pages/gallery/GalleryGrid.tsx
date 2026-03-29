@@ -11,7 +11,7 @@ const ITEMS_PER_PAGE = 24;
 const CATEGORY_ORDER = [
   { key: "arena", label: "Arenas", overline: "Performance Surfaces" },
   { key: "barn", label: "Stables & Barns", overline: "Equine Structures" },
-  { key: "infrastructure", label: "GroundLock & Infrastructure", overline: "Engineered Systems" },
+  { key: "infrastructure", label: "Infrastructure", overline: "Engineered Systems" },
   { key: "stonework", label: "Stonework", overline: "Material Craft" },
   { key: "woodwork", label: "Woodwork", overline: "Timber Detail" },
   { key: "events", label: "Events", overline: "Competition Preparation" },
