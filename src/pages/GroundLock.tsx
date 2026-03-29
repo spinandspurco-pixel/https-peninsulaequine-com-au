@@ -311,7 +311,7 @@ export default function GroundLock() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 mb-14">
             <div className="sm:col-span-2">
               <img
-                src={eventAerial}
+                src={glWideArena}
                 alt="Large-scale event ground stabilisation system — aerial view"
                 className="w-full h-full object-cover"
                 loading="lazy"
