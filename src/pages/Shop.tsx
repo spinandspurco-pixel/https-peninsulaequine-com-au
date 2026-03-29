@@ -63,7 +63,7 @@ export default function Shop() {
       </section>
 
       {/* ═══ CLOSER ═══════════════════════════════════════ */}
-      <section className="py-28 sm:py-36">
+      <section className="py-28 sm:py-36" style={{ backgroundColor: "#0b0b0b" }}>
         <div className="text-center">
           <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/12 mb-10">
             Launching soon.
