@@ -35,23 +35,25 @@ export default function Shop() {
       </section>
 
       {/* ═══ PRODUCT GRID ═════════════════════════════════ */}
-      <section className="pb-28 sm:pb-36">
+      <section className="pb-28 sm:pb-36" style={{ backgroundColor: "#0b0b0b" }}>
         <div className="section-container max-w-5xl mx-auto">
-          <div className="grid grid-cols-2 gap-3 sm:gap-5">
+          <div className="grid grid-cols-2 gap-8 sm:gap-12">
             {PRODUCTS.map((product) => (
               <div
                 key={product.name}
                 className="group cursor-pointer"
               >
-                <div className="overflow-hidden">
+                <div className="relative overflow-hidden" style={{ backgroundColor: "#0b0b0b" }}>
                   <img
                     src={product.src}
                     alt={product.name}
-                    className="w-full aspect-[4/5] object-cover transition-transform duration-500 ease-out group-hover:-translate-y-1"
+                    className="w-full aspect-[4/5] object-cover transition-transform duration-700 ease-out group-hover:-translate-y-1"
                     loading="lazy"
+                    style={{ filter: "brightness(0.85) contrast(1.05)" }}
                   />
+                  <div className="absolute inset-0 pointer-events-none" style={{ boxShadow: "inset 0 0 60px 30px #0b0b0b" }} />
                 </div>
-                <p className="mt-4 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-foreground/30 group-hover:text-foreground/50 transition-colors duration-300">
+                <p className="mt-5 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-foreground/25 group-hover:text-foreground/45 transition-colors duration-500 text-center">
                   {product.name}
                 </p>
               </div>
