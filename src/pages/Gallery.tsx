@@ -345,7 +345,7 @@ export default function Gallery() {
                 />
                 <div className="mt-6 sm:mt-8">
                   <p className="font-mono text-[8px] uppercase tracking-[0.35em] text-accent/25 mb-2">Craft Detail</p>
-                  <p className="font-serif text-[13px] sm:text-sm text-foreground/25 italic">Hand-laid stone. No shortcuts.</p>
+                  <p className="font-serif text-[13px] sm:text-sm text-foreground/25 italic">Natural stonework laid by hand to structural tolerances.</p>
                 </div>
               </RevealOnScroll>
             </div>
