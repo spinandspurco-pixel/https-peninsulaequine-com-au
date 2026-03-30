@@ -146,7 +146,7 @@ export default function GroundLock() {
             <Button variant="gold" size="lg" onClick={() => setGateOpen(true)}>
               Request Access <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            <p className="mt-8 font-mono text-[9px] uppercase tracking-[0.35em] text-white/12">
+            <p className="mt-8 font-mono text-[9px] uppercase tracking-[0.35em] text-white/15">
               Limited deployment availability
             </p>
           </div>
