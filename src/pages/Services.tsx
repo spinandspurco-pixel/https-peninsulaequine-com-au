@@ -147,7 +147,7 @@ export default function Services() {
                 Designed for repeatable large-scale use.
               </p>
               <div className="mt-4 relative overflow-hidden aspect-[21/9]">
-                <img src={systemEvent} alt="Large-scale indoor event arena" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.1) contrast(1.12) saturate(0.85)" }} />
+                <img src={systemEvent} alt="Large-scale indoor event arena" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.15) contrast(1.08) saturate(0.95) sepia(0.04)" }} />
               </div>
               <Link
                 to="/contact"
