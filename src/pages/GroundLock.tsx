@@ -78,7 +78,7 @@ export default function GroundLock() {
             </p>
 
             <p
-              className="mt-16 font-serif text-[12px] sm:text-[13px] italic text-white/15 opacity-0 animate-fade-in"
+              className="mt-16 font-serif text-[12px] sm:text-[13px] italic text-white/20 opacity-0 animate-fade-in"
               style={{
                 animationDelay: "1200ms",
                 animationFillMode: "both",
