@@ -68,12 +68,12 @@ const STATUS_MAP: Record<FamilyEntry["status"], { label: string; style: string }
   future: { label: "Future Division", style: "text-foreground/20" },
 };
 
-/* ── Image strip data ─────────────────────────────── */
+/* ── Image strip data — product-consistent ── */
 
 const MATERIAL_IMAGES = [
-  { src: steelBarnFrame, alt: "Structural steel barn frame" },
-  { src: reclaimedBeam, alt: "Workshop beam preparation" },
-  { src: roofingDetail, alt: "Steel roofing detail" },
+  { src: glIconHero, alt: "GroundLock horseshoe panel — product identity" },
+  { src: glAbstractPattern, alt: "GroundLock system pattern" },
+  { src: glApplicationHint, alt: "GroundLock surface application" },
 ];
 
 /* ── Family card ──────────────────────────────────── */
