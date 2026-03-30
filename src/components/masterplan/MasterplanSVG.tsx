@@ -458,8 +458,8 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
               <path
                 d={z.path}
                 fill="none"
-                stroke="hsl(var(--accent) / 0.14)"
-                strokeWidth="0.9"
+                stroke="hsl(var(--accent) / 0.08)"
+                strokeWidth="0.6"
                 strokeDasharray="400"
                 strokeDashoffset="0"
                 className="pointer-events-none"
