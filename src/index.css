@@ -289,27 +289,7 @@
 }
 
 
-  /* ═══════════════════════════════════════════════════════
-     ANIMATION UTILITIES
-     ═══════════════════════════════════════════════════════ */
-  .editorial-fade-in.visible {
-    @apply opacity-100 translate-y-0;
-  }
 
-
-  .mask-reveal.visible {
-    clip-path: inset(0 0 0 0);
-  }
-
-  .line-grow.visible {
-    @apply scale-x-100;
-  }
-
-  /* Stagger delays — longer intervals for luxury feel */
-
-  /* ═══════════════════════════════════════════════════════
-     TEMPERATURE & ADAPTIVE LIGHTING
-     ═══════════════════════════════════════════════════════ */
 
   /* Gold / accent hover — brushed metal catching light */
   .btn-temp-gold {
