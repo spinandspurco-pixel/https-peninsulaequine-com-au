@@ -455,9 +455,9 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
             )}
             <path
               d={z.path}
-              fill={isActive ? "hsl(var(--accent) / 0.035)" : `hsl(var(--accent) / ${ls.fillAlpha})`}
-              stroke={isActive ? "hsl(var(--accent) / 0.2)" : `hsl(var(--accent) / ${ls.zoneOpacity})`}
-              strokeWidth={isActive ? ls.strokeW * 1.4 : ls.strokeW}
+              fill={isActive ? "hsl(var(--accent) / 0.02)" : `hsl(var(--accent) / ${ls.fillAlpha})`}
+              stroke={isActive ? "hsl(var(--accent) / 0.12)" : `hsl(var(--accent) / ${ls.zoneOpacity})`}
+              strokeWidth={isActive ? ls.strokeW * 1.2 : ls.strokeW}
               style={{ transition: `fill ${T} ${T_EASE}, stroke ${T} ${T_EASE}, stroke-width ${T} ${T_EASE}`, cursor: "pointer" }}
               onMouseEnter={() => onHover(z.id)}
               onMouseLeave={onLeave}
