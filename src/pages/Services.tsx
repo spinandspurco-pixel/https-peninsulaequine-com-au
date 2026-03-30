@@ -50,33 +50,30 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ═══ FULL SITE BUILDS — wide cinematic ═══════════ */}
+      {/* ═══ FULL SITE BUILDS ═══════════════════════════ */}
       <section className="relative overflow-hidden">
-        <div className="py-32 sm:py-40 lg:py-52 relative">
-          <div className="absolute inset-0 grain-texture" />
+        <div className="py-28 sm:py-36 lg:py-44 relative">
           <div className="section-container max-w-5xl mx-auto relative z-[1]">
             <RevealOnScroll direction="up">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-end">
-                {/* Text — left */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
                 <div className="lg:col-span-4">
-                  <div className="flex items-center gap-5 mb-5">
-                    <div className="w-8 h-px bg-accent/25" />
-                    <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/35 font-mono">01</p>
+                  <div className="flex items-center gap-4 mb-5">
+                    <div className="w-6 h-px bg-accent/15" />
+                    <p className="text-[9px] uppercase tracking-[0.4em] text-accent/25 font-mono">01</p>
                   </div>
-                  <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/85 tracking-[0.02em] mb-6">
+                  <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/80 tracking-[0.02em] mb-6">
                     Full Site Builds
                   </h2>
-                  <p className="text-[13px] sm:text-sm text-foreground/35 leading-[1.8] max-w-sm">
+                  <p className="text-[13px] text-foreground/30 leading-[1.8] max-w-sm">
                     Complete project delivery from ground preparation to finished arena.
                   </p>
-                  <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/10">
+                  <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/8">
                     Selected projects only.
                   </p>
                 </div>
-                {/* Image — right, large */}
                 <div className="lg:col-span-8">
                   <div className="relative overflow-hidden aspect-[16/9]">
-                    <img src={imgFullBuild} alt="Completed equestrian estate" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.02) contrast(1.06) saturate(0.9)" }} />
+                    <img src={imgFullBuild} alt="Completed equestrian estate" className="w-full h-full object-cover" loading="lazy" style={{ filter: "contrast(1.04) saturate(0.88)" }} />
                   </div>
                 </div>
               </div>
