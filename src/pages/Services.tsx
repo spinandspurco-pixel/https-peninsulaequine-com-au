@@ -76,7 +76,7 @@ export default function Services() {
                 {/* Image — right, large */}
                 <div className="lg:col-span-8">
                   <div className="relative overflow-hidden aspect-[16/9]">
-                    <img src={imgFullBuild} alt="Completed equestrian estate" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.05) contrast(1.15) saturate(0.85)" }} />
+                    <img src={imgFullBuild} alt="Completed equestrian estate" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.02) contrast(1.06) saturate(0.9)" }} />
                   </div>
                 </div>
               </div>
