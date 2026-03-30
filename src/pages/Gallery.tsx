@@ -63,7 +63,7 @@ function BuildReveal({
         className="max-w-5xl mx-auto px-4 sm:px-6"
         style={{
           opacity: visible && data ? 1 : 0,
-          transition: "opacity 500ms cubic-bezier(0.45, 0, 0.15, 1)",
+          transition: "opacity 250ms cubic-bezier(0.45, 0, 0.15, 1)",
         }}
       >
         {data && (
