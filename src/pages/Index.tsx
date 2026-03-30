@@ -132,7 +132,7 @@ export default function Index() {
             </h2>
           </div>
         </section>
-        <div className="h-16 sm:h-20" style={{ background: "#030303" }} aria-hidden="true" />
+        <div className="h-6 sm:h-8" style={{ background: "#030303" }} aria-hidden="true" />
 
         {/* ═══ 3. PROCESS — How We Build ═══════════════════ */}
         <section className="py-28 sm:py-36 relative overflow-hidden">
