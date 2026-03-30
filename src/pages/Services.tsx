@@ -105,10 +105,10 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ═══ GROUNDLOCK — centered product, contained ═════ */}
-      <section className="relative overflow-hidden">
-        <div className="py-36 sm:py-44 lg:py-56 relative">
-          <div className="absolute inset-0 grain-texture" />
+      {/* ═══ GROUNDLOCK — dark product reveal, matches /groundlock tone ═══ */}
+      <section className="relative overflow-hidden" style={{ backgroundColor: "#0a0a0a" }}>
+        <div className="py-40 sm:py-52 lg:py-64 relative">
+          <div className="absolute inset-0 grain-texture opacity-[0.02]" />
           <div className="section-container max-w-3xl mx-auto relative z-[1] text-center">
             <RevealOnScroll direction="up">
               <div className="flex items-center gap-5 mb-5 justify-center">
@@ -116,20 +116,23 @@ export default function Services() {
                 <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/35 font-mono">02</p>
                 <div className="w-8 h-px bg-accent/25" />
               </div>
-              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/85 tracking-[0.02em] mb-6">
-                GroundLock Systems
+              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-white/85 tracking-[0.02em] mb-4">
+                GroundLock<span className="text-accent/40">™</span>
               </h2>
-              <p className="text-[13px] sm:text-sm text-foreground/35 leading-[1.8] max-w-md mx-auto mb-14">
-                Engineered ground stabilisation for permanent and temporary environments.
+              <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-white/20 mb-16">
+                Directional Interlock System
               </p>
-              <div className="relative overflow-hidden aspect-square max-w-xs mx-auto">
+              <div className="relative overflow-hidden aspect-square max-w-[280px] mx-auto">
                 <img src={imgGroundLock} alt="GroundLock stabilisation panel" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(0.96) contrast(1.06) saturate(0.9)" }} />
               </div>
+              <p className="mt-14 font-serif text-[12px] sm:text-[13px] italic text-white/20 tracking-wide">
+                Built for load. Designed for control.
+              </p>
               <Link
                 to="/groundlock"
                 className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-accent/50 hover:text-accent/80 transition-colors duration-500 mt-10"
               >
-                Explore GroundLock <ArrowRight className="w-3.5 h-3.5" />
+                Explore System <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </RevealOnScroll>
           </div>
