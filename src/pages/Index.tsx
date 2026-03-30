@@ -129,24 +129,25 @@ export default function Index() {
           aria-hidden="true"
         />
 
-        {/* ═══ 2. STRUCTURE — Selected Work ════════════════ */}
+        {/* ═══ 2. STRUCTURE — Strong, clear, architectural ══ */}
         <section className="relative min-h-[80vh] sm:min-h-[85vh] flex items-end overflow-hidden" style={{ background: "#030303" }}>
           <img
             src={systemStructure}
             alt="Steel frame structure under construction"
             className="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
-            style={{ objectPosition: "50% 32%", filter: "brightness(1.15) contrast(1.22)" }}
+            style={{ objectPosition: "50% 32%", filter: "brightness(1.1) contrast(1.28) saturate(0.85)" }}
           />
-          <div className="absolute inset-x-0 bottom-0 h-[22%] bg-gradient-to-t from-black/60 to-transparent" />
+          {/* Sharp architectural gradient — harder edge than hero */}
+          <div className="absolute inset-x-0 bottom-0 h-[28%]" style={{ background: "linear-gradient(to top, rgba(3,3,3,0.75) 0%, transparent 100%)" }} />
           <div className="relative z-10 section-container max-w-6xl mx-auto pb-20 sm:pb-28">
             <h2
-              className="font-serif text-3xl sm:text-4xl text-white/95 tracking-tight opacity-0 animate-fade-in"
+              className="font-serif text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-[0.88] opacity-0 animate-fade-in"
               style={{
                 animationDelay: "300ms",
                 animationFillMode: "both",
                 animationDuration: "800ms",
-                textShadow: "0 2px 12px rgba(0,0,0,0.6), 0 1px 3px rgba(0,0,0,0.4)",
+                textShadow: "0 2px 12px rgba(0,0,0,0.7), 0 1px 3px rgba(0,0,0,0.5)",
               }}
             >
               Selected Work
