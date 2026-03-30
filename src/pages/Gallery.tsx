@@ -54,7 +54,7 @@ function BuildReveal({
       style={{
         paddingTop: data ? "clamp(2rem, 4vw, 4rem)" : "0",
         paddingBottom: data ? "clamp(4rem, 8vw, 8rem)" : "0",
-        transition: "padding 600ms cubic-bezier(0.45, 0, 0.15, 1)",
+        transition: "padding 350ms cubic-bezier(0.45, 0, 0.15, 1)",
       }}
       onMouseEnter={() => displayed && onHoverZone?.(displayed)}
       onMouseLeave={() => onLeaveZone?.()}
