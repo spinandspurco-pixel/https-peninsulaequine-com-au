@@ -162,48 +162,27 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
       {/* ── Property boundary ── */}
       <rect x="145" y="55" width="450" height="720" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.02" strokeDasharray="12 8" />
 
-      {/* ── STABLE ROW DETAIL ── */}
-      <rect x="185" y="95" width="50" height="70" fill="url(#mp-hatch)" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity={ls.zoneOpacity * 0.7} />
-      <text x="210" y="134" textAnchor="middle" fontSize="3.2" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.6} fontFamily="monospace" letterSpacing="0.12em">FLOAT</text>
-      <rect x="505" y="95" width="50" height="70" fill="url(#mp-hatch)" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity={ls.zoneOpacity * 0.7} />
-      <text x="530" y="134" textAnchor="middle" fontSize="3.2" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.6} fontFamily="monospace" letterSpacing="0.12em">FLOAT</text>
-
-      {/* Stable dividers */}
-      {[235, 290, 345, 395, 450, 505].map(x => (
-        <line key={`sd${x}`} x1={x} y1="95" x2={x} y2="165" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.035" />
+      {/* ── STABLE ROW — minimal dividers only ── */}
+      {[235, 345, 395, 505].map(x => (
+        <line key={`sd${x}`} x1={x} y1="95" x2={x} y2="165" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.025" />
       ))}
-      <text x="262" y="134" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.5} fontFamily="monospace" letterSpacing="0.08em">S1</text>
-      <text x="318" y="134" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.5} fontFamily="monospace" letterSpacing="0.08em">S2</text>
-      <text x="370" y="134" textAnchor="middle" fontSize="3.2" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.55} fontFamily="monospace" letterSpacing="0.18em">ENTRY</text>
-      <text x="422" y="134" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.5} fontFamily="monospace" letterSpacing="0.08em">S3</text>
-      <text x="478" y="134" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.5} fontFamily="monospace" letterSpacing="0.08em">S4</text>
+      <text x="370" y="134" textAnchor="middle" fontSize="2.8" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.4} fontFamily="monospace" letterSpacing="0.18em">ENTRY</text>
 
       {/* Central axis */}
-      <line x1="370" y1="95" x2="370" y2="165" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.03" strokeDasharray="3 4" />
+      <line x1="370" y1="95" x2="370" y2="165" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.02" strokeDasharray="3 5" />
 
       {/* ── WEST WING ── */}
-      <line x1="185" y1="252" x2="275" y2="252" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.035" />
-      <text x="230" y="210" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.5} fontFamily="monospace" letterSpacing="0.08em">S5</text>
-      <text x="230" y="300" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.5} fontFamily="monospace" letterSpacing="0.08em">S6</text>
-      <text x="168" y="310" textAnchor="middle" fontSize="2.5" fill="hsl(var(--accent))" opacity="0.025" fontFamily="monospace" letterSpacing="0.1em" transform="rotate(-90, 168, 310)">PADDOCK</text>
+      <line x1="185" y1="252" x2="275" y2="252" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.02" />
 
       {/* ── SERVICE WING ── */}
-      <line x1="465" y1="220" x2="555" y2="220" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.035" />
-      <line x1="465" y1="278" x2="555" y2="278" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.035" />
-      <text x="510" y="196" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.7} fontFamily="monospace" letterSpacing="0.08em">WASH</text>
-      <text x="510" y="252" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.7} fontFamily="monospace" letterSpacing="0.08em">WC</text>
-      <text x="510" y="312" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.7} fontFamily="monospace" letterSpacing="0.08em">TIE-UP</text>
+      <line x1="465" y1="220" x2="555" y2="220" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.02" />
+      <line x1="465" y1="278" x2="555" y2="278" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.02" />
 
       {/* ── BOTTOM ROW ── */}
-      {[275, 340, 400, 465].map(x => (
-        <line key={`br${x}`} x1={x} y1="340" x2={x} y2="425" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.035" />
+      {[275, 400].map(x => (
+        <line key={`br${x}`} x1={x} y1="340" x2={x} y2="425" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.02" />
       ))}
-      <text x="230" y="370" textAnchor="middle" fontSize="2.8" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.6} fontFamily="monospace" letterSpacing="0.06em">RM 1</text>
-      <text x="230" y="405" textAnchor="middle" fontSize="2.8" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.5} fontFamily="monospace" letterSpacing="0.06em">RM 3</text>
-      <text x="308" y="385" textAnchor="middle" fontSize="2.8" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.7} fontFamily="monospace" letterSpacing="0.08em">TACK 1</text>
-      <text x="370" y="385" textAnchor="middle" fontSize="2.8" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.55} fontFamily="monospace" letterSpacing="0.1em">STAIR</text>
-      <text x="433" y="385" textAnchor="middle" fontSize="2.8" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.7} fontFamily="monospace" letterSpacing="0.08em">TACK 2</text>
-      <text x="510" y="385" textAnchor="middle" fontSize="2.8" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.5} fontFamily="monospace" letterSpacing="0.06em">RM 4</text>
+      <text x="370" y="385" textAnchor="middle" fontSize="2.5" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.35} fontFamily="monospace" letterSpacing="0.12em">TACK</text>
 
       {/* ── VIEWING LOFT (upper level) ── */}
       <rect
