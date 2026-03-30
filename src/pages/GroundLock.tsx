@@ -41,7 +41,7 @@ export default function GroundLock() {
 
       <Layout>
         {/* ═══ 1. HERO — System Identity ══════════════════ */}
-        <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden bg-black">
+        <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden" style={{ backgroundColor: "#0a0a0a" }}>
           <img
             src={glIconHero}
             alt="GroundLock system mark"
@@ -49,7 +49,7 @@ export default function GroundLock() {
             width={1920}
             height={1080}
             loading="eager"
-            style={{ objectPosition: "52% 48%", transform: "scale(1.15)", filter: "brightness(0.92) contrast(1.12)" }}
+            style={{ objectPosition: "52% 48%", transform: "scale(1.15)", filter: "brightness(0.98) contrast(1.06)" }}
           />
 
 
@@ -67,7 +67,7 @@ export default function GroundLock() {
             </h1>
 
             <p
-              className="mt-8 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.4em] text-white/25 opacity-0 animate-fade-in"
+              className="mt-8 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.4em] text-white/30 opacity-0 animate-fade-in"
               style={{
                 animationDelay: "700ms",
                 animationFillMode: "both",
@@ -78,7 +78,7 @@ export default function GroundLock() {
             </p>
 
             <p
-              className="mt-16 font-serif text-[12px] sm:text-[13px] italic text-white/15 opacity-0 animate-fade-in"
+              className="mt-16 font-serif text-[12px] sm:text-[13px] italic text-white/20 opacity-0 animate-fade-in"
               style={{
                 animationDelay: "1200ms",
                 animationFillMode: "both",
@@ -89,7 +89,7 @@ export default function GroundLock() {
             </p>
 
             <p
-              className="mt-8 font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.3em] text-white/8 opacity-0 animate-fade-in"
+              className="mt-8 font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.3em] text-white/12 opacity-0 animate-fade-in"
               style={{
                 animationDelay: "1600ms",
                 animationFillMode: "both",
@@ -102,7 +102,7 @@ export default function GroundLock() {
         </section>
 
         {/* ═══ 2. SYSTEM PRESENCE — Abstract ══════════════ */}
-        <section className="py-52 sm:py-64 lg:py-80 relative overflow-hidden bg-black">
+        <section className="py-52 sm:py-64 lg:py-80 relative overflow-hidden" style={{ backgroundColor: "#0a0a0a" }}>
           <div className="section-container max-w-5xl mx-auto px-6">
             <img
               src={glAbstractPattern}
@@ -111,16 +111,16 @@ export default function GroundLock() {
               loading="lazy"
               width={1920}
               height={1080}
-              style={{ opacity: 0.3, filter: "blur(2px)" }}
+              style={{ opacity: 0.35, filter: "blur(2px)" }}
             />
-            <p className="mt-20 font-serif text-base sm:text-lg text-white/15 text-center tracking-wide italic">
+            <p className="mt-20 font-serif text-base sm:text-lg text-white/20 text-center tracking-wide italic">
               Directional logic. Structural intent.
             </p>
           </div>
         </section>
 
         {/* ═══ 3. APPLICATION HINT ════════════════════════ */}
-        <section className="py-40 sm:py-52 lg:py-64 relative overflow-hidden bg-black">
+        <section className="py-40 sm:py-52 lg:py-64 relative overflow-hidden" style={{ backgroundColor: "#0a0a0a" }}>
           <div className="section-container max-w-5xl mx-auto px-6">
             <img
               src={glApplicationHint}
@@ -131,7 +131,7 @@ export default function GroundLock() {
               height={1080}
             />
             <div className="mt-16 text-center">
-              <p className="font-serif text-base sm:text-lg text-white/20 tracking-wide italic leading-[1.6]">
+              <p className="font-serif text-base sm:text-lg text-white/25 tracking-wide italic leading-[1.6]">
                 Permanent where you need it.
                 <br />
                 Deployable where you don't.
@@ -141,12 +141,12 @@ export default function GroundLock() {
         </section>
 
         {/* ═══ CLOSING CTA ═══════════════════════════════ */}
-        <section className="py-40 sm:py-52 lg:py-64 relative overflow-hidden bg-black">
+        <section className="py-40 sm:py-52 lg:py-64 relative overflow-hidden" style={{ backgroundColor: "#0a0a0a" }}>
           <div className="relative z-[1] text-center max-w-md mx-auto px-6">
             <Button variant="gold" size="lg" onClick={() => setGateOpen(true)}>
               Request Access <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            <p className="mt-8 font-mono text-[9px] uppercase tracking-[0.35em] text-white/12">
+            <p className="mt-8 font-mono text-[9px] uppercase tracking-[0.35em] text-white/15">
               Limited deployment availability
             </p>
           </div>
