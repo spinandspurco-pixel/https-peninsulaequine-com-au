@@ -70,7 +70,7 @@ export default function Services() {
                 Selected projects only.
               </p>
               <div className="mt-12 relative overflow-hidden aspect-[21/9]">
-                <img src={systemStructure} alt="Steel frame construction" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.1) contrast(1.22) saturate(0.82)" }} />
+                <img src={imgFullBuild} alt="Completed equestrian estate" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.05) contrast(1.15) saturate(0.85)" }} />
               </div>
             </RevealOnScroll>
           </div>
