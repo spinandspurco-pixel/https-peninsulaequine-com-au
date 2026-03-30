@@ -481,12 +481,12 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
               y={center.y}
               textAnchor="middle"
               dominantBaseline="central"
-              fontSize={isActive ? (isViewingZone ? "6" : "5.5") : "4.5"}
+              fontSize={isActive ? "4.5" : "3.8"}
               fontFamily="monospace"
-              letterSpacing="0.15em"
+              letterSpacing="0.18em"
               fill="hsl(var(--accent))"
               className="pointer-events-none uppercase"
-              style={{ opacity: isActive ? (isViewingZone ? 0.55 : 0.4) : ls.labelOpacity * 0.5, transition: `opacity ${T} ${T_EASE} ${isActive ? '180ms' : '0ms'}, font-size ${T} ${T_EASE}` }}
+              style={{ opacity: isActive ? 0.3 : ls.labelOpacity * 0.35, transition: `opacity ${T} ${T_EASE} ${isActive ? '180ms' : '0ms'}, font-size ${T} ${T_EASE}` }}
             >
               {z.shortLabel}
             </text>
