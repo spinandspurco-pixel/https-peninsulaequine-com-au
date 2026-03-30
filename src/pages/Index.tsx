@@ -231,8 +231,8 @@ export default function Index() {
         {/* ═══ THREAD ══════════════════════════════════════ */}
         <div className="mx-auto" style={{ width: "1px", height: "clamp(3rem, 6vw, 5rem)", background: "linear-gradient(to bottom, hsl(var(--accent) / 0.06), transparent)" }} aria-hidden="true" />
 
-        {/* ═══ EVENT SCALE ═════════════════════════════ */}
-        <section className="pt-12 sm:pt-16 pb-28 sm:pb-36 relative overflow-hidden">
+        {/* ═══ EVENT SCALE — Confident, expansive ══════════ */}
+        <section className="pt-16 sm:pt-20 pb-28 sm:pb-36 relative overflow-hidden">
           <div className="section-container max-w-6xl mx-auto">
             <div
               className="opacity-0 animate-fade-in"
@@ -243,11 +243,11 @@ export default function Index() {
                 alt="Indoor equestrian arena — event scale"
                 className="w-full aspect-[21/9] object-cover"
                 loading="lazy"
-                style={{ objectPosition: "50% 55%", filter: "brightness(1.18) contrast(1.06)" }}
+                style={{ objectPosition: "50% 55%", filter: "brightness(1.15) contrast(1.1) saturate(0.92)" }}
               />
             </div>
             <p
-              className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/15 text-center opacity-0 animate-fade-in"
+              className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/12 text-center opacity-0 animate-fade-in"
               style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "800ms" }}
             >
               Built for performance at any scale.
@@ -256,12 +256,12 @@ export default function Index() {
         </section>
 
         {/* ═══ THREAD ══════════════════════════════════════ */}
-        <div className="mx-auto" style={{ width: "1px", height: "clamp(3rem, 6vw, 5rem)", background: "linear-gradient(to bottom, hsl(var(--accent) / 0.06), transparent)" }} aria-hidden="true" />
+        <div className="mx-auto" style={{ width: "1px", height: "clamp(3rem, 6vw, 5rem)", background: "linear-gradient(to bottom, hsl(var(--accent) / 0.04), transparent)" }} aria-hidden="true" />
 
-        {/* ═══ TRANSFORMATION (slider exception) ═══════════ */}
-        <section className="pt-12 sm:pt-16 pb-28 sm:pb-36 relative overflow-hidden">
+        {/* ═══ TRANSFORMATION — Reflective, earned ═════════ */}
+        <section className="pt-16 sm:pt-20 pb-32 sm:pb-40 relative overflow-hidden">
           <div className="section-container max-w-5xl mx-auto">
-            <h2 className="font-serif text-2xl sm:text-3xl text-foreground/80 tracking-tight mb-10 sm:mb-14">
+            <h2 className="font-serif italic text-2xl sm:text-3xl text-foreground/65 tracking-tight mb-12 sm:mb-16 text-center">
               Transformation
             </h2>
             <BeforeAfterSlider
@@ -269,8 +269,8 @@ export default function Index() {
               after={transformAfter}
               alt="Site transformation"
             />
-            <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/15 text-center">
-              From Dirt to Dynasty.
+            <p className="mt-8 font-serif italic text-[12px] text-foreground/15 text-center tracking-[0.03em]">
+              From dirt to dynasty.
             </p>
           </div>
         </section>
