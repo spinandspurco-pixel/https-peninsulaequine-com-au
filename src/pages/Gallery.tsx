@@ -72,22 +72,25 @@ export default function Projects() {
             </div>
           </RevealOnScroll>
 
-          {/* Detail grid — architectural image cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {Object.entries(BUILD_DETAILS).slice(0, 4).map(([zoneId, data]) => (
+          {/* Detail grid — all 7 zones with varied layout */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {BUILD_DETAILS.map((data) => (
               <div
-                key={zoneId}
-                className="group relative overflow-hidden cursor-pointer"
-                onMouseEnter={() => setActiveDetail(zoneId)}
+                key={data.zoneId}
+                className={`group relative overflow-hidden cursor-pointer ${data.span || ""}`}
+                onMouseEnter={() => setActiveDetail(data.zoneId)}
                 onMouseLeave={() => setActiveDetail(null)}
               >
-                <div className="aspect-[16/10] relative overflow-hidden">
+                <div className={`${data.span ? "aspect-[21/9]" : "aspect-[16/10]"} relative overflow-hidden`}>
                   <img
                     src={data.image}
                     alt={data.caption}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                     loading="lazy"
-                    style={{ filter: "brightness(1.05) contrast(1.12) saturate(0.85)" }}
+                    style={{
+                      objectPosition: data.crop,
+                      filter: "brightness(1.05) contrast(1.12) saturate(0.85)",
+                    }}
                   />
                   {/* Blueprint overlay */}
                   <div
@@ -100,9 +103,12 @@ export default function Projects() {
                       backgroundSize: "32px 32px",
                     }}
                   />
-                  {/* Bottom caption */}
+                  {/* Zone label + caption */}
                   <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
-                    <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/60">
+                    <p className="font-mono text-[8px] uppercase tracking-[0.4em] text-white/40 mb-1">
+                      {data.label}
+                    </p>
+                    <p className="font-serif text-[11px] italic text-white/55 tracking-wide">
                       {data.caption}
                     </p>
                   </div>
