@@ -49,7 +49,7 @@ export default function GroundLock() {
             width={1920}
             height={1080}
             loading="eager"
-            style={{ objectPosition: "52% 48%", transform: "scale(1.15)", filter: "brightness(0.92) contrast(1.12)" }}
+            style={{ objectPosition: "52% 48%", transform: "scale(1.15)", filter: "brightness(0.98) contrast(1.06)" }}
           />
 
 
