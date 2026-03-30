@@ -36,14 +36,11 @@ function BuildReveal({
     if (timer.current) clearTimeout(timer.current);
 
     if (zoneId) {
-      setVisible(false);
-      timer.current = setTimeout(() => {
-        setDisplayed(zoneId);
-        setVisible(true);
-      }, 200);
+      setDisplayed(zoneId);
+      requestAnimationFrame(() => setVisible(true));
     } else {
       setVisible(false);
-      timer.current = setTimeout(() => setDisplayed(null), 350);
+      timer.current = setTimeout(() => setDisplayed(null), 200);
     }
 
     return () => { if (timer.current) clearTimeout(timer.current); };
