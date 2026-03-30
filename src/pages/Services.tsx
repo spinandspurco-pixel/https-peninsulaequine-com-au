@@ -5,11 +5,11 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 
-// Locked image system
+// Locked image system — distinct per service
 import systemHero from "@/assets/system-hero.jpg";
-import systemStructure from "@/assets/system-structure.jpg";
-import systemProcess from "@/assets/system-process.jpg";
-import systemEvent from "@/assets/system-event.jpg";
+import imgFullBuild from "@/assets/service-fullbuild.jpg";
+import imgGroundLock from "@/assets/service-groundlock.jpg";
+import imgEvent from "@/assets/service-event.jpg";
 
 export default function Services() {
   useEffect(() => {
@@ -70,7 +70,7 @@ export default function Services() {
                 Selected projects only.
               </p>
               <div className="mt-12 relative overflow-hidden aspect-[21/9]">
-                <img src={systemStructure} alt="Steel frame construction" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.1) contrast(1.22) saturate(0.82)" }} />
+                <img src={imgFullBuild} alt="Completed equestrian estate" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.05) contrast(1.15) saturate(0.85)" }} />
               </div>
             </RevealOnScroll>
           </div>
@@ -114,7 +114,7 @@ export default function Services() {
                 Engineered ground stabilisation systems for permanent and temporary environments.
               </p>
               <div className="mt-12 relative overflow-hidden aspect-[4/5] max-w-xl">
-                <img src={systemProcess} alt="Ground engineering process" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.12) contrast(1.1) saturate(0.9) sepia(0.03)" }} />
+                <img src={imgGroundLock} alt="GroundLock stabilisation panel" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.0) contrast(1.1) saturate(0.75)" }} />
               </div>
               <Link
                 to="/groundlock"
@@ -147,7 +147,7 @@ export default function Services() {
                 Designed for repeatable large-scale use.
               </p>
               <div className="mt-4 relative overflow-hidden aspect-[21/9]">
-                <img src={systemEvent} alt="Large-scale indoor event arena" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.15) contrast(1.08) saturate(0.95) sepia(0.04)" }} />
+                <img src={imgEvent} alt="Event ground deployment at scale" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.1) contrast(1.12) saturate(0.9)" }} />
               </div>
               <Link
                 to="/contact"
