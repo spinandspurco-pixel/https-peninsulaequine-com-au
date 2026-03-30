@@ -9,9 +9,9 @@ import systemOutcome from "@/assets/system-outcome.jpg";
 
 // Tight architectural crops with desaturated, high-contrast treatment
 const SECTIONS = [
-  { src: systemProcess, line: "Built by those who understand the ground.", aspect: "aspect-[1/1]", crop: "50% 30%", scale: "1.6" },
-  { src: systemStructure, line: "Precision in every layer.", aspect: "aspect-[21/9]", crop: "20% 60%", scale: "1.4" },
-  { src: systemOutcome, line: "Environments designed to perform.", aspect: "aspect-[3/2]", crop: "70% 40%", scale: "1.5" },
+  { src: systemProcess, line: "Built by those who understand the ground.", aspect: "aspect-[1/1]", crop: "50% 30%", scale: "1.6", filter: "brightness(1.12) contrast(1.2) saturate(0.82)" },
+  { src: systemStructure, line: "Precision in every layer.", aspect: "aspect-[21/9]", crop: "20% 60%", scale: "1.4", filter: "brightness(1.15) contrast(1.15) saturate(0.88) sepia(0.03)" },
+  { src: systemOutcome, line: "Environments designed to perform.", aspect: "aspect-[3/2]", crop: "70% 40%", scale: "1.5", filter: "brightness(1.18) contrast(1.06) saturate(1.05) sepia(0.05)" },
 ];
 
 export default function About() {
@@ -72,7 +72,7 @@ export default function About() {
                 style={{
                   objectPosition: section.crop,
                   transform: `scale(${section.scale})`,
-                  filter: "brightness(1.15) contrast(1.18) saturate(0.85)",
+                  filter: section.filter,
                 }}
               />
               {/* Subtle blueprint-style overlay */}
