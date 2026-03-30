@@ -7,19 +7,22 @@ import { Link } from "react-router-dom";
 import transformBefore from "@/assets/transform-before.jpg";
 import transformAfter from "@/assets/transform-after.jpg";
 
-import imgArena from "@/assets/walk-arena.jpg";
-import imgStables from "@/assets/walk-stables.jpg";
-import imgCourtyard from "@/assets/walk-courtyard.jpg";
-import imgLoft from "@/assets/walk-loft.jpg";
+import imgArena from "@/assets/zone-arena.jpg";
+import imgStableRow from "@/assets/zone-stable-row.jpg";
+import imgWestWing from "@/assets/zone-west-wing.jpg";
+import imgCourtyard from "@/assets/zone-courtyard.jpg";
+import imgService from "@/assets/zone-service.jpg";
+import imgTack from "@/assets/zone-tack.jpg";
+import imgViewing from "@/assets/zone-viewing.jpg";
 
 const ZONE_REVEAL: Record<string, { image: string; line: string; crop: string }> = {
-  "indoor-arena": { image: imgArena, line: "Clear-span. Engineered for performance under load.", crop: "50% 60%" },
-  "stable-row": { image: imgStables, line: "Cross-ventilation resolved through the corridor axis.", crop: "40% 30%" },
-  "west-wing": { image: imgStables, line: "Quieter wing. Direct paddock connection.", crop: "60% 70%" },
-  "courtyard": { image: imgCourtyard, line: "All movement converges here.", crop: "50% 50%" },
-  "service-wing": { image: imgCourtyard, line: "Clean and service workflows separated.", crop: "30% 45%" },
-  "tack-rooms": { image: imgLoft, line: "Support spaces beneath the viewing loft.", crop: "50% 35%" },
-  "viewing-loft": { image: imgLoft, line: "Full arena oversight from upper level.", crop: "50% 50%" },
+  "indoor-arena": { image: imgArena, line: "Clear-span. Engineered for performance under load.", crop: "50% 50%" },
+  "stable-row": { image: imgStableRow, line: "Cross-ventilation resolved through the corridor axis.", crop: "50% 50%" },
+  "west-wing": { image: imgWestWing, line: "Quieter wing. Direct paddock connection.", crop: "50% 50%" },
+  "courtyard": { image: imgCourtyard, line: "All movement converges here.", crop: "50% 40%" },
+  "service-wing": { image: imgService, line: "Clean and service workflows separated.", crop: "50% 50%" },
+  "tack-rooms": { image: imgTack, line: "Support spaces beneath the viewing loft.", crop: "50% 40%" },
+  "viewing-loft": { image: imgViewing, line: "Full arena oversight from upper level.", crop: "50% 50%" },
 };
 
 function BuildReveal({ zoneId }: { zoneId: string | null }) {
