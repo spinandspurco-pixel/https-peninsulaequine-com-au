@@ -113,7 +113,7 @@ export default function GroundLock() {
               height={1080}
               style={{ opacity: 0.35, filter: "blur(2px)" }}
             />
-            <p className="mt-20 font-serif text-base sm:text-lg text-white/15 text-center tracking-wide italic">
+            <p className="mt-20 font-serif text-base sm:text-lg text-white/20 text-center tracking-wide italic">
               Directional logic. Structural intent.
             </p>
           </div>
