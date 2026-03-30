@@ -147,7 +147,7 @@ export const buildLayers: { id: BuildLayer; label: string; desc: string }[] = [
 ];
 
 /* ── Tour sequence ─────────────────────────────────── */
-export const TOUR_ORDER = ["stable-row", "west-wing", "courtyard", "service-wing", "tack-rooms", "indoor-arena"];
+export const TOUR_ORDER = ["indoor-arena", "stables", "access", "ground-systems"];
 export const TOUR_DWELL = 3200;
 export const TOUR_DISSOLVE = 600;
 
