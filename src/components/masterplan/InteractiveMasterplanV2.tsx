@@ -114,7 +114,8 @@ export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onZoneChange, 
   const reducedMotion = useReducedMotion();
   const isTouch = useIsTouchDevice();
 
-  const [activeZone, _setActiveZone] = useState<string | null>(null);
+  const [internalZone, _setActiveZone] = useState<string | null>(null);
+  const activeZone = externalActiveZone !== undefined ? externalActiveZone : internalZone;
   const setActiveZone = useCallback((id: string | null) => {
     _setActiveZone(id);
     onZoneChange?.(id);
