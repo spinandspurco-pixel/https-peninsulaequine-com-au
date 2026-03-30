@@ -167,8 +167,8 @@ export default function Index() {
 
         {/* ═══ 3. PROCESS — Grounded, tactile ═════════════ */}
         <section className="pt-20 sm:pt-28 pb-32 sm:pb-40 relative overflow-hidden">
-          {/* Warm undertone wash — earthy energy */}
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 50% at 35% 50%, hsl(30 15% 12% / 0.04), transparent)" }} />
+          {/* Darker, grounded undertone */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 50% at 35% 50%, hsl(30 12% 8% / 0.06), transparent)" }} />
           <div className="section-container max-w-6xl mx-auto relative z-[1]">
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-center">
               <div
@@ -180,7 +180,7 @@ export default function Index() {
                   alt="Telehandler auger drilling into earth"
                   className="w-full aspect-[4/5] object-cover"
                   loading="lazy"
-                  style={{ objectPosition: "50% 60%", filter: "brightness(1.05) contrast(1.04) saturate(1.0)" }}
+                  style={{ objectPosition: "50% 60%", filter: "brightness(0.95) contrast(1.08) saturate(0.88)" }}
                 />
               </div>
               <div
