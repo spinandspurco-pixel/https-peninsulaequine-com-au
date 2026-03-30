@@ -50,27 +50,35 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ═══ FULL SITE BUILDS ═══════════════════════════ */}
+      {/* ═══ FULL SITE BUILDS — wide cinematic ═══════════ */}
       <section className="relative overflow-hidden">
-        <div className="py-32 sm:py-40 lg:py-48 relative">
+        <div className="py-32 sm:py-40 lg:py-52 relative">
           <div className="absolute inset-0 grain-texture" />
-          <div className="section-container max-w-4xl mx-auto relative z-[1]">
+          <div className="section-container max-w-5xl mx-auto relative z-[1]">
             <RevealOnScroll direction="up">
-              <div className="flex items-center gap-5 mb-5">
-                <div className="w-8 h-px bg-accent/25" />
-                <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/35 font-mono">01</p>
-              </div>
-              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/85 tracking-[0.02em] mb-6">
-                Full Site Builds
-              </h2>
-              <p className="text-[13px] sm:text-sm text-foreground/35 leading-[1.8] max-w-lg">
-                Complete project delivery from ground preparation to finished arena.
-              </p>
-              <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/10">
-                Selected projects only.
-              </p>
-              <div className="mt-12 relative overflow-hidden aspect-[21/9]">
-                <img src={imgFullBuild} alt="Completed equestrian estate" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.05) contrast(1.15) saturate(0.85)" }} />
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-end">
+                {/* Text — left */}
+                <div className="lg:col-span-4">
+                  <div className="flex items-center gap-5 mb-5">
+                    <div className="w-8 h-px bg-accent/25" />
+                    <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/35 font-mono">01</p>
+                  </div>
+                  <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/85 tracking-[0.02em] mb-6">
+                    Full Site Builds
+                  </h2>
+                  <p className="text-[13px] sm:text-sm text-foreground/35 leading-[1.8] max-w-sm">
+                    Complete project delivery from ground preparation to finished arena.
+                  </p>
+                  <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/10">
+                    Selected projects only.
+                  </p>
+                </div>
+                {/* Image — right, large */}
+                <div className="lg:col-span-8">
+                  <div className="relative overflow-hidden aspect-[16/9]">
+                    <img src={imgFullBuild} alt="Completed equestrian estate" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.05) contrast(1.15) saturate(0.85)" }} />
+                  </div>
+                </div>
               </div>
             </RevealOnScroll>
           </div>
@@ -97,28 +105,29 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ═══ GROUNDLOCK SYSTEMS ════════════════════════════ */}
+      {/* ═══ GROUNDLOCK — centered product, contained ═════ */}
       <section className="relative overflow-hidden">
-        <div className="py-32 sm:py-40 lg:py-48 relative">
+        <div className="py-36 sm:py-44 lg:py-56 relative">
           <div className="absolute inset-0 grain-texture" />
-          <div className="section-container max-w-4xl mx-auto relative z-[1]">
+          <div className="section-container max-w-3xl mx-auto relative z-[1] text-center">
             <RevealOnScroll direction="up">
-              <div className="flex items-center gap-5 mb-5">
+              <div className="flex items-center gap-5 mb-5 justify-center">
                 <div className="w-8 h-px bg-accent/25" />
                 <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/35 font-mono">02</p>
+                <div className="w-8 h-px bg-accent/25" />
               </div>
               <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/85 tracking-[0.02em] mb-6">
                 GroundLock Systems
               </h2>
-              <p className="text-[13px] sm:text-sm text-foreground/35 leading-[1.8] max-w-lg mb-8">
-                Engineered ground stabilisation systems for permanent and temporary environments.
+              <p className="text-[13px] sm:text-sm text-foreground/35 leading-[1.8] max-w-md mx-auto mb-14">
+                Engineered ground stabilisation for permanent and temporary environments.
               </p>
-              <div className="mt-12 relative overflow-hidden aspect-[4/5] max-w-xl">
+              <div className="relative overflow-hidden aspect-square max-w-xs mx-auto">
                 <img src={imgGroundLock} alt="GroundLock stabilisation panel" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.0) contrast(1.1) saturate(0.75)" }} />
               </div>
               <Link
                 to="/groundlock"
-                className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-accent/50 hover:text-accent/80 transition-colors duration-500 mt-8"
+                className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-accent/50 hover:text-accent/80 transition-colors duration-500 mt-10"
               >
                 Explore GroundLock <ArrowRight className="w-3.5 h-3.5" />
               </Link>
@@ -127,34 +136,42 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ═══ EVENT INFRASTRUCTURE ══════════════════════════ */}
+      {/* ═══ EVENT INFRASTRUCTURE — image left, text right ═ */}
       <section className="relative overflow-hidden">
-        <div className="py-32 sm:py-40 lg:py-48 relative">
+        <div className="py-32 sm:py-40 lg:py-52 relative">
           <div className="absolute inset-0 grain-texture" />
-          <div className="section-container max-w-4xl mx-auto relative z-[1]">
+          <div className="section-container max-w-5xl mx-auto relative z-[1]">
             <RevealOnScroll direction="up">
-              <div className="flex items-center gap-5 mb-5">
-                <div className="w-8 h-px bg-accent/25" />
-                <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/35 font-mono">03</p>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-end">
+                {/* Image — left, large */}
+                <div className="lg:col-span-7 order-2 lg:order-1">
+                  <div className="relative overflow-hidden aspect-[16/9]">
+                    <img src={imgEvent} alt="Event ground deployment at scale" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.1) contrast(1.12) saturate(0.9)" }} />
+                  </div>
+                </div>
+                {/* Text — right */}
+                <div className="lg:col-span-5 order-1 lg:order-2">
+                  <div className="flex items-center gap-5 mb-5">
+                    <div className="w-8 h-px bg-accent/25" />
+                    <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.4em] text-accent/35 font-mono">03</p>
+                  </div>
+                  <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/85 tracking-[0.02em] mb-6">
+                    Event Infrastructure
+                  </h2>
+                  <p className="text-[13px] sm:text-sm text-foreground/35 leading-[1.8] max-w-sm mb-4">
+                    Rapid deployment systems for high-traffic equine and event environments.
+                  </p>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/10 mb-8">
+                    Designed for repeatable large-scale use.
+                  </p>
+                  <Link
+                    to="/contact"
+                    className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-accent/50 hover:text-accent/80 transition-colors duration-500"
+                  >
+                    Enquire about event systems <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </div>
-              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/85 tracking-[0.02em] mb-6">
-                Event Infrastructure
-              </h2>
-              <p className="text-[13px] sm:text-sm text-foreground/35 leading-[1.8] max-w-lg mb-4">
-                Rapid deployment systems for high-traffic equine and event environments.
-              </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/10 mb-8">
-                Designed for repeatable large-scale use.
-              </p>
-              <div className="mt-4 relative overflow-hidden aspect-[21/9]">
-                <img src={imgEvent} alt="Event ground deployment at scale" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.1) contrast(1.12) saturate(0.9)" }} />
-              </div>
-              <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-accent/50 hover:text-accent/80 transition-colors duration-500 mt-8"
-              >
-                Enquire about event systems <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
             </RevealOnScroll>
           </div>
         </div>
