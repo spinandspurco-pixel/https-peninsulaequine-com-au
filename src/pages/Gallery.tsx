@@ -25,7 +25,15 @@ const ZONE_REVEAL: Record<string, { image: string; line: string; crop: string }>
   "viewing-loft": { image: imgViewing, line: "Full arena oversight from upper level.", crop: "50% 50%" },
 };
 
-function BuildReveal({ zoneId }: { zoneId: string | null }) {
+function BuildReveal({
+  zoneId,
+  onHoverZone,
+  onLeaveZone,
+}: {
+  zoneId: string | null;
+  onHoverZone?: (id: string) => void;
+  onLeaveZone?: () => void;
+}) {
   const [displayed, setDisplayed] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -34,7 +42,6 @@ function BuildReveal({ zoneId }: { zoneId: string | null }) {
     if (timer.current) clearTimeout(timer.current);
 
     if (zoneId) {
-      // Fade out, swap, fade in
       setVisible(false);
       timer.current = setTimeout(() => {
         setDisplayed(zoneId);
@@ -59,10 +66,11 @@ function BuildReveal({ zoneId }: { zoneId: string | null }) {
         paddingBottom: data ? "clamp(4rem, 8vw, 8rem)" : "0",
         transition: "padding 700ms cubic-bezier(0.45, 0, 0.15, 1)",
       }}
+      onMouseEnter={() => displayed && onHoverZone?.(displayed)}
+      onMouseLeave={() => onLeaveZone?.()}
     >
       {data && (
         <div className="section-container max-w-5xl mx-auto">
-          {/* Image */}
           <div
             className="relative w-full aspect-[21/9] overflow-hidden"
             style={{
@@ -81,7 +89,6 @@ function BuildReveal({ zoneId }: { zoneId: string | null }) {
                 filter: "brightness(1.08) contrast(1.15) saturate(0.82)",
               }}
             />
-            {/* Subtle blueprint grid overlay */}
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
@@ -94,7 +101,6 @@ function BuildReveal({ zoneId }: { zoneId: string | null }) {
             />
           </div>
 
-          {/* Single line */}
           <p
             className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/15 text-center"
             style={{
@@ -112,6 +118,24 @@ function BuildReveal({ zoneId }: { zoneId: string | null }) {
 
 export default function Projects() {
   const [activeZone, setActiveZone] = useState<string | null>(null);
+  const [hoverSource, setHoverSource] = useState<"masterplan" | "reveal" | null>(null);
+
+  const handleMasterplanChange = (id: string | null) => {
+    setActiveZone(id);
+    setHoverSource(id ? "masterplan" : null);
+  };
+
+  const handleRevealHover = (id: string) => {
+    setActiveZone(id);
+    setHoverSource("reveal");
+  };
+
+  const handleRevealLeave = () => {
+    if (hoverSource === "reveal") {
+      setActiveZone(null);
+      setHoverSource(null);
+    }
+  };
 
   useEffect(() => {
     document.title = "Projects | Peninsula Equine";
@@ -134,10 +158,13 @@ export default function Projects() {
       </section>
 
       {/* ═══ INTERACTIVE MASTERPLAN ═════════════════════ */}
-      <InteractiveMasterplan onZoneChange={setActiveZone} />
+      <InteractiveMasterplan
+        onZoneChange={handleMasterplanChange}
+        externalActiveZone={hoverSource === "reveal" ? activeZone : undefined}
+      />
 
       {/* ═══ BUILD REVEAL — linked to masterplan ═══════ */}
-      <BuildReveal zoneId={activeZone} />
+      <BuildReveal zoneId={activeZone} onHoverZone={handleRevealHover} onLeaveZone={handleRevealLeave} />
 
       {/* ═══ TRANSFORMATION ══════════════════════════ */}
       <section className="py-28 sm:py-40 relative overflow-hidden">
