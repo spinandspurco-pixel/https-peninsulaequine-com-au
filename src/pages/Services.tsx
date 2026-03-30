@@ -76,7 +76,7 @@ export default function Services() {
                 {/* Image — right, large */}
                 <div className="lg:col-span-8">
                   <div className="relative overflow-hidden aspect-[16/9]">
-                    <img src={imgFullBuild} alt="Completed equestrian estate" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.05) contrast(1.15) saturate(0.85)" }} />
+                    <img src={imgFullBuild} alt="Completed equestrian estate" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.02) contrast(1.06) saturate(0.9)" }} />
                   </div>
                 </div>
               </div>
@@ -123,7 +123,7 @@ export default function Services() {
                 Engineered ground stabilisation for permanent and temporary environments.
               </p>
               <div className="relative overflow-hidden aspect-square max-w-xs mx-auto">
-                <img src={imgGroundLock} alt="GroundLock stabilisation panel" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.0) contrast(1.1) saturate(0.75)" }} />
+                <img src={imgGroundLock} alt="GroundLock stabilisation panel" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.02) contrast(1.06) saturate(0.85)" }} />
               </div>
               <Link
                 to="/groundlock"
@@ -146,7 +146,7 @@ export default function Services() {
                 {/* Image — left, large */}
                 <div className="lg:col-span-7 order-2 lg:order-1">
                   <div className="relative overflow-hidden aspect-[16/9]">
-                    <img src={imgEvent} alt="Event ground deployment at scale" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.1) contrast(1.12) saturate(0.9)" }} />
+                    <img src={imgEvent} alt="Event ground deployment at scale" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.02) contrast(1.06) saturate(0.9)" }} />
                   </div>
                 </div>
                 {/* Text — right */}
