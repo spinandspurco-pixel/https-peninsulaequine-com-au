@@ -83,23 +83,18 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
           <line x1="0" y1="0" x2="0" y2="5" stroke="hsl(var(--accent))" strokeWidth="0.14" opacity="0.014" />
         </pattern>
 
-        {/* Filters — refined: no glow, just shadow + subtle lift */}
-        <filter id="mp-active" x="-6%" y="-6%" width="115%" height="118%">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="sb" />
-          <feFlood floodColor="hsl(0 0% 0%)" floodOpacity="0.15" result="sc" />
-          <feComposite in="sc" in2="sb" operator="in" result="s" />
-          <feOffset in="s" dx="0.8" dy="1.5" result="so" />
-          <feMerge><feMergeNode in="so" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
-        <filter id="mp-viewing" x="-8%" y="-8%" width="120%" height="124%">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="sb" />
-          <feFlood floodColor="hsl(0 0% 0%)" floodOpacity="0.2" result="sc" />
-          <feComposite in="sc" in2="sb" operator="in" result="s" />
-          <feOffset in="s" dx="1" dy="2" result="so" />
-          <feMerge><feMergeNode in="so" /><feMergeNode in="SourceGraphic" /></feMerge>
+        {/* Filter — subtle warm glow for active zone */}
+        <filter id="mp-active" x="-12%" y="-12%" width="124%" height="124%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="glow" />
+          <feFlood floodColor="hsl(35 30% 60%)" floodOpacity="0.06" result="gc" />
+          <feComposite in="gc" in2="glow" operator="in" result="softglow" />
+          <feMerge>
+            <feMergeNode in="softglow" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
         </filter>
         <filter id="mp-elev" x="-4%" y="-4%" width="112%" height="116%">
-          <feDropShadow dx="1" dy="2" stdDeviation="2.5" floodColor="hsl(0 0% 0%)" floodOpacity="0.1" />
+          <feDropShadow dx="1" dy="2" stdDeviation="2.5" floodColor="hsl(0 0% 0%)" floodOpacity="0.08" />
         </filter>
 
         {/* Flow fade mask */}
