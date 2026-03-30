@@ -84,15 +84,14 @@ export default function Services() {
 
       {/* ═══ AUTHORITY LINE ════════════════════════════════ */}
       <section className="relative overflow-hidden">
-        <div className="py-24 sm:py-32 bg-card relative">
-          <div className="absolute inset-0 grain-texture opacity-[0.02]" />
+        <div className="py-20 sm:py-28 relative">
           <div className="section-container max-w-2xl mx-auto text-center relative z-[1]">
             <RevealOnScroll direction="up">
               <p
                 className="font-serif font-light italic tracking-[0.04em]"
                 style={{
                   fontSize: "clamp(1rem, 0.5rem + 1.8vw, 1.5rem)",
-                  color: "hsl(var(--foreground) / 0.15)",
+                  color: "hsl(var(--foreground) / 0.12)",
                 }}
               >
                 No templates. Every property is different.
