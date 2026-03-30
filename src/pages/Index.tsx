@@ -38,7 +38,7 @@ export default function Index() {
     <>
       <BrandIntro onComplete={() => {}} />
       <Layout>
-        {/* ═══ 1. HERO — Emotion + Authority ═══════════════ */}
+        {/* ═══ 1. HERO — Cinematic, dominant ═══════════════ */}
         <section className="relative min-h-[100dvh] overflow-hidden flex items-center justify-center" style={{ paddingBottom: "8vh" }}>
           <img
             src={systemHero}
@@ -49,10 +49,12 @@ export default function Index() {
             loading="eager"
             style={{
               objectPosition: "50% 72%",
-              filter: "brightness(0.95) contrast(1.08)",
+              filter: "brightness(0.92) contrast(1.12) saturate(1.08)",
               animation: "heroSlowZoom 25s ease-out forwards",
             }}
           />
+          {/* Deep cinematic vignette */}
+          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 30%, rgba(0,0,0,0.4) 100%)" }} />
 
           <div
             ref={heroContentRef}
@@ -66,13 +68,13 @@ export default function Index() {
                 animationDelay: "300ms",
                 animationFillMode: "both",
                 animationDuration: "800ms",
-                textShadow: "0 2px 30px rgba(0,0,0,0.35)",
+                textShadow: "0 2px 40px rgba(0,0,0,0.45), 0 0 80px rgba(0,0,0,0.15)",
               }}
             >
               From Dirt to Dynasty.
             </h1>
             <p
-              className="mt-10 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.5em] text-white/35 opacity-0 animate-fade-in"
+              className="mt-10 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.5em] text-white/30 opacity-0 animate-fade-in"
               style={{
                 animationDelay: "700ms",
                 animationFillMode: "both",
@@ -127,24 +129,25 @@ export default function Index() {
           aria-hidden="true"
         />
 
-        {/* ═══ 2. STRUCTURE — Selected Work ════════════════ */}
+        {/* ═══ 2. STRUCTURE — Strong, clear, architectural ══ */}
         <section className="relative min-h-[80vh] sm:min-h-[85vh] flex items-end overflow-hidden" style={{ background: "#030303" }}>
           <img
             src={systemStructure}
             alt="Steel frame structure under construction"
             className="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
-            style={{ objectPosition: "50% 32%", filter: "brightness(1.15) contrast(1.22)" }}
+            style={{ objectPosition: "50% 32%", filter: "brightness(1.1) contrast(1.28) saturate(0.85)" }}
           />
-          <div className="absolute inset-x-0 bottom-0 h-[22%] bg-gradient-to-t from-black/60 to-transparent" />
+          {/* Sharp architectural gradient — harder edge than hero */}
+          <div className="absolute inset-x-0 bottom-0 h-[28%]" style={{ background: "linear-gradient(to top, rgba(3,3,3,0.75) 0%, transparent 100%)" }} />
           <div className="relative z-10 section-container max-w-6xl mx-auto pb-20 sm:pb-28">
             <h2
-              className="font-serif text-3xl sm:text-4xl text-white/95 tracking-tight opacity-0 animate-fade-in"
+              className="font-serif text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-[0.88] opacity-0 animate-fade-in"
               style={{
                 animationDelay: "300ms",
                 animationFillMode: "both",
                 animationDuration: "800ms",
-                textShadow: "0 2px 12px rgba(0,0,0,0.6), 0 1px 3px rgba(0,0,0,0.4)",
+                textShadow: "0 2px 12px rgba(0,0,0,0.7), 0 1px 3px rgba(0,0,0,0.5)",
               }}
             >
               Selected Work
@@ -162,8 +165,10 @@ export default function Index() {
           aria-hidden="true"
         />
 
-        {/* ═══ 3. PROCESS — How We Build ═══════════════════ */}
-        <section className="pt-20 sm:pt-28 pb-28 sm:pb-36 relative overflow-hidden">
+        {/* ═══ 3. PROCESS — Grounded, tactile ═════════════ */}
+        <section className="pt-20 sm:pt-28 pb-32 sm:pb-40 relative overflow-hidden">
+          {/* Warm undertone wash — earthy energy */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 50% at 35% 50%, hsl(30 15% 12% / 0.04), transparent)" }} />
           <div className="section-container max-w-6xl mx-auto relative z-[1]">
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-center">
               <div
@@ -175,7 +180,7 @@ export default function Index() {
                   alt="Telehandler auger drilling into earth"
                   className="w-full aspect-[4/5] object-cover"
                   loading="lazy"
-                  style={{ objectPosition: "50% 60%", filter: "brightness(1.2) contrast(1.08)" }}
+                  style={{ objectPosition: "50% 60%", filter: "brightness(1.15) contrast(1.12) saturate(1.1) sepia(0.04)" }}
                 />
               </div>
               <div
@@ -188,6 +193,7 @@ export default function Index() {
                 <p className="text-[13px] text-foreground/30 leading-[1.8]">
                   Engineered from the ground up.
                 </p>
+                <div className="mt-6 w-8 h-px bg-accent/8" />
               </div>
             </div>
           </div>
@@ -196,24 +202,26 @@ export default function Index() {
         {/* ═══ THREAD ══════════════════════════════════════ */}
         <div className="mx-auto" style={{ width: "1px", height: "clamp(3rem, 6vw, 5rem)", background: "linear-gradient(to bottom, hsl(var(--accent) / 0.06), transparent)" }} aria-hidden="true" />
 
-        {/* ═══ 4. OUTCOME — Standalone visual ══════════════ */}
-        <section className="pt-12 sm:pt-16 pb-28 sm:pb-36 relative overflow-hidden">
+        {/* ═══ 4. OUTCOME — Softer, warmer ═════════════════ */}
+        <section className="pt-16 sm:pt-20 pb-32 sm:pb-40 relative overflow-hidden">
+          {/* Soft warm ambient glow */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 40%, hsl(35 20% 14% / 0.03), transparent)" }} />
           <div className="section-container max-w-6xl mx-auto">
             <div
               className="opacity-0 animate-fade-in"
-              style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
+              style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "1000ms" }}
             >
               <img
                 src={systemOutcome}
                 alt="Completed equestrian property — aerial view"
                 className="w-full aspect-[21/9] object-cover"
                 loading="lazy"
-                style={{ filter: "brightness(1.18) contrast(1.04) saturate(1.06) sepia(0.03)" }}
+                style={{ filter: "brightness(1.22) contrast(0.98) saturate(1.12) sepia(0.06)" }}
               />
             </div>
             <p
-              className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/15 text-center opacity-0 animate-fade-in"
-              style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "800ms" }}
+              className="mt-8 font-serif italic text-[13px] sm:text-[14px] text-foreground/20 text-center tracking-[0.02em] opacity-0 animate-fade-in"
+              style={{ animationDelay: "600ms", animationFillMode: "both", animationDuration: "1000ms" }}
             >
               The outcome speaks for itself.
             </p>
@@ -223,8 +231,8 @@ export default function Index() {
         {/* ═══ THREAD ══════════════════════════════════════ */}
         <div className="mx-auto" style={{ width: "1px", height: "clamp(3rem, 6vw, 5rem)", background: "linear-gradient(to bottom, hsl(var(--accent) / 0.06), transparent)" }} aria-hidden="true" />
 
-        {/* ═══ EVENT SCALE ═════════════════════════════ */}
-        <section className="pt-12 sm:pt-16 pb-28 sm:pb-36 relative overflow-hidden">
+        {/* ═══ EVENT SCALE — Confident, expansive ══════════ */}
+        <section className="pt-16 sm:pt-20 pb-28 sm:pb-36 relative overflow-hidden">
           <div className="section-container max-w-6xl mx-auto">
             <div
               className="opacity-0 animate-fade-in"
@@ -235,11 +243,11 @@ export default function Index() {
                 alt="Indoor equestrian arena — event scale"
                 className="w-full aspect-[21/9] object-cover"
                 loading="lazy"
-                style={{ objectPosition: "50% 55%", filter: "brightness(1.18) contrast(1.06)" }}
+                style={{ objectPosition: "50% 55%", filter: "brightness(1.15) contrast(1.1) saturate(0.92)" }}
               />
             </div>
             <p
-              className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/15 text-center opacity-0 animate-fade-in"
+              className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/12 text-center opacity-0 animate-fade-in"
               style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "800ms" }}
             >
               Built for performance at any scale.
@@ -248,12 +256,12 @@ export default function Index() {
         </section>
 
         {/* ═══ THREAD ══════════════════════════════════════ */}
-        <div className="mx-auto" style={{ width: "1px", height: "clamp(3rem, 6vw, 5rem)", background: "linear-gradient(to bottom, hsl(var(--accent) / 0.06), transparent)" }} aria-hidden="true" />
+        <div className="mx-auto" style={{ width: "1px", height: "clamp(3rem, 6vw, 5rem)", background: "linear-gradient(to bottom, hsl(var(--accent) / 0.04), transparent)" }} aria-hidden="true" />
 
-        {/* ═══ TRANSFORMATION (slider exception) ═══════════ */}
-        <section className="pt-12 sm:pt-16 pb-28 sm:pb-36 relative overflow-hidden">
+        {/* ═══ TRANSFORMATION — Reflective, earned ═════════ */}
+        <section className="pt-16 sm:pt-20 pb-32 sm:pb-40 relative overflow-hidden">
           <div className="section-container max-w-5xl mx-auto">
-            <h2 className="font-serif text-2xl sm:text-3xl text-foreground/80 tracking-tight mb-10 sm:mb-14">
+            <h2 className="font-serif italic text-2xl sm:text-3xl text-foreground/65 tracking-tight mb-12 sm:mb-16 text-center">
               Transformation
             </h2>
             <BeforeAfterSlider
@@ -261,8 +269,8 @@ export default function Index() {
               after={transformAfter}
               alt="Site transformation"
             />
-            <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/15 text-center">
-              From Dirt to Dynasty.
+            <p className="mt-8 font-serif italic text-[12px] text-foreground/15 text-center tracking-[0.03em]">
+              From dirt to dynasty.
             </p>
           </div>
         </section>
