@@ -207,18 +207,9 @@ export default function Contact() {
     <Layout>
       {/* ═══ HERO ═══════════════════════════════════════ */}
       <section className="relative pt-40 sm:pt-48 pb-24 sm:pb-32 overflow-hidden">
-        <video
-          autoPlay muted loop playsInline
-          className="absolute inset-0 w-full h-full object-cover img-header"
-        >
-          <source src={heroVideo} type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-background/65" />
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 70% 55% at 50% 50%, transparent 20%, hsl(222 20% 4% / 0.7) 80%)" }}
-        />
-        <div className="absolute inset-0 grain-hero" />
+        <div className="absolute inset-0 bg-background" />
+        <div className="absolute inset-0 engineering-grid" />
+        <div className="absolute inset-0 grain-texture" />
 
         <div className="section-container relative z-10 text-center max-w-2xl mx-auto">
           <div

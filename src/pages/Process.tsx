@@ -117,6 +117,7 @@ export default function Process() {
                             loading="lazy"
                             decoding="async"
                             className="w-full h-full object-cover"
+                            style={{ filter: "brightness(1.1) contrast(1.12) saturate(0.85)" }}
                           />
                         </div>
                       </div>

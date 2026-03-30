@@ -35,19 +35,20 @@ export function PageHeader({
           <img
             src={backgroundImage}
             alt=""
-            className="absolute inset-0 w-full h-full object-cover img-header"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ filter: "brightness(0.9) contrast(1.08) saturate(0.85)" }}
           />
         </div>
       )}
 
       {/* Deep overlay */}
-      <div className="absolute inset-0 bg-background/70" />
+      <div className="absolute inset-0 bg-background/55" />
 
-      {/* Vignette */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse 70% 55% at 50% 50%, transparent 20%, hsl(222 20% 4% / 0.6) 80%)",
+      {/* Engineering grid */}
+      {!backgroundImage && <div className="absolute inset-0 engineering-grid" />}
+
+      {/* Grain */}
+      <div className="absolute inset-0 grain-texture" />
         }}
       />
 
