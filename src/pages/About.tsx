@@ -7,11 +7,11 @@ import systemProcess from "@/assets/system-process.jpg";
 import systemStructure from "@/assets/system-structure.jpg";
 import systemOutcome from "@/assets/system-outcome.jpg";
 
-// Tight architectural crops with desaturated, high-contrast treatment
+// Tight architectural crops — clean, natural grading (no sepia, max brightness ~1.08)
 const SECTIONS = [
-  { src: systemProcess, line: "Built by those who understand the ground.", aspect: "aspect-[1/1]", crop: "50% 30%", scale: "1.6", filter: "brightness(1.12) contrast(1.2) saturate(0.82)" },
-  { src: systemStructure, line: "Precision in every layer.", aspect: "aspect-[21/9]", crop: "20% 60%", scale: "1.4", filter: "brightness(1.15) contrast(1.15) saturate(0.88) sepia(0.03)" },
-  { src: systemOutcome, line: "Environments designed to perform.", aspect: "aspect-[3/2]", crop: "70% 40%", scale: "1.5", filter: "brightness(1.18) contrast(1.06) saturate(1.05) sepia(0.05)" },
+  { src: systemProcess, line: "Built by those who understand the ground.", aspect: "aspect-[1/1]", crop: "50% 30%", scale: "1.6", filter: "brightness(1.04) contrast(1.08) saturate(0.88)" },
+  { src: systemStructure, line: "Precision in every layer.", aspect: "aspect-[21/9]", crop: "20% 60%", scale: "1.4", filter: "brightness(1.02) contrast(1.06) saturate(0.9)" },
+  { src: systemOutcome, line: "Environments designed to perform.", aspect: "aspect-[3/2]", crop: "70% 40%", scale: "1.5", filter: "brightness(1.06) contrast(1.04) saturate(0.92)" },
 ];
 
 export default function About() {

@@ -123,7 +123,7 @@ export default function Services() {
                 Engineered ground stabilisation for permanent and temporary environments.
               </p>
               <div className="relative overflow-hidden aspect-square max-w-xs mx-auto">
-                <img src={imgGroundLock} alt="GroundLock stabilisation panel" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.02) contrast(1.06) saturate(0.85)" }} />
+                <img src={imgGroundLock} alt="GroundLock stabilisation panel" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(0.96) contrast(1.06) saturate(0.9)" }} />
               </div>
               <Link
                 to="/groundlock"

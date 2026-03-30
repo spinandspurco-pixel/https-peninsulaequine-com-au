@@ -5,10 +5,11 @@ import { StickySubpageCTA } from "@/components/StickySubpageCTA";
 import { ArrowRight, Flame } from "lucide-react";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { cn } from "@/lib/utils";
+import { GroundLockHero } from "@/components/groundlock/GroundLockHero";
 
-import steelBarnFrame from "@/assets/steel-barn-frame-wide.jpg";
-import reclaimedBeam from "@/assets/reclaimed-beam-workshop.jpg";
-import roofingDetail from "@/assets/roofing-steel-detail.jpg";
+import glIconHero from "@/assets/gl-icon-hero.jpg";
+import glAbstractPattern from "@/assets/gl-abstract-pattern.jpg";
+import glApplicationHint from "@/assets/gl-application-hint.jpg";
 
 /* ── Product Families ─────────────────────────────── */
 
@@ -67,12 +68,12 @@ const STATUS_MAP: Record<FamilyEntry["status"], { label: string; style: string }
   future: { label: "Future Division", style: "text-foreground/20" },
 };
 
-/* ── Image strip data ─────────────────────────────── */
+/* ── Image strip data — product-consistent ── */
 
 const MATERIAL_IMAGES = [
-  { src: steelBarnFrame, alt: "Structural steel barn frame" },
-  { src: reclaimedBeam, alt: "Workshop beam preparation" },
-  { src: roofingDetail, alt: "Steel roofing detail" },
+  { src: glIconHero, alt: "GroundLock horseshoe panel — product identity" },
+  { src: glAbstractPattern, alt: "GroundLock system pattern" },
+  { src: glApplicationHint, alt: "GroundLock surface application" },
 ];
 
 /* ── Family card ──────────────────────────────────── */
@@ -195,7 +196,8 @@ export default function Forge() {
                   alt={img.alt}
                   loading="lazy"
                   decoding="async"
-                  className="absolute inset-0 w-full h-full object-cover img-portfolio transition-all duration-[900ms]"
+                  className="absolute inset-0 w-full h-full object-cover transition-all duration-[900ms]"
+                  style={{ filter: "brightness(0.96) contrast(1.06) saturate(0.9)" }}
                 />
               </div>
             ))}
