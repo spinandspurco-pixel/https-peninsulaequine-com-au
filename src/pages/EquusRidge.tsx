@@ -17,7 +17,7 @@ const EquusRidge = () => {
             alt="Luxury equine estate at golden hour"
             className="absolute inset-0 w-full h-full object-cover"
             loading="eager"
-            style={{ filter: "brightness(0.9) contrast(1.08) saturate(0.85)" }}
+            style={{ filter: "brightness(0.92) contrast(1.12) saturate(1.08)" }}
           />
           <div className="absolute inset-0 bg-background/40" />
         </div>
@@ -30,7 +30,7 @@ const EquusRidge = () => {
             Equus Ridge
           </p>
           <h1
-            className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground/90 tracking-tight leading-[1.05] mb-6 opacity-0 animate-fade-in"
+            className="heading-display text-foreground mb-6 opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both", animationDuration: "1200ms" }}
           >
             A new standard for<br />equine experience.
