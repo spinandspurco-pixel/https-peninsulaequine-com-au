@@ -2,8 +2,9 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { BlueprintScene } from "@/components/BlueprintScene";
 
-/* Use one of the oblique sim images as the dominant visual */
+/* Single dominant visual — oblique pre-construction render */
 import heroVisual from "@/assets/sim/sim_medium_mixed_oblique.jpg";
 
 const PILLARS = [
@@ -25,8 +26,15 @@ export default function Visualise() {
   return (
     <Layout>
       {/* ═══ 1. HERO ═══════════════════════════════════ */}
-      <section className="relative pt-44 sm:pt-56 pb-28 sm:pb-36 overflow-hidden">
-        <div className="section-container max-w-2xl mx-auto text-center relative z-10">
+      <BlueprintScene
+        as="section"
+        layers={[
+          { image: "elevation", opacity: 0.025, direction: "left-to-right", duration: 2800, parallaxSpeed: 0.04 },
+        ]}
+        lineOverlays={[{ variant: "dimensions", color: "dark" }]}
+        className="pt-44 sm:pt-56 pb-28 sm:pb-36"
+      >
+        <div className="section-container max-w-2xl mx-auto text-center">
           <h1
             className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground/85 tracking-tight leading-[1.05] opacity-0 animate-fade-in"
             style={{ animationDelay: "300ms", animationFillMode: "both", animationDuration: "1000ms" }}
@@ -46,7 +54,7 @@ export default function Visualise() {
             Spatial planning, material direction, and build intent — resolved before ground is broken.
           </p>
         </div>
-      </section>
+      </BlueprintScene>
 
       {/* ═══ 2. MAIN VISUAL ════════════════════════════ */}
       <section className="relative overflow-hidden" style={{ backgroundColor: "#0a0a0a" }}>
@@ -61,19 +69,10 @@ export default function Visualise() {
                   loading="eager"
                   style={{ filter: "brightness(0.38) saturate(0.7) contrast(1.08)" }}
                 />
-                {/* Blueprint-like grid overlay */}
+                {/* Blueprint grid overlay — ties to global system */}
                 <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    opacity: 0.04,
-                    backgroundImage: `repeating-linear-gradient(
-                      0deg, transparent, transparent 59px,
-                      hsl(var(--accent) / 0.15) 59px, hsl(var(--accent) / 0.15) 60px
-                    ), repeating-linear-gradient(
-                      90deg, transparent, transparent 59px,
-                      hsl(var(--accent) / 0.15) 59px, hsl(var(--accent) / 0.15) 60px
-                    )`,
-                  }}
+                  className="absolute inset-0 pointer-events-none engineering-grid"
+                  style={{ opacity: 0.03 }}
                 />
                 {/* Vignette */}
                 <div
@@ -100,11 +99,17 @@ export default function Visualise() {
       />
 
       {/* ═══ 3. CAPABILITY STRIP ═══════════════════════ */}
-      <section className="pt-28 sm:pt-36 pb-32 sm:pb-40 relative overflow-hidden">
-        <div className="section-container max-w-4xl mx-auto relative z-[1]">
+      <BlueprintScene
+        as="section"
+        layers={[
+          { image: "horse-barn", opacity: 0.02, direction: "bottom-to-top", duration: 3000, parallaxSpeed: 0.03 },
+        ]}
+        className="pt-28 sm:pt-36 pb-32 sm:pb-40"
+      >
+        <div className="section-container max-w-4xl mx-auto">
           <RevealOnScroll direction="up">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-16 sm:gap-12">
-              {PILLARS.map((pillar, i) => (
+              {PILLARS.map((pillar) => (
                 <div key={pillar.title} className="text-center">
                   <p className="font-serif text-lg sm:text-xl text-foreground/65 tracking-tight mb-4">
                     {pillar.title}
@@ -118,7 +123,7 @@ export default function Visualise() {
             </div>
           </RevealOnScroll>
         </div>
-      </section>
+      </BlueprintScene>
 
       {/* ═══ THREAD ════════════════════════════════════ */}
       <div
