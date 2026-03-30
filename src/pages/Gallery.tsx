@@ -31,24 +31,15 @@ export default function Projects() {
   return (
     <Layout>
       {/* ═══ SECTION 1 — HERO ═══════════════════════════ */}
-      <section className="pt-48 sm:pt-64 pb-20 sm:pb-28">
-        <div className="section-container max-w-3xl mx-auto text-center">
+      <section className="relative pt-48 sm:pt-56 pb-24 sm:pb-32 overflow-hidden">
+        <div className="absolute inset-0 engineering-grid opacity-[0.03]" aria-hidden="true" />
+        <div className="section-container max-w-3xl mx-auto text-center relative z-10">
           <h1
-            className="font-serif text-4xl sm:text-5xl md:text-6xl text-foreground/90 tracking-tight leading-[0.9] opacity-0 animate-fade-in"
+            className="font-serif text-4xl sm:text-5xl md:text-6xl text-foreground/85 tracking-tight leading-[0.9] opacity-0 animate-fade-in"
             style={{ animationDelay: "300ms", animationFillMode: "both", animationDuration: "800ms" }}
           >
             Selected Work
           </h1>
-          <div
-            className="mt-8 flex items-center justify-center gap-4 opacity-0 animate-fade-in"
-            style={{ animationDelay: "600ms", animationFillMode: "both", animationDuration: "800ms" }}
-          >
-            <div className="w-8 h-px" style={{ background: "hsl(var(--accent) / 0.15)" }} />
-            <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-foreground/15">
-              Main Ridge Estate
-            </p>
-            <div className="w-8 h-px" style={{ background: "hsl(var(--accent) / 0.15)" }} />
-          </div>
         </div>
       </section>
 
