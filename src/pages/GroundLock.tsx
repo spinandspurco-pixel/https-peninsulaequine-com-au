@@ -141,7 +141,7 @@ export default function GroundLock() {
         </section>
 
         {/* ═══ CLOSING CTA ═══════════════════════════════ */}
-        <section className="py-40 sm:py-52 lg:py-64 relative overflow-hidden bg-black">
+        <section className="py-40 sm:py-52 lg:py-64 relative overflow-hidden" style={{ backgroundColor: "#0a0a0a" }}>
           <div className="relative z-[1] text-center max-w-md mx-auto px-6">
             <Button variant="gold" size="lg" onClick={() => setGateOpen(true)}>
               Request Access <ArrowRight className="ml-2 h-4 w-4" />
