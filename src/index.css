@@ -492,25 +492,13 @@
 
 
 
-/* ── Unified cinematic image treatment system ── */
-
-/* Base warm tone applied to all lazy images */
-img[loading="lazy"],
-
-/* Hero backgrounds — deep, moody, warm highlights */
-.img-hero {
-  filter: brightness(0.18) contrast(1.18) saturate(0.35) sepia(0.08);
-}
+/* ── Cinematic image treatment system ── */
 
 /* Page header / section backgrounds — dark overlay feel */
 .img-header {
   filter: brightness(0.3) contrast(1.1) saturate(0.55) sepia(0.05);
 }
 
-/* CTA / closing section backgrounds */
-.img-cta {
-  filter: brightness(0.35) contrast(1.12) saturate(0.55) sepia(0.05);
-}
 
 /* Portfolio cards — warm, golden-hour cohesion */
 .img-portfolio {
