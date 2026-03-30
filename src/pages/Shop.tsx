@@ -90,15 +90,15 @@ export default function Shop() {
       {/* ═══ SEPARATION ═══════════════════════════════════ */}
       <div className="py-16 sm:py-24" />
 
-      {/* ═══ 3. TIER 2 — EQUIPMENT (separate context) ═════ */}
+      {/* ═══ 3. TIER 2 — APPAREL ═════════════════════════ */}
       <section className="pt-20 sm:pt-28 pb-32 sm:pb-40">
         <div className="section-container max-w-5xl mx-auto">
           <div className="flex items-center gap-5 mb-10 sm:mb-14">
             <div className="w-6 h-px bg-accent/12" />
-            <p className="text-[8px] sm:text-[9px] uppercase tracking-[0.5em] text-accent/18 font-mono">Equipment</p>
+            <p className="text-[8px] sm:text-[9px] uppercase tracking-[0.5em] text-accent/18 font-mono">Apparel</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 sm:gap-14">
-            {EQUIPMENT.map((product) => (
+            {APPAREL.map((product) => (
               <RevealOnScroll key={product.name} direction="up">
                 <div className="group cursor-pointer">
                   <div
