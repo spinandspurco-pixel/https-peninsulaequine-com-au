@@ -433,20 +433,18 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         const isActive = activeZone === z.id;
         const isDimmed = activeZone !== null && !isActive;
         const center = getCenter(z.path);
-        const elevShift = isActive ? z.elevation * -1.5 : 0;
-        const dimOpacity = (isViewing && !isActive) ? 0.06 : 0.08;
-        const isViewingZone = z.id === "viewing-loft";
+        const elevShift = isActive ? z.elevation * -1 : 0;
+        const dimOpacity = isDimmed ? 0.15 : 1;
 
         return (
           <g
             key={z.id}
             style={{
-              opacity: isDimmed ? dimOpacity : 1,
+              opacity: dimOpacity,
               transform: `translateY(${elevShift}px)`,
-              transition: `opacity ${T} ${T_EASE} ${isDimmed ? '0ms' : '150ms'}, transform ${T} ${T_EASE} ${isActive ? '150ms' : '0ms'}`,
-              willChange: "opacity, transform",
+              transition: `opacity 400ms ${T_EASE}, transform 500ms ${T_EASE}`,
             }}
-            filter={undefined}
+            filter={isActive ? "url(#mp-active)" : undefined}
           >
             {/* Outline trace on active — draws in */}
             {isActive && (
