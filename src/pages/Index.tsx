@@ -108,7 +108,7 @@ export default function Index() {
         </section>
 
         {/* ═══ 2. STRUCTURE — Selected Work ════════════════ */}
-        <div className="h-10 sm:h-14" style={{ background: "#030303" }} aria-hidden="true" />
+        <div className="h-4 sm:h-6" style={{ background: "#030303" }} aria-hidden="true" />
         <section className="relative min-h-[80vh] sm:min-h-[85vh] flex items-end overflow-hidden" style={{ background: "#030303" }}>
           <img
             src={systemStructure}
