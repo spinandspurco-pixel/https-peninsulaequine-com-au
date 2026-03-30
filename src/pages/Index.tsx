@@ -160,7 +160,7 @@ export default function Index() {
           className="relative"
           style={{
             height: "clamp(4rem, 8vw, 7rem)",
-            background: "linear-gradient(to bottom, #030303, hsl(var(--background)))",
+            background: "linear-gradient(to bottom, #0a0a0a, hsl(var(--background)))",
           }}
           aria-hidden="true"
         />
