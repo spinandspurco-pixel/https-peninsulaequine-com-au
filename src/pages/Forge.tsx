@@ -146,7 +146,7 @@ export default function Forge() {
       
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="relative pt-52 sm:pt-72 pb-36 sm:pb-48 overflow-hidden">
-        <div className="absolute inset-0 bg-background" />
+        <div className="absolute inset-0" style={{ backgroundColor: "#0c0c0c" }} />
         <div className="absolute inset-0 pointer-events-none grain-texture" />
 
         <div className="section-container relative z-10 max-w-2xl mx-auto text-center">
