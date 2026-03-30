@@ -106,13 +106,17 @@ interface MasterplanProps {
   onZoneChange?: (zoneId: string | null) => void;
 }
 
-export function InteractiveMasterplan({ onZoneHover, onZoneLeave }: MasterplanProps = {}) {
+export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onZoneChange }: MasterplanProps = {}) {
   usePreloadImages(PRELOAD);
   const isMobile = useIsMobile();
   const reducedMotion = useReducedMotion();
   const isTouch = useIsTouchDevice();
 
-  const [activeZone, setActiveZone] = useState<string | null>(null);
+  const [activeZone, _setActiveZone] = useState<string | null>(null);
+  const setActiveZone = useCallback((id: string | null) => {
+    _setActiveZone(id);
+    onZoneChange?.(id);
+  }, [onZoneChange]);
 
   const activeZoneData = zones.find(z => z.id === activeZone) || null;
 
