@@ -524,21 +524,8 @@
   filter: brightness(0.78) contrast(1.06) saturate(0.75) sepia(0.06);
 }
 
-/* Inline content images — subtle treatment */
 
-/* ── Projects cinematic hero keyframes ── */
-@keyframes blueprintDraw {
-  from { stroke-dashoffset: inherit; opacity: 0.15; }
-  to   { stroke-dashoffset: 0; opacity: 0.15; }
-}
-@keyframes blueprintFade {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes heroHeadingReveal {
-  from { opacity: 0; transform: translateY(20px); letter-spacing: 0.08em; }
-  to   { opacity: 1; transform: translateY(0); letter-spacing: 0.02em; }
-}
+
 
 /* ══════════════════════════════════════════
    PROPOSAL PRINT / PDF STYLES
