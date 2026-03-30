@@ -88,7 +88,7 @@ export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onZoneChange, 
   }, [reducedMotion]);
 
   return (
-    <section ref={sectionRef} className="relative py-20 sm:py-28 lg:py-36 overflow-hidden">
+    <section ref={sectionRef} className="relative pt-20 sm:pt-28 lg:pt-36 pb-8 sm:pb-12 overflow-hidden">
       <div className="absolute inset-0 grain-texture pointer-events-none" />
 
       <div className="relative z-10 px-4 sm:px-6">
