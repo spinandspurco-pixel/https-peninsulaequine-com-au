@@ -103,6 +103,9 @@ export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onZoneChange, 
             <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/75 tracking-[0.04em] leading-tight">
               Main Ridge — Ground Floor
             </h2>
+            <p className="mt-5 font-mono text-[8px] uppercase tracking-[0.4em] text-foreground/8">
+              Resolved at plan level.
+            </p>
           </div>
         </RevealOnScroll>
 
