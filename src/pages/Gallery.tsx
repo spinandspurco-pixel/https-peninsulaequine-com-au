@@ -4,8 +4,8 @@ import { InteractiveMasterplan } from "@/components/masterplan/InteractiveMaster
 import { BeforeAfterSlider } from "@/components/BeforeAfterSlider";
 import { Link } from "react-router-dom";
 
-import transformBefore from "@/assets/transform-before.jpg";
-import transformAfter from "@/assets/transform-after.jpg";
+import mainridgeBefore from "@/assets/mainridge-before.jpg";
+import mainridgeAfter from "@/assets/mainridge-after.jpg";
 
 import imgArena from "@/assets/zone-arena.jpg";
 import imgStableRow from "@/assets/zone-stable-row.jpg";
@@ -140,20 +140,20 @@ export default function Projects() {
       {/* ═══ BUILD REVEAL — linked to masterplan ═══════ */}
       <BuildReveal zoneId={activeZone} onHoverZone={handleRevealHover} onLeaveZone={handleRevealLeave} />
 
-      {/* ═══ TRANSFORMATION ══════════════════════════ */}
+      {/* ═══ TRANSFORMATION — Main Ridge ═════════════ */}
       <section className="py-28 sm:py-40 relative overflow-hidden">
         <div className="section-container max-w-5xl mx-auto">
           <div className="flex items-center gap-5 mb-10 justify-center">
             <div className="w-6 h-px bg-accent/10" />
             <p className="font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.5em] text-accent/15">
-              Transformation
+              Main Ridge — Transformation
             </p>
             <div className="w-6 h-px bg-accent/10" />
           </div>
           <BeforeAfterSlider
-            before={transformBefore}
-            after={transformAfter}
-            alt="Site transformation"
+            before={mainridgeBefore}
+            after={mainridgeAfter}
+            alt="Main Ridge Estate — site to build"
           />
           <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/12 text-center">
             From dirt to dynasty.
