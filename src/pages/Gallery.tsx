@@ -128,6 +128,12 @@ export default function Projects() {
           >
             Selected Work
           </h1>
+          <p
+            className="mt-10 font-serif italic text-sm tracking-[0.04em] text-foreground/[0.12] opacity-0 animate-fade-in"
+            style={{ animationDelay: "600ms", animationFillMode: "both", animationDuration: "1000ms" }}
+          >
+            Every build is resolved at plan level.
+          </p>
         </div>
       </section>
 
