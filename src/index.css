@@ -253,42 +253,6 @@
   }
 
   /* ═══════════════════════════════════════════════════════
-     CARD / SURFACE SYSTEM
-     ═══════════════════════════════════════════════════════ */
-
-
-  /* ═══════════════════════════════════════════════════════
-     IMAGE OVERLAYS
-     ═══════════════════════════════════════════════════════ */
-
-
-  /* ═══════════════════════════════════════════════════════
-     IMAGE INTEGRATION — immersive, embedded feel
-     ═══════════════════════════════════════════════════════ */
-
-  /* Soft feathered edges — dissolves image boundaries */
-
-
-  /* Slight overflow + scale for immersive images */
-  .img-immersive {
-    @apply scale-[1.06];
-    transition: transform 1.8s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .group:hover .img-immersive,
-  .img-immersive:hover {
-    @apply scale-[1.12];
-  }
-
-  /* Bridge between sections — image bleeds into both */
-
-  /* Vertical overlap — pulls image out of its box */
-
-  @media (min-width: 1024px) {
-    .lg\:img-overlap-top { margin-top: -5rem; position: relative; z-index: 1; }
-    .lg\:img-overlap-bottom { margin-bottom: -5rem; position: relative; z-index: 1; }
-  }
-
-  /* ═══════════════════════════════════════════════════════
      INTERACTIVE EFFECTS — engineered, not animated
      ═══════════════════════════════════════════════════════ */
 
@@ -304,18 +268,6 @@
   }
   .btn-hover-lift:hover {
     filter: brightness(1.12);
-  }
-
-  .btn-glow:hover {
-    filter: brightness(1.1);
-    box-shadow: 0 0 0 1px hsl(var(--accent) / 0.2);
-  }
-  .btn-glow:active {
-    filter: brightness(1.05);
-  }
-  .btn-glow:focus-visible {
-    box-shadow: 0 0 0 2px hsl(var(--background)),
-                0 0 0 4px hsl(var(--ring));
   }
 
   /* Card hover — refined */
@@ -334,112 +286,12 @@
     box-shadow: 0 0 0 2px hsl(var(--accent) / 0.15),
                 0 0 20px -8px hsl(var(--accent) / 0.2);
   }
-
-
-
-
-  /* ═══════════════════════════════════════════════════════
-     ANIMATION UTILITIES
-     ═══════════════════════════════════════════════════════ */
-  .editorial-fade-in.visible {
-    @apply opacity-100 translate-y-0;
-  }
-
-
-  .mask-reveal.visible {
-    clip-path: inset(0 0 0 0);
-  }
-
-  .line-grow.visible {
-    @apply scale-x-100;
-  }
-
-  /* Stagger delays — longer intervals for luxury feel */
-
-  /* ═══════════════════════════════════════════════════════
-     TEMPERATURE & ADAPTIVE LIGHTING
-     ═══════════════════════════════════════════════════════ */
-
-  /* Gold / accent hover — brushed metal catching light */
-  .btn-temp-gold {
-    transition: filter 300ms ease-in-out, box-shadow 300ms ease-in-out;
-  }
-  .btn-temp-gold:hover {
-    filter: brightness(1.06) saturate(1.08) sepia(0.03);
-    box-shadow: 0 4px 28px -8px hsl(var(--accent) / 0.28);
-  }
-
-  /* Dark surface warmth on hover */
-  .surface-warm-hover {
-    transition: filter 300ms ease-in-out, background-color 300ms ease-in-out;
-  }
-  .surface-warm-hover:hover {
-    filter: brightness(1.03) sepia(0.015);
-  }
-
-  /* Masterplan zone temperature states */
-  .zone-warm {
-    filter: brightness(1.04) sepia(0.02);
-    transition: filter 300ms ease-in-out;
-  }
-  .zone-cool {
-    filter: brightness(0.97) saturate(0.94);
-    transition: filter 300ms ease-in-out;
-  }
-
-  /* Hero center illumination bias */
-  .hero-center-light::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: radial-gradient(
-      ellipse 55% 45% at 50% 48%,
-      hsl(38 20% 80% / 0.018) 0%,
-      transparent 60%
-    );
-    z-index: 1;
-  }
-
-  /* Scene ambient temperature modifiers */
-  .scene-technical {
-    filter: brightness(0.98) saturate(0.95) sepia(0);
-    transition: filter 500ms ease-in-out;
-  }
-  .scene-material {
-    filter: brightness(1.02) saturate(1.03) sepia(0.015);
-    transition: filter 500ms ease-in-out;
-  }
 }
 
-/* ═══════════════════════════════════════════════════════
-   BLUEPRINT ICON SYSTEM
-   ═══════════════════════════════════════════════════════ */
-.blueprint-icon .bp-line {
-  stroke-dasharray: 200;
-  stroke-dashoffset: 0;
-  opacity: 0.25;
-  transition: opacity 300ms ease-in-out;
-}
 
-.blueprint-icon:hover .bp-line,
-.blueprint-icon--active .bp-line {
-  opacity: 0.6;
-}
 
-.blueprint-icon .bp-line {
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset 300ms ease-in-out,
-              opacity 300ms ease-in-out;
-}
 
-.blueprint-icon.bp-draw-in .bp-line {
-  stroke-dashoffset: 200;
-}
-.blueprint-icon.bp-draw-in:hover .bp-line {
-  stroke-dashoffset: 0;
-  opacity: 0.6;
-}
+
 
 /* Blueprint grid texture */
 
@@ -532,32 +384,14 @@
   to   { transform: scale(1.06); }
 }
 
-@keyframes heroHeadlineReveal {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
 
-@keyframes heroSupportReveal {
-  from { opacity: 0; }
-  to   { opacity: 0.25; }
-}
 
-@keyframes heroBackdropReveal {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
 
-@keyframes scrollPulse {
-  0%   { transform: translateY(-100%); opacity: 0; }
-  30%  { opacity: 1; }
-  70%  { opacity: 1; }
-  100% { transform: translateY(200%); opacity: 0; }
-}
 
-@keyframes etb-cta-ready {
-  0%   { border-color: hsl(var(--accent) / 0.08); color: hsl(var(--foreground) / 0.35); box-shadow: 0 0 0 0 hsl(var(--accent) / 0); }
-  100% { border-color: hsl(var(--accent) / 0.18); color: hsl(var(--foreground) / 0.65); box-shadow: 0 0 12px -4px hsl(var(--accent) / 0.06); }
-}
+
+
+
+
 
 
 
@@ -655,30 +489,16 @@
 
 
 
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
 
-/* ── Unified cinematic image treatment system ── */
 
-/* Base warm tone applied to all lazy images */
-img[loading="lazy"],
 
-/* Hero backgrounds — deep, moody, warm highlights */
-.img-hero {
-  filter: brightness(0.18) contrast(1.18) saturate(0.35) sepia(0.08);
-}
+/* ── Cinematic image treatment system ── */
 
 /* Page header / section backgrounds — dark overlay feel */
 .img-header {
   filter: brightness(0.3) contrast(1.1) saturate(0.55) sepia(0.05);
 }
 
-/* CTA / closing section backgrounds */
-.img-cta {
-  filter: brightness(0.35) contrast(1.12) saturate(0.55) sepia(0.05);
-}
 
 /* Portfolio cards — warm, golden-hour cohesion */
 .img-portfolio {
@@ -704,21 +524,8 @@ img[loading="lazy"],
   filter: brightness(0.78) contrast(1.06) saturate(0.75) sepia(0.06);
 }
 
-/* Inline content images — subtle treatment */
 
-/* ── Projects cinematic hero keyframes ── */
-@keyframes blueprintDraw {
-  from { stroke-dashoffset: inherit; opacity: 0.15; }
-  to   { stroke-dashoffset: 0; opacity: 0.15; }
-}
-@keyframes blueprintFade {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes heroHeadingReveal {
-  from { opacity: 0; transform: translateY(20px); letter-spacing: 0.08em; }
-  to   { opacity: 1; transform: translateY(0); letter-spacing: 0.02em; }
-}
+
 
 /* ══════════════════════════════════════════
    PROPOSAL PRINT / PDF STYLES
