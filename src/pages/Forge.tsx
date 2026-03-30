@@ -171,7 +171,7 @@ export default function Forge() {
           />
 
           <p
-            className="text-[11px] tracking-[0.25em] uppercase text-foreground/18 opacity-0 animate-fade-in"
+            className="text-[11px] tracking-[0.25em] uppercase text-foreground/22 opacity-0 animate-fade-in"
             style={{ animationDelay: "650ms", animationFillMode: "both" }}
           >
             by Peninsula Equine
