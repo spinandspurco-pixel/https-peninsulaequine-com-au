@@ -87,23 +87,31 @@ export default function Shop() {
         </div>
       </section>
 
-      {/* ═══ SEPARATION ═══════════════════════════════════ */}
-      <div className="py-16 sm:py-24" />
+      {/* ═══ CATEGORY BREAK — GroundLock → Apparel ═════════ */}
+      <div className="relative" style={{ height: "clamp(5rem, 10vw, 8rem)" }}>
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, #0a0a0a, hsl(var(--background)))" }} />
+      </div>
 
-      {/* ═══ 3. TIER 2 — APPAREL ═════════════════════════ */}
-      <section className="pt-20 sm:pt-28 pb-32 sm:pb-40">
-        <div className="section-container max-w-5xl mx-auto">
-          <div className="flex items-center gap-5 mb-10 sm:mb-14">
-            <div className="w-6 h-px bg-accent/12" />
-            <p className="text-[8px] sm:text-[9px] uppercase tracking-[0.5em] text-accent/18 font-mono">Apparel</p>
-          </div>
+      {/* ═══ APPAREL SECTION ══════════════════════════════ */}
+      <section className="pt-28 sm:pt-36 pb-16 sm:pb-20 relative">
+        <div className="section-container max-w-5xl mx-auto text-center">
+          <RevealOnScroll direction="up">
+            <h2
+              className="font-serif text-2xl sm:text-3xl text-foreground/70 tracking-tight mb-4"
+            >
+              Apparel
+            </h2>
+            <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-foreground/12 mb-20 sm:mb-28">
+              Site-ready. Built to work.
+            </p>
+          </RevealOnScroll>
+
+          {/* Primary apparel — larger presentation */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 sm:gap-14">
-            {APPAREL.map((product) => (
+            {APPAREL_PRIMARY.map((product) => (
               <RevealOnScroll key={product.name} direction="up">
                 <div className="group cursor-pointer">
-                  <div
-                    className="relative overflow-hidden transition-shadow duration-500 group-hover:shadow-[0_8px_30px_-12px_rgba(0,0,0,0.5)]"
-                  >
+                  <div className="relative overflow-hidden transition-shadow duration-500 group-hover:shadow-[0_8px_30px_-12px_rgba(0,0,0,0.5)]">
                     <img
                       src={product.src}
                       alt={product.name}
@@ -127,27 +135,19 @@ export default function Shop() {
         </div>
       </section>
 
-      {/* ═══ THREAD ══════════════════════════════════════ */}
-      <div
-        className="mx-auto"
-        style={{ width: "1px", height: "clamp(2rem, 4vw, 3.5rem)", background: "linear-gradient(to bottom, hsl(var(--accent) / 0.04), transparent)" }}
-        aria-hidden="true"
-      />
-
-      {/* ═══ 4. TIER 3 — ACCESSORIES ═════════════════════ */}
-      <section className="pt-16 sm:pt-20 pb-32 sm:pb-40">
+      {/* ═══ APPAREL — ACCESSORIES ════════════════════════ */}
+      <section className="pt-12 sm:pt-16 pb-32 sm:pb-40">
         <div className="section-container max-w-4xl mx-auto">
-          <div className="flex items-center gap-5 mb-10 sm:mb-14">
+          <div className="flex items-center gap-5 mb-10 sm:mb-14 justify-center">
             <div className="w-6 h-px bg-accent/8" />
-            <p className="text-[8px] sm:text-[9px] uppercase tracking-[0.5em] text-accent/12 font-mono">Accessories</p>
+            <p className="text-[8px] sm:text-[9px] uppercase tracking-[0.5em] text-foreground/12 font-mono">Accessories</p>
+            <div className="w-6 h-px bg-accent/8" />
           </div>
           <div className="grid grid-cols-2 gap-8 sm:gap-12">
-            {ACCESSORIES.map((product) => (
+            {APPAREL_SECONDARY.map((product) => (
               <RevealOnScroll key={product.name} direction="up">
                 <div className="group cursor-pointer">
-                  <div
-                    className="relative overflow-hidden transition-shadow duration-500 group-hover:shadow-[0_6px_24px_-10px_rgba(0,0,0,0.4)]"
-                  >
+                  <div className="relative overflow-hidden transition-shadow duration-500 group-hover:shadow-[0_6px_24px_-10px_rgba(0,0,0,0.4)]">
                     <img
                       src={product.src}
                       alt={product.name}
