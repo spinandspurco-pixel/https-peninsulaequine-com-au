@@ -5,11 +5,11 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 
-// Locked image system
+// Locked image system — distinct per service
 import systemHero from "@/assets/system-hero.jpg";
-import systemStructure from "@/assets/system-structure.jpg";
-import systemProcess from "@/assets/system-process.jpg";
-import systemEvent from "@/assets/system-event.jpg";
+import imgFullBuild from "@/assets/service-fullbuild.jpg";
+import imgGroundLock from "@/assets/service-groundlock.jpg";
+import imgEvent from "@/assets/service-event.jpg";
 
 export default function Services() {
   useEffect(() => {
