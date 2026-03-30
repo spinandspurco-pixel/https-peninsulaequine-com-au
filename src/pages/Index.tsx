@@ -204,8 +204,8 @@ export default function Index() {
 
         {/* ═══ 4. OUTCOME — Softer, warmer ═════════════════ */}
         <section className="pt-16 sm:pt-20 pb-32 sm:pb-40 relative overflow-hidden">
-          {/* Soft warm ambient glow */}
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 40%, hsl(35 20% 14% / 0.03), transparent)" }} />
+          {/* Warm, softer ambient glow */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 40%, hsl(35 25% 16% / 0.05), transparent)" }} />
           <div className="section-container max-w-6xl mx-auto">
             <div
               className="opacity-0 animate-fade-in"
@@ -216,7 +216,7 @@ export default function Index() {
                 alt="Completed equestrian property — aerial view"
                 className="w-full aspect-[21/9] object-cover"
                 loading="lazy"
-                style={{ filter: "brightness(1.08) contrast(1.02) saturate(1.0)" }}
+                style={{ filter: "brightness(1.04) contrast(1.0) saturate(1.1)" }}
               />
             </div>
             <p
