@@ -38,7 +38,7 @@ export default function Index() {
     <>
       <BrandIntro onComplete={() => {}} />
       <Layout>
-        {/* ═══ 1. HERO — Emotion + Authority ═══════════════ */}
+        {/* ═══ 1. HERO — Cinematic, dominant ═══════════════ */}
         <section className="relative min-h-[100dvh] overflow-hidden flex items-center justify-center" style={{ paddingBottom: "8vh" }}>
           <img
             src={systemHero}
@@ -49,10 +49,12 @@ export default function Index() {
             loading="eager"
             style={{
               objectPosition: "50% 72%",
-              filter: "brightness(0.95) contrast(1.08)",
+              filter: "brightness(0.92) contrast(1.12) saturate(1.08)",
               animation: "heroSlowZoom 25s ease-out forwards",
             }}
           />
+          {/* Deep cinematic vignette */}
+          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 30%, rgba(0,0,0,0.4) 100%)" }} />
 
           <div
             ref={heroContentRef}
@@ -66,13 +68,13 @@ export default function Index() {
                 animationDelay: "300ms",
                 animationFillMode: "both",
                 animationDuration: "800ms",
-                textShadow: "0 2px 30px rgba(0,0,0,0.35)",
+                textShadow: "0 2px 40px rgba(0,0,0,0.45), 0 0 80px rgba(0,0,0,0.15)",
               }}
             >
               From Dirt to Dynasty.
             </h1>
             <p
-              className="mt-10 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.5em] text-white/35 opacity-0 animate-fade-in"
+              className="mt-10 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.5em] text-white/30 opacity-0 animate-fade-in"
               style={{
                 animationDelay: "700ms",
                 animationFillMode: "both",
