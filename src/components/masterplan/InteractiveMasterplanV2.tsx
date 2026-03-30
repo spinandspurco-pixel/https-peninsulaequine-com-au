@@ -140,8 +140,12 @@ export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onZoneChange }
   }, [isTouch, onZoneLeave]);
 
   const handleTap = useCallback((id: string) => {
-    setActiveZone(prev => prev === id ? null : id);
-  }, []);
+    _setActiveZone(prev => {
+      const next = prev === id ? null : id;
+      onZoneChange?.(next);
+      return next;
+    });
+  }, [onZoneChange]);
 
   /* ── Entrance ── */
   const sectionRef = useRef<HTMLElement>(null);
