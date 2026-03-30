@@ -61,57 +61,40 @@ function BuildReveal({
     <section
       className="relative overflow-hidden"
       style={{
-        height: data ? "auto" : "0",
-        paddingTop: data ? "clamp(4rem, 8vw, 8rem)" : "0",
-        paddingBottom: data ? "clamp(4rem, 8vw, 8rem)" : "0",
-        transition: "padding 700ms cubic-bezier(0.45, 0, 0.15, 1)",
+        paddingTop: data ? "clamp(5rem, 10vw, 10rem)" : "0",
+        paddingBottom: data ? "clamp(5rem, 10vw, 10rem)" : "0",
+        transition: "padding 800ms cubic-bezier(0.45, 0, 0.15, 1)",
       }}
       onMouseEnter={() => displayed && onHoverZone?.(displayed)}
       onMouseLeave={() => onLeaveZone?.()}
     >
-      {data && (
-        <div className="section-container max-w-5xl mx-auto">
-          <div
-            className="relative w-full aspect-[21/9] overflow-hidden"
-            style={{
-              opacity: visible ? 1 : 0,
-              transform: visible ? "translateY(0)" : "translateY(8px)",
-              transition: "opacity 600ms cubic-bezier(0.45, 0, 0.15, 1), transform 600ms cubic-bezier(0.45, 0, 0.15, 1)",
-              willChange: "opacity, transform",
-            }}
-          >
-            <img
-              src={data.image}
-              alt=""
-              className="w-full h-full object-cover"
-              style={{
-                objectPosition: data.crop,
-                filter: "brightness(1.08) contrast(1.15) saturate(0.82)",
-              }}
-            />
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                backgroundImage: `
-                  linear-gradient(0deg, hsl(var(--accent) / 0.03) 1px, transparent 1px),
-                  linear-gradient(90deg, hsl(var(--accent) / 0.03) 1px, transparent 1px)
-                `,
-                backgroundSize: "40px 40px",
-              }}
-            />
-          </div>
+      <div
+        className="max-w-5xl mx-auto px-4 sm:px-6"
+        style={{
+          opacity: visible && data ? 1 : 0,
+          transition: "opacity 700ms cubic-bezier(0.45, 0, 0.15, 1)",
+        }}
+      >
+        {data && (
+          <>
+            <div className="relative w-full aspect-[21/9] overflow-hidden">
+              <img
+                src={data.image}
+                alt=""
+                className="w-full h-full object-cover"
+                style={{
+                  objectPosition: data.crop,
+                  filter: "brightness(1.08) contrast(1.15) saturate(0.82)",
+                }}
+              />
+            </div>
 
-          <p
-            className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/15 text-center"
-            style={{
-              opacity: visible ? 1 : 0,
-              transition: "opacity 500ms cubic-bezier(0.45, 0, 0.15, 1) 200ms",
-            }}
-          >
-            {data.line}
-          </p>
-        </div>
-      )}
+            <p className="mt-8 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/12 text-center">
+              {data.line}
+            </p>
+          </>
+        )}
+      </div>
     </section>
   );
 }
