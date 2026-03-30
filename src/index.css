@@ -290,34 +290,8 @@
 
 
 
-/* ═══════════════════════════════════════════════════════
-   BLUEPRINT ICON SYSTEM
-   ═══════════════════════════════════════════════════════ */
-.blueprint-icon .bp-line {
-  stroke-dasharray: 200;
-  stroke-dashoffset: 0;
-  opacity: 0.25;
-  transition: opacity 300ms ease-in-out;
-}
 
-.blueprint-icon:hover .bp-line,
-.blueprint-icon--active .bp-line {
-  opacity: 0.6;
-}
 
-.blueprint-icon .bp-line {
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset 300ms ease-in-out,
-              opacity 300ms ease-in-out;
-}
-
-.blueprint-icon.bp-draw-in .bp-line {
-  stroke-dashoffset: 200;
-}
-.blueprint-icon.bp-draw-in:hover .bp-line {
-  stroke-dashoffset: 0;
-  opacity: 0.6;
-}
 
 /* Blueprint grid texture */
 
