@@ -10,15 +10,15 @@ import imgStables from "@/assets/walk-stables.jpg";
 import imgCourtyard from "@/assets/walk-courtyard.jpg";
 import imgLoft from "@/assets/walk-loft.jpg";
 
-const BUILD_DETAILS: Record<string, { image: string; caption: string }> = {
-  "indoor-arena": { image: imgArena, caption: "24 × 48m clear-span arena. GroundLock surface system." },
-  "stable-row": { image: imgStables, caption: "S1–S4 with central breezeway. Cross-ventilation resolved." },
-  "courtyard": { image: imgCourtyard, caption: "All movement converges. Horse. Rider. Service." },
-  "viewing-loft": { image: imgLoft, caption: "Full arena oversight from upper level." },
-  "west-wing": { image: imgStables, caption: "Quieter wing. Direct paddock connection." },
-  "service-wing": { image: imgCourtyard, caption: "Wash bay. WC. Tie-up. Positioned for efficiency." },
-  "tack-rooms": { image: imgLoft, caption: "Support spaces resolved beneath the viewing loft." },
-};
+const BUILD_DETAILS: { zoneId: string; image: string; label: string; caption: string; crop: string; span?: string }[] = [
+  { zoneId: "indoor-arena", image: imgArena, label: "Arena", caption: "24 × 48m clear-span. GroundLock surface system.", crop: "50% 60%", span: "sm:col-span-2" },
+  { zoneId: "stable-row", image: imgStables, label: "S1–S4", caption: "Central breezeway. Cross-ventilation resolved.", crop: "40% 30%" },
+  { zoneId: "courtyard", image: imgCourtyard, label: "Courtyard", caption: "All movement converges here.", crop: "50% 50%" },
+  { zoneId: "west-wing", image: imgStables, label: "S5–S6", caption: "Quieter wing. Direct paddock connection.", crop: "60% 70%" },
+  { zoneId: "service-wing", image: imgCourtyard, label: "Service", caption: "Wash bay. WC. Tie-up. Efficiency resolved.", crop: "30% 40%" },
+  { zoneId: "tack-rooms", image: imgLoft, label: "Tack / Rooms", caption: "Support spaces beneath the viewing loft.", crop: "50% 30%" },
+  { zoneId: "viewing-loft", image: imgLoft, label: "Viewing Loft", caption: "Full arena oversight from upper level.", crop: "50% 50%", span: "sm:col-span-2" },
+];
 
 export default function Projects() {
   const [activeDetail, setActiveDetail] = useState<string | null>(null);
