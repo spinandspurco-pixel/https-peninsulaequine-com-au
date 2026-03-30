@@ -151,7 +151,7 @@ export default function Forge() {
 
         <div className="section-container relative z-10 max-w-2xl mx-auto text-center">
           <p
-            className="font-mono text-[8px] uppercase tracking-[0.5em] text-foreground/12 mb-14 opacity-0 animate-fade-in"
+            className="font-mono text-[8px] uppercase tracking-[0.5em] text-foreground/16 mb-14 opacity-0 animate-fade-in"
             style={{ animationDelay: "200ms", animationFillMode: "both" }}
           >
             System
