@@ -41,7 +41,7 @@ export default function GroundLock() {
 
       <Layout>
         {/* ═══ 1. HERO — System Identity ══════════════════ */}
-        <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden bg-black">
+        <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden" style={{ backgroundColor: "#0a0a0a" }}>
           <img
             src={glIconHero}
             alt="GroundLock system mark"
