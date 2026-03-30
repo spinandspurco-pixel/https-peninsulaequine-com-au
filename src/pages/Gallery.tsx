@@ -1,9 +1,111 @@
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { InteractiveMasterplan } from "@/components/masterplan/InteractiveMasterplanV2";
 import { Link } from "react-router-dom";
 
+import imgArena from "@/assets/walk-arena.jpg";
+import imgStables from "@/assets/walk-stables.jpg";
+import imgCourtyard from "@/assets/walk-courtyard.jpg";
+import imgLoft from "@/assets/walk-loft.jpg";
+
+const ZONE_REVEAL: Record<string, { image: string; line: string; crop: string }> = {
+  "indoor-arena": { image: imgArena, line: "Clear-span. Engineered for performance under load.", crop: "50% 60%" },
+  "stable-row": { image: imgStables, line: "Cross-ventilation resolved through the corridor axis.", crop: "40% 30%" },
+  "west-wing": { image: imgStables, line: "Quieter wing. Direct paddock connection.", crop: "60% 70%" },
+  "courtyard": { image: imgCourtyard, line: "All movement converges here.", crop: "50% 50%" },
+  "service-wing": { image: imgCourtyard, line: "Clean and service workflows separated.", crop: "30% 45%" },
+  "tack-rooms": { image: imgLoft, line: "Support spaces beneath the viewing loft.", crop: "50% 35%" },
+  "viewing-loft": { image: imgLoft, line: "Full arena oversight from upper level.", crop: "50% 50%" },
+};
+
+function BuildReveal({ zoneId }: { zoneId: string | null }) {
+  const [displayed, setDisplayed] = useState<string | null>(null);
+  const [visible, setVisible] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (timer.current) clearTimeout(timer.current);
+
+    if (zoneId) {
+      // Fade out, swap, fade in
+      setVisible(false);
+      timer.current = setTimeout(() => {
+        setDisplayed(zoneId);
+        setVisible(true);
+      }, 350);
+    } else {
+      setVisible(false);
+      timer.current = setTimeout(() => setDisplayed(null), 500);
+    }
+
+    return () => { if (timer.current) clearTimeout(timer.current); };
+  }, [zoneId]);
+
+  const data = displayed ? ZONE_REVEAL[displayed] : null;
+
+  return (
+    <section
+      className="relative overflow-hidden"
+      style={{
+        height: data ? "auto" : "0",
+        paddingTop: data ? "clamp(4rem, 8vw, 8rem)" : "0",
+        paddingBottom: data ? "clamp(4rem, 8vw, 8rem)" : "0",
+        transition: "padding 700ms cubic-bezier(0.45, 0, 0.15, 1)",
+      }}
+    >
+      {data && (
+        <div className="section-container max-w-5xl mx-auto">
+          {/* Image */}
+          <div
+            className="relative w-full aspect-[21/9] overflow-hidden"
+            style={{
+              opacity: visible ? 1 : 0,
+              transform: visible ? "translateY(0)" : "translateY(8px)",
+              transition: "opacity 600ms cubic-bezier(0.45, 0, 0.15, 1), transform 600ms cubic-bezier(0.45, 0, 0.15, 1)",
+              willChange: "opacity, transform",
+            }}
+          >
+            <img
+              src={data.image}
+              alt=""
+              className="w-full h-full object-cover"
+              style={{
+                objectPosition: data.crop,
+                filter: "brightness(1.08) contrast(1.15) saturate(0.82)",
+              }}
+            />
+            {/* Subtle blueprint grid overlay */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                backgroundImage: `
+                  linear-gradient(0deg, hsl(var(--accent) / 0.03) 1px, transparent 1px),
+                  linear-gradient(90deg, hsl(var(--accent) / 0.03) 1px, transparent 1px)
+                `,
+                backgroundSize: "40px 40px",
+              }}
+            />
+          </div>
+
+          {/* Single line */}
+          <p
+            className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/15 text-center"
+            style={{
+              opacity: visible ? 1 : 0,
+              transition: "opacity 500ms cubic-bezier(0.45, 0, 0.15, 1) 200ms",
+            }}
+          >
+            {data.line}
+          </p>
+        </div>
+      )}
+    </section>
+  );
+}
+
 export default function Projects() {
+  const [activeZone, setActiveZone] = useState<string | null>(null);
+
   useEffect(() => {
     document.title = "Projects | Peninsula Equine";
     return () => { document.title = "Peninsula Equine"; };
@@ -25,7 +127,10 @@ export default function Projects() {
       </section>
 
       {/* ═══ INTERACTIVE MASTERPLAN ═════════════════════ */}
-      <InteractiveMasterplan />
+      <InteractiveMasterplan onZoneChange={setActiveZone} />
+
+      {/* ═══ BUILD REVEAL — linked to masterplan ═══════ */}
+      <BuildReveal zoneId={activeZone} />
 
       {/* ═══ FINAL CTA ════════════════════════════════ */}
       <section className="py-36 sm:py-48">
