@@ -10,15 +10,15 @@ import imgStables from "@/assets/walk-stables.jpg";
 import imgCourtyard from "@/assets/walk-courtyard.jpg";
 import imgLoft from "@/assets/walk-loft.jpg";
 
-const BUILD_DETAILS: Record<string, { image: string; caption: string }> = {
-  "indoor-arena": { image: imgArena, caption: "24 × 48m clear-span arena. GroundLock surface system." },
-  "stable-row": { image: imgStables, caption: "S1–S4 with central breezeway. Cross-ventilation resolved." },
-  "courtyard": { image: imgCourtyard, caption: "All movement converges. Horse. Rider. Service." },
-  "viewing-loft": { image: imgLoft, caption: "Full arena oversight from upper level." },
-  "west-wing": { image: imgStables, caption: "Quieter wing. Direct paddock connection." },
-  "service-wing": { image: imgCourtyard, caption: "Wash bay. WC. Tie-up. Positioned for efficiency." },
-  "tack-rooms": { image: imgLoft, caption: "Support spaces resolved beneath the viewing loft." },
-};
+const BUILD_DETAILS: { zoneId: string; image: string; label: string; caption: string; crop: string; span?: string }[] = [
+  { zoneId: "indoor-arena", image: imgArena, label: "Arena", caption: "24 × 48m clear-span. GroundLock surface system.", crop: "50% 60%", span: "sm:col-span-2" },
+  { zoneId: "stable-row", image: imgStables, label: "S1–S4", caption: "Central breezeway. Cross-ventilation resolved.", crop: "40% 30%" },
+  { zoneId: "courtyard", image: imgCourtyard, label: "Courtyard", caption: "All movement converges here.", crop: "50% 50%" },
+  { zoneId: "west-wing", image: imgStables, label: "S5–S6", caption: "Quieter wing. Direct paddock connection.", crop: "60% 70%" },
+  { zoneId: "service-wing", image: imgCourtyard, label: "Service", caption: "Wash bay. WC. Tie-up. Efficiency resolved.", crop: "30% 40%" },
+  { zoneId: "tack-rooms", image: imgLoft, label: "Tack / Rooms", caption: "Support spaces beneath the viewing loft.", crop: "50% 30%" },
+  { zoneId: "viewing-loft", image: imgLoft, label: "Viewing Loft", caption: "Full arena oversight from upper level.", crop: "50% 50%", span: "sm:col-span-2" },
+];
 
 export default function Projects() {
   const [activeDetail, setActiveDetail] = useState<string | null>(null);
@@ -27,8 +27,6 @@ export default function Projects() {
     document.title = "Projects | Peninsula Equine";
     return () => { document.title = "Peninsula Equine"; };
   }, []);
-
-  const detail = activeDetail ? BUILD_DETAILS[activeDetail] : null;
 
   return (
     <Layout>
@@ -74,22 +72,25 @@ export default function Projects() {
             </div>
           </RevealOnScroll>
 
-          {/* Detail grid — architectural image cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {Object.entries(BUILD_DETAILS).slice(0, 4).map(([zoneId, data]) => (
+          {/* Detail grid — all 7 zones with varied layout */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {BUILD_DETAILS.map((data) => (
               <div
-                key={zoneId}
-                className="group relative overflow-hidden cursor-pointer"
-                onMouseEnter={() => setActiveDetail(zoneId)}
+                key={data.zoneId}
+                className={`group relative overflow-hidden cursor-pointer ${data.span || ""}`}
+                onMouseEnter={() => setActiveDetail(data.zoneId)}
                 onMouseLeave={() => setActiveDetail(null)}
               >
-                <div className="aspect-[16/10] relative overflow-hidden">
+                <div className={`${data.span ? "aspect-[21/9]" : "aspect-[16/10]"} relative overflow-hidden`}>
                   <img
                     src={data.image}
                     alt={data.caption}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                     loading="lazy"
-                    style={{ filter: "brightness(1.05) contrast(1.12) saturate(0.85)" }}
+                    style={{
+                      objectPosition: data.crop,
+                      filter: "brightness(1.05) contrast(1.12) saturate(0.85)",
+                    }}
                   />
                   {/* Blueprint overlay */}
                   <div
@@ -102,9 +103,12 @@ export default function Projects() {
                       backgroundSize: "32px 32px",
                     }}
                   />
-                  {/* Bottom caption */}
+                  {/* Zone label + caption */}
                   <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
-                    <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/60">
+                    <p className="font-mono text-[8px] uppercase tracking-[0.4em] text-white/40 mb-1">
+                      {data.label}
+                    </p>
+                    <p className="font-serif text-[11px] italic text-white/55 tracking-wide">
                       {data.caption}
                     </p>
                   </div>
