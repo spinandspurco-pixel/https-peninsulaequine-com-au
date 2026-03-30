@@ -83,15 +83,9 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
           <line x1="0" y1="0" x2="0" y2="5" stroke="hsl(var(--accent))" strokeWidth="0.14" opacity="0.014" />
         </pattern>
 
-        {/* Filter — subtle warm glow for active zone */}
-        <filter id="mp-active" x="-12%" y="-12%" width="124%" height="124%">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="glow" />
-          <feFlood floodColor="hsl(35 30% 60%)" floodOpacity="0.06" result="gc" />
-          <feComposite in="gc" in2="glow" operator="in" result="softglow" />
-          <feMerge>
-            <feMergeNode in="softglow" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
+        {/* Filter — removed digital glow, kept only subtle elevation */}
+        <filter id="mp-active" x="-4%" y="-4%" width="112%" height="116%">
+          <feDropShadow dx="0.5" dy="1" stdDeviation="1.5" floodColor="hsl(0 0% 0%)" floodOpacity="0.04" />
         </filter>
         <filter id="mp-elev" x="-4%" y="-4%" width="112%" height="116%">
           <feDropShadow dx="1" dy="2" stdDeviation="2.5" floodColor="hsl(0 0% 0%)" floodOpacity="0.08" />
