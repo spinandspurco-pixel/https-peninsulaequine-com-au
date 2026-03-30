@@ -149,7 +149,7 @@ export default function Projects() {
         <div className="absolute inset-0 engineering-grid opacity-[0.03]" aria-hidden="true" />
         <div className="section-container max-w-3xl mx-auto text-center relative z-10">
           <h1
-            className="font-serif text-4xl sm:text-5xl md:text-6xl text-foreground/85 tracking-tight leading-[0.9] opacity-0 animate-fade-in"
+            className="heading-display text-foreground opacity-0 animate-fade-in"
             style={{ animationDelay: "300ms", animationFillMode: "both", animationDuration: "800ms" }}
           >
             Selected Work
