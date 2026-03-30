@@ -23,7 +23,7 @@ const DEFS_ID = "glh";
 export function GroundLockHero({
   className,
   size = "max-w-[180px]",
-  opacity = 0.75,
+  opacity = 0.88,
   perspective = false,
 }: GroundLockHeroProps) {
   return (

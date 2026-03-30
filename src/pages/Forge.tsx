@@ -178,7 +178,7 @@ export default function Forge() {
           </p>
 
           <p
-            className="mt-16 text-sm sm:text-[15px] text-muted-foreground/35 max-w-[400px] mx-auto leading-[2] opacity-0 animate-fade-in"
+            className="mt-16 text-sm sm:text-[15px] text-muted-foreground/40 max-w-[400px] mx-auto leading-[2] opacity-0 animate-fade-in"
             style={{ animationDelay: "800ms", animationFillMode: "both" }}
           >
             Purpose-built ground stabilisation systems, hardware, and estate elements —
