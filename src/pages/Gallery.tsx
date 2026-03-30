@@ -22,11 +22,11 @@ const BUILD_DETAILS: { zoneId: string; image: string; label: string; caption: st
 
 export default function Projects() {
   const [activeDetail, setActiveDetail] = useState<string | null>(null);
+
+  useEffect(() => {
     document.title = "Projects | Peninsula Equine";
     return () => { document.title = "Peninsula Equine"; };
   }, []);
-
-  const detail = activeDetail ? BUILD_DETAILS[activeDetail] : null;
 
   return (
     <Layout>
