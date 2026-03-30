@@ -12,23 +12,23 @@ export function BrandIntro({ onComplete }: { onComplete: () => void }) {
       return;
     }
 
-    // 1. Pure black — 1000ms of silence
-    const t1 = setTimeout(() => setPhase("title"), 1000);
+    // 1. Pure black — 1400ms of silence (longer hold for weight)
+    const t1 = setTimeout(() => setPhase("title"), 1400);
 
     // 2. Title fades in over 700ms, holds for 1200ms, then subtext
-    const t2 = setTimeout(() => setPhase("sub"), 2900);
+    const t2 = setTimeout(() => setPhase("sub"), 3300);
 
     // 3. Subtext holds 1000ms, then hard cut
     const t3 = setTimeout(() => {
       setPhase("cut");
-    }, 3900);
+    }, 4300);
 
     // 4. Instant removal after cut frame renders
     const t4 = setTimeout(() => {
       setPhase("done");
       sessionStorage.setItem(SESSION_KEY, "1");
       onComplete();
-    }, 3950);
+    }, 4350);
 
     return () => {
       clearTimeout(t1);
