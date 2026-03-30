@@ -170,8 +170,15 @@ export default function Projects() {
         </div>
       </section>
 
+      {/* ═══ CLOSING STATEMENT ═══════════════════════ */}
+      <section className="pt-32 sm:pt-48 pb-20 sm:pb-28">
+        <p className="text-center font-serif italic text-sm sm:text-base tracking-[0.04em] text-foreground/[0.15]">
+          Every line resolves in the build.
+        </p>
+      </section>
+
       {/* ═══ FINAL CTA ════════════════════════════════ */}
-      <section className="py-36 sm:py-48">
+      <section className="pb-36 sm:pb-48">
         <div className="text-center">
           <Link
             to="/contact"
@@ -183,9 +190,6 @@ export default function Projects() {
           >
             Start a Project →
           </Link>
-          <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/10">
-            Selected builds only.
-          </p>
         </div>
       </section>
     </Layout>
