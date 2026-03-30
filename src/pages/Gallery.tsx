@@ -46,7 +46,7 @@ function BuildReveal({
       timer.current = setTimeout(() => {
         setDisplayed(zoneId);
         setVisible(true);
-      }, 350);
+      }, 200);
     } else {
       setVisible(false);
       timer.current = setTimeout(() => setDisplayed(null), 500);
