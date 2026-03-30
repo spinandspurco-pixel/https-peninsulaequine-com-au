@@ -9,9 +9,9 @@ const layerStyles: Record<BuildLayer, {
   zoneOpacity: number; labelOpacity: number; fillAlpha: string; strokeW: number;
   materialAlpha: number; shadowAlpha: number; gridAlpha: number; terrainAlpha: number;
 }> = {
-  structure: { zoneOpacity: 0.05, labelOpacity: 0.12, fillAlpha: "0.008", strokeW: 0.6, materialAlpha: 0.12, shadowAlpha: 0.1, gridAlpha: 0.055, terrainAlpha: 0.25 },
-  envelope:  { zoneOpacity: 0.08, labelOpacity: 0.14, fillAlpha: "0.015", strokeW: 0.5, materialAlpha: 0.5, shadowAlpha: 0.4, gridAlpha: 0.03, terrainAlpha: 0.4 },
-  finished:  { zoneOpacity: 0.1,  labelOpacity: 0.16, fillAlpha: "0.025", strokeW: 0.4, materialAlpha: 1, shadowAlpha: 1, gridAlpha: 0.018, terrainAlpha: 0.6 },
+  structure: { zoneOpacity: 0.04, labelOpacity: 0.08, fillAlpha: "0.005", strokeW: 0.4, materialAlpha: 0.08, shadowAlpha: 0.06, gridAlpha: 0.035, terrainAlpha: 0.15 },
+  envelope:  { zoneOpacity: 0.06, labelOpacity: 0.1, fillAlpha: "0.01", strokeW: 0.35, materialAlpha: 0.35, shadowAlpha: 0.25, gridAlpha: 0.02, terrainAlpha: 0.25 },
+  finished:  { zoneOpacity: 0.07, labelOpacity: 0.1, fillAlpha: "0.015", strokeW: 0.3, materialAlpha: 0.7, shadowAlpha: 0.6, gridAlpha: 0.012, terrainAlpha: 0.4 },
 };
 
 interface Props {
@@ -39,7 +39,7 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
       <defs>
         {/* Drafting grid */}
         <pattern id="mp-grid" width="20" height="20" patternUnits="userSpaceOnUse">
-          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity={ls.gridAlpha} />
+          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.1" opacity={ls.gridAlpha} />
         </pattern>
 
         {/* Paper grain */}
@@ -160,73 +160,45 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
       </g>
 
       {/* ── Property boundary ── */}
-      <rect x="145" y="55" width="450" height="720" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.03" strokeDasharray="12 6" />
+      <rect x="145" y="55" width="450" height="720" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.02" strokeDasharray="12 8" />
 
-      {/* ── STABLE ROW DETAIL ── */}
-      <rect x="185" y="95" width="50" height="70" fill="url(#mp-hatch)" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity={ls.zoneOpacity * 0.7} />
-      <text x="210" y="134" textAnchor="middle" fontSize="3.2" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.6} fontFamily="monospace" letterSpacing="0.12em">FLOAT</text>
-      <rect x="505" y="95" width="50" height="70" fill="url(#mp-hatch)" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity={ls.zoneOpacity * 0.7} />
-      <text x="530" y="134" textAnchor="middle" fontSize="3.2" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.6} fontFamily="monospace" letterSpacing="0.12em">FLOAT</text>
-
-      {/* Stable dividers */}
-      {[235, 290, 345, 395, 450, 505].map(x => (
-        <line key={`sd${x}`} x1={x} y1="95" x2={x} y2="165" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.035" />
+      {/* ── STABLE ROW — minimal dividers only ── */}
+      {[235, 345, 395, 505].map(x => (
+        <line key={`sd${x}`} x1={x} y1="95" x2={x} y2="165" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.025" />
       ))}
-      <text x="262" y="134" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.5} fontFamily="monospace" letterSpacing="0.08em">S1</text>
-      <text x="318" y="134" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.5} fontFamily="monospace" letterSpacing="0.08em">S2</text>
-      <text x="370" y="134" textAnchor="middle" fontSize="3.2" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.55} fontFamily="monospace" letterSpacing="0.18em">ENTRY</text>
-      <text x="422" y="134" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.5} fontFamily="monospace" letterSpacing="0.08em">S3</text>
-      <text x="478" y="134" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.5} fontFamily="monospace" letterSpacing="0.08em">S4</text>
+      <text x="370" y="134" textAnchor="middle" fontSize="2.8" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.4} fontFamily="monospace" letterSpacing="0.18em">ENTRY</text>
 
       {/* Central axis */}
-      <line x1="370" y1="95" x2="370" y2="165" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.03" strokeDasharray="3 4" />
+      <line x1="370" y1="95" x2="370" y2="165" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.02" strokeDasharray="3 5" />
 
       {/* ── WEST WING ── */}
-      <line x1="185" y1="252" x2="275" y2="252" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.035" />
-      <text x="230" y="210" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.5} fontFamily="monospace" letterSpacing="0.08em">S5</text>
-      <text x="230" y="300" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.5} fontFamily="monospace" letterSpacing="0.08em">S6</text>
-      <text x="168" y="310" textAnchor="middle" fontSize="2.5" fill="hsl(var(--accent))" opacity="0.025" fontFamily="monospace" letterSpacing="0.1em" transform="rotate(-90, 168, 310)">PADDOCK</text>
+      <line x1="185" y1="252" x2="275" y2="252" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.02" />
 
       {/* ── SERVICE WING ── */}
-      <line x1="465" y1="220" x2="555" y2="220" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.035" />
-      <line x1="465" y1="278" x2="555" y2="278" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.035" />
-      <text x="510" y="196" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.7} fontFamily="monospace" letterSpacing="0.08em">WASH</text>
-      <text x="510" y="252" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.7} fontFamily="monospace" letterSpacing="0.08em">WC</text>
-      <text x="510" y="312" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.7} fontFamily="monospace" letterSpacing="0.08em">TIE-UP</text>
+      <line x1="465" y1="220" x2="555" y2="220" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.02" />
+      <line x1="465" y1="278" x2="555" y2="278" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.02" />
 
       {/* ── BOTTOM ROW ── */}
-      {[275, 340, 400, 465].map(x => (
-        <line key={`br${x}`} x1={x} y1="340" x2={x} y2="425" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.035" />
+      {[275, 400].map(x => (
+        <line key={`br${x}`} x1={x} y1="340" x2={x} y2="425" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.02" />
       ))}
-      <text x="230" y="370" textAnchor="middle" fontSize="2.8" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.6} fontFamily="monospace" letterSpacing="0.06em">RM 1</text>
-      <text x="230" y="405" textAnchor="middle" fontSize="2.8" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.5} fontFamily="monospace" letterSpacing="0.06em">RM 3</text>
-      <text x="308" y="385" textAnchor="middle" fontSize="2.8" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.7} fontFamily="monospace" letterSpacing="0.08em">TACK 1</text>
-      <text x="370" y="385" textAnchor="middle" fontSize="2.8" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.55} fontFamily="monospace" letterSpacing="0.1em">STAIR</text>
-      <text x="433" y="385" textAnchor="middle" fontSize="2.8" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.7} fontFamily="monospace" letterSpacing="0.08em">TACK 2</text>
-      <text x="510" y="385" textAnchor="middle" fontSize="2.8" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.5} fontFamily="monospace" letterSpacing="0.06em">RM 4</text>
+      <text x="370" y="385" textAnchor="middle" fontSize="2.5" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.35} fontFamily="monospace" letterSpacing="0.12em">TACK</text>
 
       {/* ── VIEWING LOFT (upper level) ── */}
       <rect
         x="310" y="355" width="120" height="65"
         fill="none"
         stroke="hsl(var(--accent))"
-        strokeWidth="0.35"
-        opacity={ls.labelOpacity * 0.4}
-        strokeDasharray="4 3"
+        strokeWidth="0.2"
+        opacity={ls.labelOpacity * 0.25}
+        strokeDasharray="4 4"
       />
-      <text x="370" y="393" textAnchor="middle" fontSize="2.8" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.45} fontFamily="monospace" letterSpacing="0.18em">VIEWING LOFT</text>
-      <text x="370" y="400" textAnchor="middle" fontSize="2.2" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.3} fontFamily="monospace" letterSpacing="0.1em">(UPPER LEVEL)</text>
 
       {/* ── ARENA CORRIDOR ── */}
-      <line x1="370" y1="425" x2="370" y2="470" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.04" strokeDasharray="3 3" />
-      <text x="370" y="450" textAnchor="middle" fontSize="2.5" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.35} fontFamily="monospace" letterSpacing="0.1em">WALKWAY</text>
+      <line x1="370" y1="425" x2="370" y2="470" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.02" strokeDasharray="3 4" />
 
       {/* ── ARENA LABELS ── */}
-      <text x="370" y="578" textAnchor="middle" fontSize="4.5" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.4} fontFamily="monospace" letterSpacing="0.25em">INDOOR ARENA</text>
-      <text x="370" y="592" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.25} fontFamily="monospace" letterSpacing="0.08em">24 × 48 m</text>
-
-      {/* ── ARENA STORE ── */}
-      <text x="370" y="724" textAnchor="middle" fontSize="3.2" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.5} fontFamily="monospace" letterSpacing="0.1em">ARENA STORE</text>
+      <text x="370" y="585" textAnchor="middle" fontSize="3.8" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.3} fontFamily="monospace" letterSpacing="0.25em">INDOOR ARENA</text>
 
       {/* ── STRUCTURE LAYER ── */}
       {buildLayer === "structure" && (
@@ -467,7 +439,7 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         const isDimmed = activeZone !== null && !isActive;
         const center = getCenter(z.path);
         const elevShift = isActive ? z.elevation * -1.5 : 0;
-        const dimOpacity = (isViewing && !isActive) ? 0.08 : 0.12;
+        const dimOpacity = (isViewing && !isActive) ? 0.06 : 0.08;
         const isViewingZone = z.id === "viewing-loft";
 
         return (
@@ -479,15 +451,15 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
               transition: `opacity ${T} ${T_EASE} ${isDimmed ? '0ms' : '150ms'}, transform ${T} ${T_EASE} ${isActive ? '150ms' : '0ms'}`,
               willChange: "opacity, transform",
             }}
-            filter={isActive ? (isViewingZone ? "url(#mp-viewing)" : "url(#mp-active)") : undefined}
+            filter={undefined}
           >
             {/* Outline trace on active — draws in */}
             {isActive && (
               <path
                 d={z.path}
                 fill="none"
-                stroke="hsl(var(--accent) / 0.14)"
-                strokeWidth="0.9"
+                stroke="hsl(var(--accent) / 0.08)"
+                strokeWidth="0.6"
                 strokeDasharray="400"
                 strokeDashoffset="0"
                 className="pointer-events-none"
@@ -496,9 +468,9 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
             )}
             <path
               d={z.path}
-              fill={isActive ? "hsl(var(--accent) / 0.06)" : `hsl(var(--accent) / ${ls.fillAlpha})`}
-              stroke={isActive ? "hsl(var(--accent) / 0.35)" : `hsl(var(--accent) / ${ls.zoneOpacity})`}
-              strokeWidth={isActive ? ls.strokeW * 1.6 : ls.strokeW}
+              fill={isActive ? "hsl(var(--accent) / 0.035)" : `hsl(var(--accent) / ${ls.fillAlpha})`}
+              stroke={isActive ? "hsl(var(--accent) / 0.2)" : `hsl(var(--accent) / ${ls.zoneOpacity})`}
+              strokeWidth={isActive ? ls.strokeW * 1.4 : ls.strokeW}
               style={{ transition: `fill ${T} ${T_EASE}, stroke ${T} ${T_EASE}, stroke-width ${T} ${T_EASE}`, cursor: "pointer" }}
               onMouseEnter={() => onHover(z.id)}
               onMouseLeave={onLeave}
@@ -509,12 +481,12 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
               y={center.y}
               textAnchor="middle"
               dominantBaseline="central"
-              fontSize={isActive ? (isViewingZone ? "6" : "5.5") : "4.5"}
+              fontSize={isActive ? "4.5" : "3.8"}
               fontFamily="monospace"
-              letterSpacing="0.15em"
+              letterSpacing="0.18em"
               fill="hsl(var(--accent))"
               className="pointer-events-none uppercase"
-              style={{ opacity: isActive ? (isViewingZone ? 0.55 : 0.4) : ls.labelOpacity * 0.5, transition: `opacity ${T} ${T_EASE} ${isActive ? '180ms' : '0ms'}, font-size ${T} ${T_EASE}` }}
+              style={{ opacity: isActive ? 0.3 : ls.labelOpacity * 0.35, transition: `opacity ${T} ${T_EASE} ${isActive ? '180ms' : '0ms'}, font-size ${T} ${T_EASE}` }}
             >
               {z.shortLabel}
             </text>
@@ -527,54 +499,40 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         <>
           {[0, 1, 2, 3, 4, 5, 6, 7].map(i => (
             <g key={`fc${i}`}>
-              <rect x={243} y={475 + i * 28} width="2" height="2" fill="hsl(var(--accent))" opacity="0.03" rx="0.3" />
-              <rect x={493} y={475 + i * 28} width="2" height="2" fill="hsl(var(--accent))" opacity="0.03" rx="0.3" />
+              <rect x={243} y={475 + i * 28} width="1.5" height="1.5" fill="hsl(var(--accent))" opacity="0.015" rx="0.3" />
+              <rect x={493} y={475 + i * 28} width="1.5" height="1.5" fill="hsl(var(--accent))" opacity="0.015" rx="0.3" />
             </g>
           ))}
         </>
       )}
 
-      {/* ── DIMENSIONS ── */}
-      <g opacity="0.04" fontSize="3.5" fontFamily="monospace" fill="hsl(var(--accent))" letterSpacing="0.06em">
-        <line x1="185" y1="760" x2="555" y2="760" stroke="hsl(var(--accent))" strokeWidth="0.25" />
-        <line x1="185" y1="756" x2="185" y2="764" stroke="hsl(var(--accent))" strokeWidth="0.25" />
-        <line x1="555" y1="756" x2="555" y2="764" stroke="hsl(var(--accent))" strokeWidth="0.25" />
-        <text x="370" y="772" textAnchor="middle">~50 m</text>
-        <line x1="245" y1="748" x2="495" y2="748" stroke="hsl(var(--accent))" strokeWidth="0.25" />
-        <line x1="245" y1="744" x2="245" y2="752" stroke="hsl(var(--accent))" strokeWidth="0.25" />
-        <line x1="495" y1="744" x2="495" y2="752" stroke="hsl(var(--accent))" strokeWidth="0.25" />
+      {/* ── DIMENSIONS — minimal ── */}
+      <g opacity="0.025" fontSize="3" fontFamily="monospace" fill="hsl(var(--accent))" letterSpacing="0.06em">
+        <line x1="245" y1="748" x2="495" y2="748" stroke="hsl(var(--accent))" strokeWidth="0.15" />
+        <line x1="245" y1="744" x2="245" y2="752" stroke="hsl(var(--accent))" strokeWidth="0.15" />
+        <line x1="495" y1="744" x2="495" y2="752" stroke="hsl(var(--accent))" strokeWidth="0.15" />
         <text x="370" y="747" textAnchor="middle">24 m</text>
-        <line x1="150" y1="95" x2="150" y2="700" stroke="hsl(var(--accent))" strokeWidth="0.25" />
-        <line x1="146" y1="95" x2="154" y2="95" stroke="hsl(var(--accent))" strokeWidth="0.25" />
-        <line x1="146" y1="700" x2="154" y2="700" stroke="hsl(var(--accent))" strokeWidth="0.25" />
       </g>
 
       {/* ── SCALE BAR ── */}
-      <g opacity="0.04" transform="translate(580, 760)">
-        <line x1="0" y1="0" x2="40" y2="0" stroke="hsl(var(--accent))" strokeWidth="0.4" />
-        <line x1="0" y1="-3" x2="0" y2="3" stroke="hsl(var(--accent))" strokeWidth="0.3" />
-        <line x1="20" y1="-2" x2="20" y2="2" stroke="hsl(var(--accent))" strokeWidth="0.2" />
-        <line x1="40" y1="-3" x2="40" y2="3" stroke="hsl(var(--accent))" strokeWidth="0.3" />
-        <text x="0" y="8" fontSize="3" fill="hsl(var(--accent))" fontFamily="monospace">0</text>
-        <text x="20" y="8" fontSize="3" fill="hsl(var(--accent))" fontFamily="monospace" textAnchor="middle">5m</text>
-        <text x="40" y="8" fontSize="3" fill="hsl(var(--accent))" fontFamily="monospace" textAnchor="end">10m</text>
+      <g opacity="0.02" transform="translate(600, 760)">
+        <line x1="0" y1="0" x2="40" y2="0" stroke="hsl(var(--accent))" strokeWidth="0.25" />
+        <line x1="0" y1="-2" x2="0" y2="2" stroke="hsl(var(--accent))" strokeWidth="0.2" />
+        <line x1="40" y1="-2" x2="40" y2="2" stroke="hsl(var(--accent))" strokeWidth="0.2" />
+        <text x="20" y="7" fontSize="2.5" fill="hsl(var(--accent))" fontFamily="monospace" textAnchor="middle">10m</text>
       </g>
 
       {/* ── NORTH ARROW ── */}
-      <g opacity="0.05" transform="translate(670, 120)">
-        <line x1="0" y1="16" x2="0" y2="-16" stroke="hsl(var(--accent))" strokeWidth="0.3" />
-        <polygon points="0,-18 -2,-12 2,-12" fill="hsl(var(--accent))" opacity="0.25" />
-        <text x="0" y="-22" textAnchor="middle" fontSize="4.5" fill="hsl(var(--accent))" fontFamily="monospace" letterSpacing="0.1em">N</text>
+      <g opacity="0.03" transform="translate(670, 120)">
+        <line x1="0" y1="12" x2="0" y2="-12" stroke="hsl(var(--accent))" strokeWidth="0.2" />
+        <polygon points="0,-14 -1.5,-9 1.5,-9" fill="hsl(var(--accent))" opacity="0.2" />
+        <text x="0" y="-18" textAnchor="middle" fontSize="3.5" fill="hsl(var(--accent))" fontFamily="monospace" letterSpacing="0.1em">N</text>
       </g>
 
-      {/* ── DRIVEWAY ── */}
-      <text x="370" y="790" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity="0.025" fontFamily="monospace" letterSpacing="0.18em">DRIVEWAY</text>
-
-      {/* ── DRAWING TITLE BLOCK ── */}
-      <g opacity="0.05" transform="translate(545, 788)">
-        <text x="0" y="0" fontSize="4.5" fill="hsl(var(--accent))" fontFamily="monospace" letterSpacing="0.08em">MAIN RIDGE ESTATE</text>
-        <text x="0" y="8" fontSize="3" fill="hsl(var(--accent))" fontFamily="monospace" opacity="0.55" letterSpacing="0.06em">A03 — GROUND FLOOR</text>
-        <text x="0" y="14" fontSize="2.5" fill="hsl(var(--accent))" fontFamily="monospace" opacity="0.35" letterSpacing="0.06em">PENINSULA EQUINE</text>
+      {/* ── DRAWING TITLE BLOCK — minimal ── */}
+      <g opacity="0.025" transform="translate(555, 792)">
+        <text x="0" y="0" fontSize="3" fill="hsl(var(--accent))" fontFamily="monospace" letterSpacing="0.08em">MAIN RIDGE ESTATE</text>
+        <text x="0" y="7" fontSize="2.2" fill="hsl(var(--accent))" fontFamily="monospace" opacity="0.5" letterSpacing="0.06em">A03 — GROUND FLOOR</text>
       </g>
 
       {/* ── Edge vignette ── */}
