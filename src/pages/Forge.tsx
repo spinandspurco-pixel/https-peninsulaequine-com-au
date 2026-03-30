@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 
-import { ArrowRight, Flame } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { cn } from "@/lib/utils";
 import { GroundLockHero } from "@/components/groundlock/GroundLockHero";
@@ -150,21 +150,18 @@ export default function Forge() {
         <div className="absolute inset-0 pointer-events-none grain-texture" />
 
         <div className="section-container relative z-10 max-w-2xl mx-auto text-center">
-          <div
-            className="flex items-center justify-center gap-5 mb-10 opacity-0 animate-fade-in"
+          <p
+            className="font-mono text-[9px] uppercase tracking-[0.45em] text-foreground/15 mb-10 opacity-0 animate-fade-in"
             style={{ animationDelay: "200ms", animationFillMode: "both" }}
           >
-            <div className="w-8 h-px bg-accent/30" />
-            <Flame className="w-3.5 h-3.5 text-accent/50" strokeWidth={1.25} />
-            <p className="text-overline text-accent/60">Systems Division</p>
-            <div className="w-8 h-px bg-accent/30" />
-          </div>
+            System
+          </p>
 
           <h1
             className="heading-display text-foreground opacity-0 animate-fade-in"
             style={{ animationDelay: "400ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
-            GroundLock Systems
+            GroundLock<span className="text-accent/40">™</span> System
           </h1>
 
           <p
