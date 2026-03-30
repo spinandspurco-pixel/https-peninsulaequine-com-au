@@ -49,7 +49,7 @@ export default function Index() {
             loading="eager"
             style={{
               objectPosition: "50% 72%",
-              filter: "brightness(0.92) contrast(1.06) saturate(1.05)",
+              filter: "brightness(0.88) contrast(1.1) saturate(1.08)",
               animation: "heroSlowZoom 25s ease-out forwards",
             }}
           />
@@ -136,7 +136,7 @@ export default function Index() {
             alt="Steel frame structure under construction"
             className="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
-            style={{ objectPosition: "50% 32%", filter: "brightness(1.05) contrast(1.08) saturate(0.9)" }}
+            style={{ objectPosition: "50% 32%", filter: "brightness(1.0) contrast(1.1) saturate(0.85)" }}
           />
           {/* Sharp architectural gradient — harder edge than hero */}
           <div className="absolute inset-x-0 bottom-0 h-[28%]" style={{ background: "linear-gradient(to top, rgba(3,3,3,0.75) 0%, transparent 100%)" }} />
@@ -167,8 +167,8 @@ export default function Index() {
 
         {/* ═══ 3. PROCESS — Grounded, tactile ═════════════ */}
         <section className="pt-20 sm:pt-28 pb-32 sm:pb-40 relative overflow-hidden">
-          {/* Warm undertone wash — earthy energy */}
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 50% at 35% 50%, hsl(30 15% 12% / 0.04), transparent)" }} />
+          {/* Darker, grounded undertone */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 50% at 35% 50%, hsl(30 12% 8% / 0.06), transparent)" }} />
           <div className="section-container max-w-6xl mx-auto relative z-[1]">
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-center">
               <div
@@ -180,7 +180,7 @@ export default function Index() {
                   alt="Telehandler auger drilling into earth"
                   className="w-full aspect-[4/5] object-cover"
                   loading="lazy"
-                  style={{ objectPosition: "50% 60%", filter: "brightness(1.05) contrast(1.04) saturate(1.0)" }}
+                  style={{ objectPosition: "50% 60%", filter: "brightness(0.95) contrast(1.08) saturate(0.88)" }}
                 />
               </div>
               <div
@@ -204,8 +204,8 @@ export default function Index() {
 
         {/* ═══ 4. OUTCOME — Softer, warmer ═════════════════ */}
         <section className="pt-16 sm:pt-20 pb-32 sm:pb-40 relative overflow-hidden">
-          {/* Soft warm ambient glow */}
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 40%, hsl(35 20% 14% / 0.03), transparent)" }} />
+          {/* Warm, softer ambient glow */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 40%, hsl(35 25% 16% / 0.05), transparent)" }} />
           <div className="section-container max-w-6xl mx-auto">
             <div
               className="opacity-0 animate-fade-in"
@@ -216,7 +216,7 @@ export default function Index() {
                 alt="Completed equestrian property — aerial view"
                 className="w-full aspect-[21/9] object-cover"
                 loading="lazy"
-                style={{ filter: "brightness(1.08) contrast(1.02) saturate(1.0)" }}
+                style={{ filter: "brightness(1.04) contrast(1.0) saturate(1.1)" }}
               />
             </div>
             <p
@@ -243,7 +243,7 @@ export default function Index() {
                 alt="Indoor equestrian arena — event scale"
                 className="w-full aspect-[21/9] object-cover"
                 loading="lazy"
-                style={{ objectPosition: "50% 55%", filter: "brightness(1.05) contrast(1.04) saturate(0.95)" }}
+                style={{ objectPosition: "50% 55%", filter: "brightness(1.0) contrast(1.06) saturate(0.92)" }}
               />
             </div>
             <p
