@@ -49,7 +49,7 @@ function BuildReveal({
       }, 200);
     } else {
       setVisible(false);
-      timer.current = setTimeout(() => setDisplayed(null), 500);
+      timer.current = setTimeout(() => setDisplayed(null), 350);
     }
 
     return () => { if (timer.current) clearTimeout(timer.current); };
