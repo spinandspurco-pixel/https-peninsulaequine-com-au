@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Phone } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useIntroState } from "@/hooks/useIntroState";
 import logoImage from "@/assets/logo-pe-mark.webp";
@@ -105,20 +104,19 @@ export function Header() {
           </div>
 
           {/* CTA */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-6">
             <Link
               to="/contact"
               className="text-[10px] uppercase tracking-[0.18em] text-[hsl(var(--header-foreground))]/50 hover:text-[hsl(var(--header-foreground))] transition-opacity duration-300"
             >
               Contact
             </Link>
-            <Button
-              asChild
-              variant="gold"
-              size="sm"
+            <Link
+              to="/site-assessment"
+              className="text-[10px] uppercase tracking-[0.18em] text-accent/60 hover:text-accent transition-colors duration-500"
             >
-              <Link to="/site-assessment">Start a Project</Link>
-            </Button>
+              Start a Project →
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -168,14 +166,14 @@ export function Header() {
               {item.name}
             </Link>
           ))}
-          <div className="pt-8 mt-6 border-t border-border/20 space-y-4">
-            <Button asChild variant="gold" className="w-full">
-              <Link to="/contact">Request Assessment</Link>
-            </Button>
-            <a href="tel:0418585489" className="flex items-center justify-center gap-2.5 text-xs text-muted-foreground hover:text-accent transition-colors duration-500">
-              <Phone className="h-3.5 w-3.5" /> 0418 585 489
-            </a>
-          </div>
+            <div className="pt-8 mt-6 border-t border-border/20 space-y-5">
+              <Link to="/contact" className="block text-xs uppercase tracking-[0.18em] text-accent/60 hover:text-accent transition-colors duration-500">
+                Request Assessment →
+              </Link>
+              <a href="tel:0418585489" className="flex items-center gap-2.5 text-xs text-muted-foreground/40 hover:text-accent transition-colors duration-500">
+                <Phone className="h-3.5 w-3.5" /> 0418 585 489
+              </a>
+            </div>
         </div>
       </div>
     </header>
