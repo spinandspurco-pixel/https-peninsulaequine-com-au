@@ -4,10 +4,9 @@ import { DURATION, EASE } from "@/lib/motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-import { zones, TOUR_ORDER, TOUR_DWELL, TOUR_DISSOLVE, type BuildLayer } from "./masterplanData";
+import { zones, TOUR_ORDER, TOUR_DWELL, TOUR_DISSOLVE } from "./masterplanData";
 import { MasterplanSVG } from "./MasterplanSVG";
 import { MasterplanDetailCard } from "./MasterplanDetailCard";
-import { MasterplanControls } from "./MasterplanControls";
 
 /* ── Image preload ── */
 import imgIndoor from "@/assets/walk-arena.jpg";
@@ -77,7 +76,7 @@ function MobileZoneList({ activeZone, onTap }: { activeZone: string | null; onTa
           <button
             key={z.id}
             onClick={() => onTap(z.id)}
-            className={`w-full text-left py-2.5 px-4 transition-opacity duration-300 ${
+            className={`w-full text-left py-2.5 px-4 transition-opacity duration-300 bg-transparent border-0 ${
               isActive ? "opacity-100" : "opacity-35"
             }`}
           >
@@ -104,95 +103,40 @@ function MobileZoneList({ activeZone, onTap }: { activeZone: string | null; onTa
 interface MasterplanProps {
   onZoneHover?: () => void;
   onZoneLeave?: () => void;
-  onLayerToggle?: () => void;
 }
 
-export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onLayerToggle }: MasterplanProps = {}) {
+export function InteractiveMasterplan({ onZoneHover, onZoneLeave }: MasterplanProps = {}) {
   usePreloadImages(PRELOAD);
   const isMobile = useIsMobile();
   const reducedMotion = useReducedMotion();
   const isTouch = useIsTouchDevice();
 
   const [activeZone, setActiveZone] = useState<string | null>(null);
-  const [buildLayer, setBuildLayer] = useState<BuildLayer>("finished");
-  const [activeFlows, setActiveFlows] = useState<string[]>([]);
-  const [tourActive, setTourActive] = useState(false);
-  const [tourStep, setTourStep] = useState(0);
-  const tourTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const activeZoneData = zones.find(z => z.id === activeZone) || null;
-
-  /* ── Tour ── */
-  const clearTimer = useCallback(() => {
-    if (tourTimer.current) { clearTimeout(tourTimer.current); tourTimer.current = null; }
-  }, []);
-
-  const stopTour = useCallback(() => {
-    setTourActive(false);
-    clearTimer();
-  }, [clearTimer]);
-
-  const startTour = useCallback(() => {
-    setTourStep(0);
-    setActiveZone(TOUR_ORDER[0]);
-    setTourActive(true);
-  }, []);
-
-  useEffect(() => {
-    if (!tourActive) return;
-    tourTimer.current = setTimeout(() => {
-      const next = tourStep + 1;
-      if (next >= TOUR_ORDER.length) {
-        setActiveZone(null);
-        tourTimer.current = setTimeout(stopTour, TOUR_DISSOLVE);
-        return;
-      }
-      setActiveZone(null);
-      tourTimer.current = setTimeout(() => {
-        setTourStep(next);
-        setActiveZone(TOUR_ORDER[next]);
-      }, TOUR_DISSOLVE);
-    }, TOUR_DWELL);
-    return clearTimer;
-  }, [tourActive, tourStep, stopTour, clearTimer]);
-
-  const jumpToStep = useCallback((idx: number) => {
-    clearTimer();
-    setActiveZone(null);
-    tourTimer.current = setTimeout(() => {
-      setTourStep(idx);
-      setActiveZone(TOUR_ORDER[idx]);
-    }, TOUR_DISSOLVE / 2);
-  }, [clearTimer]);
 
   /* ── Interaction — delayed hover for weighted feel ── */
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleHover = useCallback((id: string) => {
-    if (tourActive || isTouch) return;
+    if (isTouch) return;
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
     hoverTimer.current = setTimeout(() => {
       setActiveZone(id);
       onZoneHover?.();
     }, 150);
-  }, [isTouch, tourActive, onZoneHover]);
+  }, [isTouch, onZoneHover]);
 
   const handleLeave = useCallback(() => {
-    if (tourActive || isTouch) return;
+    if (isTouch) return;
     if (hoverTimer.current) { clearTimeout(hoverTimer.current); hoverTimer.current = null; }
     setActiveZone(null);
     onZoneLeave?.();
-  }, [isTouch, tourActive, onZoneLeave]);
+  }, [isTouch, onZoneLeave]);
 
   const handleTap = useCallback((id: string) => {
-    if (tourActive) stopTour();
     setActiveZone(prev => prev === id ? null : id);
-  }, [tourActive, stopTour]);
-
-  const toggleFlow = useCallback((id: string) => {
-    setActiveFlows(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
-    onLayerToggle?.();
-  }, [onLayerToggle]);
+  }, []);
 
   /* ── Entrance ── */
   const sectionRef = useRef<HTMLElement>(null);
@@ -254,8 +198,8 @@ export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onLayerToggle 
               <CameraWrapper activeZone={activeZone}>
                 <MasterplanSVG
                   activeZone={activeZone}
-                  buildLayer={buildLayer}
-                  showFlows={activeFlows}
+                  buildLayer="finished"
+                  showFlows={[]}
                   onHover={handleHover}
                   onLeave={handleLeave}
                   onTap={handleTap}
@@ -286,73 +230,16 @@ export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onLayerToggle 
                   transition: `opacity ${DURATION.normal}ms ${EASE.default}`,
                 }}
               >
-                <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/15 mb-4">
-                  {isTouch ? "Tap a zone" : "Hover to explore"}
+                <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/15">
+                  {isTouch ? "Tap a zone to explore" : "Hover to explore"}
                 </p>
-                {!tourActive && (
-                  <button
-                    onClick={startTour}
-                    className="group flex items-center gap-3 text-[10px] font-mono uppercase tracking-[0.25em] text-accent/18 transition-opacity duration-300 hover:text-accent/30"
-                  >
-                    <span className="w-4 h-px bg-accent/10 group-hover:bg-accent/20 transition-colors duration-300" />
-                    Explore the Ridge
-                  </button>
-                )}
               </div>
 
               {/* Detail */}
               <MasterplanDetailCard zone={activeZoneData} visible={!!activeZone} />
 
-              {/* Tour progress */}
-              {tourActive && (
-                <div className="mt-5">
-                  <div className="flex items-center gap-1.5 mb-3">
-                    {TOUR_ORDER.map((id, idx) => (
-                      <button
-                        key={id}
-                        onClick={() => jumpToStep(idx)}
-                        className="relative h-0.5 flex-1 rounded-full overflow-hidden"
-                        style={{ background: "hsl(var(--accent) / 0.06)" }}
-                        aria-label={`Go to ${zones.find(z => z.id === id)?.label}`}
-                      >
-                        <div
-                          className="absolute inset-y-0 left-0 w-full rounded-full"
-                          style={{
-                            transform: idx <= tourStep ? "scaleX(1)" : "scaleX(0)",
-                            transformOrigin: "left",
-                            background: idx <= tourStep ? "hsl(var(--accent) / 0.25)" : "transparent",
-                            transition: `transform ${DURATION.normal}ms ${EASE.default}`,
-                          }}
-                        />
-                      </button>
-                    ))}
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-accent/15">
-                      {tourStep + 1} / {TOUR_ORDER.length}
-                    </span>
-                    <button
-                      onClick={() => { stopTour(); setActiveZone(null); }}
-                      className="text-[9px] font-mono uppercase tracking-[0.2em] text-accent/15 transition-opacity duration-300 hover:text-accent/30"
-                    >
-                      Exit
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Controls */}
-              <div className="mt-8 pt-4 border-t border-border/8">
-                <MasterplanControls
-                  buildLayer={buildLayer}
-                  onBuildLayerChange={setBuildLayer}
-                  activeFlows={activeFlows}
-                  onToggleFlow={toggleFlow}
-                />
-              </div>
-
               {/* Authority */}
-              <p className="mt-8 text-[9px] font-mono text-accent/8 tracking-[0.2em] uppercase leading-relaxed">
+              <p className="mt-10 text-[9px] font-mono text-accent/8 tracking-[0.2em] uppercase leading-relaxed">
                 All circulation resolved at plan level
               </p>
             </div>
