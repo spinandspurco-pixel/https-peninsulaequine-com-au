@@ -104,9 +104,11 @@ interface MasterplanProps {
   onZoneHover?: () => void;
   onZoneLeave?: () => void;
   onZoneChange?: (zoneId: string | null) => void;
+  /** Externally controlled active zone — overrides internal state when set */
+  externalActiveZone?: string | null;
 }
 
-export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onZoneChange }: MasterplanProps = {}) {
+export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onZoneChange, externalActiveZone }: MasterplanProps = {}) {
   usePreloadImages(PRELOAD);
   const isMobile = useIsMobile();
   const reducedMotion = useReducedMotion();
