@@ -267,145 +267,8 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         })}
       </g>
 
-      {/* ── ZONE INTELLIGENCE OVERLAYS — subtle technical reveals ── */}
-      {/* Arena: surface grid system */}
-      <g
-        className="pointer-events-none"
-        style={{
-          opacity: activeZone === "indoor-arena" ? 0.065 : 0,
-          transition: `opacity 180ms ${T_EASE}`,
-        }}
-      >
-        {/* GroundLock panel grid */}
-        {Array.from({ length: 11 }).map((_, i) => (
-          <line key={`ag-h${i}`} x1="255" y1={480 + i * 20} x2="485" y2={480 + i * 20} stroke="hsl(38 50% 50%)" strokeWidth="0.3" />
-        ))}
-        {Array.from({ length: 12 }).map((_, i) => (
-          <line key={`ag-v${i}`} x1={255 + i * 20.9} y1="480" x2={255 + i * 20.9} y2="690" stroke="hsl(38 50% 50%)" strokeWidth="0.3" />
-        ))}
-        <text x="370" y="608" textAnchor="middle" fontSize="3" fontFamily="monospace" fill="hsl(38 50% 50%)" opacity="0.6" letterSpacing="0.15em">GROUNDLOCK SURFACE SYSTEM</text>
-        <text x="370" y="665" textAnchor="middle" fontSize="2.6" fontFamily="monospace" fill="hsl(var(--accent))" letterSpacing="0.1em"
-          style={{ opacity: activeZone === "indoor-arena" ? 0.14 : 0, transition: `opacity 260ms ${T_EASE} 200ms` }}>
-          Consistent footing. Reduced fatigue.
-        </text>
-      </g>
-
-      {/* Drainage: contour flow lines */}
-      <g
-        className="pointer-events-none"
-        style={{
-          opacity: activeZone === "courtyard" ? 0.07 : 0,
-          transition: `opacity 180ms ${T_EASE}`,
-        }}
-      >
-        {/* Flow direction arrows showing drainage away from courtyard */}
-        <path d="M 310 200 Q 290 210, 270 230" fill="none" stroke="hsl(200 40% 50%)" strokeWidth="0.4" strokeDasharray="3 2" />
-        <path d="M 430 200 Q 450 210, 470 230" fill="none" stroke="hsl(200 40% 50%)" strokeWidth="0.4" strokeDasharray="3 2" />
-        <path d="M 310 300 Q 290 310, 270 320" fill="none" stroke="hsl(200 40% 50%)" strokeWidth="0.4" strokeDasharray="3 2" />
-        <path d="M 430 300 Q 450 310, 470 320" fill="none" stroke="hsl(200 40% 50%)" strokeWidth="0.4" strokeDasharray="3 2" />
-        <path d="M 370 320 L 370 335" fill="none" stroke="hsl(200 40% 50%)" strokeWidth="0.4" strokeDasharray="3 2" />
-        {/* Small directional chevrons */}
-        <polygon points="268,232 272,228 272,232" fill="hsl(200 40% 50%)" opacity="0.5" />
-        <polygon points="472,232 468,228 468,232" fill="hsl(200 40% 50%)" opacity="0.5" />
-        <polygon points="370,337 368,332 372,332" fill="hsl(200 40% 50%)" opacity="0.5" />
-        <text x="370" y="265" textAnchor="middle" fontSize="2.5" fontFamily="monospace" fill="hsl(200 40% 50%)" opacity="0.5" letterSpacing="0.12em">GRADED FALL</text>
-        <text x="370" y="280" textAnchor="middle" fontSize="2.4" fontFamily="monospace" fill="hsl(var(--accent))" letterSpacing="0.1em"
-          style={{ opacity: activeZone === "courtyard" ? 0.13 : 0, transition: `opacity 260ms ${T_EASE} 200ms` }}>
-          Water moves. Surface holds.
-        </text>
-      </g>
-
-      {/* Access: path highlighting with direction */}
-      <g
-        className="pointer-events-none"
-        style={{
-          opacity: activeZone === "stable-row" ? 0.06 : 0,
-          transition: `opacity 180ms ${T_EASE}`,
-        }}
-      >
-        {/* Main entry flow through breezeway */}
-        <path d="M 370 75 L 370 95 L 370 165" fill="none" stroke="hsl(0 0% 65%)" strokeWidth="1.2" strokeDasharray="5 4">
-          <animate attributeName="stroke-dashoffset" from="18" to="0" dur="3s" repeatCount="indefinite" />
-        </path>
-        {/* Float bay entry paths */}
-        <path d="M 160 130 L 185 130" fill="none" stroke="hsl(0 0% 65%)" strokeWidth="0.8" strokeDasharray="3 3">
-          <animate attributeName="stroke-dashoffset" from="12" to="0" dur="3s" repeatCount="indefinite" />
-        </path>
-        <path d="M 580 130 L 555 130" fill="none" stroke="hsl(0 0% 65%)" strokeWidth="0.8" strokeDasharray="3 3">
-          <animate attributeName="stroke-dashoffset" from="12" to="0" dur="3s" repeatCount="indefinite" />
-        </path>
-        {/* Directional chevrons */}
-        <polygon points="370,167 367,160 373,160" fill="hsl(0 0% 65%)" opacity="0.4" />
-        <text x="370" y="84" textAnchor="middle" fontSize="2.5" fontFamily="monospace" fill="hsl(0 0% 65%)" opacity="0.45" letterSpacing="0.12em">ENTRY FLOW</text>
-        <text x="370" y="96" textAnchor="middle" fontSize="2.4" fontFamily="monospace" fill="hsl(var(--accent))" letterSpacing="0.1em"
-          style={{ opacity: activeZone === "stable-row" ? 0.13 : 0, transition: `opacity 260ms ${T_EASE} 200ms` }}>
-          Flow without congestion.
-        </text>
-      </g>
-
-      {/* Stables west wing: layout outline emphasis */}
-      <g
-        className="pointer-events-none"
-        style={{
-          opacity: activeZone === "west-wing" ? 0.06 : 0,
-          transition: `opacity 180ms ${T_EASE}`,
-        }}
-      >
-        {/* Individual stable outlines */}
-        <rect x="190" y="170" width="80" height="82" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.5" strokeDasharray="4 2" />
-        <rect x="190" y="257" width="80" height="78" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.5" strokeDasharray="4 2" />
-        {/* Door openings */}
-        <line x1="275" y1="195" x2="275" y2="225" stroke="hsl(38 50% 55%)" strokeWidth="1" opacity="0.6" />
-        <line x1="275" y1="280" x2="275" y2="310" stroke="hsl(38 50% 55%)" strokeWidth="1" opacity="0.6" />
-        {/* Paddock access arrows */}
-        <path d="M 185 210 L 165 210" fill="none" stroke="hsl(120 20% 45%)" strokeWidth="0.6" strokeDasharray="3 2" />
-        <path d="M 185 295 L 165 295" fill="none" stroke="hsl(120 20% 45%)" strokeWidth="0.6" strokeDasharray="3 2" />
-        <polygon points="163,210 168,208 168,212" fill="hsl(120 20% 45%)" opacity="0.5" />
-        <polygon points="163,295 168,293 168,297" fill="hsl(120 20% 45%)" opacity="0.5" />
-        <text x="157" y="253" textAnchor="middle" fontSize="2.2" fontFamily="monospace" fill="hsl(120 20% 45%)" opacity="0.5" letterSpacing="0.1em" transform="rotate(-90, 157, 253)">PADDOCK ACCESS</text>
-        <text x="230" y="225" textAnchor="middle" fontSize="2.4" fontFamily="monospace" fill="hsl(var(--accent))" letterSpacing="0.1em"
-          style={{ opacity: activeZone === "west-wing" ? 0.14 : 0, transition: `opacity 260ms ${T_EASE} 200ms` }}>
-          Movement designed, not forced.
-        </text>
-      </g>
-
-      {/* Service wing: function zones */}
-      <g
-        className="pointer-events-none"
-        style={{
-          opacity: activeZone === "service-wing" ? 0.06 : 0,
-          transition: `opacity 180ms ${T_EASE}`,
-        }}
-      >
-        {/* Drainage flow in wash bay */}
-        <path d="M 490 195 Q 510 200, 510 215 L 510 218" fill="none" stroke="hsl(200 40% 50%)" strokeWidth="0.5" strokeDasharray="2 2" />
-        <polygon points="510,220 508,215 512,215" fill="hsl(200 40% 50%)" opacity="0.5" />
-        {/* Workflow arrows */}
-        <path d="M 510 220 L 510 250" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.4" strokeDasharray="2 2" />
-        <path d="M 510 278 L 510 310" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.4" strokeDasharray="2 2" />
-        <text x="545" y="252" textAnchor="middle" fontSize="2" fontFamily="monospace" fill="hsl(var(--accent))" opacity="0.4" letterSpacing="0.1em" transform="rotate(90, 545, 252)">WORKFLOW</text>
-      </g>
-
-      {/* Tack rooms: connection to arena */}
-      <g
-        className="pointer-events-none"
-        style={{
-          opacity: activeZone === "tack-rooms" ? 0.06 : 0,
-          transition: `opacity 180ms ${T_EASE}`,
-        }}
-      >
-        {/* Stair connection arrow */}
-        <path d="M 370 425 L 370 470" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.8" strokeDasharray="4 3">
-          <animate attributeName="stroke-dashoffset" from="14" to="0" dur="3s" repeatCount="indefinite" />
-        </path>
-        <polygon points="370,472 367,465 373,465" fill="hsl(var(--accent))" opacity="0.4" />
-        <text x="395" y="448" fontSize="2.2" fontFamily="monospace" fill="hsl(var(--accent))" opacity="0.4" letterSpacing="0.1em">TO ARENA</text>
-        {/* Upper level indicator */}
-        <path d="M 370 385 L 370 360" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.5" strokeDasharray="2 2" />
-        <text x="395" y="370" fontSize="2" fontFamily="monospace" fill="hsl(var(--accent))" opacity="0.35" letterSpacing="0.08em">UPPER LEVEL</text>
-      </g>
-
-      {/* Arena zone: clear-span emphasis */}
+      {/* ── ZONE INTELLIGENCE OVERLAYS ── */}
+      {/* Arena: surface grid + clear-span */}
       <g
         className="pointer-events-none"
         style={{
@@ -413,13 +276,63 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
           transition: `opacity 180ms ${T_EASE}`,
         }}
       >
-        {/* No-column indicators */}
-        <text x="370" y="625" textAnchor="middle" fontSize="2.5" fontFamily="monospace" fill="hsl(var(--accent))" opacity="0.5" letterSpacing="0.15em">CLEAR-SPAN — NO COLUMNS</text>
-        {/* Span dimension */}
+        {Array.from({ length: 11 }).map((_, i) => (
+          <line key={`ag-h${i}`} x1="255" y1={480 + i * 20} x2="485" y2={480 + i * 20} stroke="hsl(38 50% 50%)" strokeWidth="0.3" />
+        ))}
+        {Array.from({ length: 12 }).map((_, i) => (
+          <line key={`ag-v${i}`} x1={255 + i * 20.9} y1="480" x2={255 + i * 20.9} y2="690" stroke="hsl(38 50% 50%)" strokeWidth="0.3" />
+        ))}
+        <text x="370" y="608" textAnchor="middle" fontSize="3" fontFamily="monospace" fill="hsl(38 50% 50%)" opacity="0.5" letterSpacing="0.15em">GROUNDLOCK SURFACE SYSTEM</text>
+        <text x="370" y="625" textAnchor="middle" fontSize="2.5" fontFamily="monospace" fill="hsl(var(--accent))" opacity="0.4" letterSpacing="0.15em">CLEAR-SPAN — NO COLUMNS</text>
         <line x1="255" y1="640" x2="485" y2="640" stroke="hsl(var(--accent))" strokeWidth="0.3" />
         <line x1="255" y1="636" x2="255" y2="644" stroke="hsl(var(--accent))" strokeWidth="0.25" />
         <line x1="485" y1="636" x2="485" y2="644" stroke="hsl(var(--accent))" strokeWidth="0.25" />
-        <text x="370" y="650" textAnchor="middle" fontSize="2.5" fontFamily="monospace" fill="hsl(var(--accent))" opacity="0.4" letterSpacing="0.08em">24 m CLEAR</text>
+        <text x="370" y="650" textAnchor="middle" fontSize="2.5" fontFamily="monospace" fill="hsl(var(--accent))" opacity="0.35" letterSpacing="0.08em">24 m CLEAR</text>
+      </g>
+
+      {/* Stables: entry flow */}
+      <g
+        className="pointer-events-none"
+        style={{
+          opacity: activeZone === "stables" ? 0.05 : 0,
+          transition: `opacity 180ms ${T_EASE}`,
+        }}
+      >
+        <path d="M 370 75 L 370 95 L 370 165" fill="none" stroke="hsl(0 0% 65%)" strokeWidth="1" strokeDasharray="5 4">
+          <animate attributeName="stroke-dashoffset" from="18" to="0" dur="3s" repeatCount="indefinite" />
+        </path>
+        <path d="M 160 130 L 185 130" fill="none" stroke="hsl(0 0% 65%)" strokeWidth="0.6" strokeDasharray="3 3" />
+        <path d="M 580 130 L 555 130" fill="none" stroke="hsl(0 0% 65%)" strokeWidth="0.6" strokeDasharray="3 3" />
+        <text x="370" y="84" textAnchor="middle" fontSize="2.5" fontFamily="monospace" fill="hsl(0 0% 65%)" opacity="0.4" letterSpacing="0.12em">ENTRY FLOW</text>
+      </g>
+
+      {/* Access: drainage + circulation */}
+      <g
+        className="pointer-events-none"
+        style={{
+          opacity: activeZone === "access" ? 0.05 : 0,
+          transition: `opacity 180ms ${T_EASE}`,
+        }}
+      >
+        <path d="M 310 200 Q 290 210, 270 230" fill="none" stroke="hsl(200 40% 50%)" strokeWidth="0.4" strokeDasharray="3 2" />
+        <path d="M 430 200 Q 450 210, 470 230" fill="none" stroke="hsl(200 40% 50%)" strokeWidth="0.4" strokeDasharray="3 2" />
+        <path d="M 370 320 L 370 335" fill="none" stroke="hsl(200 40% 50%)" strokeWidth="0.4" strokeDasharray="3 2" />
+        <text x="370" y="265" textAnchor="middle" fontSize="2.5" fontFamily="monospace" fill="hsl(200 40% 50%)" opacity="0.4" letterSpacing="0.12em">GRADED FALL</text>
+        <path d="M 370 425 L 370 470" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.6" strokeDasharray="4 3">
+          <animate attributeName="stroke-dashoffset" from="14" to="0" dur="3s" repeatCount="indefinite" />
+        </path>
+        <text x="395" y="448" fontSize="2.2" fontFamily="monospace" fill="hsl(var(--accent))" opacity="0.35" letterSpacing="0.1em">TO ARENA</text>
+      </g>
+
+      {/* Ground systems: panel emphasis beneath arena */}
+      <g
+        className="pointer-events-none"
+        style={{
+          opacity: activeZone === "ground-systems" ? 0.06 : 0,
+          transition: `opacity 180ms ${T_EASE}`,
+        }}
+      >
+        <text x="370" y="722" textAnchor="middle" fontSize="2.8" fontFamily="monospace" fill="hsl(38 50% 50%)" opacity="0.5" letterSpacing="0.15em">ENGINEERED SUBSTRATE</text>
       </g>
 
       {/* ── INTERACTIVE ZONES — fade + focus, weighted hover ── */}
