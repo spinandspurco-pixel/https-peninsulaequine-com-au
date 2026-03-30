@@ -72,7 +72,7 @@ export default function About() {
                 style={{
                   objectPosition: section.crop,
                   transform: `scale(${section.scale})`,
-                  filter: "brightness(1.15) contrast(1.18) saturate(0.85)",
+                  filter: section.filter,
                 }}
               />
               {/* Subtle blueprint-style overlay */}
