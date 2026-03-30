@@ -105,20 +105,19 @@ export function Header() {
           </div>
 
           {/* CTA */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-6">
             <Link
               to="/contact"
               className="text-[10px] uppercase tracking-[0.18em] text-[hsl(var(--header-foreground))]/50 hover:text-[hsl(var(--header-foreground))] transition-opacity duration-300"
             >
               Contact
             </Link>
-            <Button
-              asChild
-              variant="gold"
-              size="sm"
+            <Link
+              to="/site-assessment"
+              className="text-[10px] uppercase tracking-[0.18em] text-accent/60 hover:text-accent transition-colors duration-500"
             >
-              <Link to="/site-assessment">Start a Project</Link>
-            </Button>
+              Start a Project →
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
