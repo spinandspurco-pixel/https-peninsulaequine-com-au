@@ -2,19 +2,22 @@ import { DURATION, EASE } from "@/lib/motion";
 import type { Zone } from "./masterplanData";
 
 /* Zone images */
-import imgIndoor from "@/assets/walk-arena.jpg";
-import imgStables from "@/assets/walk-stables.jpg";
-import imgCourtyard from "@/assets/walk-courtyard.jpg";
-import imgLoft from "@/assets/walk-loft.jpg";
+import imgArena from "@/assets/zone-arena.jpg";
+import imgStableRow from "@/assets/zone-stable-row.jpg";
+import imgWestWing from "@/assets/zone-west-wing.jpg";
+import imgCourtyard from "@/assets/zone-courtyard.jpg";
+import imgService from "@/assets/zone-service.jpg";
+import imgTack from "@/assets/zone-tack.jpg";
+import imgViewing from "@/assets/zone-viewing.jpg";
 
 const ZONE_IMAGES: Record<string, string> = {
-  "indoor-arena": imgIndoor,
-  "stable-row": imgStables,
-  "west-wing": imgStables,
+  "indoor-arena": imgArena,
+  "stable-row": imgStableRow,
+  "west-wing": imgWestWing,
   courtyard: imgCourtyard,
-  "viewing-loft": imgLoft,
-  "service-wing": imgCourtyard,
-  "tack-rooms": imgCourtyard,
+  "viewing-loft": imgViewing,
+  "service-wing": imgService,
+  "tack-rooms": imgTack,
 };
 
 export function MasterplanDetailCard({ zone, visible }: { zone: Zone | null; visible: boolean }) {
