@@ -124,13 +124,13 @@ export default function Index() {
           className="relative"
           style={{
             height: "clamp(4rem, 8vw, 7rem)",
-            background: "linear-gradient(to bottom, hsl(var(--card)), #030303)",
+            background: "linear-gradient(to bottom, hsl(var(--card)), #0a0a0a)",
           }}
           aria-hidden="true"
         />
 
         {/* ═══ 2. STRUCTURE — Strong, clear, architectural ══ */}
-        <section className="relative min-h-[80vh] sm:min-h-[85vh] flex items-end overflow-hidden" style={{ background: "#030303" }}>
+        <section className="relative min-h-[80vh] sm:min-h-[85vh] flex items-end overflow-hidden" style={{ background: "#0a0a0a" }}>
           <img
             src={systemStructure}
             alt="Steel frame structure under construction"
@@ -139,7 +139,7 @@ export default function Index() {
             style={{ objectPosition: "50% 32%", filter: "brightness(1.0) contrast(1.1) saturate(0.85)" }}
           />
           {/* Sharp architectural gradient — harder edge than hero */}
-          <div className="absolute inset-x-0 bottom-0 h-[28%]" style={{ background: "linear-gradient(to top, rgba(3,3,3,0.75) 0%, transparent 100%)" }} />
+          <div className="absolute inset-x-0 bottom-0 h-[28%]" style={{ background: "linear-gradient(to top, rgba(10,10,10,0.75) 0%, transparent 100%)" }} />
           <div className="relative z-10 section-container max-w-6xl mx-auto pb-20 sm:pb-28">
             <h2
               className="font-serif text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-[0.88] opacity-0 animate-fade-in"
@@ -160,7 +160,7 @@ export default function Index() {
           className="relative"
           style={{
             height: "clamp(4rem, 8vw, 7rem)",
-            background: "linear-gradient(to bottom, #030303, hsl(var(--background)))",
+            background: "linear-gradient(to bottom, #0a0a0a, hsl(var(--background)))",
           }}
           aria-hidden="true"
         />
