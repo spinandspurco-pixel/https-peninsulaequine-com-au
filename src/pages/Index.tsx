@@ -130,7 +130,7 @@ export default function Index() {
         />
 
         {/* ═══ 2. STRUCTURE — Strong, clear, architectural ══ */}
-        <section className="relative min-h-[80vh] sm:min-h-[85vh] flex items-end overflow-hidden" style={{ background: "#030303" }}>
+        <section className="relative min-h-[80vh] sm:min-h-[85vh] flex items-end overflow-hidden" style={{ background: "#0a0a0a" }}>
           <img
             src={systemStructure}
             alt="Steel frame structure under construction"
