@@ -145,13 +145,13 @@ export default function Forge() {
     <Layout>
       
       {/* ── Hero ─────────────────────────────────────── */}
-      <section className="relative pt-44 sm:pt-56 pb-28 sm:pb-36 overflow-hidden">
+      <section className="relative pt-52 sm:pt-72 pb-36 sm:pb-48 overflow-hidden">
         <div className="absolute inset-0 bg-background" />
         <div className="absolute inset-0 pointer-events-none grain-texture" />
 
         <div className="section-container relative z-10 max-w-2xl mx-auto text-center">
           <p
-            className="font-mono text-[9px] uppercase tracking-[0.45em] text-foreground/15 mb-10 opacity-0 animate-fade-in"
+            className="font-mono text-[8px] uppercase tracking-[0.5em] text-foreground/12 mb-14 opacity-0 animate-fade-in"
             style={{ animationDelay: "200ms", animationFillMode: "both" }}
           >
             System
@@ -164,18 +164,23 @@ export default function Forge() {
             GroundLock<span className="text-accent/40">™</span> System
           </h1>
 
+          {/* Subtle divider */}
+          <div
+            className="mx-auto mt-14 mb-14 opacity-0 animate-fade-in"
+            style={{ width: "40px", height: "1px", background: "hsl(var(--accent) / 0.15)", animationDelay: "600ms", animationFillMode: "both" }}
+          />
+
           <p
-            className="mt-3 text-[11px] tracking-[0.2em] uppercase text-foreground/20 opacity-0 animate-fade-in"
-            style={{ animationDelay: "550ms", animationFillMode: "both" }}
+            className="text-[11px] tracking-[0.25em] uppercase text-foreground/18 opacity-0 animate-fade-in"
+            style={{ animationDelay: "650ms", animationFillMode: "both" }}
           >
             by Peninsula Equine
           </p>
 
           <p
-            className="mt-10 text-sm sm:text-[15px] text-muted-foreground/40 max-w-[420px] mx-auto leading-[1.9] opacity-0 animate-fade-in"
-            style={{ animationDelay: "700ms", animationFillMode: "both" }}
+            className="mt-16 text-sm sm:text-[15px] text-muted-foreground/35 max-w-[400px] mx-auto leading-[2] opacity-0 animate-fade-in"
+            style={{ animationDelay: "800ms", animationFillMode: "both" }}
           >
-            The systems and product division of Peninsula Equine.
             Purpose-built ground stabilisation systems, hardware, and estate elements —
             designed for equine properties, fabricated by the people who build them.
           </p>
