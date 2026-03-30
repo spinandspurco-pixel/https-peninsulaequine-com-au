@@ -102,7 +102,7 @@ export default function GroundLock() {
         </section>
 
         {/* ═══ 2. SYSTEM PRESENCE — Abstract ══════════════ */}
-        <section className="py-52 sm:py-64 lg:py-80 relative overflow-hidden bg-black">
+        <section className="py-52 sm:py-64 lg:py-80 relative overflow-hidden" style={{ backgroundColor: "#0a0a0a" }}>
           <div className="section-container max-w-5xl mx-auto px-6">
             <img
               src={glAbstractPattern}
