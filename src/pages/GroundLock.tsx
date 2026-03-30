@@ -111,7 +111,7 @@ export default function GroundLock() {
               loading="lazy"
               width={1920}
               height={1080}
-              style={{ opacity: 0.3, filter: "blur(2px)" }}
+              style={{ opacity: 0.35, filter: "blur(2px)" }}
             />
             <p className="mt-20 font-serif text-base sm:text-lg text-white/15 text-center tracking-wide italic">
               Directional logic. Structural intent.
