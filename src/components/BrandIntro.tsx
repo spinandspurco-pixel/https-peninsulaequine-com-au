@@ -28,7 +28,7 @@ export function BrandIntro({ onComplete }: { onComplete: () => void }) {
       setPhase("done");
       sessionStorage.setItem(SESSION_KEY, "1");
       onComplete();
-    }, 3950);
+    }, 4350);
 
     return () => {
       clearTimeout(t1);
