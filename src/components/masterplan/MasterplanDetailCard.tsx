@@ -4,20 +4,14 @@ import type { Zone } from "./masterplanData";
 /* Zone images */
 import imgArena from "@/assets/zone-arena.jpg";
 import imgStableRow from "@/assets/zone-stable-row.jpg";
-import imgWestWing from "@/assets/zone-west-wing.jpg";
 import imgCourtyard from "@/assets/zone-courtyard.jpg";
 import imgService from "@/assets/zone-service.jpg";
-import imgTack from "@/assets/zone-tack.jpg";
-import imgViewing from "@/assets/zone-viewing.jpg";
 
 const ZONE_IMAGES: Record<string, string> = {
   "indoor-arena": imgArena,
-  "stable-row": imgStableRow,
-  "west-wing": imgWestWing,
-  courtyard: imgCourtyard,
-  "viewing-loft": imgViewing,
-  "service-wing": imgService,
-  "tack-rooms": imgTack,
+  "stables": imgStableRow,
+  "access": imgCourtyard,
+  "ground-systems": imgService,
 };
 
 export function MasterplanDetailCard({ zone, visible }: { zone: Zone | null; visible: boolean }) {

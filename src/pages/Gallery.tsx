@@ -9,20 +9,14 @@ import transformAfter from "@/assets/transform-after.jpg";
 
 import imgArena from "@/assets/zone-arena.jpg";
 import imgStableRow from "@/assets/zone-stable-row.jpg";
-import imgWestWing from "@/assets/zone-west-wing.jpg";
 import imgCourtyard from "@/assets/zone-courtyard.jpg";
 import imgService from "@/assets/zone-service.jpg";
-import imgTack from "@/assets/zone-tack.jpg";
-import imgViewing from "@/assets/zone-viewing.jpg";
 
 const ZONE_REVEAL: Record<string, { image: string; line: string; crop: string }> = {
   "indoor-arena": { image: imgArena, line: "Clear-span. Engineered for performance under load.", crop: "50% 50%" },
-  "stable-row": { image: imgStableRow, line: "Cross-ventilation resolved through the corridor axis.", crop: "50% 50%" },
-  "west-wing": { image: imgWestWing, line: "Quieter wing. Direct paddock connection.", crop: "50% 50%" },
-  "courtyard": { image: imgCourtyard, line: "All movement converges here.", crop: "50% 40%" },
-  "service-wing": { image: imgService, line: "Clean and service workflows separated.", crop: "50% 50%" },
-  "tack-rooms": { image: imgTack, line: "Support spaces beneath the viewing loft.", crop: "50% 40%" },
-  "viewing-loft": { image: imgViewing, line: "Full arena oversight from upper level.", crop: "50% 50%" },
+  "stables": { image: imgStableRow, line: "Cross-ventilation resolved through the corridor axis.", crop: "50% 50%" },
+  "access": { image: imgCourtyard, line: "All movement converges here.", crop: "50% 40%" },
+  "ground-systems": { image: imgService, line: "Engineered surfaces. Drainage resolved at every level.", crop: "50% 50%" },
 };
 
 function BuildReveal({
