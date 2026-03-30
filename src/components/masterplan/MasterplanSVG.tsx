@@ -335,13 +335,14 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         <text x="370" y="722" textAnchor="middle" fontSize="2.8" fontFamily="monospace" fill="hsl(38 50% 50%)" opacity="0.5" letterSpacing="0.15em">ENGINEERED SUBSTRATE</text>
       </g>
 
-      {/* ── INTERACTIVE ZONES — fade + focus, weighted hover ── */}
+      {/* ── INTERACTIVE ZONES — tonal depth, no glow ── */}
       {zones.map(z => {
         const isActive = activeZone === z.id;
         const isDimmed = activeZone !== null && !isActive;
         const center = getCenter(z.path);
         const elevShift = isActive ? z.elevation * -0.5 : 0;
-        const dimOpacity = isDimmed ? 0.55 : 1;
+        // Softer dimming — recede rather than vanish
+        const dimOpacity = isDimmed ? 0.35 : 1;
 
         return (
           <g
@@ -349,7 +350,7 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
             style={{
               opacity: dimOpacity,
               transform: `translateY(${elevShift}px)`,
-              transition: `opacity 400ms ${T_EASE}, transform 500ms ${T_EASE}`,
+              transition: `opacity 600ms ${T_EASE}, transform 500ms ${T_EASE}`,
             }}
             filter={undefined}
           >
@@ -358,8 +359,8 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
               <path
                 d={z.path}
                 fill="none"
-                stroke="hsl(var(--accent) / 0.08)"
-                strokeWidth="0.6"
+                stroke="hsl(var(--accent) / 0.1)"
+                strokeWidth="0.7"
                 strokeDasharray="400"
                 strokeDashoffset="0"
                 className="pointer-events-none"
@@ -368,9 +369,9 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
             )}
             <path
               d={z.path}
-              fill={isActive ? "hsl(var(--accent) / 0.02)" : `hsl(var(--accent) / ${ls.fillAlpha})`}
-              stroke={isActive ? "hsl(var(--accent) / 0.12)" : `hsl(var(--accent) / ${ls.zoneOpacity})`}
-              strokeWidth={isActive ? ls.strokeW * 1.2 : ls.strokeW}
+              fill={isActive ? "hsl(var(--accent) / 0.035)" : `hsl(var(--accent) / ${ls.fillAlpha})`}
+              stroke={isActive ? "hsl(var(--accent) / 0.16)" : `hsl(var(--accent) / ${ls.zoneOpacity})`}
+              strokeWidth={isActive ? ls.strokeW * 1.4 : ls.strokeW}
               style={{ transition: `fill ${T} ${T_EASE}, stroke ${T} ${T_EASE}, stroke-width ${T} ${T_EASE}`, cursor: "pointer" }}
               onMouseEnter={() => onHover(z.id)}
               onMouseLeave={onLeave}
@@ -386,7 +387,7 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
               letterSpacing="0.18em"
               fill="hsl(var(--accent))"
               className="pointer-events-none uppercase"
-              style={{ opacity: isActive ? 0.3 : ls.labelOpacity * 0.35, transition: `opacity ${T} ${T_EASE} ${isActive ? '180ms' : '0ms'}, font-size ${T} ${T_EASE}` }}
+              style={{ opacity: isActive ? 0.35 : isDimmed ? ls.labelOpacity * 0.2 : ls.labelOpacity * 0.35, transition: `opacity ${T} ${T_EASE} ${isActive ? '180ms' : '0ms'}, font-size ${T} ${T_EASE}` }}
             >
               {z.shortLabel}
             </text>
