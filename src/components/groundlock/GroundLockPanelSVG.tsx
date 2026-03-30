@@ -74,14 +74,14 @@ export function PanelDefs({ id = "gl" }: { id?: string }) {
   return (
     <defs>
       <linearGradient id={`${id}-top-active`} x1="0" y1="0" x2="0.3" y2="1">
-        <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.35" />
-        <stop offset="40%" stopColor="hsl(var(--accent))" stopOpacity="0.22" />
-        <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.10" />
+        <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.45" />
+        <stop offset="40%" stopColor="hsl(var(--accent))" stopOpacity="0.30" />
+        <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.14" />
       </linearGradient>
       <linearGradient id={`${id}-top-idle`} x1="0" y1="0" x2="0.3" y2="1">
-        <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.18" />
-        <stop offset="40%" stopColor="hsl(var(--accent))" stopOpacity="0.10" />
-        <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.04" />
+        <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.24" />
+        <stop offset="40%" stopColor="hsl(var(--accent))" stopOpacity="0.14" />
+        <stop offset="100%" stopColor="hsl(var(--accent))" stopOpacity="0.06" />
       </linearGradient>
       <linearGradient id={`${id}-side`} x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.14" />

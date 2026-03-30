@@ -146,12 +146,12 @@ export default function Forge() {
       
       {/* ── Hero ─────────────────────────────────────── */}
       <section className="relative pt-52 sm:pt-72 pb-36 sm:pb-48 overflow-hidden">
-        <div className="absolute inset-0 bg-background" />
+        <div className="absolute inset-0" style={{ backgroundColor: "#0c0c0c" }} />
         <div className="absolute inset-0 pointer-events-none grain-texture" />
 
         <div className="section-container relative z-10 max-w-2xl mx-auto text-center">
           <p
-            className="font-mono text-[8px] uppercase tracking-[0.5em] text-foreground/12 mb-14 opacity-0 animate-fade-in"
+            className="font-mono text-[8px] uppercase tracking-[0.5em] text-foreground/16 mb-14 opacity-0 animate-fade-in"
             style={{ animationDelay: "200ms", animationFillMode: "both" }}
           >
             System
@@ -171,14 +171,14 @@ export default function Forge() {
           />
 
           <p
-            className="text-[11px] tracking-[0.25em] uppercase text-foreground/18 opacity-0 animate-fade-in"
+            className="text-[11px] tracking-[0.25em] uppercase text-foreground/22 opacity-0 animate-fade-in"
             style={{ animationDelay: "650ms", animationFillMode: "both" }}
           >
             by Peninsula Equine
           </p>
 
           <p
-            className="mt-16 text-sm sm:text-[15px] text-muted-foreground/35 max-w-[400px] mx-auto leading-[2] opacity-0 animate-fade-in"
+            className="mt-16 text-sm sm:text-[15px] text-muted-foreground/40 max-w-[400px] mx-auto leading-[2] opacity-0 animate-fade-in"
             style={{ animationDelay: "800ms", animationFillMode: "both" }}
           >
             Purpose-built ground stabilisation systems, hardware, and estate elements —
