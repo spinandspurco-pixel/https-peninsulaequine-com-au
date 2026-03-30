@@ -515,14 +515,11 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
       </g>
 
       {/* ── SCALE BAR ── */}
-      <g opacity="0.04" transform="translate(580, 760)">
-        <line x1="0" y1="0" x2="40" y2="0" stroke="hsl(var(--accent))" strokeWidth="0.4" />
-        <line x1="0" y1="-3" x2="0" y2="3" stroke="hsl(var(--accent))" strokeWidth="0.3" />
-        <line x1="20" y1="-2" x2="20" y2="2" stroke="hsl(var(--accent))" strokeWidth="0.2" />
-        <line x1="40" y1="-3" x2="40" y2="3" stroke="hsl(var(--accent))" strokeWidth="0.3" />
-        <text x="0" y="8" fontSize="3" fill="hsl(var(--accent))" fontFamily="monospace">0</text>
-        <text x="20" y="8" fontSize="3" fill="hsl(var(--accent))" fontFamily="monospace" textAnchor="middle">5m</text>
-        <text x="40" y="8" fontSize="3" fill="hsl(var(--accent))" fontFamily="monospace" textAnchor="end">10m</text>
+      <g opacity="0.02" transform="translate(600, 760)">
+        <line x1="0" y1="0" x2="40" y2="0" stroke="hsl(var(--accent))" strokeWidth="0.25" />
+        <line x1="0" y1="-2" x2="0" y2="2" stroke="hsl(var(--accent))" strokeWidth="0.2" />
+        <line x1="40" y1="-2" x2="40" y2="2" stroke="hsl(var(--accent))" strokeWidth="0.2" />
+        <text x="20" y="7" fontSize="2.5" fill="hsl(var(--accent))" fontFamily="monospace" textAnchor="middle">10m</text>
       </g>
 
       {/* ── NORTH ARROW ── */}
