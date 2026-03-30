@@ -39,7 +39,7 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
       <defs>
         {/* Drafting grid */}
         <pattern id="mp-grid" width="20" height="20" patternUnits="userSpaceOnUse">
-          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity={ls.gridAlpha} />
+          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.1" opacity={ls.gridAlpha} />
         </pattern>
 
         {/* Paper grain */}
