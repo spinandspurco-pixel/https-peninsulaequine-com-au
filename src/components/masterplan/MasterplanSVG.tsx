@@ -529,14 +529,10 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         <text x="0" y="-18" textAnchor="middle" fontSize="3.5" fill="hsl(var(--accent))" fontFamily="monospace" letterSpacing="0.1em">N</text>
       </g>
 
-      {/* ── DRIVEWAY ── */}
-      <text x="370" y="790" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity="0.025" fontFamily="monospace" letterSpacing="0.18em">DRIVEWAY</text>
-
-      {/* ── DRAWING TITLE BLOCK ── */}
-      <g opacity="0.05" transform="translate(545, 788)">
-        <text x="0" y="0" fontSize="4.5" fill="hsl(var(--accent))" fontFamily="monospace" letterSpacing="0.08em">MAIN RIDGE ESTATE</text>
-        <text x="0" y="8" fontSize="3" fill="hsl(var(--accent))" fontFamily="monospace" opacity="0.55" letterSpacing="0.06em">A03 — GROUND FLOOR</text>
-        <text x="0" y="14" fontSize="2.5" fill="hsl(var(--accent))" fontFamily="monospace" opacity="0.35" letterSpacing="0.06em">PENINSULA EQUINE</text>
+      {/* ── DRAWING TITLE BLOCK — minimal ── */}
+      <g opacity="0.025" transform="translate(555, 792)">
+        <text x="0" y="0" fontSize="3" fill="hsl(var(--accent))" fontFamily="monospace" letterSpacing="0.08em">MAIN RIDGE ESTATE</text>
+        <text x="0" y="7" fontSize="2.2" fill="hsl(var(--accent))" fontFamily="monospace" opacity="0.5" letterSpacing="0.06em">A03 — GROUND FLOOR</text>
       </g>
 
       {/* ── Edge vignette ── */}
