@@ -45,51 +45,52 @@ export default function Shop() {
         </div>
       </section>
 
-      {/* ═══ 2. TIER 1 — GROUNDLOCK HERO ═════════════════ */}
-      <section className="pb-36 sm:pb-48">
-        <div className="section-container max-w-5xl mx-auto">
-          <RevealOnScroll direction="up">
-            <Link to={HERO_PRODUCT.href} className="group block">
-              <div className="relative overflow-hidden">
-                <img
-                  src={HERO_PRODUCT.src}
-                  alt={HERO_PRODUCT.name}
-                  className="w-full aspect-[21/9] object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.015]"
-                  loading="eager"
-                  style={{ filter: "brightness(0.96) contrast(1.06) saturate(0.9)" }}
-                />
-                {/* Bottom fade */}
-                <div
-                  className="absolute inset-x-0 bottom-0 h-[40%] pointer-events-none"
-                  style={{ background: "linear-gradient(to top, hsl(var(--background)), transparent)" }}
-                />
-              </div>
-              <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-3">
-                <div>
-                  <p className="font-serif text-lg sm:text-xl text-foreground/60 tracking-[0.02em]">
+      {/* ═══ 2. TIER 1 — GROUNDLOCK HERO (isolated dark section) ═══ */}
+      <section className="relative overflow-hidden" style={{ backgroundColor: "#0a0a0a" }}>
+        <div className="py-32 sm:py-44 lg:py-56">
+          <div className="absolute inset-0 grain-texture opacity-[0.02]" />
+          <div className="section-container max-w-5xl mx-auto relative z-[1]">
+            <RevealOnScroll direction="up">
+              <Link to={HERO_PRODUCT.href} className="group block">
+                <div className="flex items-center gap-5 mb-8 justify-center">
+                  <div className="w-8 h-px bg-accent/25" />
+                  <p className="text-[9px] uppercase tracking-[0.4em] text-accent/35 font-mono">System</p>
+                  <div className="w-8 h-px bg-accent/25" />
+                </div>
+                <div className="relative overflow-hidden">
+                  <img
+                    src={HERO_PRODUCT.src}
+                    alt={HERO_PRODUCT.name}
+                    className="w-full aspect-[21/9] object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.015]"
+                    loading="eager"
+                    style={{ filter: "brightness(0.96) contrast(1.06) saturate(0.9)" }}
+                  />
+                  <div
+                    className="absolute inset-x-0 bottom-0 h-[45%] pointer-events-none"
+                    style={{ background: "linear-gradient(to top, #0a0a0a, transparent)" }}
+                  />
+                </div>
+                <div className="mt-10 sm:mt-14 text-center">
+                  <p className="font-serif text-xl sm:text-2xl text-white/75 tracking-[0.02em]">
                     {HERO_PRODUCT.name}
                   </p>
-                  <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/15">
+                  <p className="mt-4 font-mono text-[9px] uppercase tracking-[0.4em] text-white/20">
                     {HERO_PRODUCT.line}
                   </p>
+                  <span className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-accent/50 group-hover:text-accent/80 transition-colors duration-500 mt-8">
+                    {HERO_PRODUCT.cta} <ArrowRight size={12} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+                  </span>
                 </div>
-                <span className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-accent/40 group-hover:text-accent/70 transition-colors duration-500 shrink-0">
-                  {HERO_PRODUCT.cta} <ArrowRight size={12} className="transition-transform duration-300 group-hover:translate-x-0.5" />
-                </span>
-              </div>
-            </Link>
-          </RevealOnScroll>
+              </Link>
+            </RevealOnScroll>
+          </div>
         </div>
       </section>
 
-      {/* ═══ THREAD ══════════════════════════════════════ */}
-      <div
-        className="mx-auto"
-        style={{ width: "1px", height: "clamp(3rem, 6vw, 5rem)", background: "linear-gradient(to bottom, hsl(var(--accent) / 0.06), transparent)" }}
-        aria-hidden="true"
-      />
+      {/* ═══ SEPARATION ═══════════════════════════════════ */}
+      <div className="py-16 sm:py-24" />
 
-      {/* ═══ 3. TIER 2 — EQUIPMENT ═══════════════════════ */}
+      {/* ═══ 3. TIER 2 — EQUIPMENT (separate context) ═════ */}
       <section className="pt-20 sm:pt-28 pb-32 sm:pb-40">
         <div className="section-container max-w-5xl mx-auto">
           <div className="flex items-center gap-5 mb-10 sm:mb-14">
