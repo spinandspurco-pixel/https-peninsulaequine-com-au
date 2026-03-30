@@ -82,11 +82,11 @@ export function BeforeAfterSlider({ before, after, alt = "Transformation" }: Bef
       </div>
 
       {/* Labels */}
-      <span className="absolute top-4 left-4 font-mono text-[9px] uppercase tracking-[0.25em] text-white/40">
-        Before
+      <span className="absolute top-4 left-4 font-mono text-[9px] uppercase tracking-[0.35em] text-white/30">
+        Raw
       </span>
-      <span className="absolute top-4 right-4 font-mono text-[9px] uppercase tracking-[0.25em] text-white/40">
-        After
+      <span className="absolute top-4 right-4 font-mono text-[9px] uppercase tracking-[0.35em] text-white/30">
+        Resolved
       </span>
     </div>
   );
