@@ -103,6 +103,7 @@ function MobileZoneList({ activeZone, onTap }: { activeZone: string | null; onTa
 interface MasterplanProps {
   onZoneHover?: () => void;
   onZoneLeave?: () => void;
+  onZoneChange?: (zoneId: string | null) => void;
 }
 
 export function InteractiveMasterplan({ onZoneHover, onZoneLeave }: MasterplanProps = {}) {
