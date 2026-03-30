@@ -84,8 +84,11 @@ export default function Index() {
           </div>
         </section>
 
+        {/* ═══ TRANSITION BAND ═════════════════════════════ */}
+        <div className="h-20 sm:h-24 bg-background" aria-hidden="true" />
+
         {/* ═══ BREATHING STATEMENT ═════════════════════════ */}
-        <section className="relative overflow-hidden cv-auto -mt-px">
+        <section className="relative overflow-hidden cv-auto">
           <div className="py-40 sm:py-52 lg:py-64 bg-card relative">
             <div className="absolute inset-0 grain-texture opacity-20" />
             <div className="section-container relative z-10 max-w-4xl mx-auto text-center">
