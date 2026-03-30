@@ -84,12 +84,22 @@ export default function Index() {
           </div>
         </section>
 
-        {/* ═══ TRANSITION BAND ═════════════════════════════ */}
-        <div className="h-20 sm:h-24 bg-background" aria-hidden="true" />
+        {/* ═══ HERO → BREATHING TRANSITION ═════════════════ */}
+        <div
+          className="relative"
+          style={{
+            height: "clamp(3rem, 6vw, 5rem)",
+            background: "linear-gradient(to bottom, hsl(var(--background) / 0) 0%, hsl(var(--background)) 100%)",
+            marginTop: "-3rem",
+            position: "relative",
+            zIndex: 5,
+          }}
+          aria-hidden="true"
+        />
 
         {/* ═══ BREATHING STATEMENT ═════════════════════════ */}
         <section className="relative overflow-hidden cv-auto">
-          <div className="py-40 sm:py-52 lg:py-64 bg-card relative">
+          <div className="py-36 sm:py-44 lg:py-52 bg-card relative">
             <div className="absolute inset-0 grain-texture opacity-20" />
             <div className="section-container relative z-10 max-w-4xl mx-auto text-center">
               <RevealOnScroll direction="up">
@@ -107,8 +117,17 @@ export default function Index() {
           </div>
         </section>
 
+        {/* ═══ BREATHING → STRUCTURE TRANSITION ════════════ */}
+        <div
+          className="relative"
+          style={{
+            height: "clamp(4rem, 8vw, 7rem)",
+            background: "linear-gradient(to bottom, hsl(var(--card)), #030303)",
+          }}
+          aria-hidden="true"
+        />
+
         {/* ═══ 2. STRUCTURE — Selected Work ════════════════ */}
-        <div className="h-4 sm:h-6" style={{ background: "#030303" }} aria-hidden="true" />
         <section className="relative min-h-[80vh] sm:min-h-[85vh] flex items-end overflow-hidden" style={{ background: "#030303" }}>
           <img
             src={systemStructure}
@@ -117,7 +136,7 @@ export default function Index() {
             loading="lazy"
             style={{ objectPosition: "50% 32%", filter: "brightness(1.15) contrast(1.22)" }}
           />
-          <div className="absolute inset-x-0 bottom-0 h-[18%] bg-gradient-to-t from-black/50 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-[22%] bg-gradient-to-t from-black/60 to-transparent" />
           <div className="relative z-10 section-container max-w-6xl mx-auto pb-20 sm:pb-28">
             <h2
               className="font-serif text-3xl sm:text-4xl text-white/95 tracking-tight opacity-0 animate-fade-in"
@@ -132,7 +151,16 @@ export default function Index() {
             </h2>
           </div>
         </section>
-        <div className="h-6 sm:h-8" style={{ background: "#030303" }} aria-hidden="true" />
+
+        {/* ═══ STRUCTURE → PROCESS TRANSITION ══════════════ */}
+        <div
+          className="relative"
+          style={{
+            height: "clamp(4rem, 8vw, 7rem)",
+            background: "linear-gradient(to bottom, #030303, hsl(var(--background)))",
+          }}
+          aria-hidden="true"
+        />
 
         {/* ═══ 3. PROCESS — How We Build ═══════════════════ */}
         <section className="py-28 sm:py-36 relative overflow-hidden">
