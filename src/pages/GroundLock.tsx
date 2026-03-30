@@ -67,7 +67,7 @@ export default function GroundLock() {
             </h1>
 
             <p
-              className="mt-8 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.4em] text-white/25 opacity-0 animate-fade-in"
+              className="mt-8 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.4em] text-white/30 opacity-0 animate-fade-in"
               style={{
                 animationDelay: "700ms",
                 animationFillMode: "both",
