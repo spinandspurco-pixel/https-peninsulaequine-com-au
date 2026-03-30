@@ -108,7 +108,8 @@ export default function Index() {
         </section>
 
         {/* ═══ 2. STRUCTURE — Selected Work ════════════════ */}
-        <section className="relative min-h-[70vh] sm:min-h-[75vh] flex items-end overflow-hidden" style={{ background: "#030303" }}>
+        <div className="h-10 sm:h-14" style={{ background: "#030303" }} aria-hidden="true" />
+        <section className="relative min-h-[80vh] sm:min-h-[85vh] flex items-end overflow-hidden" style={{ background: "#030303" }}>
           <img
             src={systemStructure}
             alt="Steel frame structure under construction"
@@ -131,6 +132,7 @@ export default function Index() {
             </h2>
           </div>
         </section>
+        <div className="h-16 sm:h-20" style={{ background: "#030303" }} aria-hidden="true" />
 
         {/* ═══ 3. PROCESS — How We Build ═══════════════════ */}
         <section className="py-28 sm:py-36 relative overflow-hidden">
