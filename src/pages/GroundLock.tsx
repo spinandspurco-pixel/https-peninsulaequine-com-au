@@ -131,7 +131,7 @@ export default function GroundLock() {
               height={1080}
             />
             <div className="mt-16 text-center">
-              <p className="font-serif text-base sm:text-lg text-white/20 tracking-wide italic leading-[1.6]">
+              <p className="font-serif text-base sm:text-lg text-white/25 tracking-wide italic leading-[1.6]">
                 Permanent where you need it.
                 <br />
                 Deployable where you don't.
