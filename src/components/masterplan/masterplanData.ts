@@ -46,96 +46,6 @@ export interface Zone {
 
 export const zones: Zone[] = [
   {
-    id: "stable-row",
-    label: "Stable Wing — S1–S4",
-    shortLabel: "S1–S4",
-    tagline: "Four stables. Central entry. Cross-ventilation resolved.",
-    description:
-      "S1–S4 span the northern wing with a central breezeway entry. Float bays flank each end. Cross-ventilation engineered through the corridor axis.",
-    features: [
-      "S1–S4 with central breezeway",
-      "Float / garage bays at each end",
-      "Direct paddock and courtyard access",
-    ],
-    path: "M 185 95 L 555 95 L 555 165 L 185 165 Z",
-    elevation: 1,
-  },
-  {
-    id: "west-wing",
-    label: "Stable Wing — S5 & S6",
-    shortLabel: "S5–S6",
-    tagline: "Quieter wing. Direct paddock connection.",
-    description:
-      "Stables 5 and 6 form the western courtyard arm. Positioned for paddock access and separation from the service side.",
-    features: [
-      "Two oversized stables",
-      "Paddock entry at ground level",
-      "Passive ventilation design",
-    ],
-    path: "M 185 165 L 275 165 L 275 340 L 185 340 Z",
-    elevation: 1,
-  },
-  {
-    id: "courtyard",
-    label: "Central Courtyard",
-    shortLabel: "Courtyard",
-    tagline: "All movement converges here.",
-    description:
-      "Horse. Rider. Service. Resolved. An enclosed courtyard formed by the stable wings — the circulation spine connecting all zones.",
-    features: [
-      "Enclosed by stable wings",
-      "Central tie-up and handling",
-      "All-zone circulation hub",
-    ],
-    path: "M 275 165 L 465 165 L 465 340 L 275 340 Z",
-    elevation: 0,
-  },
-  {
-    id: "service-wing",
-    label: "Tack / Service Core",
-    shortLabel: "Service",
-    tagline: "Wash bay. WC. Tie-up. Positioned for efficiency.",
-    description:
-      "The eastern arm houses wash bay, WC, and tie-up area. Separated from paddock stables to resolve clean and dirty workflows.",
-    features: [
-      "Wash bay with engineered drainage",
-      "WC and utility rooms",
-      "Dedicated tie-up area",
-    ],
-    path: "M 465 165 L 555 165 L 555 340 L 465 340 Z",
-    elevation: 1,
-  },
-  {
-    id: "tack-rooms",
-    label: "Tack & Accommodation",
-    shortLabel: "Tack / Rooms",
-    tagline: "Support spaces resolved beneath the viewing loft.",
-    description:
-      "Tack Room 1 and 2 flank the arena walkway. Rooms 1, 3, and service spaces at ground level. Upper level: Viewing Loft, Rooms 3–4, WC, store.",
-    features: [
-      "Tack Room 1 & 2 flanking walkway",
-      "Rooms 1 & 3 at ground level",
-      "Upper level: Viewing Loft, Rooms 3–4",
-    ],
-    path: "M 185 340 L 555 340 L 555 425 L 185 425 Z",
-    elevation: 1,
-  },
-  {
-    id: "viewing-loft",
-    label: "Viewing Loft (Above)",
-    shortLabel: "Viewing",
-    tagline: "The system, understood from above.",
-    description:
-      "First floor above the arena walkway. Full arena oversight. Internal stair access from courtyard, connected to upper accommodation.",
-    features: [
-      "Full arena oversight from upper level",
-      "Internal stair access from courtyard",
-      "Connected to upper accommodation",
-    ],
-    path: "M 310 355 L 430 355 L 430 420 L 310 420 Z",
-    elevation: 2,
-  },
-  {
     id: "indoor-arena",
     label: "Indoor Arena — 24 × 48",
     shortLabel: "Arena",
@@ -147,8 +57,53 @@ export const zones: Zone[] = [
       "GroundLock surface system",
       "Connected via covered corridor",
     ],
-    path: "M 245 470 L 495 470 L 495 700 L 245 700 Z",
+    path: "M 245 470 L 495 470 L 495 740 L 245 740 Z",
     elevation: 1,
+  },
+  {
+    id: "stables",
+    label: "Stable Wings — S1–S6",
+    shortLabel: "Stables",
+    tagline: "Six stables. Cross-ventilation resolved.",
+    description:
+      "S1–S4 span the northern wing with a central breezeway entry. S5–S6 form the western arm with direct paddock access. Float bays flank each end.",
+    features: [
+      "S1–S4 with central breezeway",
+      "S5–S6 with paddock access",
+      "Float / garage bays at each end",
+    ],
+    path: "M 185 95 L 555 95 L 555 165 L 275 165 L 275 340 L 185 340 Z",
+    elevation: 1,
+  },
+  {
+    id: "access",
+    label: "Courtyard & Circulation",
+    shortLabel: "Access",
+    tagline: "All movement converges here.",
+    description:
+      "The central courtyard and service core form the circulation spine — connecting stables, tack, wash bay, and arena walkway.",
+    features: [
+      "Enclosed courtyard hub",
+      "Wash bay and service wing",
+      "Tack rooms flanking arena walkway",
+    ],
+    path: "M 275 165 L 555 165 L 555 425 L 185 425 L 185 340 L 275 340 Z",
+    elevation: 0,
+  },
+  {
+    id: "ground-systems",
+    label: "Ground Systems",
+    shortLabel: "Ground",
+    tagline: "Engineered surfaces. Drainage resolved at every level.",
+    description:
+      "GroundLock stabilisation beneath the arena surface. Graded drainage across the courtyard. Every surface considered for load, water, and use.",
+    features: [
+      "GroundLock panel system",
+      "Engineered drainage falls",
+      "Surface grading across all zones",
+    ],
+    path: "M 245 700 L 495 700 L 495 740 L 245 740 Z",
+    elevation: 0,
   },
 ];
 
