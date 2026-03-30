@@ -4,60 +4,8 @@ import { DURATION, EASE } from "@/lib/motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-import { zones, TOUR_ORDER, TOUR_DWELL, TOUR_DISSOLVE } from "./masterplanData";
+import { zones } from "./masterplanData";
 import { MasterplanSVG } from "./MasterplanSVG";
-import { MasterplanDetailCard } from "./MasterplanDetailCard";
-
-/* ── Image preload ── */
-import imgIndoor from "@/assets/walk-arena.jpg";
-import imgStables from "@/assets/walk-stables.jpg";
-import imgCourtyard from "@/assets/walk-courtyard.jpg";
-import imgLoft from "@/assets/walk-loft.jpg";
-
-const PRELOAD = [imgIndoor, imgStables, imgCourtyard, imgLoft];
-
-function usePreloadImages(srcs: string[]) {
-  const loaded = useRef(false);
-  useEffect(() => {
-    if (loaded.current) return;
-    loaded.current = true;
-    srcs.forEach(src => { const img = new Image(); img.src = src; });
-  }, []);
-}
-
-/* ── Camera wrapper ── */
-const SVG_W = 740;
-const SVG_H = 820;
-const CAMERA_SCALE = 1.028;
-
-function getCenter(path: string): { x: number; y: number } {
-  const nums = path.match(/[\d.]+/g)?.map(Number) || [];
-  if (nums.length < 4) return { x: 0, y: 0 };
-  const xs = nums.filter((_, i) => i % 2 === 0);
-  const ys = nums.filter((_, i) => i % 2 === 1);
-  return { x: (Math.min(...xs) + Math.max(...xs)) / 2, y: (Math.min(...ys) + Math.max(...ys)) / 2 };
-}
-
-function CameraWrapper({ activeZone, children }: { activeZone: string | null; children: React.ReactNode }) {
-  const zone = activeZone ? zones.find(z => z.id === activeZone) : null;
-  const center = zone ? getCenter(zone.path) : null;
-  const originX = center ? (center.x / SVG_W) * 100 : 50;
-  const originY = center ? (center.y / SVG_H) * 100 : 50;
-
-  return (
-    <div
-      className="w-full"
-      style={{
-        transform: zone ? `scale(${CAMERA_SCALE})` : "scale(1)",
-        transformOrigin: `${originX}% ${originY}%`,
-        transition: "transform 700ms cubic-bezier(0.45, 0, 0.15, 1), transform-origin 700ms cubic-bezier(0.45, 0, 0.15, 1)",
-        willChange: "transform",
-      }}
-    >
-      {children}
-    </div>
-  );
-}
 
 /* ── Touch detection ── */
 function useIsTouchDevice() {
@@ -66,50 +14,15 @@ function useIsTouchDevice() {
   return isTouch;
 }
 
-/* ── Mobile zone list ── */
-function MobileZoneList({ activeZone, onTap }: { activeZone: string | null; onTap: (id: string) => void }) {
-  return (
-    <div className="space-y-0.5 mt-6">
-      {zones.map(z => {
-        const isActive = activeZone === z.id;
-        return (
-          <button
-            key={z.id}
-            onClick={() => onTap(z.id)}
-            className={`w-full text-left py-2.5 px-4 transition-opacity duration-300 bg-transparent border-0 ${
-              isActive ? "opacity-100" : "opacity-35"
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <span className="text-[8px] font-mono uppercase tracking-[0.25em] text-accent/22 w-14 shrink-0">{z.shortLabel}</span>
-              <div className="w-2.5 h-px bg-accent/8" />
-              <span className={`text-[10px] font-serif italic text-muted-foreground/22 transition-colors duration-300 ${isActive ? "text-foreground/40" : ""}`}>
-                {z.tagline}
-              </span>
-            </div>
-            {isActive && (
-              <p className="mt-1.5 ml-[4.5rem] text-[10px] text-muted-foreground/18 font-serif leading-relaxed">
-                {z.description}
-              </p>
-            )}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
 /* ── Main export ── */
 interface MasterplanProps {
   onZoneHover?: () => void;
   onZoneLeave?: () => void;
   onZoneChange?: (zoneId: string | null) => void;
-  /** Externally controlled active zone — overrides internal state when set */
   externalActiveZone?: string | null;
 }
 
 export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onZoneChange, externalActiveZone }: MasterplanProps = {}) {
-  usePreloadImages(PRELOAD);
   const isMobile = useIsMobile();
   const reducedMotion = useReducedMotion();
   const isTouch = useIsTouchDevice();
@@ -123,7 +36,7 @@ export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onZoneChange, 
 
   const activeZoneData = zones.find(z => z.id === activeZone) || null;
 
-  /* ── Interaction — delayed hover for weighted feel ── */
+  /* ── Interaction — delayed hover ── */
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleHover = useCallback((id: string) => {
@@ -132,7 +45,7 @@ export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onZoneChange, 
     hoverTimer.current = setTimeout(() => {
       setActiveZone(id);
       onZoneHover?.();
-    }, 150);
+    }, 120);
   }, [isTouch, onZoneHover]);
 
   const handleLeave = useCallback(() => {
@@ -168,20 +81,20 @@ export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onZoneChange, 
           setTimeout(() => setActiveZone(null), 3200);
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.15 }
     );
     observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, [reducedMotion]);
 
   return (
-    <section ref={sectionRef} className="relative py-28 sm:py-36 lg:py-44 overflow-hidden">
+    <section ref={sectionRef} className="relative py-20 sm:py-28 lg:py-36 overflow-hidden">
       <div className="absolute inset-0 grain-texture pointer-events-none" />
 
-      <div className="section-container relative z-10">
+      <div className="relative z-10 px-4 sm:px-6">
         {/* Header */}
         <RevealOnScroll direction="up" duration={DURATION.normal}>
-          <div className="text-center mb-16 sm:mb-22">
+          <div className="text-center mb-12 sm:mb-16">
             <div className="flex items-center justify-center gap-5 mb-5">
               <div className="w-6 h-px bg-accent/12" />
               <p className="text-[8px] sm:text-[9px] uppercase tracking-[0.5em] text-accent/18 font-mono">Masterplan</p>
@@ -190,76 +103,85 @@ export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onZoneChange, 
             <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/75 tracking-[0.04em] leading-tight">
               Main Ridge — Ground Floor
             </h2>
-            <p className="mt-4 text-[13px] text-muted-foreground/22 font-serif italic max-w-sm mx-auto leading-relaxed tracking-[0.02em]">
-              Movement resolved before construction
-            </p>
           </div>
         </RevealOnScroll>
 
-        {/* Plan */}
+        {/* Full-width masterplan */}
         <div
+          className="max-w-5xl mx-auto"
           style={{
             opacity: planVisible ? 1 : 0,
             transition: `opacity ${DURATION.cinematic}ms ${EASE.cinematic}`,
-            willChange: "opacity",
           }}
         >
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-0 items-start">
-            {/* SVG */}
-            <div className="lg:col-span-7 flex justify-center overflow-hidden">
-              <CameraWrapper activeZone={activeZone}>
-                <MasterplanSVG
-                  activeZone={activeZone}
-                  buildLayer="finished"
-                  showFlows={[]}
-                  onHover={handleHover}
-                  onLeave={handleLeave}
-                  onTap={handleTap}
-                />
-              </CameraWrapper>
-            </div>
+          <MasterplanSVG
+            activeZone={activeZone}
+            buildLayer="finished"
+            showFlows={[]}
+            onHover={handleHover}
+            onLeave={handleLeave}
+            onTap={handleTap}
+          />
 
-            {/* Connector */}
-            <div className="hidden lg:flex items-stretch justify-center">
-              <div
-                className="w-px"
-                style={{
-                  background: `linear-gradient(to bottom, transparent 10%, hsl(var(--accent) / ${activeZone ? 0.1 : 0.03}) 30%, hsl(var(--accent) / ${activeZone ? 0.1 : 0.03}) 70%, transparent 90%)`,
-                  transition: `background ${DURATION.normal}ms ${EASE.default}`,
-                  minHeight: "200px",
-                }}
-              />
-            </div>
-
-            {/* Right panel */}
-            <div className="lg:col-span-4 flex flex-col justify-start pt-4 lg:pt-10">
-              {/* Idle state */}
-              <div
-                style={{
-                  opacity: activeZone ? 0 : 1,
-                  position: activeZone ? "absolute" : "relative",
-                  pointerEvents: activeZone ? "none" : "auto",
-                  transition: `opacity ${DURATION.normal}ms ${EASE.default}`,
-                }}
-              >
-                <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent/15">
-                  {isTouch ? "Tap a zone to explore" : "Hover to explore"}
+          {/* Zone label — appears below plan on hover */}
+          <div
+            className="text-center mt-8"
+            style={{
+              opacity: activeZoneData ? 1 : 0,
+              transform: activeZoneData ? "translateY(0)" : "translateY(4px)",
+              transition: "opacity 400ms cubic-bezier(0.45,0,0.15,1), transform 400ms cubic-bezier(0.45,0,0.15,1)",
+              minHeight: "2.5rem",
+            }}
+          >
+            {activeZoneData && (
+              <>
+                <p className="font-serif text-sm sm:text-base text-foreground/45 tracking-[0.04em]">
+                  {activeZoneData.label}
                 </p>
-              </div>
-
-              {/* Detail */}
-              <MasterplanDetailCard zone={activeZoneData} visible={!!activeZone} />
-
-              {/* Authority */}
-              <p className="mt-10 text-[9px] font-mono text-accent/8 tracking-[0.2em] uppercase leading-relaxed">
-                All circulation resolved at plan level
-              </p>
-            </div>
+                <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.3em] text-accent/15">
+                  {activeZoneData.tagline}
+                </p>
+              </>
+            )}
           </div>
 
-          {/* Mobile */}
+          {/* Idle hint */}
+          <div
+            className="text-center mt-4"
+            style={{
+              opacity: activeZoneData ? 0 : 0.6,
+              transition: "opacity 400ms ease",
+            }}
+          >
+            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/12">
+              {isTouch ? "Tap a zone to explore" : "Hover to explore"}
+            </p>
+          </div>
+
+          {/* Mobile zone list */}
           {isMobile && (
-            <MobileZoneList activeZone={activeZone} onTap={handleTap} />
+            <div className="space-y-0.5 mt-8">
+              {zones.map(z => {
+                const isActive = activeZone === z.id;
+                return (
+                  <button
+                    key={z.id}
+                    onClick={() => handleTap(z.id)}
+                    className={`w-full text-left py-2.5 px-4 transition-opacity duration-300 bg-transparent border-0 ${
+                      isActive ? "opacity-100" : "opacity-35"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-[8px] font-mono uppercase tracking-[0.25em] text-accent/22 w-14 shrink-0">{z.shortLabel}</span>
+                      <div className="w-2.5 h-px bg-accent/8" />
+                      <span className={`text-[10px] font-serif italic text-muted-foreground/22 transition-colors duration-300 ${isActive ? "text-foreground/40" : ""}`}>
+                        {z.tagline}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           )}
         </div>
       </div>
