@@ -7,10 +7,11 @@ import systemProcess from "@/assets/system-process.jpg";
 import systemStructure from "@/assets/system-structure.jpg";
 import systemOutcome from "@/assets/system-outcome.jpg";
 
+// Tight architectural crops with desaturated, high-contrast treatment
 const SECTIONS = [
-  { src: systemProcess, line: "Built by those who understand the ground.", aspect: "aspect-[4/5]" },
-  { src: systemStructure, line: "Precision in every layer.", aspect: "aspect-[21/9]" },
-  { src: systemOutcome, line: "Environments designed to perform.", aspect: "aspect-[16/9]" },
+  { src: systemProcess, line: "Built by those who understand the ground.", aspect: "aspect-[1/1]", crop: "50% 30%", scale: "1.6" },
+  { src: systemStructure, line: "Precision in every layer.", aspect: "aspect-[21/9]", crop: "20% 60%", scale: "1.4" },
+  { src: systemOutcome, line: "Environments designed to perform.", aspect: "aspect-[3/2]", crop: "70% 40%", scale: "1.5" },
 ];
 
 export default function About() {
@@ -56,7 +57,7 @@ export default function About() {
         <section key={i} className="py-28 sm:py-36">
           <div className="section-container max-w-5xl mx-auto">
             <div
-              className="opacity-0 animate-fade-in"
+              className="opacity-0 animate-fade-in relative overflow-hidden"
               style={{
                 animationDelay: "200ms",
                 animationFillMode: "both",
@@ -68,7 +69,22 @@ export default function About() {
                 alt={section.line}
                 className={`w-full ${section.aspect} object-cover`}
                 loading="lazy"
-                style={{ filter: "brightness(1.3) contrast(1.06)" }}
+                style={{
+                  objectPosition: section.crop,
+                  transform: `scale(${section.scale})`,
+                  filter: "brightness(1.15) contrast(1.18) saturate(0.85)",
+                }}
+              />
+              {/* Subtle blueprint-style overlay */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  backgroundImage: `
+                    linear-gradient(0deg, hsl(var(--foreground) / 0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, hsl(var(--foreground) / 0.03) 1px, transparent 1px)
+                  `,
+                  backgroundSize: "40px 40px",
+                }}
               />
             </div>
             <p
