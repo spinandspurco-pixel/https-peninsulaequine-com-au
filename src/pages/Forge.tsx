@@ -5,10 +5,11 @@ import { StickySubpageCTA } from "@/components/StickySubpageCTA";
 import { ArrowRight, Flame } from "lucide-react";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { cn } from "@/lib/utils";
+import { GroundLockHero } from "@/components/groundlock/GroundLockHero";
 
-import steelBarnFrame from "@/assets/steel-barn-frame-wide.jpg";
-import reclaimedBeam from "@/assets/reclaimed-beam-workshop.jpg";
-import roofingDetail from "@/assets/roofing-steel-detail.jpg";
+import glIconHero from "@/assets/gl-icon-hero.jpg";
+import glAbstractPattern from "@/assets/gl-abstract-pattern.jpg";
+import glApplicationHint from "@/assets/gl-application-hint.jpg";
 
 /* ── Product Families ─────────────────────────────── */
 
