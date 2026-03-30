@@ -36,14 +36,11 @@ function BuildReveal({
     if (timer.current) clearTimeout(timer.current);
 
     if (zoneId) {
-      setVisible(false);
-      timer.current = setTimeout(() => {
-        setDisplayed(zoneId);
-        setVisible(true);
-      }, 200);
+      setDisplayed(zoneId);
+      requestAnimationFrame(() => setVisible(true));
     } else {
       setVisible(false);
-      timer.current = setTimeout(() => setDisplayed(null), 350);
+      timer.current = setTimeout(() => setDisplayed(null), 200);
     }
 
     return () => { if (timer.current) clearTimeout(timer.current); };
@@ -57,7 +54,7 @@ function BuildReveal({
       style={{
         paddingTop: data ? "clamp(2rem, 4vw, 4rem)" : "0",
         paddingBottom: data ? "clamp(4rem, 8vw, 8rem)" : "0",
-        transition: "padding 600ms cubic-bezier(0.45, 0, 0.15, 1)",
+        transition: "padding 350ms cubic-bezier(0.45, 0, 0.15, 1)",
       }}
       onMouseEnter={() => displayed && onHoverZone?.(displayed)}
       onMouseLeave={() => onLeaveZone?.()}
@@ -66,7 +63,7 @@ function BuildReveal({
         className="max-w-5xl mx-auto px-4 sm:px-6"
         style={{
           opacity: visible && data ? 1 : 0,
-          transition: "opacity 500ms cubic-bezier(0.45, 0, 0.15, 1)",
+          transition: "opacity 250ms cubic-bezier(0.45, 0, 0.15, 1)",
         }}
       >
         {data && (
