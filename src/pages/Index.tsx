@@ -117,10 +117,15 @@ export default function Index() {
             style={{ objectPosition: "50% 38%", filter: "brightness(1.3) contrast(1.15)" }}
           />
           <div className="absolute inset-x-0 bottom-0 h-[18%] bg-gradient-to-t from-black/50 to-transparent" />
-          <div className="relative z-10 section-container max-w-6xl mx-auto pb-16 sm:pb-20">
+          <div className="relative z-10 section-container max-w-6xl mx-auto pb-20 sm:pb-28">
             <h2
-              className="font-serif text-2xl sm:text-3xl text-white/85 tracking-tight opacity-0 animate-fade-in"
-              style={{ animationDelay: "300ms", animationFillMode: "both", animationDuration: "800ms" }}
+              className="font-serif text-3xl sm:text-4xl text-white/95 tracking-tight opacity-0 animate-fade-in"
+              style={{
+                animationDelay: "300ms",
+                animationFillMode: "both",
+                animationDuration: "800ms",
+                textShadow: "0 2px 12px rgba(0,0,0,0.6), 0 1px 3px rgba(0,0,0,0.4)",
+              }}
             >
               Selected Work
             </h2>
