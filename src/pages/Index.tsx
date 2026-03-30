@@ -163,7 +163,7 @@ export default function Index() {
         />
 
         {/* ═══ 3. PROCESS — How We Build ═══════════════════ */}
-        <section className="py-28 sm:py-36 relative overflow-hidden">
+        <section className="pt-20 sm:pt-28 pb-28 sm:pb-36 relative overflow-hidden">
           <div className="section-container max-w-6xl mx-auto relative z-[1]">
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-center">
               <div
@@ -193,8 +193,11 @@ export default function Index() {
           </div>
         </section>
 
+        {/* ═══ THREAD ══════════════════════════════════════ */}
+        <div className="mx-auto" style={{ width: "1px", height: "clamp(3rem, 6vw, 5rem)", background: "linear-gradient(to bottom, hsl(var(--accent) / 0.06), transparent)" }} aria-hidden="true" />
+
         {/* ═══ 4. OUTCOME — Standalone visual ══════════════ */}
-        <section className="py-28 sm:py-36 relative overflow-hidden">
+        <section className="pt-12 sm:pt-16 pb-28 sm:pb-36 relative overflow-hidden">
           <div className="section-container max-w-6xl mx-auto">
             <div
               className="opacity-0 animate-fade-in"
@@ -217,8 +220,11 @@ export default function Index() {
           </div>
         </section>
 
+        {/* ═══ THREAD ══════════════════════════════════════ */}
+        <div className="mx-auto" style={{ width: "1px", height: "clamp(3rem, 6vw, 5rem)", background: "linear-gradient(to bottom, hsl(var(--accent) / 0.06), transparent)" }} aria-hidden="true" />
+
         {/* ═══ EVENT SCALE ═════════════════════════════ */}
-        <section className="py-28 sm:py-36 relative overflow-hidden">
+        <section className="pt-12 sm:pt-16 pb-28 sm:pb-36 relative overflow-hidden">
           <div className="section-container max-w-6xl mx-auto">
             <div
               className="opacity-0 animate-fade-in"
@@ -241,8 +247,11 @@ export default function Index() {
           </div>
         </section>
 
+        {/* ═══ THREAD ══════════════════════════════════════ */}
+        <div className="mx-auto" style={{ width: "1px", height: "clamp(3rem, 6vw, 5rem)", background: "linear-gradient(to bottom, hsl(var(--accent) / 0.06), transparent)" }} aria-hidden="true" />
+
         {/* ═══ TRANSFORMATION (slider exception) ═══════════ */}
-        <section className="py-28 sm:py-36 relative overflow-hidden">
+        <section className="pt-12 sm:pt-16 pb-28 sm:pb-36 relative overflow-hidden">
           <div className="section-container max-w-5xl mx-auto">
             <h2 className="font-serif text-2xl sm:text-3xl text-foreground/80 tracking-tight mb-10 sm:mb-14">
               Transformation
