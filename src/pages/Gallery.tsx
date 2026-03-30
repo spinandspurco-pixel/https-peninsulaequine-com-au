@@ -112,6 +112,24 @@ function BuildReveal({ zoneId }: { zoneId: string | null }) {
 
 export default function Projects() {
   const [activeZone, setActiveZone] = useState<string | null>(null);
+  const [hoverSource, setHoverSource] = useState<"masterplan" | "reveal" | null>(null);
+
+  const handleMasterplanChange = (id: string | null) => {
+    setActiveZone(id);
+    setHoverSource(id ? "masterplan" : null);
+  };
+
+  const handleRevealHover = (id: string) => {
+    setActiveZone(id);
+    setHoverSource("reveal");
+  };
+
+  const handleRevealLeave = () => {
+    if (hoverSource === "reveal") {
+      setActiveZone(null);
+      setHoverSource(null);
+    }
+  };
 
   useEffect(() => {
     document.title = "Projects | Peninsula Equine";
@@ -134,10 +152,13 @@ export default function Projects() {
       </section>
 
       {/* ═══ INTERACTIVE MASTERPLAN ═════════════════════ */}
-      <InteractiveMasterplan onZoneChange={setActiveZone} />
+      <InteractiveMasterplan
+        onZoneChange={handleMasterplanChange}
+        externalActiveZone={hoverSource === "reveal" ? activeZone : undefined}
+      />
 
       {/* ═══ BUILD REVEAL — linked to masterplan ═══════ */}
-      <BuildReveal zoneId={activeZone} />
+      <BuildReveal zoneId={activeZone} onHoverZone={handleRevealHover} onLeaveZone={handleRevealLeave} />
 
       {/* ═══ TRANSFORMATION ══════════════════════════ */}
       <section className="py-28 sm:py-40 relative overflow-hidden">
