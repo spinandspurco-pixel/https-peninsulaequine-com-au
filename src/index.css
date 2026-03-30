@@ -253,8 +253,40 @@
   }
 
   /* ═══════════════════════════════════════════════════════
-     CARD / SURFACE SYSTEM
+     INTERACTIVE EFFECTS — engineered, not animated
      ═══════════════════════════════════════════════════════ */
+
+  /* Global interaction baseline */
+  a, button, [role="button"] {
+    @apply transition-all ease-in-out;
+    transition-duration: 300ms;
+  }
+
+  .btn-hover-lift {
+    @apply transition-all ease-in-out;
+    transition-duration: 300ms;
+  }
+  .btn-hover-lift:hover {
+    filter: brightness(1.12);
+  }
+
+  /* Card hover — refined */
+  .card-hover-glow {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  .card-hover-glow:hover {
+    box-shadow: 0 0 40px -12px hsl(var(--accent) / 0.15),
+                0 0 0 1px hsl(var(--accent) / 0.08);
+  }
+
+  .input-glow {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  .input-glow:focus {
+    box-shadow: 0 0 0 2px hsl(var(--accent) / 0.15),
+                0 0 20px -8px hsl(var(--accent) / 0.2);
+  }
+}
 
 
   /* ═══════════════════════════════════════════════════════
