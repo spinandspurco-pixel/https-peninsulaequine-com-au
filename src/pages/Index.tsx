@@ -154,7 +154,7 @@ export default function Index() {
                 className="lg:col-span-2 opacity-0 animate-fade-in"
                 style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "800ms" }}
               >
-                <h2 className="font-serif text-2xl sm:text-3xl text-foreground/80 tracking-tight mb-5">
+                <h2 className="font-serif text-3xl sm:text-4xl text-foreground/85 tracking-tight leading-[0.9] mb-5">
                   How We Build
                 </h2>
                 <p className="text-[13px] text-foreground/30 leading-[1.8]">
