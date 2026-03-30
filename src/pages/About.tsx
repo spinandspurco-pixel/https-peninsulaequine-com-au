@@ -26,7 +26,7 @@ export default function About() {
       <section className="pt-48 sm:pt-64 pb-28 sm:pb-40">
         <div className="section-container max-w-2xl mx-auto text-center">
           <h1
-            className="font-serif text-4xl sm:text-5xl md:text-6xl text-foreground/85 tracking-tight leading-[0.9] opacity-0 animate-fade-in"
+            className="heading-display text-foreground opacity-0 animate-fade-in"
             style={{ animationDelay: "300ms", animationFillMode: "both", animationDuration: "800ms" }}
           >
             Built with intent.
