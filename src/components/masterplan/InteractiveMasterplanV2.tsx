@@ -77,8 +77,8 @@ export function InteractiveMasterplan({ onZoneHover, onZoneLeave, onZoneChange, 
           observer.disconnect();
           setPlanVisible(true);
           if (reducedMotion) return;
-          setTimeout(() => setActiveZone("indoor-arena"), 1000);
-          setTimeout(() => setActiveZone(null), 3200);
+          setTimeout(() => setActiveZone("indoor-arena"), 800);
+          setTimeout(() => setActiveZone(null), 4500);
         }
       },
       { threshold: 0.15 }
