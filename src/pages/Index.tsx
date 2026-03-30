@@ -124,7 +124,7 @@ export default function Index() {
           className="relative"
           style={{
             height: "clamp(4rem, 8vw, 7rem)",
-            background: "linear-gradient(to bottom, hsl(var(--card)), #030303)",
+            background: "linear-gradient(to bottom, hsl(var(--card)), #0a0a0a)",
           }}
           aria-hidden="true"
         />
