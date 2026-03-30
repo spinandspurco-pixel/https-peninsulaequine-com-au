@@ -1,7 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { InteractiveMasterplan } from "@/components/masterplan/InteractiveMasterplanV2";
+import { BeforeAfterSlider } from "@/components/BeforeAfterSlider";
 import { Link } from "react-router-dom";
+
+import transformBefore from "@/assets/transform-before.jpg";
+import transformAfter from "@/assets/transform-after.jpg";
 
 import imgArena from "@/assets/walk-arena.jpg";
 import imgStables from "@/assets/walk-stables.jpg";
