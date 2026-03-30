@@ -139,7 +139,7 @@ export default function Index() {
             style={{ objectPosition: "50% 32%", filter: "brightness(1.0) contrast(1.1) saturate(0.85)" }}
           />
           {/* Sharp architectural gradient — harder edge than hero */}
-          <div className="absolute inset-x-0 bottom-0 h-[28%]" style={{ background: "linear-gradient(to top, rgba(3,3,3,0.75) 0%, transparent 100%)" }} />
+          <div className="absolute inset-x-0 bottom-0 h-[28%]" style={{ background: "linear-gradient(to top, rgba(10,10,10,0.75) 0%, transparent 100%)" }} />
           <div className="relative z-10 section-container max-w-6xl mx-auto pb-20 sm:pb-28">
             <h2
               className="font-serif text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-[0.88] opacity-0 animate-fade-in"
