@@ -165,8 +165,10 @@ export default function Index() {
           aria-hidden="true"
         />
 
-        {/* ═══ 3. PROCESS — How We Build ═══════════════════ */}
-        <section className="pt-20 sm:pt-28 pb-28 sm:pb-36 relative overflow-hidden">
+        {/* ═══ 3. PROCESS — Grounded, tactile ═════════════ */}
+        <section className="pt-20 sm:pt-28 pb-32 sm:pb-40 relative overflow-hidden">
+          {/* Warm undertone wash — earthy energy */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 50% at 35% 50%, hsl(30 15% 12% / 0.04), transparent)" }} />
           <div className="section-container max-w-6xl mx-auto relative z-[1]">
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-center">
               <div
@@ -178,7 +180,7 @@ export default function Index() {
                   alt="Telehandler auger drilling into earth"
                   className="w-full aspect-[4/5] object-cover"
                   loading="lazy"
-                  style={{ objectPosition: "50% 60%", filter: "brightness(1.2) contrast(1.08)" }}
+                  style={{ objectPosition: "50% 60%", filter: "brightness(1.15) contrast(1.12) saturate(1.1) sepia(0.04)" }}
                 />
               </div>
               <div
@@ -191,6 +193,7 @@ export default function Index() {
                 <p className="text-[13px] text-foreground/30 leading-[1.8]">
                   Engineered from the ground up.
                 </p>
+                <div className="mt-6 w-8 h-px bg-accent/8" />
               </div>
             </div>
           </div>
@@ -199,24 +202,26 @@ export default function Index() {
         {/* ═══ THREAD ══════════════════════════════════════ */}
         <div className="mx-auto" style={{ width: "1px", height: "clamp(3rem, 6vw, 5rem)", background: "linear-gradient(to bottom, hsl(var(--accent) / 0.06), transparent)" }} aria-hidden="true" />
 
-        {/* ═══ 4. OUTCOME — Standalone visual ══════════════ */}
-        <section className="pt-12 sm:pt-16 pb-28 sm:pb-36 relative overflow-hidden">
+        {/* ═══ 4. OUTCOME — Softer, warmer ═════════════════ */}
+        <section className="pt-16 sm:pt-20 pb-32 sm:pb-40 relative overflow-hidden">
+          {/* Soft warm ambient glow */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 40%, hsl(35 20% 14% / 0.03), transparent)" }} />
           <div className="section-container max-w-6xl mx-auto">
             <div
               className="opacity-0 animate-fade-in"
-              style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
+              style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "1000ms" }}
             >
               <img
                 src={systemOutcome}
                 alt="Completed equestrian property — aerial view"
                 className="w-full aspect-[21/9] object-cover"
                 loading="lazy"
-                style={{ filter: "brightness(1.18) contrast(1.04) saturate(1.06) sepia(0.03)" }}
+                style={{ filter: "brightness(1.22) contrast(0.98) saturate(1.12) sepia(0.06)" }}
               />
             </div>
             <p
-              className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/15 text-center opacity-0 animate-fade-in"
-              style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "800ms" }}
+              className="mt-8 font-serif italic text-[13px] sm:text-[14px] text-foreground/20 text-center tracking-[0.02em] opacity-0 animate-fade-in"
+              style={{ animationDelay: "600ms", animationFillMode: "both", animationDuration: "1000ms" }}
             >
               The outcome speaks for itself.
             </p>
