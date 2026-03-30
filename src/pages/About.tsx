@@ -57,7 +57,7 @@ export default function About() {
         <section key={i} className="py-28 sm:py-36">
           <div className="section-container max-w-5xl mx-auto">
             <div
-              className="opacity-0 animate-fade-in"
+              className="opacity-0 animate-fade-in relative overflow-hidden"
               style={{
                 animationDelay: "200ms",
                 animationFillMode: "both",
@@ -69,7 +69,22 @@ export default function About() {
                 alt={section.line}
                 className={`w-full ${section.aspect} object-cover`}
                 loading="lazy"
-                style={{ filter: "brightness(1.3) contrast(1.06)" }}
+                style={{
+                  objectPosition: section.crop,
+                  transform: `scale(${section.scale})`,
+                  filter: "brightness(1.15) contrast(1.18) saturate(0.85)",
+                }}
+              />
+              {/* Subtle blueprint-style overlay */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  backgroundImage: `
+                    linear-gradient(0deg, hsl(var(--foreground) / 0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, hsl(var(--foreground) / 0.03) 1px, transparent 1px)
+                  `,
+                  backgroundSize: "40px 40px",
+                }}
               />
             </div>
             <p
