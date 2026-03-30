@@ -523,10 +523,10 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
       </g>
 
       {/* ── NORTH ARROW ── */}
-      <g opacity="0.05" transform="translate(670, 120)">
-        <line x1="0" y1="16" x2="0" y2="-16" stroke="hsl(var(--accent))" strokeWidth="0.3" />
-        <polygon points="0,-18 -2,-12 2,-12" fill="hsl(var(--accent))" opacity="0.25" />
-        <text x="0" y="-22" textAnchor="middle" fontSize="4.5" fill="hsl(var(--accent))" fontFamily="monospace" letterSpacing="0.1em">N</text>
+      <g opacity="0.03" transform="translate(670, 120)">
+        <line x1="0" y1="12" x2="0" y2="-12" stroke="hsl(var(--accent))" strokeWidth="0.2" />
+        <polygon points="0,-14 -1.5,-9 1.5,-9" fill="hsl(var(--accent))" opacity="0.2" />
+        <text x="0" y="-18" textAnchor="middle" fontSize="3.5" fill="hsl(var(--accent))" fontFamily="monospace" letterSpacing="0.1em">N</text>
       </g>
 
       {/* ── DRIVEWAY ── */}
