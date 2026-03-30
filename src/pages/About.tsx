@@ -7,10 +7,11 @@ import systemProcess from "@/assets/system-process.jpg";
 import systemStructure from "@/assets/system-structure.jpg";
 import systemOutcome from "@/assets/system-outcome.jpg";
 
+// Tight architectural crops with desaturated, high-contrast treatment
 const SECTIONS = [
-  { src: systemProcess, line: "Built by those who understand the ground.", aspect: "aspect-[4/5]" },
-  { src: systemStructure, line: "Precision in every layer.", aspect: "aspect-[21/9]" },
-  { src: systemOutcome, line: "Environments designed to perform.", aspect: "aspect-[16/9]" },
+  { src: systemProcess, line: "Built by those who understand the ground.", aspect: "aspect-[1/1]", crop: "50% 30%", scale: "1.6" },
+  { src: systemStructure, line: "Precision in every layer.", aspect: "aspect-[21/9]", crop: "20% 60%", scale: "1.4" },
+  { src: systemOutcome, line: "Environments designed to perform.", aspect: "aspect-[3/2]", crop: "70% 40%", scale: "1.5" },
 ];
 
 export default function About() {
