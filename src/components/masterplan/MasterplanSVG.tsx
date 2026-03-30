@@ -438,7 +438,7 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
               transform: `translateY(${elevShift}px)`,
               transition: `opacity 400ms ${T_EASE}, transform 500ms ${T_EASE}`,
             }}
-            filter={isActive ? "url(#mp-active)" : undefined}
+            filter={undefined}
           >
             {/* Outline trace on active — draws in */}
             {isActive && (
