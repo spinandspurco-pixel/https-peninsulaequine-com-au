@@ -120,7 +120,7 @@ export default function GroundLock() {
         </section>
 
         {/* ═══ 3. APPLICATION HINT ════════════════════════ */}
-        <section className="py-40 sm:py-52 lg:py-64 relative overflow-hidden bg-black">
+        <section className="py-40 sm:py-52 lg:py-64 relative overflow-hidden" style={{ backgroundColor: "#0a0a0a" }}>
           <div className="section-container max-w-5xl mx-auto px-6">
             <img
               src={glApplicationHint}
