@@ -17,8 +17,9 @@ const EquusRidge = () => {
             alt="Luxury equine estate at golden hour"
             className="absolute inset-0 w-full h-full object-cover"
             loading="eager"
+            style={{ filter: "brightness(0.9) contrast(1.08) saturate(0.85)" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/20 to-background" />
+          <div className="absolute inset-0 bg-background/40" />
         </div>
 
         <div className="relative z-10 text-center px-6 max-w-2xl mx-auto">
