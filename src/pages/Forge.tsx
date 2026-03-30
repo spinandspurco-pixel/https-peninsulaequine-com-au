@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 
-import { ArrowRight, Flame } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { cn } from "@/lib/utils";
 import { GroundLockHero } from "@/components/groundlock/GroundLockHero";
