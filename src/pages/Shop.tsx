@@ -18,13 +18,13 @@ const HERO_PRODUCT = {
   cta: "View System",
 };
 
-/* ── Tier 2: Equipment ── */
-const EQUIPMENT = [
+/* ── Tier 2: Apparel ── */
+const APPAREL = [
   { src: shopHoodie, name: "Work Hoodie — Ink" },
   { src: shopTee, name: "Site Tee — Charcoal" },
 ];
 
-/* ── Tier 3: Accessories ── */
+/* ── Tier 3: Accessories (wearable) ── */
 const ACCESSORIES = [
   { src: shopCap, name: "Crew Cap — Stone" },
   { src: shopPant, name: "Site Pant — Slate" },
