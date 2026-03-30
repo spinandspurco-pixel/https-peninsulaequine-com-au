@@ -49,7 +49,7 @@ export default function Index() {
             loading="eager"
             style={{
               objectPosition: "50% 72%",
-              filter: "brightness(0.92) contrast(1.12) saturate(1.08)",
+              filter: "brightness(0.92) contrast(1.06) saturate(1.05)",
               animation: "heroSlowZoom 25s ease-out forwards",
             }}
           />
@@ -136,7 +136,7 @@ export default function Index() {
             alt="Steel frame structure under construction"
             className="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
-            style={{ objectPosition: "50% 32%", filter: "brightness(1.1) contrast(1.28) saturate(0.85)" }}
+            style={{ objectPosition: "50% 32%", filter: "brightness(1.05) contrast(1.08) saturate(0.9)" }}
           />
           {/* Sharp architectural gradient — harder edge than hero */}
           <div className="absolute inset-x-0 bottom-0 h-[28%]" style={{ background: "linear-gradient(to top, rgba(3,3,3,0.75) 0%, transparent 100%)" }} />
@@ -180,7 +180,7 @@ export default function Index() {
                   alt="Telehandler auger drilling into earth"
                   className="w-full aspect-[4/5] object-cover"
                   loading="lazy"
-                  style={{ objectPosition: "50% 60%", filter: "brightness(1.15) contrast(1.12) saturate(1.1) sepia(0.04)" }}
+                  style={{ objectPosition: "50% 60%", filter: "brightness(1.05) contrast(1.04) saturate(1.0)" }}
                 />
               </div>
               <div
@@ -216,7 +216,7 @@ export default function Index() {
                 alt="Completed equestrian property — aerial view"
                 className="w-full aspect-[21/9] object-cover"
                 loading="lazy"
-                style={{ filter: "brightness(1.22) contrast(0.98) saturate(1.12) sepia(0.06)" }}
+                style={{ filter: "brightness(1.08) contrast(1.02) saturate(1.0)" }}
               />
             </div>
             <p
@@ -243,7 +243,7 @@ export default function Index() {
                 alt="Indoor equestrian arena — event scale"
                 className="w-full aspect-[21/9] object-cover"
                 loading="lazy"
-                style={{ objectPosition: "50% 55%", filter: "brightness(1.15) contrast(1.1) saturate(0.92)" }}
+                style={{ objectPosition: "50% 55%", filter: "brightness(1.05) contrast(1.04) saturate(0.95)" }}
               />
             </div>
             <p
