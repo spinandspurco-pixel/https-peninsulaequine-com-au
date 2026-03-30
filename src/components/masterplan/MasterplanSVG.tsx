@@ -439,7 +439,7 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         const isDimmed = activeZone !== null && !isActive;
         const center = getCenter(z.path);
         const elevShift = isActive ? z.elevation * -1.5 : 0;
-        const dimOpacity = (isViewing && !isActive) ? 0.08 : 0.12;
+        const dimOpacity = (isViewing && !isActive) ? 0.06 : 0.08;
         const isViewingZone = z.id === "viewing-loft";
 
         return (
