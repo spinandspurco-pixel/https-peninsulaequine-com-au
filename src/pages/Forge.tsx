@@ -278,39 +278,30 @@ export default function Forge() {
         </div>
       </section>
 
-      {/* ── Dual CTA ──────────────────────────────────── */}
+      {/* ── Closing CTA ─────────────────────────────────── */}
       <section className="relative overflow-hidden">
-        <div className="divider-grid" />
         <div className="py-32 sm:py-44 relative">
-          <div className="absolute inset-0 engineering-grid" />
-          <div className="absolute inset-0 grain-texture" />
-          <div
-            className="absolute inset-0"
-            style={{ background: "radial-gradient(ellipse 60% 45% at 50% 50%, transparent 15%, hsl(222 20% 3% / 0.5) 100%)" }}
-          />
-
           <div className="section-container relative z-10 text-center max-w-md mx-auto">
             <RevealOnScroll>
               <RevealLine className="mx-auto mb-16" width="w-8" />
-              <h2 className="heading-section text-foreground mb-8">
-                Work With Us
-              </h2>
-              <p className="text-sm text-muted-foreground/35 mb-12 leading-[1.9]">
+              <p className="font-serif italic text-sm text-foreground/15 mb-14">
                 Whether you're configuring a GroundLock system, specifying
                 custom hardware, or planning a bespoke element for your
                 property — we'll scope it, quote it, and build it.
               </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button asChild variant="gold" size="lg">
-                  <Link to="/groundlock">
-                    Explore GroundLock <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline-light" size="lg">
-                  <Link to="/contact">
-                    Enquire About Systems
-                  </Link>
-                </Button>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
+                <Link
+                  to="/groundlock"
+                  className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-accent/50 hover:text-accent/80 transition-colors duration-500"
+                >
+                  Explore GroundLock <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-foreground/25 hover:text-foreground/50 transition-colors duration-500"
+                >
+                  Enquire About Systems <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             </RevealOnScroll>
           </div>

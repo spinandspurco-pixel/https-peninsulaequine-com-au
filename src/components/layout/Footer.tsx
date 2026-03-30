@@ -41,7 +41,7 @@ export function Footer() {
             <p className="text-[hsl(var(--footer-muted))] text-[13px] leading-[2] max-w-xs mb-12">
               Engineered equine infrastructure — arenas, stables, ground systems, and rural builds designed for the horse.
             </p>
-            <div className="flex gap-3">
+            <div className="flex gap-5">
               {[
                 { icon: Instagram, href: siteConfig.social.instagram, label: "Instagram" },
                 { icon: Facebook, href: siteConfig.social.facebook, label: "Facebook" },
@@ -51,10 +51,10 @@ export function Footer() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 flex items-center justify-center border border-[hsl(var(--footer-muted))]/10 hover:border-accent/30 hover:text-accent transition-all duration-500"
+                  className="text-[hsl(var(--footer-muted))]/40 hover:text-accent/60 transition-colors duration-500"
                   aria-label={label}
                 >
-                  <Icon className="h-3.5 w-3.5" />
+                  <Icon className="h-4 w-4" />
                 </a>
               ))}
             </div>
