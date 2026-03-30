@@ -48,11 +48,6 @@ export function PageHeader({
       {!backgroundImage && <div className="absolute inset-0 engineering-grid" />}
 
       {/* Grain */}
-      <div className="absolute inset-0 grain-texture" />
-        }}
-      />
-
-      {/* Grain */}
       <div className="absolute inset-0 pointer-events-none grain-texture" />
 
       <div className="section-container relative z-10 text-center max-w-3xl mx-auto">
