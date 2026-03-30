@@ -160,7 +160,7 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
       </g>
 
       {/* ── Property boundary ── */}
-      <rect x="145" y="55" width="450" height="720" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity="0.03" strokeDasharray="12 6" />
+      <rect x="145" y="55" width="450" height="720" fill="none" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.02" strokeDasharray="12 8" />
 
       {/* ── STABLE ROW DETAIL ── */}
       <rect x="185" y="95" width="50" height="70" fill="url(#mp-hatch)" stroke="hsl(var(--accent))" strokeWidth="0.25" opacity={ls.zoneOpacity * 0.7} />
