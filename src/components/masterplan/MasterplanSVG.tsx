@@ -9,9 +9,9 @@ const layerStyles: Record<BuildLayer, {
   zoneOpacity: number; labelOpacity: number; fillAlpha: string; strokeW: number;
   materialAlpha: number; shadowAlpha: number; gridAlpha: number; terrainAlpha: number;
 }> = {
-  structure: { zoneOpacity: 0.05, labelOpacity: 0.12, fillAlpha: "0.008", strokeW: 0.6, materialAlpha: 0.12, shadowAlpha: 0.1, gridAlpha: 0.055, terrainAlpha: 0.25 },
-  envelope:  { zoneOpacity: 0.08, labelOpacity: 0.14, fillAlpha: "0.015", strokeW: 0.5, materialAlpha: 0.5, shadowAlpha: 0.4, gridAlpha: 0.03, terrainAlpha: 0.4 },
-  finished:  { zoneOpacity: 0.1,  labelOpacity: 0.16, fillAlpha: "0.025", strokeW: 0.4, materialAlpha: 1, shadowAlpha: 1, gridAlpha: 0.018, terrainAlpha: 0.6 },
+  structure: { zoneOpacity: 0.04, labelOpacity: 0.08, fillAlpha: "0.005", strokeW: 0.4, materialAlpha: 0.08, shadowAlpha: 0.06, gridAlpha: 0.035, terrainAlpha: 0.15 },
+  envelope:  { zoneOpacity: 0.06, labelOpacity: 0.1, fillAlpha: "0.01", strokeW: 0.35, materialAlpha: 0.35, shadowAlpha: 0.25, gridAlpha: 0.02, terrainAlpha: 0.25 },
+  finished:  { zoneOpacity: 0.07, labelOpacity: 0.1, fillAlpha: "0.015", strokeW: 0.3, materialAlpha: 0.7, shadowAlpha: 0.6, gridAlpha: 0.012, terrainAlpha: 0.4 },
 };
 
 interface Props {
