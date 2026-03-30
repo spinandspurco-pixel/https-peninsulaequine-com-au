@@ -499,8 +499,8 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         <>
           {[0, 1, 2, 3, 4, 5, 6, 7].map(i => (
             <g key={`fc${i}`}>
-              <rect x={243} y={475 + i * 28} width="2" height="2" fill="hsl(var(--accent))" opacity="0.03" rx="0.3" />
-              <rect x={493} y={475 + i * 28} width="2" height="2" fill="hsl(var(--accent))" opacity="0.03" rx="0.3" />
+              <rect x={243} y={475 + i * 28} width="1.5" height="1.5" fill="hsl(var(--accent))" opacity="0.015" rx="0.3" />
+              <rect x={493} y={475 + i * 28} width="1.5" height="1.5" fill="hsl(var(--accent))" opacity="0.015" rx="0.3" />
             </g>
           ))}
         </>
