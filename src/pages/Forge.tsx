@@ -196,7 +196,8 @@ export default function Forge() {
                   alt={img.alt}
                   loading="lazy"
                   decoding="async"
-                  className="absolute inset-0 w-full h-full object-cover img-portfolio transition-all duration-[900ms]"
+                  className="absolute inset-0 w-full h-full object-cover transition-all duration-[900ms]"
+                  style={{ filter: "brightness(0.96) contrast(1.06) saturate(0.9)" }}
                 />
               </div>
             ))}
