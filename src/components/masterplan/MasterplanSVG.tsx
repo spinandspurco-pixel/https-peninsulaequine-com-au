@@ -427,8 +427,8 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         const isActive = activeZone === z.id;
         const isDimmed = activeZone !== null && !isActive;
         const center = getCenter(z.path);
-        const elevShift = isActive ? z.elevation * -1 : 0;
-        const dimOpacity = isDimmed ? 0.15 : 1;
+        const elevShift = isActive ? z.elevation * -0.5 : 0;
+        const dimOpacity = isDimmed ? 0.55 : 1;
 
         return (
           <g
