@@ -30,7 +30,7 @@ const EquusRidge = () => {
             Equus Ridge
           </p>
           <h1
-            className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground/90 tracking-tight leading-[1.05] mb-6 opacity-0 animate-fade-in"
+            className="heading-display text-foreground opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both", animationDuration: "1200ms" }}
           >
             A new standard for<br />equine experience.
