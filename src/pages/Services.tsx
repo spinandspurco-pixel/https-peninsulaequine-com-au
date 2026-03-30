@@ -114,7 +114,7 @@ export default function Services() {
                 Engineered ground stabilisation systems for permanent and temporary environments.
               </p>
               <div className="mt-12 relative overflow-hidden aspect-[4/5] max-w-xl">
-                <img src={systemProcess} alt="Ground engineering process" className="w-full h-full object-cover" loading="lazy" />
+                <img src={systemProcess} alt="Ground engineering process" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(1.1) contrast(1.12) saturate(0.85)" }} />
               </div>
               <Link
                 to="/groundlock"
