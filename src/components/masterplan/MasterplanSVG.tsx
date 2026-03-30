@@ -83,15 +83,9 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
           <line x1="0" y1="0" x2="0" y2="5" stroke="hsl(var(--accent))" strokeWidth="0.14" opacity="0.014" />
         </pattern>
 
-        {/* Filter — subtle warm glow for active zone */}
-        <filter id="mp-active" x="-12%" y="-12%" width="124%" height="124%">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="glow" />
-          <feFlood floodColor="hsl(35 30% 60%)" floodOpacity="0.06" result="gc" />
-          <feComposite in="gc" in2="glow" operator="in" result="softglow" />
-          <feMerge>
-            <feMergeNode in="softglow" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
+        {/* Filter — removed digital glow, kept only subtle elevation */}
+        <filter id="mp-active" x="-4%" y="-4%" width="112%" height="116%">
+          <feDropShadow dx="0.5" dy="1" stdDeviation="1.5" floodColor="hsl(0 0% 0%)" floodOpacity="0.04" />
         </filter>
         <filter id="mp-elev" x="-4%" y="-4%" width="112%" height="116%">
           <feDropShadow dx="1" dy="2" stdDeviation="2.5" floodColor="hsl(0 0% 0%)" floodOpacity="0.08" />
@@ -433,8 +427,8 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         const isActive = activeZone === z.id;
         const isDimmed = activeZone !== null && !isActive;
         const center = getCenter(z.path);
-        const elevShift = isActive ? z.elevation * -1 : 0;
-        const dimOpacity = isDimmed ? 0.15 : 1;
+        const elevShift = isActive ? z.elevation * -0.5 : 0;
+        const dimOpacity = isDimmed ? 0.55 : 1;
 
         return (
           <g
@@ -444,7 +438,7 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
               transform: `translateY(${elevShift}px)`,
               transition: `opacity 400ms ${T_EASE}, transform 500ms ${T_EASE}`,
             }}
-            filter={isActive ? "url(#mp-active)" : undefined}
+            filter={undefined}
           >
             {/* Outline trace on active — draws in */}
             {isActive && (
@@ -461,9 +455,9 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
             )}
             <path
               d={z.path}
-              fill={isActive ? "hsl(var(--accent) / 0.035)" : `hsl(var(--accent) / ${ls.fillAlpha})`}
-              stroke={isActive ? "hsl(var(--accent) / 0.2)" : `hsl(var(--accent) / ${ls.zoneOpacity})`}
-              strokeWidth={isActive ? ls.strokeW * 1.4 : ls.strokeW}
+              fill={isActive ? "hsl(var(--accent) / 0.02)" : `hsl(var(--accent) / ${ls.fillAlpha})`}
+              stroke={isActive ? "hsl(var(--accent) / 0.12)" : `hsl(var(--accent) / ${ls.zoneOpacity})`}
+              strokeWidth={isActive ? ls.strokeW * 1.2 : ls.strokeW}
               style={{ transition: `fill ${T} ${T_EASE}, stroke ${T} ${T_EASE}, stroke-width ${T} ${T_EASE}`, cursor: "pointer" }}
               onMouseEnter={() => onHover(z.id)}
               onMouseLeave={onLeave}
