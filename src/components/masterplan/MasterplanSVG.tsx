@@ -198,11 +198,7 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
       <line x1="370" y1="425" x2="370" y2="470" stroke="hsl(var(--accent))" strokeWidth="0.15" opacity="0.02" strokeDasharray="3 4" />
 
       {/* ── ARENA LABELS ── */}
-      <text x="370" y="578" textAnchor="middle" fontSize="4.5" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.4} fontFamily="monospace" letterSpacing="0.25em">INDOOR ARENA</text>
-      <text x="370" y="592" textAnchor="middle" fontSize="3" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.25} fontFamily="monospace" letterSpacing="0.08em">24 × 48 m</text>
-
-      {/* ── ARENA STORE ── */}
-      <text x="370" y="724" textAnchor="middle" fontSize="3.2" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.5} fontFamily="monospace" letterSpacing="0.1em">ARENA STORE</text>
+      <text x="370" y="585" textAnchor="middle" fontSize="3.8" fill="hsl(var(--accent))" opacity={ls.labelOpacity * 0.3} fontFamily="monospace" letterSpacing="0.25em">INDOOR ARENA</text>
 
       {/* ── STRUCTURE LAYER ── */}
       {buildLayer === "structure" && (
