@@ -4,8 +4,8 @@ import { InteractiveMasterplan } from "@/components/masterplan/InteractiveMaster
 import { BeforeAfterSlider } from "@/components/BeforeAfterSlider";
 import { Link } from "react-router-dom";
 
-import transformBefore from "@/assets/transform-before.jpg";
-import transformAfter from "@/assets/transform-after.jpg";
+import mainridgeBefore from "@/assets/mainridge-before.jpg";
+import mainridgeAfter from "@/assets/mainridge-after.jpg";
 
 import imgArena from "@/assets/zone-arena.jpg";
 import imgStableRow from "@/assets/zone-stable-row.jpg";
