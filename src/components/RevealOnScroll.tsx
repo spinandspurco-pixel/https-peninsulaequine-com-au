@@ -2,7 +2,6 @@ import { ReactNode, CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
-import { useScrollIntelligence } from "@/hooks/useScrollIntelligence";
 
 type RevealDirection = "up" | "down" | "left" | "right" | "none";
 
