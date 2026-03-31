@@ -380,7 +380,8 @@ export function ParallaxSection({
   direction = "up",
 }: ParallaxSectionProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [offset, setOffset] = useState(0);
+  const offsetRef = useRef(0);
+  const elRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {

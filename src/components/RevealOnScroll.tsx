@@ -93,7 +93,6 @@ export function RevealImage({
     opacity: isVisible ? 1 : 0,
     transform: isVisible ? "scale(1)" : "scale(1.02)",
     transition: `opacity ${duration}ms ${EASE.cinematic} ${totalDelay}ms, transform ${duration}ms ${EASE.cinematic} ${totalDelay}ms`,
-    willChange: "opacity, transform",
   };
 
   return (

@@ -62,7 +62,7 @@ export default function Shop() {
                     src={HERO_PRODUCT.src}
                     alt={HERO_PRODUCT.name}
                     className="w-full aspect-[21/9] object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.015]"
-                    loading="eager"
+                    loading="lazy"
                     style={{ filter: "brightness(0.96) contrast(1.06) saturate(0.9)" }}
                   />
                   <div
