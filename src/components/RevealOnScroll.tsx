@@ -60,7 +60,6 @@ export function RevealOnScroll({
       ? "translate3d(0,0,0) scale(1)"
       : transforms[direction](distance, scaleReveal),
     transition: `opacity ${computedDuration}ms ${EASE.default} ${computedDelay}ms, transform ${computedDuration}ms ${EASE.default} ${computedDelay}ms`,
-    willChange: "opacity, transform",
   };
 
   return (
