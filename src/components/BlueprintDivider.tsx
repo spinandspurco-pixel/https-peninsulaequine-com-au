@@ -66,7 +66,7 @@ export function BlueprintDivider({
           const svg = el.querySelector('svg');
           if (svg) {
             const driftX = (progress - 0.5) * 12;
-            (svg as HTMLElement).style.transform = `translateX(${driftX}px)`;
+            (svg as unknown as HTMLElement).style.transform = `translateX(${driftX}px)`;
           }
           ticking = false;
         });
