@@ -380,31 +380,21 @@ export function ParallaxSection({
   direction = "up",
 }: ParallaxSectionProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const offsetRef = useRef(0);
-  const elRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     if (prefersReducedMotion) return;
+    const el = ref.current;
+    if (!el) return;
 
     let ticking = false;
-
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          if (ref.current) {
-            const rect = ref.current.getBoundingClientRect();
-            const windowHeight = window.innerHeight;
-            
-            // Calculate how far the element is from center of viewport
-            const elementCenter = rect.top + rect.height / 2;
-            const viewportCenter = windowHeight / 2;
-            const distanceFromCenter = elementCenter - viewportCenter;
-            
-            // Apply parallax transform
-            const parallaxOffset = distanceFromCenter * speed * (direction === "up" ? 1 : -1);
-            setOffset(parallaxOffset);
-          }
+          const rect = el.getBoundingClientRect();
+          const distanceFromCenter = (rect.top + rect.height / 2) - window.innerHeight / 2;
+          const offset = distanceFromCenter * speed * (direction === "up" ? 1 : -1);
+          el.style.transform = `translateY(${offset}px)`;
           ticking = false;
         });
         ticking = true;
@@ -412,19 +402,12 @@ export function ParallaxSection({
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Initial calculation
-    
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, [speed, direction, prefersReducedMotion]);
 
   return (
-    <div
-      ref={ref}
-      className={cn("will-change-transform", className)}
-      style={{
-        transform: prefersReducedMotion ? undefined : `translateY(${offset}px)`,
-      }}
-    >
+    <div ref={ref} className={cn(className)}>
       {children}
     </div>
   );
