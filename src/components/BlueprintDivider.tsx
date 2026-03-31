@@ -17,8 +17,8 @@ export function BlueprintDivider({
 }: BlueprintDividerProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [mouseX, setMouseX] = useState(0.5); // normalised 0-1
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [mouseX, setMouseX] = useState(0.5);
+  const scrollProgressRef = useRef(0);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
