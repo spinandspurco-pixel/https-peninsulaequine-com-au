@@ -51,18 +51,22 @@ export function BlueprintDivider({
     setMouseX((e.clientX - rect.left) / rect.width);
   }, [prefersReducedMotion]);
 
-  // Scroll-based parallax drift
   useEffect(() => {
     if (prefersReducedMotion) return;
+    const el = ref.current;
+    if (!el) return;
     let ticking = false;
     const onScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          if (ref.current) {
-            const rect = ref.current.getBoundingClientRect();
-            const vh = window.innerHeight;
-            const progress = 1 - (rect.top / vh);
-            setScrollProgress(Math.max(0, Math.min(1, progress)));
+          const rect = el.getBoundingClientRect();
+          const progress = Math.max(0, Math.min(1, 1 - (rect.top / window.innerHeight)));
+          scrollProgressRef.current = progress;
+          // Write drift directly to SVG transform
+          const svg = el.querySelector('svg');
+          if (svg) {
+            const driftX = (progress - 0.5) * 12;
+            (svg as HTMLElement).style.transform = `translateX(${driftX}px)`;
           }
           ticking = false;
         });
