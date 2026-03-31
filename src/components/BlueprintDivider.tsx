@@ -133,7 +133,6 @@ export function BlueprintDivider({
         viewBox="0 0 1600 120"
         preserveAspectRatio="none"
         style={{
-          transform: prefersReducedMotion ? "none" : `translateX(${driftX}px)`,
           transition: "transform 0.3s ease-out",
         }}
       >
