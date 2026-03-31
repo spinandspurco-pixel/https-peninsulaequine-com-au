@@ -48,12 +48,11 @@ export function RevealOnScroll({
   scaleReveal = false,
 }: RevealOnScrollProps) {
   const { ref, isVisible } = useScrollReveal<HTMLDivElement>({ threshold, once });
-  const { revealMultiplier } = useScrollIntelligence();
 
   const computedDelay =
-    (BASE_REVEAL_DELAY + (stagger !== undefined ? stagger * staggerInterval : delay)) * revealMultiplier;
+    BASE_REVEAL_DELAY + (stagger !== undefined ? stagger * staggerInterval : delay);
 
-  const computedDuration = duration * (revealMultiplier < 1 ? 0.85 + revealMultiplier * 0.15 : 1);
+  const computedDuration = duration;
 
   const style: CSSProperties = {
     opacity: isVisible ? 1 : 0,
