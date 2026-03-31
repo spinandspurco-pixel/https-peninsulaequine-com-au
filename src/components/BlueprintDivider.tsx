@@ -99,8 +99,7 @@ export function BlueprintDivider({
       : `opacity 0.7s ease-out ${delay}ms, transform 0.7s ease-out ${delay}ms`,
   });
 
-  // Parallax horizontal drift based on scroll
-  const driftX = prefersReducedMotion ? 0 : (scrollProgress - 0.5) * 12;
+  // Drift now applied directly via DOM in scroll handler above
 
   return (
     <div
