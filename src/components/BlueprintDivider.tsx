@@ -17,8 +17,8 @@ export function BlueprintDivider({
 }: BlueprintDividerProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [mouseX, setMouseX] = useState(0.5); // normalised 0-1
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [mouseX, setMouseX] = useState(0.5);
+  const scrollProgressRef = useRef(0);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -51,18 +51,22 @@ export function BlueprintDivider({
     setMouseX((e.clientX - rect.left) / rect.width);
   }, [prefersReducedMotion]);
 
-  // Scroll-based parallax drift
   useEffect(() => {
     if (prefersReducedMotion) return;
+    const el = ref.current;
+    if (!el) return;
     let ticking = false;
     const onScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          if (ref.current) {
-            const rect = ref.current.getBoundingClientRect();
-            const vh = window.innerHeight;
-            const progress = 1 - (rect.top / vh);
-            setScrollProgress(Math.max(0, Math.min(1, progress)));
+          const rect = el.getBoundingClientRect();
+          const progress = Math.max(0, Math.min(1, 1 - (rect.top / window.innerHeight)));
+          scrollProgressRef.current = progress;
+          // Write drift directly to SVG transform
+          const svg = el.querySelector('svg');
+          if (svg) {
+            const driftX = (progress - 0.5) * 12;
+            (svg as unknown as HTMLElement).style.transform = `translateX(${driftX}px)`;
           }
           ticking = false;
         });
@@ -95,8 +99,7 @@ export function BlueprintDivider({
       : `opacity 0.7s ease-out ${delay}ms, transform 0.7s ease-out ${delay}ms`,
   });
 
-  // Parallax horizontal drift based on scroll
-  const driftX = prefersReducedMotion ? 0 : (scrollProgress - 0.5) * 12;
+  // Drift now applied directly via DOM in scroll handler above
 
   return (
     <div
@@ -130,7 +133,6 @@ export function BlueprintDivider({
         viewBox="0 0 1600 120"
         preserveAspectRatio="none"
         style={{
-          transform: prefersReducedMotion ? "none" : `translateX(${driftX}px)`,
           transition: "transform 0.3s ease-out",
         }}
       >

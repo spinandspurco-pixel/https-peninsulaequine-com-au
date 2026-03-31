@@ -2,7 +2,6 @@ import { ReactNode, CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { DURATION, EASE, DISTANCE } from "@/lib/motion";
-import { useScrollIntelligence } from "@/hooks/useScrollIntelligence";
 
 type RevealDirection = "up" | "down" | "left" | "right" | "none";
 
@@ -49,12 +48,11 @@ export function RevealOnScroll({
   scaleReveal = false,
 }: RevealOnScrollProps) {
   const { ref, isVisible } = useScrollReveal<HTMLDivElement>({ threshold, once });
-  const { revealMultiplier } = useScrollIntelligence();
 
   const computedDelay =
-    (BASE_REVEAL_DELAY + (stagger !== undefined ? stagger * staggerInterval : delay)) * revealMultiplier;
+    BASE_REVEAL_DELAY + (stagger !== undefined ? stagger * staggerInterval : delay);
 
-  const computedDuration = duration * (revealMultiplier < 1 ? 0.85 + revealMultiplier * 0.15 : 1);
+  const computedDuration = duration;
 
   const style: CSSProperties = {
     opacity: isVisible ? 1 : 0,
@@ -62,7 +60,6 @@ export function RevealOnScroll({
       ? "translate3d(0,0,0) scale(1)"
       : transforms[direction](distance, scaleReveal),
     transition: `opacity ${computedDuration}ms ${EASE.default} ${computedDelay}ms, transform ${computedDuration}ms ${EASE.default} ${computedDelay}ms`,
-    willChange: "opacity, transform",
   };
 
   return (
@@ -96,7 +93,6 @@ export function RevealImage({
     opacity: isVisible ? 1 : 0,
     transform: isVisible ? "scale(1)" : "scale(1.02)",
     transition: `opacity ${duration}ms ${EASE.cinematic} ${totalDelay}ms, transform ${duration}ms ${EASE.cinematic} ${totalDelay}ms`,
-    willChange: "opacity, transform",
   };
 
   return (
