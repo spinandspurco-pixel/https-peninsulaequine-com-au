@@ -212,14 +212,16 @@ export default function Index() {
               className="opacity-0 animate-fade-in"
               style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "1000ms" }}
             >
-              <img
-                src={systemOutcome}
-                alt="Completed equestrian property — aerial view"
-                className="w-full aspect-[21/9] object-cover"
-                loading="lazy"
-                style={{ filter: "brightness(1.0) contrast(1.1) saturate(0.85)" }}
-              />
-            </div>
+              <div className="relative overflow-hidden">
+                <img
+                  src={systemOutcome}
+                  alt="Completed equestrian property — aerial view"
+                  className="w-full aspect-[21/9] object-cover"
+                  loading="lazy"
+                  style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
+                />
+                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, hsl(222 20% 4% / 0.5) 100%)" }} />
+              </div>
             <p
               className="mt-8 font-serif italic text-[13px] sm:text-[14px] text-foreground/20 text-center tracking-[0.02em] opacity-0 animate-fade-in"
               style={{ animationDelay: "600ms", animationFillMode: "both", animationDuration: "1000ms" }}
