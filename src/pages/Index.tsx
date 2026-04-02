@@ -181,9 +181,9 @@ export default function Index() {
                   alt="Telehandler auger drilling into earth"
                   className="w-full aspect-[4/5] object-cover"
                   loading="lazy"
-                  style={{ objectPosition: "50% 60%", filter: "brightness(1.0) contrast(1.1) saturate(0.85)" }}
+                  style={{ objectPosition: "50% 60%", filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
                 />
-              </div>
+                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 30%, hsl(222 20% 4% / 0.55) 100%)" }} />
               <div
                 className="lg:col-span-2 opacity-0 animate-fade-in"
                 style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "800ms" }}
