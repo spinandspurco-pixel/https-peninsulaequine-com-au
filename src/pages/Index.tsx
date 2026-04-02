@@ -136,8 +136,9 @@ export default function Index() {
             alt="Steel frame structure under construction"
             className="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
-            style={{ objectPosition: "50% 32%", filter: "brightness(1.0) contrast(1.1) saturate(0.85)" }}
+            style={{ objectPosition: "50% 32%", filter: "brightness(0.85) contrast(1.1) saturate(0.8)" }}
           />
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, #0a0a0a 100%)" }} />
           {/* Sharp architectural gradient — harder edge than hero */}
           <div className="absolute inset-x-0 bottom-0 h-[28%]" style={{ background: "linear-gradient(to top, rgba(10,10,10,0.75) 0%, transparent 100%)" }} />
           <div className="relative z-10 section-container max-w-6xl mx-auto pb-20 sm:pb-28">
