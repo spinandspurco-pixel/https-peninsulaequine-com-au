@@ -67,7 +67,7 @@ export default function Visualise() {
                   alt="Pre-construction estate visualisation"
                   className="w-full aspect-[16/9] object-cover"
                   loading="eager"
-                  style={{ filter: "brightness(0.38) saturate(0.7) contrast(1.08)" }}
+                  style={{ filter: "brightness(0.7) saturate(0.8) contrast(1.1)" }}
                 />
                 {/* Blueprint grid overlay — ties to global system */}
                 <div
@@ -77,7 +77,7 @@ export default function Visualise() {
                 {/* Vignette */}
                 <div
                   className="absolute inset-0 pointer-events-none"
-                  style={{ background: "radial-gradient(ellipse 80% 70% at 50% 50%, transparent 20%, #0a0a0a 100%)" }}
+                  style={{ background: "radial-gradient(ellipse 80% 70% at 50% 50%, transparent 40%, #0a0a0a 100%)" }}
                 />
                 {/* Corner label */}
                 <div className="absolute bottom-6 left-6 sm:bottom-8 sm:left-8">
