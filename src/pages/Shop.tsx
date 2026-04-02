@@ -23,12 +23,12 @@ const HERO_PRODUCT = {
 const APPAREL_PRIMARY = [
   { src: shopHoodie, name: "Work Hoodie — Ink" },
   { src: shopTee, name: "Site Tee — Charcoal" },
+  { src: shopPant, name: "Site Pant — Slate" },
 ];
 
-/* ── Tier 2b: Apparel — accessories ── */
+/* ── Tier 2b: Accessories ── */
 const APPAREL_SECONDARY = [
   { src: shopCap, name: "Crew Cap — Stone" },
-  { src: shopPant, name: "Site Pant — Slate" },
 ];
 
 export default function Shop() {
