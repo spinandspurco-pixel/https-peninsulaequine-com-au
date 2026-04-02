@@ -116,7 +116,7 @@ export default function Process() {
                   <RevealOnScroll key={phase.num} direction="up" stagger={0}>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
                       <div className={isEven ? "lg:order-1" : "lg:order-2"}>
-                        <div className="aspect-[4/3] overflow-hidden bg-card">
+                        <div className="aspect-[4/3] overflow-hidden bg-card relative">
                           <img
                             src={phase.image}
                             alt={phase.title}
@@ -125,6 +125,7 @@ export default function Process() {
                             className="w-full h-full object-cover"
                             style={{ filter: phase.filter }}
                           />
+                          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 85% 75% at 50% 50%, transparent 35%, hsl(222 20% 4% / 0.5) 100%)" }} />
                         </div>
                       </div>
                       <div className={isEven ? "lg:order-2" : "lg:order-1"}>
