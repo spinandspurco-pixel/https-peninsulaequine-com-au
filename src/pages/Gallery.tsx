@@ -1,24 +1,65 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { InteractiveMasterplan } from "@/components/masterplan/InteractiveMasterplanV2";
 import { BeforeAfterSlider } from "@/components/BeforeAfterSlider";
 import { Link } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { X } from "lucide-react";
 
 import mainridgeBefore from "@/assets/mainridge-before.jpg";
 import mainridgeAfter from "@/assets/mainridge-after.jpg";
 
-import imgArena from "@/assets/zone-arena.jpg";
-import imgStableRow from "@/assets/zone-stable-row.jpg";
-import imgCourtyard from "@/assets/zone-courtyard.jpg";
-import imgService from "@/assets/zone-service.jpg";
+import imgArena from "@/assets/zone-arena-v2.jpg";
+import imgStableRow from "@/assets/zone-stable-row-v2.jpg";
+import imgCourtyard from "@/assets/zone-courtyard-v2.jpg";
+import imgService from "@/assets/zone-service-v2.jpg";
 
-const ZONE_REVEAL: Record<string, { image: string; line: string; crop: string }> = {
-  "indoor-arena": { image: imgArena, line: "Clear-span. Engineered for performance under load.", crop: "50% 50%" },
-  "stables": { image: imgStableRow, line: "Cross-ventilation resolved through the corridor axis.", crop: "50% 50%" },
-  "access": { image: imgCourtyard, line: "All movement converges here.", crop: "50% 40%" },
-  "ground-systems": { image: imgService, line: "Engineered surfaces. Drainage resolved at every level.", crop: "50% 50%" },
+const ZONE_REVEAL: Record<string, { image: string; line: string; label: string }> = {
+  "indoor-arena": { image: imgArena, label: "Arena", line: "Clear-span. Engineered for performance under load." },
+  "stables": { image: imgStableRow, label: "Stables", line: "Cross-ventilation resolved through the corridor axis." },
+  "access": { image: imgCourtyard, label: "Courtyard", line: "All movement converges here." },
+  "ground-systems": { image: imgService, label: "Ground Systems", line: "Engineered surfaces. Drainage resolved at every level." },
 };
 
+/* ── Lightbox for mobile tap-to-expand ── */
+function ZoneLightbox({ image, label, line, onClose }: { image: string; label: string; line: string; onClose: () => void }) {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-primary/90 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <button
+        onClick={onClose}
+        className="absolute top-6 right-6 z-10 p-2 text-primary-foreground/50 hover:text-primary-foreground/80 transition-colors"
+        aria-label="Close"
+      >
+        <X className="w-5 h-5" />
+      </button>
+
+      <div className="w-full max-w-3xl px-6" onClick={e => e.stopPropagation()}>
+        <div className="relative overflow-hidden rounded-sm">
+          <img
+            src={image}
+            alt={label}
+            className="w-full h-auto object-cover"
+            style={{ maxHeight: "70vh" }}
+          />
+        </div>
+        <div className="mt-6 text-center">
+          <p className="font-serif text-sm text-primary-foreground/60 tracking-[0.04em]">{label}</p>
+          <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.35em] text-primary-foreground/25">{line}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Build Reveal — compact image with hover/tap ── */
 function BuildReveal({
   zoneId,
   onHoverZone,
@@ -28,8 +69,10 @@ function BuildReveal({
   onHoverZone?: (id: string) => void;
   onLeaveZone?: () => void;
 }) {
+  const isMobile = useIsMobile();
   const [displayed, setDisplayed] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
+  const [lightbox, setLightbox] = useState<string | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -48,45 +91,75 @@ function BuildReveal({
 
   const data = displayed ? ZONE_REVEAL[displayed] : null;
 
-  return (
-    <section
-      className="relative overflow-hidden"
-      style={{
-        paddingTop: data ? "clamp(2rem, 4vw, 4rem)" : "0",
-        paddingBottom: data ? "clamp(4rem, 8vw, 8rem)" : "0",
-        transition: "padding 350ms cubic-bezier(0.45, 0, 0.15, 1)",
-      }}
-      onMouseEnter={() => displayed && onHoverZone?.(displayed)}
-      onMouseLeave={() => onLeaveZone?.()}
-    >
-      <div
-        className="max-w-5xl mx-auto px-4 sm:px-6"
-        style={{
-          opacity: visible && data ? 1 : 0,
-          transition: "opacity 250ms cubic-bezier(0.45, 0, 0.15, 1)",
-        }}
-      >
-        {data && (
-          <>
-            <div className="relative w-full aspect-[21/9] overflow-hidden">
-              <img
-                src={data.image}
-                alt=""
-                className="w-full h-full object-cover"
-                style={{
-                  objectPosition: data.crop,
-                  filter: "brightness(1.08) contrast(1.15) saturate(0.82)",
-                }}
-              />
-            </div>
+  const handleImageInteraction = useCallback(() => {
+    if (displayed) setLightbox(displayed);
+  }, [displayed]);
 
-            <p className="mt-8 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/12 text-center">
-              {data.line}
-            </p>
-          </>
-        )}
-      </div>
-    </section>
+  return (
+    <>
+      <section
+        className="relative overflow-hidden"
+        style={{
+          paddingTop: data ? "clamp(1.5rem, 3vw, 3rem)" : "0",
+          paddingBottom: data ? "clamp(2rem, 4vw, 4rem)" : "0",
+          transition: "padding 350ms cubic-bezier(0.45, 0, 0.15, 1)",
+        }}
+        onMouseEnter={() => displayed && onHoverZone?.(displayed)}
+        onMouseLeave={() => onLeaveZone?.()}
+      >
+        <div
+          className="max-w-2xl mx-auto px-4 sm:px-6"
+          style={{
+            opacity: visible && data ? 1 : 0,
+            transition: "opacity 250ms cubic-bezier(0.45, 0, 0.15, 1)",
+          }}
+        >
+          {data && (
+            <>
+              <div
+                className="relative overflow-hidden cursor-pointer group"
+                style={{ maxWidth: "540px", margin: "0 auto" }}
+                onClick={handleImageInteraction}
+                role="button"
+                tabIndex={0}
+                aria-label={`View ${data.label} detail`}
+              >
+                <div className="aspect-[16/10] relative overflow-hidden">
+                  <img
+                    src={data.image}
+                    alt={data.label}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    loading="lazy"
+                    width={1920}
+                    height={1280}
+                  />
+                  {/* Subtle overlay with label */}
+                  <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/15 transition-colors duration-500 flex items-end p-4 sm:p-5">
+                    <p className="font-mono text-[8px] uppercase tracking-[0.3em] text-primary-foreground/0 group-hover:text-primary-foreground/60 transition-colors duration-500">
+                      {isMobile ? "Tap to expand" : "Click to expand"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/12 text-center">
+                {data.line}
+              </p>
+            </>
+          )}
+        </div>
+      </section>
+
+      {/* Lightbox */}
+      {lightbox && ZONE_REVEAL[lightbox] && (
+        <ZoneLightbox
+          image={ZONE_REVEAL[lightbox].image}
+          label={ZONE_REVEAL[lightbox].label}
+          line={ZONE_REVEAL[lightbox].line}
+          onClose={() => setLightbox(null)}
+        />
+      )}
+    </>
   );
 }
 
