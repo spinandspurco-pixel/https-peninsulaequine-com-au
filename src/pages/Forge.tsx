@@ -199,7 +199,7 @@ export default function Forge() {
                   loading="lazy"
                   decoding="async"
                   className="absolute inset-0 w-full h-full object-cover transition-all duration-[900ms]"
-                  style={{ filter: "brightness(0.96) contrast(1.06) saturate(0.9)" }}
+                  style={{ filter: "brightness(0.85) contrast(1.1) saturate(0.8)" }}
                 />
               </div>
             ))}

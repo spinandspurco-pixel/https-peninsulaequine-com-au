@@ -18,42 +18,42 @@ const PHASES = [
     title: "Site Assessment",
     desc: "Ground conditions, drainage, terrain, and layout constraints — evaluated on-site.",
     image: mainRidgePostDepth,
-    filter: "brightness(1.1) contrast(1.18) saturate(0.82)",
+    filter: "brightness(0.85) contrast(1.1) saturate(0.8)",
   },
   {
     num: "02",
     title: "Scope & System Design",
     desc: "Engineering drawings, material specification, and a structured project brief.",
     image: mainRidgeRebarFoundation,
-    filter: "brightness(1.08) contrast(1.14) saturate(0.88)",
+    filter: "brightness(0.85) contrast(1.1) saturate(0.8)",
   },
   {
     num: "03",
     title: "Ground Preparation",
     desc: "Clearing, grading, drainage, and foundation work.",
     image: mainRidgeFrameTrench,
-    filter: "brightness(1.12) contrast(1.1) saturate(0.9) sepia(0.03)",
+    filter: "brightness(0.85) contrast(1.1) saturate(0.8)",
   },
   {
     num: "04",
     title: "Structural Build",
     desc: "Steel, timber, roofing — engineered for decades of use.",
     image: mainRidgeBarnFrame,
-    filter: "brightness(1.1) contrast(1.2) saturate(0.8)",
+    filter: "brightness(0.85) contrast(1.1) saturate(0.8)",
   },
   {
     num: "05",
     title: "Fit-Out & Detailing",
     desc: "Stall configurations, joinery, ventilation, and hardware.",
     image: mainRidgeCiroWoodwork1,
-    filter: "brightness(1.15) contrast(1.08) saturate(1.0) sepia(0.04)",
+    filter: "brightness(0.85) contrast(1.1) saturate(0.8)",
   },
   {
     num: "06",
     title: "Surface & Commissioning",
     desc: "Arena footing, final grading, and system handover.",
     image: mainRidgeArenaGrading,
-    filter: "brightness(1.18) contrast(1.05) saturate(1.08) sepia(0.05)",
+    filter: "brightness(0.85) contrast(1.1) saturate(0.8)",
   },
 ];
 
@@ -116,7 +116,7 @@ export default function Process() {
                   <RevealOnScroll key={phase.num} direction="up" stagger={0}>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
                       <div className={isEven ? "lg:order-1" : "lg:order-2"}>
-                        <div className="aspect-[4/3] overflow-hidden bg-card">
+                        <div className="aspect-[4/3] overflow-hidden bg-card relative">
                           <img
                             src={phase.image}
                             alt={phase.title}
@@ -125,6 +125,7 @@ export default function Process() {
                             className="w-full h-full object-cover"
                             style={{ filter: phase.filter }}
                           />
+                          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 85% 75% at 50% 50%, transparent 35%, hsl(222 20% 4% / 0.5) 100%)" }} />
                         </div>
                       </div>
                       <div className={isEven ? "lg:order-2" : "lg:order-1"}>
