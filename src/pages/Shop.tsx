@@ -40,7 +40,7 @@ export default function Shop() {
             className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground/85 tracking-tight leading-[1.05] opacity-0 animate-fade-in"
             style={{ animationDelay: "300ms", animationFillMode: "both", animationDuration: "800ms" }}
           >
-            Equipment
+            Shop
           </h1>
         </div>
       </section>
