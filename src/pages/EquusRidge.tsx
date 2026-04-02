@@ -1,12 +1,44 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { Loader2, CheckCircle2 } from "lucide-react";
 import equusRidgeHero from "@/assets/equus-ridge-hero.jpg";
 
 const FRAGMENTS = ["Performance", "Community", "Land", "Experience"];
 
 const EquusRidge = () => {
+  const [form, setForm] = useState({ name: "", email: "", phone: "", interest_type: "general", message: "" });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.name.trim() || !form.email.trim()) return;
+    setSubmitting(true);
+
+    const { error } = await supabase.from("equus_ridge_interest").insert({
+      name: form.name.trim(),
+      email: form.email.trim(),
+      phone: form.phone.trim() || null,
+      interest_type: form.interest_type,
+      message: form.message.trim() || null,
+      source_page: "equus-ridge",
+    });
+
+    setSubmitting(false);
+    if (error) {
+      toast.error("Something went wrong. Please try again.");
+    } else {
+      setSubmitted(true);
+      toast.success("Interest registered successfully.");
+    }
+  };
+
   return (
     <Layout>
       {/* ═══ HERO ═══════════════════════════════════════ */}
@@ -92,26 +124,95 @@ const EquusRidge = () => {
         </div>
       </section>
 
-      {/* ═══ FINAL LINE ══════════════════════════════════ */}
+      {/* ═══ REGISTER INTEREST ═══════════════════════════ */}
       <section className="py-36 sm:py-48 bg-primary text-primary-foreground relative overflow-hidden">
         <div className="absolute inset-0 grain-texture opacity-[0.02]" />
-        <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
+        <div className="section-container max-w-md mx-auto relative z-[1]">
           <RevealOnScroll direction="up">
-            <p className="font-serif text-xl sm:text-2xl text-primary-foreground/45 italic tracking-wide leading-[1.4] mb-6">
+            <p className="font-serif text-xl sm:text-2xl text-primary-foreground/45 italic tracking-wide leading-[1.4] text-center mb-4">
               This is where it all comes together.
             </p>
-          </RevealOnScroll>
-
-          <RevealOnScroll direction="up" delay={300}>
-            <p className="font-serif text-lg sm:text-xl text-primary-foreground/55 italic tracking-wide leading-[1.4] mb-14">
+            <p className="font-serif text-lg text-primary-foreground/30 italic tracking-wide leading-[1.4] text-center mb-14">
               Built on the same principles. Expanded.
             </p>
           </RevealOnScroll>
 
-          <RevealOnScroll direction="up" delay={500}>
-            <Button asChild variant="ghost" size="sm" className="text-primary-foreground/20 hover:text-primary-foreground/40 text-[10px] uppercase tracking-[0.25em] font-mono">
-              <Link to="/contact">Register Interest</Link>
-            </Button>
+          <RevealOnScroll direction="up" delay={200}>
+            {submitted ? (
+              <div className="text-center py-12">
+                <CheckCircle2 className="w-8 h-8 text-accent/50 mx-auto mb-4" />
+                <p className="font-serif text-lg text-primary-foreground/50 italic mb-2">Thank you.</p>
+                <p className="text-[11px] text-primary-foreground/25 font-mono uppercase tracking-[0.2em]">
+                  We'll be in touch when it's time.
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-primary-foreground/20 text-center mb-8">
+                  Register Interest
+                </p>
+
+                <Input
+                  placeholder="Your name"
+                  value={form.name}
+                  onChange={(e) => setForm(prev => ({ ...prev, name: e.target.value }))}
+                  required
+                  className="bg-primary-foreground/[0.04] border-primary-foreground/10 text-primary-foreground/70 placeholder:text-primary-foreground/15 text-[13px] h-11"
+                />
+                <Input
+                  type="email"
+                  placeholder="Email address"
+                  value={form.email}
+                  onChange={(e) => setForm(prev => ({ ...prev, email: e.target.value }))}
+                  required
+                  className="bg-primary-foreground/[0.04] border-primary-foreground/10 text-primary-foreground/70 placeholder:text-primary-foreground/15 text-[13px] h-11"
+                />
+                <Input
+                  type="tel"
+                  placeholder="Phone (optional)"
+                  value={form.phone}
+                  onChange={(e) => setForm(prev => ({ ...prev, phone: e.target.value }))}
+                  className="bg-primary-foreground/[0.04] border-primary-foreground/10 text-primary-foreground/70 placeholder:text-primary-foreground/15 text-[13px] h-11"
+                />
+
+                <Select
+                  value={form.interest_type}
+                  onValueChange={(v) => setForm(prev => ({ ...prev, interest_type: v }))}
+                >
+                  <SelectTrigger className="bg-primary-foreground/[0.04] border-primary-foreground/10 text-primary-foreground/50 text-[13px] h-11">
+                    <SelectValue placeholder="I'm interested in…" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="general">General Interest</SelectItem>
+                    <SelectItem value="visit">Future Visit</SelectItem>
+                    <SelectItem value="invest">Investment Opportunity</SelectItem>
+                    <SelectItem value="collaborate">Collaboration / Partnership</SelectItem>
+                    <SelectItem value="event">Event Hosting</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Textarea
+                  placeholder="Tell us a little more (optional)"
+                  value={form.message}
+                  onChange={(e) => setForm(prev => ({ ...prev, message: e.target.value }))}
+                  rows={3}
+                  className="bg-primary-foreground/[0.04] border-primary-foreground/10 text-primary-foreground/70 placeholder:text-primary-foreground/15 text-[13px] resize-none"
+                />
+
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full py-3 border border-primary-foreground/10 text-[11px] font-mono uppercase tracking-[0.25em] text-primary-foreground/30 hover:text-primary-foreground/50 hover:border-primary-foreground/20 transition-all duration-500 disabled:opacity-40 flex items-center justify-center gap-2"
+                >
+                  {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+                  {submitting ? "Submitting…" : "Register Interest →"}
+                </button>
+
+                <p className="text-[9px] text-primary-foreground/12 font-mono uppercase tracking-[0.2em] text-center mt-4">
+                  Early access · No obligation
+                </p>
+              </form>
+            )}
           </RevealOnScroll>
         </div>
       </section>
