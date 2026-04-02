@@ -243,7 +243,7 @@ export default function Index() {
                 alt="Indoor equestrian arena — event scale"
                 className="w-full aspect-[21/9] object-cover"
                 loading="lazy"
-                style={{ objectPosition: "50% 55%", filter: "brightness(1.0) contrast(1.06) saturate(0.92)" }}
+                style={{ objectPosition: "50% 55%", filter: "brightness(1.0) contrast(1.1) saturate(0.85)" }}
               />
             </div>
             <p
