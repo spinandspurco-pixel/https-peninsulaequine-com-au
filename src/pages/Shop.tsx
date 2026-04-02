@@ -71,8 +71,9 @@ export default function Shop() {
                     alt={HERO_PRODUCT.name}
                     className="w-full aspect-[21/9] object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.015]"
                     loading="lazy"
-                    style={{ filter: "brightness(0.96) contrast(1.06) saturate(0.9)" }}
+                    style={{ filter: "brightness(0.85) contrast(1.1) saturate(0.8)" }}
                   />
+                  <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, #0a0a0a 100%)" }} />
                   <div
                     className="absolute inset-x-0 bottom-0 h-[45%] pointer-events-none"
                     style={{ background: "linear-gradient(to top, #0a0a0a, transparent)" }}
@@ -147,8 +148,9 @@ export default function Shop() {
                       alt={product.name}
                       className="w-full aspect-[4/5] object-cover transition-transform duration-[1000ms] ease-out group-hover:scale-[1.02] group-hover:-translate-y-0.5"
                       loading="lazy"
-                      style={{ filter: "brightness(0.88) contrast(1.04)" }}
+                      style={{ filter: "brightness(0.75) contrast(1.1) saturate(0.8)" }}
                     />
+                    <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 30%, hsl(222 20% 4% / 0.6) 100%)" }} />
                   </div>
                   <div className="mt-5 flex items-center justify-between">
                     <p className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-foreground/25 group-hover:text-foreground/45 transition-colors duration-500">
@@ -183,8 +185,9 @@ export default function Shop() {
                       alt={product.name}
                       className="w-full aspect-[4/5] object-cover transition-transform duration-[1000ms] ease-out group-hover:scale-[1.02] group-hover:-translate-y-0.5"
                       loading="lazy"
-                      style={{ filter: "brightness(0.85) contrast(1.04)" }}
+                      style={{ filter: "brightness(0.75) contrast(1.1) saturate(0.8)" }}
                     />
+                    <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 30%, hsl(222 20% 4% / 0.6) 100%)" }} />
                   </div>
                   <p className="mt-4 font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-foreground/20 group-hover:text-foreground/35 transition-colors duration-500 text-center">
                     {product.name}

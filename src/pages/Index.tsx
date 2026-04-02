@@ -136,8 +136,9 @@ export default function Index() {
             alt="Steel frame structure under construction"
             className="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
-            style={{ objectPosition: "50% 32%", filter: "brightness(1.0) contrast(1.1) saturate(0.85)" }}
+            style={{ objectPosition: "50% 32%", filter: "brightness(0.85) contrast(1.1) saturate(0.8)" }}
           />
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, #0a0a0a 100%)" }} />
           {/* Sharp architectural gradient — harder edge than hero */}
           <div className="absolute inset-x-0 bottom-0 h-[28%]" style={{ background: "linear-gradient(to top, rgba(10,10,10,0.75) 0%, transparent 100%)" }} />
           <div className="relative z-10 section-container max-w-6xl mx-auto pb-20 sm:pb-28">
@@ -172,7 +173,7 @@ export default function Index() {
           <div className="section-container max-w-6xl mx-auto relative z-[1]">
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-center">
               <div
-                className="lg:col-span-3 opacity-0 animate-fade-in"
+                className="lg:col-span-3 opacity-0 animate-fade-in relative"
                 style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
               >
                 <img
@@ -180,8 +181,9 @@ export default function Index() {
                   alt="Telehandler auger drilling into earth"
                   className="w-full aspect-[4/5] object-cover"
                   loading="lazy"
-                  style={{ objectPosition: "50% 60%", filter: "brightness(1.0) contrast(1.1) saturate(0.85)" }}
+                  style={{ objectPosition: "50% 60%", filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
                 />
+                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 30%, hsl(222 20% 4% / 0.55) 100%)" }} />
               </div>
               <div
                 className="lg:col-span-2 opacity-0 animate-fade-in"
@@ -211,13 +213,16 @@ export default function Index() {
               className="opacity-0 animate-fade-in"
               style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "1000ms" }}
             >
-              <img
-                src={systemOutcome}
-                alt="Completed equestrian property — aerial view"
-                className="w-full aspect-[21/9] object-cover"
-                loading="lazy"
-                style={{ filter: "brightness(1.0) contrast(1.1) saturate(0.85)" }}
-              />
+              <div className="relative overflow-hidden">
+                <img
+                  src={systemOutcome}
+                  alt="Completed equestrian property — aerial view"
+                  className="w-full aspect-[21/9] object-cover"
+                  loading="lazy"
+                  style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
+                />
+                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, hsl(222 20% 4% / 0.5) 100%)" }} />
+              </div>
             </div>
             <p
               className="mt-8 font-serif italic text-[13px] sm:text-[14px] text-foreground/20 text-center tracking-[0.02em] opacity-0 animate-fade-in"
@@ -238,13 +243,16 @@ export default function Index() {
               className="opacity-0 animate-fade-in"
               style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
             >
-              <img
-                src={systemEvent}
-                alt="Indoor equestrian arena — event scale"
-                className="w-full aspect-[21/9] object-cover"
-                loading="lazy"
-                style={{ objectPosition: "50% 55%", filter: "brightness(1.0) contrast(1.1) saturate(0.85)" }}
-              />
+              <div className="relative overflow-hidden">
+                <img
+                  src={systemEvent}
+                  alt="Indoor equestrian arena — event scale"
+                  className="w-full aspect-[21/9] object-cover"
+                  loading="lazy"
+                  style={{ objectPosition: "50% 55%", filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
+                />
+                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, hsl(222 20% 4% / 0.5) 100%)" }} />
+              </div>
             </div>
             <p
               className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/12 text-center opacity-0 animate-fade-in"
