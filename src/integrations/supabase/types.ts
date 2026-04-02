@@ -604,6 +604,39 @@ export type Database = {
         }
         Relationships: []
       }
+      equus_ridge_interest: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          interest_type: string
+          message: string | null
+          name: string
+          phone: string | null
+          source_page: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          interest_type?: string
+          message?: string | null
+          name: string
+          phone?: string | null
+          source_page?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          interest_type?: string
+          message?: string | null
+          name?: string
+          phone?: string | null
+          source_page?: string | null
+        }
+        Relationships: []
+      }
       event_rsvps: {
         Row: {
           created_at: string
