@@ -185,8 +185,9 @@ export default function Shop() {
                       alt={product.name}
                       className="w-full aspect-[4/5] object-cover transition-transform duration-[1000ms] ease-out group-hover:scale-[1.02] group-hover:-translate-y-0.5"
                       loading="lazy"
-                      style={{ filter: "brightness(0.85) contrast(1.04)" }}
+                      style={{ filter: "brightness(0.75) contrast(1.1) saturate(0.8)" }}
                     />
+                    <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 30%, hsl(222 20% 4% / 0.6) 100%)" }} />
                   </div>
                   <p className="mt-4 font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-foreground/20 group-hover:text-foreground/35 transition-colors duration-500 text-center">
                     {product.name}
