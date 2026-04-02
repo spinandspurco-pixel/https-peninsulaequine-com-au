@@ -241,14 +241,16 @@ export default function Index() {
               className="opacity-0 animate-fade-in"
               style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
             >
-              <img
-                src={systemEvent}
-                alt="Indoor equestrian arena — event scale"
-                className="w-full aspect-[21/9] object-cover"
-                loading="lazy"
-                style={{ objectPosition: "50% 55%", filter: "brightness(1.0) contrast(1.1) saturate(0.85)" }}
-              />
-            </div>
+              <div className="relative overflow-hidden">
+                <img
+                  src={systemEvent}
+                  alt="Indoor equestrian arena — event scale"
+                  className="w-full aspect-[21/9] object-cover"
+                  loading="lazy"
+                  style={{ objectPosition: "50% 55%", filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
+                />
+                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, hsl(222 20% 4% / 0.5) 100%)" }} />
+              </div>
             <p
               className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/12 text-center opacity-0 animate-fade-in"
               style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "800ms" }}
