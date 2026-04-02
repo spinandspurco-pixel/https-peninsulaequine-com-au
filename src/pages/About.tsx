@@ -75,6 +75,13 @@ export default function About() {
                   filter: section.filter,
                 }}
               />
+              {/* Vignette overlay */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: "radial-gradient(ellipse 85% 75% at 50% 50%, transparent 35%, hsl(222 20% 4% / 0.5) 100%)",
+                }}
+              />
               {/* Subtle blueprint-style overlay */}
               <div
                 className="absolute inset-0 pointer-events-none"
