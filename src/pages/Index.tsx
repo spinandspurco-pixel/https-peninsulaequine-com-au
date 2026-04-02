@@ -173,7 +173,7 @@ export default function Index() {
           <div className="section-container max-w-6xl mx-auto relative z-[1]">
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-center">
               <div
-                className="lg:col-span-3 opacity-0 animate-fade-in"
+                className="lg:col-span-3 opacity-0 animate-fade-in relative"
                 style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
               >
                 <img
@@ -184,6 +184,7 @@ export default function Index() {
                   style={{ objectPosition: "50% 60%", filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
                 />
                 <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 30%, hsl(222 20% 4% / 0.55) 100%)" }} />
+              </div>
               <div
                 className="lg:col-span-2 opacity-0 animate-fade-in"
                 style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "800ms" }}
