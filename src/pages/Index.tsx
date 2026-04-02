@@ -261,7 +261,7 @@ export default function Index() {
         {/* ═══ TRANSFORMATION — Reflective, earned ═════════ */}
         <section className="pt-16 sm:pt-20 pb-32 sm:pb-40 relative overflow-hidden">
           <div className="section-container max-w-5xl mx-auto">
-            <h2 className="font-serif italic text-2xl sm:text-3xl text-foreground/65 tracking-tight mb-12 sm:mb-16 text-center">
+            <h2 className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.45em] text-foreground/20 mb-12 sm:mb-16 text-center">
               Transformation
             </h2>
             <BeforeAfterSlider
