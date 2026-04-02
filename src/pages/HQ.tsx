@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Layout } from "@/components/layout/Layout";
+import { BlueprintScene } from "@/components/BlueprintScene";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -74,22 +75,14 @@ export default function HQ() {
   return (
     <Layout>
       {/* ── Hero ─────────────────────────────────────── */}
-      <section className="relative pt-44 sm:pt-56 pb-20 sm:pb-28 overflow-hidden">
-        <div className="absolute inset-0 grain-texture opacity-[0.025]" />
-        {/* Blueprint grid overlay */}
-        <svg
-          className="absolute inset-0 w-full h-full pointer-events-none"
-          preserveAspectRatio="none"
-          style={{ opacity: 0.03 }}
-        >
-          <defs>
-            <pattern id="hq-grid" width="80" height="80" patternUnits="userSpaceOnUse">
-              <line x1="80" y1="0" x2="80" y2="80" stroke="hsl(var(--accent))" strokeWidth="0.5" />
-              <line x1="0" y1="80" x2="80" y2="80" stroke="hsl(var(--accent))" strokeWidth="0.5" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#hq-grid)" />
-        </svg>
+      <BlueprintScene
+        as="section"
+        layers={[
+          { image: "elevation", opacity: 0.02, direction: "left-to-right", duration: 2800, parallaxSpeed: 0.04 },
+        ]}
+        lineOverlays={[{ variant: "dimensions", color: "dark" }]}
+        className="pt-44 sm:pt-56 pb-20 sm:pb-28"
+      >
 
         <div className="section-container relative z-10 max-w-2xl mx-auto text-center">
           <div
@@ -130,7 +123,7 @@ export default function HQ() {
             Controlled process. Engineered outcome.
           </p>
         </div>
-      </section>
+      </BlueprintScene>
 
       {/* ── The System Behind Every Build ─────────────── */}
       <section className="relative overflow-hidden">

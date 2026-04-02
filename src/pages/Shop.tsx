@@ -1,4 +1,5 @@
 import { Layout } from "@/components/layout/Layout";
+import { BlueprintScene } from "@/components/BlueprintScene";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
@@ -34,7 +35,14 @@ export default function Shop() {
   return (
     <Layout>
       {/* ═══ 1. ENTRY ════════════════════════════════════ */}
-      <section className="pt-44 sm:pt-56 pb-28 sm:pb-36">
+      <BlueprintScene
+        as="section"
+        layers={[
+          { image: "elevation", opacity: 0.02, direction: "left-to-right", duration: 2800, parallaxSpeed: 0.04 },
+        ]}
+        lineOverlays={[{ variant: "dimensions", color: "dark" }]}
+        className="pt-44 sm:pt-56 pb-28 sm:pb-36"
+      >
         <div className="section-container max-w-2xl mx-auto text-center">
           <h1
             className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground/85 tracking-tight leading-[1.05] opacity-0 animate-fade-in"
@@ -43,7 +51,7 @@ export default function Shop() {
             Shop
           </h1>
         </div>
-      </section>
+      </BlueprintScene>
 
       {/* ═══ 2. TIER 1 — GROUNDLOCK HERO (isolated dark section) ═══ */}
       <section className="relative overflow-hidden" style={{ backgroundColor: "#0a0a0a" }}>
