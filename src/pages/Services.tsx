@@ -73,7 +73,8 @@ export default function Services() {
                 </div>
                 <div className="lg:col-span-8">
                   <div className="relative overflow-hidden aspect-[16/9]">
-                    <img src={imgFullBuild} alt="Completed equestrian estate" className="w-full h-full object-cover" loading="lazy" style={{ filter: "contrast(1.04) saturate(0.88)" }} />
+                    <img src={imgFullBuild} alt="Completed equestrian estate" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }} />
+                    <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, #0a0a0a 100%)" }} />
                   </div>
                 </div>
               </div>
