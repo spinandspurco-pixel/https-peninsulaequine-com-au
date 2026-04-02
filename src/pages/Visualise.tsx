@@ -77,7 +77,7 @@ export default function Visualise() {
                 {/* Vignette */}
                 <div
                   className="absolute inset-0 pointer-events-none"
-                  style={{ background: "radial-gradient(ellipse 80% 70% at 50% 50%, transparent 20%, #0a0a0a 100%)" }}
+                  style={{ background: "radial-gradient(ellipse 80% 70% at 50% 50%, transparent 40%, #0a0a0a 100%)" }}
                 />
                 {/* Corner label */}
                 <div className="absolute bottom-6 left-6 sm:bottom-8 sm:left-8">
