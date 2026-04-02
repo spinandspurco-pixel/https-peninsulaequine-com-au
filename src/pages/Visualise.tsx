@@ -67,7 +67,7 @@ export default function Visualise() {
                   alt="Pre-construction estate visualisation"
                   className="w-full aspect-[16/9] object-cover"
                   loading="eager"
-                  style={{ filter: "brightness(0.38) saturate(0.7) contrast(1.08)" }}
+                  style={{ filter: "brightness(0.7) saturate(0.8) contrast(1.1)" }}
                 />
                 {/* Blueprint grid overlay — ties to global system */}
                 <div
