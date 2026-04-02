@@ -21,6 +21,14 @@ export default function GroundLock() {
           style={{ objectPosition: "52% 48%", transform: "scale(1.15)", filter: "brightness(0.96) contrast(1.06) saturate(0.9)" }}
         />
 
+        {/* Dark scrim behind text for contrast */}
+        <div
+          className="absolute inset-0 z-[1] pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse 60% 50% at 52% 40%, rgba(0,0,0,0.55) 0%, transparent 70%)",
+          }}
+        />
+
         <div className="relative z-10 text-center px-6" style={{ marginTop: "-10vh", marginLeft: "3vw" }}>
           <h1
             className="font-serif font-semibold text-white tracking-tight leading-[1.1] opacity-0 animate-fade-in"
@@ -29,43 +37,43 @@ export default function GroundLock() {
               animationDelay: "300ms",
               animationFillMode: "both",
               animationDuration: "1200ms",
-              textShadow: "0 0 40px rgba(180, 140, 60, 0.25), 0 0 80px rgba(180, 140, 60, 0.1), 0 2px 20px rgba(0, 0, 0, 0.6)",
+              textShadow: "0 0 60px rgba(200, 160, 60, 0.5), 0 0 120px rgba(200, 160, 60, 0.2), 0 0 20px rgba(200, 160, 60, 0.35), 0 2px 24px rgba(0, 0, 0, 0.8)",
             }}
           >
             GroundLock™
           </h1>
 
           <p
-            className="mt-8 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.4em] text-white/45 opacity-0 animate-fade-in"
+            className="mt-8 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.4em] text-white/60 opacity-0 animate-fade-in"
             style={{
               animationDelay: "700ms",
               animationFillMode: "both",
               animationDuration: "1200ms",
-              textShadow: "0 0 30px rgba(180, 140, 60, 0.12), 0 2px 12px rgba(0, 0, 0, 0.5)",
+              textShadow: "0 0 40px rgba(200, 160, 60, 0.25), 0 0 12px rgba(200, 160, 60, 0.15), 0 2px 16px rgba(0, 0, 0, 0.7)",
             }}
           >
             Directional Interlock System
           </p>
 
           <p
-            className="mt-16 font-serif text-[12px] sm:text-[13px] italic text-white/30 opacity-0 animate-fade-in"
+            className="mt-16 font-serif text-[12px] sm:text-[13px] italic text-white/45 opacity-0 animate-fade-in"
             style={{
               animationDelay: "1200ms",
               animationFillMode: "both",
               animationDuration: "1200ms",
-              textShadow: "0 0 20px rgba(180, 140, 60, 0.08), 0 2px 10px rgba(0, 0, 0, 0.4)",
+              textShadow: "0 0 30px rgba(200, 160, 60, 0.15), 0 2px 14px rgba(0, 0, 0, 0.6)",
             }}
           >
             Built for load. Designed for control.
           </p>
 
           <p
-            className="mt-8 font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.3em] text-white/18 opacity-0 animate-fade-in"
+            className="mt-8 font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.3em] text-white/28 opacity-0 animate-fade-in"
             style={{
               animationDelay: "1600ms",
               animationFillMode: "both",
               animationDuration: "1200ms",
-              textShadow: "0 2px 8px rgba(0, 0, 0, 0.4)",
+              textShadow: "0 0 20px rgba(200, 160, 60, 0.1), 0 2px 10px rgba(0, 0, 0, 0.5)",
             }}
           >
             System in development
