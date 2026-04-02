@@ -1,4 +1,5 @@
 import { Layout } from "@/components/layout/Layout";
+import { BlueprintScene } from "@/components/BlueprintScene";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
