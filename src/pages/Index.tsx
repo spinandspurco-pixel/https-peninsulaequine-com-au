@@ -49,7 +49,7 @@ export default function Index() {
             loading="eager"
             style={{
               objectPosition: "50% 72%",
-              filter: "brightness(0.88) contrast(1.1) saturate(1.08)",
+              filter: "brightness(0.92) contrast(1.1) saturate(0.85)",
               animation: "heroSlowZoom 25s ease-out forwards",
             }}
           />
@@ -180,7 +180,7 @@ export default function Index() {
                   alt="Telehandler auger drilling into earth"
                   className="w-full aspect-[4/5] object-cover"
                   loading="lazy"
-                  style={{ objectPosition: "50% 60%", filter: "brightness(0.95) contrast(1.08) saturate(0.88)" }}
+                  style={{ objectPosition: "50% 60%", filter: "brightness(1.0) contrast(1.1) saturate(0.85)" }}
                 />
               </div>
               <div
@@ -216,7 +216,7 @@ export default function Index() {
                 alt="Completed equestrian property — aerial view"
                 className="w-full aspect-[21/9] object-cover"
                 loading="lazy"
-                style={{ filter: "brightness(1.04) contrast(1.0) saturate(1.1)" }}
+                style={{ filter: "brightness(1.0) contrast(1.1) saturate(0.85)" }}
               />
             </div>
             <p
@@ -243,7 +243,7 @@ export default function Index() {
                 alt="Indoor equestrian arena — event scale"
                 className="w-full aspect-[21/9] object-cover"
                 loading="lazy"
-                style={{ objectPosition: "50% 55%", filter: "brightness(1.0) contrast(1.06) saturate(0.92)" }}
+                style={{ objectPosition: "50% 55%", filter: "brightness(1.0) contrast(1.1) saturate(0.85)" }}
               />
             </div>
             <p
