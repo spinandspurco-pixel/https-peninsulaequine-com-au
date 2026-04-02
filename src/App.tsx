@@ -138,6 +138,7 @@ function AppContent() {
            <Route path="/groundlock-setup" element={<ProtectedRoute><GroundLockSetup /></ProtectedRoute>} />
            <Route path="/groundlock-onboarding" element={<ProtectedRoute><GroundLockOnboarding /></ProtectedRoute>} />
            <Route path="/groundlock-licensing" element={<GroundLockLicensing />} />
+           <Route path="/groundlock/events" element={<GroundLockEvents />} />
           <Route path="/project/:slug" element={<CaseStudy />} />
           <Route path="/quote/:token" element={<ClientQuote />} />
           <Route path="/proposal" element={<ProposalTemplate />} />
