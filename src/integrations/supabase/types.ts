@@ -703,6 +703,51 @@ export type Database = {
         }
         Relationships: []
       }
+      groundlock_interest: {
+        Row: {
+          company: string | null
+          created_at: string
+          email: string
+          estimated_area: string | null
+          id: string
+          interest_type: string
+          location: string | null
+          message: string | null
+          name: string
+          phone: string | null
+          property_type: string | null
+          source_page: string | null
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string
+          email: string
+          estimated_area?: string | null
+          id?: string
+          interest_type?: string
+          location?: string | null
+          message?: string | null
+          name: string
+          phone?: string | null
+          property_type?: string | null
+          source_page?: string | null
+        }
+        Update: {
+          company?: string | null
+          created_at?: string
+          email?: string
+          estimated_area?: string | null
+          id?: string
+          interest_type?: string
+          location?: string | null
+          message?: string | null
+          name?: string
+          phone?: string | null
+          property_type?: string | null
+          source_page?: string | null
+        }
+        Relationships: []
+      }
       groundlock_project_setups: {
         Row: {
           attachment_urls: string[] | null
