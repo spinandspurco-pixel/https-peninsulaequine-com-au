@@ -71,8 +71,9 @@ export default function Shop() {
                     alt={HERO_PRODUCT.name}
                     className="w-full aspect-[21/9] object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.015]"
                     loading="lazy"
-                    style={{ filter: "brightness(0.96) contrast(1.06) saturate(0.9)" }}
+                    style={{ filter: "brightness(0.85) contrast(1.1) saturate(0.8)" }}
                   />
+                  <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, #0a0a0a 100%)" }} />
                   <div
                     className="absolute inset-x-0 bottom-0 h-[45%] pointer-events-none"
                     style={{ background: "linear-gradient(to top, #0a0a0a, transparent)" }}
