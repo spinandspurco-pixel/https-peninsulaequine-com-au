@@ -87,10 +87,32 @@ export default function Shop() {
         </div>
       </section>
 
-      {/* ═══ CATEGORY BREAK — GroundLock → Apparel ═════════ */}
+      {/* ═══ CATEGORY BREAK — GroundLock → Equipment ═══════ */}
       <div className="relative" style={{ height: "clamp(5rem, 10vw, 8rem)" }}>
         <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, #0a0a0a, hsl(var(--background)))" }} />
       </div>
+
+      {/* ═══ EQUIPMENT SECTION ════════════════════════════ */}
+      <section className="pt-28 sm:pt-36 pb-20 sm:pb-28 relative">
+        <div className="section-container max-w-5xl mx-auto text-center">
+          <RevealOnScroll direction="up">
+            <h2 className="font-serif text-2xl sm:text-3xl text-foreground/70 tracking-tight mb-4">
+              Equipment
+            </h2>
+            <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-foreground/12 mb-20 sm:mb-28">
+              Tools &amp; system components
+            </p>
+          </RevealOnScroll>
+
+          <RevealOnScroll direction="up" delay={80}>
+            <div className="border border-border/10 py-16 sm:py-24 px-8">
+              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/15">
+                Coming soon
+              </p>
+            </div>
+          </RevealOnScroll>
+        </div>
+      </section>
 
       {/* ═══ APPAREL SECTION ══════════════════════════════ */}
       <section className="pt-28 sm:pt-36 pb-16 sm:pb-20 relative">
