@@ -119,7 +119,8 @@ export default function Services() {
                 Directional Interlock System
               </p>
               <div className="relative overflow-hidden aspect-square max-w-[280px] mx-auto">
-                <img src={imgGroundLock} alt="GroundLock stabilisation panel" className="w-full h-full object-cover" loading="lazy" style={{ filter: "contrast(1.04) saturate(0.88)" }} />
+                <img src={imgGroundLock} alt="GroundLock stabilisation panel" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }} />
+                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 85% 85% at 50% 50%, transparent 35%, #0a0a0a 100%)" }} />
               </div>
               <p className="mt-14 font-serif text-[12px] sm:text-[13px] italic text-white/16 tracking-wide">
                 Built for load. Designed for control.
