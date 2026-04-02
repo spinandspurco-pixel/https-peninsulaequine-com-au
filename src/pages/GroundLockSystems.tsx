@@ -1,9 +1,154 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { GroundLockHero } from "@/components/groundlock/GroundLockHero";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+
+/* ── Animated counter ── */
+function AnimatedStat({ value, suffix, label }: { value: number; suffix: string; label: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const triggered = useRef(false);
+
+  useEffect(() => {
+    if (!ref.current || triggered.current) return;
+    const observer = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        triggered.current = true;
+        observer.disconnect();
+        const duration = 1400;
+        const start = performance.now();
+        const step = (now: number) => {
+          const progress = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          setCount(Math.round(eased * value));
+          if (progress < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      }
+    }, { threshold: 0.5 });
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [value]);
+
+  return (
+    <div ref={ref} className="text-center">
+      <p className="font-serif text-3xl sm:text-4xl md:text-5xl text-primary-foreground/80 tracking-tight">
+        {count}{suffix}
+      </p>
+      <p className="mt-3 font-mono text-[9px] uppercase tracking-[0.35em] text-accent/30">{label}</p>
+    </div>
+  );
+}
+
+/* ── Animated horseshoe tessellation ── */
+function TessellationAnimation() {
+  const reducedMotion = useReducedMotion();
+  const [visible, setVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const observer = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setVisible(true); observer.disconnect(); }
+    }, { threshold: 0.2 });
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const rows = 3;
+  const cols = 7;
+  const panels = Array.from({ length: rows * cols }, (_, i) => ({
+    row: Math.floor(i / cols),
+    col: i % cols,
+    inverted: (Math.floor(i / cols) + i % cols) % 2 === 1,
+  }));
+
+  return (
+    <div ref={ref} className="relative w-full max-w-lg mx-auto py-8">
+      <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
+        {panels.map((p, i) => {
+          const delay = reducedMotion ? 0 : (p.row * 80 + p.col * 60);
+          return (
+            <div
+              key={i}
+              className="aspect-[1/1.4] rounded-t-full border border-accent/15 transition-all"
+              style={{
+                opacity: visible ? 0.5 + (p.row * 0.15) : 0,
+                transform: visible
+                  ? `rotate(${p.inverted ? 180 : 0}deg) scale(1)`
+                  : `rotate(${p.inverted ? 180 : 0}deg) scale(0.6)`,
+                transition: `opacity 600ms ${delay}ms cubic-bezier(0.45,0,0.15,1), transform 600ms ${delay}ms cubic-bezier(0.45,0,0.15,1)`,
+                backgroundColor: `hsl(var(--accent) / ${0.04 + p.row * 0.02})`,
+              }}
+            />
+          );
+        })}
+      </div>
+      <p className="mt-6 font-mono text-[8px] uppercase tracking-[0.4em] text-accent/15 text-center">
+        Crown-into-U tessellation
+      </p>
+    </div>
+  );
+}
+
+/* ── Interactive layer stack ── */
+function LayerStack() {
+  const [activeLayer, setActiveLayer] = useState<number | null>(null);
+
+  const layers = [
+    { label: "Riding Surface", depth: "Variable", color: "hsl(var(--accent) / 0.08)", desc: "Sand, fibre, or composite — tuned to discipline" },
+    { label: "GroundLock™ Panel", depth: "15mm wall", color: "hsl(var(--accent) / 0.18)", desc: "Interlocking horseshoe modules — directional load transfer" },
+    { label: "Geotextile Membrane", depth: "Separation", color: "hsl(var(--accent) / 0.06)", desc: "Prevents migration between aggregate and surface" },
+    { label: "Compacted Aggregate", depth: "150mm+", color: "hsl(var(--accent) / 0.1)", desc: "Engineered drainage layer — graded to fall" },
+    { label: "Subgrade", depth: "Native", color: "hsl(var(--accent) / 0.04)", desc: "Prepared and compacted natural ground" },
+  ];
+
+  return (
+    <div className="max-w-md mx-auto">
+      <div className="space-y-1">
+        {layers.map((layer, i) => {
+          const isActive = activeLayer === i;
+          return (
+            <button
+              key={i}
+              className="w-full text-left transition-all duration-400 focus:outline-none group"
+              onMouseEnter={() => setActiveLayer(i)}
+              onMouseLeave={() => setActiveLayer(null)}
+              onClick={() => setActiveLayer(isActive ? null : i)}
+              style={{
+                padding: isActive ? "16px 20px" : "10px 20px",
+                backgroundColor: isActive ? layer.color : "transparent",
+                borderLeft: isActive ? "2px solid hsl(var(--accent) / 0.3)" : "2px solid transparent",
+              }}
+            >
+              <div className="flex items-center justify-between">
+                <span className={`font-mono text-[10px] uppercase tracking-[0.25em] transition-colors duration-300 ${isActive ? "text-primary-foreground/70" : "text-primary-foreground/30"}`}>
+                  {layer.label}
+                </span>
+                <span className={`font-mono text-[9px] tracking-[0.2em] transition-colors duration-300 ${isActive ? "text-accent/50" : "text-accent/15"}`}>
+                  {layer.depth}
+                </span>
+              </div>
+              <div
+                className="overflow-hidden transition-all duration-400"
+                style={{
+                  maxHeight: isActive ? "40px" : "0",
+                  opacity: isActive ? 1 : 0,
+                }}
+              >
+                <p className="mt-2 text-[11px] text-primary-foreground/35 leading-[1.6]">{layer.desc}</p>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export default function GroundLockSystems() {
   return (
@@ -39,137 +184,100 @@ export default function GroundLockSystems() {
         </div>
       </section>
 
-      {/* ═══ SECTION 1 — What GroundLock Replaces ════════ */}
-      <section className="py-32 sm:py-44 bg-background relative overflow-hidden">
-        <div className="absolute inset-0 grain-texture opacity-[0.025]" />
-        <div className="section-container max-w-md mx-auto relative z-[1]">
-          <RevealOnScroll direction="up">
-            <RevealLine className="mb-12" width="w-8" />
-          </RevealOnScroll>
-
-          <RevealOnScroll direction="up" delay={80}>
-            <p className="text-overline mb-10">What GroundLock Replaces</p>
-          </RevealOnScroll>
-
-          <RevealOnScroll direction="up" delay={150}>
-            <ul className="space-y-6">
-              {[
-                "Unstable footing",
-                "Temporary base systems",
-                "Repetitive maintenance cycles",
-              ].map((item) => (
-                <li key={item} className="flex items-center gap-4 text-[13px] text-foreground/40 leading-[1.7]">
-                  <span className="w-5 h-px bg-foreground/10 shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </RevealOnScroll>
-        </div>
-      </section>
-
-      {/* ═══ SECTION 2 — How It Works ════════════════════ */}
+      {/* ═══ SECTION 1 — Animated Performance Stats ══════ */}
       <section className="py-32 sm:py-44 bg-primary text-primary-foreground relative overflow-hidden">
         <div className="absolute inset-0 grain-texture opacity-[0.02]" />
-        <div className="section-container max-w-md mx-auto relative z-[1]">
+        <div className="section-container max-w-3xl mx-auto relative z-[1]">
           <RevealOnScroll direction="up">
-            <div className="w-8 h-px bg-accent/25 mb-12" />
+            <div className="w-8 h-px bg-accent/25 mx-auto mb-12" />
+            <p className="text-overline mb-16 text-accent/40 text-center">System Performance</p>
           </RevealOnScroll>
 
-          <RevealOnScroll direction="up" delay={80}>
-            <p className="text-overline mb-10 text-accent/40">How It Works</p>
+          <div className="grid grid-cols-3 gap-8 sm:gap-12">
+            <AnimatedStat value={15} suffix="mm" label="Wall thickness" />
+            <AnimatedStat value={100} suffix="%" label="Load transfer" />
+            <AnimatedStat value={0} suffix="∞" label="Maintenance cycles" />
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ SECTION 2 — Tessellation Animation ══════════ */}
+      <section className="py-32 sm:py-44 bg-background relative overflow-hidden">
+        <div className="absolute inset-0 grain-texture opacity-[0.025]" />
+        <div className="section-container max-w-xl mx-auto relative z-[1]">
+          <RevealOnScroll direction="up">
+            <RevealLine className="mb-12 mx-auto" width="w-8" />
+            <p className="text-overline mb-6 text-center">How It Locks</p>
+            <p className="text-center font-serif text-[13px] italic text-foreground/25 mb-12">
+              Inverted rows interlock mechanically — no adhesive, no fasteners.
+            </p>
           </RevealOnScroll>
 
-          <RevealOnScroll direction="up" delay={150}>
-            <ul className="space-y-6">
-              {[
-                "Interlocking horseshoe panels",
-                "Load distribution",
-                "Drainage integration",
-              ].map((item) => (
-                <li key={item} className="flex items-center gap-4 text-[13px] text-primary-foreground/55 leading-[1.7] font-medium">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent/35 shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
+          <TessellationAnimation />
+        </div>
+      </section>
+
+      {/* ═══ SECTION 3 — Interactive Layer Stack ═════════ */}
+      <section className="py-32 sm:py-44 bg-primary text-primary-foreground relative overflow-hidden">
+        <div className="absolute inset-0 grain-texture opacity-[0.02]" />
+        <div className="section-container max-w-xl mx-auto relative z-[1]">
+          <RevealOnScroll direction="up">
+            <div className="w-8 h-px bg-accent/25 mx-auto mb-12" />
+            <p className="text-overline mb-6 text-accent/40 text-center">System Layers</p>
+            <p className="text-center font-mono text-[8px] uppercase tracking-[0.35em] text-accent/15 mb-16">
+              Hover or tap to explore each layer
+            </p>
+          </RevealOnScroll>
+
+          <RevealOnScroll direction="up" delay={100}>
+            <LayerStack />
           </RevealOnScroll>
         </div>
       </section>
 
-      {/* ═══ SECTION 3 — Where It Applies ════════════════ */}
+      {/* ═══ SECTION 4 — Where It Applies ════════════════ */}
       <section className="py-32 sm:py-44 bg-background relative overflow-hidden">
         <div className="absolute inset-0 grain-texture opacity-[0.025]" />
         <div className="section-container max-w-md mx-auto relative z-[1]">
           <RevealOnScroll direction="up">
             <RevealLine className="mb-12" width="w-8" />
-          </RevealOnScroll>
-
-          <RevealOnScroll direction="up" delay={80}>
             <p className="text-overline mb-10">Where It Applies</p>
           </RevealOnScroll>
 
-          <RevealOnScroll direction="up" delay={150}>
-            <ul className="space-y-6">
+          <RevealOnScroll direction="up" delay={100}>
+            <div className="space-y-8">
               {[
-                "Arenas",
-                "Event sites",
-                "High-traffic equine zones",
+                { zone: "Arenas", note: "Clear-span indoor and outdoor — any discipline" },
+                { zone: "Event Sites", note: "Temporary or permanent high-traffic deployment" },
+                { zone: "Access Zones", note: "Float access, driveways, stable surrounds" },
               ].map((item) => (
-                <li key={item} className="flex items-center gap-4 text-[13px] text-foreground/55 leading-[1.7] font-medium">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent/30 shrink-0" />
-                  {item}
-                </li>
+                <div key={item.zone} className="group">
+                  <div className="flex items-center gap-4">
+                    <span className="w-2 h-2 rounded-full bg-accent/25 shrink-0 group-hover:bg-accent/50 transition-colors duration-300" />
+                    <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-foreground/50 group-hover:text-foreground/70 transition-colors duration-300">
+                      {item.zone}
+                    </span>
+                  </div>
+                  <p className="ml-6 mt-1 text-[12px] text-foreground/20 leading-[1.6]">{item.note}</p>
+                </div>
               ))}
-            </ul>
-          </RevealOnScroll>
-        </div>
-      </section>
-
-      {/* ═══ SECTION 4 — Access ══════════════════════════ */}
-      <section className="py-32 sm:py-44 bg-primary text-primary-foreground relative overflow-hidden">
-        <div className="absolute inset-0 grain-texture opacity-[0.02]" />
-        <div className="section-container max-w-md mx-auto relative z-[1]">
-          <RevealOnScroll direction="up">
-            <div className="w-8 h-px bg-accent/25 mb-12" />
-          </RevealOnScroll>
-
-          <RevealOnScroll direction="up" delay={80}>
-            <p className="text-overline mb-10 text-accent/40">Access</p>
-          </RevealOnScroll>
-
-          <RevealOnScroll direction="up" delay={150}>
-            <ul className="space-y-6">
-              {[
-                "Integrated within Peninsula Equine builds",
-                "Future licensing pathway",
-              ].map((item) => (
-                <li key={item} className="flex items-center gap-4 text-[13px] text-primary-foreground/50 leading-[1.7]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent/25 shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
+            </div>
           </RevealOnScroll>
         </div>
       </section>
 
       {/* ═══ FINAL LINE ══════════════════════════════════ */}
-      <section className="py-32 sm:py-44 bg-background relative overflow-hidden">
-        <div className="absolute inset-0 grain-texture opacity-[0.025]" />
+      <section className="py-32 sm:py-44 bg-primary relative overflow-hidden">
+        <div className="absolute inset-0 grain-texture opacity-[0.02]" />
         <div className="section-container max-w-xl mx-auto text-center relative z-[1]">
           <RevealOnScroll direction="up">
-            <p className="font-serif text-xl sm:text-2xl md:text-3xl text-foreground/60 italic tracking-wide leading-[1.3] mb-12">
+            <p className="font-serif text-xl sm:text-2xl md:text-3xl text-primary-foreground/60 italic tracking-wide leading-[1.3] mb-12">
               Not optional. Foundational.
             </p>
           </RevealOnScroll>
 
           <RevealOnScroll direction="up" delay={200}>
-            <Button
-              asChild
-              variant="gold"
-              size="lg"
-            >
+            <Button asChild variant="gold" size="lg">
               <Link to="/site-assessment">
                 Request System Plan <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
