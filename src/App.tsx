@@ -66,6 +66,7 @@ const SignatureSystems = lazy(() => import("./pages/SignatureSystems"));
 const GroundLockSetup = lazy(() => import("./pages/GroundLockSetup"));
 const GroundLockOnboarding = lazy(() => import("./pages/GroundLockOnboarding"));
 const GroundLockLicensing = lazy(() => import("./pages/GroundLockLicensing"));
+const GroundLockEvents = lazy(() => import("./pages/GroundLockEvents"));
 const ClientQuote = lazy(() => import("./pages/ClientQuote"));
 const ProposalTemplate = lazy(() => import("./pages/ProposalTemplate"));
 const ProposalEditor = lazy(() => import("./pages/ProposalEditor"));
