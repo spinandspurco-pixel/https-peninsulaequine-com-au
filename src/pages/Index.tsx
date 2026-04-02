@@ -223,6 +223,7 @@ export default function Index() {
                 />
                 <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, hsl(222 20% 4% / 0.5) 100%)" }} />
               </div>
+            </div>
             <p
               className="mt-8 font-serif italic text-[13px] sm:text-[14px] text-foreground/20 text-center tracking-[0.02em] opacity-0 animate-fade-in"
               style={{ animationDelay: "600ms", animationFillMode: "both", animationDuration: "1000ms" }}
