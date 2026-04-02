@@ -4,8 +4,8 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { BlueprintScene } from "@/components/BlueprintScene";
 
-/* Single dominant visual — oblique pre-construction render */
-import heroVisual from "@/assets/sim/sim_medium_mixed_oblique.jpg";
+/* Single dominant visual — dedicated pre-construction visualisation */
+import heroVisual from "@/assets/visualise-hero.jpg";
 
 const PILLARS = [
   {
