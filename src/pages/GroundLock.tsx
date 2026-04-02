@@ -23,45 +23,49 @@ export default function GroundLock() {
 
         <div className="relative z-10 text-center px-6" style={{ marginTop: "-10vh", marginLeft: "3vw" }}>
           <h1
-            className="font-serif font-semibold text-white/90 tracking-tight leading-[1.1] opacity-0 animate-fade-in"
+            className="font-serif font-semibold text-white tracking-tight leading-[1.1] opacity-0 animate-fade-in"
             style={{
               fontSize: "clamp(1.8rem, 0.9rem + 4.5vw, 4rem)",
               animationDelay: "300ms",
               animationFillMode: "both",
               animationDuration: "1200ms",
+              textShadow: "0 0 40px rgba(180, 140, 60, 0.25), 0 0 80px rgba(180, 140, 60, 0.1), 0 2px 20px rgba(0, 0, 0, 0.6)",
             }}
           >
             GroundLock™
           </h1>
 
           <p
-            className="mt-8 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.4em] text-white/30 opacity-0 animate-fade-in"
+            className="mt-8 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.4em] text-white/45 opacity-0 animate-fade-in"
             style={{
               animationDelay: "700ms",
               animationFillMode: "both",
               animationDuration: "1200ms",
+              textShadow: "0 0 30px rgba(180, 140, 60, 0.12), 0 2px 12px rgba(0, 0, 0, 0.5)",
             }}
           >
             Directional Interlock System
           </p>
 
           <p
-            className="mt-16 font-serif text-[12px] sm:text-[13px] italic text-white/20 opacity-0 animate-fade-in"
+            className="mt-16 font-serif text-[12px] sm:text-[13px] italic text-white/30 opacity-0 animate-fade-in"
             style={{
               animationDelay: "1200ms",
               animationFillMode: "both",
               animationDuration: "1200ms",
+              textShadow: "0 0 20px rgba(180, 140, 60, 0.08), 0 2px 10px rgba(0, 0, 0, 0.4)",
             }}
           >
             Built for load. Designed for control.
           </p>
 
           <p
-            className="mt-8 font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.3em] text-white/12 opacity-0 animate-fade-in"
+            className="mt-8 font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.3em] text-white/18 opacity-0 animate-fade-in"
             style={{
               animationDelay: "1600ms",
               animationFillMode: "both",
               animationDuration: "1200ms",
+              textShadow: "0 2px 8px rgba(0, 0, 0, 0.4)",
             }}
           >
             System in development
