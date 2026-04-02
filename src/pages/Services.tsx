@@ -29,6 +29,7 @@ export default function Services() {
             alt=""
             aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover"
+            style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
           />
         </div>
         <div className="absolute inset-0 bg-background/50" />
