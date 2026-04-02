@@ -123,7 +123,7 @@ export default function HQ() {
             Controlled process. Engineered outcome.
           </p>
         </div>
-      </section>
+      </BlueprintScene>
 
       {/* ── The System Behind Every Build ─────────────── */}
       <section className="relative overflow-hidden">
