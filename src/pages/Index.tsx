@@ -5,6 +5,7 @@ import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { Link } from "react-router-dom";
 import { BeforeAfterSlider } from "@/components/BeforeAfterSlider";
 import { HeroAtmosphere } from "@/components/HeroAtmosphere";
+import { useIntake } from "@/hooks/useIntake";
 
 
 // Locked 5-image system
