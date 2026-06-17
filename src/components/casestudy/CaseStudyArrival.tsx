@@ -20,24 +20,24 @@ export function CaseStudyArrival({ title, location, hero, heroAlt }: Props) {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,transparent,hsl(var(--primary)/0.35))]" />
 
       {/* chapter marker — top left */}
-      <div className="absolute top-8 sm:top-12 left-8 sm:left-16 z-10">
+      <div className="absolute top-[clamp(1.75rem,1rem+2vw,3rem)] left-[clamp(1.5rem,0.75rem+3vw,4rem)] z-10">
         <RevealOnScroll direction="none" duration={1200} delay={300}>
-          <p className="font-mono text-[9px] uppercase tracking-[0.5em] text-accent/55">
+          <p className="font-mono uppercase text-accent/55 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">
             Chapter I — Site
           </p>
         </RevealOnScroll>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 px-8 sm:px-16 pb-14 sm:pb-20 z-10">
+      <div className="absolute bottom-0 left-0 right-0 px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2.5rem,1.5rem+4vw,5rem)] z-10">
         <div className="max-w-6xl grid grid-cols-12 gap-6 items-end">
-          <div className="col-span-12 lg:col-span-9 space-y-5">
+          <div className="col-span-12 lg:col-span-9 space-y-[clamp(1rem,0.75rem+1vw,1.5rem)]">
             <RevealOnScroll direction="up" duration={900} delay={400}>
-              <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/55">
+              <p className="font-mono uppercase text-accent/55 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">
                 {location}
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" duration={1100} delay={600}>
-              <h1 className="font-serif text-[2.4rem] sm:text-6xl lg:text-7xl xl:text-[5.25rem] text-primary-foreground tracking-[-0.02em] leading-[0.95]">
+              <h1 className="font-serif text-primary-foreground tracking-[-0.02em] leading-[0.95] text-[clamp(2.5rem,1.4rem+5.2vw,5.25rem)]">
                 {title}
               </h1>
             </RevealOnScroll>
@@ -45,7 +45,7 @@ export function CaseStudyArrival({ title, location, hero, heroAlt }: Props) {
           <div className="hidden lg:block col-span-3">
             <RevealOnScroll direction="none" duration={1400} delay={900}>
               <div className="w-12 h-px bg-accent/50 mb-3" />
-              <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-primary-foreground/45">
+              <p className="font-mono uppercase text-primary-foreground/45 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">
                 Built Properly.
               </p>
             </RevealOnScroll>
