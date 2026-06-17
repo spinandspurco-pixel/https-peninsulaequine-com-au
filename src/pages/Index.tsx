@@ -4,6 +4,8 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { Link } from "react-router-dom";
 import { BeforeAfterSlider } from "@/components/BeforeAfterSlider";
+import { HeroAtmosphere } from "@/components/HeroAtmosphere";
+
 
 // Locked 5-image system
 import systemHero from "@/assets/system-hero.jpg";
@@ -49,41 +51,95 @@ export default function Index() {
             loading="eager"
             style={{
               objectPosition: "50% 72%",
-              filter: "brightness(0.92) contrast(1.1) saturate(0.85)",
+              filter: "brightness(0.88) contrast(1.18) saturate(0.78) sepia(0.06)",
               animation: "heroSlowZoom 25s ease-out forwards",
             }}
           />
           {/* Deep cinematic vignette */}
-          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 30%, rgba(0,0,0,0.4) 100%)" }} />
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 30%, rgba(0,0,0,0.55) 100%)" }} />
+
+          {/* Atmosphere: blueprint pulse, drifting dust, warm cast */}
+          <HeroAtmosphere />
 
           <div
             ref={heroContentRef}
-            className="relative z-10 text-center"
-            style={{ opacity: heroFade, willChange: "opacity", marginTop: "-22vh" }}
+            className="relative z-10 text-center px-6 max-w-4xl mx-auto"
+            style={{ opacity: heroFade, willChange: "opacity", marginTop: "-18vh" }}
           >
-            <h1
-              className="font-serif font-semibold text-white tracking-tight leading-[0.9] opacity-0 animate-fade-in"
+            <p
+              className="font-mono text-[10px] uppercase tracking-[0.55em] text-white/35 opacity-0 animate-fade-in"
               style={{
-                fontSize: "clamp(2.6rem, 1.2rem + 6vw, 5.8rem)",
-                animationDelay: "300ms",
+                animationDelay: "200ms",
                 animationFillMode: "both",
                 animationDuration: "800ms",
-                textShadow: "0 2px 40px rgba(0,0,0,0.45), 0 0 80px rgba(0,0,0,0.15)",
+              }}
+            >
+              Peninsula Equine
+            </p>
+
+            <h1
+              className="mt-8 font-serif font-semibold text-white tracking-tight leading-[0.9] opacity-0 animate-fade-in"
+              style={{
+                fontSize: "clamp(2.6rem, 1.2rem + 6vw, 5.8rem)",
+                animationDelay: "500ms",
+                animationFillMode: "both",
+                animationDuration: "900ms",
+                textShadow: "0 2px 40px rgba(0,0,0,0.55), 0 0 90px rgba(0,0,0,0.2)",
               }}
             >
               From Dirt to Dynasty.
             </h1>
+
             <p
-              className="mt-10 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.5em] text-white/30 opacity-0 animate-fade-in"
+              className="mt-6 font-serif italic text-white/75 opacity-0 animate-fade-in"
               style={{
-                animationDelay: "700ms",
+                fontSize: "clamp(1.05rem, 0.6rem + 1.1vw, 1.6rem)",
+                animationDelay: "800ms",
                 animationFillMode: "both",
-                animationDuration: "800ms",
+                animationDuration: "900ms",
+                textShadow: "0 2px 24px rgba(0,0,0,0.5)",
               }}
             >
-              Built environments for equine performance
+              Built by riders. Crafted for performance.
             </p>
+
+            <p
+              className="mt-8 mx-auto font-sans font-light text-white/55 leading-relaxed opacity-0 animate-fade-in"
+              style={{
+                fontSize: "clamp(0.9rem, 0.55rem + 0.5vw, 1.05rem)",
+                maxWidth: "36rem",
+                animationDelay: "1100ms",
+                animationFillMode: "both",
+                animationDuration: "900ms",
+              }}
+            >
+              Premium equine environments engineered through craftsmanship, horsemanship and experience.
+            </p>
+
+            <div
+              className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-fade-in"
+              style={{
+                animationDelay: "1400ms",
+                animationFillMode: "both",
+                animationDuration: "900ms",
+              }}
+            >
+              <Link
+                to="/contact"
+                className="group inline-flex items-center justify-center px-8 py-3.5 bg-[hsl(38_28%_88%)] text-[hsl(0_0%_8%)] text-[11px] uppercase tracking-[0.22em] font-medium rounded-sm shadow-[0_10px_40px_-12px_rgba(244,220,170,0.35)] transition-all duration-500 hover:-translate-y-0.5 hover:bg-[hsl(38_32%_93%)]"
+              >
+                Start Your Project
+                <span className="ml-3 text-[hsl(0_0%_8%)]/50 transition-transform duration-500 group-hover:translate-x-1">→</span>
+              </Link>
+              <Link
+                to="/gallery"
+                className="inline-flex items-center justify-center px-8 py-3.5 border border-white/25 text-white/75 text-[11px] uppercase tracking-[0.22em] font-medium rounded-sm transition-all duration-500 hover:border-white/60 hover:text-white hover:bg-white/[0.04]"
+              >
+                View Our Work
+              </Link>
+            </div>
           </div>
+
         </section>
 
         {/* ═══ HERO → BREATHING TRANSITION ═════════════════ */}

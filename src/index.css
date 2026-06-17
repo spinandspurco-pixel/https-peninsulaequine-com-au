@@ -384,6 +384,33 @@
   to   { transform: scale(1.06); }
 }
 
+@keyframes heroBlueprintPulse {
+  0%, 100% { opacity: 0; }
+  45%, 60% { opacity: 0.09; }
+}
+
+@keyframes dustDrift {
+  0%   { transform: translate3d(0, 8vh, 0); opacity: 0; }
+  15%  { opacity: 0.55; }
+  85%  { opacity: 0.35; }
+  100% { transform: translate3d(var(--dust-x, 2vw), -22vh, 0); opacity: 0; }
+}
+
+.hero-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 9999px;
+  background: rgba(244, 220, 170, 0.55);
+  filter: blur(1px);
+  box-shadow: 0 0 6px rgba(244, 200, 130, 0.35);
+  will-change: transform, opacity;
+  animation: dustDrift linear infinite;
+  pointer-events: none;
+}
+
+
+
 
 
 

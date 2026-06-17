@@ -1,58 +1,34 @@
+## Homepage Hero Refinement
 
+Refine the existing hero in `src/pages/Index.tsx` only. Layout, scroll fade and 25s slow zoom stay intact. Site-wide motion, typography and copy rules already in memory are respected (calm cadence, editorial serif, single H1, ≤16-word subtext).
 
-## Audit Summary
+### 1. Luxury image grading
+Update the hero `<img>` filter to a Range Rover / Ralph Lauren style grade:
+`brightness(0.88) contrast(1.18) saturate(0.78) sepia(0.06)`
+Add a second warm overlay (very low opacity amber `rgba(180,140,90,0.06)` mixed with deep shadow at the bottom) layered above the image but below content, to give a golden-hour cast without breaking the dark aesthetic.
 
-The Equus Ridge page has **three sections**, and the same `heroVideo` MP4 is used in all three:
+### 2. Animated blueprint overlay
+Add a new absolutely-positioned `<div>` above the photo, below content, rendering a thin cyan/white grid + a few architectural dimension lines as inline SVG (reusing the language of `BlueprintLineOverlay`). It slowly fades in/out in a 14s loop (opacity 0 → 0.08 → 0) via a new `heroBlueprintPulse` keyframe in `src/index.css`. `pointer-events-none`, `mix-blend-mode: screen`, respects `prefers-reduced-motion` (animation paused).
 
-1. **Hero** (full-screen) — video at 35% brightness as cinematic backdrop ✓ correct use
-2. **Atmosphere** (py-44/64) — same video at 6% opacity as ambient background → repetitive
-3. **Private Viewing** (py-44/64) — same video again in a 4:5 portrait frame → third use, feels wallpaper-like
+### 3. Drifting dust particles
+Add a single lightweight CSS-only particle field: ~14 tiny `<span>` dots (1–2px, `bg-amber-200/30`, `blur-[1px]`) randomly positioned, each with a `dustDrift` keyframe (translateY -20vh to 5vh, slight X sway, opacity 0→0.5→0) over 18–28s with staggered delays. Defined once in `index.css`. Disabled under reduced motion. Sits above image, below blueprint, below content.
 
-The page is only ~3 sections long, so the fix is surgical: keep the hero video, remove the repeated video from the middle section, and replace the portrait video in section 3 with a static treatment.
+### 4. Text hierarchy & copy
+Replace current H1 + single line with:
+- Eyebrow (micro): `PENINSULA EQUINE` — mono, 10px, tracking 0.5em, white/35, fade-in 200ms
+- H1: `From Dirt to Dynasty.` — serif, current scale, white, fade-in 500ms
+- Secondary headline: `Built by riders. Crafted for performance.` — serif italic, ~1.25rem→1.6rem clamp, white/70, fade-in 800ms
+- Supporting statement: `Premium equine environments engineered through craftsmanship, horsemanship and experience.` — sans 300, max-width 38rem, white/45, fade-in 1100ms
+- CTA row (1400ms): Primary `Start Your Project` → `/contact` (solid warm-bone bg, near-black text, hover lift), Secondary `View Our Work` → `/gallery` (ghost outline, white/60 border, hover white).
 
----
+All staged on the existing 300–500ms cadence; no bounce; durations 800ms ease-out.
 
-## Plan
+### 5. Technical details
+- Edits confined to `src/pages/Index.tsx` and `src/index.css` (new keyframes `heroBlueprintPulse`, `dustDrift`, and a `.hero-particle` utility).
+- New tiny component `HeroAtmosphere` co-located in `Index.tsx` (or `src/components/HeroAtmosphere.tsx`) encapsulating the blueprint SVG + particle field for cleanliness.
+- Buttons use existing tokens (`bg-accent text-accent-foreground`, `border-primary-foreground/30`) — no hardcoded colors.
+- All new motion gated behind `@media (prefers-reduced-motion: reduce)`.
+- `marginTop: -22vh`, scroll fade, slow-zoom and vignette preserved.
 
-### 1. Hero section — KEEP as-is
-No changes. The full-screen video backdrop is the premium identity moment.
-
-### 2. Atmosphere section — REMOVE video, replace with grounded treatment
-- **Remove** the ambient video element entirely (lines 47–57)
-- **Keep** the grain texture overlay and `bg-primary` dark background
-- **Add** a single faint `BlueprintLineOverlay` (variant `"dimensions"`, color `"light"`) at very low opacity as the one permitted brand callback — subtle architectural linework, not a repeated animated background
-- This makes the section feel like a clean, dark editorial content block with just a whisper of PE identity
-
-### 3. Private Viewing section — REPLACE video frame with static image
-- **Remove** the `<video>` element from the portrait frame (lines 90–99)
-- **Replace** with a high-quality static image import (e.g., one of the existing architectural photos like a barn exterior or landscape shot from the assets)
-- This creates visual variety: video hero → dark text section → editorial image + text layout
-- **Keep** the grain texture, gradient overlay, and all text content
-
-### 4. Clean up unused import
-- Remove the `heroVideo` import if it's only used in the hero after these changes — but it will still be used in the hero, so keep it. Just ensure the two removed `<video>` elements no longer reference it.
-
----
-
-### Visual rhythm after changes
-
-```text
-┌─────────────────────────────┐
-│  HERO — cinematic video     │  ← identity moment (video)
-│  full-screen, 35% bright    │
-└─────────────────────────────┘
-┌─────────────────────────────┐
-│  ATMOSPHERE — dark + grain  │  ← substance (no video)
-│  faint blueprint linework   │     clean editorial text block
-│  editorial text centered    │
-└─────────────────────────────┘
-┌─────────────────────────────┐
-│  PRIVATE VIEWING            │  ← refined closing (static image)
-│  static image | text        │     architectural photo in frame
-│  signature closing line     │
-└─────────────────────────────┘
-```
-
-### Files to edit
-- `src/pages/EquusRidge.tsx` — remove 2 video elements, add 1 blueprint line overlay import, add 1 static image import for the portrait frame
-
+### Out of scope
+Rest of homepage sections, header/footer, other routes.
