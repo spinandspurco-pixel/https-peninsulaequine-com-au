@@ -117,6 +117,8 @@
     font-size: 14px;
     line-height: 1.85;
     font-weight: 300;
+    text-rendering: optimizeLegibility;
+    font-synthesis: none;
   }
 
   /* ── Typography Scale — fluid clamp() ─────────────── */
