@@ -5,6 +5,7 @@ import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { Link } from "react-router-dom";
 import { BeforeAfterSlider } from "@/components/BeforeAfterSlider";
 import { HeroAtmosphere } from "@/components/HeroAtmosphere";
+import { useIntake } from "@/hooks/useIntake";
 
 
 // Locked 5-image system
@@ -21,6 +22,7 @@ import transformAfter from "@/assets/transform-after.jpg";
 export default function Index() {
   const heroContentRef = useRef<HTMLDivElement>(null);
   const [heroFade, setHeroFade] = useState(1);
+  const { open: openIntake } = useIntake();
 
   const handleScroll = useCallback(() => {
     const el = heroContentRef.current;
@@ -124,13 +126,13 @@ export default function Index() {
                 animationDuration: "900ms",
               }}
             >
-              <Link
-                to="/contact"
-                className="group inline-flex items-center justify-center px-8 py-3.5 bg-[hsl(38_28%_88%)] text-[hsl(0_0%_8%)] text-[11px] uppercase tracking-[0.22em] font-medium rounded-sm shadow-[0_10px_40px_-12px_rgba(244,220,170,0.35)] transition-all duration-500 hover:-translate-y-0.5 hover:bg-[hsl(38_32%_93%)]"
+              <button
+                onClick={openIntake}
+                className="group inline-flex items-center justify-center px-8 py-3.5 bg-[hsl(38_28%_88%)] text-[hsl(0_0%_8%)] text-[11px] uppercase tracking-[0.22em] font-medium rounded-sm shadow-[0_10px_40px_-12px_rgba(244,220,170,0.35)] transition-all duration-500 hover:-translate-y-0.5 hover:bg-[hsl(38_32%_93%)] cursor-pointer"
               >
                 Start Your Project
                 <span className="ml-3 text-[hsl(0_0%_8%)]/50 transition-transform duration-500 group-hover:translate-x-1">→</span>
-              </Link>
+              </button>
               <Link
                 to="/gallery"
                 className="inline-flex items-center justify-center px-8 py-3.5 border border-white/25 text-white/75 text-[11px] uppercase tracking-[0.22em] font-medium rounded-sm transition-all duration-500 hover:border-white/60 hover:text-white hover:bg-white/[0.04]"
