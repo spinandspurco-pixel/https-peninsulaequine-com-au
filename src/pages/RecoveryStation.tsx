@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine, RevealImage } from "@/components/RevealOnScroll";
+import { ChapterHero } from "@/components/ChapterHero";
 import heroImg from "@/assets/recovery-internal-hero.jpg";
 import infraredImg from "@/assets/recovery-internal-infrared.jpg";
 import groomingImg from "@/assets/recovery-internal-grooming.jpg";
@@ -125,64 +126,18 @@ export default function RecoveryStation() {
         </section>
 
         {chapters.map((c, i) => (
-          <section
+          <ChapterHero
             key={c.n}
-            className={`relative py-[clamp(5rem,3rem+7vw,10rem)] ${
-              i % 2 === 0 ? "bg-card" : "bg-background"
-            }`}
-          >
-            <div className="max-w-7xl mx-auto px-[clamp(1.5rem,0.75rem+3vw,4rem)] grid grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4rem)] items-center">
-              <div
-                className={`col-span-12 lg:col-span-8 ${
-                  c.align === "right" ? "lg:order-2" : ""
-                }`}
-              >
-                <RevealImage delay={100} duration={1200}>
-                  <div
-                    className={`relative aspect-[16/10] overflow-hidden ${
-                      c.align === "left" ? "lg:-ml-[3rem]" : "lg:-mr-[3rem]"
-                    }`}
-                  >
-                    <img
-                      src={c.image}
-                      alt={`${c.overline} — Peninsula Equine Recovery Station interior`}
-                      loading="lazy"
-                      width={1792}
-                      height={1024}
-                      className="absolute inset-0 w-full h-full object-cover img-feature transition-transform duration-[2200ms] ease-[cubic-bezier(0.45,0,0.15,1)] hover:scale-[1.03]"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
-                    <span className="absolute top-4 left-4 font-mono uppercase text-accent/65 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">
-                      Chapter {c.n}
-                    </span>
-                  </div>
-                </RevealImage>
-              </div>
-
-              <div
-                className={`col-span-12 lg:col-span-4 space-y-[clamp(1.25rem,0.9rem+1.2vw,2rem)] ${
-                  c.align === "right" ? "lg:order-1 lg:pr-4" : "lg:pl-4"
-                }`}
-              >
-                <RevealOnScroll direction="up" duration={900}>
-                  <p className="font-mono uppercase text-accent/55 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">
-                    {c.overline}
-                  </p>
-                </RevealOnScroll>
-                <RevealOnScroll direction="up" duration={1000} delay={150}>
-                  <h2 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.02em] text-[clamp(1.65rem,1.1rem+2.2vw,2.65rem)]">
-                    {c.title}
-                  </h2>
-                </RevealOnScroll>
-                <RevealLine width="w-8" delay={300} />
-                <RevealOnScroll direction="up" duration={1000} delay={400}>
-                  <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[clamp(0.8125rem,0.78rem+0.2vw,0.9375rem)]">
-                    {c.body}
-                  </p>
-                </RevealOnScroll>
-              </div>
-            </div>
-          </section>
+            number={c.n}
+            overline={c.overline}
+            title={c.title}
+            body={c.body}
+            image={c.image}
+            imageAlt={`${c.overline} — Peninsula Equine Recovery Station interior`}
+            align={c.align}
+            background={i % 2 === 0 ? "card" : "background"}
+            monogram="PE"
+          />
         ))}
 
         {/* ─── PE APP ──────────────────────────────────────────── */}
