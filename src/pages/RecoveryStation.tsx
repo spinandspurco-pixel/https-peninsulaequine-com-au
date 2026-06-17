@@ -63,18 +63,8 @@ export default function RecoveryStation() {
           <div className="absolute inset-0 bg-gradient-to-b from-primary/45 via-primary/10 to-primary/85" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_65%_40%,transparent,hsl(var(--primary)/0.55))]" />
 
-          <div className="absolute top-[clamp(1.75rem,1rem+2vw,3rem)] left-[clamp(1.5rem,0.75rem+3vw,4rem)] right-[clamp(1.5rem,0.75rem+3vw,4rem)] z-10 flex items-start justify-between gap-6">
-            <RevealOnScroll direction="none" duration={1200} delay={200}>
-              <p className="font-mono uppercase text-accent/55 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.5em]">
-                Internal Stable Wellness — 01
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="none" duration={1200} delay={400}>
-              <p className="hidden sm:block font-mono uppercase text-primary-foreground/40 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em] text-right">
-                Mornington Peninsula
-              </p>
-            </RevealOnScroll>
-          </div>
+          {/* Top hero overline removed — was colliding with the fixed header logo & nav. */}
+
 
           <div className="absolute bottom-0 left-0 right-0 px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2.5rem,1.5rem+5vw,6rem)] z-10">
             <div className="max-w-6xl grid grid-cols-12 gap-6 items-end">
