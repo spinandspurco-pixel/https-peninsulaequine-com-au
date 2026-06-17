@@ -56,7 +56,7 @@ export default function ClientQuote() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [accepted, setAccepted] = useState(false);
-  const [groundlockOn, setGroundlockOn] = useState(true);
+  
 
   useEffect(() => {
     if (!token) return;
@@ -83,7 +83,7 @@ export default function ClientQuote() {
 
     setQuote(q as unknown as QuoteData);
     setAccepted(!!q.accepted_at);
-    setGroundlockOn(q.groundlock_included !== false);
+    
 
     const { data: items } = await supabase
       .from("quote_line_items")

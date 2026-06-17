@@ -15,17 +15,16 @@ const CATEGORY_LABELS: Record<string, string> = {
 interface Props {
   quote: QuoteData;
   lineItems: LineItem[];
-  groundlockOn: boolean;
   exclusions: string | null;
 }
 
-export function ProposalInvestment({ quote, lineItems, groundlockOn, exclusions }: Props) {
+export function ProposalInvestment({ quote, lineItems, exclusions }: Props) {
   const categoryTotals = lineItems.reduce<Record<string, number>>((acc, item) => {
     const cat = item.category || "general";
-    if (!groundlockOn && cat === "ground-systems") return acc;
     acc[cat] = (acc[cat] || 0) + item.line_total;
     return acc;
   }, {});
+
 
   const adjustedSubtotal = Object.values(categoryTotals).reduce((s, v) => s + v, 0);
   const adjustedGst = adjustedSubtotal * 0.1;
