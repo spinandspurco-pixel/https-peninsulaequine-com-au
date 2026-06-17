@@ -175,7 +175,7 @@ export default function Index() {
                 to="/gallery"
                 className="inline-flex items-center justify-center px-8 py-3.5 border border-white/25 text-white/75 text-[11px] uppercase tracking-[0.22em] font-medium rounded-sm transition-all duration-500 hover:border-white/60 hover:text-white hover:bg-white/[0.04]"
               >
-                View Our Work
+                Explore Selected Works
               </Link>
             </div>
           </div>
