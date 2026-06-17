@@ -96,12 +96,14 @@ export function BeforeAfterSlider({ before, after, alt = "Transformation" }: Bef
   return (
     <div
       ref={containerRef}
-      className="relative w-full overflow-hidden cursor-col-resize select-none group"
+      className="relative w-full overflow-hidden cursor-col-resize select-none group touch-none"
       style={{
         aspectRatio: "16 / 9",
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? "translateY(0)" : "translateY(24px)",
         transition: "opacity 1s ease-out, transform 1s ease-out",
+        touchAction: "none",
+        WebkitUserSelect: "none",
       }}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
