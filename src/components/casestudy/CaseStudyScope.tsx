@@ -8,20 +8,20 @@ interface Props {
 
 export function CaseStudyScope({ location, scope }: Props) {
   return (
-    <section className="relative py-28 sm:py-40 bg-background">
+    <section className="relative py-32 sm:py-48 bg-background">
       {/* thin vertical thread */}
       <div className="hidden lg:block absolute top-0 bottom-0 left-1/2 w-px bg-foreground/[0.04]" />
 
       <div className="max-w-6xl mx-auto px-6 sm:px-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
         {/* Left — overline + brief */}
-        <div className="lg:col-span-7 space-y-8">
+        <div className="lg:col-span-7 space-y-10">
           <RevealOnScroll direction="up" duration={900}>
             <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/45">
-              Project Dossier
+              Chapter II — Dossier
             </p>
           </RevealOnScroll>
-          <RevealOnScroll direction="up" duration={900} delay={200}>
-            <p className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/85 leading-[1.25] tracking-tight">
+          <RevealOnScroll direction="up" duration={1000} delay={200}>
+            <p className="font-serif text-[1.65rem] sm:text-[2.1rem] lg:text-[2.6rem] text-foreground/85 leading-[1.18] tracking-[-0.015em]">
               {scope.brief}
             </p>
           </RevealOnScroll>

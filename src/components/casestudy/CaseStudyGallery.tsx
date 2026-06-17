@@ -10,15 +10,15 @@ export function CaseStudyGallery({ images }: Props) {
   const [active, setActive] = useState<number | null>(null);
 
   return (
-    <section className="py-28 sm:py-36 bg-card">
+    <section className="py-32 sm:py-44 bg-card">
       <div className="max-w-6xl mx-auto px-6 sm:px-10">
         <RevealOnScroll direction="up" duration={900}>
-          <div className="mb-12 sm:mb-16 flex items-end justify-between">
+          <div className="mb-14 sm:mb-20 flex items-end justify-between">
             <div className="space-y-3">
               <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/45">
-                Completed
+                Chapter V — Completed
               </p>
-              <p className="font-serif italic text-[13px] sm:text-sm text-foreground/30 max-w-md">
+              <p className="font-serif italic text-[13px] sm:text-sm text-foreground/35 max-w-md leading-relaxed">
                 Resolved. In use.
               </p>
             </div>
