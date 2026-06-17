@@ -15,6 +15,14 @@ import { GuidedIntake } from "./components/GuidedIntake";
 import Index from "./pages/Index";
 
 // Lazy-load all other routes
+// Core 8 public capability routes
+const Arenas = lazy(() => import("./pages/Arenas"));
+const Stables = lazy(() => import("./pages/Stables"));
+const EquineEstates = lazy(() => import("./pages/EquineEstates"));
+const RecoveryStation = lazy(() => import("./pages/RecoveryStation"));
+const InfrastructurePage = lazy(() => import("./pages/Infrastructure"));
+
+// Supporting public pages
 const Services = lazy(() => import("./pages/Services"));
 const ServiceDetail = lazy(() => import("./pages/ServiceDetail"));
 const Boarding = lazy(() => import("./pages/Boarding"));
@@ -35,14 +43,9 @@ const HQ = lazy(() => import("./pages/HQ"));
 const EmployeeDashboard = lazy(() => import("./pages/EmployeeDashboard"));
 const BookLesson = lazy(() => import("./pages/BookLesson"));
 const Lessons = lazy(() => import("./pages/Lessons"));
-
-const Shop = lazy(() => import("./pages/Shop"));
-
-const Forge = lazy(() => import("./pages/Forge"));
 const Events = lazy(() => import("./pages/Events"));
 const Process = lazy(() => import("./pages/Process"));
 const BookingsDashboard = lazy(() => import("./pages/BookingsDashboard"));
-
 const RoundPens = lazy(() => import("./pages/RoundPens"));
 const Schedule = lazy(() => import("./pages/Schedule"));
 const ThankYou = lazy(() => import("./pages/ThankYou"));
@@ -55,27 +58,15 @@ const StaffDocumentPortal = lazy(() => import("./pages/StaffDocumentPortal"));
 const TrainerDocumentPortal = lazy(() => import("./pages/TrainerDocumentPortal"));
 const TrainerProfile = lazy(() => import("./pages/TrainerProfile"));
 
-const GroundLock = lazy(() => import("./pages/GroundLock"));
-const GroundLockHowItWorks = lazy(() => import("./pages/GroundLockHowItWorks"));
 const CaseStudy = lazy(() => import("./pages/CaseStudy"));
-const GroundLockSystems = lazy(() => import("./pages/GroundLockSystems"));
 const EquusRidge = lazy(() => import("./pages/EquusRidge"));
-const InstallerAccess = lazy(() => import("./pages/InstallerAccess"));
 const SiteAssessment = lazy(() => import("./pages/SiteAssessment"));
-const SignatureSystems = lazy(() => import("./pages/SignatureSystems"));
-const GroundLockSetup = lazy(() => import("./pages/GroundLockSetup"));
-const GroundLockOnboarding = lazy(() => import("./pages/GroundLockOnboarding"));
-const GroundLockLicensing = lazy(() => import("./pages/GroundLockLicensing"));
-const GroundLockEvents = lazy(() => import("./pages/GroundLockEvents"));
 const ClientQuote = lazy(() => import("./pages/ClientQuote"));
-const ProposalTemplate = lazy(() => import("./pages/ProposalTemplate"));
-const ProposalEditor = lazy(() => import("./pages/ProposalEditor"));
 const Visualise = lazy(() => import("./pages/Visualise"));
 const TheStandard = lazy(() => import("./pages/TheStandard"));
 const WhyWeExist = lazy(() => import("./pages/WhyWeExist"));
 const ClientPortal = lazy(() => import("./pages/ClientPortal"));
 const ClientPortalLogin = lazy(() => import("./pages/ClientPortalLogin"));
-const Pavilion = lazy(() => import("./pages/Pavilion"));
 
 const queryClient = new QueryClient();
 
@@ -86,19 +77,28 @@ function AppContent() {
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        
+
         <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<Index />} />
+
+          {/* ─── Core 8 capability routes ─── */}
+          <Route path="/arenas" element={<Arenas />} />
+          <Route path="/stables" element={<Stables />} />
+          <Route path="/equine-estates" element={<EquineEstates />} />
+          <Route path="/recovery-stations" element={<RecoveryStation />} />
+          <Route path="/infrastructure" element={<InfrastructurePage />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+
+          {/* ─── Supporting routes ─── */}
           <Route path="/services" element={<Services />} />
           <Route path="/services/:slug" element={<ServiceDetail />} />
           <Route path="/services/round-pens" element={<RoundPens />} />
           <Route path="/boarding" element={<Boarding />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/gallery" element={<Gallery />} />
           <Route path="/testimonials" element={<Testimonials />} />
           <Route path="/faq" element={<FAQ />} />
-          <Route path="/contact" element={<Contact />} />
           <Route path="/privacy" element={<LegalPrivacy />} />
           <Route path="/terms" element={<LegalTerms />} />
           <Route path="/login" element={<Login />} />
@@ -110,14 +110,9 @@ function AppContent() {
           <Route path="/employee" element={<EmployeeDashboard />} />
           <Route path="/lessons" element={<Lessons />} />
           <Route path="/book-lesson" element={<ProtectedRoute><BookLesson /></ProtectedRoute>} />
-          
-          <Route path="/systems" element={<Shop />} />
-          
-          <Route path="/forge" element={<Forge />} />
           <Route path="/events" element={<Events />} />
           <Route path="/process" element={<Process />} />
           <Route path="/bookings" element={<BookingsDashboard />} />
-          
           <Route path="/schedule" element={<Schedule />} />
           <Route path="/thank-you" element={<ThankYou />} />
           <Route path="/pricing" element={<Pricing />} />
@@ -128,28 +123,16 @@ function AppContent() {
           <Route path="/trainer/documents" element={<TrainerDocumentPortal />} />
           <Route path="/admin/documents" element={<AdminDocuments />} />
           <Route path="/trainers/:slug" element={<TrainerProfile />} />
-           
-          <Route path="/groundlock" element={<GroundLock />} />
-          <Route path="/groundlock/how-it-works" element={<GroundLockHowItWorks />} />
-          <Route path="/groundlock-systems" element={<GroundLockSystems />} />
           <Route path="/equus-ridge" element={<EquusRidge />} />
-           <Route path="/installer" element={<InstallerAccess />} />
-           <Route path="/site-assessment" element={<SiteAssessment />} />
-           <Route path="/signature-systems" element={<SignatureSystems />} />
-           <Route path="/groundlock-setup" element={<ProtectedRoute><GroundLockSetup /></ProtectedRoute>} />
-           <Route path="/groundlock-onboarding" element={<ProtectedRoute><GroundLockOnboarding /></ProtectedRoute>} />
-           <Route path="/groundlock-licensing" element={<GroundLockLicensing />} />
-           <Route path="/groundlock/events" element={<GroundLockEvents />} />
+          <Route path="/site-assessment" element={<SiteAssessment />} />
           <Route path="/project/:slug" element={<CaseStudy />} />
           <Route path="/quote/:token" element={<ClientQuote />} />
-          <Route path="/proposal" element={<ProposalTemplate />} />
-           <Route path="/proposal-editor/:id" element={<ProposalEditor />} />
-           <Route path="/visualise" element={<Visualise />} />
-           <Route path="/the-standard" element={<TheStandard />} />
-           <Route path="/why" element={<WhyWeExist />} />
-           <Route path="/portal" element={<ProtectedRoute loginPath="/portal/login"><ClientPortal /></ProtectedRoute>} />
-           <Route path="/portal/login" element={<ClientPortalLogin />} />
-           <Route path="/pavilion" element={<Pavilion />} />
+          <Route path="/visualise" element={<Visualise />} />
+          <Route path="/the-standard" element={<TheStandard />} />
+          <Route path="/why" element={<WhyWeExist />} />
+          <Route path="/portal" element={<ProtectedRoute loginPath="/portal/login"><ClientPortal /></ProtectedRoute>} />
+          <Route path="/portal/login" element={<ClientPortalLogin />} />
+
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -1,20 +1,18 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIntroState } from "@/hooks/useIntroState";
 import logoImage from "@/assets/logo-pe-mark.webp";
 
 const navigation = [
-  { name: "Home", href: "/" },
-  { name: "Projects", href: "/gallery" },
-  { name: "Services", href: "/services" },
-  { name: "GroundLock™", href: "/groundlock" },
+  { name: "Arenas", href: "/arenas" },
+  { name: "Stables", href: "/stables" },
+  { name: "Equine Estates", href: "/equine-estates" },
+  { name: "Recovery Stations", href: "/recovery-stations" },
+  { name: "Infrastructure", href: "/infrastructure" },
+  { name: "Selected Work", href: "/gallery" },
   { name: "About", href: "/about" },
-  { name: "Visualise", href: "/visualise", subtle: true },
-  { name: "Equus Ridge", href: "/equus-ridge", subtle: true },
-  { name: "The Standard", href: "/the-standard", subtle: true },
-  
+  { name: "Contact", href: "/contact" },
 ];
 
 export function Header() {
@@ -47,7 +45,7 @@ export function Header() {
     >
       <div className="section-container">
         <nav className="flex items-center justify-between h-18 sm:h-22">
-          {/* Logo */}
+          {/* Logo — also home link */}
           <Link
             to="/"
             className="flex items-center gap-3.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm transition-opacity duration-700 ease-out"
@@ -74,28 +72,23 @@ export function Header() {
                 Peninsula Equine
               </span>
               <span className="text-[9px] font-sans tracking-[0.25em] uppercase text-accent/70 mt-1">
-                Engineered Infrastructure
+                Premium Equine Environments
               </span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-10">
+          <div className="hidden xl:flex items-center gap-7">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  "relative transition-all duration-500",
-                  item.subtle
-                    ? "text-[10px] italic tracking-[0.08em] font-normal text-muted-foreground/50 hover:text-accent/80"
-                    : cn(
-                        "text-[10px] uppercase tracking-[0.18em] font-medium",
-                        "after:content-[''] after:absolute after:-bottom-1.5 after:left-0 after:w-full after:h-px after:bg-accent/60 after:origin-left after:scale-x-0 after:transition-transform after:duration-500 hover:after:scale-x-100",
-                        isActive(item.href)
-                          ? "text-accent after:scale-x-100"
-                          : "text-[hsl(var(--header-foreground))]/60 hover:text-[hsl(var(--header-foreground))]"
-                      )
+                  "relative transition-all duration-500 text-[10px] uppercase tracking-[0.18em] font-medium",
+                  "after:content-[''] after:absolute after:-bottom-1.5 after:left-0 after:w-full after:h-px after:bg-accent/60 after:origin-left after:scale-x-0 after:transition-transform after:duration-500 hover:after:scale-x-100",
+                  isActive(item.href)
+                    ? "text-accent after:scale-x-100"
+                    : "text-[hsl(var(--header-foreground))]/60 hover:text-[hsl(var(--header-foreground))]"
                 )}
               >
                 {item.name}
@@ -104,25 +97,19 @@ export function Header() {
           </div>
 
           {/* CTA */}
-          <div className="hidden lg:flex items-center gap-6">
+          <div className="hidden xl:flex items-center">
             <Link
               to="/contact"
-              className="text-[10px] uppercase tracking-[0.18em] text-[hsl(var(--header-foreground))]/50 hover:text-[hsl(var(--header-foreground))] transition-opacity duration-300"
-            >
-              Contact
-            </Link>
-            <Link
-              to="/site-assessment"
               className="text-[10px] uppercase tracking-[0.18em] text-accent/60 hover:text-accent transition-colors duration-500"
             >
-              Start a Project →
+              Apply to Build →
             </Link>
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden w-10 h-10 flex items-center justify-center text-[hsl(var(--header-foreground))] transition-colors duration-300"
+            className="xl:hidden w-10 h-10 flex items-center justify-center text-[hsl(var(--header-foreground))] transition-colors duration-300"
             aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMobileMenuOpen}
           >
@@ -147,8 +134,8 @@ export function Header() {
       {/* Mobile Menu */}
       <div
         className={cn(
-          "lg:hidden bg-[hsl(var(--background))] border-t border-border/20 overflow-hidden transition-all duration-700 ease-out",
-          isMobileMenuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0 invisible"
+          "xl:hidden bg-[hsl(var(--background))] border-t border-border/20 overflow-hidden transition-all duration-700 ease-out",
+          isMobileMenuOpen ? "max-h-[640px] opacity-100" : "max-h-0 opacity-0 invisible"
         )}
       >
         <div className="section-container py-10 space-y-1">
@@ -166,14 +153,11 @@ export function Header() {
               {item.name}
             </Link>
           ))}
-            <div className="pt-8 mt-6 border-t border-border/20 space-y-5">
-              <Link to="/contact" className="block text-xs uppercase tracking-[0.18em] text-accent/60 hover:text-accent transition-colors duration-500">
-                Request Assessment →
-              </Link>
-              <a href="tel:0418585489" className="flex items-center gap-2.5 text-xs text-muted-foreground/40 hover:text-accent transition-colors duration-500">
-                <Phone className="h-3.5 w-3.5" /> 0418 585 489
-              </a>
-            </div>
+          <div className="pt-8 mt-6 border-t border-border/20">
+            <Link to="/contact" className="block text-xs uppercase tracking-[0.18em] text-accent/70 hover:text-accent transition-colors duration-500">
+              Apply to Build →
+            </Link>
+          </div>
         </div>
       </div>
     </header>

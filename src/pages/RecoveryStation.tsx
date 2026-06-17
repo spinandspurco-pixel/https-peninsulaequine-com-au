@@ -51,7 +51,7 @@ const principles = [
   { k: "03", label: "Post-Work Recovery", body: "Lactate clearance, circulation, and the unspoken signal that the day is finished." },
 ];
 
-export default function Pavilion() {
+export default function RecoveryStation() {
   return (
     <Layout>
       <article className="bg-background text-foreground">
@@ -59,7 +59,7 @@ export default function Pavilion() {
         <section className="relative h-[92vh] min-h-[620px] overflow-hidden">
           <img
             src={heroImg}
-            alt="Peninsula Equine Recovery Pavilion — interior at dusk under warm infrared light"
+            alt="Peninsula Equine Recovery Station — interior at dusk under warm infrared light"
             width={1920}
             height={1080}
             className="absolute inset-0 w-full h-full object-cover img-header"
@@ -67,7 +67,6 @@ export default function Pavilion() {
           <div className="absolute inset-0 bg-gradient-to-b from-primary/50 via-primary/15 to-primary/85" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_65%_35%,transparent,hsl(var(--primary)/0.55))]" />
 
-          {/* top chapter marker */}
           <div className="absolute top-[clamp(1.75rem,1rem+2vw,3rem)] left-[clamp(1.5rem,0.75rem+3vw,4rem)] right-[clamp(1.5rem,0.75rem+3vw,4rem)] z-10 flex items-start justify-between gap-6">
             <RevealOnScroll direction="none" duration={1200} delay={200}>
               <p className="font-mono uppercase text-accent/55 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.5em]">
@@ -81,13 +80,12 @@ export default function Pavilion() {
             </RevealOnScroll>
           </div>
 
-          {/* lower title */}
           <div className="absolute bottom-0 left-0 right-0 px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2.5rem,1.5rem+5vw,6rem)] z-10">
             <div className="max-w-6xl grid grid-cols-12 gap-6 items-end">
               <div className="col-span-12 lg:col-span-9 space-y-[clamp(1.25rem,1rem+1vw,2rem)]">
                 <RevealOnScroll direction="up" duration={900} delay={400}>
                   <p className="font-mono uppercase text-accent/65 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">
-                    The Peninsula Equine Recovery Pavilion<span className="align-super text-[0.55em] ml-1">™</span>
+                    The Peninsula Equine Recovery Station<span className="align-super text-[0.55em] ml-1">™</span>
                   </p>
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" duration={1100} delay={600}>
@@ -131,7 +129,7 @@ export default function Pavilion() {
             <RevealLine className="mx-auto" width="w-10" delay={400} />
             <RevealOnScroll direction="up" duration={1000} delay={500}>
               <p className="font-sans font-light text-foreground/55 max-w-2xl mx-auto leading-[1.85] text-[clamp(0.8125rem,0.78rem+0.2vw,0.9375rem)]">
-                The Pavilion resolves it. A category-defining environment that
+                The Recovery Station resolves it. A category-defining environment that
                 treats recovery, wellness and daily care as architecture —
                 not as equipment bolted to a shed.
               </p>
@@ -139,7 +137,6 @@ export default function Pavilion() {
           </div>
         </section>
 
-        {/* ─── CHAPTERS — alternating cinematic spreads ────────── */}
         {chapters.map((c, i) => (
           <section
             key={c.n}
@@ -148,7 +145,6 @@ export default function Pavilion() {
             }`}
           >
             <div className="max-w-7xl mx-auto px-[clamp(1.5rem,0.75rem+3vw,4rem)] grid grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4rem)] items-center">
-              {/* IMAGE */}
               <div
                 className={`col-span-12 lg:col-span-8 ${
                   c.align === "right" ? "lg:order-2" : ""
@@ -157,21 +153,18 @@ export default function Pavilion() {
                 <RevealImage delay={100} duration={1200}>
                   <div
                     className={`relative aspect-[16/10] overflow-hidden ${
-                      c.align === "left"
-                        ? "lg:-ml-[3rem]"
-                        : "lg:-mr-[3rem]"
+                      c.align === "left" ? "lg:-ml-[3rem]" : "lg:-mr-[3rem]"
                     }`}
                   >
                     <img
                       src={c.image}
-                      alt={`${c.overline} — Peninsula Equine Recovery Pavilion`}
+                      alt={`${c.overline} — Peninsula Equine Recovery Station`}
                       loading="lazy"
                       width={1600}
                       height={1000}
                       className="absolute inset-0 w-full h-full object-cover img-feature transition-transform duration-[2200ms] ease-[cubic-bezier(0.45,0,0.15,1)] hover:scale-[1.03]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
-                    {/* corner index */}
                     <span className="absolute top-4 left-4 font-mono uppercase text-accent/65 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">
                       Chapter {c.n}
                     </span>
@@ -179,7 +172,6 @@ export default function Pavilion() {
                 </RevealImage>
               </div>
 
-              {/* TEXT */}
               <div
                 className={`col-span-12 lg:col-span-4 space-y-[clamp(1.25rem,0.9rem+1.2vw,2rem)] ${
                   c.align === "right" ? "lg:order-1 lg:pr-4" : "lg:pl-4"
@@ -206,7 +198,6 @@ export default function Pavilion() {
           </section>
         ))}
 
-        {/* ─── PRINCIPLES — three quiet columns ────────────────── */}
         <section className="py-[clamp(6rem,4rem+8vw,12rem)] bg-background">
           <div className="max-w-6xl mx-auto px-[clamp(1.5rem,0.75rem+3vw,4rem)]">
             <RevealOnScroll direction="up" duration={900}>
@@ -242,11 +233,10 @@ export default function Pavilion() {
           </div>
         </section>
 
-        {/* ─── FULL-BLEED PAUSE IMAGE ─────────────────────────── */}
         <section className="relative h-[78vh] min-h-[480px] overflow-hidden">
           <img
             src={architectureImg}
-            alt="Pavilion exterior at dusk — blackened timber, blackened steel, warm slot lighting"
+            alt="Recovery Station exterior at dusk — blackened timber, blackened steel, warm slot lighting"
             loading="lazy"
             width={1920}
             height={1080}
@@ -258,7 +248,7 @@ export default function Pavilion() {
               <RevealOnScroll direction="up" duration={1100}>
                 <p className="font-serif italic text-primary-foreground/85 leading-[1.3] tracking-[-0.015em] text-[clamp(1.25rem,0.9rem+1.6vw,2.1rem)]">
                   "Most facilities are built to contain a horse.
-                  The Pavilion is built to restore one."
+                  The Recovery Station is built to restore one."
                 </p>
               </RevealOnScroll>
               <RevealLine className="mt-8" width="w-10" delay={300} />
@@ -266,7 +256,6 @@ export default function Pavilion() {
           </div>
         </section>
 
-        {/* ─── CLOSE / SELECTIVE INVITATION ────────────────────── */}
         <section className="py-[clamp(7rem,4.5rem+9vw,13rem)] bg-background">
           <div className="max-w-3xl mx-auto px-[clamp(1.5rem,0.75rem+3vw,4rem)] text-center space-y-[clamp(2.5rem,1.5rem+3vw,3.5rem)]">
             <RevealLine className="mx-auto" width="w-10" />
@@ -277,7 +266,7 @@ export default function Pavilion() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" duration={1000} delay={150}>
               <p className="font-serif italic text-foreground/75 leading-[1.4] tracking-[-0.01em] text-[clamp(1.25rem,0.9rem+1.4vw,1.85rem)]">
-                The Pavilion is commissioned, not configured. Each is sited,
+                The Recovery Station is commissioned, not configured. Each is sited,
                 detailed and built to the property — by application only.
               </p>
             </RevealOnScroll>
@@ -294,7 +283,7 @@ export default function Pavilion() {
             <RevealOnScroll direction="up" delay={400}>
               <div className="flex flex-col sm:flex-row gap-[clamp(1.75rem,1rem+2vw,3.5rem)] justify-center items-center pt-4">
                 <Link
-                  to="/site-assessment"
+                  to="/contact"
                   className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.4em]"
                 >
                   <span className="w-6 h-px bg-accent/50 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
