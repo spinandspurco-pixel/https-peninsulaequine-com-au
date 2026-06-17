@@ -1,9 +1,10 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { BrandIntro } from "@/components/BrandIntro";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { HeroAtmosphere } from "@/components/HeroAtmosphere";
+import { IntroContext } from "@/hooks/useIntroState";
 import { useIntake } from "@/hooks/useIntake";
 
 import systemHero from "@/assets/system-hero.jpg";
@@ -11,6 +12,9 @@ import systemOutcome from "@/assets/system-outcome.jpg";
 import systemEvent from "@/assets/system-event.jpg";
 import systemStructure from "@/assets/system-structure.jpg";
 import recoveryInternalHero from "@/assets/recovery-internal-hero.jpg";
+
+const SESSION_KEY = "pe-brand-intro-seen";
+const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
 
 const services = [
   { name: "Arenas", href: "/arenas", note: "Surfaces engineered for performance." },
@@ -24,6 +28,44 @@ export default function Index() {
   const heroContentRef = useRef<HTMLDivElement>(null);
   const [heroFade, setHeroFade] = useState(1);
   const { open: openIntake } = useIntake();
+
+  // Skip the intro if it's already been seen this session or user prefers reduced motion.
+  const skipIntro = useMemo(() => {
+    if (typeof window === "undefined") return true;
+    if (sessionStorage.getItem(SESSION_KEY)) return true;
+    return !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  }, []);
+
+  // Orchestrated reveal state — drives hero image, headline, sub, CTA, and header.
+  const [imageReady, setImageReady] = useState(skipIntro);
+  const [headlineReady, setHeadlineReady] = useState(false);
+  const [sublineReady, setSublineReady] = useState(false);
+  const [ctaReady, setCtaReady] = useState(false);
+  const [headerReady, setHeaderReady] = useState(skipIntro);
+
+  useEffect(() => {
+    const timers: number[] = [];
+    const at = (ms: number, fn: () => void) =>
+      timers.push(window.setTimeout(fn, ms));
+
+    if (skipIntro) {
+      // Clean, gentle hero arrival on subsequent visits.
+      setImageReady(true);
+      setHeaderReady(true);
+      at(250, () => setHeadlineReady(true));
+      at(600, () => setSublineReady(true));
+      at(1000, () => setCtaReady(true));
+    } else {
+      // First-visit cinematic sequence — synced with BrandIntro timeline.
+      at(2700, () => setImageReady(true));   // hero begins reveal as overlay clears
+      at(3200, () => setHeadlineReady(true));
+      at(3500, () => setSublineReady(true));
+      at(3800, () => setCtaReady(true));
+      at(4000, () => setHeaderReady(true));
+    }
+
+    return () => timers.forEach(clearTimeout);
+  }, [skipIntro]);
 
   const handleScroll = useCallback(() => {
     const el = heroContentRef.current;
@@ -40,11 +82,12 @@ export default function Index() {
   }, [handleScroll]);
 
   return (
-    <>
-      <BrandIntro onComplete={() => {}} />
+    <IntroContext.Provider value={{ headerLogoReady: headerReady, headerReady }}>
+      <BrandIntro />
       <Layout>
         {/* ═══ 1. CINEMATIC HERO ═══════════════════════════ */}
         <section className="relative min-h-[100dvh] overflow-hidden flex items-center justify-center" style={{ paddingBottom: "8vh" }}>
+          {/* Hero image — starts dark and softly blurred, sharpens as intro dissolves */}
           <img
             src={systemHero}
             alt="Premium equine environment at dusk"
@@ -57,11 +100,24 @@ export default function Index() {
             fetchpriority="high"
             style={{
               objectPosition: "50% 72%",
-              filter: "brightness(0.88) contrast(1.18) saturate(0.78) sepia(0.06)",
-              animation: "heroSlowZoom 25s ease-out forwards",
+              filter: imageReady
+                ? "brightness(0.88) contrast(1.18) saturate(0.78) sepia(0.06) blur(0px)"
+                : "brightness(0.42) contrast(1.05) saturate(0.7) sepia(0.06) blur(14px)",
+              transform: imageReady ? "scale(1)" : "scale(1.04)",
+              animation: imageReady ? "heroSlowZoom 25s ease-out forwards" : "none",
+              transition: `filter 1400ms ${EASE}, transform 1400ms ${EASE}`,
+              willChange: "filter, transform",
             }}
           />
 
+          {/* Soft gradient overlay — keeps headline readable without muddying the image */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.15) 35%, rgba(0,0,0,0.45) 100%)",
+            }}
+          />
           <div
             className="absolute inset-0 pointer-events-none"
             style={{ background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 30%, rgba(0,0,0,0.55) 100%)" }}
@@ -74,26 +130,26 @@ export default function Index() {
             style={{ opacity: heroFade, willChange: "opacity", marginTop: "-18vh" }}
           >
             <h1
-              className="font-serif font-semibold text-white tracking-tight leading-[0.9] opacity-0 animate-fade-in"
+              className="font-serif font-semibold text-white tracking-tight leading-[0.9]"
               style={{
                 fontSize: "clamp(2.6rem, 1.2rem + 6vw, 5.8rem)",
-                animationDelay: "300ms",
-                animationFillMode: "both",
-                animationDuration: "1100ms",
+                opacity: headlineReady ? 1 : 0,
+                transform: headlineReady ? "translateY(0)" : "translateY(8px)",
+                transition: `opacity 1200ms ${EASE}, transform 1200ms ${EASE}`,
                 textShadow: "0 2px 40px rgba(0,0,0,0.55), 0 0 90px rgba(0,0,0,0.2)",
+                willChange: "opacity, transform",
               }}
             >
               From Dirt to Dynasty.
             </h1>
 
-
             <p
-              className="mt-6 font-serif italic text-white/75 opacity-0 animate-fade-in max-w-2xl mx-auto"
+              className="mt-6 font-serif italic text-white/75 max-w-2xl mx-auto"
               style={{
                 fontSize: "clamp(1rem, 0.55rem + 1vw, 1.45rem)",
-                animationDelay: "650ms",
-                animationFillMode: "both",
-                animationDuration: "900ms",
+                opacity: sublineReady ? 1 : 0,
+                transform: sublineReady ? "translateY(0)" : "translateY(6px)",
+                transition: `opacity 1100ms ${EASE}, transform 1100ms ${EASE}`,
                 textShadow: "0 2px 24px rgba(0,0,0,0.5)",
               }}
             >
@@ -101,8 +157,12 @@ export default function Index() {
             </p>
 
             <div
-              className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-fade-in"
-              style={{ animationDelay: "1050ms", animationFillMode: "both", animationDuration: "900ms" }}
+              className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4"
+              style={{
+                opacity: ctaReady ? 1 : 0,
+                transform: ctaReady ? "translateY(0)" : "translateY(6px)",
+                transition: `opacity 1100ms ${EASE}, transform 1100ms ${EASE}`,
+              }}
             >
               <button
                 onClick={openIntake}
@@ -120,6 +180,7 @@ export default function Index() {
             </div>
           </div>
         </section>
+
 
         {/* ═══ HERO → BREATHING TRANSITION ═════════════════ */}
         <div
@@ -413,6 +474,6 @@ export default function Index() {
           </div>
         </section>
       </Layout>
-    </>
+    </IntroContext.Provider>
   );
 }

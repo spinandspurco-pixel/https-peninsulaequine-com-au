@@ -6,18 +6,30 @@ const SESSION_KEY = "pe-brand-intro-seen";
 /**
  * Cinematic brand entrance — plays once per session, respects reduced motion.
  *
- * Sequence (total ≈ 2700ms):
- *   0      black + monogram glow fades up
- *   400    PENINSULA EQUINE
- *   1000   PREMIUM EQUINE ENVIRONMENTS
- *   1600   BUILT BY RIDERS. CRAFTED FOR PERFORMANCE.
- *   2300   soft dissolve to homepage
- *   2700   removed from DOM
+ * Timeline (total ≈ 2700ms, fades through black into hero):
+ *   0      charcoal screen + bronze radial glow
+ *   400    PE monogram fades in
+ *   900    PENINSULA EQUINE fades in
+ *   1400   hairline + Premium Equine Environments fades in
+ *   1900   Built by Riders · Crafted for Performance fades in
+ *   2400   text + overlay begin fading through black
+ *   2700   removed from DOM (hero already mounted underneath)
  */
-type Phase = "mark" | "title" | "sub" | "tag" | "dissolve" | "done";
+type Phase = "idle" | "mark" | "title" | "sub" | "tag" | "dissolve" | "done";
 
-export function BrandIntro({ onComplete }: { onComplete: () => void }) {
-  const [phase, setPhase] = useState<Phase>("mark");
+export function BrandIntro({ onComplete }: { onComplete?: () => void }) {
+  const initialPhase: Phase = useMemo(() => {
+    if (typeof window === "undefined") return "done";
+    if (sessionStorage.getItem(SESSION_KEY)) return "done";
+    const prefersReduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) {
+      sessionStorage.setItem(SESSION_KEY, "1");
+      return "done";
+    }
+    return "idle";
+  }, []);
+
+  const [phase, setPhase] = useState<Phase>(initialPhase);
 
   // Pre-compute particle positions so they don't re-shuffle on re-render.
   const particles = useMemo(
@@ -27,55 +39,46 @@ export function BrandIntro({ onComplete }: { onComplete: () => void }) {
         left: Math.random() * 100,
         top: 30 + Math.random() * 50,
         size: 1 + Math.random() * 1.8,
-        delay: Math.random() * 1200,
-        duration: 4000 + Math.random() * 3500,
+        delay: Math.random() * 1400,
+        duration: 4500 + Math.random() * 3500,
         drift: -8 + Math.random() * 16,
-        opacity: 0.18 + Math.random() * 0.32,
+        opacity: 0.18 + Math.random() * 0.3,
       })),
     [],
   );
 
   useEffect(() => {
-    // Already played this session — skip entirely.
-    if (typeof window !== "undefined" && sessionStorage.getItem(SESSION_KEY)) {
-      setPhase("done");
-      onComplete();
-      return;
-    }
-
-    // Reduced motion — skip the show, but still mark as seen.
-    const prefersReduced =
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReduced) {
-      sessionStorage.setItem(SESSION_KEY, "1");
-      setPhase("done");
-      onComplete();
+    if (initialPhase === "done") {
+      onComplete?.();
       return;
     }
 
     const timers: number[] = [];
-    timers.push(window.setTimeout(() => setPhase("title"), 400));
-    timers.push(window.setTimeout(() => setPhase("sub"), 1000));
-    timers.push(window.setTimeout(() => setPhase("tag"), 1600));
-    timers.push(window.setTimeout(() => setPhase("dissolve"), 2300));
-    timers.push(
-      window.setTimeout(() => {
-        sessionStorage.setItem(SESSION_KEY, "1");
-        setPhase("done");
-        onComplete();
-      }, 2700),
-    );
+    const at = (ms: number, fn: () => void) =>
+      timers.push(window.setTimeout(fn, ms));
+
+    at(400, () => setPhase("mark"));
+    at(900, () => setPhase("title"));
+    at(1400, () => setPhase("sub"));
+    at(1900, () => setPhase("tag"));
+    at(2400, () => setPhase("dissolve"));
+    at(2700, () => {
+      sessionStorage.setItem(SESSION_KEY, "1");
+      setPhase("done");
+      onComplete?.();
+    });
 
     return () => timers.forEach(clearTimeout);
-  }, [onComplete]);
+  }, [initialPhase, onComplete]);
 
   if (phase === "done") return null;
 
   const visible = (after: Phase) => {
-    const order: Phase[] = ["mark", "title", "sub", "tag", "dissolve"];
+    const order: Phase[] = ["idle", "mark", "title", "sub", "tag", "dissolve"];
     return order.indexOf(phase) >= order.indexOf(after);
   };
+
+  const easing = "cubic-bezier(0.45, 0, 0.15, 1)";
 
   return (
     <div
@@ -85,7 +88,7 @@ export function BrandIntro({ onComplete }: { onComplete: () => void }) {
       style={{
         background: "#0a0907",
         opacity: phase === "dissolve" ? 0 : 1,
-        transition: "opacity 600ms cubic-bezier(0.45, 0, 0.15, 1)",
+        transition: `opacity 700ms ${easing}`,
       }}
     >
       {/* Warm bronze radial glow */}
@@ -94,8 +97,8 @@ export function BrandIntro({ onComplete }: { onComplete: () => void }) {
         style={{
           background:
             "radial-gradient(ellipse 55% 45% at 50% 50%, hsl(36 45% 35% / 0.28) 0%, hsl(36 30% 20% / 0.12) 35%, transparent 70%)",
-          opacity: visible("mark") ? 1 : 0,
-          transition: "opacity 900ms ease-out",
+          opacity: 1,
+          transition: `opacity 1100ms ease-out`,
         }}
       />
 
@@ -104,7 +107,7 @@ export function BrandIntro({ onComplete }: { onComplete: () => void }) {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 90% 90% at 50% 50%, transparent 40%, rgba(0,0,0,0.85) 100%)",
+            "radial-gradient(ellipse 90% 90% at 50% 50%, transparent 40%, rgba(0,0,0,0.88) 100%)",
         }}
       />
 
@@ -142,8 +145,7 @@ export function BrandIntro({ onComplete }: { onComplete: () => void }) {
           height: "auto",
           opacity: visible("mark") ? 0.92 : 0,
           transform: visible("mark") ? "translateY(0)" : "translateY(6px)",
-          transition:
-            "opacity 900ms cubic-bezier(0.45,0,0.15,1), transform 900ms cubic-bezier(0.45,0,0.15,1)",
+          transition: `opacity 1100ms ${easing}, transform 1100ms ${easing}`,
           filter: "drop-shadow(0 0 18px hsl(38 50% 55% / 0.4))",
         }}
       />
@@ -156,8 +158,7 @@ export function BrandIntro({ onComplete }: { onComplete: () => void }) {
           color: "hsl(36 22% 88%)",
           opacity: visible("title") ? 1 : 0,
           transform: visible("title") ? "translateY(0)" : "translateY(8px)",
-          transition:
-            "opacity 800ms cubic-bezier(0.45,0,0.15,1), transform 800ms cubic-bezier(0.45,0,0.15,1)",
+          transition: `opacity 1000ms ${easing}, transform 1000ms ${easing}`,
           textShadow: "0 0 30px hsl(38 40% 30% / 0.5)",
         }}
       >
@@ -169,7 +170,7 @@ export function BrandIntro({ onComplete }: { onComplete: () => void }) {
         className="relative my-5 block h-px bg-[hsl(38_40%_60%/0.35)]"
         style={{
           width: visible("sub") ? "44px" : "0px",
-          transition: "width 900ms cubic-bezier(0.45,0,0.15,1)",
+          transition: `width 1100ms ${easing}`,
         }}
       />
 
@@ -182,8 +183,7 @@ export function BrandIntro({ onComplete }: { onComplete: () => void }) {
           color: "hsl(36 18% 70%)",
           opacity: visible("sub") ? 1 : 0,
           transform: visible("sub") ? "translateY(0)" : "translateY(6px)",
-          transition:
-            "opacity 700ms cubic-bezier(0.45,0,0.15,1), transform 700ms cubic-bezier(0.45,0,0.15,1)",
+          transition: `opacity 900ms ${easing}, transform 900ms ${easing}`,
         }}
       >
         Premium Equine Environments
@@ -198,8 +198,7 @@ export function BrandIntro({ onComplete }: { onComplete: () => void }) {
           color: "hsl(38 35% 55% / 0.85)",
           opacity: visible("tag") ? 1 : 0,
           transform: visible("tag") ? "translateY(0)" : "translateY(6px)",
-          transition:
-            "opacity 700ms cubic-bezier(0.45,0,0.15,1), transform 700ms cubic-bezier(0.45,0,0.15,1)",
+          transition: `opacity 900ms ${easing}, transform 900ms ${easing}`,
         }}
       >
         Built by Riders · Crafted for Performance

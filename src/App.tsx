@@ -73,7 +73,7 @@ const queryClient = new QueryClient();
 
 function AppContent() {
   return (
-    <IntroContext.Provider value={{ headerLogoReady: true }}>
+    <IntroContext.Provider value={{ headerLogoReady: true, headerReady: true }}>
       <Toaster />
       <Sonner />
       <BrowserRouter>
