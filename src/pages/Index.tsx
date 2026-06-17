@@ -158,6 +158,9 @@ export default function Index() {
           aria-hidden="true"
         />
 
+        {/* ═══ WHY PENINSULA EQUINE ════════════════════════ */}
+        <WhyPeninsulaEquine />
+
         {/* ═══ BREATHING STATEMENT ═════════════════════════ */}
         <section className="relative overflow-hidden cv-auto">
           <div className="py-36 sm:py-44 lg:py-52 bg-card relative">
