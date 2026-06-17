@@ -180,7 +180,7 @@ export default function ClientQuote() {
           <ProposalInvestment
             quote={quote}
             lineItems={lineItems}
-            groundlockOn={groundlockOn}
+            
             exclusions={quote.exclusions}
           />
         </div>
