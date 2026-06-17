@@ -228,7 +228,10 @@ export default function Schedule() {
 
   const releaseHold = useCallback(async () => {
     if (!holdSlotId) return;
-    await supabase.from("slot_holds").delete().eq("slot_id", holdSlotId).eq("session_id", sessionId.current);
+    await supabase.rpc("release_slot_hold" as any, {
+      p_slot_id: holdSlotId,
+      p_session_id: sessionId.current,
+    });
     if (holdRefreshRef.current) clearInterval(holdRefreshRef.current);
     setHoldSlotId(null);
     setHoldExpiry(0);
@@ -237,7 +240,10 @@ export default function Schedule() {
   const acquireHold = useCallback(async (slotId: string) => {
     // Release previous hold
     if (holdSlotId) {
-      await supabase.from("slot_holds").delete().eq("slot_id", holdSlotId).eq("session_id", sessionId.current);
+      await supabase.rpc("release_slot_hold" as any, {
+        p_slot_id: holdSlotId,
+        p_session_id: sessionId.current,
+      });
       if (holdRefreshRef.current) clearInterval(holdRefreshRef.current);
     }
 
@@ -255,11 +261,11 @@ export default function Schedule() {
       // Auto-refresh the hold before it expires
       holdRefreshRef.current = setInterval(async () => {
         const newExpiry = new Date(Date.now() + HOLD_DURATION_MS).toISOString();
-        await supabase
-          .from("slot_holds")
-          .update({ expires_at: newExpiry } as any)
-          .eq("slot_id", slotId)
-          .eq("session_id", sessionId.current);
+        await supabase.rpc("refresh_slot_hold" as any, {
+          p_slot_id: slotId,
+          p_session_id: sessionId.current,
+          p_expires_at: newExpiry,
+        });
         setHoldExpiry(Date.now() + HOLD_DURATION_MS);
       }, HOLD_REFRESH_MS);
     }
