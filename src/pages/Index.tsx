@@ -98,7 +98,7 @@ export default function Index() {
 
             <div
               className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-fade-in"
-              style={{ animationDelay: "1300ms", animationFillMode: "both", animationDuration: "900ms" }}
+              style={{ animationDelay: "1050ms", animationFillMode: "both", animationDuration: "900ms" }}
             >
               <button
                 onClick={openIntake}
