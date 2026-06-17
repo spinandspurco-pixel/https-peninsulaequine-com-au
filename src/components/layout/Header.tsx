@@ -34,6 +34,9 @@ export function Header() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const location = useLocation();
+
+  const servicesItem = navigation.find((i) => i.name === "Services");
+  const shouldAutoExpandServices = servicesItem ? isParentActive(servicesItem) : false;
   const { headerLogoReady } = useIntroState();
   const closeTimer = useRef<number | null>(null);
 
