@@ -8,7 +8,7 @@ import { IntroContext } from "@/hooks/useIntroState";
 import { useIntake } from "@/hooks/useIntake";
 
 import systemHero from "@/assets/system-hero.jpg";
-import systemOutcome from "@/assets/system-outcome.jpg";
+
 import systemEvent from "@/assets/system-event.jpg";
 import systemStructure from "@/assets/system-structure.jpg";
 import recoveryInternalHero from "@/assets/recovery-internal-hero.jpg";
