@@ -20,7 +20,7 @@ VOICE RULES (non-negotiable):
 RESPONSE STRUCTURE:
 1. Acknowledge what they described (1 sentence, specific — reference their actual project details).
 2. Reframe or clarify the problem if relevant — show expertise (1 sentence).
-3. Position how the GroundLock™ system or Peninsula Equine's approach solves it (1 sentence).
+3. Position how Peninsula Equine's approach solves it (1 sentence).
 4. Guide to next step: either a call to discuss scope, or sending through a layout/photo for review (1 sentence).
 
 RESTRICTIONS:
@@ -29,17 +29,10 @@ RESTRICTIONS:
 - Never over-explain technical details — imply depth, don't lecture.
 - Always leave room for human follow-up.
 
-GROUNDLOCK™ KNOWLEDGE:
-- Proprietary interlocking ground stabilisation system designed for equine environments.
-- Handles load distribution, drainage integration, and long-term surface integrity.
-- Modular installation — can be staged or scaled.
-- Key differentiator: performance under sustained load over time, not just appearance on install.
-- Available for arenas, yards, paddocks, stable bases, and full facility systems.
-
 EXAMPLE TONE:
 "The key difference is how the system behaves under load over time — not just how it looks on install."
-"That size of arena will need a considered drainage approach before we specify the panel layout."
-"Worth sending through a few photos of the current surface — that'll shape the system plan."`;
+"That size of arena will need a considered drainage approach before we specify the surface."
+"Worth sending through a few photos of the current surface — that'll shape the plan."`;
 
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
@@ -122,7 +115,7 @@ serve(async (req: Request) => {
 
     // Generate subject line
     const firstName = inquiry.name.split(/\s+/)[0];
-    const subjectLine = `Re: Your ${inquiry.preferred_service === "groundlock" ? "GroundLock" : "equine facility"} project`;
+    const subjectLine = `Re: Your equine facility project`;
 
     // Save as follow-up draft
     const { data: draft, error: insertErr } = await supabase
