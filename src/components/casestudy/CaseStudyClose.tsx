@@ -59,7 +59,7 @@ export function CaseStudyClose({ closingLine }: Props) {
               to="/gallery"
               className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/40 hover:text-foreground/80 transition-colors duration-500 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.4em]"
             >
-              Selected Work
+              Explore Selected Works
               <span className="w-6 h-px bg-foreground/20 transition-all duration-700 group-hover:w-12 group-hover:bg-foreground/60" />
             </Link>
           </div>
