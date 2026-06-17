@@ -96,12 +96,14 @@ export function BeforeAfterSlider({ before, after, alt = "Transformation" }: Bef
   return (
     <div
       ref={containerRef}
-      className="relative w-full overflow-hidden cursor-col-resize select-none group"
+      className="relative w-full overflow-hidden cursor-col-resize select-none group touch-none"
       style={{
         aspectRatio: "16 / 9",
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? "translateY(0)" : "translateY(24px)",
         transition: "opacity 1s ease-out, transform 1s ease-out",
+        touchAction: "none",
+        WebkitUserSelect: "none",
       }}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
@@ -190,7 +192,7 @@ export function BeforeAfterSlider({ before, after, alt = "Transformation" }: Bef
         aria-valuenow={Math.round(position)}
         aria-valuetext={`${Math.round(position)} percent raw, ${Math.round(100 - position)} percent resolved`}
         onKeyDown={handleKeyDown}
-        className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 cursor-grab active:cursor-grabbing focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 rounded-full transition-opacity duration-300"
+        className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 cursor-grab active:cursor-grabbing focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 rounded-full transition-opacity duration-300 touch-none"
         style={{
           left: `${position}%`,
           opacity: dragging ? 1 : 0.85,
