@@ -1959,6 +1959,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_quote_by_share_token: {
+        Args: { p_token: string }
+        Returns: boolean
+      }
       cleanup_expired_holds: { Args: never; Returns: undefined }
       get_event_rsvp_counts: {
         Args: { p_event_id: string }
@@ -1970,12 +1974,21 @@ export type Database = {
           waitlisted_guests: number
         }[]
       }
+      get_quote_by_share_token: { Args: { p_token: string }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      refresh_slot_hold: {
+        Args: { p_expires_at: string; p_session_id: string; p_slot_id: string }
+        Returns: undefined
+      }
+      release_slot_hold: {
+        Args: { p_session_id: string; p_slot_id: string }
+        Returns: undefined
       }
     }
     Enums: {
