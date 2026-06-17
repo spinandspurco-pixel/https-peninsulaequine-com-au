@@ -1,41 +1,61 @@
 import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { Home } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Layout } from "@/components/layout/Layout";
 
 const NotFound = () => {
   const location = useLocation();
 
   useEffect(() => {
     console.error("404 Error: User attempted to access non-existent route:", location.pathname);
+    document.title = "Page Not Found — Peninsula Equine";
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center px-4">
-        <h1 className="font-serif text-8xl font-bold text-accent mb-4">404</h1>
-        <h2 className="font-serif text-2xl font-semibold text-foreground mb-4">
-          Page Not Found
-        </h2>
-        <p className="text-muted-foreground max-w-md mx-auto mb-8">
-          The page you're looking for doesn't exist or has been moved. 
-          Let's get you back on track.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
-            <Link to="/">
-              <Home className="mr-2 h-4 w-4" />
-              Back to Home
+    <Layout>
+      <section className="relative min-h-[80vh] flex items-center justify-center bg-background overflow-hidden">
+        {/* Subtle architectural grid backdrop */}
+        <div className="absolute inset-0 engineering-grid opacity-[0.04] pointer-events-none" aria-hidden="true" />
+
+        <div className="relative z-10 max-w-2xl mx-auto px-6 text-center">
+          {/* Overline */}
+          <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.5em] mb-10">
+            404 — Off the plan
+          </p>
+
+          {/* Heading */}
+          <h1 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.02em] text-[clamp(2rem,1.25rem+3vw,3.25rem)] mb-6">
+            This page isn't built.
+          </h1>
+
+          {/* Body */}
+          <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px] max-w-md mx-auto mb-14">
+            The route you followed doesn't lead anywhere on the estate.
+            Step back to the homepage, or speak with us directly.
+          </p>
+
+          {/* Hairline divider */}
+          <span className="block mx-auto w-10 h-px bg-accent/40 mb-12" aria-hidden="true" />
+
+          {/* Minimal text-link CTAs */}
+          <div className="flex flex-col sm:flex-row gap-[clamp(1.75rem,1rem+2vw,3.5rem)] justify-center items-center">
+            <Link
+              to="/"
+              className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[11px] tracking-[0.4em]"
+            >
+              <span className="w-6 h-px bg-accent/50 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
+              Return Home
             </Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link to="/contact">
-              Contact Us
+            <Link
+              to="/contact"
+              className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/40 hover:text-foreground/80 transition-colors duration-500 text-[11px] tracking-[0.4em]"
+            >
+              Speak With Us
+              <span className="w-6 h-px bg-foreground/20 transition-all duration-700 group-hover:w-12 group-hover:bg-foreground/60" />
             </Link>
-          </Button>
+          </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </Layout>
   );
 };
 

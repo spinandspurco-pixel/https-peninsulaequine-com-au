@@ -10,7 +10,7 @@ import { siteConfig } from "@/data/content";
 import { cn } from "@/lib/utils";
 import { z } from "zod";
 
-import heroVideo from "@/assets/videos/hero-blueprint-gold.mp4";
+
 
 /* ── Constants ──────────────────────────────────────── */
 const PROPERTY_TYPES = [
