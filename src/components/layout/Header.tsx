@@ -34,7 +34,7 @@ export function Header() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const location = useLocation();
-  const { headerLogoReady } = useIntroState();
+  const { headerLogoReady, headerReady } = useIntroState();
   const closeTimer = useRef<number | null>(null);
   const mobileToggleRef = useRef<HTMLButtonElement | null>(null);
   const desktopDropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -150,6 +150,13 @@ export function Header() {
           ? "bg-[hsl(var(--header-scrolled-bg)/0.98)] backdrop-blur-xl border-b border-accent/8"
           : "bg-transparent"
       )}
+      style={{
+        opacity: headerReady ? 1 : 0,
+        transform: headerReady ? "none" : "translateY(-6px)",
+        transition:
+          "opacity 1100ms cubic-bezier(0.45,0,0.15,1), transform 1100ms cubic-bezier(0.45,0,0.15,1), background-color 700ms ease-out, backdrop-filter 700ms ease-out, border-color 700ms ease-out",
+        pointerEvents: headerReady ? "auto" : "none",
+      }}
     >
       <div className="section-container">
         <nav className="flex items-center justify-between h-18 sm:h-22" aria-label="Primary">
