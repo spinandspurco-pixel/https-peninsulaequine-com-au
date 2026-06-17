@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ProposalHeader } from "@/components/proposal/ProposalHeader";
 import { ProposalOverview } from "@/components/proposal/ProposalOverview";
 import { ProposalScope } from "@/components/proposal/ProposalScope";
-import { ProposalGroundLock } from "@/components/proposal/ProposalGroundLock";
+
 import { ProposalInvestment } from "@/components/proposal/ProposalInvestment";
 import { ProposalDecision } from "@/components/proposal/ProposalDecision";
 import { toast } from "sonner";
@@ -175,13 +175,6 @@ export default function ClientQuote() {
           <ProposalScope groupedItems={groupedItems} scopeSummary={quote.scope_summary} />
         </div>
 
-        <div className="animate-fade-in" style={{ animationDuration: "400ms", animationDelay: "180ms", animationFillMode: "both" }}>
-          <ProposalGroundLock
-            included={quote.groundlock_included}
-            groundlockOn={groundlockOn}
-            onToggle={setGroundlockOn}
-          />
-        </div>
 
         <div className="animate-fade-in" style={{ animationDuration: "350ms", animationDelay: "220ms", animationFillMode: "both" }}>
           <ProposalInvestment
