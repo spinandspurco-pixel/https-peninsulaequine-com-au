@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import {
   X, Phone, Mail, MapPin, DollarSign, Calendar,
   FileText, ArrowRight, CheckCircle, Zap, Lightbulb,
-  Briefcase, Copy, Check, Send,
+  Briefcase, Sparkles, Copy, Check, Send,
 } from "lucide-react";
 import { CommunicationTimeline } from "@/components/CommunicationTimeline";
 import { scheduleLeadFollowUps } from "@/lib/autoSendScheduler";
