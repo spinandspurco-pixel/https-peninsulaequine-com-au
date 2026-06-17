@@ -25,6 +25,7 @@ const navigation: NavItem[] = [
   },
   { name: "Recovery Station", href: "/recovery-stations" },
   { name: "Selected Works", href: "/gallery" },
+  { name: "Field Notes", href: "/field-notes" },
   { name: "Contact", href: "/contact" },
 ];
 
