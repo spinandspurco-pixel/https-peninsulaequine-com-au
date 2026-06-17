@@ -396,6 +396,14 @@
   100% { transform: translate3d(var(--dust-x, 2vw), -22vh, 0); opacity: 0; }
 }
 
+@keyframes peDust {
+  0%   { transform: translate3d(0, 0, 0); opacity: 0; }
+  20%  { opacity: var(--pe-dust-opacity, 0.35); }
+  80%  { opacity: var(--pe-dust-opacity, 0.35); }
+  100% { transform: translate3d(var(--pe-dust-drift, 0), -22vh, 0); opacity: 0; }
+}
+
+
 .hero-particle {
   position: absolute;
   width: 2px;
