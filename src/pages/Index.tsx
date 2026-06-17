@@ -27,6 +27,39 @@ const services = [
   { name: "Infrastructure & Maintenance", href: "/infrastructure", note: "The work that holds it all together." },
 ];
 
+const featuredWorks = [
+  {
+    slug: "main-ridge",
+    title: "Main Ridge",
+    location: "Mornington Peninsula",
+    kind: "Complete Property Build",
+    image: mainRidgeInterior,
+    alt: "Main Ridge barn interior with exposed timber framing at dusk",
+    summary:
+      "Earthworks, structure and surface resolved as a single performance system — a property rebuilt from the ground up.",
+  },
+  {
+    slug: "aberdeen-farm",
+    title: "Private Estate",
+    location: "Mornington Peninsula",
+    kind: "Private Stable Complex",
+    image: aberdeenExterior,
+    alt: "Private estate stable exterior in late afternoon light",
+    summary:
+      "A full stable complex resolved as one architectural gesture — stone, timber and air, engineered to perform for generations.",
+  },
+  {
+    slug: "equitana",
+    title: "Equitana Melbourne",
+    location: "Melbourne",
+    kind: "Competition Arena",
+    image: equitanaArena1,
+    alt: "Equitana Melbourne competition arena surface, prepared",
+    summary:
+      "An event-grade arena delivered to international standard — surface, drainage and presentation tuned for elite competition.",
+  },
+];
+
 export default function Index() {
   const heroContentRef = useRef<HTMLDivElement>(null);
   const [heroFade, setHeroFade] = useState(1);
