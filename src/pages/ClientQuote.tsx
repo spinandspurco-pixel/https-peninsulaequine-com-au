@@ -90,12 +90,11 @@ export default function ClientQuote() {
 
   async function handleAccept() {
     if (!quote) return;
-    const { error } = await supabase
-      .from("quotes")
-      .update({ accepted_at: new Date().toISOString(), status: "accepted" })
-      .eq("id", quote.id);
+    const { data: ok, error } = await supabase.rpc("accept_quote_by_share_token" as any, {
+      p_token: quote.share_token,
+    });
 
-    if (error) {
+    if (error || !ok) {
       toast.error("Unable to accept quote. Please contact us directly.");
       return;
     }
