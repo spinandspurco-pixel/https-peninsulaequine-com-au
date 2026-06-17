@@ -275,9 +275,27 @@ export default function Schedule() {
   useEffect(() => {
     const cleanup = () => {
       if (holdSlotId) {
-        navigator.sendBeacon?.(
-          `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/slot_holds?slot_id=eq.${holdSlotId}&session_id=eq.${sessionId.current}`,
-        );
+        const url = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/rpc/release_slot_hold`;
+        const body = JSON.stringify({
+          p_slot_id: holdSlotId,
+          p_session_id: sessionId.current,
+        });
+        const blob = new Blob([body], { type: "application/json" });
+        // sendBeacon doesn't allow custom headers; use fetch keepalive for auth header.
+        try {
+          fetch(url, {
+            method: "POST",
+            keepalive: true,
+            headers: {
+              "Content-Type": "application/json",
+              apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            },
+            body,
+          });
+        } catch {
+          navigator.sendBeacon?.(url, blob);
+        }
       }
     };
     window.addEventListener("beforeunload", cleanup);
