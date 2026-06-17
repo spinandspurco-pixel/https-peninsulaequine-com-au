@@ -59,7 +59,7 @@ const TrainerDocumentPortal = lazy(() => import("./pages/TrainerDocumentPortal")
 const TrainerProfile = lazy(() => import("./pages/TrainerProfile"));
 
 const CaseStudy = lazy(() => import("./pages/CaseStudy"));
-const EquusRidge = lazy(() => import("./pages/EquusRidge"));
+
 const SiteAssessment = lazy(() => import("./pages/SiteAssessment"));
 const ClientQuote = lazy(() => import("./pages/ClientQuote"));
 const Visualise = lazy(() => import("./pages/Visualise"));

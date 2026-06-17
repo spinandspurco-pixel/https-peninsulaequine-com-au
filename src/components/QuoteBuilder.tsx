@@ -94,7 +94,7 @@ export function QuoteBuilder({ quoteId, inquiryId, onSaved, onClose }: QuoteBuil
     location: "",
     property_name: "",
     project_overview: "",
-    groundlock_included: false,
+    
     scope_summary: "",
     exclusions: "• Access to site assumed available\n• Council permits not included\n• Rock removal not included unless specified\n• Variations require written approval and updated pricing",
     internal_notes: "",
@@ -137,7 +137,7 @@ export function QuoteBuilder({ quoteId, inquiryId, onSaved, onClose }: QuoteBuil
         expiry_date: qRes.data.expiry_date || "",
         property_name: qRes.data.property_name || "",
         project_overview: qRes.data.project_overview || "",
-        groundlock_included: qRes.data.groundlock_included || false,
+        
         share_token: qRes.data.share_token || undefined,
       });
     }
