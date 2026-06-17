@@ -153,7 +153,7 @@ export default function ThankYou() {
             </Button>
             <Button asChild variant="ghost">
               <Link to="/gallery">
-                View Our Work
+                Explore Selected Works
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
