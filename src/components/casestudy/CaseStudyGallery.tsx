@@ -10,15 +10,15 @@ export function CaseStudyGallery({ images }: Props) {
   const [active, setActive] = useState<number | null>(null);
 
   return (
-    <section className="py-32 sm:py-44 bg-card">
-      <div className="max-w-6xl mx-auto px-6 sm:px-10">
+    <section className="py-[clamp(6rem,4rem+8vw,11rem)] bg-card">
+      <div className="max-w-6xl mx-auto px-[clamp(1.5rem,0.75rem+3vw,4rem)]">
         <RevealOnScroll direction="up" duration={900}>
-          <div className="mb-14 sm:mb-20 flex items-end justify-between">
+          <div className="mb-[clamp(3rem,2rem+4vw,5rem)] flex items-end justify-between gap-6">
             <div className="space-y-3">
-              <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/45">
+              <p className="font-mono uppercase text-accent/45 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">
                 Chapter V — Completed
               </p>
-              <p className="font-serif italic text-[13px] sm:text-sm text-foreground/35 max-w-md leading-relaxed">
+              <p className="font-serif italic text-foreground/35 max-w-md leading-[1.55] text-[clamp(0.75rem,0.7rem+0.2vw,0.875rem)]">
                 Resolved. In use.
               </p>
             </div>
@@ -79,7 +79,7 @@ export function CaseStudyGallery({ images }: Props) {
             alt={images[active].alt}
             className="max-w-full max-h-full object-contain"
           />
-          <span className="absolute bottom-6 left-1/2 -translate-x-1/2 font-mono text-[9px] uppercase tracking-[0.4em] text-accent/50">
+          <span className="absolute bottom-6 left-1/2 -translate-x-1/2 font-mono uppercase text-accent/50 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.4em]">
             Close
           </span>
         </button>
