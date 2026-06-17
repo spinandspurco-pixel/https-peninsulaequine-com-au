@@ -1,27 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://peninsulaequine.com.au/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://peninsulaequine.com.au/services</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://peninsulaequine.com.au/services/arena-construction</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://peninsulaequine.com.au/services/barn-construction</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://peninsulaequine.com.au/services/fencing</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://peninsulaequine.com.au/services/infrastructure</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://peninsulaequine.com.au/services/round-pens</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://peninsulaequine.com.au/services/renovations</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://peninsulaequine.com.au/services/full-facility</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://peninsulaequine.com.au/services/clinics-events</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://peninsulaequine.com.au/arenas</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://peninsulaequine.com.au/stables</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://peninsulaequine.com.au/equine-estates</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://peninsulaequine.com.au/recovery-stations</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://peninsulaequine.com.au/infrastructure</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://peninsulaequine.com.au/gallery</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://peninsulaequine.com.au/lessons</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://peninsulaequine.com.au/book-lesson</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://peninsulaequine.com.au/pricing</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://peninsulaequine.com.au/about</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://peninsulaequine.com.au/process</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://peninsulaequine.com.au/testimonials</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://peninsulaequine.com.au/events</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://peninsulaequine.com.au/contact</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://peninsulaequine.com.au/faq</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://peninsulaequine.com.au/schedule</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://peninsulaequine.com.au/group-booking</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://peninsulaequine.com.au/process</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://peninsulaequine.com.au/testimonials</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://peninsulaequine.com.au/faq</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://peninsulaequine.com.au/equus-ridge</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://peninsulaequine.com.au/privacy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://peninsulaequine.com.au/terms</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
 </urlset>

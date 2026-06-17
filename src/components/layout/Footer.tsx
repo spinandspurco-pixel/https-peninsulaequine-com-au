@@ -3,31 +3,30 @@ import { Phone, Mail, MapPin, Instagram, Facebook, ArrowUpRight } from "lucide-r
 import { siteConfig } from "@/data/content";
 import logoPeMark from "@/assets/logo-pe-mark.webp";
 
-const navLinks = [
-  { name: "Projects", href: "/gallery" },
-  { name: "GroundLock™", href: "/groundlock" },
-  { name: "GroundLock Systems", href: "/forge" },
-  { name: "About", href: "/about" },
-  { name: "Contact", href: "/contact" },
+const capabilityLinks = [
+  { name: "Arenas", href: "/arenas" },
+  { name: "Stables", href: "/stables" },
+  { name: "Equine Estates", href: "/equine-estates" },
+  { name: "Recovery Stations", href: "/recovery-stations" },
+  { name: "Infrastructure & Maintenance", href: "/infrastructure" },
 ];
 
-const ecosystemLinks = [
-  { name: "Equus Ridge", desc: "Destination" },
-  { name: "Spin & Spur", desc: "Lifestyle" },
+const studioLinks = [
+  { name: "Selected Work", href: "/gallery" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
 ];
 
 export function Footer() {
   return (
     <footer className="bg-[hsl(var(--footer-bg))] text-[hsl(var(--footer-foreground))] relative">
-      {/* Subtle top accent line */}
       <div className="divider-grid" />
 
-      {/* Main Footer */}
       <div className="section-container py-28 sm:py-36 lg:py-44">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 lg:gap-20">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-16 lg:gap-20">
 
           {/* Brand */}
-          <div>
+          <div className="md:col-span-1">
             <Link to="/" className="inline-flex items-center gap-3.5 mb-10 group">
               <img
                 src={logoPeMark}
@@ -39,7 +38,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-[hsl(var(--footer-muted))] text-[13px] leading-[2] max-w-xs mb-12">
-              Engineered equine infrastructure — arenas, stables, ground systems, and rural builds designed for the horse.
+              Premium equine environments — built by riders, crafted for performance.
             </p>
             <div className="flex gap-5">
               {[
@@ -60,13 +59,32 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Navigate */}
+          {/* Capabilities */}
           <div>
             <h4 className="text-[9px] font-sans font-semibold uppercase tracking-[0.35em] text-accent/50 mb-10">
-              Navigate
+              Capabilities
             </h4>
             <ul className="space-y-5">
-              {navLinks.map((link) => (
+              {capabilityLinks.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    to={link.href}
+                    className="text-[13px] text-[hsl(var(--footer-muted))] hover:text-accent transition-colors duration-500"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Studio */}
+          <div>
+            <h4 className="text-[9px] font-sans font-semibold uppercase tracking-[0.35em] text-accent/50 mb-10">
+              Studio
+            </h4>
+            <ul className="space-y-5">
+              {studioLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.href}
@@ -115,26 +133,10 @@ export function Footer() {
                 to="/contact"
                 className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-semibold text-accent/80 hover:text-accent transition-colors duration-500"
               >
-                Discuss Project <ArrowUpRight className="h-3 w-3" />
+                Apply to Build <ArrowUpRight className="h-3 w-3" />
               </Link>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Ecosystem */}
-      <div className="border-t border-border/10">
-        <div className="section-container py-16 flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16">
-          {ecosystemLinks.map((link) => (
-            <div key={link.name} className="text-center">
-              <p className="font-serif text-sm tracking-[0.15em] text-muted-foreground/40 italic">
-                {link.name}
-              </p>
-              <p className="text-[10px] text-muted-foreground/20 tracking-[0.12em] mt-2 font-sans">
-                {link.desc}
-              </p>
-            </div>
-          ))}
         </div>
       </div>
 
