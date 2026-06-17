@@ -8,6 +8,7 @@ interface BeforeAfterSliderProps {
 
 export function BeforeAfterSlider({ before, after, alt = "Transformation" }: BeforeAfterSliderProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const handleRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState(50);
   const [dragging, setDragging] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -34,7 +35,6 @@ export function BeforeAfterSlider({ before, after, alt = "Transformation" }: Bef
 
     const animate = (now: number) => {
       const t = Math.min((now - start) / duration, 1);
-      // ease-in-out sweep from 50 → 30 → 70 → 50
       const eased = t < 0.33
         ? 50 - 20 * (t / 0.33)
         : t < 0.66
@@ -72,7 +72,26 @@ export function BeforeAfterSlider({ before, after, alt = "Transformation" }: Bef
     setDragging(false);
   }, []);
 
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    const step = e.shiftKey ? 10 : 2;
+    let next = position;
+    switch (e.key) {
+      case "ArrowLeft": next = Math.max(0, position - step); break;
+      case "ArrowRight": next = Math.min(100, position + step); break;
+      case "Home": next = 0; break;
+      case "End": next = 100; break;
+      case "PageUp": next = Math.min(100, position + 10); break;
+      case "PageDown": next = Math.max(0, position - 10); break;
+      default: return;
+    }
+    e.preventDefault();
+    setHasInteracted(true);
+    setPosition(next);
+  }, [position]);
+
   const imgFilter = "brightness(1.0) contrast(1.1) saturate(0.85)";
+  // Blur reveal: edge transition zone gets blurred briefly during drag
+  const edgeBlur = dragging ? 1.5 : 0;
 
   return (
     <div
@@ -87,11 +106,18 @@ export function BeforeAfterSlider({ before, after, alt = "Transformation" }: Bef
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
+      role="group"
+      aria-label={`${alt} — before and after comparison`}
     >
+      {/* Screen reader live region */}
+      <span className="sr-only" aria-live="polite" aria-atomic="true">
+        Showing {Math.round(position)}% raw, {Math.round(100 - position)}% resolved
+      </span>
+
       {/* After (full) */}
       <img
         src={after}
-        alt={`${alt} — after`}
+        alt={`${alt} — resolved`}
         className="absolute inset-0 w-full h-full object-cover"
         style={{ filter: imgFilter }}
         loading="lazy"
@@ -101,14 +127,14 @@ export function BeforeAfterSlider({ before, after, alt = "Transformation" }: Bef
       {/* Before (clipped) */}
       <div
         className="absolute inset-0 overflow-hidden"
-        style={{ width: `${position}%` }}
+        style={{ width: `${position}%`, transition: dragging ? "none" : "width 120ms ease-out" }}
       >
         <img
           src={before}
-          alt={`${alt} — before`}
-          className="absolute inset-0 w-full h-full object-cover"
+          alt={`${alt} — raw`}
+          className="absolute inset-0 h-full object-cover"
           style={{
-            width: `${containerRef.current?.offsetWidth || 100}px`,
+            width: containerRef.current?.offsetWidth ? `${containerRef.current.offsetWidth}px` : "100%",
             maxWidth: "none",
             filter: imgFilter,
           }}
@@ -117,10 +143,25 @@ export function BeforeAfterSlider({ before, after, alt = "Transformation" }: Bef
         />
       </div>
 
-      {/* Grain overlay for texture consistency */}
+      {/* Blur reveal mask along divider edge */}
+      {edgeBlur > 0 && (
+        <div
+          className="absolute top-0 bottom-0 pointer-events-none"
+          style={{
+            left: `calc(${position}% - 18px)`,
+            width: "36px",
+            backdropFilter: `blur(${edgeBlur}px)`,
+            WebkitBackdropFilter: `blur(${edgeBlur}px)`,
+            maskImage: "linear-gradient(to right, transparent, black 50%, transparent)",
+            WebkitMaskImage: "linear-gradient(to right, transparent, black 50%, transparent)",
+          }}
+        />
+      )}
+
+      {/* Grain overlay */}
       <div className="absolute inset-0 grain-texture opacity-[0.015] pointer-events-none" />
 
-      {/* Subtle vignette */}
+      {/* Vignette */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -128,40 +169,51 @@ export function BeforeAfterSlider({ before, after, alt = "Transformation" }: Bef
         }}
       />
 
-      {/* Divider line — architectural */}
+      {/* Divider line */}
       <div
         className="absolute top-0 bottom-0 w-px pointer-events-none"
         style={{
           left: `${position}%`,
           background: "linear-gradient(to bottom, transparent, hsl(var(--accent) / 0.5) 20%, hsl(var(--accent) / 0.5) 80%, transparent)",
+          transition: dragging ? "none" : "left 120ms ease-out",
         }}
       />
 
-      {/* Handle — minimal */}
+      {/* Draggable handle — keyboard focusable */}
       <div
-        className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none transition-opacity duration-300"
+        ref={handleRef}
+        role="slider"
+        tabIndex={0}
+        aria-label={`${alt} comparison slider`}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(position)}
+        aria-valuetext={`${Math.round(position)} percent raw, ${Math.round(100 - position)} percent resolved`}
+        onKeyDown={handleKeyDown}
+        className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 cursor-grab active:cursor-grabbing focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 rounded-full transition-opacity duration-300"
         style={{
           left: `${position}%`,
-          opacity: dragging ? 1 : 0.7,
+          opacity: dragging ? 1 : 0.85,
+          transition: dragging ? "none" : "left 120ms ease-out, opacity 200ms ease-out",
         }}
       >
-        <div className="w-9 h-9 rounded-full border border-accent/40 bg-background/40 backdrop-blur-sm flex items-center justify-center shadow-lg shadow-black/20">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="text-accent/70">
-            <path d="M4 7L1 7M1 7L3.5 4.5M1 7L3.5 9.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-            <path d="M10 7L13 7M13 7L10.5 4.5M13 7L10.5 9.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+        <div className="w-11 h-11 rounded-full border border-accent/50 bg-background/50 backdrop-blur-md flex items-center justify-center shadow-lg shadow-black/30 group-hover:border-accent/70 transition-colors">
+          <svg width="16" height="16" viewBox="0 0 14 14" fill="none" className="text-accent/80">
+            <path d="M4 7L1 7M1 7L3.5 4.5M1 7L3.5 9.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+            <path d="M10 7L13 7M13 7L10.5 4.5M13 7L10.5 9.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
           </svg>
         </div>
       </div>
 
       {/* Labels */}
       <span
-        className="absolute top-5 left-5 font-mono text-[9px] uppercase tracking-[0.35em] pointer-events-none transition-opacity duration-500"
+        className="absolute top-5 left-5 font-mono text-[9px] uppercase tracking-[0.35em] pointer-events-none"
         style={{ color: "hsl(var(--accent) / 0.45)" }}
       >
         Raw
       </span>
       <span
-        className="absolute top-5 right-5 font-mono text-[9px] uppercase tracking-[0.35em] pointer-events-none transition-opacity duration-500"
+        className="absolute top-5 right-5 font-mono text-[9px] uppercase tracking-[0.35em] pointer-events-none"
         style={{ color: "hsl(var(--accent) / 0.45)" }}
       >
         Resolved
