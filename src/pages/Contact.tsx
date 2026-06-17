@@ -23,7 +23,7 @@ const PROPERTY_TYPES = [
 const PROJECT_SCOPES = [
   { id: "arena-construction", label: "Arena Construction" },
   { id: "stables-barn", label: "Stables / Barn" },
-  { id: "ground-systems", label: "Ground Stabilisation (GroundLock™)" },
+  { id: "ground-systems", label: "Ground Stabilisation" },
   { id: "drainage-civil", label: "Drainage / Civil Works" },
   { id: "full-infrastructure", label: "Full Property Infrastructure" },
   { id: "design-planning", label: "Design & Site Planning" },

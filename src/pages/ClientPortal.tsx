@@ -14,7 +14,7 @@ interface PortalProject {
   build_stage: string;
   stage_label: string | null;
   property_layout_notes: string | null;
-  groundlock_included: boolean;
+  
   system_notes: string | null;
   contact_note: string | null;
 }
@@ -301,7 +301,7 @@ export default function ClientPortal() {
         {updates.length > 0 && <div className="w-full h-px bg-primary-foreground/[0.04]" />}
 
         {/* ═══ 4. SYSTEM DETAILS ═══ */}
-        {(project.groundlock_included || project.system_notes) && (
+        {project.system_notes && (
           <section className="py-16 sm:py-24">
             <RevealOnScroll direction="up">
               <div className="flex items-center gap-4 mb-10">
@@ -309,33 +309,18 @@ export default function ClientPortal() {
                 <p className="text-overline text-accent/35">System Details</p>
               </div>
             </RevealOnScroll>
-
-            {project.groundlock_included && (
-              <RevealOnScroll direction="up" delay={80}>
-                <div className="bg-primary-foreground/[0.03] border border-accent/8 p-7 rounded-sm mb-6 max-w-md">
-                  <p className="text-[11px] font-mono uppercase tracking-[0.25em] text-accent/40 mb-3">
-                    GroundLock™ System
-                  </p>
-                  <p className="text-[12px] text-primary-foreground/35 leading-[1.7]">
-                    Integrated into your project for long-term ground stabilisation.
-                  </p>
-                </div>
-              </RevealOnScroll>
-            )}
-
-            {project.system_notes && (
-              <RevealOnScroll direction="up" delay={160}>
-                <p className="text-[13px] text-primary-foreground/30 leading-[1.8] max-w-md">
-                  {project.system_notes}
-                </p>
-              </RevealOnScroll>
-            )}
+            <RevealOnScroll direction="up" delay={160}>
+              <p className="text-[13px] text-primary-foreground/30 leading-[1.8] max-w-md">
+                {project.system_notes}
+              </p>
+            </RevealOnScroll>
           </section>
         )}
 
-        {(project.groundlock_included || project.system_notes) && (
+        {project.system_notes && (
           <div className="w-full h-px bg-primary-foreground/[0.04]" />
         )}
+
 
         {/* ═══ 5. DIRECT CONTACT ═══ */}
         <section className="py-16 sm:py-24">

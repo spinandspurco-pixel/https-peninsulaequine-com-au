@@ -33,7 +33,7 @@ interface Quote {
   location: string;
   property_name: string;
   project_overview: string;
-  groundlock_included: boolean;
+  
   scope_summary: string;
   exclusions: string;
   internal_notes: string;
@@ -353,10 +353,8 @@ export function QuoteBuilder({ quoteId, inquiryId, onSaved, onClose }: QuoteBuil
             <label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60">Property Name</label>
             <Input value={quote.property_name} onChange={(e) => setQuote({ ...quote, property_name: e.target.value })} className="h-8 bg-background/60 border-border/50 text-sm" placeholder="e.g. Willowbrook Estate" />
           </div>
-          <div className="space-y-1 flex items-center gap-3 pt-4">
-            <input type="checkbox" id="groundlock-toggle" checked={quote.groundlock_included} onChange={(e) => setQuote({ ...quote, groundlock_included: e.target.checked })} className="accent-accent" />
-            <label htmlFor="groundlock-toggle" className="text-[11px] text-muted-foreground/60 cursor-pointer">Include GroundLock™ System</label>
-          </div>
+          <div className="space-y-1 pt-4" />
+
         </CardContent>
       </Card>
 

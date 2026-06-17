@@ -18,7 +18,7 @@ const PROJECT_TYPES = [
   "Fencing & Infrastructure",
   "Round Pen",
   "Renovation",
-  "GroundLock System",
+  "Recovery Station",
   "Other",
 ];
 
