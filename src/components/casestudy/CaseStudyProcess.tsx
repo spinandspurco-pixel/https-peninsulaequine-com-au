@@ -7,14 +7,14 @@ interface Props {
 
 export function CaseStudyProcess({ images }: Props) {
   return (
-    <section className="py-28 sm:py-36 bg-background">
+    <section className="py-32 sm:py-44 bg-background">
       <div className="max-w-6xl mx-auto px-6 sm:px-10">
         <RevealOnScroll direction="up" duration={900}>
-          <div className="mb-12 sm:mb-16 space-y-3">
+          <div className="mb-14 sm:mb-20 space-y-3">
             <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/45">
-              Construction
+              Chapter IV — Construction
             </p>
-            <p className="font-serif italic text-[13px] sm:text-sm text-foreground/30 max-w-md">
+            <p className="font-serif italic text-[13px] sm:text-sm text-foreground/35 max-w-md leading-relaxed">
               The work, recorded as it was built.
             </p>
             <RevealLine width="w-8" delay={200} />
@@ -31,9 +31,16 @@ export function CaseStudyProcess({ images }: Props) {
                   loading="lazy"
                   className="absolute inset-0 w-full h-full object-cover img-gallery transition-transform duration-[1400ms] ease-[cubic-bezier(0.45,0,0.15,1)] group-hover:scale-[1.04]"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                <figcaption className="absolute bottom-0 left-0 right-0 p-4 font-mono text-[9px] uppercase tracking-[0.3em] text-accent/60 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
-                  {String(i + 1).padStart(2, "0")} — {img.alt}
+                {/* persistent vignette so caption stays legible */}
+                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background/85 via-background/30 to-transparent" />
+                {/* persistent index */}
+                <figcaption className="absolute bottom-0 left-0 right-0 px-4 pb-3.5 flex items-center justify-between gap-3">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.4em] text-accent/65">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="font-serif italic text-[10px] sm:text-[11px] text-foreground/45 truncate text-right">
+                    {img.alt}
+                  </span>
                 </figcaption>
               </figure>
             </RevealOnScroll>
