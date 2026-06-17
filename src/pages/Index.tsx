@@ -12,6 +12,9 @@ import systemOutcome from "@/assets/system-outcome.jpg";
 import systemEvent from "@/assets/system-event.jpg";
 import systemStructure from "@/assets/system-structure.jpg";
 import recoveryInternalHero from "@/assets/recovery-internal-hero.jpg";
+import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
+import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
+import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
 
 const SESSION_KEY = "pe-brand-intro-seen";
 const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
