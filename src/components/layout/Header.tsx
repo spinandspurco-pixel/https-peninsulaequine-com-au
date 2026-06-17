@@ -55,6 +55,14 @@ export function Header() {
   const isParentActive = (item: NavItem) =>
     isActive(item.href) || (item.children?.some((c) => isActive(c.href)) ?? false);
 
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const servicesItem = navigation.find((i) => i.name === "Services");
+    if (servicesItem && isParentActive(servicesItem)) {
+      setMobileServicesOpen(true);
+    }
+  }, [isMobileMenuOpen]);
+
   const openMenu = (name: string) => {
     if (closeTimer.current) window.clearTimeout(closeTimer.current);
     setOpenDropdown(name);
