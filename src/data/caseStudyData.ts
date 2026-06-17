@@ -36,8 +36,8 @@ import equitanaArena3 from "@/assets/equitana-arena-3.jpg";
 import equitanaArena4 from "@/assets/equitana-arena-4.jpg";
 import equitanaArena5 from "@/assets/equitana-arena-5.jpg";
 
-// System / GroundLock — canonical horseshoe
-import groundlockInstallation from "@/assets/groundlock-horseshoe-canonical.jpg";
+// Canonical surface system image (re-uses living hero)
+import groundlockInstallation from "@/assets/living-hero-wide.jpg";
 
 export interface CaseStudyAct {
   image: string;
@@ -223,7 +223,7 @@ export const CASE_STUDIES: CaseStudyData[] = [
         "A multi-discipline competition surface delivered under exhibition conditions — built to perform under national scrutiny.",
       items: [
         "Competition-grade arena surface",
-        "Engineered footing, GroundLock system",
+        "Engineered footing and stabilised surface system",
         "Multi-discipline configuration",
         "Delivered under live exhibition timing",
       ],
@@ -236,7 +236,7 @@ export const CASE_STUDIES: CaseStudyData[] = [
     process: [
       { src: equitanaArena2, alt: "Surface preparation at exhibition scale" },
       { src: equitanaArena3, alt: "Footing laid to engineered depth" },
-      { src: groundlockInstallation, alt: "GroundLock system in situ" },
+      { src: groundlockInstallation, alt: "Stabilised surface system in situ" },
     ],
     final: [
       { src: equitanaArena1, alt: "Arena under exhibition lighting" },

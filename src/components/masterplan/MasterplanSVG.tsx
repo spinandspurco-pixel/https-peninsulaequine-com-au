@@ -282,7 +282,7 @@ export function MasterplanSVG({ activeZone, buildLayer, showFlows, onHover, onLe
         {Array.from({ length: 12 }).map((_, i) => (
           <line key={`ag-v${i}`} x1={255 + i * 20.9} y1="480" x2={255 + i * 20.9} y2="690" stroke="hsl(38 50% 50%)" strokeWidth="0.3" />
         ))}
-        <text x="370" y="608" textAnchor="middle" fontSize="3" fontFamily="monospace" fill="hsl(38 50% 50%)" opacity="0.5" letterSpacing="0.15em">GROUNDLOCK SURFACE SYSTEM</text>
+        <text x="370" y="608" textAnchor="middle" fontSize="3" fontFamily="monospace" fill="hsl(38 50% 50%)" opacity="0.5" letterSpacing="0.15em">STABILISED SURFACE SYSTEM</text>
         <text x="370" y="625" textAnchor="middle" fontSize="2.5" fontFamily="monospace" fill="hsl(var(--accent))" opacity="0.4" letterSpacing="0.15em">CLEAR-SPAN — NO COLUMNS</text>
         <line x1="255" y1="640" x2="485" y2="640" stroke="hsl(var(--accent))" strokeWidth="0.3" />
         <line x1="255" y1="636" x2="255" y2="644" stroke="hsl(var(--accent))" strokeWidth="0.25" />

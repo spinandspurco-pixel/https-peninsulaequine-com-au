@@ -51,10 +51,10 @@ export const zones: Zone[] = [
     shortLabel: "Arena",
     tagline: "Clear-span. Engineered for performance under load.",
     description:
-      "Fully enclosed riding arena connected via covered corridor. Clear-span steel structure, no internal columns. GroundLock surface system beneath.",
+      "Fully enclosed riding arena connected via covered corridor. Clear-span steel structure, no internal columns. Engineered stabilised surface system beneath.",
     features: [
       "24 × 48 m clear-span structure",
-      "GroundLock surface system",
+      "Engineered stabilised surface system",
       "Connected via covered corridor",
     ],
     path: "M 245 470 L 495 470 L 495 740 L 245 740 Z",
@@ -96,9 +96,9 @@ export const zones: Zone[] = [
     shortLabel: "Ground",
     tagline: "Engineered surfaces. Drainage resolved at every level.",
     description:
-      "GroundLock stabilisation beneath the arena surface. Graded drainage across the courtyard. Every surface considered for load, water, and use.",
+      "Stabilised surface system beneath the arena. Graded drainage across the courtyard. Every surface considered for load, water, and use.",
     features: [
-      "GroundLock panel system",
+      "Engineered stabilisation system",
       "Engineered drainage falls",
       "Surface grading across all zones",
     ],
