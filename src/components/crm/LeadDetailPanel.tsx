@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import {
   X, Phone, Mail, MapPin, DollarSign, Calendar,
   FileText, ArrowRight, CheckCircle, Zap, Lightbulb,
-  Briefcase, Shield, Sparkles, Copy, Check, Send, FileUp,
+  Briefcase, Sparkles, Copy, Check, Send,
 } from "lucide-react";
 import { CommunicationTimeline } from "@/components/CommunicationTimeline";
 import { scheduleLeadFollowUps } from "@/lib/autoSendScheduler";
@@ -48,11 +48,6 @@ function getAutoPrompts(
 
   // Qualified → suggest create quote
   if (stage === "qualified" && !linkedQuote) {
-    const hasGroundLockHint =
-      record.services?.some((s) => s.includes("arena") || s.includes("infrastructure") || s.includes("full-facility")) ||
-      record.project_vision?.toLowerCase().includes("ground") ||
-      record.project_details?.toLowerCase().includes("ground");
-
     prompts.push({
       key: "create-quote",
       icon: FileText,
@@ -60,16 +55,8 @@ function getAutoPrompts(
       action: onCreateQuote,
       actionLabel: "Create Quote",
     });
-
-    if (hasGroundLockHint) {
-      prompts.push({
-        key: "groundlock-hint",
-        icon: Shield,
-        message: "GroundLock™ may be relevant based on project scope.",
-        subtle: true,
-      });
-    }
   }
+
 
   // Quote sent → remind about follow-up
   if (stage === "quote_sent" && linkedQuote?.status === "sent") {
@@ -115,14 +102,12 @@ export function LeadDetailPanel({ record, onClose, onUpdated, onCreateQuote }: P
   const [notes, setNotes] = useState(record.notes || "");
   const [saving, setSaving] = useState(false);
   const [linkedQuote, setLinkedQuote] = useState<any | null>(null);
-  const [linkedProposal, setLinkedProposal] = useState<any | null>(null);
+  
   const [dealValue, setDealValue] = useState(record.deal_value?.toString() || "");
   const [probability, setProbability] = useState(record.probability?.toString() || "");
   const [aiDraft, setAiDraft] = useState<{ draft_message: string; subject_line: string } | null>(null);
   const [generatingDraft, setGeneratingDraft] = useState(false);
   const [draftCopied, setDraftCopied] = useState(false);
-  const [proposalInternalNotes, setProposalInternalNotes] = useState("");
-  const [savingProposalNotes, setSavingProposalNotes] = useState(false);
 
   // Fetch linked quote + proposal
   useEffect(() => {
@@ -136,18 +121,6 @@ export function LeadDetailPanel({ record, onClose, onUpdated, onCreateQuote }: P
         if (data && data.length > 0) setLinkedQuote(data[0]);
       });
 
-    supabase
-      .from("groundlock_proposals")
-      .select("id, proposal_ref, status, investment_total, created_at, system_notes")
-      .eq("inquiry_id", record.id)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .then(({ data }) => {
-        if (data && data.length > 0) {
-          setLinkedProposal(data[0]);
-          setProposalInternalNotes(data[0].system_notes || "");
-        }
-      });
   }, [record.id]);
 
   const handleSave = useCallback(async () => {
@@ -369,135 +342,6 @@ export function LeadDetailPanel({ record, onClose, onUpdated, onCreateQuote }: P
             </section>
           )}
 
-          {/* ═══ GROUNDLOCK PROPOSAL CONTROLS ═══ */}
-          {(record.preferred_service === "groundlock" ||
-            record.services?.some((s) => s.toLowerCase().includes("arena") || s.toLowerCase().includes("groundlock") || s.toLowerCase().includes("infrastructure") || s.toLowerCase().includes("full-facility"))) && (
-            <section>
-              <p className="text-[10px] font-sans uppercase tracking-[0.2em] text-accent/40 mb-3">GroundLock Proposal</p>
-              {linkedProposal ? (
-                <div className="space-y-3">
-                  <div className="p-3 rounded-sm border border-border/20 bg-background/40 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[12px] font-mono font-medium text-foreground/70">{linkedProposal.proposal_ref}</span>
-                      <span className={`text-[8px] uppercase tracking-wider px-2 py-0.5 rounded-full ${
-                        linkedProposal.status === "sent"
-                          ? "bg-green-500/10 text-green-400"
-                          : linkedProposal.status === "ready"
-                          ? "bg-blue-500/10 text-blue-400"
-                          : "bg-amber-500/10 text-amber-400"
-                      }`}>
-                        {linkedProposal.status}
-                      </span>
-                    </div>
-                    {linkedProposal.investment_total && (
-                      <p className="text-[11px] text-muted-foreground/50">
-                        Investment: {linkedProposal.investment_total}
-                      </p>
-                    )}
-                    <p className="text-[10px] text-muted-foreground/30">
-                      Created {format(new Date(linkedProposal.created_at), "d MMM yyyy")}
-                    </p>
-                  </div>
-
-                  {/* Internal Notes */}
-                  <div>
-                    <p className="text-[10px] text-muted-foreground/40 mb-1.5">Internal Notes</p>
-                    <Textarea
-                      value={proposalInternalNotes}
-                      onChange={(e) => setProposalInternalNotes(e.target.value)}
-                      placeholder="Private notes about this proposal…"
-                      className="bg-background/60 border-border/30 text-[12px] min-h-[60px]"
-                    />
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      disabled={savingProposalNotes}
-                      onClick={async () => {
-                        setSavingProposalNotes(true);
-                        await supabase
-                          .from("groundlock_proposals")
-                          .update({ system_notes: proposalInternalNotes })
-                          .eq("id", linkedProposal.id);
-                        setSavingProposalNotes(false);
-                        toast.success("Notes saved");
-                      }}
-                      className="mt-1 text-[9px] uppercase tracking-wider h-6 px-2 text-muted-foreground/40 hover:text-foreground/60"
-                    >
-                      {savingProposalNotes ? "Saving…" : "Save Notes"}
-                    </Button>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate(`/proposal-editor/${linkedProposal.id}`)}
-                      className="text-[10px] uppercase tracking-wider h-8 border-border/30"
-                    >
-                      <FileText className="h-3 w-3 mr-1.5" />
-                      Edit
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        const params = new URLSearchParams({ proposalId: linkedProposal.id });
-                        window.open(`/proposal?${params.toString()}`, "_blank");
-                      }}
-                      className="text-[10px] uppercase tracking-wider h-8 border-border/30"
-                    >
-                      <FileUp className="h-3 w-3 mr-1.5" />
-                      Export PDF
-                    </Button>
-                  </div>
-
-                  {/* Mark as Sent */}
-                  {linkedProposal.status !== "sent" && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={async () => {
-                        await supabase
-                          .from("groundlock_proposals")
-                          .update({ status: "sent" })
-                          .eq("id", linkedProposal.id);
-                        setLinkedProposal({ ...linkedProposal, status: "sent" });
-                        toast.success("Marked as sent");
-                      }}
-                      className="w-full text-[10px] uppercase tracking-wider h-8 border-accent/20 text-accent hover:bg-accent/5"
-                    >
-                      <Send className="h-3 w-3 mr-1.5" />
-                      Mark as Sent
-                    </Button>
-                  )}
-                </div>
-              ) : (
-                <Button
-                  variant="outline"
-                  onClick={async () => {
-                    const toastId = toast.loading("Generating proposal draft...");
-                    try {
-                      const { data, error } = await supabase.functions.invoke("generate-groundlock-proposal", {
-                        body: { inquiry_id: record.id },
-                      });
-                      if (error || data?.error) throw new Error(data?.error || "Failed");
-                      toast.dismiss(toastId);
-                      toast.success("Proposal draft generated");
-                      navigate(`/proposal-editor/${data.proposal.id}`);
-                    } catch (err: any) {
-                      toast.dismiss(toastId);
-                      toast.error(err.message || "Failed to generate proposal");
-                    }
-                  }}
-                  className="w-full text-[11px] uppercase tracking-[0.12em] border-amber-500/20 text-amber-600 hover:bg-amber-50/50"
-                >
-                  <Sparkles className="h-3.5 w-3.5 mr-2" />
-                  Generate Proposal
-                </Button>
-              )}
-            </section>
-          )}
 
           {/* ═══ PROJECT SNAPSHOT ═══ */}
           <section>

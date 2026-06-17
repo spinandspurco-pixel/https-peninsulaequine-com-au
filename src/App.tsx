@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { IntroContext } from "./hooks/useIntroState";
@@ -59,7 +59,7 @@ const TrainerDocumentPortal = lazy(() => import("./pages/TrainerDocumentPortal")
 const TrainerProfile = lazy(() => import("./pages/TrainerProfile"));
 
 const CaseStudy = lazy(() => import("./pages/CaseStudy"));
-const EquusRidge = lazy(() => import("./pages/EquusRidge"));
+
 const SiteAssessment = lazy(() => import("./pages/SiteAssessment"));
 const ClientQuote = lazy(() => import("./pages/ClientQuote"));
 const Visualise = lazy(() => import("./pages/Visualise"));
@@ -123,7 +123,7 @@ function AppContent() {
           <Route path="/trainer/documents" element={<TrainerDocumentPortal />} />
           <Route path="/admin/documents" element={<AdminDocuments />} />
           <Route path="/trainers/:slug" element={<TrainerProfile />} />
-          <Route path="/equus-ridge" element={<EquusRidge />} />
+          <Route path="/equus-ridge" element={<Navigate to="/equine-estates" replace />} />
           <Route path="/site-assessment" element={<SiteAssessment />} />
           <Route path="/project/:slug" element={<CaseStudy />} />
           <Route path="/quote/:token" element={<ClientQuote />} />

@@ -78,7 +78,7 @@ KNOWLEDGE BASE:
 - Payment: 30% deposit, progress at 50%, final on handover
 - Follow-up cadence: Day 2, Day 5, Day 10
 - Site assessment: always before quoting — terrain, access, soil, structures, horse behaviour
-- GroundLock™: proprietary ground stabilisation — engineered infrastructure, not generic footing
+- Engineered stabilised surface systems for arenas, yards, and infrastructure
 - Stages: Enquiry → Site Assessment → Scope & Brief → Proposal → Approval → Build → Handover
 - Proposal validity: 30 days
 - Site visits: Mon-Fri, 1-2 hours, Ciro attends
@@ -250,7 +250,7 @@ const KNOWLEDGE_PROMPT = (question: string) => `Internal question: ${question}
 Answer using PE operational knowledge. Under 100 words. No generic advice.
 If uncertain, say "requires review" — do not speculate.
 
-Reference: Payment 30/50/final. Follow-up Day 2/5/10. Site assessment before quoting. GroundLock = proprietary ground stabilisation. Stages: Enquiry → Assessment → Brief → Proposal → Approval → Build → Handover. Proposals valid 30 days. Site visits Mon-Fri, Ciro attends. Scope changes need written variation.`;
+Reference: Payment 30/50/final. Follow-up Day 2/5/10. Site assessment before quoting. Stages: Enquiry → Assessment → Brief → Proposal → Approval → Build → Handover. Proposals valid 30 days. Site visits Mon-Fri. Scope changes need written variation.`;
 
 const DECISION_PANEL_PROMPT = `Analyse the pipeline and return ONE high-impact conversion insight. One sentence only.
 

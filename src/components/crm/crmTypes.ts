@@ -31,7 +31,7 @@ export const PROJECT_TYPES = [
   "Full Facility",
   "Infrastructure",
   "Renovation",
-  "GroundLock Install",
+  "Recovery Station",
   "Other",
 ] as const;
 

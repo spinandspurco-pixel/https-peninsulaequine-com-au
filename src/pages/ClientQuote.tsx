@@ -32,7 +32,7 @@ export interface QuoteData {
   status: string;
   expiry_date: string | null;
   created_at: string;
-  groundlock_included: boolean | null;
+  
   share_token: string;
   accepted_at: string | null;
 }
