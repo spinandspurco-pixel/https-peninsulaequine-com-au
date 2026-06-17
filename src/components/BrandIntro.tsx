@@ -57,10 +57,10 @@ export function BrandIntro({ onComplete }: { onComplete?: () => void }) {
     const at = (ms: number, fn: () => void) =>
       timers.push(window.setTimeout(fn, ms));
 
-    at(0, () => setPhase("mark"));
-    at(500, () => setPhase("title"));
-    at(1000, () => setPhase("sub"));
-    at(1500, () => setPhase("tag"));
+    at(400, () => setPhase("mark"));
+    at(900, () => setPhase("title"));
+    at(1400, () => setPhase("sub"));
+    at(1900, () => setPhase("tag"));
     at(2400, () => setPhase("dissolve"));
     at(2700, () => {
       sessionStorage.setItem(SESSION_KEY, "1");
