@@ -65,33 +65,26 @@ export default function ClientQuote() {
 
   async function loadQuote() {
     setLoading(true);
-    const { data: q, error: qErr } = await supabase
-      .from("quotes")
-      .select("*")
-      .eq("share_token", token!)
-      .single();
+    const { data, error: rpcErr } = await supabase.rpc("get_quote_by_share_token" as any, {
+      p_token: token!,
+    });
 
-    if (qErr || !q) {
+    if (rpcErr || !data) {
       setError("Quote not found or no longer available.");
       setLoading(false);
       return;
     }
 
-    if (!q.viewed_at) {
-      await supabase.from("quotes").update({ viewed_at: new Date().toISOString() }).eq("id", q.id);
+    const payload = data as { quote: QuoteData; line_items: LineItem[] } | null;
+    if (!payload || !payload.quote) {
+      setError("Quote not found or no longer available.");
+      setLoading(false);
+      return;
     }
 
-    setQuote(q as unknown as QuoteData);
-    setAccepted(!!q.accepted_at);
-    
-
-    const { data: items } = await supabase
-      .from("quote_line_items")
-      .select("*")
-      .eq("quote_id", q.id)
-      .order("sort_order", { ascending: true });
-
-    setLineItems((items || []) as unknown as LineItem[]);
+    setQuote(payload.quote);
+    setAccepted(!!payload.quote.accepted_at);
+    setLineItems(payload.line_items ?? []);
     setLoading(false);
   }
 
