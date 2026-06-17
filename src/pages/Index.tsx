@@ -69,25 +69,19 @@ export default function Index() {
             className="relative z-10 text-center px-6 max-w-4xl mx-auto"
             style={{ opacity: heroFade, willChange: "opacity", marginTop: "-18vh" }}
           >
-            <p
-              className="font-mono text-[10px] uppercase tracking-[0.55em] text-white/35 opacity-0 animate-fade-in"
-              style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
-            >
-              Peninsula Equine
-            </p>
-
             <h1
-              className="mt-8 font-serif font-semibold text-white tracking-tight leading-[0.9] opacity-0 animate-fade-in"
+              className="font-serif font-semibold text-white tracking-tight leading-[0.9] opacity-0 animate-fade-in"
               style={{
                 fontSize: "clamp(2.6rem, 1.2rem + 6vw, 5.8rem)",
-                animationDelay: "500ms",
+                animationDelay: "300ms",
                 animationFillMode: "both",
-                animationDuration: "900ms",
+                animationDuration: "1100ms",
                 textShadow: "0 2px 40px rgba(0,0,0,0.55), 0 0 90px rgba(0,0,0,0.2)",
               }}
             >
               From Dirt to Dynasty.
             </h1>
+
 
             <p
               className="mt-6 font-serif italic text-white/75 opacity-0 animate-fade-in max-w-2xl mx-auto"
