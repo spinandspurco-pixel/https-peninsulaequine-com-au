@@ -22,6 +22,7 @@ import transformAfter from "@/assets/transform-after.jpg";
 export default function Index() {
   const heroContentRef = useRef<HTMLDivElement>(null);
   const [heroFade, setHeroFade] = useState(1);
+  const { open: openIntake } = useIntake();
 
   const handleScroll = useCallback(() => {
     const el = heroContentRef.current;
