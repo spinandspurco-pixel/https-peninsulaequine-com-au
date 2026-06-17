@@ -274,56 +274,98 @@ export default function Index() {
           </div>
         </section>
 
-        {/* ═══ 4. FEATURED WORK ════════════════════════════ */}
+        {/* ═══ 4. SELECTED WORKS ═══════════════════════════ */}
         <section className="relative py-[clamp(6rem,4rem+8vw,12rem)] bg-background overflow-hidden">
-          <div className="section-container max-w-7xl mx-auto grid grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4rem)] items-center">
-            <div className="col-span-12 lg:col-span-8">
-              <RevealOnScroll direction="up" duration={1200}>
-                <div className="relative aspect-[16/10] overflow-hidden lg:-ml-[3rem]">
-                  <img
-                    src={systemOutcome}
-                    alt="Selected work — completed Peninsula Equine property"
-                    loading="lazy"
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2200ms] ease-[cubic-bezier(0.45,0,0.15,1)] hover:scale-[1.03]"
-                    style={{ filter: "brightness(0.85) contrast(1.1) saturate(0.8)" }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
-                  <span className="absolute top-4 left-4 font-mono uppercase text-accent/65 text-[10px] tracking-[0.45em]">
-                    Featured Work
-                  </span>
-                </div>
-              </RevealOnScroll>
+          <div className="section-container max-w-7xl mx-auto">
+            <div className="mb-[clamp(3rem,2rem+3vw,5rem)] grid grid-cols-12 gap-6 items-end">
+              <div className="col-span-12 md:col-span-7 space-y-3">
+                <RevealOnScroll direction="up" duration={900}>
+                  <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
+                    Selected Works
+                  </p>
+                </RevealOnScroll>
+                <RevealOnScroll direction="up" duration={1000} delay={150}>
+                  <h2 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.02em] text-[clamp(1.85rem,1.2rem+2.4vw,2.85rem)]">
+                    A small number of properties, resolved end to end.
+                  </h2>
+                </RevealOnScroll>
+                <RevealLine width="w-8" delay={300} />
+              </div>
+              <div className="col-span-12 md:col-span-5 md:text-right">
+                <RevealOnScroll direction="up" duration={1000} delay={400}>
+                  <p className="font-sans font-light text-foreground/50 leading-[1.85] text-[14px] max-w-sm md:ml-auto">
+                    No catalogues. No templates. Each commission sited, detailed
+                    and built to the property.
+                  </p>
+                </RevealOnScroll>
+              </div>
             </div>
-            <div className="col-span-12 lg:col-span-4 space-y-6 lg:pl-4">
+
+            <div className="space-y-[clamp(4rem,3rem+4vw,7rem)]">
+              {featuredWorks.map((p, i) => (
+                <RevealOnScroll key={p.slug} direction="up" duration={1100} delay={i * 120}>
+                  <Link
+                    to={`/project/${p.slug}`}
+                    className="group block grid grid-cols-12 gap-[clamp(1.5rem,1rem+2vw,3.5rem)] items-center"
+                  >
+                    <div
+                      className={`col-span-12 lg:col-span-8 ${
+                        i % 2 === 1 ? "lg:order-2" : ""
+                      }`}
+                    >
+                      <div
+                        className={`relative aspect-[16/10] overflow-hidden ${
+                          i % 2 === 0 ? "lg:-ml-[3rem]" : "lg:-mr-[3rem]"
+                        }`}
+                      >
+                        <img
+                          src={p.image}
+                          alt={p.alt}
+                          loading="lazy"
+                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2200ms] ease-[cubic-bezier(0.45,0,0.15,1)] group-hover:scale-[1.04]"
+                          style={{ filter: "brightness(0.85) contrast(1.1) saturate(0.8)" }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
+                        <span className="absolute top-4 left-4 font-mono uppercase text-accent/65 text-[10px] tracking-[0.45em]">
+                          {`0${i + 1} — ${p.kind}`}
+                        </span>
+                      </div>
+                    </div>
+                    <div className={`col-span-12 lg:col-span-4 space-y-5 ${i % 2 === 1 ? "lg:order-1 lg:pr-4" : "lg:pl-4"}`}>
+                      <p className="font-mono uppercase text-foreground/35 text-[10px] tracking-[0.4em]">
+                        {p.location}
+                      </p>
+                      <h3 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.02em] text-[clamp(1.55rem,1.05rem+2vw,2.35rem)] group-hover:text-accent transition-colors duration-700">
+                        {p.title}
+                      </h3>
+                      <RevealLine width="w-6" />
+                      <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px]">
+                        {p.summary}
+                      </p>
+                      <span className="inline-flex items-center gap-3 font-mono uppercase text-foreground/70 group-hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.4em] pt-2">
+                        <span className="w-6 h-px bg-accent/50 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
+                        View Case Study
+                      </span>
+                    </div>
+                  </Link>
+                </RevealOnScroll>
+              ))}
+            </div>
+
+            <div className="mt-[clamp(4rem,3rem+3vw,6rem)] flex justify-center">
               <RevealOnScroll direction="up" duration={900}>
-                <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
-                  Selected Work
-                </p>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" duration={1000} delay={150}>
-                <h2 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.02em] text-[clamp(1.65rem,1.1rem+2.2vw,2.5rem)]">
-                  Properties resolved, end to end.
-                </h2>
-              </RevealOnScroll>
-              <RevealLine width="w-8" delay={300} />
-              <RevealOnScroll direction="up" duration={1000} delay={400}>
-                <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px]">
-                  A small number of equestrian properties each year — sited, detailed and built
-                  to the property. No catalogues. No templates.
-                </p>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" duration={900} delay={550}>
                 <Link
                   to="/gallery"
-                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.4em] pt-2"
+                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/55 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.4em]"
                 >
-                  <span className="w-6 h-px bg-accent/50 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
-                  View Projects
+                  <span className="w-6 h-px bg-accent/40 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
+                  Explore Selected Works
                 </Link>
               </RevealOnScroll>
             </div>
           </div>
         </section>
+
 
         {/* ═══ 5. RECOVERY STATION TEASER ══════════════════ */}
         <section className="relative py-[clamp(6rem,4rem+8vw,12rem)] bg-card overflow-hidden">
