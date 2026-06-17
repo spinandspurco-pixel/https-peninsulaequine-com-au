@@ -428,7 +428,6 @@ export type Database = {
           client_name: string
           contact_note: string | null
           created_at: string
-          groundlock_included: boolean | null
           id: string
           job_id: string | null
           project_name: string
@@ -445,7 +444,6 @@ export type Database = {
           client_name: string
           contact_note?: string | null
           created_at?: string
-          groundlock_included?: boolean | null
           id?: string
           job_id?: string | null
           project_name: string
@@ -462,7 +460,6 @@ export type Database = {
           client_name?: string
           contact_note?: string | null
           created_at?: string
-          groundlock_included?: boolean | null
           id?: string
           job_id?: string | null
           project_name?: string
@@ -735,203 +732,6 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
-      }
-      groundlock_interest: {
-        Row: {
-          company: string | null
-          created_at: string
-          email: string
-          estimated_area: string | null
-          id: string
-          interest_type: string
-          location: string | null
-          message: string | null
-          name: string
-          phone: string | null
-          property_type: string | null
-          source_page: string | null
-        }
-        Insert: {
-          company?: string | null
-          created_at?: string
-          email: string
-          estimated_area?: string | null
-          id?: string
-          interest_type?: string
-          location?: string | null
-          message?: string | null
-          name: string
-          phone?: string | null
-          property_type?: string | null
-          source_page?: string | null
-        }
-        Update: {
-          company?: string | null
-          created_at?: string
-          email?: string
-          estimated_area?: string | null
-          id?: string
-          interest_type?: string
-          location?: string | null
-          message?: string | null
-          name?: string
-          phone?: string | null
-          property_type?: string | null
-          source_page?: string | null
-        }
-        Relationships: []
-      }
-      groundlock_project_setups: {
-        Row: {
-          attachment_urls: string[] | null
-          completed_at: string | null
-          completion_photo_urls: string[] | null
-          created_at: string
-          estimated_area: string | null
-          ground_conditions: string
-          id: string
-          key_notes: string | null
-          notes: string | null
-          primary_use: string
-          project_location: string
-          review_notes: string | null
-          reviewed_at: string | null
-          reviewed_by: string | null
-          status: string
-          system_summary: string | null
-          system_zones: string[] | null
-          traffic_level: string
-          updated_at: string
-          user_id: string
-          workflow_step: string
-        }
-        Insert: {
-          attachment_urls?: string[] | null
-          completed_at?: string | null
-          completion_photo_urls?: string[] | null
-          created_at?: string
-          estimated_area?: string | null
-          ground_conditions: string
-          id?: string
-          key_notes?: string | null
-          notes?: string | null
-          primary_use?: string
-          project_location: string
-          review_notes?: string | null
-          reviewed_at?: string | null
-          reviewed_by?: string | null
-          status?: string
-          system_summary?: string | null
-          system_zones?: string[] | null
-          traffic_level?: string
-          updated_at?: string
-          user_id: string
-          workflow_step?: string
-        }
-        Update: {
-          attachment_urls?: string[] | null
-          completed_at?: string | null
-          completion_photo_urls?: string[] | null
-          created_at?: string
-          estimated_area?: string | null
-          ground_conditions?: string
-          id?: string
-          key_notes?: string | null
-          notes?: string | null
-          primary_use?: string
-          project_location?: string
-          review_notes?: string | null
-          reviewed_at?: string | null
-          reviewed_by?: string | null
-          status?: string
-          system_summary?: string | null
-          system_zones?: string[] | null
-          traffic_level?: string
-          updated_at?: string
-          user_id?: string
-          workflow_step?: string
-        }
-        Relationships: []
-      }
-      groundlock_proposals: {
-        Row: {
-          attachment_urls: string[] | null
-          client_email: string | null
-          client_name: string
-          created_at: string
-          created_by: string | null
-          id: string
-          inquiry_id: string | null
-          investment_note: string | null
-          investment_total: string | null
-          layout_notes: string | null
-          location: string | null
-          overview: string | null
-          project_size: string | null
-          project_type: string | null
-          property_name: string | null
-          proposal_date: string
-          proposal_ref: string
-          scope_items: Json
-          status: string
-          system_notes: string | null
-          updated_at: string
-        }
-        Insert: {
-          attachment_urls?: string[] | null
-          client_email?: string | null
-          client_name: string
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          inquiry_id?: string | null
-          investment_note?: string | null
-          investment_total?: string | null
-          layout_notes?: string | null
-          location?: string | null
-          overview?: string | null
-          project_size?: string | null
-          project_type?: string | null
-          property_name?: string | null
-          proposal_date?: string
-          proposal_ref: string
-          scope_items?: Json
-          status?: string
-          system_notes?: string | null
-          updated_at?: string
-        }
-        Update: {
-          attachment_urls?: string[] | null
-          client_email?: string | null
-          client_name?: string
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          inquiry_id?: string | null
-          investment_note?: string | null
-          investment_total?: string | null
-          layout_notes?: string | null
-          location?: string | null
-          overview?: string | null
-          project_size?: string | null
-          project_type?: string | null
-          property_name?: string | null
-          proposal_date?: string
-          proposal_ref?: string
-          scope_items?: Json
-          status?: string
-          system_notes?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "groundlock_proposals_inquiry_id_fkey"
-            columns: ["inquiry_id"]
-            isOneToOne: false
-            referencedRelation: "inquiries"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       inquiries: {
         Row: {
@@ -1766,7 +1566,6 @@ export type Database = {
           declined_at: string | null
           exclusions: string | null
           expiry_date: string | null
-          groundlock_included: boolean | null
           gst: number
           id: string
           inquiry_id: string | null
@@ -1798,7 +1597,6 @@ export type Database = {
           declined_at?: string | null
           exclusions?: string | null
           expiry_date?: string | null
-          groundlock_included?: boolean | null
           gst?: number
           id?: string
           inquiry_id?: string | null
@@ -1830,7 +1628,6 @@ export type Database = {
           declined_at?: string | null
           exclusions?: string | null
           expiry_date?: string | null
-          groundlock_included?: boolean | null
           gst?: number
           id?: string
           inquiry_id?: string | null
