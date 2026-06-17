@@ -8,7 +8,7 @@ import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 // Locked image system — distinct per service
 import systemHero from "@/assets/system-hero.jpg";
 import imgFullBuild from "@/assets/service-fullbuild.jpg";
-import imgGroundLock from "@/assets/service-groundlock.jpg";
+
 import imgEvent from "@/assets/service-event.jpg";
 
 export default function Services() {
@@ -103,39 +103,6 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ═══ GROUNDLOCK ═══════════════════════════════════ */}
-      <section className="relative overflow-hidden" style={{ backgroundColor: "#0a0a0a" }}>
-        <div className="py-36 sm:py-44 lg:py-56 relative">
-          <div className="section-container max-w-3xl mx-auto relative z-[1] text-center">
-            <RevealOnScroll direction="up">
-              <div className="flex items-center gap-4 mb-5 justify-center">
-                <div className="w-6 h-px bg-accent/15" />
-                <p className="text-[9px] uppercase tracking-[0.4em] text-accent/25 font-mono">02</p>
-                <div className="w-6 h-px bg-accent/15" />
-              </div>
-              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-white/80 tracking-[0.02em] mb-4">
-                GroundLock<span className="text-accent/35">™</span>
-              </h2>
-              <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-white/15 mb-16">
-                Directional Interlock System
-              </p>
-              <div className="relative overflow-hidden aspect-square max-w-[280px] mx-auto">
-                <img src={imgGroundLock} alt="GroundLock stabilisation panel" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }} />
-                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 85% 85% at 50% 50%, transparent 35%, #0a0a0a 100%)" }} />
-              </div>
-              <p className="mt-14 font-serif text-[12px] sm:text-[13px] italic text-white/16 tracking-wide">
-                Built for load. Designed for control.
-              </p>
-              <Link
-                to="/groundlock"
-                className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-accent/40 hover:text-accent/70 transition-colors duration-500 mt-10"
-              >
-                Explore System <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </RevealOnScroll>
-          </div>
-        </div>
-      </section>
 
       {/* ═══ EVENT INFRASTRUCTURE ═══════════════════════ */}
       <section className="relative overflow-hidden">
