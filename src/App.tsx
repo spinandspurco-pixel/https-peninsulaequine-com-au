@@ -75,6 +75,7 @@ const TheStandard = lazy(() => import("./pages/TheStandard"));
 const WhyWeExist = lazy(() => import("./pages/WhyWeExist"));
 const ClientPortal = lazy(() => import("./pages/ClientPortal"));
 const ClientPortalLogin = lazy(() => import("./pages/ClientPortalLogin"));
+const Pavilion = lazy(() => import("./pages/Pavilion"));
 
 const queryClient = new QueryClient();
 
@@ -148,6 +149,7 @@ function AppContent() {
            <Route path="/why" element={<WhyWeExist />} />
            <Route path="/portal" element={<ProtectedRoute loginPath="/portal/login"><ClientPortal /></ProtectedRoute>} />
            <Route path="/portal/login" element={<ClientPortalLogin />} />
+           <Route path="/pavilion" element={<Pavilion />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
