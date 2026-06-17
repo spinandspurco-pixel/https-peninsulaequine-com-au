@@ -125,7 +125,7 @@ export function Header() {
                       "relative inline-flex items-center gap-1.5 transition-all duration-500 text-[10px] uppercase tracking-[0.2em] font-medium",
                       "after:content-[''] after:absolute after:-bottom-1.5 after:left-0 after:w-full after:h-px after:bg-accent/60 after:origin-left after:scale-x-0 after:transition-transform after:duration-500 hover:after:scale-x-100",
                       isParentActive(item)
-                        ? "text-accent after:scale-x-100"
+                        ? "text-[hsl(var(--header-active))] after:scale-x-100 after:bg-accent"
                         : "text-[hsl(var(--header-foreground))]/60 hover:text-[hsl(var(--header-foreground))]"
                     )}
                   >
