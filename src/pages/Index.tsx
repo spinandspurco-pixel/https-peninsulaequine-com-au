@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { BeforeAfterSlider } from "@/components/BeforeAfterSlider";
 import { HeroAtmosphere } from "@/components/HeroAtmosphere";
 import { useIntake } from "@/hooks/useIntake";
+import { WhyPeninsulaEquine } from "@/components/WhyPeninsulaEquine";
 
 
 // Locked 5-image system
