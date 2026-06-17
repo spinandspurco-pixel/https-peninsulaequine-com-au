@@ -1,24 +1,24 @@
 import { useRef, useEffect, useState, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { BrandIntro } from "@/components/BrandIntro";
 import { Layout } from "@/components/layout/Layout";
-import { RevealOnScroll } from "@/components/RevealOnScroll";
-import { Link } from "react-router-dom";
-import { BeforeAfterSlider } from "@/components/BeforeAfterSlider";
+import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { HeroAtmosphere } from "@/components/HeroAtmosphere";
 import { useIntake } from "@/hooks/useIntake";
-import { WhyPeninsulaEquine } from "@/components/WhyPeninsulaEquine";
 
-
-// Locked 5-image system
 import systemHero from "@/assets/system-hero.jpg";
-import systemStructure from "@/assets/system-structure.jpg";
-import systemProcess from "@/assets/system-process.jpg";
 import systemOutcome from "@/assets/system-outcome.jpg";
 import systemEvent from "@/assets/system-event.jpg";
+import systemStructure from "@/assets/system-structure.jpg";
+import recoveryInternalHero from "@/assets/recovery-internal-hero.jpg";
 
-// Transformation (slider exception)
-import transformBefore from "@/assets/transform-before.jpg";
-import transformAfter from "@/assets/transform-after.jpg";
+const services = [
+  { name: "Arenas", href: "/arenas", note: "Surfaces engineered for performance." },
+  { name: "Stables", href: "/stables", note: "Daily care, treated as architecture." },
+  { name: "Equine Estates", href: "/equine-estates", note: "Whole-property masterplans." },
+  { name: "Recovery Station", href: "/recovery-stations", note: "Internal stable wellness bay." },
+  { name: "Infrastructure & Maintenance", href: "/infrastructure", note: "The work that holds it all together." },
+];
 
 export default function Index() {
   const heroContentRef = useRef<HTMLDivElement>(null);
@@ -43,11 +43,11 @@ export default function Index() {
     <>
       <BrandIntro onComplete={() => {}} />
       <Layout>
-        {/* ═══ 1. HERO — Cinematic, dominant ═══════════════ */}
+        {/* ═══ 1. CINEMATIC HERO ═══════════════════════════ */}
         <section className="relative min-h-[100dvh] overflow-hidden flex items-center justify-center" style={{ paddingBottom: "8vh" }}>
           <img
             src={systemHero}
-            alt="Covered equestrian arena at dusk"
+            alt="Premium equine environment at dusk"
             className="absolute inset-0 w-full h-full object-cover"
             width={1920}
             height={1080}
@@ -58,10 +58,10 @@ export default function Index() {
               animation: "heroSlowZoom 25s ease-out forwards",
             }}
           />
-          {/* Deep cinematic vignette */}
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 30%, rgba(0,0,0,0.55) 100%)" }} />
-
-          {/* Atmosphere: blueprint pulse, drifting dust, warm cast */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 30%, rgba(0,0,0,0.55) 100%)" }}
+          />
           <HeroAtmosphere />
 
           <div
@@ -71,11 +71,7 @@ export default function Index() {
           >
             <p
               className="font-mono text-[10px] uppercase tracking-[0.55em] text-white/35 opacity-0 animate-fade-in"
-              style={{
-                animationDelay: "200ms",
-                animationFillMode: "both",
-                animationDuration: "800ms",
-              }}
+              style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
             >
               Peninsula Equine
             </p>
@@ -94,38 +90,21 @@ export default function Index() {
             </h1>
 
             <p
-              className="mt-6 font-serif italic text-white/75 opacity-0 animate-fade-in"
+              className="mt-6 font-serif italic text-white/75 opacity-0 animate-fade-in max-w-2xl mx-auto"
               style={{
-                fontSize: "clamp(1.05rem, 0.6rem + 1.1vw, 1.6rem)",
+                fontSize: "clamp(1rem, 0.55rem + 1vw, 1.45rem)",
                 animationDelay: "800ms",
                 animationFillMode: "both",
                 animationDuration: "900ms",
                 textShadow: "0 2px 24px rgba(0,0,0,0.5)",
               }}
             >
-              Built by riders. Crafted for performance.
-            </p>
-
-            <p
-              className="mt-8 mx-auto font-sans font-light text-white/55 leading-relaxed opacity-0 animate-fade-in"
-              style={{
-                fontSize: "clamp(0.9rem, 0.55rem + 0.5vw, 1.05rem)",
-                maxWidth: "36rem",
-                animationDelay: "1100ms",
-                animationFillMode: "both",
-                animationDuration: "900ms",
-              }}
-            >
-              Premium equine environments engineered through craftsmanship, horsemanship and experience.
+              Premium equine environments built by riders, crafted for performance.
             </p>
 
             <div
               className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-fade-in"
-              style={{
-                animationDelay: "1400ms",
-                animationFillMode: "both",
-                animationDuration: "900ms",
-              }}
+              style={{ animationDelay: "1300ms", animationFillMode: "both", animationDuration: "900ms" }}
             >
               <button
                 onClick={openIntake}
@@ -142,7 +121,6 @@ export default function Index() {
               </Link>
             </div>
           </div>
-
         </section>
 
         {/* ═══ HERO → BREATHING TRANSITION ═════════════════ */}
@@ -152,223 +130,288 @@ export default function Index() {
             height: "clamp(3rem, 6vw, 5rem)",
             background: "linear-gradient(to bottom, hsl(var(--background) / 0) 0%, hsl(var(--background)) 100%)",
             marginTop: "-3rem",
-            position: "relative",
             zIndex: 5,
           }}
           aria-hidden="true"
         />
 
-        {/* ═══ WHY PENINSULA EQUINE ════════════════════════ */}
-        <WhyPeninsulaEquine />
+        {/* ═══ 2. BRAND AUTHORITY ══════════════════════════ */}
+        <section className="relative py-[clamp(6rem,4rem+8vw,11rem)] bg-background overflow-hidden">
+          <div className="hidden lg:block absolute top-0 bottom-0 left-1/2 w-px bg-foreground/[0.04]" />
+          <div className="section-container max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-foreground/[0.05]">
+              {[
+                { k: "01", label: "Built by horsemen.", body: "Decisions made by riders who live this every day." },
+                { k: "02", label: "Engineered for performance.", body: "Surfaces, drainage and structure tuned to the horse." },
+                { k: "03", label: "Crafted for longevity.", body: "Properties that hold their standard, decade after decade." },
+              ].map((p, i) => (
+                <RevealOnScroll key={p.k} direction="up" delay={i * 120}>
+                  <div className="group relative bg-background px-[clamp(1.75rem,1.25rem+2vw,2.5rem)] py-[clamp(2.75rem,2rem+3vw,4rem)] h-full">
+                    <span className="absolute top-0 left-0 h-px w-8 bg-accent/40 transition-all duration-[1100ms] ease-[cubic-bezier(0.45,0,0.15,1)] group-hover:w-20" />
+                    <p className="font-mono uppercase text-foreground/25 mb-6 text-[10px] tracking-[0.4em]">
+                      {p.k}
+                    </p>
+                    <p className="font-serif text-foreground/90 leading-[1.1] tracking-[-0.02em] text-[clamp(1.35rem,1rem+1.2vw,1.85rem)] mb-5">
+                      {p.label}
+                    </p>
+                    <p className="font-sans font-light text-foreground/50 leading-[1.8] text-[13px]">
+                      {p.body}
+                    </p>
+                  </div>
+                </RevealOnScroll>
+              ))}
+            </div>
+          </div>
+        </section>
 
-        {/* ═══ BREATHING STATEMENT ═════════════════════════ */}
-        <section className="relative overflow-hidden cv-auto">
-          <div className="py-36 sm:py-44 lg:py-52 bg-card relative">
-            <div className="absolute inset-0 grain-texture opacity-20" />
-            <div className="section-container relative z-10 max-w-4xl mx-auto text-center">
-              <RevealOnScroll direction="up">
-                <p
-                  className="font-serif font-light tracking-[0.06em] leading-[1.6]"
-                  style={{
-                    fontSize: "clamp(1.1rem, 0.6rem + 2vw, 1.75rem)",
-                    color: "hsl(var(--foreground) / 0.18)",
-                  }}
-                >
-                  No two builds are the same. Every surface is considered.
+        {/* ═══ 3. CORE SERVICES ════════════════════════════ */}
+        <section className="relative py-[clamp(6rem,4rem+8vw,12rem)] bg-card overflow-hidden">
+          <div className="section-container max-w-6xl mx-auto">
+            <div className="mb-[clamp(3rem,2rem+3vw,5rem)] grid grid-cols-12 gap-6 items-end">
+              <div className="col-span-12 md:col-span-7 space-y-3">
+                <RevealOnScroll direction="up" duration={900}>
+                  <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
+                    Capabilities
+                  </p>
+                </RevealOnScroll>
+                <RevealOnScroll direction="up" duration={1000} delay={150}>
+                  <h2 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.02em] text-[clamp(1.85rem,1.2rem+2.4vw,2.85rem)]">
+                    The complete equestrian property — built properly.
+                  </h2>
+                </RevealOnScroll>
+                <RevealLine width="w-8" delay={300} />
+              </div>
+            </div>
+
+            <ul className="divide-y divide-foreground/[0.06] border-y border-foreground/[0.06]">
+              {services.map((s, i) => (
+                <RevealOnScroll key={s.href} direction="up" delay={i * 80}>
+                  <li>
+                    <Link
+                      to={s.href}
+                      className="group flex items-baseline justify-between gap-6 py-[clamp(1.5rem,1.25rem+1vw,2.25rem)] transition-colors duration-500"
+                    >
+                      <div className="flex items-baseline gap-[clamp(1rem,0.75rem+1vw,2rem)] min-w-0">
+                        <span className="font-mono text-[10px] tracking-[0.4em] text-foreground/25 w-8 shrink-0">
+                          0{i + 1}
+                        </span>
+                        <span className="font-serif text-foreground/90 group-hover:text-accent transition-colors duration-500 leading-[1.1] tracking-[-0.015em] text-[clamp(1.5rem,1rem+1.8vw,2.35rem)]">
+                          {s.name}
+                        </span>
+                      </div>
+                      <div className="hidden md:flex items-baseline gap-6 shrink-0">
+                        <span className="font-sans font-light text-foreground/45 text-[13px] max-w-xs text-right">
+                          {s.note}
+                        </span>
+                        <span className="font-mono text-[10px] tracking-[0.3em] text-accent/50 group-hover:text-accent transition-all duration-500 group-hover:translate-x-1">
+                          →
+                        </span>
+                      </div>
+                    </Link>
+                  </li>
+                </RevealOnScroll>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* ═══ 4. FEATURED WORK ════════════════════════════ */}
+        <section className="relative py-[clamp(6rem,4rem+8vw,12rem)] bg-background overflow-hidden">
+          <div className="section-container max-w-7xl mx-auto grid grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4rem)] items-center">
+            <div className="col-span-12 lg:col-span-8">
+              <RevealOnScroll direction="up" duration={1200}>
+                <div className="relative aspect-[16/10] overflow-hidden lg:-ml-[3rem]">
+                  <img
+                    src={systemOutcome}
+                    alt="Selected work — completed Peninsula Equine property"
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2200ms] ease-[cubic-bezier(0.45,0,0.15,1)] hover:scale-[1.03]"
+                    style={{ filter: "brightness(0.85) contrast(1.1) saturate(0.8)" }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
+                  <span className="absolute top-4 left-4 font-mono uppercase text-accent/65 text-[10px] tracking-[0.45em]">
+                    Featured Work
+                  </span>
+                </div>
+              </RevealOnScroll>
+            </div>
+            <div className="col-span-12 lg:col-span-4 space-y-6 lg:pl-4">
+              <RevealOnScroll direction="up" duration={900}>
+                <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
+                  Selected Work
                 </p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" duration={1000} delay={150}>
+                <h2 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.02em] text-[clamp(1.65rem,1.1rem+2.2vw,2.5rem)]">
+                  Properties resolved, end to end.
+                </h2>
+              </RevealOnScroll>
+              <RevealLine width="w-8" delay={300} />
+              <RevealOnScroll direction="up" duration={1000} delay={400}>
+                <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px]">
+                  A small number of equestrian properties each year — sited, detailed and built
+                  to the property. No catalogues. No templates.
+                </p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" duration={900} delay={550}>
+                <Link
+                  to="/gallery"
+                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.4em] pt-2"
+                >
+                  <span className="w-6 h-px bg-accent/50 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
+                  View Projects
+                </Link>
               </RevealOnScroll>
             </div>
           </div>
         </section>
 
-        {/* ═══ BREATHING → STRUCTURE TRANSITION ════════════ */}
-        <div
-          className="relative"
-          style={{
-            height: "clamp(4rem, 8vw, 7rem)",
-            background: "linear-gradient(to bottom, hsl(var(--card)), #0a0a0a)",
-          }}
-          aria-hidden="true"
-        />
-
-        {/* ═══ 2. STRUCTURE — Strong, clear, architectural ══ */}
-        <section className="relative min-h-[80vh] sm:min-h-[85vh] flex items-end overflow-hidden" style={{ background: "#0a0a0a" }}>
-          <img
-            src={systemStructure}
-            alt="Steel frame structure under construction"
-            className="absolute inset-0 w-full h-full object-cover"
-            loading="lazy"
-            style={{ objectPosition: "50% 32%", filter: "brightness(0.85) contrast(1.1) saturate(0.8)" }}
-          />
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, #0a0a0a 100%)" }} />
-          {/* Sharp architectural gradient — harder edge than hero */}
-          <div className="absolute inset-x-0 bottom-0 h-[28%]" style={{ background: "linear-gradient(to top, rgba(10,10,10,0.75) 0%, transparent 100%)" }} />
-          <div className="relative z-10 section-container max-w-6xl mx-auto pb-20 sm:pb-28">
-            <h2
-              className="font-serif text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-[0.88] opacity-0 animate-fade-in"
-              style={{
-                animationDelay: "300ms",
-                animationFillMode: "both",
-                animationDuration: "800ms",
-                textShadow: "0 2px 12px rgba(0,0,0,0.7), 0 1px 3px rgba(0,0,0,0.5)",
-              }}
-            >
-              Selected Work
-            </h2>
-          </div>
-        </section>
-
-        {/* ═══ STRUCTURE → PROCESS TRANSITION ══════════════ */}
-        <div
-          className="relative"
-          style={{
-            height: "clamp(4rem, 8vw, 7rem)",
-            background: "linear-gradient(to bottom, #0a0a0a, hsl(var(--background)))",
-          }}
-          aria-hidden="true"
-        />
-
-        {/* ═══ 3. PROCESS — Grounded, tactile ═════════════ */}
-        <section className="pt-20 sm:pt-28 pb-32 sm:pb-40 relative overflow-hidden">
-          {/* Darker, grounded undertone */}
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 50% at 35% 50%, hsl(30 12% 8% / 0.06), transparent)" }} />
-          <div className="section-container max-w-6xl mx-auto relative z-[1]">
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-center">
-              <div
-                className="lg:col-span-3 opacity-0 animate-fade-in relative"
-                style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
-              >
-                <img
-                  src={systemProcess}
-                  alt="Telehandler auger drilling into earth"
-                  className="w-full aspect-[4/5] object-cover"
-                  loading="lazy"
-                  style={{ objectPosition: "50% 60%", filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
-                />
-                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 30%, hsl(222 20% 4% / 0.55) 100%)" }} />
-              </div>
-              <div
-                className="lg:col-span-2 opacity-0 animate-fade-in"
-                style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "800ms" }}
-              >
-                <h2 className="font-serif text-3xl sm:text-4xl text-foreground/85 tracking-tight leading-[0.9] mb-5">
-                  How We Build
-                </h2>
-                <p className="text-[13px] text-foreground/30 leading-[1.8]">
-                  Engineered from the ground up.
+        {/* ═══ 5. RECOVERY STATION TEASER ══════════════════ */}
+        <section className="relative py-[clamp(6rem,4rem+8vw,12rem)] bg-card overflow-hidden">
+          <div className="section-container max-w-7xl mx-auto grid grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4rem)] items-center">
+            <div className="col-span-12 lg:col-span-5 lg:order-1 space-y-6">
+              <RevealOnScroll direction="up" duration={900}>
+                <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
+                  Innovation — Recovery Station
                 </p>
-                <div className="mt-6 w-8 h-px bg-accent/8" />
-              </div>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" duration={1000} delay={150}>
+                <h2 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.02em] text-[clamp(1.75rem,1.15rem+2.4vw,2.75rem)]">
+                  Premium internal stable wellness.
+                </h2>
+              </RevealOnScroll>
+              <RevealLine width="w-8" delay={300} />
+              <RevealOnScroll direction="up" duration={1000} delay={400}>
+                <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px]">
+                  A dedicated recovery, grooming and wellness bay engineered into the stable
+                  itself — overhead infrared, integrated tack, considered finishes. Comfort,
+                  performance and care, held by the architecture.
+                </p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" duration={900} delay={550}>
+                <Link
+                  to="/recovery-stations"
+                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.4em] pt-2"
+                >
+                  <span className="w-6 h-px bg-accent/50 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
+                  Explore the Recovery Station
+                </Link>
+              </RevealOnScroll>
+            </div>
+            <div className="col-span-12 lg:col-span-7 lg:order-2">
+              <RevealOnScroll direction="up" duration={1200}>
+                <div className="relative aspect-[16/10] overflow-hidden lg:-mr-[3rem]">
+                  <img
+                    src={recoveryInternalHero}
+                    alt="Peninsula Equine Recovery Station — interior stable wellness bay under warm infrared light"
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2200ms] ease-[cubic-bezier(0.45,0,0.15,1)] hover:scale-[1.03]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card/30 via-transparent to-transparent" />
+                </div>
+              </RevealOnScroll>
             </div>
           </div>
         </section>
 
-        {/* ═══ THREAD ══════════════════════════════════════ */}
-        <div className="mx-auto" style={{ width: "1px", height: "clamp(3rem, 6vw, 5rem)", background: "linear-gradient(to bottom, hsl(var(--accent) / 0.06), transparent)" }} aria-hidden="true" />
-
-        {/* ═══ 4. OUTCOME — Softer, warmer ═════════════════ */}
-        <section className="pt-16 sm:pt-20 pb-32 sm:pb-40 relative overflow-hidden">
-          {/* Warm, softer ambient glow */}
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 40%, hsl(35 25% 16% / 0.05), transparent)" }} />
-          <div className="section-container max-w-6xl mx-auto">
-            <div
-              className="opacity-0 animate-fade-in"
-              style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "1000ms" }}
-            >
-              <div className="relative overflow-hidden">
-                <img
-                  src={systemOutcome}
-                  alt="Completed equestrian property — aerial view"
-                  className="w-full aspect-[21/9] object-cover"
-                  loading="lazy"
-                  style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
-                />
-                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, hsl(222 20% 4% / 0.5) 100%)" }} />
-              </div>
+        {/* ═══ 6. BUILT BY RIDERS ══════════════════════════ */}
+        <section className="relative py-[clamp(6rem,4rem+8vw,12rem)] bg-background overflow-hidden">
+          <div className="section-container max-w-6xl mx-auto grid grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4rem)] items-center">
+            <div className="col-span-12 lg:col-span-6">
+              <RevealOnScroll direction="up" duration={1200}>
+                <div className="relative aspect-[4/5] overflow-hidden">
+                  <img
+                    src={systemStructure}
+                    alt="On site — Peninsula Equine team building"
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover"
+                    style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)", objectPosition: "50% 40%" }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
+                </div>
+              </RevealOnScroll>
             </div>
-            <p
-              className="mt-8 font-serif italic text-[13px] sm:text-[14px] text-foreground/20 text-center tracking-[0.02em] opacity-0 animate-fade-in"
-              style={{ animationDelay: "600ms", animationFillMode: "both", animationDuration: "1000ms" }}
-            >
-              The outcome speaks for itself.
-            </p>
+            <div className="col-span-12 lg:col-span-6 space-y-7 lg:pl-6">
+              <RevealOnScroll direction="up" duration={900}>
+                <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
+                  Built by Riders
+                </p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" duration={1000} delay={150}>
+                <h2 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.02em] text-[clamp(1.85rem,1.2rem+2.6vw,3rem)]">
+                  Built by the people who ride. Resolved by the people who build.
+                </h2>
+              </RevealOnScroll>
+              <RevealLine width="w-8" delay={300} />
+              <RevealOnScroll direction="up" duration={1000} delay={400}>
+                <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px] max-w-xl">
+                  Peninsula Equine is run by horsemen and builders working from the same
+                  property. Every decision is filtered through the horse first, the rider
+                  second and the architecture last.
+                </p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" duration={900} delay={550}>
+                <Link
+                  to="/about"
+                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.4em]"
+                >
+                  <span className="w-6 h-px bg-accent/50 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
+                  About Peninsula Equine
+                </Link>
+              </RevealOnScroll>
+            </div>
           </div>
         </section>
 
-        {/* ═══ THREAD ══════════════════════════════════════ */}
-        <div className="mx-auto" style={{ width: "1px", height: "clamp(3rem, 6vw, 5rem)", background: "linear-gradient(to bottom, hsl(var(--accent) / 0.06), transparent)" }} aria-hidden="true" />
-
-        {/* ═══ EVENT SCALE — Confident, expansive ══════════ */}
-        <section className="pt-16 sm:pt-20 pb-28 sm:pb-36 relative overflow-hidden">
-          <div className="section-container max-w-6xl mx-auto">
-            <div
-              className="opacity-0 animate-fade-in"
-              style={{ animationDelay: "200ms", animationFillMode: "both", animationDuration: "800ms" }}
-            >
-              <div className="relative overflow-hidden">
-                <img
-                  src={systemEvent}
-                  alt="Indoor equestrian arena — event scale"
-                  className="w-full aspect-[21/9] object-cover"
-                  loading="lazy"
-                  style={{ objectPosition: "50% 55%", filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
-                />
-                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, hsl(222 20% 4% / 0.5) 100%)" }} />
-              </div>
-            </div>
-            <p
-              className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/12 text-center opacity-0 animate-fade-in"
-              style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "800ms" }}
-            >
-              Built for performance at any scale.
-            </p>
-          </div>
-        </section>
-
-        {/* ═══ THREAD ══════════════════════════════════════ */}
-        <div className="mx-auto" style={{ width: "1px", height: "clamp(3rem, 6vw, 5rem)", background: "linear-gradient(to bottom, hsl(var(--accent) / 0.04), transparent)" }} aria-hidden="true" />
-
-        {/* ═══ TRANSFORMATION — Reflective, earned ═════════ */}
-        <section className="pt-16 sm:pt-20 pb-32 sm:pb-40 relative overflow-hidden">
-          <div className="section-container max-w-5xl mx-auto">
-            <RevealOnScroll direction="up">
-              <h2 className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.45em] text-foreground/20 mb-4 text-center">
-                Transformation
-              </h2>
-              <p className="font-serif italic text-[12px] sm:text-[13px] text-foreground/12 text-center tracking-[0.03em] mb-14 sm:mb-18">
-                From dirt to dynasty.
+        {/* ═══ 7. FINAL CTA ════════════════════════════════ */}
+        <section className="relative py-[clamp(7rem,4.5rem+9vw,13rem)] bg-background overflow-hidden">
+          <img
+            src={systemEvent}
+            alt=""
+            aria-hidden
+            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover opacity-[0.18]"
+            style={{ filter: "brightness(0.65) contrast(1.1) saturate(0.7)" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-background/85 to-background" />
+          <div className="relative section-container max-w-3xl mx-auto text-center space-y-[clamp(2rem,1.25rem+2.5vw,3rem)]">
+            <RevealLine className="mx-auto" width="w-10" />
+            <RevealOnScroll direction="up" duration={900}>
+              <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.5em]">
+                Limited Commissions — 2026
               </p>
             </RevealOnScroll>
-            <BeforeAfterSlider
-              before={transformBefore}
-              after={transformAfter}
-              alt="Site transformation — raw paddock to engineered equestrian estate"
-            />
-          </div>
-        </section>
-
-        {/* ═══ FINAL CTA ══════════════════════════════════ */}
-        <section className="py-36 sm:py-48 lg:py-56 relative">
-          <div className="text-center">
-            <Link
-              to="/contact"
-              className="inline-block px-12 py-4 border text-[11px] font-mono uppercase tracking-[0.3em] hover:bg-accent/[0.03] transition-colors duration-500 opacity-0 animate-fade-in"
-              style={{
-                borderColor: "hsl(var(--accent) / 0.08)",
-                color: "hsl(var(--foreground) / 0.35)",
-                animationDelay: "200ms",
-                animationFillMode: "both",
-                animationDuration: "800ms",
-              }}
-            >
-              Apply to Build →
-            </Link>
-            <p
-              className="mt-5 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/10 opacity-0 animate-fade-in"
-              style={{ animationDelay: "500ms", animationFillMode: "both", animationDuration: "800ms" }}
-            >
-              Selected projects only.
-            </p>
+            <RevealOnScroll direction="up" duration={1000} delay={150}>
+              <p className="font-serif italic text-foreground/80 leading-[1.3] tracking-[-0.015em] text-[clamp(1.65rem,1.1rem+2vw,2.5rem)]">
+                Start your Peninsula Equine project.
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="none" duration={1200} delay={400}>
+              <p
+                className="font-mono uppercase italic text-[10px] tracking-[0.5em]"
+                style={{ color: "hsl(var(--muted-foreground) / 0.18)" }}
+              >
+                From Dirt to Dynasty
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={400}>
+              <div className="flex flex-col sm:flex-row gap-[clamp(1.75rem,1rem+2vw,3.5rem)] justify-center items-center pt-4">
+                <button
+                  onClick={openIntake}
+                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/75 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.4em] cursor-pointer"
+                >
+                  <span className="w-6 h-px bg-accent/50 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
+                  Start Your Project
+                </button>
+                <Link
+                  to="/gallery"
+                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/40 hover:text-foreground/80 transition-colors duration-500 text-[10px] tracking-[0.4em]"
+                >
+                  View Our Work
+                  <span className="w-6 h-px bg-foreground/20 transition-all duration-700 group-hover:w-12 group-hover:bg-foreground/60" />
+                </Link>
+              </div>
+            </RevealOnScroll>
           </div>
         </section>
       </Layout>
