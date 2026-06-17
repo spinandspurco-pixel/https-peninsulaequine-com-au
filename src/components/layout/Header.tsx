@@ -125,7 +125,7 @@ export function Header() {
                       "relative inline-flex items-center gap-1.5 transition-all duration-500 text-[10px] uppercase tracking-[0.2em] font-medium",
                       "after:content-[''] after:absolute after:-bottom-1.5 after:left-0 after:w-full after:h-px after:bg-accent/60 after:origin-left after:scale-x-0 after:transition-transform after:duration-500 hover:after:scale-x-100",
                       isParentActive(item)
-                        ? "text-accent after:scale-x-100"
+                        ? "text-[hsl(var(--header-active))] after:scale-x-100 after:bg-accent"
                         : "text-[hsl(var(--header-foreground))]/60 hover:text-[hsl(var(--header-foreground))]"
                     )}
                   >
@@ -162,13 +162,18 @@ export function Header() {
                               key={child.href}
                               to={child.href}
                               className={cn(
-                                "group flex items-center gap-3 py-2.5 text-[11px] uppercase tracking-[0.18em] transition-colors duration-400",
+                                "group flex items-center gap-3 py-2.5 text-[11px] uppercase tracking-[0.18em] transition-all duration-400",
                                 isActive(child.href)
-                                  ? "text-accent"
+                                  ? "text-[hsl(var(--header-active))] font-medium"
                                   : "text-foreground/55 hover:text-foreground"
                               )}
                             >
-                              <span className="w-4 h-px bg-accent/30 transition-all duration-500 group-hover:w-8 group-hover:bg-accent" />
+                              <span className={cn(
+                                "h-px transition-all duration-500",
+                                isActive(child.href)
+                                  ? "w-6 bg-[hsl(var(--header-active))]"
+                                  : "w-4 bg-accent/30 group-hover:w-8 group-hover:bg-accent"
+                              )} />
                               {child.name}
                             </Link>
                           ))}
@@ -232,10 +237,10 @@ export function Header() {
                   key={item.name}
                   to={item.href}
                   className={cn(
-                    "block py-3.5 text-xs uppercase tracking-[0.18em] font-medium transition-all duration-500",
+                    "block py-3.5 text-xs uppercase tracking-[0.18em] font-medium transition-all duration-500 border-l-2 pl-4 -ml-[2px]",
                     isActive(item.href)
-                      ? "text-accent"
-                      : "text-foreground/55 hover:text-accent"
+                      ? "text-[hsl(var(--header-active))] border-[hsl(var(--header-active))]"
+                      : "text-foreground/55 border-transparent hover:text-accent"
                   )}
                 >
                   {item.name}
@@ -247,10 +252,10 @@ export function Header() {
                 <button
                   type="button"
                   onClick={() => setMobileServicesOpen((v) => !v)}
-                  className={cn(
-                    "w-full flex items-center justify-between py-3.5 text-xs uppercase tracking-[0.18em] font-medium transition-colors duration-500",
-                    isParentActive(item) ? "text-accent" : "text-foreground/55 hover:text-accent"
-                  )}
+                    className={cn(
+                      "w-full flex items-center justify-between py-3.5 text-xs uppercase tracking-[0.18em] font-medium transition-all duration-500 border-l-2 pl-4 -ml-[2px]",
+                      isParentActive(item) ? "text-[hsl(var(--header-active))] border-[hsl(var(--header-active))]" : "text-foreground/55 border-transparent hover:text-accent"
+                    )}
                   aria-expanded={mobileServicesOpen}
                 >
                   <span>{item.name}</span>
@@ -276,10 +281,10 @@ export function Header() {
                         key={child.href}
                         to={child.href}
                         className={cn(
-                          "block py-2.5 text-[11px] uppercase tracking-[0.18em] transition-colors duration-400",
+                          "block py-2.5 text-[11px] uppercase tracking-[0.18em] transition-all duration-400 border-l-2 pl-3 -ml-[2px]",
                           isActive(child.href)
-                            ? "text-accent"
-                            : "text-foreground/40 hover:text-foreground/85"
+                            ? "text-[hsl(var(--header-active))] border-[hsl(var(--header-active))] font-medium"
+                            : "text-foreground/40 border-transparent hover:text-foreground/85"
                         )}
                       >
                         {child.name}
