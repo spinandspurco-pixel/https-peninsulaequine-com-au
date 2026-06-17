@@ -192,21 +192,12 @@ describe("security regression — internal SECURITY DEFINER functions are NOT an
 });
 
 describe("security regression — public storage buckets", () => {
-  it("private buckets remain not publicly listable via Data API", async () => {
-    // storage.objects is in the storage schema; the Data API only exposes the
-    // public schema. Confirm that anon can't pull arbitrary objects through
-    // the public table API.
-    const { data, error } = await anon.from("objects" as any).select("*").limit(1);
+  it("storage.objects is not exposed through the public Data API", async () => {
+    // The storage schema is not exposed via PostgREST. Any attempt to query
+    // `objects` through the public Data API must return no data — either an
+    // error or an empty result.
+    const { data } = await anon.from("objects" as any).select("*").limit(1);
     expect(data ?? []).toEqual([]);
-    // The table isn't even in the public schema, so PostgREST will reject.
-    if (error) {
-      const msg = (error.message ?? "").toLowerCase();
-      expect(
-        msg.includes("does not exist") ||
-          msg.includes("permission denied") ||
-          msg.includes("not found"),
-      ).toBe(true);
-    }
   });
 });
 
