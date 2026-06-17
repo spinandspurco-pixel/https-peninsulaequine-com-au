@@ -4,6 +4,8 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { Link } from "react-router-dom";
 import { BeforeAfterSlider } from "@/components/BeforeAfterSlider";
+import { HeroAtmosphere } from "@/components/HeroAtmosphere";
+
 
 // Locked 5-image system
 import systemHero from "@/assets/system-hero.jpg";
