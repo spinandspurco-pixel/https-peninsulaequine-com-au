@@ -171,7 +171,11 @@ export function Header() {
                   isScrolled ? "opacity-100" : "opacity-85 drop-shadow-[0_0_12px_rgba(255,255,255,0.1)]"
                 )}
                 loading="eager"
+                decoding="async"
+                // @ts-expect-error — valid HTML attribute
+                fetchpriority="low"
               />
+
             </div>
             <div className={cn(
               "hidden sm:flex flex-col transition-colors duration-500",

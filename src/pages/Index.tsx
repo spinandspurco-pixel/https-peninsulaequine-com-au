@@ -52,12 +52,16 @@ export default function Index() {
             width={1920}
             height={1080}
             loading="eager"
+            decoding="async"
+            // @ts-expect-error — valid HTML attribute, not yet in React types in all versions
+            fetchpriority="high"
             style={{
               objectPosition: "50% 72%",
               filter: "brightness(0.88) contrast(1.18) saturate(0.78) sepia(0.06)",
               animation: "heroSlowZoom 25s ease-out forwards",
             }}
           />
+
           <div
             className="absolute inset-0 pointer-events-none"
             style={{ background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 30%, rgba(0,0,0,0.55) 100%)" }}
