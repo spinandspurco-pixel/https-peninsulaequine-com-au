@@ -87,7 +87,7 @@ export default function Index() {
               className="mt-6 font-serif italic text-white/75 opacity-0 animate-fade-in max-w-2xl mx-auto"
               style={{
                 fontSize: "clamp(1rem, 0.55rem + 1vw, 1.45rem)",
-                animationDelay: "800ms",
+                animationDelay: "650ms",
                 animationFillMode: "both",
                 animationDuration: "900ms",
                 textShadow: "0 2px 24px rgba(0,0,0,0.5)",
