@@ -679,6 +679,7 @@ export default function ServiceDetail() {
           onClose={() => setShowGallery(false)}
         />
       )}
+      </div>
     </Layout>
   );
 }
