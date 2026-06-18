@@ -10,12 +10,8 @@ import { IntroContext } from "./hooks/useIntroState";
 import { IntakeProvider } from "./hooks/useIntake";
 import { GuidedIntake } from "./components/GuidedIntake";
 
-
-// Eagerly load the homepage for fastest FCP
 import Index from "./pages/Index";
 
-// Lazy-load all other routes
-// Core 8 public capability routes
 const Arenas = lazy(() => import("./pages/Arenas"));
 const Stables = lazy(() => import("./pages/Stables"));
 const EquineEstates = lazy(() => import("./pages/EquineEstates"));
@@ -23,7 +19,6 @@ const LumenArc = lazy(() => import("./pages/RecoveryStation"));
 import LumenArcRouteFallback from "./components/lumenarc/LumenArcRouteFallback";
 const InfrastructurePage = lazy(() => import("./pages/Infrastructure"));
 
-// Supporting public pages
 const Services = lazy(() => import("./pages/Services"));
 const ServiceDetail = lazy(() => import("./pages/ServiceDetail"));
 const Boarding = lazy(() => import("./pages/Boarding"));
@@ -69,13 +64,11 @@ const WhyWeExist = lazy(() => import("./pages/WhyWeExist"));
 const ClientPortal = lazy(() => import("./pages/ClientPortal"));
 const ClientPortalLogin = lazy(() => import("./pages/ClientPortalLogin"));
 const FieldNotes = lazy(() => import("./pages/FieldNotes"));
-const AberdeenFarmFieldNote = lazy(() => import("./pages/AberdeenFarmFieldNote"));
+const CoveredArenaStablesBuild = lazy(() => import("./pages/CoveredArenaStablesBuild"));
 const MainRidgePavilion = lazy(() => import("./pages/MainRidgePavilion"));
 const Aberdeen = lazy(() => import("./pages/Aberdeen"));
 
-
 const queryClient = new QueryClient();
-
 
 function AppContent() {
   return (
@@ -83,89 +76,83 @@ function AppContent() {
       <Toaster />
       <Sonner />
       <BrowserRouter>
-
         <Suspense fallback={null}>
-        <Routes>
-          <Route path="/" element={<Index />} />
+          <Routes>
+            <Route path="/" element={<Index />} />
 
-          {/* ─── Core 8 capability routes ─── */}
-          <Route path="/arenas" element={<Arenas />} />
-          <Route path="/stables" element={<Stables />} />
-          <Route path="/equine-estates" element={<EquineEstates />} />
-          <Route
-            path="/lumenarc"
-            element={
-              <Suspense fallback={<LumenArcRouteFallback />}>
-                <LumenArc />
-              </Suspense>
-            }
-          />
-          <Route path="/recovery-stations" element={<Navigate to="/lumenarc" replace />} />
-          <Route path="/infrastructure" element={<InfrastructurePage />} />
-          <Route path="/gallery" element={<Gallery />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
+            <Route path="/arenas" element={<Arenas />} />
+            <Route path="/stables" element={<Stables />} />
+            <Route path="/equine-estates" element={<EquineEstates />} />
+            <Route
+              path="/lumenarc"
+              element={
+                <Suspense fallback={<LumenArcRouteFallback />}>
+                  <LumenArc />
+                </Suspense>
+              }
+            />
+            <Route path="/recovery-stations" element={<Navigate to="/lumenarc" replace />} />
+            <Route path="/infrastructure" element={<InfrastructurePage />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
 
-          {/* ─── Supporting routes ─── */}
-          <Route path="/services" element={<Services />} />
-          <Route path="/services/:slug" element={<ServiceDetail />} />
-          <Route path="/services/round-pens" element={<RoundPens />} />
-          <Route path="/boarding" element={<Boarding />} />
-          <Route path="/testimonials" element={<Testimonials />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/privacy" element={<LegalPrivacy />} />
-          <Route path="/terms" element={<LegalTerms />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/hq" element={<HQ />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/admin/services" element={<AdminServices />} />
-          <Route path="/admin/testimonials" element={<AdminTestimonials />} />
-          <Route path="/admin/events" element={<AdminEvents />} />
-          <Route path="/employee" element={<EmployeeDashboard />} />
-          <Route path="/lessons" element={<Lessons />} />
-          <Route path="/book-lesson" element={<ProtectedRoute><BookLesson /></ProtectedRoute>} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/process" element={<Process />} />
-          <Route path="/bookings" element={<BookingsDashboard />} />
-          <Route path="/schedule" element={<Schedule />} />
-          <Route path="/thank-you" element={<ThankYou />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/group-booking" element={<GroupBooking />} />
-          <Route path="/estimate" element={<Estimate />} />
-          <Route path="/documents" element={<StaffDocuments />} />
-          <Route path="/staff/documents" element={<StaffDocumentPortal />} />
-          <Route path="/trainer/documents" element={<TrainerDocumentPortal />} />
-          <Route path="/admin/documents" element={<AdminDocuments />} />
-          <Route path="/trainers/:slug" element={<TrainerProfile />} />
-          <Route path="/equus-ridge" element={<Navigate to="/equine-estates" replace />} />
-          <Route path="/site-assessment" element={<SiteAssessment />} />
-          <Route path="/project/:slug" element={<CaseStudy />} />
-          <Route path="/quote/:token" element={<ClientQuote />} />
-          <Route path="/visualise" element={<Visualise />} />
-          <Route path="/the-standard" element={<TheStandard />} />
-          <Route path="/why" element={<WhyWeExist />} />
-          <Route path="/portal" element={<ProtectedRoute loginPath="/portal/login"><ClientPortal /></ProtectedRoute>} />
-          <Route path="/portal/login" element={<ClientPortalLogin />} />
-          <Route path="/field-notes" element={<FieldNotes />} />
-          <Route path="/field-notes/aberdeen-farm" element={<AberdeenFarmFieldNote />} />
-          <Route path="/selected-works/aberdeen" element={<Aberdeen />} />
-          <Route path="/selected-works/main-ridge-pavilion" element={<MainRidgePavilion />} />
-          {/* Legacy Aberdeen routes — redirect to canonical project page */}
-          <Route path="/projects/aberdeen" element={<Navigate to="/selected-works/aberdeen" replace />} />
-          <Route path="/project/aberdeen" element={<Navigate to="/selected-works/aberdeen" replace />} />
-          <Route path="/selected-works/aberdeen-farm" element={<Navigate to="/selected-works/aberdeen" replace />} />
-          <Route path="/aberdeen" element={<Navigate to="/selected-works/aberdeen" replace />} />
-          {/* Legacy Main Ridge routes — redirect to canonical pavilion page */}
-          <Route path="/projects/main-ridge-pavilion" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
-          <Route path="/projects/main-ridge" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
-          <Route path="/project/main-ridge" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
-          <Route path="/selected-works/main-ridge" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
-          <Route path="/main-ridge" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/services/:slug" element={<ServiceDetail />} />
+            <Route path="/services/round-pens" element={<RoundPens />} />
+            <Route path="/boarding" element={<Boarding />} />
+            <Route path="/testimonials" element={<Testimonials />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/privacy" element={<LegalPrivacy />} />
+            <Route path="/terms" element={<LegalTerms />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/hq" element={<HQ />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/services" element={<AdminServices />} />
+            <Route path="/admin/testimonials" element={<AdminTestimonials />} />
+            <Route path="/admin/events" element={<AdminEvents />} />
+            <Route path="/employee" element={<EmployeeDashboard />} />
+            <Route path="/lessons" element={<Lessons />} />
+            <Route path="/book-lesson" element={<ProtectedRoute><BookLesson /></ProtectedRoute>} />
+            <Route path="/events" element={<Events />} />
+            <Route path="/process" element={<Process />} />
+            <Route path="/bookings" element={<BookingsDashboard />} />
+            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/thank-you" element={<ThankYou />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/group-booking" element={<GroupBooking />} />
+            <Route path="/estimate" element={<Estimate />} />
+            <Route path="/documents" element={<StaffDocuments />} />
+            <Route path="/staff/documents" element={<StaffDocumentPortal />} />
+            <Route path="/trainer/documents" element={<TrainerDocumentPortal />} />
+            <Route path="/admin/documents" element={<AdminDocuments />} />
+            <Route path="/trainers/:slug" element={<TrainerProfile />} />
+            <Route path="/equus-ridge" element={<Navigate to="/equine-estates" replace />} />
+            <Route path="/site-assessment" element={<SiteAssessment />} />
+            <Route path="/project/:slug" element={<CaseStudy />} />
+            <Route path="/quote/:token" element={<ClientQuote />} />
+            <Route path="/visualise" element={<Visualise />} />
+            <Route path="/the-standard" element={<TheStandard />} />
+            <Route path="/why" element={<WhyWeExist />} />
+            <Route path="/portal" element={<ProtectedRoute loginPath="/portal/login"><ClientPortal /></ProtectedRoute>} />
+            <Route path="/portal/login" element={<ClientPortalLogin />} />
+            <Route path="/field-notes" element={<FieldNotes />} />
+            <Route path="/field-notes/covered-arena-stables-build" element={<CoveredArenaStablesBuild />} />
+            <Route path="/field-notes/aberdeen-farm" element={<Navigate to="/field-notes/covered-arena-stables-build" replace />} />
+            <Route path="/selected-works/aberdeen" element={<Aberdeen />} />
+            <Route path="/selected-works/main-ridge-pavilion" element={<MainRidgePavilion />} />
+            <Route path="/projects/aberdeen" element={<Navigate to="/selected-works/aberdeen" replace />} />
+            <Route path="/project/aberdeen" element={<Navigate to="/selected-works/aberdeen" replace />} />
+            <Route path="/selected-works/aberdeen-farm" element={<Navigate to="/selected-works/aberdeen" replace />} />
+            <Route path="/aberdeen" element={<Navigate to="/selected-works/aberdeen" replace />} />
+            <Route path="/projects/main-ridge-pavilion" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
+            <Route path="/projects/main-ridge" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
+            <Route path="/project/main-ridge" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
+            <Route path="/selected-works/main-ridge" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
+            <Route path="/main-ridge" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
 
-
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </Suspense>
       </BrowserRouter>
     </IntroContext.Provider>
