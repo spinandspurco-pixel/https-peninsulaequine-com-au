@@ -197,10 +197,10 @@ export default function RecoveryStation() {
   return (
     <Layout>
       <article className="bg-background text-foreground">
-        <section className="relative min-h-screen overflow-hidden border-b border-accent/12 bg-card grain-hero">
+        <section className="relative h-[100svh] min-h-[640px] overflow-hidden border-b border-accent/12 bg-card grain-hero">
           <img
             src={comingSoonAsset.url}
-            alt="LumenArc coming soon teaser visual showing premium equine recovery canopy concept with blueprint-led detailing"
+            alt="LumenArc coming soon teaser visual — premium equine recovery canopy concept with blueprint-led detailing"
             width={1536}
             height={1024}
             className="absolute inset-0 h-full w-full object-cover object-center"
@@ -208,46 +208,31 @@ export default function RecoveryStation() {
             decoding="async"
             fetchPriority="high"
           />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,hsl(var(--background)/0.28)_0%,hsl(var(--background)/0.44)_38%,hsl(var(--background)/0.88)_100%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_56%,transparent_0%,hsl(var(--background)/0.08)_38%,hsl(var(--background)/0.72)_100%)]" />
+          {/* Edge vignettes only — let the artwork breathe through the centre */}
+          <div className="absolute inset-x-0 top-0 h-40 bg-[linear-gradient(180deg,hsl(var(--background)/0.55)_0%,transparent_100%)]" />
+          <div className="absolute inset-x-0 bottom-0 h-56 bg-[linear-gradient(0deg,hsl(var(--background)/0.78)_0%,transparent_100%)]" />
           <HeroAtmosphere />
 
-          <div className="relative z-10 flex min-h-screen items-end">
-            <div className="section-container w-full pb-[clamp(3rem,2rem+5vw,6.5rem)] pt-40 sm:pt-44">
-              <div className="max-w-5xl space-y-8">
-                <RevealOnScroll direction="up" duration={900}>
-                  <p className="font-mono uppercase text-accent/60 text-[clamp(0.62rem,0.58rem+0.2vw,0.78rem)] tracking-[0.55em]">
-                    01 — Coming Soon
-                  </p>
-                </RevealOnScroll>
+          {/* Bronze section index — top left */}
+          <div className="absolute left-[clamp(1.5rem,0.75rem+3vw,4rem)] top-[clamp(6.5rem,5rem+5vw,9rem)] z-10">
+            <RevealOnScroll direction="none" duration={1100} delay={300}>
+              <p className="font-mono uppercase text-accent/70 text-[clamp(0.62rem,0.58rem+0.2vw,0.74rem)] tracking-[0.55em]">
+                01 — Coming Soon
+              </p>
+            </RevealOnScroll>
+          </div>
 
-                <RevealOnScroll direction="up" duration={1050} delay={180}>
-                  <div className="space-y-3">
-                    <p className="font-mono uppercase text-foreground/48 text-[clamp(0.62rem,0.56rem+0.18vw,0.72rem)] tracking-[0.45em]">
-                      Performance Recovery System
-                    </p>
-                    <h1 className="font-serif text-primary-foreground leading-[0.86] tracking-[0.08em] text-[clamp(3rem,1.9rem+6vw,7.6rem)]">
-                      LUMENARC
-                    </h1>
-                  </div>
-                </RevealOnScroll>
-
-                <RevealLine width="w-14" delay={340} />
-
-                <RevealOnScroll direction="up" duration={1100} delay={420}>
-                  <p className="max-w-2xl font-serif italic text-primary-foreground/72 leading-[1.32] text-[clamp(1.12rem,0.96rem+0.8vw,1.75rem)]">
-                    A new standard is under construction.
-                  </p>
-                </RevealOnScroll>
-
-                <RevealOnScroll direction="up" duration={1100} delay={520}>
-                  <p className="max-w-2xl font-sans font-light text-primary-foreground/50 leading-[1.95] text-[clamp(0.84rem,0.8rem+0.2vw,0.98rem)]">
-                    A future Peninsula Equine division exploring intelligent equine recovery infrastructure — cinematic,
-                    architectural and quietly technical. In development. Features subject to refinement.
-                  </p>
-                </RevealOnScroll>
-              </div>
-            </div>
+          {/* Scroll indicator — bottom centre */}
+          <div className="absolute bottom-[clamp(2rem,1.5rem+1.5vw,3.25rem)] left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-3">
+            <RevealOnScroll direction="none" duration={1100} delay={600}>
+              <span className="font-mono uppercase text-primary-foreground/40 text-[0.6rem] tracking-[0.5em]">
+                Scroll
+              </span>
+            </RevealOnScroll>
+            <span
+              aria-hidden
+              className="block w-px h-10 bg-gradient-to-b from-accent/55 via-accent/20 to-transparent animate-[scrollLine_2.4s_cubic-bezier(0.45,0,0.15,1)_infinite]"
+            />
           </div>
         </section>
 
