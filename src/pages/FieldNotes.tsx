@@ -58,7 +58,7 @@ export default function FieldNotes() {
         <section className="relative min-h-[92vh] overflow-hidden flex items-end">
           <img
             src={sunsetPuddles.url}
-            alt="Covered Competition Arena in progress — structural steel at sunset with wet ground reflections and machinery"
+            alt="Aberdeen Farm in progress — structural steel at sunset with wet ground reflections and machinery"
             className="absolute inset-0 h-full w-full object-cover object-[60%_50%] sm:object-[55%_52%] lg:object-center"
             style={{ filter: "brightness(0.72) contrast(1.12) saturate(0.8)" }}
           />
@@ -98,7 +98,7 @@ export default function FieldNotes() {
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" duration={1000} delay={120}>
                   <h2 className="font-serif text-foreground/92 leading-[1.02] tracking-tight text-[clamp(1.8rem,1.2rem+2vw,3rem)]">
-                    Covered Competition Arena
+                    Aberdeen Farm
                   </h2>
                 </RevealOnScroll>
                 <RevealLine width="w-8" delay={220} />
@@ -115,12 +115,12 @@ export default function FieldNotes() {
 
               <div className="col-span-12 lg:col-span-8">
                 <RevealOnScroll direction="up" duration={1200}>
-                  <Link to="/field-notes/covered-competition-arena" className="group block">
+                  <Link to="/field-notes/aberdeen-farm" className="group block">
                     <article className="relative overflow-hidden">
                       <div className="relative aspect-[4/5] sm:aspect-[16/10] xl:aspect-[16/8] overflow-hidden">
                         <img
                           src={dozerStormSky.url}
-                          alt="Covered Competition Arena progress — dozer in muddy conditions with structural steel under a stormy sky"
+                          alt="Aberdeen Farm progress — dozer in muddy conditions with structural steel under a stormy sky"
                           className="absolute inset-0 h-full w-full object-cover object-[28%_50%] sm:object-center transition-transform duration-[1600ms] ease-out group-hover:scale-[1.03]"
                           style={{ filter: "brightness(0.78) contrast(1.12) saturate(0.82)" }}
                         />
@@ -131,7 +131,7 @@ export default function FieldNotes() {
                               Current Project
                             </p>
                             <h3 className="font-serif text-foreground/94 leading-[1.02] tracking-tight text-[clamp(1.6rem,1.1rem+1.8vw,2.5rem)]">
-                              Covered Competition Arena
+                              Aberdeen Farm
                             </h3>
                             <p className="font-sans font-light text-foreground/62 leading-[1.8] text-[14px] sm:text-[15px] max-w-lg">
                               Structural steel, earthworks and base preparation underway.
@@ -224,7 +224,7 @@ export default function FieldNotes() {
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" duration={1000} delay={120}>
                   <h2 className="font-serif text-foreground/92 leading-[1.02] tracking-tight text-[clamp(1.8rem,1.15rem+2vw,2.8rem)]">
-                    Covered Competition Arena
+                    Aberdeen Farm
                   </h2>
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" duration={1000} delay={220}>
@@ -276,7 +276,7 @@ export default function FieldNotes() {
             </RevealOnScroll>
             <RevealOnScroll direction="none" duration={1100} delay={320}>
               <Link
-                to="/field-notes/covered-competition-arena"
+                to="/field-notes/aberdeen-farm"
                 className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/72 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
               >
                 <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />

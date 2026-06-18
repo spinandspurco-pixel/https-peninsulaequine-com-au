@@ -69,7 +69,7 @@ const WhyWeExist = lazy(() => import("./pages/WhyWeExist"));
 const ClientPortal = lazy(() => import("./pages/ClientPortal"));
 const ClientPortalLogin = lazy(() => import("./pages/ClientPortalLogin"));
 const FieldNotes = lazy(() => import("./pages/FieldNotes"));
-const CoveredCompetitionArenaFieldNote = lazy(() => import("./pages/CoveredCompetitionArenaFieldNote"));
+const AberdeenFarmFieldNote = lazy(() => import("./pages/AberdeenFarmFieldNote"));
 const MainRidgePavilion = lazy(() => import("./pages/MainRidgePavilion"));
 
 const queryClient = new QueryClient();
@@ -145,7 +145,7 @@ function AppContent() {
           <Route path="/portal" element={<ProtectedRoute loginPath="/portal/login"><ClientPortal /></ProtectedRoute>} />
           <Route path="/portal/login" element={<ClientPortalLogin />} />
           <Route path="/field-notes" element={<FieldNotes />} />
-          <Route path="/field-notes/covered-competition-arena" element={<CoveredCompetitionArenaFieldNote />} />
+          <Route path="/field-notes/aberdeen-farm" element={<AberdeenFarmFieldNote />} />
           <Route path="/selected-works/main-ridge-pavilion" element={<MainRidgePavilion />} />
           {/* Legacy Main Ridge routes — redirect to canonical pavilion page */}
           <Route path="/projects/main-ridge-pavilion" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />

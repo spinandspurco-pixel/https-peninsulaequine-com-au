@@ -300,7 +300,7 @@ export default function Index() {
                   </div>
                   <div className="mt-6 pt-5 border-t border-accent/15 flex items-baseline justify-between gap-4">
                     <p className="font-serif text-foreground/85 group-hover:text-foreground transition-colors duration-500 text-[clamp(1.15rem,0.95rem+0.7vw,1.6rem)] leading-[1.2] tracking-[-0.012em]">
-                      Covered Competition Arena
+                      Aberdeen Farm
                     </p>
                     <p className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.45em]">Arena</p>
                   </div>
@@ -327,7 +327,7 @@ export default function Index() {
               <div className="relative aspect-[4/5] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                 <img
                   src={fieldNoteSunset.url}
-                  alt="Covered competition arena in progress — steel framework at sunset with puddles across the muddy site"
+                  alt="Aberdeen Farm in progress — steel framework at sunset with puddles across the muddy site"
                   loading="lazy"
                   decoding="async"
                   className="absolute inset-0 w-full h-full object-cover image-bleed object-[60%_50%] sm:object-[56%_52%] md:object-center"
