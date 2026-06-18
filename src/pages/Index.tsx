@@ -6,18 +6,34 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { IntroContext } from "@/hooks/useIntroState";
 import { useIntake } from "@/hooks/useIntake";
 
-import mainRidgePavilionTile from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
 import serviceGroundworks from "@/assets/homepage-services/groundworks.png.asset.json";
-import coveredArenaSunsetAsset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
-const coveredArenaHero = coveredArenaSunsetAsset.url;
-import slidingStopHero from "@/assets/homepage-refresh/sliding-stop-hero.png.asset.json";
-import steelFrontAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
-const steelFront = steelFrontAsset.url;
 import lumenArcCanopy from "@/assets/lumenarc/canopy.asset.json";
 import pavilionFireplaceDetail from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
 import aberdeenHero from "@/assets/aberdeen/hero-entrance-twilight.png.asset.json";
 import aberdeenArena from "@/assets/aberdeen/arena-dramatic-light.png.asset.json";
-import ciroAceQuietMoment from "@/assets/about/ciro-ace-quiet-moment.png.asset.json";
+import steelFrontAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
+const steelFront = steelFrontAsset.url;
+
+// Responsive webp variants for srcset (generated at 640/1024/1536w)
+import slidingStop640 from "@/assets/responsive/sliding-stop-hero-640.webp.asset.json";
+import slidingStop1024 from "@/assets/responsive/sliding-stop-hero-1024.webp.asset.json";
+import slidingStop1536 from "@/assets/responsive/sliding-stop-hero-1536.webp.asset.json";
+import ciro640 from "@/assets/responsive/ciro-ace-quiet-moment-640.webp.asset.json";
+import ciro1024 from "@/assets/responsive/ciro-ace-quiet-moment-1024.webp.asset.json";
+import ciro1536 from "@/assets/responsive/ciro-ace-quiet-moment-1536.webp.asset.json";
+import mainRidge640 from "@/assets/responsive/main-ridge-pavilion-wide-fireplace-table-640.webp.asset.json";
+import mainRidge1024 from "@/assets/responsive/main-ridge-pavilion-wide-fireplace-table-1024.webp.asset.json";
+import mainRidge1536 from "@/assets/responsive/main-ridge-pavilion-wide-fireplace-table-1536.webp.asset.json";
+import coveredArena640 from "@/assets/responsive/covered-competition-arena-sunset-puddles-640.webp.asset.json";
+import coveredArena1024 from "@/assets/responsive/covered-competition-arena-sunset-puddles-1024.webp.asset.json";
+import coveredArena1536 from "@/assets/responsive/covered-competition-arena-sunset-puddles-1536.webp.asset.json";
+
+const srcset = (a: { url: string }, b: { url: string }, c: { url: string }) =>
+  `${a.url} 640w, ${b.url} 1024w, ${c.url} 1536w`;
+const slidingStopSrcSet = srcset(slidingStop640, slidingStop1024, slidingStop1536);
+const ciroSrcSet = srcset(ciro640, ciro1024, ciro1536);
+const mainRidgeSrcSet = srcset(mainRidge640, mainRidge1024, mainRidge1536);
+const coveredArenaSrcSet = srcset(coveredArena640, coveredArena1024, coveredArena1536);
 
 const SESSION_KEY = "pe-brand-intro-seen";
 const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
@@ -81,7 +97,9 @@ export default function Index() {
         <div className="type-architectural">
           <section className="relative min-h-[100dvh] overflow-hidden flex items-end">
             <img
-              src={slidingStopHero.url}
+              src={slidingStop1536.url}
+              srcSet={slidingStopSrcSet}
+              sizes="100vw"
               alt="Sliding stop horse throwing warm arena dirt through late light"
               className="absolute inset-0 w-full h-full object-cover"
               width={1920}
@@ -233,7 +251,9 @@ export default function Index() {
                 <RevealOnScroll direction="up" duration={1300} className="col-span-12 md:col-span-7">
                   <div className="relative aspect-[4/5] sm:aspect-[5/4] md:aspect-[4/5] overflow-hidden">
                     <img
-                      src={ciroAceQuietMoment.url}
+                      src={ciro1024.url}
+                      srcSet={ciroSrcSet}
+                      sizes="(min-width: 768px) 58vw, 100vw"
                       alt="A quiet moment between horseman and horse in low arena light — the ground Peninsula Equine builds for"
                       loading="lazy"
                       decoding="async"
@@ -307,7 +327,9 @@ export default function Index() {
                 <Link to="/selected-works/main-ridge-pavilion" className="group block">
                   <div className="relative aspect-[5/6] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                     <img
-                      src={mainRidgePavilionTile.url}
+                      src={mainRidge1536.url}
+                      srcSet={mainRidgeSrcSet}
+                      sizes="(min-width: 1480px) 1480px, 100vw"
                       alt="Main Ridge pavilion — wide interior with fireplace, handcrafted timber table and warm dusk light"
                       loading="lazy"
                       decoding="async"
@@ -389,7 +411,9 @@ export default function Index() {
                 <Link to="/field-notes/covered-arena-stables-build" className="group block">
                   <div className="relative aspect-[5/6] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                     <img
-                      src={coveredArenaHero}
+                      src={coveredArena1536.url}
+                      srcSet={coveredArenaSrcSet}
+                      sizes="(min-width: 1480px) 1480px, 100vw"
                       alt="Covered competition arena at sunset — steel frame and finished surface mirrored in puddles after rain"
                       loading="lazy"
                       decoding="async"

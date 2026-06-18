@@ -7,7 +7,11 @@ import heroDroneAsset from "@/assets/field-notes/covered-competition-arena-sunse
 import steelFrontAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
 import sitewideProgressAsset from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
 import redClayRooflineAsset from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
-const heroDrone = heroDroneAsset.url;
+import heroDrone640 from "@/assets/responsive/covered-competition-arena-sunset-puddles-640.webp.asset.json";
+import heroDrone1024 from "@/assets/responsive/covered-competition-arena-sunset-puddles-1024.webp.asset.json";
+import heroDrone1536 from "@/assets/responsive/covered-competition-arena-sunset-puddles-1536.webp.asset.json";
+const heroDrone = heroDrone1536.url;
+const heroDroneSrcSet = `${heroDrone640.url} 640w, ${heroDrone1024.url} 1024w, ${heroDrone1536.url} 1536w`;
 const steelFront = steelFrontAsset.url;
 const sitewideProgress = sitewideProgressAsset.url;
 const redClayRoofline = redClayRooflineAsset.url;
@@ -33,8 +37,14 @@ export default function FieldNotes() {
         <section className="relative min-h-[92vh] overflow-hidden flex items-end">
           <img
             src={heroDrone}
+            srcSet={heroDroneSrcSet}
+            sizes="100vw"
             alt="Covered Arena & Stables Build in progress — steel framing, roof works and red clay conditions across a live equine facility site"
             className="absolute inset-0 h-full w-full object-cover object-[62%_48%] sm:object-[58%_48%] lg:object-center"
+            loading="eager"
+            decoding="async"
+            // @ts-expect-error valid HTML attribute
+            fetchpriority="high"
             style={{ filter: "brightness(0.7) contrast(1.12) saturate(0.8)" }}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/55 to-background/18" />
