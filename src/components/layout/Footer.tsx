@@ -25,12 +25,11 @@ export function Footer() {
     <footer className="bg-[hsl(var(--footer-bg))] text-[hsl(var(--footer-foreground))] relative">
       <div className="divider-grid" />
 
-      <div className="section-container py-28 sm:py-36 lg:py-44">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-16 lg:gap-20">
+      <div className="section-container py-16 sm:py-24 lg:py-32">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 sm:gap-12 lg:gap-20">
 
-          {/* Brand */}
-          <div className="md:col-span-1">
-            <Link to="/" className="inline-flex items-center gap-3.5 mb-10 group">
+          <div className="col-span-2 md:col-span-1">
+            <Link to="/" className="inline-flex items-center gap-3.5 mb-6 sm:mb-10 group">
               <img
                 src={logoPeMark}
                 alt="Peninsula Equine"
@@ -43,7 +42,7 @@ export function Footer() {
                 Peninsula Equine
               </span>
             </Link>
-            <p className="text-[hsl(var(--footer-muted))] text-[13px] leading-[2] max-w-xs mb-12">
+            <p className="text-[hsl(var(--footer-muted))] text-[13px] leading-[1.85] max-w-xs mb-8 sm:mb-12">
               Premium equine environments — built by riders, crafted for performance.
             </p>
             <div className="flex gap-5">
