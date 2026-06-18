@@ -60,13 +60,13 @@ import mainRidgeTrenchUtilities from "@/assets/main-ridge-trench-utilities.jpg";
 
 // Primary images per service
 const serviceImages: Record<string, string> = {
-  "arena-construction": equitanaArena,
+  "arena-construction": peArenaGrading,
   "barn-construction": aberdeenBarnInterior,
-  "fencing": aberdeenStalls,
-  "infrastructure": mainRidgeSitePrep,
+  "fencing": peFencingGate,
+  "infrastructure": peGroundworksDozer,
   "round-pens": coveredArenaLit,
-  "renovations": mainRidgeCiroWoodwork,
-  "full-facility": mainRidgeSitePrep,
+  "renovations": peCustomRuralPavilion,
+  "full-facility": peCustomRuralPavilion,
   "clinics-events": equitanaArena,
 };
 
