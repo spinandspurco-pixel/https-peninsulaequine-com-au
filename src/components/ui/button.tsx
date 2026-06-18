@@ -23,7 +23,7 @@ const buttonVariants = cva(
           "text-accent underline-offset-4 hover:underline transition-opacity duration-300",
         /** Gold CTA — premium high-impact action */
         gold:
-          "bg-accent text-accent-foreground font-semibold tracking-[0.15em] uppercase text-[11px] shadow-[0_4px_24px_-8px_hsl(var(--accent)/0.3)] transition-[filter,box-shadow,opacity] duration-300 ease-in-out hover:brightness-[1.08] hover:shadow-[0_4px_28px_-8px_hsl(var(--accent)/0.28)]",
+          "bg-accent text-accent-foreground font-semibold tracking-[0.15em] uppercase text-[11px] shadow-[0_4px_24px_-8px_hsl(var(--accent)/0.3)] transition-[filter,box-shadow,opacity] duration-300 ease-in-out hover:brightness-[1.08] hover:shadow-[0_4px_28px_-8px_hsl(var(--accent)/0.28)] focus-visible:brightness-[1.08] focus-visible:shadow-[0_4px_28px_-8px_hsl(var(--accent)/0.28)] active:scale-[0.98]", 
         /** Outline-light — refined secondary on dark */
         "outline-light":
           "border border-foreground/20 text-foreground hover:opacity-80 tracking-[0.15em] uppercase text-[11px] font-medium transition-opacity duration-300",
