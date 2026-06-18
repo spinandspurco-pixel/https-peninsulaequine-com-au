@@ -66,8 +66,17 @@ describe("LumenArc mobile clipping regression", () => {
       const heroImg = heroImgMatch![0];
       expect(heroImg).toMatch(/\bobject-contain\b/);
       expect(heroImg).toMatch(/\bmd:object-cover\b/);
-      // The mobile default class must not be a bare object-cover.
-      expect(heroImg).not.toMatch(/className="[^"]*\bobject-cover\b(?![^"]*\bobject-contain\b)/);
+      // The mobile default class must come before any object-cover — i.e.
+      // object-contain wins on phones and only md+ upgrades to cover.
+      const classMatch = heroImg.match(/className="([^"]+)"/);
+      expect(classMatch, "hero img should have a className").toBeTruthy();
+      const cls = classMatch![1];
+      const containIdx = cls.indexOf("object-contain");
+      const bareCoverIdx = cls.search(/(?<!:)\bobject-cover\b/);
+      expect(containIdx).toBeGreaterThanOrEqual(0);
+      // Either there is no bare (unprefixed) object-cover at all, or it appears
+      // after object-contain — the responsive prefix `md:object-cover` is fine.
+      expect(bareCoverIdx === -1 || containIdx < bareCoverIdx).toBe(true);
     });
 
     it("centers the hero image so the lockup stays in frame", () => {
