@@ -436,26 +436,8 @@
     font-size: 0.7rem;
   }
 
-  /* ── Strip card chrome from descendant elements ─────────
-     Apply to a section to soften any nested .card/.shadow/.border
-     into architectural plates without rewriting child markup. */
-  .strip-cards [class*="border"]:not(.keep-border) {
-    border-color: hsl(var(--accent) / 0.18) !important;
-    border-width: 0 !important;
-    border-top-width: 1px !important;
-  }
-  .strip-cards [class*="bg-card"]:not(.keep-fill),
-  .strip-cards [class*="bg-secondary"]:not(.keep-fill),
-  .strip-cards [class*="bg-muted"]:not(.keep-fill) {
-    background-color: transparent !important;
-  }
-  .strip-cards [class*="shadow"]:not(.keep-shadow) {
-    box-shadow: none !important;
-  }
-  .strip-cards [class*="rounded"]:not(.keep-radius) {
-    border-radius: 0 !important;
-  }
 }
+
 
 
 /* ═══════════════════════════════════════════════════════
