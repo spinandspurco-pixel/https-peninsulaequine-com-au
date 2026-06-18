@@ -218,7 +218,7 @@ export default function Contact() {
             style={{ animationDelay: "200ms", animationFillMode: "both" }}
           >
             <div className="w-8 h-px bg-accent/40" />
-            <p className="text-overline text-accent/70">Get Started</p>
+            <p className="text-overline text-[hsl(var(--accent-light))]/95">Get Started</p>
             <div className="w-8 h-px bg-accent/40" />
           </div>
           <h1
@@ -298,7 +298,7 @@ export default function Contact() {
                   { num: "05", text: "Project scheduling and delivery" },
                 ].map((step, i) => (
                   <div key={step.num} className="flex items-center gap-5 py-4 border-b border-border/15 last:border-b-0">
-                    <span className="text-[9px] font-mono tracking-[0.3em] text-accent/25 uppercase w-6 shrink-0">{step.num}</span>
+                    <span className="text-[9px] font-mono tracking-[0.3em] text-[hsl(var(--accent-light))]/95 uppercase w-6 shrink-0">{step.num}</span>
                     <span className="text-sm text-foreground/80">{step.text}</span>
                   </div>
                 ))}
