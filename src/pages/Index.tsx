@@ -231,7 +231,7 @@ export default function Index() {
               {/* Main Ridge Pavilion — featured card */}
               <RevealOnScroll direction="up" duration={1300} className="md:col-span-7">
                 <Link
-                  to="/projects/main-ridge-pavilion"
+                  to="/selected-works/main-ridge-pavilion"
                   className="group block relative aspect-[5/4] md:aspect-[4/3] overflow-hidden"
                 >
                   <picture className="absolute inset-0 w-full h-full">
@@ -351,7 +351,7 @@ export default function Index() {
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-[clamp(1.75rem,1.25rem+2vw,3.5rem)] items-start">
               <RevealOnScroll direction="up" duration={1300} className="md:col-span-8">
-                <Link to="/projects/main-ridge-pavilion" className="group block">
+                <Link to="/selected-works/main-ridge-pavilion" className="group block">
                   <div className="relative aspect-[16/10] overflow-hidden">
                     <picture className="absolute inset-0 w-full h-full">
                       <source
