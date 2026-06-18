@@ -17,7 +17,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import blueprintDetail from "@/assets/blueprint-detail.png";
-import horseAction from "@/assets/horse-action.png";
+import horseAction from "@/assets/covered-arena-finished-lit.jpg";
 
 // ── Categories ───────────────────────────────────────
 

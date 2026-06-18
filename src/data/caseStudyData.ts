@@ -15,11 +15,11 @@ import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
 import livingHeroWide from "@/assets/living-hero-wide.jpg";
 
 // Equitana
-import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
-import equitanaArena2 from "@/assets/equitana-arena-2.jpg";
-import equitanaArena3 from "@/assets/equitana-arena-3.jpg";
-import equitanaArena4 from "@/assets/equitana-arena-4.jpg";
-import equitanaArena5 from "@/assets/equitana-arena-5.jpg";
+import equitanaArena1 from "@/assets/covered-arena-finished-lit.jpg";
+import equitanaArena2 from "@/assets/aberdeen-aisle.jpg";
+import equitanaArena3 from "@/assets/aberdeen-barn-interior.jpg";
+import equitanaArena4 from "@/assets/main-ridge-finished-interior-1.jpg";
+import equitanaArena5 from "@/assets/main-ridge-finished-interior-2.jpg";
 
 // Canonical surface system image (re-uses living hero)
 import groundlockInstallation from "@/assets/living-hero-wide.jpg";

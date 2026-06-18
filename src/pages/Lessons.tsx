@@ -33,7 +33,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
 import { glennBrowitt, lessonInfo, siteConfig } from "@/data/content";
-import equitanaArena4 from "@/assets/equitana-arena-4.jpg";
+import equitanaArena4 from "@/assets/main-ridge-finished-interior-1.jpg";
 
 // ── Program Data ─────────────────────────────────────
 
