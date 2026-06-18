@@ -136,9 +136,10 @@ function LumenArcChapterSection({
   return (
     <section
       className="relative py-[clamp(6rem,4rem+8vw,12rem)] la-chapter-section group/chapter outline-none focus-visible:ring-1 focus-visible:ring-accent/40 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
-      tabIndex={0}
+      tabIndex={tabIndex ?? -1}
       data-la-chapter={number}
       onKeyDown={handleKeyDown}
+      onFocus={onFocusChapter}
       aria-label={`${label} — chapter ${number}. Use arrow keys to move between chapters.`}
       aria-describedby={`la-meta-${number}`}
     >
