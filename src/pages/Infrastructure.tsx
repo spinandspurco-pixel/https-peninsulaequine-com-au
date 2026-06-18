@@ -43,8 +43,11 @@ export default function InfrastructurePage() {
               <div className="mb-[clamp(3rem,2rem+4vw,5rem)] max-w-xl space-y-3">
                 <p className="font-mono uppercase text-accent/45 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">Scope</p>
                 <h2 className="font-serif text-foreground/85 leading-[1.1] tracking-[-0.02em] text-[clamp(1.65rem,1.1rem+2.2vw,2.65rem)]">
-                  Everything underneath, beside, and after the build.
+                  The systems that keep the property working.
                 </h2>
+                <p className="font-sans font-light text-foreground/45 leading-[1.85] text-[clamp(0.8125rem,0.78rem+0.2vw,0.9375rem)] pt-2">
+                  Ground, drainage, access and ongoing care — the work that supports every other build.
+                </p>
                 <RevealLine width="w-8" delay={200} />
               </div>
             </RevealOnScroll>
