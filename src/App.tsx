@@ -19,7 +19,7 @@ import Index from "./pages/Index";
 const Arenas = lazy(() => import("./pages/Arenas"));
 const Stables = lazy(() => import("./pages/Stables"));
 const EquineEstates = lazy(() => import("./pages/EquineEstates"));
-const RecoveryStation = lazy(() => import("./pages/RecoveryStation"));
+const LumenArc = lazy(() => import("./pages/RecoveryStation"));
 const InfrastructurePage = lazy(() => import("./pages/Infrastructure"));
 
 // Supporting public pages
@@ -87,7 +87,8 @@ function AppContent() {
           <Route path="/arenas" element={<Arenas />} />
           <Route path="/stables" element={<Stables />} />
           <Route path="/equine-estates" element={<EquineEstates />} />
-          <Route path="/recovery-stations" element={<RecoveryStation />} />
+          <Route path="/lumenarc" element={<LumenArc />} />
+          <Route path="/recovery-stations" element={<Navigate to="/lumenarc" replace />} />
           <Route path="/infrastructure" element={<InfrastructurePage />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/about" element={<About />} />
