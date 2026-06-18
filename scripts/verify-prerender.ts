@@ -19,7 +19,7 @@
  * file still knows what to expect.
  */
 
-import { readFileSync, existsSync, appendFileSync } from "node:fs";
+import { readFileSync, existsSync, appendFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const SITE_ORIGIN = "https://peninsulaequine.com.au";
