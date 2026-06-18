@@ -14,6 +14,9 @@ import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
 import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
 
 import goldenHourPavilion from "@/assets/golden-hour-pavilion.png.asset.json";
+import goldenHourPavilion800 from "@/assets/golden-hour-pavilion-800.webp.asset.json";
+import goldenHourPavilion1200 from "@/assets/golden-hour-pavilion-1200.webp.asset.json";
+import goldenHourPavilion1600 from "@/assets/golden-hour-pavilion-1600.webp.asset.json";
 import serviceArenas from "@/assets/homepage-services/arenas.png.asset.json";
 import serviceGroundworks from "@/assets/homepage-services/groundworks.png.asset.json";
 
@@ -250,13 +253,23 @@ export default function Index() {
               <RevealOnScroll direction="up" duration={1200}>
                 <div className="md:col-span-7">
                   <div className="relative aspect-[4/3] overflow-hidden">
-                    <img
-                      src={goldenHourPavilion.url}
-                      alt="Warm evening light inside the Main Ridge timber pavilion with corrugated iron and open framing"
-                      loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover"
-                      style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
-                    />
+                    <picture className="absolute inset-0 w-full h-full">
+                      <source
+                        srcSet={`${goldenHourPavilion800.url} 800w, ${goldenHourPavilion1200.url} 1200w, ${goldenHourPavilion1600.url} 1600w`}
+                        sizes="(min-width: 768px) 58vw, 100vw"
+                        type="image/webp"
+                      />
+                      <img
+                        src={goldenHourPavilion.url}
+                        alt="Warm evening light inside the Main Ridge timber pavilion with corrugated iron and open framing"
+                        loading="lazy"
+                        decoding="async"
+                        width={1672}
+                        height={941}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
+                      />
+                    </picture>
                   </div>
                   <div className="mt-6 space-y-1.5">
                     <p className="font-mono uppercase text-accent/45 text-[10px] tracking-[0.45em]">
