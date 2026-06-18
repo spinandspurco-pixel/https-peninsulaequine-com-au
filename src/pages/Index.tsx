@@ -267,21 +267,14 @@ export default function Index() {
               <RevealOnScroll direction="up" duration={1300}>
                 <Link to="/selected-works/main-ridge-pavilion" className="group block">
                   <div className="relative aspect-[5/6] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
-                    <picture className="absolute inset-0 w-full h-full">
-                      <source
-                        srcSet={`${goldenHourPavilion800.url} 800w, ${goldenHourPavilion1200.url} 1200w, ${goldenHourPavilion1600.url} 1600w`}
-                        sizes="100vw"
-                        type="image/webp"
-                      />
-                      <img
-                        src={goldenHourPavilion.url}
-                        alt="Wide moody interior of the Main Ridge pavilion at dusk with fireplace and long handcrafted timber table"
-                        loading="lazy"
-                        decoding="async"
-                        className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
-                        style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
-                      />
-                    </picture>
+                    <img
+                      src={mainRidgePavilionTile.url}
+                      alt="Main Ridge pavilion — wide interior with fireplace, handcrafted timber table and warm dusk light"
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
+                      style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
+                    />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-transparent to-transparent" />
                   </div>
                   <div className="mt-6 pt-5 border-t border-accent/15 grid grid-cols-12 gap-4 items-baseline">
