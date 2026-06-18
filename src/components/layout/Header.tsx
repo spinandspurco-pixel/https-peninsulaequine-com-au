@@ -26,8 +26,8 @@ const servicesGroups: NavGroup[] = [
   {
     label: "Ground",
     items: [
-      { name: "Groundworks", href: "/services/groundworks", description: "Site cuts, levels and base preparation" },
-      { name: "Drainage & Surfacing", href: "/services/drainage-surfacing", description: "Engineered drainage and arena footing" },
+      { name: "Groundworks", href: "/infrastructure", description: "Site cuts, levels and base preparation" },
+      { name: "Drainage & Surfacing", href: "/arenas", description: "Engineered drainage and arena footing" },
     ],
   },
   {
