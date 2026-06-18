@@ -78,13 +78,13 @@ const FeatureSection = ({
           <Grid />
         </div>
         <div className="md:col-span-5">
-          <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-foreground/25">
+          <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-[hsl(var(--accent-light))]/95">
             {overline}
           </p>
           <h2 className="mt-6 font-serif text-3xl sm:text-4xl md:text-5xl leading-[1.05] tracking-tight text-foreground/90">
             {title}
           </h2>
-          <p className="mt-8 text-[14px] sm:text-[15px] font-light leading-[1.9] text-foreground/45 max-w-md">
+          <p className="mt-8 text-[14px] sm:text-[15px] font-light leading-[1.9] text-foreground/80 max-w-md">
             {body}
           </p>
         </div>
@@ -138,7 +138,7 @@ export default function About() {
 
               <div className="absolute inset-x-0 bottom-0 p-6 sm:p-12 md:p-16">
                 <p
-                  className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.5em] text-foreground/40 opacity-0 animate-fade-in"
+                  className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.5em] text-[hsl(var(--accent-light))]/95 opacity-0 animate-fade-in"
                   style={{
                     animationDelay: "700ms",
                     animationFillMode: "both",
@@ -161,7 +161,7 @@ export default function About() {
             </div>
 
             <p
-              className="mt-12 sm:mt-16 max-w-2xl text-[14px] sm:text-[15px] font-light leading-[1.9] text-foreground/50 opacity-0 animate-fade-in"
+              className="mt-12 sm:mt-16 max-w-2xl text-[14px] sm:text-[15px] font-light leading-[1.9] text-foreground/80 opacity-0 animate-fade-in"
               style={{
                 animationDelay: "1200ms",
                 animationFillMode: "both",
@@ -177,13 +177,13 @@ export default function About() {
         {/* ═══ INTRO / BRAND STORY ════════════════════════════ */}
         <section className="py-32 sm:py-44">
           <div className="section-container max-w-3xl mx-auto text-center">
-            <p className="font-mono text-[9px] uppercase tracking-[0.5em] text-foreground/25">
+            <p className="font-mono text-[9px] uppercase tracking-[0.5em] text-[hsl(var(--accent-light))]/95">
               01 — Origin
             </p>
             <h2 className="mt-8 font-serif text-4xl sm:text-5xl md:text-6xl leading-[1] tracking-tight text-foreground/90">
               From the saddle to the site.
             </h2>
-            <p className="mt-10 text-[14px] sm:text-[15px] font-light leading-[1.95] text-foreground/45 max-w-xl mx-auto">
+            <p className="mt-10 text-[14px] sm:text-[15px] font-light leading-[1.95] text-foreground/80 max-w-xl mx-auto">
               Peninsula Equine brings together practical construction knowledge
               and real horsemanship. Every arena, stable, fence line, laneway,
               drainage plan and rural build is considered through the way
@@ -235,7 +235,7 @@ export default function About() {
                 }}
               />
               <div className="absolute inset-x-0 bottom-0 p-6 sm:p-10 md:p-14">
-                <p className="font-mono text-[9px] uppercase tracking-[0.5em] text-foreground/35">
+                <p className="font-mono text-[9px] uppercase tracking-[0.5em] text-[hsl(var(--accent-light))]/95">
                   03 — Proof
                 </p>
                 <h2 className="mt-5 font-serif text-3xl sm:text-5xl md:text-6xl leading-[1] tracking-tight text-foreground max-w-3xl">
@@ -243,7 +243,7 @@ export default function About() {
                 </h2>
               </div>
             </div>
-            <p className="mt-10 max-w-2xl text-[14px] sm:text-[15px] font-light leading-[1.95] text-foreground/45">
+            <p className="mt-10 max-w-2xl text-[14px] sm:text-[15px] font-light leading-[1.95] text-foreground/80">
               Arena construction is not theoretical. The feel of the surface,
               the structure beneath it, the drainage, the preparation and the
               finish all matter. Peninsula Equine approaches each build with an
@@ -293,7 +293,7 @@ export default function About() {
             />
           </div>
           <div className="relative section-container max-w-2xl mx-auto text-center">
-            <p className="font-mono text-[9px] uppercase tracking-[0.5em] text-foreground/30">
+            <p className="font-mono text-[9px] uppercase tracking-[0.5em] text-[hsl(var(--accent-light))]/95">
               06 — Begin
             </p>
             <h2 className="mt-8 font-serif text-4xl sm:text-5xl md:text-6xl leading-[1] tracking-tight text-foreground/95">
@@ -301,7 +301,7 @@ export default function About() {
               <br />
               Build the legacy.
             </h2>
-            <p className="mt-10 text-[14px] sm:text-[15px] font-light leading-[1.9] text-foreground/45 max-w-md mx-auto">
+            <p className="mt-10 text-[14px] sm:text-[15px] font-light leading-[1.9] text-foreground/80 max-w-md mx-auto">
               Talk to Peninsula Equine about your arena, stable, groundwork or
               rural build.
             </p>
