@@ -5,11 +5,20 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import heroAsset from "@/assets/services-new/pe-estate-aerial-masterplan.png.asset.json";
 const heroImg = heroAsset.url;
 
+/**
+ * Whole-Property Planning.
+ *
+ * Served at /equine-estates for backward compatibility. This is a concept /
+ * planning section, NOT a standalone build category, so it is intentionally
+ * absent from the primary Services dropdown.
+ */
+
 const pillars = [
-  { k: "01", label: "Masterplanning", body: "Land, water, light, movement. The estate is resolved on paper before a single post is sunk." },
-  { k: "02", label: "Single Authorship", body: "Arena, stables, recovery, fencing, landscape — designed and delivered as one continuous gesture." },
-  { k: "03", label: "Built for Generations", body: "Materials and detailing chosen to compound in value, not depreciate to it." },
+  { k: "01", label: "Reading the Land", body: "Slope, water, prevailing wind, sun arc. Every later decision descends from this first reading." },
+  { k: "02", label: "One Continuous Brief", body: "Arena, stables, access, drainage, recovery and fencing — resolved together, not stitched after the fact." },
+  { k: "03", label: "Built for Generations", body: "Materials and detailing chosen to compound in value over thirty years of daily use." },
 ];
+
 
 export default function EquineEstates() {
   return (
@@ -21,14 +30,14 @@ export default function EquineEstates() {
           <div className="absolute bottom-0 left-0 right-0 px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2.5rem,1.5rem+5vw,6rem)]">
             <div className="max-w-6xl space-y-[clamp(1.25rem,1rem+1vw,2rem)]">
               <RevealOnScroll direction="up" duration={900} delay={300}>
-                <p className="font-mono uppercase text-accent/65 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">Capability — 03</p>
+                <p className="font-mono uppercase text-accent/65 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">Concept — Planning</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1100} delay={500}>
-                <h1 className="font-serif text-primary-foreground tracking-[-0.025em] leading-[0.95] text-[clamp(2.5rem,1.4rem+5.4vw,5.5rem)]">Equine Estates.</h1>
+                <h1 className="font-serif text-primary-foreground tracking-[-0.025em] leading-[0.95] text-[clamp(2.5rem,1.4rem+5.4vw,5.5rem)]">Whole-Property<br className="hidden sm:block" /> Planning.</h1>
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1100} delay={800}>
                 <p className="font-serif italic text-primary-foreground/65 max-w-xl leading-[1.55] text-[clamp(0.875rem,0.78rem+0.4vw,1.0625rem)]">
-                  Whole-property equine planning across arenas, stables, access, fencing, water, drainage, recovery and movement — authored by one team.
+                  A horse property is not a collection of disconnected structures — covered arenas, stables, access, drainage, fencing, water, recovery and movement, considered as one environment.
                 </p>
               </RevealOnScroll>
             </div>

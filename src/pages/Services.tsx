@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { BlueprintContinuity } from "@/components/BlueprintContinuity";
@@ -9,12 +8,13 @@ import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 // Locked cinematic image system — one correct visual per service.
 // Outdoor-arena-first positioning is removed. Lead with covered & indoor.
 import coveredArenaAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
-import indoorArenaAsset from "@/assets/aberdeen/arena-dramatic-light.png.asset.json";
 import stableAisleAsset from "@/assets/services-new/pe-stable-aisle-cinematic.png.asset.json";
 import pavilionAsset from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
-import estateAerialAsset from "@/assets/services-new/pe-estate-aerial-masterplan.png.asset.json";
-import infrastructureAsset from "@/assets/services-new/pe-infrastructure-muddy-site.png.asset.json";
 import groundworksAsset from "@/assets/services-new/pe-groundworks-dozer.png.asset.json";
+import drainageAsset from "@/assets/services-new/pe-infrastructure-muddy-site.png.asset.json";
+import fencingAsset from "@/assets/services-new/pe-fencing-hero-gate.png.asset.json";
+import lumenArcAsset from "@/assets/lumenarc/canopy.asset.json";
+import estateAerialAsset from "@/assets/services-new/pe-estate-aerial-masterplan.png.asset.json";
 
 type Service = {
   k: string;
@@ -33,28 +33,20 @@ const SERVICES: Service[] = [
     image: coveredArenaAsset.url,
     alt: "Covered competition arena steel structure rising under night-work lights",
     objectPosition: "50% 55%",
-    body: "Competition-ready covered riding environments designed around structure, surface, light, flow and long-term use.",
-    href: "/services/arenas",
+    body: "Covered and indoor riding environments designed around structure, surface, light, flow and long-term use.",
+    href: "/arenas",
   },
   {
     k: "02",
-    title: "Indoor Riding Environments",
-    image: indoorArenaAsset.url,
-    alt: "Indoor arena with dramatic shafts of natural light across the surface",
-    objectPosition: "50% 50%",
-    body: "Controlled arena spaces shaped for year-round training, rider comfort, visibility and reduced weather-related maintenance.",
-  },
-  {
-    k: "03",
     title: "Stables & Barn Structures",
     image: stableAisleAsset.url,
     alt: "Cinematic stable aisle at dusk — timber stalls, polished steel hardware, warm bronze lighting",
     objectPosition: "50% 55%",
     body: "Purpose-built stable environments with practical flow, durable finishes and horse-first daily usability.",
-    href: "/services/stables",
+    href: "/stables",
   },
   {
-    k: "04",
+    k: "03",
     title: "Pavilions & Rural Builds",
     image: pavilionAsset.url,
     alt: "Main Ridge pavilion at dusk — handcrafted timber table, brick fireplace and open rural outlook",
@@ -63,30 +55,40 @@ const SERVICES: Service[] = [
     href: "/selected-works/main-ridge-pavilion",
   },
   {
-    k: "05",
-    title: "Equine Estates",
-    image: estateAerialAsset.url,
-    alt: "Aerial masterplan view of a private equine estate at dusk",
-    objectPosition: "50% 55%",
-    body: "Whole-property equine planning across arenas, stables, access, fencing, water, drainage, recovery and movement.",
-    href: "/services/equine-estates",
-  },
-  {
-    k: "06",
-    title: "Infrastructure & Maintenance",
-    image: infrastructureAsset.url,
-    alt: "Drainage trench, aggregate pile and dozer working a stormy site at dusk",
-    objectPosition: "50% 60%",
-    body: "The supporting systems that keep a property working — drainage, access, yards, surfaces, repairs and ongoing care.",
-    href: "/services/infrastructure",
-  },
-  {
-    k: "07",
+    k: "04",
     title: "Groundworks & Site Preparation",
     image: groundworksAsset.url,
     alt: "Engineered groundworks and grading at sunset — dozer shaping the base of a future build",
     objectPosition: "50% 55%",
     body: "Levels, base works, drainage preparation, red clay, machinery and the groundwork that determines the life of the build.",
+    href: "/infrastructure",
+  },
+  {
+    k: "05",
+    title: "Drainage & Surfacing",
+    image: drainageAsset.url,
+    alt: "Drainage trench, aggregate and stormwater detail at dusk",
+    objectPosition: "30% 65%",
+    body: "Base layers, drainage systems and surface preparation designed for performance, longevity and all-weather function.",
+    href: "/infrastructure",
+  },
+  {
+    k: "06",
+    title: "Equine Infrastructure",
+    image: fencingAsset.url,
+    alt: "Steel gate and fencing along an engineered laneway at dusk",
+    objectPosition: "50% 55%",
+    body: "Laneways, yards, fencing, gates, access, wash areas, retaining and support structures that keep the property working.",
+    href: "/infrastructure",
+  },
+  {
+    k: "07",
+    title: "LumenArc Recovery Systems",
+    image: lumenArcAsset.url,
+    alt: "LumenArc recovery canopy — considered warmth and rest environment for equine wellbeing",
+    objectPosition: "50% 50%",
+    body: "A considered recovery environment designed around warmth, rest and equine wellbeing.",
+    href: "/lumenarc",
   },
 ];
 
@@ -174,7 +176,7 @@ export default function Services() {
                         <h2 className="font-serif text-2xl sm:text-3xl lg:text-[2.15rem] text-foreground/85 tracking-[-0.018em] leading-[1.08] mb-6">
                           {s.title}
                         </h2>
-                        <p className="text-[13.5px] text-foreground/45 leading-[1.85] max-w-sm mb-6">
+                        <p className="text-[13.5px] text-foreground/55 leading-[1.85] max-w-sm mb-6">
                           {s.body}
                         </p>
                         {s.href ? (
@@ -186,7 +188,7 @@ export default function Services() {
                             Explore
                           </Link>
                         ) : (
-                          <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-foreground/15">
+                          <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-foreground/20">
                             Available on request.
                           </p>
                         )}
@@ -199,8 +201,61 @@ export default function Services() {
           </div>
         </section>
 
+        {/* ═══ WHOLE-PROPERTY PLANNING — concept band, not a service tile ═══ */}
+        <section className="relative overflow-hidden border-t border-accent/10">
+          <div className="py-24 sm:py-32 lg:py-40 relative">
+            <div className="section-container max-w-6xl mx-auto">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+                <RevealOnScroll direction="up" className="lg:col-span-7">
+                  <div className="relative overflow-hidden aspect-[16/9]">
+                    <img
+                      src={estateAerialAsset.url}
+                      alt="Aerial view of a private equine estate at dusk — arena, stables, paddocks, water and access resolved as one composition"
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover image-bleed"
+                      style={{ filter: "brightness(0.85) contrast(1.08) saturate(0.82)", objectPosition: "50% 55%" }}
+                    />
+                    <div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 45%, hsl(var(--background)/0.7) 100%)" }}
+                    />
+                  </div>
+                </RevealOnScroll>
+                <div className="lg:col-span-5 space-y-6">
+                  <RevealOnScroll direction="up">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-accent/55">
+                      Concept — Planning
+                    </p>
+                  </RevealOnScroll>
+                  <RevealOnScroll direction="up" delay={120}>
+                    <h2 className="font-serif text-[clamp(1.65rem,1.1rem+1.8vw,2.4rem)] text-foreground/90 tracking-[-0.02em] leading-[1.1]">
+                      Whole-Property Planning
+                    </h2>
+                  </RevealOnScroll>
+                  <RevealLine width="w-10" delay={220} />
+                  <RevealOnScroll direction="up" delay={280}>
+                    <p className="font-sans font-light text-foreground/60 leading-[1.85] text-[14px] sm:text-[15px] max-w-md">
+                      A horse property is not a collection of disconnected structures. Peninsula Equine considers the whole environment — covered arenas, stables, access, drainage, fencing, water, recovery, movement and future maintenance — so each decision supports the next.
+                    </p>
+                  </RevealOnScroll>
+                  <RevealOnScroll direction="up" delay={380}>
+                    <Link
+                      to="/equine-estates"
+                      className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
+                    >
+                      <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
+                      Read the Approach
+                    </Link>
+                  </RevealOnScroll>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ═══ AUTHORITY LINE ═══════════════════════════════ */}
-        <section className="relative overflow-hidden">
+        <section className="relative overflow-hidden border-t border-accent/10">
           <div className="py-20 sm:py-28">
             <div className="section-container max-w-2xl mx-auto text-center">
               <RevealOnScroll direction="up">
