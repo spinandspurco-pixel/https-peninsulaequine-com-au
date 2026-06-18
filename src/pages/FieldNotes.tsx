@@ -44,7 +44,7 @@ export default function FieldNotes() {
             src={heroDrone}
             srcSet={heroDroneSrcSet}
             sizes="100vw"
-            alt="Covered Arena & Stables Build in progress — steel framing, roof works and red clay conditions across a live equine facility site"
+            alt={heroDroneAlt}
             className="absolute inset-0 h-full w-full object-cover object-[62%_48%] sm:object-[58%_48%] lg:object-center"
             loading="eager"
             decoding="async"
