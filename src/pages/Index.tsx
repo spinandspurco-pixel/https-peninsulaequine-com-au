@@ -16,6 +16,7 @@ import fieldNoteSunset from "@/assets/field-notes/covered-competition-arena-suns
 
 import slidingStopHero from "@/assets/homepage-refresh/sliding-stop-hero.png.asset.json";
 import coveredArenaExterior from "@/assets/covered-arena-black-exterior.jpg";
+import lumenArcCanopy from "@/assets/lumenarc/canopy.asset.json";
 
 const SESSION_KEY = "pe-brand-intro-seen";
 const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
