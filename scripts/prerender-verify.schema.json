@@ -72,7 +72,7 @@
             "description": "List of head-tag failures for this route.",
             "items": {
               "type": "object",
-              "required": ["route", "check", "detail"],
+              "required": ["route", "check", "code", "path", "expected", "received", "detail"],
               "properties": {
                 "route": {
                   "type": "string",
@@ -82,9 +82,35 @@
                   "type": "string",
                   "description": "Name of the check that failed (e.g. og:image, canonical)."
                 },
+                "code": {
+                  "type": "string",
+                  "enum": [
+                    "missing",
+                    "mismatch",
+                    "too-short",
+                    "placeholder",
+                    "not-absolute",
+                    "wrong-origin",
+                    "file-missing",
+                    "schema"
+                  ],
+                  "description": "Machine-readable failure category."
+                },
+                "path": {
+                  "type": "string",
+                  "description": "CSS-style locator (or file path) of the offending element, e.g. meta[property=\"og:image\"]."
+                },
+                "expected": {
+                  "type": ["string", "null"],
+                  "description": "The value the verifier expected, or null when not applicable."
+                },
+                "received": {
+                  "type": ["string", "null"],
+                  "description": "The value the verifier actually observed, or null when missing/not applicable."
+                },
                 "detail": {
                   "type": "string",
-                  "description": "Human-readable explanation of the failure."
+                  "description": "Human-readable explanation derived from the structured fields."
                 }
               },
               "additionalProperties": false
