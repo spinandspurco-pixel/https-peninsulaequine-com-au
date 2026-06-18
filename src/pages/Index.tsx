@@ -16,6 +16,13 @@ import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
 import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
 import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
 
+import serviceArenas from "@/assets/service-arenas.jpg";
+import serviceStables from "@/assets/service-stables.jpg";
+import serviceInfrastructure from "@/assets/service-infrastructure.jpg";
+import serviceGroundworks from "@/assets/service-groundworks.jpg";
+import serviceCustom from "@/assets/service-custom.jpg";
+import serviceDrainage from "@/assets/service-drainage.jpg";
+
 const SESSION_KEY = "pe-brand-intro-seen";
 const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
 
