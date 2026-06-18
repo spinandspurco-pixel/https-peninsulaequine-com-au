@@ -318,22 +318,6 @@ interface Report {
   routes: RouteResult[];
 }
 
-const ajv = new Ajv({ strict: true, allErrors: true });
-const SCHEMA_PATH = resolve("scripts/prerender-verify.schema.json");
-
-function validateAgainstSchema(report: Report): string[] {
-  if (!existsSync(SCHEMA_PATH)) {
-    return [`Schema file missing at ${SCHEMA_PATH}`];
-  }
-  const schema = JSON.parse(readFileSync(SCHEMA_PATH, "utf8"));
-  const validate = ajv.compile(schema);
-  const ok = validate(report);
-  if (ok) return [];
-  return (validate.errors ?? []).map(
-    (e) => `${e.instancePath || "/"} ${e.message}`,
-  );
-}
-
 /** Build and, if `--json` was passed, write the machine-readable report. */
 function writeJsonReport(): void {
   if (!jsonOut) return;
