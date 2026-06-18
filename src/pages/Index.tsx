@@ -350,15 +350,13 @@ export default function Index() {
                 <Link to="/field-notes/covered-arena-stables-build" className="group block">
                   <div className="relative aspect-[5/6] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                     <img
-                      src={fieldNoteDozerStorm.url}
-                      alt="Dozer working red clay site under storm sky — steel frame rising on the covered arena and stables build"
+                      src={coveredArenaHero}
+                      alt="Covered competition arena at sunset — steel frame and finished surface mirrored in puddles after rain"
                       loading="lazy"
                       decoding="async"
                       className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1800ms] ease-out group-hover:scale-[1.02]"
-                      style={{ filter: "brightness(0.9) contrast(1.1) saturate(0.82)", objectPosition: "55% 55%" }}
+                      style={{ filter: "brightness(0.88) contrast(1.1) saturate(0.82)", objectPosition: "55% 55%" }}
                     />
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/85 via-background/30 to-transparent" />
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
 
                     <div className="absolute bottom-0 left-0 w-full p-6 sm:p-10 md:p-14 lg:p-16">
                       <div className="max-w-2xl space-y-5">
