@@ -141,9 +141,27 @@ function LumenArcChapterSection({
                 className="absolute inset-0 h-full w-full object-cover"
                 style={{ filter: "brightness(0.86) contrast(1.08) saturate(0.82)" }}
               />
+              {/* Edge fades — dissolve image into the page rather than sit as a card */}
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,hsl(var(--background)/0.55)_100%)]" />
+              <div
+                className={`pointer-events-none absolute inset-y-0 w-1/3 ${
+                  align === "right" ? "right-0 bg-[linear-gradient(270deg,hsl(var(--background))_0%,transparent_100%)]" : "left-0 bg-[linear-gradient(90deg,hsl(var(--background))_0%,transparent_100%)]"
+                }`}
+              />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-[linear-gradient(0deg,hsl(var(--background))_0%,transparent_100%)]" />
+              {/* Subtle blueprint plate overlay */}
+              <div
+                className="pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-screen"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(0deg, hsl(var(--accent)/0.6) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--accent)/0.6) 1px, transparent 1px)",
+                  backgroundSize: "80px 80px",
+                }}
+              />
             </div>
           </RevealImage>
         </div>
+
 
         <div className={`col-span-12 lg:col-span-5 ${copyOrder}`}>
           <div className="space-y-8 lg:max-w-[28rem]">
@@ -203,6 +221,7 @@ function LumenArcChapterSection({
 export default function RecoveryStation() {
   return (
     <Layout>
+      <LumenArcEntrance />
       <article className="relative bg-background text-foreground">
         {/* Continuous drafting layer — binds every section into one architectural plate */}
         <BlueprintContinuity />
@@ -214,15 +233,24 @@ export default function RecoveryStation() {
             width={1536}
             height={1024}
             className="absolute inset-0 h-full w-full object-cover object-center"
+            style={{ filter: "brightness(0.82) contrast(1.06) saturate(0.8)" }}
             loading="eager"
             decoding="async"
             fetchPriority="high"
           />
+          {/* Cinematic vignette — image reads as full-bleed scene, not a card */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,transparent_35%,hsl(var(--background)/0.55)_80%,hsl(var(--background))_100%)]" />
           {/* Subtle top gradient for navigation readability */}
-          <div className="absolute inset-x-0 top-0 h-32 bg-[linear-gradient(180deg,hsl(var(--background)/0.45)_0%,transparent_100%)]" />
+          <div className="absolute inset-x-0 top-0 h-40 bg-[linear-gradient(180deg,hsl(var(--background)/0.7)_0%,transparent_100%)]" />
+          {/* Side fades blend hero into background continuation */}
+          <div className="absolute inset-y-0 left-0 w-[18%] bg-[linear-gradient(90deg,hsl(var(--background))_0%,transparent_100%)]" />
+          <div className="absolute inset-y-0 right-0 w-[18%] bg-[linear-gradient(270deg,hsl(var(--background))_0%,transparent_100%)]" />
           {/* Long bottom gradient so the artwork dissolves into the next chapter */}
-          <div className="absolute inset-x-0 bottom-0 h-[40vh] bg-[linear-gradient(0deg,hsl(var(--background))_0%,hsl(var(--background)/0.7)_45%,transparent_100%)]" />
+          <div className="absolute inset-x-0 bottom-0 h-[55vh] bg-[linear-gradient(0deg,hsl(var(--background))_0%,hsl(var(--background)/0.75)_45%,transparent_100%)]" />
+          {/* Restrained amber breath */}
+          <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_60%,hsl(var(--accent)/0.07),transparent_55%)]" />
         </section>
+
 
         {chapters.map((chapter, index) => (
           <LumenArcChapterSection key={chapter.number} {...chapter} align={index % 2 === 0 ? chapter.align ?? "left" : chapter.align ?? "right"} />
