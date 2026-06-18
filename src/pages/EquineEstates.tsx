@@ -30,14 +30,14 @@ export default function EquineEstates() {
           <div className="absolute bottom-0 left-0 right-0 px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2.5rem,1.5rem+5vw,6rem)]">
             <div className="max-w-6xl space-y-[clamp(1.25rem,1rem+1vw,2rem)]">
               <RevealOnScroll direction="up" duration={900} delay={300}>
-                <p className="font-mono uppercase text-accent/65 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">Capability — 03</p>
+                <p className="font-mono uppercase text-accent/65 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">Concept — Planning</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1100} delay={500}>
-                <h1 className="font-serif text-primary-foreground tracking-[-0.025em] leading-[0.95] text-[clamp(2.5rem,1.4rem+5.4vw,5.5rem)]">Equine Estates.</h1>
+                <h1 className="font-serif text-primary-foreground tracking-[-0.025em] leading-[0.95] text-[clamp(2.5rem,1.4rem+5.4vw,5.5rem)]">Whole-Property<br className="hidden sm:block" /> Planning.</h1>
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1100} delay={800}>
                 <p className="font-serif italic text-primary-foreground/65 max-w-xl leading-[1.55] text-[clamp(0.875rem,0.78rem+0.4vw,1.0625rem)]">
-                  Whole-property equine planning across arenas, stables, access, fencing, water, drainage, recovery and movement — authored by one team.
+                  A horse property is not a collection of disconnected structures — covered arenas, stables, access, drainage, fencing, water, recovery and movement, considered as one environment.
                 </p>
               </RevealOnScroll>
             </div>
