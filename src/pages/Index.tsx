@@ -248,7 +248,7 @@ export default function Index() {
                   <RevealLine width="w-12" delay={240} />
                   <RevealOnScroll direction="up" duration={1000} delay={300}>
                     <p className="font-sans font-light text-foreground/55 leading-[1.8] text-[clamp(0.95rem,0.85rem+0.25vw,1.05rem)] max-w-xl">
-                      Completed environments shown with the warmth they were built for — paired with a polished interior to feel the range.
+                      Completed environments shown with the warmth and structural precision they were built for — from covered arenas to pavilion interiors.
                     </p>
                   </RevealOnScroll>
                 </div>
