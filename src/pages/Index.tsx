@@ -424,7 +424,7 @@ export default function Index() {
           <div className="relative section-container max-w-3xl mx-auto text-center space-y-[clamp(2rem,1.25rem+2.5vw,3rem)]">
             <RevealOnScroll direction="up" duration={900}>
               <div className="mx-auto flex items-baseline justify-center gap-5">
-                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">04</span>
+                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">05</span>
                 <span className="h-px w-12 bg-accent/30" />
                 <span className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.5em]">
                   Start a Project
