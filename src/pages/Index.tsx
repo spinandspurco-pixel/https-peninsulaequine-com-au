@@ -6,13 +6,10 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { IntroContext } from "@/hooks/useIntroState";
 import { useIntake } from "@/hooks/useIntake";
 
-import goldenHourPavilion from "@/assets/golden-hour-pavilion.png.asset.json";
-import goldenHourPavilion800 from "@/assets/golden-hour-pavilion-800.webp.asset.json";
-import goldenHourPavilion1200 from "@/assets/golden-hour-pavilion-1200.webp.asset.json";
-import goldenHourPavilion1600 from "@/assets/golden-hour-pavilion-1600.webp.asset.json";
+import mainRidgePavilionTile from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
 import serviceGroundworks from "@/assets/homepage-services/groundworks.png.asset.json";
-import currentArenaHeroAsset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
-const currentArenaHero = currentArenaHeroAsset.url;
+import coveredArenaSunsetAsset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
+const coveredArenaHero = coveredArenaSunsetAsset.url;
 import slidingStopHero from "@/assets/homepage-refresh/sliding-stop-hero.png.asset.json";
 import steelFrontAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
 const steelFront = steelFrontAsset.url;
@@ -20,7 +17,7 @@ import lumenArcCanopy from "@/assets/lumenarc/canopy.asset.json";
 import pavilionFireplaceDetail from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
 import aberdeenHero from "@/assets/aberdeen/hero-entrance-twilight.png.asset.json";
 import aberdeenArena from "@/assets/aberdeen/arena-dramatic-light.png.asset.json";
-import fieldNoteDozerStorm from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
+import ciroAceQuietMoment from "@/assets/about/ciro-ace-quiet-moment.png.asset.json";
 
 const SESSION_KEY = "pe-brand-intro-seen";
 const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
@@ -229,6 +226,45 @@ export default function Index() {
             </div>
           </section>
 
+          {/* Built by Horse People — brand anchor */}
+          <section className="relative py-[clamp(3.5rem,2rem+5vw,8.5rem)] bg-background overflow-hidden border-t border-accent/10">
+            <div className="section-container max-w-[1480px] mx-auto">
+              <div className="grid grid-cols-12 gap-[clamp(2rem,1.25rem+2vw,4rem)] items-center">
+                <RevealOnScroll direction="up" duration={1300} className="col-span-12 md:col-span-7">
+                  <div className="relative aspect-[4/5] sm:aspect-[5/4] md:aspect-[4/5] overflow-hidden">
+                    <img
+                      src={ciroAceQuietMoment.url}
+                      alt="A quiet moment between horseman and horse in low arena light — the ground Peninsula Equine builds for"
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 w-full h-full object-cover image-bleed"
+                      style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)", objectPosition: "50% 38%" }}
+                    />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
+                  </div>
+                </RevealOnScroll>
+                <div className="col-span-12 md:col-span-5 space-y-6">
+                  <RevealOnScroll direction="up" duration={900}>
+                    <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Built by Horse People</span>
+                  </RevealOnScroll>
+                  <RevealOnScroll direction="up" duration={1000} delay={120}>
+                    <h2 className="font-serif text-foreground/92 leading-[1.04] tracking-[-0.022em] text-[clamp(1.75rem,1.15rem+2vw,2.7rem)]">
+                      We ride the ground we build.
+                    </h2>
+                  </RevealOnScroll>
+                  <RevealLine width="w-10" delay={220} />
+                  <RevealOnScroll direction="up" duration={1000} delay={300}>
+                    <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[clamp(0.95rem,0.85rem+0.25vw,1.05rem)] max-w-md">
+                      Peninsula Equine is built by riders. Every covered arena, stable and pavilion
+                      is shaped from the saddle out — sightlines, footing, flow and quiet detail
+                      that horses and people actually feel.
+                    </p>
+                  </RevealOnScroll>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <section className="relative py-[clamp(3.75rem,2.25rem+5vw,9rem)] bg-background overflow-hidden border-t border-accent/10">
             <div className="section-container max-w-[1480px] mx-auto">
               <RevealOnScroll direction="up" duration={900}>
@@ -270,21 +306,14 @@ export default function Index() {
               <RevealOnScroll direction="up" duration={1300}>
                 <Link to="/selected-works/main-ridge-pavilion" className="group block">
                   <div className="relative aspect-[5/6] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
-                    <picture className="absolute inset-0 w-full h-full">
-                      <source
-                        srcSet={`${goldenHourPavilion800.url} 800w, ${goldenHourPavilion1200.url} 1200w, ${goldenHourPavilion1600.url} 1600w`}
-                        sizes="100vw"
-                        type="image/webp"
-                      />
-                      <img
-                        src={goldenHourPavilion.url}
-                        alt="Wide moody interior of the Main Ridge pavilion at dusk with fireplace and long handcrafted timber table"
-                        loading="lazy"
-                        decoding="async"
-                        className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
-                        style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
-                      />
-                    </picture>
+                    <img
+                      src={mainRidgePavilionTile.url}
+                      alt="Main Ridge pavilion — wide interior with fireplace, handcrafted timber table and warm dusk light"
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
+                      style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
+                    />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-transparent to-transparent" />
                   </div>
                   <div className="mt-6 pt-5 border-t border-accent/15 grid grid-cols-12 gap-4 items-baseline">
@@ -360,15 +389,16 @@ export default function Index() {
                 <Link to="/field-notes/covered-arena-stables-build" className="group block">
                   <div className="relative aspect-[5/6] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                     <img
-                      src={fieldNoteDozerStorm.url}
-                      alt="Dozer working red clay site under storm sky — steel frame rising on the covered arena and stables build"
+                      src={coveredArenaHero}
+                      alt="Covered competition arena at sunset — steel frame and finished surface mirrored in puddles after rain"
                       loading="lazy"
                       decoding="async"
                       className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1800ms] ease-out group-hover:scale-[1.02]"
-                      style={{ filter: "brightness(0.9) contrast(1.1) saturate(0.82)", objectPosition: "55% 55%" }}
+                      style={{ filter: "brightness(0.88) contrast(1.1) saturate(0.82)", objectPosition: "55% 55%" }}
                     />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/85 via-background/30 to-transparent" />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+
 
                     <div className="absolute bottom-0 left-0 w-full p-6 sm:p-10 md:p-14 lg:p-16">
                       <div className="max-w-2xl space-y-5">

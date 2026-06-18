@@ -5,7 +5,7 @@ import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 
 import heroDroneAsset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
 import steelFrontAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
-import sitewideProgressAsset from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
+import sitewideProgressAsset from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
 import redClayRooflineAsset from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
 const heroDrone = heroDroneAsset.url;
 const steelFront = steelFrontAsset.url;
