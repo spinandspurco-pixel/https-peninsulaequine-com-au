@@ -95,27 +95,37 @@ export default function Index() {
               style={{
                 objectPosition: "78% 58%",
                 filter: imageReady
-                  ? "brightness(0.8) contrast(1.12) saturate(0.82)"
-                  : "brightness(0.42) contrast(1.05) saturate(0.7) blur(12px)",
+                  ? "brightness(0.92) contrast(1.1) saturate(0.85)"
+                  : "brightness(0.5) contrast(1.05) saturate(0.7) blur(12px)",
                 transform: imageReady ? "scale(1)" : "scale(1.035)",
                 transition: `filter 1400ms ${EASE}, transform 1400ms ${EASE}`,
               }}
             />
 
+            {/* Readability scrim — anchored to text column, softer on the horse */}
             <div
-              className="absolute inset-0 pointer-events-none"
+              className="absolute inset-0 pointer-events-none hidden sm:block"
               style={{
                 background:
-                  "linear-gradient(90deg, hsl(var(--background) / 0.94) 0%, hsl(var(--background) / 0.78) 30%, hsl(var(--background) / 0.12) 58%, hsl(var(--background) / 0.25) 100%)",
+                  "linear-gradient(90deg, hsl(var(--background) / 0.92) 0%, hsl(var(--background) / 0.72) 28%, hsl(var(--background) / 0.08) 58%, hsl(var(--background) / 0.22) 100%)",
+              }}
+            />
+            {/* Mobile: bottom-weighted scrim so the horse stays visible at top, text reads at bottom */}
+            <div
+              className="absolute inset-0 pointer-events-none sm:hidden"
+              style={{
+                background:
+                  "linear-gradient(180deg, hsl(var(--background) / 0.45) 0%, hsl(var(--background) / 0.15) 30%, hsl(var(--background) / 0.55) 60%, hsl(var(--background) / 0.92) 100%)",
               }}
             />
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
                 background:
-                  "linear-gradient(180deg, hsl(var(--background) / 0.22) 0%, transparent 28%, hsl(var(--background) / 0.7) 100%)",
+                  "linear-gradient(180deg, hsl(var(--background) / 0.22) 0%, transparent 28%, hsl(var(--background) / 0.65) 100%)",
               }}
             />
+
 
             <div
               ref={heroContentRef}
