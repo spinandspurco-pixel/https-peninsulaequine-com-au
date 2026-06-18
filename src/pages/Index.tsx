@@ -243,31 +243,49 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative py-[clamp(4rem,3rem+5vw,8rem)] bg-background overflow-hidden">
+        <section className="relative py-[clamp(5.5rem,4rem+6vw,10rem)] bg-background overflow-hidden">
           <div className="section-container max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-[clamp(1rem,0.5rem+1.5vw,2rem)] items-start">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-[clamp(1.5rem,1rem+2vw,3.5rem)] items-start">
               <RevealOnScroll direction="up" duration={1200}>
-                <div className="md:col-span-7 relative aspect-[4/3] overflow-hidden rounded-sm">
-                  <img
-                    src={mainRidgeInterior}
-                    alt="Main Ridge pavilion interior with exposed timber framing in evening light"
-                    loading="lazy"
-                    className="absolute inset-0 w-full h-full object-cover"
-                    style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
+                <div className="md:col-span-7">
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <img
+                      src={mainRidgeInterior}
+                      alt="Main Ridge pavilion interior with exposed timber framing in evening light"
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover"
+                      style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
+                    />
+                  </div>
+                  <div className="mt-6 space-y-1.5">
+                    <p className="font-mono uppercase text-accent/45 text-[10px] tracking-[0.45em]">
+                      Flagship Build
+                    </p>
+                    <p className="font-serif text-foreground/75 text-[clamp(1.1rem,0.9rem+0.6vw,1.45rem)] leading-[1.2] tracking-[-0.01em]">
+                      Main Ridge Pavilion
+                    </p>
+                  </div>
                 </div>
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1200} delay={200}>
-                <div className="md:col-span-5 relative aspect-[4/5] overflow-hidden rounded-sm md:mt-20">
-                  <img
-                    src={serviceArenas.url}
-                    alt="Arena groundwork at golden hour inside a covered equestrian structure"
-                    loading="lazy"
-                    className="absolute inset-0 w-full h-full object-cover"
-                    style={{ objectPosition: "50% 58%", filter: "brightness(0.8) contrast(1.12) saturate(0.78)" }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
+                <div className="md:col-span-5 md:mt-28">
+                  <div className="relative aspect-[4/5] overflow-hidden">
+                    <img
+                      src={serviceArenas.url}
+                      alt="Arena groundwork at golden hour inside a covered equestrian structure"
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover"
+                      style={{ objectPosition: "50% 58%", filter: "brightness(0.8) contrast(1.12) saturate(0.78)" }}
+                    />
+                  </div>
+                  <div className="mt-6 space-y-1.5">
+                    <p className="font-mono uppercase text-accent/45 text-[10px] tracking-[0.45em]">
+                      Arenas
+                    </p>
+                    <p className="font-serif text-foreground/75 text-[clamp(1.1rem,0.9rem+0.6vw,1.45rem)] leading-[1.2] tracking-[-0.01em]">
+                      Covered Competition Arena
+                    </p>
+                  </div>
                 </div>
               </RevealOnScroll>
             </div>
