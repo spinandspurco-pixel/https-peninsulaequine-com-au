@@ -197,7 +197,7 @@ export default function Projects() {
                 <div className="relative aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                   <img
                     src={currentArenaHero}
-                    alt="Covered Arena & Stables Build in progress — steel frame, roofing works and red clay site conditions"
+                    alt={currentArenaAlt}
                     loading="lazy"
                     decoding="async"
                     className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
