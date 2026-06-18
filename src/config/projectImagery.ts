@@ -32,6 +32,12 @@ import coveredArenaSunset640 from "@/assets/responsive/covered-competition-arena
 import coveredArenaSunset1024 from "@/assets/responsive/covered-competition-arena-sunset-puddles-1024.webp.asset.json";
 import coveredArenaSunset1536 from "@/assets/responsive/covered-competition-arena-sunset-puddles-1536.webp.asset.json";
 
+// "Real conditions" supporting visual — muddy boots + steel frame at dusk
+import muddyBootsSteelFrame from "@/assets/field-notes/muddy-boots-steel-frame.png.asset.json";
+import muddyBoots640 from "@/assets/responsive/muddy-boots-steel-frame-640.webp.asset.json";
+import muddyBoots1024 from "@/assets/responsive/muddy-boots-steel-frame-1024.webp.asset.json";
+import muddyBoots1536 from "@/assets/responsive/muddy-boots-steel-frame-1536.webp.asset.json";
+
 // ---- Main Ridge Pavilion (completed) ----
 import mainRidgeWide from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
 import mainRidgeFireplaceDetail from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
