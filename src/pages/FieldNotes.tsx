@@ -70,8 +70,8 @@ const projects: Project[] = [
     status: "In Progress",
     latest:
       "Timber, corrugated steel, brick firebox and custom-built table details coming together.",
-    image: mrTimber,
-    alt: "Main Ridge Pavilion — timber framing and custom joinery in progress",
+    image: mrCustomTable,
+    alt: "Main Ridge Pavilion — solid timber table and steel-clad legs at golden hour",
   },
   {
     slug: "private-estate-arena",
