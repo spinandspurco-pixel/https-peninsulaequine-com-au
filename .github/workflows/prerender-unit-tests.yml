@@ -58,7 +58,14 @@ jobs:
         if: matrix.runtime == 'bun'
         run: |
           echo "Bun cache hit: ${{ steps.bun-cache.outputs.cache-hit }}"
-          echo "Bun cache restore key: ${{ runner.os }}-bun-${{ hashFiles('bun.lockb') }}"
+          echo "Bun cache primary key: ${{ runner.os }}-bun-${{ hashFiles('bun.lockb') }}"
+          echo "Bun cache matched key: ${{ steps.bun-cache.outputs.cache-matched-key }}"
+          echo "Bun cache restore-keys: ${{ runner.os }}-bun-"
+          echo "## Bun Cache Status" >> $GITHUB_STEP_SUMMARY
+          echo "- Cache hit: \`${{ steps.bun-cache.outputs.cache-hit }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Primary key: \`${{ runner.os }}-bun-${{ hashFiles('bun.lockb') }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Matched key: \`${{ steps.bun-cache.outputs.cache-matched-key }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Restore key fallback: \`${{ runner.os }}-bun-\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Setup Node
         if: matrix.runtime == 'node'
