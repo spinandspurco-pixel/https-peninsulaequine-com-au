@@ -42,7 +42,9 @@ interface SectionProps {
   body: string;
   src: string;
   alt: string;
+  /** Tailwind aspect classes, e.g. "aspect-[4/5] md:aspect-[5/6]" */
   aspect?: string;
+  /** Tailwind object-position classes, e.g. "object-[60%_30%] md:object-[50%_40%]" */
   crop?: string;
   reverse?: boolean;
 }
@@ -53,14 +55,14 @@ const FeatureSection = ({
   body,
   src,
   alt,
-  aspect = "aspect-[4/5]",
-  crop = "50% 40%",
+  aspect = "aspect-[4/5] md:aspect-[5/6]",
+  crop = "object-[50%_40%]",
   reverse = false,
 }: SectionProps) => (
-  <section className="py-28 sm:py-40">
+  <section className="py-20 sm:py-32 md:py-40">
     <div className="section-container max-w-6xl mx-auto">
       <div
-        className={`grid md:grid-cols-12 gap-10 md:gap-16 items-center ${
+        className={`grid md:grid-cols-12 gap-8 sm:gap-10 md:gap-16 items-center ${
           reverse ? "md:[&>*:first-child]:order-2" : ""
         }`}
       >
@@ -69,8 +71,8 @@ const FeatureSection = ({
             src={src}
             alt={alt}
             loading="lazy"
-            className={`w-full ${aspect} object-cover`}
-            style={{ objectPosition: crop, filter: FILTER }}
+            className={`w-full ${aspect} object-cover ${crop}`}
+            style={{ filter: FILTER }}
           />
           <Vignette />
           <Grid />
@@ -90,6 +92,7 @@ const FeatureSection = ({
     </div>
   </section>
 );
+
 
 export default function About() {
   useEffect(() => {
