@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
-import { HeroAtmosphere } from "@/components/HeroAtmosphere";
 import { RevealImage, RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
+import { BlueprintContinuity } from "@/components/BlueprintContinuity";
 import comingSoonAsset from "@/assets/lumenarc/coming-soon.asset.json";
 import canopyAsset from "@/assets/lumenarc/canopy.asset.json";
 import controlColumnAsset from "@/assets/lumenarc/control-column.asset.json";
@@ -126,12 +126,11 @@ function LumenArcChapterSection({
   const imageBleed = align === "right" ? "lg:-mr-[3rem]" : "lg:-ml-[3rem]";
 
   return (
-    <section className="relative py-[clamp(5.5rem,3.5rem+7vw,10rem)] bg-background border-t border-accent/10">
-      <div className="absolute inset-0 pointer-events-none opacity-40 bg-[linear-gradient(90deg,transparent_0%,hsl(var(--accent)/0.06)_49.9%,transparent_50.1%,transparent_100%)]" />
+    <section className="relative py-[clamp(5.5rem,3.5rem+7vw,10rem)]">
       <div className="section-container relative z-10 grid grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4.5rem)] items-center">
         <div className={`col-span-12 lg:col-span-7 ${imageOrder}`}>
           <RevealImage delay={100} duration={1200}>
-            <div className={`relative aspect-[16/10] overflow-hidden border border-accent/12 bg-card grain-hero ${imageBleed}`}>
+            <div className={`relative aspect-[16/10] overflow-hidden ${imageBleed}`}>
               <img
                 src={image}
                 alt={alt}
@@ -139,35 +138,42 @@ function LumenArcChapterSection({
                 width={1400}
                 height={1000}
                 className="absolute inset-0 h-full w-full object-cover"
+                style={{ filter: "brightness(0.86) contrast(1.08) saturate(0.82)" }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-primary/15" />
             </div>
           </RevealImage>
         </div>
 
         <div className={`col-span-12 lg:col-span-5 ${copyOrder}`}>
-          <div className="space-y-6 lg:max-w-[28rem]">
+          <div className="space-y-8 lg:max-w-[28rem]">
             <RevealOnScroll direction="up" duration={900}>
-              <div className="space-y-3">
-                <p className="font-mono uppercase text-accent/55 text-[clamp(0.6rem,0.55rem+0.18vw,0.72rem)] tracking-[0.45em]">
-                  {number} — {label}
-                </p>
-                <h2 className="font-serif text-foreground/92 leading-[0.98] tracking-[0.01em] text-[clamp(1.95rem,1.35rem+2.1vw,3.2rem)]">
-                  {title}
-                </h2>
+              <div className="flex items-baseline gap-5">
+                <span className="font-mono text-accent/55 text-[0.7rem] tracking-[0.32em] tabular-nums">
+                  {number}
+                </span>
+                <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
+                <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">
+                  {label}
+                </span>
               </div>
             </RevealOnScroll>
 
-            <RevealLine width="w-10" delay={180} />
+            <RevealOnScroll direction="up" duration={1000} delay={120}>
+              <h2 className="font-serif text-foreground/92 leading-[0.98] tracking-[0.01em] text-[clamp(1.95rem,1.35rem+2.1vw,3.2rem)]">
+                {title}
+              </h2>
+            </RevealOnScroll>
 
-            <RevealOnScroll direction="up" duration={1000} delay={220}>
+            <RevealLine width="w-10" delay={220} />
+
+            <RevealOnScroll direction="up" duration={1000} delay={260}>
               <p className="font-sans font-light text-foreground/56 leading-[1.9] text-[clamp(0.86rem,0.82rem+0.16vw,0.95rem)]">
                 {body}
               </p>
             </RevealOnScroll>
 
-            <RevealOnScroll direction="up" duration={1000} delay={320}>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-6 gap-y-3 border-y border-accent/10 py-5">
+            <RevealOnScroll direction="up" duration={1000} delay={340}>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-6 gap-y-3 pt-5">
                 {notes.map((note) => (
                   <p
                     key={note}
@@ -180,7 +186,7 @@ function LumenArcChapterSection({
             </RevealOnScroll>
 
             {disclaimer && (
-              <RevealOnScroll direction="up" duration={950} delay={380}>
+              <RevealOnScroll direction="up" duration={950} delay={400}>
                 <p className="font-sans font-light italic text-foreground/34 leading-[1.75] text-[0.76rem] max-w-md">
                   {disclaimer}
                 </p>
@@ -196,8 +202,11 @@ function LumenArcChapterSection({
 export default function RecoveryStation() {
   return (
     <Layout>
-      <article className="bg-background text-foreground">
-        <section className="relative h-[85svh] md:h-[100svh] overflow-hidden border-b border-accent/12 bg-card">
+      <article className="relative bg-background text-foreground">
+        {/* Continuous drafting layer — binds every section into one architectural plate */}
+        <BlueprintContinuity />
+
+        <section className="relative h-[85svh] md:h-[100svh] overflow-hidden">
           <img
             src={comingSoonAsset.url}
             alt="LumenArc coming soon teaser visual — premium equine recovery canopy concept with blueprint-led detailing"
@@ -210,15 +219,15 @@ export default function RecoveryStation() {
           />
           {/* Subtle top gradient for navigation readability */}
           <div className="absolute inset-x-0 top-0 h-32 bg-[linear-gradient(180deg,hsl(var(--background)/0.45)_0%,transparent_100%)]" />
-          {/* Subtle bottom gradient for transition into next section */}
-          <div className="absolute inset-x-0 bottom-0 h-48 bg-[linear-gradient(0deg,hsl(var(--background)/0.65)_0%,transparent_100%)]" />
+          {/* Long bottom gradient so the artwork dissolves into the next chapter */}
+          <div className="absolute inset-x-0 bottom-0 h-[40vh] bg-[linear-gradient(0deg,hsl(var(--background))_0%,hsl(var(--background)/0.7)_45%,transparent_100%)]" />
         </section>
 
         {chapters.map((chapter, index) => (
           <LumenArcChapterSection key={chapter.number} {...chapter} align={index % 2 === 0 ? chapter.align ?? "left" : chapter.align ?? "right"} />
         ))}
 
-        <section className="relative border-t border-accent/10 bg-card py-[clamp(5rem,3.5rem+6vw,8rem)]">
+        <section className="relative py-[clamp(5rem,3.5rem+6vw,8rem)]">
           <div className="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(circle_at_50%_35%,hsl(var(--accent)/0.08),transparent_52%)]" />
           <div className="section-container relative z-10">
             <div className="mx-auto max-w-3xl text-center space-y-7">

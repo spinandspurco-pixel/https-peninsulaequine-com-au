@@ -157,6 +157,22 @@ export default {
           "30%": { opacity: "1" },
           "100%": { transform: "scaleY(1)", transformOrigin: "top", opacity: "0" },
         },
+        "draft-sweep": {
+          "0%": { transform: "translateX(-15%)", opacity: "0" },
+          "12%": { opacity: "0.45" },
+          "88%": { opacity: "0.45" },
+          "100%": { transform: "translateX(115%)", opacity: "0" },
+        },
+        "draft-sweep-v": {
+          "0%": { transform: "translateY(-15%)", opacity: "0" },
+          "15%": { opacity: "0.35" },
+          "85%": { opacity: "0.35" },
+          "100%": { transform: "translateY(115%)", opacity: "0" },
+        },
+        "measure-glow": {
+          "0%, 100%": { opacity: "0.18" },
+          "50%": { opacity: "0.42" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -167,6 +183,10 @@ export default {
         "ken-burns": "ken-burns 40s ease-in-out infinite alternate",
         "pulse-subtle": "pulse-subtle 6s ease-in-out infinite",
         "scroll-line": "scroll-line 2.4s cubic-bezier(0.45, 0, 0.15, 1) infinite",
+        "draft-sweep": "draft-sweep 18s cubic-bezier(0.45, 0, 0.15, 1) infinite",
+        "draft-sweep-slow": "draft-sweep 28s cubic-bezier(0.45, 0, 0.15, 1) infinite",
+        "draft-sweep-v": "draft-sweep-v 24s cubic-bezier(0.45, 0, 0.15, 1) infinite",
+        "measure-glow": "measure-glow 7s ease-in-out infinite",
       },
     },
   },
