@@ -185,7 +185,7 @@ export default function HQ() {
                 className="font-serif font-light italic tracking-[0.04em]"
                 style={{
                   fontSize: "clamp(1rem, 0.5rem + 1.8vw, 1.5rem)",
-                  color: "hsl(var(--foreground) / 0.14)",
+                  color: "hsl(var(--footer-muted))",
                 }}
               >
                 Not a portal. A process.
