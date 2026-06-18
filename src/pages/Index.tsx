@@ -327,11 +327,14 @@ export default function Index() {
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background via-background/82 to-background" />
           <div className="relative section-container max-w-3xl mx-auto text-center space-y-[clamp(2rem,1.25rem+2.5vw,3rem)]">
-            <RevealLine className="mx-auto" width="w-10" />
             <RevealOnScroll direction="up" duration={900}>
-              <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.5em]">
-                Start a Project
-              </p>
+              <div className="mx-auto flex items-baseline justify-center gap-5">
+                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">04</span>
+                <span className="h-px w-12 bg-accent/30" />
+                <span className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.5em]">
+                  Start a Project
+                </span>
+              </div>
             </RevealOnScroll>
             <RevealOnScroll direction="up" duration={1000} delay={150}>
               <h2 className="font-serif text-foreground/90 leading-[1.02] tracking-[-0.02em] text-[clamp(1.95rem,1.2rem+2.8vw,3.1rem)]">
