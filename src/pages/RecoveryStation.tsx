@@ -111,7 +111,42 @@ function LumenArcChapterSection({
       : "lg:-ml-[5.5rem] xl:-ml-[8rem]";
 
   return (
-    <section className="relative py-[clamp(6rem,4rem+8vw,12rem)]">
+    <section
+      className="relative py-[clamp(6rem,4rem+8vw,12rem)] la-chapter-section group/chapter outline-none"
+      tabIndex={0}
+      aria-label={`${label} — chapter ${number}`}
+    >
+      {/* Interactive blueprint overlay — revealed on hover/focus, respects reduced motion */}
+      <div
+        aria-hidden="true"
+        className="la-chapter-overlay pointer-events-none absolute inset-0 overflow-hidden opacity-0 transition-opacity duration-[1200ms] ease-[cubic-bezier(0.45,0,0.15,1)] group-hover/chapter:opacity-100 group-focus-within/chapter:opacity-100"
+      >
+        <div
+          className="absolute inset-0 opacity-[0.07] mix-blend-screen"
+          style={{
+            backgroundImage:
+              "linear-gradient(0deg, hsl(var(--accent)/0.55) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--accent)/0.55) 1px, transparent 1px)",
+            backgroundSize: "80px 80px",
+          }}
+        />
+        <svg
+          className="la-overlay-lines absolute inset-0 h-full w-full"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+        >
+          <line x1="0" y1="14" x2="100" y2="14" stroke="hsl(var(--accent)/0.35)" strokeWidth="0.12" vectorEffect="non-scaling-stroke" pathLength={1} />
+          <line x1="0" y1="86" x2="100" y2="86" stroke="hsl(var(--accent)/0.35)" strokeWidth="0.12" vectorEffect="non-scaling-stroke" pathLength={1} />
+          <line x1={align === "right" ? "78" : "22"} y1="0" x2={align === "right" ? "78" : "22"} y2="100" stroke="hsl(var(--accent)/0.22)" strokeWidth="0.1" vectorEffect="non-scaling-stroke" pathLength={1} />
+        </svg>
+        <div className="absolute top-6 right-6 flex items-baseline gap-3 font-mono text-accent/60 text-[0.55rem] tracking-[0.42em] tabular-nums uppercase">
+          <span className="h-px w-6 bg-accent/40" />
+          <span>LA · {number}</span>
+        </div>
+        <div className="absolute bottom-6 left-6 font-mono text-accent/55 text-[0.55rem] tracking-[0.42em] uppercase">
+          {label}
+        </div>
+      </div>
+
       <div className="section-container relative z-10 grid grid-cols-12 gap-[clamp(2rem,1.5rem+2.4vw,5rem)] items-center">
         <div className={`col-span-12 lg:col-span-8 ${imageOrder}`}>
           <RevealImage delay={100} duration={1400}>
