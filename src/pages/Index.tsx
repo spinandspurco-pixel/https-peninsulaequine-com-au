@@ -16,6 +16,13 @@ import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
 import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
 import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
 
+import serviceArenas from "@/assets/service-arenas.jpg";
+import serviceStables from "@/assets/service-stables.jpg";
+import serviceInfrastructure from "@/assets/service-infrastructure.jpg";
+import serviceGroundworks from "@/assets/service-groundworks.jpg";
+import serviceCustom from "@/assets/service-custom.jpg";
+import serviceDrainage from "@/assets/service-drainage.jpg";
+
 const SESSION_KEY = "pe-brand-intro-seen";
 const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
 
@@ -57,6 +64,57 @@ const featuredWorks = [
     alt: "Equitana Melbourne competition arena surface, prepared",
     summary:
       "An event-grade arena delivered to international standard — surface, drainage and presentation tuned for elite competition.",
+  },
+];
+
+const serviceCards = [
+  {
+    num: "01",
+    title: "Arenas",
+    description:
+      "Indoor and outdoor arenas, footing preparation, drainage, base works and surfaces designed for real use.",
+    image: serviceArenas,
+    href: "/arenas",
+  },
+  {
+    num: "02",
+    title: "Stables & Barns",
+    description:
+      "Stable builds, barn interiors, shelters, wash bays, tack spaces and practical horse-first layouts.",
+    image: serviceStables,
+    href: "/stables",
+  },
+  {
+    num: "03",
+    title: "Equine Infrastructure",
+    description:
+      "Fencing, laneways, yards, gates, retaining, access, drainage and site works that make the whole property function.",
+    image: serviceInfrastructure,
+    href: "/infrastructure",
+  },
+  {
+    num: "04",
+    title: "Groundworks",
+    description:
+      "Site cuts, levels, bases, preparation and machine work — the ugly stuff that makes the beautiful stuff last.",
+    image: serviceGroundworks,
+    href: "/services",
+  },
+  {
+    num: "05",
+    title: "Custom Rural Builds",
+    description:
+      "Pavilions, viewing areas, parrilla spaces, tables, fit-outs and lifestyle additions built with the same grit and finish.",
+    image: serviceCustom,
+    href: "/services",
+  },
+  {
+    num: "06",
+    title: "Drainage & Surfacing",
+    description:
+      "Drainage systems, base works and surface preparation engineered for performance, longevity and all conditions.",
+    image: serviceDrainage,
+    href: "/services",
   },
 ];
 
@@ -230,29 +288,102 @@ export default function Index() {
           aria-hidden="true"
         />
 
-        {/* ═══ 2. BRAND AUTHORITY ══════════════════════════ */}
+        {/* ═══ 2. PREMIUM SERVICE OVERVIEW ═════════════════ */}
         <section className="relative py-[clamp(6rem,4rem+8vw,11rem)] bg-background overflow-hidden">
           <div className="hidden lg:block absolute top-0 bottom-0 left-1/2 w-px bg-foreground/[0.04]" />
-          <div className="section-container max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-foreground/[0.05]">
-              {[
-                { k: "01", label: "Built by horsemen.", body: "Decisions made by riders who live this every day." },
-                { k: "02", label: "Engineered for performance.", body: "Surfaces, drainage and structure tuned to the horse." },
-                { k: "03", label: "Crafted for longevity.", body: "Properties that hold their standard, decade after decade." },
-              ].map((p, i) => (
-                <RevealOnScroll key={p.k} direction="up" delay={i * 120}>
-                  <div className="group relative bg-background px-[clamp(1.75rem,1.25rem+2vw,2.5rem)] py-[clamp(2.75rem,2rem+3vw,4rem)] h-full">
-                    <span className="absolute top-0 left-0 h-px w-8 bg-accent/40 transition-all duration-[1100ms] ease-[cubic-bezier(0.45,0,0.15,1)] group-hover:w-20" />
-                    <p className="font-mono uppercase text-foreground/25 mb-6 text-[10px] tracking-[0.4em]">
-                      {p.k}
-                    </p>
-                    <p className="font-serif text-foreground/90 leading-[1.1] tracking-[-0.02em] text-[clamp(1.35rem,1rem+1.2vw,1.85rem)] mb-5">
-                      {p.label}
-                    </p>
-                    <p className="font-sans font-light text-foreground/50 leading-[1.8] text-[13px]">
-                      {p.body}
-                    </p>
-                  </div>
+          <div className="section-container max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="mb-[clamp(3rem,2rem+3vw,5rem)] grid grid-cols-12 gap-6 items-end">
+              <div className="col-span-12 md:col-span-8 space-y-4">
+                <RevealOnScroll direction="up" duration={900}>
+                  <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
+                    Capabilities
+                  </p>
+                </RevealOnScroll>
+                <RevealOnScroll direction="up" duration={1000} delay={150}>
+                  <h2 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.02em] text-[clamp(1.85rem,1.2rem+2.4vw,2.85rem)]">
+                    Built for the way horse properties actually work.
+                  </h2>
+                </RevealOnScroll>
+                <RevealLine width="w-8" delay={300} />
+                <RevealOnScroll direction="up" duration={1000} delay={250}>
+                  <p className="font-sans font-light text-foreground/50 leading-[1.85] text-[14px] max-w-xl">
+                    From arenas and stables to groundwork, drainage, fencing and custom rural builds, Peninsula Equine creates practical equine environments with the structure, flow and finish required for real daily use.
+                  </p>
+                </RevealOnScroll>
+              </div>
+            </div>
+
+            {/* Service Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[clamp(1rem,0.5rem+1vw,1.5rem)]">
+              {serviceCards.map((card, i) => (
+                <RevealOnScroll key={card.num} direction="up" delay={i * 100}>
+                  <Link
+                    to={card.href}
+                    className="group relative block overflow-hidden rounded-sm bg-card"
+                    style={{
+                      transition: `box-shadow 700ms ${EASE}`,
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.boxShadow =
+                        "0 0 40px -12px hsl(var(--accent) / 0.18), 0 0 0 1px hsl(var(--accent) / 0.12)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.boxShadow = "none";
+                    }}
+                  >
+                    {/* Image */}
+                    <div className="relative aspect-[16/10] overflow-hidden">
+                      <img
+                        src={card.image}
+                        alt={card.title}
+                        width={1024}
+                        height={640}
+                        loading="lazy"
+                        className="absolute inset-0 w-full h-full object-cover"
+                        style={{
+                          filter: "brightness(0.82) contrast(1.12) saturate(0.78)",
+                          transition: `transform 900ms ${EASE}`,
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = "scale(1.06)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = "scale(1)";
+                        }}
+                      />
+                      {/* Dark gradient overlay */}
+                      <div
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          background:
+                            "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.75) 100%)",
+                        }}
+                      />
+                      {/* Number */}
+                      <span
+                        className="absolute top-4 left-4 font-mono text-[10px] tracking-[0.4em] text-accent/80"
+                      >
+                        {card.num}
+                      </span>
+                      {/* View service — hover reveal */}
+                      <span
+                        className="absolute top-4 right-4 font-sans text-[11px] tracking-[0.2em] uppercase text-white/0 group-hover:text-white/80 transition-colors duration-500"
+                      >
+                        View service →
+                      </span>
+                    </div>
+
+                    {/* Text block */}
+                    <div className="relative p-[clamp(1.25rem,1rem+1vw,1.75rem)]">
+                      <h3 className="font-serif text-foreground/90 leading-[1.1] tracking-[-0.015em] text-[clamp(1.25rem,1rem+0.8vw,1.55rem)] mb-2">
+                        {card.title}
+                      </h3>
+                      <p className="font-sans font-light text-foreground/45 leading-[1.75] text-[13px]">
+                        {card.description}
+                      </p>
+                    </div>
+                  </Link>
                 </RevealOnScroll>
               ))}
             </div>
