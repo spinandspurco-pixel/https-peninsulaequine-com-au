@@ -21,6 +21,7 @@
 
 import { readFileSync, existsSync, appendFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
+import Ajv from "ajv";
 
 const SITE_ORIGIN = "https://peninsulaequine.com.au";
 const DIST = resolve("dist");
