@@ -71,3 +71,47 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## Prerender verification
+
+After every build, `scripts/verify-prerender.ts` checks that each prerendered route ships the correct head tags (`og:image`, `twitter:image`, `canonical`, route-specific alt text, and more). It can emit a machine-readable JSON report and validate that report against a JSON Schema so downstream tooling never receives malformed output.
+
+### JSON report
+
+Generate the report by passing `--json` (default path) or `--json=<path>`:
+
+```bash
+bun run build
+bunx tsx scripts/verify-prerender.ts --json
+```
+
+This writes `dist/prerender-verify.json` and validates it automatically against `scripts/prerender-verify.schema.json`.
+
+Re-verify only the routes that failed:
+
+```bash
+bunx tsx scripts/verify-prerender.ts --only="/about,/arenas"
+```
+
+### Schema location and required fields
+
+| File | Purpose |
+|------|---------|
+| `scripts/prerender-verify.schema.json` | JSON Schema (Draft-07) consumed by the verifier to validate every report |
+
+The report object must contain these top-level fields:
+
+- `timestamp` — ISO 8601 date-time of report generation  
+- `siteOrigin` — canonical origin used for self-reference checks  
+- `checked` — total routes evaluated (integer)  
+- `passed` — routes with zero failures (integer)  
+- `failed` — routes with at least one failure (integer)  
+- `allPassed` — boolean, `true` when no failures were found  
+- `rerunCommand` — shell command to re-verify only the failing routes  
+- `routes` — array of per-route results, each with:  
+  - `path` — route path (e.g. `/about`)  
+  - `file` — absolute path to the prerendered HTML file that was checked  
+  - `passed` — boolean  
+  - `failures` — array of failure objects, each with `route`, `check`, and `detail`
+
+If the report fails schema validation, the verifier logs the mismatch, records a `_report` level failure, and still exits non-zero so CI catches it.
