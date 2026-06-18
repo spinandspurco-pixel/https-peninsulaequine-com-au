@@ -2,9 +2,10 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 
-import ciroWithHorse from "@/assets/ciro-with-horse.png";
-import horseAction from "@/assets/horse-action.png";
-import slidingStop from "@/assets/homepage-refresh/sliding-stop-hero.png.asset.json";
+import ciroAceArena from "@/assets/about/ciro-ace-arena-standing.png.asset.json";
+import ciroAceQuiet from "@/assets/about/ciro-ace-quiet-moment.png.asset.json";
+import ciroAcePortrait from "@/assets/about/ciro-ace-portrait.png.asset.json";
+import ciroAceSlidingStop from "@/assets/about/ciro-ace-sliding-stop.png.asset.json";
 import arenaGrading from "@/assets/main-ridge-arena-grading.jpg";
 import pavilionTableDetail from "@/assets/about/main-ridge-pavilion-table-detail.png.asset.json";
 import coveredArena from "@/assets/covered-arena-black-exterior.jpg";
@@ -113,11 +114,11 @@ export default function About() {
           <div className="section-container max-w-6xl mx-auto">
             <div className="relative overflow-hidden">
               <img
-                src={ciroWithHorse}
-                alt="A quiet moment in the arena — horseman and horse."
+                src={ciroAceArena.url}
+                alt="Ciro and Ace in the arena — horseman and horse, end of day."
                 className="w-full aspect-[16/10] sm:aspect-[21/9] object-cover opacity-0 animate-fade-in"
                 style={{
-                  objectPosition: "50% 35%",
+                  objectPosition: "50% 30%",
                   filter: FILTER,
                   animationDelay: "200ms",
                   animationFillMode: "both",
@@ -186,6 +187,16 @@ export default function About() {
               drainage plan and rural build is considered through the way
               horses and people actually use the space.
             </p>
+            <div className="mt-16 mx-auto max-w-xs relative overflow-hidden">
+              <img
+                src={ciroAcePortrait.url}
+                alt="Ciro and Ace — portrait at golden hour."
+                loading="lazy"
+                className="w-full aspect-[4/5] object-cover"
+                style={{ objectPosition: "50% 35%", filter: FILTER }}
+              />
+              <Vignette />
+            </div>
             <div className="mt-16 mx-auto w-px h-20 bg-foreground/10" />
           </div>
         </section>
@@ -195,10 +206,10 @@ export default function About() {
           overline="02 — The difference"
           title="The details matter because horses notice them first."
           body="Good equine infrastructure is not just about how it looks. It is about flow, footing, safety, access, shelter, drainage, maintenance and the small decisions that make a property easier to use every day."
-          src={horseAction}
-          alt="Hand on horse — a quiet detail of trust."
+          src={ciroAceQuiet.url}
+          alt="Ciro and Ace — a quiet moment, head to head."
           aspect="aspect-[4/5]"
-          crop="55% 35%"
+          crop="50% 40%"
         />
 
         {/* ═══ WE RIDE THE GROUND WE BUILD ═══════════════════ */}
@@ -206,8 +217,8 @@ export default function About() {
           <div className="section-container max-w-7xl mx-auto">
             <div className="relative overflow-hidden">
               <img
-                src={slidingStop.url}
-                alt="A sliding stop — the ground tested through use."
+                src={ciroAceSlidingStop.url}
+                alt="Ciro and Ace — sliding stop, testing the ground."
                 loading="lazy"
                 className="w-full aspect-[21/9] object-cover"
                 style={{ objectPosition: "50% 50%", filter: FILTER }}
