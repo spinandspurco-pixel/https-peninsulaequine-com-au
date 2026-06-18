@@ -2,11 +2,8 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 
-import heroAsset from "@/assets/golden-hour-pavilion.png.asset.json";
-import hero800 from "@/assets/golden-hour-pavilion-800.webp.asset.json";
-import hero1200 from "@/assets/golden-hour-pavilion-1200.webp.asset.json";
-import hero1600 from "@/assets/golden-hour-pavilion-1600.webp.asset.json";
-import fireplacePortrait from "@/assets/main-ridge/mr-beam-detail.png.asset.json";
+import heroAsset from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
+import fireplacePortrait from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
 import parrillaWide from "@/assets/main-ridge/mr-parrilla-wide.png.asset.json";
 
 const FACTS: Array<{ label: string; value: string }> = [
@@ -31,19 +28,17 @@ export default function MainRidgePavilion() {
       <article className="bg-background text-foreground">
         {/* 1. HERO */}
         <section className="relative w-full h-[clamp(560px,92vh,960px)] overflow-hidden">
-          <picture className="absolute inset-0 w-full h-full">
-            <source
-              srcSet={`${hero800.url} 800w, ${hero1200.url} 1200w, ${hero1600.url} 1600w`}
-              sizes="100vw"
-              type="image/webp"
-            />
+          <div className="absolute inset-0 w-full h-full">
             <img
               src={heroAsset.url}
-              alt="Warm evening light inside the Main Ridge timber pavilion with corrugated iron, fireplace and long handcrafted table"
+              alt="Wide view of the Main Ridge Pavilion with brick fireplace, handcrafted table and dusk landscape beyond"
               className="absolute inset-0 w-full h-full object-cover"
-              style={{ filter: "brightness(0.78) contrast(1.1) saturate(0.8)" }}
+              style={{
+                objectPosition: "50% 52%",
+                filter: "brightness(0.76) contrast(1.1) saturate(0.8)",
+              }}
             />
-          </picture>
+          </div>
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,hsl(var(--background)/0.45)_0%,transparent_30%,transparent_60%,hsl(var(--background)/0.85)_100%)]" />
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,hsl(var(--background)/0.55)_100%)]" />
 
@@ -126,11 +121,14 @@ export default function MainRidgePavilion() {
                 <div className="relative aspect-[3/4] overflow-hidden">
                   <img
                     src={fireplacePortrait.url}
-                    alt="Vertical brick fireplace and wall light detail inside the Main Ridge Pavilion"
+                    alt="Brick fireplace detail inside the Main Ridge Pavilion with warm lamp light and fire glow"
                     loading="lazy"
                     decoding="async"
                     className="absolute inset-0 w-full h-full object-cover"
-                    style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
+                    style={{
+                      objectPosition: "58% 45%",
+                      filter: "brightness(0.84) contrast(1.1) saturate(0.8)",
+                    }}
                   />
                   <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_60%,hsl(var(--background)/0.5)_100%)]" />
                 </div>
