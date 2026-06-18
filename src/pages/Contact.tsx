@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Phone, Mail, ArrowRight, CheckCircle, Loader2, MapPin } from "lucide-react";
+import { ArrowRight, CheckCircle, Loader2, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Layout } from "@/components/layout/Layout";
@@ -312,7 +312,7 @@ export default function Contact() {
       {/* ═══ FORM ════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <div className="divider-grid" />
-        <div className="py-16 sm:py-24 bg-card relative">
+        <div className="py-16 sm:py-24 relative">
           <div className="section-container max-w-2xl mx-auto">
             {submitted ? (
               <RevealOnScroll direction="up">
@@ -328,19 +328,19 @@ export default function Contact() {
                     Each project is assessed based on scope,<br />
                     location, and current availability.
                   </p>
-                  <div className="pt-6 flex flex-col sm:flex-row gap-4 justify-center">
+                  <div className="pt-6 flex flex-col sm:flex-row gap-8 justify-center">
                     <a
                       href={`tel:${siteConfig.phone}`}
-                      className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium text-foreground hover:border-accent/30 hover:text-accent transition-all duration-500"
+                      className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
                     >
-                      <Phone className="h-4 w-4 text-accent" />
+                      <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
                       {siteConfig.phone}
                     </a>
                     <a
                       href={`mailto:${siteConfig.email}`}
-                      className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium text-foreground hover:border-accent/30 hover:text-accent transition-all duration-500"
+                      className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
                     >
-                      <Mail className="h-4 w-4 text-accent" />
+                      <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
                       {siteConfig.email}
                     </a>
                   </div>
@@ -461,22 +461,29 @@ export default function Contact() {
                         Project Type
                       </h3>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                      {PROJECT_SCOPES.map((scope) => (
-                        <button
-                          key={scope.id}
-                          type="button"
-                          onClick={() => toggleScope(scope.id)}
-                          className={cn(
-                            "px-4 py-3 rounded-md text-sm font-medium border transition-all text-left",
-                            form.scopes.includes(scope.id)
-                              ? "bg-accent/10 border-accent text-foreground ring-1 ring-accent/30"
-                              : "bg-background border-border text-muted-foreground hover:border-accent/40 hover:text-foreground"
-                          )}
-                        >
-                          {scope.label}
-                        </button>
-                      ))}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-0">
+                      {PROJECT_SCOPES.map((scope) => {
+                        const selected = form.scopes.includes(scope.id);
+                        return (
+                          <button
+                            key={scope.id}
+                            type="button"
+                            onClick={() => toggleScope(scope.id)}
+                            className={cn(
+                              "group flex items-center gap-4 py-4 text-left border-b border-border/15 transition-colors duration-500",
+                              selected ? "text-foreground" : "text-muted-foreground/70 hover:text-foreground"
+                            )}
+                          >
+                            <span
+                              className={cn(
+                                "h-px transition-all duration-700",
+                                selected ? "w-10 bg-accent" : "w-5 bg-accent/30 group-hover:w-8 group-hover:bg-accent/60"
+                              )}
+                            />
+                            <span className="text-[13px] tracking-[0.02em]">{scope.label}</span>
+                          </button>
+                        );
+                      })}
                     </div>
                     {errors.scopes && (
                       <p className="text-destructive text-xs">
@@ -605,19 +612,19 @@ export default function Contact() {
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={100}>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-8 justify-center">
                 <a
                   href={`tel:${siteConfig.phone}`}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium text-foreground hover:border-accent/30 hover:text-accent transition-all duration-500"
+                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
                 >
-                  <Phone className="h-4 w-4 text-accent" />
+                  <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
                   {siteConfig.phone}
                 </a>
                 <a
                   href={`mailto:${siteConfig.email}`}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium text-foreground hover:border-accent/30 hover:text-accent transition-all duration-500"
+                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
                 >
-                  <Mail className="h-4 w-4 text-accent" />
+                  <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
                   {siteConfig.email}
                 </a>
               </div>

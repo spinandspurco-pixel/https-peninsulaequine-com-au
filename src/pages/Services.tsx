@@ -8,10 +8,12 @@ import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 
 
 // Locked image system — distinct per service
-import systemHero from "@/assets/system-hero.jpg";
-import imgFullBuild from "@/assets/service-fullbuild.jpg";
-
-import imgEvent from "@/assets/service-event.jpg";
+import systemHeroAsset from "@/assets/services-new/pe-arena-grading.png.asset.json";
+import imgFullBuildAsset from "@/assets/services-new/pe-custom-rural-pavilion.png.asset.json";
+import imgEventAsset from "@/assets/services-new/pe-groundworks-dozer.png.asset.json";
+const systemHero = systemHeroAsset.url;
+const imgFullBuild = imgFullBuildAsset.url;
+const imgEvent = imgEventAsset.url;
 
 export default function Services() {
   useEffect(() => {

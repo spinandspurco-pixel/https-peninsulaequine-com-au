@@ -253,13 +253,10 @@ export default function Projects() {
         <div className="text-center">
           <Link
             to="/contact"
-            className="inline-block px-12 py-4 border text-[11px] font-mono uppercase tracking-[0.3em] hover:bg-accent/[0.03] transition-colors duration-500"
-            style={{
-              borderColor: "hsl(var(--accent) / 0.08)",
-              color: "hsl(var(--foreground) / 0.35)",
-            }}
+            className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
           >
-            Start a Project →
+            <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
+            Start a Project
           </Link>
         </div>
       </section>
