@@ -100,7 +100,9 @@ function LumenArcChapterSection({
   alt,
   align = "left",
   disclaimer,
-}: LumenArcChapter) {
+  tabIndex,
+  onFocusChapter,
+}: LumenArcChapter & { tabIndex?: number; onFocusChapter?: () => void }) {
   const imageOrder = align === "right" ? "lg:order-2" : "";
   const copyOrder = align === "right" ? "lg:order-1" : "";
   // Deeper directional bleed — image escapes its column on the outer edge
@@ -134,9 +136,10 @@ function LumenArcChapterSection({
   return (
     <section
       className="relative py-[clamp(6rem,4rem+8vw,12rem)] la-chapter-section group/chapter outline-none focus-visible:ring-1 focus-visible:ring-accent/40 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
-      tabIndex={0}
+      tabIndex={tabIndex ?? -1}
       data-la-chapter={number}
       onKeyDown={handleKeyDown}
+      onFocus={onFocusChapter}
       aria-label={`${label} — chapter ${number}. Use arrow keys to move between chapters.`}
       aria-describedby={`la-meta-${number}`}
     >
@@ -340,6 +343,7 @@ function BlueprintTransition({ next }: { next: string }) {
 
 export default function RecoveryStation() {
   const [briefingOpen, setBriefingOpen] = useState(false);
+  const [activeChapter, setActiveChapter] = useState("01");
   return (
     <Layout>
       <LumenArcEntrance />
@@ -378,6 +382,8 @@ export default function RecoveryStation() {
             <LumenArcChapterSection
               {...chapter}
               align={index % 2 === 0 ? chapter.align ?? "left" : chapter.align ?? "right"}
+              tabIndex={chapter.number === activeChapter ? 0 : -1}
+              onFocusChapter={() => setActiveChapter(chapter.number)}
             />
             {index < chapters.length - 1 && (
               <BlueprintTransition next={chapters[index + 1].number} />
