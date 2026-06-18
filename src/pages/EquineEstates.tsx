@@ -12,7 +12,7 @@ const pillars = [
 export default function EquineEstates() {
   return (
     <Layout>
-      <article className="bg-background text-foreground">
+      <article className="bg-background text-foreground type-architectural">
         <section className="relative h-[88vh] min-h-[600px] overflow-hidden">
           <img src={heroImg} alt="Private equine estate at dusk" width={1920} height={1080} className="absolute inset-0 w-full h-full object-cover img-header" />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/50 via-primary/15 to-primary/85" />
