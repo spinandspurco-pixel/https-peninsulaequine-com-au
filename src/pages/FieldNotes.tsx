@@ -157,7 +157,7 @@ export default function FieldNotes() {
                 <div className="relative overflow-hidden aspect-[16/10] lg:aspect-[21/10]">
                   <img
                     src={sitewideProgress}
-                    alt="Wide site view of the current arena build showing steel span, machinery placement and open ground conditions"
+                    alt={sitewideProgressAlt}
                     className="absolute inset-0 h-full w-full object-cover object-center"
                     style={{ filter: "brightness(0.8) contrast(1.08) saturate(0.78)" }}
                   />
