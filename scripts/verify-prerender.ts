@@ -320,9 +320,6 @@ interface Report {
   routes: RouteResult[];
 }
 
-const ajv = new Ajv({ strict: true, allErrors: true });
-const SCHEMA_PATH = resolve("scripts/prerender-verify.schema.json");
-
 function validateAgainstSchema(report: Report): string[] {
   if (!existsSync(SCHEMA_PATH)) {
     return [`Schema file missing at ${SCHEMA_PATH}`];
