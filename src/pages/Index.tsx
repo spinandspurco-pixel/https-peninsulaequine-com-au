@@ -221,8 +221,8 @@ export default function Index() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1000} delay={120}>
                 <p className="font-serif text-foreground/82 leading-[1.4] tracking-[-0.022em] text-[clamp(1.5rem,1.05rem+1.8vw,2.45rem)] max-w-4xl">
-                  Covered arenas, stables, pavilions and integrated equestrian builds — shaped from the
-                  ground up across the Mornington Peninsula and beyond.
+                  Covered arenas, stable structures, pavilions and integrated equine builds —
+                  shaped from the ground up with structural clarity across the Mornington Peninsula and beyond.
                 </p>
               </RevealOnScroll>
             </div>
