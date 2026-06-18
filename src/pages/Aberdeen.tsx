@@ -49,30 +49,32 @@ export default function Aberdeen() {
           <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--background)/0.72)_0%,hsl(var(--background)/0.48)_32%,transparent_62%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,transparent,hsl(var(--background)/0.42))]" />
 
-          <div className="relative z-10 mx-auto flex min-h-[82vh] max-w-[1480px] items-end px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2.5rem,1.5rem+4vw,5rem)] pt-36 sm:pt-44">
+          <div className="relative z-10 mx-auto flex min-h-[82vh] max-w-[1480px] items-start lg:items-end px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2.5rem,1.5rem+4vw,5rem)] pt-32 sm:pt-40 lg:pt-44">
             <div className="grid w-full grid-cols-12 gap-10 lg:gap-12 items-end">
               <div className="col-span-12 lg:col-span-7 max-w-3xl">
-                <RevealOnScroll direction="up" duration={900}>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.48em] text-accent/68">
-                    Selected Works
-                  </p>
-                </RevealOnScroll>
-                <RevealOnScroll direction="up" duration={1100} delay={120}>
-                  <h1 className="mt-8 font-serif leading-[0.92] tracking-[-0.03em] text-primary-foreground text-[clamp(2.8rem,1.6rem+5vw,5.75rem)]">
-                    Aberdeen
-                  </h1>
-                </RevealOnScroll>
-                <RevealLine width="w-14" delay={260} className="mt-8" />
-                <RevealOnScroll direction="up" duration={1000} delay={320}>
-                  <p className="mt-8 max-w-[36rem] font-serif text-primary-foreground/88 leading-[1.28] text-[clamp(1.05rem,0.92rem+0.55vw,1.45rem)]">
-                    Indoor arena, viewing lounge and refined equine facility detailing.
-                  </p>
-                </RevealOnScroll>
+                <div className="inline-block max-w-[26rem] bg-background/20 px-4 py-4 sm:max-w-none sm:bg-transparent sm:px-0 sm:py-0">
+                  <RevealOnScroll direction="up" duration={900}>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.48em] text-accent/72">
+                      Selected Works
+                    </p>
+                  </RevealOnScroll>
+                  <RevealOnScroll direction="up" duration={1100} delay={120}>
+                    <h1 className="mt-6 font-serif leading-[0.92] tracking-[-0.03em] text-primary-foreground text-[clamp(2.8rem,1.6rem+5vw,5.75rem)]">
+                      Aberdeen
+                    </h1>
+                  </RevealOnScroll>
+                  <RevealLine width="w-14" delay={260} className="mt-6" />
+                  <RevealOnScroll direction="up" duration={1000} delay={320}>
+                    <p className="mt-6 max-w-[36rem] font-serif text-primary-foreground/90 leading-[1.28] text-[clamp(1.05rem,0.92rem+0.55vw,1.45rem)]">
+                      Indoor arena, viewing lounge and refined equine facility detailing.
+                    </p>
+                  </RevealOnScroll>
+                </div>
               </div>
 
-              <div className="col-span-12 lg:col-span-5 lg:justify-self-end w-full max-w-[460px]">
+              <div className="col-span-12 lg:col-span-5 lg:justify-self-end w-full max-w-[460px] pt-3 sm:pt-0">
                 <RevealOnScroll direction="up" duration={1100} delay={420}>
-                  <div className="bg-background/28 backdrop-blur-[3px] px-5 py-5 sm:px-6 sm:py-6 border border-primary-foreground/10">
+                  <div className="bg-background/32 backdrop-blur-[3px] px-5 py-5 sm:px-6 sm:py-6 border border-primary-foreground/10">
                     <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5 border-t border-primary-foreground/15 pt-6">
                       {FACTS.map((fact) => (
                         <div key={fact.label} className="space-y-2">
@@ -90,6 +92,7 @@ export default function Aberdeen() {
               </div>
             </div>
           </div>
+
         </section>
 
 
