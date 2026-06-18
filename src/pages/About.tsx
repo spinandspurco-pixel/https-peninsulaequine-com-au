@@ -2,131 +2,312 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 
-// Locked image system — 3 distinct images, no repeats from hero
-import systemProcess from "@/assets/system-process.jpg";
-import systemStructure from "@/assets/system-structure.jpg";
-import systemOutcome from "@/assets/system-outcome.jpg";
+import ciroWithHorse from "@/assets/ciro-with-horse.png";
+import ciroWide from "@/assets/ciro-wide.png";
+import horseAction from "@/assets/horse-action.png";
+import slidingStop from "@/assets/homepage-refresh/sliding-stop-hero.png.asset.json";
+import arenaGrading from "@/assets/main-ridge-arena-grading.jpg";
+import mrBeamDetail from "@/assets/main-ridge/mr-beam-detail.png.asset.json";
+import coveredArena from "@/assets/covered-arena-black-exterior.jpg";
 
-// Unified architectural grading — consistent with homepage
-const SECTIONS = [
-  { src: systemProcess, line: "Built by those who understand the ground.", aspect: "aspect-[1/1]", crop: "50% 30%", scale: "1.6", filter: "brightness(0.82) contrast(1.1) saturate(0.8)" },
-  { src: systemStructure, line: "Precision in every layer.", aspect: "aspect-[21/9]", crop: "20% 60%", scale: "1.4", filter: "brightness(0.82) contrast(1.1) saturate(0.8)" },
-  { src: systemOutcome, line: "Environments designed to perform.", aspect: "aspect-[3/2]", crop: "70% 40%", scale: "1.5", filter: "brightness(0.82) contrast(1.1) saturate(0.8)" },
-];
+// Unified architectural grading consistent across the brand
+const FILTER = "brightness(0.85) contrast(1.1) saturate(0.8)";
+
+const Vignette = () => (
+  <div
+    className="absolute inset-0 pointer-events-none"
+    style={{
+      background:
+        "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, hsl(222 20% 4% / 0.55) 100%)",
+    }}
+  />
+);
+
+const Grid = () => (
+  <div
+    className="absolute inset-0 pointer-events-none"
+    style={{
+      backgroundImage: `
+        linear-gradient(0deg, hsl(var(--foreground) / 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, hsl(var(--foreground) / 0.025) 1px, transparent 1px)
+      `,
+      backgroundSize: "80px 80px",
+    }}
+  />
+);
+
+interface SectionProps {
+  overline: string;
+  title: string;
+  body: string;
+  src: string;
+  alt: string;
+  aspect?: string;
+  crop?: string;
+  reverse?: boolean;
+}
+
+const FeatureSection = ({
+  overline,
+  title,
+  body,
+  src,
+  alt,
+  aspect = "aspect-[4/5]",
+  crop = "50% 40%",
+  reverse = false,
+}: SectionProps) => (
+  <section className="py-28 sm:py-40">
+    <div className="section-container max-w-6xl mx-auto">
+      <div
+        className={`grid md:grid-cols-12 gap-10 md:gap-16 items-center ${
+          reverse ? "md:[&>*:first-child]:order-2" : ""
+        }`}
+      >
+        <div className="md:col-span-7 relative overflow-hidden">
+          <img
+            src={src}
+            alt={alt}
+            loading="lazy"
+            className={`w-full ${aspect} object-cover`}
+            style={{ objectPosition: crop, filter: FILTER }}
+          />
+          <Vignette />
+          <Grid />
+        </div>
+        <div className="md:col-span-5">
+          <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-foreground/25">
+            {overline}
+          </p>
+          <h2 className="mt-6 font-serif text-3xl sm:text-4xl md:text-5xl leading-[1.05] tracking-tight text-foreground/90">
+            {title}
+          </h2>
+          <p className="mt-8 text-[14px] sm:text-[15px] font-light leading-[1.9] text-foreground/45 max-w-md">
+            {body}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+);
 
 export default function About() {
   useEffect(() => {
     document.title = "About | Peninsula Equine";
-    return () => { document.title = "Peninsula Equine"; };
+    const meta = document.querySelector('meta[name="description"]');
+    const prev = meta?.getAttribute("content") || "";
+    meta?.setAttribute(
+      "content",
+      "Peninsula Equine is built by horse people — arenas, stables and rural builds shaped by real experience with horses, ground and property life on the Mornington Peninsula."
+    );
+    return () => {
+      document.title = "Peninsula Equine";
+      if (meta && prev) meta.setAttribute("content", prev);
+    };
   }, []);
 
   return (
     <Layout>
       <div className="type-architectural">
-      {/* ═══ HERO ═══════════════════════════════════════ */}
-      <section className="pt-48 sm:pt-64 pb-28 sm:pb-40">
-        <div className="section-container max-w-2xl mx-auto text-center">
-          <h1
-            className="heading-display text-foreground opacity-0 animate-fade-in"
-            style={{ animationDelay: "300ms", animationFillMode: "both", animationDuration: "800ms" }}
-          >
-            Built with intent.
-          </h1>
-          <p
-            className="mt-12 text-[13px] sm:text-[14px] text-foreground/30 leading-[1.9] max-w-lg mx-auto opacity-0 animate-fade-in"
-            style={{ animationDelay: "600ms", animationFillMode: "both", animationDuration: "800ms" }}
-          >
-            Peninsula Equine creates equine environments with a focus on structure, performance, and long-term durability. Every build is informed not just by construction, but by an understanding of how horses move, load, and interact with the ground beneath them.
-          </p>
-          <p
-            className="mt-14 font-mono text-[9px] uppercase tracking-[0.45em] text-foreground/12 opacity-0 animate-fade-in"
-            style={{ animationDelay: "900ms", animationFillMode: "both", animationDuration: "800ms" }}
-          >
-            Engineered infrastructure. Considered execution.
-          </p>
-          <p
-            className="mt-10 font-mono text-[8px] uppercase tracking-[0.5em] text-foreground/8 opacity-0 animate-fade-in"
-            style={{ animationDelay: "1200ms", animationFillMode: "both", animationDuration: "800ms" }}
-          >
-            Ground. Structure. Horse.
-          </p>
-        </div>
-      </section>
-
-      {/* ═══ IMAGE-LED SECTIONS ═══════════════════════════ */}
-      {SECTIONS.map((section, i) => (
-        <section key={i} className="py-28 sm:py-36">
-          <div className="section-container max-w-5xl mx-auto">
-            <div
-              className="opacity-0 animate-fade-in relative overflow-hidden"
-              style={{
-                animationDelay: "200ms",
-                animationFillMode: "both",
-                animationDuration: "800ms",
-              }}
-            >
+        {/* ═══ HERO ═══════════════════════════════════════════ */}
+        <section className="relative pt-32 sm:pt-40 pb-24 sm:pb-32">
+          <div className="section-container max-w-6xl mx-auto">
+            <div className="relative overflow-hidden">
               <img
-                src={section.src}
-                alt={section.line}
-                className={`w-full ${section.aspect} object-cover`}
-                loading="lazy"
+                src={ciroWithHorse}
+                alt="A quiet moment in the arena — horseman and horse."
+                className="w-full aspect-[16/10] sm:aspect-[21/9] object-cover opacity-0 animate-fade-in"
                 style={{
-                  objectPosition: section.crop,
-                  transform: `scale(${section.scale})`,
-                  filter: section.filter,
+                  objectPosition: "50% 35%",
+                  filter: FILTER,
+                  animationDelay: "200ms",
+                  animationFillMode: "both",
+                  animationDuration: "1100ms",
                 }}
               />
-              {/* Vignette overlay */}
               <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
-                  background: "radial-gradient(ellipse 85% 75% at 50% 50%, transparent 35%, hsl(222 20% 4% / 0.5) 100%)",
+                  background:
+                    "linear-gradient(180deg, hsl(222 20% 4% / 0.35) 0%, transparent 35%, transparent 60%, hsl(222 20% 4% / 0.85) 100%)",
                 }}
               />
-              {/* Subtle blueprint-style overlay */}
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  backgroundImage: `
-                    linear-gradient(0deg, hsl(var(--foreground) / 0.03) 1px, transparent 1px),
-                    linear-gradient(90deg, hsl(var(--foreground) / 0.03) 1px, transparent 1px)
-                  `,
-                  backgroundSize: "40px 40px",
-                }}
-              />
+              <Grid />
+
+              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-12 md:p-16">
+                <p
+                  className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.5em] text-foreground/40 opacity-0 animate-fade-in"
+                  style={{
+                    animationDelay: "700ms",
+                    animationFillMode: "both",
+                    animationDuration: "900ms",
+                  }}
+                >
+                  About — Peninsula Equine
+                </p>
+                <h1
+                  className="mt-5 font-serif text-4xl sm:text-6xl md:text-7xl leading-[0.95] tracking-tight text-foreground opacity-0 animate-fade-in max-w-3xl"
+                  style={{
+                    animationDelay: "900ms",
+                    animationFillMode: "both",
+                    animationDuration: "1100ms",
+                  }}
+                >
+                  Built by horse people.
+                </h1>
+              </div>
             </div>
+
             <p
-              className="mt-6 font-serif text-lg sm:text-xl text-foreground/40 italic tracking-wide opacity-0 animate-fade-in"
+              className="mt-12 sm:mt-16 max-w-2xl text-[14px] sm:text-[15px] font-light leading-[1.9] text-foreground/50 opacity-0 animate-fade-in"
               style={{
-                animationDelay: "500ms",
+                animationDelay: "1200ms",
                 animationFillMode: "both",
-                animationDuration: "800ms",
+                animationDuration: "900ms",
               }}
             >
-              {section.line}
+              Peninsula Equine is shaped by the realities of horse properties —
+              how they move, drain, wear, shelter and work every day.
             </p>
           </div>
         </section>
-      ))}
 
-      {/* ═══ FINAL CTA ═══════════════════════════════════ */}
-      <section className="py-36 sm:py-48">
-        <div className="text-center">
-          <Link
-            to="/contact"
-            className="inline-block px-12 py-4 border text-[11px] font-mono uppercase tracking-[0.3em] hover:bg-accent/[0.03] transition-colors duration-500"
-            style={{
-              borderColor: "hsl(var(--accent) / 0.08)",
-              color: "hsl(var(--foreground) / 0.35)",
-            }}
-          >
-            Apply to Build →
-          </Link>
-          <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/10">
-            Selected projects only.
-          </p>
-        </div>
-      </section>
+        {/* ═══ INTRO / BRAND STORY ════════════════════════════ */}
+        <section className="py-32 sm:py-44">
+          <div className="section-container max-w-3xl mx-auto text-center">
+            <p className="font-mono text-[9px] uppercase tracking-[0.5em] text-foreground/25">
+              01 — Origin
+            </p>
+            <h2 className="mt-8 font-serif text-4xl sm:text-5xl md:text-6xl leading-[1] tracking-tight text-foreground/90">
+              From the saddle to the site.
+            </h2>
+            <p className="mt-10 text-[14px] sm:text-[15px] font-light leading-[1.95] text-foreground/45 max-w-xl mx-auto">
+              Peninsula Equine brings together practical construction knowledge
+              and real horsemanship. Every arena, stable, fence line, laneway,
+              drainage plan and rural build is considered through the way
+              horses and people actually use the space.
+            </p>
+            <div className="mt-16 mx-auto w-px h-20 bg-foreground/10" />
+          </div>
+        </section>
+
+        {/* ═══ WHY IT MATTERS ═════════════════════════════════ */}
+        <FeatureSection
+          overline="02 — The difference"
+          title="The details matter because horses notice them first."
+          body="Good equine infrastructure is not just about how it looks. It is about flow, footing, safety, access, shelter, drainage, maintenance and the small decisions that make a property easier to use every day."
+          src={horseAction}
+          alt="Hand on horse — a quiet detail of trust."
+          aspect="aspect-[4/5]"
+          crop="55% 35%"
+        />
+
+        {/* ═══ WE RIDE THE GROUND WE BUILD ═══════════════════ */}
+        <section className="py-28 sm:py-40">
+          <div className="section-container max-w-7xl mx-auto">
+            <div className="relative overflow-hidden">
+              <img
+                src={slidingStop.url}
+                alt="A sliding stop — the ground tested through use."
+                loading="lazy"
+                className="w-full aspect-[21/9] object-cover"
+                style={{ objectPosition: "50% 50%", filter: FILTER }}
+              />
+              <Vignette />
+              <Grid />
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background:
+                    "linear-gradient(180deg, transparent 50%, hsl(222 20% 4% / 0.85) 100%)",
+                }}
+              />
+              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-10 md:p-14">
+                <p className="font-mono text-[9px] uppercase tracking-[0.5em] text-foreground/35">
+                  03 — Proof
+                </p>
+                <h2 className="mt-5 font-serif text-3xl sm:text-5xl md:text-6xl leading-[1] tracking-tight text-foreground max-w-3xl">
+                  We ride the ground we build.
+                </h2>
+              </div>
+            </div>
+            <p className="mt-10 max-w-2xl text-[14px] sm:text-[15px] font-light leading-[1.95] text-foreground/45">
+              Arena construction is not theoretical. The feel of the surface,
+              the structure beneath it, the drainage, the preparation and the
+              finish all matter. Peninsula Equine approaches each build with an
+              understanding of what horse people need from the ground up.
+            </p>
+          </div>
+        </section>
+
+        {/* ═══ FROM DIRT TO DYNASTY ══════════════════════════ */}
+        <FeatureSection
+          overline="04 — From dirt to dynasty"
+          title="From groundwork to finished environment."
+          body="The unseen work is what makes the visible result last — site preparation, levels, drainage, base works, structure, access and practical sequencing."
+          src={arenaGrading}
+          alt="Arena grading in progress — base works before the finish."
+          aspect="aspect-[5/4]"
+          crop="50% 55%"
+          reverse
+        />
+
+        {/* ═══ CRAFTSMANSHIP ═════════════════════════════════ */}
+        <FeatureSection
+          overline="05 — Craftsmanship"
+          title="Built with weight, purpose and finish."
+          body="From arenas and stables to custom rural builds, Peninsula Equine works with honest materials and practical details — timber, steel, brick, surface, structure and finish."
+          src={mrBeamDetail.url}
+          alt="Main Ridge Pavilion — timber and steel detail."
+          aspect="aspect-[4/5]"
+          crop="50% 45%"
+        />
+
+        {/* ═══ CTA ════════════════════════════════════════════ */}
+        <section className="relative py-36 sm:py-48 overflow-hidden">
+          <div className="absolute inset-0">
+            <img
+              src={coveredArena}
+              alt=""
+              className="w-full h-full object-cover opacity-30"
+              style={{ objectPosition: "50% 50%", filter: FILTER }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(ellipse 80% 70% at 50% 50%, hsl(222 20% 4% / 0.4) 0%, hsl(222 20% 4% / 0.95) 100%)",
+              }}
+            />
+          </div>
+          <div className="relative section-container max-w-2xl mx-auto text-center">
+            <p className="font-mono text-[9px] uppercase tracking-[0.5em] text-foreground/30">
+              06 — Begin
+            </p>
+            <h2 className="mt-8 font-serif text-4xl sm:text-5xl md:text-6xl leading-[1] tracking-tight text-foreground/95">
+              Start with the ground.
+              <br />
+              Build the legacy.
+            </h2>
+            <p className="mt-10 text-[14px] sm:text-[15px] font-light leading-[1.9] text-foreground/45 max-w-md mx-auto">
+              Talk to Peninsula Equine about your arena, stable, groundwork or
+              rural build.
+            </p>
+            <Link
+              to="/contact"
+              className="mt-14 inline-block px-12 py-4 border text-[11px] font-mono uppercase tracking-[0.3em] hover:bg-accent/[0.04] transition-colors duration-500"
+              style={{
+                borderColor: "hsl(var(--accent) / 0.15)",
+                color: "hsl(var(--foreground) / 0.55)",
+              }}
+            >
+              Start a Project →
+            </Link>
+            <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.4em] text-foreground/15">
+              From Dirt to Dynasty
+            </p>
+          </div>
+        </section>
       </div>
     </Layout>
   );
