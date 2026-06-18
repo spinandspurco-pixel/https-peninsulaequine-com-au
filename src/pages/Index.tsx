@@ -15,6 +15,7 @@ import serviceGroundworks from "@/assets/homepage-services/groundworks.png.asset
 import fieldNoteAsset from "@/assets/main-ridge/mr-pendant-beams.png.asset.json";
 
 import slidingStopHero from "@/assets/homepage-refresh/sliding-stop-hero.png.asset.json";
+import coveredArenaExterior from "@/assets/covered-arena-black-exterior.jpg";
 
 const SESSION_KEY = "pe-brand-intro-seen";
 const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
