@@ -116,7 +116,7 @@ export default function CoveredCompetitionArenaFieldNote() {
               <RevealOnScroll direction="up" duration={1000} delay={360}>
                 <div className="space-y-3 font-sans font-light text-foreground/52 text-[14px] sm:text-[15px]">
                   <p><span className="text-accent/60">Status</span> — In Progress</p>
-                  <p><span className="text-accent/60">Location</span> — Mornington Peninsula, VIC</p>
+                  <p><span className="text-accent/60">Location</span> — Main Ridge, VIC</p>
                 </div>
               </RevealOnScroll>
             </div>
