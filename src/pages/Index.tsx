@@ -14,6 +14,9 @@ import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
 import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
 
 import goldenHourPavilion from "@/assets/golden-hour-pavilion.png.asset.json";
+import goldenHourPavilion800 from "@/assets/golden-hour-pavilion-800.webp.asset.json";
+import goldenHourPavilion1200 from "@/assets/golden-hour-pavilion-1200.webp.asset.json";
+import goldenHourPavilion1600 from "@/assets/golden-hour-pavilion-1600.webp.asset.json";
 import serviceArenas from "@/assets/homepage-services/arenas.png.asset.json";
 import serviceGroundworks from "@/assets/homepage-services/groundworks.png.asset.json";
 
