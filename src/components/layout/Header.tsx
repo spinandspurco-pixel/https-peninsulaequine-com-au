@@ -23,7 +23,7 @@ const navigation: NavItem[] = [
       { name: "Infrastructure & Maintenance", href: "/infrastructure" },
     ],
   },
-  { name: "Recovery Station", href: "/recovery-stations" },
+  { name: "LumenArc", href: "/lumenarc" },
   { name: "Selected Works", href: "/gallery" },
   { name: "Field Notes", href: "/field-notes" },
   { name: "Contact", href: "/contact" },

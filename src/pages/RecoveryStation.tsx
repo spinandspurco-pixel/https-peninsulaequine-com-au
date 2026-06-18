@@ -1,282 +1,323 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
-import { RevealOnScroll, RevealLine, RevealImage } from "@/components/RevealOnScroll";
-import { ChapterHero } from "@/components/ChapterHero";
-import heroImg from "@/assets/recovery-internal-hero.jpg";
-import infraredImg from "@/assets/recovery-internal-infrared.jpg";
-import groomingImg from "@/assets/recovery-internal-grooming.jpg";
-import inUseImg from "@/assets/recovery-internal-inuse.jpg";
-import appImg from "@/assets/recovery-internal-app.jpg";
-import detailsImg from "@/assets/recovery-internal-details.jpg";
+import { HeroAtmosphere } from "@/components/HeroAtmosphere";
+import { RevealImage, RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
+import comingSoonAsset from "@/assets/lumenarc/coming-soon.asset.json";
+import canopyAsset from "@/assets/lumenarc/canopy.asset.json";
+import controlColumnAsset from "@/assets/lumenarc/control-column.asset.json";
+import inUseAsset from "@/assets/lumenarc/in-use.asset.json";
+import appAsset from "@/assets/lumenarc/app.asset.json";
+import thermalIntelligenceAsset from "@/assets/lumenarc/thermal-intelligence.asset.json";
+import recoveryMistAsset from "@/assets/lumenarc/recovery-mist.asset.json";
+import wellnessPrecinctAsset from "@/assets/lumenarc/wellness-precinct.asset.json";
 
-const chapters = [
+type LumenArcChapter = {
+  number: string;
+  label: string;
+  title: string;
+  body: string;
+  notes: string[];
+  image: string;
+  alt: string;
+  align?: "left" | "right";
+  disclaimer?: string;
+};
+
+const chapters: LumenArcChapter[] = [
   {
-    n: "I",
-    overline: "Infrared Technology",
-    title: "Controlled warmth, held by the building.",
+    number: "02",
+    label: "Infrared Therapy Canopy",
+    title: "Targeted warmth, held within an architectural canopy.",
     body:
-      "Overhead infrared panels deliver calibrated, low-stress warmth — supporting drying, post-work comfort and the quiet recovery between sessions. No noise. No applied equipment. Heat held in the room itself.",
-    image: infraredImg,
-    align: "left" as const,
+      "A future concept canopy designed to support warm-up, post-work comfort and quieter recovery moments through directed infrared heat, controlled airflow and a deliberately open equine-safe form.",
+    notes: ["Targeted infrared heat", "Optimal airflow", "Engineered performance"],
+    image: canopyAsset.url,
+    alt: "LumenArc infrared canopy concept with horse standing beneath illuminated recovery canopy in a moody stable courtyard",
+    align: "left",
+    disclaimer: "Future concept. Features subject to refinement during design development.",
   },
   {
-    n: "II",
-    overline: "Grooming & Tacking",
-    title: "An integrated horse care space.",
+    number: "03",
+    label: "Intelligent Control Column",
+    title: "Real-time oversight, resolved into a single physical touchpoint.",
     body:
-      "Brushed bronze tack walls, walnut cabinetry, dark timber and considered storage — built so grooming, tacking and daily preparation share the same architectural language as recovery. One environment, not three.",
-    image: groomingImg,
-    align: "right" as const,
+      "The control column is conceived as the operational spine of the system — bringing session timing, environmental settings, monitoring prompts and layered safety controls into one architectural object rather than scattered equipment.",
+    notes: ["Session control", "Recovery monitoring", "Safety systems"],
+    image: controlColumnAsset.url,
+    alt: "LumenArc intelligent control column concept beside horse recovery canopy with illuminated controls and safety hardware",
+    align: "right",
+    disclaimer: "Interface and monitoring views shown as concept visuals only, in development.",
   },
   {
-    n: "III",
-    overline: "In Use",
-    title: "Designed for the daily rhythm of real horse people.",
+    number: "04",
+    label: "In Use",
+    title: "Designed for real horses, real yards and everyday use.",
     body:
-      "Training, cooling down, grooming, drying and preparing for the next ride. The Recovery Station holds each of these moments inside the stable — without ceremony, without compromise.",
-    image: inUseImg,
-    align: "left" as const,
+      "Open-air geometry, non-slip underfoot conditions, integrated drainage and tempered airflow shape a more practical recovery environment — designed to support calm handling, cleaner circulation and equine comfort without clinical character.",
+    notes: ["Open-air safety", "Non-slip flooring", "Drainage + airflow"],
+    image: inUseAsset.url,
+    alt: "Horse beneath the LumenArc recovery canopy in a premium stable courtyard at night",
+    align: "left",
+    disclaimer: "Designed to support comfort and practical post-work routines. Not presented as a medical device.",
+  },
+  {
+    number: "05",
+    label: "Future Control App",
+    title: "Connected oversight, carried with the rider or stable manager.",
+    body:
+      "A future app layer is being explored to support horse profiles, session controls, usage history and operational visibility across the broader property — extending the architectural system into a quieter digital companion.",
+    notes: ["Horse profiles", "Session controls", "Recovery insights"],
+    image: appAsset.url,
+    alt: "LumenArc mobile control app concept shown in hand with illuminated recovery canopy in the background",
+    align: "right",
+    disclaimer: "App experience shown as a future concept. Features subject to refinement.",
+  },
+  {
+    number: "06",
+    label: "Thermal Intelligence",
+    title: "A smarter visual read of warmth, use and recovery conditions.",
+    body:
+      "Thermal mapping and session data are being developed as decision-support layers — intended to help owners and managers better understand heat distribution, comfort settings and repeatable recovery routines without overclaiming clinical outcomes.",
+    notes: ["Thermal mapping", "Data-led adjustment", "Monitoring support"],
+    image: thermalIntelligenceAsset.url,
+    alt: "LumenArc thermal intelligence concept showing horse heat-map overlay beneath recovery canopy",
+    align: "left",
+    disclaimer: "Designed to support monitoring and adjustment only. No diagnostic, treatment or cure claims are made.",
+  },
+  {
+    number: "07",
+    label: "Recovery Mist Mode",
+    title: "Cool-down support for summer, post-work reset and quieter comfort.",
+    body:
+      "Recovery Mist Mode is being studied as a lighter environmental setting within the LumenArc system — designed to support cool-down comfort, summer usability and post-work reset through fine misting and controlled ambient conditions.",
+    notes: ["Summer mode", "Post-work recovery", "Comfort support"],
+    image: recoveryMistAsset.url,
+    alt: "LumenArc recovery mist mode concept with horse beneath illuminated canopy and fine cooling mist",
+    align: "right",
+    disclaimer: "Future concept in development. Features and operating modes subject to refinement.",
+  },
+  {
+    number: "08",
+    label: "Wellness Precinct",
+    title: "A future Peninsula Equine precinct built around recovery, care and place.",
+    body:
+      "Beyond a single structure, LumenArc is positioned as a coming-soon division inside a wider facility ecosystem — where recovery, landscape, circulation, infrastructure and digital oversight are conceived as one premium equine environment.",
+    notes: ["Facility ecosystem", "Premium infrastructure", "Future-focused planning"],
+    image: wellnessPrecinctAsset.url,
+    alt: "LumenArc wellness precinct concept showing broader premium equine facility ecosystem at night",
+    align: "left",
+    disclaimer: "Precinct visual shown as future direction only. Elements remain in development and subject to refinement.",
   },
 ];
 
-const details = [
-  { k: "01", label: "Infrared Panels", body: "Overhead, recessed, calibrated for comfort and drying." },
-  { k: "02", label: "Ventilation", body: "Quiet cross-flow detailing tuned for warmth without stagnation." },
-  { k: "03", label: "Non-Slip Flooring", body: "Textured rubber-aggregate over polished concrete — sure-footed when wet." },
-  { k: "04", label: "Drainage", body: "Brushed bronze channels integrated flush with the floor line." },
-  { k: "05", label: "Tack Storage", body: "Walnut and bronze cabinetry, considered as joinery, not equipment." },
-  { k: "06", label: "Finishes", body: "Thermally-modified timber battens, blackened steel, bronze hardware." },
-];
+function LumenArcChapterSection({
+  number,
+  label,
+  title,
+  body,
+  notes,
+  image,
+  alt,
+  align = "left",
+  disclaimer,
+}: LumenArcChapter) {
+  const imageOrder = align === "right" ? "lg:order-2" : "";
+  const copyOrder = align === "right" ? "lg:order-1" : "";
+  const imageBleed = align === "right" ? "lg:-mr-[3rem]" : "lg:-ml-[3rem]";
+
+  return (
+    <section className="relative py-[clamp(5.5rem,3.5rem+7vw,10rem)] bg-background border-t border-accent/10">
+      <div className="absolute inset-0 pointer-events-none opacity-40 bg-[linear-gradient(90deg,transparent_0%,hsl(var(--accent)/0.06)_49.9%,transparent_50.1%,transparent_100%)]" />
+      <div className="section-container relative z-10 grid grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4.5rem)] items-center">
+        <div className={`col-span-12 lg:col-span-7 ${imageOrder}`}>
+          <RevealImage delay={100} duration={1200}>
+            <div className={`relative aspect-[16/10] overflow-hidden border border-accent/12 bg-card grain-hero ${imageBleed}`}>
+              <img
+                src={image}
+                alt={alt}
+                loading="lazy"
+                width={1400}
+                height={1000}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-primary/15" />
+            </div>
+          </RevealImage>
+        </div>
+
+        <div className={`col-span-12 lg:col-span-5 ${copyOrder}`}>
+          <div className="space-y-6 lg:max-w-[28rem]">
+            <RevealOnScroll direction="up" duration={900}>
+              <div className="space-y-3">
+                <p className="font-mono uppercase text-accent/55 text-[clamp(0.6rem,0.55rem+0.18vw,0.72rem)] tracking-[0.45em]">
+                  {number} — {label}
+                </p>
+                <h2 className="font-serif text-foreground/92 leading-[0.98] tracking-[0.01em] text-[clamp(1.95rem,1.35rem+2.1vw,3.2rem)]">
+                  {title}
+                </h2>
+              </div>
+            </RevealOnScroll>
+
+            <RevealLine width="w-10" delay={180} />
+
+            <RevealOnScroll direction="up" duration={1000} delay={220}>
+              <p className="font-sans font-light text-foreground/56 leading-[1.9] text-[clamp(0.86rem,0.82rem+0.16vw,0.95rem)]">
+                {body}
+              </p>
+            </RevealOnScroll>
+
+            <RevealOnScroll direction="up" duration={1000} delay={320}>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-6 gap-y-3 border-y border-accent/10 py-5">
+                {notes.map((note) => (
+                  <p
+                    key={note}
+                    className="font-mono uppercase text-accent/62 text-[0.62rem] tracking-[0.32em] leading-[1.7]"
+                  >
+                    {note}
+                  </p>
+                ))}
+              </div>
+            </RevealOnScroll>
+
+            {disclaimer && (
+              <RevealOnScroll direction="up" duration={950} delay={380}>
+                <p className="font-sans font-light italic text-foreground/34 leading-[1.75] text-[0.76rem] max-w-md">
+                  {disclaimer}
+                </p>
+              </RevealOnScroll>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function RecoveryStation() {
   return (
     <Layout>
       <article className="bg-background text-foreground">
-        {/* ─── ARRIVAL ─────────────────────────────────────────── */}
-        <section className="relative h-[92vh] min-h-[620px] overflow-hidden">
+        <section className="relative min-h-screen overflow-hidden border-b border-accent/12 bg-card grain-hero">
           <img
-            src={heroImg}
-            alt="Peninsula Equine Recovery Station — interior stable wellness bay with horse beneath warm infrared recovery panels"
-            width={1792}
+            src={comingSoonAsset.url}
+            alt="LumenArc coming soon teaser visual showing premium equine recovery canopy concept with blueprint-led detailing"
+            width={1536}
             height={1024}
-            className="absolute inset-0 w-full h-full object-cover img-header"
+            className="absolute inset-0 h-full w-full object-cover object-center"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/45 via-primary/10 to-primary/85" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_65%_40%,transparent,hsl(var(--primary)/0.55))]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,hsl(var(--background)/0.28)_0%,hsl(var(--background)/0.44)_38%,hsl(var(--background)/0.88)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_56%,transparent_0%,hsl(var(--background)/0.08)_38%,hsl(var(--background)/0.72)_100%)]" />
+          <HeroAtmosphere />
 
-          {/* Top hero overline removed — was colliding with the fixed header logo & nav. */}
-
-
-          <div className="absolute bottom-0 left-0 right-0 px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2.5rem,1.5rem+5vw,6rem)] z-10">
-            <div className="max-w-6xl grid grid-cols-12 gap-6 items-end">
-              <div className="col-span-12 lg:col-span-9 space-y-[clamp(1.25rem,1rem+1vw,2rem)]">
-                <RevealOnScroll direction="up" duration={900} delay={400}>
-                  <p className="font-mono uppercase text-accent/65 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">
-                    The Peninsula Equine Recovery Station<span className="align-super text-[0.55em] ml-1">™</span>
+          <div className="relative z-10 flex min-h-screen items-end">
+            <div className="section-container w-full pb-[clamp(3rem,2rem+5vw,6.5rem)] pt-40 sm:pt-44">
+              <div className="max-w-5xl space-y-8">
+                <RevealOnScroll direction="up" duration={900}>
+                  <p className="font-mono uppercase text-accent/60 text-[clamp(0.62rem,0.58rem+0.2vw,0.78rem)] tracking-[0.55em]">
+                    01 — Coming Soon
                   </p>
                 </RevealOnScroll>
-                <RevealOnScroll direction="up" duration={1100} delay={600}>
-                  <h1 className="font-serif text-primary-foreground tracking-[-0.025em] leading-[0.95] text-[clamp(2.25rem,1.2rem+5vw,5rem)]">
-                    The Peninsula Equine<br className="hidden sm:block" /> Recovery Station.
-                  </h1>
-                </RevealOnScroll>
-                <RevealOnScroll direction="up" duration={1100} delay={900}>
-                  <p className="font-serif italic text-primary-foreground/60 max-w-xl leading-[1.55] text-[clamp(0.875rem,0.78rem+0.4vw,1.0625rem)]">
-                    A premium internal recovery environment — engineered for comfort,
-                    performance and care, built inside the stable itself.
-                  </p>
-                </RevealOnScroll>
-              </div>
-              <div className="hidden lg:block col-span-3">
-                <RevealOnScroll direction="none" duration={1400} delay={1100}>
-                  <div className="w-12 h-px bg-accent/50 mb-3" />
-                  <p className="font-mono uppercase text-primary-foreground/45 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">
-                    Built Properly.
-                  </p>
-                </RevealOnScroll>
-              </div>
-            </div>
-          </div>
-        </section>
 
-        {/* ─── PAUSE / PHILOSOPHY ──────────────────────────────── */}
-        <section className="relative py-[clamp(7rem,4.5rem+9vw,13rem)] bg-background">
-          <div className="hidden lg:block absolute top-0 bottom-0 left-1/2 w-px bg-foreground/[0.04]" />
-          <div className="max-w-5xl mx-auto px-[clamp(1.5rem,0.75rem+3vw,4rem)] text-center space-y-[clamp(2rem,1.25rem+2.5vw,3.5rem)]">
-            <RevealOnScroll direction="none" duration={1100}>
-              <p className="font-mono uppercase text-accent/45 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.5em]">
-                Premise
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" duration={1100} delay={150}>
-              <p className="font-serif italic text-foreground/75 leading-[1.25] tracking-[-0.015em] text-[clamp(1.5rem,1rem+2.2vw,2.85rem)]">
-                Recovery, grooming and daily care belong inside the stable —
-                not bolted to the side of it.
-              </p>
-            </RevealOnScroll>
-            <RevealLine className="mx-auto" width="w-10" delay={400} />
-            <RevealOnScroll direction="up" duration={1000} delay={500}>
-              <p className="font-sans font-light text-foreground/55 max-w-2xl mx-auto leading-[1.85] text-[clamp(0.8125rem,0.78rem+0.2vw,0.9375rem)]">
-                The Recovery Station is a dedicated wellness bay built into premium
-                stable areas — purpose-built for horse welfare, grooming, drying,
-                winter comfort and post-work recovery support.
-              </p>
-            </RevealOnScroll>
-          </div>
-        </section>
-
-        {chapters.map((c, i) => (
-          <ChapterHero
-            key={c.n}
-            number={c.n}
-            overline={c.overline}
-            title={c.title}
-            body={c.body}
-            image={c.image}
-            imageAlt={`${c.overline} — Peninsula Equine Recovery Station interior`}
-            align={c.align}
-            background={i % 2 === 0 ? "card" : "background"}
-            monogram="PE"
-          />
-        ))}
-
-        {/* ─── PE APP ──────────────────────────────────────────── */}
-        <section className="relative py-[clamp(6rem,4rem+8vw,12rem)] bg-card">
-          <div className="max-w-7xl mx-auto px-[clamp(1.5rem,0.75rem+3vw,4rem)] grid grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4rem)] items-center">
-            <div className="col-span-12 lg:col-span-5 space-y-[clamp(1.25rem,0.9rem+1.2vw,2rem)]">
-              <RevealOnScroll direction="up" duration={900}>
-                <p className="font-mono uppercase text-accent/55 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">
-                  PE App — Concept
-                </p>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" duration={1000} delay={150}>
-                <h2 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.02em] text-[clamp(1.65rem,1.1rem+2.2vw,2.65rem)]">
-                  The room, held in the hand.
-                </h2>
-              </RevealOnScroll>
-              <RevealLine width="w-8" delay={300} />
-              <RevealOnScroll direction="up" duration={1000} delay={400}>
-                <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[clamp(0.8125rem,0.78rem+0.2vw,0.9375rem)]">
-                  A concept interface for monitoring session time, temperature, lighting
-                  and usage history across every Recovery Station on the property —
-                  designed for the rider, the groom and the stable manager.
-                </p>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" duration={1000} delay={550}>
-                <p className="font-sans font-light italic text-foreground/35 leading-[1.7] text-[clamp(0.75rem,0.72rem+0.15vw,0.8125rem)] max-w-md">
-                  A comfort and care environment — not a medical treatment device.
-                </p>
-              </RevealOnScroll>
-            </div>
-            <div className="col-span-12 lg:col-span-7">
-              <RevealImage delay={100} duration={1200}>
-                <div className="relative aspect-[16/10] overflow-hidden lg:-mr-[3rem]">
-                  <img
-                    src={appImg}
-                    alt="PE Recovery Station app — concept interface for session, temperature and lighting"
-                    loading="lazy"
-                    width={1792}
-                    height={1024}
-                    className="absolute inset-0 w-full h-full object-cover img-feature"
-                  />
-                </div>
-              </RevealImage>
-            </div>
-          </div>
-        </section>
-
-        {/* ─── DETAILS GRID ────────────────────────────────────── */}
-        <section className="py-[clamp(6rem,4rem+8vw,12rem)] bg-background">
-          <div className="max-w-6xl mx-auto px-[clamp(1.5rem,0.75rem+3vw,4rem)]">
-            <RevealOnScroll direction="up" duration={900}>
-              <div className="mb-[clamp(3.5rem,2.25rem+5vw,6rem)] space-y-3 max-w-xl">
-                <p className="font-mono uppercase text-accent/45 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">
-                  Detail
-                </p>
-                <h3 className="font-serif text-foreground/85 leading-[1.1] tracking-[-0.02em] text-[clamp(1.5rem,1rem+2vw,2.4rem)]">
-                  Considered to the millimetre.
-                </h3>
-                <RevealLine width="w-8" delay={200} />
-              </div>
-            </RevealOnScroll>
-
-            <RevealImage delay={100} duration={1200}>
-              <div className="relative aspect-[16/10] overflow-hidden mb-[clamp(3rem,2rem+3vw,5rem)]">
-                <img
-                  src={detailsImg}
-                  alt="Peninsula Equine Recovery Station — close-up details: PE logo, infrared panel, drainage and tack hardware"
-                  loading="lazy"
-                  width={1792}
-                  height={1024}
-                  className="absolute inset-0 w-full h-full object-cover img-feature"
-                />
-              </div>
-            </RevealImage>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-foreground/[0.05]">
-              {details.map((p, i) => (
-                <RevealOnScroll key={p.k} direction="up" delay={i * 90}>
-                  <div className="group relative bg-background px-[clamp(1.5rem,1.1rem+1.5vw,2.25rem)] py-[clamp(2.25rem,1.5rem+3vw,3.75rem)] h-full">
-                    <span className="absolute top-0 left-0 h-px w-8 bg-accent/40 transition-all duration-[1100ms] ease-[cubic-bezier(0.45,0,0.15,1)] group-hover:w-20" />
-                    <p className="font-mono uppercase text-foreground/25 mb-[clamp(1rem,0.8rem+1vw,1.5rem)] text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.4em]">
-                      {p.k}
+                <RevealOnScroll direction="up" duration={1050} delay={180}>
+                  <div className="space-y-3">
+                    <p className="font-mono uppercase text-foreground/48 text-[clamp(0.62rem,0.56rem+0.18vw,0.72rem)] tracking-[0.45em]">
+                      Performance Recovery System
                     </p>
-                    <p className="font-serif text-foreground/90 leading-[1.15] tracking-[-0.02em] text-[clamp(1.25rem,1rem+1vw,1.65rem)] mb-4">
-                      {p.label}
-                    </p>
-                    <p className="font-sans font-light text-foreground/50 leading-[1.8] text-[clamp(0.8125rem,0.78rem+0.15vw,0.875rem)]">
-                      {p.body}
-                    </p>
+                    <h1 className="font-serif text-primary-foreground leading-[0.86] tracking-[0.08em] text-[clamp(3rem,1.9rem+6vw,7.6rem)]">
+                      LUMENARC
+                    </h1>
                   </div>
                 </RevealOnScroll>
-              ))}
+
+                <RevealLine width="w-14" delay={340} />
+
+                <RevealOnScroll direction="up" duration={1100} delay={420}>
+                  <p className="max-w-2xl font-serif italic text-primary-foreground/72 leading-[1.32] text-[clamp(1.12rem,0.96rem+0.8vw,1.75rem)]">
+                    A new standard is under construction.
+                  </p>
+                </RevealOnScroll>
+
+                <RevealOnScroll direction="up" duration={1100} delay={520}>
+                  <p className="max-w-2xl font-sans font-light text-primary-foreground/50 leading-[1.95] text-[clamp(0.84rem,0.8rem+0.2vw,0.98rem)]">
+                    A future Peninsula Equine division exploring intelligent equine recovery infrastructure — cinematic,
+                    architectural and quietly technical. In development. Features subject to refinement.
+                  </p>
+                </RevealOnScroll>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* ─── COMMISSION ──────────────────────────────────────── */}
-        <section className="py-[clamp(7rem,4.5rem+9vw,13rem)] bg-background">
-          <div className="max-w-3xl mx-auto px-[clamp(1.5rem,0.75rem+3vw,4rem)] text-center space-y-[clamp(2.5rem,1.5rem+3vw,3.5rem)]">
-            <RevealLine className="mx-auto" width="w-10" />
-            <RevealOnScroll direction="up" duration={900}>
-              <p className="font-mono uppercase text-accent/55 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.5em]">
-                Limited Commissions — 2026
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" duration={1000} delay={150}>
-              <p className="font-serif italic text-foreground/75 leading-[1.4] tracking-[-0.01em] text-[clamp(1.25rem,0.9rem+1.4vw,1.85rem)]">
-                The Recovery Station is commissioned, not configured. Each is sited
-                inside the stable, detailed to the property — by application only.
-              </p>
-            </RevealOnScroll>
+        <section className="relative overflow-hidden bg-card border-b border-accent/10">
+          <div className="absolute inset-0 pointer-events-none opacity-45 bg-[linear-gradient(180deg,transparent_0%,hsl(var(--accent)/0.05)_50%,transparent_100%)]" />
+          <div className="section-container relative z-10 py-[clamp(3rem,2.4rem+3vw,5rem)]">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+              <RevealOnScroll direction="up" duration={900}>
+                <div className="space-y-4 max-w-2xl">
+                  <p className="font-mono uppercase text-accent/55 text-[0.62rem] tracking-[0.42em]">
+                    Peninsula Equine — Product Direction
+                  </p>
+                  <h2 className="font-serif text-foreground/90 leading-[1.02] tracking-[0.01em] text-[clamp(1.7rem,1.2rem+2vw,2.8rem)]">
+                    Luxury equine construction, rethought as a future recovery system.
+                  </h2>
+                </div>
+              </RevealOnScroll>
 
-            <RevealOnScroll direction="none" duration={1200} delay={500}>
-              <p
-                className="font-mono uppercase italic text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.5em]"
-                style={{ color: "hsl(var(--muted-foreground) / 0.18)" }}
-              >
-                From Dirt to Dynasty
-              </p>
-            </RevealOnScroll>
+              <RevealOnScroll direction="up" duration={1000} delay={160}>
+                <p className="font-sans font-light text-foreground/48 leading-[1.9] text-[0.84rem] lg:max-w-md lg:justify-self-end">
+                  LumenArc is being positioned as a premium, blueprint-led product division rather than a standard service page — more institution than promotion, more architecture than gadgetry.
+                </p>
+              </RevealOnScroll>
+            </div>
+          </div>
+        </section>
 
-            <RevealOnScroll direction="up" delay={400}>
-              <div className="flex flex-col sm:flex-row gap-[clamp(1.75rem,1rem+2vw,3.5rem)] justify-center items-center pt-4">
-                <Link
-                  to="/contact"
-                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.4em]"
-                >
-                  <span className="w-6 h-px bg-accent/50 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
-                  Request Assessment
-                </Link>
-                <Link
-                  to="/gallery"
-                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/40 hover:text-foreground/80 transition-colors duration-500 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.4em]"
-                >
-                  Selected Work
-                  <span className="w-6 h-px bg-foreground/20 transition-all duration-700 group-hover:w-12 group-hover:bg-foreground/60" />
-                </Link>
-              </div>
-            </RevealOnScroll>
+        {chapters.map((chapter, index) => (
+          <LumenArcChapterSection key={chapter.number} {...chapter} align={index % 2 === 0 ? chapter.align ?? "left" : chapter.align ?? "right"} />
+        ))}
+
+        <section className="relative border-t border-accent/10 bg-card py-[clamp(5rem,3.5rem+6vw,8rem)]">
+          <div className="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(circle_at_50%_35%,hsl(var(--accent)/0.08),transparent_52%)]" />
+          <div className="section-container relative z-10">
+            <div className="mx-auto max-w-3xl text-center space-y-7">
+              <RevealOnScroll direction="up" duration={900}>
+                <p className="font-mono uppercase text-accent/55 text-[0.62rem] tracking-[0.5em]">
+                  Coming Soon — Future Concept
+                </p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" duration={1000} delay={120}>
+                <h2 className="font-serif text-foreground/90 leading-[1.02] tracking-[0.01em] text-[clamp(1.9rem,1.3rem+2.2vw,3rem)]">
+                  Built to support performance, comfort and the next era of Peninsula Equine environments.
+                </h2>
+              </RevealOnScroll>
+              <RevealLine className="mx-auto" width="w-12" delay={260} />
+              <RevealOnScroll direction="up" duration={1050} delay={320}>
+                <p className="mx-auto max-w-2xl font-sans font-light text-foreground/48 leading-[1.95] text-[0.86rem]">
+                  LumenArc remains in development. Imagery, controls and environmental modes shown here communicate design direction only and may evolve through refinement, prototyping and final specification.
+                </p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" duration={1100} delay={420}>
+                <div className="flex flex-col items-center justify-center gap-5 pt-4 sm:flex-row sm:gap-10">
+                  <Link
+                    to="/contact"
+                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[0.64rem] tracking-[0.42em]"
+                  >
+                    <span className="h-px w-8 bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
+                    Request Assessment
+                  </Link>
+                  <Link
+                    to="/field-notes"
+                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/42 hover:text-foreground/78 transition-colors duration-500 text-[0.64rem] tracking-[0.42em]"
+                  >
+                    Field Notes
+                    <span className="h-px w-8 bg-foreground/20 transition-all duration-700 group-hover:w-14 group-hover:bg-foreground/58" />
+                  </Link>
+                </div>
+              </RevealOnScroll>
+            </div>
           </div>
         </section>
       </article>
