@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://peninsulaequine.com.au/schemas/prerender-verify.json",
+  "title": "Prerender Verification Report",
+  "description": "Machine-readable output from the post-prerender head-tag verifier.",
+  "type": "object",
+  "required": [
+    "timestamp",
+    "siteOrigin",
+    "checked",
+    "passed",
+    "failed",
+    "allPassed",
+    "rerunCommand",
+    "routes"
+  ],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the report was generated."
+    },
+    "siteOrigin": {
+      "type": "string",
+      "format": "uri",
+      "description": "Canonical origin used for self-reference checks."
+    },
+    "checked": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of routes evaluated."
+    },
+    "passed": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of routes that passed every head-tag check."
+    },
+    "failed": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of routes with at least one head-tag failure."
+    },
+    "allPassed": {
+      "type": "boolean",
+      "description": "True when no failures were found across all checked routes."
+    },
+    "rerunCommand": {
+      "type": "string",
+      "description": "Shell command to re-verify only the routes that failed."
+    },
+    "routes": {
+      "type": "array",
+      "description": "Per-route results.",
+      "items": {
+        "type": "object",
+        "required": ["path", "file", "passed", "failures"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Route path (e.g. /about)."
+          },
+          "file": {
+            "type": "string",
+            "description": "Absolute path to the prerendered HTML file that was checked."
+          },
+          "passed": {
+            "type": "boolean",
+            "description": "True when this route had zero failures."
+          },
+          "failures": {
+            "type": "array",
+            "description": "List of head-tag failures for this route.",
+            "items": {
+              "type": "object",
+              "required": ["route", "check", "detail"],
+              "properties": {
+                "route": {
+                  "type": "string",
+                  "description": "Route path where the failure occurred."
+                },
+                "check": {
+                  "type": "string",
+                  "description": "Name of the check that failed (e.g. og:image, canonical)."
+                },
+                "detail": {
+                  "type": "string",
+                  "description": "Human-readable explanation of the failure."
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
