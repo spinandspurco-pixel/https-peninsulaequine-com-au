@@ -187,6 +187,16 @@ export default function About() {
               drainage plan and rural build is considered through the way
               horses and people actually use the space.
             </p>
+            <div className="mt-16 mx-auto max-w-xs relative overflow-hidden">
+              <img
+                src={ciroAcePortrait.url}
+                alt="Ciro and Ace — portrait at golden hour."
+                loading="lazy"
+                className="w-full aspect-[4/5] object-cover"
+                style={{ objectPosition: "50% 35%", filter: FILTER }}
+              />
+              <Vignette />
+            </div>
             <div className="mt-16 mx-auto w-px h-20 bg-foreground/10" />
           </div>
         </section>
