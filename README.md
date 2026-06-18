@@ -148,4 +148,44 @@ The report object must contain these top-level fields:
 }
 ```
 
+### Sample failure report
+
+A route with multiple failures looks like this. Each failure object carries `route` (the path), `check` (the rule that failed), and `detail` (human-readable explanation):
+
+```json
+{
+  "timestamp": "2026-06-18T09:45:30.000Z",
+  "siteOrigin": "https://peninsulaequine.com.au",
+  "checked": 1,
+  "passed": 0,
+  "failed": 1,
+  "allPassed": false,
+  "rerunCommand": "bun run build && bunx tsx scripts/verify-prerender.ts --only=\"/contact\"",
+  "routes": [
+    {
+      "path": "/contact",
+      "file": "/path/to/project/dist/contact/index.html",
+      "passed": false,
+      "failures": [
+        {
+          "route": "/contact",
+          "check": "og:image",
+          "detail": "expected \"https://peninsulaequine.com.au/assets/og-contact.jpg\", got \"\""
+        },
+        {
+          "route": "/contact",
+          "check": "twitter:image",
+          "detail": "missing twitter:image"
+        },
+        {
+          "route": "/contact",
+          "check": "canonical",
+          "detail": "expected \"https://peninsulaequine.com.au/contact\", got \"https://peninsulaequine.com.au/about\""
+        }
+      ]
+    }
+  ]
+}
+```
+
 If the report fails schema validation, the verifier logs the mismatch, records a `_report` level failure, and still exits non-zero so CI catches it.
