@@ -7,7 +7,11 @@ import heroDroneAsset from "@/assets/field-notes/covered-competition-arena-sunse
 import steelFrontAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
 import sitewideProgressAsset from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
 import redClayRooflineAsset from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
-const heroDrone = heroDroneAsset.url;
+import heroDrone640 from "@/assets/responsive/covered-competition-arena-sunset-puddles-640.webp.asset.json";
+import heroDrone1024 from "@/assets/responsive/covered-competition-arena-sunset-puddles-1024.webp.asset.json";
+import heroDrone1536 from "@/assets/responsive/covered-competition-arena-sunset-puddles-1536.webp.asset.json";
+const heroDrone = heroDrone1536.url;
+const heroDroneSrcSet = `${heroDrone640.url} 640w, ${heroDrone1024.url} 1024w, ${heroDrone1536.url} 1536w`;
 const steelFront = steelFrontAsset.url;
 const sitewideProgress = sitewideProgressAsset.url;
 const redClayRoofline = redClayRooflineAsset.url;
