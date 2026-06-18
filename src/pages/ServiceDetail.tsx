@@ -19,10 +19,14 @@ import peArenaGradingAsset from "@/assets/services-new/pe-arena-grading.png.asse
 import peFencingGateAsset from "@/assets/services-new/pe-fencing-gate-sunset.png.asset.json";
 import peGroundworksDozerAsset from "@/assets/services-new/pe-groundworks-dozer.png.asset.json";
 import peCustomRuralPavilionAsset from "@/assets/services-new/pe-custom-rural-pavilion.png.asset.json";
+import peCustomRuralFireplaceGrillAsset from "@/assets/services-new/pe-custom-rural-fireplace-grill.png.asset.json";
+import peCustomRuralFireplaceHatAsset from "@/assets/services-new/pe-custom-rural-fireplace-hat.png.asset.json";
 const peArenaGrading = peArenaGradingAsset.url;
 const peFencingGate = peFencingGateAsset.url;
 const peGroundworksDozer = peGroundworksDozerAsset.url;
 const peCustomRuralPavilion = peCustomRuralPavilionAsset.url;
+const peCustomRuralFireplaceGrill = peCustomRuralFireplaceGrillAsset.url;
+const peCustomRuralFireplaceHat = peCustomRuralFireplaceHatAsset.url;
 
 // Service card images
 import equitanaArena from "@/assets/equitana-arena-1.jpg";
@@ -65,8 +69,8 @@ const serviceImages: Record<string, string> = {
   "fencing": peFencingGate,
   "infrastructure": peGroundworksDozer,
   "round-pens": coveredArenaLit,
-  "renovations": peCustomRuralPavilion,
-  "full-facility": peCustomRuralPavilion,
+  "renovations": peCustomRuralFireplaceGrill,
+  "full-facility": peCustomRuralFireplaceGrill,
   "clinics-events": equitanaArena,
 };
 
@@ -104,17 +108,18 @@ const serviceGalleryImages: Record<string, { src: string; caption: string }[]> =
     { src: arenaSandPrep2, caption: "Surface grading" },
   ],
   "renovations": [
+    { src: peCustomRuralFireplaceHat, caption: "Fireplace detail in a custom rural build" },
     { src: peCustomRuralPavilion, caption: "Custom rural pavilion" },
     { src: mainRidgeCiroWoodwork, caption: "Custom woodwork restoration" },
     { src: mainRidgeCiroWoodwork2, caption: "Timber detail" },
     { src: mainRidgeInterior, caption: "Renovated interior" },
   ],
   "full-facility": [
+    { src: peCustomRuralFireplaceHat, caption: "Crafted fireplace and material detail" },
     { src: peCustomRuralPavilion, caption: "Bespoke rural entertaining pavilion" },
     { src: mainRidgeSitePrep, caption: "Full facility build" },
     { src: mainRidgeFinishedInterior1, caption: "Completed interior" },
     { src: mainRidgeFinishedInterior2, caption: "Interior detail" },
-    { src: coveredArenaLit, caption: "Arena at dusk" },
   ],
   "clinics-events": [
     { src: equitanaArena, caption: "Competition arena" },
