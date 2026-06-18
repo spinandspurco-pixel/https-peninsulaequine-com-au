@@ -107,7 +107,7 @@ export function RouteCanonical() {
 
     const match = ROUTE_IMAGES[normalised];
     const imagePath = match?.image ?? DEFAULT_OG_IMAGE;
-    const imageAlt = match?.alt ?? "Peninsula Equine";
+    const imageAlt = match?.alt ?? DEFAULT_OG_ALT;
     const imageUrl = `${SITE_ORIGIN}${imagePath}`;
 
     upsertMeta('meta[property="og:image"]', "property", "og:image", imageUrl);
