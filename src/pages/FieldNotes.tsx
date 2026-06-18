@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 
-import heroDrone from "@/assets/current-arena/covered-arena-drone-hero.png.asset.json";
-import steelFront from "@/assets/current-arena/covered-arena-steel-front.png.asset.json";
-import sitewideProgress from "@/assets/current-arena/covered-arena-sitewide-progress.png.asset.json";
-import redClayRoofline from "@/assets/current-arena/covered-arena-red-clay-roofline.png.asset.json";
+import heroDrone from "@/assets/covered-arena-finished-lit.jpg";
+import steelFront from "@/assets/steel-shed-dramatic.webp";
+import sitewideProgress from "@/assets/covered-arena-black-exterior.jpg";
+import redClayRoofline from "@/assets/main-ridge-arena-grading.jpg";
 
 export default function FieldNotes() {
   useEffect(() => {
