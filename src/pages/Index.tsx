@@ -11,6 +11,8 @@ import lumenArcCanopy from "@/assets/lumenarc/canopy.asset.json";
 import pavilionFireplaceDetail from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
 import aberdeenHero from "@/assets/aberdeen/hero-entrance-twilight.png.asset.json";
 import aberdeenArena from "@/assets/aberdeen/arena-dramatic-light.png.asset.json";
+import steelFrontAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
+const steelFront = steelFrontAsset.url;
 
 // Responsive webp variants for srcset (generated at 640/1024/1536w)
 import slidingStop640 from "@/assets/responsive/sliding-stop-hero-640.webp.asset.json";
