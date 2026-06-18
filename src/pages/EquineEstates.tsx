@@ -5,11 +5,20 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import heroAsset from "@/assets/services-new/pe-estate-aerial-masterplan.png.asset.json";
 const heroImg = heroAsset.url;
 
+/**
+ * Whole-Property Planning.
+ *
+ * Served at /equine-estates for backward compatibility. This is a concept /
+ * planning section, NOT a standalone build category, so it is intentionally
+ * absent from the primary Services dropdown.
+ */
+
 const pillars = [
-  { k: "01", label: "Masterplanning", body: "Land, water, light, movement. The estate is resolved on paper before a single post is sunk." },
-  { k: "02", label: "Single Authorship", body: "Arena, stables, recovery, fencing, landscape — designed and delivered as one continuous gesture." },
-  { k: "03", label: "Built for Generations", body: "Materials and detailing chosen to compound in value, not depreciate to it." },
+  { k: "01", label: "Reading the Land", body: "Slope, water, prevailing wind, sun arc. Every later decision descends from this first reading." },
+  { k: "02", label: "One Continuous Brief", body: "Arena, stables, access, drainage, recovery and fencing — resolved together, not stitched after the fact." },
+  { k: "03", label: "Built for Generations", body: "Materials and detailing chosen to compound in value over thirty years of daily use." },
 ];
+
 
 export default function EquineEstates() {
   return (
