@@ -221,6 +221,7 @@ function LumenArcChapterSection({
 }
 
 export default function RecoveryStation() {
+  const [briefingOpen, setBriefingOpen] = useState(false);
   return (
     <Layout>
       <LumenArcEntrance />
