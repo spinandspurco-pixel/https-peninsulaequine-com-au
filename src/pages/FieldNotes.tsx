@@ -4,7 +4,6 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine, RevealImage } from "@/components/RevealOnScroll";
 
 // Editorial imagery sourced from existing project library.
-import heroImg from "@/assets/main-ridge-timber.jpg";
 import mrFrame from "@/assets/main-ridge-barn-frame.jpg";
 import mrBrick from "@/assets/main-ridge-brickwork.jpg";
 import mrTimber from "@/assets/main-ridge-ciro-woodwork-1.jpg";
@@ -17,6 +16,20 @@ import mrInterior2 from "@/assets/main-ridge-finished-interior-2.jpg";
 import aberdeenExt from "@/assets/aberdeen-exterior.jpg";
 import arenaPrep from "@/assets/arena-sand-prep-1.jpg";
 import coveredArena from "@/assets/covered-arena-black-exterior.jpg";
+
+// Latest Main Ridge Pavilion photography (Nov 2026).
+import mrCustomTableAsset from "@/assets/main-ridge/mr-custom-table.png.asset.json";
+import mrPendantBeamsAsset from "@/assets/main-ridge/mr-pendant-beams.png.asset.json";
+import mrParrillaWideAsset from "@/assets/main-ridge/mr-parrilla-wide.png.asset.json";
+import mrBeamDetailAsset from "@/assets/main-ridge/mr-beam-detail.png.asset.json";
+import mrParrillaGrillAsset from "@/assets/main-ridge/mr-parrilla-grill.png.asset.json";
+
+const mrCustomTable = mrCustomTableAsset.url;
+const mrPendantBeams = mrPendantBeamsAsset.url;
+const mrParrillaWide = mrParrillaWideAsset.url;
+const mrBeamDetail = mrBeamDetailAsset.url;
+const mrParrillaGrill = mrParrillaGrillAsset.url;
+const heroImg = mrParrillaWide;
 
 type Status = "In Progress" | "Completed";
 type Category =
