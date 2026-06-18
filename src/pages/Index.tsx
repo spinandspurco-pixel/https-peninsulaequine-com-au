@@ -102,7 +102,9 @@ export default function Index() {
         <div className="type-architectural">
           <section className="relative min-h-[100dvh] overflow-hidden flex items-end">
             <img
-              src={slidingStopHero.url}
+              src={slidingStop1536.url}
+              srcSet={slidingStopSrcSet}
+              sizes="100vw"
               alt="Sliding stop horse throwing warm arena dirt through late light"
               className="absolute inset-0 w-full h-full object-cover"
               width={1920}
