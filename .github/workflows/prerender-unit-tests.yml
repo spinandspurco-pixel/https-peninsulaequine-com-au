@@ -46,12 +46,19 @@ jobs:
 
       - name: Cache Bun dependencies
         if: matrix.runtime == 'bun'
+        id: bun-cache
         uses: actions/cache@v4
         with:
           path: ~/.bun/install/cache
           key: ${{ runner.os }}-bun-${{ hashFiles('bun.lockb') }}
           restore-keys: |
             ${{ runner.os }}-bun-
+
+      - name: Report Bun cache status
+        if: matrix.runtime == 'bun'
+        run: |
+          echo "Bun cache hit: ${{ steps.bun-cache.outputs.cache-hit }}"
+          echo "Bun cache restore key: ${{ runner.os }}-bun-${{ hashFiles('bun.lockb') }}"
 
       - name: Setup Node
         if: matrix.runtime == 'node'
