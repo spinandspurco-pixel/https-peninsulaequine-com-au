@@ -8,9 +8,7 @@ import { LumenArcBriefingDialog } from "@/components/lumenarc/LumenArcBriefingDi
 import comingSoonAsset from "@/assets/lumenarc/coming-soon.asset.json";
 import canopyAsset from "@/assets/lumenarc/canopy.asset.json";
 import controlColumnAsset from "@/assets/lumenarc/control-column.asset.json";
-import inUseAsset from "@/assets/lumenarc/in-use.asset.json";
 import appAsset from "@/assets/lumenarc/app.asset.json";
-import thermalIntelligenceAsset from "@/assets/lumenarc/thermal-intelligence.asset.json";
 import recoveryMistAsset from "@/assets/lumenarc/recovery-mist.asset.json";
 import wellnessPrecinctAsset from "@/assets/lumenarc/wellness-precinct.asset.json";
 
@@ -26,92 +24,71 @@ type LumenArcChapter = {
   disclaimer?: string;
 };
 
+// Five chapters. Fewer, stronger, more breathing room.
+// Luxury reveals less, not more.
 const chapters: LumenArcChapter[] = [
   {
-    number: "02",
-    label: "Infrared Therapy Canopy",
-    title: "Targeted warmth, held within an architectural canopy.",
+    number: "01",
+    label: "The Pavilion",
+    title: "An architectural canopy built around the horse.",
     body:
-      "A future concept canopy designed to support warm-up, post-work comfort and quieter recovery moments through directed infrared heat, controlled airflow and a deliberately open equine-safe form.",
-    notes: ["Targeted infrared heat", "Optimal airflow", "Engineered performance"],
+      "Directed infrared, tempered airflow and equine-safe geometry resolved into one quiet structure — engineered for warm-up, post-work comfort and everyday use in real yards.",
+    notes: ["Infrared canopy", "Open-air safety", "Engineered for daily use"],
     image: canopyAsset.url,
     alt: "LumenArc infrared canopy concept with horse standing beneath illuminated recovery canopy in a moody stable courtyard",
     align: "left",
-    disclaimer: "Future concept. Features subject to refinement during design development.",
+    disclaimer: "Future concept. Designed to support comfort and routine. Not a medical device.",
   },
   {
-    number: "03",
-    label: "Intelligent Control Column",
-    title: "Real-time oversight, resolved into a single physical touchpoint.",
+    number: "02",
+    label: "The Intelligence",
+    title: "Oversight resolved into a single architectural touchpoint.",
     body:
-      "The control column is conceived as the operational spine of the system — bringing session timing, environmental settings, monitoring prompts and layered safety controls into one architectural object rather than scattered equipment.",
-    notes: ["Session control", "Recovery monitoring", "Safety systems"],
+      "The control column consolidates session timing, thermal mapping and safety logic into one object — replacing scattered equipment with a deliberate, readable instrument.",
+    notes: ["Session control", "Thermal mapping", "Layered safety"],
     image: controlColumnAsset.url,
     alt: "LumenArc intelligent control column concept beside horse recovery canopy with illuminated controls and safety hardware",
     align: "right",
-    disclaimer: "Interface and monitoring views shown as concept visuals only, in development.",
+    disclaimer: "Interface and monitoring views shown as concept visuals in development.",
   },
   {
-    number: "04",
-    label: "In Use",
-    title: "Designed for real horses, real yards and everyday use.",
+    number: "03",
+    label: "The Companion",
+    title: "A quieter digital extension of the system.",
     body:
-      "Open-air geometry, non-slip underfoot conditions, integrated drainage and tempered airflow shape a more practical recovery environment — designed to support calm handling, cleaner circulation and equine comfort without clinical character.",
-    notes: ["Open-air safety", "Non-slip flooring", "Drainage + airflow"],
-    image: inUseAsset.url,
-    alt: "Horse beneath the LumenArc recovery canopy in a premium stable courtyard at night",
-    align: "left",
-    disclaimer: "Designed to support comfort and practical post-work routines. Not presented as a medical device.",
-  },
-  {
-    number: "05",
-    label: "Future Control App",
-    title: "Connected oversight, carried with the rider or stable manager.",
-    body:
-      "A future app layer is being explored to support horse profiles, session controls, usage history and operational visibility across the broader property — extending the architectural system into a quieter digital companion.",
-    notes: ["Horse profiles", "Session controls", "Recovery insights"],
+      "A future app layer carries horse profiles, session controls and usage history with the rider or stable manager — extending the architecture without intruding on it.",
+    notes: ["Horse profiles", "Session controls", "Usage history"],
     image: appAsset.url,
     alt: "LumenArc mobile control app concept shown in hand with illuminated recovery canopy in the background",
-    align: "right",
+    align: "left",
     disclaimer: "App experience shown as a future concept. Features subject to refinement.",
   },
   {
-    number: "06",
-    label: "Thermal Intelligence",
-    title: "A smarter visual read of warmth, use and recovery conditions.",
+    number: "04",
+    label: "Recovery Modes",
+    title: "Conditions tuned for season, work and quieter moments.",
     body:
-      "Thermal mapping and session data are being developed as decision-support layers — intended to help owners and managers better understand heat distribution, comfort settings and repeatable recovery routines without overclaiming clinical outcomes.",
-    notes: ["Thermal mapping", "Data-led adjustment", "Monitoring support"],
-    image: thermalIntelligenceAsset.url,
-    alt: "LumenArc thermal intelligence concept showing horse heat-map overlay beneath recovery canopy",
-    align: "left",
-    disclaimer: "Designed to support monitoring and adjustment only. No diagnostic, treatment or cure claims are made.",
-  },
-  {
-    number: "07",
-    label: "Recovery Mist Mode",
-    title: "Cool-down support for summer, post-work reset and quieter comfort.",
-    body:
-      "Recovery Mist Mode is being studied as a lighter environmental setting within the LumenArc system — designed to support cool-down comfort, summer usability and post-work reset through fine misting and controlled ambient conditions.",
-    notes: ["Summer mode", "Post-work recovery", "Comfort support"],
+      "Mist, cooling, air quality and further environmental modes are being developed as lighter settings inside the same canopy — supporting summer cool-down, post-work reset and future recovery systems.",
+    notes: ["Recovery mist", "Cooling + air quality", "Future modes"],
     image: recoveryMistAsset.url,
     alt: "LumenArc recovery mist mode concept with horse beneath illuminated canopy and fine cooling mist",
     align: "right",
-    disclaimer: "Future concept in development. Features and operating modes subject to refinement.",
+    disclaimer: "Operating modes in development. No diagnostic or treatment claims are made.",
   },
   {
-    number: "08",
-    label: "Wellness Precinct",
-    title: "A future Peninsula Equine precinct built around recovery, care and place.",
+    number: "05",
+    label: "The Precinct",
+    title: "A future Peninsula Equine ecosystem, built around recovery.",
     body:
-      "Beyond a single structure, LumenArc is positioned as a coming-soon division inside a wider facility ecosystem — where recovery, landscape, circulation, infrastructure and digital oversight are conceived as one premium equine environment.",
-    notes: ["Facility ecosystem", "Premium infrastructure", "Future-focused planning"],
+      "Beyond a single structure, LumenArc sits inside a wider facility direction — where landscape, infrastructure, circulation and oversight are conceived as one premium equine environment.",
+    notes: ["Facility ecosystem", "Premium infrastructure", "Long-horizon planning"],
     image: wellnessPrecinctAsset.url,
     alt: "LumenArc wellness precinct concept showing broader premium equine facility ecosystem at night",
     align: "left",
-    disclaimer: "Precinct visual shown as future direction only. Elements remain in development and subject to refinement.",
+    disclaimer: "Precinct visual shown as future direction only. Elements remain in development.",
   },
 ];
+
 
 function LumenArcChapterSection({
   number,
