@@ -92,11 +92,12 @@ export function BrandIntro({ onComplete }: { onComplete?: () => void }) {
     at(500, () => setPhase("mark"));
     at(1100, () => setPhase("title"));
     at(1700, () => setPhase("tag"));
-    at(2600, () => setPhase("dissolve"));
-    at(3100, finish);
+    at(2400, () => setPhase("dissolve"));
+    at(3250, finish);
 
     return () => timers.forEach(clearTimeout);
   }, [initialPhase, onComplete, finish]);
+
 
   if (phase === "done") return null;
 
@@ -113,9 +114,12 @@ export function BrandIntro({ onComplete }: { onComplete?: () => void }) {
       style={{
         background: "#08070a",
         opacity: phase === "dissolve" ? 0 : 1,
-        transition: `opacity 700ms ${EASE}`,
+        pointerEvents: phase === "dissolve" ? "none" : "auto",
+        transition: `opacity 800ms ${EASE}`,
+        willChange: "opacity",
       }}
     >
+
       {/* Local keyframes scoped to the intro */}
       <style>{`
         @keyframes peDraft { to { stroke-dashoffset: 0; } }
