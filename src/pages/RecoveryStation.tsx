@@ -231,7 +231,7 @@ export default function RecoveryStation() {
             </RevealOnScroll>
             <span
               aria-hidden
-              className="block w-px h-10 bg-gradient-to-b from-accent/55 via-accent/20 to-transparent animate-[scrollLine_2.4s_cubic-bezier(0.45,0,0.15,1)_infinite]"
+              className="block w-px h-10 bg-gradient-to-b from-accent/55 via-accent/20 to-transparent animate-scroll-line"
             />
           </div>
         </section>
