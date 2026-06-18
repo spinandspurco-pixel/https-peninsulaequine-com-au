@@ -4,6 +4,8 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { BlueprintContinuity } from "@/components/BlueprintContinuity";
 import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
+import { Button } from "@/components/ui/button";
+import { useIntake } from "@/hooks/useIntake";
 
 // Locked cinematic image system — one correct visual per service.
 // Outdoor-arena-first positioning is removed. Lead with covered & indoor.
@@ -93,6 +95,7 @@ const SERVICES: Service[] = [
 ];
 
 export default function Services() {
+  const { open } = useIntake();
   useEffect(() => {
     document.title = "Capabilities | Peninsula Equine";
     return () => { document.title = "Peninsula Equine"; };
@@ -247,6 +250,18 @@ export default function Services() {
                       <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
                       Read the Approach
                     </Link>
+                  </RevealOnScroll>
+                  <RevealOnScroll direction="up" delay={480}>
+                    <div className="pt-8">
+                      <Button
+                        variant="gold"
+                        size="lg"
+                        onClick={open}
+                        className="btn-hover-lift"
+                      >
+                        Request a Consult
+                      </Button>
+                    </div>
                   </RevealOnScroll>
                 </div>
               </div>

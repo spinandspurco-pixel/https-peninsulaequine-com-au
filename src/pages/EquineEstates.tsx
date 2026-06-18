@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { Button } from "@/components/ui/button";
+import { useIntake } from "@/hooks/useIntake";
 // Cinematic estate-scale hero — aerial masterplan at dusk
 import heroAsset from "@/assets/services-new/pe-estate-aerial-masterplan.png.asset.json";
 const heroImg = heroAsset.url;
@@ -21,6 +23,7 @@ const pillars = [
 
 
 export default function EquineEstates() {
+  const { open } = useIntake();
   return (
     <Layout>
       <article className="bg-background text-foreground type-architectural">
@@ -92,7 +95,17 @@ export default function EquineEstates() {
                 Estate-scale work is selective by definition.
               </p>
             </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={400}>
+            <RevealOnScroll direction="up" delay={350}>
+              <Button
+                variant="gold"
+                size="lg"
+                onClick={open}
+                className="btn-hover-lift"
+              >
+                Request a Consult
+              </Button>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={500}>
               <Link to="/contact" className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.4em]">
                 <span className="w-6 h-px bg-accent/50 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
                 Apply to Build
