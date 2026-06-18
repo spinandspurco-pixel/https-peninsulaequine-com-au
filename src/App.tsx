@@ -71,6 +71,8 @@ const ClientPortalLogin = lazy(() => import("./pages/ClientPortalLogin"));
 const FieldNotes = lazy(() => import("./pages/FieldNotes"));
 const AberdeenFarmFieldNote = lazy(() => import("./pages/AberdeenFarmFieldNote"));
 const MainRidgePavilion = lazy(() => import("./pages/MainRidgePavilion"));
+const Aberdeen = lazy(() => import("./pages/Aberdeen"));
+
 
 const queryClient = new QueryClient();
 
@@ -146,13 +148,20 @@ function AppContent() {
           <Route path="/portal/login" element={<ClientPortalLogin />} />
           <Route path="/field-notes" element={<FieldNotes />} />
           <Route path="/field-notes/aberdeen-farm" element={<AberdeenFarmFieldNote />} />
+          <Route path="/selected-works/aberdeen" element={<Aberdeen />} />
           <Route path="/selected-works/main-ridge-pavilion" element={<MainRidgePavilion />} />
+          {/* Legacy Aberdeen routes — redirect to canonical project page */}
+          <Route path="/projects/aberdeen" element={<Navigate to="/selected-works/aberdeen" replace />} />
+          <Route path="/project/aberdeen" element={<Navigate to="/selected-works/aberdeen" replace />} />
+          <Route path="/selected-works/aberdeen-farm" element={<Navigate to="/selected-works/aberdeen" replace />} />
+          <Route path="/aberdeen" element={<Navigate to="/selected-works/aberdeen" replace />} />
           {/* Legacy Main Ridge routes — redirect to canonical pavilion page */}
           <Route path="/projects/main-ridge-pavilion" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
           <Route path="/projects/main-ridge" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
           <Route path="/project/main-ridge" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
           <Route path="/selected-works/main-ridge" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
           <Route path="/main-ridge" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
+
 
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
