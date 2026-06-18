@@ -138,7 +138,7 @@ function LumenArcChapterSection({
                 loading="lazy"
                 width={1400}
                 height={1000}
-                className="absolute inset-0 h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full object-cover image-bleed"
                 style={{ filter: "brightness(0.86) contrast(1.08) saturate(0.82)" }}
               />
               {/* Edge fades — dissolve image into the page rather than sit as a card */}
@@ -222,7 +222,7 @@ export default function RecoveryStation() {
   return (
     <Layout>
       <LumenArcEntrance />
-      <article className="relative bg-background text-foreground">
+      <article className="relative bg-background text-foreground type-architectural">
         {/* Continuous drafting layer — binds every section into one architectural plate */}
         <BlueprintContinuity />
 

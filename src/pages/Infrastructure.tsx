@@ -16,7 +16,7 @@ const items = [
 export default function InfrastructurePage() {
   return (
     <Layout>
-      <article className="bg-background text-foreground">
+      <article className="bg-background text-foreground type-architectural">
         <section className="relative h-[78vh] min-h-[520px] overflow-hidden">
           <img src={heroImg} alt="Engineered site works and infrastructure" width={1920} height={1080} className="absolute inset-0 w-full h-full object-cover img-header" />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/45 via-primary/15 to-primary/80" />

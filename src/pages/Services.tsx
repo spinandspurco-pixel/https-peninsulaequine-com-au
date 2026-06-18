@@ -22,7 +22,7 @@ export default function Services() {
   return (
     <Layout>
       <ServicesSchemaMarkup />
-      <article className="relative">
+      <article className="relative type-architectural">
         <BlueprintContinuity />
 
       {/* ═══ HERO ═══════════════════════════════════════ */}
@@ -79,7 +79,7 @@ export default function Services() {
                 </div>
                 <div className="lg:col-span-8">
                   <div className="relative overflow-hidden aspect-[16/9]">
-                    <img src={imgFullBuild} alt="Completed equestrian estate" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }} />
+                    <img src={imgFullBuild} alt="Completed equestrian estate" className="w-full h-full object-cover image-bleed" loading="lazy" style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }} />
                     <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, #0a0a0a 100%)" }} />
                   </div>
                 </div>
@@ -117,7 +117,7 @@ export default function Services() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
                 <div className="lg:col-span-7 order-2 lg:order-1">
                   <div className="relative overflow-hidden aspect-[16/9]">
-                    <img src={imgEvent} alt="Event ground deployment at scale" className="w-full h-full object-cover" loading="lazy" style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }} />
+                    <img src={imgEvent} alt="Event ground deployment at scale" className="w-full h-full object-cover image-bleed" loading="lazy" style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }} />
                     <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, #0a0a0a 100%)" }} />
                   </div>
                 </div>
@@ -164,15 +164,12 @@ export default function Services() {
             <RevealOnScroll direction="up" delay={150}>
               <Link
                 to="/contact"
-                className="inline-block px-12 py-4 border text-[11px] font-mono uppercase tracking-[0.3em] hover:bg-accent/[0.03] transition-colors duration-500"
-                style={{
-                  borderColor: "hsl(var(--accent) / 0.08)",
-                  color: "hsl(var(--foreground) / 0.35)",
-                }}
+                className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
               >
-                Apply to Build →
+                <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
+                Apply to Build
               </Link>
-              <p className="mt-4 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/10">
+              <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.4em] text-foreground/20">
                 Selected projects only.
               </p>
             </RevealOnScroll>

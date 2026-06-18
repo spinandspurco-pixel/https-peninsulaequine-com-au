@@ -205,6 +205,7 @@ export default function Contact() {
 
   return (
     <Layout>
+      <div className="type-architectural">
       {/* ═══ HERO ═══════════════════════════════════════ */}
       <section className="relative pt-40 sm:pt-48 pb-24 sm:pb-32 overflow-hidden">
         <div className="absolute inset-0 bg-background" />
@@ -624,6 +625,7 @@ export default function Contact() {
           </div>
         </div>
       </section>
+      </div>
     </Layout>
   );
 }

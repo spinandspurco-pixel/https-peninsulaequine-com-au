@@ -74,6 +74,7 @@ export default function HQ() {
 
   return (
     <Layout>
+      <div className="type-architectural">
       {/* ── Hero ─────────────────────────────────────── */}
       <BlueprintScene
         as="section"
@@ -315,6 +316,7 @@ export default function HQ() {
           </RevealOnScroll>
         </div>
       </section>
+      </div>
     </Layout>
   );
 }

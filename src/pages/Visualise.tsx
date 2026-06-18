@@ -25,6 +25,7 @@ const PILLARS = [
 export default function Visualise() {
   return (
     <Layout>
+      <div className="type-architectural">
       {/* ═══ 1. HERO ═══════════════════════════════════ */}
       <BlueprintScene
         as="section"
@@ -147,6 +148,7 @@ export default function Visualise() {
           </p>
         </div>
       </section>
+      </div>
     </Layout>
   );
 }

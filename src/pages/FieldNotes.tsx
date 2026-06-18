@@ -185,7 +185,7 @@ export default function FieldNotes() {
 
   return (
     <Layout>
-      <article className="bg-background text-foreground">
+      <article className="bg-background text-foreground type-architectural">
         {/* ─── HERO ─────────────────────────────────────────── */}
         <section className="relative h-[92vh] min-h-[620px] overflow-hidden">
           <img
