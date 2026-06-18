@@ -197,7 +197,7 @@ export default function RecoveryStation() {
   return (
     <Layout>
       <article className="bg-background text-foreground">
-        <section className="relative h-[100svh] min-h-[640px] overflow-hidden border-b border-accent/12 bg-card grain-hero">
+        <section className="relative h-[85svh] md:h-[100svh] overflow-hidden border-b border-accent/12 bg-card">
           <img
             src={comingSoonAsset.url}
             alt="LumenArc coming soon teaser visual — premium equine recovery canopy concept with blueprint-led detailing"
@@ -208,65 +208,10 @@ export default function RecoveryStation() {
             decoding="async"
             fetchPriority="high"
           />
-          {/* Edge vignettes only — let the artwork breathe through the centre */}
-          <div className="absolute inset-x-0 top-0 h-40 bg-[linear-gradient(180deg,hsl(var(--background)/0.55)_0%,transparent_100%)]" />
-          <div className="absolute inset-x-0 bottom-0 h-56 bg-[linear-gradient(0deg,hsl(var(--background)/0.78)_0%,transparent_100%)]" />
-          <HeroAtmosphere />
-
-          {/* Bronze section index — top left */}
-          <div className="absolute left-[clamp(1.5rem,0.75rem+3vw,4rem)] top-[clamp(6.5rem,5rem+5vw,9rem)] z-10">
-            <RevealOnScroll direction="none" duration={1100} delay={300}>
-              <p className="font-mono uppercase text-accent/70 text-[clamp(0.62rem,0.58rem+0.2vw,0.74rem)] tracking-[0.55em]">
-                01 — Coming Soon
-              </p>
-            </RevealOnScroll>
-          </div>
-
-          {/* Scroll indicator — bottom centre */}
-          <div className="absolute bottom-[clamp(2rem,1.5rem+1.5vw,3.25rem)] left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-3">
-            <RevealOnScroll direction="none" duration={1100} delay={600}>
-              <span className="font-mono uppercase text-primary-foreground/40 text-[0.6rem] tracking-[0.5em]">
-                Scroll
-              </span>
-            </RevealOnScroll>
-            <span
-              aria-hidden
-              className="block w-px h-10 bg-gradient-to-b from-accent/55 via-accent/20 to-transparent animate-scroll-line"
-            />
-          </div>
-        </section>
-
-        <section className="relative overflow-hidden bg-card border-b border-accent/10">
-          <div className="absolute inset-0 pointer-events-none opacity-45 bg-[linear-gradient(180deg,transparent_0%,hsl(var(--accent)/0.05)_50%,transparent_100%)]" />
-          <div className="section-container relative z-10 py-[clamp(4.5rem,3rem+5vw,8rem)]">
-            <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
-              <div className="space-y-6 max-w-2xl">
-                <RevealOnScroll direction="up" duration={900}>
-                  <p className="font-mono uppercase text-accent/60 text-[0.62rem] tracking-[0.5em]">
-                    Performance Recovery System
-                  </p>
-                </RevealOnScroll>
-                <RevealOnScroll direction="up" duration={1000} delay={140}>
-                  <h1 className="font-serif text-foreground leading-[0.92] tracking-[0.06em] text-[clamp(2.4rem,1.6rem+3.2vw,4.4rem)]">
-                    LUMENARC
-                  </h1>
-                </RevealOnScroll>
-                <RevealLine width="w-12" delay={300} />
-                <RevealOnScroll direction="up" duration={1050} delay={360}>
-                  <p className="font-serif italic text-foreground/65 leading-[1.4] text-[clamp(1rem,0.9rem+0.6vw,1.4rem)] max-w-xl">
-                    A new standard is under construction.
-                  </p>
-                </RevealOnScroll>
-              </div>
-
-              <RevealOnScroll direction="up" duration={1000} delay={220}>
-                <p className="font-sans font-light text-foreground/52 leading-[1.9] text-[0.86rem] lg:max-w-md lg:justify-self-end">
-                  A future Peninsula Equine division exploring intelligent equine recovery infrastructure — cinematic,
-                  architectural and quietly technical. In development. Features subject to refinement.
-                </p>
-              </RevealOnScroll>
-            </div>
-          </div>
+          {/* Subtle top gradient for navigation readability */}
+          <div className="absolute inset-x-0 top-0 h-32 bg-[linear-gradient(180deg,hsl(var(--background)/0.45)_0%,transparent_100%)]" />
+          {/* Subtle bottom gradient for transition into next section */}
+          <div className="absolute inset-x-0 bottom-0 h-48 bg-[linear-gradient(0deg,hsl(var(--background)/0.65)_0%,transparent_100%)]" />
         </section>
 
         {chapters.map((chapter, index) => (
