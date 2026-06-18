@@ -210,8 +210,8 @@ export default function About() {
           body="Good equine infrastructure is not just about how it looks. It is about flow, footing, safety, access, shelter, drainage, maintenance and the small decisions that make a property easier to use every day."
           src={ciroAceQuiet.url}
           alt="Ciro and Ace — a quiet moment, head to head."
-          aspect="aspect-[4/5]"
-          crop="50% 40%"
+          aspect="aspect-[4/5] md:aspect-[5/6]"
+          crop="object-[55%_30%] sm:object-[52%_34%] md:object-[50%_38%]"
         />
 
         {/* ═══ WE RIDE THE GROUND WE BUILD ═══════════════════ */}
