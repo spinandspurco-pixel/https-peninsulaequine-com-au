@@ -440,10 +440,10 @@ export default function Index() {
             <div className="col-span-12 lg:col-span-7">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-5 items-start">
                 <RevealOnScroll direction="up" duration={1200}>
-                  <div className="md:col-span-7 relative aspect-[4/5] overflow-hidden rounded-sm">
+                  <div className="md:col-span-8 relative aspect-[4/5] overflow-hidden rounded-sm">
                     <img
                       src={ciroAceCloseup.url}
-                      alt="Quiet close-up of Ciro with Ace in warm stable light"
+                      alt="Quiet moment with horse and horseman in warm stable light"
                       loading="lazy"
                       className="absolute inset-0 w-full h-full object-cover"
                       style={{
@@ -455,38 +455,21 @@ export default function Index() {
                   </div>
                 </RevealOnScroll>
 
-                <div className="md:col-span-5 space-y-4 md:pt-8">
-                  <RevealOnScroll direction="up" duration={1050} delay={120}>
-                    <div className="relative aspect-[4/5] overflow-hidden rounded-sm">
-                      <img
-                        src={ciroAceDetail.url}
-                        alt="Close detail of Peninsula Equine horseman and horse connection in warm light"
-                        loading="lazy"
-                        className="absolute inset-0 w-full h-full object-cover"
-                        style={{
-                          objectPosition: "50% 42%",
-                          filter: "brightness(0.82) contrast(1.08) saturate(0.8)",
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-card/35 via-transparent to-transparent" />
-                    </div>
-                  </RevealOnScroll>
-                  <RevealOnScroll direction="up" duration={1050} delay={220}>
-                    <div className="relative aspect-[5/6] overflow-hidden rounded-sm">
-                      <img
-                        src={ciroAceWalk.url}
-                        alt="Ciro walking with Ace through the arena in dust-filled warm light"
-                        loading="lazy"
-                        className="absolute inset-0 w-full h-full object-cover"
-                        style={{
-                          objectPosition: "52% 35%",
-                          filter: "brightness(0.78) contrast(1.08) saturate(0.78)",
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-card/45 via-transparent to-transparent" />
-                    </div>
-                  </RevealOnScroll>
-                </div>
+                <RevealOnScroll direction="up" duration={1050} delay={180}>
+                  <div className="md:col-span-4 relative aspect-[4/5] overflow-hidden rounded-sm md:mt-16">
+                    <img
+                      src={ciroAceDetail.url}
+                      alt="Close detail — hand, rein and horse in warm light"
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover"
+                      style={{
+                        objectPosition: "50% 42%",
+                        filter: "brightness(0.82) contrast(1.08) saturate(0.8)",
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-card/35 via-transparent to-transparent" />
+                  </div>
+                </RevealOnScroll>
               </div>
             </div>
           </div>
