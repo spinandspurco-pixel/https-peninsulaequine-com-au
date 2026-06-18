@@ -612,19 +612,19 @@ export default function Contact() {
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={100}>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-8 justify-center">
                 <a
                   href={`tel:${siteConfig.phone}`}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium text-foreground hover:border-accent/30 hover:text-accent transition-all duration-500"
+                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
                 >
-                  <Phone className="h-4 w-4 text-accent" />
+                  <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
                   {siteConfig.phone}
                 </a>
                 <a
                   href={`mailto:${siteConfig.email}`}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-sm font-medium text-foreground hover:border-accent/30 hover:text-accent transition-all duration-500"
+                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
                 >
-                  <Mail className="h-4 w-4 text-accent" />
+                  <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
                   {siteConfig.email}
                 </a>
               </div>
