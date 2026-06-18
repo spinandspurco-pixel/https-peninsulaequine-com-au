@@ -238,6 +238,72 @@ function check(route: Expectation): void {
 
 for (const r of ROUTES) check(r);
 
+/**
+ * Escape a string for a GitHub Actions workflow command parameter
+ * (title=, etc.). Newlines and commas would otherwise terminate the
+ * parameter or break the line.
+ * See https://docs.github.com/actions/reference/workflow-commands-for-github-actions
+ */
+function ghEscapeProp(s: string): string {
+  return s
+    .replace(/%/g, "%25")
+    .replace(/\r/g, "%0D")
+    .replace(/\n/g, "%0A")
+    .replace(/:/g, "%3A")
+    .replace(/,/g, "%2C");
+}
+function ghEscapeMsg(s: string): string {
+  return s.replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A");
+}
+
+/**
+ * On GitHub Actions, emit one `::error file=...,title=...::message`
+ * annotation per failure so it shows up inline on the PR Checks tab,
+ * and write a markdown table to the job summary. Annotations attach
+ * to scripts/prerender.ts (the most likely fix site).
+ */
+function emitGithubAnnotations(): void {
+  if (!process.env.GITHUB_ACTIONS) return;
+  const file = "scripts/prerender.ts";
+  for (const f of failures) {
+    const title = ghEscapeProp(`[${f.route}] ${f.check}`);
+    const msg = ghEscapeMsg(`${f.route} — ${f.check}: ${f.detail}`);
+    // eslint-disable-next-line no-console
+    console.log(`::error file=${file},title=${title}::${msg}`);
+  }
+
+  const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+  if (summaryPath) {
+    const lines: string[] = [];
+    lines.push(`## Prerender head-tag verification`);
+    lines.push("");
+    if (failures.length === 0) {
+      lines.push(
+        `Passed — ${ROUTES.length} routes, all head tags present and self-referencing.`,
+      );
+    } else {
+      lines.push(
+        `**Failed** — ${failures.length} issue(s) across ${ROUTES.length} routes.`,
+      );
+      lines.push("");
+      lines.push("| Route | Check | Detail |");
+      lines.push("| --- | --- | --- |");
+      for (const f of failures) {
+        const detail = f.detail.replace(/\|/g, "\\|").replace(/\n/g, " ");
+        lines.push(`| \`${f.route}\` | \`${f.check}\` | ${detail} |`);
+      }
+    }
+    lines.push("");
+    // appendFileSync via dynamic import to keep the happy path
+    // free of unused imports.
+    import("node:fs").then(({ appendFileSync }) => {
+      appendFileSync(summaryPath, lines.join("\n") + "\n");
+    });
+  }
+}
+
+emitGithubAnnotations();
+
 if (failures.length > 0) {
   console.error(
     `\n✗ prerender verification failed: ${failures.length} issue(s) across ${ROUTES.length} routes\n`,
