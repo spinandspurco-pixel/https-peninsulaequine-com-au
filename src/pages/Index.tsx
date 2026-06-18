@@ -256,13 +256,13 @@ export default function Index() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-[clamp(1.75rem,1.25rem+2vw,3.5rem)] items-start">
-              <RevealOnScroll direction="up" duration={1300} className="md:col-span-8">
+              <RevealOnScroll direction="up" duration={1300} className="md:col-span-6">
                 <Link to="/selected-works/main-ridge-pavilion" className="group block">
                   <div className="relative aspect-[16/10] overflow-hidden">
                     <picture className="absolute inset-0 w-full h-full">
                       <source
                         srcSet={`${goldenHourPavilion800.url} 800w, ${goldenHourPavilion1200.url} 1200w, ${goldenHourPavilion1600.url} 1600w`}
-                        sizes="(min-width: 768px) 66vw, 100vw"
+                        sizes="(min-width: 768px) 50vw, 100vw"
                         type="image/webp"
                       />
                       <img
@@ -274,7 +274,7 @@ export default function Index() {
                         style={{ filter: "brightness(0.8) contrast(1.1) saturate(0.8)" }}
                       />
                     </picture>
-                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,hsl(var(--background)/0.5)_100%)]" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
                   </div>
                   <div className="mt-6 pt-5 border-t border-accent/15 flex items-baseline justify-between gap-4">
                     <p className="font-serif text-foreground/85 group-hover:text-foreground transition-colors duration-500 text-[clamp(1.15rem,0.95rem+0.7vw,1.6rem)] leading-[1.2] tracking-[-0.012em]">
@@ -285,21 +285,21 @@ export default function Index() {
                 </Link>
               </RevealOnScroll>
 
-              <RevealOnScroll direction="up" duration={1300} delay={220} className="md:col-span-4 md:mt-24">
+              <RevealOnScroll direction="up" duration={1300} delay={220} className="md:col-span-6">
                 <Link to="/gallery" className="group block">
-                  <div className="relative aspect-[4/5] overflow-hidden">
+                  <div className="relative aspect-[16/10] overflow-hidden">
                     <img
                       src={coveredArenaExterior}
                       alt="Steel-frame covered competition arena progress build"
                       loading="lazy"
                       decoding="async"
                       className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
-                      style={{ objectPosition: "50% 55%", filter: "brightness(0.78) contrast(1.12) saturate(0.78)" }}
+                      style={{ objectPosition: "50% 45%", filter: "brightness(0.78) contrast(1.12) saturate(0.78)" }}
                     />
-                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,hsl(var(--background)/0.5)_100%)]" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
                   </div>
                   <div className="mt-6 pt-5 border-t border-accent/15 flex items-baseline justify-between gap-4">
-                    <p className="font-serif text-foreground/85 group-hover:text-foreground transition-colors duration-500 text-[clamp(1.05rem,0.9rem+0.5vw,1.35rem)] leading-[1.2] tracking-[-0.01em]">
+                    <p className="font-serif text-foreground/85 group-hover:text-foreground transition-colors duration-500 text-[clamp(1.15rem,0.95rem+0.7vw,1.6rem)] leading-[1.2] tracking-[-0.012em]">
                       Covered Competition Arena
                     </p>
                     <p className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.45em]">Arena</p>
