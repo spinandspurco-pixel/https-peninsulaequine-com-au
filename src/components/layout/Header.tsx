@@ -218,7 +218,7 @@ export function Header() {
               <span className="font-serif text-sm font-semibold tracking-[0.08em] leading-none">
                 Peninsula Equine
               </span>
-              <span className="text-[9px] font-sans tracking-[0.25em] uppercase text-accent/55 mt-1">
+              <span className="text-[9px] font-sans tracking-[0.25em] uppercase text-[hsl(var(--accent-light))]/95 mt-1">
                 From Dirt to Dynasty
               </span>
             </div>
@@ -296,7 +296,7 @@ export function Header() {
 
                         <div className="relative px-8 py-7">
                           <div className="flex items-baseline justify-between mb-5">
-                            <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/55">
+                            <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-[hsl(var(--accent-light))]/95">
                               {item.name}
                             </p>
                             <Link
@@ -400,7 +400,7 @@ export function Header() {
           <div className="hidden lg:flex items-center">
             <Link
               to="/contact"
-              className="text-[10px] uppercase tracking-[0.2em] text-accent/60 hover:text-accent transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
+              className="text-[10px] uppercase tracking-[0.2em] text-[hsl(var(--accent-light))]/95 hover:text-accent transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
             >
               Apply to Build →
             </Link>
@@ -501,7 +501,7 @@ export function Header() {
                     <div className="pl-4 pb-2 ml-1 border-l border-accent/10 space-y-5 pt-2">
                       {(item.groups ?? [{ label: item.name, items: item.children ?? [] }]).map((group) => (
                         <div key={group.label} className="space-y-1.5">
-                          <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-accent/55 pl-3">
+                          <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-[hsl(var(--accent-light))]/95 pl-3">
                             {group.label}
                           </p>
                           <ul className="space-y-0.5 list-none m-0 p-0">

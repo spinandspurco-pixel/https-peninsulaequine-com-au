@@ -218,7 +218,7 @@ export default function Contact() {
             style={{ animationDelay: "200ms", animationFillMode: "both" }}
           >
             <div className="w-8 h-px bg-accent/40" />
-            <p className="text-overline text-accent/70">Get Started</p>
+            <p className="text-overline text-[hsl(var(--accent-light))]/95">Get Started</p>
             <div className="w-8 h-px bg-accent/40" />
           </div>
           <h1
@@ -228,7 +228,7 @@ export default function Contact() {
             Request Site Assessment
           </h1>
           <p
-            className="mt-8 text-muted-foreground/45 text-sm sm:text-base max-w-lg mx-auto leading-relaxed opacity-0 animate-fade-in"
+            className="mt-8 text-[hsl(var(--footer-muted))] text-sm sm:text-base max-w-lg mx-auto leading-relaxed opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
             Tell us about your site. We'll scope the right system.
@@ -245,7 +245,7 @@ export default function Contact() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
               <div>
                 <RevealOnScroll direction="up">
-                  <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/60 mb-6">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-[hsl(var(--accent-light))]/95 mb-6">
                     Site Assessment
                   </p>
                   <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-foreground/90 leading-[1.25]">
@@ -255,17 +255,17 @@ export default function Contact() {
               </div>
               <div>
                 <RevealOnScroll direction="up" delay={100}>
-                  <div className="space-y-5 text-sm text-muted-foreground/60 leading-[1.9]">
+                  <div className="space-y-5 text-sm text-[hsl(var(--footer-muted))] leading-[1.9]">
                     <p>This allows us to properly evaluate:</p>
                     <div className="space-y-3">
                       {["Ground conditions", "Drainage pathways", "Site layout", "Long-term performance requirements"].map((item) => (
                         <div key={item} className="flex items-center gap-3">
                           <div className="w-px h-4 bg-accent/40 shrink-0" />
-                          <span className="text-foreground/60 text-sm">{item}</span>
+                          <span className="text-foreground/80 text-sm">{item}</span>
                         </div>
                       ))}
                     </div>
-                    <p className="text-muted-foreground/40 italic pt-2">
+                    <p className="text-[hsl(var(--footer-muted))] italic pt-2">
                       Assessment fees apply and are credited toward your project if you proceed.
                     </p>
                   </div>
@@ -298,8 +298,8 @@ export default function Contact() {
                   { num: "05", text: "Project scheduling and delivery" },
                 ].map((step, i) => (
                   <div key={step.num} className="flex items-center gap-5 py-4 border-b border-border/15 last:border-b-0">
-                    <span className="text-[9px] font-mono tracking-[0.3em] text-accent/25 uppercase w-6 shrink-0">{step.num}</span>
-                    <span className="text-sm text-foreground/60">{step.text}</span>
+                    <span className="text-[9px] font-mono tracking-[0.3em] text-[hsl(var(--accent-light))]/95 uppercase w-6 shrink-0">{step.num}</span>
+                    <span className="text-sm text-foreground/80">{step.text}</span>
                   </div>
                 ))}
               </div>
@@ -331,14 +331,14 @@ export default function Contact() {
                   <div className="pt-6 flex flex-col sm:flex-row gap-8 justify-center">
                     <a
                       href={`tel:${siteConfig.phone}`}
-                      className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
+                      className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/80 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
                     >
                       <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
                       {siteConfig.phone}
                     </a>
                     <a
                       href={`mailto:${siteConfig.email}`}
-                      className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
+                      className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/80 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
                     >
                       <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
                       {siteConfig.email}
@@ -352,7 +352,7 @@ export default function Contact() {
                 <RevealOnScroll direction="up">
                   <div className="space-y-6">
                     <div>
-                      <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
+                      <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-[hsl(var(--accent-light))]/95 mb-2">
                         01
                       </p>
                       <h3 className="font-serif text-xl font-medium text-foreground">
@@ -415,7 +415,7 @@ export default function Contact() {
                 <RevealOnScroll direction="up" delay={50}>
                   <div className="space-y-6">
                     <div>
-                      <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
+                      <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-[hsl(var(--accent-light))]/95 mb-2">
                         02
                       </p>
                       <h3 className="font-serif text-xl font-medium text-foreground">
@@ -454,7 +454,7 @@ export default function Contact() {
                 <RevealOnScroll direction="up" delay={100}>
                   <div className="space-y-6">
                     <div>
-                      <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
+                      <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-[hsl(var(--accent-light))]/95 mb-2">
                         03
                       </p>
                       <h3 className="font-serif text-xl font-medium text-foreground">
@@ -499,7 +499,7 @@ export default function Contact() {
                 <RevealOnScroll direction="up" delay={150}>
                   <div className="space-y-6">
                     <div>
-                      <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
+                      <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-[hsl(var(--accent-light))]/95 mb-2">
                         04
                       </p>
                       <h3 className="font-serif text-xl font-medium text-foreground">
@@ -529,7 +529,7 @@ export default function Contact() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                     <div className="space-y-6">
                       <div>
-                        <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
+                        <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-[hsl(var(--accent-light))]/95 mb-2">
                           05
                         </p>
                         <h3 className="font-serif text-xl font-medium text-foreground">
@@ -546,13 +546,13 @@ export default function Contact() {
                     </div>
                     <div className="space-y-6">
                       <div>
-                        <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-accent/50 mb-2">
+                        <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-[hsl(var(--accent-light))]/95 mb-2">
                           06
                         </p>
                         <h3 className="font-serif text-xl font-medium text-foreground">
                           Investment Range
                         </h3>
-                        <p className="text-[11px] text-muted-foreground/40 mt-1">Optional</p>
+                        <p className="text-[11px] text-[hsl(var(--footer-muted))] mt-1">Optional</p>
                       </div>
                       <SelectField
                         label="Approximate project investment"
@@ -590,7 +590,7 @@ export default function Contact() {
                       </>
                     )}
                   </Button>
-                  <p className="text-muted-foreground/25 text-[10px] tracking-[0.15em] uppercase mt-4">
+                  <p className="text-[hsl(var(--footer-muted))] text-[10px] tracking-[0.15em] uppercase mt-4">
                     Assessment availability is limited.
                   </p>
                 </div>
@@ -615,14 +615,14 @@ export default function Contact() {
               <div className="flex flex-col sm:flex-row gap-8 justify-center">
                 <a
                   href={`tel:${siteConfig.phone}`}
-                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
+                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/80 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
                 >
                   <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
                   {siteConfig.phone}
                 </a>
                 <a
                   href={`mailto:${siteConfig.email}`}
-                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
+                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/80 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
                 >
                   <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
                   {siteConfig.email}

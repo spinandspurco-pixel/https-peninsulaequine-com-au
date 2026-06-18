@@ -62,7 +62,7 @@ export default function EquineEstates() {
           <div className="absolute bottom-0 left-0 right-0 px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2.5rem,1.5rem+5vw,6rem)]">
             <div className="max-w-6xl space-y-[clamp(1.25rem,1rem+1vw,2rem)]">
               <RevealOnScroll direction="up" duration={900} delay={300}>
-                <p className="font-mono uppercase text-accent/65 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">Concept — Planning</p>
+                <p className="font-mono uppercase text-[hsl(var(--accent-light))]/95 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">Concept — Planning</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1100} delay={500}>
                 <h1 className="font-serif text-primary-foreground tracking-[-0.025em] leading-[0.95] text-[clamp(2.5rem,1.4rem+5.4vw,5.5rem)]">
@@ -83,11 +83,11 @@ export default function EquineEstates() {
           <div className="hidden lg:block absolute top-0 bottom-0 left-1/2 w-px bg-foreground/[0.04]" />
           <div className="max-w-3xl mx-auto px-[clamp(1.5rem,0.75rem+3vw,4rem)] text-center space-y-[clamp(1.75rem,1.25rem+2vw,3rem)]">
             <RevealOnScroll direction="none" duration={1100}>
-              <p className="font-mono uppercase text-accent/45 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.5em]">The Approach</p>
+              <p className="font-mono uppercase text-[hsl(var(--accent-light))]/95 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.5em]">The Approach</p>
             </RevealOnScroll>
             <RevealLine className="mx-auto" width="w-10" delay={200} />
             <RevealOnScroll direction="up" duration={1000} delay={280}>
-              <p className="font-sans font-light text-foreground/70 leading-[1.85] text-[clamp(0.9375rem,0.85rem+0.35vw,1.0625rem)]">
+              <p className="font-sans font-light text-foreground/80 leading-[1.85] text-[clamp(0.9375rem,0.85rem+0.35vw,1.0625rem)]">
                 A horse property is not a collection of disconnected structures. Peninsula Equine considers the whole environment — covered arenas, stables, access, fencing, drainage, water, recovery, movement and future maintenance — so each decision supports the next.
               </p>
             </RevealOnScroll>
@@ -102,9 +102,9 @@ export default function EquineEstates() {
                 <RevealOnScroll key={p.k} direction="up" delay={i * 120}>
                   <div className="group relative bg-card h-full px-[clamp(1.75rem,1.25rem+2vw,2.75rem)] py-[clamp(3rem,2rem+4vw,5rem)]">
                     <span className="absolute top-0 left-0 h-px w-8 bg-accent/40 transition-all duration-[1100ms] group-hover:w-20" />
-                    <p className="font-mono uppercase text-foreground/25 mb-[clamp(1.5rem,1rem+1.5vw,2rem)] text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.4em]">{p.k}</p>
+                    <p className="font-mono uppercase text-[hsl(var(--accent-light))]/95 mb-[clamp(1.5rem,1rem+1.5vw,2rem)] text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.4em]">{p.k}</p>
                     <h2 className="font-serif text-foreground/90 leading-[1.1] tracking-[-0.02em] text-[clamp(1.45rem,1.05rem+1.3vw,1.95rem)] mb-6">{p.label}</h2>
-                    <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[clamp(0.8125rem,0.78rem+0.2vw,0.9375rem)] max-w-md">{p.body}</p>
+                    <p className="font-sans font-light text-foreground/80 leading-[1.85] text-[clamp(0.8125rem,0.78rem+0.2vw,0.9375rem)] max-w-md">{p.body}</p>
                   </div>
                 </RevealOnScroll>
               ))}
@@ -117,7 +117,7 @@ export default function EquineEstates() {
           <div className="max-w-2xl mx-auto px-[clamp(1.5rem,0.75rem+3vw,4rem)] space-y-10">
             <RevealLine className="mx-auto" width="w-10" />
             <RevealOnScroll direction="up">
-              <p className="font-mono uppercase text-accent/55 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.5em]">Limited Commissions — 2026</p>
+              <p className="font-mono uppercase text-[hsl(var(--accent-light))]/95 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.5em]">Limited Commissions — 2026</p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={180}>
               <p className="font-serif italic text-foreground/75 leading-[1.4] text-[clamp(1.25rem,0.9rem+1.4vw,1.85rem)]">
@@ -135,7 +135,7 @@ export default function EquineEstates() {
               </Button>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={480}>
-              <Link to="/contact" className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.4em]">
+              <Link to="/contact" className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/80 hover:text-foreground transition-colors duration-500 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.4em]">
                 <span className="w-6 h-px bg-accent/50 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
                 Apply to Build
               </Link>
