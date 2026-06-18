@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealImage, RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 import { BlueprintContinuity } from "@/components/BlueprintContinuity";
+import { LumenArcEntrance } from "@/components/lumenarc/LumenArcEntrance";
 import comingSoonAsset from "@/assets/lumenarc/coming-soon.asset.json";
 import canopyAsset from "@/assets/lumenarc/canopy.asset.json";
 import controlColumnAsset from "@/assets/lumenarc/control-column.asset.json";
