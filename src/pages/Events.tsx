@@ -16,9 +16,9 @@ import { cn } from "@/lib/utils";
 import { EventRSVPForm } from "@/components/events/EventRSVPForm";
 import { EventGuestList } from "@/components/events/EventGuestList";
 
-import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
-import equitanaArena5 from "@/assets/equitana-arena-5.jpg";
-import caulfieldEvent from "@/assets/caulfield-event.jpg";
+import equitanaArena1 from "@/assets/covered-arena-finished-lit.jpg";
+import equitanaArena5 from "@/assets/main-ridge-finished-interior-2.jpg";
+import caulfieldEvent from "@/assets/covered-arena-finished-lit.jpg";
 
 // Fallback images by keyword
 const fallbackImages: Record<string, string> = {

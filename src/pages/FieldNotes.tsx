@@ -4,7 +4,7 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 
 import heroDrone from "@/assets/covered-arena-finished-lit.jpg";
-import steelFront from "@/assets/steel-shed-dramatic.webp";
+import steelFront from "@/assets/covered-arena-finished-lit.jpg";
 import sitewideProgress from "@/assets/covered-arena-black-exterior.jpg";
 import redClayRoofline from "@/assets/main-ridge-arena-grading.jpg";
 

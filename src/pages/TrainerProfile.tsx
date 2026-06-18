@@ -11,7 +11,7 @@ import { TrainerVideoPlaylist } from "@/components/TrainerVideoPlaylist";
 import { TrainerClinicRSVP } from "@/components/TrainerClinicRSVP";
 import { fetchMergedTestimonials, TRAINER_PROFILES, SERVICE_FILTERS, type TestimonialItem } from "@/lib/testimonials";
 import { glennBrowitt, aboutCiro } from "@/data/content";
-import ciroWithHorse from "@/assets/ciro-with-horse.png";
+import ciroWithHorse from "@/assets/covered-arena-finished-lit.jpg";
 
 interface TrainerData {
   slug: string;

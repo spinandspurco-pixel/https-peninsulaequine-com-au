@@ -9,7 +9,7 @@ import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { SectionTransition, AnimatedDivider } from "@/components/SectionTransition";
 import { TestimonialLightbox } from "@/components/TestimonialLightbox";
 import { fetchMergedTestimonials, SERVICE_FILTERS, getTrainerFilters, TRAINER_PROFILES, type TestimonialItem } from "@/lib/testimonials";
-import ciroWithHorse from "@/assets/ciro-with-horse.png";
+import ciroWithHorse from "@/assets/covered-arena-finished-lit.jpg";
 
 function StarRating({ rating }: { rating: number }) {
   return (

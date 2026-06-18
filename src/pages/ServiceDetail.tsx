@@ -29,10 +29,10 @@ const peCustomRuralFireplaceGrill = peCustomRuralFireplaceGrillAsset.url;
 const peCustomRuralFireplaceHat = peCustomRuralFireplaceHatAsset.url;
 
 // Service card images
-import equitanaArena from "@/assets/equitana-arena-1.jpg";
-import equitanaArena2 from "@/assets/equitana-arena-2.jpg";
-import equitanaArena3 from "@/assets/equitana-arena-3.jpg";
-import equitanaArena4 from "@/assets/equitana-arena-4.jpg";
+import equitanaArena from "@/assets/covered-arena-finished-lit.jpg";
+import equitanaArena2 from "@/assets/aberdeen-aisle.jpg";
+import equitanaArena3 from "@/assets/aberdeen-barn-interior.jpg";
+import equitanaArena4 from "@/assets/main-ridge-finished-interior-1.jpg";
 import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
 import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
 import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
@@ -44,9 +44,9 @@ import coveredArenaBlack from "@/assets/covered-arena-black-exterior.jpg";
 import mainRidgeFinishedInterior1 from "@/assets/main-ridge-finished-interior-1.jpg";
 import mainRidgeFinishedInterior2 from "@/assets/main-ridge-finished-interior-2.jpg";
 import mainRidgeSitePrep from "@/assets/main-ridge-site-prep.jpg";
-import premiumStableFacade from "@/assets/premium-stable-facade.png";
-import mainRidgeCiroWoodwork from "@/assets/main-ridge-ciro-woodwork-1.jpg";
-import mainRidgeCiroWoodwork2 from "@/assets/main-ridge-ciro-woodwork-2.jpg";
+import premiumStableFacade from "@/assets/aberdeen-exterior.jpg";
+import mainRidgeCiroWoodwork from "@/assets/main-ridge-brickwork.jpg";
+import mainRidgeCiroWoodwork2 from "@/assets/main-ridge-timber.jpg";
 import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
 import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
 import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";

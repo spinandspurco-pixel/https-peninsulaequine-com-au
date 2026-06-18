@@ -9,15 +9,15 @@ import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
 import aberdeenDeck from "@/assets/aberdeen-deck.jpg";
 
 // Custom Builds
-import steelShedDramatic from "@/assets/steel-shed-dramatic.webp";
+import steelShedDramatic from "@/assets/covered-arena-finished-lit.jpg";
 
 // Curated portfolio additions
 import coveredArenaFinishedLit from "@/assets/covered-arena-finished-lit.jpg";
 
 // Premium portfolio visuals
-import portfolioArenaSymmetry from "@/assets/portfolio-arena-symmetry.jpg";
-import portfolioTimberJoinery from "@/assets/portfolio-timber-joinery.jpg";
-import portfolioPropertyAerial from "@/assets/portfolio-property-aerial.jpg";
+import portfolioArenaSymmetry from "@/assets/main-ridge-finished-interior-1.jpg";
+import portfolioTimberJoinery from "@/assets/aberdeen-stalls-detail.jpg";
+import portfolioPropertyAerial from "@/assets/aberdeen-exterior.jpg";
 
 export type GalleryItem = {
   id: number;

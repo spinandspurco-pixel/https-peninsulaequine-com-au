@@ -32,8 +32,8 @@ import { lessonInfo, glennBrowitt } from "@/data/content";
 import blueprintFacility from "@/assets/blueprint-facility.png";
 import blueprintDetail from "@/assets/blueprint-detail.png";
 import blueprintBarn from "@/assets/blueprint-barn.png";
-import ciroWide from "@/assets/ciro-wide.png";
-import ciroWithHorse from "@/assets/ciro-with-horse.png";
+import ciroWide from "@/assets/aberdeen-exterior.jpg";
+import ciroWithHorse from "@/assets/covered-arena-finished-lit.jpg";
 
 // ── Data ──────────────────────────────────────────────
 

@@ -11,7 +11,7 @@ import mainRidgePostDepth from "@/assets/main-ridge-post-depth.jpg";
 import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
 import mainRidgeFrameTrench from "@/assets/main-ridge-frame-trench.jpg";
 import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
-import mainRidgeCiroWoodwork1 from "@/assets/main-ridge-ciro-woodwork-1.jpg";
+import mainRidgeCiroWoodwork1 from "@/assets/main-ridge-brickwork.jpg";
 import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
 
 const PHASES = [

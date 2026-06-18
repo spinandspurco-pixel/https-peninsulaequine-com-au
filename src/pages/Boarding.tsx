@@ -17,7 +17,7 @@ import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
 import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
 import aberdeenDeck from "@/assets/aberdeen-deck.jpg";
 import coveredArenaLit from "@/assets/covered-arena-finished-lit.jpg";
-import premiumStableFacade from "@/assets/premium-stable-facade.png";
+import premiumStableFacade from "@/assets/aberdeen-exterior.jpg";
 import mainRidgeFinishedInterior1 from "@/assets/main-ridge-finished-interior-1.jpg";
 import blueprintFacility from "@/assets/blueprint-facility.png";
 import blueprintElevation from "@/assets/blueprint-elevation.png";
