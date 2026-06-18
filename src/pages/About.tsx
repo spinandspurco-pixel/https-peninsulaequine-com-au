@@ -259,8 +259,8 @@ export default function About() {
           body="The unseen work is what makes the visible result last — site preparation, levels, drainage, base works, structure, access and practical sequencing."
           src={arenaGrading}
           alt="Arena grading in progress — base works before the finish."
-          aspect="aspect-[5/4]"
-          crop="50% 55%"
+          aspect="aspect-[4/3] md:aspect-[5/4]"
+          crop="object-[50%_60%] md:object-[50%_55%]"
           reverse
         />
 
