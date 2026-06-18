@@ -73,10 +73,10 @@ const serviceImages: Record<string, string> = {
 // Gallery images per service
 const serviceGalleryImages: Record<string, { src: string; caption: string }[]> = {
   "arena-construction": [
+    { src: peArenaGrading, caption: "Laser-graded arena base" },
     { src: equitanaArena, caption: "Competition-grade arena" },
     { src: equitanaArena2, caption: "Professional footing installation" },
     { src: equitanaArena3, caption: "Arena drainage system" },
-    { src: equitanaArena4, caption: "Finished arena surface" },
     { src: arenaSandPrep1, caption: "Base preparation" },
     { src: arenaSandPrep2, caption: "Sand footing grading" },
   ],
@@ -88,11 +88,12 @@ const serviceGalleryImages: Record<string, { src: string; caption: string }[]> =
     { src: aberdeenStallsDetail, caption: "Stall fitout detail" },
   ],
   "fencing": [
+    { src: peFencingGate, caption: "Engineered gate and post-and-rail run" },
     { src: aberdeenStalls, caption: "Post and rail fencing" },
     { src: aberdeenExterior, caption: "Paddock perimeter fencing" },
-    { src: coveredArenaBlack, caption: "Gate and entry design" },
   ],
   "infrastructure": [
+    { src: peGroundworksDozer, caption: "Bulk earthworks and site shaping" },
     { src: mainRidgeSitePrep, caption: "Site development" },
     { src: mainRidgeBarnFrame, caption: "Structural framework" },
     { src: mainRidgeBrickwork, caption: "Drainage infrastructure" },
@@ -103,16 +104,16 @@ const serviceGalleryImages: Record<string, { src: string; caption: string }[]> =
     { src: arenaSandPrep2, caption: "Surface grading" },
   ],
   "renovations": [
+    { src: peCustomRuralPavilion, caption: "Custom rural pavilion" },
     { src: mainRidgeCiroWoodwork, caption: "Custom woodwork restoration" },
     { src: mainRidgeCiroWoodwork2, caption: "Timber detail" },
     { src: mainRidgeInterior, caption: "Renovated interior" },
-    { src: mainRidgeBrickwork, caption: "Structural repair" },
   ],
   "full-facility": [
+    { src: peCustomRuralPavilion, caption: "Bespoke rural entertaining pavilion" },
     { src: mainRidgeSitePrep, caption: "Full facility build" },
     { src: mainRidgeFinishedInterior1, caption: "Completed interior" },
     { src: mainRidgeFinishedInterior2, caption: "Interior detail" },
-    { src: premiumStableFacade, caption: "Stabling wing" },
     { src: coveredArenaLit, caption: "Arena at dusk" },
   ],
   "clinics-events": [
