@@ -23,6 +23,7 @@ const pillars = [
 
 
 export default function EquineEstates() {
+  const { open } = useIntake();
   return (
     <Layout>
       <article className="bg-background text-foreground type-architectural">
