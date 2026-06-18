@@ -169,7 +169,8 @@
   .text-overline {
     font-size: clamp(0.5625rem, 0.55rem + 0.1vw, 0.6875rem);
     letter-spacing: 0.45em;
-    @apply font-sans font-medium uppercase text-accent;
+    @apply font-sans font-medium uppercase;
+    color: hsl(var(--accent-light));
   }
 
 }

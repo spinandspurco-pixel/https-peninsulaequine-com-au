@@ -255,7 +255,7 @@ export default function Contact() {
               </div>
               <div>
                 <RevealOnScroll direction="up" delay={100}>
-                  <div className="space-y-5 text-sm text-muted-foreground/60 leading-[1.9]">
+                  <div className="space-y-5 text-sm text-[hsl(var(--footer-muted))] leading-[1.9]">
                     <p>This allows us to properly evaluate:</p>
                     <div className="space-y-3">
                       {["Ground conditions", "Drainage pathways", "Site layout", "Long-term performance requirements"].map((item) => (
