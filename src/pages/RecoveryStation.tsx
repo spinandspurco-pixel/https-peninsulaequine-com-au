@@ -382,6 +382,8 @@ export default function RecoveryStation() {
             <LumenArcChapterSection
               {...chapter}
               align={index % 2 === 0 ? chapter.align ?? "left" : chapter.align ?? "right"}
+              tabIndex={chapter.number === activeChapter ? 0 : -1}
+              onFocusChapter={() => setActiveChapter(chapter.number)}
             />
             {index < chapters.length - 1 && (
               <BlueprintTransition next={chapters[index + 1].number} />
