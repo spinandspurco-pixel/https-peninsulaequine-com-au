@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
+import { CropSafeImage } from "@/components/media/CropSafeImage";
 
 import {
   getProjectImage,
