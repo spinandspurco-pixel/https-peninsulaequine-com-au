@@ -112,14 +112,18 @@ function LumenArcChapterSection({
 
   return (
     <section
-      className="relative py-[clamp(6rem,4rem+8vw,12rem)] la-chapter-section group/chapter outline-none"
+      className="relative py-[clamp(6rem,4rem+8vw,12rem)] la-chapter-section group/chapter outline-none focus-visible:ring-1 focus-visible:ring-accent/40 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
       tabIndex={0}
       aria-label={`${label} — chapter ${number}`}
+      aria-describedby={`la-meta-${number}`}
     >
+      <span id={`la-meta-${number}`} className="sr-only">
+        {label}. LumenArc chapter {number}.
+      </span>
       {/* Interactive blueprint overlay — revealed on hover/focus, respects reduced motion */}
       <div
         aria-hidden="true"
-        className="la-chapter-overlay pointer-events-none absolute inset-0 overflow-hidden opacity-0 transition-opacity duration-[1200ms] ease-[cubic-bezier(0.45,0,0.15,1)] group-hover/chapter:opacity-100 group-focus-within/chapter:opacity-100"
+        className="la-chapter-overlay pointer-events-none absolute inset-0 overflow-hidden opacity-0 transition-opacity duration-[1200ms] ease-[cubic-bezier(0.45,0,0.15,1)] group-hover/chapter:opacity-100 group-focus-visible/chapter:opacity-100"
       >
         <div
           className="absolute inset-0 opacity-[0.07] mix-blend-screen"
@@ -407,15 +411,15 @@ export default function RecoveryStation() {
             stroke-dashoffset: 1;
           }
           .la-chapter-section:hover .la-overlay-lines line,
-          .la-chapter-section:focus-within .la-overlay-lines line {
+          .la-chapter-section:focus-visible .la-overlay-lines line {
             animation: la-overlay-line-draw 1400ms cubic-bezier(0.45, 0, 0.15, 1) forwards;
           }
           .la-chapter-section:hover .la-overlay-lines line:nth-child(2),
-          .la-chapter-section:focus-within .la-overlay-lines line:nth-child(2) {
+          .la-chapter-section:focus-visible .la-overlay-lines line:nth-child(2) {
             animation-delay: 120ms;
           }
           .la-chapter-section:hover .la-overlay-lines line:nth-child(3),
-          .la-chapter-section:focus-within .la-overlay-lines line:nth-child(3) {
+          .la-chapter-section:focus-visible .la-overlay-lines line:nth-child(3) {
             animation-delay: 240ms;
           }
 
