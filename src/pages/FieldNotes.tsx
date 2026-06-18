@@ -20,6 +20,8 @@ const sitewideProgress = getProjectImage(SLUG, "fieldNotesGalleryA").url;
 const sitewideProgressAlt = getProjectImageAlt(SLUG, "fieldNotesGalleryA");
 const redClayRoofline = getProjectImage(SLUG, "fieldNotesGalleryB").url;
 const redClayRooflineAlt = getProjectImageAlt(SLUG, "fieldNotesGalleryB");
+const conditionsResp = getProjectResponsive(SLUG, "fieldNotesConditions")!;
+const conditionsAlt = getProjectImageAlt(SLUG, "fieldNotesConditions");
 
 export default function FieldNotes() {
   useEffect(() => {
@@ -141,6 +143,50 @@ export default function FieldNotes() {
             </div>
           </div>
         </section>
+
+        {/* Real Conditions — full-bleed cinematic divider */}
+        <section className="relative w-full overflow-hidden border-t border-accent/10">
+          <div className="relative aspect-[16/9] sm:aspect-[21/9] w-full">
+            <img
+              src={conditionsResp.src}
+              srcSet={conditionsResp.srcSet}
+              sizes={conditionsResp.sizes}
+              alt={conditionsAlt}
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover object-[35%_70%] sm:object-[40%_65%] md:object-center"
+              style={{ filter: "brightness(0.86) contrast(1.1) saturate(0.85)" }}
+            />
+            {/* subtle dark gradient for text legibility — keeps mud + steel readable */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-background/15 to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-1/2 sm:w-2/5 bg-gradient-to-r from-background/70 to-transparent" />
+
+            <div className="absolute inset-x-0 bottom-0 p-6 sm:p-10 lg:p-16">
+              <div className="section-container max-w-[1480px] mx-auto">
+                <div className="max-w-2xl space-y-4 sm:space-y-6">
+                  <RevealOnScroll direction="up" duration={900}>
+                    <p className="font-mono uppercase text-accent/65 text-[10px] tracking-[0.48em]">
+                      Real Conditions
+                    </p>
+                  </RevealOnScroll>
+                  <RevealOnScroll direction="up" duration={1100} delay={140}>
+                    <h2 className="font-serif text-foreground leading-[0.96] tracking-tight text-[clamp(1.8rem,1.15rem+2.2vw,3rem)]">
+                      Real progress. Real conditions. Real builds.
+                    </h2>
+                  </RevealOnScroll>
+                  <RevealLine width="w-10" delay={260} />
+                  <RevealOnScroll direction="up" duration={1100} delay={320}>
+                    <p className="font-sans font-light text-foreground/70 leading-[1.85] text-[14px] sm:text-[15px] max-w-xl">
+                      Field Notes captures the work while it is still alive — the mud, weather,
+                      machinery, steel and decisions that shape the finished environment.
+                    </p>
+                  </RevealOnScroll>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
 
         <section className="relative border-t border-accent/10 py-[clamp(5rem,3rem+6vw,9rem)]">
           <div className="section-container max-w-[1480px] mx-auto">

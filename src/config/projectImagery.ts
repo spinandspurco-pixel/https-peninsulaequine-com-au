@@ -32,6 +32,12 @@ import coveredArenaSunset640 from "@/assets/responsive/covered-competition-arena
 import coveredArenaSunset1024 from "@/assets/responsive/covered-competition-arena-sunset-puddles-1024.webp.asset.json";
 import coveredArenaSunset1536 from "@/assets/responsive/covered-competition-arena-sunset-puddles-1536.webp.asset.json";
 
+// "Real conditions" supporting visual — muddy boots + steel frame at dusk
+import muddyBootsSteelFrame from "@/assets/field-notes/muddy-boots-steel-frame.png.asset.json";
+import muddyBoots640 from "@/assets/responsive/muddy-boots-steel-frame-640.webp.asset.json";
+import muddyBoots1024 from "@/assets/responsive/muddy-boots-steel-frame-1024.webp.asset.json";
+import muddyBoots1536 from "@/assets/responsive/muddy-boots-steel-frame-1536.webp.asset.json";
+
 // ---- Main Ridge Pavilion (completed) ----
 import mainRidgeWide from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
 import mainRidgeFireplaceDetail from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
@@ -64,6 +70,7 @@ export type ProjectSurface =
   | "selectedWorks"
   | "fieldNotesHero"
   | "fieldNotesPreview"
+  | "fieldNotesConditions"
   | "fieldNotesGalleryA"
   | "fieldNotesGalleryB"
   | "caseStudyHero";
@@ -112,6 +119,8 @@ export const projectImagery: Record<string, ProjectImagery> = {
       // Build Read pair — distinct conditions, no repetition
       fieldNotesGalleryA: coveredArenaTruckAccessTrack,
       fieldNotesGalleryB: coveredArenaDrainageDetail,
+      // Real conditions divider — muddy boots + steel frame at dusk
+      fieldNotesConditions: muddyBootsSteelFrame,
       caseStudyHero: coveredArenaNightWorkLights,
     },
     responsive: {
@@ -127,6 +136,12 @@ export const projectImagery: Record<string, ProjectImagery> = {
         coveredArenaSunset1536,
         "(min-width: 1480px) 1480px, 100vw",
       ),
+      fieldNotesConditions: buildSrcSet(
+        muddyBoots640,
+        muddyBoots1024,
+        muddyBoots1536,
+        "100vw",
+      ),
     },
     alt: {
       selectedWorks:
@@ -139,6 +154,8 @@ export const projectImagery: Record<string, ProjectImagery> = {
         "Wide site view of the current arena build showing steel span, machinery placement and open ground conditions",
       fieldNotesGalleryB:
         "Drainage detail and wet red clay around the active covered arena and stables build",
+      fieldNotesConditions:
+        "Muddy work boots in red clay with excavator, dump truck and steel-frame arena rising under a storm-lit dusk sky",
       caseStudyHero:
         "Covered Arena & Stables Build — structural steel and roof line under a dramatic storm sky",
     },
