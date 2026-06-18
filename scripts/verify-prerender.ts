@@ -466,7 +466,9 @@ function writeJsonReport(): void {
   // receives malformed output.
   const schemaErrors = validateAgainstSchema(report);
   if (schemaErrors.length > 0) {
-    fail("_report", "json-schema", schemaErrors.join("; "));
+    fail("_report", "json-schema", "schema", SCHEMA_PATH, {
+      received: schemaErrors.join("; "),
+    });
     console.error(
       `✗ JSON report failed schema validation:\n  ${schemaErrors.join("\n  ")}`,
     );
