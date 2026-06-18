@@ -276,40 +276,113 @@ export function Header() {
                           : "opacity-0 invisible -translate-y-1 pointer-events-none"
                       )}
                     >
-                      <div className="min-w-[18rem] bg-[hsl(var(--background))]/98 backdrop-blur-xl border border-accent/10 shadow-[0_24px_60px_-24px_rgba(0,0,0,0.65)]">
-                        <div className="px-7 py-6 space-y-1">
-                          <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/45 pb-3 border-b border-accent/10 mb-3">
-                            {item.name}
-                          </p>
-                          {item.children!.map((child, idx) => (
+                      <div className="relative w-[min(34rem,calc(100vw-2.5rem))] bg-[hsl(var(--background))]/98 backdrop-blur-xl border border-accent/10 shadow-[0_28px_64px_-24px_rgba(0,0,0,0.7)]">
+                        {/* Blueprint grid overlay */}
+                        <div
+                          aria-hidden="true"
+                          className="absolute inset-0 pointer-events-none opacity-[0.04] mix-blend-screen"
+                          style={{
+                            backgroundImage:
+                              "linear-gradient(hsl(var(--accent)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--accent)) 1px, transparent 1px)",
+                            backgroundSize: "40px 40px",
+                          }}
+                        />
+                        {/* Thin gold rule */}
+                        <span aria-hidden="true" className="absolute top-0 left-7 right-7 h-px bg-accent/30" />
+
+                        <div className="relative px-8 py-7">
+                          <div className="flex items-baseline justify-between mb-5">
+                            <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/55">
+                              {item.name}
+                            </p>
                             <Link
-                              key={child.href}
-                              to={child.href}
+                              to={item.href}
                               role="menuitem"
                               tabIndex={isOpen ? 0 : -1}
-                              aria-current={isActive(child.href) ? "page" : undefined}
-                              onKeyDown={(e) =>
-                                handleDropdownItemKey(e, item.name, idx, item.children!.length)
-                              }
-                              className={cn(
-                                "group flex items-center gap-3 py-2.5 text-[11px] uppercase tracking-[0.18em] transition-all duration-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm",
-                                isActive(child.href)
-                                  ? "text-[hsl(var(--header-active))] font-medium"
-                                  : "text-foreground/55 hover:text-foreground"
-                              )}
+                              onKeyDown={(e) => {
+                                const total = (desktopDropdownRefs.current[item.name]?.querySelectorAll("a[href]").length) ?? 0;
+                                handleDropdownItemKey(e, item.name, 0, total);
+                              }}
+                              aria-current={isActive(item.href) ? "page" : undefined}
+                              className="group inline-flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.4em] text-foreground/45 hover:text-foreground transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
                             >
-                              <span
-                                aria-hidden="true"
-                                className={cn(
-                                  "h-px transition-all duration-500",
-                                  isActive(child.href)
-                                    ? "w-6 bg-[hsl(var(--header-active))]"
-                                    : "w-4 bg-accent/30 group-hover:w-8 group-hover:bg-accent"
-                                )}
-                              />
-                              {child.name}
+                              Overview
+                              <span aria-hidden="true" className="h-px w-3 bg-accent/40 transition-all duration-500 group-hover:w-6 group-hover:bg-accent" />
                             </Link>
-                          ))}
+                          </div>
+
+                          {item.groups?.map((group, gIdx) => {
+                            // Compute the global index across all groups for arrow-key nav
+                            // (+1 to account for the Overview link rendered above)
+                            const priorCount = (item.groups ?? [])
+                              .slice(0, gIdx)
+                              .reduce((acc, g) => acc + g.items.length, 0);
+                            const totalCount =
+                              1 + (item.groups ?? []).reduce((acc, g) => acc + g.items.length, 0);
+                            return (
+                              <div
+                                key={group.label}
+                                className={cn("space-y-2", gIdx > 0 && "mt-5 pt-5 border-t border-accent/10")}
+                              >
+                                <p
+                                  id={`${dropdownId}-group-${gIdx}`}
+                                  className="font-mono text-[8.5px] uppercase tracking-[0.5em] text-foreground/32"
+                                >
+                                  {group.label}
+                                </p>
+                                <ul
+                                  role="group"
+                                  aria-labelledby={`${dropdownId}-group-${gIdx}`}
+                                  className="list-none m-0 p-0 space-y-0.5"
+                                >
+                                  {group.items.map((child, cIdx) => {
+                                    const globalIdx = 1 + priorCount + cIdx;
+                                    const active = isActive(child.href);
+                                    return (
+                                      <li key={child.href}>
+                                        <Link
+                                          to={child.href}
+                                          role="menuitem"
+                                          tabIndex={isOpen ? 0 : -1}
+                                          aria-current={active ? "page" : undefined}
+                                          onKeyDown={(e) =>
+                                            handleDropdownItemKey(e, item.name, globalIdx, totalCount)
+                                          }
+                                          className={cn(
+                                            "group flex items-start gap-3 py-2 pr-2 transition-colors duration-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm",
+                                            active ? "text-[hsl(var(--header-active))]" : "text-foreground/72 hover:text-foreground"
+                                          )}
+                                        >
+                                          <span
+                                            aria-hidden="true"
+                                            className={cn(
+                                              "mt-[0.65rem] h-px shrink-0 transition-all duration-500",
+                                              active
+                                                ? "w-6 bg-[hsl(var(--header-active))]"
+                                                : "w-3 bg-accent/35 group-hover:w-7 group-hover:bg-accent"
+                                            )}
+                                          />
+                                          <span className="flex-1 min-w-0">
+                                            <span className={cn(
+                                              "block text-[11px] uppercase tracking-[0.2em]",
+                                              active ? "font-medium" : "font-normal"
+                                            )}>
+                                              {child.name}
+                                            </span>
+                                            {child.description && (
+                                              <span className="block mt-1 font-sans text-[11px] font-light leading-[1.55] text-foreground/40">
+                                                {child.description}
+                                              </span>
+                                            )}
+                                          </span>
+                                        </Link>
+                                      </li>
+                                    );
+                                  })}
+                                </ul>
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     </div>
