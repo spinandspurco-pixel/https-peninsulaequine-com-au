@@ -1,266 +1,219 @@
-import { useEffect, useState, useRef, useCallback } from "react";
-import { Layout } from "@/components/layout/Layout";
-import { InteractiveMasterplan } from "@/components/masterplan/InteractiveMasterplanV2";
-import { BeforeAfterSlider } from "@/components/BeforeAfterSlider";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { X } from "lucide-react";
+import { Layout } from "@/components/layout/Layout";
+import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 
-import mainridgeBefore from "@/assets/mainridge-before.jpg";
-import mainridgeAfter from "@/assets/mainridge-after.jpg";
+import pavilionWide from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
+import fireplacePortrait from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
+import parrillaWide from "@/assets/main-ridge/mr-parrilla-wide.png.asset.json";
+import aberdeenSunset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
 
-import imgArena from "@/assets/zone-arena-v2.jpg";
-import imgStableRow from "@/assets/zone-stable-row-v2.jpg";
-import imgCourtyard from "@/assets/zone-courtyard-v2.jpg";
-import imgService from "@/assets/zone-service-v2.jpg";
-
-const ZONE_REVEAL: Record<string, { image: string; line: string; label: string }> = {
-  "indoor-arena": { image: imgArena, label: "Arena", line: "Clear-span. Engineered for performance under load." },
-  "stables": { image: imgStableRow, label: "Stables", line: "Cross-ventilation resolved through the corridor axis." },
-  "access": { image: imgCourtyard, label: "Courtyard", line: "All movement converges here." },
-  "ground-systems": { image: imgService, label: "Ground Systems", line: "Engineered surfaces. Drainage resolved at every level." },
-};
-
-/* ── Lightbox for mobile tap-to-expand ── */
-function ZoneLightbox({ image, label, line, onClose }: { image: string; label: string; line: string; onClose: () => void }) {
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = ""; };
-  }, []);
-
-  return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-primary/90 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <button
-        onClick={onClose}
-        className="absolute top-6 right-6 z-10 p-2 text-primary-foreground/50 hover:text-primary-foreground/80 transition-colors"
-        aria-label="Close"
-      >
-        <X className="w-5 h-5" />
-      </button>
-
-      <div className="w-full max-w-3xl px-6" onClick={e => e.stopPropagation()}>
-        <div className="relative overflow-hidden rounded-sm">
-          <img
-            src={image}
-            alt={label}
-            className="w-full h-auto object-cover"
-            style={{ maxHeight: "70vh" }}
-          />
-        </div>
-        <div className="mt-6 text-center">
-          <p className="font-serif text-sm text-primary-foreground/60 tracking-[0.04em]">{label}</p>
-          <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.35em] text-primary-foreground/25">{line}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ── Build Reveal — compact image with hover/tap ── */
-function BuildReveal({
-  zoneId,
-  onHoverZone,
-  onLeaveZone,
-}: {
-  zoneId: string | null;
-  onHoverZone?: (id: string) => void;
-  onLeaveZone?: () => void;
-}) {
-  const isMobile = useIsMobile();
-  const [displayed, setDisplayed] = useState<string | null>(null);
-  const [visible, setVisible] = useState(false);
-  const [lightbox, setLightbox] = useState<string | null>(null);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    if (timer.current) clearTimeout(timer.current);
-
-    if (zoneId) {
-      setDisplayed(zoneId);
-      requestAnimationFrame(() => setVisible(true));
-    } else {
-      setVisible(false);
-      timer.current = setTimeout(() => setDisplayed(null), 200);
-    }
-
-    return () => { if (timer.current) clearTimeout(timer.current); };
-  }, [zoneId]);
-
-  const data = displayed ? ZONE_REVEAL[displayed] : null;
-
-  const handleImageInteraction = useCallback(() => {
-    if (displayed) setLightbox(displayed);
-  }, [displayed]);
-
-  return (
-    <>
-      <section
-        className="relative overflow-hidden"
-        style={{
-          paddingTop: data ? "clamp(1.5rem, 3vw, 3rem)" : "0",
-          paddingBottom: data ? "clamp(2rem, 4vw, 4rem)" : "0",
-          transition: "padding 350ms cubic-bezier(0.45, 0, 0.15, 1)",
-        }}
-        onMouseEnter={() => displayed && onHoverZone?.(displayed)}
-        onMouseLeave={() => onLeaveZone?.()}
-      >
-        <div
-          className="max-w-2xl mx-auto px-4 sm:px-6"
-          style={{
-            opacity: visible && data ? 1 : 0,
-            transition: "opacity 250ms cubic-bezier(0.45, 0, 0.15, 1)",
-          }}
-        >
-          {data && (
-            <>
-              <div
-                className="relative overflow-hidden cursor-pointer group"
-                style={{ maxWidth: "540px", margin: "0 auto" }}
-                onClick={handleImageInteraction}
-                role="button"
-                tabIndex={0}
-                aria-label={`View ${data.label} detail`}
-              >
-                <div className="aspect-[16/10] relative overflow-hidden">
-                  <img
-                    src={data.image}
-                    alt={data.label}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                    loading="lazy"
-                    width={1920}
-                    height={1280}
-                  />
-                  {/* Subtle overlay with label */}
-                  <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/15 transition-colors duration-500 flex items-end p-4 sm:p-5">
-                    <p className="font-mono text-[8px] uppercase tracking-[0.3em] text-primary-foreground/0 group-hover:text-primary-foreground/60 transition-colors duration-500">
-                      {isMobile ? "Tap to expand" : "Click to expand"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/12 text-center">
-                {data.line}
-              </p>
-            </>
-          )}
-        </div>
-      </section>
-
-      {/* Lightbox */}
-      {lightbox && ZONE_REVEAL[lightbox] && (
-        <ZoneLightbox
-          image={ZONE_REVEAL[lightbox].image}
-          label={ZONE_REVEAL[lightbox].label}
-          line={ZONE_REVEAL[lightbox].line}
-          onClose={() => setLightbox(null)}
-        />
-      )}
-    </>
-  );
-}
+const FILTER = "brightness(0.82) contrast(1.1) saturate(0.8)";
 
 export default function Projects() {
-  const [activeZone, setActiveZone] = useState<string | null>(null);
-  const [hoverSource, setHoverSource] = useState<"masterplan" | "reveal" | null>(null);
-
-  const handleMasterplanChange = (id: string | null) => {
-    setActiveZone(id);
-    setHoverSource(id ? "masterplan" : null);
-  };
-
-  const handleRevealHover = (id: string) => {
-    setActiveZone(id);
-    setHoverSource("reveal");
-  };
-
-  const handleRevealLeave = () => {
-    if (hoverSource === "reveal") {
-      setActiveZone(null);
-      setHoverSource(null);
-    }
-  };
-
   useEffect(() => {
-    document.title = "Projects | Peninsula Equine";
-    return () => { document.title = "Peninsula Equine"; };
+    document.title = "Selected Works | Peninsula Equine";
+    const meta = document.querySelector('meta[name="description"]');
+    const prev = meta?.getAttribute("content") || "";
+    meta?.setAttribute(
+      "content",
+      "Selected Works from Peninsula Equine — flagship rural builds, arenas and equine environments across the Mornington Peninsula and beyond.",
+    );
+    return () => {
+      document.title = "Peninsula Equine";
+      if (meta && prev) meta.setAttribute("content", prev);
+    };
   }, []);
 
   return (
     <Layout>
-      <div className="type-architectural">
-      {/* ═══ HERO ═══════════════════════════════════════ */}
-      <section className="relative pt-48 sm:pt-56 pb-16 sm:pb-20 overflow-hidden">
-        <div className="absolute inset-0 engineering-grid opacity-[0.03]" aria-hidden="true" />
-        <div className="section-container max-w-3xl mx-auto text-center relative z-10">
-          <h1
-            className="heading-display text-foreground opacity-0 animate-fade-in"
-            style={{ animationDelay: "300ms", animationFillMode: "both", animationDuration: "800ms" }}
-          >
-            Selected Work
-          </h1>
-          <p
-            className="mt-10 font-serif italic text-sm tracking-[0.04em] text-foreground/[0.12] opacity-0 animate-fade-in"
-            style={{ animationDelay: "600ms", animationFillMode: "both", animationDuration: "1000ms" }}
-          >
-            Every build is resolved at plan level.
-          </p>
-        </div>
-      </section>
-
-      {/* ═══ INTERACTIVE MASTERPLAN ═════════════════════ */}
-      <InteractiveMasterplan
-        onZoneChange={handleMasterplanChange}
-        externalActiveZone={hoverSource === "reveal" ? activeZone : undefined}
-      />
-
-      {/* ═══ BUILD REVEAL — linked to masterplan ═══════ */}
-      <BuildReveal zoneId={activeZone} onHoverZone={handleRevealHover} onLeaveZone={handleRevealLeave} />
-
-      {/* ═══ TRANSFORMATION — Main Ridge ═════════════ */}
-      <section className="py-28 sm:py-40 relative overflow-hidden">
-        <div className="section-container max-w-5xl mx-auto">
-          <div className="flex items-center gap-5 mb-10 justify-center">
-            <div className="w-6 h-px bg-accent/10" />
-            <p className="font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.5em] text-accent/15">
-              Main Ridge — Transformation
-            </p>
-            <div className="w-6 h-px bg-accent/10" />
+      <main className="bg-background text-foreground type-architectural">
+        {/* ═══ HERO ═══════════════════════════════════════ */}
+        <section className="relative pt-44 sm:pt-52 pb-16 sm:pb-24 overflow-hidden">
+          <div className="absolute inset-0 engineering-grid opacity-[0.03]" aria-hidden="true" />
+          <div className="section-container max-w-4xl mx-auto text-center relative z-10">
+            <RevealOnScroll direction="up" duration={900}>
+              <p className="font-mono text-[10px] uppercase tracking-[0.5em] text-accent/55">
+                Selected Works
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" duration={1100} delay={150}>
+              <h1 className="mt-8 font-serif text-foreground leading-[0.95] tracking-tight text-[clamp(2.4rem,1.4rem+4.6vw,5.4rem)]">
+                Built for the way horse properties actually work.
+              </h1>
+            </RevealOnScroll>
+            <RevealLine width="w-10" delay={280} className="mx-auto mt-10" />
+            <RevealOnScroll direction="up" duration={1000} delay={340}>
+              <p className="mt-10 max-w-xl mx-auto font-sans font-light text-foreground/55 leading-[1.85] text-[14px] sm:text-[15px]">
+                A focused portfolio of arenas, pavilions and rural builds — shaped from the ground up.
+              </p>
+            </RevealOnScroll>
           </div>
-          <BeforeAfterSlider
-            before={mainridgeBefore}
-            after={mainridgeAfter}
-            alt="Main Ridge Estate — site to build"
-          />
-          <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/12 text-center">
-            From dirt to dynasty.
-          </p>
-        </div>
-      </section>
+        </section>
 
-      {/* ═══ CLOSING STATEMENT ═══════════════════════ */}
-      <section className="pt-32 sm:pt-48 pb-20 sm:pb-28">
-        <p className="text-center font-serif italic text-sm sm:text-base tracking-[0.04em] text-foreground/[0.15]">
-          Every line resolves in the build.
-        </p>
-      </section>
+        {/* ═══ FLAGSHIP — MAIN RIDGE PAVILION ═════════════ */}
+        <section className="relative border-t border-accent/10 py-[clamp(5rem,3rem+6vw,9rem)]">
+          <div className="section-container max-w-[1480px] mx-auto">
+            <RevealOnScroll direction="up" duration={900}>
+              <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4rem)]">
+                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">01</span>
+                <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
+                <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Flagship</span>
+              </div>
+            </RevealOnScroll>
 
-      {/* ═══ FINAL CTA ════════════════════════════════ */}
-      <section className="pb-36 sm:pb-48">
-        <div className="text-center">
-          <Link
-            to="/contact"
-            className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
-          >
-            <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
-            Start a Project
-          </Link>
-        </div>
-      </section>
-      </div>
+            <Link to="/selected-works/main-ridge-pavilion" className="group block">
+              <RevealOnScroll direction="up" duration={1300}>
+                <div className="relative aspect-[16/10] md:aspect-[21/9] overflow-hidden">
+                  <img
+                    src={pavilionWide.url}
+                    alt="Main Ridge Pavilion at dusk — handcrafted timber table, brick fireplace and open rural outlook"
+                    className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
+                    loading="lazy"
+                    decoding="async"
+                    style={{ filter: FILTER }}
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-transparent to-transparent" />
+                </div>
+              </RevealOnScroll>
+
+              <div className="mt-8 grid grid-cols-12 gap-6 lg:gap-12 items-end">
+                <div className="col-span-12 md:col-span-7 space-y-4">
+                  <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.42em]">
+                    Custom Rural Build — Main Ridge, VIC
+                  </p>
+                  <h2 className="font-serif text-foreground/92 group-hover:text-foreground transition-colors duration-500 leading-[1.02] tracking-tight text-[clamp(1.9rem,1.2rem+2.4vw,3.1rem)]">
+                    Main Ridge Pavilion
+                  </h2>
+                  <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px] sm:text-[15px] max-w-xl">
+                    Timber, brick, steel and firelight resolved into a gathering place that holds the
+                    weight of the land it sits on.
+                  </p>
+                </div>
+                <div className="col-span-12 md:col-span-5 md:text-right">
+                  <span className="inline-flex items-center gap-3 font-mono uppercase text-foreground/72 group-hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]">
+                    <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
+                    View Project
+                  </span>
+                </div>
+              </div>
+            </Link>
+
+            {/* Editorial detail strip — two crops from the pavilion */}
+            <div className="mt-[clamp(2.5rem,1.5rem+2.5vw,4rem)] grid grid-cols-1 md:grid-cols-12 gap-[clamp(1.5rem,1rem+1.5vw,3rem)]">
+              <RevealOnScroll direction="up" duration={1100} className="md:col-span-5">
+                <Link to="/selected-works/main-ridge-pavilion" className="group block">
+                  <div className="relative aspect-[4/5] overflow-hidden">
+                    <img
+                      src={fireplacePortrait.url}
+                      alt="Brick wall and bronze wall light detail inside the Main Ridge Pavilion"
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
+                      style={{ filter: "brightness(0.84) contrast(1.1) saturate(0.8)" }}
+                    />
+                  </div>
+                  <p className="mt-5 font-mono uppercase text-accent/45 text-[9.5px] tracking-[0.45em]">
+                    Material — Brick & Bronze
+                  </p>
+                </Link>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" duration={1100} delay={150} className="md:col-span-7">
+                <Link to="/selected-works/main-ridge-pavilion" className="group block">
+                  <div className="relative aspect-[16/10] md:aspect-[5/4] overflow-hidden">
+                    <img
+                      src={parrillaWide.url}
+                      alt="Wide view of the brick parrilla grill and fireplace anchoring the Main Ridge Pavilion"
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
+                      style={{ filter: "brightness(0.82) contrast(1.12) saturate(0.82)" }}
+                    />
+                  </div>
+                  <p className="mt-5 font-mono uppercase text-accent/45 text-[9.5px] tracking-[0.45em]">
+                    Detail — Parrilla & Fire
+                  </p>
+                </Link>
+              </RevealOnScroll>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ IN PROGRESS — ABERDEEN FARM ════════════════ */}
+        <section className="relative border-t border-accent/10 py-[clamp(5rem,3rem+6vw,9rem)]">
+          <div className="section-container max-w-[1480px] mx-auto">
+            <RevealOnScroll direction="up" duration={900}>
+              <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4rem)]">
+                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">02</span>
+                <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
+                <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">In Progress</span>
+              </div>
+            </RevealOnScroll>
+
+            <Link to="/field-notes/aberdeen-farm" className="group block">
+              <RevealOnScroll direction="up" duration={1200}>
+                <div className="relative aspect-[16/10] md:aspect-[21/9] overflow-hidden">
+                  <img
+                    src={aberdeenSunset.url}
+                    alt="Aberdeen Farm — structural steel at sunset with wet ground reflections"
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
+                    style={{ filter: "brightness(0.78) contrast(1.12) saturate(0.8)", objectPosition: "55% 50%" }}
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-transparent to-transparent" />
+                </div>
+              </RevealOnScroll>
+
+              <div className="mt-8 grid grid-cols-12 gap-6 lg:gap-12 items-end">
+                <div className="col-span-12 md:col-span-7 space-y-4">
+                  <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.42em]">
+                    Covered Arena — Main Ridge, VIC
+                  </p>
+                  <h2 className="font-serif text-foreground/92 group-hover:text-foreground transition-colors duration-500 leading-[1.02] tracking-tight text-[clamp(1.9rem,1.2rem+2.4vw,3.1rem)]">
+                    Aberdeen Farm
+                  </h2>
+                  <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px] sm:text-[15px] max-w-xl">
+                    A covered arena currently moving through structural steel, drainage and base
+                    preparation. Followed in real time through Field Notes.
+                  </p>
+                </div>
+                <div className="col-span-12 md:col-span-5 md:text-right">
+                  <span className="inline-flex items-center gap-3 font-mono uppercase text-foreground/72 group-hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]">
+                    <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
+                    Read Field Note
+                  </span>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </section>
+
+        {/* ═══ CLOSING ═══════════════════════════════════ */}
+        <section className="relative border-t border-accent/10 py-[clamp(6rem,4rem+7vw,11rem)]">
+          <div className="section-container max-w-3xl mx-auto text-center space-y-8">
+            <RevealOnScroll direction="up" duration={900}>
+              <p className="font-mono text-[9px] uppercase tracking-[0.5em] text-foreground/25">
+                From groundwork to finished environment
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" duration={1000} delay={150}>
+              <h2 className="font-serif text-foreground/90 leading-[1.05] tracking-tight text-[clamp(1.9rem,1.2rem+2.6vw,3rem)]">
+                Start the next one with us.
+              </h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="none" duration={1100} delay={280}>
+              <Link
+                to="/contact"
+                className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/72 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
+              >
+                <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
+                Start a Project
+              </Link>
+            </RevealOnScroll>
+          </div>
+        </section>
+      </main>
     </Layout>
   );
 }

@@ -19,19 +19,21 @@ const servicesGroups: NavGroup[] = [
     items: [
       { name: "Arenas", href: "/arenas", description: "Dressage, jumping & covered arenas" },
       { name: "Stables & Barns", href: "/stables", description: "Custom stables and equestrian barns" },
-      { name: "Equine Estates", href: "/equine-estates", description: "Full-property masterplans" },
+      { name: "Equine Infrastructure", href: "/infrastructure", description: "Fencing, yards & site infrastructure" },
+      { name: "Custom Rural Builds", href: "/equine-estates", description: "Pavilions, masterplans & rural homes" },
     ],
   },
   {
-    label: "Support",
+    label: "Ground",
     items: [
-      { name: "Infrastructure & Maintenance", href: "/infrastructure", description: "Fencing, surfaces & site works" },
+      { name: "Groundworks", href: "/infrastructure", description: "Site cuts, levels and base preparation" },
+      { name: "Drainage & Surfacing", href: "/arenas", description: "Engineered drainage and arena footing" },
     ],
   },
   {
-    label: "Approach",
+    label: "Recovery",
     items: [
-      { name: "Our Process", href: "/process", description: "How a Peninsula Equine build unfolds" },
+      { name: "LumenArc Recovery Systems", href: "/lumenarc", description: "Considered recovery environments for equine wellbeing" },
     ],
   },
 ];
@@ -215,8 +217,8 @@ export function Header() {
               <span className="font-serif text-sm font-semibold tracking-[0.08em] leading-none">
                 Peninsula Equine
               </span>
-              <span className="text-[9px] font-sans tracking-[0.25em] uppercase text-accent/70 mt-1">
-                Premium Equine Environments
+              <span className="text-[9px] font-sans tracking-[0.25em] uppercase text-accent/55 mt-1">
+                From Dirt to Dynasty
               </span>
             </div>
           </Link>
