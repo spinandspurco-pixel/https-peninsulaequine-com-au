@@ -250,6 +250,10 @@ const only = onlyArg
     )
   : null;
 
+// `--json` or `--json=path/to/file.json` — write machine-readable results.
+const jsonArg = process.argv.find((a) => a.startsWith("--json"));
+const jsonOut = jsonArg ? (jsonArg.includes("=") ? jsonArg.slice("--json=".length) : "dist/prerender-verify.json") : null;
+
 const selectedRoutes = only
   ? ROUTES.filter((r) => only.has(r.path))
   : ROUTES;
