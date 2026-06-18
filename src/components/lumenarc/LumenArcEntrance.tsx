@@ -52,11 +52,11 @@ export function LumenArcEntrance() {
       }`}
       style={{ transitionTimingFunction: "cubic-bezier(0.45, 0, 0.15, 1)" }}
     >
-      {/* Coming Soon backdrop — same filter/mask as page hero */}
+      {/* Coming Soon backdrop — contained so the baked-in lockup never clips on narrow viewports */}
       <img
         src={comingSoonAsset.url}
         alt=""
-        className="absolute inset-0 h-full w-full object-cover object-center image-bleed la-entrance-bg"
+        className="absolute inset-0 h-full w-full object-contain object-center image-bleed la-entrance-bg"
         style={{ filter: "brightness(0.78) contrast(1.08) saturate(0.8)" }}
         decoding="async"
         fetchPriority="high"
