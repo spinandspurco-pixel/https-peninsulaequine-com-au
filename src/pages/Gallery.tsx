@@ -7,7 +7,7 @@ import pavilionWide from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace
 import fireplacePortrait from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
 import parrillaWide from "@/assets/main-ridge/mr-parrilla-wide.png.asset.json";
 import aberdeenHero from "@/assets/aberdeen/hero-entrance-twilight.png.asset.json";
-import currentArenaHero from "@/assets/current-arena/covered-arena-drone-hero.png.asset.json";
+import currentArenaHero from "@/assets/covered-arena-finished-lit.jpg";
 
 const FILTER = "brightness(0.82) contrast(1.1) saturate(0.8)";
 
@@ -194,7 +194,7 @@ export default function Projects() {
               <RevealOnScroll direction="up" duration={1200}>
                 <div className="relative aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                   <img
-                    src={currentArenaHero.url}
+                    src={currentArenaHero}
                     alt="Covered Arena & Stables Build in progress — steel frame, roofing works and red clay site conditions"
                     loading="lazy"
                     decoding="async"
