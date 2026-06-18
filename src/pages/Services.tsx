@@ -250,6 +250,18 @@ export default function Services() {
                       Read the Approach
                     </Link>
                   </RevealOnScroll>
+                  <RevealOnScroll direction="up" delay={480}>
+                    <div className="pt-8">
+                      <Button
+                        variant="gold"
+                        size="lg"
+                        onClick={useIntake().open}
+                        className="btn-hover-lift"
+                      >
+                        Request a Consult
+                      </Button>
+                    </div>
+                  </RevealOnScroll>
                 </div>
               </div>
             </div>
