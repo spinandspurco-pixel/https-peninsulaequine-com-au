@@ -196,10 +196,17 @@ export default function Index() {
           aria-hidden="true"
         />
 
-        <section className="relative py-[clamp(3.75rem,3rem+4vw,6.75rem)] bg-background overflow-hidden">
+        <section className="relative py-[clamp(4.5rem,3rem+5vw,8rem)] bg-background overflow-hidden">
           <div className="section-container max-w-5xl">
             <RevealOnScroll direction="up" duration={900}>
-              <p className="font-serif text-foreground/82 leading-[1.45] tracking-[-0.02em] text-[clamp(1.4rem,1.05rem+1.5vw,2.2rem)] max-w-4xl">
+              <div className="flex items-baseline gap-5 mb-10">
+                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">01</span>
+                <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
+                <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Discipline</span>
+              </div>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" duration={1000} delay={120}>
+              <p className="font-serif text-foreground/82 leading-[1.4] tracking-[-0.022em] text-[clamp(1.5rem,1.05rem+1.8vw,2.45rem)] max-w-4xl text-wrap-balance">
                 Arenas, stables, groundworks and rural builds — shaped from the ground up across the
                 Mornington Peninsula and beyond.
               </p>
@@ -209,6 +216,13 @@ export default function Index() {
 
         <section className="relative py-[clamp(5.5rem,4rem+6vw,10rem)] bg-background overflow-hidden">
           <div className="section-container max-w-7xl mx-auto">
+            <RevealOnScroll direction="up" duration={900}>
+              <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4.5rem)]">
+                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">02</span>
+                <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
+                <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Reference Plates</span>
+              </div>
+            </RevealOnScroll>
             <div className="grid grid-cols-1 md:grid-cols-12 gap-[clamp(1.5rem,1rem+2vw,3.5rem)] items-start">
               <RevealOnScroll direction="up" duration={1200}>
                 <div className="md:col-span-7">
@@ -226,18 +240,17 @@ export default function Index() {
                         decoding="async"
                         width={1672}
                         height={941}
-                        className="absolute inset-0 w-full h-full object-cover"
+                        className="absolute inset-0 w-full h-full object-cover image-bleed"
                         style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
                       />
                     </picture>
+                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,hsl(var(--background)/0.55)_100%)]" />
                   </div>
-                  <div className="mt-6 space-y-1.5">
-                    <p className="font-mono uppercase text-accent/45 text-[10px] tracking-[0.45em]">
-                      Flagship Build
-                    </p>
-                    <p className="font-serif text-foreground/75 text-[clamp(1.1rem,0.9rem+0.6vw,1.45rem)] leading-[1.2] tracking-[-0.01em]">
+                  <div className="mt-6 pt-5 border-t border-accent/15 flex items-baseline justify-between gap-4">
+                    <p className="font-serif text-foreground/78 text-[clamp(1.1rem,0.9rem+0.6vw,1.45rem)] leading-[1.2] tracking-[-0.01em]">
                       Main Ridge Pavilion
                     </p>
+                    <p className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.45em]">Flagship</p>
                   </div>
                 </div>
               </RevealOnScroll>
@@ -248,17 +261,16 @@ export default function Index() {
                       src={serviceArenas.url}
                       alt="Arena groundwork at golden hour inside a covered equestrian structure"
                       loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover"
+                      className="absolute inset-0 w-full h-full object-cover image-bleed"
                       style={{ objectPosition: "50% 58%", filter: "brightness(0.8) contrast(1.12) saturate(0.78)" }}
                     />
+                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,hsl(var(--background)/0.55)_100%)]" />
                   </div>
-                  <div className="mt-6 space-y-1.5">
-                    <p className="font-mono uppercase text-accent/45 text-[10px] tracking-[0.45em]">
-                      Arenas
-                    </p>
-                    <p className="font-serif text-foreground/75 text-[clamp(1.1rem,0.9rem+0.6vw,1.45rem)] leading-[1.2] tracking-[-0.01em]">
+                  <div className="mt-6 pt-5 border-t border-accent/15 flex items-baseline justify-between gap-4">
+                    <p className="font-serif text-foreground/78 text-[clamp(1.1rem,0.9rem+0.6vw,1.45rem)] leading-[1.2] tracking-[-0.01em]">
                       Covered Competition Arena
                     </p>
+                    <p className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.45em]">Arena</p>
                   </div>
                 </div>
               </RevealOnScroll>
@@ -269,19 +281,21 @@ export default function Index() {
 
         <section className="relative py-[clamp(5rem,3.5rem+5vw,8rem)] bg-background overflow-hidden">
           <div className="section-container max-w-5xl mx-auto">
+            <RevealOnScroll direction="up" duration={900}>
+              <div className="flex items-baseline gap-5 mb-8">
+                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">03</span>
+                <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
+                <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Selected Works</span>
+              </div>
+            </RevealOnScroll>
             <div className="grid grid-cols-12 gap-6 items-end">
-              <div className="col-span-12 md:col-span-7 space-y-3">
-                <RevealOnScroll direction="up" duration={900}>
-                  <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
-                    Selected Works
-                  </p>
-                </RevealOnScroll>
+              <div className="col-span-12 md:col-span-7 space-y-4">
                 <RevealOnScroll direction="up" duration={1000} delay={120}>
-                  <h2 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.02em] text-[clamp(1.6rem,1.1rem+1.8vw,2.4rem)]">
+                  <h2 className="font-serif text-foreground/90 leading-[1.02] tracking-[-0.022em] text-[clamp(1.7rem,1.1rem+2vw,2.6rem)] text-wrap-balance">
                     A closer look at the work.
                   </h2>
                 </RevealOnScroll>
-                <RevealLine width="w-8" delay={260} />
+                <RevealLine width="w-10" delay={260} />
               </div>
               <div className="col-span-12 md:col-span-5 md:text-right">
                 <RevealOnScroll direction="up" duration={1000} delay={320}>
@@ -297,6 +311,7 @@ export default function Index() {
             </div>
           </div>
         </section>
+
 
 
 
