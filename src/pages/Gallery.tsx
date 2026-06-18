@@ -7,8 +7,9 @@ import pavilionWide from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace
 import fireplacePortrait from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
 import parrillaWide from "@/assets/main-ridge/mr-parrilla-wide.png.asset.json";
 import aberdeenHero from "@/assets/aberdeen/hero-entrance-twilight.png.asset.json";
-import currentArenaSteelAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
-const currentArenaHero = currentArenaSteelAsset.url;
+import { getProjectImage, getProjectImageAlt } from "@/config/projectImagery";
+const currentArenaHero = getProjectImage("covered-arena-stables-build", "selectedWorks").url;
+const currentArenaAlt = getProjectImageAlt("covered-arena-stables-build", "selectedWorks");
 
 const FILTER = "brightness(0.82) contrast(1.1) saturate(0.8)";
 
