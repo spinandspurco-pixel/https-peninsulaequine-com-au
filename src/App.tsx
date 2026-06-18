@@ -20,6 +20,7 @@ const Arenas = lazy(() => import("./pages/Arenas"));
 const Stables = lazy(() => import("./pages/Stables"));
 const EquineEstates = lazy(() => import("./pages/EquineEstates"));
 const LumenArc = lazy(() => import("./pages/RecoveryStation"));
+import LumenArcRouteFallback from "./components/lumenarc/LumenArcRouteFallback";
 const InfrastructurePage = lazy(() => import("./pages/Infrastructure"));
 
 // Supporting public pages
