@@ -112,10 +112,14 @@ function LumenArcChapterSection({
 
   return (
     <section
-      className="relative py-[clamp(6rem,4rem+8vw,12rem)] la-chapter-section group/chapter outline-none"
+      className="relative py-[clamp(6rem,4rem+8vw,12rem)] la-chapter-section group/chapter outline-none focus-visible:ring-1 focus-visible:ring-accent/40 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
       tabIndex={0}
       aria-label={`${label} — chapter ${number}`}
+      aria-describedby={`la-meta-${number}`}
     >
+      <span id={`la-meta-${number}`} className="sr-only">
+        {label}. LumenArc chapter {number}.
+      </span>
       {/* Interactive blueprint overlay — revealed on hover/focus, respects reduced motion */}
       <div
         aria-hidden="true"
