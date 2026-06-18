@@ -209,7 +209,7 @@ export default function Index() {
             aria-hidden="true"
           />
 
-          <section className="relative py-[clamp(4.5rem,3rem+5vw,8rem)] bg-background overflow-hidden">
+          <section className="relative py-[clamp(3rem,2rem+4vw,7rem)] bg-background overflow-hidden">
             <div className="section-container max-w-5xl">
               <RevealOnScroll direction="up" duration={900}>
                 <div className="flex items-baseline gap-5 mb-10">
@@ -227,7 +227,7 @@ export default function Index() {
             </div>
           </section>
 
-          <section className="relative py-[clamp(6rem,4rem+7vw,11rem)] bg-background overflow-hidden border-t border-accent/10">
+          <section className="relative py-[clamp(3.75rem,2.25rem+5vw,9rem)] bg-background overflow-hidden border-t border-accent/10">
             <div className="section-container max-w-[1480px] mx-auto">
               <RevealOnScroll direction="up" duration={900}>
                 <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4rem)]">
@@ -267,7 +267,7 @@ export default function Index() {
               {/* Main Ridge — full-bleed anchor */}
               <RevealOnScroll direction="up" duration={1300}>
                 <Link to="/selected-works/main-ridge-pavilion" className="group block">
-                  <div className="relative aspect-[4/5] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
+                  <div className="relative aspect-[5/6] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                     <picture className="absolute inset-0 w-full h-full">
                       <source
                         srcSet={`${goldenHourPavilion800.url} 800w, ${goldenHourPavilion1200.url} 1200w, ${goldenHourPavilion1600.url} 1600w`}
@@ -344,7 +344,7 @@ export default function Index() {
           </section>
 
           {/* Field Notes — live build feature */}
-          <section className="relative py-[clamp(6rem,4rem+7vw,10rem)] bg-background overflow-hidden border-t border-accent/10">
+          <section className="relative py-[clamp(3.5rem,2rem+5vw,8.5rem)] bg-background overflow-hidden border-t border-accent/10">
             <div className="section-container max-w-[1480px] mx-auto">
               <RevealOnScroll direction="up" duration={900}>
                 <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4rem)]">
@@ -356,7 +356,7 @@ export default function Index() {
 
               <RevealOnScroll direction="up" duration={1200}>
                 <Link to="/field-notes/covered-arena-stables-build" className="group block">
-                  <div className="relative aspect-[4/5] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
+                  <div className="relative aspect-[5/6] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                     <img
                       src={fieldNoteDozerStorm.url}
                       alt="Dozer working red clay site under storm sky — steel frame rising on the covered arena and stables build"
@@ -440,7 +440,7 @@ export default function Index() {
             </div>
           </section>
 
-          <section className="relative py-[clamp(6rem,4rem+7vw,10rem)] bg-background overflow-hidden border-t border-accent/10">
+          <section className="relative py-[clamp(3.5rem,2rem+5vw,8.5rem)] bg-background overflow-hidden border-t border-accent/10">
             <div className="section-container max-w-[1480px] mx-auto">
               <RevealOnScroll direction="up" duration={900}>
                 <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4rem)]">
@@ -491,7 +491,7 @@ export default function Index() {
             </div>
           </section>
 
-          <section className="relative py-[clamp(7rem,4.5rem+9vw,13rem)] bg-background overflow-hidden">
+          <section className="relative py-[clamp(4rem,2.5rem+6vw,10rem)] bg-background overflow-hidden">
             <img
               src={serviceGroundworks.url}
               alt=""
