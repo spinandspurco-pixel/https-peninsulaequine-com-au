@@ -62,10 +62,17 @@ jobs:
 
       - name: Setup Node
         if: matrix.runtime == 'node'
+        id: node-cache
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
+
+      - name: Report Node cache status
+        if: matrix.runtime == 'node'
+        run: |
+          echo "Node cache hit: ${{ steps.node-cache.outputs.cache-hit }}"
+          echo "Node cache key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}"
 
       - name: Install dependencies (Bun)
         if: matrix.runtime == 'bun'
