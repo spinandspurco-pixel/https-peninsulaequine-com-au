@@ -112,7 +112,51 @@ The report object must contain these top-level fields:
   - `path` — route path (e.g. `/about`)  
   - `file` — absolute path to the prerendered HTML file that was checked  
   - `passed` — boolean  
-  - `failures` — array of failure objects, each with `route`, `check`, and `detail`
+  - `failures` — array of failure objects, each with `route`, `check`, `code`, `path`, `expected`, `received`, and `detail`
+
+### Failure object fields
+
+Every entry in `failures[]` is a structured object so tooling can branch on the failure category without parsing prose:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `route` | string | Route path where the failure occurred (e.g. `/about`). |
+| `check` | string | Symbolic name of the check (e.g. `og:image`, `canonical`, `title`). |
+| `code` | enum | Category — one of `missing`, `mismatch`, `too-short`, `placeholder`, `not-absolute`, `wrong-origin`, `file-missing`, `schema`. |
+| `path` | string | CSS-style locator of the offending element (e.g. `meta[property="og:image"]`, `link[rel="canonical"]`, `head > title`). For `file-missing`/`schema` this is a filesystem path. |
+| `expected` | string \| null | The value the verifier expected. `null` when the check doesn't have a single expected value (e.g. a plain `missing` for an optional rule). |
+| `received` | string \| null | The value the verifier actually observed. `null` when the tag was absent. |
+| `detail` | string | Human-readable summary derived from the structured fields — useful for log lines and CI annotations. |
+
+#### Examples
+
+A **missing** tag has `received: null` and no specific `expected` value:
+
+```json
+{
+  "route": "/about",
+  "check": "og:image",
+  "code": "missing",
+  "path": "meta[property=\"og:image\"]",
+  "expected": null,
+  "received": null,
+  "detail": "missing og:image"
+}
+```
+
+A **mismatch** carries both sides for easy diffing:
+
+```json
+{
+  "route": "/contact",
+  "check": "canonical",
+  "code": "mismatch",
+  "path": "link[rel=\"canonical\"]",
+  "expected": "https://peninsulaequine.com.au/contact",
+  "received": "https://peninsulaequine.com.au/about",
+  "detail": "expected \"https://peninsulaequine.com.au/contact\", got \"https://peninsulaequine.com.au/about\""
+}
+```
 
 ### Sample output
 
@@ -140,6 +184,10 @@ The report object must contain these top-level fields:
         {
           "route": "/about",
           "check": "og:image",
+          "code": "missing",
+          "path": "meta[property=\"og:image\"]",
+          "expected": null,
+          "received": null,
           "detail": "missing og:image"
         }
       ]
@@ -150,7 +198,7 @@ The report object must contain these top-level fields:
 
 ### Sample failure report
 
-A route with multiple failures looks like this. Each failure object carries `route` (the path), `check` (the rule that failed), and `detail` (human-readable explanation):
+A route with multiple failures looks like this. Each failure object carries the full structured set of fields so tooling can group by `code` or `check` and surface `expected` vs `received` directly:
 
 ```json
 {
@@ -170,16 +218,28 @@ A route with multiple failures looks like this. Each failure object carries `rou
         {
           "route": "/contact",
           "check": "og:image",
+          "code": "mismatch",
+          "path": "meta[property=\"og:image\"]",
+          "expected": "https://peninsulaequine.com.au/assets/og-contact.jpg",
+          "received": "",
           "detail": "expected \"https://peninsulaequine.com.au/assets/og-contact.jpg\", got \"\""
         },
         {
           "route": "/contact",
           "check": "twitter:image",
+          "code": "missing",
+          "path": "meta[name=\"twitter:image\"]",
+          "expected": null,
+          "received": null,
           "detail": "missing twitter:image"
         },
         {
           "route": "/contact",
           "check": "canonical",
+          "code": "mismatch",
+          "path": "link[rel=\"canonical\"]",
+          "expected": "https://peninsulaequine.com.au/contact",
+          "received": "https://peninsulaequine.com.au/about",
           "detail": "expected \"https://peninsulaequine.com.au/contact\", got \"https://peninsulaequine.com.au/about\""
         }
       ]
