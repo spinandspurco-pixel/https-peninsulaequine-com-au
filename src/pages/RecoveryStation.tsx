@@ -100,7 +100,9 @@ function LumenArcChapterSection({
   alt,
   align = "left",
   disclaimer,
-}: LumenArcChapter) {
+  tabIndex,
+  onFocusChapter,
+}: LumenArcChapter & { tabIndex?: number; onFocusChapter?: () => void }) {
   const imageOrder = align === "right" ? "lg:order-2" : "";
   const copyOrder = align === "right" ? "lg:order-1" : "";
   // Deeper directional bleed — image escapes its column on the outer edge
