@@ -185,7 +185,7 @@ export default function HQ() {
                 className="font-serif font-light italic tracking-[0.04em]"
                 style={{
                   fontSize: "clamp(1rem, 0.5rem + 1.8vw, 1.5rem)",
-                  color: "hsl(var(--foreground) / 0.14)",
+                  color: "hsl(var(--footer-muted))",
                 }}
               >
                 Not a portal. A process.
@@ -249,6 +249,7 @@ export default function HQ() {
                     />
                     <button
                       type="button"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/60 hover:text-accent transition-colors"
                     >
