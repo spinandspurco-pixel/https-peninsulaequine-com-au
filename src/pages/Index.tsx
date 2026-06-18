@@ -226,6 +226,45 @@ export default function Index() {
             </div>
           </section>
 
+          {/* Built by Horse People — brand anchor */}
+          <section className="relative py-[clamp(3.5rem,2rem+5vw,8.5rem)] bg-background overflow-hidden border-t border-accent/10">
+            <div className="section-container max-w-[1480px] mx-auto">
+              <div className="grid grid-cols-12 gap-[clamp(2rem,1.25rem+2vw,4rem)] items-center">
+                <RevealOnScroll direction="up" duration={1300} className="col-span-12 md:col-span-7">
+                  <div className="relative aspect-[4/5] sm:aspect-[5/4] md:aspect-[4/5] overflow-hidden">
+                    <img
+                      src={ciroAceQuietMoment.url}
+                      alt="A quiet moment between horseman and horse in low arena light — the ground Peninsula Equine builds for"
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 w-full h-full object-cover image-bleed"
+                      style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)", objectPosition: "50% 38%" }}
+                    />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
+                  </div>
+                </RevealOnScroll>
+                <div className="col-span-12 md:col-span-5 space-y-6">
+                  <RevealOnScroll direction="up" duration={900}>
+                    <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Built by Horse People</span>
+                  </RevealOnScroll>
+                  <RevealOnScroll direction="up" duration={1000} delay={120}>
+                    <h2 className="font-serif text-foreground/92 leading-[1.04] tracking-[-0.022em] text-[clamp(1.75rem,1.15rem+2vw,2.7rem)]">
+                      We ride the ground we build.
+                    </h2>
+                  </RevealOnScroll>
+                  <RevealLine width="w-10" delay={220} />
+                  <RevealOnScroll direction="up" duration={1000} delay={300}>
+                    <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[clamp(0.95rem,0.85rem+0.25vw,1.05rem)] max-w-md">
+                      Peninsula Equine is built by riders. Every covered arena, stable and pavilion
+                      is shaped from the saddle out — sightlines, footing, flow and quiet detail
+                      that horses and people actually feel.
+                    </p>
+                  </RevealOnScroll>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <section className="relative py-[clamp(3.75rem,2.25rem+5vw,9rem)] bg-background overflow-hidden border-t border-accent/10">
             <div className="section-container max-w-[1480px] mx-auto">
               <RevealOnScroll direction="up" duration={900}>
