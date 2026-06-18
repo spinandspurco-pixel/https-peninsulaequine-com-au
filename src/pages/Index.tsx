@@ -14,82 +14,13 @@ import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
 import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
 
 import serviceArenas from "@/assets/homepage-services/arenas.png.asset.json";
-import serviceStables from "@/assets/homepage-services/stables.png.asset.json";
-import serviceInfrastructure from "@/assets/homepage-services/infrastructure.png.asset.json";
 import serviceGroundworks from "@/assets/homepage-services/groundworks.png.asset.json";
-import serviceCustom from "@/assets/homepage-services/custom-rural-builds.png.asset.json";
-import serviceDrainage from "@/assets/homepage-services/drainage.png.asset.json";
 
 import slidingStopHero from "@/assets/homepage-refresh/sliding-stop-hero.png.asset.json";
-import ciroAceCloseup from "@/assets/homepage-refresh/ciro-ace-closeup.png.asset.json";
-import ciroAceDetail from "@/assets/homepage-refresh/ciro-ace-detail.png.asset.json";
-
 
 const SESSION_KEY = "pe-brand-intro-seen";
 const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
 
-const serviceCards = [
-  {
-    num: "01",
-    title: "Arenas",
-    description:
-      "Indoor and outdoor arenas, footing preparation, drainage, base works and surfaces designed for real use.",
-    image: serviceArenas.url,
-    alt: "Arena groundwork underway inside a large covered equestrian structure at golden hour",
-    imagePosition: "50% 58%",
-    href: "/arenas",
-  },
-  {
-    num: "02",
-    title: "Stables & Barns",
-    description:
-      "Stable builds, barn interiors, shelters, wash bays, tack spaces and practical horse-first layouts.",
-    image: serviceStables.url,
-    alt: "Moody stable aisle with warm timber stall fronts and a horse leaning from its bay",
-    imagePosition: "54% 44%",
-    href: "/stables",
-  },
-  {
-    num: "03",
-    title: "Equine Infrastructure",
-    description:
-      "Fencing, laneways, yards, gates, retaining, access, drainage and site works that make the whole property function.",
-    image: serviceInfrastructure.url,
-    alt: "Rural steel gate and timber fencing stretching down an equine laneway at sunset",
-    imagePosition: "48% 54%",
-    href: "/infrastructure",
-  },
-  {
-    num: "04",
-    title: "Groundworks",
-    description:
-      "Site cuts, levels, bases, preparation and machine work — the ugly stuff that makes the beautiful stuff last.",
-    image: serviceGroundworks.url,
-    alt: "Dozer pushing earth on a rural construction site with equine fencing behind it at sunset",
-    imagePosition: "42% 52%",
-    href: "/services",
-  },
-  {
-    num: "05",
-    title: "Custom Rural Builds",
-    description:
-      "Pavilions, viewing areas, parrilla spaces, tables, fit-outs and lifestyle additions built with the same grit and finish.",
-    image: serviceCustom.url,
-    alt: "Rustic pavilion with timber table, corrugated steel lining and firebox in warm evening light",
-    imagePosition: "50% 50%",
-    href: "/services",
-  },
-  {
-    num: "06",
-    title: "Drainage & Surfacing",
-    description:
-      "Drainage systems, base works and surface preparation engineered for performance, longevity and all conditions.",
-    image: serviceDrainage.url,
-    alt: "Close-up of arena drainage trench with gravel, geotextile fabric and perforated pipe in golden light",
-    imagePosition: "50% 56%",
-    href: "/services",
-  },
-];
 
 const featuredWorks = [
   {
@@ -312,166 +243,37 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="relative py-[clamp(6rem,4rem+8vw,11rem)] bg-background overflow-hidden">
-          <div className="hidden lg:block absolute top-0 bottom-0 left-1/2 w-px bg-foreground/[0.04]" />
+        <section className="relative py-[clamp(4rem,3rem+5vw,8rem)] bg-background overflow-hidden">
           <div className="section-container max-w-7xl mx-auto">
-            <div className="mb-[clamp(3rem,2rem+3vw,5rem)] grid grid-cols-12 gap-6 items-end">
-              <div className="col-span-12 md:col-span-8 space-y-4">
-                <RevealOnScroll direction="up" duration={900}>
-                  <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
-                    Services
-                  </p>
-                </RevealOnScroll>
-                <RevealOnScroll direction="up" duration={1000} delay={150}>
-                  <h2 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.02em] text-[clamp(1.85rem,1.2rem+2.4vw,2.9rem)]">
-                    Built for the way horse properties actually work.
-                  </h2>
-                </RevealOnScroll>
-                <RevealLine width="w-8" delay={300} />
-                <RevealOnScroll direction="up" duration={1000} delay={250}>
-                  <p className="font-sans font-light text-foreground/50 leading-[1.85] text-[14px] max-w-xl">
-                    From arenas and stables to groundwork, drainage, fencing and custom rural builds,
-                    Peninsula Equine creates practical equine environments with the structure, flow and
-                    finish required for real daily use.
-                  </p>
-                </RevealOnScroll>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[clamp(1rem,0.5rem+1vw,1.5rem)]">
-              {serviceCards.map((card, i) => (
-                <RevealOnScroll key={card.num} direction="up" delay={i * 100}>
-                  <Link
-                    to={card.href}
-                    className="group relative block overflow-hidden rounded-sm bg-card"
-                    style={{ transition: `box-shadow 700ms ${EASE}` }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.boxShadow =
-                        "0 0 40px -12px hsl(var(--accent) / 0.18), 0 0 0 1px hsl(var(--accent) / 0.12)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.boxShadow = "none";
-                    }}
-                  >
-                    <div className="relative aspect-[16/10] overflow-hidden">
-                      <img
-                        src={card.image}
-                        alt={card.alt}
-                        width={1024}
-                        height={640}
-                        loading="lazy"
-                        className="absolute inset-0 w-full h-full object-cover"
-                        style={{
-                          objectPosition: card.imagePosition,
-                          filter: "brightness(0.82) contrast(1.12) saturate(0.78)",
-                          transition: `transform 900ms ${EASE}`,
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = "scale(1.06)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = "scale(1)";
-                        }}
-                      />
-                      <div
-                        className="absolute inset-0 pointer-events-none"
-                        style={{
-                          background:
-                            "linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.52) 58%, rgba(0,0,0,0.78) 100%)",
-                        }}
-                      />
-                      <span className="absolute top-4 left-4 font-mono text-[10px] tracking-[0.4em] text-accent/80">
-                        {card.num}
-                      </span>
-                      <span className="absolute top-4 right-4 font-sans text-[11px] tracking-[0.2em] uppercase text-foreground/0 group-hover:text-foreground/80 transition-colors duration-500">
-                        View service →
-                      </span>
-                    </div>
-
-                    <div className="relative p-[clamp(1.25rem,1rem+1vw,1.75rem)]">
-                      <h3 className="font-serif text-foreground/90 leading-[1.1] tracking-[-0.015em] text-[clamp(1.25rem,1rem+0.8vw,1.55rem)] mb-2">
-                        {card.title}
-                      </h3>
-                      <p className="font-sans font-light text-foreground/45 leading-[1.75] text-[13px]">
-                        {card.description}
-                      </p>
-                    </div>
-                  </Link>
-                </RevealOnScroll>
-              ))}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-[clamp(1rem,0.5rem+1.5vw,2rem)] items-start">
+              <RevealOnScroll direction="up" duration={1200}>
+                <div className="md:col-span-7 relative aspect-[4/3] overflow-hidden rounded-sm">
+                  <img
+                    src={mainRidgeInterior}
+                    alt="Main Ridge pavilion interior with exposed timber framing in evening light"
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover"
+                    style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
+                </div>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" duration={1200} delay={200}>
+                <div className="md:col-span-5 relative aspect-[4/5] overflow-hidden rounded-sm md:mt-20">
+                  <img
+                    src={serviceArenas.url}
+                    alt="Arena groundwork at golden hour inside a covered equestrian structure"
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover"
+                    style={{ objectPosition: "50% 58%", filter: "brightness(0.8) contrast(1.12) saturate(0.78)" }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
+                </div>
+              </RevealOnScroll>
             </div>
           </div>
         </section>
 
-        <section className="relative py-[clamp(6rem,4rem+8vw,11rem)] bg-card overflow-hidden">
-          <div className="section-container max-w-7xl mx-auto grid grid-cols-12 gap-[clamp(1.5rem,1rem+2vw,3rem)] items-start">
-            <div className="col-span-12 lg:col-span-5 space-y-6 lg:pr-6">
-              <RevealOnScroll direction="up" duration={900}>
-                <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
-                  Built by horse people
-                </p>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" duration={1000} delay={150}>
-                <h2 className="font-serif text-foreground/90 leading-[1.03] tracking-[-0.02em] text-[clamp(1.9rem,1.2rem+2.8vw,3.1rem)]">
-                  Built by horse people.
-                </h2>
-              </RevealOnScroll>
-              <RevealLine width="w-8" delay={300} />
-              <RevealOnScroll direction="up" duration={1000} delay={350}>
-                <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px] max-w-md">
-                  Real time in the saddle shapes the way these properties are built —
-                  the feel of the surface, the flow through the yards, the details that hold up after
-                  the machines leave.
-                </p>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" duration={900} delay={500}>
-                <Link
-                  to="/about"
-                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.4em]"
-                >
-                  <span className="w-6 h-px bg-accent/50 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
-                  About Peninsula Equine
-                </Link>
-              </RevealOnScroll>
-            </div>
-
-            <div className="col-span-12 lg:col-span-7">
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-5 items-start">
-                <RevealOnScroll direction="up" duration={1200}>
-                  <div className="md:col-span-8 relative aspect-[4/5] overflow-hidden rounded-sm">
-                    <img
-                      src={ciroAceCloseup.url}
-                      alt="Quiet moment with horse and horseman in warm stable light"
-                      loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover"
-                      style={{
-                        objectPosition: "52% 45%",
-                        filter: "brightness(0.84) contrast(1.08) saturate(0.82)",
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-card/35 via-transparent to-transparent" />
-                  </div>
-                </RevealOnScroll>
-
-                <RevealOnScroll direction="up" duration={1050} delay={180}>
-                  <div className="md:col-span-4 relative aspect-[4/5] overflow-hidden rounded-sm md:mt-16">
-                    <img
-                      src={ciroAceDetail.url}
-                      alt="Close detail — hand, rein and horse in warm light"
-                      loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover"
-                      style={{
-                        objectPosition: "50% 42%",
-                        filter: "brightness(0.82) contrast(1.08) saturate(0.8)",
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-card/35 via-transparent to-transparent" />
-                  </div>
-                </RevealOnScroll>
-              </div>
-            </div>
-          </div>
-        </section>
 
         <section className="relative py-[clamp(6rem,4rem+8vw,11rem)] bg-background overflow-hidden">
           <div className="section-container max-w-7xl mx-auto">
