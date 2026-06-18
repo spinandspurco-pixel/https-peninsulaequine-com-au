@@ -322,6 +322,7 @@ export default function ServiceDetail() {
 
   return (
     <Layout>
+      <div className="type-architectural">
       <StickySubpageCTA
         ctaLabel="Discuss Project"
         ctaIcon={<Phone className="h-4 w-4" />}
