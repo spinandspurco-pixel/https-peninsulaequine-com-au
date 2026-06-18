@@ -70,6 +70,7 @@ export type ProjectSurface =
   | "selectedWorks"
   | "fieldNotesHero"
   | "fieldNotesPreview"
+  | "fieldNotesConditions"
   | "fieldNotesGalleryA"
   | "fieldNotesGalleryB"
   | "caseStudyHero";
