@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
-// Cinematic estate-scale hero (Aberdeen entrance at twilight — whole-property reading)
-import heroAsset from "@/assets/aberdeen/hero-entrance-twilight.png.asset.json";
+// Cinematic estate-scale hero — aerial masterplan at dusk
+import heroAsset from "@/assets/services-new/pe-estate-aerial-masterplan.png.asset.json";
 const heroImg = heroAsset.url;
 
 const pillars = [
@@ -16,7 +16,7 @@ export default function EquineEstates() {
     <Layout>
       <article className="bg-background text-foreground type-architectural">
         <section className="relative h-[88vh] min-h-[600px] overflow-hidden">
-          <img src={heroImg} alt="Private equine estate entrance at twilight — whole-property authorship" width={1920} height={1080} className="absolute inset-0 w-full h-full object-cover img-header" style={{ filter: "brightness(0.86) contrast(1.1) saturate(0.85)" }} />
+          <img src={heroImg} alt="Aerial masterplan view of a private equine estate at dusk — arena, stables, paddocks, water and access resolved as one composition" width={1920} height={1080} className="absolute inset-0 w-full h-full object-cover img-header" style={{ filter: "brightness(0.88) contrast(1.08) saturate(0.85)", objectPosition: "50% 55%" }} />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/50 via-primary/15 to-primary/85" />
           <div className="absolute bottom-0 left-0 right-0 px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2.5rem,1.5rem+5vw,6rem)]">
             <div className="max-w-6xl space-y-[clamp(1.25rem,1rem+1vw,2rem)]">
@@ -27,8 +27,8 @@ export default function EquineEstates() {
                 <h1 className="font-serif text-primary-foreground tracking-[-0.025em] leading-[0.95] text-[clamp(2.5rem,1.4rem+5.4vw,5.5rem)]">Equine Estates.</h1>
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1100} delay={800}>
-                <p className="font-serif italic text-primary-foreground/55 max-w-xl leading-[1.55] text-[clamp(0.875rem,0.78rem+0.4vw,1.0625rem)]">
-                  An entire property, authored by one team. The whole resolved before the parts.
+                <p className="font-serif italic text-primary-foreground/65 max-w-xl leading-[1.55] text-[clamp(0.875rem,0.78rem+0.4vw,1.0625rem)]">
+                  Whole-property equine planning across arenas, stables, access, fencing, water, drainage, recovery and movement — authored by one team.
                 </p>
               </RevealOnScroll>
             </div>

@@ -1,19 +1,16 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import heroAsset from "@/assets/services-new/pe-stable-aisle-cinematic.png.asset.json";
+const heroImg = heroAsset.url;
 
 /**
- * Stables.
+ * Stables & Barn Structures.
  *
  * Image policy (locked):
- *   The pavilion / parrilla / interior-dining photo set is forbidden on this page.
- *   The current cinematic asset library does not yet contain a graded stable
- *   aisle / stall frontage that matches the rest of the site. Per the global
- *   image rules, we render this page as a dark text-only composition until
- *   a category-correct cinematic stable visual is uploaded.
- *
- *   When that asset lands, replace the dark hero band below with an <img>
- *   and a gradient overlay — and only then.
+ *   Only cinematic stable / barn interior imagery — timber, steel, joinery,
+ *   door hardware, aisle, stall frontage. Pavilion / parrilla / dining
+ *   imagery is forbidden on this page.
  */
 
 const capabilities = [
@@ -26,27 +23,29 @@ export default function Stables() {
   return (
     <Layout>
       <article className="bg-background text-foreground type-architectural">
-        {/* HERO — text-only dark composition (no pavilion/parrilla imagery) */}
+        {/* HERO — cinematic stable aisle */}
         <section className="relative h-[82vh] min-h-[560px] overflow-hidden bg-background">
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(ellipse 80% 60% at 30% 70%, hsl(var(--accent) / 0.08), transparent 60%), linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background)) 60%, hsl(var(--primary) / 0.85) 100%)",
-            }}
+          <img
+            src={heroImg}
+            alt="Cinematic stable aisle at dusk — timber stalls, polished steel hardware, warm bronze lighting and an open doorway to the paddock"
+            width={1920}
+            height={1080}
+            className="absolute inset-0 w-full h-full object-cover img-header"
+            style={{ filter: "brightness(0.86) contrast(1.1) saturate(0.82)", objectPosition: "50% 55%" }}
           />
-          <div className="absolute inset-0 grain-texture opacity-40" />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/45 via-primary/15 to-primary/85" />
+          <div className="absolute inset-0 grain-texture opacity-30" />
           <div className="absolute bottom-0 left-0 right-0 px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2.5rem,1.5rem+4vw,5rem)]">
             <div className="max-w-6xl space-y-[clamp(1.25rem,1rem+1vw,2rem)]">
               <RevealOnScroll direction="up" duration={900} delay={300}>
                 <p className="font-mono uppercase text-accent/65 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">Capability — 02</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1100} delay={500}>
-                <h1 className="font-serif text-foreground tracking-[-0.025em] leading-[0.95] text-[clamp(2.5rem,1.4rem+5.4vw,5.5rem)]">Stables.</h1>
+                <h1 className="font-serif text-primary-foreground tracking-[-0.025em] leading-[0.95] text-[clamp(2.5rem,1.4rem+5.4vw,5.5rem)]">Stables &amp; Barn Structures.</h1>
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1100} delay={800}>
-                <p className="font-serif italic text-foreground/55 max-w-xl leading-[1.55] text-[clamp(0.875rem,0.78rem+0.4vw,1.0625rem)]">
-                  Architecture for the horse. Joinery for the handler. Engineered for thirty years of daily use.
+                <p className="font-serif italic text-primary-foreground/65 max-w-xl leading-[1.55] text-[clamp(0.875rem,0.78rem+0.4vw,1.0625rem)]">
+                  Purpose-built stable environments with practical flow, durable finishes and horse-first daily usability.
                 </p>
               </RevealOnScroll>
             </div>
