@@ -411,15 +411,15 @@ export default function RecoveryStation() {
             stroke-dashoffset: 1;
           }
           .la-chapter-section:hover .la-overlay-lines line,
-          .la-chapter-section:focus-within .la-overlay-lines line {
+          .la-chapter-section:focus-visible .la-overlay-lines line {
             animation: la-overlay-line-draw 1400ms cubic-bezier(0.45, 0, 0.15, 1) forwards;
           }
           .la-chapter-section:hover .la-overlay-lines line:nth-child(2),
-          .la-chapter-section:focus-within .la-overlay-lines line:nth-child(2) {
+          .la-chapter-section:focus-visible .la-overlay-lines line:nth-child(2) {
             animation-delay: 120ms;
           }
           .la-chapter-section:hover .la-overlay-lines line:nth-child(3),
-          .la-chapter-section:focus-within .la-overlay-lines line:nth-child(3) {
+          .la-chapter-section:focus-visible .la-overlay-lines line:nth-child(3) {
             animation-delay: 240ms;
           }
 
