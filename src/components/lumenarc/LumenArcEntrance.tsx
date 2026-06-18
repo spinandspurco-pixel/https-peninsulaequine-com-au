@@ -5,17 +5,22 @@ const SESSION_KEY = "lumenarc-entrance-seen";
 
 /**
  * Cinematic entrance overlay for the LumenArc page.
- * - Coming Soon backdrop fades in
- * - Soft amber vignette + restrained gold-dust drift
- * - Blueprint line-draw animation
- * - PE mark + LumenArc lockup slowly reveal
- * - Dissolves into page content after ~2.6s
+ *
+ * Visual continuity rules — matches the rest of the site:
+ *  - Coming Soon backdrop uses the same image-bleed + radial vignette + edge
+ *    fades as LumenArcChapterSection so it dissolves into the page, not a card.
+ *  - Blueprint 80px drafting grid matches the chapter overlay exactly.
+ *  - Same SAME amber breath, hero gradient stack and easing curve as the
+ *    page hero, so when the overlay fades out the visual lineage continues.
+ *  - Animations stay lightweight: opacity + transform only, ~2.4s total.
  */
 export function LumenArcEntrance() {
   const [active, setActive] = useState(() => {
     if (typeof window === "undefined") return false;
     try {
-      return sessionStorage.getItem(SESSION_KEY) !== "1";
+      if (sessionStorage.getItem(SESSION_KEY) === "1") return false;
+      if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return false;
+      return true;
     } catch {
       return true;
     }
@@ -29,8 +34,8 @@ export function LumenArcEntrance() {
     } catch {
       /* ignore */
     }
-    const fadeAt = window.setTimeout(() => setFading(true), 2600);
-    const removeAt = window.setTimeout(() => setActive(false), 3800);
+    const fadeAt = window.setTimeout(() => setFading(true), 2400);
+    const removeAt = window.setTimeout(() => setActive(false), 3500);
     return () => {
       window.clearTimeout(fadeAt);
       window.clearTimeout(removeAt);
@@ -42,38 +47,52 @@ export function LumenArcEntrance() {
   return (
     <div
       aria-hidden="true"
-      className={`fixed inset-0 z-[80] pointer-events-none overflow-hidden bg-background transition-opacity duration-[1100ms] ease-out ${
+      className={`fixed inset-0 z-[80] pointer-events-none overflow-hidden bg-background transition-opacity duration-[1100ms] ${
         fading ? "opacity-0" : "opacity-100"
       }`}
       style={{ transitionTimingFunction: "cubic-bezier(0.45, 0, 0.15, 1)" }}
     >
-      {/* Coming Soon backdrop — slow fade-in */}
+      {/* Coming Soon backdrop — same filter/mask as page hero */}
       <img
         src={comingSoonAsset.url}
         alt=""
-        className="absolute inset-0 h-full w-full object-cover object-center la-entrance-bg"
-        style={{ filter: "brightness(0.7) contrast(1.08) saturate(0.78)" }}
+        className="absolute inset-0 h-full w-full object-cover object-center image-bleed la-entrance-bg"
+        style={{ filter: "brightness(0.78) contrast(1.08) saturate(0.8)" }}
         decoding="async"
         fetchPriority="high"
       />
 
-      {/* Vignette + amber glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,hsl(var(--background)/0.55)_70%,hsl(var(--background))_100%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_55%,hsl(var(--accent)/0.12),transparent_55%)] la-entrance-glow" />
+      {/* Cinematic vignette stack — mirrors the LumenArc hero section */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,transparent_35%,hsl(var(--background)/0.55)_80%,hsl(var(--background))_100%)]" />
+      <div className="absolute inset-x-0 top-0 h-40 bg-[linear-gradient(180deg,hsl(var(--background)/0.7)_0%,transparent_100%)]" />
+      <div className="absolute inset-y-0 left-0 w-[18%] bg-[linear-gradient(90deg,hsl(var(--background))_0%,transparent_100%)]" />
+      <div className="absolute inset-y-0 right-0 w-[18%] bg-[linear-gradient(270deg,hsl(var(--background))_0%,transparent_100%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-[55vh] bg-[linear-gradient(0deg,hsl(var(--background))_0%,hsl(var(--background)/0.75)_45%,transparent_100%)]" />
 
-      {/* Restrained gold dust */}
-      <div className="absolute inset-0 la-entrance-dust" />
+      {/* Restrained amber breath */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_55%,hsl(var(--accent)/0.1),transparent_55%)] la-entrance-glow" />
 
-      {/* Blueprint line-draw frame */}
+      {/* Blueprint 80px drafting grid — matches chapter section overlay exactly */}
+      <div
+        className="absolute inset-0 la-entrance-grid"
+        style={{
+          backgroundImage:
+            "linear-gradient(0deg, hsl(var(--accent)/0.6) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--accent)/0.6) 1px, transparent 1px)",
+          backgroundSize: "80px 80px",
+          mixBlendMode: "screen",
+        }}
+      />
+
+      {/* Blueprint perimeter — thin gold frame that draws in */}
       <svg
         className="absolute inset-0 h-full w-full la-entrance-lines"
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
       >
-        <line x1="8" y1="8" x2="92" y2="8" stroke="hsl(var(--accent) / 0.35)" strokeWidth="0.05" pathLength={1} />
-        <line x1="92" y1="8" x2="92" y2="92" stroke="hsl(var(--accent) / 0.35)" strokeWidth="0.05" pathLength={1} />
-        <line x1="92" y1="92" x2="8" y2="92" stroke="hsl(var(--accent) / 0.35)" strokeWidth="0.05" pathLength={1} />
-        <line x1="8" y1="92" x2="8" y2="8" stroke="hsl(var(--accent) / 0.35)" strokeWidth="0.05" pathLength={1} />
+        <line x1="6" y1="6" x2="94" y2="6" stroke="hsl(var(--accent) / 0.42)" strokeWidth="0.05" pathLength={1} />
+        <line x1="94" y1="6" x2="94" y2="94" stroke="hsl(var(--accent) / 0.42)" strokeWidth="0.05" pathLength={1} />
+        <line x1="94" y1="94" x2="6" y2="94" stroke="hsl(var(--accent) / 0.42)" strokeWidth="0.05" pathLength={1} />
+        <line x1="6" y1="94" x2="6" y2="6" stroke="hsl(var(--accent) / 0.42)" strokeWidth="0.05" pathLength={1} />
       </svg>
 
       {/* PE mark + LumenArc lockup */}
@@ -98,84 +117,61 @@ export function LumenArcEntrance() {
       </div>
 
       <style>{`
-        @keyframes la-entrance-bg-in {
-          0% { opacity: 0; transform: scale(1.04); }
+        @keyframes la-bg-in {
+          0% { opacity: 0; transform: scale(1.035); }
           100% { opacity: 1; transform: scale(1); }
         }
-        @keyframes la-entrance-glow-in {
+        @keyframes la-glow-in {
           0% { opacity: 0; }
-          60% { opacity: 1; }
-          100% { opacity: 0.85; }
+          100% { opacity: 1; }
         }
-        @keyframes la-entrance-dust-drift {
-          0% { background-position: 0 0, 0 0; opacity: 0; }
-          30% { opacity: 0.55; }
-          100% { background-position: 80px -40px, -60px 50px; opacity: 0.45; }
+        @keyframes la-grid-in {
+          0% { opacity: 0; }
+          100% { opacity: 0.07; }
         }
-        @keyframes la-entrance-line-draw {
-          0% { stroke-dashoffset: 1; opacity: 0; }
-          20% { opacity: 1; }
-          100% { stroke-dashoffset: 0; opacity: 1; }
+        @keyframes la-line-draw {
+          0% { stroke-dashoffset: 1; }
+          100% { stroke-dashoffset: 0; }
         }
-        @keyframes la-entrance-mark-in {
-          0% { opacity: 0; transform: translateY(8px); letter-spacing: 0.12em; }
-          100% { opacity: 1; transform: translateY(0); letter-spacing: 0.04em; }
+        @keyframes la-rise {
+          0% { opacity: 0; transform: translateY(8px); }
+          100% { opacity: 1; transform: translateY(0); }
         }
-        @keyframes la-entrance-rule-in {
+        @keyframes la-rule-in {
           0% { transform: scaleX(0); opacity: 0; }
           100% { transform: scaleX(1); opacity: 1; }
         }
-        @keyframes la-entrance-lockup-in {
-          0% { opacity: 0; transform: translateY(10px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
 
         .la-entrance-bg {
-          animation: la-entrance-bg-in 1600ms cubic-bezier(0.45, 0, 0.15, 1) both;
+          animation: la-bg-in 1400ms cubic-bezier(0.45, 0, 0.15, 1) both;
+          will-change: opacity, transform;
         }
         .la-entrance-glow {
-          animation: la-entrance-glow-in 1800ms cubic-bezier(0.45, 0, 0.15, 1) 200ms both;
+          animation: la-glow-in 1600ms cubic-bezier(0.45, 0, 0.15, 1) 200ms both;
         }
-        .la-entrance-dust {
-          background-image:
-            radial-gradient(circle at 20% 30%, hsl(var(--accent) / 0.18) 0, transparent 1.2px),
-            radial-gradient(circle at 70% 60%, hsl(var(--accent) / 0.14) 0, transparent 1.2px);
-          background-size: 140px 140px, 180px 180px;
-          animation: la-entrance-dust-drift 3600ms cubic-bezier(0.45, 0, 0.15, 1) 400ms both;
-          mix-blend-mode: screen;
+        .la-entrance-grid {
+          opacity: 0;
+          animation: la-grid-in 1400ms cubic-bezier(0.45, 0, 0.15, 1) 250ms both;
         }
         .la-entrance-lines line {
           stroke-dasharray: 1;
           stroke-dashoffset: 1;
-          animation: la-entrance-line-draw 1600ms cubic-bezier(0.45, 0, 0.15, 1) 350ms both;
+          animation: la-line-draw 1400ms cubic-bezier(0.45, 0, 0.15, 1) 300ms both;
           vector-effect: non-scaling-stroke;
         }
-        .la-entrance-lines line:nth-child(2) { animation-delay: 500ms; }
-        .la-entrance-lines line:nth-child(3) { animation-delay: 650ms; }
-        .la-entrance-lines line:nth-child(4) { animation-delay: 800ms; }
+        .la-entrance-lines line:nth-child(2) { animation-delay: 420ms; }
+        .la-entrance-lines line:nth-child(3) { animation-delay: 540ms; }
+        .la-entrance-lines line:nth-child(4) { animation-delay: 660ms; }
 
         .la-entrance-mark {
-          animation: la-entrance-mark-in 1200ms cubic-bezier(0.45, 0, 0.15, 1) 900ms both;
+          animation: la-rise 1100ms cubic-bezier(0.45, 0, 0.15, 1) 800ms both;
         }
         .la-entrance-rule {
           transform-origin: center;
-          animation: la-entrance-rule-in 1100ms cubic-bezier(0.45, 0, 0.15, 1) 1300ms both;
+          animation: la-rule-in 1000ms cubic-bezier(0.45, 0, 0.15, 1) 1150ms both;
         }
         .la-entrance-lockup {
-          animation: la-entrance-lockup-in 1300ms cubic-bezier(0.45, 0, 0.15, 1) 1500ms both;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .la-entrance-bg,
-          .la-entrance-glow,
-          .la-entrance-dust,
-          .la-entrance-lines line,
-          .la-entrance-mark,
-          .la-entrance-rule,
-          .la-entrance-lockup {
-            animation-duration: 1ms !important;
-            animation-delay: 0ms !important;
-          }
+          animation: la-rise 1200ms cubic-bezier(0.45, 0, 0.15, 1) 1300ms both;
         }
       `}</style>
     </div>
