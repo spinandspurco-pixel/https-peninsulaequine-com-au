@@ -317,18 +317,18 @@ export default function Index() {
 
 
 
-        {/* Field Notes teaser */}
-        <section className="relative py-[clamp(5rem,3.5rem+6vw,8.5rem)] bg-background overflow-hidden">
-          <div className="section-container max-w-6xl mx-auto">
+        {/* 04 — Field Notes teaser */}
+        <section className="relative py-[clamp(6rem,4rem+7vw,10rem)] bg-background overflow-hidden border-t border-accent/10">
+          <div className="section-container max-w-[1480px] mx-auto">
             <RevealOnScroll direction="up" duration={900}>
-              <div className="flex items-baseline gap-5 mb-[clamp(2.25rem,1.5rem+2vw,3.5rem)]">
+              <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4rem)]">
                 <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">04</span>
                 <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
                 <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Field Notes</span>
               </div>
             </RevealOnScroll>
-            <div className="grid grid-cols-12 gap-[clamp(1.75rem,1rem+2vw,3.5rem)] items-center">
-              <RevealOnScroll direction="up" duration={1100} className="col-span-12 md:col-span-7">
+            <div className="grid grid-cols-12 gap-[clamp(2rem,1.25rem+2.5vw,4.5rem)] items-center">
+              <RevealOnScroll direction="up" duration={1200} className="col-span-12 md:col-span-8">
                 <div className="relative aspect-[16/10] overflow-hidden">
                   <img
                     src={fieldNoteAsset.url}
@@ -336,20 +336,20 @@ export default function Index() {
                     loading="lazy"
                     decoding="async"
                     className="absolute inset-0 w-full h-full object-cover image-bleed"
-                    style={{ filter: "brightness(0.78) contrast(1.12) saturate(0.78)" }}
+                    style={{ filter: "brightness(0.8) contrast(1.12) saturate(0.78)" }}
                   />
-                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,hsl(var(--background)/0.6)_100%)]" />
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,hsl(var(--background)/0.55)_100%)]" />
                 </div>
               </RevealOnScroll>
-              <div className="col-span-12 md:col-span-5 space-y-6">
+              <div className="col-span-12 md:col-span-4 space-y-6">
                 <RevealOnScroll direction="up" duration={1000} delay={120}>
-                  <h2 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.022em] text-[clamp(1.7rem,1.1rem+2vw,2.55rem)]">
+                  <h2 className="font-serif text-foreground/92 leading-[1.05] tracking-[-0.022em] text-[clamp(1.75rem,1.15rem+2.2vw,2.7rem)]">
                     Notes from the build.
                   </h2>
                 </RevealOnScroll>
                 <RevealLine width="w-10" delay={240} />
                 <RevealOnScroll direction="up" duration={1000} delay={300}>
-                  <p className="font-sans font-light text-foreground/52 leading-[1.9] text-[0.86rem] max-w-md">
+                  <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[clamp(0.9rem,0.82rem+0.2vw,1rem)] max-w-md">
                     Process, material and detail — recorded as projects move through the ground.
                   </p>
                 </RevealOnScroll>
