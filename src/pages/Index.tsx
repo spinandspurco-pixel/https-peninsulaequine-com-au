@@ -332,7 +332,9 @@ export default function Index() {
                 <Link to="/selected-works/main-ridge-pavilion" className="group block">
                   <div className="relative aspect-[5/6] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                     <img
-                      src={mainRidgePavilionTile.url}
+                      src={mainRidge1536.url}
+                      srcSet={mainRidgeSrcSet}
+                      sizes="(min-width: 1480px) 1480px, 100vw"
                       alt="Main Ridge pavilion — wide interior with fireplace, handcrafted timber table and warm dusk light"
                       loading="lazy"
                       decoding="async"
