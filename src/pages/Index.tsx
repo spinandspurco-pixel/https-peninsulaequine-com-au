@@ -6,11 +6,6 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { IntroContext } from "@/hooks/useIntroState";
 import { useIntake } from "@/hooks/useIntake";
 
-import mainRidgeSitePrep from "@/assets/main-ridge-site-prep.jpg";
-import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
-import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
-
-
 import goldenHourPavilion from "@/assets/golden-hour-pavilion.png.asset.json";
 import goldenHourPavilion800 from "@/assets/golden-hour-pavilion-800.webp.asset.json";
 import goldenHourPavilion1200 from "@/assets/golden-hour-pavilion-1200.webp.asset.json";
@@ -23,13 +18,6 @@ import slidingStopHero from "@/assets/homepage-refresh/sliding-stop-hero.png.ass
 const SESSION_KEY = "pe-brand-intro-seen";
 const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
 
-
-const fieldNotesChapters = [
-  "Groundwork",
-  "Structure",
-  "Materials",
-  "Final reveal",
-];
 
 
 export default function Index() {
@@ -310,88 +298,7 @@ export default function Index() {
         </section>
 
 
-        <section className="relative py-[clamp(6rem,4rem+8vw,10rem)] bg-card overflow-hidden">
-          <div className="section-container max-w-7xl mx-auto grid grid-cols-12 gap-[clamp(1.5rem,1rem+2vw,3rem)] items-center">
-            <div className="col-span-12 lg:col-span-5 space-y-6">
-              <RevealOnScroll direction="up" duration={900}>
-                <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
-                  Field Notes
-                </p>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" duration={1000} delay={150}>
-                <h2 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.02em] text-[clamp(1.8rem,1.15rem+2.2vw,2.7rem)]">
-                  Field Notes
-                </h2>
-              </RevealOnScroll>
-              <RevealLine width="w-8" delay={300} />
-              <RevealOnScroll direction="up" duration={1000} delay={350}>
-                <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px] max-w-lg">
-                  Follow current projects as they move from raw groundwork to finished equine environments.
-                </p>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" duration={1000} delay={450}>
-                <ul className="space-y-3 border-t border-foreground/[0.08] pt-5">
-                  {fieldNotesChapters.map((chapter) => (
-                    <li key={chapter} className="flex items-center justify-between gap-4">
-                      <span className="font-serif text-foreground/82 text-[1.05rem]">{chapter}</span>
-                      <span className="font-mono text-[10px] tracking-[0.38em] uppercase text-foreground/30">
-                        Current
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" duration={900} delay={550}>
-                <Link
-                  to="/field-notes"
-                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.4em]"
-                >
-                  <span className="w-6 h-px bg-accent/50 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
-                  Enter Field Notes
-                </Link>
-              </RevealOnScroll>
-            </div>
 
-            <div className="col-span-12 lg:col-span-7">
-              <RevealOnScroll direction="up" duration={1200}>
-                <Link to="/field-notes" className="group block">
-                  <div className="grid grid-cols-12 gap-4">
-                    <div className="col-span-12 md:col-span-8 relative aspect-[5/4] overflow-hidden rounded-sm">
-                      <img
-                        src={mainRidgeSitePrep}
-                        alt="Main Ridge groundwork and early site preparation in warm rural light"
-                        loading="lazy"
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1800ms] ease-[cubic-bezier(0.45,0,0.15,1)] group-hover:scale-[1.03]"
-                        style={{ filter: "brightness(0.8) contrast(1.12) saturate(0.78)", objectPosition: "50% 50%" }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-card/55 via-transparent to-transparent" />
-                    </div>
-                    <div className="col-span-6 md:col-span-4 relative aspect-[4/5] overflow-hidden rounded-sm">
-                      <img
-                        src={mainRidgeBrickwork}
-                        alt="Brickwork and material detail during a Peninsula Equine build"
-                        loading="lazy"
-                        className="absolute inset-0 w-full h-full object-cover"
-                        style={{ filter: "brightness(0.82) contrast(1.08) saturate(0.8)", objectPosition: "50% 54%" }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-card/40 via-transparent to-transparent" />
-                    </div>
-                    <div className="col-span-6 md:col-span-4 md:col-start-9 relative aspect-[4/5] overflow-hidden rounded-sm md:-mt-20">
-                      <img
-                        src={mainRidgeTimber}
-                        alt="Timber material detail from a Peninsula Equine custom rural build"
-                        loading="lazy"
-                        className="absolute inset-0 w-full h-full object-cover"
-                        style={{ filter: "brightness(0.8) contrast(1.08) saturate(0.78)", objectPosition: "50% 45%" }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-card/45 via-transparent to-transparent" />
-                    </div>
-                  </div>
-                </Link>
-              </RevealOnScroll>
-            </div>
-          </div>
-        </section>
 
         <section className="relative py-[clamp(7rem,4.5rem+9vw,13rem)] bg-background overflow-hidden">
           <img
