@@ -323,43 +323,36 @@ export default function Index() {
                 <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Field Notes</span>
               </div>
             </RevealOnScroll>
-            <div className="grid grid-cols-12 gap-[clamp(2rem,1.25rem+2.5vw,4.5rem)] items-center">
-              <RevealOnScroll direction="up" duration={1200} className="col-span-12 md:col-span-8">
-                <div className="relative aspect-[16/10] overflow-hidden">
-                  <img
-                    src={fieldNoteAsset.url}
-                    alt="Pendant lighting suspended between heavy timber beams inside the Main Ridge build"
-                    loading="lazy"
-                    decoding="async"
-                    className="absolute inset-0 w-full h-full object-cover image-bleed"
-                    style={{ filter: "brightness(0.8) contrast(1.12) saturate(0.78)" }}
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,hsl(var(--background)/0.55)_100%)]" />
+            <RevealOnScroll direction="up" duration={1200}>
+              <div className="relative aspect-[16/9] md:aspect-[21/9] overflow-hidden">
+                <img
+                  src={fieldNoteAsset.url}
+                  alt="Pendant lighting suspended between heavy timber beams inside the Main Ridge build"
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover image-bleed"
+                  style={{ filter: "brightness(0.78) contrast(1.12) saturate(0.78)", objectPosition: "50% 40%" }}
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/65 to-transparent" />
+                <div className="absolute bottom-0 left-0 w-full p-6 md:p-10 lg:p-14">
+                  <div className="max-w-2xl space-y-5">
+                    <h2 className="font-serif text-foreground/92 leading-[1.05] tracking-[-0.022em] text-[clamp(1.75rem,1.15rem+2.2vw,2.7rem)]">
+                      Notes from the build.
+                    </h2>
+                    <p className="font-sans font-light text-foreground/60 leading-[1.85] text-[clamp(0.9rem,0.82rem+0.2vw,1rem)] max-w-lg">
+                      Process, material and detail — recorded as projects move through the ground.
+                    </p>
+                    <Link
+                      to="/field-notes"
+                      className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em] pt-1"
+                    >
+                      <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
+                      Read Field Notes
+                    </Link>
+                  </div>
                 </div>
-              </RevealOnScroll>
-              <div className="col-span-12 md:col-span-4 space-y-6">
-                <RevealOnScroll direction="up" duration={1000} delay={120}>
-                  <h2 className="font-serif text-foreground/92 leading-[1.05] tracking-[-0.022em] text-[clamp(1.75rem,1.15rem+2.2vw,2.7rem)]">
-                    Notes from the build.
-                  </h2>
-                </RevealOnScroll>
-                <RevealLine width="w-10" delay={240} />
-                <RevealOnScroll direction="up" duration={1000} delay={300}>
-                  <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[clamp(0.9rem,0.82rem+0.2vw,1rem)] max-w-md">
-                    Process, material and detail — recorded as projects move through the ground.
-                  </p>
-                </RevealOnScroll>
-                <RevealOnScroll direction="up" duration={1000} delay={400}>
-                  <Link
-                    to="/field-notes"
-                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em] pt-2"
-                  >
-                    <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
-                    Read Field Notes
-                  </Link>
-                </RevealOnScroll>
               </div>
-            </div>
+            </RevealOnScroll>
           </div>
         </section>
 
