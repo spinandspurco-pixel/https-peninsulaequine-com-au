@@ -67,6 +67,57 @@ const featuredWorks = [
   },
 ];
 
+const serviceCards = [
+  {
+    num: "01",
+    title: "Arenas",
+    description:
+      "Indoor and outdoor arenas, footing preparation, drainage, base works and surfaces designed for real use.",
+    image: serviceArenas,
+    href: "/arenas",
+  },
+  {
+    num: "02",
+    title: "Stables & Barns",
+    description:
+      "Stable builds, barn interiors, shelters, wash bays, tack spaces and practical horse-first layouts.",
+    image: serviceStables,
+    href: "/stables",
+  },
+  {
+    num: "03",
+    title: "Equine Infrastructure",
+    description:
+      "Fencing, laneways, yards, gates, retaining, access, drainage and site works that make the whole property function.",
+    image: serviceInfrastructure,
+    href: "/infrastructure",
+  },
+  {
+    num: "04",
+    title: "Groundworks",
+    description:
+      "Site cuts, levels, bases, preparation and machine work — the ugly stuff that makes the beautiful stuff last.",
+    image: serviceGroundworks,
+    href: "/services",
+  },
+  {
+    num: "05",
+    title: "Custom Rural Builds",
+    description:
+      "Pavilions, viewing areas, parrilla spaces, tables, fit-outs and lifestyle additions built with the same grit and finish.",
+    image: serviceCustom,
+    href: "/services",
+  },
+  {
+    num: "06",
+    title: "Drainage & Surfacing",
+    description:
+      "Drainage systems, base works and surface preparation engineered for performance, longevity and all conditions.",
+    image: serviceDrainage,
+    href: "/services",
+  },
+];
+
 export default function Index() {
   const heroContentRef = useRef<HTMLDivElement>(null);
   const [heroFade, setHeroFade] = useState(1);
