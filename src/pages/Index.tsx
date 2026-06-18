@@ -237,8 +237,8 @@ export default function Index() {
                       alt="A quiet moment between horseman and horse in low arena light — the ground Peninsula Equine builds for"
                       loading="lazy"
                       decoding="async"
-                      className="absolute inset-0 w-full h-full object-cover image-bleed"
-                      style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)", objectPosition: "50% 38%" }}
+                      className="absolute inset-0 w-full h-full object-cover image-bleed object-[50%_32%] sm:object-[50%_46%] md:object-[50%_38%]"
+                      style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
                     />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
                   </div>
