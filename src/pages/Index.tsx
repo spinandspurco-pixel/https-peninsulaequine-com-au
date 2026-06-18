@@ -157,11 +157,12 @@ export default function Index() {
                     From Dirt to Dynasty
                   </h1>
                   <p
-                    className="max-w-xl font-sans font-light text-foreground/72 leading-[1.8] text-[14px] sm:text-[15px]"
+                    className="max-w-xl font-sans font-light text-foreground/90 leading-[1.8] text-[15px] sm:text-[15px]"
                     style={{
                       opacity: sublineReady ? 1 : 0,
                       transform: sublineReady ? "translateY(0)" : "translateY(8px)",
                       transition: `opacity 1100ms ${EASE}, transform 1100ms ${EASE}`,
+                      textShadow: "0 2px 18px rgba(0,0,0,0.55)",
                     }}
                   >
                     Equine environments built by horse people — from the ground beneath the ride to the
@@ -170,7 +171,7 @@ export default function Index() {
                 </div>
 
                 <div
-                  className="flex flex-col sm:flex-row items-start gap-4"
+                  className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4"
                   style={{
                     opacity: ctaReady ? 1 : 0,
                     transform: ctaReady ? "translateY(0)" : "translateY(8px)",
@@ -179,19 +180,20 @@ export default function Index() {
                 >
                   <Link
                     to="/gallery"
-                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/82 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
+                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground hover:text-foreground transition-colors duration-500 text-[11px] sm:text-[10px] tracking-[0.42em] py-3 -my-3"
                   >
-                    <span className="w-8 h-px bg-accent/55 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
+                    <span className="w-9 h-px bg-accent/70 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
                     Explore Our Work
                   </Link>
                   <Link
                     to="/services"
-                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/54 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
+                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/75 hover:text-foreground transition-colors duration-500 text-[11px] sm:text-[10px] tracking-[0.42em] py-3 -my-3"
                   >
-                    <span className="w-8 h-px bg-foreground/20 transition-all duration-700 group-hover:w-14 group-hover:bg-foreground/55" />
+                    <span className="w-9 h-px bg-foreground/35 transition-all duration-700 group-hover:w-14 group-hover:bg-foreground/70" />
                     View Services
                   </Link>
                 </div>
+
               </div>
             </div>
           </section>
