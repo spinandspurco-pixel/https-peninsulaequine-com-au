@@ -44,11 +44,21 @@ jobs:
         with:
           bun-version: latest
 
+      - name: Cache Bun dependencies
+        if: matrix.runtime == 'bun'
+        uses: actions/cache@v4
+        with:
+          path: ~/.lovable ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
       - name: Setup Node
         if: matrix.runtime == 'node'
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
       - name: Install dependencies (Bun)
         if: matrix.runtime == 'bun'
