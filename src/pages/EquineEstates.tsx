@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
-import heroImg from "@/assets/aberdeen-exterior.jpg";
+// Cinematic estate-scale hero (Aberdeen entrance at twilight — whole-property reading)
+import heroAsset from "@/assets/aberdeen/hero-entrance-twilight.png.asset.json";
+const heroImg = heroAsset.url;
 
 const pillars = [
   { k: "01", label: "Masterplanning", body: "Land, water, light, movement. The estate is resolved on paper before a single post is sunk." },
