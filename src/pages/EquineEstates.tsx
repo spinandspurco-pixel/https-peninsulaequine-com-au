@@ -16,7 +16,7 @@ export default function EquineEstates() {
     <Layout>
       <article className="bg-background text-foreground type-architectural">
         <section className="relative h-[88vh] min-h-[600px] overflow-hidden">
-          <img src={heroImg} alt="Private equine estate at dusk" width={1920} height={1080} className="absolute inset-0 w-full h-full object-cover img-header" />
+          <img src={heroImg} alt="Private equine estate entrance at twilight — whole-property authorship" width={1920} height={1080} className="absolute inset-0 w-full h-full object-cover img-header" style={{ filter: "brightness(0.86) contrast(1.1) saturate(0.85)" }} />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/50 via-primary/15 to-primary/85" />
           <div className="absolute bottom-0 left-0 right-0 px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2.5rem,1.5rem+5vw,6rem)]">
             <div className="max-w-6xl space-y-[clamp(1.25rem,1rem+1vw,2rem)]">
