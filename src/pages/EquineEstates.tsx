@@ -95,7 +95,17 @@ export default function EquineEstates() {
                 Estate-scale work is selective by definition.
               </p>
             </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={400}>
+            <RevealOnScroll direction="up" delay={350}>
+              <Button
+                variant="gold"
+                size="lg"
+                onClick={open}
+                className="btn-hover-lift"
+              >
+                Request a Consult
+              </Button>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" delay={500}>
               <Link to="/contact" className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.4em]">
                 <span className="w-6 h-px bg-accent/50 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
                 Apply to Build
