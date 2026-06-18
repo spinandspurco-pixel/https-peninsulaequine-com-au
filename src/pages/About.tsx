@@ -22,6 +22,7 @@ export default function About() {
 
   return (
     <Layout>
+      <div className="type-architectural">
       {/* ═══ HERO ═══════════════════════════════════════ */}
       <section className="pt-48 sm:pt-64 pb-28 sm:pb-40">
         <div className="section-container max-w-2xl mx-auto text-center">
@@ -126,6 +127,7 @@ export default function About() {
           </p>
         </div>
       </section>
+      </div>
     </Layout>
   );
 }

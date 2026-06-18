@@ -4,6 +4,7 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 export default function WhyWeExist() {
   return (
     <Layout>
+      <div className="type-architectural">
       {/* ═══ HERO ═══════════════════════════════════════ */}
       <section className="relative pt-36 sm:pt-48 pb-24 sm:pb-32 overflow-hidden">
         <div className="absolute inset-0 bg-primary" />
@@ -121,6 +122,7 @@ export default function WhyWeExist() {
           </RevealOnScroll>
         </div>
       </section>
+      </div>
     </Layout>
   );
 }

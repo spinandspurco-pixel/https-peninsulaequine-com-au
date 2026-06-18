@@ -21,7 +21,7 @@ const DO = [
 export default function TheStandard() {
   return (
     <Layout>
-      <article className="relative">
+      <article className="relative type-architectural">
         <BlueprintContinuity />
       {/* ═══ 1. HERO ═══════════════════════════════════════ */}
 
