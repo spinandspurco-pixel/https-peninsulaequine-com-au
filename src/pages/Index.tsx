@@ -23,7 +23,7 @@ import serviceDrainage from "@/assets/homepage-services/drainage.png.asset.json"
 import slidingStopHero from "@/assets/homepage-refresh/sliding-stop-hero.png.asset.json";
 import ciroAceCloseup from "@/assets/homepage-refresh/ciro-ace-closeup.png.asset.json";
 import ciroAceDetail from "@/assets/homepage-refresh/ciro-ace-detail.png.asset.json";
-import ciroAceWalk from "@/assets/homepage-refresh/ciro-ace-walk.png.asset.json";
+
 
 const SESSION_KEY = "pe-brand-intro-seen";
 const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
@@ -96,11 +96,11 @@ const featuredWorks = [
     slug: "main-ridge",
     title: "Main Ridge",
     location: "Mornington Peninsula",
-    kind: "Pavilion / Arena / Property Build",
+    kind: "Flagship — Pavilion / Arena / Property",
     image: mainRidgeInterior,
     alt: "Main Ridge pavilion interior with exposed timber framing in evening light",
     summary:
-      "A rural build where groundwork, shelter, arena logic and material finish were resolved as one equine environment.",
+      "A full property build — ground, shelter and finish resolved as one environment.",
   },
   {
     slug: "aberdeen-farm",
@@ -109,8 +109,7 @@ const featuredWorks = [
     kind: "Stable Complex",
     image: aberdeenExterior,
     alt: "Private estate stable exterior in late afternoon light",
-    summary:
-      "A practical stable complex with the finish, airflow and structure required for daily horse use.",
+    summary: "Stable complex built for daily horse use — airflow, finish and flow.",
   },
   {
     slug: "equitana",
@@ -119,8 +118,7 @@ const featuredWorks = [
     kind: "Event Arena",
     image: equitanaArena1,
     alt: "Equitana Melbourne competition arena surface prepared for an event",
-    summary:
-      "Competition-grade arena work delivered with surface performance, drainage discipline and presentation under pressure.",
+    summary: "Competition-grade arena work delivered under event pressure.",
   },
 ];
 
@@ -199,7 +197,7 @@ export default function Index() {
             // @ts-expect-error valid HTML attribute
             fetchpriority="high"
             style={{
-              objectPosition: "68% 54%",
+              objectPosition: "78% 58%",
               filter: imageReady
                 ? "brightness(0.8) contrast(1.12) saturate(0.82)"
                 : "brightness(0.42) contrast(1.05) saturate(0.7) blur(12px)",
@@ -212,7 +210,7 @@ export default function Index() {
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                "linear-gradient(90deg, hsl(var(--background) / 0.92) 0%, hsl(var(--background) / 0.74) 34%, hsl(var(--background) / 0.18) 62%, hsl(var(--background) / 0.55) 100%)",
+                "linear-gradient(90deg, hsl(var(--background) / 0.94) 0%, hsl(var(--background) / 0.78) 30%, hsl(var(--background) / 0.12) 58%, hsl(var(--background) / 0.25) 100%)",
             }}
           />
           <div
@@ -307,9 +305,8 @@ export default function Index() {
           <div className="section-container max-w-5xl">
             <RevealOnScroll direction="up" duration={900}>
               <p className="font-serif text-foreground/82 leading-[1.45] tracking-[-0.02em] text-[clamp(1.4rem,1.05rem+1.5vw,2.2rem)] max-w-4xl">
-                Peninsula Equine builds functional, enduring equine environments across the Mornington
-                Peninsula and beyond — arenas, stables, groundworks, fencing, drainage, pavilions and
-                full-property infrastructure designed for real horse people.
+                Arenas, stables, groundworks and rural builds — shaped from the ground up across the
+                Mornington Peninsula and beyond.
               </p>
             </RevealOnScroll>
           </div>
@@ -421,10 +418,10 @@ export default function Index() {
               </RevealOnScroll>
               <RevealLine width="w-8" delay={300} />
               <RevealOnScroll direction="up" duration={1000} delay={350}>
-                <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px] max-w-xl">
-                  Peninsula Equine is shaped by real time in the saddle — the feel of the surface,
-                  the way horses move through a property, and the details that make a build work long
-                  after the machines leave.
+                <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px] max-w-md">
+                  Real time in the saddle shapes the way these properties are built —
+                  the feel of the surface, the flow through the yards, the details that hold up after
+                  the machines leave.
                 </p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={900} delay={500}>
@@ -441,10 +438,10 @@ export default function Index() {
             <div className="col-span-12 lg:col-span-7">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-5 items-start">
                 <RevealOnScroll direction="up" duration={1200}>
-                  <div className="md:col-span-7 relative aspect-[4/5] overflow-hidden rounded-sm">
+                  <div className="md:col-span-8 relative aspect-[4/5] overflow-hidden rounded-sm">
                     <img
                       src={ciroAceCloseup.url}
-                      alt="Quiet close-up of Ciro with Ace in warm stable light"
+                      alt="Quiet moment with horse and horseman in warm stable light"
                       loading="lazy"
                       className="absolute inset-0 w-full h-full object-cover"
                       style={{
@@ -456,38 +453,21 @@ export default function Index() {
                   </div>
                 </RevealOnScroll>
 
-                <div className="md:col-span-5 space-y-4 md:pt-8">
-                  <RevealOnScroll direction="up" duration={1050} delay={120}>
-                    <div className="relative aspect-[4/5] overflow-hidden rounded-sm">
-                      <img
-                        src={ciroAceDetail.url}
-                        alt="Close detail of Peninsula Equine horseman and horse connection in warm light"
-                        loading="lazy"
-                        className="absolute inset-0 w-full h-full object-cover"
-                        style={{
-                          objectPosition: "50% 42%",
-                          filter: "brightness(0.82) contrast(1.08) saturate(0.8)",
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-card/35 via-transparent to-transparent" />
-                    </div>
-                  </RevealOnScroll>
-                  <RevealOnScroll direction="up" duration={1050} delay={220}>
-                    <div className="relative aspect-[5/6] overflow-hidden rounded-sm">
-                      <img
-                        src={ciroAceWalk.url}
-                        alt="Ciro walking with Ace through the arena in dust-filled warm light"
-                        loading="lazy"
-                        className="absolute inset-0 w-full h-full object-cover"
-                        style={{
-                          objectPosition: "52% 35%",
-                          filter: "brightness(0.78) contrast(1.08) saturate(0.78)",
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-card/45 via-transparent to-transparent" />
-                    </div>
-                  </RevealOnScroll>
-                </div>
+                <RevealOnScroll direction="up" duration={1050} delay={180}>
+                  <div className="md:col-span-4 relative aspect-[4/5] overflow-hidden rounded-sm md:mt-16">
+                    <img
+                      src={ciroAceDetail.url}
+                      alt="Close detail — hand, rein and horse in warm light"
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover"
+                      style={{
+                        objectPosition: "50% 42%",
+                        filter: "brightness(0.82) contrast(1.08) saturate(0.8)",
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-card/35 via-transparent to-transparent" />
+                  </div>
+                </RevealOnScroll>
               </div>
             </div>
           </div>
