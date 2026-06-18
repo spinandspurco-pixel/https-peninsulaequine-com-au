@@ -388,7 +388,7 @@ export default function Index() {
                             Notes from the build.
                           </p>
                           <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[clamp(0.9rem,0.82rem+0.2vw,1rem)]">
-                            Process, material and detail — recorded as projects move through the ground.
+                            Process, material and structural detail — recorded as projects move through the ground.
                           </p>
                         </div>
                         <div className="flex flex-wrap items-center gap-x-8 gap-y-3 pt-2">
