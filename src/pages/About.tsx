@@ -196,10 +196,10 @@ export default function About() {
           overline="02 — The difference"
           title="The details matter because horses notice them first."
           body="Good equine infrastructure is not just about how it looks. It is about flow, footing, safety, access, shelter, drainage, maintenance and the small decisions that make a property easier to use every day."
-          src={horseAction}
-          alt="Hand on horse — a quiet detail of trust."
+          src={ciroAceQuiet.url}
+          alt="Ciro and Ace — a quiet moment, head to head."
           aspect="aspect-[4/5]"
-          crop="55% 35%"
+          crop="50% 40%"
         />
 
         {/* ═══ WE RIDE THE GROUND WE BUILD ═══════════════════ */}
