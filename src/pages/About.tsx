@@ -119,9 +119,8 @@ export default function About() {
               <img
                 src={ciroAceArena.url}
                 alt="Ciro and Ace in the arena — horseman and horse, end of day."
-                className="w-full aspect-[16/10] sm:aspect-[21/9] object-cover opacity-0 animate-fade-in"
+                className="w-full aspect-[4/5] sm:aspect-[16/10] lg:aspect-[21/9] object-cover object-[58%_28%] sm:object-[55%_32%] lg:object-[50%_36%] opacity-0 animate-fade-in"
                 style={{
-                  objectPosition: "50% 30%",
                   filter: FILTER,
                   animationDelay: "200ms",
                   animationFillMode: "both",
