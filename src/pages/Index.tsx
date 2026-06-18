@@ -282,7 +282,7 @@ export default function Index() {
                   <Link to="/field-notes/covered-arena-stables-build" className="group block">
                     <div className="relative aspect-[16/10] overflow-hidden">
                       <img
-                        src={currentArenaHero.url}
+                        src={currentArenaHero}
                         alt="Covered Arena & Stables Build — steel framing, roof structure and red clay ground conditions"
                         loading="lazy"
                         decoding="async"
@@ -315,7 +315,7 @@ export default function Index() {
               <RevealOnScroll direction="up" duration={1200}>
                 <div className="relative aspect-[4/5] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                   <img
-                    src={steelFront.url}
+                    src={steelFront}
                     alt="Current covered arena and stables build with steel frame rising under dramatic storm light"
                     loading="lazy"
                     decoding="async"

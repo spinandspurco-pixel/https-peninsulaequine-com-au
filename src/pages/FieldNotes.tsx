@@ -28,7 +28,7 @@ export default function FieldNotes() {
       <main className="bg-background text-foreground type-architectural">
         <section className="relative min-h-[92vh] overflow-hidden flex items-end">
           <img
-            src={heroDrone.url}
+            src={heroDrone}
             alt="Covered Arena & Stables Build in progress — steel framing, roof works and red clay conditions across a live equine facility site"
             className="absolute inset-0 h-full w-full object-cover object-[62%_48%] sm:object-[58%_48%] lg:object-center"
             style={{ filter: "brightness(0.7) contrast(1.12) saturate(0.8)" }}
@@ -91,7 +91,7 @@ export default function FieldNotes() {
                     <article className="relative overflow-hidden">
                       <div className="relative aspect-[4/5] sm:aspect-[16/10] xl:aspect-[16/8] overflow-hidden">
                         <img
-                          src={steelFront.url}
+                          src={steelFront}
                           alt="Covered Arena & Stables Build — structural steel and roof line under a dramatic storm sky"
                           className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-[1600ms] ease-out group-hover:scale-[1.03]"
                           style={{ filter: "brightness(0.78) contrast(1.12) saturate(0.82)" }}
@@ -137,7 +137,7 @@ export default function FieldNotes() {
               <RevealOnScroll direction="up" duration={1100} className="md:col-span-8">
                 <div className="relative overflow-hidden aspect-[16/10] lg:aspect-[21/10]">
                   <img
-                    src={sitewideProgress.url}
+                    src={sitewideProgress}
                     alt="Wide site view of the current arena build showing steel span, machinery placement and open ground conditions"
                     className="absolute inset-0 h-full w-full object-cover object-center"
                     style={{ filter: "brightness(0.8) contrast(1.08) saturate(0.78)" }}
@@ -149,7 +149,7 @@ export default function FieldNotes() {
               <RevealOnScroll direction="up" duration={1100} delay={120} className="md:col-span-4">
                 <div className="relative overflow-hidden aspect-[4/5] md:h-full md:aspect-auto min-h-[320px]">
                   <img
-                    src={redClayRoofline.url}
+                    src={redClayRoofline}
                     alt="Red clay, roofing progress and site moisture around the current arena and stables build"
                     className="absolute inset-0 h-full w-full object-cover object-[54%_50%]"
                     style={{ filter: "brightness(0.78) contrast(1.1) saturate(0.8)" }}

@@ -72,7 +72,7 @@ export default function CoveredArenaStablesBuild() {
       <main className="bg-background text-foreground type-architectural">
         <section className="relative min-h-[90vh] overflow-hidden flex items-end border-b border-accent/10">
           <img
-            src={heroDrone.url}
+            src={heroDrone}
             alt="Covered Arena & Stables Build in progress — wide drone view of steel framing, roofing works and red clay ground conditions"
             className="absolute inset-0 h-full w-full object-cover object-[62%_48%] sm:object-[58%_48%] lg:object-center"
             style={{ filter: "brightness(0.7) contrast(1.12) saturate(0.8)" }}
@@ -160,7 +160,7 @@ export default function CoveredArenaStablesBuild() {
               <RevealOnScroll direction="up" duration={1100} className="md:col-span-8">
                 <div className="relative overflow-hidden aspect-[16/10] lg:aspect-[21/10]">
                   <img
-                    src={heroDrone.url}
+                    src={heroDrone}
                     alt="Large-scale drone view of the current covered arena and stables build with steel framing and roofing taking shape"
                     className="absolute inset-0 h-full w-full object-cover object-[62%_48%]"
                     style={{ filter: "brightness(0.74) contrast(1.1) saturate(0.8)" }}
@@ -172,7 +172,7 @@ export default function CoveredArenaStablesBuild() {
               <RevealOnScroll direction="up" duration={1100} delay={120} className="md:col-span-4">
                 <div className="relative overflow-hidden aspect-[4/5] md:h-full md:aspect-auto min-h-[320px]">
                   <img
-                    src={steelFront.url}
+                    src={steelFront}
                     alt="Structural steel detail at the front of the covered arena with dramatic cloud cover overhead"
                     className="absolute inset-0 h-full w-full object-cover object-center"
                     style={{ filter: "brightness(0.78) contrast(1.12) saturate(0.78)" }}
@@ -184,7 +184,7 @@ export default function CoveredArenaStablesBuild() {
               <RevealOnScroll direction="up" duration={1100} delay={180} className="md:col-span-5">
                 <div className="relative overflow-hidden aspect-[16/11]">
                   <img
-                    src={sitewideProgress.url}
+                    src={sitewideProgress}
                     alt="Wide drone progress image showing the build footprint, open site and machinery positioning"
                     className="absolute inset-0 h-full w-full object-cover object-center"
                     style={{ filter: "brightness(0.8) contrast(1.08) saturate(0.78)" }}
@@ -196,7 +196,7 @@ export default function CoveredArenaStablesBuild() {
               <RevealOnScroll direction="up" duration={1100} delay={260} className="md:col-span-4">
                 <div className="relative overflow-hidden aspect-[16/11]">
                   <img
-                    src={redClayRoofline.url}
+                    src={redClayRoofline}
                     alt="Red clay, wet ground and roofline progress around the current arena and stable works"
                     className="absolute inset-0 h-full w-full object-cover object-[54%_50%]"
                     style={{ filter: "brightness(0.78) contrast(1.1) saturate(0.8)" }}
@@ -208,7 +208,7 @@ export default function CoveredArenaStablesBuild() {
               <RevealOnScroll direction="up" duration={1100} delay={340} className="md:col-span-3">
                 <div className="relative overflow-hidden aspect-[16/11]">
                   <img
-                    src={steelSide.url}
+                    src={steelSide}
                     alt="Side angle of stable framing and steel roof structure progressing through muddy site conditions"
                     className="absolute inset-0 h-full w-full object-cover object-[52%_50%]"
                     style={{ filter: "brightness(0.8) contrast(1.08) saturate(0.78)" }}
