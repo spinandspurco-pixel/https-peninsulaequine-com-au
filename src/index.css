@@ -370,7 +370,93 @@
 }
 
 @layer utilities {
+  /* ── Architectural plate (replaces card chrome) ─────────
+     Use on sections/items that used to live in bordered cards.
+     Provides a thin top accent rule + technical inner spacing
+     rather than a filled container. */
+  .plate {
+    position: relative;
+    padding-top: 1.75rem;
+  }
+  .plate::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2.5rem;
+    height: 1px;
+    background: hsl(var(--accent) / 0.55);
+  }
+  .plate-full::before { width: 100%; opacity: 0.18; }
+
+  /* ── Thin technical divider ───────────────────────────── */
+  .rule-thin {
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--accent) / 0.32) 15%,
+      hsl(var(--accent) / 0.32) 85%,
+      transparent
+    );
+  }
+
+  /* ── Blueprint label (mono uppercase, drafting spacing) ── */
+  .label-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: hsl(var(--accent) / 0.55);
+  }
+  .label-mono-soft {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: hsl(var(--foreground) / 0.42);
+  }
+
+  /* ── Image plate dissolves ────────────────────────────── */
+  .image-dissolve {
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 55%, transparent 100%);
+            mask-image: radial-gradient(ellipse at center, #000 55%, transparent 100%);
+  }
+
+  /* ── Section technical spacing ────────────────────────── */
+  .section-technical { padding-top: clamp(5rem, 3.5rem + 5vw, 8rem); padding-bottom: clamp(5rem, 3.5rem + 5vw, 8rem); }
+
+  /* ── Numbered tabular spec value ──────────────────────── */
+  .num-spec {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.32em;
+    color: hsl(var(--accent) / 0.55);
+    font-size: 0.7rem;
+  }
+
+  /* ── Strip card chrome from descendant elements ─────────
+     Apply to a section to soften any nested .card/.shadow/.border
+     into architectural plates without rewriting child markup. */
+  .strip-cards [class*="border"]:not(.keep-border) {
+    border-color: hsl(var(--accent) / 0.18) !important;
+    border-width: 0 !important;
+    border-top-width: 1px !important;
+  }
+  .strip-cards [class*="bg-card"]:not(.keep-fill),
+  .strip-cards [class*="bg-secondary"]:not(.keep-fill),
+  .strip-cards [class*="bg-muted"]:not(.keep-fill) {
+    background-color: transparent !important;
+  }
+  .strip-cards [class*="shadow"]:not(.keep-shadow) {
+    box-shadow: none !important;
+  }
+  .strip-cards [class*="rounded"]:not(.keep-radius) {
+    border-radius: 0 !important;
+  }
 }
+
 
 /* ═══════════════════════════════════════════════════════
    ARCHITECTURAL MOTION SYSTEM
