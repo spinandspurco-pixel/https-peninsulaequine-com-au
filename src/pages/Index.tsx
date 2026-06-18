@@ -96,11 +96,11 @@ const featuredWorks = [
     slug: "main-ridge",
     title: "Main Ridge",
     location: "Mornington Peninsula",
-    kind: "Pavilion / Arena / Property Build",
+    kind: "Flagship — Pavilion / Arena / Property",
     image: mainRidgeInterior,
     alt: "Main Ridge pavilion interior with exposed timber framing in evening light",
     summary:
-      "A rural build where groundwork, shelter, arena logic and material finish were resolved as one equine environment.",
+      "A full property build — ground, shelter and finish resolved as one environment.",
   },
   {
     slug: "aberdeen-farm",
@@ -109,8 +109,7 @@ const featuredWorks = [
     kind: "Stable Complex",
     image: aberdeenExterior,
     alt: "Private estate stable exterior in late afternoon light",
-    summary:
-      "A practical stable complex with the finish, airflow and structure required for daily horse use.",
+    summary: "Stable complex built for daily horse use — airflow, finish and flow.",
   },
   {
     slug: "equitana",
@@ -119,8 +118,7 @@ const featuredWorks = [
     kind: "Event Arena",
     image: equitanaArena1,
     alt: "Equitana Melbourne competition arena surface prepared for an event",
-    summary:
-      "Competition-grade arena work delivered with surface performance, drainage discipline and presentation under pressure.",
+    summary: "Competition-grade arena work delivered under event pressure.",
   },
 ];
 
