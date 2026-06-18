@@ -23,7 +23,7 @@ import serviceDrainage from "@/assets/homepage-services/drainage.png.asset.json"
 import slidingStopHero from "@/assets/homepage-refresh/sliding-stop-hero.png.asset.json";
 import ciroAceCloseup from "@/assets/homepage-refresh/ciro-ace-closeup.png.asset.json";
 import ciroAceDetail from "@/assets/homepage-refresh/ciro-ace-detail.png.asset.json";
-import ciroAceWalk from "@/assets/homepage-refresh/ciro-ace-walk.png.asset.json";
+
 
 const SESSION_KEY = "pe-brand-intro-seen";
 const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
