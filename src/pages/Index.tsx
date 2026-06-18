@@ -307,9 +307,8 @@ export default function Index() {
           <div className="section-container max-w-5xl">
             <RevealOnScroll direction="up" duration={900}>
               <p className="font-serif text-foreground/82 leading-[1.45] tracking-[-0.02em] text-[clamp(1.4rem,1.05rem+1.5vw,2.2rem)] max-w-4xl">
-                Peninsula Equine builds functional, enduring equine environments across the Mornington
-                Peninsula and beyond — arenas, stables, groundworks, fencing, drainage, pavilions and
-                full-property infrastructure designed for real horse people.
+                Arenas, stables, groundworks and rural builds — shaped from the ground up across the
+                Mornington Peninsula and beyond.
               </p>
             </RevealOnScroll>
           </div>
