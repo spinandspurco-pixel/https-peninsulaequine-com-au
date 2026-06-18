@@ -133,70 +133,7 @@ export const CASE_STUDIES: CaseStudyData[] = [
     },
     closingLine: "From Dirt to Dynasty.",
   },
-  {
-    slug: "main-ridge",
-    title: "Main Ridge",
-    location: "Mornington Peninsula",
-    hero: mainRidgeInterior,
-    heroAlt: "Main Ridge barn interior with exposed timber framing",
-    scope: {
-      brief:
-        "A complete property transformation — earthworks, structure and surface resolved as a single performance system.",
-      items: [
-        "U-shaped stable and arena complex",
-        "Engineered footing system",
-        "Structural timber framing",
-        "Full site grading and drainage",
-        "Integrated brick and joinery work",
-      ],
-    },
-    transformation: {
-      before: mainRidgeSitePrep,
-      after: livingHeroWide,
-      caption: "Raw earth to resolved arena.",
-    },
-    process: [
-      { src: mainRidgeArenaGrading, alt: "Arena pad graded to engineered tolerance" },
-      { src: mainRidgeTrenchUtilities, alt: "Utility trenches set before pour" },
-      { src: mainRidgeRebar, alt: "Rebar grid bound for foundation" },
-      { src: mainRidgePostDepth, alt: "Post depth verified before set" },
-      { src: mainRidgeFrameTrench, alt: "Frame trench cut to drainage spec" },
-      { src: mainRidgeTimberPosts, alt: "Structural timber posts standing" },
-      { src: mainRidgeBarnFrame, alt: "Barn frame rising over pad" },
-      { src: mainRidgeCraneLift, alt: "Crane lift staging structural members" },
-      { src: mainRidgeBrickwork, alt: "Brickwork tied into structural openings" },
-      { src: mainRidgeCiroWoodwork, alt: "Hand-fitted timber joinery" },
-      { src: mainRidgeCiroWoodwork2, alt: "Joinery detail, second pass" },
-      { src: mainRidgeTimber, alt: "Timber finish under interior light" },
-    ],
-    final: [
-      { src: mainRidgeInterior, alt: "Resolved barn interior" },
-      { src: mainRidgeFinishedInterior1, alt: "Finished interior, primary aisle" },
-      { src: mainRidgeFinishedInterior2, alt: "Finished interior, stall row" },
-      { src: livingHeroWide, alt: "Arena in use at golden hour" },
-    ],
-    outcomes: [
-      { metric: "1", label: "Continuous build, no rework" },
-      { metric: "60m", label: "Engineered arena run" },
-      { metric: "12+", label: "Trades coordinated end-to-end" },
-    ],
-    understanding: {
-      image: mainRidgeCiroWoodwork,
-      alt: "Hand-crafted timber joinery",
-      line: "Full property transformation with integrated footing system.",
-    },
-    solution: {
-      image: groundlockInstallation,
-      alt: "Stabilised arena surface in use",
-      line: "From Dirt to Dynasty.",
-    },
-    outcome: {
-      image: livingHeroWide,
-      alt: "Arena in use with horse and rider at golden hour",
-      line: "Private performance arena built for high-load use.",
-    },
-    closingLine: "From Dirt to Dynasty.",
-  },
+  // Main Ridge case study removed — see pages/MainRidgePavilion.tsx (/selected-works/main-ridge-pavilion).
   {
     slug: "equitana",
     title: "Equitana Melbourne",
