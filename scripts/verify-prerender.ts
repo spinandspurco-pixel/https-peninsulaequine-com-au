@@ -294,11 +294,7 @@ function emitGithubAnnotations(): void {
       }
     }
     lines.push("");
-    // appendFileSync via dynamic import to keep the happy path
-    // free of unused imports.
-    import("node:fs").then(({ appendFileSync }) => {
-      appendFileSync(summaryPath, lines.join("\n") + "\n");
-    });
+    appendFileSync(summaryPath, lines.join("\n") + "\n");
   }
 }
 
