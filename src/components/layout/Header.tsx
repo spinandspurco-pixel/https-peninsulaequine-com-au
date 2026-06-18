@@ -4,25 +4,47 @@ import { cn } from "@/lib/utils";
 import { useIntroState } from "@/hooks/useIntroState";
 import logoImage from "@/assets/logo-pe-mark.webp";
 
+type NavChild = { name: string; href: string; description?: string };
+type NavGroup = { label: string; items: NavChild[] };
 type NavItem = {
   name: string;
   href: string;
-  children?: { name: string; href: string }[];
+  children?: NavChild[];
+  groups?: NavGroup[];
 };
+
+const servicesGroups: NavGroup[] = [
+  {
+    label: "Build",
+    items: [
+      { name: "Arenas", href: "/arenas", description: "Dressage, jumping & covered arenas" },
+      { name: "Stables & Barns", href: "/stables", description: "Custom stables and equestrian barns" },
+      { name: "Equine Estates", href: "/equine-estates", description: "Full-property masterplans" },
+    ],
+  },
+  {
+    label: "Support",
+    items: [
+      { name: "Infrastructure & Maintenance", href: "/infrastructure", description: "Fencing, surfaces & site works" },
+    ],
+  },
+  {
+    label: "Approach",
+    items: [
+      { name: "Our Process", href: "/process", description: "How a Peninsula Equine build unfolds" },
+    ],
+  },
+];
+
+const servicesChildren: NavChild[] = servicesGroups.flatMap((g) => g.items);
 
 const navigation: NavItem[] = [
   { name: "Home", href: "/" },
   {
     name: "Services",
     href: "/services",
-    children: [
-      { name: "Arenas", href: "/arenas" },
-      { name: "Stables & Barns", href: "/stables" },
-      { name: "Equine Estates", href: "/equine-estates" },
-      { name: "Infrastructure & Maintenance", href: "/infrastructure" },
-      { name: "Our Process", href: "/process" },
-    ],
-
+    children: servicesChildren,
+    groups: servicesGroups,
   },
   { name: "LumenArc", href: "/lumenarc" },
   { name: "Selected Works", href: "/gallery" },
