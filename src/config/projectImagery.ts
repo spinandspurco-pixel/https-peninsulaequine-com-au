@@ -54,7 +54,24 @@ import aberdeenArenaVaulted from "@/assets/aberdeen/arena-vaulted-wide.png.asset
 import aberdeenEntryCorridor from "@/assets/aberdeen/entry-corridor.png.asset.json";
 
 // -----------------------------------------------------------------
-// Types
+// Crop-safety contract
+// -----------------------------------------------------------------
+// When an image contains critical focal elements that must never be
+// cropped (e.g. boots at the bottom-left + steel frame at the right),
+// the consuming component MUST enforce ALL of the following:
+//
+//   1. Container aspectRatio locked to the source image's native ratio
+//      (e.g. style={{ aspectRatio: "3 / 2" }} for a 3:2 photo).
+//   2. object-contain (NOT object-cover) so a future container override
+//      letterboxes instead of clipping.
+//   3. Intrinsic width / height attributes so the browser reserves the
+//      correct box before decode (prevents transient crop / CLS).
+//   4. object-center (or a conservative position that never shifts the
+//      crop window toward an edge with critical detail).
+//
+// If you change any of the four rules above for a "conditions" or
+// hero surface, you risk cropping boots, steel, machinery or other
+// edge-dominant focal points on mobile.
 // -----------------------------------------------------------------
 
 export type AssetPointer = { url: string };
