@@ -62,17 +62,30 @@ jobs:
 
       - name: Setup Node
         if: matrix.runtime == 'node'
-        id: node-cache
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+
+      - name: Cache npm dependencies
+        if: matrix.runtime == 'node'
+        id: node-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
 
       - name: Report Node cache status
         if: matrix.runtime == 'node'
         run: |
           echo "Node cache hit: ${{ steps.node-cache.outputs.cache-hit }}"
           echo "Node cache key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}"
+          echo "Node cache restore-keys: ${{ runner.os }}-npm-"
+          echo "## Node Cache Status" >> $GITHUB_STEP_SUMMARY
+          echo "- Cache hit: \`${{ steps.node-cache.outputs.cache-hit }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Cache key: \`${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Restore key fallback: \`${{ runner.os }}-npm-\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Install dependencies (Bun)
         if: matrix.runtime == 'bun'
