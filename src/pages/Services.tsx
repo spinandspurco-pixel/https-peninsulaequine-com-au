@@ -95,6 +95,7 @@ const SERVICES: Service[] = [
 ];
 
 export default function Services() {
+  const { open } = useIntake();
   useEffect(() => {
     document.title = "Capabilities | Peninsula Equine";
     return () => { document.title = "Peninsula Equine"; };
