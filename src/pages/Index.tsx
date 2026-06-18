@@ -393,8 +393,8 @@ export default function Index() {
                       alt="Covered competition arena at sunset — steel frame and finished surface mirrored in puddles after rain"
                       loading="lazy"
                       decoding="async"
-                      className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1800ms] ease-out group-hover:scale-[1.02]"
-                      style={{ filter: "brightness(0.88) contrast(1.1) saturate(0.82)", objectPosition: "55% 55%" }}
+                      className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1800ms] ease-out group-hover:scale-[1.02] object-[62%_58%] sm:object-[58%_55%] md:object-[50%_50%]"
+                      style={{ filter: "brightness(0.88) contrast(1.1) saturate(0.82)" }}
                     />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/85 via-background/30 to-transparent" />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
