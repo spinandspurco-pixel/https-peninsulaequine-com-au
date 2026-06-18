@@ -237,8 +237,8 @@ export default function Index() {
                       alt="A quiet moment between horseman and horse in low arena light — the ground Peninsula Equine builds for"
                       loading="lazy"
                       decoding="async"
-                      className="absolute inset-0 w-full h-full object-cover image-bleed"
-                      style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)", objectPosition: "50% 38%" }}
+                      className="absolute inset-0 w-full h-full object-cover image-bleed object-[50%_32%] sm:object-[50%_46%] md:object-[50%_38%]"
+                      style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
                     />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
                   </div>
@@ -311,7 +311,7 @@ export default function Index() {
                       alt="Main Ridge pavilion — wide interior with fireplace, handcrafted timber table and warm dusk light"
                       loading="lazy"
                       decoding="async"
-                      className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
+                      className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025] object-[50%_62%] sm:object-[50%_55%] md:object-[50%_50%]"
                       style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
                     />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-transparent to-transparent" />
@@ -393,8 +393,8 @@ export default function Index() {
                       alt="Covered competition arena at sunset — steel frame and finished surface mirrored in puddles after rain"
                       loading="lazy"
                       decoding="async"
-                      className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1800ms] ease-out group-hover:scale-[1.02]"
-                      style={{ filter: "brightness(0.88) contrast(1.1) saturate(0.82)", objectPosition: "55% 55%" }}
+                      className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1800ms] ease-out group-hover:scale-[1.02] object-[62%_58%] sm:object-[58%_55%] md:object-[50%_50%]"
+                      style={{ filter: "brightness(0.88) contrast(1.1) saturate(0.82)" }}
                     />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/85 via-background/30 to-transparent" />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
