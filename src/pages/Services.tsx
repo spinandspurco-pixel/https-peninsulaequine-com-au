@@ -4,8 +4,6 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { BlueprintContinuity } from "@/components/BlueprintContinuity";
 import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
-import { Button } from "@/components/ui/button";
-import { useIntake } from "@/hooks/useIntake";
 
 // Locked cinematic image system — one correct visual per service.
 // Outdoor-arena-first positioning is removed. Lead with covered & indoor.
@@ -95,7 +93,6 @@ const SERVICES: Service[] = [
 ];
 
 export default function Services() {
-  const { open } = useIntake();
   useEffect(() => {
     document.title = "Capabilities | Peninsula Equine";
     return () => { document.title = "Peninsula Equine"; };
@@ -204,64 +201,52 @@ export default function Services() {
           </div>
         </section>
 
-        {/* ═══ WHOLE-PROPERTY PLANNING — concept band, not a service tile ═══ */}
+        {/* ═══ WHOLE-PROPERTY PLANNING — compact teaser, links out to /equine-estates ═══ */}
         <section className="relative overflow-hidden border-t border-accent/10">
-          <div className="py-24 sm:py-32 lg:py-40 relative">
-            <div className="section-container max-w-6xl mx-auto">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-                <RevealOnScroll direction="up" className="lg:col-span-7">
-                  <div className="relative overflow-hidden aspect-[16/9]">
+          <div className="py-20 sm:py-24 lg:py-28 relative">
+            <div className="section-container max-w-5xl mx-auto">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                <RevealOnScroll direction="up" className="lg:col-span-5">
+                  <div className="relative overflow-hidden aspect-[4/3]">
                     <img
                       src={estateAerialAsset.url}
-                      alt="Aerial view of a private equine estate at dusk — arena, stables, paddocks, water and access resolved as one composition"
+                      alt="Aerial crop of a planned equine property — arena, stables and access resolved together"
                       loading="lazy"
                       decoding="async"
                       className="w-full h-full object-cover image-bleed"
-                      style={{ filter: "brightness(0.85) contrast(1.08) saturate(0.82)", objectPosition: "50% 55%" }}
+                      style={{ filter: "brightness(0.82) contrast(1.08) saturate(0.8)", objectPosition: "55% 60%" }}
                     />
                     <div
                       className="absolute inset-0 pointer-events-none"
-                      style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 45%, hsl(var(--background)/0.7) 100%)" }}
+                      style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 45%, hsl(var(--background)/0.6) 100%)" }}
                     />
                   </div>
                 </RevealOnScroll>
-                <div className="lg:col-span-5 space-y-6">
+                <div className="lg:col-span-7 space-y-5">
                   <RevealOnScroll direction="up">
                     <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-accent/55">
-                      Concept — Planning
+                      Supporting Concept
                     </p>
                   </RevealOnScroll>
                   <RevealOnScroll direction="up" delay={120}>
-                    <h2 className="font-serif text-[clamp(1.65rem,1.1rem+1.8vw,2.4rem)] text-foreground/90 tracking-[-0.02em] leading-[1.1]">
+                    <h2 className="font-serif text-[clamp(1.5rem,1rem+1.6vw,2.1rem)] text-foreground/90 tracking-[-0.02em] leading-[1.1]">
                       Whole-Property Planning
                     </h2>
                   </RevealOnScroll>
                   <RevealLine width="w-10" delay={220} />
-                  <RevealOnScroll direction="up" delay={280}>
-                    <p className="font-sans font-light text-foreground/60 leading-[1.85] text-[14px] sm:text-[15px] max-w-md">
-                      A horse property works best when the big decisions are made early. Peninsula Equine considers covered arenas, stables, access, fencing, drainage, water, recovery, movement and future maintenance as one connected environment — not separate pieces fighting each other later.
+                  <RevealOnScroll direction="up" delay={260}>
+                    <p className="font-sans font-light text-foreground/60 leading-[1.85] text-[14px] sm:text-[15px] max-w-xl">
+                      A horse property works best when the big decisions are made early. Peninsula Equine considers covered arenas, stables, access, fencing, drainage, water, recovery, movement and future maintenance as one connected environment.
                     </p>
                   </RevealOnScroll>
-                  <RevealOnScroll direction="up" delay={380}>
+                  <RevealOnScroll direction="up" delay={360}>
                     <Link
                       to="/equine-estates"
                       className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
                     >
                       <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
-                      Read the Approach
+                      Explore Whole-Property Planning
                     </Link>
-                  </RevealOnScroll>
-                  <RevealOnScroll direction="up" delay={480}>
-                    <div className="pt-8">
-                      <Button
-                        variant="gold"
-                        size="lg"
-                        onClick={open}
-                        className="btn-hover-lift"
-                      >
-                        Request a Consult
-                      </Button>
-                    </div>
                   </RevealOnScroll>
                 </div>
               </div>
