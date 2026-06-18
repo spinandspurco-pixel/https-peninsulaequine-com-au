@@ -358,6 +358,58 @@ export default function Index() {
           </div>
         </section>
 
+        {/* 04 — LumenArc Recovery Systems teaser */}
+        <section className="relative py-[clamp(6rem,4rem+7vw,10rem)] bg-background overflow-hidden border-t border-accent/10">
+          <div className="section-container max-w-[1480px] mx-auto">
+            <RevealOnScroll direction="up" duration={900}>
+              <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4rem)]">
+                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">04</span>
+                <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
+                <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">LumenArc</span>
+              </div>
+            </RevealOnScroll>
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-[clamp(2rem,1.25rem+2vw,3.5rem)] items-center">
+              <RevealOnScroll direction="up" duration={1200} className="md:col-span-7">
+                <Link to="/lumenarc" className="group block">
+                  <div className="relative aspect-[16/10] overflow-hidden">
+                    <img
+                      src={lumenArcCanopy.url}
+                      alt="LumenArc recovery canopy — considered warmth and rest environment for equine wellbeing"
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
+                      style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.82)" }}
+                    />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
+                  </div>
+                </Link>
+              </RevealOnScroll>
+              <div className="md:col-span-5 space-y-6">
+                <RevealOnScroll direction="up" duration={1000} delay={120}>
+                  <h2 className="font-serif text-foreground/92 leading-[1.04] tracking-[-0.022em] text-[clamp(1.75rem,1.15rem+2vw,2.6rem)]">
+                    LumenArc Recovery Systems
+                  </h2>
+                </RevealOnScroll>
+                <RevealLine width="w-10" delay={220} />
+                <RevealOnScroll direction="up" duration={1000} delay={300}>
+                  <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px] sm:text-[15px] max-w-md">
+                    A considered recovery environment designed around warmth, rest and equine
+                    wellbeing.
+                  </p>
+                </RevealOnScroll>
+                <RevealOnScroll direction="none" duration={1100} delay={400}>
+                  <Link
+                    to="/lumenarc"
+                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/72 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
+                  >
+                    <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
+                    Explore LumenArc
+                  </Link>
+                </RevealOnScroll>
+              </div>
+            </div>
+          </div>
+        </section>
 
         <section className="relative py-[clamp(7rem,4.5rem+9vw,13rem)] bg-background overflow-hidden">
           <img
