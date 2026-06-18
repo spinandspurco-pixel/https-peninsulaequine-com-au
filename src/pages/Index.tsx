@@ -165,8 +165,9 @@ export default function Index() {
                       textShadow: "0 2px 18px rgba(0,0,0,0.55)",
                     }}
                   >
-                    Covered arenas, stables and pavilions — premium equine infrastructure built by
-                    horse people, shaped from the ground beneath the ride.
+                    Peninsula Equine designs and builds premium equine environments — with a focus
+                    on covered arenas, stable structures, pavilions and supporting infrastructure
+                    shaped for long-term use.
                   </p>
                 </div>
 
