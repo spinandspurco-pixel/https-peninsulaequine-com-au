@@ -199,7 +199,7 @@ export default function Index() {
             // @ts-expect-error valid HTML attribute
             fetchpriority="high"
             style={{
-              objectPosition: "68% 54%",
+              objectPosition: "78% 58%",
               filter: imageReady
                 ? "brightness(0.8) contrast(1.12) saturate(0.82)"
                 : "brightness(0.42) contrast(1.05) saturate(0.7) blur(12px)",
