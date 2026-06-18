@@ -6,13 +6,10 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { IntroContext } from "@/hooks/useIntroState";
 import { useIntake } from "@/hooks/useIntake";
 
-import goldenHourPavilion from "@/assets/golden-hour-pavilion.png.asset.json";
-import goldenHourPavilion800 from "@/assets/golden-hour-pavilion-800.webp.asset.json";
-import goldenHourPavilion1200 from "@/assets/golden-hour-pavilion-1200.webp.asset.json";
-import goldenHourPavilion1600 from "@/assets/golden-hour-pavilion-1600.webp.asset.json";
+import mainRidgePavilionTile from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
 import serviceGroundworks from "@/assets/homepage-services/groundworks.png.asset.json";
-import currentArenaHeroAsset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
-const currentArenaHero = currentArenaHeroAsset.url;
+import coveredArenaSunsetAsset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
+const coveredArenaHero = coveredArenaSunsetAsset.url;
 import slidingStopHero from "@/assets/homepage-refresh/sliding-stop-hero.png.asset.json";
 import steelFrontAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
 const steelFront = steelFrontAsset.url;
@@ -20,7 +17,7 @@ import lumenArcCanopy from "@/assets/lumenarc/canopy.asset.json";
 import pavilionFireplaceDetail from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
 import aberdeenHero from "@/assets/aberdeen/hero-entrance-twilight.png.asset.json";
 import aberdeenArena from "@/assets/aberdeen/arena-dramatic-light.png.asset.json";
-import fieldNoteDozerStorm from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
+import ciroAceQuietMoment from "@/assets/about/ciro-ace-quiet-moment.png.asset.json";
 
 const SESSION_KEY = "pe-brand-intro-seen";
 const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
