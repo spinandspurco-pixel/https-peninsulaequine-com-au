@@ -146,15 +146,28 @@ export default function FieldNotes() {
 
         {/* Real Conditions — full-bleed cinematic divider */}
         <section className="relative w-full overflow-hidden border-t border-accent/10">
-          <div className="relative aspect-[16/9] sm:aspect-[21/9] w-full">
+          {/*
+            Aspect locked to the source image's native 3:2 across every
+            breakpoint so neither the boots (bottom-left) nor the steel
+            frame (right) can ever be cropped. object-contain is the
+            authoritative fail-safe — if a future container override
+            changes the box, the full frame still renders inside it,
+            letterboxed against bg-background instead of clipping.
+          */}
+          <div
+            className="relative w-full bg-background"
+            style={{ aspectRatio: "3 / 2" }}
+          >
             <img
               src={conditionsResp.src}
               srcSet={conditionsResp.srcSet}
               sizes={conditionsResp.sizes}
               alt={conditionsAlt}
+              width={1536}
+              height={1024}
               loading="lazy"
               decoding="async"
-              className="absolute inset-0 h-full w-full object-cover object-[35%_70%] sm:object-[40%_65%] md:object-center"
+              className="absolute inset-0 h-full w-full object-contain object-center"
               style={{ filter: "brightness(0.86) contrast(1.1) saturate(0.85)" }}
             />
             {/* subtle dark gradient for text legibility — keeps mud + steel readable */}
