@@ -87,7 +87,14 @@ function AppContent() {
           <Route path="/arenas" element={<Arenas />} />
           <Route path="/stables" element={<Stables />} />
           <Route path="/equine-estates" element={<EquineEstates />} />
-          <Route path="/lumenarc" element={<LumenArc />} />
+          <Route
+            path="/lumenarc"
+            element={
+              <Suspense fallback={<LumenArcRouteFallback />}>
+                <LumenArc />
+              </Suspense>
+            }
+          />
           <Route path="/recovery-stations" element={<Navigate to="/lumenarc" replace />} />
           <Route path="/infrastructure" element={<InfrastructurePage />} />
           <Route path="/gallery" element={<Gallery />} />
