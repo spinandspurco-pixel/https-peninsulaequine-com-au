@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
-import heroImg from "@/assets/main-ridge-arena-grading.jpg";
+import heroAsset from "@/assets/services-new/pe-groundworks-dozer.png.asset.json";
+const heroImg = heroAsset.url;
 
 const items = [
   { k: "01", label: "Site Works & Drainage", body: "Cut, fill, contour, drain. The foundation of every later decision — done once, properly." },

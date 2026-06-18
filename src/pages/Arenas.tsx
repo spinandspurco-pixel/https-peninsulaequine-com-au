@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
-import heroImg from "@/assets/living-hero-wide.jpg";
+import heroAsset from "@/assets/services-new/pe-arena-grading.png.asset.json";
+const heroImg = heroAsset.url;
 
 const capabilities = [
   { k: "01", label: "Engineered Footing", body: "Sub-base, drainage and surface tuned to discipline and climate. Performance written into the ground." },

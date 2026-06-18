@@ -14,6 +14,16 @@ import { servicePricingTiers, serviceFaqs } from "@/data/servicePricingFaq";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
 
+// New PE service hero/feature imagery (CDN)
+import peArenaGradingAsset from "@/assets/services-new/pe-arena-grading.png.asset.json";
+import peFencingGateAsset from "@/assets/services-new/pe-fencing-gate-sunset.png.asset.json";
+import peGroundworksDozerAsset from "@/assets/services-new/pe-groundworks-dozer.png.asset.json";
+import peCustomRuralPavilionAsset from "@/assets/services-new/pe-custom-rural-pavilion.png.asset.json";
+const peArenaGrading = peArenaGradingAsset.url;
+const peFencingGate = peFencingGateAsset.url;
+const peGroundworksDozer = peGroundworksDozerAsset.url;
+const peCustomRuralPavilion = peCustomRuralPavilionAsset.url;
+
 // Service card images
 import equitanaArena from "@/assets/equitana-arena-1.jpg";
 import equitanaArena2 from "@/assets/equitana-arena-2.jpg";
@@ -50,23 +60,23 @@ import mainRidgeTrenchUtilities from "@/assets/main-ridge-trench-utilities.jpg";
 
 // Primary images per service
 const serviceImages: Record<string, string> = {
-  "arena-construction": equitanaArena,
+  "arena-construction": peArenaGrading,
   "barn-construction": aberdeenBarnInterior,
-  "fencing": aberdeenStalls,
-  "infrastructure": mainRidgeSitePrep,
+  "fencing": peFencingGate,
+  "infrastructure": peGroundworksDozer,
   "round-pens": coveredArenaLit,
-  "renovations": mainRidgeCiroWoodwork,
-  "full-facility": mainRidgeSitePrep,
+  "renovations": peCustomRuralPavilion,
+  "full-facility": peCustomRuralPavilion,
   "clinics-events": equitanaArena,
 };
 
 // Gallery images per service
 const serviceGalleryImages: Record<string, { src: string; caption: string }[]> = {
   "arena-construction": [
+    { src: peArenaGrading, caption: "Laser-graded arena base" },
     { src: equitanaArena, caption: "Competition-grade arena" },
     { src: equitanaArena2, caption: "Professional footing installation" },
     { src: equitanaArena3, caption: "Arena drainage system" },
-    { src: equitanaArena4, caption: "Finished arena surface" },
     { src: arenaSandPrep1, caption: "Base preparation" },
     { src: arenaSandPrep2, caption: "Sand footing grading" },
   ],
@@ -78,11 +88,12 @@ const serviceGalleryImages: Record<string, { src: string; caption: string }[]> =
     { src: aberdeenStallsDetail, caption: "Stall fitout detail" },
   ],
   "fencing": [
+    { src: peFencingGate, caption: "Engineered gate and post-and-rail run" },
     { src: aberdeenStalls, caption: "Post and rail fencing" },
     { src: aberdeenExterior, caption: "Paddock perimeter fencing" },
-    { src: coveredArenaBlack, caption: "Gate and entry design" },
   ],
   "infrastructure": [
+    { src: peGroundworksDozer, caption: "Bulk earthworks and site shaping" },
     { src: mainRidgeSitePrep, caption: "Site development" },
     { src: mainRidgeBarnFrame, caption: "Structural framework" },
     { src: mainRidgeBrickwork, caption: "Drainage infrastructure" },
@@ -93,16 +104,16 @@ const serviceGalleryImages: Record<string, { src: string; caption: string }[]> =
     { src: arenaSandPrep2, caption: "Surface grading" },
   ],
   "renovations": [
+    { src: peCustomRuralPavilion, caption: "Custom rural pavilion" },
     { src: mainRidgeCiroWoodwork, caption: "Custom woodwork restoration" },
     { src: mainRidgeCiroWoodwork2, caption: "Timber detail" },
     { src: mainRidgeInterior, caption: "Renovated interior" },
-    { src: mainRidgeBrickwork, caption: "Structural repair" },
   ],
   "full-facility": [
+    { src: peCustomRuralPavilion, caption: "Bespoke rural entertaining pavilion" },
     { src: mainRidgeSitePrep, caption: "Full facility build" },
     { src: mainRidgeFinishedInterior1, caption: "Completed interior" },
     { src: mainRidgeFinishedInterior2, caption: "Interior detail" },
-    { src: premiumStableFacade, caption: "Stabling wing" },
     { src: coveredArenaLit, caption: "Arena at dusk" },
   ],
   "clinics-events": [
