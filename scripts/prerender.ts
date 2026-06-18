@@ -165,7 +165,7 @@ function rewriteHead(html: string, meta: RouteMeta): string {
   const desc = escapeHtml(meta.description);
   const imagePath = meta.image ?? DEFAULT_OG_IMAGE;
   const imageUrl = `${SITE_ORIGIN}${imagePath}`;
-  const imageAlt = escapeHtml(meta.imageAlt ?? meta.title);
+  const imageAlt = escapeHtml(meta.imageAlt ?? DEFAULT_OG_ALT);
 
   let out = html;
 
