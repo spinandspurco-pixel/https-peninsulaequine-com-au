@@ -2,9 +2,10 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 
-import ciroWithHorse from "@/assets/ciro-with-horse.png";
-import horseAction from "@/assets/horse-action.png";
-import slidingStop from "@/assets/homepage-refresh/sliding-stop-hero.png.asset.json";
+import ciroAceArena from "@/assets/about/ciro-ace-arena-standing.png.asset.json";
+import ciroAceQuiet from "@/assets/about/ciro-ace-quiet-moment.png.asset.json";
+import ciroAcePortrait from "@/assets/about/ciro-ace-portrait.png.asset.json";
+import ciroAceSlidingStop from "@/assets/about/ciro-ace-sliding-stop.png.asset.json";
 import arenaGrading from "@/assets/main-ridge-arena-grading.jpg";
 import pavilionTableDetail from "@/assets/about/main-ridge-pavilion-table-detail.png.asset.json";
 import coveredArena from "@/assets/covered-arena-black-exterior.jpg";
