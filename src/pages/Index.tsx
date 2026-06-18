@@ -216,108 +216,14 @@ export default function Index() {
           </div>
         </section>
 
-        {/* 02 — Reference Plates: large editorial project cards */}
-        <section className="relative py-[clamp(6rem,4rem+7vw,11rem)] bg-background overflow-hidden">
-          <div className="section-container max-w-[1480px] mx-auto">
-            <RevealOnScroll direction="up" duration={900}>
-              <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4.5rem)]">
-                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">02</span>
-                <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
-                <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Reference Plates</span>
-              </div>
-            </RevealOnScroll>
-
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-[clamp(2rem,1.25rem+2.5vw,4rem)] items-stretch">
-              {/* Main Ridge Pavilion — featured card */}
-              <RevealOnScroll direction="up" duration={1300} className="md:col-span-7">
-                <Link
-                  to="/selected-works/main-ridge-pavilion"
-                  className="group block relative aspect-[5/4] md:aspect-[4/3] overflow-hidden"
-                >
-                  <picture className="absolute inset-0 w-full h-full">
-                    <source
-                      srcSet={`${goldenHourPavilion800.url} 800w, ${goldenHourPavilion1200.url} 1200w, ${goldenHourPavilion1600.url} 1600w`}
-                      sizes="(min-width: 768px) 58vw, 100vw"
-                      type="image/webp"
-                    />
-                    <img
-                      src={goldenHourPavilion.url}
-                      alt="Warm evening light inside the Main Ridge timber pavilion with corrugated iron and open framing"
-                      loading="lazy"
-                      decoding="async"
-                      width={1672}
-                      height={941}
-                      className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
-                      style={{ filter: "brightness(0.8) contrast(1.1) saturate(0.8)" }}
-                    />
-                  </picture>
-                  <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,hsl(var(--background)/0.92)_0%,hsl(var(--background)/0.45)_38%,transparent_70%)]" />
-                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,hsl(var(--background)/0.45)_100%)]" />
-
-                  <div className="absolute inset-x-0 bottom-0 p-[clamp(1.5rem,1rem+1.5vw,2.75rem)]">
-                    <p className="font-mono uppercase text-accent/80 text-[0.6rem] tracking-[0.5em] mb-4">
-                      Custom Rural Build
-                    </p>
-                    <h3 className="font-serif text-foreground leading-[1] tracking-[-0.022em] text-[clamp(1.75rem,1.1rem+2.4vw,3rem)]">
-                      Main Ridge Pavilion
-                    </h3>
-                    <div className="mt-6 pt-5 border-t border-accent/20 flex items-center justify-between gap-4">
-                      <span className="font-mono uppercase text-foreground/55 text-[0.6rem] tracking-[0.45em]">Flagship</span>
-                      <span className="inline-flex items-center gap-3 font-mono uppercase text-foreground/80 group-hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]">
-                        <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
-                        View Project
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </RevealOnScroll>
-
-              {/* Covered Competition Arena — supporting card */}
-              <RevealOnScroll direction="up" duration={1300} delay={200} className="md:col-span-5 md:mt-20">
-                <Link
-                  to="/gallery"
-                  className="group block relative aspect-[4/5] overflow-hidden"
-                >
-                  <img
-                    src={coveredArenaExterior}
-                    alt="Steel-frame covered competition arena under construction at dusk"
-                    loading="lazy"
-                    decoding="async"
-                    className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
-                    style={{ objectPosition: "50% 55%", filter: "brightness(0.78) contrast(1.12) saturate(0.78)" }}
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,hsl(var(--background)/0.92)_0%,hsl(var(--background)/0.45)_38%,transparent_70%)]" />
-                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,hsl(var(--background)/0.45)_100%)]" />
-
-                  <div className="absolute inset-x-0 bottom-0 p-[clamp(1.5rem,1rem+1.5vw,2.5rem)]">
-                    <p className="font-mono uppercase text-accent/80 text-[0.6rem] tracking-[0.5em] mb-4">
-                      Arena
-                    </p>
-                    <h3 className="font-serif text-foreground leading-[1.02] tracking-[-0.022em] text-[clamp(1.55rem,1rem+2vw,2.5rem)]">
-                      Covered Competition Arena
-                    </h3>
-                    <div className="mt-6 pt-5 border-t border-accent/20 flex items-center justify-between gap-4">
-                      <span className="font-mono uppercase text-foreground/55 text-[0.6rem] tracking-[0.45em]">In Progress</span>
-                      <span className="inline-flex items-center gap-3 font-mono uppercase text-foreground/80 group-hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]">
-                        <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
-                        Explore
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </RevealOnScroll>
-            </div>
-          </div>
-        </section>
-
-
-        {/* 03 — Selected Works: image-led editorial preview */}
+        {/* 02 — Selected Works: image-led editorial preview */}
         <section className="relative py-[clamp(6rem,4rem+7vw,11rem)] bg-background overflow-hidden border-t border-accent/10">
           <div className="section-container max-w-[1480px] mx-auto">
             <RevealOnScroll direction="up" duration={900}>
               <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4rem)]">
-                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">03</span>
+                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">02</span>
                 <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
+
                 <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Selected Works</span>
               </div>
             </RevealOnScroll>
