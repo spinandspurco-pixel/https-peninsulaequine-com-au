@@ -70,10 +70,10 @@ export default function Services() {
                     <p className="text-[9px] uppercase tracking-[0.4em] text-accent/25 font-mono">01</p>
                   </div>
                   <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/80 tracking-[0.02em] mb-6">
-                    Full Site Builds
+                    Covered Arenas, Stables & Pavilions
                   </h2>
                   <p className="text-[13px] text-foreground/30 leading-[1.8] max-w-sm">
-                    Complete project delivery from ground preparation to finished arena.
+                    Integrated equine builds — covered arenas, stables, pavilions and rural infrastructure, delivered ground-up by one team.
                   </p>
                   <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.35em] text-foreground/8">
                     Selected projects only.
