@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 
 // New PE service hero/feature imagery (CDN)
 import peArenaGradingAsset from "@/assets/services-new/pe-arena-grading.png.asset.json";
-import peFencingGateAsset from "@/assets/services-new/pe-fencing-gate-sunset.png.asset.json";
+import peFencingGateAsset from "@/assets/services-new/pe-fencing-hero-gate.png.asset.json";
 import peGroundworksDozerAsset from "@/assets/services-new/pe-groundworks-dozer.png.asset.json";
 import peCustomRuralPavilionAsset from "@/assets/services-new/pe-custom-rural-pavilion.png.asset.json";
 import peCustomRuralFireplaceGrillAsset from "@/assets/services-new/pe-custom-rural-fireplace-grill.png.asset.json";
