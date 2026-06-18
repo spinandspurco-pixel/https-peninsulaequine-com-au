@@ -31,7 +31,7 @@ const servicesGroups: NavGroup[] = [
     ],
   },
   {
-    label: "Recovery",
+    label: "Recovery & Systems",
     items: [
       { name: "LumenArc Recovery Systems", href: "/lumenarc", description: "Considered recovery environments for equine wellbeing" },
     ],
