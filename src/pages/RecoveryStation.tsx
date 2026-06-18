@@ -238,22 +238,31 @@ export default function RecoveryStation() {
 
         <section className="relative overflow-hidden bg-card border-b border-accent/10">
           <div className="absolute inset-0 pointer-events-none opacity-45 bg-[linear-gradient(180deg,transparent_0%,hsl(var(--accent)/0.05)_50%,transparent_100%)]" />
-          <div className="section-container relative z-10 py-[clamp(3rem,2.4rem+3vw,5rem)]">
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
-              <RevealOnScroll direction="up" duration={900}>
-                <div className="space-y-4 max-w-2xl">
-                  <p className="font-mono uppercase text-accent/55 text-[0.62rem] tracking-[0.42em]">
-                    Peninsula Equine — Product Direction
+          <div className="section-container relative z-10 py-[clamp(4.5rem,3rem+5vw,8rem)]">
+            <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+              <div className="space-y-6 max-w-2xl">
+                <RevealOnScroll direction="up" duration={900}>
+                  <p className="font-mono uppercase text-accent/60 text-[0.62rem] tracking-[0.5em]">
+                    Performance Recovery System
                   </p>
-                  <h2 className="font-serif text-foreground/90 leading-[1.02] tracking-[0.01em] text-[clamp(1.7rem,1.2rem+2vw,2.8rem)]">
-                    Luxury equine construction, rethought as a future recovery system.
-                  </h2>
-                </div>
-              </RevealOnScroll>
+                </RevealOnScroll>
+                <RevealOnScroll direction="up" duration={1000} delay={140}>
+                  <h1 className="font-serif text-foreground leading-[0.92] tracking-[0.06em] text-[clamp(2.4rem,1.6rem+3.2vw,4.4rem)]">
+                    LUMENARC
+                  </h1>
+                </RevealOnScroll>
+                <RevealLine width="w-12" delay={300} />
+                <RevealOnScroll direction="up" duration={1050} delay={360}>
+                  <p className="font-serif italic text-foreground/65 leading-[1.4] text-[clamp(1rem,0.9rem+0.6vw,1.4rem)] max-w-xl">
+                    A new standard is under construction.
+                  </p>
+                </RevealOnScroll>
+              </div>
 
-              <RevealOnScroll direction="up" duration={1000} delay={160}>
-                <p className="font-sans font-light text-foreground/48 leading-[1.9] text-[0.84rem] lg:max-w-md lg:justify-self-end">
-                  LumenArc is being positioned as a premium, blueprint-led product division rather than a standard service page — more institution than promotion, more architecture than gadgetry.
+              <RevealOnScroll direction="up" duration={1000} delay={220}>
+                <p className="font-sans font-light text-foreground/52 leading-[1.9] text-[0.86rem] lg:max-w-md lg:justify-self-end">
+                  A future Peninsula Equine division exploring intelligent equine recovery infrastructure — cinematic,
+                  architectural and quietly technical. In development. Features subject to refinement.
                 </p>
               </RevealOnScroll>
             </div>
