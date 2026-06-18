@@ -126,7 +126,7 @@ function LumenArcChapterSection({
   const imageBleed = align === "right" ? "lg:-mr-[3rem]" : "lg:-ml-[3rem]";
 
   return (
-    <section className="relative py-[clamp(5.5rem,3.5rem+7vw,10rem)] bg-background">
+    <section className="relative py-[clamp(5.5rem,3.5rem+7vw,10rem)]">
       <div className="section-container relative z-10 grid grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4.5rem)] items-center">
         <div className={`col-span-12 lg:col-span-7 ${imageOrder}`}>
           <RevealImage delay={100} duration={1200}>
@@ -227,7 +227,7 @@ export default function RecoveryStation() {
           <LumenArcChapterSection key={chapter.number} {...chapter} align={index % 2 === 0 ? chapter.align ?? "left" : chapter.align ?? "right"} />
         ))}
 
-        <section className="relative bg-background py-[clamp(5rem,3.5rem+6vw,8rem)]">
+        <section className="relative py-[clamp(5rem,3.5rem+6vw,8rem)]">
           <div className="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(circle_at_50%_35%,hsl(var(--accent)/0.08),transparent_52%)]" />
           <div className="section-container relative z-10">
             <div className="mx-auto max-w-3xl text-center space-y-7">
