@@ -95,27 +95,37 @@ export default function Index() {
               style={{
                 objectPosition: "78% 58%",
                 filter: imageReady
-                  ? "brightness(0.8) contrast(1.12) saturate(0.82)"
-                  : "brightness(0.42) contrast(1.05) saturate(0.7) blur(12px)",
+                  ? "brightness(0.92) contrast(1.1) saturate(0.85)"
+                  : "brightness(0.5) contrast(1.05) saturate(0.7) blur(12px)",
                 transform: imageReady ? "scale(1)" : "scale(1.035)",
                 transition: `filter 1400ms ${EASE}, transform 1400ms ${EASE}`,
               }}
             />
 
+            {/* Readability scrim — anchored to text column, softer on the horse */}
             <div
-              className="absolute inset-0 pointer-events-none"
+              className="absolute inset-0 pointer-events-none hidden sm:block"
               style={{
                 background:
-                  "linear-gradient(90deg, hsl(var(--background) / 0.94) 0%, hsl(var(--background) / 0.78) 30%, hsl(var(--background) / 0.12) 58%, hsl(var(--background) / 0.25) 100%)",
+                  "linear-gradient(90deg, hsl(var(--background) / 0.92) 0%, hsl(var(--background) / 0.72) 28%, hsl(var(--background) / 0.08) 58%, hsl(var(--background) / 0.22) 100%)",
+              }}
+            />
+            {/* Mobile: bottom-weighted scrim so the horse stays visible at top, text reads at bottom */}
+            <div
+              className="absolute inset-0 pointer-events-none sm:hidden"
+              style={{
+                background:
+                  "linear-gradient(180deg, hsl(var(--background) / 0.45) 0%, hsl(var(--background) / 0.15) 30%, hsl(var(--background) / 0.55) 60%, hsl(var(--background) / 0.92) 100%)",
               }}
             />
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
                 background:
-                  "linear-gradient(180deg, hsl(var(--background) / 0.22) 0%, transparent 28%, hsl(var(--background) / 0.7) 100%)",
+                  "linear-gradient(180deg, hsl(var(--background) / 0.22) 0%, transparent 28%, hsl(var(--background) / 0.65) 100%)",
               }}
             />
+
 
             <div
               ref={heroContentRef}
@@ -147,11 +157,12 @@ export default function Index() {
                     From Dirt to Dynasty
                   </h1>
                   <p
-                    className="max-w-xl font-sans font-light text-foreground/72 leading-[1.8] text-[14px] sm:text-[15px]"
+                    className="max-w-xl font-sans font-light text-foreground/90 leading-[1.8] text-[15px] sm:text-[15px]"
                     style={{
                       opacity: sublineReady ? 1 : 0,
                       transform: sublineReady ? "translateY(0)" : "translateY(8px)",
                       transition: `opacity 1100ms ${EASE}, transform 1100ms ${EASE}`,
+                      textShadow: "0 2px 18px rgba(0,0,0,0.55)",
                     }}
                   >
                     Equine environments built by horse people — from the ground beneath the ride to the
@@ -160,7 +171,7 @@ export default function Index() {
                 </div>
 
                 <div
-                  className="flex flex-col sm:flex-row items-start gap-4"
+                  className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4"
                   style={{
                     opacity: ctaReady ? 1 : 0,
                     transform: ctaReady ? "translateY(0)" : "translateY(8px)",
@@ -169,19 +180,20 @@ export default function Index() {
                 >
                   <Link
                     to="/gallery"
-                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/82 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
+                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground hover:text-foreground transition-colors duration-500 text-[11px] sm:text-[10px] tracking-[0.42em] py-3 -my-3"
                   >
-                    <span className="w-8 h-px bg-accent/55 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
+                    <span className="w-9 h-px bg-accent/70 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
                     Explore Our Work
                   </Link>
                   <Link
                     to="/services"
-                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/54 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
+                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/75 hover:text-foreground transition-colors duration-500 text-[11px] sm:text-[10px] tracking-[0.42em] py-3 -my-3"
                   >
-                    <span className="w-8 h-px bg-foreground/20 transition-all duration-700 group-hover:w-14 group-hover:bg-foreground/55" />
+                    <span className="w-9 h-px bg-foreground/35 transition-all duration-700 group-hover:w-14 group-hover:bg-foreground/70" />
                     View Services
                   </Link>
                 </div>
+
               </div>
             </div>
           </section>
@@ -197,7 +209,7 @@ export default function Index() {
             aria-hidden="true"
           />
 
-          <section className="relative py-[clamp(4.5rem,3rem+5vw,8rem)] bg-background overflow-hidden">
+          <section className="relative py-[clamp(3rem,2rem+4vw,7rem)] bg-background overflow-hidden">
             <div className="section-container max-w-5xl">
               <RevealOnScroll direction="up" duration={900}>
                 <div className="flex items-baseline gap-5 mb-10">
@@ -215,7 +227,7 @@ export default function Index() {
             </div>
           </section>
 
-          <section className="relative py-[clamp(6rem,4rem+7vw,11rem)] bg-background overflow-hidden border-t border-accent/10">
+          <section className="relative py-[clamp(3.75rem,2.25rem+5vw,9rem)] bg-background overflow-hidden border-t border-accent/10">
             <div className="section-container max-w-[1480px] mx-auto">
               <RevealOnScroll direction="up" duration={900}>
                 <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4rem)]">
@@ -255,7 +267,7 @@ export default function Index() {
               {/* Main Ridge — full-bleed anchor */}
               <RevealOnScroll direction="up" duration={1300}>
                 <Link to="/selected-works/main-ridge-pavilion" className="group block">
-                  <div className="relative aspect-[4/5] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
+                  <div className="relative aspect-[5/6] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                     <picture className="absolute inset-0 w-full h-full">
                       <source
                         srcSet={`${goldenHourPavilion800.url} 800w, ${goldenHourPavilion1200.url} 1200w, ${goldenHourPavilion1600.url} 1600w`}
@@ -332,7 +344,7 @@ export default function Index() {
           </section>
 
           {/* Field Notes — live build feature */}
-          <section className="relative py-[clamp(6rem,4rem+7vw,10rem)] bg-background overflow-hidden border-t border-accent/10">
+          <section className="relative py-[clamp(3.5rem,2rem+5vw,8.5rem)] bg-background overflow-hidden border-t border-accent/10">
             <div className="section-container max-w-[1480px] mx-auto">
               <RevealOnScroll direction="up" duration={900}>
                 <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4rem)]">
@@ -344,17 +356,17 @@ export default function Index() {
 
               <RevealOnScroll direction="up" duration={1200}>
                 <Link to="/field-notes/covered-arena-stables-build" className="group block">
-                  <div className="relative aspect-[4/5] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
+                  <div className="relative aspect-[5/6] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                     <img
                       src={fieldNoteDozerStorm.url}
                       alt="Dozer working red clay site under storm sky — steel frame rising on the covered arena and stables build"
                       loading="lazy"
                       decoding="async"
                       className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1800ms] ease-out group-hover:scale-[1.02]"
-                      style={{ filter: "brightness(0.72) contrast(1.14) saturate(0.78)", objectPosition: "55% 55%" }}
+                      style={{ filter: "brightness(0.9) contrast(1.1) saturate(0.82)", objectPosition: "55% 55%" }}
                     />
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-transparent" />
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/55 to-transparent" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/85 via-background/30 to-transparent" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
 
                     <div className="absolute bottom-0 left-0 w-full p-6 sm:p-10 md:p-14 lg:p-16">
                       <div className="max-w-2xl space-y-5">
@@ -428,7 +440,7 @@ export default function Index() {
             </div>
           </section>
 
-          <section className="relative py-[clamp(6rem,4rem+7vw,10rem)] bg-background overflow-hidden border-t border-accent/10">
+          <section className="relative py-[clamp(3.5rem,2rem+5vw,8.5rem)] bg-background overflow-hidden border-t border-accent/10">
             <div className="section-container max-w-[1480px] mx-auto">
               <RevealOnScroll direction="up" duration={900}>
                 <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4rem)]">
@@ -479,7 +491,7 @@ export default function Index() {
             </div>
           </section>
 
-          <section className="relative py-[clamp(7rem,4.5rem+9vw,13rem)] bg-background overflow-hidden">
+          <section className="relative py-[clamp(4rem,2.5rem+6vw,10rem)] bg-background overflow-hidden">
             <img
               src={serviceGroundworks.url}
               alt=""
