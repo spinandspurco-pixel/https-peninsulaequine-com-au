@@ -9,8 +9,8 @@ import parrillaWide from "@/assets/main-ridge/mr-parrilla-wide.png.asset.json";
 const FACTS: Array<{ label: string; value: string }> = [
   { label: "Category", value: "Custom Rural Build" },
   { label: "Location", value: "Main Ridge" },
-  { label: "Scope", value: "Pavilion / Parrilla / Handcrafted Furniture" },
   { label: "Status", value: "Completed" },
+  { label: "Scope", value: "Pavilion / Parrilla / Handcrafted Furniture" },
 ];
 
 const DETAILS = [
@@ -26,206 +26,171 @@ export default function MainRidgePavilion() {
   return (
     <Layout>
       <article className="bg-background text-foreground">
-        {/* 1. HERO */}
-        <section className="relative w-full h-[clamp(560px,92vh,960px)] overflow-hidden">
-          <div className="absolute inset-0 w-full h-full">
-            <img
-              src={heroAsset.url}
-              alt="Wide view of the Main Ridge Pavilion with brick fireplace, handcrafted table and dusk landscape beyond"
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{
-                objectPosition: "50% 52%",
-                filter: "brightness(0.76) contrast(1.1) saturate(0.8)",
-              }}
-            />
-          </div>
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,hsl(var(--background)/0.45)_0%,transparent_30%,transparent_60%,hsl(var(--background)/0.85)_100%)]" />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,hsl(var(--background)/0.55)_100%)]" />
-
-          <div className="relative h-full section-container max-w-7xl mx-auto flex flex-col justify-end pb-[clamp(3rem,2rem+4vw,6rem)]">
-            <RevealOnScroll direction="up" duration={1000}>
-              <div className="flex items-baseline gap-5 mb-8">
-                <span className="font-mono text-accent/70 text-[0.6rem] tracking-[0.5em] uppercase">Selected Works</span>
-                <span className="h-px w-12 bg-accent/40" />
-                <span className="font-mono text-foreground/55 text-[0.6rem] tracking-[0.4em] uppercase">Main Ridge</span>
-              </div>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" duration={1200} delay={120}>
-              <h1 className="font-serif text-foreground leading-[0.95] tracking-[-0.028em] text-[clamp(2.4rem,1.4rem+5vw,5.5rem)] max-w-4xl">
-                Main Ridge Pavilion
-              </h1>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" duration={1100} delay={260}>
-              <p className="mt-6 font-serif italic text-foreground/65 leading-[1.4] tracking-[-0.01em] text-[clamp(1.05rem,0.85rem+0.7vw,1.4rem)] max-w-2xl font-light">
-                A custom rural pavilion built for gathering, fire, view and function.
-              </p>
-            </RevealOnScroll>
-            <RevealLine width="w-16" delay={400} className="mt-10" />
-          </div>
-        </section>
-
-        {/* 2. INTRO */}
-        <section className="relative py-[clamp(5rem,3.5rem+5vw,9rem)] bg-background">
-          <div className="section-container max-w-4xl mx-auto">
-            <RevealOnScroll direction="up" duration={900}>
-              <div className="flex items-baseline gap-5 mb-10">
-                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">01</span>
-                <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
-                <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Overview</span>
-              </div>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" duration={1000} delay={120}>
-              <p className="font-serif text-foreground/82 leading-[1.45] tracking-[-0.018em] text-[clamp(1.3rem,1rem+1.2vw,2rem)]">
-                Set into the rural landscape of Main Ridge, this custom pavilion brings together raw timber, corrugated steel, brick, fire and handcrafted furniture. Built as a practical gathering space with a strong rural character, the project reflects Peninsula Equine's approach to construction: functional, durable, tactile and considered from every angle.
-              </p>
-            </RevealOnScroll>
-          </div>
-        </section>
-
-        {/* 3. PROJECT FACTS */}
-        <section className="relative py-[clamp(3rem,2rem+3vw,5rem)] bg-background border-t border-accent/15">
-          <div className="section-container max-w-6xl mx-auto">
-            <RevealOnScroll direction="up" duration={900}>
-              <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-10">
-                {FACTS.map((fact, i) => (
-                  <div
-                    key={fact.label}
-                    className={`flex flex-col gap-3 ${i > 0 ? "lg:border-l lg:border-accent/15 lg:pl-10" : ""}`}
-                  >
-                    <dt className="font-mono uppercase text-accent/65 text-[0.6rem] tracking-[0.45em]">
-                      {fact.label}
-                    </dt>
-                    <dd className="font-serif text-foreground/85 text-[clamp(1rem,0.85rem+0.4vw,1.2rem)] leading-[1.3] tracking-[-0.01em]">
-                      {fact.value}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </RevealOnScroll>
-          </div>
-        </section>
-
-        {/* 4. CRAFTSMANSHIP */}
-        <section className="relative py-[clamp(5.5rem,4rem+6vw,10rem)] bg-background border-t border-accent/15 overflow-hidden">
-          <div className="section-container max-w-7xl mx-auto">
-            <RevealOnScroll direction="up" duration={900}>
-              <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4rem)]">
-                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">02</span>
-                <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
-                <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Craftsmanship</span>
-              </div>
-            </RevealOnScroll>
-
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-[clamp(2rem,1.5rem+3vw,5rem)] items-start">
-              <RevealOnScroll direction="up" duration={1200} className="md:col-span-5">
-                <div className="relative aspect-[3/4] overflow-hidden">
-                  <img
-                    src={fireplacePortrait.url}
-                    alt="Brick fireplace detail inside the Main Ridge Pavilion with warm lamp light and fire glow"
-                    loading="lazy"
-                    decoding="async"
-                    className="absolute inset-0 w-full h-full object-cover"
-                    style={{
-                      objectPosition: "58% 45%",
-                      filter: "brightness(0.84) contrast(1.1) saturate(0.8)",
-                    }}
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_60%,hsl(var(--background)/0.5)_100%)]" />
+        {/* 1. HERO — split: left title/facts panel, right cinematic image */}
+        <section className="relative w-full bg-background border-b border-accent/10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[clamp(560px,82vh,900px)]">
+            {/* LEFT — title + subtitle + facts */}
+            <div className="lg:col-span-4 relative flex flex-col justify-between px-[clamp(1.5rem,1rem+3vw,4rem)] py-[clamp(3rem,2rem+4vw,5rem)]">
+              <RevealOnScroll direction="up" duration={900}>
+                <div className="flex items-baseline gap-4">
+                  <span className="font-mono text-accent/70 text-[0.6rem] tracking-[0.5em] uppercase">Selected Works</span>
                 </div>
               </RevealOnScroll>
 
-              <div className="md:col-span-7 md:pt-10 space-y-10">
-                <RevealOnScroll direction="up" duration={1000} delay={120}>
-                  <h2 className="font-serif text-foreground/92 leading-[1.05] tracking-[-0.024em] text-[clamp(1.8rem,1.2rem+2.2vw,3rem)] max-w-xl">
-                    Built around fire, timber and function.
-                  </h2>
+              <div className="mt-12 lg:mt-0">
+                <RevealOnScroll direction="up" duration={1200} delay={120}>
+                  <h1 className="font-serif text-foreground leading-[0.95] tracking-[-0.028em] text-[clamp(2.4rem,1.4rem+4.2vw,4.8rem)]">
+                    Main Ridge<br />Pavilion
+                  </h1>
                 </RevealOnScroll>
-                <RevealLine width="w-12" delay={260} />
-                <RevealOnScroll direction="up" duration={1000} delay={200}>
-                  <p className="font-sans font-light text-foreground/60 leading-[1.7] tracking-[0.005em] text-[clamp(0.98rem,0.85rem+0.3vw,1.1rem)] max-w-xl">
-                    Every detail was chosen for purpose — heavy timber structure, corrugated steel, brickwork, open views, fire, and a handcrafted table setting made to sit naturally within the space.
+                <RevealLine width="w-14" delay={300} className="mt-8" />
+                <RevealOnScroll direction="up" duration={1100} delay={380}>
+                  <p className="mt-8 font-serif text-foreground/75 leading-[1.35] tracking-[-0.01em] text-[clamp(1.05rem,0.9rem+0.55vw,1.35rem)] max-w-md font-light">
+                    Pavilion, Parrilla Grill &amp; Handcrafted Dining Setting
                   </p>
                 </RevealOnScroll>
-                <RevealOnScroll direction="up" duration={1000} delay={320}>
-                  <ul className="pt-4 border-t border-accent/15 divide-y divide-accent/10">
-                    {DETAILS.map((d) => (
-                      <li
-                        key={d}
-                        className="py-3.5 flex items-baseline gap-4 font-sans font-light text-foreground/75 text-[clamp(0.95rem,0.85rem+0.2vw,1.05rem)] tracking-[-0.005em]"
-                      >
-                        <span className="font-mono text-accent/55 text-[0.55rem] tracking-[0.4em] tabular-nums w-6">
-                          0{DETAILS.indexOf(d) + 1}
-                        </span>
-                        <span>{d}</span>
-                      </li>
-                    ))}
-                  </ul>
+                <RevealOnScroll direction="up" duration={1000} delay={480}>
+                  <p className="mt-6 font-sans font-light text-foreground/55 leading-[1.65] text-[clamp(0.92rem,0.82rem+0.2vw,1rem)] max-w-md">
+                    A custom rural pavilion built for gathering, fire, view and function.
+                  </p>
                 </RevealOnScroll>
               </div>
+
+              {/* Project facts grid at bottom of panel */}
+              <RevealOnScroll direction="up" duration={1000} delay={600} className="mt-12 lg:mt-16">
+                <dl className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-6 pt-8 border-t border-accent/15">
+                  {FACTS.map((fact) => (
+                    <div key={fact.label} className="flex flex-col gap-2">
+                      <dt className="font-mono uppercase text-accent/65 text-[0.55rem] tracking-[0.4em]">
+                        {fact.label}
+                      </dt>
+                      <dd className="font-sans font-light text-foreground/85 text-[0.85rem] leading-[1.3] tracking-[-0.005em]">
+                        {fact.value}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </RevealOnScroll>
+            </div>
+
+            {/* RIGHT — cinematic hero image */}
+            <div className="lg:col-span-8 relative min-h-[420px] lg:min-h-0 overflow-hidden">
+              <img
+                src={heroAsset.url}
+                alt="Main Ridge Pavilion at dusk — handcrafted timber table with candle lanterns, brick fireplace and open rural outlook"
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{
+                  objectPosition: "50% 52%",
+                  filter: "brightness(0.82) contrast(1.1) saturate(0.82)",
+                }}
+              />
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_60%,hsl(var(--background)/0.45)_100%)]" />
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-[linear-gradient(to_right,hsl(var(--background)/0.6),transparent)] hidden lg:block" />
             </div>
           </div>
         </section>
 
-        {/* 5. FEATURE IMAGE */}
-        <section className="relative py-[clamp(4rem,3rem+4vw,7rem)] bg-background overflow-hidden">
-          <div className="section-container max-w-[1480px] mx-auto">
-            <RevealOnScroll direction="up" duration={900}>
-              <div className="flex items-baseline gap-5 mb-[clamp(2rem,1.5rem+2vw,3.5rem)]">
-                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">03</span>
-                <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
-                <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Parrilla</span>
-              </div>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" duration={1200}>
-              <figure>
-                <div className="relative aspect-[16/9] overflow-hidden">
-                  <img
-                    src={parrillaWide.url}
-                    alt="Wide view of the brick parrilla grill and fireplace anchoring the Main Ridge Pavilion"
-                    loading="lazy"
-                    decoding="async"
-                    className="absolute inset-0 w-full h-full object-cover"
-                    style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_60%,hsl(var(--background)/0.55)_100%)]" />
-                </div>
-                <figcaption className="mt-6 pt-5 border-t border-accent/15 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-3">
-                  <p className="font-serif italic text-foreground/65 text-[clamp(0.98rem,0.85rem+0.3vw,1.1rem)] leading-[1.4] tracking-[-0.005em] max-w-xl">
-                    The parrilla forms the heart of the pavilion — practical, warm and built to anchor the space.
-                  </p>
-                  <p className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.45em]">Feature</p>
-                </figcaption>
-              </figure>
-            </RevealOnScroll>
+        {/* 2. CRAFTSMANSHIP — portrait brick detail + text + wide parrilla feature */}
+        <section className="relative bg-background border-t border-accent/10 overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-12">
+            {/* Portrait brick / wall-light detail */}
+            <div className="lg:col-span-3 relative min-h-[420px] lg:min-h-0 overflow-hidden">
+              <img
+                src={fireplacePortrait.url}
+                alt="Brick wall and bronze wall light detail inside the Main Ridge Pavilion"
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{
+                  objectPosition: "55% 50%",
+                  filter: "brightness(0.84) contrast(1.1) saturate(0.8)",
+                }}
+              />
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,hsl(var(--background)/0.5)_100%)]" />
+            </div>
+
+            {/* Text column */}
+            <div className="lg:col-span-4 px-[clamp(1.5rem,1rem+3vw,3.5rem)] py-[clamp(3.5rem,2.5rem+4vw,6rem)]">
+              <RevealOnScroll direction="up" duration={900}>
+                <p className="font-mono uppercase text-accent/65 text-[0.6rem] tracking-[0.5em]">Built Around</p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" duration={1100} delay={140}>
+                <h2 className="mt-6 font-serif text-foreground/92 leading-[1.05] tracking-[-0.024em] text-[clamp(1.8rem,1.2rem+2vw,2.8rem)]">
+                  Fire, timber<br />and function.
+                </h2>
+              </RevealOnScroll>
+              <RevealLine width="w-10" delay={280} className="mt-8" />
+              <RevealOnScroll direction="up" duration={1000} delay={320}>
+                <p className="mt-8 font-sans font-light text-foreground/60 leading-[1.7] tracking-[0.005em] text-[clamp(0.95rem,0.85rem+0.25vw,1.05rem)] max-w-md">
+                  Every detail was chosen for purpose — heavy timber structure, corrugated steel, brickwork, open views, fire, and a handcrafted table setting made to sit naturally within the space.
+                </p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" duration={1000} delay={420}>
+                <ul className="mt-10 pt-6 border-t border-accent/15 divide-y divide-accent/10">
+                  {DETAILS.map((d, i) => (
+                    <li
+                      key={d}
+                      className="py-3 flex items-baseline gap-4 font-sans font-light text-foreground/75 text-[clamp(0.9rem,0.82rem+0.18vw,1rem)] tracking-[-0.005em]"
+                    >
+                      <span className="h-px w-4 bg-accent/45 shrink-0 translate-y-[-3px]" />
+                      <span>{d}</span>
+                    </li>
+                  ))}
+                </ul>
+              </RevealOnScroll>
+            </div>
+
+            {/* Wide parrilla / fireplace feature image */}
+            <div className="lg:col-span-5 relative min-h-[460px] lg:min-h-0 overflow-hidden">
+              <img
+                src={parrillaWide.url}
+                alt="Wide view of the brick parrilla grill and fireplace anchoring the Main Ridge Pavilion"
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{
+                  objectPosition: "50% 50%",
+                  filter: "brightness(0.82) contrast(1.12) saturate(0.82)",
+                }}
+              />
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_60%,hsl(var(--background)/0.5)_100%)]" />
+              <figcaption className="absolute bottom-0 left-0 right-0 px-[clamp(1.25rem,1rem+1.5vw,2.5rem)] py-5 bg-[linear-gradient(to_top,hsl(var(--background)/0.9),transparent)]">
+                <p className="font-serif italic text-foreground/75 text-[clamp(0.9rem,0.82rem+0.2vw,1rem)] leading-[1.4] tracking-[-0.005em] text-center">
+                  The parrilla forms the heart of the pavilion — practical, warm and built to anchor the space.
+                </p>
+              </figcaption>
+            </div>
           </div>
         </section>
 
-        {/* 6. MATERIAL DETAILS STRIP */}
-        <section className="relative py-[clamp(5rem,4rem+5vw,9rem)] bg-background border-t border-accent/15">
-          <div className="section-container max-w-5xl mx-auto text-center">
-            <RevealOnScroll direction="up" duration={1000}>
-              <p className="font-mono uppercase text-accent/65 text-[0.65rem] tracking-[0.55em]">
-                Timber. Brick. Steel. Fire. View.
-              </p>
-            </RevealOnScroll>
-            <RevealLine width="w-12" delay={220} className="mx-auto mt-10" />
-            <RevealOnScroll direction="up" duration={1100} delay={200}>
-              <p className="mt-10 font-serif text-foreground/82 leading-[1.4] tracking-[-0.018em] text-[clamp(1.3rem,1rem+1.2vw,2rem)] max-w-3xl mx-auto">
-                The Main Ridge Pavilion is not polished into sterility. It keeps the grain, weight and honesty of its materials — built to be used, lived in and gathered around.
-              </p>
-            </RevealOnScroll>
+        {/* 3. MATERIAL DETAILS STRIP — text only */}
+        <section className="relative py-[clamp(4.5rem,3.5rem+4vw,7rem)] bg-background border-t border-accent/10">
+          <div className="section-container max-w-5xl mx-auto px-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+              <RevealOnScroll direction="up" duration={1000} className="lg:col-span-5">
+                <p className="font-mono uppercase text-accent/70 text-[0.65rem] tracking-[0.55em]">
+                  Timber. Brick.<br />Steel. Fire. View.
+                </p>
+                <RevealLine width="w-10" delay={220} className="mt-6" />
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" duration={1100} delay={180} className="lg:col-span-7">
+                <p className="font-serif text-foreground/82 leading-[1.45] tracking-[-0.018em] text-[clamp(1.15rem,0.95rem+0.9vw,1.65rem)]">
+                  The Main Ridge Pavilion is not polished into sterility. It keeps the grain, weight and honesty of its materials — built to be used, lived in and gathered around.
+                </p>
+              </RevealOnScroll>
+            </div>
           </div>
         </section>
 
-        {/* 7. NAVIGATION / CTA */}
+        {/* 4. CLOSING CTA */}
         <section className="relative py-[clamp(5rem,4rem+5vw,9rem)] bg-background border-t border-accent/15">
-          <div className="section-container max-w-5xl mx-auto">
+          <div className="section-container max-w-5xl mx-auto px-6">
             <RevealOnScroll direction="up" duration={1100}>
-              <div className="text-center space-y-6">
-                <p className="font-serif text-foreground/85 leading-[1.2] tracking-[-0.022em] text-[clamp(1.6rem,1.1rem+1.8vw,2.5rem)]">
+              <div className="text-center space-y-5">
+                <p className="font-serif text-foreground/88 leading-[1.2] tracking-[-0.022em] text-[clamp(1.6rem,1.1rem+1.8vw,2.5rem)]">
                   From groundwork to gathering place.
                 </p>
-                <p className="font-sans font-light text-foreground/55 leading-[1.6] text-[clamp(0.98rem,0.85rem+0.3vw,1.1rem)] max-w-xl mx-auto">
+                <p className="font-sans font-light text-foreground/55 leading-[1.6] text-[clamp(0.95rem,0.85rem+0.25vw,1.05rem)] max-w-xl mx-auto">
                   Talk to Peninsula Equine about your next rural build.
                 </p>
               </div>
