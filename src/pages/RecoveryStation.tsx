@@ -343,6 +343,7 @@ function BlueprintTransition({ next }: { next: string }) {
 
 export default function RecoveryStation() {
   const [briefingOpen, setBriefingOpen] = useState(false);
+  const [activeChapter, setActiveChapter] = useState("01");
   return (
     <Layout>
       <LumenArcEntrance />
