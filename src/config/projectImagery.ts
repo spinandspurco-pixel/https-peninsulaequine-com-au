@@ -119,6 +119,8 @@ export const projectImagery: Record<string, ProjectImagery> = {
       // Build Read pair — distinct conditions, no repetition
       fieldNotesGalleryA: coveredArenaTruckAccessTrack,
       fieldNotesGalleryB: coveredArenaDrainageDetail,
+      // Real conditions divider — muddy boots + steel frame at dusk
+      fieldNotesConditions: muddyBootsSteelFrame,
       caseStudyHero: coveredArenaNightWorkLights,
     },
     responsive: {
@@ -134,6 +136,12 @@ export const projectImagery: Record<string, ProjectImagery> = {
         coveredArenaSunset1536,
         "(min-width: 1480px) 1480px, 100vw",
       ),
+      fieldNotesConditions: buildSrcSet(
+        muddyBoots640,
+        muddyBoots1024,
+        muddyBoots1536,
+        "100vw",
+      ),
     },
     alt: {
       selectedWorks:
@@ -146,6 +154,8 @@ export const projectImagery: Record<string, ProjectImagery> = {
         "Wide site view of the current arena build showing steel span, machinery placement and open ground conditions",
       fieldNotesGalleryB:
         "Drainage detail and wet red clay around the active covered arena and stables build",
+      fieldNotesConditions:
+        "Muddy work boots in red clay with excavator, dump truck and steel-frame arena rising under a storm-lit dusk sky",
       caseStudyHero:
         "Covered Arena & Stables Build — structural steel and roof line under a dramatic storm sky",
     },
