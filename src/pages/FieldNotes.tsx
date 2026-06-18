@@ -169,7 +169,7 @@ export default function FieldNotes() {
                 <div className="relative overflow-hidden aspect-[4/5] md:h-full md:aspect-auto min-h-[320px]">
                   <img
                     src={redClayRoofline}
-                    alt="Red clay, roofing progress and site moisture around the current arena and stables build"
+                    alt={redClayRooflineAlt}
                     className="absolute inset-0 h-full w-full object-cover object-[54%_50%]"
                     style={{ filter: "brightness(0.78) contrast(1.1) saturate(0.8)" }}
                   />
