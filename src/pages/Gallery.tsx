@@ -200,7 +200,7 @@ export default function Projects() {
                     loading="lazy"
                     decoding="async"
                     className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
-                    style={{ filter: "brightness(0.72) contrast(1.08) saturate(0.78)", objectPosition: "62% 48%" }}
+                    style={{ filter: "brightness(0.78) contrast(1.12) saturate(0.82)", objectPosition: "55% 50%" }}
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-transparent to-transparent" />
                 </div>
