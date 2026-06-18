@@ -51,11 +51,76 @@ const ROUTES: Expectation[] = [
   { path: "/terms", titleIncludes: "Terms" },
 ];
 
-type Failure = { route: string; check: string; detail: string };
+type FailureCode =
+  | "missing"
+  | "mismatch"
+  | "too-short"
+  | "placeholder"
+  | "not-absolute"
+  | "wrong-origin"
+  | "file-missing"
+  | "schema";
+
+interface Failure {
+  /** Route path the failure was found on (e.g. `/about`). */
+  route: string;
+  /** Symbolic name of the check that failed (e.g. `og:image`). */
+  check: string;
+  /** Machine-readable failure category. */
+  code: FailureCode;
+  /** CSS-style locator (or file path) of the offending element. */
+  path: string;
+  /** The value the verifier expected, when applicable. */
+  expected: string | null;
+  /** The value the verifier actually observed, when applicable. */
+  received: string | null;
+  /** Human-readable summary, derived from the structured fields. */
+  detail: string;
+}
+
 const failures: Failure[] = [];
 
-function fail(route: string, check: string, detail: string): void {
-  failures.push({ route, check, detail });
+const metaName = (n: string) => `meta[name="${n}"]`;
+const metaProp = (p: string) => `meta[property="${p}"]`;
+
+function buildDetail(
+  code: FailureCode,
+  check: string,
+  expected: string | null,
+  received: string | null,
+  path: string,
+): string {
+  switch (code) {
+    case "missing":
+      return `missing ${check}`;
+    case "mismatch":
+      return `expected ${JSON.stringify(expected)}, got ${JSON.stringify(received)}`;
+    case "too-short":
+      return `${check} too short${received != null ? ` (${received})` : ""}`;
+    case "placeholder":
+      return `${check} is a placeholder — needs route-specific value: ${JSON.stringify(received)}`;
+    case "not-absolute":
+      return `${check} is not an absolute URL: ${received}`;
+    case "wrong-origin":
+      return `${check} not on expected origin ${expected}: ${received}`;
+    case "file-missing":
+      return `missing prerendered HTML at ${path}`;
+    case "schema":
+      return `schema validation failed: ${received}`;
+  }
+}
+
+function fail(
+  route: string,
+  check: string,
+  code: FailureCode,
+  path: string,
+  opts: { expected?: string | null; received?: string | null; detail?: string } = {},
+): void {
+  const expected = opts.expected ?? null;
+  const received = opts.received ?? null;
+  const detail = opts.detail ?? buildDetail(code, check, expected, received, path);
+  failures.push({ route, check, code, path, expected, received, detail });
 }
 
 /** Extract the value of an attribute from the first tag matching `tagRe`. */
