@@ -152,6 +152,11 @@ const mainRidgeTimeline = [
 ];
 
 const mainRidgeGallery = [
+  { src: mrParrillaWide, alt: "Pavilion dusk — corrugated steel, recycled posts and brick parrilla beyond" },
+  { src: mrCustomTable, alt: "Custom recycled-timber table and bench on blackened steel legs" },
+  { src: mrParrillaGrill, alt: "Hand-forged parrilla grill on chain and wheel over glowing coals" },
+  { src: mrPendantBeams, alt: "Recycled hardwood beams, corrugated roof and pendant light" },
+  { src: mrBeamDetail, alt: "Hardwood post-to-beam junction with bolted steel plate detail" },
   { src: mrGround, alt: "Site preparation" },
   { src: mrRebar, alt: "Rebar foundation detail" },
   { src: mrCrane, alt: "Crane lift — frame raising" },
