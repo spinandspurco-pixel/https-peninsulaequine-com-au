@@ -2,7 +2,9 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import heroAsset from "@/assets/services-new/pe-groundworks-dozer.png.asset.json";
+import muddySiteAsset from "@/assets/services-new/pe-infrastructure-muddy-site.png.asset.json";
 const heroImg = heroAsset.url;
+const muddySiteImg = muddySiteAsset.url;
 
 const items = [
   { k: "01", label: "Site Works & Drainage", body: "Cut, fill, contour, drain. The foundation of every later decision — done once, properly." },
@@ -63,6 +65,26 @@ export default function InfrastructurePage() {
                   </div>
                 </RevealOnScroll>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* SUPPORTING — muddy construction site, the work behind the work */}
+        <section className="relative bg-background border-t border-foreground/[0.04]">
+          <div className="relative aspect-[21/9] sm:aspect-[21/8] overflow-hidden">
+            <img
+              src={muddySiteImg}
+              alt="Drainage trench, aggregate pile and dozer working a stormy site at dusk — the supporting work behind every finished build"
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ filter: "brightness(0.82) contrast(1.12) saturate(0.78)", objectPosition: "50% 60%" }}
+            />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2rem,1.25rem+3vw,4rem)]">
+              <p className="font-serif italic text-foreground/75 max-w-xl leading-[1.4] text-[clamp(1rem,0.85rem+0.8vw,1.45rem)]">
+                Drainage, base, fall, water. The work that decides whether the finished build lasts thirty years or three.
+              </p>
             </div>
           </div>
         </section>
