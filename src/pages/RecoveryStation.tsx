@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealImage, RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 import { BlueprintContinuity } from "@/components/BlueprintContinuity";
 import { LumenArcEntrance } from "@/components/lumenarc/LumenArcEntrance";
+import { LumenArcBriefingDialog } from "@/components/lumenarc/LumenArcBriefingDialog";
 import comingSoonAsset from "@/assets/lumenarc/coming-soon.asset.json";
 import canopyAsset from "@/assets/lumenarc/canopy.asset.json";
 import controlColumnAsset from "@/assets/lumenarc/control-column.asset.json";
@@ -219,6 +221,7 @@ function LumenArcChapterSection({
 }
 
 export default function RecoveryStation() {
+  const [briefingOpen, setBriefingOpen] = useState(false);
   return (
     <Layout>
       <LumenArcEntrance />
@@ -278,13 +281,14 @@ export default function RecoveryStation() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1100} delay={420}>
                 <div className="flex flex-col items-center justify-center gap-5 pt-4 sm:flex-row sm:gap-10">
-                  <Link
-                    to="/contact"
+                  <button
+                    type="button"
+                    onClick={() => setBriefingOpen(true)}
                     className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[0.64rem] tracking-[0.42em]"
                   >
                     <span className="h-px w-8 bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
                     Request Advance Briefing
-                  </Link>
+                  </button>
                   <Link
                     to="/field-notes"
                     className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/42 hover:text-foreground/78 transition-colors duration-500 text-[0.64rem] tracking-[0.42em]"
@@ -298,6 +302,7 @@ export default function RecoveryStation() {
           </div>
         </section>
       </article>
+      <LumenArcBriefingDialog open={briefingOpen} onClose={() => setBriefingOpen(false)} />
     </Layout>
   );
 }
