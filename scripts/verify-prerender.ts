@@ -23,17 +23,19 @@ import { readFileSync, existsSync, appendFileSync, writeFileSync } from "node:fs
 import { resolve } from "node:path";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
+import {
+  buildDetail,
+  checkHtml,
+  type Expectation,
+  type Failure,
+  type FailureCode,
+} from "./verify-prerender-core";
 
 const SITE_ORIGIN = "https://peninsulaequine.com.au";
 const DIST = resolve("dist");
 const ajv = new Ajv({ strict: true, allErrors: true });
 addFormats(ajv);
 const SCHEMA_PATH = resolve("scripts/prerender-verify.schema.json");
-
-interface Expectation {
-  path: string;
-  titleIncludes: string;
-}
 
 const ROUTES: Expectation[] = [
   { path: "/", titleIncludes: "Peninsula Equine" },
@@ -51,64 +53,7 @@ const ROUTES: Expectation[] = [
   { path: "/terms", titleIncludes: "Terms" },
 ];
 
-type FailureCode =
-  | "missing"
-  | "mismatch"
-  | "too-short"
-  | "placeholder"
-  | "not-absolute"
-  | "wrong-origin"
-  | "file-missing"
-  | "schema";
-
-interface Failure {
-  /** Route path the failure was found on (e.g. `/about`). */
-  route: string;
-  /** Symbolic name of the check that failed (e.g. `og:image`). */
-  check: string;
-  /** Machine-readable failure category. */
-  code: FailureCode;
-  /** CSS-style locator (or file path) of the offending element. */
-  path: string;
-  /** The value the verifier expected, when applicable. */
-  expected: string | null;
-  /** The value the verifier actually observed, when applicable. */
-  received: string | null;
-  /** Human-readable summary, derived from the structured fields. */
-  detail: string;
-}
-
 const failures: Failure[] = [];
-
-const metaName = (n: string) => `meta[name="${n}"]`;
-const metaProp = (p: string) => `meta[property="${p}"]`;
-
-function buildDetail(
-  code: FailureCode,
-  check: string,
-  expected: string | null,
-  received: string | null,
-  path: string,
-): string {
-  switch (code) {
-    case "missing":
-      return `missing ${check}`;
-    case "mismatch":
-      return `expected ${JSON.stringify(expected)}, got ${JSON.stringify(received)}`;
-    case "too-short":
-      return `${check} too short${received != null ? ` (${received})` : ""}`;
-    case "placeholder":
-      return `${check} is a placeholder — needs route-specific value: ${JSON.stringify(received)}`;
-    case "not-absolute":
-      return `${check} is not an absolute URL: ${received}`;
-    case "wrong-origin":
-      return `${check} not on expected origin ${expected}: ${received}`;
-    case "file-missing":
-      return `missing prerendered HTML at ${path}`;
-    case "schema":
-      return `schema validation failed: ${received}`;
-  }
-}
 
 function fail(
   route: string,
@@ -123,19 +68,6 @@ function fail(
   failures.push({ route, check, code, path, expected, received, detail });
 }
 
-/** Extract the value of an attribute from the first tag matching `tagRe`. */
-function extract(html: string, tagRe: RegExp, attr: string): string | null {
-  const tag = html.match(tagRe)?.[0];
-  if (!tag) return null;
-  // Match attr="..." or attr='...'.
-  const m = tag.match(new RegExp(`${attr}=["']([^"']*)["']`, "i"));
-  return m ? m[1] : null;
-}
-
-function extractTitle(html: string): string | null {
-  return html.match(/<title>([\s\S]*?)<\/title>/i)?.[1]?.trim() ?? null;
-}
-
 function indexPathFor(routePath: string): string {
   if (routePath === "/") return resolve(DIST, "index.html");
   return resolve(DIST, routePath.replace(/^\//, ""), "index.html");
@@ -148,201 +80,7 @@ function check(route: Expectation): void {
     return;
   }
   const html = readFileSync(file, "utf8");
-  const expectedUrl = `${SITE_ORIGIN}${route.path === "/" ? "/" : route.path}`;
-
-  // <title>
-  const title = extractTitle(html);
-  if (!title) {
-    fail(route.path, "title", "missing", "head > title");
-  } else if (!title.includes(route.titleIncludes)) {
-    fail(route.path, "title", "mismatch", "head > title", {
-      expected: `*${route.titleIncludes}*`,
-      received: title,
-      detail: `expected to include "${route.titleIncludes}", got "${title}"`,
-    });
-  }
-
-  // description
-  const desc = extract(
-    html,
-    /<meta\s+name=["']description["'][^>]*>/i,
-    "content",
-  );
-  if (!desc) {
-    fail(route.path, "description", "missing", metaName("description"));
-  } else if (desc.length < 30) {
-    fail(route.path, "description", "too-short", metaName("description"), {
-      expected: ">=30 chars",
-      received: `${desc.length} chars`,
-    });
-  }
-
-  // canonical — must self-reference, not point at homepage for non-root routes
-  const canonical = html
-    .match(/<link\s+rel=["']canonical["'][^>]*>/i)?.[0]
-    ?.match(/href=["']([^"']+)["']/i)?.[1];
-  const canonicalPath = `link[rel="canonical"]`;
-  if (!canonical) {
-    fail(route.path, "canonical", "missing", canonicalPath);
-  } else if (route.path === "/") {
-    if (canonical !== expectedUrl && canonical !== `${SITE_ORIGIN}`) {
-      fail(route.path, "canonical", "mismatch", canonicalPath, {
-        expected: expectedUrl,
-        received: canonical,
-      });
-    }
-  } else if (canonical !== expectedUrl) {
-    fail(route.path, "canonical", "mismatch", canonicalPath, {
-      expected: expectedUrl,
-      received: canonical,
-      detail: `expected ${expectedUrl}, got ${canonical} (likely still pointing at homepage)`,
-    });
-  }
-
-  // og:url — must self-reference
-  const ogUrl = extract(
-    html,
-    /<meta\s+property=["']og:url["'][^>]*>/i,
-    "content",
-  );
-  if (!ogUrl) {
-    fail(route.path, "og:url", "missing", metaProp("og:url"));
-  } else if (route.path !== "/" && ogUrl !== expectedUrl) {
-    fail(route.path, "og:url", "mismatch", metaProp("og:url"), {
-      expected: expectedUrl,
-      received: ogUrl,
-    });
-  }
-
-  // og:title / og:description
-  const ogTitle = extract(
-    html,
-    /<meta\s+property=["']og:title["'][^>]*>/i,
-    "content",
-  );
-  if (!ogTitle) fail(route.path, "og:title", "missing", metaProp("og:title"));
-  const ogDesc = extract(
-    html,
-    /<meta\s+property=["']og:description["'][^>]*>/i,
-    "content",
-  );
-  if (!ogDesc)
-    fail(route.path, "og:description", "missing", metaProp("og:description"));
-
-  // og:image — absolute URL, on the project origin
-  const ogImage = extract(
-    html,
-    /<meta\s+property=["']og:image["'][^>]*>/i,
-    "content",
-  );
-  if (!ogImage) {
-    fail(route.path, "og:image", "missing", metaProp("og:image"));
-  } else if (!/^https?:\/\//.test(ogImage)) {
-    fail(route.path, "og:image", "not-absolute", metaProp("og:image"), {
-      expected: "absolute http(s) URL",
-      received: ogImage,
-    });
-  } else if (!ogImage.startsWith(SITE_ORIGIN)) {
-    fail(route.path, "og:image", "wrong-origin", metaProp("og:image"), {
-      expected: SITE_ORIGIN,
-      received: ogImage,
-    });
-  }
-
-  // og:image:alt — must be specific (not the bare brand name)
-  const ogAlt = extract(
-    html,
-    /<meta\s+property=["']og:image:alt["'][^>]*>/i,
-    "content",
-  );
-  if (!ogAlt) {
-    fail(route.path, "og:image:alt", "missing", metaProp("og:image:alt"));
-  } else if (ogAlt.trim().length < 12) {
-    fail(route.path, "og:image:alt", "too-short", metaProp("og:image:alt"), {
-      expected: ">=12 chars",
-      received: ogAlt,
-    });
-  } else if (/^peninsula equine\.?$/i.test(ogAlt.trim())) {
-    fail(route.path, "og:image:alt", "placeholder", metaProp("og:image:alt"), {
-      expected: "route-specific description",
-      received: ogAlt,
-    });
-  }
-
-  // Twitter card + image
-  const twCard = extract(
-    html,
-    /<meta\s+name=["']twitter:card["'][^>]*>/i,
-    "content",
-  );
-  if (twCard !== "summary_large_image") {
-    if (twCard == null) {
-      fail(route.path, "twitter:card", "missing", metaName("twitter:card"));
-    } else {
-      fail(route.path, "twitter:card", "mismatch", metaName("twitter:card"), {
-        expected: "summary_large_image",
-        received: twCard,
-      });
-    }
-  }
-  const twImage = extract(
-    html,
-    /<meta\s+name=["']twitter:image["'][^>]*>/i,
-    "content",
-  );
-  if (!twImage) {
-    fail(route.path, "twitter:image", "missing", metaName("twitter:image"));
-  } else if (twImage !== ogImage) {
-    fail(route.path, "twitter:image", "mismatch", metaName("twitter:image"), {
-      expected: ogImage,
-      received: twImage,
-      detail: `should match og:image — og:${ogImage} vs twitter:${twImage}`,
-    });
-  }
-  const twAlt = extract(
-    html,
-    /<meta\s+name=["']twitter:image:alt["'][^>]*>/i,
-    "content",
-  );
-  if (!twAlt) {
-    fail(
-      route.path,
-      "twitter:image:alt",
-      "missing",
-      metaName("twitter:image:alt"),
-    );
-  } else if (twAlt !== ogAlt) {
-    fail(
-      route.path,
-      "twitter:image:alt",
-      "mismatch",
-      metaName("twitter:image:alt"),
-      {
-        expected: ogAlt,
-        received: twAlt,
-        detail: "should match og:image:alt",
-      },
-    );
-  }
-  const twTitle = extract(
-    html,
-    /<meta\s+name=["']twitter:title["'][^>]*>/i,
-    "content",
-  );
-  if (!twTitle)
-    fail(route.path, "twitter:title", "missing", metaName("twitter:title"));
-  const twDesc = extract(
-    html,
-    /<meta\s+name=["']twitter:description["'][^>]*>/i,
-    "content",
-  );
-  if (!twDesc)
-    fail(
-      route.path,
-      "twitter:description",
-      "missing",
-      metaName("twitter:description"),
-    );
+  for (const f of checkHtml(route, html, SITE_ORIGIN)) failures.push(f);
 }
 
 // --- CLI arg parsing -------------------------------------------------
