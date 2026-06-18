@@ -490,30 +490,40 @@ export function Header() {
                     id={mobileServicesId}
                     aria-hidden={!mobileServicesOpen}
                     className={cn(
-                      "overflow-hidden transition-all duration-500 ease-out",
-                      mobileServicesOpen ? "max-h-72 opacity-100" : "max-h-0 opacity-0"
+                      "overflow-hidden transition-all duration-700 ease-out",
+                      mobileServicesOpen ? "max-h-[40rem] opacity-100" : "max-h-0 opacity-0"
                     )}
                   >
-                    <ul className="pl-4 pb-2 space-y-1 border-l border-accent/10 ml-1 list-none m-0">
-                      {item.children!.map((child) => (
-                        <li key={child.href}>
-                          <Link
-                            to={child.href}
-                            tabIndex={mobileServicesOpen ? 0 : -1}
-                            aria-current={isActive(child.href) ? "page" : undefined}
-                            className={cn(
-                              "block py-2.5 min-h-11 text-[11px] uppercase tracking-[0.18em] transition-all duration-400 border-l-2 pl-3 -ml-[2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm",
-                              isActive(child.href)
-                                ? "text-[hsl(var(--header-active))] border-[hsl(var(--header-active))] font-medium"
-                                : "text-foreground/40 border-transparent hover:text-foreground/85"
-                            )}
-                          >
-                            {child.name}
-                          </Link>
-                        </li>
+                    <div className="pl-4 pb-2 ml-1 border-l border-accent/10 space-y-5 pt-2">
+                      {(item.groups ?? [{ label: item.name, items: item.children ?? [] }]).map((group) => (
+                        <div key={group.label} className="space-y-2">
+                          <p className="font-mono text-[8.5px] uppercase tracking-[0.5em] text-foreground/30 pl-3">
+                            {group.label}
+                          </p>
+                          <ul className="space-y-1 list-none m-0 p-0">
+                            {group.items.map((child) => (
+                              <li key={child.href}>
+                                <Link
+                                  to={child.href}
+                                  tabIndex={mobileServicesOpen ? 0 : -1}
+                                  aria-current={isActive(child.href) ? "page" : undefined}
+                                  className={cn(
+                                    "block py-2.5 min-h-11 text-[11px] uppercase tracking-[0.2em] transition-all duration-400 border-l-2 pl-3 -ml-[2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm",
+                                    isActive(child.href)
+                                      ? "text-[hsl(var(--header-active))] border-[hsl(var(--header-active))] font-medium"
+                                      : "text-foreground/55 border-transparent hover:text-foreground/90"
+                                  )}
+                                >
+                                  {child.name}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
                   </div>
+
                 </li>
               );
             })}
