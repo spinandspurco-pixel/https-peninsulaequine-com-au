@@ -145,15 +145,34 @@ export default function FieldNotes() {
         </section>
 
         {/* Real Conditions — full-bleed cinematic divider */}
+        {/*
+          CROP-SAFETY CONTRACT — DO NOT MODIFY WITHOUT REVIEW
+          -----------------------------------------------------
+          This image contains two critical edge-dominant focal points:
+            • Muddy work boots in red clay (bottom-left)
+            • Rising steel-frame arena structure (right)
+          Because both sit close to opposing edges, ANY change to the
+          container ratio, object-fit or object-position risks cropping
+          one or both on mobile or narrow viewports.
+
+          Locked rules (violating any of them re-introduces cropping):
+            1. Container aspectRatio is HARD-CODED to "3 / 2" — the
+               image's exact native ratio — via inline style. Do NOT
+               switch to responsive Tailwind aspect utilities.
+            2. object-contain (not object-cover) is the authoritative
+               fail-safe. If a future edit mutates the container, the
+               full frame still renders letterboxed instead of clipped.
+            3. Intrinsic width={1536} height={1024} prevents the browser
+               from reserving a wrong-ratio box before decode (CLS),
+               which would temporarily crop edges during load.
+            4. object-center keeps the frame perfectly centred; no
+               directional object-position shifts the crop window.
+
+          Before changing anything above, verify the live preview at
+          320 px, 384 px, 768 px and 1440 px breakpoints.
+          -----------------------------------------------------
+        */}
         <section className="relative w-full overflow-hidden border-t border-accent/10">
-          {/*
-            Aspect locked to the source image's native 3:2 across every
-            breakpoint so neither the boots (bottom-left) nor the steel
-            frame (right) can ever be cropped. object-contain is the
-            authoritative fail-safe — if a future container override
-            changes the box, the full frame still renders inside it,
-            letterboxed against bg-background instead of clipping.
-          */}
           <div
             className="relative w-full bg-background"
             style={{ aspectRatio: "3 / 2" }}
