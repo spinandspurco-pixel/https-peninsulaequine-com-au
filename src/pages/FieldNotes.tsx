@@ -105,7 +105,7 @@ export default function FieldNotes() {
                 <RevealOnScroll direction="up" duration={1000} delay={300}>
                   <div className="space-y-3 text-[14px] sm:text-[15px] font-light leading-[1.9] text-foreground/52">
                     <p><span className="text-accent/60">Status</span> — In Progress</p>
-                    <p><span className="text-accent/60">Location</span> — Mornington Peninsula, VIC</p>
+                    <p><span className="text-accent/60">Location</span> — Main Ridge, VIC</p>
                     <p>
                       Structural steel is up, earthworks are underway, and the site is moving through the hard, practical stages that shape the finished arena. Every layer matters — from access and base preparation to structure, drainage and final surface performance.
                     </p>
