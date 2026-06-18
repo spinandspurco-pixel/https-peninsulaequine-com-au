@@ -420,10 +420,10 @@ export default function Index() {
               </RevealOnScroll>
               <RevealLine width="w-8" delay={300} />
               <RevealOnScroll direction="up" duration={1000} delay={350}>
-                <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px] max-w-xl">
-                  Peninsula Equine is shaped by real time in the saddle — the feel of the surface,
-                  the way horses move through a property, and the details that make a build work long
-                  after the machines leave.
+                <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px] max-w-md">
+                  Real time in the saddle shapes the way these properties are built —
+                  the feel of the surface, the flow through the yards, the details that hold up after
+                  the machines leave.
                 </p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={900} delay={500}>
