@@ -206,7 +206,7 @@ export default function Index() {
               </div>
             </RevealOnScroll>
             <RevealOnScroll direction="up" duration={1000} delay={120}>
-              <p className="font-serif text-foreground/82 leading-[1.4] tracking-[-0.022em] text-[clamp(1.5rem,1.05rem+1.8vw,2.45rem)] max-w-4xl text-wrap-balance">
+              <p className="font-serif text-foreground/82 leading-[1.4] tracking-[-0.022em] text-[clamp(1.5rem,1.05rem+1.8vw,2.45rem)] max-w-4xl">
                 Arenas, stables, groundworks and rural builds — shaped from the ground up across the
                 Mornington Peninsula and beyond.
               </p>
@@ -291,7 +291,7 @@ export default function Index() {
             <div className="grid grid-cols-12 gap-6 items-end">
               <div className="col-span-12 md:col-span-7 space-y-4">
                 <RevealOnScroll direction="up" duration={1000} delay={120}>
-                  <h2 className="font-serif text-foreground/90 leading-[1.02] tracking-[-0.022em] text-[clamp(1.7rem,1.1rem+2vw,2.6rem)] text-wrap-balance">
+                  <h2 className="font-serif text-foreground/90 leading-[1.02] tracking-[-0.022em] text-[clamp(1.7rem,1.1rem+2vw,2.6rem)]">
                     A closer look at the work.
                   </h2>
                 </RevealOnScroll>
