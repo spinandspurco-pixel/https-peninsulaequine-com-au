@@ -190,6 +190,54 @@ export default function Projects() {
           </div>
         </section>
 
+        {/* ═══ CURRENT — COVERED COMPETITION ARENA ════════ */}
+        <section className="relative border-t border-accent/10 py-[clamp(5rem,3rem+6vw,9rem)]">
+          <div className="section-container max-w-[1480px] mx-auto">
+            <RevealOnScroll direction="up" duration={900}>
+              <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4rem)]">
+                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">03</span>
+                <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
+                <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">In Progress</span>
+              </div>
+            </RevealOnScroll>
+
+            <Link to="/field-notes" className="group block">
+              <RevealOnScroll direction="up" duration={1200}>
+                <div className="relative aspect-[16/10] md:aspect-[21/9] overflow-hidden">
+                  <img
+                    src={coveredArenaLit}
+                    alt="Covered competition arena under construction — dramatic night lighting and structural framework"
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
+                    style={{ filter: "brightness(0.72) contrast(1.08) saturate(0.76)", objectPosition: "50% 45%" }}
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-transparent to-transparent" />
+                </div>
+              </RevealOnScroll>
+
+              <div className="mt-8 grid grid-cols-12 gap-6 lg:gap-12 items-end">
+                <div className="col-span-12 md:col-span-7 space-y-4">
+                  <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.42em]">
+                    Current Project / Field Notes / In Progress
+                  </p>
+                  <h2 className="font-serif text-foreground/92 group-hover:text-foreground transition-colors duration-500 leading-[1.02] tracking-tight text-[clamp(1.9rem,1.2rem+2.4vw,3.1rem)]">
+                    Covered Competition Arena
+                  </h2>
+                  <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px] sm:text-[15px] max-w-xl">
+                    A live large-scale arena and event infrastructure project, documented week by week as it takes shape.
+                  </p>
+                </div>
+                <div className="col-span-12 md:col-span-5 md:text-right">
+                  <span className="inline-flex items-center gap-3 font-mono uppercase text-foreground/72 group-hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]">
+                    <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
+                    Follow the Build
+                  </span>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </section>
 
         {/* ═══ CLOSING ═══════════════════════════════════ */}
         <section className="relative border-t border-accent/10 py-[clamp(6rem,4rem+7vw,11rem)]">
