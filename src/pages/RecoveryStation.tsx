@@ -398,6 +398,27 @@ export default function RecoveryStation() {
           .la-seam-line-r { transform-origin: left center;  animation: la-seam-line-in 1100ms cubic-bezier(0.45, 0, 0.15, 1) both; }
           .la-seam-number  { animation: la-seam-number-in 1100ms cubic-bezier(0.45, 0, 0.15, 1) 200ms both; }
 
+          @keyframes la-overlay-line-draw {
+            0% { stroke-dashoffset: 1; }
+            100% { stroke-dashoffset: 0; }
+          }
+          .la-chapter-overlay .la-overlay-lines line {
+            stroke-dasharray: 1;
+            stroke-dashoffset: 1;
+          }
+          .la-chapter-section:hover .la-overlay-lines line,
+          .la-chapter-section:focus-within .la-overlay-lines line {
+            animation: la-overlay-line-draw 1400ms cubic-bezier(0.45, 0, 0.15, 1) forwards;
+          }
+          .la-chapter-section:hover .la-overlay-lines line:nth-child(2),
+          .la-chapter-section:focus-within .la-overlay-lines line:nth-child(2) {
+            animation-delay: 120ms;
+          }
+          .la-chapter-section:hover .la-overlay-lines line:nth-child(3),
+          .la-chapter-section:focus-within .la-overlay-lines line:nth-child(3) {
+            animation-delay: 240ms;
+          }
+
           @media (prefers-reduced-motion: reduce) {
             .la-chapter-img,
             .la-chapter-ticks polyline,
@@ -411,6 +432,13 @@ export default function RecoveryStation() {
               filter: none;
               stroke-dashoffset: 0;
               letter-spacing: 0.45em;
+            }
+            .la-chapter-overlay {
+              transition: none !important;
+            }
+            .la-chapter-overlay .la-overlay-lines line {
+              stroke-dashoffset: 0;
+              animation: none !important;
             }
           }
         `}</style>
