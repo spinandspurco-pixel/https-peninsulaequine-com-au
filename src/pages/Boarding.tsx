@@ -133,7 +133,7 @@ function AmenitiesGallery() {
           {AMENITIES.map((item, index) => (
             <div
               key={item.title}
-              className={`group rounded-lg overflow-hidden border border-border card-hover-glow transition-all duration-700 ${
+              className={`group overflow-hidden border border-border card-hover-glow transition-all duration-700 ${
                 visibleItems[index] ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               }`}
             >
@@ -196,7 +196,7 @@ function CareStandardsSection() {
           {CARE_STANDARDS.map((standard, index) => (
             <div
               key={standard.title}
-              className={`group rounded-xl border border-border bg-card p-6 card-hover-glow transition-all duration-700 ${
+              className={`group border border-border bg-card p-6 card-hover-glow transition-all duration-700 ${
                 visibleItems[index] ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               }`}
             >
@@ -250,7 +250,7 @@ function PolicySection() {
             {POLICIES.map((policy) => (
               <div
                 key={policy.name}
-                className="flex items-center justify-between gap-4 rounded-lg border border-border bg-background p-4 sm:p-5 transition-colors hover:border-accent/30"
+                className="flex items-center justify-between gap-4 border border-border bg-background p-4 sm:p-5 transition-colors hover:border-accent/30"
               >
                 <div>
                   <h3 className="font-medium text-foreground text-sm sm:text-base">{policy.name}</h3>

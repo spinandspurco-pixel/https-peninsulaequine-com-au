@@ -90,7 +90,7 @@ function SingleLessons() {
               <div
                 key={lesson.name}
                 className={cn(
-                  "relative rounded-xl border bg-card p-6 flex flex-col transition-all duration-500",
+                  "relative border bg-card p-6 flex flex-col transition-all duration-500",
                   lesson.popular ? "border-accent shadow-lg ring-1 ring-accent/20" : "border-border",
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                 )}
@@ -156,7 +156,7 @@ function BulkPackages() {
                 <div
                   key={pkg.name}
                   className={cn(
-                    "relative rounded-xl border bg-background p-6 flex flex-col transition-all duration-500",
+                    "relative border bg-background p-6 flex flex-col transition-all duration-500",
                     pkg.popular ? "border-accent shadow-lg ring-1 ring-accent/20" : "border-border",
                     isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                   )}
@@ -167,7 +167,7 @@ function BulkPackages() {
                       Best Value
                     </span>
                   )}
-                  <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
+                  <div className="w-10 h-10 bg-accent/10 flex items-center justify-center mb-4">
                     <Icon className="h-5 w-5 text-accent" />
                   </div>
                   <h3 className="font-serif text-lg font-semibold text-foreground mb-1">{pkg.name}</h3>
@@ -232,7 +232,7 @@ function ClinicPricing() {
               <div
                 key={clinic.name}
                 className={cn(
-                  "rounded-xl border border-border bg-card p-5 text-center transition-all duration-500",
+                  " border border-border bg-card p-5 text-center transition-all duration-500",
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                 )}
                 style={{ transitionDelay: `${150 + i * 100}ms` }}
@@ -372,7 +372,7 @@ function AudPricingFAQ() {
                   key={i}
                   value={`aud-faq-${i}`}
                   className={cn(
-                    "border border-border rounded-lg px-5 data-[state=open]:bg-card transition-all duration-500",
+                    "border border-border px-5 data-[state=open]:bg-card transition-all duration-500",
                     isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                   )}
                   style={{ transitionDelay: `${200 + i * 60}ms` }}
@@ -474,13 +474,13 @@ function RegionalCostDrivers() {
                 <div
                   key={driver.title}
                   className={cn(
-                    "rounded-xl border border-border bg-background p-6 transition-all duration-500 hover:border-accent/30 hover:shadow-md",
+                    " border border-border bg-background p-6 transition-all duration-500 hover:border-accent/30 hover:shadow-md",
                     isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                   )}
                   style={{ transitionDelay: `${150 + i * 80}ms` }}
                 >
                   <div className="flex items-start gap-4 mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 bg-accent/10 flex items-center justify-center shrink-0">
                       <Icon className="h-5 w-5 text-accent" />
                     </div>
                     <div>
@@ -548,11 +548,11 @@ function DepositPolicySection() {
           <div className="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {/* Lesson Deposits */}
             <div className={cn(
-              "rounded-xl border border-border bg-card p-6 transition-all duration-500",
+              " border border-border bg-card p-6 transition-all duration-500",
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
             )} style={{ transitionDelay: "150ms" }}>
               <div className="flex items-center gap-3 mb-5">
-                <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                <div className="w-10 h-10 bg-accent/10 flex items-center justify-center">
                   <CreditCard className="h-5 w-5 text-accent" />
                 </div>
                 <div>
@@ -578,7 +578,7 @@ function DepositPolicySection() {
                 })}
               </div>
 
-              <div className="mt-5 p-3 rounded-lg bg-accent/5 border border-accent/15">
+              <div className="mt-5 p-3 bg-accent/5 border border-accent/15">
                 <p className="text-xs text-muted-foreground leading-relaxed">
                   <strong className="text-foreground">Example:</strong> A Development lesson ($120) requires a $60 deposit at booking. Pay the remaining $60 on the day. Package buyers pay $1,020 upfront (10-pack at 15% off) — no further payments needed.
                 </p>
@@ -587,11 +587,11 @@ function DepositPolicySection() {
 
             {/* Construction Milestones */}
             <div className={cn(
-              "rounded-xl border border-border bg-card p-6 transition-all duration-500",
+              " border border-border bg-card p-6 transition-all duration-500",
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
             )} style={{ transitionDelay: "250ms" }}>
               <div className="flex items-center gap-3 mb-5">
-                <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                <div className="w-10 h-10 bg-accent/10 flex items-center justify-center">
                   <Milestone className="h-5 w-5 text-accent" />
                 </div>
                 <div>
@@ -620,7 +620,7 @@ function DepositPolicySection() {
                 ))}
               </div>
 
-              <div className="mt-5 p-3 rounded-lg bg-accent/5 border border-accent/15">
+              <div className="mt-5 p-3 bg-accent/5 border border-accent/15">
                 <p className="text-xs text-muted-foreground leading-relaxed">
                   <strong className="text-foreground">Your protection:</strong> Payments are tied to inspected milestones — you only pay when work is verified. Variations or extras are quoted in writing before proceeding.
                 </p>
@@ -682,7 +682,7 @@ function ServiceAreaSection() {
               <div
                 key={zone.zone}
                 className={cn(
-                  "rounded-xl border p-6 transition-all duration-500",
+                  " border p-6 transition-all duration-500",
                   zone.highlight ? "border-accent/40 bg-accent/5 ring-1 ring-accent/10" : "border-border bg-background",
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                 )}
@@ -716,7 +716,7 @@ function ServiceAreaSection() {
             ))}
           </div>
 
-          <div className="max-w-3xl mx-auto mt-8 p-4 rounded-lg bg-background border border-border">
+          <div className="max-w-3xl mx-auto mt-8 p-4 bg-background border border-border">
             <div className="flex items-start gap-3">
               <Navigation className="h-5 w-5 text-accent shrink-0 mt-0.5" />
               <div>
