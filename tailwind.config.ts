@@ -152,6 +152,11 @@ export default {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.92" },
         },
+        "scroll-line": {
+          "0%": { transform: "scaleY(0)", transformOrigin: "top", opacity: "0" },
+          "30%": { opacity: "1" },
+          "100%": { transform: "scaleY(1)", transformOrigin: "top", opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
