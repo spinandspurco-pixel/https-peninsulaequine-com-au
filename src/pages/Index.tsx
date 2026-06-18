@@ -92,12 +92,15 @@ export default function Index() {
       at(520, () => setSublineReady(true));
       at(840, () => setCtaReady(true));
     } else {
-      at(2700, () => setImageReady(true));
-      at(3200, () => setHeadlineReady(true));
-      at(3500, () => setSublineReady(true));
-      at(3825, () => setCtaReady(true));
-      at(4000, () => setHeaderReady(true));
+      // Reveal homepage hero underneath the intro overlay BEFORE it dissolves,
+      // so the hero is already fully composed when the overlay fades out (no flicker).
+      at(1600, () => setImageReady(true));
+      at(1850, () => setHeadlineReady(true));
+      at(2100, () => setSublineReady(true));
+      at(2300, () => setCtaReady(true));
+      at(2400, () => setHeaderReady(true));
     }
+
 
     return () => timers.forEach(clearTimeout);
   }, [skipIntro]);
