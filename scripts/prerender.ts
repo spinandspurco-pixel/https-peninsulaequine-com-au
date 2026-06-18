@@ -17,12 +17,13 @@ import { resolve, dirname } from "node:path";
 const SITE_ORIGIN = "https://peninsulaequine.com.au";
 const DIST = resolve("dist");
 
-// Sitewide fallback OG image — the homepage sliding-stop hero. Used by
-// routes without a more specific hero (contact, process, testimonials,
-// faq, privacy, terms) and as the og:image baked into the static
-// index.html for the homepage.
+// Sitewide fallback OG card — the branded 1200×630 root card. Used by
+// any route that doesn't define its own image and as the og:image baked
+// into the static homepage index.html.
 const DEFAULT_OG_IMAGE =
-  "/__l5e/assets-v1/a006cbde-92fd-4c76-a17d-db3530672d7a/sliding-stop-hero.png";
+  "/__l5e/assets-v1/0fb3dbec-500e-400e-bb23-455301cadcde/og-root.png";
+const DEFAULT_OG_ALT =
+  "Peninsula Equine — premium equine environments on the Mornington Peninsula.";
 
 interface RouteMeta {
   path: string;
@@ -33,26 +34,26 @@ interface RouteMeta {
   imageAlt?: string;
 }
 
-// Keep in sync with public/sitemap.xml.
+// Keep in sync with public/sitemap.xml and src/components/RouteCanonical.tsx.
+// Each route ships its own dedicated 1200×630 branded social card.
 const ROUTES: RouteMeta[] = [
   {
     path: "/arenas",
     title: "Arenas | Peninsula Equine",
     description:
       "Sand, rubber and all-weather arenas engineered for performance — built by riders on the Mornington Peninsula.",
-    image:
-      "/__l5e/assets-v1/37069802-9f36-4073-aed4-0659270ccafe/pe-arena-grading.png",
+    image: "/__l5e/assets-v1/71d7e4e8-b1c2-4004-8706-4092927dbff8/og-arenas.png",
     imageAlt:
-      "Covered equestrian arena interior with engineered footing under controlled light.",
+      "Peninsula Equine social card — Arenas. Covered arena at dusk with engineered footing being graded.",
   },
   {
     path: "/stables",
     title: "Stables | Peninsula Equine",
     description:
       "Bespoke stables, barns and shelters designed around how horses actually live, work and recover.",
-    image:
-      "/__l5e/assets-v1/94caa649-4df5-456a-9871-684b90f34580/pe-stable-aisle-cinematic.png",
-    imageAlt: "Cinematic stable aisle interior.",
+    image: "/__l5e/assets-v1/4c5e4f1e-0d18-494f-bab8-acfa31539459/og-stables.png",
+    imageAlt:
+      "Peninsula Equine social card — Stables. Cinematic stable aisle interior.",
   },
   {
     path: "/equine-estates",
@@ -60,8 +61,9 @@ const ROUTES: RouteMeta[] = [
     description:
       "Whole-property equine estate planning — arenas, stables, paddocks and infrastructure resolved as one system.",
     image:
-      "/__l5e/assets-v1/8564a7af-7ef2-4267-9ee1-6b10228eecbe/pe-estate-aerial-masterplan.png",
-    imageAlt: "Aerial masterplan of an equine estate at dusk.",
+      "/__l5e/assets-v1/b4c45153-b6fc-49c1-93b5-ce421e0077af/og-equine-estates.png",
+    imageAlt:
+      "Peninsula Equine social card — Equine Estates. Aerial masterplan of a whole-property estate at dusk.",
   },
   {
     path: "/infrastructure",
@@ -69,60 +71,77 @@ const ROUTES: RouteMeta[] = [
     description:
       "Fencing, water, drainage, tracks and yards — the unglamorous infrastructure that makes a property work.",
     image:
-      "/__l5e/assets-v1/743392aa-050a-4f00-89df-2e018966f2c0/pe-groundworks-dozer.png",
-    imageAlt: "Engineered site works and infrastructure in progress.",
+      "/__l5e/assets-v1/8fce50f6-6134-4757-b362-d88c9d6b0a61/og-infrastructure.png",
+    imageAlt:
+      "Peninsula Equine social card — Infrastructure. Engineered site works and groundworks in progress.",
   },
   {
     path: "/gallery",
     title: "Gallery | Peninsula Equine",
     description:
       "Selected works across arenas, stables and equine estates on the Mornington Peninsula.",
-    image:
-      "/__l5e/assets-v1/8da1740b-3fe0-4f86-b3bf-02bfca528210/main-ridge-pavilion-wide-fireplace-table.png",
-    imageAlt: "Main Ridge pavilion interior at golden hour.",
+    image: "/__l5e/assets-v1/5d473238-b765-40e8-86cf-ce8e3947fd1a/og-gallery.png",
+    imageAlt:
+      "Peninsula Equine social card — Gallery. Main Ridge pavilion interior at golden hour.",
   },
   {
     path: "/about",
     title: "About | Peninsula Equine",
     description:
       "Peninsula Equine is built by horse people — arenas, stables and rural builds shaped by real experience with horses, ground and property life on the Mornington Peninsula.",
-    image:
-      "/__l5e/assets-v1/8da1740b-3fe0-4f86-b3bf-02bfca528210/main-ridge-pavilion-wide-fireplace-table.png",
-    imageAlt: "Main Ridge pavilion interior at golden hour.",
+    image: "/__l5e/assets-v1/1d391d4c-696d-4196-8df4-20fa4c23bc38/og-about.png",
+    imageAlt:
+      "Peninsula Equine social card — About. Built by horse people on the Mornington Peninsula.",
   },
   {
     path: "/contact",
     title: "Contact | Peninsula Equine",
     description:
       "Talk to Peninsula Equine about an arena, stable, or whole-property build on the Mornington Peninsula.",
+    image: "/__l5e/assets-v1/4f99afa6-c250-4084-9b63-93d2a4e9a11d/og-contact.png",
+    imageAlt: "Peninsula Equine social card — Contact.",
   },
   {
     path: "/process",
     title: "Process | Peninsula Equine",
     description:
       "How Peninsula Equine takes a property from first assessment through resolved build.",
+    image: "/__l5e/assets-v1/a022152e-e50e-45d5-969f-2ece81072971/og-process.png",
+    imageAlt:
+      "Peninsula Equine social card — Process. How we take a property from assessment through resolved build.",
   },
   {
     path: "/testimonials",
     title: "Testimonials | Peninsula Equine",
     description:
       "What owners, riders and trainers say about working with Peninsula Equine.",
+    image:
+      "/__l5e/assets-v1/2214b391-0534-4fab-a73d-4f7b8e4b7ef5/og-testimonials.png",
+    imageAlt:
+      "Peninsula Equine social card — Testimonials. What owners, riders and trainers say.",
   },
   {
     path: "/faq",
     title: "FAQ | Peninsula Equine",
     description:
       "Common questions about arenas, stables, estates, timelines and how Peninsula Equine works.",
+    image: "/__l5e/assets-v1/f1d04f26-b54f-4fde-b601-96cca86611fe/og-faq.png",
+    imageAlt:
+      "Peninsula Equine social card — FAQ. Common questions answered.",
   },
   {
     path: "/privacy",
     title: "Privacy | Peninsula Equine",
     description: "Peninsula Equine privacy policy.",
+    image: "/__l5e/assets-v1/d3ae53c0-9bd2-45cc-9312-46178f55bb9a/og-privacy.png",
+    imageAlt: "Peninsula Equine social card — Privacy policy.",
   },
   {
     path: "/terms",
     title: "Terms | Peninsula Equine",
     description: "Peninsula Equine terms of use.",
+    image: "/__l5e/assets-v1/a898c2d8-15d2-460b-9e8f-9ebca6d021d4/og-terms.png",
+    imageAlt: "Peninsula Equine social card — Terms of use.",
   },
 ];
 
@@ -146,7 +165,7 @@ function rewriteHead(html: string, meta: RouteMeta): string {
   const desc = escapeHtml(meta.description);
   const imagePath = meta.image ?? DEFAULT_OG_IMAGE;
   const imageUrl = `${SITE_ORIGIN}${imagePath}`;
-  const imageAlt = escapeHtml(meta.imageAlt ?? meta.title);
+  const imageAlt = escapeHtml(meta.imageAlt ?? DEFAULT_OG_ALT);
 
   let out = html;
 
@@ -231,7 +250,7 @@ function main() {
       description:
         "Arenas, stables, equine estates, recovery stations and infrastructure — built by riders, crafted for performance. Mornington Peninsula.",
       image: DEFAULT_OG_IMAGE,
-      imageAlt: "Sliding stop — Peninsula Equine.",
+      imageAlt: DEFAULT_OG_ALT,
     }),
   );
 
