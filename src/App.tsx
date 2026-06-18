@@ -69,6 +69,7 @@ const WhyWeExist = lazy(() => import("./pages/WhyWeExist"));
 const ClientPortal = lazy(() => import("./pages/ClientPortal"));
 const ClientPortalLogin = lazy(() => import("./pages/ClientPortalLogin"));
 const FieldNotes = lazy(() => import("./pages/FieldNotes"));
+const MainRidgePavilion = lazy(() => import("./pages/MainRidgePavilion"));
 
 const queryClient = new QueryClient();
 
