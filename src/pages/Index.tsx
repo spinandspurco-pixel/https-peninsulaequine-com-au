@@ -13,6 +13,7 @@ import mainRidgeSitePrep from "@/assets/main-ridge-site-prep.jpg";
 import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
 import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
 
+import goldenHourPavilion from "@/assets/golden-hour-pavilion.png.asset.json";
 import serviceArenas from "@/assets/homepage-services/arenas.png.asset.json";
 import serviceGroundworks from "@/assets/homepage-services/groundworks.png.asset.json";
 
@@ -250,8 +251,8 @@ export default function Index() {
                 <div className="md:col-span-7">
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <img
-                      src={mainRidgeInterior}
-                      alt="Main Ridge pavilion interior with exposed timber framing in evening light"
+                      src={goldenHourPavilion.url}
+                      alt="Warm evening light inside the Main Ridge timber pavilion with corrugated iron and open framing"
                       loading="lazy"
                       className="absolute inset-0 w-full h-full object-cover"
                       style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
