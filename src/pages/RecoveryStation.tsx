@@ -103,46 +103,90 @@ function LumenArcChapterSection({
 }: LumenArcChapter) {
   const imageOrder = align === "right" ? "lg:order-2" : "";
   const copyOrder = align === "right" ? "lg:order-1" : "";
-  const imageBleed = align === "right" ? "lg:-mr-[3rem]" : "lg:-ml-[3rem]";
+  // Deeper directional bleed — image escapes its column on the outer edge
+  // and dissolves into the page, never reads as a card.
+  const imageBleed =
+    align === "right"
+      ? "lg:-mr-[5.5rem] xl:-mr-[8rem]"
+      : "lg:-ml-[5.5rem] xl:-ml-[8rem]";
 
   return (
-    <section className="relative py-[clamp(5.5rem,3.5rem+7vw,10rem)]">
-      <div className="section-container relative z-10 grid grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4.5rem)] items-center">
-        <div className={`col-span-12 lg:col-span-7 ${imageOrder}`}>
-          <RevealImage delay={100} duration={1200}>
-            <div className={`relative aspect-[16/10] overflow-hidden ${imageBleed}`}>
+    <section className="relative py-[clamp(6rem,4rem+8vw,12rem)]">
+      <div className="section-container relative z-10 grid grid-cols-12 gap-[clamp(2rem,1.5rem+2.4vw,5rem)] items-center">
+        <div className={`col-span-12 lg:col-span-8 ${imageOrder}`}>
+          <RevealImage delay={100} duration={1400}>
+            {/* Larger, more cinematic plate — taller on mobile, wider on lg */}
+            <div
+              className={`relative aspect-[4/5] sm:aspect-[3/2] lg:aspect-[16/11] overflow-hidden ${imageBleed} la-chapter-plate`}
+            >
               <img
                 src={image}
                 alt={alt}
                 loading="lazy"
-                width={1400}
-                height={1000}
-                className="absolute inset-0 h-full w-full object-cover image-bleed"
-                style={{ filter: "brightness(0.86) contrast(1.08) saturate(0.82)" }}
+                width={1600}
+                height={1100}
+                className="absolute inset-0 h-full w-full object-cover image-bleed la-chapter-img"
+                style={{ filter: "brightness(0.84) contrast(1.1) saturate(0.8)" }}
               />
-              {/* Edge fades — dissolve image into the page rather than sit as a card */}
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,hsl(var(--background)/0.55)_100%)]" />
+              {/* Deeper cinematic vignette */}
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_45%,hsl(var(--background)/0.65)_100%)]" />
+              {/* Directional dissolve into the page on the inner edge */}
               <div
-                className={`pointer-events-none absolute inset-y-0 w-1/3 ${
-                  align === "right" ? "right-0 bg-[linear-gradient(270deg,hsl(var(--background))_0%,transparent_100%)]" : "left-0 bg-[linear-gradient(90deg,hsl(var(--background))_0%,transparent_100%)]"
+                className={`pointer-events-none absolute inset-y-0 w-2/5 ${
+                  align === "right"
+                    ? "right-0 bg-[linear-gradient(270deg,hsl(var(--background))_0%,transparent_100%)]"
+                    : "left-0 bg-[linear-gradient(90deg,hsl(var(--background))_0%,transparent_100%)]"
                 }`}
               />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-[linear-gradient(0deg,hsl(var(--background))_0%,transparent_100%)]" />
-              {/* Subtle blueprint plate overlay */}
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-[linear-gradient(0deg,hsl(var(--background))_0%,transparent_100%)]" />
+              {/* Blueprint plate overlay — drafting grid screen-blended */}
               <div
-                className="pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-screen"
+                className="pointer-events-none absolute inset-0 opacity-[0.07] mix-blend-screen"
                 style={{
                   backgroundImage:
                     "linear-gradient(0deg, hsl(var(--accent)/0.6) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--accent)/0.6) 1px, transparent 1px)",
                   backgroundSize: "80px 80px",
                 }}
               />
+              {/* Blueprint corner ticks — drawn-in architectural frame */}
+              <svg
+                className="pointer-events-none absolute inset-0 h-full w-full la-chapter-ticks"
+                viewBox="0 0 100 100"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                {/* TL */}
+                <polyline
+                  points="2,8 2,2 8,2"
+                  fill="none"
+                  stroke="hsl(var(--accent) / 0.55)"
+                  strokeWidth="0.18"
+                  vectorEffect="non-scaling-stroke"
+                  pathLength={1}
+                />
+                {/* BR */}
+                <polyline
+                  points="92,98 98,98 98,92"
+                  fill="none"
+                  stroke="hsl(var(--accent) / 0.55)"
+                  strokeWidth="0.18"
+                  vectorEffect="non-scaling-stroke"
+                  pathLength={1}
+                />
+              </svg>
+              {/* Edge-anchored chapter number — engineering plate label */}
+              <div
+                className={`pointer-events-none absolute bottom-4 ${
+                  align === "right" ? "right-5" : "left-5"
+                } font-mono text-accent/65 text-[0.6rem] tracking-[0.5em] tabular-nums la-chapter-plate-label`}
+              >
+                LA · {number}
+              </div>
             </div>
           </RevealImage>
         </div>
 
-
-        <div className={`col-span-12 lg:col-span-5 ${copyOrder}`}>
+        <div className={`col-span-12 lg:col-span-4 ${copyOrder}`}>
           <div className="space-y-8 lg:max-w-[28rem]">
             <RevealOnScroll direction="up" duration={900}>
               <div className="flex items-baseline gap-5">
@@ -196,6 +240,41 @@ function LumenArcChapterSection({
     </section>
   );
 }
+
+/**
+ * BlueprintTransition
+ *
+ * Thin architectural seam between chapters — a hairline drafting thread with
+ * a centred tick and the next chapter number. Draws in on scroll so each
+ * chapter feels stitched into the same plate rather than stacked as separate
+ * pages. Mirrors LumenArcEntrance / BlueprintContinuity language.
+ */
+function BlueprintTransition({ next }: { next: string }) {
+  return (
+    <div
+      aria-hidden="true"
+      className="relative py-[clamp(2rem,1.25rem+2vw,4rem)]"
+    >
+      <div className="section-container">
+        <div className="relative mx-auto flex items-center justify-center la-chapter-seam">
+          {/* Left hairline */}
+          <span className="h-px flex-1 max-w-[28rem] bg-[linear-gradient(90deg,transparent_0%,hsl(var(--accent)/0.32)_85%,hsl(var(--accent)/0.5)_100%)] la-seam-line-l" />
+          {/* Centre tick + number */}
+          <span className="relative mx-4 flex items-center gap-3">
+            <span className="block h-[6px] w-px bg-accent/55" />
+            <span className="font-mono text-accent/55 text-[0.58rem] tracking-[0.45em] tabular-nums la-seam-number">
+              {next}
+            </span>
+            <span className="block h-[6px] w-px bg-accent/55" />
+          </span>
+          {/* Right hairline */}
+          <span className="h-px flex-1 max-w-[28rem] bg-[linear-gradient(270deg,transparent_0%,hsl(var(--accent)/0.32)_85%,hsl(var(--accent)/0.5)_100%)] la-seam-line-r" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 export default function RecoveryStation() {
   const [briefingOpen, setBriefingOpen] = useState(false);
