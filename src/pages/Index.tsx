@@ -316,6 +316,56 @@ export default function Index() {
 
 
 
+        {/* Field Notes teaser */}
+        <section className="relative py-[clamp(5rem,3.5rem+6vw,8.5rem)] bg-background overflow-hidden">
+          <div className="section-container max-w-6xl mx-auto">
+            <RevealOnScroll direction="up" duration={900}>
+              <div className="flex items-baseline gap-5 mb-[clamp(2.25rem,1.5rem+2vw,3.5rem)]">
+                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">04</span>
+                <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
+                <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Field Notes</span>
+              </div>
+            </RevealOnScroll>
+            <div className="grid grid-cols-12 gap-[clamp(1.75rem,1rem+2vw,3.5rem)] items-center">
+              <RevealOnScroll direction="up" duration={1100} className="col-span-12 md:col-span-7">
+                <div className="relative aspect-[16/10] overflow-hidden">
+                  <img
+                    src={fieldNoteAsset.url}
+                    alt="Pendant lighting suspended between heavy timber beams inside the Main Ridge build"
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover image-bleed"
+                    style={{ filter: "brightness(0.78) contrast(1.12) saturate(0.78)" }}
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,hsl(var(--background)/0.6)_100%)]" />
+                </div>
+              </RevealOnScroll>
+              <div className="col-span-12 md:col-span-5 space-y-6">
+                <RevealOnScroll direction="up" duration={1000} delay={120}>
+                  <h2 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.022em] text-[clamp(1.7rem,1.1rem+2vw,2.55rem)]">
+                    Notes from the build.
+                  </h2>
+                </RevealOnScroll>
+                <RevealLine width="w-10" delay={240} />
+                <RevealOnScroll direction="up" duration={1000} delay={300}>
+                  <p className="font-sans font-light text-foreground/52 leading-[1.9] text-[0.86rem] max-w-md">
+                    Process, material and detail — recorded as projects move through the ground.
+                  </p>
+                </RevealOnScroll>
+                <RevealOnScroll direction="up" duration={1000} delay={400}>
+                  <Link
+                    to="/field-notes"
+                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em] pt-2"
+                  >
+                    <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
+                    Read Field Notes
+                  </Link>
+                </RevealOnScroll>
+              </div>
+            </div>
+          </div>
+        </section>
+
 
         <section className="relative py-[clamp(7rem,4.5rem+9vw,13rem)] bg-background overflow-hidden">
           <img
@@ -330,7 +380,7 @@ export default function Index() {
           <div className="relative section-container max-w-3xl mx-auto text-center space-y-[clamp(2rem,1.25rem+2.5vw,3rem)]">
             <RevealOnScroll direction="up" duration={900}>
               <div className="mx-auto flex items-baseline justify-center gap-5">
-                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">04</span>
+                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">05</span>
                 <span className="h-px w-12 bg-accent/30" />
                 <span className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.5em]">
                   Start a Project
