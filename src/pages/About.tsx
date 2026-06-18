@@ -207,8 +207,8 @@ export default function About() {
           <div className="section-container max-w-7xl mx-auto">
             <div className="relative overflow-hidden">
               <img
-                src={slidingStop.url}
-                alt="A sliding stop — the ground tested through use."
+                src={ciroAceSlidingStop.url}
+                alt="Ciro and Ace — sliding stop, testing the ground."
                 loading="lazy"
                 className="w-full aspect-[21/9] object-cover"
                 style={{ objectPosition: "50% 50%", filter: FILTER }}
