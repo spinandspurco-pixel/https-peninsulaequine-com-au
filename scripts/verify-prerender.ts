@@ -19,7 +19,7 @@
  * file still knows what to expect.
  */
 
-import { readFileSync, existsSync, appendFileSync } from "node:fs";
+import { readFileSync, existsSync, appendFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const SITE_ORIGIN = "https://peninsulaequine.com.au";
@@ -250,6 +250,10 @@ const only = onlyArg
     )
   : null;
 
+// `--json` or `--json=path/to/file.json` — write machine-readable results.
+const jsonArg = process.argv.find((a) => a.startsWith("--json"));
+const jsonOut = jsonArg ? (jsonArg.includes("=") ? jsonArg.slice("--json=".length) : "dist/prerender-verify.json") : null;
+
 const selectedRoutes = only
   ? ROUTES.filter((r) => only.has(r.path))
   : ROUTES;
@@ -262,6 +266,8 @@ if (only && selectedRoutes.length === 0) {
 }
 
 for (const r of selectedRoutes) check(r);
+
+writeJsonReport();
 
 /**
  * Escape a string for a GitHub Actions workflow command parameter
@@ -291,6 +297,52 @@ function rerunCommand(routes: string[]): string {
   if (routes.length === 0) return "bun run build";
   // Quote so shells treat the comma-separated list as one arg.
   return `bun run build && bunx tsx scripts/verify-prerender.ts --only="${routes.join(",")}"`;
+}
+
+interface RouteResult {
+  path: string;
+  file: string;
+  passed: boolean;
+  failures: Failure[];
+}
+
+interface Report {
+  timestamp: string;
+  siteOrigin: string;
+  checked: number;
+  passed: number;
+  failed: number;
+  allPassed: boolean;
+  rerunCommand: string;
+  routes: RouteResult[];
+}
+
+/** Build and, if `--json` was passed, write the machine-readable report. */
+function writeJsonReport(): void {
+  if (!jsonOut) return;
+
+  const report: Report = {
+    timestamp: new Date().toISOString(),
+    siteOrigin: SITE_ORIGIN,
+    checked: selectedRoutes.length,
+    passed: selectedRoutes.length - failingRoutes().length,
+    failed: failingRoutes().length,
+    allPassed: failures.length === 0,
+    rerunCommand: rerunCommand(failingRoutes()),
+    routes: selectedRoutes.map((r) => {
+      const routeFailures = failures.filter((f) => f.route === r.path);
+      return {
+        path: r.path,
+        file: indexPathFor(r.path),
+        passed: routeFailures.length === 0,
+        failures: routeFailures,
+      };
+    }),
+  };
+
+  const json = JSON.stringify(report, null, 2);
+  writeFileSync(resolve(jsonOut!), json, "utf8");
+  console.log(`Wrote JSON report to ${jsonOut}`);
 }
 
 /**
