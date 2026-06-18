@@ -12,7 +12,7 @@ import goldenHourPavilion1200 from "@/assets/golden-hour-pavilion-1200.webp.asse
 import goldenHourPavilion1600 from "@/assets/golden-hour-pavilion-1600.webp.asset.json";
 import serviceArenas from "@/assets/homepage-services/arenas.png.asset.json";
 import serviceGroundworks from "@/assets/homepage-services/groundworks.png.asset.json";
-import fieldNoteAsset from "@/assets/main-ridge/mr-pendant-beams.png.asset.json";
+import fieldNoteSunset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
 
 import slidingStopHero from "@/assets/homepage-refresh/sliding-stop-hero.png.asset.json";
 import coveredArenaExterior from "@/assets/covered-arena-black-exterior.jpg";
@@ -324,16 +324,17 @@ export default function Index() {
               </div>
             </RevealOnScroll>
             <RevealOnScroll direction="up" duration={1200}>
-              <div className="relative aspect-[16/9] md:aspect-[21/9] overflow-hidden">
+              <div className="relative aspect-[4/5] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                 <img
-                  src={fieldNoteAsset.url}
-                  alt="Pendant lighting suspended between heavy timber beams inside the Main Ridge build"
+                  src={fieldNoteSunset.url}
+                  alt="Covered competition arena in progress — steel framework at sunset with puddles across the muddy site"
                   loading="lazy"
                   decoding="async"
-                  className="absolute inset-0 w-full h-full object-cover image-bleed"
-                  style={{ filter: "brightness(0.78) contrast(1.12) saturate(0.78)", objectPosition: "50% 40%" }}
+                  className="absolute inset-0 w-full h-full object-cover image-bleed object-[60%_50%] sm:object-[56%_52%] md:object-center"
+                  style={{ filter: "brightness(0.76) contrast(1.12) saturate(0.8)" }}
                 />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/65 to-transparent" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/88 via-background/45 to-transparent" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/55 to-transparent" />
                 <div className="absolute bottom-0 left-0 w-full p-6 md:p-10 lg:p-14">
                   <div className="max-w-2xl space-y-5">
                     <h2 className="font-serif text-foreground/92 leading-[1.05] tracking-[-0.022em] text-[clamp(1.75rem,1.15rem+2.2vw,2.7rem)]">

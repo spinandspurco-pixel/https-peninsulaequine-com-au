@@ -1,569 +1,291 @@
-import { useMemo, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
-import { RevealOnScroll, RevealLine, RevealImage } from "@/components/RevealOnScroll";
+import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 
-// Editorial imagery sourced from existing project library.
-import mrFrame from "@/assets/main-ridge-barn-frame.jpg";
-import mrBrick from "@/assets/main-ridge-brickwork.jpg";
-import mrTimber from "@/assets/main-ridge-ciro-woodwork-1.jpg";
-import mrTimber2 from "@/assets/main-ridge-ciro-woodwork-2.jpg";
-import mrGround from "@/assets/main-ridge-site-prep.jpg";
-import mrRebar from "@/assets/main-ridge-rebar-foundation.jpg";
-import mrCrane from "@/assets/main-ridge-crane-lift.jpg";
-import mrInterior from "@/assets/main-ridge-finished-interior-1.jpg";
-import mrInterior2 from "@/assets/main-ridge-finished-interior-2.jpg";
-import aberdeenExt from "@/assets/aberdeen-exterior.jpg";
-import arenaPrep from "@/assets/arena-sand-prep-1.jpg";
-import coveredArena from "@/assets/covered-arena-black-exterior.jpg";
+import sunsetPuddles from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
+import drainageDetail from "@/assets/field-notes/covered-competition-arena-drainage-detail.png.asset.json";
+import truckAccessTrack from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
+import dozerStormSky from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
+import nightWorkLights from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
 
-// Latest Main Ridge Pavilion photography (Nov 2026).
-import mrCustomTableAsset from "@/assets/main-ridge/mr-custom-table.png.asset.json";
-import mrPendantBeamsAsset from "@/assets/main-ridge/mr-pendant-beams.png.asset.json";
-import mrParrillaWideAsset from "@/assets/main-ridge/mr-parrilla-wide.png.asset.json";
-import mrBeamDetailAsset from "@/assets/main-ridge/mr-beam-detail.png.asset.json";
-import mrParrillaGrillAsset from "@/assets/main-ridge/mr-parrilla-grill.png.asset.json";
-
-const mrCustomTable = mrCustomTableAsset.url;
-const mrPendantBeams = mrPendantBeamsAsset.url;
-const mrParrillaWide = mrParrillaWideAsset.url;
-const mrBeamDetail = mrBeamDetailAsset.url;
-const mrParrillaGrill = mrParrillaGrillAsset.url;
-const heroImg = mrParrillaWide;
-
-type Status = "In Progress" | "Completed";
-type Category =
-  | "Arenas"
-  | "Stables"
-  | "Pavilions"
-  | "Groundworks"
-  | "Custom Details";
-
-interface Project {
-  slug: string;
-  name: string;
-  location: string;
-  categories: Category[];
-  status: Status;
-  latest: string;
-  image: string;
-  alt: string;
-}
-
-const filters: Array<Category | Status | "All"> = [
-  "All",
-  "Arenas",
-  "Stables",
-  "Pavilions",
-  "Groundworks",
-  "Custom Details",
-  "In Progress",
-  "Completed",
-];
-
-const projects: Project[] = [
+const timeline = [
   {
-    slug: "main-ridge-pavilion",
-    name: "Main Ridge Pavilion",
-    location: "Main Ridge, Mornington Peninsula",
-    categories: ["Pavilions", "Custom Details"],
-    status: "In Progress",
-    latest:
-      "Timber, corrugated steel, brick firebox and custom-built table details coming together.",
-    image: mrCustomTable,
-    alt: "Main Ridge Pavilion — solid timber table and steel-clad legs at golden hour",
+    step: "01",
+    title: "Ground Preparation",
+    body: "Site cuts, levels, access and early base works.",
   },
   {
-    slug: "private-estate-arena",
-    name: "Private Estate — Covered Arena",
-    location: "Red Hill, Mornington Peninsula",
-    categories: ["Arenas", "Groundworks"],
-    status: "In Progress",
-    latest:
-      "Sub-base laid, drainage tuned, structural steel arriving end of month.",
-    image: arenaPrep,
-    alt: "Private estate covered arena — graded sub-base and surface preparation",
+    step: "02",
+    title: "Steel Rising",
+    body: "Structural frame installation and covered arena form taking shape.",
   },
   {
-    slug: "aberdeen-stable-complex",
-    name: "Aberdeen Stable Complex",
-    location: "Mornington Peninsula",
-    categories: ["Stables", "Custom Details"],
-    status: "Completed",
-    latest:
-      "Final commissioning complete. Stone, timber and bronze hardware resolved as one gesture.",
-    image: aberdeenExt,
-    alt: "Aberdeen stable complex — completed exterior at dusk",
+    step: "03",
+    title: "Weather & Worksite Conditions",
+    body: "Real build conditions, wet ground, machinery movement and sequencing.",
   },
   {
-    slug: "covered-arena-black",
-    name: "Black Pavilion Arena",
-    location: "Main Ridge",
-    categories: ["Arenas", "Pavilions"],
-    status: "Completed",
-    latest:
-      "Blackened steel envelope handed over — interior lighting tuned for evening sessions.",
-    image: coveredArena,
-    alt: "Black pavilion covered arena — completed exterior",
-  },
-];
-
-const mainRidgeTimeline = [
-  {
-    n: "I",
-    title: "The Groundwork",
-    body:
-      "Site stripped, levels set, drainage and services trenched. The pad is the building before the building.",
-    image: mrGround,
-    alt: "Main Ridge Pavilion — site preparation and grading",
+    step: "04",
+    title: "Base & Drainage",
+    body: "The unseen layers that support surface performance and longevity.",
   },
   {
-    n: "II",
-    title: "Frame & Form",
-    body:
-      "Foundations poured, rebar tied, posts plumbed. The pavilion's footprint becomes architecture.",
-    image: mrPendantBeams,
-    alt: "Main Ridge Pavilion — recycled hardwood posts, beams and pendant lighting at dusk",
+    step: "05",
+    title: "Final Surface & Finish",
+    body: "Placeholder for future updates when footing, surface and finishing works are completed.",
   },
-  {
-    n: "III",
-    title: "Fire & Iron",
-    body:
-      "Brick firebox laid by hand, hand-forged parrilla grill suspended on chain and wheel. Heat, mass and iron take their place.",
-    image: mrParrillaGrill,
-    alt: "Main Ridge Pavilion — hand-forged parrilla grill over glowing coals in brick firebox",
-  },
-  {
-    n: "IV",
-    title: "Custom Table & Finish",
-    body:
-      "Solid recycled timber table fabricated on site, set on blackened steel legs. Joinery, bronze hardware and lighting tuned for long evenings.",
-    image: mrCustomTable,
-    alt: "Main Ridge Pavilion — custom recycled-timber table and bench on steel legs at golden hour",
-  },
-  {
-    n: "V",
-    title: "Final Reveal",
-    body:
-      "Photography to follow. The pavilion will be commissioned alongside the main stable in 2026.",
-    image: mrInterior,
-    alt: "Main Ridge Pavilion — final reveal placeholder",
-  },
-];
-
-const mainRidgeGallery = [
-  { src: mrParrillaWide, alt: "Pavilion dusk — corrugated steel, recycled posts and brick parrilla beyond" },
-  { src: mrCustomTable, alt: "Custom recycled-timber table and bench on blackened steel legs" },
-  { src: mrParrillaGrill, alt: "Hand-forged parrilla grill on chain and wheel over glowing coals" },
-  { src: mrPendantBeams, alt: "Recycled hardwood beams, corrugated roof and pendant light" },
-  { src: mrBeamDetail, alt: "Hardwood post-to-beam junction with bolted steel plate detail" },
-  { src: mrGround, alt: "Site preparation" },
-  { src: mrRebar, alt: "Rebar foundation detail" },
-  { src: mrCrane, alt: "Crane lift — frame raising" },
-  { src: mrFrame, alt: "Timber frame closeup" },
-  { src: mrBrick, alt: "Brick firebox detail" },
-  { src: mrTimber, alt: "Timber joinery in progress" },
-  { src: mrTimber2, alt: "Custom table fabrication" },
-  { src: mrInterior2, alt: "Pavilion interior — finishing" },
 ];
 
 export default function FieldNotes() {
-  const [activeFilter, setActiveFilter] =
-    useState<(typeof filters)[number]>("All");
-  const [openProject, setOpenProject] = useState<string | null>(
-    "main-ridge-pavilion",
-  );
-
-  const visible = useMemo(() => {
-    if (activeFilter === "All") return projects;
-    return projects.filter((p) =>
-      activeFilter === "In Progress" || activeFilter === "Completed"
-        ? p.status === activeFilter
-        : p.categories.includes(activeFilter as Category),
+  useEffect(() => {
+    document.title = "Field Notes | Peninsula Equine";
+    const meta = document.querySelector('meta[name="description"]');
+    const prev = meta?.getAttribute("content") || "";
+    meta?.setAttribute(
+      "content",
+      "Field Notes follows Peninsula Equine projects through real conditions — steel, earthworks, drainage and site progress across the Mornington Peninsula.",
     );
-  }, [activeFilter]);
+    return () => {
+      document.title = "Peninsula Equine";
+      if (meta && prev) meta.setAttribute("content", prev);
+    };
+  }, []);
 
   return (
     <Layout>
-      <article className="bg-background text-foreground type-architectural">
-        {/* ─── HERO ─────────────────────────────────────────── */}
-        <section className="relative h-[92vh] min-h-[620px] overflow-hidden">
+      <main className="bg-background text-foreground type-architectural">
+        <section className="relative min-h-[92vh] overflow-hidden flex items-end">
           <img
-            src={heroImg}
-            alt="Peninsula Equine Field Notes — timber and steel pavilion frame at dusk"
-            width={1792}
-            height={1024}
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ filter: "brightness(0.7) contrast(1.15) saturate(0.78)" }}
+            src={sunsetPuddles.url}
+            alt="Covered Competition Arena in progress — structural steel at sunset with wet ground reflections and machinery"
+            className="absolute inset-0 h-full w-full object-cover object-[60%_50%] sm:object-[55%_52%] lg:object-center"
+            style={{ filter: "brightness(0.72) contrast(1.12) saturate(0.8)" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/25 to-black/85" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_45%,transparent,rgba(0,0,0,0.6))]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/55 to-background/18" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/10" />
 
-          <div className="absolute bottom-0 left-0 right-0 px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2.5rem,1.5rem+5vw,6rem)] z-10">
-            <div className="max-w-6xl mx-auto grid grid-cols-12 gap-6 items-end">
-              <div className="col-span-12 lg:col-span-9 space-y-[clamp(1.25rem,1rem+1vw,2rem)]">
-                <RevealOnScroll direction="up" duration={900} delay={200}>
-                  <p className="font-mono uppercase text-[hsl(38_45%_70%)]/70 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">
-                    Field Notes — Live From the Ground
-                  </p>
-                </RevealOnScroll>
-                <RevealOnScroll direction="up" duration={1100} delay={400}>
-                  <h1 className="font-serif text-white tracking-[-0.025em] leading-[0.95] text-[clamp(2.25rem,1.2rem+5vw,5rem)]">
-                    From Dirt to Dynasty<br className="hidden sm:block" /> — Current Projects.
-                  </h1>
-                </RevealOnScroll>
-                <RevealOnScroll direction="up" duration={1100} delay={700}>
-                  <p className="font-serif italic text-white/65 max-w-xl leading-[1.55] text-[clamp(0.875rem,0.78rem+0.4vw,1.0625rem)]">
-                    Follow current Peninsula Equine builds as they move from raw
-                    site work to finished equine environments — through progress
-                    imagery, material details, video updates and behind-the-scenes
-                    craftsmanship.
-                  </p>
-                </RevealOnScroll>
-              </div>
-              <div className="hidden lg:block col-span-3">
-                <RevealOnScroll direction="none" duration={1400} delay={900}>
-                  <div className="w-12 h-px bg-[hsl(38_45%_70%)]/60 mb-3" />
-                  <p className="font-mono uppercase text-white/45 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">
-                    Updated Regularly.
-                  </p>
-                </RevealOnScroll>
-              </div>
+          <div className="relative z-10 section-container w-full pb-[clamp(3.5rem,3rem+5vw,7rem)] pt-28 sm:pt-36">
+            <div className="max-w-3xl space-y-6 sm:space-y-8">
+              <RevealOnScroll direction="up" duration={900}>
+                <p className="font-mono uppercase text-accent/60 text-[10px] tracking-[0.48em]">
+                  Field Notes
+                </p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" duration={1100} delay={140}>
+                <h1 className="font-serif text-foreground leading-[0.92] tracking-tight text-[clamp(2.3rem,1.4rem+4.6vw,5.4rem)] max-w-4xl">
+                  Real progress. Real conditions. Real builds.
+                </h1>
+              </RevealOnScroll>
+              <RevealLine width="w-10" delay={260} />
+              <RevealOnScroll direction="up" duration={1100} delay={320}>
+                <p className="max-w-2xl font-sans font-light text-foreground/62 leading-[1.85] text-[14px] sm:text-[15px]">
+                  A look behind the scenes at current Peninsula Equine projects across the Mornington Peninsula and beyond — from the first cut to the final finish.
+                </p>
+              </RevealOnScroll>
             </div>
           </div>
         </section>
 
-        {/* ─── FILTERS ──────────────────────────────────────── */}
-        <section className="relative bg-card border-y border-foreground/[0.06]">
-          <div className="max-w-6xl mx-auto px-[clamp(1.5rem,0.75rem+3vw,4rem)] py-[clamp(1.5rem,1rem+1.5vw,2.5rem)]">
-            <div className="flex flex-wrap items-center gap-x-[clamp(1.25rem,0.75rem+1.5vw,2.5rem)] gap-y-3">
-              <p className="font-mono uppercase text-foreground/35 text-[10px] tracking-[0.45em] mr-2">
-                Filter
-              </p>
-              {filters.map((f) => {
-                const active = activeFilter === f;
-                return (
-                  <button
-                    key={f}
-                    type="button"
-                    onClick={() => setActiveFilter(f)}
-                    className={`group inline-flex items-center gap-2 font-mono uppercase text-[10px] tracking-[0.32em] transition-colors duration-500 ${
-                      active
-                        ? "text-[hsl(38_45%_65%)]"
-                        : "text-foreground/45 hover:text-foreground/80"
-                    }`}
-                  >
-                    <span
-                      aria-hidden
-                      className={`h-px transition-all duration-500 ${
-                        active
-                          ? "w-6 bg-[hsl(38_45%_65%)]"
-                          : "w-3 bg-foreground/25 group-hover:w-5"
-                      }`}
-                    />
-                    {f}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </section>
+        <section className="relative border-t border-accent/10 py-[clamp(4.5rem,3rem+5vw,7rem)]">
+          <div className="section-container max-w-[1480px] mx-auto">
+            <div className="grid grid-cols-12 gap-8 lg:gap-12 items-start">
+              <div className="col-span-12 lg:col-span-4 space-y-5">
+                <RevealOnScroll direction="up" duration={900}>
+                  <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
+                    Current Project
+                  </p>
+                </RevealOnScroll>
+                <RevealOnScroll direction="up" duration={1000} delay={120}>
+                  <h2 className="font-serif text-foreground/92 leading-[1.02] tracking-tight text-[clamp(1.8rem,1.2rem+2vw,3rem)]">
+                    Covered Competition Arena
+                  </h2>
+                </RevealOnScroll>
+                <RevealLine width="w-8" delay={220} />
+                <RevealOnScroll direction="up" duration={1000} delay={300}>
+                  <div className="space-y-3 text-[14px] sm:text-[15px] font-light leading-[1.9] text-foreground/52">
+                    <p><span className="text-accent/60">Status</span> — In Progress</p>
+                    <p><span className="text-accent/60">Location</span> — Mornington Peninsula, VIC</p>
+                    <p>
+                      Structural steel is up, earthworks are underway, and the site is moving through the hard, practical stages that shape the finished arena. Every layer matters — from access and base preparation to structure, drainage and final surface performance.
+                    </p>
+                  </div>
+                </RevealOnScroll>
+              </div>
 
-        {/* ─── PROJECT CARDS ────────────────────────────────── */}
-        <section className="relative py-[clamp(5rem,3rem+6vw,9rem)] bg-background">
-          <div className="max-w-7xl mx-auto px-[clamp(1.5rem,0.75rem+3vw,4rem)]">
-            {visible.length === 0 ? (
-              <p className="font-serif italic text-foreground/50 text-center py-20">
-                No projects in this category right now. Check back soon.
-              </p>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-[clamp(2rem,1.5rem+2vw,3.5rem)]">
-                {visible.map((p, i) => {
-                  const isOpen = openProject === p.slug;
-                  return (
-                    <RevealOnScroll
-                      key={p.slug}
-                      direction="up"
-                      duration={1000}
-                      delay={i * 100}
-                    >
-                      <article className="group flex flex-col h-full">
-                        <div className="relative aspect-[4/3] overflow-hidden bg-card">
-                          <img
-                            src={p.image}
-                            alt={p.alt}
-                            loading="lazy"
-                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2200ms] ease-[cubic-bezier(0.45,0,0.15,1)] group-hover:scale-[1.04]"
-                            style={{
-                              filter:
-                                "brightness(0.82) contrast(1.12) saturate(0.78)",
-                            }}
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
-                          <span
-                            className={`absolute top-4 left-4 inline-flex items-center gap-2 font-mono uppercase text-[10px] tracking-[0.32em] px-3 py-1.5 backdrop-blur-sm ${
-                              p.status === "In Progress"
-                                ? "bg-[hsl(38_45%_60%)]/15 text-[hsl(38_55%_80%)]"
-                                : "bg-white/10 text-white/80"
-                            }`}
-                          >
-                            <span
-                              aria-hidden
-                              className={`w-1.5 h-1.5 rounded-full ${
-                                p.status === "In Progress"
-                                  ? "bg-[hsl(38_55%_70%)] animate-pulse"
-                                  : "bg-white/70"
-                              }`}
-                            />
-                            {p.status}
-                          </span>
-                        </div>
-
-                        <div className="pt-7 space-y-4 flex-1 flex flex-col">
-                          <p className="font-mono uppercase text-foreground/35 text-[10px] tracking-[0.4em]">
-                            {p.location}
-                          </p>
-                          <h2 className="font-serif text-foreground/90 leading-[1.1] tracking-[-0.02em] text-[clamp(1.4rem,1rem+1.4vw,1.9rem)]">
-                            {p.name}
-                          </h2>
-                          <div className="flex flex-wrap gap-x-4 gap-y-1">
-                            {p.categories.map((c) => (
-                              <span
-                                key={c}
-                                className="font-mono uppercase text-[hsl(38_35%_55%)]/70 text-[10px] tracking-[0.3em]"
-                              >
-                                {c}
-                              </span>
-                            ))}
+              <div className="col-span-12 lg:col-span-8">
+                <RevealOnScroll direction="up" duration={1200}>
+                  <Link to="/field-notes/covered-competition-arena" className="group block">
+                    <article className="relative overflow-hidden">
+                      <div className="relative aspect-[4/5] sm:aspect-[16/10] xl:aspect-[16/8] overflow-hidden">
+                        <img
+                          src={dozerStormSky.url}
+                          alt="Covered Competition Arena progress — dozer in muddy conditions with structural steel under a stormy sky"
+                          className="absolute inset-0 h-full w-full object-cover object-[28%_50%] sm:object-center transition-transform duration-[1600ms] ease-out group-hover:scale-[1.03]"
+                          style={{ filter: "brightness(0.78) contrast(1.12) saturate(0.82)" }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/15 to-transparent" />
+                        <div className="absolute left-0 right-0 bottom-0 p-6 sm:p-8 lg:p-10">
+                          <div className="max-w-xl space-y-4">
+                            <p className="font-mono uppercase text-accent/60 text-[10px] tracking-[0.42em]">
+                              Current Project
+                            </p>
+                            <h3 className="font-serif text-foreground/94 leading-[1.02] tracking-tight text-[clamp(1.6rem,1.1rem+1.8vw,2.5rem)]">
+                              Covered Competition Arena
+                            </h3>
+                            <p className="font-sans font-light text-foreground/62 leading-[1.8] text-[14px] sm:text-[15px] max-w-lg">
+                              Structural steel, earthworks and base preparation underway.
+                            </p>
+                            <span className="inline-flex items-center gap-3 font-mono uppercase text-foreground/74 group-hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em] pt-1">
+                              <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
+                              View Field Note
+                            </span>
                           </div>
-                          <RevealLine width="w-6" />
-                          <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px] flex-1">
-                            {p.latest}
-                          </p>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setOpenProject(isOpen ? null : p.slug)
-                            }
-                            className="group/cta inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-[hsl(38_55%_70%)] transition-colors duration-500 text-[10px] tracking-[0.4em] pt-2 self-start"
-                            aria-expanded={isOpen}
-                            aria-controls={`detail-${p.slug}`}
-                          >
-                            <span className="w-6 h-px bg-[hsl(38_45%_60%)]/60 transition-all duration-700 group-hover/cta:w-12 group-hover/cta:bg-[hsl(38_55%_70%)]" />
-                            {isOpen ? "Hide Progress" : "View Progress"}
-                          </button>
                         </div>
-                      </article>
-                    </RevealOnScroll>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* ─── EXPANDED DETAIL: Main Ridge Pavilion ──────────── */}
-        {openProject === "main-ridge-pavilion" && (
-          <section
-            id="detail-main-ridge-pavilion"
-            className="relative bg-card border-t border-foreground/[0.06]"
-          >
-            <div className="max-w-7xl mx-auto px-[clamp(1.5rem,0.75rem+3vw,4rem)] py-[clamp(5rem,3rem+7vw,10rem)] space-y-[clamp(4rem,2.5rem+5vw,7rem)]">
-              {/* Snapshot */}
-              <div className="grid grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4rem)] items-end">
-                <div className="col-span-12 lg:col-span-7 space-y-5">
-                  <RevealOnScroll direction="up" duration={900}>
-                    <p className="font-mono uppercase text-[hsl(38_45%_60%)]/70 text-[10px] tracking-[0.45em]">
-                      Project Journal — Main Ridge Pavilion
-                    </p>
-                  </RevealOnScroll>
-                  <RevealOnScroll direction="up" duration={1000} delay={150}>
-                    <h2 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.02em] text-[clamp(1.85rem,1.2rem+2.6vw,3rem)]">
-                      A pavilion built around fire, timber and the long table.
-                    </h2>
-                  </RevealOnScroll>
-                  <RevealLine width="w-8" delay={300} />
-                  <RevealOnScroll direction="up" duration={1000} delay={400}>
-                    <p className="font-sans font-light text-foreground/55 leading-[1.9] text-[14px] max-w-xl">
-                      An open-air pavilion paired with a brick parrilla, sited
-                      between the stable and the arena. Built from solid timber,
-                      blackened steel and corrugated cladding — a place for long
-                      evenings between work and rest.
-                    </p>
-                  </RevealOnScroll>
-                </div>
-                <div className="col-span-12 lg:col-span-5">
-                  <dl className="grid grid-cols-2 gap-px bg-foreground/[0.06]">
-                    {[
-                      ["Location", "Main Ridge"],
-                      ["Category", "Pavilion / Parrilla"],
-                      ["Status", "In Progress"],
-                      ["Reveal", "2026"],
-                    ].map(([k, v]) => (
-                      <div key={k} className="bg-card p-5">
-                        <dt className="font-mono uppercase text-foreground/35 text-[10px] tracking-[0.4em] mb-2">
-                          {k}
-                        </dt>
-                        <dd className="font-serif text-foreground/85 text-[clamp(0.95rem,0.85rem+0.3vw,1.1rem)] tracking-[-0.01em]">
-                          {v}
-                        </dd>
                       </div>
-                    ))}
-                  </dl>
-                </div>
-              </div>
-
-              {/* Timeline chapters */}
-              <div className="space-y-[clamp(3rem,2rem+3vw,5rem)]">
-                <div className="space-y-3 max-w-xl">
-                  <p className="font-mono uppercase text-foreground/35 text-[10px] tracking-[0.45em]">
-                    Progress Timeline
-                  </p>
-                  <h3 className="font-serif text-foreground/85 leading-[1.1] tracking-[-0.02em] text-[clamp(1.5rem,1rem+1.8vw,2.2rem)]">
-                    Five chapters, one pavilion.
-                  </h3>
-                </div>
-
-                <ol className="relative space-y-[clamp(2.5rem,1.5rem+3vw,4rem)]">
-                  {mainRidgeTimeline.map((c, i) => (
-                    <RevealOnScroll
-                      key={c.n}
-                      direction="up"
-                      duration={1000}
-                      delay={i * 80}
-                    >
-                      <li className="grid grid-cols-12 gap-[clamp(1.5rem,1rem+1.5vw,3rem)] items-start">
-                        <div className="col-span-12 md:col-span-2 md:sticky md:top-32 space-y-2">
-                          <p className="font-mono uppercase text-[hsl(38_45%_60%)]/70 text-[10px] tracking-[0.45em]">
-                            Chapter {c.n}
-                          </p>
-                          <p className="font-serif text-foreground/40 text-[clamp(2rem,1.5rem+2vw,3rem)] leading-none tracking-[-0.03em]">
-                            0{i + 1}
-                          </p>
-                        </div>
-                        <div className="col-span-12 md:col-span-6">
-                          <RevealImage delay={120}>
-                            <div className="relative aspect-[4/3] overflow-hidden">
-                              <img
-                                src={c.image}
-                                alt={c.alt}
-                                loading="lazy"
-                                className="absolute inset-0 w-full h-full object-cover"
-                                style={{
-                                  filter:
-                                    "brightness(0.82) contrast(1.12) saturate(0.78)",
-                                }}
-                              />
-                            </div>
-                          </RevealImage>
-                        </div>
-                        <div className="col-span-12 md:col-span-4 space-y-4 md:pt-2">
-                          <h4 className="font-serif text-foreground/90 leading-[1.1] tracking-[-0.02em] text-[clamp(1.25rem,0.95rem+1vw,1.65rem)]">
-                            {c.title}
-                          </h4>
-                          <RevealLine width="w-6" />
-                          <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[13.5px]">
-                            {c.body}
-                          </p>
-                        </div>
-                      </li>
-                    </RevealOnScroll>
-                  ))}
-                </ol>
-              </div>
-
-              {/* Detail gallery */}
-              <div className="space-y-[clamp(2rem,1.25rem+2vw,3.5rem)]">
-                <div className="space-y-3 max-w-xl">
-                  <p className="font-mono uppercase text-foreground/35 text-[10px] tracking-[0.45em]">
-                    Detail Gallery
-                  </p>
-                  <h3 className="font-serif text-foreground/85 leading-[1.1] tracking-[-0.02em] text-[clamp(1.5rem,1rem+1.8vw,2.2rem)]">
-                    Material, joint, finish.
-                  </h3>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-foreground/[0.06]">
-                  {mainRidgeGallery.map((g) => (
-                    <div
-                      key={g.src}
-                      className="relative aspect-square overflow-hidden bg-card group"
-                    >
-                      <img
-                        src={g.src}
-                        alt={g.alt}
-                        loading="lazy"
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2200ms] ease-[cubic-bezier(0.45,0,0.15,1)] group-hover:scale-[1.05]"
-                        style={{
-                          filter:
-                            "brightness(0.82) contrast(1.12) saturate(0.78)",
-                        }}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Final reveal placeholder */}
-              <div className="relative overflow-hidden aspect-[21/9]">
-                <img
-                  src={mrInterior}
-                  alt="Main Ridge Pavilion — final reveal coming 2026"
-                  loading="lazy"
-                  className="absolute inset-0 w-full h-full object-cover"
-                  style={{
-                    filter:
-                      "brightness(0.55) contrast(1.15) saturate(0.75) blur(2px)",
-                  }}
-                />
-                <div className="absolute inset-0 bg-black/40" />
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 space-y-4">
-                  <p className="font-mono uppercase text-[hsl(38_55%_75%)]/80 text-[10px] tracking-[0.5em]">
-                    Final Reveal — 2026
-                  </p>
-                  <p className="font-serif italic text-white/85 leading-[1.3] tracking-[-0.015em] text-[clamp(1.25rem,0.9rem+1.4vw,1.85rem)] max-w-xl">
-                    Photography to follow on commissioning.
-                  </p>
-                </div>
+                    </article>
+                  </Link>
+                </RevealOnScroll>
               </div>
             </div>
-          </section>
-        )}
+          </div>
+        </section>
 
-        {/* ─── CLOSING ──────────────────────────────────────── */}
-        <section className="relative py-[clamp(6rem,4rem+8vw,11rem)] bg-background">
-          <div className="max-w-3xl mx-auto px-[clamp(1.5rem,0.75rem+3vw,4rem)] text-center space-y-[clamp(2rem,1.25rem+2.5vw,3rem)]">
-            <RevealLine className="mx-auto" width="w-10" />
+        <section className="relative border-t border-accent/10 py-[clamp(5rem,3rem+6vw,9rem)]">
+          <div className="section-container max-w-[1480px] mx-auto">
             <RevealOnScroll direction="up" duration={900}>
-              <p className="font-mono uppercase text-[hsl(38_45%_60%)]/70 text-[10px] tracking-[0.5em]">
-                Live From the Ground
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" duration={1000} delay={150}>
-              <p className="font-serif italic text-foreground/75 leading-[1.4] tracking-[-0.01em] text-[clamp(1.25rem,0.9rem+1.4vw,1.85rem)]">
-                New entries posted as the work progresses. Return often.
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={300}>
-              <div className="flex flex-col sm:flex-row gap-[clamp(1.75rem,1rem+2vw,3.5rem)] justify-center items-center pt-2">
-                <Link
-                  to="/contact"
-                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.4em]"
-                >
-                  <span className="w-6 h-px bg-[hsl(38_45%_60%)]/60 transition-all duration-700 group-hover:w-12 group-hover:bg-[hsl(38_55%_70%)]" />
-                  Request Assessment
-                </Link>
-                <Link
-                  to="/gallery"
-                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/40 hover:text-foreground/80 transition-colors duration-500 text-[10px] tracking-[0.4em]"
-                >
-                  Explore Selected Works
-                  <span className="w-6 h-px bg-foreground/20 transition-all duration-700 group-hover:w-12 group-hover:bg-foreground/60" />
-                </Link>
+              <div className="flex items-baseline gap-5 mb-[clamp(2rem,1.2rem+2vw,3rem)]">
+                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">02</span>
+                <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
+                <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Build Journal</span>
               </div>
+            </RevealOnScroll>
+
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+              <RevealOnScroll direction="up" duration={1100} className="md:col-span-8">
+                <div className="relative overflow-hidden aspect-[16/10] lg:aspect-[21/10]">
+                  <img
+                    src={truckAccessTrack.url}
+                    alt="Truck arriving on wet access track beside the covered competition arena steel frame"
+                    className="absolute inset-0 h-full w-full object-cover object-[44%_50%]"
+                    style={{ filter: "brightness(0.8) contrast(1.08) saturate(0.78)" }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/45 to-transparent" />
+                </div>
+              </RevealOnScroll>
+
+              <RevealOnScroll direction="up" duration={1100} delay={120} className="md:col-span-4">
+                <div className="relative overflow-hidden aspect-[4/5] md:h-full md:aspect-auto min-h-[320px]">
+                  <img
+                    src={drainageDetail.url}
+                    alt="Drainage and footing detail beside the arena slab edge in wet conditions"
+                    className="absolute inset-0 h-full w-full object-cover object-[52%_50%]"
+                    style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.78)" }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/35 to-transparent" />
+                </div>
+              </RevealOnScroll>
+
+              <RevealOnScroll direction="up" duration={1100} delay={180} className="md:col-span-5">
+                <div className="relative overflow-hidden aspect-[16/11]">
+                  <img
+                    src={nightWorkLights.url}
+                    alt="Covered competition arena construction site under storm clouds with work lights at night"
+                    className="absolute inset-0 h-full w-full object-cover object-[55%_50%]"
+                    style={{ filter: "brightness(0.8) contrast(1.12) saturate(0.78)" }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
+                </div>
+              </RevealOnScroll>
+
+              <RevealOnScroll direction="up" duration={1100} delay={260} className="md:col-span-7">
+                <div className="relative overflow-hidden aspect-[16/11]">
+                  <img
+                    src={sunsetPuddles.url}
+                    alt="Wide view of the steel structure at sunset reflected in wet ground during arena construction"
+                    className="absolute inset-0 h-full w-full object-cover object-[58%_50%]"
+                    style={{ filter: "brightness(0.76) contrast(1.12) saturate(0.8)" }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
+                </div>
+              </RevealOnScroll>
+            </div>
+          </div>
+        </section>
+
+        <section className="relative border-t border-accent/10 py-[clamp(5rem,3rem+6vw,9rem)]">
+          <div className="section-container max-w-6xl mx-auto">
+            <div className="grid grid-cols-12 gap-8 lg:gap-12">
+              <div className="col-span-12 lg:col-span-4 space-y-5">
+                <RevealOnScroll direction="up" duration={900}>
+                  <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
+                    Project Timeline
+                  </p>
+                </RevealOnScroll>
+                <RevealOnScroll direction="up" duration={1000} delay={120}>
+                  <h2 className="font-serif text-foreground/92 leading-[1.02] tracking-tight text-[clamp(1.8rem,1.15rem+2vw,2.8rem)]">
+                    Covered Competition Arena
+                  </h2>
+                </RevealOnScroll>
+                <RevealOnScroll direction="up" duration={1000} delay={220}>
+                  <p className="font-sans font-light text-foreground/54 leading-[1.85] text-[14px] sm:text-[15px] max-w-sm">
+                    A simple read of the work as it stands now — from the first cuts through to the layers that will eventually carry the finished surface.
+                  </p>
+                </RevealOnScroll>
+              </div>
+
+              <div className="col-span-12 lg:col-span-8 divide-y divide-accent/10 border-t border-accent/10">
+                {timeline.map((item, index) => (
+                  <RevealOnScroll key={item.step} direction="up" duration={950} delay={index * 90}>
+                    <div className="grid grid-cols-12 gap-4 sm:gap-6 py-6 sm:py-8 items-start">
+                      <div className="col-span-12 sm:col-span-2 font-mono text-accent/55 text-[10px] tracking-[0.42em] uppercase">
+                        {item.step}
+                      </div>
+                      <div className="col-span-12 sm:col-span-10">
+                        <h3 className="font-serif text-foreground/90 leading-[1.05] tracking-tight text-[1.35rem] sm:text-[1.55rem]">
+                          {item.title}
+                        </h3>
+                        <p className="mt-3 font-sans font-light text-foreground/56 leading-[1.85] text-[14px] sm:text-[15px] max-w-2xl">
+                          {item.body}
+                        </p>
+                      </div>
+                    </div>
+                  </RevealOnScroll>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="relative border-t border-accent/10 py-[clamp(5rem,3rem+6vw,9rem)]">
+          <div className="section-container max-w-5xl mx-auto text-center space-y-6 sm:space-y-8">
+            <RevealOnScroll direction="up" duration={900}>
+              <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
+                Current Update
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" duration={1000} delay={120}>
+              <h2 className="font-serif text-foreground/92 leading-[1.02] tracking-tight text-[clamp(1.9rem,1.2rem+2.5vw,3.2rem)]">
+                The middle of the work matters.
+              </h2>
+            </RevealOnScroll>
+            <RevealOnScroll direction="up" duration={1000} delay={240}>
+              <p className="font-sans font-light text-foreground/56 leading-[1.85] text-[14px] sm:text-[15px] max-w-2xl mx-auto">
+                Steel rising, red clay underfoot, drainage detail, machinery movement and weather pressure — this is where the finished arena is really made.
+              </p>
+            </RevealOnScroll>
+            <RevealOnScroll direction="none" duration={1100} delay={320}>
+              <Link
+                to="/field-notes/covered-competition-arena"
+                className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/72 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
+              >
+                <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
+                View Field Note
+              </Link>
             </RevealOnScroll>
           </div>
         </section>
-      </article>
+      </main>
     </Layout>
   );
 }
