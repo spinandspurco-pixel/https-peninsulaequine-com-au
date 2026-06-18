@@ -122,24 +122,24 @@ const mainRidgeTimeline = [
     title: "Frame & Form",
     body:
       "Foundations poured, rebar tied, posts plumbed. The pavilion's footprint becomes architecture.",
-    image: mrFrame,
-    alt: "Main Ridge Pavilion — timber frame and steel rising",
+    image: mrPendantBeams,
+    alt: "Main Ridge Pavilion — recycled hardwood posts, beams and pendant lighting at dusk",
   },
   {
     n: "III",
     title: "Fire & Iron",
     body:
-      "Brick firebox laid by hand, corrugated steel skin lifted in. Heat, mass and material take their place.",
-    image: mrBrick,
-    alt: "Main Ridge Pavilion — brick firebox under construction",
+      "Brick firebox laid by hand, hand-forged parrilla grill suspended on chain and wheel. Heat, mass and iron take their place.",
+    image: mrParrillaGrill,
+    alt: "Main Ridge Pavilion — hand-forged parrilla grill over glowing coals in brick firebox",
   },
   {
     n: "IV",
     title: "Custom Table & Finish",
     body:
-      "Solid timber table fabricated on site. Joinery, bronze hardware and lighting tuned for long evenings.",
-    image: mrTimber2,
-    alt: "Main Ridge Pavilion — custom timber table and joinery",
+      "Solid recycled timber table fabricated on site, set on blackened steel legs. Joinery, bronze hardware and lighting tuned for long evenings.",
+    image: mrCustomTable,
+    alt: "Main Ridge Pavilion — custom recycled-timber table and bench on steel legs at golden hour",
   },
   {
     n: "V",
