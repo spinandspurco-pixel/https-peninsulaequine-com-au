@@ -13,6 +13,7 @@ import mainRidgeSitePrep from "@/assets/main-ridge-site-prep.jpg";
 import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
 import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
 
+import goldenHourPavilion from "@/assets/golden-hour-pavilion.png.asset.json";
 import serviceArenas from "@/assets/homepage-services/arenas.png.asset.json";
 import serviceGroundworks from "@/assets/homepage-services/groundworks.png.asset.json";
 
