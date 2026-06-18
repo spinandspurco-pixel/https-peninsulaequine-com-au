@@ -80,11 +80,13 @@ jobs:
         if: matrix.runtime == 'node'
         run: |
           echo "Node cache hit: ${{ steps.node-cache.outputs.cache-hit }}"
-          echo "Node cache key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}"
+          echo "Node cache primary key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}"
+          echo "Node cache matched key: ${{ steps.node-cache.outputs.cache-matched-key }}"
           echo "Node cache restore-keys: ${{ runner.os }}-npm-"
           echo "## Node Cache Status" >> $GITHUB_STEP_SUMMARY
           echo "- Cache hit: \`${{ steps.node-cache.outputs.cache-hit }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- Cache key: \`${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Primary key: \`${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Matched key: \`${{ steps.node-cache.outputs.cache-matched-key }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- Restore key fallback: \`${{ runner.os }}-npm-\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Install dependencies (Bun)
