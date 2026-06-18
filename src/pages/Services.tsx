@@ -256,7 +256,7 @@ export default function Services() {
                       <Button
                         variant="gold"
                         size="lg"
-                        onClick={useIntake().open}
+                        onClick={open}
                         className="btn-hover-lift"
                       >
                         Request a Consult
