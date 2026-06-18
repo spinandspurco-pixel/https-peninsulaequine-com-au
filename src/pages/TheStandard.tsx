@@ -148,6 +148,8 @@ export default function TheStandard() {
           </div>
         </div>
       </section>
+      </article>
     </Layout>
   );
+
 }
