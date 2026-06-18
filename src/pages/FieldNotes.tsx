@@ -145,51 +145,22 @@ export default function FieldNotes() {
           </div>
         </section>
 
-        {/* Real Conditions — full-bleed cinematic divider */}
         {/*
-          CROP-SAFETY CONTRACT — DO NOT MODIFY WITHOUT REVIEW
-          -----------------------------------------------------
-          This image contains two critical edge-dominant focal points:
-            • Muddy work boots in red clay (bottom-left)
-            • Rising steel-frame arena structure (right)
-          Because both sit close to opposing edges, ANY change to the
-          container ratio, object-fit or object-position risks cropping
-          one or both on mobile or narrow viewports.
-
-          Locked rules (violating any of them re-introduces cropping):
-            1. Container aspectRatio is HARD-CODED to "3 / 2" — the
-               image's exact native ratio — via inline style. Do NOT
-               switch to responsive Tailwind aspect utilities.
-            2. object-contain (not object-cover) is the authoritative
-               fail-safe. If a future edit mutates the container, the
-               full frame still renders letterboxed instead of clipped.
-            3. Intrinsic width={1536} height={1024} prevents the browser
-               from reserving a wrong-ratio box before decode (CLS),
-               which would temporarily crop edges during load.
-            4. object-center keeps the frame perfectly centred; no
-               directional object-position shifts the crop window.
-
-          Before changing anything above, verify the live preview at
-          320 px, 384 px, 768 px and 1440 px breakpoints.
-          -----------------------------------------------------
+          Real Conditions — full-bleed cinematic divider.
+          Crop-safety contract is enforced in code by <CropSafeImage/>:
+          aspectRatio, object-contain, object-center and intrinsic
+          width/height cannot be overridden from this call site.
+          See src/components/media/CropSafeImage.tsx.
         */}
         <section className="relative w-full overflow-hidden border-t border-accent/10">
-          <div
-            className="relative w-full bg-background"
-            style={{ aspectRatio: "3 / 2" }}
+          <CropSafeImage
+            responsive={conditionsResp}
+            alt={conditionsAlt}
+            aspectRatio="3 / 2"
+            width={1536}
+            height={1024}
+            filter="brightness(0.86) contrast(1.1) saturate(0.85)"
           >
-            <img
-              src={conditionsResp.src}
-              srcSet={conditionsResp.srcSet}
-              sizes={conditionsResp.sizes}
-              alt={conditionsAlt}
-              width={1536}
-              height={1024}
-              loading="lazy"
-              decoding="async"
-              className="absolute inset-0 h-full w-full object-contain object-center"
-              style={{ filter: "brightness(0.86) contrast(1.1) saturate(0.85)" }}
-            />
             {/* subtle dark gradient for text legibility — keeps mud + steel readable */}
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-background/15 to-transparent" />
             <div className="pointer-events-none absolute inset-y-0 left-0 w-1/2 sm:w-2/5 bg-gradient-to-r from-background/70 to-transparent" />
@@ -217,7 +188,7 @@ export default function FieldNotes() {
                 </div>
               </div>
             </div>
-          </div>
+          </CropSafeImage>
         </section>
 
 
