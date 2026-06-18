@@ -194,7 +194,7 @@ export default function Projects() {
               <RevealOnScroll direction="up" duration={1200}>
                 <div className="relative aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                   <img
-                    src={currentArenaHero.url}
+                    src={currentArenaHero}
                     alt="Covered Arena & Stables Build in progress — steel frame, roofing works and red clay site conditions"
                     loading="lazy"
                     decoding="async"
