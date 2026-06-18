@@ -235,7 +235,7 @@ export default function RecoveryStation() {
             alt="LumenArc coming soon teaser visual — premium equine recovery canopy concept with blueprint-led detailing"
             width={1536}
             height={1024}
-            className="absolute inset-0 h-full w-full object-cover object-center"
+            className="absolute inset-0 h-full w-full object-contain md:object-cover object-center"
             style={{ filter: "brightness(0.82) contrast(1.06) saturate(0.8)" }}
             loading="eager"
             decoding="async"
