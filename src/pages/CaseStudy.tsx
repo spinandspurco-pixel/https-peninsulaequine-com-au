@@ -20,6 +20,7 @@ export default function CaseStudy() {
 
   return (
     <Layout>
+      <div className="type-architectural">
       {/* Act 1 — Arrival */}
       <CaseStudyArrival
         title={study.title}
@@ -60,6 +61,7 @@ export default function CaseStudy() {
 
       {/* Act 5 — Close */}
       <CaseStudyClose closingLine={study.closingLine} />
+      </div>
     </Layout>
   );
 }

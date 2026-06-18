@@ -443,6 +443,7 @@ export default function Testimonials() {
 
   return (
     <Layout>
+      <div className="type-architectural">
       <PageHeader
         title="Testimonials"
         description="Don't just take our word for it — hear from clients who've trusted Peninsula Equine with their facilities."
@@ -706,6 +707,7 @@ export default function Testimonials() {
         primaryButtonLink="/contact"
         showPhoneButton={true}
       />
+      </div>
     </Layout>
   );
 }

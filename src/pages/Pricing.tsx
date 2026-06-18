@@ -939,6 +939,7 @@ export default function Pricing() {
 
   return (
     <Layout>
+      <div className="type-architectural">
       <PricingSchemaMarkup />
       <SalesHero />
       <SocialProofStrip />
@@ -956,6 +957,7 @@ export default function Pricing() {
         ctaLabel="Book a Lesson"
         ctaHref="/book-lesson"
       />
+      </div>
     </Layout>
   );
 }

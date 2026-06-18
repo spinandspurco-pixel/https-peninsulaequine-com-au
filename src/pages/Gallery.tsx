@@ -191,6 +191,7 @@ export default function Projects() {
 
   return (
     <Layout>
+      <div className="type-architectural">
       {/* ═══ HERO ═══════════════════════════════════════ */}
       <section className="relative pt-48 sm:pt-56 pb-16 sm:pb-20 overflow-hidden">
         <div className="absolute inset-0 engineering-grid opacity-[0.03]" aria-hidden="true" />
@@ -262,6 +263,7 @@ export default function Projects() {
           </Link>
         </div>
       </section>
+      </div>
     </Layout>
   );
 }

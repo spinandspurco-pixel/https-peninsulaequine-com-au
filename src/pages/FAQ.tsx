@@ -111,6 +111,7 @@ export default function FAQ() {
 
   return (
     <Layout>
+      <div className="type-architectural">
       <PageHeader
         title="Frequently Asked Questions"
         description="Got questions? We've got answers. If you don't find what you're looking for, don't hesitate to reach out."
@@ -258,6 +259,7 @@ export default function FAQ() {
         primaryButtonLink="/contact"
         showPhoneButton={true}
       />
+      </div>
     </Layout>
   );
 }
