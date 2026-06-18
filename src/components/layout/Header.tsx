@@ -12,20 +12,20 @@ type NavItem = {
 
 const navigation: NavItem[] = [
   { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
   {
     name: "Services",
     href: "/services",
     children: [
       { name: "Arenas", href: "/arenas" },
-      { name: "Stables", href: "/stables" },
-      { name: "Equine Estates", href: "/equine-estates" },
-      { name: "Infrastructure & Maintenance", href: "/infrastructure" },
+      { name: "Stables & Barns", href: "/stables" },
+      { name: "Equine Infrastructure", href: "/infrastructure" },
+      { name: "Groundworks", href: "/services" },
+      { name: "Custom Rural Builds", href: "/services" },
+      { name: "Drainage & Surfacing", href: "/services" },
     ],
   },
   { name: "LumenArc", href: "/lumenarc" },
   { name: "Selected Works", href: "/gallery" },
-  { name: "Field Notes", href: "/field-notes" },
   { name: "Contact", href: "/contact" },
 ];
 
