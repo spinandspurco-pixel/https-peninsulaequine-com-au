@@ -267,6 +267,8 @@ if (only && selectedRoutes.length === 0) {
 
 for (const r of selectedRoutes) check(r);
 
+writeJsonReport();
+
 /**
  * Escape a string for a GitHub Actions workflow command parameter
  * (title=, etc.). Newlines and commas would otherwise terminate the
