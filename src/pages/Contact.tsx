@@ -461,22 +461,29 @@ export default function Contact() {
                         Project Type
                       </h3>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                      {PROJECT_SCOPES.map((scope) => (
-                        <button
-                          key={scope.id}
-                          type="button"
-                          onClick={() => toggleScope(scope.id)}
-                          className={cn(
-                            "px-4 py-3 rounded-md text-sm font-medium border transition-all text-left",
-                            form.scopes.includes(scope.id)
-                              ? "bg-accent/10 border-accent text-foreground ring-1 ring-accent/30"
-                              : "bg-background border-border text-muted-foreground hover:border-accent/40 hover:text-foreground"
-                          )}
-                        >
-                          {scope.label}
-                        </button>
-                      ))}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-0">
+                      {PROJECT_SCOPES.map((scope) => {
+                        const selected = form.scopes.includes(scope.id);
+                        return (
+                          <button
+                            key={scope.id}
+                            type="button"
+                            onClick={() => toggleScope(scope.id)}
+                            className={cn(
+                              "group flex items-center gap-4 py-4 text-left border-b border-border/15 transition-colors duration-500",
+                              selected ? "text-foreground" : "text-muted-foreground/70 hover:text-foreground"
+                            )}
+                          >
+                            <span
+                              className={cn(
+                                "h-px transition-all duration-700",
+                                selected ? "w-10 bg-accent" : "w-5 bg-accent/30 group-hover:w-8 group-hover:bg-accent/60"
+                              )}
+                            />
+                            <span className="text-[13px] tracking-[0.02em]">{scope.label}</span>
+                          </button>
+                        );
+                      })}
                     </div>
                     {errors.scopes && (
                       <p className="text-destructive text-xs">
