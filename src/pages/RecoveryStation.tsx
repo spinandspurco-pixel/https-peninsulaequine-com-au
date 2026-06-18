@@ -110,15 +110,38 @@ function LumenArcChapterSection({
       ? "lg:-mr-[5.5rem] xl:-mr-[8rem]"
       : "lg:-ml-[5.5rem] xl:-ml-[8rem]";
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    const keys = ["ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft", "Home", "End"];
+    if (!keys.includes(e.key)) return;
+    const sections = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-la-chapter]")
+    );
+    const idx = sections.indexOf(e.currentTarget as HTMLElement);
+    if (idx === -1) return;
+    let nextIdx = idx;
+    if (e.key === "ArrowDown" || e.key === "ArrowRight") nextIdx = Math.min(sections.length - 1, idx + 1);
+    else if (e.key === "ArrowUp" || e.key === "ArrowLeft") nextIdx = Math.max(0, idx - 1);
+    else if (e.key === "Home") nextIdx = 0;
+    else if (e.key === "End") nextIdx = sections.length - 1;
+    if (nextIdx === idx) return;
+    e.preventDefault();
+    const target = sections[nextIdx];
+    target.focus({ preventScroll: true });
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  };
+
   return (
     <section
       className="relative py-[clamp(6rem,4rem+8vw,12rem)] la-chapter-section group/chapter outline-none focus-visible:ring-1 focus-visible:ring-accent/40 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
       tabIndex={0}
-      aria-label={`${label} — chapter ${number}`}
+      data-la-chapter={number}
+      onKeyDown={handleKeyDown}
+      aria-label={`${label} — chapter ${number}. Use arrow keys to move between chapters.`}
       aria-describedby={`la-meta-${number}`}
     >
       <span id={`la-meta-${number}`} className="sr-only">
-        {label}. LumenArc chapter {number}.
+        {label}. LumenArc chapter {number}. Use the arrow keys to move between chapters.
       </span>
       {/* Interactive blueprint overlay — revealed on hover/focus, respects reduced motion */}
       <div
