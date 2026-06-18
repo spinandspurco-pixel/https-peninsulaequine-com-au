@@ -16,6 +16,10 @@ import currentArenaHero from "@/assets/covered-arena-finished-lit.jpg";
 import slidingStopHero from "@/assets/homepage-refresh/sliding-stop-hero.png.asset.json";
 import steelFront from "@/assets/steel-shed-dramatic.webp";
 import lumenArcCanopy from "@/assets/lumenarc/canopy.asset.json";
+import pavilionFireplaceDetail from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
+import aberdeenHero from "@/assets/aberdeen/hero-entrance-twilight.png.asset.json";
+import aberdeenArena from "@/assets/aberdeen/arena-dramatic-light.png.asset.json";
+import fieldNoteDozerStorm from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
 
 const SESSION_KEY = "pe-brand-intro-seen";
 const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
