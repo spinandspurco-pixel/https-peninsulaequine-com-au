@@ -24,16 +24,15 @@ import ciro1536 from "@/assets/responsive/ciro-ace-quiet-moment-1536.webp.asset.
 import mainRidge640 from "@/assets/responsive/main-ridge-pavilion-wide-fireplace-table-640.webp.asset.json";
 import mainRidge1024 from "@/assets/responsive/main-ridge-pavilion-wide-fireplace-table-1024.webp.asset.json";
 import mainRidge1536 from "@/assets/responsive/main-ridge-pavilion-wide-fireplace-table-1536.webp.asset.json";
-import coveredArena640 from "@/assets/responsive/covered-competition-arena-sunset-puddles-640.webp.asset.json";
-import coveredArena1024 from "@/assets/responsive/covered-competition-arena-sunset-puddles-1024.webp.asset.json";
-import coveredArena1536 from "@/assets/responsive/covered-competition-arena-sunset-puddles-1536.webp.asset.json";
+import { getProjectImageAlt, getProjectResponsive } from "@/config/projectImagery";
+const fieldNotesPreview = getProjectResponsive("covered-arena-stables-build", "fieldNotesPreview")!;
+const fieldNotesPreviewAlt = getProjectImageAlt("covered-arena-stables-build", "fieldNotesPreview");
 
 const srcset = (a: { url: string }, b: { url: string }, c: { url: string }) =>
   `${a.url} 640w, ${b.url} 1024w, ${c.url} 1536w`;
 const slidingStopSrcSet = srcset(slidingStop640, slidingStop1024, slidingStop1536);
 const ciroSrcSet = srcset(ciro640, ciro1024, ciro1536);
 const mainRidgeSrcSet = srcset(mainRidge640, mainRidge1024, mainRidge1536);
-const coveredArenaSrcSet = srcset(coveredArena640, coveredArena1024, coveredArena1536);
 
 const SESSION_KEY = "pe-brand-intro-seen";
 const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
@@ -411,10 +410,10 @@ export default function Index() {
                 <Link to="/field-notes/covered-arena-stables-build" className="group block">
                   <div className="relative aspect-[5/6] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                     <img
-                      src={coveredArena1536.url}
-                      srcSet={coveredArenaSrcSet}
-                      sizes="(min-width: 1480px) 1480px, 100vw"
-                      alt="Covered competition arena at sunset — steel frame and finished surface mirrored in puddles after rain"
+                      src={fieldNotesPreview.src}
+                      srcSet={fieldNotesPreview.srcSet}
+                      sizes={fieldNotesPreview.sizes}
+                      alt={fieldNotesPreviewAlt}
                       loading="lazy"
                       decoding="async"
                       className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1800ms] ease-out group-hover:scale-[1.02] object-[62%_58%] sm:object-[58%_55%] md:object-[50%_50%]"

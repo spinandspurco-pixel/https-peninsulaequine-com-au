@@ -3,18 +3,23 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 
-import heroDroneAsset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
-import steelFrontAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
-import sitewideProgressAsset from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
-import redClayRooflineAsset from "@/assets/field-notes/covered-competition-arena-drainage-detail.png.asset.json";
-import heroDrone640 from "@/assets/responsive/covered-competition-arena-sunset-puddles-640.webp.asset.json";
-import heroDrone1024 from "@/assets/responsive/covered-competition-arena-sunset-puddles-1024.webp.asset.json";
-import heroDrone1536 from "@/assets/responsive/covered-competition-arena-sunset-puddles-1536.webp.asset.json";
-const heroDrone = heroDrone1536.url;
-const heroDroneSrcSet = `${heroDrone640.url} 640w, ${heroDrone1024.url} 1024w, ${heroDrone1536.url} 1536w`;
-const steelFront = steelFrontAsset.url;
-const sitewideProgress = sitewideProgressAsset.url;
-const redClayRoofline = redClayRooflineAsset.url;
+import {
+  getProjectImage,
+  getProjectImageAlt,
+  getProjectResponsive,
+} from "@/config/projectImagery";
+
+const SLUG = "covered-arena-stables-build";
+const heroResp = getProjectResponsive(SLUG, "fieldNotesHero")!;
+const heroDrone = heroResp.src;
+const heroDroneSrcSet = heroResp.srcSet;
+const heroDroneAlt = getProjectImageAlt(SLUG, "fieldNotesHero");
+const steelFront = getProjectImage(SLUG, "caseStudyHero").url;
+const steelFrontAlt = getProjectImageAlt(SLUG, "caseStudyHero");
+const sitewideProgress = getProjectImage(SLUG, "fieldNotesGalleryA").url;
+const sitewideProgressAlt = getProjectImageAlt(SLUG, "fieldNotesGalleryA");
+const redClayRoofline = getProjectImage(SLUG, "fieldNotesGalleryB").url;
+const redClayRooflineAlt = getProjectImageAlt(SLUG, "fieldNotesGalleryB");
 
 export default function FieldNotes() {
   useEffect(() => {
@@ -39,7 +44,7 @@ export default function FieldNotes() {
             src={heroDrone}
             srcSet={heroDroneSrcSet}
             sizes="100vw"
-            alt="Covered Arena & Stables Build in progress — steel framing, roof works and red clay conditions across a live equine facility site"
+            alt={heroDroneAlt}
             className="absolute inset-0 h-full w-full object-cover object-[62%_48%] sm:object-[58%_48%] lg:object-center"
             loading="eager"
             decoding="async"
@@ -106,7 +111,7 @@ export default function FieldNotes() {
                       <div className="relative aspect-[4/5] sm:aspect-[16/10] xl:aspect-[16/8] overflow-hidden">
                         <img
                           src={steelFront}
-                          alt="Covered Arena & Stables Build — structural steel and roof line under a dramatic storm sky"
+                          alt={steelFrontAlt}
                           className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-[1600ms] ease-out group-hover:scale-[1.03]"
                           style={{ filter: "brightness(0.78) contrast(1.12) saturate(0.82)" }}
                         />
@@ -152,7 +157,7 @@ export default function FieldNotes() {
                 <div className="relative overflow-hidden aspect-[16/10] lg:aspect-[21/10]">
                   <img
                     src={sitewideProgress}
-                    alt="Wide site view of the current arena build showing steel span, machinery placement and open ground conditions"
+                    alt={sitewideProgressAlt}
                     className="absolute inset-0 h-full w-full object-cover object-center"
                     style={{ filter: "brightness(0.8) contrast(1.08) saturate(0.78)" }}
                   />
@@ -164,7 +169,7 @@ export default function FieldNotes() {
                 <div className="relative overflow-hidden aspect-[4/5] md:h-full md:aspect-auto min-h-[320px]">
                   <img
                     src={redClayRoofline}
-                    alt="Red clay, roofing progress and site moisture around the current arena and stables build"
+                    alt={redClayRooflineAlt}
                     className="absolute inset-0 h-full w-full object-cover object-[54%_50%]"
                     style={{ filter: "brightness(0.78) contrast(1.1) saturate(0.8)" }}
                   />
