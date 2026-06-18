@@ -144,6 +144,7 @@ function AppContent() {
           <Route path="/portal" element={<ProtectedRoute loginPath="/portal/login"><ClientPortal /></ProtectedRoute>} />
           <Route path="/portal/login" element={<ClientPortalLogin />} />
           <Route path="/field-notes" element={<FieldNotes />} />
+          <Route path="/projects/main-ridge-pavilion" element={<MainRidgePavilion />} />
 
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
