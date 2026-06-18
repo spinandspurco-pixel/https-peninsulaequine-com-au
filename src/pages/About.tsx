@@ -42,7 +42,9 @@ interface SectionProps {
   body: string;
   src: string;
   alt: string;
+  /** Tailwind aspect classes, e.g. "aspect-[4/5] md:aspect-[5/6]" */
   aspect?: string;
+  /** Tailwind object-position classes, e.g. "object-[60%_30%] md:object-[50%_40%]" */
   crop?: string;
   reverse?: boolean;
 }
@@ -53,14 +55,14 @@ const FeatureSection = ({
   body,
   src,
   alt,
-  aspect = "aspect-[4/5]",
-  crop = "50% 40%",
+  aspect = "aspect-[4/5] md:aspect-[5/6]",
+  crop = "object-[50%_40%]",
   reverse = false,
 }: SectionProps) => (
-  <section className="py-28 sm:py-40">
+  <section className="py-20 sm:py-32 md:py-40">
     <div className="section-container max-w-6xl mx-auto">
       <div
-        className={`grid md:grid-cols-12 gap-10 md:gap-16 items-center ${
+        className={`grid md:grid-cols-12 gap-8 sm:gap-10 md:gap-16 items-center ${
           reverse ? "md:[&>*:first-child]:order-2" : ""
         }`}
       >
@@ -69,8 +71,8 @@ const FeatureSection = ({
             src={src}
             alt={alt}
             loading="lazy"
-            className={`w-full ${aspect} object-cover`}
-            style={{ objectPosition: crop, filter: FILTER }}
+            className={`w-full ${aspect} object-cover ${crop}`}
+            style={{ filter: FILTER }}
           />
           <Vignette />
           <Grid />
@@ -90,6 +92,7 @@ const FeatureSection = ({
     </div>
   </section>
 );
+
 
 export default function About() {
   useEffect(() => {
@@ -116,9 +119,8 @@ export default function About() {
               <img
                 src={ciroAceArena.url}
                 alt="Ciro and Ace in the arena — horseman and horse, end of day."
-                className="w-full aspect-[16/10] sm:aspect-[21/9] object-cover opacity-0 animate-fade-in"
+                className="w-full aspect-[4/5] sm:aspect-[16/10] lg:aspect-[21/9] object-cover object-[58%_28%] sm:object-[55%_32%] lg:object-[50%_36%] opacity-0 animate-fade-in"
                 style={{
-                  objectPosition: "50% 30%",
                   filter: FILTER,
                   animationDelay: "200ms",
                   animationFillMode: "both",
@@ -187,13 +189,13 @@ export default function About() {
               drainage plan and rural build is considered through the way
               horses and people actually use the space.
             </p>
-            <div className="mt-16 mx-auto max-w-xs relative overflow-hidden">
+            <div className="mt-16 mx-auto max-w-[260px] sm:max-w-xs md:max-w-sm relative overflow-hidden">
               <img
                 src={ciroAcePortrait.url}
                 alt="Ciro and Ace — portrait at golden hour."
                 loading="lazy"
-                className="w-full aspect-[4/5] object-cover"
-                style={{ objectPosition: "50% 35%", filter: FILTER }}
+                className="w-full aspect-[4/5] md:aspect-[3/4] object-cover object-[45%_30%] sm:object-[48%_32%] md:object-[50%_34%]"
+                style={{ filter: FILTER }}
               />
               <Vignette />
             </div>
@@ -208,8 +210,8 @@ export default function About() {
           body="Good equine infrastructure is not just about how it looks. It is about flow, footing, safety, access, shelter, drainage, maintenance and the small decisions that make a property easier to use every day."
           src={ciroAceQuiet.url}
           alt="Ciro and Ace — a quiet moment, head to head."
-          aspect="aspect-[4/5]"
-          crop="50% 40%"
+          aspect="aspect-[4/5] md:aspect-[5/6]"
+          crop="object-[55%_30%] sm:object-[52%_34%] md:object-[50%_38%]"
         />
 
         {/* ═══ WE RIDE THE GROUND WE BUILD ═══════════════════ */}
@@ -220,8 +222,8 @@ export default function About() {
                 src={ciroAceSlidingStop.url}
                 alt="Ciro and Ace — sliding stop, testing the ground."
                 loading="lazy"
-                className="w-full aspect-[21/9] object-cover"
-                style={{ objectPosition: "50% 50%", filter: FILTER }}
+                className="w-full aspect-[4/5] sm:aspect-[16/9] lg:aspect-[21/9] object-cover object-[62%_45%] sm:object-[55%_50%] lg:object-[50%_50%]"
+                style={{ filter: FILTER }}
               />
               <Vignette />
               <Grid />
@@ -257,8 +259,8 @@ export default function About() {
           body="The unseen work is what makes the visible result last — site preparation, levels, drainage, base works, structure, access and practical sequencing."
           src={arenaGrading}
           alt="Arena grading in progress — base works before the finish."
-          aspect="aspect-[5/4]"
-          crop="50% 55%"
+          aspect="aspect-[4/3] md:aspect-[5/4]"
+          crop="object-[50%_60%] md:object-[50%_55%]"
           reverse
         />
 
@@ -269,8 +271,8 @@ export default function About() {
           body="From arenas and stables to custom rural builds, Peninsula Equine works with honest materials and practical details — timber, steel, brick, firelight, joinery and finish."
           src={pavilionTableDetail.url}
           alt="Main Ridge Pavilion — handcrafted timber table at dusk."
-          aspect="aspect-[3/2]"
-          crop="50% 52%"
+          aspect="aspect-[4/3] md:aspect-[3/2]"
+          crop="object-[50%_55%] md:object-[50%_52%]"
         />
 
         {/* ═══ CTA ════════════════════════════════════════════ */}
