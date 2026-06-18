@@ -144,7 +144,13 @@ function AppContent() {
           <Route path="/portal" element={<ProtectedRoute loginPath="/portal/login"><ClientPortal /></ProtectedRoute>} />
           <Route path="/portal/login" element={<ClientPortalLogin />} />
           <Route path="/field-notes" element={<FieldNotes />} />
-          <Route path="/projects/main-ridge-pavilion" element={<MainRidgePavilion />} />
+          <Route path="/selected-works/main-ridge-pavilion" element={<MainRidgePavilion />} />
+          {/* Legacy Main Ridge routes — redirect to canonical pavilion page */}
+          <Route path="/projects/main-ridge-pavilion" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
+          <Route path="/projects/main-ridge" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
+          <Route path="/project/main-ridge" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
+          <Route path="/selected-works/main-ridge" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
+          <Route path="/main-ridge" element={<Navigate to="/selected-works/main-ridge-pavilion" replace />} />
 
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
