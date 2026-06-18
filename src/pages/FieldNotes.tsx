@@ -3,18 +3,23 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 
-import heroDroneAsset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
-import steelFrontAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
-import sitewideProgressAsset from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
-import redClayRooflineAsset from "@/assets/field-notes/covered-competition-arena-drainage-detail.png.asset.json";
-import heroDrone640 from "@/assets/responsive/covered-competition-arena-sunset-puddles-640.webp.asset.json";
-import heroDrone1024 from "@/assets/responsive/covered-competition-arena-sunset-puddles-1024.webp.asset.json";
-import heroDrone1536 from "@/assets/responsive/covered-competition-arena-sunset-puddles-1536.webp.asset.json";
-const heroDrone = heroDrone1536.url;
-const heroDroneSrcSet = `${heroDrone640.url} 640w, ${heroDrone1024.url} 1024w, ${heroDrone1536.url} 1536w`;
-const steelFront = steelFrontAsset.url;
-const sitewideProgress = sitewideProgressAsset.url;
-const redClayRoofline = redClayRooflineAsset.url;
+import {
+  getProjectImage,
+  getProjectImageAlt,
+  getProjectResponsive,
+} from "@/config/projectImagery";
+
+const SLUG = "covered-arena-stables-build";
+const heroResp = getProjectResponsive(SLUG, "fieldNotesHero")!;
+const heroDrone = heroResp.src;
+const heroDroneSrcSet = heroResp.srcSet;
+const heroDroneAlt = getProjectImageAlt(SLUG, "fieldNotesHero");
+const steelFront = getProjectImage(SLUG, "caseStudyHero").url;
+const steelFrontAlt = getProjectImageAlt(SLUG, "caseStudyHero");
+const sitewideProgress = getProjectImage(SLUG, "fieldNotesGalleryA").url;
+const sitewideProgressAlt = getProjectImageAlt(SLUG, "fieldNotesGalleryA");
+const redClayRoofline = getProjectImage(SLUG, "fieldNotesGalleryB").url;
+const redClayRooflineAlt = getProjectImageAlt(SLUG, "fieldNotesGalleryB");
 
 export default function FieldNotes() {
   useEffect(() => {
