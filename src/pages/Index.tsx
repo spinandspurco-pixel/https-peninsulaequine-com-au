@@ -363,10 +363,10 @@ export default function Index() {
                       loading="lazy"
                       decoding="async"
                       className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1800ms] ease-out group-hover:scale-[1.02]"
-                      style={{ filter: "brightness(0.72) contrast(1.14) saturate(0.78)", objectPosition: "55% 55%" }}
+                      style={{ filter: "brightness(0.9) contrast(1.1) saturate(0.82)", objectPosition: "55% 55%" }}
                     />
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-transparent" />
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/55 to-transparent" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/85 via-background/30 to-transparent" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
 
                     <div className="absolute bottom-0 left-0 w-full p-6 sm:p-10 md:p-14 lg:p-16">
                       <div className="max-w-2xl space-y-5">
