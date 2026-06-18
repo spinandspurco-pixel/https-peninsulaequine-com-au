@@ -6,7 +6,7 @@ import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 import pavilionWide from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
 import fireplacePortrait from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
 import parrillaWide from "@/assets/main-ridge/mr-parrilla-wide.png.asset.json";
-import aberdeenSunset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
+import aberdeenHero from "@/assets/aberdeen/hero-entrance-twilight.png.asset.json";
 
 const FILTER = "brightness(0.82) contrast(1.1) saturate(0.8)";
 
@@ -139,27 +139,27 @@ export default function Projects() {
           </div>
         </section>
 
-        {/* ═══ IN PROGRESS — ABERDEEN FARM ════════════════ */}
+        {/* ═══ FEATURED — ABERDEEN ════════════════════════ */}
         <section className="relative border-t border-accent/10 py-[clamp(5rem,3rem+6vw,9rem)]">
           <div className="section-container max-w-[1480px] mx-auto">
             <RevealOnScroll direction="up" duration={900}>
               <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4rem)]">
                 <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">02</span>
                 <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
-                <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">In Progress</span>
+                <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Completed</span>
               </div>
             </RevealOnScroll>
 
-            <Link to="/field-notes/aberdeen-farm" className="group block">
+            <Link to="/selected-works/aberdeen" className="group block">
               <RevealOnScroll direction="up" duration={1200}>
                 <div className="relative aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                   <img
-                    src={aberdeenSunset.url}
-                    alt="Aberdeen Farm — structural steel at sunset with wet ground reflections"
+                    src={aberdeenHero.url}
+                    alt="Aberdeen — symmetrical equine facility entrance at twilight with warm internal glow"
                     loading="lazy"
                     decoding="async"
                     className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
-                    style={{ filter: "brightness(0.78) contrast(1.12) saturate(0.8)", objectPosition: "55% 50%" }}
+                    style={{ filter: "brightness(0.72) contrast(1.08) saturate(0.76)", objectPosition: "50% 42%" }}
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-transparent to-transparent" />
                 </div>
@@ -168,26 +168,27 @@ export default function Projects() {
               <div className="mt-8 grid grid-cols-12 gap-6 lg:gap-12 items-end">
                 <div className="col-span-12 md:col-span-7 space-y-4">
                   <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.42em]">
-                    Covered Arena — Main Ridge, VIC
+                    Indoor Arena — Aberdeen
                   </p>
                   <h2 className="font-serif text-foreground/92 group-hover:text-foreground transition-colors duration-500 leading-[1.02] tracking-tight text-[clamp(1.9rem,1.2rem+2.4vw,3.1rem)]">
-                    Aberdeen Farm
+                    Aberdeen
                   </h2>
                   <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px] sm:text-[15px] max-w-xl">
-                    A covered arena currently moving through structural steel, drainage and base
-                    preparation. Followed in real time through Field Notes.
+                    Indoor arena, viewing lounge and equine facility detailing resolved with a cleaner,
+                    more controlled architectural language.
                   </p>
                 </div>
                 <div className="col-span-12 md:col-span-5 md:text-right">
                   <span className="inline-flex items-center gap-3 font-mono uppercase text-foreground/72 group-hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]">
                     <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
-                    Read Field Note
+                    View Project
                   </span>
                 </div>
               </div>
             </Link>
           </div>
         </section>
+
 
         {/* ═══ CLOSING ═══════════════════════════════════ */}
         <section className="relative border-t border-accent/10 py-[clamp(6rem,4rem+7vw,11rem)]">
