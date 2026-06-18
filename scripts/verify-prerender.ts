@@ -27,6 +27,7 @@ import addFormats from "ajv-formats";
 const SITE_ORIGIN = "https://peninsulaequine.com.au";
 const DIST = resolve("dist");
 const ajv = new Ajv({ strict: true, allErrors: true });
+addFormats(ajv);
 const SCHEMA_PATH = resolve("scripts/prerender-verify.schema.json");
 
 interface Expectation {
