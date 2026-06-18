@@ -165,8 +165,8 @@ export default function Index() {
                       textShadow: "0 2px 18px rgba(0,0,0,0.55)",
                     }}
                   >
-                    Equine environments built by horse people — from the ground beneath the ride to the
-                    structures that shape the property.
+                    Covered arenas, stables and pavilions — premium equine infrastructure built by
+                    horse people, shaped from the ground beneath the ride.
                   </p>
                 </div>
 
@@ -220,8 +220,8 @@ export default function Index() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1000} delay={120}>
                 <p className="font-serif text-foreground/82 leading-[1.4] tracking-[-0.022em] text-[clamp(1.5rem,1.05rem+1.8vw,2.45rem)] max-w-4xl">
-                  Arenas, stables, groundworks and rural builds — shaped from the ground up across the
-                  Mornington Peninsula and beyond.
+                  Covered arenas, stables, pavilions and integrated equestrian builds — shaped from the
+                  ground up across the Mornington Peninsula and beyond.
                 </p>
               </RevealOnScroll>
             </div>
@@ -518,7 +518,7 @@ export default function Index() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1000} delay={300}>
                 <p className="font-sans font-light text-foreground/56 leading-[1.85] text-[14px] max-w-xl mx-auto">
-                  Talk to Peninsula Equine about your arena, stable, groundwork or rural build.
+                  Talk to Peninsula Equine about your covered arena, stable, pavilion or integrated equine build.
                 </p>
               </RevealOnScroll>
               <RevealOnScroll direction="none" duration={1200} delay={380}>

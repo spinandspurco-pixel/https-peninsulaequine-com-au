@@ -17,16 +17,16 @@ const servicesGroups: NavGroup[] = [
   {
     label: "Build",
     items: [
-      { name: "Arenas", href: "/arenas", description: "Dressage, jumping & covered arenas" },
-      { name: "Stables & Barns", href: "/stables", description: "Custom stables and equestrian barns" },
-      { name: "Equine Infrastructure", href: "/infrastructure", description: "Fencing, yards & site infrastructure" },
-      { name: "Custom Rural Builds", href: "/equine-estates", description: "Pavilions, masterplans & rural homes" },
+      { name: "Covered Arenas", href: "/arenas", description: "Indoor riding environments & competition-ready covered arenas" },
+      { name: "Stables & Barns", href: "/stables", description: "Custom stables and equestrian barn structures" },
+      { name: "Pavilions & Rural Builds", href: "/equine-estates", description: "Pavilions, rural entertaining spaces & masterplans" },
+      { name: "Equine Infrastructure", href: "/infrastructure", description: "Fencing, yards & integrated site infrastructure" },
     ],
   },
   {
     label: "Ground",
     items: [
-      { name: "Groundworks", href: "/infrastructure", description: "Site cuts, levels and base preparation" },
+      { name: "Groundworks & Site Preparation", href: "/infrastructure", description: "Site cuts, levels and base preparation" },
       { name: "Drainage & Surfacing", href: "/arenas", description: "Engineered drainage and arena footing" },
     ],
   },

@@ -5,8 +5,8 @@ import heroAsset from "@/assets/services-new/pe-arena-grading.png.asset.json";
 const heroImg = heroAsset.url;
 
 const capabilities = [
-  { k: "01", label: "Engineered Footing", body: "Sub-base, drainage and surface tuned to discipline and climate. Performance written into the ground." },
-  { k: "02", label: "Covered & Open Forms", body: "Clear-span steel, blackened timber, controlled light — built to perform under any sky." },
+  { k: "01", label: "Clear-Span Structures", body: "Engineered steel and blackened timber — competition-ready spans built to ride year-round, under any sky." },
+  { k: "02", label: "Engineered Footing", body: "Sub-base, drainage and surface blend tuned to discipline and climate. Performance written into the ground." },
   { k: "03", label: "Resolved at Handover", body: "Specified, fabricated, installed and commissioned by one team. No coordination tax." },
 ];
 
@@ -15,7 +15,7 @@ export default function Arenas() {
     <Layout>
       <article className="bg-background text-foreground type-architectural">
         <section className="relative h-[82vh] min-h-[560px] overflow-hidden">
-          <img src={heroImg} alt="Engineered equestrian arena at golden hour" width={1920} height={1080} className="absolute inset-0 w-full h-full object-cover img-header" />
+          <img src={heroImg} alt="Covered equestrian arena interior with engineered footing under controlled light" width={1920} height={1080} className="absolute inset-0 w-full h-full object-cover img-header" />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/45 via-primary/15 to-primary/80" />
           <div className="absolute bottom-0 left-0 right-0 px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2.5rem,1.5rem+4vw,5rem)]">
             <div className="max-w-6xl space-y-[clamp(1.25rem,1rem+1vw,2rem)]">
@@ -23,11 +23,11 @@ export default function Arenas() {
                 <p className="font-mono uppercase text-accent/65 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">Capability — 01</p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1100} delay={500}>
-                <h1 className="font-serif text-primary-foreground tracking-[-0.025em] leading-[0.95] text-[clamp(2.5rem,1.4rem+5.4vw,5.5rem)]">Arenas.</h1>
+                <h1 className="font-serif text-primary-foreground tracking-[-0.025em] leading-[0.95] text-[clamp(2.5rem,1.4rem+5.4vw,5.5rem)]">Covered Arenas.</h1>
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1100} delay={800}>
                 <p className="font-serif italic text-primary-foreground/55 max-w-xl leading-[1.55] text-[clamp(0.875rem,0.78rem+0.4vw,1.0625rem)]">
-                  Surfaces built to ride. Structures built to hold. Engineered as a single system.
+                  Competition-ready indoor environments. Structures built to hold, surfaces built to ride — engineered as a single system.
                 </p>
               </RevealOnScroll>
             </div>
@@ -42,7 +42,7 @@ export default function Arenas() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" delay={150}>
                 <h2 className="font-serif text-foreground/85 leading-[1.1] tracking-[-0.02em] text-[clamp(1.65rem,1.1rem+2.2vw,2.65rem)]">
-                  Dressage. Jumping. Reining. Each surface tuned, not templated.
+                  Indoor riding environments. Built to ride every day of the year.
                 </h2>
               </RevealOnScroll>
               <RevealLine width="w-8" delay={300} />
@@ -50,7 +50,7 @@ export default function Arenas() {
             <div className="lg:col-span-7">
               <RevealOnScroll direction="up" delay={200}>
                 <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[clamp(0.875rem,0.82rem+0.2vw,1rem)]">
-                  Every arena begins with a soil report and ends with a rider. In between sits engineering — sub-grade, drainage falls, geotextile, base, surface blend. We test on the property, not from a spec sheet.
+                  Covered arenas remove weather from the program. Every build begins with a soil report and ends with a rider — in between sits engineering: sub-grade, drainage falls, geotextile, base, surface blend, clear-span steel and controlled light. Tested on the property, not from a spec sheet.
                 </p>
               </RevealOnScroll>
             </div>

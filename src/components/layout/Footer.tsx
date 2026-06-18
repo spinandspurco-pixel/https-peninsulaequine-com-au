@@ -4,11 +4,11 @@ import { siteConfig } from "@/data/content";
 import logoPeMark from "@/assets/logo-pe-mark.webp";
 
 const capabilityLinks = [
-  { name: "Arenas", href: "/arenas" },
-  { name: "Stables", href: "/stables" },
-  { name: "Equine Estates", href: "/equine-estates" },
+  { name: "Covered Arenas", href: "/arenas" },
+  { name: "Stables & Barns", href: "/stables" },
+  { name: "Pavilions & Rural Builds", href: "/equine-estates" },
+  { name: "Equine Infrastructure", href: "/infrastructure" },
   { name: "LumenArc", href: "/lumenarc" },
-  { name: "Infrastructure & Maintenance", href: "/infrastructure" },
 ];
 
 const studioLinks = [
@@ -43,7 +43,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-[hsl(var(--footer-muted))] text-[13px] leading-[1.85] max-w-xs mb-8 sm:mb-12">
-              Premium equine environments — built by riders, crafted for performance.
+              Covered arenas, stables and premium equine environments — built by riders, crafted for performance.
             </p>
             <div className="flex gap-5">
               {[
