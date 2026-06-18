@@ -111,7 +111,7 @@ export default function FieldNotes() {
                       <div className="relative aspect-[4/5] sm:aspect-[16/10] xl:aspect-[16/8] overflow-hidden">
                         <img
                           src={steelFront}
-                          alt="Covered Arena & Stables Build — structural steel and roof line under a dramatic storm sky"
+                          alt={steelFrontAlt}
                           className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-[1600ms] ease-out group-hover:scale-[1.03]"
                           style={{ filter: "brightness(0.78) contrast(1.12) saturate(0.82)" }}
                         />
