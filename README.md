@@ -114,4 +114,38 @@ The report object must contain these top-level fields:
   - `passed` — boolean  
   - `failures` — array of failure objects, each with `route`, `check`, and `detail`
 
+### Sample output
+
+```json
+{
+  "timestamp": "2026-06-18T09:42:00.000Z",
+  "siteOrigin": "https://peninsulaequine.com.au",
+  "checked": 2,
+  "passed": 1,
+  "failed": 1,
+  "allPassed": false,
+  "rerunCommand": "bun run build && bunx tsx scripts/verify-prerender.ts --only=\"/about\"",
+  "routes": [
+    {
+      "path": "/",
+      "file": "/path/to/project/dist/index.html",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "path": "/about",
+      "file": "/path/to/project/dist/about/index.html",
+      "passed": false,
+      "failures": [
+        {
+          "route": "/about",
+          "check": "og:image",
+          "detail": "missing og:image"
+        }
+      ]
+    }
+  ]
+}
+```
+
 If the report fails schema validation, the verifier logs the mismatch, records a `_report` level failure, and still exits non-zero so CI catches it.
