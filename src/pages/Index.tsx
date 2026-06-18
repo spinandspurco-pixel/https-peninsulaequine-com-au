@@ -313,12 +313,12 @@ export default function Index() {
 
 
 
-        {/* 04 — Field Notes teaser */}
+        {/* 03 — Field Notes teaser */}
         <section className="relative py-[clamp(6rem,4rem+7vw,10rem)] bg-background overflow-hidden border-t border-accent/10">
           <div className="section-container max-w-[1480px] mx-auto">
             <RevealOnScroll direction="up" duration={900}>
               <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4rem)]">
-                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">04</span>
+                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">03</span>
                 <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
                 <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Field Notes</span>
               </div>
