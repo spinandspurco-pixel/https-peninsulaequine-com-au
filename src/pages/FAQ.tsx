@@ -150,7 +150,7 @@ export default function FAQ() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search questions… e.g. 'group discount', 'payment', 'book a lesson'"
-                className="w-full pl-11 pr-10 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/40 transition-shadow text-sm"
+                className="w-full pl-11 pr-10 py-3 border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/40 transition-shadow text-sm"
               />
               {search && (
                 <button
@@ -166,7 +166,7 @@ export default function FAQ() {
 
           {/* Auto-suggest banner */}
           {autoSuggestion && (
-            <div className="mb-6 flex items-center gap-3 rounded-lg border border-accent/30 bg-accent/5 px-4 py-3 text-sm animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="mb-6 flex items-center gap-3 border border-accent/30 bg-accent/5 px-4 py-3 text-sm animate-in fade-in slide-in-from-top-2 duration-300">
               <Lightbulb className="h-4 w-4 text-accent shrink-0" />
               <span className="text-foreground">{autoSuggestion.suggestion}</span>
               {autoSuggestion.link && (
@@ -217,7 +217,7 @@ export default function FAQ() {
                 <RevealOnScroll key={faq.question} direction="up" stagger={index} staggerInterval={80}>
                   <AccordionItem
                     value={faq.question}
-                    className="border border-border rounded-lg px-6 data-[state=open]:border-accent transition-all duration-300"
+                    className="border border-border px-6 data-[state=open]:border-accent transition-all duration-300"
                   >
                     <AccordionTrigger className="text-left font-serif text-lg font-semibold text-foreground hover:text-accent hover:no-underline py-6">
                       {faq.question}

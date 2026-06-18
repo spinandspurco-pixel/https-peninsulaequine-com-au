@@ -4,6 +4,8 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { BlueprintContinuity } from "@/components/BlueprintContinuity";
+
 
 import mainRidgePostDepth from "@/assets/main-ridge-post-depth.jpg";
 import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
@@ -71,7 +73,10 @@ export default function Process() {
 
   return (
     <Layout>
+      <article className="relative">
+        <BlueprintContinuity />
       {/* ═══ HERO ═══════════════════════════════════════ */}
+
       <section className="relative pt-40 sm:pt-48 pb-24 sm:pb-32 overflow-hidden">
         <div className="absolute inset-0 bg-background" />
         <div className="absolute inset-0 engineering-grid" />
@@ -216,6 +221,8 @@ export default function Process() {
           </div>
         </div>
       </section>
+      </article>
     </Layout>
   );
 }
+

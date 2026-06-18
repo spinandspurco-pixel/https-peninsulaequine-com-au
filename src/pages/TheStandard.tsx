@@ -1,8 +1,10 @@
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { BlueprintContinuity } from "@/components/BlueprintContinuity";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+
 
 const DONT = [
   "We don't build at scale.",
@@ -19,7 +21,10 @@ const DO = [
 export default function TheStandard() {
   return (
     <Layout>
+      <article className="relative">
+        <BlueprintContinuity />
       {/* ═══ 1. HERO ═══════════════════════════════════════ */}
+
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-background" />
         <div className="absolute inset-0 grain-texture opacity-[0.025]" />
@@ -143,6 +148,8 @@ export default function TheStandard() {
           </div>
         </div>
       </section>
+      </article>
     </Layout>
   );
+
 }

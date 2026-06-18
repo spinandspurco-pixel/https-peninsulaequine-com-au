@@ -46,7 +46,7 @@ function VideoEmbed({ url }: { url: string }) {
   // Direct video files render as native <video>
   if (isDirectVideo(url)) {
     return (
-      <div className="w-full aspect-video rounded-lg overflow-hidden border border-border bg-black">
+      <div className="w-full aspect-video overflow-hidden border border-border bg-black">
         <video
           src={url}
           controls
@@ -66,7 +66,7 @@ function VideoEmbed({ url }: { url: string }) {
     return (
       <button
         onClick={() => setPlaying(true)}
-        className="relative w-full aspect-video rounded-lg bg-muted/50 border border-border flex items-center justify-center group hover:border-accent/40 transition-colors overflow-hidden"
+        className="relative w-full aspect-video bg-muted/50 border border-border flex items-center justify-center group hover:border-accent/40 transition-colors overflow-hidden"
         aria-label="Play video testimonial"
       >
         <div className="w-14 h-14 rounded-full bg-accent/90 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
@@ -80,7 +80,7 @@ function VideoEmbed({ url }: { url: string }) {
   }
 
   return (
-    <div className="w-full aspect-video rounded-lg overflow-hidden border border-border">
+    <div className="w-full aspect-video overflow-hidden border border-border">
       <iframe
         src={getEmbedUrl(url)}
         title="Video testimonial"
@@ -98,10 +98,10 @@ function TestimonialCard({ testimonial, index }: { testimonial: TestimonialItem;
 
   return (
     <SectionTransition variant="fade-up" delay={index * 80}>
-      <article className="rounded-xl border border-border bg-card p-6 sm:p-8 flex flex-col h-full hover:border-accent/30 transition-colors">
+      <article className=" border border-border bg-card p-6 sm:p-8 flex flex-col h-full hover:border-accent/30 transition-colors">
         {hasVideo && <div className="mb-6"><VideoEmbed url={testimonial.mediaUrl!} /></div>}
         {hasImage && (
-          <div className="mb-6 rounded-lg overflow-hidden aspect-video">
+          <div className="mb-6 overflow-hidden aspect-video">
             <img src={testimonial.mediaUrl!} alt={`Project by ${testimonial.name}`} loading="lazy" className="w-full h-full object-cover" />
           </div>
         )}
@@ -292,7 +292,7 @@ function VideoGallerySection({ testimonials }: { testimonials: TestimonialItem[]
                 <SectionTransition key={video.id} variant="fade-up" delay={i * 80}>
                   <button
                     onClick={() => setLightboxIndex(i)}
-                    className="group relative w-full aspect-video rounded-xl overflow-hidden border border-border bg-muted hover:border-accent/40 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                    className="group relative w-full aspect-video overflow-hidden border border-border bg-muted hover:border-accent/40 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                     aria-label={`Play video testimonial from ${video.name}`}
                   >
                     {thumbnail ? (
@@ -658,7 +658,7 @@ export default function Testimonials() {
           {loading ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="rounded-xl border border-border bg-card p-8 animate-pulse">
+                <div key={i} className=" border border-border bg-card p-8 animate-pulse">
                   <div className="h-4 bg-muted rounded w-24 mb-6" />
                   <div className="space-y-2">
                     <div className="h-3 bg-muted rounded w-full" />

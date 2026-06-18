@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { BlueprintContinuity } from "@/components/BlueprintContinuity";
 import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
+
 
 // Locked image system — distinct per service
 import systemHero from "@/assets/system-hero.jpg";
@@ -20,9 +22,12 @@ export default function Services() {
   return (
     <Layout>
       <ServicesSchemaMarkup />
+      <article className="relative">
+        <BlueprintContinuity />
 
       {/* ═══ HERO ═══════════════════════════════════════ */}
       <section className="relative pt-40 sm:pt-52 pb-28 sm:pb-36 overflow-hidden">
+
         <div className="absolute inset-0">
           <img
             src={systemHero}
@@ -174,6 +179,8 @@ export default function Services() {
           </div>
         </div>
       </section>
+      </article>
     </Layout>
   );
 }
+

@@ -1,105 +1,63 @@
-# Brand Realignment — Remove GroundLock, Install Recovery Station
 
-GroundLock currently spans 55 files: 14 dedicated pages, a `components/groundlock/` folder, proposal templates, CRM lead types, masterplan zones, edge functions, SQL migrations, and metadata. This is a destructive cleanup, not a rename.
+## Findings from the audit
 
-## 1 — New site architecture
+Good news: **no Wellness Station references remain anywhere**, and no overclaiming language ("world-class", "industry-leading", etc.) was found.
 
-Header + footer nav reduced to exactly:
+Critical finding: a botched find-replace at some point turned the word **"Mornington" into the letter "n"** across 10+ files. Several are visible to clients (quote pages, field notes locations, estimate copy). These must be fixed first.
 
-```text
-Arenas · Stables · Equine Estates · Recovery Stations · Infrastructure & Maintenance · Selected Work · About · Contact
-```
+## Phase 1 — P0 live copy bugs (do first, ship same pass)
 
-Route mapping:
+Fix the broken `"n"` artifacts left over from a previous find-replace:
 
-| Nav item                     | Route                          | Source                                        |
-| ---------------------------- | ------------------------------ | --------------------------------------------- |
-| Arenas                       | `/arenas`                      | new — split from `/services`                  |
-| Stables                      | `/stables`                     | new — split from `/services`                  |
-| Equine Estates               | `/equine-estates`              | new — rebuilt from EquusRidge tone            |
-| Recovery Stations            | `/recovery-stations`           | rebuilt from existing `/pavilion` page        |
-| Infrastructure & Maintenance | `/infrastructure`              | new — absorbs round pens, fencing, surfaces   |
-| Selected Work                | `/gallery`                     | existing                                      |
-| About                        | `/about`                       | existing                                      |
-| Contact                      | `/contact`                     | existing                                      |
+- `src/pages/ClientQuote.tsx` — `"n Peninsula, VIC"` → `"Mornington Peninsula, VIC"`
+- `src/pages/Estimate.tsx` — `"n ex. GST"`, `"n's 10% GST"`, `"nn market"` → AU equivalents
+- `src/pages/FieldNotes.tsx:156-158` — three locations: `"n Peninsula"` → `"Mornington Peninsula"`
+- `src/pages/Events.tsx`, `Legal.tsx` (×2), `AdminTestimonials.tsx`, `ClientPortal.tsx` — `toLocaleDateString("en-n", …)` → `"en-AU"`
+- `src/pages/StaffDocuments.tsx` — `"Hourly Rate ($n)"` → `"$AUD"`
+- `src/pages/Pricing.tsx` — variable `n_PRICING_FAQS` → `AU_PRICING_FAQS`
+- `src/pages/gallery/galleryData.ts:5`, `src/pages/GroupBooking.tsx` — comment artifacts
 
-The current `/pavilion` page is renamed and rewritten as **Peninsula Equine Recovery Station** — wellness, grooming, drying, post-work recovery, winter comfort, performance preparation. Same cinematic structure, refreshed copy and trademark line.
+## Phase 2 — Navigation & discoverability
 
-## 2 — Pages deleted
+- `Header.tsx` services dropdown: "Groundworks", "Custom Rural Builds", "Drainage & Surfacing" all dead-end at `/services`. Point them at proper anchors (`/services#groundworks`, etc.) so each lands on its section.
+- `Footer.tsx`: rename "Recovery Stations" → "LumenArc" to match the brand.
+- Add Field Notes, About, FAQ, Testimonials links into the Footer column structure so publicly-routed pages are reachable.
 
-Removed from router and filesystem:
+## Phase 3 — Visual consistency pass
 
-```text
-src/pages/GroundLock.tsx
-src/pages/GroundLockHowItWorks.tsx
-src/pages/GroundLockSystems.tsx
-src/pages/GroundLockSetup.tsx
-src/pages/GroundLockOnboarding.tsx
-src/pages/GroundLockLicensing.tsx
-src/pages/GroundLockEvents.tsx
-src/pages/SignatureSystems.tsx        (built around GL tiers)
-src/pages/Shop.tsx                    (Systems showroom around GL)
-src/pages/Forge.tsx                   (GL Forge product line)
-src/pages/InstallerAccess.tsx         (GL installer portal)
-src/pages/SiteAssessment.tsx          (will be rebuilt minimal, no GL framing)
-```
+Bring stragglers in line with the editorial / architectural system already established on Index, RecoveryStation, Arenas, Stables, EquineEstates, Infrastructure, FieldNotes:
 
-Components deleted wholesale:
+- **Testimonials.tsx** — strip `rounded-lg` / `rounded-xl` from video cards (lines 49, 83, 101, 104, 295). Replace with sharp-edged full-bleed treatment + vignette gradients matching FieldNotes.
+- **Pricing.tsx** — replace SaaS-style `md:grid-cols-3` shadcn `<Card>` grid with editorial 12-column layout + hairline dividers + serif headings.
+- **Boarding.tsx** — replace `sm:grid-cols-2 lg:grid-cols-3 gap-6` generic card grid with the `gap-px bg-foreground/[0.05]` divider grid pattern used by Arenas/Stables.
+- **FAQ.tsx** — sharpen accordion edges (remove `rounded-lg`), tighten typography to match brand scale.
+- **About.tsx, Testimonials.tsx, FAQ.tsx** — wrap content blocks in `<RevealOnScroll>` so motion register matches the rest of the site.
+- Audit remaining shadcn `<Button>` usages on Contact/FAQ/BookLesson — replace with the brand CTA pattern (`px-12 py-4 border text-[11px] font-mono uppercase tracking-[0.3em]`) where the button is a primary marketing CTA. Leave functional form submit buttons as-is.
 
-```text
-src/components/groundlock/*           (entire folder)
-src/components/proposal/ProposalGroundLock.tsx
-src/components/InteractiveMasterplan.tsx  (GL hover zones)
-```
+## Phase 4 — Blueprint overlay coverage
 
-## 3 — Files rewritten, not deleted
+Use the existing `BlueprintContinuity` / `BlueprintDivider` components (already built for LumenArc) to give other craft-focused pages the same drafting tonal layer:
 
-- `src/components/layout/Header.tsx` — new nav
-- `src/components/layout/Footer.tsx` — new column structure, no GL
-- `index.html` — title, description, OG, JSON-LD
-- `public/sitemap.xml` + `public/robots.txt` — new routes only
-- `src/App.tsx` — drop dead routes, add new ones, register Recovery Station
-- `src/pages/Services.tsx` — becomes a thin redirect/index pointing at the 5 offering pages
-- `src/pages/Contact.tsx` — remove GL mentions in form options
-- `src/pages/ClientPortal.tsx`, `ClientQuote.tsx` — strip GL line items
-- `src/data/caseStudyData.ts` — remove GL outcome metrics, no grid copy
-- `src/data/servicePricingFaq.ts` — drop GL FAQs
-- `src/components/QuoteBuilder.tsx`, `proposal/Proposal*.tsx` — remove GL scope items, leave Arena/Stable/Estate/Recovery/Infra
-- `src/components/masterplan/*` — strip GL grid zones, keep generic site zones
-- `src/components/crm/crmTypes.ts`, `LeadDetailPanel.tsx` — drop `interest: 'groundlock'` enum, replace with new offerings
+- `Process.tsx` — full-page `<BlueprintContinuity />`
+- `TheStandard.tsx` — full-page `<BlueprintContinuity />`
+- `SiteAssessment.tsx` — `<BlueprintContinuity />` + drafting divider between sections
+- `Estimate.tsx` — `<BlueprintContinuity />` so the calculator reads as "engineered" not generic
+- `Services.tsx` — add `<BlueprintDivider />` between capability bands
 
-## 4 — Backend cleanup
+Overlay opacity stays at the existing 2–3.5% so it never competes with content.
 
-Edge functions:
+## Phase 5 — Hygiene & performance
 
-- `supabase/functions/generate-groundlock-proposal/` — delete folder
-- `supabase/functions/generate-enquiry-response/index.ts` — strip GL prompt sections
-- `supabase/functions/admin-ai-assistant/index.ts` — strip GL knowledge blocks
+- Rename `src/pages/RecoveryStation.tsx` → `src/pages/LumenArc.tsx` (update App.tsx import). Stale filename.
+- Add `loading="lazy"` to `GalleryLightbox.tsx` nav-preview images and `Footer.tsx` logo. Spot-check below-fold imagery on Arenas/Stables/EquineEstates/Infrastructure.
+- Leave hero images eager (correct for LCP).
 
-SQL migrations are historical record — **not edited**. Any live `groundlock_*` tables/columns remain in the DB but become orphaned; no app code reads them after this pass. A follow-up migration to drop them can be done separately if you want — flag below.
+## Out of scope for this pass
 
-`src/integrations/supabase/types.ts` is auto-generated — leaves any GL table types in place harmlessly until the next types regen.
+- Generating new imagery to "replace generic stock-feeling visuals" — current images are real project photos. If you point at specific ones you want replaced, I'll swap them with `imagegen` or new uploads in a follow-up pass.
+- Rewriting long-form copy on every page. I'll only touch copy where it's broken (`n` artifacts) or overclaiming. A full editorial rewrite is a separate ask — let me know if you want it and I'll scope it.
+- Building the missing sub-pages for `/services/groundworks`, `/services/custom-rural-builds`, `/services/drainage-surfacing`. The dropdown will point at section anchors for now; building real sub-pages is a sizeable separate feature.
 
-## 5 — SEO + metadata
+## Approach
 
-- `index.html` `<title>`: *Peninsula Equine — premium equine environments*
-- meta description: *Arenas, stables, equine estates and recovery stations — built by riders, crafted for performance. Mornington Peninsula.*
-- JSON-LD `Organization` name + description aligned
-- `sitemap.xml` lists only the 8 nav routes + project case studies
-- `robots.txt` keeps allow-all
-
-## 6 — Verification pass
-
-- `rg -i 'groundlock|ground.?lock|ground.?grid'` returns zero hits in `src/`, `index.html`, `public/`, edge functions
-- Every nav link resolves to a live route (no 404s)
-- Every internal `<Link to=...>` audited against the new route list; broken ones rewritten or removed
-- Build passes
-
-## Decisions I need from you before I start
-
-1. **`/site-assessment`** — currently GL-framed but the assessment model itself is a core business tool (per memory). Keep route, rewrite copy generically (recommended) or delete entirely?
-2. **`/equus-ridge`** — branded destination page, no GL inside. Keep as-is, or fold into the new `/equine-estates`?
-3. **CRM lead `interest` enum** — drop `'groundlock'` and replace with `'recovery_station' | 'arena' | 'stable' | 'estate' | 'infrastructure'`? Existing leads with `interest='groundlock'` will display as "—" until manually re-tagged.
-4. **Orphaned DB tables** — write a follow-up migration to drop `groundlock_*` tables, or leave them in place?
-
-Answer those four and I'll execute the full pass in one go.
+I'll ship Phase 1 (live bugs) and Phase 2 (nav) in one pass, then Phase 3, 4, 5 in a second pass so you can review the visual changes in chunks rather than one giant diff. Approve and I'll begin.
