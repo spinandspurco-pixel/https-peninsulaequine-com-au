@@ -416,7 +416,9 @@ export default function Index() {
                 <Link to="/field-notes/covered-arena-stables-build" className="group block">
                   <div className="relative aspect-[5/6] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                     <img
-                      src={coveredArenaHero}
+                      src={coveredArena1536.url}
+                      srcSet={coveredArenaSrcSet}
+                      sizes="(min-width: 1480px) 1480px, 100vw"
                       alt="Covered competition arena at sunset — steel frame and finished surface mirrored in puddles after rain"
                       loading="lazy"
                       decoding="async"
