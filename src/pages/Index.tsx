@@ -212,7 +212,7 @@ export default function Index() {
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                "linear-gradient(90deg, hsl(var(--background) / 0.92) 0%, hsl(var(--background) / 0.74) 34%, hsl(var(--background) / 0.18) 62%, hsl(var(--background) / 0.55) 100%)",
+                "linear-gradient(90deg, hsl(var(--background) / 0.94) 0%, hsl(var(--background) / 0.78) 30%, hsl(var(--background) / 0.12) 58%, hsl(var(--background) / 0.25) 100%)",
             }}
           />
           <div
