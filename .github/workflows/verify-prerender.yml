@@ -31,6 +31,14 @@ jobs:
     name: Build + verify head tags
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # `checks: write` lets the verifier's `::error file=...,title=...`
+    # workflow commands attach inline annotations to the PR's Files
+    # Changed tab. `pull-requests: write` lets the job summary render
+    # on the PR's Checks tab.
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -43,10 +51,20 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build (runs prerender + verifier via postbuild)
-        run: bun run build
+      # Build first (vite build only). We split prerender + verify into
+      # their own steps so a verifier failure is attributed to the
+      # right step in the PR Checks UI, not buried in build output.
+      - name: Build
+        run: bunx vite build
+
+      - name: Prerender public routes
+        run: bunx tsx scripts/prerender.ts
+
+      - name: Verify per-route head tags (annotates PR on failure)
+        run: bunx tsx scripts/verify-prerender.ts
 
       - name: Confirm prerendered routes exist
+        if: always()
         run: |
           set -e
           for route in arenas stables equine-estates infrastructure gallery about contact process testimonials faq privacy terms; do
@@ -54,3 +72,4 @@ jobs:
           done
           test -f dist/index.html
           echo "all 13 prerendered HTML files present"
+
