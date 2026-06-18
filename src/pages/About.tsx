@@ -222,8 +222,8 @@ export default function About() {
                 src={ciroAceSlidingStop.url}
                 alt="Ciro and Ace — sliding stop, testing the ground."
                 loading="lazy"
-                className="w-full aspect-[21/9] object-cover"
-                style={{ objectPosition: "50% 50%", filter: FILTER }}
+                className="w-full aspect-[4/5] sm:aspect-[16/9] lg:aspect-[21/9] object-cover object-[62%_45%] sm:object-[55%_50%] lg:object-[50%_50%]"
+                style={{ filter: FILTER }}
               />
               <Vignette />
               <Grid />
