@@ -302,6 +302,7 @@ export default function RecoveryStation() {
           </div>
         </section>
       </article>
+      <LumenArcBriefingDialog open={briefingOpen} onClose={() => setBriefingOpen(false)} />
     </Layout>
   );
 }
