@@ -10,23 +10,8 @@ import aberdeenAisle from "@/assets/aberdeen-aisle.jpg";
 import aberdeenDeck from "@/assets/aberdeen-deck.jpg";
 import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
 
-// Main Ridge
-import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
-import mainRidgeCiroWoodwork from "@/assets/main-ridge-ciro-woodwork-1.jpg";
-import mainRidgeCiroWoodwork2 from "@/assets/main-ridge-ciro-woodwork-2.jpg";
-import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
-import mainRidgeTimberPosts from "@/assets/main-ridge-timber-posts.jpg";
-import mainRidgeSitePrep from "@/assets/main-ridge-site-prep.jpg";
-import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
-import mainRidgeRebar from "@/assets/main-ridge-rebar-foundation.jpg";
-import mainRidgeFrameTrench from "@/assets/main-ridge-frame-trench.jpg";
-import mainRidgeTrenchUtilities from "@/assets/main-ridge-trench-utilities.jpg";
-import mainRidgePostDepth from "@/assets/main-ridge-post-depth.jpg";
-import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
-import mainRidgeCraneLift from "@/assets/main-ridge-crane-lift.jpg";
-import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
-import mainRidgeFinishedInterior1 from "@/assets/main-ridge-finished-interior-1.jpg";
-import mainRidgeFinishedInterior2 from "@/assets/main-ridge-finished-interior-2.jpg";
+// Main Ridge — case study deprecated. New page lives at /selected-works/main-ridge-pavilion (see pages/MainRidgePavilion.tsx).
+// livingHeroWide is still referenced by other entries via the canonical surface import below.
 import livingHeroWide from "@/assets/living-hero-wide.jpg";
 
 // Equitana
