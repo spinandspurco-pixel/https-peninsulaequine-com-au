@@ -6,7 +6,7 @@ import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 import sunsetPuddles from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
 import drainageDetail from "@/assets/field-notes/covered-competition-arena-drainage-detail.png.asset.json";
 import truckAccessTrack from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
-import dozerStormSky from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
+import dozerStormSky from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
 import nightWorkLights from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
 
 const timeline = [
