@@ -27,13 +27,13 @@ const servicesGroups: NavGroup[] = [
     items: [
       { name: "Groundworks & Site Preparation", href: "/infrastructure#groundworks", description: "Levels, base works, machinery" },
       { name: "Drainage & Surfacing", href: "/infrastructure#drainage", description: "Drainage systems & surface preparation" },
-      { name: "Equine Infrastructure", href: "/infrastructure", description: "Fencing, yards, laneways, wash areas" },
+      { name: "Infrastructure", href: "/infrastructure", description: "Fencing, yards, laneways, wash areas" },
     ],
   },
   {
     label: "Systems",
     items: [
-      { name: "LumenArc Recovery Systems", href: "/lumenarc", description: "Considered recovery environments" },
+      { name: "LumenArc", href: "/lumenarc", description: "Considered recovery environments" },
     ],
   },
 ];

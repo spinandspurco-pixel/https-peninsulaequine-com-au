@@ -236,7 +236,7 @@ export default function Services() {
                   <RevealLine width="w-10" delay={220} />
                   <RevealOnScroll direction="up" delay={280}>
                     <p className="font-sans font-light text-foreground/60 leading-[1.85] text-[14px] sm:text-[15px] max-w-md">
-                      A horse property is not a collection of disconnected structures. Peninsula Equine considers the whole environment — covered arenas, stables, access, drainage, fencing, water, recovery, movement and future maintenance — so each decision supports the next.
+                      A horse property works best when the big decisions are made early. Peninsula Equine considers covered arenas, stables, access, fencing, drainage, water, recovery, movement and future maintenance as one connected environment — not separate pieces fighting each other later.
                     </p>
                   </RevealOnScroll>
                   <RevealOnScroll direction="up" delay={380}>
