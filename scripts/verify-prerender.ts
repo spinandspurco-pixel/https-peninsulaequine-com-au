@@ -236,7 +236,32 @@ function check(route: Expectation): void {
     fail(route.path, "twitter:description", "missing twitter:description");
 }
 
-for (const r of ROUTES) check(r);
+// --- CLI arg parsing -------------------------------------------------
+// Supports `--only=/arenas,/about` so a developer can re-verify just
+// the routes that failed without re-checking everything.
+const onlyArg = process.argv.find((a) => a.startsWith("--only="));
+const only = onlyArg
+  ? new Set(
+      onlyArg
+        .slice("--only=".length)
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+    )
+  : null;
+
+const selectedRoutes = only
+  ? ROUTES.filter((r) => only.has(r.path))
+  : ROUTES;
+
+if (only && selectedRoutes.length === 0) {
+  console.error(
+    `✗ --only matched no known routes. Valid paths:\n  ${ROUTES.map((r) => r.path).join(", ")}`,
+  );
+  process.exit(2);
+}
+
+for (const r of selectedRoutes) check(r);
 
 /**
  * Escape a string for a GitHub Actions workflow command parameter
@@ -256,11 +281,22 @@ function ghEscapeMsg(s: string): string {
   return s.replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A");
 }
 
+/** Unique sorted list of routes that produced at least one failure. */
+function failingRoutes(): string[] {
+  return [...new Set(failures.map((f) => f.route))].sort();
+}
+
+/** The ready-to-run local command to re-verify only what broke. */
+function rerunCommand(routes: string[]): string {
+  if (routes.length === 0) return "bun run build";
+  // Quote so shells treat the comma-separated list as one arg.
+  return `bun run build && bunx tsx scripts/verify-prerender.ts --only="${routes.join(",")}"`;
+}
+
 /**
- * On GitHub Actions, emit one `::error file=...,title=...::message`
- * annotation per failure so it shows up inline on the PR Checks tab,
- * and write a markdown table to the job summary. Annotations attach
- * to scripts/prerender.ts (the most likely fix site).
+ * On GitHub Actions, emit one `::error file=...,title=...` annotation
+ * per failure and write a markdown summary (per-route grouping +
+ * rerun command) to the job summary.
  */
 function emitGithubAnnotations(): void {
   if (!process.env.GITHUB_ACTIONS) return;
@@ -268,49 +304,75 @@ function emitGithubAnnotations(): void {
   for (const f of failures) {
     const title = ghEscapeProp(`[${f.route}] ${f.check}`);
     const msg = ghEscapeMsg(`${f.route} — ${f.check}: ${f.detail}`);
-    // eslint-disable-next-line no-console
     console.log(`::error file=${file},title=${title}::${msg}`);
   }
 
   const summaryPath = process.env.GITHUB_STEP_SUMMARY;
-  if (summaryPath) {
-    const lines: string[] = [];
-    lines.push(`## Prerender head-tag verification`);
+  if (!summaryPath) return;
+  const lines: string[] = [];
+  lines.push(`## Prerender head-tag verification`);
+  lines.push("");
+  if (failures.length === 0) {
+    lines.push(
+      `Passed — ${selectedRoutes.length} route(s), all head tags present and self-referencing.`,
+    );
+  } else {
+    const routes = failingRoutes();
+    lines.push(
+      `**Failed** — ${failures.length} issue(s) across ${routes.length} route(s): ${routes.map((r) => `\`${r}\``).join(", ")}.`,
+    );
     lines.push("");
-    if (failures.length === 0) {
-      lines.push(
-        `Passed — ${ROUTES.length} routes, all head tags present and self-referencing.`,
-      );
-    } else {
-      lines.push(
-        `**Failed** — ${failures.length} issue(s) across ${ROUTES.length} routes.`,
-      );
-      lines.push("");
-      lines.push("| Route | Check | Detail |");
-      lines.push("| --- | --- | --- |");
-      for (const f of failures) {
-        const detail = f.detail.replace(/\|/g, "\\|").replace(/\n/g, " ");
-        lines.push(`| \`${f.route}\` | \`${f.check}\` | ${detail} |`);
-      }
+    lines.push("| Route | Check | Detail |");
+    lines.push("| --- | --- | --- |");
+    for (const f of failures) {
+      const detail = f.detail.replace(/\|/g, "\\|").replace(/\n/g, " ");
+      lines.push(`| \`${f.route}\` | \`${f.check}\` | ${detail} |`);
     }
     lines.push("");
-    appendFileSync(summaryPath, lines.join("\n") + "\n");
+    lines.push("### Re-verify locally");
+    lines.push("");
+    lines.push("```bash");
+    lines.push(rerunCommand(routes));
+    lines.push("```");
   }
+  lines.push("");
+  appendFileSync(summaryPath, lines.join("\n") + "\n");
 }
 
 emitGithubAnnotations();
 
 if (failures.length > 0) {
-  console.error(
-    `\n✗ prerender verification failed: ${failures.length} issue(s) across ${ROUTES.length} routes\n`,
-  );
+  const routes = failingRoutes();
+
+  // Group failures by route for a clean per-route summary.
+  const byRoute = new Map<string, Failure[]>();
   for (const f of failures) {
-    console.error(`  [${f.route}] ${f.check}: ${f.detail}`);
+    if (!byRoute.has(f.route)) byRoute.set(f.route, []);
+    byRoute.get(f.route)!.push(f);
   }
+
+  console.error(
+    `\n✗ prerender verification failed: ${failures.length} issue(s) across ${routes.length} route(s) (of ${selectedRoutes.length} checked)\n`,
+  );
+  for (const route of routes) {
+    console.error(`  ${route}`);
+    for (const f of byRoute.get(route)!) {
+      console.error(`    ✗ ${f.check}: ${f.detail}`);
+    }
+  }
+  console.error("");
+  console.error("Failing routes: " + routes.join(" "));
+  console.error("Failing tags:   " + [...new Set(failures.map((f) => f.check))].sort().join(" "));
+  console.error("");
+  console.error("Re-verify locally (rebuild + check only the failing routes):");
+  console.error(`  ${rerunCommand(routes)}`);
+  console.error("");
+  console.error("Or re-check everything:");
+  console.error("  bun run build");
   console.error("");
   process.exit(1);
 }
 
 console.log(
-  `✓ prerender verification passed: ${ROUTES.length} routes, all head tags present and self-referencing`,
+  `✓ prerender verification passed: ${selectedRoutes.length} route(s), all head tags present and self-referencing`,
 );
