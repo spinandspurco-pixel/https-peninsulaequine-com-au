@@ -312,8 +312,73 @@ export default function RecoveryStation() {
 
 
         {chapters.map((chapter, index) => (
-          <LumenArcChapterSection key={chapter.number} {...chapter} align={index % 2 === 0 ? chapter.align ?? "left" : chapter.align ?? "right"} />
+          <Fragment key={chapter.number}>
+            <LumenArcChapterSection
+              {...chapter}
+              align={index % 2 === 0 ? chapter.align ?? "left" : chapter.align ?? "right"}
+            />
+            {index < chapters.length - 1 && (
+              <BlueprintTransition next={chapters[index + 1].number} />
+            )}
+          </Fragment>
         ))}
+
+        {/* Closing seam into the briefing CTA */}
+        <BlueprintTransition next="06" />
+
+        <style>{`
+          @keyframes la-chapter-img-in {
+            0% { transform: scale(1.06); filter: brightness(0.7) contrast(1.1) saturate(0.78); }
+            100% { transform: scale(1); filter: brightness(0.84) contrast(1.1) saturate(0.8); }
+          }
+          @keyframes la-chapter-tick-draw {
+            0% { stroke-dashoffset: 1; opacity: 0; }
+            100% { stroke-dashoffset: 0; opacity: 1; }
+          }
+          @keyframes la-chapter-label-in {
+            0% { opacity: 0; transform: translateY(4px); }
+            100% { opacity: 1; transform: translateY(0); }
+          }
+          @keyframes la-seam-line-in {
+            0% { transform: scaleX(0); opacity: 0; }
+            100% { transform: scaleX(1); opacity: 1; }
+          }
+          @keyframes la-seam-number-in {
+            0% { opacity: 0; letter-spacing: 0.6em; }
+            100% { opacity: 1; letter-spacing: 0.45em; }
+          }
+
+          .la-chapter-img {
+            animation: la-chapter-img-in 1800ms cubic-bezier(0.45, 0, 0.15, 1) both;
+            transform-origin: center;
+          }
+          .la-chapter-ticks polyline {
+            stroke-dasharray: 1;
+            animation: la-chapter-tick-draw 1400ms cubic-bezier(0.45, 0, 0.15, 1) 400ms both;
+          }
+          .la-chapter-plate-label {
+            animation: la-chapter-label-in 900ms cubic-bezier(0.45, 0, 0.15, 1) 900ms both;
+          }
+          .la-seam-line-l { transform-origin: right center; animation: la-seam-line-in 1100ms cubic-bezier(0.45, 0, 0.15, 1) both; }
+          .la-seam-line-r { transform-origin: left center;  animation: la-seam-line-in 1100ms cubic-bezier(0.45, 0, 0.15, 1) both; }
+          .la-seam-number  { animation: la-seam-number-in 1100ms cubic-bezier(0.45, 0, 0.15, 1) 200ms both; }
+
+          @media (prefers-reduced-motion: reduce) {
+            .la-chapter-img,
+            .la-chapter-ticks polyline,
+            .la-chapter-plate-label,
+            .la-seam-line-l,
+            .la-seam-line-r,
+            .la-seam-number {
+              animation: none;
+              opacity: 1;
+              transform: none;
+              filter: none;
+              stroke-dashoffset: 0;
+              letter-spacing: 0.45em;
+            }
+          }
+        `}</style>
 
         <section className="relative py-[clamp(5rem,3.5rem+6vw,8rem)]">
           <div className="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(circle_at_50%_35%,hsl(var(--accent)/0.08),transparent_52%)]" />
