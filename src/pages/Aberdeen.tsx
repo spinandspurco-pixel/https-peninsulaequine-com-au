@@ -49,23 +49,23 @@ export default function Aberdeen() {
           <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--background)/0.72)_0%,hsl(var(--background)/0.48)_32%,transparent_62%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,transparent,hsl(var(--background)/0.42))]" />
 
-          <div className="relative z-10 mx-auto flex min-h-[82vh] max-w-[1480px] items-start lg:items-end px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2.5rem,1.5rem+4vw,5rem)] pt-32 sm:pt-40 lg:pt-44">
+          <div className="relative z-10 mx-auto flex min-h-[82vh] max-w-[1480px] items-start lg:items-end px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2.5rem,1.5rem+4vw,5rem)] pt-44 sm:pt-40 lg:pt-44">
             <div className="grid w-full grid-cols-12 gap-10 lg:gap-12 items-end">
               <div className="col-span-12 lg:col-span-7 max-w-3xl">
-                <div className="inline-block max-w-[26rem] bg-background/20 px-4 py-4 sm:max-w-none sm:bg-transparent sm:px-0 sm:py-0">
+                <div className="mt-16 sm:mt-0 inline-block max-w-[26rem] bg-background/34 px-4 py-5 backdrop-blur-[2px] sm:max-w-none sm:bg-transparent sm:px-0 sm:py-0 sm:backdrop-blur-0">
                   <RevealOnScroll direction="up" duration={900}>
                     <p className="font-mono text-[10px] uppercase tracking-[0.48em] text-accent/72">
                       Selected Works
                     </p>
                   </RevealOnScroll>
                   <RevealOnScroll direction="up" duration={1100} delay={120}>
-                    <h1 className="mt-6 font-serif leading-[0.92] tracking-[-0.03em] text-primary-foreground text-[clamp(2.8rem,1.6rem+5vw,5.75rem)]">
+                    <h1 className="mt-5 font-serif leading-[0.92] tracking-[-0.03em] text-primary-foreground text-[clamp(2.8rem,1.6rem+5vw,5.75rem)]">
                       Aberdeen
                     </h1>
                   </RevealOnScroll>
-                  <RevealLine width="w-14" delay={260} className="mt-6" />
+                  <RevealLine width="w-14" delay={260} className="mt-5 hidden sm:block" />
                   <RevealOnScroll direction="up" duration={1000} delay={320}>
-                    <p className="mt-6 max-w-[36rem] font-serif text-primary-foreground/90 leading-[1.28] text-[clamp(1.05rem,0.92rem+0.55vw,1.45rem)]">
+                    <p className="mt-5 max-w-[36rem] font-serif text-primary-foreground/90 leading-[1.28] text-[clamp(1.05rem,0.92rem+0.55vw,1.45rem)]">
                       Indoor arena, viewing lounge and refined equine facility detailing.
                     </p>
                   </RevealOnScroll>
@@ -90,6 +90,7 @@ export default function Aberdeen() {
                   </div>
                 </RevealOnScroll>
               </div>
+
             </div>
           </div>
 
