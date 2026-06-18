@@ -18,6 +18,8 @@ import serviceGroundworks from "@/assets/homepage-services/groundworks.png.asset
 
 import slidingStopHero from "@/assets/homepage-refresh/sliding-stop-hero.png.asset.json";
 
+const SESSION_KEY = "pe-brand-intro-seen";
+const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
 
 
 const featuredWorks = [
