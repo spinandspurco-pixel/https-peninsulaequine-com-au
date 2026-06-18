@@ -66,7 +66,7 @@ export function Footer() {
 
           {/* Capabilities */}
           <div>
-            <h4 className="text-[9px] font-sans font-semibold uppercase tracking-[0.35em] text-accent/50 mb-10">
+            <h4 className="text-[9px] font-sans font-semibold uppercase tracking-[0.35em] text-[hsl(var(--accent-light))]/95 mb-10">
               Capabilities
             </h4>
             <ul className="space-y-5">
@@ -85,7 +85,7 @@ export function Footer() {
 
           {/* Studio */}
           <div>
-            <h4 className="text-[9px] font-sans font-semibold uppercase tracking-[0.35em] text-accent/50 mb-10">
+            <h4 className="text-[9px] font-sans font-semibold uppercase tracking-[0.35em] text-[hsl(var(--accent-light))]/95 mb-10">
               Studio
             </h4>
             <ul className="space-y-5">
@@ -104,7 +104,7 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-[9px] font-sans font-semibold uppercase tracking-[0.35em] text-accent/50 mb-10">
+            <h4 className="text-[9px] font-sans font-semibold uppercase tracking-[0.35em] text-[hsl(var(--accent-light))]/95 mb-10">
               Contact
             </h4>
             <ul className="space-y-5">
