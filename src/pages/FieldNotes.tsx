@@ -4,7 +4,6 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine, RevealImage } from "@/components/RevealOnScroll";
 
 // Editorial imagery sourced from existing project library.
-import heroImg from "@/assets/main-ridge-timber.jpg";
 import mrFrame from "@/assets/main-ridge-barn-frame.jpg";
 import mrBrick from "@/assets/main-ridge-brickwork.jpg";
 import mrTimber from "@/assets/main-ridge-ciro-woodwork-1.jpg";
@@ -17,6 +16,20 @@ import mrInterior2 from "@/assets/main-ridge-finished-interior-2.jpg";
 import aberdeenExt from "@/assets/aberdeen-exterior.jpg";
 import arenaPrep from "@/assets/arena-sand-prep-1.jpg";
 import coveredArena from "@/assets/covered-arena-black-exterior.jpg";
+
+// Latest Main Ridge Pavilion photography (Nov 2026).
+import mrCustomTableAsset from "@/assets/main-ridge/mr-custom-table.png.asset.json";
+import mrPendantBeamsAsset from "@/assets/main-ridge/mr-pendant-beams.png.asset.json";
+import mrParrillaWideAsset from "@/assets/main-ridge/mr-parrilla-wide.png.asset.json";
+import mrBeamDetailAsset from "@/assets/main-ridge/mr-beam-detail.png.asset.json";
+import mrParrillaGrillAsset from "@/assets/main-ridge/mr-parrilla-grill.png.asset.json";
+
+const mrCustomTable = mrCustomTableAsset.url;
+const mrPendantBeams = mrPendantBeamsAsset.url;
+const mrParrillaWide = mrParrillaWideAsset.url;
+const mrBeamDetail = mrBeamDetailAsset.url;
+const mrParrillaGrill = mrParrillaGrillAsset.url;
+const heroImg = mrParrillaWide;
 
 type Status = "In Progress" | "Completed";
 type Category =
@@ -57,8 +70,8 @@ const projects: Project[] = [
     status: "In Progress",
     latest:
       "Timber, corrugated steel, brick firebox and custom-built table details coming together.",
-    image: mrTimber,
-    alt: "Main Ridge Pavilion — timber framing and custom joinery in progress",
+    image: mrCustomTable,
+    alt: "Main Ridge Pavilion — solid timber table and steel-clad legs at golden hour",
   },
   {
     slug: "private-estate-arena",
@@ -109,24 +122,24 @@ const mainRidgeTimeline = [
     title: "Frame & Form",
     body:
       "Foundations poured, rebar tied, posts plumbed. The pavilion's footprint becomes architecture.",
-    image: mrFrame,
-    alt: "Main Ridge Pavilion — timber frame and steel rising",
+    image: mrPendantBeams,
+    alt: "Main Ridge Pavilion — recycled hardwood posts, beams and pendant lighting at dusk",
   },
   {
     n: "III",
     title: "Fire & Iron",
     body:
-      "Brick firebox laid by hand, corrugated steel skin lifted in. Heat, mass and material take their place.",
-    image: mrBrick,
-    alt: "Main Ridge Pavilion — brick firebox under construction",
+      "Brick firebox laid by hand, hand-forged parrilla grill suspended on chain and wheel. Heat, mass and iron take their place.",
+    image: mrParrillaGrill,
+    alt: "Main Ridge Pavilion — hand-forged parrilla grill over glowing coals in brick firebox",
   },
   {
     n: "IV",
     title: "Custom Table & Finish",
     body:
-      "Solid timber table fabricated on site. Joinery, bronze hardware and lighting tuned for long evenings.",
-    image: mrTimber2,
-    alt: "Main Ridge Pavilion — custom timber table and joinery",
+      "Solid recycled timber table fabricated on site, set on blackened steel legs. Joinery, bronze hardware and lighting tuned for long evenings.",
+    image: mrCustomTable,
+    alt: "Main Ridge Pavilion — custom recycled-timber table and bench on steel legs at golden hour",
   },
   {
     n: "V",
@@ -139,6 +152,11 @@ const mainRidgeTimeline = [
 ];
 
 const mainRidgeGallery = [
+  { src: mrParrillaWide, alt: "Pavilion dusk — corrugated steel, recycled posts and brick parrilla beyond" },
+  { src: mrCustomTable, alt: "Custom recycled-timber table and bench on blackened steel legs" },
+  { src: mrParrillaGrill, alt: "Hand-forged parrilla grill on chain and wheel over glowing coals" },
+  { src: mrPendantBeams, alt: "Recycled hardwood beams, corrugated roof and pendant light" },
+  { src: mrBeamDetail, alt: "Hardwood post-to-beam junction with bolted steel plate detail" },
   { src: mrGround, alt: "Site preparation" },
   { src: mrRebar, alt: "Rebar foundation detail" },
   { src: mrCrane, alt: "Crane lift — frame raising" },
