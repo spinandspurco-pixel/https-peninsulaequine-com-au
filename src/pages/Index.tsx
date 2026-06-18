@@ -79,6 +79,7 @@ export default function Index() {
     <IntroContext.Provider value={{ headerLogoReady: headerReady, headerReady }}>
       <BrandIntro />
       <Layout>
+        <div className="type-architectural">
         <section className="relative min-h-[100dvh] overflow-hidden flex items-end">
           <img
             src={slidingStopHero.url}
