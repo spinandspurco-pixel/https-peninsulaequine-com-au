@@ -217,8 +217,8 @@ export function Header() {
               <span className="font-serif text-sm font-semibold tracking-[0.08em] leading-none">
                 Peninsula Equine
               </span>
-              <span className="text-[9px] font-sans tracking-[0.25em] uppercase text-accent/70 mt-1">
-                Premium Equine Environments
+              <span className="text-[9px] font-sans tracking-[0.25em] uppercase text-accent/55 mt-1">
+                From Dirt to Dynasty
               </span>
             </div>
           </Link>
