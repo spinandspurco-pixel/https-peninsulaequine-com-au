@@ -3,11 +3,16 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 
-import heroDrone from "@/assets/covered-arena-finished-lit.jpg";
-import steelFront from "@/assets/covered-arena-finished-lit.jpg";
-import sitewideProgress from "@/assets/covered-arena-black-exterior.jpg";
-import redClayRoofline from "@/assets/main-ridge-arena-grading.jpg";
-import steelSide from "@/assets/arena-sand-prep-1.jpg";
+import heroDroneAsset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
+import steelFrontAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
+import sitewideProgressAsset from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
+import redClayRooflineAsset from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
+import steelSideAsset from "@/assets/field-notes/covered-competition-arena-drainage-detail.png.asset.json";
+const heroDrone = heroDroneAsset.url;
+const steelFront = steelFrontAsset.url;
+const sitewideProgress = sitewideProgressAsset.url;
+const redClayRoofline = redClayRooflineAsset.url;
+const steelSide = steelSideAsset.url;
 
 const facts = [
   { label: "Category", value: "Covered Arena / Stables" },
