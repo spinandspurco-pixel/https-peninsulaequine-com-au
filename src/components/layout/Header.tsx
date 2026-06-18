@@ -17,26 +17,27 @@ const servicesGroups: NavGroup[] = [
   {
     label: "Build",
     items: [
-      { name: "Covered Arenas", href: "/arenas", description: "Indoor riding environments & competition-ready covered arenas" },
-      { name: "Stables & Barns", href: "/stables", description: "Custom stables and equestrian barn structures" },
-      { name: "Pavilions & Rural Builds", href: "/equine-estates", description: "Pavilions, rural entertaining spaces & masterplans" },
-      { name: "Equine Infrastructure", href: "/infrastructure", description: "Fencing, yards & integrated site infrastructure" },
+      { name: "Covered Arenas", href: "/arenas", description: "Covered & indoor riding environments" },
+      { name: "Stables & Barn Structures", href: "/stables", description: "Purpose-built stables and barns" },
+      { name: "Pavilions & Rural Builds", href: "/selected-works/main-ridge-pavilion", description: "Custom rural pavilions and gathering spaces" },
     ],
   },
   {
     label: "Ground",
     items: [
-      { name: "Groundworks & Site Preparation", href: "/infrastructure", description: "Site cuts, levels and base preparation" },
-      { name: "Drainage & Surfacing", href: "/arenas", description: "Engineered drainage and arena footing" },
+      { name: "Groundworks & Site Preparation", href: "/infrastructure#groundworks", description: "Levels, base works, machinery" },
+      { name: "Drainage & Surfacing", href: "/infrastructure#drainage", description: "Drainage systems & surface preparation" },
+      { name: "Equine Infrastructure", href: "/infrastructure", description: "Fencing, yards, laneways, wash areas" },
     ],
   },
   {
-    label: "Recovery & Systems",
+    label: "Systems",
     items: [
-      { name: "LumenArc Recovery Systems", href: "/lumenarc", description: "Considered recovery environments for equine wellbeing" },
+      { name: "LumenArc Recovery Systems", href: "/lumenarc", description: "Considered recovery environments" },
     ],
   },
 ];
+
 
 const servicesChildren: NavChild[] = servicesGroups.flatMap((g) => g.items);
 
@@ -455,10 +456,10 @@ export function Header() {
                       to={item.href}
                       aria-current={isActive(item.href) ? "page" : undefined}
                       className={cn(
-                        "block py-3.5 min-h-11 text-xs uppercase tracking-[0.18em] font-medium transition-all duration-500 border-l-2 pl-4 -ml-[2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm",
+                        "block py-3.5 min-h-11 text-[13px] uppercase tracking-[0.12em] font-medium transition-all duration-500 border-l-2 pl-4 -ml-[2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm",
                         isActive(item.href)
                           ? "text-[hsl(var(--header-active))] border-[hsl(var(--header-active))]"
-                          : "text-foreground/55 border-transparent hover:text-accent"
+                          : "text-foreground/70 border-transparent hover:text-accent"
                       )}
                     >
                       {item.name}
@@ -472,8 +473,8 @@ export function Header() {
                     type="button"
                     onClick={() => setMobileServicesOpen((v) => !v)}
                     className={cn(
-                      "w-full flex items-center justify-between py-3.5 min-h-11 text-xs uppercase tracking-[0.18em] font-medium transition-all duration-500 border-l-2 pl-4 -ml-[2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm",
-                      isParentActive(item) ? "text-[hsl(var(--header-active))] border-[hsl(var(--header-active))]" : "text-foreground/55 border-transparent hover:text-accent"
+                      "w-full flex items-center justify-between py-3.5 min-h-11 text-[13px] uppercase tracking-[0.12em] font-medium transition-all duration-500 border-l-2 pl-4 -ml-[2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm",
+                      isParentActive(item) ? "text-[hsl(var(--header-active))] border-[hsl(var(--header-active))]" : "text-foreground/70 border-transparent hover:text-accent"
                     )}
                     aria-expanded={mobileServicesOpen}
                     aria-controls={mobileServicesId}
@@ -481,7 +482,7 @@ export function Header() {
                     <span>{item.name}</span>
                     <span
                       className={cn(
-                        "text-[9px] transition-transform duration-500",
+                        "text-[10px] transition-transform duration-500",
                         mobileServicesOpen ? "rotate-180" : ""
                       )}
                       aria-hidden="true"
@@ -499,11 +500,11 @@ export function Header() {
                   >
                     <div className="pl-4 pb-2 ml-1 border-l border-accent/10 space-y-5 pt-2">
                       {(item.groups ?? [{ label: item.name, items: item.children ?? [] }]).map((group) => (
-                        <div key={group.label} className="space-y-2">
-                          <p className="font-mono text-[8.5px] uppercase tracking-[0.5em] text-foreground/30 pl-3">
+                        <div key={group.label} className="space-y-1.5">
+                          <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-accent/55 pl-3">
                             {group.label}
                           </p>
-                          <ul className="space-y-1 list-none m-0 p-0">
+                          <ul className="space-y-0.5 list-none m-0 p-0">
                             {group.items.map((child) => (
                               <li key={child.href}>
                                 <Link
@@ -511,10 +512,10 @@ export function Header() {
                                   tabIndex={mobileServicesOpen ? 0 : -1}
                                   aria-current={isActive(child.href) ? "page" : undefined}
                                   className={cn(
-                                    "block py-2.5 min-h-11 text-[11px] uppercase tracking-[0.2em] transition-all duration-400 border-l-2 pl-3 -ml-[2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm",
+                                    "block py-2.5 min-h-11 text-[12px] tracking-[0.04em] transition-all duration-400 border-l-2 pl-3 -ml-[2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm",
                                     isActive(child.href)
                                       ? "text-[hsl(var(--header-active))] border-[hsl(var(--header-active))] font-medium"
-                                      : "text-foreground/55 border-transparent hover:text-foreground/90"
+                                      : "text-foreground/65 border-transparent hover:text-foreground/95"
                                   )}
                                 >
                                   {child.name}
