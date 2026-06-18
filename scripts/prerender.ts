@@ -250,7 +250,7 @@ function main() {
       description:
         "Arenas, stables, equine estates, recovery stations and infrastructure — built by riders, crafted for performance. Mornington Peninsula.",
       image: DEFAULT_OG_IMAGE,
-      imageAlt: "Sliding stop — Peninsula Equine.",
+      imageAlt: DEFAULT_OG_ALT,
     }),
   );
 
