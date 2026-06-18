@@ -60,7 +60,7 @@ describe("LumenArc mobile clipping regression", () => {
       // Bare `object-cover` without a mobile-first `object-contain` partner
       // is what caused the original clipping bug.
       const heroImgMatch = source.match(
-        /<img[\s\S]*?alt="LumenArc coming soon teaser visual[\s\S]*?\/>/,
+        /<img(?:(?!<img)[\s\S])*?alt="LumenArc coming soon teaser visual[\s\S]*?\/>/,
       );
       expect(heroImgMatch, "LumenArc hero <img> should exist").toBeTruthy();
       const heroImg = heroImgMatch![0];
@@ -81,7 +81,7 @@ describe("LumenArc mobile clipping regression", () => {
 
     it("centers the hero image so the lockup stays in frame", () => {
       const heroImgMatch = source.match(
-        /<img[\s\S]*?alt="LumenArc coming soon teaser visual[\s\S]*?\/>/,
+        /<img(?:(?!<img)[\s\S])*?alt="LumenArc coming soon teaser visual[\s\S]*?\/>/,
       );
       expect(heroImgMatch![0]).toMatch(/\bobject-center\b/);
     });
