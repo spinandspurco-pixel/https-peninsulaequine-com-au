@@ -20,6 +20,8 @@ const sitewideProgress = getProjectImage(SLUG, "fieldNotesGalleryA").url;
 const sitewideProgressAlt = getProjectImageAlt(SLUG, "fieldNotesGalleryA");
 const redClayRoofline = getProjectImage(SLUG, "fieldNotesGalleryB").url;
 const redClayRooflineAlt = getProjectImageAlt(SLUG, "fieldNotesGalleryB");
+const conditionsResp = getProjectResponsive(SLUG, "fieldNotesConditions")!;
+const conditionsAlt = getProjectImageAlt(SLUG, "fieldNotesConditions");
 
 export default function FieldNotes() {
   useEffect(() => {
