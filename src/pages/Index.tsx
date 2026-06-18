@@ -348,7 +348,9 @@ export default function Index() {
               </div>
             </RevealOnScroll>
           </div>
+          </div>
         </section>
+        </div>
       </Layout>
     </IntroContext.Provider>
   );
