@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Phone, Mail, ArrowRight, CheckCircle, Loader2, MapPin } from "lucide-react";
+import { ArrowRight, CheckCircle, Loader2, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Layout } from "@/components/layout/Layout";
