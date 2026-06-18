@@ -7,7 +7,8 @@ import pavilionWide from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace
 import fireplacePortrait from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
 import parrillaWide from "@/assets/main-ridge/mr-parrilla-wide.png.asset.json";
 import aberdeenHero from "@/assets/aberdeen/hero-entrance-twilight.png.asset.json";
-import currentArenaHero from "@/assets/covered-arena-finished-lit.jpg";
+import currentArenaSteelAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
+const currentArenaHero = currentArenaSteelAsset.url;
 
 const FILTER = "brightness(0.82) contrast(1.1) saturate(0.8)";
 
@@ -199,7 +200,7 @@ export default function Projects() {
                     loading="lazy"
                     decoding="async"
                     className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
-                    style={{ filter: "brightness(0.72) contrast(1.08) saturate(0.78)", objectPosition: "62% 48%" }}
+                    style={{ filter: "brightness(0.78) contrast(1.12) saturate(0.82)", objectPosition: "55% 50%" }}
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-transparent to-transparent" />
                 </div>
