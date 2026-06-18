@@ -235,7 +235,7 @@ export default function Index() {
                   <RevealLine width="w-12" delay={240} />
                   <RevealOnScroll direction="up" duration={1000} delay={300}>
                     <p className="font-sans font-light text-foreground/55 leading-[1.8] text-[clamp(0.95rem,0.85rem+0.25vw,1.05rem)] max-w-xl">
-                      Main Ridge carries the finished warmth. The current arena build stays visible without pretending it is complete.
+                      Completed environments shown with the warmth they were built for — paired with a polished interior to feel the range.
                     </p>
                   </RevealOnScroll>
                 </div>
@@ -252,54 +252,78 @@ export default function Index() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-[clamp(1.75rem,1.25rem+2vw,3.5rem)] items-start">
-                <RevealOnScroll direction="up" duration={1300} className="md:col-span-6">
-                  <Link to="/selected-works/main-ridge-pavilion" className="group block">
-                    <div className="relative aspect-[16/10] overflow-hidden">
-                      <picture className="absolute inset-0 w-full h-full">
-                        <source
-                          srcSet={`${goldenHourPavilion800.url} 800w, ${goldenHourPavilion1200.url} 1200w, ${goldenHourPavilion1600.url} 1600w`}
-                          sizes="(min-width: 768px) 50vw, 100vw"
-                          type="image/webp"
-                        />
-                        <img
-                          src={goldenHourPavilion.url}
-                          alt="Wide moody interior of the Main Ridge pavilion at dusk with fireplace and long handcrafted timber table"
-                          loading="lazy"
-                          decoding="async"
-                          className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
-                          style={{ filter: "brightness(0.8) contrast(1.1) saturate(0.8)" }}
-                        />
-                      </picture>
-                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-                    </div>
-                    <div className="mt-6 pt-5 border-t border-accent/15 flex items-baseline justify-between gap-4">
-                      <p className="font-serif text-foreground/85 group-hover:text-foreground transition-colors duration-500 text-[clamp(1.15rem,0.95rem+0.7vw,1.6rem)] leading-[1.2] tracking-[-0.012em]">
-                        Main Ridge Pavilion
-                      </p>
-                      <p className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.45em]">Completed</p>
-                    </div>
-                  </Link>
-                </RevealOnScroll>
-
-                <RevealOnScroll direction="up" duration={1300} delay={220} className="md:col-span-6">
-                  <Link to="/field-notes/covered-arena-stables-build" className="group block">
-                    <div className="relative aspect-[16/10] overflow-hidden">
+              {/* Main Ridge — full-bleed anchor */}
+              <RevealOnScroll direction="up" duration={1300}>
+                <Link to="/selected-works/main-ridge-pavilion" className="group block">
+                  <div className="relative aspect-[4/5] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
+                    <picture className="absolute inset-0 w-full h-full">
+                      <source
+                        srcSet={`${goldenHourPavilion800.url} 800w, ${goldenHourPavilion1200.url} 1200w, ${goldenHourPavilion1600.url} 1600w`}
+                        sizes="100vw"
+                        type="image/webp"
+                      />
                       <img
-                        src={currentArenaHero}
-                        alt="Covered Arena & Stables Build — steel framing, roof structure and red clay ground conditions"
+                        src={goldenHourPavilion.url}
+                        alt="Wide moody interior of the Main Ridge pavilion at dusk with fireplace and long handcrafted timber table"
                         loading="lazy"
                         decoding="async"
                         className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
-                        style={{ objectPosition: "62% 48%", filter: "brightness(0.76) contrast(1.12) saturate(0.78)" }}
+                        style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
                       />
-                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-                    </div>
-                    <div className="mt-6 pt-5 border-t border-accent/15 flex items-baseline justify-between gap-4">
-                      <p className="font-serif text-foreground/85 group-hover:text-foreground transition-colors duration-500 text-[clamp(1.15rem,0.95rem+0.7vw,1.6rem)] leading-[1.2] tracking-[-0.012em]">
-                        Covered Arena &amp; Stables Build
+                    </picture>
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-transparent to-transparent" />
+                  </div>
+                  <div className="mt-6 pt-5 border-t border-accent/15 grid grid-cols-12 gap-4 items-baseline">
+                    <div className="col-span-12 md:col-span-8 space-y-2">
+                      <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.42em]">Custom Rural Build</p>
+                      <p className="font-serif text-foreground/88 group-hover:text-foreground transition-colors duration-500 text-[clamp(1.35rem,1rem+1vw,1.95rem)] leading-[1.15] tracking-[-0.014em]">
+                        Main Ridge Pavilion
                       </p>
-                      <p className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.45em]">In Progress</p>
+                    </div>
+                    <div className="col-span-12 md:col-span-4 md:text-right">
+                      <p className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.45em]">Completed</p>
+                    </div>
+                  </div>
+                </Link>
+              </RevealOnScroll>
+
+              {/* Aberdeen — secondary anchor pair */}
+              <div className="mt-[clamp(2.5rem,1.75rem+2.5vw,4.5rem)] grid grid-cols-1 md:grid-cols-12 gap-[clamp(1.5rem,1rem+1.5vw,3rem)] items-stretch">
+                <RevealOnScroll direction="up" duration={1300} className="md:col-span-7">
+                  <Link to="/selected-works/aberdeen" className="group block h-full">
+                    <div className="relative aspect-[16/10] md:aspect-[5/4] overflow-hidden h-full">
+                      <img
+                        src={aberdeenHero.url}
+                        alt="Aberdeen — symmetrical equine facility entrance at twilight with warm internal glow"
+                        loading="lazy"
+                        decoding="async"
+                        className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
+                        style={{ filter: "brightness(0.74) contrast(1.08) saturate(0.78)", objectPosition: "50% 42%" }}
+                      />
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/82 via-transparent to-transparent" />
+                    </div>
+                  </Link>
+                </RevealOnScroll>
+                <RevealOnScroll direction="up" duration={1300} delay={180} className="md:col-span-5">
+                  <Link to="/selected-works/aberdeen" className="group block">
+                    <div className="relative aspect-[4/5] overflow-hidden">
+                      <img
+                        src={aberdeenArena.url}
+                        alt="Aberdeen indoor arena with dramatic shafts of natural light across the surface"
+                        loading="lazy"
+                        decoding="async"
+                        className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
+                        style={{ filter: "brightness(0.78) contrast(1.1) saturate(0.78)" }}
+                      />
+                    </div>
+                    <div className="mt-6 pt-5 border-t border-accent/15 space-y-2">
+                      <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.42em]">Indoor Arena / Viewing Lounge</p>
+                      <div className="flex items-baseline justify-between gap-4">
+                        <p className="font-serif text-foreground/88 group-hover:text-foreground transition-colors duration-500 text-[clamp(1.2rem,0.95rem+0.85vw,1.7rem)] leading-[1.15] tracking-[-0.012em]">
+                          Aberdeen
+                        </p>
+                        <p className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.45em]">Completed</p>
+                      </div>
                     </div>
                   </Link>
                 </RevealOnScroll>
@@ -307,6 +331,7 @@ export default function Index() {
             </div>
           </section>
 
+          {/* Field Notes — live build feature */}
           <section className="relative py-[clamp(6rem,4rem+7vw,10rem)] bg-background overflow-hidden border-t border-accent/10">
             <div className="section-container max-w-[1480px] mx-auto">
               <RevealOnScroll direction="up" duration={900}>
@@ -316,37 +341,90 @@ export default function Index() {
                   <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Field Notes</span>
                 </div>
               </RevealOnScroll>
+
               <RevealOnScroll direction="up" duration={1200}>
-                <div className="relative aspect-[4/5] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
-                  <img
-                    src={steelFront}
-                    alt="Current covered arena and stables build with steel frame rising under dramatic storm light"
-                    loading="lazy"
-                    decoding="async"
-                    className="absolute inset-0 w-full h-full object-cover image-bleed object-center"
-                    style={{ filter: "brightness(0.76) contrast(1.12) saturate(0.8)" }}
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/88 via-background/45 to-transparent" />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/55 to-transparent" />
-                  <div className="absolute bottom-0 left-0 w-full p-6 md:p-10 lg:p-14">
-                    <div className="max-w-2xl space-y-5">
-                      <h2 className="font-serif text-foreground/92 leading-[1.05] tracking-[-0.022em] text-[clamp(1.75rem,1.15rem+2.2vw,2.7rem)]">
-                        Covered Arena &amp; Stables Build
-                      </h2>
-                      <p className="font-sans font-light text-foreground/60 leading-[1.85] text-[clamp(0.9rem,0.82rem+0.2vw,1rem)] max-w-lg">
-                        Structural steel, undercover arena works and stable infrastructure in progress.
-                      </p>
-                      <Link
-                        to="/field-notes/covered-arena-stables-build"
-                        className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em] pt-1"
-                      >
-                        <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
-                        View Field Note
-                      </Link>
+                <Link to="/field-notes/covered-arena-stables-build" className="group block">
+                  <div className="relative aspect-[4/5] sm:aspect-[16/10] md:aspect-[21/9] overflow-hidden">
+                    <img
+                      src={fieldNoteDozerStorm.url}
+                      alt="Dozer working red clay site under storm sky — steel frame rising on the covered arena and stables build"
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1800ms] ease-out group-hover:scale-[1.02]"
+                      style={{ filter: "brightness(0.72) contrast(1.14) saturate(0.78)", objectPosition: "55% 55%" }}
+                    />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-transparent" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/55 to-transparent" />
+
+                    <div className="absolute bottom-0 left-0 w-full p-6 sm:p-10 md:p-14 lg:p-16">
+                      <div className="max-w-2xl space-y-5">
+                        <div className="flex flex-wrap items-center gap-3">
+                          <span className="inline-flex items-center gap-2 font-mono uppercase text-[9.5px] tracking-[0.42em] text-accent border border-accent/45 px-3 py-1.5 bg-background/45 backdrop-blur-sm">
+                            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                            In Progress
+                          </span>
+                          <span className="font-mono uppercase text-foreground/45 text-[9.5px] tracking-[0.42em]">
+                            Live Build · Mornington Peninsula
+                          </span>
+                        </div>
+                        <h2 className="font-serif text-foreground/94 leading-[1.02] tracking-[-0.022em] text-[clamp(2rem,1.2rem+2.6vw,3.2rem)]">
+                          Covered Arena &amp; Stables Build
+                        </h2>
+                        <div className="space-y-3 max-w-lg">
+                          <p className="font-sans font-light text-foreground/72 leading-[1.7] text-[clamp(0.95rem,0.85rem+0.25vw,1.1rem)]">
+                            Notes from the build.
+                          </p>
+                          <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[clamp(0.9rem,0.82rem+0.2vw,1rem)]">
+                            Process, material and detail — recorded as projects move through the ground.
+                          </p>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-x-8 gap-y-3 pt-2">
+                          <span className="inline-flex items-center gap-3 font-mono uppercase text-foreground/82 group-hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]">
+                            <span className="w-8 h-px bg-accent/60 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
+                            View Field Note
+                          </span>
+                          <Link
+                            to="/field-notes"
+                            onClick={(e) => e.stopPropagation()}
+                            className="group/alt inline-flex items-center gap-3 font-mono uppercase text-foreground/50 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
+                          >
+                            <span className="w-6 h-px bg-foreground/25 transition-all duration-700 group-hover/alt:w-12 group-hover/alt:bg-foreground/60" />
+                            Read Field Notes
+                          </Link>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               </RevealOnScroll>
+
+              {/* Supporting detail strip — keeps the live feel grounded */}
+              <div className="mt-[clamp(1.5rem,1rem+1.5vw,2.5rem)] grid grid-cols-2 gap-[clamp(1rem,0.75rem+1vw,2rem)]">
+                <RevealOnScroll direction="up" duration={1100} delay={120}>
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <img
+                      src={steelFront}
+                      alt="Steel framing rising on the covered arena under dramatic light"
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1600ms] ease-out hover:scale-[1.02]"
+                      style={{ filter: "brightness(0.74) contrast(1.12) saturate(0.78)" }}
+                    />
+                  </div>
+                </RevealOnScroll>
+                <RevealOnScroll direction="up" duration={1100} delay={240}>
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <img
+                      src={pavilionFireplaceDetail.url}
+                      alt="Main Ridge brick fireplace and bronze wall light detail"
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1600ms] ease-out hover:scale-[1.02]"
+                      style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
+                    />
+                  </div>
+                </RevealOnScroll>
+              </div>
             </div>
           </section>
 
