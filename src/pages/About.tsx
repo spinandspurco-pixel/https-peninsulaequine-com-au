@@ -271,8 +271,8 @@ export default function About() {
           body="From arenas and stables to custom rural builds, Peninsula Equine works with honest materials and practical details — timber, steel, brick, firelight, joinery and finish."
           src={pavilionTableDetail.url}
           alt="Main Ridge Pavilion — handcrafted timber table at dusk."
-          aspect="aspect-[3/2]"
-          crop="50% 52%"
+          aspect="aspect-[4/3] md:aspect-[3/2]"
+          crop="object-[50%_55%] md:object-[50%_52%]"
         />
 
         {/* ═══ CTA ════════════════════════════════════════════ */}
