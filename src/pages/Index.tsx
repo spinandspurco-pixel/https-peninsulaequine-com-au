@@ -256,7 +256,9 @@ export default function Index() {
                 <RevealOnScroll direction="up" duration={1300} className="col-span-12 md:col-span-7">
                   <div className="relative aspect-[4/5] sm:aspect-[5/4] md:aspect-[4/5] overflow-hidden">
                     <img
-                      src={ciroAceQuietMoment.url}
+                      src={ciro1024.url}
+                      srcSet={ciroSrcSet}
+                      sizes="(min-width: 768px) 58vw, 100vw"
                       alt="A quiet moment between horseman and horse in low arena light — the ground Peninsula Equine builds for"
                       loading="lazy"
                       decoding="async"
