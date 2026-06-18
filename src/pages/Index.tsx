@@ -16,12 +16,12 @@ import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
 import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
 import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
 
-import serviceArenas from "@/assets/service-arenas.jpg";
-import serviceStables from "@/assets/service-stables.jpg";
-import serviceInfrastructure from "@/assets/service-infrastructure.jpg";
-import serviceGroundworks from "@/assets/service-groundworks.jpg";
-import serviceCustom from "@/assets/service-custom.jpg";
-import serviceDrainage from "@/assets/service-drainage.jpg";
+import serviceArenas from "@/assets/homepage-services/arenas.png.asset.json";
+import serviceStables from "@/assets/homepage-services/stables.png.asset.json";
+import serviceInfrastructure from "@/assets/homepage-services/infrastructure.png.asset.json";
+import serviceGroundworks from "@/assets/homepage-services/groundworks.png.asset.json";
+import serviceCustom from "@/assets/homepage-services/custom-rural-builds.png.asset.json";
+import serviceDrainage from "@/assets/homepage-services/drainage.png.asset.json";
 
 const SESSION_KEY = "pe-brand-intro-seen";
 const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
@@ -73,7 +73,9 @@ const serviceCards = [
     title: "Arenas",
     description:
       "Indoor and outdoor arenas, footing preparation, drainage, base works and surfaces designed for real use.",
-    image: serviceArenas,
+    image: serviceArenas.url,
+    alt: "Arena groundwork underway inside a large covered equestrian structure at golden hour",
+    imagePosition: "50% 58%",
     href: "/arenas",
   },
   {
@@ -81,7 +83,9 @@ const serviceCards = [
     title: "Stables & Barns",
     description:
       "Stable builds, barn interiors, shelters, wash bays, tack spaces and practical horse-first layouts.",
-    image: serviceStables,
+    image: serviceStables.url,
+    alt: "Moody stable aisle with warm timber stall fronts and a horse leaning from its bay",
+    imagePosition: "54% 44%",
     href: "/stables",
   },
   {
@@ -89,15 +93,19 @@ const serviceCards = [
     title: "Equine Infrastructure",
     description:
       "Fencing, laneways, yards, gates, retaining, access, drainage and site works that make the whole property function.",
-    image: serviceInfrastructure,
+    image: serviceInfrastructure.url,
+    alt: "Rural steel gate and timber fencing stretching down an equine laneway at sunset",
+    imagePosition: "48% 54%",
     href: "/infrastructure",
   },
   {
     num: "04",
     title: "Groundworks",
     description:
-      "Site cuts, levels, bases, preparation and machine work — the ugly stuff that makes the beautiful stuff last.",
-    image: serviceGroundworks,
+      "Site cuts, levels, bases, preparation and machine work — the groundwork that makes the finished build last.",
+    image: serviceGroundworks.url,
+    alt: "Dozer pushing earth on a rural construction site with equine fencing behind it at sunset",
+    imagePosition: "42% 52%",
     href: "/services",
   },
   {
@@ -105,7 +113,9 @@ const serviceCards = [
     title: "Custom Rural Builds",
     description:
       "Pavilions, viewing areas, parrilla spaces, tables, fit-outs and lifestyle additions built with the same grit and finish.",
-    image: serviceCustom,
+    image: serviceCustom.url,
+    alt: "Rustic pavilion with timber table, corrugated steel lining and firebox in warm evening light",
+    imagePosition: "50% 50%",
     href: "/services",
   },
   {
@@ -113,7 +123,9 @@ const serviceCards = [
     title: "Drainage & Surfacing",
     description:
       "Drainage systems, base works and surface preparation engineered for performance, longevity and all conditions.",
-    image: serviceDrainage,
+    image: serviceDrainage.url,
+    alt: "Close-up of arena drainage trench with gravel, geotextile fabric and perforated pipe in golden light",
+    imagePosition: "50% 56%",
     href: "/services",
   },
 ];
@@ -336,12 +348,13 @@ export default function Index() {
                     <div className="relative aspect-[16/10] overflow-hidden">
                       <img
                         src={card.image}
-                        alt={card.title}
+                        alt={card.alt}
                         width={1024}
                         height={640}
                         loading="lazy"
                         className="absolute inset-0 w-full h-full object-cover"
                         style={{
+                          objectPosition: card.imagePosition,
                           filter: "brightness(0.82) contrast(1.12) saturate(0.78)",
                           transition: `transform 900ms ${EASE}`,
                         }}
