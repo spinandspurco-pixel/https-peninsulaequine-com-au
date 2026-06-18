@@ -226,7 +226,7 @@ export default function Index() {
             </RevealOnScroll>
             <div className="grid grid-cols-1 md:grid-cols-12 gap-[clamp(1.5rem,1rem+2vw,3.5rem)] items-start">
               <RevealOnScroll direction="up" duration={1200}>
-                <div className="md:col-span-7">
+                <Link to="/projects/main-ridge-pavilion" className="md:col-span-7 group block">
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <picture className="absolute inset-0 w-full h-full">
                       <source
@@ -241,19 +241,19 @@ export default function Index() {
                         decoding="async"
                         width={1672}
                         height={941}
-                        className="absolute inset-0 w-full h-full object-cover image-bleed"
+                        className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1400ms] ease-out group-hover:scale-[1.02]"
                         style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
                       />
                     </picture>
                     <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,hsl(var(--background)/0.55)_100%)]" />
                   </div>
                   <div className="mt-6 pt-5 border-t border-accent/15 flex items-baseline justify-between gap-4">
-                    <p className="font-serif text-foreground/78 text-[clamp(1.1rem,0.9rem+0.6vw,1.45rem)] leading-[1.2] tracking-[-0.01em]">
+                    <p className="font-serif text-foreground/78 group-hover:text-foreground transition-colors duration-500 text-[clamp(1.1rem,0.9rem+0.6vw,1.45rem)] leading-[1.2] tracking-[-0.01em]">
                       Main Ridge Pavilion
                     </p>
                     <p className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.45em]">Flagship</p>
                   </div>
-                </div>
+                </Link>
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1200} delay={200}>
                 <div className="md:col-span-5 md:mt-28">
