@@ -17,10 +17,20 @@ import { resolve, dirname } from "node:path";
 const SITE_ORIGIN = "https://peninsulaequine.com.au";
 const DIST = resolve("dist");
 
+// Sitewide fallback OG image — the homepage sliding-stop hero. Used by
+// routes without a more specific hero (contact, process, testimonials,
+// faq, privacy, terms) and as the og:image baked into the static
+// index.html for the homepage.
+const DEFAULT_OG_IMAGE =
+  "/__l5e/assets-v1/a006cbde-92fd-4c76-a17d-db3530672d7a/sliding-stop-hero.png";
+
 interface RouteMeta {
   path: string;
   title: string;
   description: string;
+  /** Absolute path under the project origin, e.g. "/__l5e/..." */
+  image?: string;
+  imageAlt?: string;
 }
 
 // Keep in sync with public/sitemap.xml.
@@ -30,36 +40,55 @@ const ROUTES: RouteMeta[] = [
     title: "Arenas | Peninsula Equine",
     description:
       "Sand, rubber and all-weather arenas engineered for performance — built by riders on the Mornington Peninsula.",
+    image:
+      "/__l5e/assets-v1/37069802-9f36-4073-aed4-0659270ccafe/pe-arena-grading.png",
+    imageAlt:
+      "Covered equestrian arena interior with engineered footing under controlled light.",
   },
   {
     path: "/stables",
     title: "Stables | Peninsula Equine",
     description:
       "Bespoke stables, barns and shelters designed around how horses actually live, work and recover.",
+    image:
+      "/__l5e/assets-v1/94caa649-4df5-456a-9871-684b90f34580/pe-stable-aisle-cinematic.png",
+    imageAlt: "Cinematic stable aisle interior.",
   },
   {
     path: "/equine-estates",
     title: "Whole-Property Planning | Peninsula Equine",
     description:
       "Whole-property equine estate planning — arenas, stables, paddocks and infrastructure resolved as one system.",
+    image:
+      "/__l5e/assets-v1/8564a7af-7ef2-4267-9ee1-6b10228eecbe/pe-estate-aerial-masterplan.png",
+    imageAlt: "Aerial masterplan of an equine estate at dusk.",
   },
   {
     path: "/infrastructure",
     title: "Infrastructure | Peninsula Equine",
     description:
       "Fencing, water, drainage, tracks and yards — the unglamorous infrastructure that makes a property work.",
+    image:
+      "/__l5e/assets-v1/743392aa-050a-4f00-89df-2e018966f2c0/pe-groundworks-dozer.png",
+    imageAlt: "Engineered site works and infrastructure in progress.",
   },
   {
     path: "/gallery",
     title: "Gallery | Peninsula Equine",
     description:
       "Selected works across arenas, stables and equine estates on the Mornington Peninsula.",
+    image:
+      "/__l5e/assets-v1/8da1740b-3fe0-4f86-b3bf-02bfca528210/main-ridge-pavilion-wide-fireplace-table.png",
+    imageAlt: "Main Ridge pavilion interior at golden hour.",
   },
   {
     path: "/about",
     title: "About | Peninsula Equine",
     description:
       "Peninsula Equine is built by horse people — arenas, stables and rural builds shaped by real experience with horses, ground and property life on the Mornington Peninsula.",
+    image:
+      "/__l5e/assets-v1/8da1740b-3fe0-4f86-b3bf-02bfca528210/main-ridge-pavilion-wide-fireplace-table.png",
+    imageAlt: "Main Ridge pavilion interior at golden hour.",
   },
   {
     path: "/contact",
@@ -105,46 +134,86 @@ function escapeHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
+/** Replace an existing tag matching `pattern`, or inject `tag` before </head>. */
+function upsert(html: string, pattern: RegExp, tag: string): string {
+  if (pattern.test(html)) return html.replace(pattern, tag);
+  return html.replace(/<\/head>/i, `  ${tag}\n  </head>`);
+}
+
 function rewriteHead(html: string, meta: RouteMeta): string {
   const url = `${SITE_ORIGIN}${meta.path}`;
   const title = escapeHtml(meta.title);
   const desc = escapeHtml(meta.description);
+  const imagePath = meta.image ?? DEFAULT_OG_IMAGE;
+  const imageUrl = `${SITE_ORIGIN}${imagePath}`;
+  const imageAlt = escapeHtml(meta.imageAlt ?? meta.title);
 
   let out = html;
 
-  // <title>
-  out = out.replace(/<title>[\s\S]*?<\/title>/i, `<title>${title}</title>`);
-
-  // <meta name="description">
-  out = out.replace(
+  out = upsert(out, /<title>[\s\S]*?<\/title>/i, `<title>${title}</title>`);
+  out = upsert(
+    out,
     /<meta\s+name=["']description["'][^>]*>/i,
     `<meta name="description" content="${desc}" />`,
   );
-
-  // <link rel="canonical">
-  out = out.replace(
+  out = upsert(
+    out,
     /<link\s+rel=["']canonical["'][^>]*>/i,
     `<link rel="canonical" href="${url}" />`,
   );
 
-  // og:title / og:url / og:description
-  out = out.replace(
+  // Open Graph
+  out = upsert(
+    out,
     /<meta\s+property=["']og:title["'][^>]*>/i,
     `<meta property="og:title" content="${title}" />`,
   );
-  out = out.replace(
+  out = upsert(
+    out,
     /<meta\s+property=["']og:url["'][^>]*>/i,
     `<meta property="og:url" content="${url}" />`,
   );
-  out = out.replace(
+  out = upsert(
+    out,
     /<meta\s+property=["']og:description["'][^>]*>/i,
     `<meta property="og:description" content="${desc}" />`,
   );
+  out = upsert(
+    out,
+    /<meta\s+property=["']og:image["'][^>]*>/i,
+    `<meta property="og:image" content="${imageUrl}" />`,
+  );
+  out = upsert(
+    out,
+    /<meta\s+property=["']og:image:alt["'][^>]*>/i,
+    `<meta property="og:image:alt" content="${imageAlt}" />`,
+  );
 
-  // twitter:title
-  out = out.replace(
+  // Twitter
+  out = upsert(
+    out,
+    /<meta\s+name=["']twitter:card["'][^>]*>/i,
+    `<meta name="twitter:card" content="summary_large_image" />`,
+  );
+  out = upsert(
+    out,
     /<meta\s+name=["']twitter:title["'][^>]*>/i,
     `<meta name="twitter:title" content="${title}" />`,
+  );
+  out = upsert(
+    out,
+    /<meta\s+name=["']twitter:description["'][^>]*>/i,
+    `<meta name="twitter:description" content="${desc}" />`,
+  );
+  out = upsert(
+    out,
+    /<meta\s+name=["']twitter:image["'][^>]*>/i,
+    `<meta name="twitter:image" content="${imageUrl}" />`,
+  );
+  out = upsert(
+    out,
+    /<meta\s+name=["']twitter:image:alt["'][^>]*>/i,
+    `<meta name="twitter:image:alt" content="${imageAlt}" />`,
   );
 
   return out;
@@ -154,8 +223,6 @@ function main() {
   const indexPath = resolve(DIST, "index.html");
   const template = readFileSync(indexPath, "utf8");
 
-  // Rewrite the root index.html as well so og:description (which is
-  // missing in source) is present on the homepage's static head.
   writeFileSync(
     indexPath,
     rewriteHead(template, {
@@ -163,6 +230,8 @@ function main() {
       title: "Peninsula Equine — Premium Equine Environments",
       description:
         "Arenas, stables, equine estates, recovery stations and infrastructure — built by riders, crafted for performance. Mornington Peninsula.",
+      image: DEFAULT_OG_IMAGE,
+      imageAlt: "Sliding stop — Peninsula Equine.",
     }),
   );
 
@@ -177,3 +246,4 @@ function main() {
 }
 
 main();
+
