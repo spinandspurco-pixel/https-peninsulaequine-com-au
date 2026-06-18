@@ -165,8 +165,9 @@ export default function Index() {
                       textShadow: "0 2px 18px rgba(0,0,0,0.55)",
                     }}
                   >
-                    Covered arenas, stables and pavilions — premium equine infrastructure built by
-                    horse people, shaped from the ground beneath the ride.
+                    Peninsula Equine designs and builds premium equine environments — with a focus
+                    on covered arenas, stable structures, pavilions and supporting infrastructure
+                    shaped for long-term use.
                   </p>
                 </div>
 
@@ -220,8 +221,8 @@ export default function Index() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1000} delay={120}>
                 <p className="font-serif text-foreground/82 leading-[1.4] tracking-[-0.022em] text-[clamp(1.5rem,1.05rem+1.8vw,2.45rem)] max-w-4xl">
-                  Covered arenas, stables, pavilions and integrated equestrian builds — shaped from the
-                  ground up across the Mornington Peninsula and beyond.
+                  Covered arenas, stable structures, pavilions and integrated equine builds —
+                  shaped from the ground up with structural clarity across the Mornington Peninsula and beyond.
                 </p>
               </RevealOnScroll>
             </div>
@@ -247,7 +248,7 @@ export default function Index() {
                   <RevealLine width="w-12" delay={240} />
                   <RevealOnScroll direction="up" duration={1000} delay={300}>
                     <p className="font-sans font-light text-foreground/55 leading-[1.8] text-[clamp(0.95rem,0.85rem+0.25vw,1.05rem)] max-w-xl">
-                      Completed environments shown with the warmth they were built for — paired with a polished interior to feel the range.
+                      Completed environments shown with the warmth and structural precision they were built for — from covered arenas to pavilion interiors.
                     </p>
                   </RevealOnScroll>
                 </div>
@@ -387,7 +388,7 @@ export default function Index() {
                             Notes from the build.
                           </p>
                           <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[clamp(0.9rem,0.82rem+0.2vw,1rem)]">
-                            Process, material and detail — recorded as projects move through the ground.
+                            Process, material and structural detail — recorded as projects move through the ground.
                           </p>
                         </div>
                         <div className="flex flex-wrap items-center gap-x-8 gap-y-3 pt-2">
