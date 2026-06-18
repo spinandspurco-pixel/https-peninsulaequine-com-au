@@ -12,6 +12,7 @@ import goldenHourPavilion1200 from "@/assets/golden-hour-pavilion-1200.webp.asse
 import goldenHourPavilion1600 from "@/assets/golden-hour-pavilion-1600.webp.asset.json";
 import serviceArenas from "@/assets/homepage-services/arenas.png.asset.json";
 import serviceGroundworks from "@/assets/homepage-services/groundworks.png.asset.json";
+import fieldNoteAsset from "@/assets/main-ridge/mr-pendant-beams.png.asset.json";
 
 import slidingStopHero from "@/assets/homepage-refresh/sliding-stop-hero.png.asset.json";
 
