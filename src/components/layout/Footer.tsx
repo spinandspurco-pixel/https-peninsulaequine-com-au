@@ -148,16 +148,16 @@ export function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-border/8">
         <div className="section-container py-8 flex flex-col sm:flex-row justify-between items-center gap-5">
-          <p className="text-[10px] text-muted-foreground/40 tracking-wider">
+          <p className="text-[10px] text-[hsl(var(--footer-muted))] tracking-wider">
             © {new Date().getFullYear()} Peninsula Equine. All rights reserved.
           </p>
-          <p className="text-[10px] text-muted-foreground/20 italic tracking-[0.12em]">
+          <p className="text-[10px] text-[hsl(var(--footer-muted))] italic tracking-[0.12em]">
             From Dirt to Dynasty.
           </p>
           <div className="flex gap-8">
-            <Link to="/privacy" className="text-[10px] text-muted-foreground/30 hover:text-accent/60 transition-colors duration-500">Privacy</Link>
-            <Link to="/terms" className="text-[10px] text-muted-foreground/30 hover:text-accent/60 transition-colors duration-500">Terms</Link>
-            <Link to="/login" className="text-[10px] text-muted-foreground/30 hover:text-accent/60 transition-colors duration-500">Staff</Link>
+            <Link to="/privacy" className="text-[10px] text-[hsl(var(--footer-muted))] hover:text-accent transition-colors duration-500">Privacy</Link>
+            <Link to="/terms" className="text-[10px] text-[hsl(var(--footer-muted))] hover:text-accent transition-colors duration-500">Terms</Link>
+            <Link to="/login" className="text-[10px] text-[hsl(var(--footer-muted))] hover:text-accent transition-colors duration-500">Staff</Link>
           </div>
         </div>
       </div>
