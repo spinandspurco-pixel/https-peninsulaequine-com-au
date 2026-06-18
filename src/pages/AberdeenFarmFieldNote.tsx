@@ -37,14 +37,14 @@ const timeline = [
   },
 ];
 
-export default function CoveredCompetitionArenaFieldNote() {
+export default function AberdeenFarmFieldNote() {
   useEffect(() => {
-    document.title = "Covered Competition Arena | Field Notes";
+    document.title = "Aberdeen Farm | Field Notes";
     const meta = document.querySelector('meta[name="description"]');
     const prev = meta?.getAttribute("content") || "";
     meta?.setAttribute(
       "content",
-      "Covered Competition Arena field note — structural steel, groundwork and base preparation in progress across a real Peninsula Equine build.",
+      "Aberdeen Farm field note — structural steel, groundwork and base preparation in progress across a real Peninsula Equine build.",
     );
     return () => {
       document.title = "Peninsula Equine";
@@ -58,7 +58,7 @@ export default function CoveredCompetitionArenaFieldNote() {
         <section className="relative min-h-[88vh] overflow-hidden flex items-end">
           <img
             src={sunsetPuddles.url}
-            alt="Covered Competition Arena — structural steel at sunset with puddles and machinery on site"
+            alt="Aberdeen Farm — structural steel at sunset with puddles and machinery on site"
             className="absolute inset-0 h-full w-full object-cover object-[60%_50%] sm:object-[56%_50%] lg:object-center"
             style={{ filter: "brightness(0.72) contrast(1.12) saturate(0.8)" }}
           />
@@ -74,7 +74,7 @@ export default function CoveredCompetitionArenaFieldNote() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1100} delay={120}>
                 <h1 className="font-serif text-foreground leading-[0.92] tracking-tight text-[clamp(2.2rem,1.35rem+4.4vw,5rem)]">
-                  Covered Competition Arena
+                  Aberdeen Farm
                 </h1>
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1000} delay={220}>
