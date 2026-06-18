@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { RouteCanonical } from "./components/RouteCanonical";
 import { IntroContext } from "./hooks/useIntroState";
 import { IntakeProvider } from "./hooks/useIntake";
 import { GuidedIntake } from "./components/GuidedIntake";
@@ -76,6 +77,7 @@ function AppContent() {
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <RouteCanonical />
         <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<Index />} />
