@@ -3,11 +3,10 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 
 import ciroWithHorse from "@/assets/ciro-with-horse.png";
-import ciroWide from "@/assets/ciro-wide.png";
 import horseAction from "@/assets/horse-action.png";
 import slidingStop from "@/assets/homepage-refresh/sliding-stop-hero.png.asset.json";
 import arenaGrading from "@/assets/main-ridge-arena-grading.jpg";
-import mrBeamDetail from "@/assets/main-ridge/mr-beam-detail.png.asset.json";
+import pavilionTableDetail from "@/assets/about/main-ridge-pavilion-table-detail.png.asset.json";
 import coveredArena from "@/assets/covered-arena-black-exterior.jpg";
 
 // Unified architectural grading consistent across the brand
@@ -256,11 +255,11 @@ export default function About() {
         <FeatureSection
           overline="05 — Craftsmanship"
           title="Built with weight, purpose and finish."
-          body="From arenas and stables to custom rural builds, Peninsula Equine works with honest materials and practical details — timber, steel, brick, surface, structure and finish."
-          src={mrBeamDetail.url}
-          alt="Main Ridge Pavilion — timber and steel detail."
-          aspect="aspect-[4/5]"
-          crop="50% 45%"
+          body="From arenas and stables to custom rural builds, Peninsula Equine works with honest materials and practical details — timber, steel, brick, firelight, joinery and finish."
+          src={pavilionTableDetail.url}
+          alt="Main Ridge Pavilion — handcrafted timber table at dusk."
+          aspect="aspect-[3/2]"
+          crop="50% 52%"
         />
 
         {/* ═══ CTA ════════════════════════════════════════════ */}
