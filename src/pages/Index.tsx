@@ -6,12 +6,10 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { IntroContext } from "@/hooks/useIntroState";
 import { useIntake } from "@/hooks/useIntake";
 
-import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
-import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
-import equitanaArena1 from "@/assets/equitana-arena-1.jpg";
 import mainRidgeSitePrep from "@/assets/main-ridge-site-prep.jpg";
 import mainRidgeTimber from "@/assets/main-ridge-timber.jpg";
 import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
+
 
 import goldenHourPavilion from "@/assets/golden-hour-pavilion.png.asset.json";
 import goldenHourPavilion800 from "@/assets/golden-hour-pavilion-800.webp.asset.json";
@@ -26,43 +24,13 @@ const SESSION_KEY = "pe-brand-intro-seen";
 const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
 
 
-const featuredWorks = [
-  {
-    slug: "main-ridge",
-    title: "Main Ridge",
-    location: "Mornington Peninsula",
-    kind: "Flagship — Pavilion / Arena / Property",
-    image: mainRidgeInterior,
-    alt: "Main Ridge pavilion interior with exposed timber framing in evening light",
-    summary:
-      "A full property build — ground, shelter and finish resolved as one environment.",
-  },
-  {
-    slug: "aberdeen-farm",
-    title: "Private Estate",
-    location: "Mornington Peninsula",
-    kind: "Stable Complex",
-    image: aberdeenExterior,
-    alt: "Private estate stable exterior in late afternoon light",
-    summary: "Stable complex built for daily horse use — airflow, finish and flow.",
-  },
-  {
-    slug: "equitana",
-    title: "Equitana Melbourne",
-    location: "Melbourne",
-    kind: "Event Arena",
-    image: equitanaArena1,
-    alt: "Equitana Melbourne competition arena surface prepared for an event",
-    summary: "Competition-grade arena work delivered under event pressure.",
-  },
-];
-
 const fieldNotesChapters = [
   "Groundwork",
   "Structure",
   "Materials",
   "Final reveal",
 ];
+
 
 export default function Index() {
   const heroContentRef = useRef<HTMLDivElement>(null);
