@@ -310,83 +310,37 @@ export default function Index() {
         </section>
 
 
-        <section className="relative py-[clamp(6rem,4rem+8vw,11rem)] bg-background overflow-hidden">
-          <div className="section-container max-w-7xl mx-auto">
-            <div className="mb-[clamp(3rem,2rem+3vw,5rem)] grid grid-cols-12 gap-6 items-end">
+        <section className="relative py-[clamp(5rem,3.5rem+5vw,8rem)] bg-background overflow-hidden">
+          <div className="section-container max-w-5xl mx-auto">
+            <div className="grid grid-cols-12 gap-6 items-end">
               <div className="col-span-12 md:col-span-7 space-y-3">
                 <RevealOnScroll direction="up" duration={900}>
                   <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
                     Selected Works
                   </p>
                 </RevealOnScroll>
-                <RevealOnScroll direction="up" duration={1000} delay={150}>
-                  <h2 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.02em] text-[clamp(1.85rem,1.2rem+2.4vw,2.85rem)]">
-                    Selected Works
+                <RevealOnScroll direction="up" duration={1000} delay={120}>
+                  <h2 className="font-serif text-foreground/90 leading-[1.05] tracking-[-0.02em] text-[clamp(1.6rem,1.1rem+1.8vw,2.4rem)]">
+                    A closer look at the work.
                   </h2>
                 </RevealOnScroll>
-                <RevealLine width="w-8" delay={300} />
+                <RevealLine width="w-8" delay={260} />
               </div>
               <div className="col-span-12 md:col-span-5 md:text-right">
-                <RevealOnScroll direction="up" duration={1000} delay={350}>
-                  <p className="font-sans font-light text-foreground/50 leading-[1.85] text-[14px] max-w-sm md:ml-auto">
-                    A closer look at the builds, details and environments shaped from the ground up.
-                  </p>
-                </RevealOnScroll>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-[clamp(1rem,0.5rem+1vw,1.5rem)]">
-              {featuredWorks.map((project, i) => (
-                <RevealOnScroll key={project.slug} direction="up" delay={i * 120}>
-                  <Link to={`/project/${project.slug}`} className="group block overflow-hidden rounded-sm bg-card h-full">
-                    <div className="relative aspect-[5/6] overflow-hidden">
-                      <img
-                        src={project.image}
-                        alt={project.alt}
-                        loading="lazy"
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1800ms] ease-[cubic-bezier(0.45,0,0.15,1)] group-hover:scale-[1.04]"
-                        style={{ filter: "brightness(0.84) contrast(1.1) saturate(0.8)" }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
-                      <span className="absolute top-4 left-4 font-mono uppercase text-accent/70 text-[10px] tracking-[0.38em]">
-                        0{i + 1} — {project.kind}
-                      </span>
-                    </div>
-                    <div className="p-[clamp(1.25rem,1rem+1vw,1.75rem)] space-y-4">
-                      <div className="space-y-2">
-                        <p className="font-mono uppercase text-foreground/35 text-[10px] tracking-[0.4em]">
-                          {project.location}
-                        </p>
-                        <h3 className="font-serif text-foreground/90 leading-[1.08] tracking-[-0.02em] text-[clamp(1.4rem,1.1rem+1vw,1.8rem)] group-hover:text-accent transition-colors duration-700">
-                          {project.title}
-                        </h3>
-                      </div>
-                      <p className="font-sans font-light text-foreground/50 leading-[1.8] text-[13px]">
-                        {project.summary}
-                      </p>
-                      <span className="inline-flex items-center gap-3 font-mono uppercase text-foreground/68 group-hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.4em] pt-1">
-                        <span className="w-6 h-px bg-accent/45 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
-                        View project
-                      </span>
-                    </div>
+                <RevealOnScroll direction="up" duration={1000} delay={320}>
+                  <Link
+                    to="/gallery"
+                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/65 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
+                  >
+                    <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
+                    Enter Selected Works
                   </Link>
                 </RevealOnScroll>
-              ))}
-            </div>
-
-            <div className="mt-[clamp(3rem,2rem+3vw,4.5rem)] flex justify-center">
-              <RevealOnScroll direction="up" duration={900}>
-                <Link
-                  to="/gallery"
-                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/55 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.4em]"
-                >
-                  <span className="w-6 h-px bg-accent/40 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
-                  Explore Selected Works
-                </Link>
-              </RevealOnScroll>
+              </div>
             </div>
           </div>
         </section>
+
 
         <section className="relative py-[clamp(6rem,4rem+8vw,10rem)] bg-card overflow-hidden">
           <div className="section-container max-w-7xl mx-auto grid grid-cols-12 gap-[clamp(1.5rem,1rem+2vw,3rem)] items-center">
