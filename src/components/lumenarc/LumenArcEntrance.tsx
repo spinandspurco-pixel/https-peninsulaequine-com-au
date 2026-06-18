@@ -111,7 +111,7 @@ export function LumenArcEntrance() {
             LumenArc
           </h1>
           <div className="mt-4 font-mono uppercase text-accent/55 text-[0.58rem] tracking-[0.5em]">
-            Coming Soon — Future Concept
+            In Development
           </div>
         </div>
       </div>

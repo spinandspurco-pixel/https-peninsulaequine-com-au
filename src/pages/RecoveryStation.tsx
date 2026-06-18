@@ -262,7 +262,7 @@ export default function RecoveryStation() {
             <div className="mx-auto max-w-3xl text-center space-y-7">
               <RevealOnScroll direction="up" duration={900}>
                 <p className="font-mono uppercase text-accent/55 text-[0.62rem] tracking-[0.5em]">
-                  Coming Soon — Future Concept
+                  In Development
                 </p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1000} delay={120}>
@@ -273,7 +273,7 @@ export default function RecoveryStation() {
               <RevealLine className="mx-auto" width="w-12" delay={260} />
               <RevealOnScroll direction="up" duration={1050} delay={320}>
                 <p className="mx-auto max-w-2xl font-sans font-light text-foreground/48 leading-[1.95] text-[0.86rem]">
-                  LumenArc remains in development. Imagery, controls and environmental modes shown here communicate design direction only and may evolve through refinement, prototyping and final specification.
+                  LumenArc is in development. Imagery and controls communicate design direction only and may evolve through specification and prototyping.
                 </p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1100} delay={420}>
@@ -283,13 +283,13 @@ export default function RecoveryStation() {
                     className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[0.64rem] tracking-[0.42em]"
                   >
                     <span className="h-px w-8 bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
-                    Request Assessment
+                    Request Advance Briefing
                   </Link>
                   <Link
                     to="/field-notes"
                     className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/42 hover:text-foreground/78 transition-colors duration-500 text-[0.64rem] tracking-[0.42em]"
                   >
-                    Field Notes
+                    Explore Field Notes
                     <span className="h-px w-8 bg-foreground/20 transition-all duration-700 group-hover:w-14 group-hover:bg-foreground/58" />
                   </Link>
                 </div>
