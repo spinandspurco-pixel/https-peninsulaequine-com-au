@@ -18,11 +18,11 @@ const navigation: NavItem[] = [
     children: [
       { name: "Arenas", href: "/arenas" },
       { name: "Stables & Barns", href: "/stables" },
-      { name: "Equine Infrastructure", href: "/infrastructure" },
-      { name: "Groundworks", href: "/services" },
-      { name: "Custom Rural Builds", href: "/services" },
-      { name: "Drainage & Surfacing", href: "/services" },
+      { name: "Equine Estates", href: "/equine-estates" },
+      { name: "Infrastructure & Maintenance", href: "/infrastructure" },
+      { name: "Our Process", href: "/process" },
     ],
+
   },
   { name: "LumenArc", href: "/lumenarc" },
   { name: "Selected Works", href: "/gallery" },

@@ -7,15 +7,18 @@ const capabilityLinks = [
   { name: "Arenas", href: "/arenas" },
   { name: "Stables", href: "/stables" },
   { name: "Equine Estates", href: "/equine-estates" },
-  { name: "Recovery Stations", href: "/recovery-stations" },
+  { name: "LumenArc", href: "/lumenarc" },
   { name: "Infrastructure & Maintenance", href: "/infrastructure" },
 ];
 
 const studioLinks = [
   { name: "Selected Works", href: "/gallery" },
+  { name: "Field Notes", href: "/field-notes" },
+  { name: "The Standard", href: "/the-standard" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];
+
 
 export function Footer() {
   return (
@@ -32,7 +35,10 @@ export function Footer() {
                 src={logoPeMark}
                 alt="Peninsula Equine"
                 className="h-8 w-8 object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                loading="lazy"
+                decoding="async"
               />
+
               <span className="font-serif text-sm font-semibold tracking-[0.06em]">
                 Peninsula Equine
               </span>
