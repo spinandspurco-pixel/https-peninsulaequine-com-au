@@ -46,8 +46,9 @@ const navigation: NavItem[] = [
     children: servicesChildren,
     groups: servicesGroups,
   },
-  { name: "LumenArc", href: "/lumenarc" },
   { name: "Selected Works", href: "/gallery" },
+  { name: "Field Notes", href: "/field-notes" },
+  { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];
 
