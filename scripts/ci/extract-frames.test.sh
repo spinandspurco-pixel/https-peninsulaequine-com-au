@@ -82,8 +82,32 @@ run_case "bash: 'file.sh: line N: ...' frames (func blank)" "bash.txt" \
 scripts/ci/app.sh${TAB}21${TAB}${TAB}
 scripts/ci/validate-retention.sh${TAB}42${TAB}${TAB}"
 
-# Java assertion above used inline literals; the Bootstrap.java assertion has
-# `Bootstrap.java${TAB}7${TAB}${TAB}` (col blank, func from `at ...` prefix).
+echo
+echo "extract-frames: edge cases"
+
+# Edge: Node frames missing the column entirely. Function names must still be
+# captured — the generic fallback would otherwise discard them.
+run_case "edge/node-no-col: 'at fn (file:line)' preserves fn names" "node-no-col.txt" \
+"src/bootstrap.ts${TAB}7${TAB}${TAB}<anonymous>
+src/index.ts${TAB}10${TAB}${TAB}Object.<anonymous>
+src/config.ts${TAB}42${TAB}${TAB}parseConfig"
+
+# Edge: minified bundles + URL paths + "[as alias]" rename + bare URL frame.
+# Verifies we treat URLs as file paths and don't truncate the rename suffix.
+run_case "edge/node-minified: URL paths + [as alias] + bare URL frame" "node-minified.txt" \
+"https://cdn.example.com/assets/runtime-9f8e7d.min.js${TAB}2${TAB}1024${TAB}<anonymous>
+dist/bundle-A1b2C3d.min.js${TAB}1${TAB}54321${TAB}e.default [as render]
+https://cdn.example.com/assets/index-AbC123.min.js${TAB}1${TAB}23456${TAB}t"
+
+# Edge: mixed languages in one log (bash error, then a Python traceback, then a
+# Node stack). Deepest-first across all dialects: the two Node frames printed
+# last + the deepest Python frame above them.
+run_case "edge/mixed: bash + python + node interleaved, deepest 3 across dialects" "mixed.txt" \
+"src/runner.ts${TAB}88${TAB}9${TAB}Object.runNode
+src/config.ts${TAB}42${TAB}17${TAB}parseConfig
+scripts/wrapper.py${TAB}12${TAB}${TAB}<module>"
+
+
 
 echo
 printf 'extract-frames: %d passed, %d failed\n' "$PASS" "$FAIL"

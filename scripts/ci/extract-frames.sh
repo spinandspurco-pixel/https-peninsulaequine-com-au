@@ -56,6 +56,20 @@ while IFS= read -r LINE; do
     F_COL=$(echo  "$INNER" | sed -E 's/^.+:[0-9]+:([0-9]+)$/\1/')
   fi
 
+  # Node stack without column: "at fn (file:line)" / "at file:line". Preserves
+  # function names that the generic fallback would otherwise discard.
+  if [ -z "$F_FILE" ] && echo "$LINE" | grep -qE '^[[:space:]]*at .+\.(ts|tsx|js|jsx|mjs|cjs):[0-9]+\)?[[:space:]]*$'; then
+    if echo "$LINE" | grep -qE '\([^()]+:[0-9]+\)[[:space:]]*$'; then
+      F_FUNC=$(echo "$LINE" | sed -E 's/^[[:space:]]*at[[:space:]]+(.+)[[:space:]]+\([^()]+:[0-9]+\)[[:space:]]*$/\1/' | tr -d '\n\r')
+      INNER=$(echo "$LINE" | sed -E 's/.*\(([^()]+:[0-9]+)\).*/\1/')
+    else
+      F_FUNC="<anonymous>"
+      INNER=$(echo "$LINE" | sed -E 's/^[[:space:]]*at[[:space:]]+(.+)$/\1/')
+    fi
+    F_FILE=$(echo "$INNER" | sed -E 's/^(.+):[0-9]+$/\1/')
+    F_LINE=$(echo "$INNER" | sed -E 's/^.+:([0-9]+)$/\1/')
+  fi
+
   # Python traceback: '  File "x.py", line 42, in funcname'
   if [ -z "$F_FILE" ] && echo "$LINE" | grep -qE 'File "[^"]+\.py", line [0-9]+'; then
     F_FILE=$(echo "$LINE" | sed -E 's/.*File "([^"]+)", line [0-9]+.*/\1/')

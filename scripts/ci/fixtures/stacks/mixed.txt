@@ -1,0 +1,8 @@
++ bash scripts/ci/bootstrap.sh
+scripts/ci/bootstrap.sh: line 7: validate: command not found
+Traceback (most recent call last):
+  File "scripts/wrapper.py", line 12, in <module>
+    run_node()
+TypeError: Cannot read properties of undefined (reading 'parse')
+    at parseConfig (src/config.ts:42:17)
+    at Object.runNode (src/runner.ts:88:9)
