@@ -1,0 +1,4 @@
+TypeError: Cannot read properties of undefined (reading 'foo')
+    at parseConfig (src/config.ts:42)
+    at Object.<anonymous> (src/index.ts:10)
+    at src/bootstrap.ts:7
