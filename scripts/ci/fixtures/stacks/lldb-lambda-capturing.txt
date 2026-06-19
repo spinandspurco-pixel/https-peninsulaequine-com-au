@@ -1,0 +1,4 @@
+* thread #1, queue = 'com.apple.main-thread', stop reason = breakpoint 1.1
+  * frame #0: 0x000000010000a1b2 myapp`Worker::process::{lambda(int)#1}::operator()(int) const at /Users/runner/work/repo/src/worker.cpp:42:17
+    frame #1: 0x000000010000a2c3 myapp`Manager::dispatch::{lambda(std::string&)#2}::operator()(std::string&) at /Users/runner/work/repo/src/manager.cpp:21:5
+    frame #2: 0x000000010000a3d4 myapp`App::main::{lambda(char const*, long)#3}::operator()(char const*, long) const & at /Users/runner/work/repo/src/app.cpp:7:3
