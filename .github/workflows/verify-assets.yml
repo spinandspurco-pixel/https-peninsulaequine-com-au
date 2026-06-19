@@ -19,10 +19,15 @@ on:
   workflow_dispatch:
     inputs:
       retention_days:
-        description: "Artifact retention in days (overrides repo variable for this run)"
+        description: "Artifact retention in days (overrides ASSET_SCAN_RETENTION_DAYS for this run)"
         required: false
         type: number
         default: 30
+      max_retained:
+        description: "Max number of asset-scan-report artifacts to keep (overrides ASSET_SCAN_MAX_RETAINED for this run)"
+        required: false
+        type: number
+        default: 10
 
 concurrency:
   group: verify-assets-${{ github.ref }}
@@ -39,12 +44,17 @@ jobs:
       pull-requests: write
       actions: write
     steps:
-      - name: Validate retention_days
+      - name: Validate workflow inputs
         if: github.event_name == 'workflow_dispatch'
         run: |
-          INPUT="${{ inputs.retention_days }}"
-          if ! [[ "$INPUT" =~ ^[0-9]+$ ]] || [ "$INPUT" -lt 1 ]; then
-            echo "::error::Invalid retention_days: '$INPUT'. Must be a positive integer (1 or greater)."
+          RD="${{ inputs.retention_days }}"
+          MR="${{ inputs.max_retained }}"
+          if ! [[ "$RD" =~ ^[0-9]+$ ]] || [ "$RD" -lt 1 ]; then
+            echo "::error::Invalid retention_days: '$RD'. Must be a positive integer (1 or greater)."
+            exit 1
+          fi
+          if ! [[ "$MR" =~ ^[0-9]+$ ]] || [ "$MR" -lt 1 ]; then
+            echo "::error::Invalid max_retained: '$MR'. Must be a positive integer (1 or greater)."
             exit 1
           fi
 
