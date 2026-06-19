@@ -213,9 +213,12 @@ run_case "lldb/lambda-extra: \$_0 + rv-ref, nested mutable, triple-nested" "lldb
 /Users/runner/work/repo/src/outer.cpp${TAB}21${TAB}5${TAB}B::go::{lambda()#1}::{lambda(int)#2}::operator()(int)
 /Users/runner/work/repo/src/app.cpp${TAB}7${TAB}3${TAB}A::init::\$_0::operator()(std::string&&) const &"
 
-
-
-
+# Mixed qualifier ordering — lvalue-ref (&), rvalue-ref (&&), and const&& on
+# lambda call operators, plus double-digit closure numbering (#10).
+run_case "lldb/lambda-qualifiers: &, &&, const&&, double-digit #10" "lldb-lambda-qualifiers.txt" \
+"/Users/runner/work/repo/src/y.cpp${TAB}7${TAB}3${TAB}Y::work::{lambda(char const*)#2}::operator()(char const*) &&
+/Users/runner/work/repo/src/x.cpp${TAB}21${TAB}5${TAB}X::go::{lambda()#1}::operator()() &
+/Users/runner/work/repo/src/ns.cpp${TAB}42${TAB}17${TAB}ns::run::{lambda()#10}::operator()() const &&"
 
 echo
 printf 'extract-frames: %d passed, %d failed\n' "$PASS" "$FAIL"
