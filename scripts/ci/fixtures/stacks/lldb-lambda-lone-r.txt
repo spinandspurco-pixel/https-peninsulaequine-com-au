@@ -1,4 +1,4 @@
 * thread #1, queue = 'com.apple.main-thread', stop reason = breakpoint 1.1
-  * frame #0: 0x000000010000a1b2 myapp`A::foo::{lambda()#1}::operator()() const at /Users/runner/work/repo/src/lambda.cpp:42:17
-    frame #1: 0x000000010000a2c3 myapp`B::bar::{lambda(int)#2}::operator()(int) at /Users/runner/work/repo/src/handler.cpp:21:5
+  * frame #0: 0x000000010000a1b2 myapp`A::foo::{lambda()#1}::operator()() const at /Users/runner/work/repo/src/lambda.cpp:42:17
+    frame #1: 0x000000010000a2c3 myapp`B::bar::{lambda(int)#2}::operator()(int) at /Users/runner/work/repo/src/handler.cpp:21:5
     frame #2: 0x000000010000a3d4 myapp`C::baz::{lambda(char*)#3}::operator()(char*) const & at /Users/runner/work/repo/src/factory.cpp:7:3
