@@ -79,6 +79,8 @@ jobs:
           fi
           echo "days=$DAYS" >> "$GITHUB_OUTPUT"
           echo "Artifact retention set to $DAYS day(s)"
+          echo "### Artifact Retention" >> "$GITHUB_STEP_SUMMARY"
+          echo "Retention period: **$DAYS day(s)**" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload scan report
         if: steps.verify.outcome != 'skipped'
