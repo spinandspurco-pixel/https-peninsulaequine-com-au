@@ -99,23 +99,38 @@ export default function Index() {
       <Layout>
         <div className="type-architectural">
           <section className="relative min-h-[100dvh] overflow-hidden flex items-end">
-            {/* Cinematic sliding-stop hero — brand anchor */}
+            {/*
+             * ⛔ LOCKED HERO SLOT — HOMEPAGE_HERO_SLIDING_STOP_REQUIRED
+             * This slot MUST render the approved cinematic sliding-stop image.
+             * Do NOT replace with: building exteriors, stables, pavilions,
+             * arena interiors, uploads, or fallback placeholders.
+             * Image: src/assets/responsive/sliding-stop-hero-{640,1024,1536}.webp
+             * If the asset reference is ever broken, render a labelled
+             * placeholder reading "HOMEPAGE_HERO_SLIDING_STOP_REQUIRED" —
+             * never substitute another image.
+             */}
             <div className="absolute inset-0 bg-[hsl(222_20%_6%)]">
-              <img
-                src={slidingStop1536.url}
-                srcSet={slidingStopSrcSet}
-                sizes="100vw"
-                alt="Horse and rider executing a sliding stop, dust plume across worked arena footing — Peninsula Equine."
-                fetchPriority="high"
-                decoding="async"
-                className="absolute inset-0 w-full h-full object-cover object-[58%_center] sm:object-[62%_center]"
-                style={{
-                  opacity: imageReady ? 1 : 0,
-                  transform: imageReady ? "scale(1)" : "scale(1.04)",
-                  transition: `opacity 1600ms ${EASE}, transform 2400ms ${EASE}`,
-                  willChange: "opacity, transform",
-                }}
-              />
+              {slidingStop1536?.url ? (
+                <img
+                  src={slidingStop1536.url}
+                  srcSet={slidingStopSrcSet}
+                  sizes="100vw"
+                  alt="Horse and rider executing a sliding stop, dust plume across worked arena footing — Peninsula Equine."
+                  fetchPriority="high"
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover object-[58%_center] sm:object-[62%_center]"
+                  style={{
+                    opacity: imageReady ? 1 : 0,
+                    transform: imageReady ? "scale(1)" : "scale(1.04)",
+                    transition: `opacity 1600ms ${EASE}, transform 2400ms ${EASE}`,
+                    willChange: "opacity, transform",
+                  }}
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-[hsl(222_20%_6%)] text-accent/70 font-mono text-[11px] tracking-[0.4em] uppercase text-center px-6">
+                  HOMEPAGE_HERO_SLIDING_STOP_REQUIRED
+                </div>
+              )}
             </div>
 
             {/* Readability scrim — anchored to text column, softer on the horse */}
