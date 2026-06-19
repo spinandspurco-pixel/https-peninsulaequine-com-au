@@ -121,6 +121,7 @@ jobs:
           path: verify-download
 
       - name: Verify downloaded artifact SHA256
+        id: verify-sha256
         if: steps.upload-report.outcome == 'success'
         run: |
           EXPECTED="${{ steps.summary.outputs.checksum }}"
@@ -128,11 +129,18 @@ jobs:
           echo "Expected: $EXPECTED"
           echo "Actual:   $ACTUAL"
           if [ "$EXPECTED" != "$ACTUAL" ]; then
-            echo "::error::Artifact integrity check failed. SHA256 mismatch (expected $EXPECTED, got $ACTUAL)."
+            echo "::error::Artifact integrity check failed."
+            echo "::error::Expected SHA256: $EXPECTED"
+            echo "::error::Actual SHA256:   $ACTUAL"
             {
               echo ""
               echo "### Artifact Integrity"
-              echo ":x: **SHA256 mismatch** — expected \`$EXPECTED\`, got \`$ACTUAL\`."
+              echo ":x: **SHA256 mismatch**"
+              echo ""
+              echo "| | Value |"
+              echo "|---|---|"
+              echo "| Expected | \`$EXPECTED\` |"
+              echo "| Actual   | \`$ACTUAL\` |"
             } >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
