@@ -4,7 +4,7 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 
 import heroAsset from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.png.asset.json";
-import arenaVaulted from "@/assets/uploads/approved-covered-arena-interior-wide-gold.png.asset.json";
+import arenaVaulted from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
 import stableStallAsset from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
 import viewingLoungeAsset from "@/assets/uploads/approved-aberdeen-viewing-lounge.png.asset.json";
 import aisleDetailAsset from "@/assets/uploads/approved-stable-aisle-detail-warm-light.png.asset.json";
