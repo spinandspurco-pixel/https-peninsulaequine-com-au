@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
-import heroAsset from "@/assets/aberdeen/approved-barn-front-twilight.png.asset.json";
+import heroAsset from "@/assets/uploads/approved-aberdeen-exterior-dusk-frontage.png.asset.json";
+import stallInteriorAsset from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
+import aisleDetailAsset from "@/assets/uploads/approved-stable-aisle-detail-warm-light.png.asset.json";
+
 const heroImg = heroAsset.url;
 
 /**
@@ -23,15 +26,14 @@ export default function Stables() {
   return (
     <Layout>
       <article className="bg-background text-foreground type-architectural">
-        {/* HERO — approved stable / barn structure exterior */}
         <section className="relative h-[82vh] min-h-[560px] overflow-hidden bg-background">
           <img
             src={heroImg}
-            alt="Stable and barn structure at twilight with warm entry lighting, dark shutters and refined landscape approach"
+            alt="Stable and barn structure at dusk with a long frontage, warm entry lighting and the covered arena form rising behind"
             width={1920}
             height={1080}
             className="absolute inset-0 w-full h-full object-cover img-header"
-            style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)", objectPosition: "50% 46%" }}
+            style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)", objectPosition: "50% 52%" }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/45 via-primary/15 to-primary/85" />
           <div className="absolute inset-0 grain-texture opacity-30" />
@@ -52,22 +54,47 @@ export default function Stables() {
           </div>
         </section>
 
-        {/* DETAIL — text-only band (image withheld until a category-correct cinematic stable is uploaded) */}
         <section className="py-[clamp(6rem,4rem+8vw,11rem)] bg-background border-t border-foreground/[0.04]">
-          <div className="max-w-4xl mx-auto px-[clamp(1.5rem,0.75rem+3vw,4rem)] space-y-8">
-            <RevealOnScroll direction="up">
-              <p className="font-mono uppercase text-accent/45 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">Detail</p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" delay={150}>
-              <h2 className="font-serif text-foreground/85 leading-[1.1] tracking-[-0.02em] text-[clamp(1.65rem,1.1rem+2.2vw,2.65rem)] max-w-2xl">
-                Every junction considered. Every surface specified.
-              </h2>
-            </RevealOnScroll>
-            <RevealLine width="w-8" delay={300} />
-            <RevealOnScroll direction="up" delay={400}>
-              <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[clamp(0.8125rem,0.78rem+0.2vw,0.9375rem)] max-w-2xl">
-                Hardwood grain matched. Steel galvanised then powder-coated. Latches that close with the weight of the door. The standard is invisible — until you've lived without it.
-              </p>
+          <div className="max-w-6xl mx-auto px-[clamp(1.5rem,0.75rem+3vw,4rem)] grid grid-cols-1 lg:grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4rem)] items-center">
+            <div className="lg:col-span-5 space-y-8">
+              <RevealOnScroll direction="up">
+                <p className="font-mono uppercase text-accent/45 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.45em]">Detail</p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" delay={150}>
+                <h2 className="font-serif text-foreground/85 leading-[1.1] tracking-[-0.02em] text-[clamp(1.65rem,1.1rem+2.2vw,2.65rem)] max-w-2xl">
+                  Every junction considered. Every surface specified.
+                </h2>
+              </RevealOnScroll>
+              <RevealLine width="w-8" delay={300} />
+              <RevealOnScroll direction="up" delay={400}>
+                <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[clamp(0.8125rem,0.78rem+0.2vw,0.9375rem)] max-w-2xl">
+                  Hardwood grain matched. Steel galvanised then powder-coated. Latches that close with the weight of the door. The standard is invisible — until you've lived without it.
+                </p>
+              </RevealOnScroll>
+            </div>
+            <RevealOnScroll direction="up" delay={180} className="lg:col-span-7">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="relative aspect-[4/5] overflow-hidden">
+                  <img
+                    src={stallInteriorAsset.url}
+                    alt="Stable stall interior with black steel framing, timber lower walls and warm linear lighting"
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover"
+                    style={{ filter: "brightness(0.82) contrast(1.08) saturate(0.78)", objectPosition: "50% 50%" }}
+                  />
+                </div>
+                <div className="relative aspect-[4/5] overflow-hidden">
+                  <img
+                    src={aisleDetailAsset.url}
+                    alt="Stable aisle detail with black steel posts, timber fronts and warm late light across the stall joinery"
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover"
+                    style={{ filter: "brightness(0.8) contrast(1.08) saturate(0.78)", objectPosition: "50% 50%" }}
+                  />
+                </div>
+              </div>
             </RevealOnScroll>
           </div>
         </section>

@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 
-import heroAsset from "@/assets/aberdeen/approved-barn-front-twilight.png.asset.json";
+import heroAsset from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.png.asset.json";
 import arenaVaulted from "@/assets/uploads/approved-covered-arena-interior-night-v2.png.asset.json";
-import entryCorridor from "@/assets/aberdeen/approved-arena-surfacing-forecourt.png.asset.json";
+import stableStallAsset from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
 import viewingLoungeAsset from "@/assets/uploads/approved-aberdeen-viewing-lounge.png.asset.json";
-
-
+import aisleDetailAsset from "@/assets/uploads/approved-stable-aisle-detail-warm-light.png.asset.json";
+import tackRoomAsset from "@/assets/uploads/approved-tack-room-joinery.png.asset.json";
 
 const FACTS: Array<{ label: string; value: string }> = [
   { label: "Category", value: "Indoor Arena / Stable Precinct" },
@@ -37,13 +37,12 @@ export default function Aberdeen() {
   return (
     <Layout>
       <article className="bg-background text-foreground">
-        {/* ====== HERO ====== */}
         <section className="relative min-h-[82vh] overflow-hidden border-b border-accent/10">
           <img
             src={heroAsset.url}
-            alt="Aberdeen stable and barn structure at twilight with symmetrical gable form and warm entry glow"
+            alt="Aberdeen exterior at dusk with rider passing the completed arena and stable frontage beneath a dramatic storm sky"
             className="absolute inset-0 h-full w-full object-cover"
-            style={{ objectPosition: "50% 44%", filter: "brightness(0.62) contrast(1.08) saturate(0.76)" }}
+            style={{ objectPosition: "50% 52%", filter: "brightness(0.62) contrast(1.08) saturate(0.76)" }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/42 via-background/18 to-background/88" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--background)/0.72)_0%,hsl(var(--background)/0.48)_32%,transparent_62%)]" />
@@ -94,7 +93,6 @@ export default function Aberdeen() {
           </div>
         </section>
 
-        {/* ====== SECTION 1 — INDOOR RIDING ENVIRONMENT ====== */}
         <section className="border-b border-accent/10 bg-background py-[clamp(5rem,3.5rem+6vw,8.5rem)]">
           <div className="section-container mx-auto max-w-[1480px]">
             <RevealOnScroll direction="up" duration={1100}>
@@ -132,20 +130,28 @@ export default function Aberdeen() {
           </div>
         </section>
 
-        {/* ====== SECTION 2 — STABLE FLOW (text-led, no image) ====== */}
         <section className="border-b border-accent/10 bg-background py-[clamp(5rem,3.5rem+6vw,8.5rem)]">
-          <div className="section-container mx-auto max-w-[1120px]">
-            <div className="grid grid-cols-12 gap-8 lg:gap-12">
-              <div className="col-span-12 lg:col-span-3">
+          <div className="section-container mx-auto max-w-[1480px]">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4rem)] items-center">
+              <RevealOnScroll direction="up" duration={1100} className="lg:col-span-7 order-1 lg:order-2">
+                <div className="relative aspect-[16/11] overflow-hidden">
+                  <img
+                    src={stableStallAsset.url}
+                    alt="Aberdeen stable stall interior with black steel framing, timber lower walls and warm overhead light"
+                    className="absolute inset-0 h-full w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                    style={{ objectPosition: "50% 50%", filter: "brightness(0.8) contrast(1.08) saturate(0.76)" }}
+                  />
+                </div>
+              </RevealOnScroll>
+
+              <div className="lg:col-span-5 order-2 lg:order-1">
                 <RevealOnScroll direction="up" duration={900}>
                   <p className="font-mono text-[10px] uppercase tracking-[0.48em] text-accent/55">
                     Stable Flow
                   </p>
-                </RevealOnScroll>
-              </div>
-              <div className="col-span-12 lg:col-span-8 lg:col-start-5">
-                <RevealOnScroll direction="up" duration={1050} delay={120}>
-                  <h2 className="font-serif leading-[1] tracking-[-0.025em] text-foreground/92 text-[clamp(1.85rem,1.2rem+2vw,3rem)]">
+                  <h2 className="mt-5 font-serif leading-[1] tracking-[-0.025em] text-foreground/92 text-[clamp(1.85rem,1.2rem+2vw,3rem)]">
                     Black steel, warm timber and practical spacing create a stable environment built for care, movement and daily handling.
                   </h2>
                 </RevealOnScroll>
@@ -160,7 +166,6 @@ export default function Aberdeen() {
           </div>
         </section>
 
-        {/* ====== SECTION 3 — VIEWING & CONNECTION ====== */}
         <section className="border-b border-accent/10 bg-background py-[clamp(5rem,3.5rem+6vw,8.5rem)]">
           <div className="section-container mx-auto max-w-[1480px]">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4rem)] items-start">
@@ -177,11 +182,10 @@ export default function Aberdeen() {
                 </div>
               </RevealOnScroll>
 
-
               <div className="lg:col-span-4 lg:pt-8">
                 <RevealOnScroll direction="up" duration={900}>
                   <p className="font-mono text-[10px] uppercase tracking-[0.48em] text-accent/55">
-                    Viewing & Connection
+                    Viewing &amp; Connection
                   </p>
                   <h2 className="mt-5 font-serif leading-[1] tracking-[-0.025em] text-foreground/92 text-[clamp(1.85rem,1.2rem+2vw,3rem)]">
                     The viewing space keeps riders, owners and the arena connected without interrupting the working environment.
@@ -197,14 +201,13 @@ export default function Aberdeen() {
           </div>
         </section>
 
-        {/* ====== SECTION 4 — DETAIL & FABRICATION ====== */}
         <section className="border-b border-accent/10 bg-background py-[clamp(5rem,3.5rem+6vw,8.5rem)]">
           <div className="section-container mx-auto max-w-[1320px]">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4rem)] items-center">
               <div className="lg:col-span-5 order-2 lg:order-1">
                 <RevealOnScroll direction="up" duration={900}>
                   <p className="font-mono text-[10px] uppercase tracking-[0.48em] text-accent/55">
-                    Detail & Fabrication
+                    Detail &amp; Fabrication
                   </p>
                   <h2 className="mt-5 font-serif leading-[1] tracking-[-0.025em] text-foreground/92 text-[clamp(1.85rem,1.2rem+2vw,3rem)]">
                     The smaller details carry the same discipline as the larger structure — hardware, junctions, finishes and daily-use durability.
@@ -221,8 +224,8 @@ export default function Aberdeen() {
               <RevealOnScroll direction="up" duration={1150} className="lg:col-span-7 order-1 lg:order-2">
                 <div className="relative aspect-[16/11] overflow-hidden">
                   <img
-                    src={entryCorridor.url}
-                    alt="Arena surfacing forecourt outside the Aberdeen stable precinct with groomed footing and the long barn form beyond"
+                    src={aisleDetailAsset.url}
+                    alt="Aberdeen stable aisle detail with black steel posts, timber stall fronts and warm late light across the joinery"
                     className="absolute inset-0 h-full w-full object-cover"
                     loading="lazy"
                     decoding="async"
@@ -234,20 +237,28 @@ export default function Aberdeen() {
           </div>
         </section>
 
-        {/* ====== SECTION 5 — UTILITY / TACK / CARE SPACES (text-led, no image) ====== */}
         <section className="border-b border-accent/10 bg-background py-[clamp(5rem,3.5rem+6vw,8.5rem)]">
-          <div className="section-container mx-auto max-w-[1120px]">
-            <div className="grid grid-cols-12 gap-8 lg:gap-12">
-              <div className="col-span-12 lg:col-span-3">
+          <div className="section-container mx-auto max-w-[1480px]">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4rem)] items-center">
+              <RevealOnScroll direction="up" duration={1100} className="lg:col-span-8">
+                <div className="relative aspect-[16/11] overflow-hidden">
+                  <img
+                    src={tackRoomAsset.url}
+                    alt="Aberdeen tack room with timber joinery, bridle storage, saddle organisation and integrated sink bench"
+                    className="absolute inset-0 h-full w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                    style={{ objectPosition: "50% 50%", filter: "brightness(0.82) contrast(1.06) saturate(0.78)" }}
+                  />
+                </div>
+              </RevealOnScroll>
+
+              <div className="lg:col-span-4 lg:pt-8">
                 <RevealOnScroll direction="up" duration={900}>
                   <p className="font-mono text-[10px] uppercase tracking-[0.48em] text-accent/55">
                     Utility / Tack / Care
                   </p>
-                </RevealOnScroll>
-              </div>
-              <div className="col-span-12 lg:col-span-8 lg:col-start-5">
-                <RevealOnScroll direction="up" duration={1050} delay={120}>
-                  <h2 className="font-serif leading-[1] tracking-[-0.025em] text-foreground/92 text-[clamp(1.85rem,1.2rem+2vw,3rem)]">
+                  <h2 className="mt-5 font-serif leading-[1] tracking-[-0.025em] text-foreground/92 text-[clamp(1.85rem,1.2rem+2vw,3rem)]">
                     Support spaces are part of the system, not afterthoughts.
                   </h2>
                 </RevealOnScroll>
@@ -262,7 +273,6 @@ export default function Aberdeen() {
           </div>
         </section>
 
-        {/* ====== CLOSING CTA ====== */}
         <section className="bg-background py-[clamp(5rem,4rem+5vw,8rem)]">
           <div className="section-container mx-auto max-w-5xl px-6 text-center">
             <RevealOnScroll direction="up" duration={1000}>
