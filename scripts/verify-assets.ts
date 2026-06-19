@@ -54,10 +54,16 @@ if (missing.length === 0) {
 }
 
 console.error(`\n✗ asset verification failed — ${missing.length} missing reference(s):\n`);
+const inCI = process.env.GITHUB_ACTIONS === "true";
 for (const { ref, resolved, file, line } of missing) {
-  console.error(`  • ${relative(ROOT, file)}:${line}`);
+  const rel = relative(ROOT, file);
+  console.error(`  • ${rel}:${line}`);
   console.error(`      import:   ${ref}`);
   console.error(`      expected: ${relative(ROOT, resolved)}\n`);
+  if (inCI) {
+    const msg = `Missing asset pointer: ${ref} (expected ${relative(ROOT, resolved)})`;
+    console.log(`::error file=${rel},line=${line},title=Missing .asset.json::${msg}`);
+  }
 }
 console.error(
   `Fix by either (a) creating the missing .asset.json pointer with ` +
