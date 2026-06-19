@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
+import { logClientEvent } from "@/lib/clientLog";
 import { Link } from "react-router-dom";
 import { BrandIntro } from "@/components/BrandIntro";
 import { Layout } from "@/components/layout/Layout";
@@ -122,7 +123,15 @@ export default function Index() {
                   fetchPriority="high"
                   decoding="async"
                   onLoad={() => setHeroImgLoaded(true)}
-                  onError={() => setHeroImgFailed(true)}
+                  onError={() => {
+                    setHeroImgFailed(true);
+                    logClientEvent("hero_image_load_failure", {
+                      src: slidingStop1536?.url ?? null,
+                      srcSetPresent: !!slidingStopSrcSet,
+                      imageReady,
+                      heroImgLoaded,
+                    });
+                  }}
                   className="absolute inset-0 w-full h-full object-cover object-[58%_center] sm:object-[62%_center]"
                   style={{
                     opacity: imageReady && heroImgLoaded ? 1 : 0,
