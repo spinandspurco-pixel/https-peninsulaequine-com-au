@@ -6,56 +6,36 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { BlueprintContinuity } from "@/components/BlueprintContinuity";
 
-
-import mainRidgePostDepth from "@/assets/main-ridge-post-depth.jpg";
-import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
-import mainRidgeFrameTrench from "@/assets/main-ridge-frame-trench.jpg";
-import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
-import mainRidgeCiroWoodwork1 from "@/assets/main-ridge-brickwork.jpg";
-import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
-
 const PHASES = [
   {
     num: "01",
     title: "Site Assessment",
-    desc: "Ground conditions, drainage, terrain, and layout constraints — evaluated on-site.",
-    image: mainRidgePostDepth,
-    filter: "brightness(0.85) contrast(1.1) saturate(0.8)",
+    desc: "Ground conditions, drainage, terrain and layout constraints — evaluated on-site.",
   },
   {
     num: "02",
     title: "Scope & System Design",
-    desc: "Engineering drawings, material specification, and a structured project brief.",
-    image: mainRidgeRebarFoundation,
-    filter: "brightness(0.85) contrast(1.1) saturate(0.8)",
+    desc: "Engineering drawings, material specification and a structured project brief.",
   },
   {
     num: "03",
     title: "Ground Preparation",
-    desc: "Clearing, grading, drainage, and foundation work.",
-    image: mainRidgeFrameTrench,
-    filter: "brightness(0.85) contrast(1.1) saturate(0.8)",
+    desc: "Clearing, grading, drainage and foundation work.",
   },
   {
     num: "04",
     title: "Structural Build",
-    desc: "Steel, timber, roofing — engineered for decades of use.",
-    image: mainRidgeBarnFrame,
-    filter: "brightness(0.85) contrast(1.1) saturate(0.8)",
+    desc: "Steel, timber and roofing — engineered for decades of use.",
   },
   {
     num: "05",
     title: "Fit-Out & Detailing",
-    desc: "Stall configurations, joinery, ventilation, and hardware.",
-    image: mainRidgeCiroWoodwork1,
-    filter: "brightness(0.85) contrast(1.1) saturate(0.8)",
+    desc: "Stall configurations, joinery, ventilation and hardware.",
   },
   {
     num: "06",
     title: "Surface & Commissioning",
-    desc: "Arena footing, final grading, and system handover.",
-    image: mainRidgeArenaGrading,
-    filter: "brightness(0.85) contrast(1.1) saturate(0.8)",
+    desc: "Arena footing, final grading and system handover.",
   },
 ];
 
@@ -113,41 +93,25 @@ export default function Process() {
         <div className="divider-grid" />
         <div className="py-28 sm:py-40 relative">
           <div className="absolute inset-0 grain-texture" />
-          <div className="section-container max-w-5xl mx-auto relative z-[1]">
-            <div className="space-y-24 sm:space-y-32">
-              {PHASES.map((phase, i) => {
-                const isEven = i % 2 === 0;
-                return (
-                  <RevealOnScroll key={phase.num} direction="up" stagger={0}>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-                      <div className={isEven ? "lg:order-1" : "lg:order-2"}>
-                        <div className="aspect-[4/3] overflow-hidden bg-card relative">
-                          <img
-                            src={phase.image}
-                            alt={phase.title}
-                            loading="lazy"
-                            decoding="async"
-                            className="w-full h-full object-cover"
-                            style={{ filter: phase.filter }}
-                          />
-                          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 85% 75% at 50% 50%, transparent 35%, hsl(222 20% 4% / 0.5) 100%)" }} />
-                        </div>
-                      </div>
-                      <div className={isEven ? "lg:order-2" : "lg:order-1"}>
-                        <p className="text-[9px] font-mono tracking-[0.3em] text-accent/30 uppercase mb-5">
-                          {phase.num}
-                        </p>
-                        <h3 className="font-serif text-xl sm:text-2xl font-medium text-foreground tracking-[0.02em] mb-5">
-                          {phase.title}
-                        </h3>
-                        <p className="text-[13px] sm:text-sm text-muted-foreground/50 leading-[1.9] max-w-md">
-                          {phase.desc}
-                        </p>
-                      </div>
+          <div className="section-container max-w-4xl mx-auto relative z-[1]">
+            <div className="divide-y divide-accent/10 border-y border-accent/10">
+              {PHASES.map((phase, i) => (
+                <RevealOnScroll key={phase.num} direction="up" stagger={i} staggerInterval={60}>
+                  <div className="grid grid-cols-12 gap-6 sm:gap-10 py-10 sm:py-14 items-start">
+                    <div className="col-span-12 sm:col-span-2 font-mono text-[10px] tracking-[0.42em] uppercase text-accent/45">
+                      {phase.num}
                     </div>
-                  </RevealOnScroll>
-                );
-              })}
+                    <div className="col-span-12 sm:col-span-10 max-w-2xl">
+                      <h3 className="font-serif text-foreground/90 leading-[1.05] tracking-tight text-[1.45rem] sm:text-[1.7rem] mb-4">
+                        {phase.title}
+                      </h3>
+                      <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[14px] sm:text-[15px]">
+                        {phase.desc}
+                      </p>
+                    </div>
+                  </div>
+                </RevealOnScroll>
+              ))}
             </div>
           </div>
         </div>
