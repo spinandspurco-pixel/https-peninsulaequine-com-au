@@ -76,9 +76,15 @@ jobs:
           bash scripts/ci/validate-retention.test.sh > test-output.txt 2>&1 || {
             EC=$?
             FAILED_LINE=$(grep -v '^[[:space:]]*$' test-output.txt | tail -n 1 | tr -d '\n\r\t\"\\' | cut -c1-300)
+            FAIL_LINE_NO=$(grep -n '^[^[:space:]]' test-output.txt | tail -n 1 | cut -d: -f1)
+            CTX_START=$((FAIL_LINE_NO - 5))
+            [ "$CTX_START" -lt 1 ] && CTX_START=1
+            CTX_END=$((FAIL_LINE_NO + 5))
+            FAILED_CONTEXT=$(sed -n "${CTX_START},${CTX_END}p" test-output.txt | tr '\n\r\t\"\\' ' | ' | sed 's/  */ /g' | cut -c1-800)
             {
               echo "exit_code=${EC}"
               echo "failed_line=${FAILED_LINE}"
+              echo "failed_context=${FAILED_CONTEXT}"
               echo "stderr<<SLACKERR"
               head -c 800 test-output.txt
               echo "SLACKERR"
