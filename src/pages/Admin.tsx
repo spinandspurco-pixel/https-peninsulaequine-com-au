@@ -160,6 +160,9 @@ export default function Admin() {
             </div>
             <WholePropertyInbox />
           </div>
+        </section>
+
+
 
         {/* ════════════════════════════════════════════ */}
         {/*  ZONE 2 — PIPELINE                          */}
