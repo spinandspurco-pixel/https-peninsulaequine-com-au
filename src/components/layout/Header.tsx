@@ -83,8 +83,26 @@ export function Header() {
     setMobileServicesOpen(false);
   }, [location.pathname]);
 
-  const isActive = (href: string) =>
-    href === "/" ? location.pathname === "/" : location.pathname.startsWith(href);
+  const isActive = (href: string) => {
+    if (href === "/") return location.pathname === "/";
+    const [path, hash] = href.split("#");
+    if (hash) {
+      // For chapter-anchored items, light up when on the same path AND the
+      // chapter currently in view contains this service slug. The activeChapter
+      // is the chapter slug (build/ground/systems); the hash is the service
+      // slug — so we just match path and hash to the live URL hash for the
+      // selected item, and rely on group-level highlighting for the chapter.
+      return (
+        location.pathname === path &&
+        (location.hash === `#${hash}` ||
+          // Chapter-level glow: if the in-view chapter matches the group this
+          // item belongs to, the caller will compute groupActive separately.
+          false)
+      );
+    }
+    return location.pathname.startsWith(href);
+  };
+
 
   const isParentActive = (item: NavItem) =>
     isActive(item.href) || (item.children?.some((c) => isActive(c.href)) ?? false);
