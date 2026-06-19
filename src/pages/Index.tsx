@@ -9,9 +9,10 @@ import { useIntake } from "@/hooks/useIntake";
 
 import lumenArcCanopy from "@/assets/lumenarc/canopy.asset.json";
 import aberdeenHero from "@/assets/aberdeen/approved-barn-front-twilight.png.asset.json";
-import aberdeenArena from "@/assets/aberdeen/approved-viewing-lounge-arena-fireplace.png.asset.json";
+import aberdeenArena from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
 import steelFrontAsset from "@/assets/field-notes/approved-current-build-black-shed-storm.png.asset.json";
 import coveredArenaExteriorAsset from "@/assets/covered-arenas/approved-covered-arena-exterior-dusk.png.asset.json";
+
 const steelFront = steelFrontAsset.url;
 const coveredArenaExterior = coveredArenaExteriorAsset.url;
 
@@ -350,7 +351,7 @@ export default function Index() {
                     <div className="relative aspect-[4/5] overflow-hidden">
                       <img
                         src={aberdeenArena.url}
-                        alt="Aberdeen viewing lounge with fireplace and direct sightline into the indoor arena"
+                        alt="Aberdeen indoor arena with black steel frame, warm overhead lighting and prepared riding surface"
                         loading="lazy"
                         decoding="async"
                         className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
@@ -358,7 +359,8 @@ export default function Index() {
                       />
                     </div>
                     <div className="mt-6 pt-5 border-t border-accent/15 space-y-2">
-                      <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.42em]">Indoor Arena / Viewing Lounge</p>
+                      <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.42em]">Indoor Arena</p>
+
                       <div className="flex items-baseline justify-between gap-4">
                         <p className="font-serif text-foreground/88 group-hover:text-foreground transition-colors duration-500 text-[clamp(1.2rem,0.95rem+0.85vw,1.7rem)] leading-[1.15] tracking-[-0.012em]">
                           Aberdeen

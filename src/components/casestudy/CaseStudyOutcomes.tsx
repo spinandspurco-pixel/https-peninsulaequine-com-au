@@ -22,8 +22,10 @@ export function CaseStudyOutcomes({ outcomes }: Props) {
           {outcomes.map((o, i) => (
             <RevealOnScroll key={o.label} direction="up" delay={i * 120}>
               <div className="group bg-background px-[clamp(1.75rem,1.25rem+2vw,2.5rem)] py-[clamp(3.5rem,2.25rem+5vw,6rem)] relative">
-                <span className="absolute top-0 left-0 h-px w-8 bg-accent/40 transition-all duration-[1100ms] ease-[cubic-bezier(0.45,0,0.15,1)] group-hover:w-20" />
+                <span className="absolute top-0 left-0 h-px w-8 bg-accent/40 transition-all group-hover:w-20" style={{ transitionDuration: "1100ms", transitionTimingFunction: "cubic-bezier(0.45,0,0.15,1)" }} />
                 <p className="font-mono uppercase text-foreground/25 mb-[clamp(1.5rem,1rem+1.5vw,2rem)] text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.4em]">
+
+
                   {String(i + 1).padStart(2, "0")}
                 </p>
                 <p className="font-serif text-foreground/90 tracking-[-0.03em] leading-[0.9] text-[clamp(2.75rem,1.5rem+5vw,4.5rem)]">

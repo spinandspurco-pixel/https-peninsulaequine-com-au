@@ -51,9 +51,9 @@ import mainRidgeWide1536 from "@/assets/responsive/main-ridge-pavilion-wide-fire
 
 // ---- Aberdeen (completed) ----
 import aberdeenHeroTwilight from "@/assets/aberdeen/approved-barn-front-twilight.png.asset.json";
-import aberdeenArenaDramatic from "@/assets/aberdeen/approved-viewing-lounge-arena-fireplace.png.asset.json";
 import aberdeenArenaVaulted from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
 import aberdeenEntryCorridor from "@/assets/aberdeen/approved-arena-surfacing-forecourt.png.asset.json";
+
 
 // -----------------------------------------------------------------
 // Crop-safety contract
@@ -217,7 +217,7 @@ export const projectImagery: Record<string, ProjectImagery> = {
     surfaces: {
       selectedWorks: aberdeenHeroTwilight,
       caseStudyHero: aberdeenHeroTwilight,
-      fieldNotesGalleryA: aberdeenArenaDramatic,
+      fieldNotesGalleryA: aberdeenArenaVaulted,
       fieldNotesGalleryB: aberdeenEntryCorridor,
     },
     alt: {
@@ -226,9 +226,10 @@ export const projectImagery: Record<string, ProjectImagery> = {
       caseStudyHero:
         "Aberdeen — stable and barn structure at twilight with warm entry glow",
       fieldNotesGalleryA:
-        "Aberdeen viewing lounge with fireplace and direct sightline into the indoor arena",
+        "Aberdeen indoor arena with black steel frame, warm overhead lighting and prepared riding surface",
       fieldNotesGalleryB:
         "Aberdeen arena surfacing forecourt with the long barn form beyond",
+
     },
   },
 };
