@@ -243,6 +243,15 @@ run_case "lldb/lambda-lone-r: bare \\r at start/mid/end of lines" "lldb-lambda-l
 /Users/runner/work/repo/src/handler.cpp${TAB}21${TAB}5${TAB}B::bar::{lambda(int)#2}::operator()(int)
 /Users/runner/work/repo/src/lambda.cpp${TAB}42${TAB}17${TAB}A::foo::{lambda()#1}::operator()() const"
 
+# Embedded NUL bytes at line start, inside function names, and at line ends —
+# bash strips NULs from command substitution (with a stderr warning), so the
+# extractor must not truncate function names or file paths at the NUL byte.
+run_case "lldb/lambda-nulls: embedded \\0 bytes ignored, function names intact" "lldb-lambda-nulls.txt" \
+"/Users/runner/work/repo/src/factory.cpp${TAB}7${TAB}3${TAB}C::baz::{lambda(char*)#3}::operator()(char*) const &
+/Users/runner/work/repo/src/handler.cpp${TAB}21${TAB}5${TAB}B::bar::{lambda(int)#2}::operator()(int)
+/Users/runner/work/repo/src/lambda.cpp${TAB}42${TAB}17${TAB}A::foo::{lambda()#1}::operator()() const"
+
+
 echo
 printf 'extract-frames: %d passed, %d failed\n' "$PASS" "$FAIL"
 if [ "$FAIL" -gt 0 ]; then
