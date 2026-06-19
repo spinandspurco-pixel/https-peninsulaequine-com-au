@@ -152,6 +152,28 @@ run_case "macos/asan: '#N 0x... in Func::method(args) file.cpp:line:col'" "macos
 /Users/runner/work/repo/src/app.cpp${TAB}21${TAB}5${TAB}App::run()
 /Users/runner/work/repo/src/config.cpp${TAB}42${TAB}17${TAB}Config::parse(int)"
 
+echo
+echo "extract-frames: LLDB backtraces"
+
+# Symbolicated LLDB frames — module`Func(args) at file:line:col. Function name
+# preserves namespaces and full arg list (including pointer values).
+run_case "lldb/symbolicated: 'frame #N: 0x... mod\`Func(args) at file:line:col'" "lldb-symbolicated.txt" \
+"/Users/runner/work/repo/src/bootstrap.cpp${TAB}7${TAB}3${TAB}main(argc=1, argv=0x00007ffeefbff5c0)
+/Users/runner/work/repo/src/app.cpp${TAB}21${TAB}5${TAB}App::run()
+/Users/runner/work/repo/src/config.cpp${TAB}42${TAB}17${TAB}Config::parse(this=0x00007ffeefbff520, n=42)"
+
+# Unsymbolicated LLDB — no 'at file:line', just 'module + offset' or
+# '___lldb_unnamed_symbol'. Extractor must emit nothing (no usable source ref).
+run_case "lldb/unsymbolicated: stripped frames produce no output" "lldb-unsymbolicated.txt" \
+""
+
+# Mixed symbolicated + unsymbolicated — only the symbolicated frames should
+# survive, in deepest-first order.
+run_case "lldb/mixed: skips stripped frames, keeps symbolicated in deepest-first order" "lldb-mixed.txt" \
+"/Users/runner/work/repo/src/bootstrap.cpp${TAB}7${TAB}3${TAB}main(argc=1, argv=0x...)
+/Users/runner/work/repo/src/app.cpp${TAB}21${TAB}5${TAB}App::run()
+/Users/runner/work/repo/src/config.cpp${TAB}42${TAB}17${TAB}Config::parse(this=0x..., n=42)"
+
 
 echo
 printf 'extract-frames: %d passed, %d failed\n' "$PASS" "$FAIL"
