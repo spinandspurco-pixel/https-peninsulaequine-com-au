@@ -36,11 +36,6 @@ type Chapter = {
   services: Service[];
 };
 
-  code: string;
-  title: string;
-  intent: string;
-  services: Service[];
-};
 
 const CHAPTERS: Chapter[] = [
   {
