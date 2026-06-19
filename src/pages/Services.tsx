@@ -137,6 +137,26 @@ const CHAPTERS: Chapter[] = [
   },
 ];
 
+// ─── Active-chapter observer tuning ────────────────────────────────────────
+// The highlight switches the moment a chapter masthead crosses the trigger
+// line — a thin band just below the site header. Adjust these to taste:
+//   HEADER_OFFSET_FALLBACK_PX — used only when the <header> can't be measured.
+//   TRIGGER_BAND_PX           — height of the live "you've just crossed" band
+//                               below the header (larger = earlier switch).
+//   OBSERVER_THRESHOLD        — IntersectionObserver threshold(s). Keep at 0
+//                               so the masthead triggers as it first enters
+//                               the band, not when it's fully inside it.
+const HEADER_OFFSET_FALLBACK_PX = 96;
+const TRIGGER_BAND_PX = 24;
+const OBSERVER_THRESHOLD: number | number[] = 0;
+
+function measureHeaderHeight(): number {
+  if (typeof document === "undefined") return HEADER_OFFSET_FALLBACK_PX;
+  const el = document.querySelector("header");
+  return el?.getBoundingClientRect().height || HEADER_OFFSET_FALLBACK_PX;
+}
+
+
 
 
 export default function Services() {
