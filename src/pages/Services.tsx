@@ -242,7 +242,11 @@ export default function Services() {
                       const reversed = i % 2 === 1;
                       return (
                         <RevealOnScroll key={s.k} direction="up">
-                          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
+                          <div
+                            id={s.slug}
+                            className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end scroll-mt-32"
+                          >
+
                             <div className={`lg:col-span-8 ${reversed ? "lg:order-2" : ""}`}>
                               <div className="relative overflow-hidden aspect-[16/9]">
                                 <img
