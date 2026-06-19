@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
+import { logClientEvent } from "@/lib/clientLog";
 import { Link } from "react-router-dom";
 import { BrandIntro } from "@/components/BrandIntro";
 import { Layout } from "@/components/layout/Layout";
