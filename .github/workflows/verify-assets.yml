@@ -36,8 +36,43 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  retention-tests:
+    name: Retention validator tests (${{ matrix.label }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: "bash 3.2 (macOS system)"
+            os: macos-latest
+            container: ""
+          - label: "bash 5 (Ubuntu system)"
+            os: ubuntu-latest
+            container: ""
+          - label: "bash 4.4 (container)"
+            os: ubuntu-latest
+            container: "bash:4.4"
+          - label: "bash 5.1 (container)"
+            os: ubuntu-latest
+            container: "bash:5.1"
+          - label: "bash 5.2 (container)"
+            os: ubuntu-latest
+            container: "bash:5.2"
+    container: ${{ matrix.container != '' && matrix.container || null }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Print bash version
+        run: bash --version
+
+      - name: Run retention-policy unit tests
+        run: bash scripts/ci/validate-retention.test.sh
+
   verify:
     name: Scan for missing .asset.json references
+    needs: retention-tests
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
