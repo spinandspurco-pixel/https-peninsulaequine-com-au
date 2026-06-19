@@ -99,17 +99,48 @@ jobs:
           retention-days: ${{ steps.retention.outputs.days }}
 
       - name: Add artifact download link to summary
+        id: summary
         if: steps.upload-report.outcome == 'success'
         run: |
           SIZE=$(stat -c%s asset-scan-report.txt)
           TS=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
           CHECKSUM=$(sha256sum asset-scan-report.txt | awk '{print $1}')
+          echo "checksum=$CHECKSUM" >> "$GITHUB_OUTPUT"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "### Artifact Download" >> "$GITHUB_STEP_SUMMARY"
           echo "[Download asset-scan-report](${{ steps.upload-report.outputs.artifact-url }})" >> "$GITHUB_STEP_SUMMARY"
           echo "File size: **$SIZE bytes**" >> "$GITHUB_STEP_SUMMARY"
           echo "SHA256: \`$CHECKSUM\`" >> "$GITHUB_STEP_SUMMARY"
           echo "Generated: **$TS**" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Re-download artifact for integrity check
+        if: steps.upload-report.outcome == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: asset-scan-report
+          path: verify-download
+
+      - name: Verify downloaded artifact SHA256
+        if: steps.upload-report.outcome == 'success'
+        run: |
+          EXPECTED="${{ steps.summary.outputs.checksum }}"
+          ACTUAL=$(sha256sum verify-download/asset-scan-report.txt | awk '{print $1}')
+          echo "Expected: $EXPECTED"
+          echo "Actual:   $ACTUAL"
+          if [ "$EXPECTED" != "$ACTUAL" ]; then
+            echo "::error::Artifact integrity check failed. SHA256 mismatch (expected $EXPECTED, got $ACTUAL)."
+            {
+              echo ""
+              echo "### Artifact Integrity"
+              echo ":x: **SHA256 mismatch** — expected \`$EXPECTED\`, got \`$ACTUAL\`."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          {
+            echo ""
+            echo "### Artifact Integrity"
+            echo ":white_check_mark: Re-downloaded artifact SHA256 matches (\`$ACTUAL\`)."
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Fail if verification failed
         if: steps.verify.outcome == 'failure'
