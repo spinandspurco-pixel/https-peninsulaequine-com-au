@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "bunx tsx scripts/verify-assets.ts",
     "build": "vite build",
     "postbuild": "bunx tsx scripts/prerender.ts && bunx tsx scripts/verify-prerender.ts",
     "build:dev": "vite build --mode development",
