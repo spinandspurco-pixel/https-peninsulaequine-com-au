@@ -10,8 +10,8 @@ import { useIntake } from "@/hooks/useIntake";
 import lumenArcCanopy from "@/assets/lumenarc/canopy.asset.json";
 import aberdeenHero from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.png.asset.json";
 import aberdeenArena from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
-import steelFrontAsset from "@/assets/uploads/approved-current-build-crane-storm-lift.png.asset.json";
-import coveredArenaExteriorAsset from "@/assets/uploads/approved-covered-arena-service-yard-gold.png.asset.json";
+import steelFrontAsset from "@/assets/uploads/approved-current-build-steel-frame-storm.png.asset.json";
+import coveredArenaExteriorAsset from "@/assets/covered-arenas/approved-covered-arena-exterior-dusk.png.asset.json";
 
 
 const steelFront = steelFrontAsset.url;
