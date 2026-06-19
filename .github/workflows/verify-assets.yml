@@ -96,41 +96,87 @@ jobs:
             REVERSED=$(tac test-output.txt 2>/dev/null || tail -r test-output.txt 2>/dev/null || cat test-output.txt)
 
             # Collect up to 3 unique frames in deepest-first order.
+            # Each emitted record is TAB-separated: file<TAB>line<TAB>col<TAB>func
             FRAMES_FILE=$(mktemp)
             FRAME_COUNT=0
             MAX_FRAMES=3
             while IFS= read -r LINE; do
               [ "$FRAME_COUNT" -ge "$MAX_FRAMES" ] && break
-              MATCH=""
-              # Node stack frames: "at ... (file:line:col)" or "at file:line:col"
-              MATCH=$(printf '%s\n' "$LINE" | grep -oE 'at [^ ]*\(?([A-Za-z0-9_./+-]+\.(ts|tsx|js|jsx|mjs|cjs)):([0-9]+):([0-9]+)\)?' | tail -n 1 | sed -E 's/.*\(?([A-Za-z0-9_./+-]+\.(ts|tsx|js|jsx|mjs|cjs)):([0-9]+):([0-9]+)\)?$/\1:\3:\4/')
-              # Python traceback: File "x.py", line 42
-              if [ -z "$MATCH" ]; then
-                MATCH=$(printf '%s\n' "$LINE" | grep -oE 'File "[^"]+\.py", line [0-9]+' | tail -n 1 | sed -E 's/File "([^"]+)", line ([0-9]+)/\1:\2/')
+              F_FILE=""; F_LINE=""; F_COL=""; F_FUNC=""
+
+              # Node stack: "at funcName (file:line:col)" / "at Class.method (file:line:col)" / "at file:line:col"
+              if echo "$LINE" | grep -qE '^[[:space:]]*at .+\.(ts|tsx|js|jsx|mjs|cjs):[0-9]+:[0-9]+\)?[[:space:]]*$'; then
+                # With parens — extract func before "(" and file:line:col inside parens.
+                if echo "$LINE" | grep -qE '\([^()]*:[0-9]+:[0-9]+\)'; then
+                  F_FUNC=$(echo "$LINE" | sed -E 's/^[[:space:]]*at[[:space:]]+([^ ]+(\s+\[as\s+[^]]+\])?)[[:space:]]+\(.*$/\1/' | tr -d '\n\r')
+                  INNER=$(echo "$LINE" | sed -E 's/.*\(([^()]+:[0-9]+:[0-9]+)\).*/\1/')
+                else
+                  F_FUNC="<anonymous>"
+                  INNER=$(echo "$LINE" | sed -E 's/^[[:space:]]*at[[:space:]]+(.+)$/\1/')
+                fi
+                F_FILE=$(echo "$INNER" | sed -E 's/^(.+):[0-9]+:[0-9]+$/\1/')
+                F_LINE=$(echo "$INNER" | sed -E 's/^.+:([0-9]+):[0-9]+$/\1/')
+                F_COL=$(echo  "$INNER" | sed -E 's/^.+:[0-9]+:([0-9]+)$/\1/')
               fi
-              # tsc diagnostics: file.ts(42,10): error
-              if [ -z "$MATCH" ]; then
-                MATCH=$(printf '%s\n' "$LINE" | grep -oE '([A-Za-z0-9_./+-]+\.(ts|tsx|js|jsx))\(([0-9]+),([0-9]+)\)' | tail -n 1 | sed -E 's/([A-Za-z0-9_./+-]+):?\(([0-9]+),([0-9]+)\)/\1:\2:\3/')
+
+              # Python traceback: '  File "x.py", line 42, in funcname'
+              if [ -z "$F_FILE" ] && echo "$LINE" | grep -qE 'File "[^"]+\.py", line [0-9]+'; then
+                F_FILE=$(echo "$LINE" | sed -E 's/.*File "([^"]+)", line [0-9]+.*/\1/')
+                F_LINE=$(echo "$LINE" | sed -E 's/.*File "[^"]+", line ([0-9]+).*/\1/')
+                if echo "$LINE" | grep -qE ', in [^ ]+'; then
+                  F_FUNC=$(echo "$LINE" | sed -E 's/.*, in ([^[:space:]]+).*/\1/')
+                fi
               fi
-              # Ruby/Go stack frames
-              if [ -z "$MATCH" ]; then
-                MATCH=$(printf '%s\n' "$LINE" | grep -oE '([A-Za-z0-9_./+-]+\.(rb|go|py|java|kt|rs|swift)):([0-9]+)' | tail -n 1)
+
+              # Ruby: "file.rb:42:in `method'"
+              if [ -z "$F_FILE" ] && echo "$LINE" | grep -qE "\.rb:[0-9]+:in [\`']"; then
+                F_FILE=$(echo "$LINE" | sed -E "s/.*[[:space:](]([A-Za-z0-9_./+-]+\.rb):[0-9]+:in.*/\1/")
+                F_LINE=$(echo "$LINE" | sed -E "s/.*\.rb:([0-9]+):in.*/\1/")
+                F_FUNC=$(echo "$LINE" | sed -E "s/.*in [\`']([^']+)'.*/\1/")
               fi
-              # Bash xtrace: "file.sh: line N"
-              if [ -z "$MATCH" ]; then
-                MATCH=$(printf '%s\n' "$LINE" | grep -oE '([A-Za-z0-9_./+-]+\.(sh|bash|zsh)): ?line [0-9]+' | tail -n 1 | sed -E 's/: ?line /:/')
+
+              # Go: "package.Func(...)" on one line, "\tfile.go:42 +0x" on next — we
+              # only see one line at a time; capture the file:line and leave func blank.
+              if [ -z "$F_FILE" ] && echo "$LINE" | grep -qE '([A-Za-z0-9_./+-]+\.go):[0-9]+'; then
+                F_FILE=$(echo "$LINE" | grep -oE '([A-Za-z0-9_./+-]+\.go):[0-9]+' | tail -n 1 | sed -E 's/:[0-9]+$//')
+                F_LINE=$(echo "$LINE" | grep -oE '([A-Za-z0-9_./+-]+\.go):[0-9]+' | tail -n 1 | sed -E 's/.*:([0-9]+)$/\1/')
               fi
-              # Generic "path/file.ext:line[:col]"
-              if [ -z "$MATCH" ]; then
-                MATCH=$(printf '%s\n' "$LINE" | grep -oE '([A-Za-z0-9_./+-]+\.(sh|ts|tsx|js|jsx|mjs|cjs|bash|py|rb|go)):[0-9]+(:[0-9]+)?' | tail -n 1)
+
+              # Java/Kotlin: "at pkg.Class.method(File.kt:42)"
+              if [ -z "$F_FILE" ] && echo "$LINE" | grep -qE 'at [A-Za-z0-9_.$<>]+\([A-Za-z0-9_./+-]+\.(java|kt):[0-9]+\)'; then
+                F_FUNC=$(echo "$LINE" | sed -E 's/^[[:space:]]*at[[:space:]]+([A-Za-z0-9_.$<>]+)\(.*$/\1/')
+                F_FILE=$(echo "$LINE" | sed -E 's/.*\(([A-Za-z0-9_./+-]+\.(java|kt)):[0-9]+\).*/\1/')
+                F_LINE=$(echo "$LINE" | sed -E 's/.*\([A-Za-z0-9_./+-]+\.(java|kt):([0-9]+)\).*/\2/')
               fi
-              if [ -n "$MATCH" ]; then
-                # Dedupe by file:line (ignore column) so adjacent frames at the
-                # same source line collapse to one entry.
-                KEY=$(echo "$MATCH" | awk -F: '{print $1":"$2}')
+
+              # tsc diagnostics: "file.ts(42,10): error"
+              if [ -z "$F_FILE" ] && echo "$LINE" | grep -qE '([A-Za-z0-9_./+-]+\.(ts|tsx|js|jsx))\([0-9]+,[0-9]+\)'; then
+                F_FILE=$(echo "$LINE" | sed -E 's/.*([A-Za-z0-9_./+-]+\.(ts|tsx|js|jsx))\([0-9]+,[0-9]+\).*/\1/')
+                F_LINE=$(echo "$LINE" | sed -E 's/.*\(([0-9]+),[0-9]+\).*/\1/')
+                F_COL=$(echo  "$LINE" | sed -E 's/.*\([0-9]+,([0-9]+)\).*/\1/')
+              fi
+
+              # Bash xtrace / errexit: "scripts/foo.sh: line 42: cmd: not found"
+              if [ -z "$F_FILE" ] && echo "$LINE" | grep -qE '([A-Za-z0-9_./+-]+\.(sh|bash|zsh)): ?line [0-9]+'; then
+                F_FILE=$(echo "$LINE" | sed -E 's/.*([A-Za-z0-9_./+-]+\.(sh|bash|zsh)): ?line [0-9]+.*/\1/')
+                F_LINE=$(echo "$LINE" | sed -E 's/.*: ?line ([0-9]+).*/\1/')
+              fi
+
+              # Generic fallback: "path/file.ext:line[:col]"
+              if [ -z "$F_FILE" ] && echo "$LINE" | grep -qE '([A-Za-z0-9_./+-]+\.(sh|ts|tsx|js|jsx|mjs|cjs|bash|py|rb|go)):[0-9]+(:[0-9]+)?'; then
+                RAW=$(echo "$LINE" | grep -oE '([A-Za-z0-9_./+-]+\.(sh|ts|tsx|js|jsx|mjs|cjs|bash|py|rb|go)):[0-9]+(:[0-9]+)?' | tail -n 1)
+                F_FILE=$(echo "$RAW" | awk -F: '{print $1}')
+                F_LINE=$(echo "$RAW" | awk -F: '{print $2}')
+                F_COL=$(echo  "$RAW" | awk -F: '{print $3}')
+              fi
+
+              if [ -n "$F_FILE" ] && [ -n "$F_LINE" ]; then
+                # Sanitise the function name (strip quotes/backticks and clip length).
+                F_FUNC=$(echo "$F_FUNC" | tr -d '`"\\' | cut -c1-80)
+                KEY="${F_FILE}:${F_LINE}"
                 if ! grep -Fxq "$KEY" "$FRAMES_FILE.keys" 2>/dev/null; then
                   echo "$KEY" >> "$FRAMES_FILE.keys"
-                  echo "$MATCH" >> "$FRAMES_FILE"
+                  printf '%s\t%s\t%s\t%s\n' "$F_FILE" "$F_LINE" "$F_COL" "$F_FUNC" >> "$FRAMES_FILE"
                   FRAME_COUNT=$((FRAME_COUNT + 1))
                 fi
               fi
@@ -139,14 +185,12 @@ jobs:
             # Build top-1 fields (backwards compat) and a multi-line frames block.
             FAILED_FILE=""
             FAILED_LINENO=""
+            FAILED_FUNC=""
             FAILED_SOURCE_URL=""
             FAILED_FRAMES=""
             FRAME_INDEX=0
-            while IFS= read -r FRAME; do
-              [ -z "$FRAME" ] && continue
-              F_FILE=$(echo "$FRAME" | awk -F: '{print $1}')
-              F_LINE=$(echo "$FRAME" | awk -F: '{print $2}')
-              F_COL=$(echo "$FRAME" | awk -F: '{print $3}')
+            while IFS=$'\t' read -r F_FILE F_LINE F_COL F_FUNC; do
+              [ -z "$F_FILE" ] && continue
               # Normalise absolute paths to repo-relative.
               case "$F_FILE" in
                 "$REPO_ROOT"/*) F_FILE="${F_FILE#$REPO_ROOT/}" ;;
@@ -158,8 +202,9 @@ jobs:
               else
                 F_LABEL="${F_FILE}:${F_LINE}"
               fi
-              # Slack-formatted entry with link.
-              ENTRY="<${F_URL}|${F_LABEL}>"
+              [ -z "$F_FUNC" ] && F_FUNC='<anonymous>'
+              # Slack entry: "funcName @ <link|file:line:col>"
+              ENTRY="${F_FUNC} @ <${F_URL}|${F_LABEL}>"
               if [ -z "$FAILED_FRAMES" ]; then
                 FAILED_FRAMES="$ENTRY"
               else
@@ -168,11 +213,13 @@ jobs:
               if [ "$FRAME_INDEX" -eq 0 ]; then
                 FAILED_FILE="$F_FILE"
                 FAILED_LINENO="$F_LINE"
+                FAILED_FUNC="$F_FUNC"
                 FAILED_SOURCE_URL="$F_URL"
               fi
               FRAME_INDEX=$((FRAME_INDEX + 1))
             done < "$FRAMES_FILE"
             rm -f "$FRAMES_FILE" "$FRAMES_FILE.keys"
+
 
             {
               echo "exit_code=${EC}"
