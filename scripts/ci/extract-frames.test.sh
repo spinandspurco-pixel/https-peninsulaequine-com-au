@@ -129,6 +129,29 @@ run_case "edge/windows-tsc: drive letter + backslashes in 'file.ts(line,col)'" "
 C:\\Users\\runner\\work\\repo\\src\\app.ts${TAB}21${TAB}5${TAB}
 C:\\Users\\runner\\work\\repo\\src\\config.ts${TAB}42${TAB}17${TAB}"
 
+echo
+echo "extract-frames: macOS runner formats"
+
+# macOS Node — /Users/runner/... paths; should behave identically to the Linux
+# Node case (validates the path prefix doesn't break the matcher).
+run_case "macos/node: '/Users/runner/...' Node frames" "macos-node.txt" \
+"/Users/runner/work/repo/src/bootstrap.ts${TAB}7${TAB}3${TAB}<anonymous>
+/Users/runner/work/repo/src/index.ts${TAB}10${TAB}5${TAB}Object.<anonymous>
+/Users/runner/work/repo/src/config.ts${TAB}42${TAB}17${TAB}parseConfig"
+
+# Clang/GCC diagnostics: 'file.cpp:42:17: error: ...' — no function name available.
+run_case "macos/clang: 'file.cpp:line:col: error:' diagnostics" "macos-clang.txt" \
+"/Users/runner/work/repo/include/bootstrap.hpp${TAB}7${TAB}3${TAB}
+/Users/runner/work/repo/src/app.cpp${TAB}21${TAB}5${TAB}
+/Users/runner/work/repo/src/config.cpp${TAB}42${TAB}17${TAB}"
+
+# AddressSanitizer / lldb stack frames: '#N 0x... in Func::method(args) file.cpp:line:col'
+# Function name (with namespaces, args, and parens) must survive the extraction.
+run_case "macos/asan: '#N 0x... in Func::method(args) file.cpp:line:col'" "macos-asan.txt" \
+"/Users/runner/work/repo/src/bootstrap.cpp${TAB}7${TAB}3${TAB}main
+/Users/runner/work/repo/src/app.cpp${TAB}21${TAB}5${TAB}App::run()
+/Users/runner/work/repo/src/config.cpp${TAB}42${TAB}17${TAB}Config::parse(int)"
+
 
 echo
 printf 'extract-frames: %d passed, %d failed\n' "$PASS" "$FAIL"
