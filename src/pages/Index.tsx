@@ -172,6 +172,13 @@ export default function Index() {
 
 
 
+            {/* faint plan-line overlay — text column only, never over the subject */}
+            <div
+              aria-hidden
+              className="absolute left-0 bottom-0 w-full md:w-[46%] h-[60%] pointer-events-none z-[1] bg-plan-lines opacity-[0.18] animate-plan-drift-x"
+              style={{ maskImage: "linear-gradient(to right, black 70%, transparent 100%)", WebkitMaskImage: "linear-gradient(to right, black 70%, transparent 100%)" }}
+            />
+
             <div
               ref={heroContentRef}
               className="relative z-10 section-container w-full pb-[clamp(5rem,4rem+7vw,9rem)] pt-32"

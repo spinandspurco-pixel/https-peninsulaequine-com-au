@@ -173,6 +173,26 @@ export default {
           "0%, 100%": { opacity: "0.18" },
           "50%": { opacity: "0.42" },
         },
+        "draw-x": {
+          from: { transform: "scaleX(0)" },
+          to: { transform: "scaleX(1)" },
+        },
+        "draw-y": {
+          from: { transform: "scaleY(0)" },
+          to: { transform: "scaleY(1)" },
+        },
+        "tick-in": {
+          from: { transform: "scaleY(0)", opacity: "0" },
+          to: { transform: "scaleY(1)", opacity: "1" },
+        },
+        "mask-reveal": {
+          from: { clipPath: "inset(0 100% 0 0)" },
+          to: { clipPath: "inset(0 0 0 0)" },
+        },
+        "plan-drift-x": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "100%": { backgroundPosition: "240px 50%" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -187,6 +207,11 @@ export default {
         "draft-sweep-slow": "draft-sweep 28s cubic-bezier(0.45, 0, 0.15, 1) infinite",
         "draft-sweep-v": "draft-sweep-v 24s cubic-bezier(0.45, 0, 0.15, 1) infinite",
         "measure-glow": "measure-glow 7s ease-in-out infinite",
+        "draw-x": "draw-x 1100ms cubic-bezier(0.45, 0, 0.15, 1) forwards",
+        "draw-y": "draw-y 1100ms cubic-bezier(0.45, 0, 0.15, 1) forwards",
+        "tick-in": "tick-in 600ms cubic-bezier(0.45, 0, 0.15, 1) forwards",
+        "mask-reveal": "mask-reveal 1200ms cubic-bezier(0.45, 0, 0.15, 1) forwards",
+        "plan-drift-x": "plan-drift-x 24s linear infinite",
       },
     },
   },

@@ -793,3 +793,54 @@
     padding-bottom: 2rem !important;
   }
 }
+
+/* ── Construction-drawing motion system ─────────────────────── */
+@layer utilities {
+  .bg-draft-grid {
+    background-image:
+      linear-gradient(to right, hsl(var(--foreground) / 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--foreground) / 0.03) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+  .bg-plan-lines {
+    background-image:
+      linear-gradient(90deg, hsl(var(--accent) / 0.06) 1px, transparent 1px),
+      linear-gradient(0deg,  hsl(var(--foreground) / 0.025) 1px, transparent 1px);
+    background-size: 120px 100%, 100% 28px;
+  }
+  /* draw-on origin helpers */
+  .origin-left   { transform-origin: left   center; }
+  .origin-right  { transform-origin: right  center; }
+  .origin-top    { transform-origin: center top; }
+  .origin-bottom { transform-origin: center bottom; }
+
+  .draft-tick {
+    transform: scaleY(0);
+    transform-origin: bottom;
+    opacity: 0;
+  }
+  .draft-in .draft-tick {
+    animation: tick-in 600ms cubic-bezier(0.45,0,0.15,1) forwards;
+  }
+  .draft-in .draft-tick:nth-child(2)  { animation-delay:  60ms; }
+  .draft-in .draft-tick:nth-child(3)  { animation-delay: 120ms; }
+  .draft-in .draft-tick:nth-child(4)  { animation-delay: 180ms; }
+  .draft-in .draft-tick:nth-child(5)  { animation-delay: 240ms; }
+  .draft-in .draft-tick:nth-child(6)  { animation-delay: 300ms; }
+  .draft-in .draft-tick:nth-child(7)  { animation-delay: 360ms; }
+  .draft-in .draft-tick:nth-child(8)  { animation-delay: 420ms; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .draft-tick,
+  .animate-draw-x,
+  .animate-draw-y,
+  .animate-mask-reveal,
+  .animate-plan-drift-x,
+  .animate-tick-in {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    clip-path: none !important;
+  }
+}

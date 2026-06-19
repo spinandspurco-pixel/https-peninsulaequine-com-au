@@ -1,44 +1,77 @@
-## Goal
-Add a CI gate that fails the build when new security findings appear in any scan result (Supabase linter + connector/Wiz-style scans), so regressions can't merge unnoticed.
+# Construction Drawing Motion System
 
-## Approach
+A subtle, bespoke technical-drawing layer applied site-wide. Charcoal + bronze + warm grey. No blueprint blue, no sci-fi, no clutter.
 
-Add a new GitHub Actions workflow `.github/workflows/security-gate.yml` plus a small Node script `scripts/security-gate.ts` that:
+## 1. Design tokens (`src/index.css`, `tailwind.config.ts`)
 
-1. Runs the Supabase DB linter via the Supabase Management API (using `SUPABASE_ACCESS_TOKEN` + project ref `aizkqajrzkvwuobisnzr`) and collects findings.
-2. Reads a committed baseline at `.security/baseline.json` containing the fingerprints of all currently-known/accepted findings (mirrors what's already been marked fixed/ignored in the security memory).
-3. Diffs current findings against the baseline:
-   - Any finding **not in baseline** → fail the job with a non-zero exit and a `$GITHUB_STEP_SUMMARY` table listing the new issues (id, severity, table/function, remediation link).
-   - Findings in baseline that disappeared → log as "resolved, consider pruning baseline" (non-fatal).
-4. Writes a `security-report.json` artifact for traceability.
+Add semantic tokens (HSL) — reuse existing charcoal palette:
+- `--draft-line`: warm charcoal `30 8% 22%` @ low opacity use
+- `--draft-bronze`: `28 45% 52%`
+- `--draft-bronze-soft`: `28 35% 60%`
+- `--draft-grid`: charcoal @ 3%
+- `--draft-warm-grey`: `30 6% 65%`
 
-Baseline updates are an explicit human action: a maintainer runs `bun scripts/security-gate.ts --update-baseline` locally and commits the result. PRs that introduce a legitimately accepted finding must include the baseline change, making acceptance reviewable in code review.
+Keyframes:
+- `draw-line` (stroke-dashoffset N → 0, 1100ms `cubic-bezier(0.45,0,0.15,1)`)
+- `tick-in` (scaleX 0 → 1, 600ms)
+- `mask-reveal` (clip-path inset 100% → 0, 1200ms)
+- `plan-drift` (translateX subtle, 18s linear infinite, very low opacity)
+- `fade-page` (opacity + 4px lift, 500ms — replaces white flash)
 
-## Files
+Utilities:
+- `.bg-draft-grid` — 80px charcoal grid SVG, 3% opacity
+- `.bg-plan-lines` — diagonal/horizontal faint plan motif, animated drift
+- `.draft-corner` — corner-bracket pseudo-elements (12px, bronze, 1px)
 
-- **New** `.github/workflows/security-gate.yml`
-  - Triggers: `pull_request` to `main`, `push` to `main`, `workflow_dispatch`, plus a nightly `schedule` so drift from connector scans is caught even without PRs.
-  - Steps: checkout → setup Bun → `bun install --frozen-lockfile` → run `bun scripts/security-gate.ts` with `SUPABASE_ACCESS_TOKEN` from secrets → upload `security-report.json` artifact → write summary.
-- **New** `scripts/security-gate.ts`
-  - Fetches linter results from `https://api.supabase.com/v1/projects/{ref}/database/lints`.
-  - Normalises each finding to a stable fingerprint: `sha256(name + level + (metadata.schema||'') + (metadata.name||'') + cache_key)`.
-  - Loads `.security/baseline.json`, diffs, prints a markdown summary, exits 1 on any new finding.
-  - Supports `--update-baseline` to rewrite the baseline file.
-- **New** `.security/baseline.json`
-  - Seeded from the current scan output so the gate starts green. Each entry: `{ fingerprint, name, level, schema, object, acknowledged_in: "<migration or memory ref>" }`.
-- **New** `.security/README.md`
-  - Two-paragraph doc: what the gate does, how to refresh the baseline, and the rule that baseline changes require reviewer approval.
+## 2. Reusable primitives (`src/components/draft/`)
 
-## Secrets
+- `DraftLine.tsx` — horizontal/vertical SVG line that draws on scroll-in via IntersectionObserver (uses `prefers-reduced-motion` + mobile downscale).
+- `DraftTicks.tsx` — row of measurement ticks, staggered tick-in.
+- `DraftCorners.tsx` — wraps children with 4 bronze corner brackets (absolute positioned).
+- `DraftSectionLabel.tsx` — small "§ 03 / SERVICES" overline with bronze numeral + warm grey label, 0.45em tracking.
+- `DraftStatusCode.tsx` — pill-less monospace code like `PE-MR-024 · IN BUILD`.
+- `DraftPlanBackdrop.tsx` — absolutely-positioned faint SVG plan lines, animated drift, `pointer-events-none`, mobile reduces opacity/disables motion.
+- `DraftHoverFrame.tsx` — wraps an interactive card; on hover, animates 1px border + corner ticks "activating".
+- `DraftReveal.tsx` — image mask reveal (clip-path) on scroll-in.
+- `PageTransition.tsx` — wraps `<Routes>`; AnimatePresence fade (no white), uses background color of theme.
 
-One new GitHub Actions secret required: `SUPABASE_ACCESS_TOKEN` (personal access token with read access to the project's lints endpoint). The plan will include instructions for the maintainer to add it; the workflow will fail fast with a clear message if it's missing.
+All primitives:
+- Respect `prefers-reduced-motion` (skip animation, end state only).
+- Use `IntersectionObserver` once-only.
+- Mobile (`<768px`): shorter durations, ticks/brackets only, no infinite drift.
 
-## Out of scope
+## 3. Page integrations
 
-- No changes to existing workflows (`prerender-unit-tests.yml`, `verify-prerender.yml`).
-- No changes to RLS, policies, or app code — this is CI-only.
-- Connector/Wiz findings beyond what the Supabase linter surfaces are read from the same baseline mechanism; if you later want to ingest a second scanner, we extend `security-gate.ts` with another fetcher and keep the same diff logic.
+| Surface | Additions |
+|---|---|
+| `App.tsx` / router | `PageTransition` wrapper; remove any white flash bg |
+| Homepage hero | `DraftPlanBackdrop` constrained to text column only (left half), `DraftSectionLabel` "§ 01" |
+| Services cards (`ServicesGrid` / `ServiceDetail`) | bronze numeral, `DraftTicks` under title, `DraftHoverFrame` border line, `DraftPlanBackdrop` faint behind section |
+| Selected Works / project cards | `DraftCorners` around image, `DraftStatusCode` (e.g. `PE-MR-024 · RESOLVED`), thin connector line from title → image corner |
+| Field Notes timeline (`BuildTimeline` or Field Notes page) | replace timeline rule with `DraftLine` vertical, chapter markers as bronze tick + numeral |
+| About sections (horseman / craft / groundwork) | `DraftLine` connectors between sections, `DraftSectionLabel` per section |
+| Between major sections site-wide | `<DraftLine variant="horizontal" />` divider (1px, draws on enter) — added to `Layout` slots where applicable |
+| Global background | optional `bg-draft-grid` on neutral sections (very subtle) |
 
-## Open question
+## 4. Performance & a11y
 
-Do you want the gate to **block PRs** (required status check, hard fail) or **warn only** (annotate the PR but allow merge) for the first iteration? Default in the plan above is hard-fail on `pull_request`.
+- All SVGs inline, no extra requests.
+- IntersectionObserver disconnect after first reveal.
+- `will-change` only during active animation, removed after.
+- `prefers-reduced-motion: reduce` → end-state only, no drift loops.
+- Mobile: drift loops disabled, durations halved.
+
+## 5. Out of scope
+
+- No content/copy changes.
+- No restructuring of existing components beyond inserting primitives.
+- No new images.
+
+## Build order
+
+1. Tokens + keyframes + utilities.
+2. Primitives in `src/components/draft/`.
+3. `PageTransition` + router wrap (kills white flash).
+4. Integrate into Services, Selected Works, Field Notes, About, Homepage hero — in that order.
+
+After step 3 the user will see immediate site-wide effect; steps 4 are progressive enhancements per page.
