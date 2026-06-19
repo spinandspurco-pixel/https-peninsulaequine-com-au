@@ -63,13 +63,29 @@ jobs:
         run: bunx tsx scripts/verify-assets.ts > asset-scan-report.txt 2>&1
         continue-on-error: true
 
+      - name: Determine valid retention days
+        id: retention
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            DAYS="${{ inputs.retention_days }}"
+          else
+            DAYS="${{ vars.ASSET_SCAN_RETENTION_DAYS }}"
+          fi
+          if [ -z "$DAYS" ]; then
+            DAYS=30
+          elif ! [[ "$DAYS" =~ ^[0-9]+$ ]] || [ "$DAYS" -lt 1 ]; then
+            echo "::warning::ASSET_SCAN_RETENTION_DAYS is invalid ('$DAYS'). Falling back to 30 days."
+            DAYS=30
+          fi
+          echo "days=$DAYS" >> "$GITHUB_OUTPUT"
+
       - name: Upload scan report
         if: steps.verify.outcome != 'skipped'
         uses: actions/upload-artifact@v4
         with:
           name: asset-scan-report
           path: asset-scan-report.txt
-          retention-days: ${{ inputs.retention_days || vars.ASSET_SCAN_RETENTION_DAYS || 30 }}
+          retention-days: ${{ steps.retention.outputs.days }}
 
       - name: Fail if verification failed
         if: steps.verify.outcome == 'failure'
