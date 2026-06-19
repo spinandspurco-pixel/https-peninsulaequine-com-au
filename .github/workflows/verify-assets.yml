@@ -103,10 +103,12 @@ jobs:
         run: |
           SIZE=$(stat -c%s asset-scan-report.txt)
           TS=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          CHECKSUM=$(sha256sum asset-scan-report.txt | awk '{print $1}')
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "### Artifact Download" >> "$GITHUB_STEP_SUMMARY"
           echo "[Download asset-scan-report](${{ steps.upload-report.outputs.artifact-url }})" >> "$GITHUB_STEP_SUMMARY"
           echo "File size: **$SIZE bytes**" >> "$GITHUB_STEP_SUMMARY"
+          echo "SHA256: \`$CHECKSUM\`" >> "$GITHUB_STEP_SUMMARY"
           echo "Generated: **$TS**" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Fail if verification failed
