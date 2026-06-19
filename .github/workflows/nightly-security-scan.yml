@@ -1,0 +1,123 @@
+name: Nightly security scan
+
+# Runs the full security gate on a nightly schedule independent of PR
+# activity. If new findings appear vs the committed baseline, the job
+# fails AND opens (or updates) a tracking GitHub issue so the team is
+# notified even when nobody opens a PR.
+
+on:
+  schedule:
+    - cron: "0 4 * * *" # 04:00 UTC nightly
+  workflow_dispatch:
+
+concurrency:
+  group: nightly-security-scan
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  scan:
+    name: Run all security scans
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Cache Bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Verify SUPABASE_ACCESS_TOKEN is configured
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          if [ -z "$SUPABASE_ACCESS_TOKEN" ]; then
+            echo "::error::SUPABASE_ACCESS_TOKEN secret is missing."
+            exit 1
+          fi
+
+      - name: Run security gate
+        id: gate
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: bun scripts/security-gate.ts | tee gate-output.txt
+        continue-on-error: true
+
+      - name: Run anon Data API regression suite
+        id: regression
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
+        run: bun vitest run src/test/security-regression.test.ts
+        continue-on-error: true
+
+      - name: Upload security report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-security-report
+          path: |
+            security-report.json
+            gate-output.txt
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Open or update tracking issue on failure
+        if: steps.gate.outcome == 'failure' || steps.regression.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let body = '## Nightly security scan detected new findings\n\n';
+            body += `- Run: ${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}\n`;
+            body += `- Gate: **${{ steps.gate.outcome }}**\n`;
+            body += `- Regression suite: **${{ steps.regression.outcome }}**\n\n`;
+            try {
+              const out = fs.readFileSync('gate-output.txt', 'utf8');
+              body += '<details><summary>Gate output</summary>\n\n```\n' + out.slice(0, 60000) + '\n```\n\n</details>\n';
+            } catch {}
+            const title = 'Nightly security scan: new findings detected';
+            const { data: existing } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'security,nightly-scan',
+              per_page: 10,
+            });
+            const match = existing.find(i => i.title === title);
+            if (match) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: match.number,
+                body,
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+                labels: ['security', 'nightly-scan'],
+              });
+            }
+
+      - name: Fail job if any scan reported new findings
+        if: steps.gate.outcome == 'failure' || steps.regression.outcome == 'failure'
+        run: exit 1
