@@ -9,7 +9,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { CheckCircle, ArrowRight, Phone, Ruler, Shield, Layers, CircleDot } from "lucide-react";
 import { siteConfig, services } from "@/data/content";
 
-import roundPenTwilightAsset from "@/assets/uploads/approved-round-pen-twilight.png.asset.json";
+import roundPenTwilightAsset from "@/assets/uploads/approved-aberdeen-round-pen-sunset.png.asset.json";
 import roundPenSlabSunriseAsset from "@/assets/uploads/approved-round-pen-slab-sunrise.png.asset.json";
 import blueprintFacility from "@/assets/blueprint-facility.png";
 import blueprintDetail from "@/assets/blueprint-detail.png";

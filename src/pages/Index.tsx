@@ -8,9 +8,9 @@ import { useIntake } from "@/hooks/useIntake";
 
 
 import lumenArcCanopy from "@/assets/lumenarc/canopy.asset.json";
-import aberdeenHero from "@/assets/aberdeen/approved-barn-front-twilight.png.asset.json";
-import aberdeenArena from "@/assets/uploads/approved-covered-arena-interior-night-v2.png.asset.json";
-import steelFrontAsset from "@/assets/uploads/approved-current-build-rain-frame-symmetry.png.asset.json";
+import aberdeenHero from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.png.asset.json";
+import aberdeenArena from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
+import steelFrontAsset from "@/assets/uploads/approved-current-build-steel-frame-storm.png.asset.json";
 import coveredArenaExteriorAsset from "@/assets/uploads/approved-covered-arena-interior-construction-dawn-v2.png.asset.json";
 
 
