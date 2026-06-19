@@ -43,7 +43,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-[hsl(var(--footer-muted))] text-[13px] leading-[1.85] max-w-xs mb-8 sm:mb-12">
-              Covered arenas, stables and premium equine environments — built by riders, crafted for performance.
+              Covered arenas, stable structures and equine environments built by horse people — from the ground beneath the ride to the systems that make the property work.
             </p>
             <div className="flex gap-5">
               {[

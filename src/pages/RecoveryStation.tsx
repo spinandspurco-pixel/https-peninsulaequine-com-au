@@ -80,10 +80,10 @@ const chapters: LumenArcChapter[] = [
     label: "The Precinct",
     title: "A future Peninsula Equine ecosystem, built around recovery.",
     body:
-      "Beyond a single structure, LumenArc sits inside a wider facility direction — where landscape, infrastructure, circulation and oversight are conceived as one premium equine environment.",
-    notes: ["Facility ecosystem", "Premium infrastructure", "Long-horizon planning"],
+      "Beyond a single structure, LumenArc sits inside a wider facility direction — where landscape, infrastructure, circulation and oversight are shaped as one working equine environment.",
+    notes: ["Facility ecosystem", "Whole-property infrastructure", "Long-horizon planning"],
     image: wellnessPrecinctAsset.url,
-    alt: "LumenArc wellness precinct concept showing broader premium equine facility ecosystem at night",
+    alt: "LumenArc wellness precinct concept — broader equine facility ecosystem at night",
     align: "left",
     disclaimer: "Precinct visual shown as future direction only. Elements remain in development.",
   },
@@ -357,7 +357,7 @@ export default function RecoveryStation() {
         <section className="relative h-[85svh] md:h-[100svh] overflow-hidden">
           <img
             src={comingSoonAsset.url}
-            alt="LumenArc coming soon teaser visual — premium equine recovery canopy concept with blueprint-led detailing"
+            alt="LumenArc coming soon teaser — equine recovery canopy concept with blueprint-led detailing"
             width={1536}
             height={1024}
             className="absolute inset-0 h-full w-full object-contain md:object-cover object-center"

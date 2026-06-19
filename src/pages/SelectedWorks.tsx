@@ -86,8 +86,7 @@ export default function SelectedWorks() {
             <RevealLine width="w-10" delay={280} className="mx-auto mt-10" />
             <RevealOnScroll direction="up" duration={1000} delay={340}>
               <p className="mt-10 max-w-xl mx-auto font-sans font-light text-foreground/55 leading-[1.85] text-[14px] sm:text-[15px]">
-                A closer look at the environments, structures and details shaped
-                from the ground up.
+                A closer look at the builds, structures and details shaped from the ground up.
               </p>
             </RevealOnScroll>
           </div>

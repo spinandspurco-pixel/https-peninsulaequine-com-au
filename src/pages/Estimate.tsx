@@ -263,7 +263,7 @@ export default function Estimate() {
     <Layout>
       <PageHeader
         title="Construction Pricing"
-        description="Premium equine facility pricing for the Australian market. Use our interactive calculator or browse tiered packages below."
+        description="Indicative pricing for covered arenas, stables, pavilions and equine infrastructure built across the Mornington Peninsula. Use the calculator or browse tiered packages below."
       />
 
       {/* Jump-nav strip */}
