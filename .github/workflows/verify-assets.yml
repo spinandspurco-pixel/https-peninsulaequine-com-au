@@ -105,6 +105,7 @@ jobs:
           SIZE=$(stat -c%s asset-scan-report.txt)
           TS=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
           CHECKSUM=$(sha256sum asset-scan-report.txt | awk '{print $1}')
+          echo "::add-mask::$CHECKSUM"
           echo "checksum=$CHECKSUM" >> "$GITHUB_OUTPUT"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "### Artifact Download" >> "$GITHUB_STEP_SUMMARY"
@@ -126,6 +127,7 @@ jobs:
         run: |
           EXPECTED="${{ steps.summary.outputs.checksum }}"
           ACTUAL=$(sha256sum verify-download/asset-scan-report.txt | awk '{print $1}')
+          echo "::add-mask::$ACTUAL"
           echo "Expected: $EXPECTED"
           echo "Actual:   $ACTUAL"
           if [ "$EXPECTED" != "$ACTUAL" ]; then
