@@ -547,14 +547,6 @@ export default function Index() {
           </section>
 
           <section className="relative py-[clamp(4rem,2.5rem+6vw,10rem)] bg-background overflow-hidden">
-            <img
-              src={serviceGroundworks.url}
-              alt=""
-              aria-hidden
-              loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover opacity-[0.22]"
-              style={{ filter: "brightness(0.48) contrast(1.1) saturate(0.7)", objectPosition: "42% 52%" }}
-            />
             <div className="absolute inset-0 bg-gradient-to-b from-background via-background/82 to-background" />
             <div className="relative section-container max-w-3xl mx-auto text-center space-y-[clamp(2rem,1.25rem+2.5vw,3rem)]">
               <RevealOnScroll direction="up" duration={900}>
