@@ -1,0 +1,6 @@
+==12345==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x602000000010
+READ of size 4 at 0x602000000010 thread T0
+    #0 0x10abc1234 in Config::parse(int) /Users/runner/work/repo/src/config.cpp:42:17
+    #1 0x10abc5678 in App::run() /Users/runner/work/repo/src/app.cpp:21:5
+    #2 0x10abc9abc in main /Users/runner/work/repo/src/bootstrap.cpp:7:3
+SUMMARY: AddressSanitizer: heap-buffer-overflow
