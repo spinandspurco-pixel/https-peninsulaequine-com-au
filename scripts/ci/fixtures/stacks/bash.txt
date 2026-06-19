@@ -1,0 +1,3 @@
+scripts/ci/validate-retention.sh: line 42: parse_config: command not found
+scripts/ci/app.sh: line 21: run: command not found
+scripts/ci/bootstrap.sh: line 7: main: command not found
