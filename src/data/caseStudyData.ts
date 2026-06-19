@@ -1,28 +1,47 @@
 /* ── Case Study Data — Editorial Estate Dossier ── */
 
-// Aberdeen (Private Client)
-import aberdeenStoneworkColor from "@/assets/aberdeen-stonework-color.jpg";
-import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
-import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
-import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
-import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
-import aberdeenAisle from "@/assets/aberdeen-aisle.jpg";
-import aberdeenDeck from "@/assets/aberdeen-deck.jpg";
-import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
+// Approved cinematic asset library only.
+// Legacy bright-daytime phone photos (aberdeen-*.jpg, covered-arena-finished-lit,
+// main-ridge-finished-interior, living-hero-wide) have been removed. Slots
+// without an approved equivalent are filled by neighbouring approved frames
+// rather than off-direction imagery.
 
-// Main Ridge — case study deprecated. New page lives at /selected-works/main-ridge-pavilion (see pages/MainRidgePavilion.tsx).
-// livingHeroWide is still referenced by other entries via the canonical surface import below.
-import livingHeroWide from "@/assets/living-hero-wide.jpg";
+// Aberdeen (Private Client) — approved set
+import aberdeenExteriorDuskAsset from "@/assets/uploads/approved-aberdeen-exterior-dusk-frontage.png.asset.json";
+import aberdeenRiderStormAsset from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.png.asset.json";
+import aberdeenViewingLoungeAsset from "@/assets/uploads/approved-aberdeen-viewing-lounge.png.asset.json";
+import stableAisleWarmAsset from "@/assets/uploads/approved-stable-aisle-detail-warm-light.png.asset.json";
+import stableStallSymmetricAsset from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
+import tackRoomJoineryAsset from "@/assets/uploads/approved-tack-room-joinery.png.asset.json";
+import currentBuildSteelStormAsset from "@/assets/uploads/approved-current-build-steel-frame-storm.png.asset.json";
 
-// Equitana
-import equitanaArena1 from "@/assets/covered-arena-finished-lit.jpg";
-import equitanaArena2 from "@/assets/aberdeen-aisle.jpg";
-import equitanaArena3 from "@/assets/aberdeen-barn-interior.jpg";
-import equitanaArena4 from "@/assets/main-ridge-finished-interior-1.jpg";
-import equitanaArena5 from "@/assets/main-ridge-finished-interior-2.jpg";
+// Equitana / arena programme — approved covered arena + field-notes set
+import coveredArenaInteriorNightAsset from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
+import coveredArenaInteriorDawnAsset from "@/assets/covered-arenas/approved-covered-arena-interior-construction-dawn.png.asset.json";
+import timberKickboardAsset from "@/assets/covered-arenas/approved-timber-kickboard-detail.png.asset.json";
+import compArenaDrainageAsset from "@/assets/field-notes/covered-competition-arena-drainage-detail.png.asset.json";
+import compArenaNightWorkAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
+import compArenaSunsetPuddlesAsset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
+import compArenaTruckAccessAsset from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
+import muddyBootsSteelFrameAsset from "@/assets/field-notes/muddy-boots-steel-frame.png.asset.json";
 
-// Canonical surface system image (re-uses living hero)
-import groundlockInstallation from "@/assets/living-hero-wide.jpg";
+const aberdeenExteriorDusk = aberdeenExteriorDuskAsset.url;
+const aberdeenRiderStorm = aberdeenRiderStormAsset.url;
+const aberdeenViewingLounge = aberdeenViewingLoungeAsset.url;
+const stableAisleWarm = stableAisleWarmAsset.url;
+const stableStallSymmetric = stableStallSymmetricAsset.url;
+const tackRoomJoinery = tackRoomJoineryAsset.url;
+const currentBuildSteelStorm = currentBuildSteelStormAsset.url;
+
+const coveredArenaInteriorNight = coveredArenaInteriorNightAsset.url;
+const coveredArenaInteriorDawn = coveredArenaInteriorDawnAsset.url;
+const timberKickboard = timberKickboardAsset.url;
+const compArenaDrainage = compArenaDrainageAsset.url;
+const compArenaNightWork = compArenaNightWorkAsset.url;
+const compArenaSunsetPuddles = compArenaSunsetPuddlesAsset.url;
+const compArenaTruckAccess = compArenaTruckAccessAsset.url;
+const muddyBootsSteelFrame = muddyBootsSteelFrameAsset.url;
+
 
 export interface CaseStudyAct {
   image: string;
