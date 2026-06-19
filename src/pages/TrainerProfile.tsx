@@ -11,7 +11,9 @@ import { TrainerVideoPlaylist } from "@/components/TrainerVideoPlaylist";
 import { TrainerClinicRSVP } from "@/components/TrainerClinicRSVP";
 import { fetchMergedTestimonials, TRAINER_PROFILES, SERVICE_FILTERS, type TestimonialItem } from "@/lib/testimonials";
 import { glennBrowitt, aboutCiro } from "@/data/content";
-import ciroWithHorse from "@/assets/covered-arena-finished-lit.jpg";
+// Approved cinematic — legacy covered-arena-finished-lit removed.
+import ciroWithHorseAsset from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.png.asset.json";
+const ciroWithHorse = ciroWithHorseAsset.url;
 
 interface TrainerData {
   slug: string;

@@ -16,9 +16,14 @@ import { cn } from "@/lib/utils";
 import { EventRSVPForm } from "@/components/events/EventRSVPForm";
 import { EventGuestList } from "@/components/events/EventGuestList";
 
-import equitanaArena1 from "@/assets/covered-arena-finished-lit.jpg";
-import equitanaArena5 from "@/assets/main-ridge-finished-interior-2.jpg";
-import caulfieldEvent from "@/assets/covered-arena-finished-lit.jpg";
+// Approved cinematic event imagery only — legacy covered-arena-finished-lit
+// and main-ridge-finished-interior phone shots removed.
+import equitanaArena1Asset from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
+import equitanaArena5Asset from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
+import caulfieldEventAsset from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
+const equitanaArena1 = equitanaArena1Asset.url;
+const equitanaArena5 = equitanaArena5Asset.url;
+const caulfieldEvent = caulfieldEventAsset.url;
 
 // Fallback images by keyword
 const fallbackImages: Record<string, string> = {
