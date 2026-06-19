@@ -44,7 +44,10 @@ const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
 export default function Index() {
   const heroContentRef = useRef<HTMLDivElement>(null);
   const [heroFade, setHeroFade] = useState(1);
+  const [heroImgLoaded, setHeroImgLoaded] = useState(false);
+  const [heroImgFailed, setHeroImgFailed] = useState(false);
   const { open: openIntake } = useIntake();
+
 
   const skipIntro = useMemo(() => {
     if (typeof window === "undefined") return true;
@@ -110,7 +113,7 @@ export default function Index() {
              * never substitute another image.
              */}
             <div className="absolute inset-0 bg-[hsl(222_20%_6%)]">
-              {slidingStop1536?.url ? (
+              {slidingStop1536?.url && !heroImgFailed ? (
                 <img
                   src={slidingStop1536.url}
                   srcSet={slidingStopSrcSet}
@@ -118,18 +121,26 @@ export default function Index() {
                   alt="Horse and rider executing a sliding stop, dust plume across worked arena footing — Peninsula Equine."
                   fetchPriority="high"
                   decoding="async"
+                  onLoad={() => setHeroImgLoaded(true)}
+                  onError={() => setHeroImgFailed(true)}
                   className="absolute inset-0 w-full h-full object-cover object-[58%_center] sm:object-[62%_center]"
                   style={{
-                    opacity: imageReady ? 1 : 0,
-                    transform: imageReady ? "scale(1)" : "scale(1.04)",
+                    opacity: imageReady && heroImgLoaded ? 1 : 0,
+                    transform: imageReady && heroImgLoaded ? "scale(1)" : "scale(1.04)",
                     transition: `opacity 1600ms ${EASE}, transform 2400ms ${EASE}`,
                     willChange: "opacity, transform",
                   }}
                 />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center bg-[hsl(222_20%_6%)] text-accent/70 font-mono text-[11px] tracking-[0.4em] uppercase text-center px-6">
-                  HOMEPAGE_HERO_SLIDING_STOP_REQUIRED
-                </div>
+              ) : null}
+              {heroImgFailed && (
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 bg-[hsl(222_20%_6%)]"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(ellipse 70% 60% at 62% 50%, hsl(28 35% 14% / 0.45) 0%, transparent 70%)",
+                  }}
+                />
               )}
             </div>
 
