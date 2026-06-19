@@ -498,10 +498,10 @@ export default function Index() {
                         </h2>
                         <div className="space-y-3 max-w-lg">
                           <p className="font-sans font-light text-foreground/72 leading-[1.7] text-[clamp(0.95rem,0.85rem+0.25vw,1.1rem)]">
-                            Notes from the build.
+                            Steel rising. Ground settling. The work between milestones.
                           </p>
                           <p className="font-sans font-light text-foreground/55 leading-[1.85] text-[clamp(0.9rem,0.82rem+0.2vw,1rem)]">
-                            Process, material and structural detail — recorded as projects move through the ground.
+                            A live read on a covered arena and stable build — structure, weather and the layers that decide how it lasts.
                           </p>
                         </div>
                         <div className="flex flex-wrap items-center gap-x-8 gap-y-3 pt-2">
