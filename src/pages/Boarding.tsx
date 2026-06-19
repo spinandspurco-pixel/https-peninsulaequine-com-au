@@ -8,32 +8,49 @@ import { Button } from "@/components/ui/button";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
 
-// Facility images
-import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
-import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
-import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
-import aberdeenAisle from "@/assets/aberdeen-aisle.jpg";
-import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
-import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
-import aberdeenDeck from "@/assets/aberdeen-deck.jpg";
-import coveredArenaLit from "@/assets/covered-arena-finished-lit.jpg";
-import premiumStableFacade from "@/assets/aberdeen-exterior.jpg";
-import mainRidgeFinishedInterior1 from "@/assets/main-ridge-finished-interior-1.jpg";
+// ── Approved cinematic facility imagery ─────────────────
+// Legacy bright-daytime phone photos (aberdeen-*.jpg, covered-arena-finished-lit,
+// main-ridge-finished-interior, aberdeen-deck) have been removed. Slots with
+// no approved equivalent render an EditorialPlaceholder.
+import { EditorialPlaceholder } from "@/components/EditorialPlaceholder";
+import aberdeenExteriorDuskAsset from "@/assets/uploads/approved-aberdeen-exterior-dusk-frontage.png.asset.json";
+import aberdeenViewingLoungeAsset from "@/assets/uploads/approved-aberdeen-viewing-lounge.png.asset.json";
+import stableAisleWarmAsset from "@/assets/uploads/approved-stable-aisle-detail-warm-light.png.asset.json";
+import stableStallSymmetricAsset from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
+import tackRoomJoineryAsset from "@/assets/uploads/approved-tack-room-joinery.png.asset.json";
+import coveredArenaInteriorNightAsset from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
+import timberKickboardAsset from "@/assets/covered-arenas/approved-timber-kickboard-detail.png.asset.json";
 import blueprintFacility from "@/assets/blueprint-facility.png";
-import blueprintElevation from "@/assets/blueprint-elevation.png";
+
+const aberdeenExteriorDusk = aberdeenExteriorDuskAsset.url;
+const aberdeenViewingLounge = aberdeenViewingLoungeAsset.url;
+const stableAisleWarm = stableAisleWarmAsset.url;
+const stableStallSymmetric = stableStallSymmetricAsset.url;
+const tackRoomJoinery = tackRoomJoineryAsset.url;
+const coveredArenaInteriorNight = coveredArenaInteriorNightAsset.url;
+const timberKickboard = timberKickboardAsset.url;
 
 // ── Data ──────────────────────────────────────────────
 
-const AMENITIES = [
-  { image: aberdeenStalls, title: "Spacious Stalls", description: "Oversized stalls with rubber matting and premium bedding", alt: "Interior view of oversized horse stalls with rubber matting, premium timber partitions, and ample natural light" },
-  { image: aberdeenAisle, title: "Wide Aisles", description: "Well-lit, clean aisles for safe horse handling", alt: "Clean, wide barn aisle with natural stone flooring and bright overhead lighting for safe horse handling" },
-  { image: aberdeenBarnInterior, title: "Barn Interior", description: "Natural ventilation and abundant natural light", alt: "Spacious barn interior showing high ceilings with natural ventilation, chandeliers, and stained timber finishes" },
-  { image: aberdeenStallsDetail, title: "Stall Details", description: "Heavy-duty hardware and quality timber finishes", alt: "Close-up of heavy-duty stall door hardware, sliding gate mechanism, and hand-finished timber detailing" },
-  { image: coveredArenaLit, title: "Covered Arena", description: "Covered training and wash bay zones", alt: "Covered arena finished and illuminated at dusk, showcasing premium structural design" },
-  { image: aberdeenDeck, title: "Viewing Deck", description: "Elevated viewing for owners and visitors", alt: "Elevated timber viewing deck overlooking paddocks and arena, designed for owners and visitors" },
-  { image: mainRidgeFinishedInterior1, title: "Facility Interior", description: "Natural light and premium finishes throughout", alt: "Finished interior space with natural light and quality timber finishes" },
-  { image: aberdeenExterior, title: "Facility Grounds", description: "Landscaped grounds with secure perimeter fencing", alt: "Exterior view of the completed facility showing landscaped grounds and secure perimeter fencing" },
+type AmenityItem = {
+  title: string;
+  description: string;
+  alt: string;
+  image?: string;
+  placeholder?: { code: string; label: string };
+};
+
+const AMENITIES: AmenityItem[] = [
+  { image: stableStallSymmetric, title: "Spacious Stalls", description: "Oversized stalls with rubber matting and premium bedding", alt: "Symmetric stall interior with timber detailing under warm light" },
+  { image: stableAisleWarm, title: "Wide Aisles", description: "Well-lit, clean aisles for safe horse handling", alt: "Stable aisle in warm low light, clean and architectural" },
+  { image: tackRoomJoinery, title: "Tack Room", description: "Bespoke joinery, secure storage and quality finishes", alt: "Tack room joinery, hand-finished timber and ordered storage" },
+  { image: coveredArenaInteriorNight, title: "Covered Arena", description: "All-weather covered training, night-lit", alt: "Covered arena interior at night, work lights overhead" },
+  { image: aberdeenViewingLounge, title: "Viewing Lounge", description: "Elevated, sheltered viewing for owners and visitors", alt: "Aberdeen viewing lounge overlooking the arena" },
+  { image: timberKickboard, title: "Material Detail", description: "Timber kickboards and considered finishes throughout", alt: "Close detail of timber kickboard inside the covered arena" },
+  { image: aberdeenExteriorDusk, title: "Facility Grounds", description: "Approach, frontage and secure perimeter at dusk", alt: "Aberdeen stables exterior at dusk, full frontage" },
+  { placeholder: { code: "PE / BRD-08", label: "Wash bay and turnout — approved cinematic capture pending" }, title: "Wash Bays & Turnout", description: "Hot and cold wash bays, paddock turnout daily", alt: "Wash bay and turnout, awaiting approved image" },
 ];
+
 
 const CARE_STANDARDS = [
   {
