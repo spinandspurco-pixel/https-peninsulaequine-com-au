@@ -81,6 +81,15 @@ jobs:
             --repo "${{ github.repository }}" \
             --body ":x: **Retention test failed** on ${{ matrix.label }}. See [run logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})."
 
+      - name: Send Slack notification on retention test failure
+        if: failure() && env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl -s -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\":x: Retention test failed on ${{ matrix.label }}. Logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
+            "$SLACK_WEBHOOK_URL"
+
   verify:
     name: Scan for missing .asset.json references
     needs: retention-tests
