@@ -205,7 +205,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ARTIFACT_NAME: asset-scan-report
           RETENTION_DAYS: ${{ steps.retention.outputs.days }}
-          KEEP_LAST: "10"
+          KEEP_LAST: ${{ steps.retention.outputs.max_retained }}
           CURRENT_ARTIFACT_ID: ${{ steps.upload-report.outputs.artifact-id }}
           REPO: ${{ github.repository }}
         shell: bash
