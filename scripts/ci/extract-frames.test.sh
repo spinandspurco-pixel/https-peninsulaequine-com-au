@@ -205,6 +205,15 @@ run_case "lldb/lambda-unusual: \$_0, generic auto:1, nested {lambda}::{lambda}" 
 /Users/runner/work/repo/src/gen.cpp${TAB}21${TAB}5${TAB}Gen::do::{lambda(auto:1)#1}::operator()<int>(int) const
 /Users/runner/work/repo/src/svc.cpp${TAB}42${TAB}17${TAB}Svc::run::\$_0::operator()(int) const"
 
+# Extra unusual closure variants — $_0 with ref-qualifiers and rvalue-ref args,
+# nested {lambda}::{lambda} with mutable (non-const) operator(), and
+# triple-nested closures with mixed qualifiers.
+run_case "lldb/lambda-extra: \$_0 + rv-ref, nested mutable, triple-nested" "lldb-lambda-extra.txt" \
+"/Users/runner/work/repo/src/deep.cpp${TAB}42${TAB}17${TAB}C::r::{lambda()#1}::{lambda()#2}::{lambda(char*)#3}::operator()(char*) const &
+/Users/runner/work/repo/src/outer.cpp${TAB}21${TAB}5${TAB}B::go::{lambda()#1}::{lambda(int)#2}::operator()(int)
+/Users/runner/work/repo/src/app.cpp${TAB}7${TAB}3${TAB}A::init::\$_0::operator()(std::string&&) const &"
+
+
 
 
 
