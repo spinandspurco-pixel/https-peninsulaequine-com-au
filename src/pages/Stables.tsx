@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
-import heroAsset from "@/assets/services-new/pe-stable-aisle-cinematic.png.asset.json";
+import heroAsset from "@/assets/aberdeen/approved-barn-front-twilight.png.asset.json";
 const heroImg = heroAsset.url;
 
 /**
@@ -23,15 +23,15 @@ export default function Stables() {
   return (
     <Layout>
       <article className="bg-background text-foreground type-architectural">
-        {/* HERO — cinematic stable aisle */}
+        {/* HERO — approved stable / barn structure exterior */}
         <section className="relative h-[82vh] min-h-[560px] overflow-hidden bg-background">
           <img
             src={heroImg}
-            alt="Cinematic stable aisle at dusk — timber stalls, polished steel hardware, warm bronze lighting and an open doorway to the paddock"
+            alt="Stable and barn structure at twilight with warm entry lighting, dark shutters and refined landscape approach"
             width={1920}
             height={1080}
             className="absolute inset-0 w-full h-full object-cover img-header"
-            style={{ filter: "brightness(0.86) contrast(1.1) saturate(0.82)", objectPosition: "50% 55%" }}
+            style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)", objectPosition: "50% 46%" }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/45 via-primary/15 to-primary/85" />
           <div className="absolute inset-0 grain-texture opacity-30" />
