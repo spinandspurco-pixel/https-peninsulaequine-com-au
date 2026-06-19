@@ -1,9 +1,10 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { BlueprintContinuity } from "@/components/BlueprintContinuity";
 import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
+
 
 // Locked cinematic image system — one correct visual per service.
 // Outdoor-arena-first positioning is removed. Lead with covered & indoor.
@@ -137,10 +138,24 @@ const CHAPTERS: Chapter[] = [
 
 
 export default function Services() {
+  const { hash } = useLocation();
+
   useEffect(() => {
     document.title = "Capabilities | Peninsula Equine";
     return () => { document.title = "Peninsula Equine"; };
   }, []);
+
+  useEffect(() => {
+    if (!hash) return;
+    const id = hash.slice(1);
+    // Defer to next frame so the section has mounted.
+    const t = window.setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 60);
+    return () => clearTimeout(t);
+  }, [hash]);
+
 
   return (
     <Layout>
@@ -189,7 +204,11 @@ export default function Services() {
           <div className="py-20 sm:py-28 lg:py-32">
             <div className="section-container max-w-6xl mx-auto space-y-[clamp(5rem,4rem+5vw,9rem)]">
               {CHAPTERS.map((chapter, ci) => (
-                <div key={chapter.code} className="space-y-[clamp(3rem,2rem+3vw,5rem)]">
+                <div
+                  key={chapter.code}
+                  id={chapter.slug}
+                  className="space-y-[clamp(3rem,2rem+3vw,5rem)] scroll-mt-32"
+                >
                   {/* Chapter masthead */}
                   <RevealOnScroll direction="up">
                     <div className="border-t border-accent/15 pt-10 sm:pt-14">
@@ -203,6 +222,7 @@ export default function Services() {
                             {chapter.title}
                           </h2>
                         </div>
+
                         <p className="lg:col-span-7 lg:col-start-6 font-sans font-light text-foreground/55 leading-[1.8] text-[14px] sm:text-[15px] max-w-xl">
                           {chapter.intent}
                         </p>
