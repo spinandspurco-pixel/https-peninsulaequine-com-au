@@ -1,0 +1,3 @@
+bin/bootstrap.rb:7:in `<main>': bad config (RuntimeError)
+	from app/runner.rb:21:in `run'
+	from lib/config.rb:42:in `parse'
