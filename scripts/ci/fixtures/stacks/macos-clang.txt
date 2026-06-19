@@ -1,0 +1,4 @@
+/Users/runner/work/repo/src/config.cpp:42:17: error: use of undeclared identifier 'foo'
+/Users/runner/work/repo/src/app.cpp:21:5: warning: unused variable 'tmp' [-Wunused-variable]
+/Users/runner/work/repo/include/bootstrap.hpp:7:3: error: expected ';' after expression
+3 errors generated.
