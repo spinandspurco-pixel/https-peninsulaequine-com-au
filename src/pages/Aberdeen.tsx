@@ -5,16 +5,13 @@ import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 
 import heroAsset from "@/assets/aberdeen/hero-entrance-twilight.png.asset.json";
 import arenaVaulted from "@/assets/aberdeen/arena-vaulted-wide.png.asset.json";
-import arenaLight from "@/assets/aberdeen/arena-dramatic-light.png.asset.json";
 import loungeSerene from "@/assets/aberdeen/lounge-serene.png.asset.json";
-import loungeNook from "@/assets/aberdeen/lounge-nook.png.asset.json";
 import entryCorridor from "@/assets/aberdeen/entry-corridor.png.asset.json";
 
-
 const FACTS: Array<{ label: string; value: string }> = [
-  { label: "Category", value: "Indoor Arena" },
+  { label: "Category", value: "Indoor Arena / Stable Precinct" },
   { label: "Location", value: "Aberdeen" },
-  { label: "Scope", value: "Arena / Viewing Lounge / Stable Detailing / Interior Fit-Out" },
+  { label: "Scope", value: "Arena / Stables / Viewing Lounge / Tack & Utility / Interior Fit-Out" },
   { label: "Status", value: "Completed" },
 ];
 
@@ -26,7 +23,7 @@ export default function Aberdeen() {
 
     meta?.setAttribute(
       "content",
-      "Aberdeen by Peninsula Equine — indoor arena, viewing lounge and refined equine facility detailing presented as a premium architectural case study.",
+      "Aberdeen by Peninsula Equine — indoor arena, stable precinct, viewing lounge and refined equine facility detailing built for daily use.",
     );
 
     return () => {
@@ -38,6 +35,7 @@ export default function Aberdeen() {
   return (
     <Layout>
       <article className="bg-background text-foreground">
+        {/* ====== HERO ====== */}
         <section className="relative min-h-[82vh] overflow-hidden border-b border-accent/10">
           <img
             src={heroAsset.url}
@@ -66,7 +64,7 @@ export default function Aberdeen() {
                   <RevealLine width="w-14" delay={260} className="mt-5 hidden sm:block" />
                   <RevealOnScroll direction="up" duration={1000} delay={320}>
                     <p className="mt-5 max-w-[36rem] font-serif text-primary-foreground/90 leading-[1.28] text-[clamp(1.05rem,0.92rem+0.55vw,1.45rem)]">
-                      Indoor arena, viewing lounge and refined equine facility detailing.
+                      Indoor arena, stable precinct and viewing spaces shaped for daily use.
                     </p>
                   </RevealOnScroll>
                 </div>
@@ -90,34 +88,11 @@ export default function Aberdeen() {
                   </div>
                 </RevealOnScroll>
               </div>
-
-            </div>
-          </div>
-
-        </section>
-
-
-        <section className="border-b border-accent/10 bg-background py-[clamp(4.5rem,3rem+5vw,7.5rem)]">
-          <div className="section-container mx-auto max-w-[1120px]">
-            <div className="grid grid-cols-12 gap-8 lg:gap-12">
-              <div className="col-span-12 lg:col-span-3">
-                <RevealOnScroll direction="up" duration={900}>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.48em] text-accent/55">
-                    Project Overview
-                  </p>
-                </RevealOnScroll>
-              </div>
-              <div className="col-span-12 lg:col-span-8 lg:col-start-5">
-                <RevealOnScroll direction="up" duration={1050} delay={120}>
-                  <p className="font-serif leading-[1.36] tracking-[-0.015em] text-foreground/88 text-[clamp(1.3rem,1rem+1vw,2rem)]">
-                    Aberdeen brings together a controlled indoor riding environment with considered viewing spaces, stable detailing and architectural finishes. Designed around light, visibility, flow and function, the project reflects Peninsula Equine’s ability to deliver equine environments that feel as polished as they are practical.
-                  </p>
-                </RevealOnScroll>
-              </div>
             </div>
           </div>
         </section>
 
+        {/* ====== SECTION 1 — INDOOR RIDING ENVIRONMENT ====== */}
         <section className="border-b border-accent/10 bg-background py-[clamp(5rem,3.5rem+6vw,8.5rem)]">
           <div className="section-container mx-auto max-w-[1480px]">
             <RevealOnScroll direction="up" duration={1100}>
@@ -137,17 +112,17 @@ export default function Aberdeen() {
               <div className="col-span-12 lg:col-span-4">
                 <RevealOnScroll direction="up" duration={900}>
                   <p className="font-mono text-[10px] uppercase tracking-[0.48em] text-accent/55">
-                    Arena Feature
+                    Indoor Riding Environment
                   </p>
                   <h2 className="mt-5 font-serif leading-[1] tracking-[-0.025em] text-foreground/92 text-[clamp(1.85rem,1.2rem+2vw,3rem)]">
-                    A controlled riding environment.
+                    A covered riding environment designed around structure, footing, light and year-round usability.
                   </h2>
                 </RevealOnScroll>
               </div>
               <div className="col-span-12 lg:col-span-6 lg:col-start-7">
                 <RevealOnScroll direction="up" duration={1000} delay={140}>
                   <p className="font-sans font-light leading-[1.8] text-[15px] text-foreground/58 max-w-xl">
-                    The indoor arena is shaped around scale, light, surface and structure — creating a practical space for training while maintaining a refined architectural finish.
+                    Scale, surface and controlled atmosphere allow training to continue regardless of weather. The arena is built to be ridden in — not just looked at.
                   </p>
                 </RevealOnScroll>
               </div>
@@ -155,42 +130,35 @@ export default function Aberdeen() {
           </div>
         </section>
 
+        {/* ====== SECTION 2 — STABLE FLOW (text-led, no image) ====== */}
         <section className="border-b border-accent/10 bg-background py-[clamp(5rem,3.5rem+6vw,8.5rem)]">
-          <div className="section-container mx-auto max-w-[1320px]">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4rem)] items-center">
-              <div className="lg:col-span-5 order-2 lg:order-1">
+          <div className="section-container mx-auto max-w-[1120px]">
+            <div className="grid grid-cols-12 gap-8 lg:gap-12">
+              <div className="col-span-12 lg:col-span-3">
                 <RevealOnScroll direction="up" duration={900}>
                   <p className="font-mono text-[10px] uppercase tracking-[0.48em] text-accent/55">
-                    Surface & Structure
-                  </p>
-                  <h2 className="mt-5 font-serif leading-[1] tracking-[-0.025em] text-foreground/92 text-[clamp(1.85rem,1.2rem+2vw,3rem)]">
-                    Built for light, movement and daily use.
-                  </h2>
-                </RevealOnScroll>
-                <RevealLine width="w-10" delay={220} className="mt-8" />
-                <RevealOnScroll direction="up" duration={1000} delay={260}>
-                  <p className="mt-8 max-w-lg font-sans font-light leading-[1.8] text-[15px] text-foreground/58">
-                    Every line of the arena is designed to support the way horses and riders move through the space — from the footing and kickboards to visibility, access and atmosphere.
+                    Stable Flow
                   </p>
                 </RevealOnScroll>
               </div>
-
-              <RevealOnScroll direction="up" duration={1150} className="lg:col-span-7 order-1 lg:order-2">
-                <div className="relative aspect-[16/11] overflow-hidden">
-                  <img
-                    src={arenaLight.url}
-                    alt="Aberdeen indoor arena with dramatic angled light across the riding surface and timber kickboards"
-                    className="absolute inset-0 h-full w-full object-cover"
-                    loading="lazy"
-                    decoding="async"
-                    style={{ objectPosition: "50% 50%", filter: "brightness(0.82) contrast(1.1) saturate(0.76)" }}
-                  />
-                </div>
-              </RevealOnScroll>
+              <div className="col-span-12 lg:col-span-8 lg:col-start-5">
+                <RevealOnScroll direction="up" duration={1050} delay={120}>
+                  <h2 className="font-serif leading-[1] tracking-[-0.025em] text-foreground/92 text-[clamp(1.85rem,1.2rem+2vw,3rem)]">
+                    Black steel, warm timber and practical spacing create a stable environment built for care, movement and daily handling.
+                  </h2>
+                </RevealOnScroll>
+                <RevealLine width="w-12" delay={200} className="mt-8" />
+                <RevealOnScroll direction="up" duration={1000} delay={180}>
+                  <p className="mt-8 max-w-xl font-sans font-light leading-[1.8] text-[15px] text-foreground/58">
+                    The stable precinct is arranged around the rhythm of daily work — feed, turnout, grooming, tacking up, returning. Every dimension is shaped by what happens at 6am on a Tuesday, not by what photographs well.
+                  </p>
+                </RevealOnScroll>
+              </div>
             </div>
           </div>
         </section>
 
+        {/* ====== SECTION 3 — VIEWING & CONNECTION ====== */}
         <section className="border-b border-accent/10 bg-background py-[clamp(5rem,3.5rem+6vw,8.5rem)]">
           <div className="section-container mx-auto max-w-[1480px]">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4rem)] items-start">
@@ -207,59 +175,48 @@ export default function Aberdeen() {
                 </div>
               </RevealOnScroll>
 
-              <div className="lg:col-span-4 space-y-8 lg:pt-8">
+              <div className="lg:col-span-4 lg:pt-8">
                 <RevealOnScroll direction="up" duration={900}>
                   <p className="font-mono text-[10px] uppercase tracking-[0.48em] text-accent/55">
-                    Viewing Lounge
+                    Viewing & Connection
                   </p>
                   <h2 className="mt-5 font-serif leading-[1] tracking-[-0.025em] text-foreground/92 text-[clamp(1.85rem,1.2rem+2vw,3rem)]">
-                    A place to watch the work.
+                    The viewing space keeps riders, owners and the arena connected without interrupting the working environment.
                   </h2>
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" duration={1000} delay={140}>
-                  <p className="max-w-md font-sans font-light leading-[1.8] text-[15px] text-foreground/58">
-                    The viewing spaces connect comfort with function, allowing the arena to be experienced without interrupting the work inside it.
+                  <p className="mt-6 max-w-md font-sans font-light leading-[1.8] text-[15px] text-foreground/58">
+                    A clear sightline from lounge to arena means observation, instruction and quiet presence are all part of the same space.
                   </p>
-                </RevealOnScroll>
-                <RevealOnScroll direction="up" duration={1100} delay={220}>
-                  <div className="relative aspect-[4/5] overflow-hidden max-w-[420px]">
-                    <img
-                      src={loungeNook.url}
-                      alt="Compact Aberdeen arena viewing nook with chair, side table and framed sightline into the arena"
-                      className="absolute inset-0 h-full w-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                      style={{ objectPosition: "52% 50%", filter: "brightness(0.8) contrast(1.08) saturate(0.78)" }}
-                    />
-                  </div>
                 </RevealOnScroll>
               </div>
             </div>
           </div>
         </section>
 
+        {/* ====== SECTION 4 — DETAIL & FABRICATION ====== */}
         <section className="border-b border-accent/10 bg-background py-[clamp(5rem,3.5rem+6vw,8.5rem)]">
-          <div className="section-container mx-auto max-w-[1280px]">
+          <div className="section-container mx-auto max-w-[1320px]">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4rem)] items-center">
-              <div className="lg:col-span-4">
+              <div className="lg:col-span-5 order-2 lg:order-1">
                 <RevealOnScroll direction="up" duration={900}>
                   <p className="font-mono text-[10px] uppercase tracking-[0.48em] text-accent/55">
-                    Entry & Detailing
+                    Detail & Fabrication
                   </p>
                   <h2 className="mt-5 font-serif leading-[1] tracking-[-0.025em] text-foreground/92 text-[clamp(1.85rem,1.2rem+2vw,3rem)]">
-                    Details that hold the standard.
+                    The smaller details carry the same discipline as the larger structure — hardware, junctions, finishes and daily-use durability.
                   </h2>
                 </RevealOnScroll>
                 <RevealLine width="w-10" delay={220} className="mt-8" />
                 <RevealOnScroll direction="up" duration={1000} delay={260}>
-                  <p className="mt-8 max-w-md font-sans font-light leading-[1.8] text-[15px] text-foreground/58">
-                    Black steel, warm timber, clean lines and practical finishes give the facility a refined but durable character.
+                  <p className="mt-8 max-w-lg font-sans font-light leading-[1.8] text-[15px] text-foreground/58">
+                    Black steel, warm timber, clean lines and practical finishes give the facility a refined but durable character. Every junction is resolved because the early work was done properly.
                   </p>
                 </RevealOnScroll>
               </div>
 
-              <RevealOnScroll direction="up" duration={1100} className="lg:col-span-5 lg:col-start-7">
-                <div className="relative aspect-[4/5] overflow-hidden max-w-[520px] lg:ml-auto">
+              <RevealOnScroll direction="up" duration={1150} className="lg:col-span-7 order-1 lg:order-2">
+                <div className="relative aspect-[16/11] overflow-hidden">
                   <img
                     src={entryCorridor.url}
                     alt="Aberdeen entry corridor with timber half-height walls, black steel framing and arched equine facility doors"
@@ -274,11 +231,40 @@ export default function Aberdeen() {
           </div>
         </section>
 
+        {/* ====== SECTION 5 — UTILITY / TACK / CARE SPACES (text-led, no image) ====== */}
+        <section className="border-b border-accent/10 bg-background py-[clamp(5rem,3.5rem+6vw,8.5rem)]">
+          <div className="section-container mx-auto max-w-[1120px]">
+            <div className="grid grid-cols-12 gap-8 lg:gap-12">
+              <div className="col-span-12 lg:col-span-3">
+                <RevealOnScroll direction="up" duration={900}>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.48em] text-accent/55">
+                    Utility / Tack / Care
+                  </p>
+                </RevealOnScroll>
+              </div>
+              <div className="col-span-12 lg:col-span-8 lg:col-start-5">
+                <RevealOnScroll direction="up" duration={1050} delay={120}>
+                  <h2 className="font-serif leading-[1] tracking-[-0.025em] text-foreground/92 text-[clamp(1.85rem,1.2rem+2vw,3rem)]">
+                    Support spaces are part of the system, not afterthoughts.
+                  </h2>
+                </RevealOnScroll>
+                <RevealLine width="w-12" delay={200} className="mt-8" />
+                <RevealOnScroll direction="up" duration={1000} delay={180}>
+                  <p className="mt-8 max-w-xl font-sans font-light leading-[1.8] text-[15px] text-foreground/58">
+                    Tack rooms, wash bays, feed storage and utility areas are planned into the layout from the first sketch. When the daily workflow is considered early, the building becomes easier to maintain and more pleasant to use.
+                  </p>
+                </RevealOnScroll>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ====== CLOSING CTA ====== */}
         <section className="bg-background py-[clamp(5rem,4rem+5vw,8rem)]">
           <div className="section-container mx-auto max-w-5xl px-6 text-center">
             <RevealOnScroll direction="up" duration={1000}>
               <p className="font-serif text-foreground/88 leading-[1.18] tracking-[-0.022em] text-[clamp(1.7rem,1.2rem+1.7vw,2.6rem)]">
-                Built properly. Resolved completely.
+                Start with the ground. Build the legacy.
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" duration={1000} delay={140}>
