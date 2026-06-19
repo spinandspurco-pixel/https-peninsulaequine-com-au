@@ -117,6 +117,25 @@ while IFS= read -r LINE; do
     F_LINE=$(echo "$RAW" | sed -E 's/.*line ([0-9]+)$/\1/')
   fi
 
+  # ASan / sanitizer / lldb-style frames:
+  #   "    #0 0x10abc1234 in Func::method(args) /path/file.cpp:42:17"
+  # Function is everything between " in " and the trailing file:line[:col].
+  if [ -z "$F_FILE" ] && echo "$LINE" | grep -qE '^[[:space:]]*#[0-9]+ .* in .+ [^[:space:]]+\.(c|cc|cpp|cxx|h|hh|hpp|hxx|m|mm|swift):[0-9]+(:[0-9]+)?[[:space:]]*$'; then
+    RAW=$(echo "$LINE" | grep -oE '[^[:space:]]+\.(c|cc|cpp|cxx|h|hh|hpp|hxx|m|mm|swift):[0-9]+(:[0-9]+)?' | tail -n 1)
+    F_FILE=$(echo "$RAW" | awk -F: '{print $1}')
+    F_LINE=$(echo "$RAW" | awk -F: '{print $2}')
+    F_COL=$(echo  "$RAW" | awk -F: '{print $3}')
+    F_FUNC=$(echo "$LINE" | sed -E 's/^[[:space:]]*#[0-9]+[[:space:]]+[^ ]+[[:space:]]+in[[:space:]]+(.+)[[:space:]]+[^[:space:]]+\.(c|cc|cpp|cxx|h|hh|hpp|hxx|m|mm|swift):[0-9]+(:[0-9]+)?[[:space:]]*$/\1/')
+  fi
+
+  # Clang / GCC diagnostics: "/path/file.cpp:42:17: error: ..." (no function name).
+  if [ -z "$F_FILE" ] && echo "$LINE" | grep -qE '[^[:space:]]+\.(c|cc|cpp|cxx|h|hh|hpp|hxx|m|mm|swift):[0-9]+:[0-9]+:[[:space:]]*(error|warning|note|fatal error):'; then
+    RAW=$(echo "$LINE" | grep -oE '[^[:space:]]+\.(c|cc|cpp|cxx|h|hh|hpp|hxx|m|mm|swift):[0-9]+:[0-9]+' | tail -n 1)
+    F_FILE=$(echo "$RAW" | awk -F: '{print $1}')
+    F_LINE=$(echo "$RAW" | awk -F: '{print $2}')
+    F_COL=$(echo  "$RAW" | awk -F: '{print $3}')
+  fi
+
   # Generic fallback: "path/file.ext:line[:col]"
   if [ -z "$F_FILE" ] && echo "$LINE" | grep -qE '([A-Za-z0-9_./+-]+\.(sh|ts|tsx|js|jsx|mjs|cjs|bash|py|rb|go)):[0-9]+(:[0-9]+)?'; then
     RAW=$(echo "$LINE" | grep -oE '([A-Za-z0-9_./+-]+\.(sh|ts|tsx|js|jsx|mjs|cjs|bash|py|rb|go)):[0-9]+(:[0-9]+)?' | tail -n 1)
