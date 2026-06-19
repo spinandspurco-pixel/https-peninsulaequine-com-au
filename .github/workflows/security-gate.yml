@@ -22,6 +22,12 @@ concurrency:
   group: security-gate-${{ github.ref }}
   cancel-in-progress: true
 
+# Least-privilege token: this job only checks out source and reads the
+# Supabase linter via SUPABASE_ACCESS_TOKEN. It does not need to write
+# anything back to the repo or to issues / PRs.
+permissions:
+  contents: read
+
 jobs:
   gate:
     name: Diff scan results vs baseline

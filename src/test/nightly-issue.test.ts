@@ -119,4 +119,17 @@ describe("nightly security scan — issue reconciliation", () => {
     });
     expect(create).not.toHaveBeenCalled();
   });
+
+  it("propagates auth errors so the workflow can surface a clear message", async () => {
+    const err = Object.assign(new Error("Resource not accessible by integration"), {
+      status: 403,
+    });
+    const list = vi.fn().mockResolvedValue([]);
+    const create = vi.fn().mockRejectedValue(err);
+    const comment = vi.fn();
+
+    await expect(
+      reconcileIssue({ list, create, comment }, "body-here"),
+    ).rejects.toThrow(/Resource not accessible/);
+  });
 });
