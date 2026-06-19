@@ -1,0 +1,5 @@
+* thread #1, queue = 'com.apple.main-thread', stop reason = signal SIGSEGV
+  * frame #0: 0x000000010000abcd myapp`___lldb_unnamed_symbol1234$$myapp + 42
+    frame #1: 0x000000010000bcde myapp + 8910
+    frame #2: 0x00007fff20419abc libsystem_c.dylib`__abort + 123
+    frame #3: 0x00007fff20419def libsystem_pthread.dylib`_pthread_start + 224

@@ -1,0 +1,6 @@
+* thread #1, queue = 'com.apple.main-thread', stop reason = signal SIGSEGV
+  * frame #0: 0x000000010000abcd myapp`Config::parse(this=0x..., n=42) at /Users/runner/work/repo/src/config.cpp:42:17
+    frame #1: 0x000000010000bcde myapp`___lldb_unnamed_symbol9999$$myapp + 88
+    frame #2: 0x000000010000cdef myapp`App::run() at /Users/runner/work/repo/src/app.cpp:21:5
+    frame #3: 0x00007fff20419abc libsystem_c.dylib`__abort + 123
+    frame #4: 0x000000010000def0 myapp`main(argc=1, argv=0x...) at /Users/runner/work/repo/src/bootstrap.cpp:7:3
