@@ -100,6 +100,8 @@ jobs:
           WORKFLOW_NAME='${{ github.workflow }}'
           JOB_NAME='Retention validator tests (${{ matrix.label }})'
           LOGS_URL='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+          COMMIT_SHA='${{ github.sha }}'
+          COMMIT_URL='${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}'
           FAILED_STEP='Run retention-policy unit tests'
           FAILED_COMMAND='bash scripts/ci/validate-retention.test.sh'
           EXIT_CODE='${{ steps.unit-tests.outputs.exit_code }}'
@@ -109,9 +111,9 @@ jobs:
             STDERR_SAFE=$(printf '%s' "$STDERR" | tr '\n\r\t' '   ' | tr -d '"\\' | cut -c1-500)
           fi
           if [ -n "$EXIT_CODE" ]; then
-            PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Step: %s\n• Command: `%s`\n• Exit code: %s\n• Error: %s\n• Logs: <%s|View run logs>"}' "$WORKFLOW_NAME" "$JOB_NAME" "$FAILED_STEP" "$FAILED_COMMAND" "$EXIT_CODE" "$STDERR_SAFE" "$LOGS_URL")
+            PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Step: %s\n• Command: `%s`\n• Exit code: %s\n• Error: %s\n• Commit: <%s|%s>\n• Logs: <%s|View run logs>"}' "$WORKFLOW_NAME" "$JOB_NAME" "$FAILED_STEP" "$FAILED_COMMAND" "$EXIT_CODE" "$STDERR_SAFE" "$COMMIT_URL" "${COMMIT_SHA:0:7}" "$LOGS_URL")
           else
-            PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Command: `%s`\n• Logs: <%s|View run logs>"}' "$WORKFLOW_NAME" "$JOB_NAME" "$FAILED_COMMAND" "$LOGS_URL")
+            PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Command: `%s`\n• Commit: <%s|%s>\n• Logs: <%s|View run logs>"}' "$WORKFLOW_NAME" "$JOB_NAME" "$FAILED_COMMAND" "$COMMIT_URL" "${COMMIT_SHA:0:7}" "$LOGS_URL")
           fi
           MAX_RETRIES=3
           DELAY=2
