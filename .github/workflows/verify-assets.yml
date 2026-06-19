@@ -37,6 +37,7 @@ jobs:
       contents: read
       checks: write
       pull-requests: write
+      actions: write
     steps:
       - name: Validate retention_days
         if: github.event_name == 'workflow_dispatch'
