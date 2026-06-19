@@ -1,0 +1,5 @@
+* thread #1, queue = 'com.apple.main-thread', stop reason = breakpoint 1.1
+  * frame #0: 0x000000010000abcd myapp`Config::parse(this=0x00007ffeefbff520, n=42) at /Users/runner/work/repo/src/config.cpp:42:17
+    frame #1: 0x000000010000bcde myapp`App::run() at /Users/runner/work/repo/src/app.cpp:21:5
+    frame #2: 0x000000010000cdef myapp`main(argc=1, argv=0x00007ffeefbff5c0) at /Users/runner/work/repo/src/bootstrap.cpp:7:3
+    frame #3: 0x00007fff20419abc dyld`start + 462
