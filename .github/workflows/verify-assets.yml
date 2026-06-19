@@ -99,15 +99,15 @@ jobs:
           fi
           if [ -z "$DAYS" ]; then
             DAYS=30; DAYS_SOURCE="fallback (default)"
-          elif ! [[ "$DAYS" =~ ^[0-9]+$ ]] || [ "$DAYS" -lt 1 ]; then
-            echo "::warning::retention_days invalid ('$DAYS'). Falling back to 30."
-            DAYS=30; DAYS_SOURCE="fallback (invalid value)"
+          elif ! [[ "$DAYS" =~ ^[0-9]+$ ]] || [ "$DAYS" -lt 1 ] || [ "$DAYS" -gt 365 ]; then
+            echo "::error::Invalid retention_days from ${DAYS_SOURCE}: '$DAYS'. Must be an integer between 1 and 365 (inclusive)."
+            exit 1
           fi
           if [ -z "$MAX" ]; then
             MAX=10; MAX_SOURCE="fallback (default)"
-          elif ! [[ "$MAX" =~ ^[0-9]+$ ]] || [ "$MAX" -lt 1 ]; then
-            echo "::warning::max_retained invalid ('$MAX'). Falling back to 10."
-            MAX=10; MAX_SOURCE="fallback (invalid value)"
+          elif ! [[ "$MAX" =~ ^[0-9]+$ ]] || [ "$MAX" -lt 1 ] || [ "$MAX" -gt 100 ]; then
+            echo "::error::Invalid max_retained from ${MAX_SOURCE}: '$MAX'. Must be an integer between 1 and 100 (inclusive)."
+            exit 1
           fi
           echo "days=$DAYS" >> "$GITHUB_OUTPUT"
           echo "max_retained=$MAX" >> "$GITHUB_OUTPUT"
