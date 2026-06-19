@@ -163,7 +163,7 @@ export const projectImagery: Record<string, ProjectImagery> = {
     },
     alt: {
       selectedWorks:
-        "Covered Arena & Stables Build — structural steel frame and stable infrastructure under dramatic light",
+        "Covered Arena & Stables Build — dozer and steel frame rising under a dramatic storm sky",
       fieldNotesHero:
         "Covered competition arena at sunset — steel frame and finished surface mirrored in puddles after rain",
       fieldNotesPreview:
