@@ -24,6 +24,9 @@ import ciro1536 from "@/assets/responsive/ciro-ace-quiet-moment-1536.webp.asset.
 import mainRidge640 from "@/assets/responsive/main-ridge-pavilion-wide-fireplace-table-640.webp.asset.json";
 import mainRidge1024 from "@/assets/responsive/main-ridge-pavilion-wide-fireplace-table-1024.webp.asset.json";
 import mainRidge1536 from "@/assets/responsive/main-ridge-pavilion-wide-fireplace-table-1536.webp.asset.json";
+import slidingStop640 from "@/assets/responsive/sliding-stop-hero-640.webp.asset.json";
+import slidingStop1024 from "@/assets/responsive/sliding-stop-hero-1024.webp.asset.json";
+import slidingStop1536 from "@/assets/responsive/sliding-stop-hero-1536.webp.asset.json";
 import { getProjectImageAlt, getProjectResponsive } from "@/config/projectImagery";
 const fieldNotesPreview = getProjectResponsive("covered-arena-stables-build", "fieldNotesPreview")!;
 const fieldNotesPreviewAlt = getProjectImageAlt("covered-arena-stables-build", "fieldNotesPreview");
@@ -32,6 +35,8 @@ const srcset = (a: { url: string }, b: { url: string }, c: { url: string }) =>
   `${a.url} 640w, ${b.url} 1024w, ${c.url} 1536w`;
 const ciroSrcSet = srcset(ciro640, ciro1024, ciro1536);
 const mainRidgeSrcSet = srcset(mainRidge640, mainRidge1024, mainRidge1536);
+const slidingStopSrcSet = srcset(slidingStop640, slidingStop1024, slidingStop1536);
+
 
 const SESSION_KEY = "pe-brand-intro-seen";
 const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
@@ -94,7 +99,24 @@ export default function Index() {
       <Layout>
         <div className="type-architectural">
           <section className="relative min-h-[100dvh] overflow-hidden flex items-end">
-            <div className="absolute inset-0 bg-[hsl(222_20%_6%)]" aria-label="Homepage Hero Image placeholder" />
+            {/* Cinematic sliding-stop hero — brand anchor */}
+            <div className="absolute inset-0 bg-[hsl(222_20%_6%)]">
+              <img
+                src={slidingStop1536.url}
+                srcSet={slidingStopSrcSet}
+                sizes="100vw"
+                alt="Horse and rider executing a sliding stop, dust plume across worked arena footing — Peninsula Equine."
+                fetchPriority="high"
+                decoding="async"
+                className="absolute inset-0 w-full h-full object-cover object-[58%_center] sm:object-[62%_center]"
+                style={{
+                  opacity: imageReady ? 1 : 0,
+                  transform: imageReady ? "scale(1)" : "scale(1.04)",
+                  transition: `opacity 1600ms ${EASE}, transform 2400ms ${EASE}`,
+                  willChange: "opacity, transform",
+                }}
+              />
+            </div>
 
             {/* Readability scrim — anchored to text column, softer on the horse */}
             <div
@@ -119,6 +141,20 @@ export default function Index() {
                   "linear-gradient(180deg, hsl(var(--background) / 0.22) 0%, transparent 28%, hsl(var(--background) / 0.65) 100%)",
               }}
             />
+
+            {/* Architectural corner brackets — fine construction-drawing detail */}
+            <div aria-hidden className="absolute inset-[clamp(1rem,2.5vw,2.5rem)] pointer-events-none z-[2]">
+              <span className="absolute top-0 left-0 w-6 h-px bg-accent/45" />
+              <span className="absolute top-0 left-0 w-px h-6 bg-accent/45" />
+              <span className="absolute top-0 right-0 w-6 h-px bg-accent/45" />
+              <span className="absolute top-0 right-0 w-px h-6 bg-accent/45" />
+              <span className="absolute bottom-0 left-0 w-6 h-px bg-accent/45" />
+              <span className="absolute bottom-0 left-0 w-px h-6 bg-accent/45" />
+              <span className="absolute bottom-0 right-0 w-6 h-px bg-accent/45" />
+              <span className="absolute bottom-0 right-0 w-px h-6 bg-accent/45" />
+              <span className="absolute top-2 right-0 font-mono text-accent/55 text-[9px] tracking-[0.4em] uppercase">PE / 01 — Hero</span>
+            </div>
+
 
 
             <div
@@ -159,9 +195,9 @@ export default function Index() {
                       textShadow: "0 2px 18px rgba(0,0,0,0.55)",
                     }}
                   >
-                    Peninsula Equine designs and builds premium equine environments — with a focus
-                    on covered arenas, stable structures, pavilions and supporting infrastructure
-                    shaped for long-term use.
+                    Covered arenas, stable structures and equine environments built by horse
+                    people — from the ground beneath the ride to the systems that make the
+                    property work.
                   </p>
                 </div>
 
@@ -178,7 +214,7 @@ export default function Index() {
                     className="group inline-flex items-center gap-3 font-mono uppercase text-foreground hover:text-foreground transition-colors duration-500 text-[11px] sm:text-[10px] tracking-[0.42em] py-3 -my-3"
                   >
                     <span className="w-9 h-px bg-accent/70 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
-                    Explore Our Work
+                    Explore Selected Works
                   </Link>
                   <Link
                     to="/services"
@@ -188,6 +224,7 @@ export default function Index() {
                     View Services
                   </Link>
                 </div>
+
 
               </div>
             </div>
