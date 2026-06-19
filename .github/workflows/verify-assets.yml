@@ -37,6 +37,15 @@ jobs:
       checks: write
       pull-requests: write
     steps:
+      - name: Validate retention_days
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          INPUT="${{ inputs.retention_days }}"
+          if ! [[ "$INPUT" =~ ^[0-9]+$ ]] || [ "$INPUT" -lt 1 ]; then
+            echo "::error::Invalid retention_days: '$INPUT'. Must be a positive integer (1 or greater)."
+            exit 1
+          fi
+
       - name: Checkout
         uses: actions/checkout@v4
 
