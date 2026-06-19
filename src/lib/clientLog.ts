@@ -34,7 +34,7 @@ function scheduleFlush() {
  * Lightweight, fire-and-forget client event logger.
  * Batches inserts to avoid spamming the DB on rapid events.
  */
-export function logClientEvent(eventType: string, payload?: Record<string, unknown>) {
+export function logClientEvent(eventType: string, payload?: Json) {
   if (typeof window === "undefined") return;
 
   pending.push({
