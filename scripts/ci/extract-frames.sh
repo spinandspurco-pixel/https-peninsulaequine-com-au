@@ -89,15 +89,17 @@ while IFS= read -r LINE; do
 
   # tsc diagnostics: "file.ts(42,10): error"
   if [ -z "$F_FILE" ] && echo "$LINE" | grep -qE '([A-Za-z0-9_./+-]+\.(ts|tsx|js|jsx))\([0-9]+,[0-9]+\)'; then
-    F_FILE=$(echo "$LINE" | sed -E 's/.*([A-Za-z0-9_./+-]+\.(ts|tsx|js|jsx))\([0-9]+,[0-9]+\).*/\1/')
-    F_LINE=$(echo "$LINE" | sed -E 's/.*\(([0-9]+),[0-9]+\).*/\1/')
-    F_COL=$(echo  "$LINE" | sed -E 's/.*\([0-9]+,([0-9]+)\).*/\1/')
+    RAW=$(echo "$LINE" | grep -oE '([A-Za-z0-9_./+-]+\.(ts|tsx|js|jsx))\([0-9]+,[0-9]+\)' | tail -n 1)
+    F_FILE=$(echo "$RAW" | sed -E 's/\([0-9]+,[0-9]+\)$//')
+    F_LINE=$(echo "$RAW" | sed -E 's/.*\(([0-9]+),[0-9]+\)$/\1/')
+    F_COL=$(echo  "$RAW" | sed -E 's/.*\([0-9]+,([0-9]+)\)$/\1/')
   fi
 
   # Bash xtrace / errexit: "scripts/foo.sh: line 42: cmd: not found"
   if [ -z "$F_FILE" ] && echo "$LINE" | grep -qE '([A-Za-z0-9_./+-]+\.(sh|bash|zsh)): ?line [0-9]+'; then
-    F_FILE=$(echo "$LINE" | sed -E 's/.*([A-Za-z0-9_./+-]+\.(sh|bash|zsh)): ?line [0-9]+.*/\1/')
-    F_LINE=$(echo "$LINE" | sed -E 's/.*: ?line ([0-9]+).*/\1/')
+    RAW=$(echo "$LINE" | grep -oE '([A-Za-z0-9_./+-]+\.(sh|bash|zsh)): ?line [0-9]+' | tail -n 1)
+    F_FILE=$(echo "$RAW" | sed -E 's/: ?line [0-9]+$//')
+    F_LINE=$(echo "$RAW" | sed -E 's/.*line ([0-9]+)$/\1/')
   fi
 
   # Generic fallback: "path/file.ext:line[:col]"
