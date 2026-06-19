@@ -6,15 +6,15 @@ import logoPeMark from "@/assets/logo-pe-mark.webp";
 const capabilityLinks = [
   { name: "Covered Arenas", href: "/arenas" },
   { name: "Stables & Barns", href: "/stables" },
-  { name: "Pavilions & Rural Builds", href: "/equine-estates" },
+  { name: "Pavilions & Rural Builds", href: "/selected-works/main-ridge-pavilion" },
   { name: "Equine Infrastructure", href: "/infrastructure" },
+  { name: "Whole-Property Planning", href: "/equine-estates" },
   { name: "LumenArc", href: "/lumenarc" },
 ];
 
 const studioLinks = [
   { name: "Selected Works", href: "/gallery" },
   { name: "Field Notes", href: "/field-notes" },
-  { name: "The Standard", href: "/the-standard" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];

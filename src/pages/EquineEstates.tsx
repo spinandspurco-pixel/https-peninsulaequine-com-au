@@ -71,7 +71,7 @@ export default function EquineEstates() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1100} delay={800}>
                 <p className="font-serif italic text-primary-foreground/65 max-w-xl leading-[1.55] text-[clamp(0.875rem,0.78rem+0.4vw,1.0625rem)]">
-                  Equine properties planned as one connected environment.
+                  Arena, stables, access, drainage and recovery — planned together, so the property works in daily use.
                 </p>
               </RevealOnScroll>
             </div>
