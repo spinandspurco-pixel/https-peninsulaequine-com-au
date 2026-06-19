@@ -2,11 +2,12 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
-import { ImagePlaceholder } from "@/components/ImagePlaceholder";
 
 import heroAsset from "@/assets/aberdeen/approved-barn-front-twilight.png.asset.json";
-import arenaVaulted from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
+import arenaVaulted from "@/assets/uploads/approved-covered-arena-interior-night-v2.png.asset.json";
 import entryCorridor from "@/assets/aberdeen/approved-arena-surfacing-forecourt.png.asset.json";
+import viewingLoungeAsset from "@/assets/uploads/approved-aberdeen-viewing-lounge.png.asset.json";
+
 
 
 const FACTS: Array<{ label: string; value: string }> = [
@@ -165,9 +166,13 @@ export default function Aberdeen() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4rem)] items-start">
               <RevealOnScroll direction="up" duration={1100} className="lg:col-span-8">
                 <div className="relative aspect-[16/11] overflow-hidden">
-                  <ImagePlaceholder
-                    label="Aberdeen Viewing Lounge Image"
-                    className="absolute inset-0 h-full w-full"
+                  <img
+                    src={viewingLoungeAsset.url}
+                    alt="Aberdeen viewing lounge opening directly onto the indoor arena with warm timber lining, seating and integrated kitchen outlook"
+                    className="absolute inset-0 h-full w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                    style={{ objectPosition: "50% 52%", filter: "brightness(0.8) contrast(1.08) saturate(0.76)" }}
                   />
                 </div>
               </RevealOnScroll>

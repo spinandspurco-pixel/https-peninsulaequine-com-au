@@ -9,9 +9,10 @@ import { useIntake } from "@/hooks/useIntake";
 
 import lumenArcCanopy from "@/assets/lumenarc/canopy.asset.json";
 import aberdeenHero from "@/assets/aberdeen/approved-barn-front-twilight.png.asset.json";
-import aberdeenArena from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
-import steelFrontAsset from "@/assets/field-notes/approved-current-build-black-shed-storm.png.asset.json";
-import coveredArenaExteriorAsset from "@/assets/covered-arenas/approved-covered-arena-exterior-dusk.png.asset.json";
+import aberdeenArena from "@/assets/uploads/approved-covered-arena-interior-night-v2.png.asset.json";
+import steelFrontAsset from "@/assets/uploads/approved-current-build-rain-frame-symmetry.png.asset.json";
+import coveredArenaExteriorAsset from "@/assets/uploads/approved-covered-arena-interior-construction-dawn-v2.png.asset.json";
+
 
 const steelFront = steelFrontAsset.url;
 const coveredArenaExterior = coveredArenaExteriorAsset.url;
@@ -450,7 +451,7 @@ export default function Index() {
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <img
                       src={steelFront}
-                        alt="Current build black shed structure under a storm sky with warm perimeter lighting"
+                        alt="Rain-soaked current build frame aligned on axis with the wider barn structure beyond"
                         loading="lazy"
                         decoding="async"
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1600ms] ease-out hover:scale-[1.02]"
@@ -462,7 +463,7 @@ export default function Index() {
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <img
                       src={coveredArenaExterior}
-                      alt="Covered arena exterior at dusk with glowing interior structure and dark storm sky"
+                      alt="Covered arena interior under construction at dawn with low light entering the open span"
                       loading="lazy"
                       decoding="async"
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1600ms] ease-out hover:scale-[1.02]"

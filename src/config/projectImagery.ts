@@ -28,6 +28,9 @@ import coveredArenaTruckAccessTrack from "@/assets/field-notes/covered-competiti
 import coveredArenaDrainageDetail from "@/assets/field-notes/covered-competition-arena-drainage-detail.png.asset.json";
 import coveredArenaDozerStormSky from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
 import approvedCurrentBuildBlackShedStorm from "@/assets/field-notes/approved-current-build-black-shed-storm.png.asset.json";
+import approvedCurrentBuildEquipmentStorm from "@/assets/uploads/approved-current-build-equipment-storm.png.asset.json";
+import approvedCurrentBuildRainFrameSymmetry from "@/assets/uploads/approved-current-build-rain-frame-symmetry.png.asset.json";
+
 
 // Responsive webp variants for the hero/preview surfaces
 import coveredArenaSunset640 from "@/assets/responsive/covered-competition-arena-sunset-puddles-640.webp.asset.json";
@@ -51,8 +54,9 @@ import mainRidgeWide1536 from "@/assets/responsive/main-ridge-pavilion-wide-fire
 
 // ---- Aberdeen (completed) ----
 import aberdeenHeroTwilight from "@/assets/aberdeen/approved-barn-front-twilight.png.asset.json";
-import aberdeenArenaVaulted from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
+import aberdeenArenaVaulted from "@/assets/uploads/approved-covered-arena-interior-night-v2.png.asset.json";
 import aberdeenEntryCorridor from "@/assets/aberdeen/approved-arena-surfacing-forecourt.png.asset.json";
+
 
 
 // -----------------------------------------------------------------
@@ -129,18 +133,19 @@ export const projectImagery: Record<string, ProjectImagery> = {
     title: "Covered Arena & Stables Build",
     status: "in-progress",
     surfaces: {
-      // Selected Works = stormy dozer steel-frame identity
-      selectedWorks: approvedCurrentBuildBlackShedStorm,
-      // Field Notes hero = moody puddles, the project's live signature
-      fieldNotesHero: coveredArenaSunsetPuddles,
+      // Selected Works = structural symmetry in rain
+      selectedWorks: approvedCurrentBuildRainFrameSymmetry,
+      // Field Notes hero = equipment arrival under storm light
+      fieldNotesHero: approvedCurrentBuildEquipmentStorm,
       // Homepage Field Notes preview matches the Field Notes hero on purpose
-      fieldNotesPreview: coveredArenaSunsetPuddles,
+      fieldNotesPreview: approvedCurrentBuildEquipmentStorm,
       // Build Read pair — distinct conditions, no repetition
       fieldNotesGalleryA: coveredArenaTruckAccessTrack,
       fieldNotesGalleryB: coveredArenaDrainageDetail,
       // Real conditions divider — muddy boots + steel frame at dusk
       fieldNotesConditions: muddyBootsSteelFrame,
-      caseStudyHero: approvedCurrentBuildBlackShedStorm,
+      caseStudyHero: approvedCurrentBuildRainFrameSymmetry,
+
     },
     responsive: {
       fieldNotesHero: buildSrcSet(
@@ -164,11 +169,11 @@ export const projectImagery: Record<string, ProjectImagery> = {
     },
     alt: {
       selectedWorks:
-        "Covered Arena & Stables Build — current black-clad structure under a storm sky with warm perimeter lighting",
+        "Covered Arena & Stables Build — rain-soaked structural frame aligned on axis with the wider barn form beyond",
       fieldNotesHero:
-        "Covered competition arena at sunset — steel frame and finished surface mirrored in puddles after rain",
+        "Current build convoy arriving beside the black-clad structure under a heavy storm sky",
       fieldNotesPreview:
-        "Covered competition arena at sunset — steel frame and finished surface mirrored in puddles after rain",
+        "Current build convoy arriving beside the black-clad structure under a heavy storm sky",
       fieldNotesGalleryA:
         "Wide site view of the current arena build showing steel span, machinery placement and open ground conditions",
       fieldNotesGalleryB:
@@ -176,7 +181,8 @@ export const projectImagery: Record<string, ProjectImagery> = {
       fieldNotesConditions:
         "Muddy work boots in red clay with excavator, dump truck and steel-frame arena rising under a storm-lit dusk sky",
       caseStudyHero:
-        "Covered Arena & Stables Build — current black-clad structure under a storm sky with warm perimeter lighting",
+        "Covered Arena & Stables Build — rain-soaked structural frame aligned on axis with the wider barn form beyond",
+
     },
   },
 

@@ -9,13 +9,14 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { CheckCircle, ArrowRight, Phone, Ruler, Shield, Layers, CircleDot } from "lucide-react";
 import { siteConfig, services } from "@/data/content";
 
-import coveredArenaLit from "@/assets/covered-arena-finished-lit.jpg";
-import arenaSandPrep1 from "@/assets/arena-sand-prep-1.jpg";
-import arenaSandPrep2 from "@/assets/arena-sand-prep-2.jpg";
+import roundPenTwilightAsset from "@/assets/uploads/approved-round-pen-twilight.png.asset.json";
+import roundPenSlabSunriseAsset from "@/assets/uploads/approved-round-pen-slab-sunrise.png.asset.json";
 import blueprintFacility from "@/assets/blueprint-facility.png";
 import blueprintDetail from "@/assets/blueprint-detail.png";
 import roundPenDiagram from "@/assets/round-pen-diagram.png";
 import paddockDiagram from "@/assets/paddock-diagram.png";
+import coveredArenaConstructionDawnAsset from "@/assets/uploads/approved-covered-arena-interior-construction-dawn-v2.png.asset.json";
+
 
 const serviceData = services.find((s) => s.id === "round-pens")!;
 
@@ -146,7 +147,7 @@ export default function RoundPens() {
       <PageHeader
         title="Round Pens & Paddocks"
         description={serviceData.description}
-        backgroundImage={coveredArenaLit}
+        backgroundImage={roundPenTwilightAsset.url}
         dividerVariant="contact"
       />
 
@@ -238,9 +239,9 @@ export default function RoundPens() {
           </h2>
           <div className="grid sm:grid-cols-3 gap-4">
             {[
-              { src: coveredArenaLit, alt: "Covered arena at dusk" },
-              { src: arenaSandPrep1, alt: "Footing preparation for round pen" },
-              { src: arenaSandPrep2, alt: "Arena surface grading" },
+              { src: roundPenTwilightAsset.url, alt: "Completed round pen at twilight with dark walling and a glowing sky beyond" },
+              { src: roundPenSlabSunriseAsset.url, alt: "Round pen slab at sunrise with wet concrete reflecting low golden light" },
+              { src: coveredArenaConstructionDawnAsset.url, alt: "Covered arena under construction at dawn with machinery inside the span" },
             ].map((img) => (
               <div key={img.alt} className="aspect-[4/3] rounded-xl overflow-hidden border border-border">
                 <img
