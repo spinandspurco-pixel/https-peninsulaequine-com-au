@@ -155,19 +155,30 @@ function AmenitiesGallery() {
               }`}
             >
               <div className="aspect-[4/3] overflow-hidden relative">
-                {/* Skeleton placeholder */}
-                <div className="absolute inset-0 bg-muted animate-pulse" aria-hidden="true" />
-                <img
-                  src={item.image}
-                  alt={item.alt}
-                  className="w-full h-full object-cover img-portfolio transition-all duration-500 group-hover:scale-105 relative z-[1]"
-                  loading="lazy"
-                  onLoad={(e) => {
-                    const skeleton = (e.currentTarget.parentElement?.querySelector('.animate-pulse') as HTMLElement);
-                    if (skeleton) skeleton.style.display = 'none';
-                  }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-[2]" />
+                {item.image ? (
+                  <>
+                    {/* Skeleton placeholder */}
+                    <div className="absolute inset-0 bg-muted animate-pulse" aria-hidden="true" />
+                    <img
+                      src={item.image}
+                      alt={item.alt}
+                      className="w-full h-full object-cover img-portfolio transition-all duration-500 group-hover:scale-105 relative z-[1]"
+                      loading="lazy"
+                      onLoad={(e) => {
+                        const skeleton = (e.currentTarget.parentElement?.querySelector('.animate-pulse') as HTMLElement);
+                        if (skeleton) skeleton.style.display = 'none';
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-[2]" />
+                  </>
+                ) : (
+                  <EditorialPlaceholder
+                    aspect="4/3"
+                    code={item.placeholder?.code ?? "PE / BRD"}
+                    label={item.placeholder?.label ?? item.alt}
+                    className="w-full h-full"
+                  />
+                )}
               </div>
               <div className="p-4 bg-background">
                 <h3 className="font-serif text-sm font-semibold text-foreground mb-1 transition-colors duration-300 group-hover:text-accent">
