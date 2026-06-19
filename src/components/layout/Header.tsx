@@ -64,7 +64,9 @@ export function Header() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const location = useLocation();
+  const activeChapter = useActiveServiceChapter();
   const { headerLogoReady, headerReady } = useIntroState();
+
   const closeTimer = useRef<number | null>(null);
   const mobileToggleRef = useRef<HTMLButtonElement | null>(null);
   const desktopDropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
