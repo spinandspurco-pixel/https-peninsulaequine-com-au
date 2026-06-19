@@ -54,6 +54,7 @@ jobs:
         with:
           name: asset-scan-report
           path: asset-scan-report.txt
+          retention-days: 30
 
       - name: Fail if verification failed
         if: steps.verify.outcome == 'failure'
