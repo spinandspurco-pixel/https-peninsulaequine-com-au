@@ -73,12 +73,14 @@ jobs:
       - name: Run retention-policy unit tests
         id: unit-tests
         run: |
-          bash scripts/ci/validate-retention.test.sh 2>test-stderr.txt || {
+          bash scripts/ci/validate-retention.test.sh > test-output.txt 2>&1 || {
             EC=$?
+            FAILED_LINE=$(grep -v '^[[:space:]]*$' test-output.txt | tail -n 1 | tr -d '\n\r\t\"\\' | cut -c1-300)
             {
               echo "exit_code=${EC}"
+              echo "failed_line=${FAILED_LINE}"
               echo "stderr<<SLACKERR"
-              head -c 800 test-stderr.txt
+              head -c 800 test-output.txt
               echo "SLACKERR"
             } >> "$GITHUB_OUTPUT"
             exit $EC
@@ -103,20 +105,22 @@ jobs:
           JOB_NAME='Retention validator tests (${{ matrix.label }})'
           LOGS_URL='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
           JOB_URL=$(gh api "/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs" --jq ".jobs[] | select(.name==\"${JOB_NAME}\") | .html_url" 2>/dev/null || echo "$LOGS_URL")
+          FAILED_STEP=$(gh api "/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs" --jq ".jobs[] | select(.name==\"${JOB_NAME}\") | .steps[] | select(.conclusion==\"failure\") | .name" 2>/dev/null | head -n 1)
+          [ -z "$FAILED_STEP" ] && FAILED_STEP='Run retention-policy unit tests'
           COMMIT_SHA='${{ github.sha }}'
           COMMIT_URL='${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}'
-          FAILED_STEP='Run retention-policy unit tests'
           FAILED_COMMAND='bash scripts/ci/validate-retention.test.sh'
           EXIT_CODE='${{ steps.unit-tests.outputs.exit_code }}'
+          FAILED_LINE='${{ steps.unit-tests.outputs.failed_line }}'
           STDERR='${{ steps.unit-tests.outputs.stderr }}'
           STDERR_SAFE=""
           if [ -n "$STDERR" ]; then
             STDERR_SAFE=$(printf '%s' "$STDERR" | tr '\n\r\t' '   ' | tr -d '"\\' | cut -c1-500)
           fi
           if [ -n "$EXIT_CODE" ]; then
-            PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Step: %s\n• Command: `%s`\n• Exit code: %s\n• Error: %s\n• Commit: <%s|%s>\n• Job URL: %s"}' "$WORKFLOW_NAME" "$JOB_NAME" "$FAILED_STEP" "$FAILED_COMMAND" "$EXIT_CODE" "$STDERR_SAFE" "$COMMIT_URL" "${COMMIT_SHA:0:7}" "$JOB_URL")
+            PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Step: %s\n• Command: `%s`\n• Exit code: %s\n• Failing line: %s\n• Error: %s\n• Commit: <%s|%s>\n• Job URL: %s"}' "$WORKFLOW_NAME" "$JOB_NAME" "$FAILED_STEP" "$FAILED_COMMAND" "$EXIT_CODE" "$FAILED_LINE" "$STDERR_SAFE" "$COMMIT_URL" "${COMMIT_SHA:0:7}" "$JOB_URL")
           else
-            PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Command: `%s`\n• Commit: <%s|%s>\n• Job URL: %s"}' "$WORKFLOW_NAME" "$JOB_NAME" "$FAILED_COMMAND" "$COMMIT_URL" "${COMMIT_SHA:0:7}" "$JOB_URL")
+            PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Step: %s\n• Command: `%s`\n• Failing line: %s\n• Commit: <%s|%s>\n• Job URL: %s"}' "$WORKFLOW_NAME" "$JOB_NAME" "$FAILED_STEP" "$FAILED_COMMAND" "$FAILED_LINE" "$COMMIT_URL" "${COMMIT_SHA:0:7}" "$JOB_URL")
           fi
           MAX_RETRIES=3
           DELAY=2
