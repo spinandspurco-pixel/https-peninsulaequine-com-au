@@ -6,7 +6,7 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { IntroContext } from "@/hooks/useIntroState";
 import { useIntake } from "@/hooks/useIntake";
 
-import serviceGroundworks from "@/assets/homepage-services/groundworks.png.asset.json";
+// Image placeholder — awaiting final approved cinematic hero upload
 import lumenArcCanopy from "@/assets/lumenarc/canopy.asset.json";
 import pavilionFireplaceDetail from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
 import aberdeenHero from "@/assets/aberdeen/hero-entrance-twilight.png.asset.json";
