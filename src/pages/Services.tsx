@@ -137,6 +137,26 @@ const CHAPTERS: Chapter[] = [
   },
 ];
 
+// ─── Active-chapter observer tuning ────────────────────────────────────────
+// The highlight switches the moment a chapter masthead crosses the trigger
+// line — a thin band just below the site header. Adjust these to taste:
+//   HEADER_OFFSET_FALLBACK_PX — used only when the <header> can't be measured.
+//   TRIGGER_BAND_PX           — height of the live "you've just crossed" band
+//                               below the header (larger = earlier switch).
+//   OBSERVER_THRESHOLD        — IntersectionObserver threshold(s). Keep at 0
+//                               so the masthead triggers as it first enters
+//                               the band, not when it's fully inside it.
+const HEADER_OFFSET_FALLBACK_PX = 96;
+const TRIGGER_BAND_PX = 24;
+const OBSERVER_THRESHOLD: number | number[] = 0;
+
+function measureHeaderHeight(): number {
+  if (typeof document === "undefined") return HEADER_OFFSET_FALLBACK_PX;
+  const el = document.querySelector("header");
+  return el?.getBoundingClientRect().height || HEADER_OFFSET_FALLBACK_PX;
+}
+
+
 
 
 export default function Services() {
@@ -158,39 +178,63 @@ export default function Services() {
     return () => clearTimeout(t);
   }, [hash]);
 
-  // Observe chapter sections and broadcast the one currently in view so the
-  // global header dropdown can highlight the matching chapter.
+  // Observe chapter mastheads (via small sentinels) and broadcast the one
+  // currently sitting beneath the header so the dropdown can highlight it.
+  // The trigger fires exactly when a masthead crosses the header line.
   useEffect(() => {
     const slugs = CHAPTERS.map((c) => c.slug);
-    const els = slugs
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => !!el);
-    if (!els.length) return;
+    let io: IntersectionObserver | null = null;
 
-    const visibility = new Map<string, number>();
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          visibility.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0);
-        }
-        let bestId: string | null = null;
-        let bestRatio = 0;
-        visibility.forEach((ratio, id) => {
-          if (ratio > bestRatio) {
-            bestRatio = ratio;
-            bestId = id;
+    const build = () => {
+      io?.disconnect();
+      const headerPx = measureHeaderHeight();
+      const viewportPx = window.innerHeight;
+      // Shrink the IO root to a thin band right under the header:
+      //   top   = header height (so masthead must clear the header)
+      //   bottom = everything below the band is ignored
+      const bottomPx = Math.max(0, viewportPx - headerPx - TRIGGER_BAND_PX);
+      const rootMargin = `-${headerPx}px 0px -${bottomPx}px 0px`;
+
+      const sentinels = slugs
+        .map((slug) =>
+          document.querySelector<HTMLElement>(`[data-chapter-masthead="${slug}"]`)
+        )
+        .filter((el): el is HTMLElement => !!el);
+      if (!sentinels.length) return;
+
+      // Pick the masthead nearest above the trigger line (deterministic on
+      // up/down scroll and when multiple sentinels share the band).
+      const recompute = () => {
+        let bestSlug: string | null = null;
+        let bestTop = -Infinity;
+        for (const s of sentinels) {
+          const top = s.getBoundingClientRect().top;
+          if (top - headerPx - TRIGGER_BAND_PX <= 0 && top > bestTop) {
+            bestTop = top;
+            bestSlug = s.dataset.chapterMasthead ?? null;
           }
-        });
-        setActiveServiceChapter(bestRatio > 0 ? bestId : null);
-      },
-      { rootMargin: "-25% 0px -55% 0px", threshold: [0, 0.25, 0.5, 0.75, 1] }
-    );
-    els.forEach((el) => io.observe(el));
+        }
+        setActiveServiceChapter(bestSlug);
+      };
+
+      io = new IntersectionObserver(recompute, {
+        rootMargin,
+        threshold: OBSERVER_THRESHOLD,
+      });
+      sentinels.forEach((s) => io!.observe(s));
+      recompute(); // seed initial state on mount / resize
+    };
+
+    build();
+    const onResize = () => build();
+    window.addEventListener("resize", onResize);
     return () => {
-      io.disconnect();
+      window.removeEventListener("resize", onResize);
+      io?.disconnect();
       setActiveServiceChapter(null);
     };
   }, []);
+
 
 
 
@@ -247,9 +291,20 @@ export default function Services() {
                   id={chapter.slug}
                   className="space-y-[clamp(3rem,2rem+3vw,5rem)] scroll-mt-32"
                 >
+                  {/*
+                    Sentinel: zero-height marker aligned with the top of the
+                    masthead. The observer watches this — when it crosses the
+                    trigger band beneath the header, this chapter becomes active.
+                  */}
+                  <span
+                    aria-hidden="true"
+                    data-chapter-masthead={chapter.slug}
+                    className="block h-0"
+                  />
                   {/* Chapter masthead */}
                   <RevealOnScroll direction="up">
                     <div className="border-t border-accent/15 pt-10 sm:pt-14">
+
                       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-baseline">
                         <div className="lg:col-span-4 flex items-baseline gap-5">
                           <span className="font-mono text-accent/45 text-[10px] tracking-[0.4em] tabular-nums">
