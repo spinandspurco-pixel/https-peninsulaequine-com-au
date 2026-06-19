@@ -2,10 +2,13 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
+import { DraftCorners, DraftStatusCode, DraftLine } from "@/components/draft";
 import {
   getProjectImage,
   getProjectImageAlt,
 } from "@/config/projectImagery";
+
+const CODES = ["PE-MR-024", "PE-AB-019", "PE-CA-031"];
 
 const FILTER = "brightness(0.82) contrast(1.1) saturate(0.8)";
 
@@ -100,24 +103,27 @@ export default function SelectedWorks() {
               >
                 <Link to={project.slug} className="group block">
                   <RevealOnScroll direction="up" duration={1200}>
-                    <div className="relative aspect-[16/10] md:aspect-[21/9] overflow-hidden">
-                      <img
-                        src={project.image}
-                        alt={project.alt}
-                        className={`absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.025] ${project.crop}`}
-                        loading={i === 0 ? "eager" : "lazy"}
-                        decoding="async"
-                        style={{ filter: FILTER }}
-                      />
-                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-                    </div>
+                    <DraftCorners size={16} inset={-6}>
+                      <div className="relative aspect-[16/10] md:aspect-[21/9] overflow-hidden">
+                        <img
+                          src={project.image}
+                          alt={project.alt}
+                          className={`absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.025] ${project.crop}`}
+                          loading={i === 0 ? "eager" : "lazy"}
+                          decoding="async"
+                          style={{ filter: FILTER }}
+                        />
+                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                      </div>
+                    </DraftCorners>
                   </RevealOnScroll>
 
-                  <div className="mt-8 sm:mt-10 grid grid-cols-12 gap-6 lg:gap-12 items-end">
+                  {/* fine technical line connecting image → title */}
+                  <DraftLine className="mt-8 sm:mt-10 max-w-[28%]" delay={150} />
+
+                  <div className="mt-5 sm:mt-6 grid grid-cols-12 gap-6 lg:gap-12 items-end">
                     <div className="col-span-12 md:col-span-7 space-y-3 sm:space-y-4">
-                      <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.42em]">
-                        {project.category}
-                      </p>
+                      <DraftStatusCode code={CODES[i] ?? `PE-${i + 1}`} status={project.category} />
                       <h2 className="font-serif text-foreground/92 group-hover:text-foreground transition-colors duration-500 leading-[1.02] tracking-tight text-[clamp(1.9rem,1.2rem+2.4vw,3.1rem)]">
                         {project.title}
                       </h2>
