@@ -70,7 +70,18 @@ jobs:
         run: bash --version
 
       - name: Run retention-policy unit tests
-        run: bash scripts/ci/validate-retention.test.sh
+        id: unit-tests
+        run: |
+          bash scripts/ci/validate-retention.test.sh 2>test-stderr.txt || {
+            EC=$?
+            {
+              echo "exit_code=${EC}"
+              echo "stderr<<SLACKERR"
+              head -c 800 test-stderr.txt
+              echo "SLACKERR"
+            } >> "$GITHUB_OUTPUT"
+            exit $EC
+          }
 
       - name: Notify on retention test failure
         if: failure() && github.event_name == 'pull_request'
