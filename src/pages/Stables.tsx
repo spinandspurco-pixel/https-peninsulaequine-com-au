@@ -3,7 +3,7 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import heroAsset from "@/assets/uploads/approved-stable-aisle-detail-warm-light.png.asset.json";
 import stallInteriorAsset from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
-import aisleDetailAsset from "@/assets/uploads/approved-stable-aisle-detail-warm-light.png.asset.json";
+
 
 const heroImg = heroAsset.url;
 
@@ -86,7 +86,7 @@ export default function Stables() {
                 </div>
                 <div className="relative aspect-[4/5] overflow-hidden">
                   <img
-                    src={aisleDetailAsset.url}
+                    src={heroImg}
                     alt="Stable aisle with black steel columns, skylights and warm timber stall fronts extending through the barn"
                     loading="lazy"
                     decoding="async"
