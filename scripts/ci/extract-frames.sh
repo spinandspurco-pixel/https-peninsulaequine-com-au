@@ -101,9 +101,10 @@ while IFS= read -r LINE; do
     F_LINE=$(echo "$RAW" | sed -E 's/.*:([0-9]+)$/\1/')
   fi
 
-  # tsc diagnostics: "file.ts(42,10): error"
-  if [ -z "$F_FILE" ] && echo "$LINE" | grep -qE '([A-Za-z0-9_./+-]+\.(ts|tsx|js|jsx))\([0-9]+,[0-9]+\)'; then
-    RAW=$(echo "$LINE" | grep -oE '([A-Za-z0-9_./+-]+\.(ts|tsx|js|jsx))\([0-9]+,[0-9]+\)' | tail -n 1)
+  # tsc diagnostics: "file.ts(42,10): error" — accepts POSIX and Windows paths
+  # (drive letter + backslashes). The path is anything non-space up to ".ext(".
+  if [ -z "$F_FILE" ] && echo "$LINE" | grep -qE '[^[:space:]]+\.(ts|tsx|js|jsx)\([0-9]+,[0-9]+\)'; then
+    RAW=$(echo "$LINE" | grep -oE '[^[:space:]]+\.(ts|tsx|js|jsx)\([0-9]+,[0-9]+\)' | tail -n 1)
     F_FILE=$(echo "$RAW" | sed -E 's/\([0-9]+,[0-9]+\)$//')
     F_LINE=$(echo "$RAW" | sed -E 's/.*\(([0-9]+),[0-9]+\)$/\1/')
     F_COL=$(echo  "$RAW" | sed -E 's/.*\([0-9]+,([0-9]+)\)$/\1/')
