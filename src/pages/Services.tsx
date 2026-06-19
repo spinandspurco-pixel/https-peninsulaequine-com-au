@@ -7,9 +7,9 @@ import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 
 // Locked cinematic image system — one correct visual per service.
 // Outdoor-arena-first positioning is removed. Lead with covered & indoor.
-import coveredArenaAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
+import coveredArenaAsset from "@/assets/covered-arenas/approved-covered-arena-exterior-dusk.png.asset.json";
 import heroStormAsset from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
-import stableAisleAsset from "@/assets/services-new/pe-stable-aisle-cinematic.png.asset.json";
+import stableAisleAsset from "@/assets/aberdeen/approved-barn-front-twilight.png.asset.json";
 import pavilionAsset from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
 import groundworksAsset from "@/assets/services-new/pe-groundworks-dozer.png.asset.json";
 import drainageAsset from "@/assets/services-new/pe-infrastructure-muddy-site.png.asset.json";
@@ -32,8 +32,8 @@ const SERVICES: Service[] = [
     k: "01",
     title: "Covered Arenas",
     image: coveredArenaAsset.url,
-    alt: "Covered competition arena steel structure rising under night-work lights",
-    objectPosition: "50% 55%",
+    alt: "Covered arena exterior at dusk with glowing interior structure and dark storm sky",
+    objectPosition: "50% 52%",
     body: "Covered and indoor riding environments designed around structure, surface, light, airflow and long-term daily use.",
     href: "/arenas",
   },
@@ -41,8 +41,8 @@ const SERVICES: Service[] = [
     k: "02",
     title: "Stables & Barn Structures",
     image: stableAisleAsset.url,
-    alt: "Cinematic stable aisle at dusk — timber stalls, polished steel hardware, warm bronze lighting",
-    objectPosition: "50% 55%",
+    alt: "Stable and barn structure at twilight with warm entry lighting, dark shutters and refined landscape approach",
+    objectPosition: "50% 44%",
     body: "Stable environments built around horse care, safe handling, practical movement, durable finishes and daily flow.",
     href: "/stables",
   },

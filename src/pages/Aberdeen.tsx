@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 
-import heroAsset from "@/assets/aberdeen/hero-entrance-twilight.png.asset.json";
-import arenaVaulted from "@/assets/aberdeen/arena-vaulted-wide.png.asset.json";
-import loungeSerene from "@/assets/aberdeen/lounge-serene.png.asset.json";
-import entryCorridor from "@/assets/aberdeen/entry-corridor.png.asset.json";
+import heroAsset from "@/assets/aberdeen/approved-barn-front-twilight.png.asset.json";
+import arenaVaulted from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
+import loungeSerene from "@/assets/aberdeen/approved-viewing-lounge-arena-fireplace.png.asset.json";
+import entryCorridor from "@/assets/aberdeen/approved-arena-surfacing-forecourt.png.asset.json";
 
 const FACTS: Array<{ label: string; value: string }> = [
   { label: "Category", value: "Indoor Arena / Stable Precinct" },
@@ -39,9 +39,9 @@ export default function Aberdeen() {
         <section className="relative min-h-[82vh] overflow-hidden border-b border-accent/10">
           <img
             src={heroAsset.url}
-            alt="Aberdeen equine facility entrance at twilight with symmetrical gable form and warm interior glow"
+            alt="Aberdeen stable and barn structure at twilight with symmetrical gable form and warm entry glow"
             className="absolute inset-0 h-full w-full object-cover"
-            style={{ objectPosition: "50% 42%", filter: "brightness(0.58) contrast(1.1) saturate(0.74)" }}
+            style={{ objectPosition: "50% 44%", filter: "brightness(0.62) contrast(1.08) saturate(0.76)" }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/42 via-background/18 to-background/88" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--background)/0.72)_0%,hsl(var(--background)/0.48)_32%,transparent_62%)]" />
@@ -99,7 +99,7 @@ export default function Aberdeen() {
               <div className="relative aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                 <img
                   src={arenaVaulted.url}
-                  alt="Wide view of Aberdeen indoor arena with vaulted ceiling, skylight and viewing lounge beyond"
+                  alt="Aberdeen indoor riding environment with black steel frame, warm overhead lighting and prepared arena surface"
                   className="absolute inset-0 h-full w-full object-cover"
                   loading="lazy"
                   decoding="async"
@@ -166,11 +166,11 @@ export default function Aberdeen() {
                 <div className="relative aspect-[16/11] overflow-hidden">
                   <img
                     src={loungeSerene.url}
-                    alt="Serene Aberdeen viewing lounge framed around a full arena window at dusk"
+                    alt="Aberdeen viewing lounge with fireplace and direct sightline into the indoor arena"
                     className="absolute inset-0 h-full w-full object-cover"
                     loading="lazy"
                     decoding="async"
-                    style={{ objectPosition: "50% 48%", filter: "brightness(0.78) contrast(1.08) saturate(0.78)" }}
+                    style={{ objectPosition: "50% 50%", filter: "brightness(0.8) contrast(1.08) saturate(0.78)" }}
                   />
                 </div>
               </RevealOnScroll>
@@ -219,11 +219,11 @@ export default function Aberdeen() {
                 <div className="relative aspect-[16/11] overflow-hidden">
                   <img
                     src={entryCorridor.url}
-                    alt="Aberdeen entry corridor with timber half-height walls, black steel framing and arched equine facility doors"
+                    alt="Arena surfacing forecourt outside the Aberdeen stable precinct with groomed footing and the long barn form beyond"
                     className="absolute inset-0 h-full w-full object-cover"
                     loading="lazy"
                     decoding="async"
-                    style={{ objectPosition: "50% 50%", filter: "brightness(0.76) contrast(1.08) saturate(0.78)" }}
+                    style={{ objectPosition: "50% 50%", filter: "brightness(0.8) contrast(1.08) saturate(0.78)" }}
                   />
                 </div>
               </RevealOnScroll>

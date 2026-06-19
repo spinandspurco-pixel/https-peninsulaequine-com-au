@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
-// Covered Arenas hero — a covered/indoor arena image, not a grading shot
-import heroAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
+// Covered Arenas hero — approved interior arena image
+import heroAsset from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
 const heroImg = heroAsset.url;
 
 const capabilities = [
@@ -16,7 +16,7 @@ export default function Arenas() {
     <Layout>
       <article className="bg-background text-foreground type-architectural">
         <section className="relative h-[82vh] min-h-[560px] overflow-hidden">
-          <img src={heroImg} alt="Covered equestrian arena interior with engineered footing under controlled light" width={1920} height={1080} className="absolute inset-0 w-full h-full object-cover img-header" />
+          <img src={heroImg} alt="Covered indoor riding environment with black steel portal frame, warm lighting and prepared arena surface" width={1920} height={1080} className="absolute inset-0 w-full h-full object-cover img-header" />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/45 via-primary/15 to-primary/80" />
           <div className="absolute bottom-0 left-0 right-0 px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2.5rem,1.5rem+4vw,5rem)]">
             <div className="max-w-6xl space-y-[clamp(1.25rem,1rem+1vw,2rem)]">

@@ -27,6 +27,7 @@ import coveredArenaNightWorkLights from "@/assets/field-notes/covered-competitio
 import coveredArenaTruckAccessTrack from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
 import coveredArenaDrainageDetail from "@/assets/field-notes/covered-competition-arena-drainage-detail.png.asset.json";
 import coveredArenaDozerStormSky from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
+import approvedCurrentBuildBlackShedStorm from "@/assets/field-notes/approved-current-build-black-shed-storm.png.asset.json";
 
 // Responsive webp variants for the hero/preview surfaces
 import coveredArenaSunset640 from "@/assets/responsive/covered-competition-arena-sunset-puddles-640.webp.asset.json";
@@ -49,10 +50,10 @@ import mainRidgeWide1024 from "@/assets/responsive/main-ridge-pavilion-wide-fire
 import mainRidgeWide1536 from "@/assets/responsive/main-ridge-pavilion-wide-fireplace-table-1536.webp.asset.json";
 
 // ---- Aberdeen (completed) ----
-import aberdeenHeroTwilight from "@/assets/aberdeen/hero-entrance-twilight.png.asset.json";
-import aberdeenArenaDramatic from "@/assets/aberdeen/arena-dramatic-light.png.asset.json";
-import aberdeenArenaVaulted from "@/assets/aberdeen/arena-vaulted-wide.png.asset.json";
-import aberdeenEntryCorridor from "@/assets/aberdeen/entry-corridor.png.asset.json";
+import aberdeenHeroTwilight from "@/assets/aberdeen/approved-barn-front-twilight.png.asset.json";
+import aberdeenArenaDramatic from "@/assets/aberdeen/approved-viewing-lounge-arena-fireplace.png.asset.json";
+import aberdeenArenaVaulted from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
+import aberdeenEntryCorridor from "@/assets/aberdeen/approved-arena-surfacing-forecourt.png.asset.json";
 
 // -----------------------------------------------------------------
 // Crop-safety contract
@@ -129,7 +130,7 @@ export const projectImagery: Record<string, ProjectImagery> = {
     status: "in-progress",
     surfaces: {
       // Selected Works = stormy dozer steel-frame identity
-      selectedWorks: coveredArenaDozerStormSky,
+      selectedWorks: approvedCurrentBuildBlackShedStorm,
       // Field Notes hero = moody puddles, the project's live signature
       fieldNotesHero: coveredArenaSunsetPuddles,
       // Homepage Field Notes preview matches the Field Notes hero on purpose
@@ -139,7 +140,7 @@ export const projectImagery: Record<string, ProjectImagery> = {
       fieldNotesGalleryB: coveredArenaDrainageDetail,
       // Real conditions divider — muddy boots + steel frame at dusk
       fieldNotesConditions: muddyBootsSteelFrame,
-      caseStudyHero: coveredArenaNightWorkLights,
+      caseStudyHero: approvedCurrentBuildBlackShedStorm,
     },
     responsive: {
       fieldNotesHero: buildSrcSet(
@@ -163,7 +164,7 @@ export const projectImagery: Record<string, ProjectImagery> = {
     },
     alt: {
       selectedWorks:
-        "Covered Arena & Stables Build — dozer and steel frame rising under a dramatic storm sky",
+        "Covered Arena & Stables Build — current black-clad structure under a storm sky with warm perimeter lighting",
       fieldNotesHero:
         "Covered competition arena at sunset — steel frame and finished surface mirrored in puddles after rain",
       fieldNotesPreview:
@@ -175,7 +176,7 @@ export const projectImagery: Record<string, ProjectImagery> = {
       fieldNotesConditions:
         "Muddy work boots in red clay with excavator, dump truck and steel-frame arena rising under a storm-lit dusk sky",
       caseStudyHero:
-        "Covered Arena & Stables Build — structural steel and roof line under a dramatic storm sky",
+        "Covered Arena & Stables Build — current black-clad structure under a storm sky with warm perimeter lighting",
     },
   },
 
@@ -221,13 +222,13 @@ export const projectImagery: Record<string, ProjectImagery> = {
     },
     alt: {
       selectedWorks:
-        "Aberdeen — symmetrical equine facility entrance at twilight with warm internal glow",
+        "Aberdeen — stable and barn structure at twilight with warm entry glow",
       caseStudyHero:
-        "Aberdeen — symmetrical equine facility entrance at twilight with warm internal glow",
+        "Aberdeen — stable and barn structure at twilight with warm entry glow",
       fieldNotesGalleryA:
-        "Aberdeen indoor arena with dramatic shafts of natural light across the surface",
+        "Aberdeen viewing lounge with fireplace and direct sightline into the indoor arena",
       fieldNotesGalleryB:
-        "Aberdeen entry corridor — symmetrical interior with warm tones",
+        "Aberdeen arena surfacing forecourt with the long barn form beyond",
     },
   },
 };

@@ -8,11 +8,12 @@ import { useIntake } from "@/hooks/useIntake";
 
 
 import lumenArcCanopy from "@/assets/lumenarc/canopy.asset.json";
-import pavilionFireplaceDetail from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
-import aberdeenHero from "@/assets/aberdeen/hero-entrance-twilight.png.asset.json";
-import aberdeenArena from "@/assets/aberdeen/arena-dramatic-light.png.asset.json";
-import steelFrontAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
+import aberdeenHero from "@/assets/aberdeen/approved-barn-front-twilight.png.asset.json";
+import aberdeenArena from "@/assets/aberdeen/approved-viewing-lounge-arena-fireplace.png.asset.json";
+import steelFrontAsset from "@/assets/field-notes/approved-current-build-black-shed-storm.png.asset.json";
+import coveredArenaExteriorAsset from "@/assets/covered-arenas/approved-covered-arena-exterior-dusk.png.asset.json";
 const steelFront = steelFrontAsset.url;
+const coveredArenaExterior = coveredArenaExteriorAsset.url;
 
 // Responsive webp variants for srcset (generated at 640/1024/1536w)
 import ciro640 from "@/assets/responsive/ciro-ace-quiet-moment-640.webp.asset.json";
@@ -334,11 +335,11 @@ export default function Index() {
                     <div className="relative aspect-[16/10] md:aspect-[5/4] overflow-hidden h-full">
                       <img
                         src={aberdeenHero.url}
-                        alt="Aberdeen — symmetrical equine facility entrance at twilight with warm internal glow"
+                        alt="Aberdeen stable and barn structure at twilight with warm entry glow"
                         loading="lazy"
                         decoding="async"
                         className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
-                        style={{ filter: "brightness(0.74) contrast(1.08) saturate(0.78)", objectPosition: "50% 42%" }}
+                        style={{ filter: "brightness(0.76) contrast(1.08) saturate(0.78)", objectPosition: "50% 44%" }}
                       />
                       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/82 via-transparent to-transparent" />
                     </div>
@@ -349,11 +350,11 @@ export default function Index() {
                     <div className="relative aspect-[4/5] overflow-hidden">
                       <img
                         src={aberdeenArena.url}
-                        alt="Aberdeen indoor arena with dramatic shafts of natural light across the surface"
+                        alt="Aberdeen viewing lounge with fireplace and direct sightline into the indoor arena"
                         loading="lazy"
                         decoding="async"
                         className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
-                        style={{ filter: "brightness(0.78) contrast(1.1) saturate(0.78)" }}
+                        style={{ filter: "brightness(0.8) contrast(1.08) saturate(0.78)" }}
                       />
                     </div>
                     <div className="mt-6 pt-5 border-t border-accent/15 space-y-2">
@@ -447,23 +448,23 @@ export default function Index() {
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <img
                       src={steelFront}
-                      alt="Steel framing rising on the covered arena under dramatic light"
-                      loading="lazy"
-                      decoding="async"
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1600ms] ease-out hover:scale-[1.02]"
-                      style={{ filter: "brightness(0.74) contrast(1.12) saturate(0.78)" }}
+                        alt="Current build black shed structure under a storm sky with warm perimeter lighting"
+                        loading="lazy"
+                        decoding="async"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1600ms] ease-out hover:scale-[1.02]"
+                        style={{ filter: "brightness(0.74) contrast(1.12) saturate(0.78)" }}
                     />
                   </div>
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" duration={1100} delay={240}>
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <img
-                      src={pavilionFireplaceDetail.url}
-                      alt="Main Ridge brick fireplace and bronze wall light detail"
+                      src={coveredArenaExterior}
+                      alt="Covered arena exterior at dusk with glowing interior structure and dark storm sky"
                       loading="lazy"
                       decoding="async"
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1600ms] ease-out hover:scale-[1.02]"
-                      style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
+                      style={{ filter: "brightness(0.76) contrast(1.1) saturate(0.78)" }}
                     />
                   </div>
                 </RevealOnScroll>
