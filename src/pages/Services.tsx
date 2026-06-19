@@ -407,7 +407,7 @@ export default function Services() {
 
 
         {/* ═══ WHOLE-PROPERTY PLANNING — supporting concept ═══ */}
-        <section className="relative overflow-hidden border-t border-accent/10">
+        <section id="whole-property" className="relative overflow-hidden border-t border-accent/10 scroll-mt-28">
           <div className="py-24 sm:py-32">
             <div className="section-container max-w-4xl mx-auto">
               <RevealOnScroll direction="up" duration={900}>
