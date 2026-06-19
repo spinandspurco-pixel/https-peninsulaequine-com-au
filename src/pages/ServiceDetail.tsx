@@ -244,11 +244,20 @@ function GalleryLightbox({
         </div>
 
         <div className="relative aspect-[16/10] rounded-lg overflow-hidden bg-primary/50">
-          <img
-            src={images[currentIndex].src}
-            alt={images[currentIndex].caption}
-            className="w-full h-full object-cover img-feature transition-opacity duration-300"
-          />
+          {images[currentIndex].src ? (
+            <img
+              src={images[currentIndex].src}
+              alt={images[currentIndex].caption}
+              className="w-full h-full object-cover img-feature transition-opacity duration-300"
+            />
+          ) : (
+            <EditorialPlaceholder
+              aspect="16/10"
+              code={images[currentIndex].placeholder?.code ?? "PE / IMG"}
+              label={images[currentIndex].placeholder?.label ?? images[currentIndex].caption}
+              className="w-full h-full"
+            />
+          )}
           <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-primary/80 to-transparent p-4">
             <p className="text-sm text-primary-foreground/90">{images[currentIndex].caption}</p>
             <p className="text-xs text-primary-foreground/50 mt-1">{currentIndex + 1} / {images.length}</p>
