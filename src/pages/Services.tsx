@@ -4,6 +4,8 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { BlueprintContinuity } from "@/components/BlueprintContinuity";
 import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
+import { setActiveServiceChapter } from "@/hooks/useActiveServiceChapter";
+
 
 
 // Locked cinematic image system — one correct visual per service.
