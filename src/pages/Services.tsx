@@ -27,71 +27,100 @@ type Service = {
   href?: string;
 };
 
-const SERVICES: Service[] = [
+type Chapter = {
+  code: string;
+  title: string;
+  intent: string;
+  services: Service[];
+};
+
+const CHAPTERS: Chapter[] = [
   {
-    k: "01",
-    title: "Covered Arenas",
-    image: coveredArenaAsset.url,
-    alt: "Covered indoor arena with warm late light across the riding surface, open side bays and a full-length steel roof span",
-    objectPosition: "50% 52%",
-    body: "Covered and indoor riding environments designed around structure, surface, light, airflow and long-term daily use.",
-    href: "/arenas",
+    code: "I",
+    title: "Build",
+    intent: "Covered structures, stables and rural buildings — designed around the horse and built to outlast the lease on the land.",
+    services: [
+      {
+        k: "01",
+        title: "Covered Arenas",
+        image: coveredArenaAsset.url,
+        alt: "Covered indoor arena with warm late light across the riding surface, open side bays and a full-length steel roof span",
+        objectPosition: "50% 52%",
+        body: "Covered and indoor riding environments designed around structure, surface, light, airflow and long-term daily use.",
+        href: "/arenas",
+      },
+      {
+        k: "02",
+        title: "Stables & Barn Structures",
+        image: stableAisleAsset.url,
+        alt: "Stable aisle with black steel columns, skylights and warm timber stall fronts extending through the barn",
+        objectPosition: "50% 48%",
+        body: "Stable environments built around horse care, safe handling, practical movement, durable finishes and daily flow.",
+        href: "/stables",
+      },
+      {
+        k: "03",
+        title: "Pavilions & Rural Builds",
+        image: pavilionAsset.url,
+        alt: "Main Ridge pavilion at dusk — handcrafted timber table, brick fireplace and open rural outlook",
+        objectPosition: "50% 52%",
+        body: "Custom rural structures for viewing, gathering, shelter and property use — built with material warmth and long-term function.",
+        href: "/selected-works/main-ridge-pavilion",
+      },
+    ],
   },
   {
-    k: "02",
-    title: "Stables & Barn Structures",
-    image: stableAisleAsset.url,
-    alt: "Stable aisle with black steel columns, skylights and warm timber stall fronts extending through the barn",
-    objectPosition: "50% 48%",
-    body: "Stable environments built around horse care, safe handling, practical movement, durable finishes and daily flow.",
-    href: "/stables",
+    code: "II",
+    title: "Ground",
+    intent: "Levels, drainage, surfacing and the working infrastructure under and around every structure. Nothing built well stands on the wrong ground.",
+    services: [
+      {
+        k: "01",
+        title: "Groundworks & Site Preparation",
+        image: groundworksAsset.url,
+        alt: "Engineered groundworks and grading at sunset — dozer shaping the base of a future build",
+        objectPosition: "50% 55%",
+        body: "Levels, access, site cuts, base works and preparation that determine how the finished environment performs.",
+        href: "/infrastructure",
+      },
+      {
+        k: "02",
+        title: "Drainage & Surfacing",
+        image: drainageAsset.url,
+        alt: "Drainage trench, aggregate and stormwater detail at dusk",
+        objectPosition: "30% 65%",
+        body: "Drainage, base layers and surface preparation designed to support performance, durability and all-weather use.",
+        href: "/infrastructure",
+      },
+      {
+        k: "03",
+        title: "Equine Infrastructure",
+        image: fencingAsset.url,
+        alt: "Steel gate and fencing along an engineered laneway at dusk",
+        objectPosition: "50% 55%",
+        body: "Laneways, gates, fencing, yards, access points, wash areas and service zones that keep the property working.",
+        href: "/infrastructure",
+      },
+    ],
   },
   {
-    k: "03",
-    title: "Pavilions & Rural Builds",
-    image: pavilionAsset.url,
-    alt: "Main Ridge pavilion at dusk — handcrafted timber table, brick fireplace and open rural outlook",
-    objectPosition: "50% 52%",
-    body: "Custom rural structures for viewing, gathering, shelter and property use — built with material warmth and long-term function.",
-    href: "/selected-works/main-ridge-pavilion",
-  },
-  {
-    k: "04",
-    title: "Groundworks & Site Preparation",
-    image: groundworksAsset.url,
-    alt: "Engineered groundworks and grading at sunset — dozer shaping the base of a future build",
-    objectPosition: "50% 55%",
-    body: "Levels, access, site cuts, base works and preparation that determine how the finished environment performs.",
-    href: "/infrastructure",
-  },
-  {
-    k: "05",
-    title: "Drainage & Surfacing",
-    image: drainageAsset.url,
-    alt: "Drainage trench, aggregate and stormwater detail at dusk",
-    objectPosition: "30% 65%",
-    body: "Drainage, base layers and surface preparation designed to support performance, durability and all-weather use.",
-    href: "/infrastructure",
-  },
-  {
-    k: "06",
-    title: "Equine Infrastructure",
-    image: fencingAsset.url,
-    alt: "Steel gate and fencing along an engineered laneway at dusk",
-    objectPosition: "50% 55%",
-    body: "Laneways, gates, fencing, yards, access points, wash areas and service zones that keep the property working.",
-    href: "/infrastructure",
-  },
-  {
-    k: "07",
-    title: "LumenArc Recovery Systems",
-    image: lumenArcAsset.url,
-    alt: "LumenArc recovery canopy — considered warmth and rest environment for equine wellbeing",
-    objectPosition: "50% 50%",
-    body: "A considered equine recovery environment designed around warmth, rest, wellbeing and controlled care.",
-    href: "/lumenarc",
+    code: "III",
+    title: "Systems",
+    intent: "Engineered systems integrated into the build — controlled environments for performance, recovery and long-term equine wellbeing.",
+    services: [
+      {
+        k: "01",
+        title: "LumenArc Recovery Systems",
+        image: lumenArcAsset.url,
+        alt: "LumenArc recovery canopy — considered warmth and rest environment for equine wellbeing",
+        objectPosition: "50% 50%",
+        body: "A considered equine recovery environment designed around warmth, rest, wellbeing and controlled care.",
+        href: "/lumenarc",
+      },
+    ],
   },
 ];
+
 
 export default function Services() {
   useEffect(() => {
@@ -141,119 +170,107 @@ export default function Services() {
           </div>
         </section>
 
-        {/* ═══ SERVICE CARDS — alternating cinematic rows ═══ */}
+        {/* ═══ SERVICE CHAPTERS — BUILD / GROUND / SYSTEMS ═══ */}
         <section className="relative overflow-hidden">
           <div className="py-20 sm:py-28 lg:py-32">
-            <div className="section-container max-w-6xl mx-auto space-y-[clamp(4rem,3rem+5vw,8rem)]">
-              {SERVICES.map((s, i) => {
-                const reversed = i % 2 === 1;
-                return (
-                  <RevealOnScroll key={s.k} direction="up">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
-                      <div className={`lg:col-span-8 ${reversed ? "lg:order-2" : ""}`}>
-                        <div className="relative overflow-hidden aspect-[16/9]">
-                          <img
-                            src={s.image}
-                            alt={s.alt}
-                            className="w-full h-full object-cover image-bleed"
-                            loading="lazy"
-                            decoding="async"
-                            style={{
-                              filter: "brightness(0.82) contrast(1.1) saturate(0.8)",
-                              objectPosition: s.objectPosition ?? "50% 50%",
-                            }}
-                          />
-                          <div
-                            className="absolute inset-0 pointer-events-none"
-                            style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, hsl(var(--background)) 100%)" }}
-                          />
+            <div className="section-container max-w-6xl mx-auto space-y-[clamp(5rem,4rem+5vw,9rem)]">
+              {CHAPTERS.map((chapter, ci) => (
+                <div key={chapter.code} className="space-y-[clamp(3rem,2rem+3vw,5rem)]">
+                  {/* Chapter masthead */}
+                  <RevealOnScroll direction="up">
+                    <div className="border-t border-accent/15 pt-10 sm:pt-14">
+                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-baseline">
+                        <div className="lg:col-span-4 flex items-baseline gap-5">
+                          <span className="font-mono text-accent/45 text-[10px] tracking-[0.4em] tabular-nums">
+                            {String(ci + 1).padStart(2, "0")} / {String(CHAPTERS.length).padStart(2, "0")}
+                          </span>
+                          <span className="h-px flex-1 max-w-[2.5rem] bg-accent/25" />
+                          <h2 className="font-serif text-foreground/90 tracking-[-0.025em] leading-none text-[clamp(2rem,1.4rem+2.4vw,3.4rem)] uppercase">
+                            {chapter.title}
+                          </h2>
                         </div>
-                      </div>
-                      <div className={`lg:col-span-4 ${reversed ? "lg:order-1" : ""}`}>
-                        <div className="flex items-center gap-4 mb-5">
-                          <div className="w-6 h-px bg-accent/20" />
-                          <p className="text-[9px] uppercase tracking-[0.4em] text-accent/35 font-mono">{s.k}</p>
-                        </div>
-                        <h2 className="font-serif text-2xl sm:text-3xl lg:text-[2.15rem] text-foreground/85 tracking-[-0.018em] leading-[1.08] mb-6">
-                          {s.title}
-                        </h2>
-                        <p className="text-[13.5px] text-foreground/55 leading-[1.85] max-w-sm mb-6">
-                          {s.body}
+                        <p className="lg:col-span-7 lg:col-start-6 font-sans font-light text-foreground/55 leading-[1.8] text-[14px] sm:text-[15px] max-w-xl">
+                          {chapter.intent}
                         </p>
-                        {s.href ? (
-                          <Link
-                            to={s.href}
-                            className="group inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.4em] text-accent/55 hover:text-accent transition-colors duration-500"
-                          >
-                            <span className="w-6 h-px bg-accent/45 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
-                            Explore
-                          </Link>
-                        ) : (
-                          <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-foreground/20">
-                            Available on request.
-                          </p>
-                        )}
+                      </div>
+                      <div className="mt-8 flex items-center gap-4">
+                        <span className="font-mono text-accent/35 text-[9px] tracking-[0.45em] uppercase">
+                          Sec. {chapter.code}
+                        </span>
+                        <span className="h-px flex-1 bg-accent/10" />
                       </div>
                     </div>
                   </RevealOnScroll>
-                );
-              })}
+
+                  {/* Services within chapter */}
+                  <div className="space-y-[clamp(4rem,3rem+4vw,7rem)]">
+                    {chapter.services.map((s, i) => {
+                      const reversed = i % 2 === 1;
+                      return (
+                        <RevealOnScroll key={s.k} direction="up">
+                          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
+                            <div className={`lg:col-span-8 ${reversed ? "lg:order-2" : ""}`}>
+                              <div className="relative overflow-hidden aspect-[16/9]">
+                                <img
+                                  src={s.image}
+                                  alt={s.alt}
+                                  className="w-full h-full object-cover image-bleed"
+                                  loading="lazy"
+                                  decoding="async"
+                                  style={{
+                                    filter: "brightness(0.82) contrast(1.1) saturate(0.8)",
+                                    objectPosition: s.objectPosition ?? "50% 50%",
+                                  }}
+                                />
+                                <div
+                                  className="absolute inset-0 pointer-events-none"
+                                  style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, hsl(var(--background)) 100%)" }}
+                                />
+                                {/* Construction-drawing corner ticks */}
+                                <span aria-hidden className="absolute top-0 left-0 w-4 h-px bg-accent/45" />
+                                <span aria-hidden className="absolute top-0 left-0 w-px h-4 bg-accent/45" />
+                                <span aria-hidden className="absolute bottom-0 right-0 w-4 h-px bg-accent/45" />
+                                <span aria-hidden className="absolute bottom-0 right-0 w-px h-4 bg-accent/45" />
+                              </div>
+                            </div>
+                            <div className={`lg:col-span-4 ${reversed ? "lg:order-1" : ""}`}>
+                              <div className="flex items-center gap-4 mb-5">
+                                <div className="w-6 h-px bg-accent/20" />
+                                <p className="text-[9px] uppercase tracking-[0.4em] text-accent/35 font-mono tabular-nums">
+                                  {chapter.code}.{s.k}
+                                </p>
+                              </div>
+                              <h3 className="font-serif text-2xl sm:text-3xl lg:text-[2.15rem] text-foreground/85 tracking-[-0.018em] leading-[1.08] mb-6">
+                                {s.title}
+                              </h3>
+                              <p className="text-[13.5px] text-foreground/55 leading-[1.85] max-w-sm mb-6">
+                                {s.body}
+                              </p>
+                              {s.href ? (
+                                <Link
+                                  to={s.href}
+                                  className="group inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.4em] text-accent/55 hover:text-accent transition-colors duration-500"
+                                >
+                                  <span className="w-6 h-px bg-accent/45 transition-all duration-700 group-hover:w-12 group-hover:bg-accent" />
+                                  Explore
+                                </Link>
+                              ) : (
+                                <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-foreground/20">
+                                  Available on request.
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </RevealOnScroll>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* ═══ WHOLE-PROPERTY PLANNING — compact teaser, links out to /equine-estates ═══ */}
-        <section className="relative overflow-hidden border-t border-accent/10">
-          <div className="py-20 sm:py-24 lg:py-28 relative">
-            <div className="section-container max-w-5xl mx-auto">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-                <RevealOnScroll direction="up" className="lg:col-span-5">
-                  <div className="relative overflow-hidden aspect-[4/3]">
-                    <img
-                      src={estateAerialAsset.url}
-                      alt="Aerial crop of a planned equine property — arena, stables and access resolved together"
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-cover image-bleed"
-                      style={{ filter: "brightness(0.82) contrast(1.08) saturate(0.8)", objectPosition: "55% 60%" }}
-                    />
-                    <div
-                      className="absolute inset-0 pointer-events-none"
-                      style={{ background: "radial-gradient(ellipse 90% 80% at 50% 50%, transparent 45%, hsl(var(--background)/0.6) 100%)" }}
-                    />
-                  </div>
-                </RevealOnScroll>
-                <div className="lg:col-span-7 space-y-5">
-                  <RevealOnScroll direction="up">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-accent/55">
-                      Supporting Concept
-                    </p>
-                  </RevealOnScroll>
-                  <RevealOnScroll direction="up" delay={120}>
-                    <h2 className="font-serif text-[clamp(1.5rem,1rem+1.6vw,2.1rem)] text-foreground/90 tracking-[-0.02em] leading-[1.1]">
-                      Whole-Property Planning
-                    </h2>
-                  </RevealOnScroll>
-                  <RevealLine width="w-10" delay={220} />
-                  <RevealOnScroll direction="up" delay={260}>
-                    <p className="font-sans font-light text-foreground/60 leading-[1.85] text-[14px] sm:text-[15px] max-w-xl">
-                      A supporting planning framework that considers the whole property — arena, stables, access, drainage and laneways — before individual structures are placed.
-                    </p>
-                  </RevealOnScroll>
-                  <RevealOnScroll direction="up" delay={360}>
-                    <Link
-                      to="/equine-estates"
-                      className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
-                    >
-                      <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
-                      Explore Whole-Property Planning
-                    </Link>
-                  </RevealOnScroll>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* ═══ AUTHORITY LINE ═══════════════════════════════ */}
         <section className="relative overflow-hidden border-t border-accent/10">
