@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 import { CropSafeImage } from "@/components/media/CropSafeImage";
-import { DraftLine, DraftStatusCode } from "@/components/draft";
+import { DraftLine } from "@/components/draft";
 
 import {
   getProjectImage,
