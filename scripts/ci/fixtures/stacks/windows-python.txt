@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\runner\work\repo\scripts\bootstrap.py", line 7, in <module>
+    main()
+  File "C:\Users\runner\work\repo\scripts\app.py", line 21, in main
+    parse_config()
+  File "C:\Users\runner\work\repo\scripts\config.py", line 42, in parse_config
+    raise ValueError("bad config")
+ValueError: bad config
