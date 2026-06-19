@@ -13,14 +13,57 @@ import { services, siteConfig } from "@/data/content";
 import { servicePricingTiers, serviceFaqs } from "@/data/servicePricingFaq";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
+import { EditorialPlaceholder } from "@/components/EditorialPlaceholder";
 
-// New PE service hero/feature imagery (CDN)
+// ── Approved cinematic asset library ────────────────────────────────────
+// All legacy bright-daytime phone photos (covered-arena-finished-lit,
+// aberdeen-*, main-ridge-* construction snaps, arena-sand-prep, sequence-*)
+// have been removed. If a slot has no approved equivalent it renders an
+// EditorialPlaceholder rather than an off-direction image.
+
+// PE service hero / feature imagery
 import peArenaGradingAsset from "@/assets/services-new/pe-arena-grading.png.asset.json";
 import peFencingGateAsset from "@/assets/services-new/pe-fencing-hero-gate.png.asset.json";
 import peGroundworksDozerAsset from "@/assets/services-new/pe-groundworks-dozer.png.asset.json";
 import peCustomRuralPavilionAsset from "@/assets/services-new/pe-custom-rural-pavilion.png.asset.json";
 import peCustomRuralFireplaceGrillAsset from "@/assets/services-new/pe-custom-rural-fireplace-grill.png.asset.json";
 import peCustomRuralFireplaceHatAsset from "@/assets/services-new/pe-custom-rural-fireplace-hat.png.asset.json";
+
+// Approved Aberdeen / stables
+import aberdeenExteriorDuskAsset from "@/assets/uploads/approved-aberdeen-exterior-dusk-frontage.png.asset.json";
+import aberdeenRiderStormAsset from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.png.asset.json";
+import aberdeenRoundPenSunsetAsset from "@/assets/uploads/approved-aberdeen-round-pen-sunset.png.asset.json";
+import stableAisleWarmAsset from "@/assets/uploads/approved-stable-aisle-detail-warm-light.png.asset.json";
+import stableStallSymmetricAsset from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
+import tackRoomJoineryAsset from "@/assets/uploads/approved-tack-room-joinery.png.asset.json";
+
+// Approved covered arena
+import coveredArenaInteriorNightAsset from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
+import coveredArenaInteriorDawnAsset from "@/assets/covered-arenas/approved-covered-arena-interior-construction-dawn.png.asset.json";
+import coveredArenaExteriorDuskAsset from "@/assets/covered-arenas/approved-covered-arena-exterior-dusk.png.asset.json";
+import timberKickboardAsset from "@/assets/covered-arenas/approved-timber-kickboard-detail.png.asset.json";
+
+// Approved current build / field notes
+import currentBuildSteelStormAsset from "@/assets/uploads/approved-current-build-steel-frame-storm.png.asset.json";
+import currentBuildRainFrameAsset from "@/assets/uploads/approved-current-build-rain-frame-symmetry.png.asset.json";
+import currentBuildEquipmentStormAsset from "@/assets/uploads/approved-current-build-equipment-storm.png.asset.json";
+import muddyBootsSteelFrameAsset from "@/assets/field-notes/muddy-boots-steel-frame.png.asset.json";
+import compArenaDozerStormAsset from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
+import compArenaDrainageAsset from "@/assets/field-notes/covered-competition-arena-drainage-detail.png.asset.json";
+import compArenaNightWorkAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
+import compArenaSunsetPuddlesAsset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
+import compArenaTruckAccessAsset from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
+
+// Approved Main Ridge
+import mrPavilionWideAsset from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
+import mrPavilionBrickAsset from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
+import mrBeamDetailAsset from "@/assets/main-ridge/mr-beam-detail.png.asset.json";
+import mrPendantBeamsAsset from "@/assets/main-ridge/mr-pendant-beams.png.asset.json";
+import mrCustomTableAsset from "@/assets/main-ridge/mr-custom-table.png.asset.json";
+import mrParrillaWideAsset from "@/assets/main-ridge/mr-parrilla-wide.png.asset.json";
+import mrParrillaGrillAsset from "@/assets/main-ridge/mr-parrilla-grill.png.asset.json";
+
+// URL helpers
 const peArenaGrading = peArenaGradingAsset.url;
 const peFencingGate = peFencingGateAsset.url;
 const peGroundworksDozer = peGroundworksDozerAsset.url;
@@ -28,118 +71,135 @@ const peCustomRuralPavilion = peCustomRuralPavilionAsset.url;
 const peCustomRuralFireplaceGrill = peCustomRuralFireplaceGrillAsset.url;
 const peCustomRuralFireplaceHat = peCustomRuralFireplaceHatAsset.url;
 
-// Service card images
-import equitanaArena from "@/assets/covered-arena-finished-lit.jpg";
-import equitanaArena2 from "@/assets/aberdeen-aisle.jpg";
-import equitanaArena3 from "@/assets/aberdeen-barn-interior.jpg";
-import equitanaArena4 from "@/assets/main-ridge-finished-interior-1.jpg";
-import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
-import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
-import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
-import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
-import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
-import aberdeenAisle from "@/assets/aberdeen-aisle.jpg";
-import coveredArenaLit from "@/assets/covered-arena-finished-lit.jpg";
-import coveredArenaBlack from "@/assets/covered-arena-black-exterior.jpg";
-import mainRidgeFinishedInterior1 from "@/assets/main-ridge-finished-interior-1.jpg";
-import mainRidgeFinishedInterior2 from "@/assets/main-ridge-finished-interior-2.jpg";
-import mainRidgeSitePrep from "@/assets/main-ridge-site-prep.jpg";
-import premiumStableFacade from "@/assets/aberdeen-exterior.jpg";
-import mainRidgeCiroWoodwork from "@/assets/main-ridge-brickwork.jpg";
-import mainRidgeCiroWoodwork2 from "@/assets/main-ridge-timber.jpg";
-import mainRidgeInterior from "@/assets/main-ridge-interior.jpg";
-import mainRidgeBrickwork from "@/assets/main-ridge-brickwork.jpg";
-import mainRidgeBarnFrame from "@/assets/main-ridge-barn-frame.jpg";
-import arenaSandPrep1 from "@/assets/arena-sand-prep-1.jpg";
-import arenaSandPrep2 from "@/assets/arena-sand-prep-2.jpg";
+const aberdeenExteriorDusk = aberdeenExteriorDuskAsset.url;
+const aberdeenRiderStorm = aberdeenRiderStormAsset.url;
+const aberdeenRoundPenSunset = aberdeenRoundPenSunsetAsset.url;
+const stableAisleWarm = stableAisleWarmAsset.url;
+const stableStallSymmetric = stableStallSymmetricAsset.url;
+const tackRoomJoinery = tackRoomJoineryAsset.url;
 
-// Construction process images
-import mainRidgeArenaGrading from "@/assets/main-ridge-arena-grading.jpg";
-import mainRidgeCraneLift from "@/assets/main-ridge-crane-lift.jpg";
-import mainRidgeFrameTrench from "@/assets/main-ridge-frame-trench.jpg";
-import mainRidgePostDepth from "@/assets/main-ridge-post-depth.jpg";
-import mainRidgeRebarFoundation from "@/assets/main-ridge-rebar-foundation.jpg";
-import mainRidgeTimberPosts from "@/assets/main-ridge-timber-posts.jpg";
-import mainRidgeTrenchUtilities from "@/assets/main-ridge-trench-utilities.jpg";
+const coveredArenaInteriorNight = coveredArenaInteriorNightAsset.url;
+const coveredArenaInteriorDawn = coveredArenaInteriorDawnAsset.url;
+const coveredArenaExteriorDusk = coveredArenaExteriorDuskAsset.url;
+const timberKickboard = timberKickboardAsset.url;
 
-// Primary images per service
-const serviceImages: Record<string, string> = {
-  "arena-construction": peArenaGrading,
-  "barn-construction": aberdeenBarnInterior,
-  "fencing": peFencingGate,
-  "infrastructure": peGroundworksDozer,
-  "round-pens": coveredArenaLit,
-  "renovations": peCustomRuralFireplaceGrill,
-  "full-facility": peCustomRuralFireplaceGrill,
-  "clinics-events": equitanaArena,
+const currentBuildSteelStorm = currentBuildSteelStormAsset.url;
+const currentBuildRainFrame = currentBuildRainFrameAsset.url;
+const currentBuildEquipmentStorm = currentBuildEquipmentStormAsset.url;
+const muddyBootsSteelFrame = muddyBootsSteelFrameAsset.url;
+const compArenaDozerStorm = compArenaDozerStormAsset.url;
+const compArenaDrainage = compArenaDrainageAsset.url;
+const compArenaNightWork = compArenaNightWorkAsset.url;
+const compArenaSunsetPuddles = compArenaSunsetPuddlesAsset.url;
+const compArenaTruckAccess = compArenaTruckAccessAsset.url;
+
+const mrPavilionWide = mrPavilionWideAsset.url;
+const mrPavilionBrick = mrPavilionBrickAsset.url;
+const mrBeamDetail = mrBeamDetailAsset.url;
+const mrPendantBeams = mrPendantBeamsAsset.url;
+const mrCustomTable = mrCustomTableAsset.url;
+const mrParrillaWide = mrParrillaWideAsset.url;
+const mrParrillaGrill = mrParrillaGrillAsset.url;
+
+// ── Types ───────────────────────────────────────────────────────────────
+type PlaceholderSpec = { code: string; label: string };
+type GalleryEntry = { src?: string; placeholder?: PlaceholderSpec; caption: string };
+type ProcessStep = {
+  title: string;
+  description: string;
+  image?: string;
+  placeholder?: PlaceholderSpec;
 };
 
-// Gallery images per service
-const serviceGalleryImages: Record<string, { src: string; caption: string }[]> = {
+// ── Primary image per service ───────────────────────────────────────────
+const serviceImages: Record<string, string> = {
+  "arena-construction": peArenaGrading,
+  "barn-construction": aberdeenExteriorDusk,
+  "fencing": peFencingGate,
+  "infrastructure": peGroundworksDozer,
+  "round-pens": aberdeenRoundPenSunset,
+  "renovations": peCustomRuralFireplaceGrill,
+  "full-facility": peCustomRuralPavilion,
+  "clinics-events": mrPavilionWide,
+};
+
+// ── Gallery (approved cinematic only; placeholders for empty slots) ─────
+const serviceGalleryImages: Record<string, GalleryEntry[]> = {
   "arena-construction": [
     { src: peArenaGrading, caption: "Laser-graded arena base" },
-    { src: equitanaArena, caption: "Competition-grade arena" },
-    { src: equitanaArena2, caption: "Professional footing installation" },
-    { src: equitanaArena3, caption: "Arena drainage system" },
-    { src: arenaSandPrep1, caption: "Base preparation" },
-    { src: arenaSandPrep2, caption: "Sand footing grading" },
+    { src: coveredArenaInteriorNight, caption: "Covered arena interior, night" },
+    { src: coveredArenaInteriorDawn, caption: "Interior construction, dawn" },
+    { src: compArenaDrainage, caption: "Subsurface drainage detail" },
+    { src: compArenaSunsetPuddles, caption: "Surface integrity after rain" },
+    { src: timberKickboard, caption: "Timber kickboard detail" },
   ],
   "barn-construction": [
-    { src: aberdeenBarnInterior, caption: "Custom barn interior" },
-    { src: aberdeenAisle, caption: "Barn aisle design" },
-    { src: aberdeenStonework, caption: "Stone detail work" },
-    { src: aberdeenExterior, caption: "Barn exterior" },
-    { src: aberdeenStallsDetail, caption: "Stall fitout detail" },
+    { src: aberdeenExteriorDusk, caption: "Aberdeen stables — dusk frontage" },
+    { src: stableAisleWarm, caption: "Stable aisle, warm light" },
+    { src: stableStallSymmetric, caption: "Stall interior, symmetric" },
+    { src: tackRoomJoinery, caption: "Tack room joinery" },
+    { src: currentBuildSteelStorm, caption: "Steel frame, storm sky" },
   ],
   "fencing": [
     { src: peFencingGate, caption: "Engineered gate and post-and-rail run" },
-    { src: aberdeenStalls, caption: "Post and rail fencing" },
-    { src: aberdeenExterior, caption: "Paddock perimeter fencing" },
+    { src: aberdeenExteriorDusk, caption: "Perimeter and frontage" },
+    {
+      placeholder: { code: "PE / FNC-03", label: "Engineered paddock fencing — cinematic detail to come" },
+      caption: "Paddock perimeter, detail",
+    },
   ],
   "infrastructure": [
     { src: peGroundworksDozer, caption: "Bulk earthworks and site shaping" },
-    { src: mainRidgeSitePrep, caption: "Site development" },
-    { src: mainRidgeBarnFrame, caption: "Structural framework" },
-    { src: mainRidgeBrickwork, caption: "Drainage infrastructure" },
+    { src: compArenaDozerStorm, caption: "Heavy plant, storm sky" },
+    { src: compArenaDrainage, caption: "Drainage cut and base course" },
+    { src: compArenaTruckAccess, caption: "Truck access and haul route" },
+    { src: muddyBootsSteelFrame, caption: "On-site, steel frame underway" },
   ],
   "round-pens": [
-    { src: coveredArenaLit, caption: "Round pen setup" },
-    { src: arenaSandPrep1, caption: "Footing preparation" },
-    { src: arenaSandPrep2, caption: "Surface grading" },
+    { src: aberdeenRoundPenSunset, caption: "Round pen, Aberdeen — sunset" },
+    {
+      placeholder: { code: "PE / RP-02", label: "Round pen slab at sunrise — approved capture pending" },
+      caption: "Slab and footing prep",
+    },
+    {
+      placeholder: { code: "PE / RP-03", label: "Round pen twilight — approved capture pending" },
+      caption: "Pen at twilight",
+    },
   ],
   "renovations": [
-    { src: peCustomRuralFireplaceHat, caption: "Fireplace detail in a custom rural build" },
+    { src: peCustomRuralFireplaceHat, caption: "Fireplace detail, custom rural build" },
     { src: peCustomRuralPavilion, caption: "Custom rural pavilion" },
-    { src: mainRidgeCiroWoodwork, caption: "Custom woodwork restoration" },
-    { src: mainRidgeCiroWoodwork2, caption: "Timber detail" },
-    { src: mainRidgeInterior, caption: "Renovated interior" },
+    { src: mrBeamDetail, caption: "Reclaimed beam detail" },
+    { src: mrPendantBeams, caption: "Pendant lighting on exposed beams" },
+    { src: mrCustomTable, caption: "Custom table, in situ" },
   ],
   "full-facility": [
-    { src: peCustomRuralFireplaceHat, caption: "Crafted fireplace and material detail" },
-    { src: peCustomRuralPavilion, caption: "Bespoke rural entertaining pavilion" },
-    { src: mainRidgeSitePrep, caption: "Full facility build" },
-    { src: mainRidgeFinishedInterior1, caption: "Completed interior" },
-    { src: mainRidgeFinishedInterior2, caption: "Interior detail" },
+    { src: peCustomRuralPavilion, caption: "Bespoke entertaining pavilion" },
+    { src: mrPavilionWide, caption: "Pavilion wide, fireplace and table" },
+    { src: mrParrillaWide, caption: "Parrilla, wide" },
+    { src: mrParrillaGrill, caption: "Parrilla grill detail" },
+    { src: aberdeenExteriorDusk, caption: "Aberdeen frontage at dusk" },
   ],
   "clinics-events": [
-    { src: equitanaArena, caption: "Competition arena" },
-    { src: equitanaArena2, caption: "Warm-up area" },
-    { src: equitanaArena3, caption: "Spectator amenities" },
-    { src: equitanaArena4, caption: "Event lighting" },
+    { src: mrPavilionWide, caption: "Pavilion gathering space" },
+    { src: mrPavilionBrick, caption: "Brick fireplace, detail" },
+    { src: coveredArenaInteriorNight, caption: "Covered arena, night session" },
+    { src: compArenaNightWork, caption: "Night work lights, competition arena" },
   ],
 };
 
-// Construction process steps
-const constructionSteps = [
-  { image: mainRidgeTrenchUtilities, title: "Site Preparation", description: "Trenching for utilities and drainage" },
-  { image: mainRidgeRebarFoundation, title: "Foundation Work", description: "Reinforced concrete foundations built to last" },
-  { image: mainRidgePostDepth, title: "Post Installation", description: "Deep-set posts for structural integrity" },
-  { image: mainRidgeFrameTrench, title: "Frame Layout", description: "Precise framing aligned to specifications" },
-  { image: mainRidgeTimberPosts, title: "Timber Framework", description: "Quality timber posts and structural elements" },
-  { image: mainRidgeBarnFrame, title: "Barn Framing", description: "Complete structural framework taking shape" },
-  { image: mainRidgeCraneLift, title: "Heavy Lifting", description: "Precision crane work for large components" },
-  { image: mainRidgeArenaGrading, title: "Arena Grading", description: "Perfectly leveled arena surfaces" },
+// ── Construction Process (approved field-notes / current-build set) ─────
+const constructionSteps: ProcessStep[] = [
+  { image: compArenaTruckAccess, title: "Site Preparation", description: "Access tracks, haul routes and site shaping" },
+  { image: compArenaDrainage, title: "Drainage & Base", description: "Subsurface drainage cut and base course" },
+  { image: muddyBootsSteelFrame, title: "On-Site Build-Up", description: "Boots on the ground as the frame rises" },
+  { image: currentBuildRainFrame, title: "Frame Symmetry", description: "Frame set true through rain and storm" },
+  { image: currentBuildSteelStorm, title: "Steel Frame", description: "Primary steel under a working sky" },
+  { image: currentBuildEquipmentStorm, title: "Plant & Equipment", description: "Heavy equipment staged on site" },
+  { image: compArenaDozerStorm, title: "Heavy Earthworks", description: "Dozer work under a storm sky" },
+  { image: coveredArenaInteriorDawn, title: "Interior Completion", description: "Covered arena interior at dawn" },
 ];
+
 
 /* ── Gallery Lightbox ──────────────────────────────────── */
 
@@ -148,7 +208,7 @@ function GalleryLightbox({
   serviceTitle,
   onClose,
 }: {
-  images: { src: string; caption: string }[];
+  images: GalleryEntry[];
   serviceTitle: string;
   onClose: () => void;
 }) {
@@ -184,11 +244,20 @@ function GalleryLightbox({
         </div>
 
         <div className="relative aspect-[16/10] rounded-lg overflow-hidden bg-primary/50">
-          <img
-            src={images[currentIndex].src}
-            alt={images[currentIndex].caption}
-            className="w-full h-full object-cover img-feature transition-opacity duration-300"
-          />
+          {images[currentIndex].src ? (
+            <img
+              src={images[currentIndex].src}
+              alt={images[currentIndex].caption}
+              className="w-full h-full object-cover img-feature transition-opacity duration-300"
+            />
+          ) : (
+            <EditorialPlaceholder
+              aspect="16/10"
+              code={images[currentIndex].placeholder?.code ?? "PE / IMG"}
+              label={images[currentIndex].placeholder?.label ?? images[currentIndex].caption}
+              className="w-full h-full"
+            />
+          )}
           <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-primary/80 to-transparent p-4">
             <p className="text-sm text-primary-foreground/90">{images[currentIndex].caption}</p>
             <p className="text-xs text-primary-foreground/50 mt-1">{currentIndex + 1} / {images.length}</p>
@@ -226,7 +295,11 @@ function GalleryLightbox({
                     : "opacity-50 hover:opacity-100"
                 }`}
               >
-                <img src={img.src} alt={img.caption} className="w-full h-full object-cover"  loading="lazy" decoding="async" />
+                {img.src ? (
+                  <img src={img.src} alt={img.caption} className="w-full h-full object-cover"  loading="lazy" decoding="async" />
+                ) : (
+                  <EditorialPlaceholder aspect="1/1" code={img.placeholder?.code ?? "PE / IMG"} label={img.caption} className="w-full h-full" />
+                )}
               </button>
             ))}
           </div>
@@ -275,12 +348,20 @@ function ConstructionProcess() {
               }`}
             >
               <div className="aspect-square rounded-lg overflow-hidden bg-muted mb-3 relative">
-                <img
-                  src={step.image}
-                  alt={step.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
-                />
+                {step.image ? (
+                  <img
+                    src={step.image}
+                    alt={step.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                ) : (
+                  <EditorialPlaceholder
+                    aspect="1/1"
+                    code={step.placeholder?.code ?? "PE / PROC"}
+                    label={step.placeholder?.label ?? step.title}
+                  />
+                )}
               </div>
               <div className="flex items-start gap-3">
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center text-xs font-semibold text-accent">
@@ -313,7 +394,7 @@ export default function ServiceDetail() {
   const tiers = servicePricingTiers[service.id] || [];
   const faqs = serviceFaqs[service.id] || [];
   const galleryImages = serviceGalleryImages[service.id] || [];
-  const heroImage = serviceImages[service.id] || equitanaArena;
+  const heroImage = serviceImages[service.id] || peArenaGrading;
 
   // Find adjacent services for navigation
   const currentIndex = services.findIndex((s) => s.id === slug);
@@ -502,12 +583,21 @@ export default function ServiceDetail() {
                   onClick={() => setShowGallery(true)}
                   className="group aspect-[4/3] rounded-lg overflow-hidden relative"
                 >
-                  <img
-                    src={img.src}
-                    alt={img.caption}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    loading="lazy"
-                  />
+                  {img.src ? (
+                    <img
+                      src={img.src}
+                      alt={img.caption}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <EditorialPlaceholder
+                      aspect="4/3"
+                      code={img.placeholder?.code ?? "PE / IMG"}
+                      label={img.placeholder?.label ?? img.caption}
+                      className="w-full h-full"
+                    />
+                  )}
                   <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-colors flex items-center justify-center">
                     <ZoomIn className="h-6 w-6 text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
@@ -665,7 +755,7 @@ export default function ServiceDetail() {
       <ParallaxCTA
         title="Ready to Start a Project?"
         description="Tell us about your project and we'll prepare a personalised quote within 1–2 business days."
-        backgroundImage={mainRidgeBarnFrame}
+        backgroundImage={currentBuildSteelStorm}
         primaryButtonText="Discuss Project"
         primaryButtonLink={`/contact?services=${service.id}`}
         showPhoneButton={true}
