@@ -420,6 +420,39 @@ export type Database = {
           },
         ]
       }
+      client_logs: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          page_path: string | null
+          payload: Json | null
+          user_agent: string | null
+          viewport_h: number | null
+          viewport_w: number | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          page_path?: string | null
+          payload?: Json | null
+          user_agent?: string | null
+          viewport_h?: number | null
+          viewport_w?: number | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          page_path?: string | null
+          payload?: Json | null
+          user_agent?: string | null
+          viewport_h?: number | null
+          viewport_w?: number | null
+        }
+        Relationships: []
+      }
       client_portal_projects: {
         Row: {
           active: boolean
