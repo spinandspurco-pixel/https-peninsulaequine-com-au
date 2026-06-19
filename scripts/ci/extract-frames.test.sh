@@ -228,6 +228,13 @@ run_case "lldb/lambda-whitespace: spaces in template args, leading space after b
 /Users/runner/work/repo/src/space.cpp${TAB}21${TAB}5${TAB}V::run::{lambda(int)#2}::operator()< int >(int) const &
 /Users/runner/work/repo/src/tab.cpp${TAB}7${TAB}3${TAB} W::go::{lambda()#1}::operator()() const"
 
+# CRLF and mixed line-break styles — the extractor must handle \r\n and bare \r
+# without letting carriage returns leak into file paths or function names.
+run_case "lldb/lambda-crlf: CRLF + mixed line endings, demangled lambda frames" "lldb-lambda-crlf.txt" \
+"/Users/runner/work/repo/src/factory.cpp${TAB}7${TAB}3${TAB}C::baz::{lambda(char*)#3}::operator()(char*) const &
+/Users/runner/work/repo/src/handler.cpp${TAB}21${TAB}5${TAB}B::bar::{lambda(int)#2}::operator()(int)
+/Users/runner/work/repo/src/lambda.cpp${TAB}42${TAB}17${TAB}A::foo::{lambda()#1}::operator()() const"
+
 echo
 printf 'extract-frames: %d passed, %d failed\n' "$PASS" "$FAIL"
 if [ "$FAIL" -gt 0 ]; then
