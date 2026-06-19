@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
-import heroAsset from "@/assets/services-new/pe-arena-grading.png.asset.json";
+// Covered Arenas hero — a covered/indoor arena image, not a grading shot
+import heroAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
 const heroImg = heroAsset.url;
 
 const capabilities = [
