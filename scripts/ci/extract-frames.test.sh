@@ -220,6 +220,14 @@ run_case "lldb/lambda-qualifiers: &, &&, const&&, double-digit #10" "lldb-lambda
 /Users/runner/work/repo/src/x.cpp${TAB}21${TAB}5${TAB}X::go::{lambda()#1}::operator()() &
 /Users/runner/work/repo/src/ns.cpp${TAB}42${TAB}17${TAB}ns::run::{lambda()#10}::operator()() const &&"
 
+# Unusual whitespace in LLDB output — leading space after backtick, spaces in
+# template angle brackets, and tab indentation. The greedy `.*` extraction must
+# preserve internal spaces and tabs without truncating the function name.
+run_case "lldb/lambda-whitespace: spaces in template args, leading space after backtick" "lldb-lambda-whitespace.txt" \
+"/Users/runner/work/repo/src/mix.cpp${TAB}42${TAB}17${TAB}U::do::{lambda(char*)#3}::operator()(char*) &&
+/Users/runner/work/repo/src/space.cpp${TAB}21${TAB}5${TAB}V::run::{lambda(int)#2}::operator()< int >(int) const &
+/Users/runner/work/repo/src/tab.cpp${TAB}7${TAB}3${TAB} W::go::{lambda()#1}::operator()() const"
+
 echo
 printf 'extract-frames: %d passed, %d failed\n' "$PASS" "$FAIL"
 if [ "$FAIL" -gt 0 ]; then
