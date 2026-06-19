@@ -291,9 +291,20 @@ export default function Services() {
                   id={chapter.slug}
                   className="space-y-[clamp(3rem,2rem+3vw,5rem)] scroll-mt-32"
                 >
+                  {/*
+                    Sentinel: zero-height marker aligned with the top of the
+                    masthead. The observer watches this — when it crosses the
+                    trigger band beneath the header, this chapter becomes active.
+                  */}
+                  <span
+                    aria-hidden="true"
+                    data-chapter-masthead={chapter.slug}
+                    className="block h-0"
+                  />
                   {/* Chapter masthead */}
                   <RevealOnScroll direction="up">
                     <div className="border-t border-accent/15 pt-10 sm:pt-14">
+
                       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-baseline">
                         <div className="lg:col-span-4 flex items-baseline gap-5">
                           <span className="font-mono text-accent/45 text-[10px] tracking-[0.4em] tabular-nums">
