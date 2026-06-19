@@ -34,6 +34,7 @@ const servicesGroups: NavGroup[] = [
     label: "Systems",
     items: [
       { name: "LumenArc Recovery Systems", href: "/lumenarc", description: "Considered recovery environments" },
+      { name: "Whole-Property Planning", href: "/equine-estates", description: "Property considered as one before structures are placed" },
     ],
   },
 ];
