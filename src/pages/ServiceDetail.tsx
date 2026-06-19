@@ -295,7 +295,11 @@ function GalleryLightbox({
                     : "opacity-50 hover:opacity-100"
                 }`}
               >
-                <img src={img.src} alt={img.caption} className="w-full h-full object-cover"  loading="lazy" decoding="async" />
+                {img.src ? (
+                  <img src={img.src} alt={img.caption} className="w-full h-full object-cover"  loading="lazy" decoding="async" />
+                ) : (
+                  <EditorialPlaceholder aspect="1/1" code={img.placeholder?.code ?? "PE / IMG"} label={img.caption} className="w-full h-full" />
+                )}
               </button>
             ))}
           </div>
