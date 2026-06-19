@@ -7,9 +7,9 @@ import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 
 // Locked cinematic image system — one correct visual per service.
 // Outdoor-arena-first positioning is removed. Lead with covered & indoor.
-import coveredArenaAsset from "@/assets/covered-arenas/approved-covered-arena-exterior-dusk.png.asset.json";
-import heroStormAsset from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
-import stableAisleAsset from "@/assets/uploads/approved-aberdeen-exterior-dusk-frontage.png.asset.json";
+import coveredArenaAsset from "@/assets/uploads/approved-covered-arena-interior-wide-gold.png.asset.json";
+import heroStormAsset from "@/assets/uploads/approved-current-build-crane-storm-lift.png.asset.json";
+import stableAisleAsset from "@/assets/uploads/approved-stable-aisle-skybridge.png.asset.json";
 import pavilionAsset from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
 import groundworksAsset from "@/assets/services-new/pe-groundworks-dozer.png.asset.json";
 import drainageAsset from "@/assets/services-new/pe-infrastructure-muddy-site.png.asset.json";

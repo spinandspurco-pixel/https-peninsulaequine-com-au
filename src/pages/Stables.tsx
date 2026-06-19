@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
-import heroAsset from "@/assets/uploads/approved-aberdeen-exterior-dusk-frontage.png.asset.json";
-import stallInteriorAsset from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
-import aisleDetailAsset from "@/assets/uploads/approved-stable-aisle-detail-warm-light.png.asset.json";
+import heroAsset from "@/assets/uploads/approved-stable-aisle-skybridge.png.asset.json";
+import stallInteriorAsset from "@/assets/uploads/approved-horse-wash-bay-solarium.png.asset.json";
+import aisleDetailAsset from "@/assets/uploads/approved-stable-aisle-skybridge.png.asset.json";
 
 const heroImg = heroAsset.url;
 
@@ -29,11 +29,11 @@ export default function Stables() {
         <section className="relative h-[82vh] min-h-[560px] overflow-hidden bg-background">
           <img
             src={heroImg}
-            alt="Stable and barn structure at dusk with a long frontage, warm entry lighting and the covered arena form rising behind"
+            alt="Stable aisle framed by black steel, skylit roof structure, warm timber stall fronts and a long central passage"
             width={1920}
             height={1080}
             className="absolute inset-0 w-full h-full object-cover img-header"
-            style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)", objectPosition: "50% 52%" }}
+            style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)", objectPosition: "50% 48%" }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/45 via-primary/15 to-primary/85" />
           <div className="absolute inset-0 grain-texture opacity-30" />
@@ -77,7 +77,7 @@ export default function Stables() {
                 <div className="relative aspect-[4/5] overflow-hidden">
                   <img
                     src={stallInteriorAsset.url}
-                    alt="Stable stall interior with black steel framing, timber lower walls and warm linear lighting"
+                    alt="Horse wash bay with warm timber stall lining, overhead care system and handler standing beside a horse"
                     loading="lazy"
                     decoding="async"
                     className="absolute inset-0 w-full h-full object-cover"
@@ -87,7 +87,7 @@ export default function Stables() {
                 <div className="relative aspect-[4/5] overflow-hidden">
                   <img
                     src={aisleDetailAsset.url}
-                    alt="Stable aisle detail with black steel posts, timber fronts and warm late light across the stall joinery"
+                    alt="Stable aisle with black steel columns, skylights and warm timber stall fronts extending through the barn"
                     loading="lazy"
                     decoding="async"
                     className="absolute inset-0 w-full h-full object-cover"

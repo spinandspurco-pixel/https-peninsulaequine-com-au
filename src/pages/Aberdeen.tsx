@@ -4,11 +4,11 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 
 import heroAsset from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.png.asset.json";
-import arenaVaulted from "@/assets/uploads/approved-covered-arena-interior-night-v2.png.asset.json";
-import stableStallAsset from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
+import arenaVaulted from "@/assets/uploads/approved-covered-arena-interior-wide-dim.png.asset.json";
+import stableStallAsset from "@/assets/uploads/approved-horse-wash-bay-solarium.png.asset.json";
 import viewingLoungeAsset from "@/assets/uploads/approved-aberdeen-viewing-lounge.png.asset.json";
-import aisleDetailAsset from "@/assets/uploads/approved-stable-aisle-detail-warm-light.png.asset.json";
-import tackRoomAsset from "@/assets/uploads/approved-tack-room-joinery.png.asset.json";
+import aisleDetailAsset from "@/assets/uploads/approved-stable-aisle-skybridge.png.asset.json";
+import tackRoomAsset from "@/assets/uploads/approved-tack-room-island-joinery-v2.png.asset.json";
 
 const FACTS: Array<{ label: string; value: string }> = [
   { label: "Category", value: "Indoor Arena / Stable Precinct" },
@@ -99,7 +99,7 @@ export default function Aberdeen() {
               <div className="relative aspect-[16/10] md:aspect-[21/9] overflow-hidden">
                 <img
                   src={arenaVaulted.url}
-                  alt="Aberdeen indoor riding environment with black steel frame, warm overhead lighting and prepared arena surface"
+                  alt="Aberdeen indoor arena with full roof span, dim controlled light and a broad prepared riding surface"
                   className="absolute inset-0 h-full w-full object-cover"
                   loading="lazy"
                   decoding="async"
@@ -137,7 +137,7 @@ export default function Aberdeen() {
                 <div className="relative aspect-[16/11] overflow-hidden">
                   <img
                     src={stableStallAsset.url}
-                    alt="Aberdeen stable stall interior with black steel framing, timber lower walls and warm overhead light"
+                    alt="Aberdeen horse wash bay with warm timber lining, overhead care system and handler standing with a horse"
                     className="absolute inset-0 h-full w-full object-cover"
                     loading="lazy"
                     decoding="async"
@@ -225,7 +225,7 @@ export default function Aberdeen() {
                 <div className="relative aspect-[16/11] overflow-hidden">
                   <img
                     src={aisleDetailAsset.url}
-                    alt="Aberdeen stable aisle detail with black steel posts, timber stall fronts and warm late light across the joinery"
+                    alt="Aberdeen stable aisle with skylit roof structure, black steel columns and warm timber stall fronts"
                     className="absolute inset-0 h-full w-full object-cover"
                     loading="lazy"
                     decoding="async"
@@ -244,7 +244,7 @@ export default function Aberdeen() {
                 <div className="relative aspect-[16/11] overflow-hidden">
                   <img
                     src={tackRoomAsset.url}
-                    alt="Aberdeen tack room with timber joinery, bridle storage, saddle organisation and integrated sink bench"
+                    alt="Aberdeen tack room with full timber joinery, wall-mounted tack hardware and an integrated central sink island"
                     className="absolute inset-0 h-full w-full object-cover"
                     loading="lazy"
                     decoding="async"

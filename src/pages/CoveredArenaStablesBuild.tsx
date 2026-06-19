@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 
-import stormSteelAsset from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
-import nightWorkAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
-import truckAccessAsset from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
+import stormSteelAsset from "@/assets/uploads/approved-current-build-crane-storm-lift.png.asset.json";
+import nightWorkAsset from "@/assets/uploads/approved-current-build-rain-frame-symmetry.png.asset.json";
+import truckAccessAsset from "@/assets/uploads/approved-covered-arena-interior-construction-sunbeam.png.asset.json";
 import wetGroundAsset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
 import drainageAsset from "@/assets/field-notes/covered-competition-arena-drainage-detail.png.asset.json";
 import muddyBootsAsset from "@/assets/field-notes/muddy-boots-steel-frame.png.asset.json";
@@ -82,8 +82,8 @@ export default function CoveredArenaStablesBuild() {
         <section className="relative min-h-[90vh] overflow-hidden flex items-end border-b border-accent/10">
           <img
             src={stormSteel}
-            alt="Covered arena steel frame rising under a stormy sky with dozer working red clay groundworks"
-            className="absolute inset-0 h-full w-full object-cover object-[58%_48%] sm:object-[55%_48%] lg:object-center"
+            alt="Current build crane lift raising arena structure panels beneath a dramatic storm sky"
+            className="absolute inset-0 h-full w-full object-cover object-[52%_48%] sm:object-[52%_48%] lg:object-center"
             style={{ filter: "brightness(0.68) contrast(1.14) saturate(0.78)" }}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background/92 via-background/55 to-background/15" />
@@ -173,7 +173,7 @@ export default function CoveredArenaStablesBuild() {
                 <div className="relative overflow-hidden aspect-[16/10] lg:aspect-[21/10]">
                   <img
                     src={nightWork}
-                    alt="Night work lighting on the covered arena build with steel frame and machinery still in motion"
+                    alt="Rain-marked interior arena frame in progress with symmetrical roof span and tracked footing lines"
                     className="absolute inset-0 h-full w-full object-cover object-center"
                     style={{ filter: "brightness(0.72) contrast(1.12) saturate(0.78)" }}
                   />
@@ -198,7 +198,7 @@ export default function CoveredArenaStablesBuild() {
                 <div className="relative overflow-hidden aspect-[16/11]">
                   <img
                     src={truckAccess}
-                    alt="Heavy truck moving along the access track with machinery positioned for the next stage of works"
+                    alt="Covered arena interior under construction with sunbeam light, roof glazing and unfinished riding surface"
                     className="absolute inset-0 h-full w-full object-cover object-center"
                     style={{ filter: "brightness(0.78) contrast(1.1) saturate(0.78)" }}
                   />
