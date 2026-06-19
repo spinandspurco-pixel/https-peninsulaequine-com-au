@@ -346,6 +346,10 @@ export function Header() {
                               .reduce((acc, g) => acc + g.items.length, 0);
                             const totalCount =
                               1 + (item.groups ?? []).reduce((acc, g) => acc + g.items.length, 0);
+                            const groupActive =
+                              item.name === "Services" &&
+                              location.pathname === "/services" &&
+                              activeChapter === group.label.toLowerCase();
                             return (
                               <div
                                 key={group.label}
@@ -353,9 +357,22 @@ export function Header() {
                               >
                                 <p
                                   id={`${dropdownId}-group-${gIdx}`}
-                                  className="font-mono text-[8.5px] uppercase tracking-[0.5em] text-foreground/32"
+                                  className={cn(
+                                    "font-mono text-[8.5px] uppercase tracking-[0.5em] transition-colors duration-500 flex items-center gap-3",
+                                    groupActive ? "text-[hsl(var(--header-active))]" : "text-foreground/32"
+                                  )}
                                 >
-                                  {group.label}
+                                  <span>{group.label}</span>
+                                  <span
+                                    aria-hidden="true"
+                                    className={cn(
+                                      "h-px transition-all duration-500",
+                                      groupActive ? "w-8 bg-[hsl(var(--header-active))]" : "w-0 bg-transparent"
+                                    )}
+                                  />
+                                  {groupActive && (
+                                    <span className="sr-only">(currently in view)</span>
+                                  )}
                                 </p>
                                 <ul
                                   role="group"
@@ -364,14 +381,16 @@ export function Header() {
                                 >
                                   {group.items.map((child, cIdx) => {
                                     const globalIdx = 1 + priorCount + cIdx;
-                                    const active = isActive(child.href);
+                                    const exact = isActive(child.href);
+                                    const inViewGroup = groupActive;
+                                    const active = exact || inViewGroup;
                                     return (
                                       <li key={child.href}>
                                         <Link
                                           to={child.href}
                                           role="menuitem"
                                           tabIndex={isOpen ? 0 : -1}
-                                          aria-current={active ? "page" : undefined}
+                                          aria-current={exact ? "page" : undefined}
                                           onKeyDown={(e) =>
                                             handleDropdownItemKey(e, item.name, globalIdx, totalCount)
                                           }
@@ -410,6 +429,7 @@ export function Header() {
                               </div>
                             );
                           })}
+
                         </div>
                       </div>
                     </div>
