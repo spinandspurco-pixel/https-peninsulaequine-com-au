@@ -40,6 +40,7 @@ export function CaseStudyGallery({ images }: Props) {
                   alt={images[0].alt}
                   className="absolute inset-0 w-full h-full object-cover img-header transition-transform duration-[1400ms] ease-[cubic-bezier(0.45,0,0.15,1)] group-hover:scale-[1.03]"
                 />
+
               </button>
             </RevealOnScroll>
           )}
@@ -58,6 +59,7 @@ export function CaseStudyGallery({ images }: Props) {
                       loading="lazy"
                       className="absolute inset-0 w-full h-full object-cover img-gallery transition-transform duration-[1400ms] ease-[cubic-bezier(0.45,0,0.15,1)] group-hover:scale-[1.04]"
                     />
+
                   </button>
                 </RevealOnScroll>
               ))}

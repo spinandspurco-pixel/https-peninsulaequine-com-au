@@ -151,6 +151,7 @@ function LumenArcChapterSection({
         aria-hidden="true"
         className="la-chapter-overlay pointer-events-none absolute inset-0 overflow-hidden opacity-0 transition-opacity duration-[1200ms] ease-[cubic-bezier(0.45,0,0.15,1)] group-hover/chapter:opacity-100 group-focus-visible/chapter:opacity-100"
       >
+
         <div
           className="absolute inset-0 opacity-[0.07] mix-blend-screen"
           style={{

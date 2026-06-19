@@ -31,6 +31,7 @@ export function CaseStudyProcess({ images }: Props) {
                   loading="lazy"
                   className="absolute inset-0 w-full h-full object-cover img-gallery transition-transform duration-[1400ms] ease-[cubic-bezier(0.45,0,0.15,1)] group-hover:scale-[1.04]"
                 />
+
                 {/* persistent vignette so caption stays legible */}
                 <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background/85 via-background/30 to-transparent" />
                 {/* persistent index */}

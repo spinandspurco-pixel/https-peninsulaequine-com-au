@@ -46,6 +46,7 @@ export function StartProjectButton({
           opacityShift,
           className
         )}
+
       >
         {displayLabel}
       </Button>
@@ -61,6 +62,7 @@ export function StartProjectButton({
         opacityShift,
         engagedGlow,
         className
+
       )}
     >
       {displayLabel} <ArrowRight className="ml-2 h-4 w-4" />
