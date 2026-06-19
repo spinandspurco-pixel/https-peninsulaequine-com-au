@@ -1,0 +1,4 @@
+(lldb) bt
+  * frame #0: 0x0000000100003abc myapp`A::fo\0o::{lambda()#1}::operator()() const at /Users/runner/work/repo/src/lam\0bda.cpp:42:17
+  * frame #1: 0x0000000100002fed myapp`B::bar::{lambda(int)#2}::operator()\0(int) at /Users/runner/work/repo/src/han\0dler.cpp:21:5
+  * frame #2: 0x0000000100001bcd myapp`C::baz::{lambda(char*)#3}::operator()(char*) const & at /Users/\0runner/work/repo/src/factory.cpp:7:3
