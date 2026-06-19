@@ -86,7 +86,7 @@ export default function Stables() {
                 </div>
                 <div className="relative aspect-[4/5] overflow-hidden">
                   <img
-                    src={aisleDetailAsset.url}
+                    src={heroImg}
                     alt="Stable aisle with black steel columns, skylights and warm timber stall fronts extending through the barn"
                     loading="lazy"
                     decoding="async"
