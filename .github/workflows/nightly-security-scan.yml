@@ -174,8 +174,22 @@ jobs:
               },
             };
 
-            const result = await reconcileIssue(client, body, NIGHTLY_ISSUE_TITLE, NIGHTLY_ISSUE_LABELS);
-            core.info(`Issue ${result.action}: #${result.issueNumber}`);
+            try {
+              const result = await reconcileIssue(client, body, NIGHTLY_ISSUE_TITLE, NIGHTLY_ISSUE_LABELS);
+              core.info(`Issue ${result.action}: #${result.issueNumber}`);
+            } catch (e) {
+              const msg = e && e.message ? e.message : String(e);
+              const isAuth = /403|forbidden|resource not accessible/i.test(msg);
+              core.setFailed(
+                (isAuth
+                  ? "GITHUB_TOKEN was rejected when creating or commenting on the tracking issue. "
+                  + "Confirm the workflow `permissions:` block includes `issues: write` AND the repo "
+                  + "setting Settings → Actions → General → Workflow permissions is set to "
+                  + "'Read and write permissions' (or explicitly allows issues:write). "
+                  : "Failed to file tracking issue. ")
+                + "Underlying error: " + msg
+              );
+            }
 
       - name: Fail job if any scan reported new findings
         if: steps.gate.outcome == 'failure' || steps.regression.outcome == 'failure'
