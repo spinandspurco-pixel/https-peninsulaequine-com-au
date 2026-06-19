@@ -128,6 +128,18 @@ while IFS= read -r LINE; do
     F_FUNC=$(echo "$LINE" | sed -E 's/^[[:space:]]*#[0-9]+[[:space:]]+[^ ]+[[:space:]]+in[[:space:]]+(.+)[[:space:]]+[^[:space:]]+\.(c|cc|cpp|cxx|h|hh|hpp|hxx|m|mm|swift):[0-9]+(:[0-9]+)?[[:space:]]*$/\1/')
   fi
 
+  # LLDB symbolicated backtrace:
+  #   "  * frame #0: 0x...abcd module`Class::method(args) at /path/file.cpp:42:17"
+  # Function is everything between the module backtick and " at "; unsymbolicated
+  # frames (no " at FILE:line" suffix) naturally don't match and are skipped.
+  if [ -z "$F_FILE" ] && echo "$LINE" | grep -qE '^[[:space:]]*\*?[[:space:]]*frame #[0-9]+:.*`.+ at [^[:space:]]+\.(c|cc|cpp|cxx|h|hh|hpp|hxx|m|mm|swift):[0-9]+(:[0-9]+)?[[:space:]]*$'; then
+    RAW=$(echo "$LINE" | grep -oE '[^[:space:]]+\.(c|cc|cpp|cxx|h|hh|hpp|hxx|m|mm|swift):[0-9]+(:[0-9]+)?' | tail -n 1)
+    F_FILE=$(echo "$RAW" | awk -F: '{print $1}')
+    F_LINE=$(echo "$RAW" | awk -F: '{print $2}')
+    F_COL=$(echo  "$RAW" | awk -F: '{print $3}')
+    F_FUNC=$(echo "$LINE" | sed -E 's/^.*`(.+) at [^[:space:]]+\.(c|cc|cpp|cxx|h|hh|hpp|hxx|m|mm|swift):[0-9]+(:[0-9]+)?[[:space:]]*$/\1/')
+  fi
+
   # Clang / GCC diagnostics: "/path/file.cpp:42:17: error: ..." (no function name).
   if [ -z "$F_FILE" ] && echo "$LINE" | grep -qE '[^[:space:]]+\.(c|cc|cpp|cxx|h|hh|hpp|hxx|m|mm|swift):[0-9]+:[0-9]+:[[:space:]]*(error|warning|note|fatal error):'; then
     RAW=$(echo "$LINE" | grep -oE '[^[:space:]]+\.(c|cc|cpp|cxx|h|hh|hpp|hxx|m|mm|swift):[0-9]+:[0-9]+' | tail -n 1)
