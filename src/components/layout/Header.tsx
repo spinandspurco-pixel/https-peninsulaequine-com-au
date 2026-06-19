@@ -2,7 +2,9 @@ import { useState, useEffect, useRef, KeyboardEvent } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useIntroState } from "@/hooks/useIntroState";
+import { useActiveServiceChapter } from "@/hooks/useActiveServiceChapter";
 import logoImage from "@/assets/logo-pe-mark.webp";
+
 
 type NavChild = { name: string; href: string; description?: string };
 type NavGroup = { label: string; items: NavChild[] };
