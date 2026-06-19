@@ -17,6 +17,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      retention_days:
+        description: "Artifact retention in days (overrides repo variable for this run)"
+        required: false
+        type: number
 
 concurrency:
   group: verify-assets-${{ github.ref }}
