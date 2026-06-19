@@ -44,7 +44,10 @@ const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
 export default function Index() {
   const heroContentRef = useRef<HTMLDivElement>(null);
   const [heroFade, setHeroFade] = useState(1);
+  const [heroImgLoaded, setHeroImgLoaded] = useState(false);
+  const [heroImgFailed, setHeroImgFailed] = useState(false);
   const { open: openIntake } = useIntake();
+
 
   const skipIntro = useMemo(() => {
     if (typeof window === "undefined") return true;
