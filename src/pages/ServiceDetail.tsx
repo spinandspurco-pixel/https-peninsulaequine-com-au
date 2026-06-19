@@ -583,12 +583,21 @@ export default function ServiceDetail() {
                   onClick={() => setShowGallery(true)}
                   className="group aspect-[4/3] rounded-lg overflow-hidden relative"
                 >
-                  <img
-                    src={img.src}
-                    alt={img.caption}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    loading="lazy"
-                  />
+                  {img.src ? (
+                    <img
+                      src={img.src}
+                      alt={img.caption}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <EditorialPlaceholder
+                      aspect="4/3"
+                      code={img.placeholder?.code ?? "PE / IMG"}
+                      label={img.placeholder?.label ?? img.caption}
+                      className="w-full h-full"
+                    />
+                  )}
                   <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-colors flex items-center justify-center">
                     <ZoomIn className="h-6 w-6 text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
