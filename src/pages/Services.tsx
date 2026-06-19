@@ -40,11 +40,13 @@ type Chapter = {
 const CHAPTERS: Chapter[] = [
   {
     code: "I",
+    slug: "build",
     title: "Build",
     intent: "Covered structures, stables and rural buildings — designed around the horse and built to outlast the lease on the land.",
     services: [
       {
         k: "01",
+        slug: "covered-arenas",
         title: "Covered Arenas",
         image: coveredArenaAsset.url,
         alt: "Covered indoor arena with warm late light across the riding surface, open side bays and a full-length steel roof span",
@@ -54,6 +56,7 @@ const CHAPTERS: Chapter[] = [
       },
       {
         k: "02",
+        slug: "stables-barn-structures",
         title: "Stables & Barn Structures",
         image: stableAisleAsset.url,
         alt: "Stable aisle with black steel columns, skylights and warm timber stall fronts extending through the barn",
@@ -63,6 +66,7 @@ const CHAPTERS: Chapter[] = [
       },
       {
         k: "03",
+        slug: "pavilions-rural-builds",
         title: "Pavilions & Rural Builds",
         image: pavilionAsset.url,
         alt: "Main Ridge pavilion at dusk — handcrafted timber table, brick fireplace and open rural outlook",
@@ -74,11 +78,13 @@ const CHAPTERS: Chapter[] = [
   },
   {
     code: "II",
+    slug: "ground",
     title: "Ground",
     intent: "Levels, drainage, surfacing and the working infrastructure under and around every structure. Nothing built well stands on the wrong ground.",
     services: [
       {
         k: "01",
+        slug: "groundworks-site-preparation",
         title: "Groundworks & Site Preparation",
         image: groundworksAsset.url,
         alt: "Engineered groundworks and grading at sunset — dozer shaping the base of a future build",
@@ -88,6 +94,7 @@ const CHAPTERS: Chapter[] = [
       },
       {
         k: "02",
+        slug: "drainage-surfacing",
         title: "Drainage & Surfacing",
         image: drainageAsset.url,
         alt: "Drainage trench, aggregate and stormwater detail at dusk",
@@ -97,6 +104,7 @@ const CHAPTERS: Chapter[] = [
       },
       {
         k: "03",
+        slug: "equine-infrastructure",
         title: "Equine Infrastructure",
         image: fencingAsset.url,
         alt: "Steel gate and fencing along an engineered laneway at dusk",
@@ -108,11 +116,13 @@ const CHAPTERS: Chapter[] = [
   },
   {
     code: "III",
+    slug: "systems",
     title: "Systems",
     intent: "Engineered systems integrated into the build — controlled environments for performance, recovery and long-term equine wellbeing.",
     services: [
       {
         k: "01",
+        slug: "lumenarc-recovery-systems",
         title: "LumenArc Recovery Systems",
         image: lumenArcAsset.url,
         alt: "LumenArc recovery canopy — considered warmth and rest environment for equine wellbeing",
@@ -123,6 +133,7 @@ const CHAPTERS: Chapter[] = [
     ],
   },
 ];
+
 
 
 export default function Services() {
