@@ -6,6 +6,7 @@ import { BlueprintContinuity } from "@/components/BlueprintContinuity";
 import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 import { setActiveServiceChapter } from "@/hooks/useActiveServiceChapter";
 import { DraftTicks, DraftPlanBackdrop } from "@/components/draft";
+import { WholePropertyInquiryForm } from "@/components/services/WholePropertyInquiryForm";
 
 
 
@@ -427,6 +428,9 @@ export default function Services() {
                 <p className="mt-8 max-w-2xl font-sans font-light text-foreground/55 leading-[1.85] text-[14px] sm:text-[15px]">
                   Covered arena, stables, laneways, drainage, machinery access and daily flow are read as one site. Decisions made on the ground in the first weeks are what the finished property feels like in year ten.
                 </p>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" duration={1000} delay={420}>
+                <WholePropertyInquiryForm />
               </RevealOnScroll>
             </div>
           </div>
