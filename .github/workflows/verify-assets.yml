@@ -41,7 +41,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 5
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         include:
           - label: "bash 3.2 (macOS system)"
