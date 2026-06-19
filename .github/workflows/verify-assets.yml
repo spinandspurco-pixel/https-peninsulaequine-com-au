@@ -86,6 +86,8 @@ jobs:
           echo "### Artifact Retention" >> "$GITHUB_STEP_SUMMARY"
           echo "Retention period: **$DAYS day(s)**" >> "$GITHUB_STEP_SUMMARY"
           echo "Source: $SOURCE" >> "$GITHUB_STEP_SUMMARY"
+          echo "Workflow run ID: ${{ github.run_id }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Artifact name: asset-scan-report" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload scan report
         if: steps.verify.outcome != 'skipped'
