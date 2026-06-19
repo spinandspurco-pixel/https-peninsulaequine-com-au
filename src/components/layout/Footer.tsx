@@ -13,7 +13,7 @@ const capabilityLinks = [
 ];
 
 const studioLinks = [
-  { name: "Selected Works", href: "/gallery" },
+  { name: "Selected Works", href: "/selected-works" },
   { name: "Field Notes", href: "/field-notes" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },

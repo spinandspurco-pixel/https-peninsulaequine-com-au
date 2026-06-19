@@ -68,6 +68,7 @@ const FieldNotes = lazy(() => import("./pages/FieldNotes"));
 const CoveredArenaStablesBuild = lazy(() => import("./pages/CoveredArenaStablesBuild"));
 const MainRidgePavilion = lazy(() => import("./pages/MainRidgePavilion"));
 const Aberdeen = lazy(() => import("./pages/Aberdeen"));
+const SelectedWorks = lazy(() => import("./pages/SelectedWorks"));
 
 const queryClient = new QueryClient();
 
@@ -95,7 +96,8 @@ function AppContent() {
             />
             <Route path="/recovery-stations" element={<Navigate to="/lumenarc" replace />} />
             <Route path="/infrastructure" element={<InfrastructurePage />} />
-            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/selected-works" element={<SelectedWorks />} />
+            <Route path="/gallery" element={<Navigate to="/selected-works" replace />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
 
