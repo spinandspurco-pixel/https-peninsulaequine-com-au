@@ -86,9 +86,22 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          curl -s -X POST -H 'Content-type: application/json' \
-            --data "{\"text\":\":x: Retention test failed on ${{ matrix.label }}. Logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
-            "$SLACK_WEBHOOK_URL"
+          PAYLOAD='{"text":":x: Retention test failed on ${{ matrix.label }}. Logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'
+          MAX_RETRIES=3
+          DELAY=2
+          for i in $(seq 1 $MAX_RETRIES); do
+            HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-type: application/json' \
+              --data "$PAYLOAD" \
+              "$SLACK_WEBHOOK_URL")
+            if [ "$HTTP_CODE" -eq 200 ]; then
+              echo "Slack notification sent successfully."
+              exit 0
+            fi
+            echo "Slack notification attempt $i/$MAX_RETRIES failed (HTTP $HTTP_CODE). Retrying in ${DELAY}s..."
+            sleep $DELAY
+            DELAY=$((DELAY * 2))
+          done
+          echo "::error::Slack notification failed after $MAX_RETRIES attempts."
 
   verify:
     name: Scan for missing .asset.json references
