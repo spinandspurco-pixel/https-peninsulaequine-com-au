@@ -47,13 +47,19 @@ jobs:
       - name: Validate workflow inputs
         if: github.event_name == 'workflow_dispatch'
         run: |
-          RD="${{ inputs.retention_days }}"
-          MR="${{ inputs.max_retained }}"
+          RD_RAW="${{ inputs.retention_days }}"
+          MR_RAW="${{ inputs.max_retained }}"
 
           validate_int() {
-            local name="$1" value="$2" min="$3" max="$4"
+            local name="$1" raw="$2" min="$3" max="$4"
+            local value
+            value=$(echo "$raw" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            if [ -z "$value" ]; then
+              echo "::error::Invalid $name: input is empty or whitespace-only. Must be an integer between $min and $max (inclusive)."
+              return 1
+            fi
             if ! [[ "$value" =~ ^[0-9]+$ ]]; then
-              echo "::error::Invalid $name: '$value'. Must be an integer between $min and $max (inclusive)."
+              echo "::error::Invalid $name: '$raw' is not a valid integer. Must be an integer between $min and $max (inclusive)."
               return 1
             fi
             if [ "$value" -lt "$min" ] || [ "$value" -gt "$max" ]; then
@@ -62,8 +68,8 @@ jobs:
             fi
           }
 
-          validate_int "retention_days" "$RD" 1 365 || exit 1
-          validate_int "max_retained" "$MR" 1 100 || exit 1
+          validate_int "retention_days" "$RD_RAW" 1 365 || exit 1
+          validate_int "max_retained" "$MR_RAW" 1 100 || exit 1
 
       - name: Checkout
         uses: actions/checkout@v4
