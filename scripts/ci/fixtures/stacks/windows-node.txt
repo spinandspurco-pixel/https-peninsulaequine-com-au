@@ -1,0 +1,4 @@
+TypeError: Cannot read properties of undefined (reading 'foo')
+    at parseConfig (C:\Users\runner\work\repo\src\config.ts:42:17)
+    at Object.<anonymous> (C:\Users\runner\work\repo\src\index.ts:10:5)
+    at C:\Users\runner\work\repo\src\bootstrap.ts:7:3
