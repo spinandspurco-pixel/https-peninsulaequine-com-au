@@ -37,6 +37,7 @@ jobs:
       contents: read
       checks: write
       pull-requests: write
+      actions: write
     steps:
       - name: Validate retention_days
         if: github.event_name == 'workflow_dispatch'
@@ -173,3 +174,65 @@ jobs:
         run: |
           cat asset-scan-report.txt
           exit 1
+
+      - name: Cleanup old asset-scan-report artifacts
+        # Runs even if verification failed so stale artifacts don't accumulate.
+        if: always() && steps.upload-report.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ARTIFACT_NAME: asset-scan-report
+          RETENTION_DAYS: ${{ steps.retention.outputs.days }}
+          KEEP_LAST: "10"
+          CURRENT_ARTIFACT_ID: ${{ steps.upload-report.outputs.artifact-id }}
+          REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          : "${RETENTION_DAYS:=30}"
+          CUTOFF_EPOCH=$(date -u -d "${RETENTION_DAYS} days ago" +%s)
+          echo "Cleaning '${ARTIFACT_NAME}' artifacts older than ${RETENTION_DAYS} day(s) (keeping newest ${KEEP_LAST})."
+
+          # Paginate all artifacts matching the name, newest first by created_at.
+          MAPPING=$(gh api --paginate \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${REPO}/actions/artifacts?name=${ARTIFACT_NAME}&per_page=100" \
+            --jq '.artifacts[] | {id: .id, created_at: .created_at, expired: .expired}' \
+            | jq -s 'sort_by(.created_at) | reverse')
+
+          TOTAL=$(echo "$MAPPING" | jq 'length')
+          echo "Found $TOTAL artifact(s) named '${ARTIFACT_NAME}'."
+
+          DELETED=0
+          SKIPPED=0
+          # shellcheck disable=SC2016
+          while IFS=$'\t' read -r ID CREATED EXPIRED INDEX; do
+            [ -z "$ID" ] && continue
+            if [ "$ID" = "$CURRENT_ARTIFACT_ID" ]; then
+              SKIPPED=$((SKIPPED + 1))
+              continue
+            fi
+            if [ "$EXPIRED" = "true" ]; then
+              continue
+            fi
+            CREATED_EPOCH=$(date -u -d "$CREATED" +%s)
+            if [ "$INDEX" -lt "$KEEP_LAST" ] && [ "$CREATED_EPOCH" -ge "$CUTOFF_EPOCH" ]; then
+              SKIPPED=$((SKIPPED + 1))
+              continue
+            fi
+            if gh api -X DELETE \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/${REPO}/actions/artifacts/${ID}" >/dev/null 2>&1; then
+              DELETED=$((DELETED + 1))
+              echo "Deleted artifact id=$ID created=$CREATED"
+            else
+              echo "::warning::Failed to delete artifact id=$ID (created=$CREATED)"
+            fi
+          done < <(echo "$MAPPING" | jq -r 'to_entries[] | [.value.id, .value.created_at, .value.expired, .key] | @tsv')
+
+          {
+            echo ""
+            echo "### Artifact Cleanup"
+            echo "- Scanned: **$TOTAL**"
+            echo "- Deleted: **$DELETED**"
+            echo "- Retained: **$SKIPPED** (current run + newest ${KEEP_LAST} within ${RETENTION_DAYS}d)"
+          } >> "$GITHUB_STEP_SUMMARY"
