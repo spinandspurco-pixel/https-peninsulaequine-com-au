@@ -1305,7 +1305,7 @@ function TrainerTestimonialsSection() {
             </a>
           </Button>
           <Button asChild variant="outline" className="border-border text-foreground hover:bg-accent/10">
-            <Link to="/testimonials">
+            <Link to="/selected-works">
               Read All Reviews
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
