@@ -236,7 +236,7 @@ export default function Services() {
                   <RevealLine width="w-10" delay={220} />
                   <RevealOnScroll direction="up" delay={260}>
                     <p className="font-sans font-light text-foreground/60 leading-[1.85] text-[14px] sm:text-[15px] max-w-xl">
-                      Before the first post is set or the first surface is prepared, the property needs a clear read. Peninsula Equine looks at the way horses, people, vehicles, water and future works will move through the site — so the arena, stables, access and infrastructure are planned as part of the same working system.
+                      A short read of the land before the first post is set — slope, access, water, arena placement, stable flow, drainage and future maintenance considered together.
                     </p>
                   </RevealOnScroll>
                   <RevealOnScroll direction="up" delay={360}>
