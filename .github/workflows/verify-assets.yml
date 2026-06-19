@@ -74,31 +74,44 @@ jobs:
         run: bunx tsx scripts/verify-assets.ts > asset-scan-report.txt 2>&1
         continue-on-error: true
 
-      - name: Determine valid retention days
+      - name: Determine retention policy
         id: retention
+        shell: bash
         run: |
+          set -euo pipefail
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             DAYS="${{ inputs.retention_days }}"
-            SOURCE="workflow_dispatch input"
+            DAYS_SOURCE="workflow_dispatch input"
+            MAX="${{ inputs.max_retained }}"
+            MAX_SOURCE="workflow_dispatch input"
           else
             DAYS="${{ vars.ASSET_SCAN_RETENTION_DAYS }}"
-            SOURCE="ASSET_SCAN_RETENTION_DAYS repository variable"
+            DAYS_SOURCE="ASSET_SCAN_RETENTION_DAYS repository variable"
+            MAX="${{ vars.ASSET_SCAN_MAX_RETAINED }}"
+            MAX_SOURCE="ASSET_SCAN_MAX_RETAINED repository variable"
           fi
           if [ -z "$DAYS" ]; then
-            DAYS=30
-            SOURCE="fallback (default)"
+            DAYS=30; DAYS_SOURCE="fallback (default)"
           elif ! [[ "$DAYS" =~ ^[0-9]+$ ]] || [ "$DAYS" -lt 1 ]; then
-            echo "::warning::ASSET_SCAN_RETENTION_DAYS is invalid ('$DAYS'). Falling back to 30 days."
-            DAYS=30
-            SOURCE="fallback (ASSET_SCAN_RETENTION_DAYS invalid)"
+            echo "::warning::retention_days invalid ('$DAYS'). Falling back to 30."
+            DAYS=30; DAYS_SOURCE="fallback (invalid value)"
+          fi
+          if [ -z "$MAX" ]; then
+            MAX=10; MAX_SOURCE="fallback (default)"
+          elif ! [[ "$MAX" =~ ^[0-9]+$ ]] || [ "$MAX" -lt 1 ]; then
+            echo "::warning::max_retained invalid ('$MAX'). Falling back to 10."
+            MAX=10; MAX_SOURCE="fallback (invalid value)"
           fi
           echo "days=$DAYS" >> "$GITHUB_OUTPUT"
-          echo "Artifact retention set to $DAYS day(s)"
-          echo "### Artifact Retention" >> "$GITHUB_STEP_SUMMARY"
-          echo "Retention period: **$DAYS day(s)**" >> "$GITHUB_STEP_SUMMARY"
-          echo "Source: $SOURCE" >> "$GITHUB_STEP_SUMMARY"
-          echo "Workflow run ID: ${{ github.run_id }}" >> "$GITHUB_STEP_SUMMARY"
-          echo "Artifact name: asset-scan-report" >> "$GITHUB_STEP_SUMMARY"
+          echo "max_retained=$MAX" >> "$GITHUB_OUTPUT"
+          echo "Artifact retention: $DAYS day(s); max retained: $MAX"
+          {
+            echo "### Artifact Retention"
+            echo "- Retention period: **$DAYS day(s)** (source: $DAYS_SOURCE)"
+            echo "- Max retained artifacts: **$MAX** (source: $MAX_SOURCE)"
+            echo "- Workflow run ID: ${{ github.run_id }}"
+            echo "- Artifact name: asset-scan-report"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload scan report
         id: upload-report
