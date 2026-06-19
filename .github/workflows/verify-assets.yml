@@ -86,7 +86,10 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          PAYLOAD='{"text":":x: Retention test failed on ${{ matrix.label }}. Logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'
+          WORKFLOW_NAME='${{ github.workflow }}'
+          JOB_NAME='Retention validator tests (${{ matrix.label }})'
+          LOGS_URL='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+          PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Logs: <%s|View run logs>"}' "$WORKFLOW_NAME" "$JOB_NAME" "$LOGS_URL")
           MAX_RETRIES=3
           DELAY=2
           MAX_DELAY=60
