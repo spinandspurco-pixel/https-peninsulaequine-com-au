@@ -42,10 +42,12 @@ export function StartProjectButton({
         variant="outline"
         onClick={open}
         className={cn(
-          "uppercase tracking-[0.1em] text-xs transition-all duration-[600ms] ease-in-out",
+          "uppercase tracking-[0.1em] text-xs transition-all ease-in-out",
           opacityShift,
           className
         )}
+        style={{ transitionDuration: "600ms" }}
+
 
       >
         {displayLabel}
