@@ -1,0 +1,9 @@
+panic: runtime error: bad config
+
+goroutine 1 [running]:
+main.parseConfig(...)
+	/home/runner/work/repo/repo/internal/config.go:42
+main.run(...)
+	/home/runner/work/repo/repo/internal/app.go:21
+main.main()
+	/home/runner/work/repo/repo/cmd/bootstrap.go:7 +0xab

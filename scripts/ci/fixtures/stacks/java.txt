@@ -1,0 +1,4 @@
+Exception in thread "main" java.lang.NullPointerException
+	at com.example.Config.parse(Config.java:42)
+	at com.example.App.main(App.kt:21)
+	at com.example.Bootstrap.start(Bootstrap.java:7)
