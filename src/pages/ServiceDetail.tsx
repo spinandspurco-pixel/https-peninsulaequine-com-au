@@ -208,7 +208,7 @@ function GalleryLightbox({
   serviceTitle,
   onClose,
 }: {
-  images: { src: string; caption: string }[];
+  images: GalleryEntry[];
   serviceTitle: string;
   onClose: () => void;
 }) {
