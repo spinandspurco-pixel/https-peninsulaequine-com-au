@@ -268,6 +268,7 @@ jobs:
           FAILED_CONTEXT='${{ steps.unit-tests.outputs.failed_context }}'
           FAILED_FILE='${{ steps.unit-tests.outputs.failed_file }}'
           FAILED_LINENO='${{ steps.unit-tests.outputs.failed_lineno }}'
+          FAILED_FUNC='${{ steps.unit-tests.outputs.failed_func }}'
           FAILED_SOURCE_URL='${{ steps.unit-tests.outputs.failed_source_url }}'
           FAILED_FRAMES=$(cat <<'FRAMESEOF'
           ${{ steps.unit-tests.outputs.failed_frames }}
@@ -277,10 +278,11 @@ jobs:
           # single line with escaped newlines so it fits in a Slack text field.
           FAILED_FRAMES=$(printf '%s' "$FAILED_FRAMES" | sed 's/^[[:space:]]*//' | awk 'NF' | paste -sd '\n' -)
           if [ -n "$FAILED_FILE" ] && [ -n "$FAILED_LINENO" ]; then
+            [ -z "$FAILED_FUNC" ] && FAILED_FUNC='<anonymous>'
             if [ -n "$FAILED_SOURCE_URL" ]; then
-              FAILED_SOURCE_FIELD=$(printf '<%s|%s:%s>' "$FAILED_SOURCE_URL" "$FAILED_FILE" "$FAILED_LINENO")
+              FAILED_SOURCE_FIELD=$(printf '%s @ <%s|%s:%s>' "$FAILED_FUNC" "$FAILED_SOURCE_URL" "$FAILED_FILE" "$FAILED_LINENO")
             else
-              FAILED_SOURCE_FIELD=$(printf '%s:%s' "$FAILED_FILE" "$FAILED_LINENO")
+              FAILED_SOURCE_FIELD=$(printf '%s @ %s:%s' "$FAILED_FUNC" "$FAILED_FILE" "$FAILED_LINENO")
             fi
           else
             FAILED_SOURCE_FIELD='(not detected)'
