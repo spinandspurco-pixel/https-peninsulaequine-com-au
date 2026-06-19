@@ -90,12 +90,20 @@ jobs:
           echo "Artifact name: asset-scan-report" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload scan report
+        id: upload-report
         if: steps.verify.outcome != 'skipped'
         uses: actions/upload-artifact@v4
         with:
           name: asset-scan-report
           path: asset-scan-report.txt
           retention-days: ${{ steps.retention.outputs.days }}
+
+      - name: Add artifact download link to summary
+        if: steps.upload-report.outcome == 'success'
+        run: |
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Artifact Download" >> "$GITHUB_STEP_SUMMARY"
+          echo "[Download asset-scan-report](${{ steps.upload-report.outputs.artifact-url }})" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Fail if verification failed
         if: steps.verify.outcome == 'failure'
