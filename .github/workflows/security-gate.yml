@@ -1,0 +1,75 @@
+name: Security gate
+
+# Fails the build if any new security finding appears in the Supabase
+# linter (or any future scanner wired into scripts/security-gate.ts) that
+# is not already present in the committed baseline at .security/baseline.json.
+#
+# Intentionally accepted findings must be added to the baseline in the same
+# PR via `bun scripts/security-gate.ts --update-baseline`, which makes
+# acceptance reviewable in code review.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  schedule:
+    # Nightly drift check — catches new findings even without PR activity.
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: security-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    name: Diff scan results vs baseline
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Cache Bun dependencies
+        id: bun-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Verify SUPABASE_ACCESS_TOKEN is configured
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          if [ -z "$SUPABASE_ACCESS_TOKEN" ]; then
+            echo "::error::SUPABASE_ACCESS_TOKEN secret is missing. Add it in Settings → Secrets → Actions."
+            echo "## Security Gate — misconfigured" >> "$GITHUB_STEP_SUMMARY"
+            echo "Missing repository secret \`SUPABASE_ACCESS_TOKEN\`." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          echo "Token present."
+
+      - name: Run security gate
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: bun scripts/security-gate.ts
+
+      - name: Upload security report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report
+          path: security-report.json
+          if-no-files-found: ignore
+          retention-days: 30
