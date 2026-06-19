@@ -14,6 +14,10 @@ concurrency:
   group: nightly-security-scan
   cancel-in-progress: false
 
+# Least-privilege token:
+#   contents: read   — checkout source
+#   issues:   write  — open or comment on the nightly tracking issue
+# Nothing else is needed; any additional scope would violate least-privilege.
 permissions:
   contents: read
   issues: write
