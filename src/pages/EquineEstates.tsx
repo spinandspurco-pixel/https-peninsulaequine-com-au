@@ -101,7 +101,7 @@ export default function EquineEstates() {
               {sections.map((p, i) => (
                 <RevealOnScroll key={p.k} direction="up" delay={i * 120}>
                   <div className="group relative bg-card h-full px-[clamp(1.75rem,1.25rem+2vw,2.75rem)] py-[clamp(3rem,2rem+4vw,5rem)]">
-                    <span className="absolute top-0 left-0 h-px w-8 bg-accent/40 transition-all duration-[1100ms] group-hover:w-20" />
+                    <span className="absolute top-0 left-0 h-px w-8 bg-accent/40 transition-all duration-1000 group-hover:w-20" />
                     <p className="font-mono uppercase text-[hsl(var(--accent-light))]/95 mb-[clamp(1.5rem,1rem+1.5vw,2rem)] text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.4em]">{p.k}</p>
                     <h2 className="font-serif text-foreground/90 leading-[1.1] tracking-[-0.02em] text-[clamp(1.45rem,1.05rem+1.3vw,1.95rem)] mb-6">{p.label}</h2>
                     <p className="font-sans font-light text-foreground/80 leading-[1.85] text-[clamp(0.8125rem,0.78rem+0.2vw,0.9375rem)] max-w-md">{p.body}</p>

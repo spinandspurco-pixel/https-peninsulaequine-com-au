@@ -5,7 +5,7 @@ import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 
 import stormSteelAsset from "@/assets/uploads/approved-current-build-crane-storm-lift.png.asset.json";
 import nightWorkAsset from "@/assets/uploads/approved-current-build-rain-frame-symmetry.png.asset.json";
-import truckAccessAsset from "@/assets/uploads/approved-covered-arena-interior-construction-sunbeam.png.asset.json";
+import truckAccessAsset from "@/assets/uploads/approved-covered-arena-service-yard-gold.png.asset.json";
 import wetGroundAsset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
 import drainageAsset from "@/assets/field-notes/covered-competition-arena-drainage-detail.png.asset.json";
 import muddyBootsAsset from "@/assets/field-notes/muddy-boots-steel-frame.png.asset.json";

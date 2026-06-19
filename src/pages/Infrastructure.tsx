@@ -58,7 +58,7 @@ export default function InfrastructurePage() {
               {items.map((it, i) => (
                 <RevealOnScroll key={it.k} direction="up" delay={(i % 3) * 100}>
                   <div className="group relative bg-background px-[clamp(1.75rem,1.25rem+2vw,2.5rem)] py-[clamp(2.5rem,1.5rem+3vw,4rem)]">
-                    <span className="absolute top-0 left-0 h-px w-6 bg-accent/40 transition-all duration-[1100ms] group-hover:w-16" />
+                    <span className="absolute top-0 left-0 h-px w-6 bg-accent/40 transition-all duration-1000 group-hover:w-16" />
                     <p className="font-mono uppercase text-foreground/25 mb-5 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.4em]">{it.k}</p>
                     <p className="font-serif text-foreground/85 leading-[1.15] tracking-[-0.015em] text-[clamp(1.15rem,1rem+0.6vw,1.45rem)] mb-4">{it.label}</p>
                     <p className="font-sans font-light text-foreground/50 leading-[1.8] text-[clamp(0.8125rem,0.78rem+0.15vw,0.875rem)]">{it.body}</p>

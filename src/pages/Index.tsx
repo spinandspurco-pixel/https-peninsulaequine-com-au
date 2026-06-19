@@ -9,9 +9,9 @@ import { useIntake } from "@/hooks/useIntake";
 
 import lumenArcCanopy from "@/assets/lumenarc/canopy.asset.json";
 import aberdeenHero from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.png.asset.json";
-import aberdeenArena from "@/assets/uploads/approved-horse-wash-bay-solarium.png.asset.json";
+import aberdeenArena from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
 import steelFrontAsset from "@/assets/uploads/approved-current-build-crane-storm-lift.png.asset.json";
-import coveredArenaExteriorAsset from "@/assets/uploads/approved-covered-arena-interior-construction-sunbeam.png.asset.json";
+import coveredArenaExteriorAsset from "@/assets/uploads/approved-covered-arena-service-yard-gold.png.asset.json";
 
 
 const steelFront = steelFrontAsset.url;
@@ -311,7 +311,7 @@ export default function Index() {
                       alt="Main Ridge pavilion — wide interior with fireplace, handcrafted timber table and warm dusk light"
                       loading="lazy"
                       decoding="async"
-                      className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025] object-[50%_62%] sm:object-[50%_55%] md:object-[50%_50%]"
+                      className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-1000 ease-out group-hover:scale-[1.025] object-[50%_62%] sm:object-[50%_55%] md:object-[50%_50%]"
                       style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.8)" }}
                     />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-transparent to-transparent" />
@@ -340,7 +340,7 @@ export default function Index() {
                         alt="Aberdeen stable and barn structure at twilight with warm entry glow"
                         loading="lazy"
                         decoding="async"
-                        className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
+                        className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-1000 ease-out group-hover:scale-[1.025]"
                         style={{ filter: "brightness(0.76) contrast(1.08) saturate(0.78)", objectPosition: "50% 44%" }}
                       />
                       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/82 via-transparent to-transparent" />
@@ -355,7 +355,7 @@ export default function Index() {
                         alt="Aberdeen horse wash bay with warm timber lining, overhead care system and handler standing with a horse"
                         loading="lazy"
                         decoding="async"
-                        className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
+                        className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-1000 ease-out group-hover:scale-[1.025]"
                         style={{ filter: "brightness(0.8) contrast(1.08) saturate(0.78)" }}
                       />
                     </div>
@@ -396,7 +396,7 @@ export default function Index() {
                       alt={fieldNotesPreviewAlt}
                       loading="lazy"
                       decoding="async"
-                      className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1800ms] ease-out group-hover:scale-[1.02] object-[62%_58%] sm:object-[58%_55%] md:object-[50%_50%]"
+                      className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-1000 ease-out group-hover:scale-[1.02] object-[62%_58%] sm:object-[58%_55%] md:object-[50%_50%]"
                       style={{ filter: "brightness(0.88) contrast(1.1) saturate(0.82)" }}
                     />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/85 via-background/30 to-transparent" />
@@ -454,7 +454,7 @@ export default function Index() {
                         alt="Current build crane lift raising arena structure panels beneath a dramatic storm sky"
                         loading="lazy"
                         decoding="async"
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1600ms] ease-out hover:scale-[1.02]"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out hover:scale-[1.02]"
                         style={{ filter: "brightness(0.74) contrast(1.12) saturate(0.78)" }}
                     />
                   </div>
@@ -466,7 +466,7 @@ export default function Index() {
                       alt="Covered arena interior under construction with sunbeam light entering the open span"
                       loading="lazy"
                       decoding="async"
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1600ms] ease-out hover:scale-[1.02]"
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out hover:scale-[1.02]"
                       style={{ filter: "brightness(0.76) contrast(1.1) saturate(0.78)" }}
                     />
                   </div>
@@ -493,7 +493,7 @@ export default function Index() {
                         alt="LumenArc recovery canopy — considered warmth and rest environment for equine wellbeing"
                         loading="lazy"
                         decoding="async"
-                        className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
+                        className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-1000 ease-out group-hover:scale-[1.025]"
                         style={{ filter: "brightness(0.82) contrast(1.1) saturate(0.82)" }}
                       />
                       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
