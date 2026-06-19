@@ -59,7 +59,7 @@ jobs:
         with:
           name: asset-scan-report
           path: asset-scan-report.txt
-          retention-days: ${{ vars.ASSET_SCAN_RETENTION_DAYS || 30 }}
+          retention-days: ${{ inputs.retention_days || vars.ASSET_SCAN_RETENTION_DAYS || 30 }}
 
       - name: Fail if verification failed
         if: steps.verify.outcome == 'failure'
