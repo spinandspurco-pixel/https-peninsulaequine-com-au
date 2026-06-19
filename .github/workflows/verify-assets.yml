@@ -118,15 +118,16 @@ jobs:
           FAILED_COMMAND='bash scripts/ci/validate-retention.test.sh'
           EXIT_CODE='${{ steps.unit-tests.outputs.exit_code }}'
           FAILED_LINE='${{ steps.unit-tests.outputs.failed_line }}'
+          FAILED_CONTEXT='${{ steps.unit-tests.outputs.failed_context }}'
           STDERR='${{ steps.unit-tests.outputs.stderr }}'
           STDERR_SAFE=""
           if [ -n "$STDERR" ]; then
             STDERR_SAFE=$(printf '%s' "$STDERR" | tr '\n\r\t' '   ' | tr -d '"\\' | cut -c1-500)
           fi
           if [ -n "$EXIT_CODE" ]; then
-            PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Step: %s\n• Command: `%s`\n• Exit code: %s\n• Failing line: %s\n• Error: %s\n• Commit: <%s|%s>\n• Job URL: %s"}' "$WORKFLOW_NAME" "$JOB_NAME" "$FAILED_STEP" "$FAILED_COMMAND" "$EXIT_CODE" "$FAILED_LINE" "$STDERR_SAFE" "$COMMIT_URL" "${COMMIT_SHA:0:7}" "$JOB_URL")
+            PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Step: %s\n• Command: `%s`\n• Exit code: %s\n• Failing line: %s\n• Context: %s\n• Error: %s\n• Commit: <%s|%s>\n• Job URL: %s"}' "$WORKFLOW_NAME" "$JOB_NAME" "$FAILED_STEP" "$FAILED_COMMAND" "$EXIT_CODE" "$FAILED_LINE" "$FAILED_CONTEXT" "$STDERR_SAFE" "$COMMIT_URL" "${COMMIT_SHA:0:7}" "$JOB_URL")
           else
-            PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Step: %s\n• Command: `%s`\n• Failing line: %s\n• Commit: <%s|%s>\n• Job URL: %s"}' "$WORKFLOW_NAME" "$JOB_NAME" "$FAILED_STEP" "$FAILED_COMMAND" "$FAILED_LINE" "$COMMIT_URL" "${COMMIT_SHA:0:7}" "$JOB_URL")
+            PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Step: %s\n• Command: `%s`\n• Failing line: %s\n• Context: %s\n• Commit: <%s|%s>\n• Job URL: %s"}' "$WORKFLOW_NAME" "$JOB_NAME" "$FAILED_STEP" "$FAILED_COMMAND" "$FAILED_LINE" "$FAILED_CONTEXT" "$COMMIT_URL" "${COMMIT_SHA:0:7}" "$JOB_URL")
           fi
           MAX_RETRIES=3
           DELAY=2
