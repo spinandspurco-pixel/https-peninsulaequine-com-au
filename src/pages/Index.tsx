@@ -9,9 +9,9 @@ import { useIntake } from "@/hooks/useIntake";
 
 import lumenArcCanopy from "@/assets/lumenarc/canopy.asset.json";
 import aberdeenHero from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.png.asset.json";
-import aberdeenArena from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
-import steelFrontAsset from "@/assets/uploads/approved-current-build-steel-frame-storm.png.asset.json";
-import coveredArenaExteriorAsset from "@/assets/uploads/approved-covered-arena-interior-construction-dawn-v2.png.asset.json";
+import aberdeenArena from "@/assets/uploads/approved-horse-wash-bay-solarium.png.asset.json";
+import steelFrontAsset from "@/assets/uploads/approved-current-build-crane-storm-lift.png.asset.json";
+import coveredArenaExteriorAsset from "@/assets/uploads/approved-covered-arena-interior-construction-sunbeam.png.asset.json";
 
 
 const steelFront = steelFrontAsset.url;
@@ -352,7 +352,7 @@ export default function Index() {
                     <div className="relative aspect-[4/5] overflow-hidden">
                       <img
                         src={aberdeenArena.url}
-                        alt="Aberdeen indoor arena with black steel frame, warm overhead lighting and prepared riding surface"
+                        alt="Aberdeen horse wash bay with warm timber lining, overhead care system and handler standing with a horse"
                         loading="lazy"
                         decoding="async"
                         className="absolute inset-0 w-full h-full object-cover image-bleed transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025]"
@@ -451,7 +451,7 @@ export default function Index() {
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <img
                       src={steelFront}
-                        alt="Rain-soaked current build frame aligned on axis with the wider barn structure beyond"
+                        alt="Current build crane lift raising arena structure panels beneath a dramatic storm sky"
                         loading="lazy"
                         decoding="async"
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1600ms] ease-out hover:scale-[1.02]"
@@ -463,7 +463,7 @@ export default function Index() {
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <img
                       src={coveredArenaExterior}
-                      alt="Covered arena interior under construction at dawn with low light entering the open span"
+                      alt="Covered arena interior under construction with sunbeam light entering the open span"
                       loading="lazy"
                       decoding="async"
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1600ms] ease-out hover:scale-[1.02]"

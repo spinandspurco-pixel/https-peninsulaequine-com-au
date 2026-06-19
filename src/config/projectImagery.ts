@@ -23,11 +23,9 @@
 
 // ---- Covered Arena & Stables Build (active project) ----
 import coveredArenaSunsetPuddles from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
-import coveredArenaNightWorkLights from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
 import coveredArenaTruckAccessTrack from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
 import coveredArenaDrainageDetail from "@/assets/field-notes/covered-competition-arena-drainage-detail.png.asset.json";
-import coveredArenaDozerStormSky from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
-import approvedCurrentBuildBlackShedStorm from "@/assets/field-notes/approved-current-build-black-shed-storm.png.asset.json";
+import approvedCurrentBuildCraneStormLift from "@/assets/uploads/approved-current-build-crane-storm-lift.png.asset.json";
 import approvedCurrentBuildEquipmentStorm from "@/assets/uploads/approved-current-build-equipment-storm.png.asset.json";
 import approvedCurrentBuildRainFrameSymmetry from "@/assets/uploads/approved-current-build-rain-frame-symmetry.png.asset.json";
 import approvedCurrentBuildSteelFrameStorm from "@/assets/uploads/approved-current-build-steel-frame-storm.png.asset.json";
@@ -54,8 +52,8 @@ import mainRidgeWide1536 from "@/assets/responsive/main-ridge-pavilion-wide-fire
 
 // ---- Aberdeen (completed) ----
 import aberdeenHeroStorm from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.png.asset.json";
-import aberdeenStableStallInterior from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
-import aberdeenTackRoomJoinery from "@/assets/uploads/approved-tack-room-joinery.png.asset.json";
+import aberdeenStableStallInterior from "@/assets/uploads/approved-horse-wash-bay-solarium.png.asset.json";
+import aberdeenTackRoomJoinery from "@/assets/uploads/approved-tack-room-island-joinery-v2.png.asset.json";
 
 
 
@@ -135,12 +133,12 @@ export const projectImagery: Record<string, ProjectImagery> = {
     surfaces: {
       // Selected Works = storm-fronted structural arrival
       selectedWorks: approvedCurrentBuildSteelFrameStorm,
-      // Field Notes hero = equipment arrival under storm light
-      fieldNotesHero: approvedCurrentBuildEquipmentStorm,
-      // Homepage Field Notes preview matches the Field Notes hero on purpose
-      fieldNotesPreview: approvedCurrentBuildEquipmentStorm,
+      // Field Notes hero = active lift under a breaking storm front
+      fieldNotesHero: approvedCurrentBuildCraneStormLift,
+      // Homepage Field Notes preview holds the same live-build read
+      fieldNotesPreview: approvedCurrentBuildCraneStormLift,
       // Build Read pair — distinct conditions, no repetition
-      fieldNotesGalleryA: coveredArenaTruckAccessTrack,
+      fieldNotesGalleryA: approvedCurrentBuildRainFrameSymmetry,
       fieldNotesGalleryB: coveredArenaDrainageDetail,
       // Real conditions divider — muddy boots + steel frame at dusk
       fieldNotesConditions: muddyBootsSteelFrame,
@@ -171,11 +169,11 @@ export const projectImagery: Record<string, ProjectImagery> = {
       selectedWorks:
         "Covered Arena & Stables Build — steel frame rising from wet ground beneath a dramatic storm front",
       fieldNotesHero:
-        "Current build convoy arriving beside the black-clad structure under a heavy storm sky",
+        "Current build crane lift raising the arena structure beneath a heavy storm sky",
       fieldNotesPreview:
-        "Current build convoy arriving beside the black-clad structure under a heavy storm sky",
+        "Current build crane lift raising the arena structure beneath a heavy storm sky",
       fieldNotesGalleryA:
-        "Wide site view of the current arena build showing steel span, machinery placement and open ground conditions",
+        "Current build interior frame read with rain-marked footing lines and a symmetrical arena structure in progress",
       fieldNotesGalleryB:
         "Drainage detail and wet red clay around the active covered arena and stables build",
       fieldNotesConditions:

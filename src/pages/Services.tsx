@@ -7,9 +7,9 @@ import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 
 // Locked cinematic image system — one correct visual per service.
 // Outdoor-arena-first positioning is removed. Lead with covered & indoor.
-import coveredArenaAsset from "@/assets/covered-arenas/approved-covered-arena-exterior-dusk.png.asset.json";
-import heroStormAsset from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
-import stableAisleAsset from "@/assets/uploads/approved-aberdeen-exterior-dusk-frontage.png.asset.json";
+import coveredArenaAsset from "@/assets/uploads/approved-covered-arena-interior-wide-gold.png.asset.json";
+import heroStormAsset from "@/assets/uploads/approved-current-build-crane-storm-lift.png.asset.json";
+import stableAisleAsset from "@/assets/uploads/approved-stable-aisle-skybridge.png.asset.json";
 import pavilionAsset from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
 import groundworksAsset from "@/assets/services-new/pe-groundworks-dozer.png.asset.json";
 import drainageAsset from "@/assets/services-new/pe-infrastructure-muddy-site.png.asset.json";
@@ -32,7 +32,7 @@ const SERVICES: Service[] = [
     k: "01",
     title: "Covered Arenas",
     image: coveredArenaAsset.url,
-    alt: "Covered arena exterior at dusk with glowing interior structure and dark storm sky",
+    alt: "Covered indoor arena with warm late light across the riding surface, open side bays and a full-length steel roof span",
     objectPosition: "50% 52%",
     body: "Covered and indoor riding environments designed around structure, surface, light, airflow and long-term daily use.",
     href: "/arenas",
@@ -41,8 +41,8 @@ const SERVICES: Service[] = [
     k: "02",
     title: "Stables & Barn Structures",
     image: stableAisleAsset.url,
-    alt: "Stable and barn structure at twilight with warm entry lighting, dark shutters and refined landscape approach",
-    objectPosition: "50% 44%",
+    alt: "Stable aisle with black steel columns, skylights and warm timber stall fronts extending through the barn",
+    objectPosition: "50% 48%",
     body: "Stable environments built around horse care, safe handling, practical movement, durable finishes and daily flow.",
     href: "/stables",
   },

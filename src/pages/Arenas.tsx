@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
-// Covered Arenas hero — approved interior arena image
-import heroAsset from "@/assets/uploads/approved-covered-arena-interior-night-v2.png.asset.json";
+// Covered Arenas hero — approved wide indoor arena image
+import heroAsset from "@/assets/uploads/approved-covered-arena-interior-wide-gold.png.asset.json";
 const heroImg = heroAsset.url;
 
 
@@ -17,7 +17,7 @@ export default function Arenas() {
     <Layout>
       <article className="bg-background text-foreground type-architectural">
         <section className="relative h-[82vh] min-h-[560px] overflow-hidden">
-          <img src={heroImg} alt="Covered indoor riding environment with black steel portal frame, warm lighting and prepared arena surface" width={1920} height={1080} className="absolute inset-0 w-full h-full object-cover img-header" />
+          <img src={heroImg} alt="Covered indoor arena with warm late light across the riding surface, open side bays and a full-length steel roof span" width={1920} height={1080} className="absolute inset-0 w-full h-full object-cover img-header" style={{ objectPosition: "50% 52%" }} />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/45 via-primary/15 to-primary/80" />
           <div className="absolute bottom-0 left-0 right-0 px-[clamp(1.5rem,0.75rem+3vw,4rem)] pb-[clamp(2.5rem,1.5rem+4vw,5rem)]">
             <div className="max-w-6xl space-y-[clamp(1.25rem,1rem+1vw,2rem)]">
