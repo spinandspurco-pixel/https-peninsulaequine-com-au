@@ -70,7 +70,18 @@ jobs:
         run: bash --version
 
       - name: Run retention-policy unit tests
-        run: bash scripts/ci/validate-retention.test.sh
+        id: unit-tests
+        run: |
+          bash scripts/ci/validate-retention.test.sh 2>test-stderr.txt || {
+            EC=$?
+            {
+              echo "exit_code=${EC}"
+              echo "stderr<<SLACKERR"
+              head -c 800 test-stderr.txt
+              echo "SLACKERR"
+            } >> "$GITHUB_OUTPUT"
+            exit $EC
+          }
 
       - name: Notify on retention test failure
         if: failure() && github.event_name == 'pull_request'
@@ -89,7 +100,18 @@ jobs:
           WORKFLOW_NAME='${{ github.workflow }}'
           JOB_NAME='Retention validator tests (${{ matrix.label }})'
           LOGS_URL='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-          PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Logs: <%s|View run logs>"}' "$WORKFLOW_NAME" "$JOB_NAME" "$LOGS_URL")
+          FAILED_STEP='Run retention-policy unit tests'
+          EXIT_CODE='${{ steps.unit-tests.outputs.exit_code }}'
+          STDERR='${{ steps.unit-tests.outputs.stderr }}'
+          STDERR_SAFE=""
+          if [ -n "$STDERR" ]; then
+            STDERR_SAFE=$(printf '%s' "$STDERR" | tr '\n\r\t' '   ' | tr -d '"\\' | cut -c1-500)
+          fi
+          if [ -n "$EXIT_CODE" ]; then
+            PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Step: %s\n• Exit code: %s\n• Error: %s\n• Logs: <%s|View run logs>"}' "$WORKFLOW_NAME" "$JOB_NAME" "$FAILED_STEP" "$EXIT_CODE" "$STDERR_SAFE" "$LOGS_URL")
+          else
+            PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Logs: <%s|View run logs>"}' "$WORKFLOW_NAME" "$JOB_NAME" "$LOGS_URL")
+          fi
           MAX_RETRIES=3
           DELAY=2
           MAX_DELAY=60
