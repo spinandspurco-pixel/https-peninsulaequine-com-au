@@ -5,7 +5,8 @@ import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { BlueprintScene } from "@/components/BlueprintScene";
 
 /* Single dominant visual — dedicated pre-construction visualisation */
-import heroVisual from "@/assets/visualise-hero.jpg";
+import heroVisualAsset from "@/assets/services-new/pe-estate-aerial-masterplan.png.asset.json";
+const heroVisual = heroVisualAsset.url;
 
 const PILLARS = [
   {

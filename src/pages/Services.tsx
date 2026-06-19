@@ -8,6 +8,7 @@ import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 // Locked cinematic image system — one correct visual per service.
 // Outdoor-arena-first positioning is removed. Lead with covered & indoor.
 import coveredArenaAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
+import heroStormAsset from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
 import stableAisleAsset from "@/assets/services-new/pe-stable-aisle-cinematic.png.asset.json";
 import pavilionAsset from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
 import groundworksAsset from "@/assets/services-new/pe-groundworks-dozer.png.asset.json";
@@ -108,7 +109,7 @@ export default function Services() {
         <section className="relative pt-40 sm:pt-52 pb-28 sm:pb-36 overflow-hidden">
           <div className="absolute inset-0">
             <img
-              src={coveredArenaAsset.url}
+              src={heroStormAsset.url}
               alt=""
               aria-hidden="true"
               className="absolute inset-0 w-full h-full object-cover"
