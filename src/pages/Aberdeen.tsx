@@ -290,7 +290,7 @@ export default function Aberdeen() {
             <RevealOnScroll direction="up" duration={1100} delay={260}>
               <div className="mt-12 flex flex-col items-center justify-center gap-8 sm:flex-row sm:gap-16">
                 <Link
-                  to="/gallery"
+                  to="/selected-works"
                   className="group inline-flex items-center gap-3 font-mono uppercase text-[10px] tracking-[0.42em] text-foreground/62 transition-colors duration-500 hover:text-foreground"
                 >
                   <span className="h-px w-8 bg-accent/45 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />

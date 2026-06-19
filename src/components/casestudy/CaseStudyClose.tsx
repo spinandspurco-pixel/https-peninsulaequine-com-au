@@ -56,7 +56,7 @@ export function CaseStudyClose({ closingLine }: Props) {
               Apply to Build
             </Link>
             <Link
-              to="/gallery"
+              to="/selected-works"
               className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/40 hover:text-foreground/80 transition-colors duration-500 text-[clamp(0.5625rem,0.52rem+0.18vw,0.6875rem)] tracking-[0.4em]"
             >
               Explore Selected Works

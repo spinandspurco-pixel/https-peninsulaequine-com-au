@@ -195,7 +195,7 @@ export default function Index() {
                   }}
                 >
                   <Link
-                    to="/gallery"
+                    to="/selected-works"
                     className="group inline-flex items-center gap-3 font-mono uppercase text-foreground hover:text-foreground transition-colors duration-500 text-[11px] sm:text-[10px] tracking-[0.42em] py-3 -my-3"
                   >
                     <span className="w-9 h-px bg-accent/70 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
@@ -311,7 +311,7 @@ export default function Index() {
                 <div className="col-span-12 md:col-span-5 md:text-right">
                   <RevealOnScroll direction="up" duration={1000} delay={360}>
                     <Link
-                      to="/gallery"
+                      to="/selected-works"
                       className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
                     >
                       <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />

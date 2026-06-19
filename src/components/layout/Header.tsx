@@ -49,7 +49,7 @@ const navigation: NavItem[] = [
     children: servicesChildren,
     groups: servicesGroups,
   },
-  { name: "Selected Works", href: "/gallery" },
+  { name: "Selected Works", href: "/selected-works" },
   { name: "Field Notes", href: "/field-notes" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },

@@ -32,7 +32,11 @@ const ROUTE_IMAGES: Record<string, { image: string; alt: string }> = {
   },
   "/gallery": {
     image: "/__l5e/assets-v1/5d473238-b765-40e8-86cf-ce8e3947fd1a/og-gallery.png",
-    alt: "Peninsula Equine social card — Gallery. Main Ridge pavilion interior at golden hour.",
+    alt: "Peninsula Equine social card — Selected Works. Main Ridge pavilion interior at golden hour.",
+  },
+  "/selected-works": {
+    image: "/__l5e/assets-v1/5d473238-b765-40e8-86cf-ce8e3947fd1a/og-gallery.png",
+    alt: "Peninsula Equine social card — Selected Works. Main Ridge pavilion interior at golden hour.",
   },
   "/about": {
     image: "/__l5e/assets-v1/1d391d4c-696d-4196-8df4-20fa4c23bc38/og-about.png",

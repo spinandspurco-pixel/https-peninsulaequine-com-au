@@ -201,7 +201,7 @@ export default function MainRidgePavilion() {
             <RevealOnScroll direction="up" duration={1100} delay={300}>
               <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16">
                 <Link
-                  to="/gallery"
+                  to="/selected-works"
                   className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/60 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
                 >
                   <span className="w-8 h-px bg-accent/40 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />

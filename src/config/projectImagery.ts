@@ -26,6 +26,7 @@ import coveredArenaSunsetPuddles from "@/assets/field-notes/covered-competition-
 import coveredArenaNightWorkLights from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
 import coveredArenaTruckAccessTrack from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
 import coveredArenaDrainageDetail from "@/assets/field-notes/covered-competition-arena-drainage-detail.png.asset.json";
+import coveredArenaDozerStormSky from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
 
 // Responsive webp variants for the hero/preview surfaces
 import coveredArenaSunset640 from "@/assets/responsive/covered-competition-arena-sunset-puddles-640.webp.asset.json";
@@ -127,8 +128,8 @@ export const projectImagery: Record<string, ProjectImagery> = {
     title: "Covered Arena & Stables Build",
     status: "in-progress",
     surfaces: {
-      // Selected Works = clean steel-frame identity
-      selectedWorks: coveredArenaNightWorkLights,
+      // Selected Works = stormy dozer steel-frame identity
+      selectedWorks: coveredArenaDozerStormSky,
       // Field Notes hero = moody puddles, the project's live signature
       fieldNotesHero: coveredArenaSunsetPuddles,
       // Homepage Field Notes preview matches the Field Notes hero on purpose
@@ -162,7 +163,7 @@ export const projectImagery: Record<string, ProjectImagery> = {
     },
     alt: {
       selectedWorks:
-        "Covered Arena & Stables Build — structural steel frame and stable infrastructure under dramatic light",
+        "Covered Arena & Stables Build — dozer and steel frame rising under a dramatic storm sky",
       fieldNotesHero:
         "Covered competition arena at sunset — steel frame and finished surface mirrored in puddles after rain",
       fieldNotesPreview:
