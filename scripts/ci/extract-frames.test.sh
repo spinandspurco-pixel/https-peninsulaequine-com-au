@@ -57,11 +57,11 @@ run_case "ruby: 'in \`method'' frames" "ruby.txt" \
 app/runner.rb${TAB}21${TAB}${TAB}run
 bin/bootstrap.rb${TAB}7${TAB}${TAB}<main>"
 
-# Java/Kotlin — deepest is Bootstrap.java:7 (printed last).
+# Java/Kotlin — deepest is Bootstrap.java:7 (printed last). TSV is file/line/col/func.
 run_case "java/kotlin: 'at pkg.Class.method(File:line)' frames" "java.txt" \
-"com.example.Bootstrap.start${TAB}Bootstrap.java${TAB}7${TAB}
-com.example.App.main${TAB}App.kt${TAB}21${TAB}
-com.example.Config.parse${TAB}Config.java${TAB}42${TAB}"
+"Bootstrap.java${TAB}7${TAB}${TAB}com.example.Bootstrap.start
+App.kt${TAB}21${TAB}${TAB}com.example.App.main
+Config.java${TAB}42${TAB}${TAB}com.example.Config.parse"
 
 # Go — function name lives on the line above the file:line; we capture file:line
 # only and leave func blank. Deepest is cmd/bootstrap.go:7 (printed last).
