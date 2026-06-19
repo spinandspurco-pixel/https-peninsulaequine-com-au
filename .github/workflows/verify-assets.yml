@@ -82,19 +82,56 @@ jobs:
             CTX_END=$((FAIL_LINE_NO + 5))
             FAILED_CONTEXT=$(sed -n "${CTX_START},${CTX_END}p" test-output.txt | tr '\n\r\t\"\\' ' | ' | sed 's/  */ /g' | cut -c1-800)
             # Extract source file:line reference from failing output.
-            # Matches common patterns:
-            #   bash:   scripts/foo.sh: line 42:
-            #   bash:   scripts/foo.sh:42:
-            #   node:   at file (scripts/foo.ts:42:10)
-            #   node:   scripts/foo.ts:42:10
-            FAILED_SOURCE=$(grep -oE '([A-Za-z0-9_./-]+\.(sh|ts|tsx|js|jsx|mjs|cjs|bash)):? ?(line )?[0-9]+(:[0-9]+)?' test-output.txt \
-              | tail -n 1 \
-              | sed -E 's/: ?line /:/' \
-              | tr -d '\n\r\t\"\\' \
-              | cut -c1-200)
+            # Walks the output bottom-up so the deepest stack frame wins, and
+            # tries multiple patterns in order of specificity:
+            #   node stack:  "    at fn (/path/file.ts:42:10)"  or  "    at /path/file.ts:42:10"
+            #   python:      '  File "scripts/foo.py", line 42, in funcname'
+            #   tsc:         "src/foo.ts(42,10): error TS1234: ..."
+            #   ruby/go:     "scripts/foo.rb:42:in `method'"  /  "file.go:42 +0xab"
+            #   bash xtrace: "scripts/foo.sh: line 42: ..."
+            #   generic:     "path/file.ext:42[:col]"
+            REPO_ROOT="${{ github.workspace }}"
+            FAILED_SOURCE=""
+            # Reverse so deepest frame (printed last) is considered first.
+            REVERSED=$(tac test-output.txt 2>/dev/null || tail -r test-output.txt 2>/dev/null || cat test-output.txt)
+            while IFS= read -r LINE; do
+              MATCH=""
+              # Node stack frames: "at ... (file:line:col)" or "at file:line:col"
+              MATCH=$(printf '%s\n' "$LINE" | grep -oE 'at [^ ]*\(?([A-Za-z0-9_./+-]+\.(ts|tsx|js|jsx|mjs|cjs)):([0-9]+):([0-9]+)\)?' | tail -n 1 | sed -E 's/.*\(?([A-Za-z0-9_./+-]+\.(ts|tsx|js|jsx|mjs|cjs)):([0-9]+):([0-9]+)\)?$/\1:\3:\4/')
+              # Python traceback: File "x.py", line 42
+              if [ -z "$MATCH" ]; then
+                MATCH=$(printf '%s\n' "$LINE" | grep -oE 'File "[^"]+\.py", line [0-9]+' | tail -n 1 | sed -E 's/File "([^"]+)", line ([0-9]+)/\1:\2/')
+              fi
+              # tsc diagnostics: file.ts(42,10): error
+              if [ -z "$MATCH" ]; then
+                MATCH=$(printf '%s\n' "$LINE" | grep -oE '([A-Za-z0-9_./+-]+\.(ts|tsx|js|jsx))\(([0-9]+),([0-9]+)\)' | tail -n 1 | sed -E 's/([A-Za-z0-9_./+-]+):?\(([0-9]+),([0-9]+)\)/\1:\2:\3/')
+              fi
+              # Ruby/Go stack frames: file.rb:42:in or file.go:42 +0x
+              if [ -z "$MATCH" ]; then
+                MATCH=$(printf '%s\n' "$LINE" | grep -oE '([A-Za-z0-9_./+-]+\.(rb|go|py|java|kt|rs|swift)):([0-9]+)' | tail -n 1)
+              fi
+              # Bash xtrace / generic "file: line N"
+              if [ -z "$MATCH" ]; then
+                MATCH=$(printf '%s\n' "$LINE" | grep -oE '([A-Za-z0-9_./+-]+\.(sh|bash|zsh)): ?line [0-9]+' | tail -n 1 | sed -E 's/: ?line /:/')
+              fi
+              # Generic "path/file.ext:line[:col]"
+              if [ -z "$MATCH" ]; then
+                MATCH=$(printf '%s\n' "$LINE" | grep -oE '([A-Za-z0-9_./+-]+\.(sh|ts|tsx|js|jsx|mjs|cjs|bash|py|rb|go)):[0-9]+(:[0-9]+)?' | tail -n 1)
+              fi
+              if [ -n "$MATCH" ]; then
+                FAILED_SOURCE="$MATCH"
+                break
+              fi
+            done <<< "$REVERSED"
+
             if [ -n "$FAILED_SOURCE" ]; then
               FAILED_FILE=$(echo "$FAILED_SOURCE" | sed -E 's/^([^:]+):.*/\1/')
               FAILED_LINENO=$(echo "$FAILED_SOURCE" | sed -E 's/^[^:]+:([0-9]+).*/\1/')
+              # Normalise absolute paths to repo-relative for stable GitHub links.
+              case "$FAILED_FILE" in
+                "$REPO_ROOT"/*) FAILED_FILE="${FAILED_FILE#$REPO_ROOT/}" ;;
+                /*) FAILED_FILE="${FAILED_FILE#/}" ;;
+              esac
               REPO_URL="${{ github.server_url }}/${{ github.repository }}"
               FAILED_SOURCE_URL="${REPO_URL}/blob/${{ github.sha }}/${FAILED_FILE}#L${FAILED_LINENO}"
             else
