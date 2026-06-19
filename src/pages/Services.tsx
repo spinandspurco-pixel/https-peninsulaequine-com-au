@@ -33,7 +33,7 @@ const SERVICES: Service[] = [
     image: coveredArenaAsset.url,
     alt: "Covered competition arena steel structure rising under night-work lights",
     objectPosition: "50% 55%",
-    body: "Covered and indoor riding environments designed around structure, surface, light, flow and long-term use.",
+    body: "Covered and indoor riding environments designed around structure, surface, light, airflow and long-term daily use.",
     href: "/arenas",
   },
   {
@@ -42,7 +42,7 @@ const SERVICES: Service[] = [
     image: stableAisleAsset.url,
     alt: "Cinematic stable aisle at dusk — timber stalls, polished steel hardware, warm bronze lighting",
     objectPosition: "50% 55%",
-    body: "Purpose-built stable environments with practical flow, durable finishes and horse-first daily usability.",
+    body: "Stable environments built around horse care, safe handling, practical movement, durable finishes and daily flow.",
     href: "/stables",
   },
   {
@@ -51,7 +51,7 @@ const SERVICES: Service[] = [
     image: pavilionAsset.url,
     alt: "Main Ridge pavilion at dusk — handcrafted timber table, brick fireplace and open rural outlook",
     objectPosition: "50% 52%",
-    body: "Custom rural structures, viewing spaces and gathering areas built with warmth, material honesty and long-term function.",
+    body: "Custom rural structures for viewing, gathering, shelter and property use — built with material warmth and long-term function.",
     href: "/selected-works/main-ridge-pavilion",
   },
   {
@@ -60,7 +60,7 @@ const SERVICES: Service[] = [
     image: groundworksAsset.url,
     alt: "Engineered groundworks and grading at sunset — dozer shaping the base of a future build",
     objectPosition: "50% 55%",
-    body: "Levels, base works, drainage preparation, red clay, machinery and the groundwork that determines the life of the build.",
+    body: "Levels, access, site cuts, base works and preparation that determine how the finished environment performs.",
     href: "/infrastructure",
   },
   {
@@ -69,7 +69,7 @@ const SERVICES: Service[] = [
     image: drainageAsset.url,
     alt: "Drainage trench, aggregate and stormwater detail at dusk",
     objectPosition: "30% 65%",
-    body: "Base layers, drainage systems and surface preparation designed for performance, longevity and all-weather function.",
+    body: "Drainage, base layers and surface preparation designed to support performance, durability and all-weather use.",
     href: "/infrastructure",
   },
   {
@@ -78,7 +78,7 @@ const SERVICES: Service[] = [
     image: fencingAsset.url,
     alt: "Steel gate and fencing along an engineered laneway at dusk",
     objectPosition: "50% 55%",
-    body: "Laneways, yards, fencing, gates, access, wash areas, retaining and support structures that keep the property working.",
+    body: "Laneways, gates, fencing, yards, access points, wash areas and service zones that keep the property working.",
     href: "/infrastructure",
   },
   {
@@ -87,7 +87,7 @@ const SERVICES: Service[] = [
     image: lumenArcAsset.url,
     alt: "LumenArc recovery canopy — considered warmth and rest environment for equine wellbeing",
     objectPosition: "50% 50%",
-    body: "A considered recovery environment designed around warmth, rest and equine wellbeing.",
+    body: "A considered equine recovery environment designed around warmth, rest, wellbeing and controlled care.",
     href: "/lumenarc",
   },
 ];
@@ -236,7 +236,7 @@ export default function Services() {
                   <RevealLine width="w-10" delay={220} />
                   <RevealOnScroll direction="up" delay={260}>
                     <p className="font-sans font-light text-foreground/60 leading-[1.85] text-[14px] sm:text-[15px] max-w-xl">
-                      A short read of the land before the first post is set — slope, access, water, arena placement, stable flow, drainage and future maintenance considered together.
+                      A supporting planning framework that considers the whole property — arena, stables, access, drainage and laneways — before individual structures are placed.
                     </p>
                   </RevealOnScroll>
                   <RevealOnScroll direction="up" delay={360}>
