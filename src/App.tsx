@@ -15,18 +15,14 @@ import Index from "./pages/Index";
 
 const Arenas = lazy(() => import("./pages/Arenas"));
 const Stables = lazy(() => import("./pages/Stables"));
-const EquineEstates = lazy(() => import("./pages/EquineEstates"));
 const LumenArc = lazy(() => import("./pages/RecoveryStation"));
 import LumenArcRouteFallback from "./components/lumenarc/LumenArcRouteFallback";
 const InfrastructurePage = lazy(() => import("./pages/Infrastructure"));
 
 const Services = lazy(() => import("./pages/Services"));
 const ServiceDetail = lazy(() => import("./pages/ServiceDetail"));
-const Boarding = lazy(() => import("./pages/Boarding"));
 const About = lazy(() => import("./pages/About"));
 
-const Testimonials = lazy(() => import("./pages/Testimonials"));
-const FAQ = lazy(() => import("./pages/FAQ"));
 const Contact = lazy(() => import("./pages/Contact"));
 const LegalPrivacy = lazy(() => import("./pages/Legal").then(m => ({ default: m.Privacy })));
 const LegalTerms = lazy(() => import("./pages/Legal").then(m => ({ default: m.Terms })));
@@ -36,14 +32,11 @@ const Admin = lazy(() => import("./pages/Admin"));
 const AdminServices = lazy(() => import("./pages/AdminServices"));
 const AdminTestimonials = lazy(() => import("./pages/AdminTestimonials"));
 const AdminEvents = lazy(() => import("./pages/AdminEvents"));
-const HQ = lazy(() => import("./pages/HQ"));
 const EmployeeDashboard = lazy(() => import("./pages/EmployeeDashboard"));
 const BookLesson = lazy(() => import("./pages/BookLesson"));
 const Lessons = lazy(() => import("./pages/Lessons"));
 const Events = lazy(() => import("./pages/Events"));
-const Process = lazy(() => import("./pages/Process"));
 const BookingsDashboard = lazy(() => import("./pages/BookingsDashboard"));
-const RoundPens = lazy(() => import("./pages/RoundPens"));
 const Schedule = lazy(() => import("./pages/Schedule"));
 const ThankYou = lazy(() => import("./pages/ThankYou"));
 const Pricing = lazy(() => import("./pages/Pricing"));
@@ -59,9 +52,6 @@ const CaseStudy = lazy(() => import("./pages/CaseStudy"));
 
 const SiteAssessment = lazy(() => import("./pages/SiteAssessment"));
 const ClientQuote = lazy(() => import("./pages/ClientQuote"));
-const Visualise = lazy(() => import("./pages/Visualise"));
-const TheStandard = lazy(() => import("./pages/TheStandard"));
-const WhyWeExist = lazy(() => import("./pages/WhyWeExist"));
 const ClientPortal = lazy(() => import("./pages/ClientPortal"));
 const ClientPortalLogin = lazy(() => import("./pages/ClientPortalLogin"));
 const FieldNotes = lazy(() => import("./pages/FieldNotes"));
@@ -85,7 +75,7 @@ function AppContent() {
 
             <Route path="/arenas" element={<Arenas />} />
             <Route path="/stables" element={<Stables />} />
-            <Route path="/equine-estates" element={<EquineEstates />} />
+            <Route path="/equine-estates" element={<Navigate to="/services#whole-property" replace />} />
             <Route
               path="/lumenarc"
               element={
@@ -103,14 +93,14 @@ function AppContent() {
 
             <Route path="/services" element={<Services />} />
             <Route path="/services/:slug" element={<ServiceDetail />} />
-            <Route path="/services/round-pens" element={<RoundPens />} />
-            <Route path="/boarding" element={<Boarding />} />
-            <Route path="/testimonials" element={<Testimonials />} />
-            <Route path="/faq" element={<FAQ />} />
+            <Route path="/services/round-pens" element={<Navigate to="/services" replace />} />
+            <Route path="/boarding" element={<Navigate to="/services" replace />} />
+            <Route path="/testimonials" element={<Navigate to="/selected-works" replace />} />
+            <Route path="/faq" element={<Navigate to="/contact" replace />} />
             <Route path="/privacy" element={<LegalPrivacy />} />
             <Route path="/terms" element={<LegalTerms />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/hq" element={<HQ />} />
+            <Route path="/hq" element={<Navigate to="/about" replace />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/services" element={<AdminServices />} />
             <Route path="/admin/testimonials" element={<AdminTestimonials />} />
@@ -119,7 +109,7 @@ function AppContent() {
             <Route path="/lessons" element={<Lessons />} />
             <Route path="/book-lesson" element={<ProtectedRoute><BookLesson /></ProtectedRoute>} />
             <Route path="/events" element={<Events />} />
-            <Route path="/process" element={<Process />} />
+            <Route path="/process" element={<Navigate to="/services" replace />} />
             <Route path="/bookings" element={<BookingsDashboard />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/thank-you" element={<ThankYou />} />
