@@ -182,6 +182,14 @@ run_case "lldb/demangled-cxx: templates, operator(), dtor, const& args preserved
 /Users/runner/work/repo/src/app.cpp${TAB}21${TAB}5${TAB}example::Parser<std::string>::operator()(std::string const&) const
 /Users/runner/work/repo/src/config.cpp${TAB}42${TAB}17${TAB}std::vector<int>::push_back(int const&)"
 
+# Demangled lambda/functor frames — the `{lambda()#N}` closure type and nested
+# `operator()` with arguments must survive the greedy `.*` extraction between
+# the module backtick and the trailing ` at file:line:col`.
+run_case "lldb/lambda: demangled {lambda()#N}::operator()(args) const" "lldb-lambda.txt" \
+"/Users/runner/work/repo/src/lambda.cpp${TAB}42${TAB}17${TAB}MyClass::execute::{lambda()#1}::operator()() const
+/Users/runner/work/repo/src/handler.cpp${TAB}21${TAB}5${TAB}Handler::invoke::{lambda(int, std::string const&)#2}::operator()(int, std::string const&)
+/Users/runner/work/repo/src/factory.cpp${TAB}7${TAB}3${TAB}Factory::build::{lambda(std::unique_ptr<Context>)#3}::operator()(std::unique_ptr<Context>) const &"
+
 
 echo
 printf 'extract-frames: %d passed, %d failed\n' "$PASS" "$FAIL"
