@@ -174,6 +174,14 @@ run_case "lldb/mixed: skips stripped frames, keeps symbolicated in deepest-first
 /Users/runner/work/repo/src/app.cpp${TAB}21${TAB}5${TAB}App::run()
 /Users/runner/work/repo/src/config.cpp${TAB}42${TAB}17${TAB}Config::parse(this=0x..., n=42)"
 
+# Demangled C++ symbols — templates (`<...>`), operator overloads (`operator()`),
+# destructors (`~Service`), const-qualified methods, and reference args
+# (`int const&`) must all pass through the LLDB extractor unmodified.
+run_case "lldb/demangled-cxx: templates, operator(), dtor, const& args preserved" "lldb-demangled-cxx.txt" \
+"/Users/runner/work/repo/src/bootstrap.cpp${TAB}7${TAB}3${TAB}example::ns::Service::~Service()
+/Users/runner/work/repo/src/app.cpp${TAB}21${TAB}5${TAB}example::Parser<std::string>::operator()(std::string const&) const
+/Users/runner/work/repo/src/config.cpp${TAB}42${TAB}17${TAB}std::vector<int>::push_back(int const&)"
+
 
 echo
 printf 'extract-frames: %d passed, %d failed\n' "$PASS" "$FAIL"
