@@ -335,12 +335,20 @@ function ConstructionProcess() {
               }`}
             >
               <div className="aspect-square rounded-lg overflow-hidden bg-muted mb-3 relative">
-                <img
-                  src={step.image}
-                  alt={step.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
-                />
+                {step.image ? (
+                  <img
+                    src={step.image}
+                    alt={step.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                ) : (
+                  <EditorialPlaceholder
+                    aspect="1/1"
+                    code={step.placeholder?.code ?? "PE / PROC"}
+                    label={step.placeholder?.label ?? step.title}
+                  />
+                )}
               </div>
               <div className="flex items-start gap-3">
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center text-xs font-semibold text-accent">
