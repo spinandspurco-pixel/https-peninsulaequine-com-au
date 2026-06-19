@@ -15,9 +15,6 @@ import steelFrontAsset from "@/assets/field-notes/covered-competition-arena-nigh
 const steelFront = steelFrontAsset.url;
 
 // Responsive webp variants for srcset (generated at 640/1024/1536w)
-import slidingStop640 from "@/assets/responsive/sliding-stop-hero-640.webp.asset.json";
-import slidingStop1024 from "@/assets/responsive/sliding-stop-hero-1024.webp.asset.json";
-import slidingStop1536 from "@/assets/responsive/sliding-stop-hero-1536.webp.asset.json";
 import ciro640 from "@/assets/responsive/ciro-ace-quiet-moment-640.webp.asset.json";
 import ciro1024 from "@/assets/responsive/ciro-ace-quiet-moment-1024.webp.asset.json";
 import ciro1536 from "@/assets/responsive/ciro-ace-quiet-moment-1536.webp.asset.json";
