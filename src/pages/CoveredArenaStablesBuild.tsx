@@ -3,16 +3,19 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 
-import heroDroneAsset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
-import steelFrontAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
-import sitewideProgressAsset from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
-import redClayRooflineAsset from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
-import steelSideAsset from "@/assets/field-notes/covered-competition-arena-drainage-detail.png.asset.json";
-const heroDrone = heroDroneAsset.url;
-const steelFront = steelFrontAsset.url;
-const sitewideProgress = sitewideProgressAsset.url;
-const redClayRoofline = redClayRooflineAsset.url;
-const steelSide = steelSideAsset.url;
+import stormSteelAsset from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
+import nightWorkAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
+import truckAccessAsset from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
+import wetGroundAsset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
+import drainageAsset from "@/assets/field-notes/covered-competition-arena-drainage-detail.png.asset.json";
+import muddyBootsAsset from "@/assets/field-notes/muddy-boots-steel-frame.png.asset.json";
+
+const stormSteel = stormSteelAsset.url;
+const nightWork = nightWorkAsset.url;
+const truckAccess = truckAccessAsset.url;
+const wetGround = wetGroundAsset.url;
+const drainage = drainageAsset.url;
+const muddyBoots = muddyBootsAsset.url;
 
 const facts = [
   { label: "Category", value: "Covered Arena / Stables" },
@@ -28,17 +31,17 @@ const timeline = [
   {
     step: "01",
     title: "Site Preparation",
-    body: "Access, levels, red clay cuts and base planning.",
+    body: "Access tracks, levels, red clay cuts and base planning — the work that decides how everything above it performs.",
   },
   {
     step: "02",
     title: "Steel Rising",
-    body: "Structural frame installation and the covered arena form taking shape.",
+    body: "Structural frame installation. Columns, portals and bracing locked into position as the covered arena form begins to take shape.",
   },
   {
     step: "03",
     title: "Roof & Shelter",
-    body: "Roof works beginning to define the scale, protection and usability of the structure.",
+    body: "Roof works defining the scale, weather protection and year-round usability of the structure.",
   },
   {
     step: "04",
@@ -47,13 +50,13 @@ const timeline = [
   },
   {
     step: "05",
-    title: "Base, Drainage & Surface",
-    body: "The unseen layers that determine performance, longevity and daily use.",
+    title: "Drainage & Base",
+    body: "The unseen layers — falls, drainage runs and compacted base — that determine performance and longevity.",
   },
   {
     step: "06",
-    title: "Final Fit-Off",
-    body: "Placeholder for future updates once the project reaches the finishing stages.",
+    title: "Final Surface & Finish",
+    body: "Surface install, fit-off and the final details that bring the environment into daily working use.",
   },
 ];
 
@@ -75,21 +78,22 @@ export default function CoveredArenaStablesBuild() {
   return (
     <Layout>
       <main className="bg-background text-foreground type-architectural">
+        {/* HERO — stormy steel + dozer */}
         <section className="relative min-h-[90vh] overflow-hidden flex items-end border-b border-accent/10">
           <img
-            src={heroDrone}
-            alt="Covered Arena & Stables Build in progress — wide drone view of steel framing, roofing works and red clay ground conditions"
-            className="absolute inset-0 h-full w-full object-cover object-[62%_48%] sm:object-[58%_48%] lg:object-center"
-            style={{ filter: "brightness(0.7) contrast(1.12) saturate(0.8)" }}
+            src={stormSteel}
+            alt="Covered arena steel frame rising under a stormy sky with dozer working red clay groundworks"
+            className="absolute inset-0 h-full w-full object-cover object-[58%_48%] sm:object-[55%_48%] lg:object-center"
+            style={{ filter: "brightness(0.68) contrast(1.14) saturate(0.78)" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/92 via-background/56 to-background/18" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/92 via-background/55 to-background/15" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/45 to-background/10" />
 
           <div className="relative z-10 section-container w-full pb-[clamp(3.5rem,3rem+5vw,7rem)] pt-28 sm:pt-36">
             <div className="max-w-3xl space-y-6 sm:space-y-8">
               <RevealOnScroll direction="up" duration={900}>
                 <p className="font-mono uppercase text-accent/60 text-[10px] tracking-[0.48em]">
-                  Current Project
+                  Current Project — In Progress
                 </p>
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1100} delay={120}>
@@ -99,21 +103,22 @@ export default function CoveredArenaStablesBuild() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1000} delay={220}>
                 <p className="font-serif italic text-foreground/72 leading-[1.55] text-[clamp(1rem,0.88rem+0.32vw,1.16rem)] max-w-2xl">
-                  Structural steel, groundwork and stable infrastructure in progress.
+                  Structural steel, groundworks and stable infrastructure in progress.
                 </p>
               </RevealOnScroll>
               <RevealLine width="w-10" delay={320} />
               <RevealOnScroll direction="up" duration={1100} delay={380}>
                 <p className="max-w-2xl font-sans font-light text-foreground/60 leading-[1.85] text-[14px] sm:text-[15px]">
-                  This active project captures the real middle of a Peninsula Equine build — steel rising,
-                  red clay underfoot, machinery moving through changing site conditions, and every layer
-                  setting the foundation for the finished arena and stable environment.
+                  This active project documents the real middle of a Peninsula Equine build — steel rising,
+                  red clay underfoot, machinery moving through changing conditions and every layer setting
+                  the foundation for the finished arena and stable environment.
                 </p>
               </RevealOnScroll>
             </div>
           </div>
         </section>
 
+        {/* PROJECT SUMMARY */}
         <section className="border-t border-accent/10 py-[clamp(4.5rem,3rem+5vw,7rem)]">
           <div className="section-container max-w-6xl mx-auto grid grid-cols-12 gap-8 lg:gap-12 items-end">
             <div className="col-span-12 lg:col-span-7 space-y-5">
@@ -130,9 +135,9 @@ export default function CoveredArenaStablesBuild() {
               <RevealLine width="w-8" delay={240} />
               <RevealOnScroll direction="up" duration={1000} delay={320}>
                 <p className="font-sans font-light text-foreground/56 leading-[1.9] text-[14px] sm:text-[15px] max-w-2xl">
-                  Covered arena structure, steel framing, roof works, base preparation, stable infrastructure,
-                  access, drainage, machinery works and site sequencing — documented as the build moves from
-                  heavy groundwork toward a fully resolved horse environment.
+                  This active project documents the real middle of a Peninsula Equine build — steel rising,
+                  red clay underfoot, machinery moving through changing conditions and every layer setting
+                  the foundation for the finished arena and stable environment.
                 </p>
               </RevealOnScroll>
             </div>
@@ -151,6 +156,7 @@ export default function CoveredArenaStablesBuild() {
           </div>
         </section>
 
+        {/* EDITORIAL GRID — 6 process images, no duplicates side by side */}
         <section className="border-t border-accent/10 py-[clamp(5rem,3rem+6vw,9rem)]">
           <div className="section-container max-w-[1480px] mx-auto">
             <RevealOnScroll direction="up" duration={900}>
@@ -162,13 +168,14 @@ export default function CoveredArenaStablesBuild() {
             </RevealOnScroll>
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+              {/* Row 1: wide night-work + tall muddy boots */}
               <RevealOnScroll direction="up" duration={1100} className="md:col-span-8">
                 <div className="relative overflow-hidden aspect-[16/10] lg:aspect-[21/10]">
                   <img
-                    src={heroDrone}
-                    alt="Large-scale drone view of the current covered arena and stables build with steel framing and roofing taking shape"
-                    className="absolute inset-0 h-full w-full object-cover object-[62%_48%]"
-                    style={{ filter: "brightness(0.74) contrast(1.1) saturate(0.8)" }}
+                    src={nightWork}
+                    alt="Night work lighting on the covered arena build with steel frame and machinery still in motion"
+                    className="absolute inset-0 h-full w-full object-cover object-center"
+                    style={{ filter: "brightness(0.72) contrast(1.12) saturate(0.78)" }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/45 to-transparent" />
                 </div>
@@ -177,22 +184,23 @@ export default function CoveredArenaStablesBuild() {
               <RevealOnScroll direction="up" duration={1100} delay={120} className="md:col-span-4">
                 <div className="relative overflow-hidden aspect-[4/5] md:h-full md:aspect-auto min-h-[320px]">
                   <img
-                    src={steelFront}
-                    alt="Structural steel detail at the front of the covered arena with dramatic cloud cover overhead"
+                    src={muddyBoots}
+                    alt="Dirty boots standing in red clay beside the steel frame of the covered arena"
                     className="absolute inset-0 h-full w-full object-cover object-center"
-                    style={{ filter: "brightness(0.78) contrast(1.12) saturate(0.78)" }}
+                    style={{ filter: "brightness(0.76) contrast(1.12) saturate(0.78)" }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/35 to-transparent" />
                 </div>
               </RevealOnScroll>
 
+              {/* Row 2: truck access + wet ground + drainage */}
               <RevealOnScroll direction="up" duration={1100} delay={180} className="md:col-span-5">
                 <div className="relative overflow-hidden aspect-[16/11]">
                   <img
-                    src={sitewideProgress}
-                    alt="Wide drone progress image showing the build footprint, open site and machinery positioning"
+                    src={truckAccess}
+                    alt="Heavy truck moving along the access track with machinery positioned for the next stage of works"
                     className="absolute inset-0 h-full w-full object-cover object-center"
-                    style={{ filter: "brightness(0.8) contrast(1.08) saturate(0.78)" }}
+                    style={{ filter: "brightness(0.78) contrast(1.1) saturate(0.78)" }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
                 </div>
@@ -201,10 +209,10 @@ export default function CoveredArenaStablesBuild() {
               <RevealOnScroll direction="up" duration={1100} delay={260} className="md:col-span-4">
                 <div className="relative overflow-hidden aspect-[16/11]">
                   <img
-                    src={redClayRoofline}
-                    alt="Red clay, wet ground and roofline progress around the current arena and stable works"
+                    src={wetGround}
+                    alt="Wet ground and puddles across the covered arena footprint at sunset, roof structure overhead"
                     className="absolute inset-0 h-full w-full object-cover object-[54%_50%]"
-                    style={{ filter: "brightness(0.78) contrast(1.1) saturate(0.8)" }}
+                    style={{ filter: "brightness(0.76) contrast(1.1) saturate(0.78)" }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
                 </div>
@@ -213,10 +221,10 @@ export default function CoveredArenaStablesBuild() {
               <RevealOnScroll direction="up" duration={1100} delay={340} className="md:col-span-3">
                 <div className="relative overflow-hidden aspect-[16/11]">
                   <img
-                    src={steelSide}
-                    alt="Side angle of stable framing and steel roof structure progressing through muddy site conditions"
+                    src={drainage}
+                    alt="Drainage detail and base preparation channel cut into the red clay site"
                     className="absolute inset-0 h-full w-full object-cover object-[52%_50%]"
-                    style={{ filter: "brightness(0.8) contrast(1.08) saturate(0.78)" }}
+                    style={{ filter: "brightness(0.78) contrast(1.1) saturate(0.78)" }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
                 </div>
@@ -225,6 +233,7 @@ export default function CoveredArenaStablesBuild() {
           </div>
         </section>
 
+        {/* BUILD TIMELINE */}
         <section className="border-t border-accent/10 py-[clamp(5rem,3rem+6vw,9rem)]">
           <div className="section-container max-w-6xl mx-auto grid grid-cols-12 gap-8 lg:gap-12">
             <div className="col-span-12 lg:col-span-4 space-y-5">
@@ -267,6 +276,7 @@ export default function CoveredArenaStablesBuild() {
           </div>
         </section>
 
+        {/* CLOSING CTA */}
         <section className="border-t border-accent/10 py-[clamp(5rem,3rem+6vw,9rem)]">
           <div className="section-container max-w-5xl mx-auto text-center space-y-6 sm:space-y-8">
             <RevealOnScroll direction="up" duration={900}>
@@ -289,11 +299,11 @@ export default function CoveredArenaStablesBuild() {
                   Back to Field Notes
                 </Link>
                 <Link
-                  to="/site-assessment"
-                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/46 hover:text-foreground/80 transition-colors duration-500 text-[10px] tracking-[0.42em]"
+                  to="/contact"
+                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/72 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
                 >
-                  Request Assessment
-                  <span className="w-8 h-px bg-foreground/20 transition-all duration-700 group-hover:w-14 group-hover:bg-foreground/55" />
+                  Start a Project
+                  <span className="w-8 h-px bg-foreground/30 transition-all duration-700 group-hover:w-14 group-hover:bg-foreground/70" />
                 </Link>
               </div>
             </RevealOnScroll>
