@@ -81,10 +81,34 @@ jobs:
             [ "$CTX_START" -lt 1 ] && CTX_START=1
             CTX_END=$((FAIL_LINE_NO + 5))
             FAILED_CONTEXT=$(sed -n "${CTX_START},${CTX_END}p" test-output.txt | tr '\n\r\t\"\\' ' | ' | sed 's/  */ /g' | cut -c1-800)
+            # Extract source file:line reference from failing output.
+            # Matches common patterns:
+            #   bash:   scripts/foo.sh: line 42:
+            #   bash:   scripts/foo.sh:42:
+            #   node:   at file (scripts/foo.ts:42:10)
+            #   node:   scripts/foo.ts:42:10
+            FAILED_SOURCE=$(grep -oE '([A-Za-z0-9_./-]+\.(sh|ts|tsx|js|jsx|mjs|cjs|bash)):? ?(line )?[0-9]+(:[0-9]+)?' test-output.txt \
+              | tail -n 1 \
+              | sed -E 's/: ?line /:/' \
+              | tr -d '\n\r\t\"\\' \
+              | cut -c1-200)
+            if [ -n "$FAILED_SOURCE" ]; then
+              FAILED_FILE=$(echo "$FAILED_SOURCE" | sed -E 's/^([^:]+):.*/\1/')
+              FAILED_LINENO=$(echo "$FAILED_SOURCE" | sed -E 's/^[^:]+:([0-9]+).*/\1/')
+              REPO_URL="${{ github.server_url }}/${{ github.repository }}"
+              FAILED_SOURCE_URL="${REPO_URL}/blob/${{ github.sha }}/${FAILED_FILE}#L${FAILED_LINENO}"
+            else
+              FAILED_FILE=""
+              FAILED_LINENO=""
+              FAILED_SOURCE_URL=""
+            fi
             {
               echo "exit_code=${EC}"
               echo "failed_line=${FAILED_LINE}"
               echo "failed_context=${FAILED_CONTEXT}"
+              echo "failed_file=${FAILED_FILE}"
+              echo "failed_lineno=${FAILED_LINENO}"
+              echo "failed_source_url=${FAILED_SOURCE_URL}"
               echo "stderr<<SLACKERR"
               head -c 800 test-output.txt
               echo "SLACKERR"
