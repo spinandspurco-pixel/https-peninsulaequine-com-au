@@ -27,7 +27,6 @@ const fieldNotesPreviewAlt = getProjectImageAlt("covered-arena-stables-build", "
 
 const srcset = (a: { url: string }, b: { url: string }, c: { url: string }) =>
   `${a.url} 640w, ${b.url} 1024w, ${c.url} 1536w`;
-const slidingStopSrcSet = srcset(slidingStop640, slidingStop1024, slidingStop1536);
 const ciroSrcSet = srcset(ciro640, ciro1024, ciro1536);
 const mainRidgeSrcSet = srcset(mainRidge640, mainRidge1024, mainRidge1536);
 
