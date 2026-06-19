@@ -6,7 +6,7 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { IntroContext } from "@/hooks/useIntroState";
 import { useIntake } from "@/hooks/useIntake";
 
-import serviceGroundworks from "@/assets/homepage-services/groundworks.png.asset.json";
+
 import lumenArcCanopy from "@/assets/lumenarc/canopy.asset.json";
 import pavilionFireplaceDetail from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
 import aberdeenHero from "@/assets/aberdeen/hero-entrance-twilight.png.asset.json";
@@ -15,9 +15,6 @@ import steelFrontAsset from "@/assets/field-notes/covered-competition-arena-nigh
 const steelFront = steelFrontAsset.url;
 
 // Responsive webp variants for srcset (generated at 640/1024/1536w)
-import slidingStop640 from "@/assets/responsive/sliding-stop-hero-640.webp.asset.json";
-import slidingStop1024 from "@/assets/responsive/sliding-stop-hero-1024.webp.asset.json";
-import slidingStop1536 from "@/assets/responsive/sliding-stop-hero-1536.webp.asset.json";
 import ciro640 from "@/assets/responsive/ciro-ace-quiet-moment-640.webp.asset.json";
 import ciro1024 from "@/assets/responsive/ciro-ace-quiet-moment-1024.webp.asset.json";
 import ciro1536 from "@/assets/responsive/ciro-ace-quiet-moment-1536.webp.asset.json";
@@ -30,7 +27,6 @@ const fieldNotesPreviewAlt = getProjectImageAlt("covered-arena-stables-build", "
 
 const srcset = (a: { url: string }, b: { url: string }, c: { url: string }) =>
   `${a.url} 640w, ${b.url} 1024w, ${c.url} 1536w`;
-const slidingStopSrcSet = srcset(slidingStop640, slidingStop1024, slidingStop1536);
 const ciroSrcSet = srcset(ciro640, ciro1024, ciro1536);
 const mainRidgeSrcSet = srcset(mainRidge640, mainRidge1024, mainRidge1536);
 
@@ -95,27 +91,7 @@ export default function Index() {
       <Layout>
         <div className="type-architectural">
           <section className="relative min-h-[100dvh] overflow-hidden flex items-end">
-            <img
-              src={slidingStop1536.url}
-              srcSet={slidingStopSrcSet}
-              sizes="100vw"
-              alt="Sliding stop horse throwing warm arena dirt through late light"
-              className="absolute inset-0 w-full h-full object-cover"
-              width={1920}
-              height={1080}
-              loading="eager"
-              decoding="async"
-              // @ts-expect-error valid HTML attribute
-              fetchpriority="high"
-              style={{
-                objectPosition: "78% 58%",
-                filter: imageReady
-                  ? "brightness(0.92) contrast(1.1) saturate(0.85)"
-                  : "brightness(0.5) contrast(1.05) saturate(0.7) blur(12px)",
-                transform: imageReady ? "scale(1)" : "scale(1.035)",
-                transition: `filter 1400ms ${EASE}, transform 1400ms ${EASE}`,
-              }}
-            />
+            <div className="absolute inset-0 bg-[hsl(222_20%_6%)]" aria-label="Homepage Hero Image placeholder" />
 
             {/* Readability scrim — anchored to text column, softer on the horse */}
             <div
@@ -547,14 +523,6 @@ export default function Index() {
           </section>
 
           <section className="relative py-[clamp(4rem,2.5rem+6vw,10rem)] bg-background overflow-hidden">
-            <img
-              src={serviceGroundworks.url}
-              alt=""
-              aria-hidden
-              loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover opacity-[0.22]"
-              style={{ filter: "brightness(0.48) contrast(1.1) saturate(0.7)", objectPosition: "42% 52%" }}
-            />
             <div className="absolute inset-0 bg-gradient-to-b from-background via-background/82 to-background" />
             <div className="relative section-container max-w-3xl mx-auto text-center space-y-[clamp(2rem,1.25rem+2.5vw,3rem)]">
               <RevealOnScroll direction="up" duration={900}>
