@@ -89,19 +89,38 @@ jobs:
           PAYLOAD='{"text":":x: Retention test failed on ${{ matrix.label }}. Logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'
           MAX_RETRIES=3
           DELAY=2
+          MAX_DELAY=60
+          RESP_HEADERS=$(mktemp)
           for i in $(seq 1 $MAX_RETRIES); do
-            HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-type: application/json' \
+            HTTP_CODE=$(curl -s -o /dev/null -D "$RESP_HEADERS" -w '%{http_code}' -X POST -H 'Content-type: application/json' \
               --data "$PAYLOAD" \
               "$SLACK_WEBHOOK_URL")
             if [ "$HTTP_CODE" -eq 200 ]; then
               echo "Slack notification sent successfully."
+              rm -f "$RESP_HEADERS"
               exit 0
             fi
-            echo "Slack notification attempt $i/$MAX_RETRIES failed (HTTP $HTTP_CODE). Retrying in ${DELAY}s..."
-            sleep $DELAY
+            # Respect Retry-After header on 429 (rate limit) or 503 responses.
+            WAIT=$DELAY
+            if [ "$HTTP_CODE" -eq 429 ] || [ "$HTTP_CODE" -eq 503 ]; then
+              RETRY_AFTER=$(grep -i '^retry-after:' "$RESP_HEADERS" | tail -n1 | sed -E 's/^[Rr]etry-[Aa]fter:[[:space:]]*([0-9]+).*/\1/' | tr -d '\r\n')
+              if [ -n "$RETRY_AFTER" ] && [ "$RETRY_AFTER" -gt 0 ] 2>/dev/null; then
+                WAIT=$RETRY_AFTER
+                if [ "$WAIT" -gt "$MAX_DELAY" ]; then WAIT=$MAX_DELAY; fi
+                echo "Slack rate-limited (HTTP $HTTP_CODE). Honouring Retry-After: ${WAIT}s (attempt $i/$MAX_RETRIES)."
+              else
+                echo "Slack returned HTTP $HTTP_CODE without parseable Retry-After. Backing off ${WAIT}s (attempt $i/$MAX_RETRIES)."
+              fi
+            else
+              echo "Slack notification attempt $i/$MAX_RETRIES failed (HTTP $HTTP_CODE). Retrying in ${WAIT}s..."
+            fi
+            sleep "$WAIT"
             DELAY=$((DELAY * 2))
+            if [ "$DELAY" -gt "$MAX_DELAY" ]; then DELAY=$MAX_DELAY; fi
           done
+          rm -f "$RESP_HEADERS"
           echo "::error::Slack notification failed after $MAX_RETRIES attempts."
+
 
   verify:
     name: Scan for missing .asset.json references
