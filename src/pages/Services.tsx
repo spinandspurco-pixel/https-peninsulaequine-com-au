@@ -284,7 +284,8 @@ export default function Services() {
 
         {/* ═══ SERVICE CHAPTERS — BUILD / GROUND / SYSTEMS ═══ */}
         <section className="relative overflow-hidden">
-          <div className="py-20 sm:py-28 lg:py-32">
+          <DraftPlanBackdrop opacity={0.35} />
+          <div className="relative py-20 sm:py-28 lg:py-32">
             <div className="section-container max-w-6xl mx-auto space-y-[clamp(5rem,4rem+5vw,9rem)]">
               {CHAPTERS.map((chapter, ci) => (
                 <div
