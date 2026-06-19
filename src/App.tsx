@@ -121,13 +121,13 @@ function AppContent() {
             <Route path="/trainer/documents" element={<TrainerDocumentPortal />} />
             <Route path="/admin/documents" element={<AdminDocuments />} />
             <Route path="/trainers/:slug" element={<TrainerProfile />} />
-            <Route path="/equus-ridge" element={<Navigate to="/equine-estates" replace />} />
+            <Route path="/equus-ridge" element={<Navigate to="/services#whole-property" replace />} />
             <Route path="/site-assessment" element={<SiteAssessment />} />
             <Route path="/project/:slug" element={<CaseStudy />} />
             <Route path="/quote/:token" element={<ClientQuote />} />
-            <Route path="/visualise" element={<Visualise />} />
-            <Route path="/the-standard" element={<TheStandard />} />
-            <Route path="/why" element={<WhyWeExist />} />
+            <Route path="/visualise" element={<Navigate to="/services" replace />} />
+            <Route path="/the-standard" element={<Navigate to="/about" replace />} />
+            <Route path="/why" element={<Navigate to="/about" replace />} />
             <Route path="/portal" element={<ProtectedRoute loginPath="/portal/login"><ClientPortal /></ProtectedRoute>} />
             <Route path="/portal/login" element={<ClientPortalLogin />} />
             <Route path="/field-notes" element={<FieldNotes />} />
