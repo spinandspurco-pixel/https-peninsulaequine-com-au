@@ -1,28 +1,47 @@
 /* ── Case Study Data — Editorial Estate Dossier ── */
 
-// Aberdeen (Private Client)
-import aberdeenStoneworkColor from "@/assets/aberdeen-stonework-color.jpg";
-import aberdeenStonework from "@/assets/aberdeen-stonework.jpg";
-import aberdeenBarnInterior from "@/assets/aberdeen-barn-interior.jpg";
-import aberdeenStalls from "@/assets/aberdeen-stalls.jpg";
-import aberdeenStallsDetail from "@/assets/aberdeen-stalls-detail.jpg";
-import aberdeenAisle from "@/assets/aberdeen-aisle.jpg";
-import aberdeenDeck from "@/assets/aberdeen-deck.jpg";
-import aberdeenExterior from "@/assets/aberdeen-exterior.jpg";
+// Approved cinematic asset library only.
+// Legacy bright-daytime phone photos (aberdeen-*.jpg, covered-arena-finished-lit,
+// main-ridge-finished-interior, living-hero-wide) have been removed. Slots
+// without an approved equivalent are filled by neighbouring approved frames
+// rather than off-direction imagery.
 
-// Main Ridge — case study deprecated. New page lives at /selected-works/main-ridge-pavilion (see pages/MainRidgePavilion.tsx).
-// livingHeroWide is still referenced by other entries via the canonical surface import below.
-import livingHeroWide from "@/assets/living-hero-wide.jpg";
+// Aberdeen (Private Client) — approved set
+import aberdeenExteriorDuskAsset from "@/assets/uploads/approved-aberdeen-exterior-dusk-frontage.png.asset.json";
+import aberdeenRiderStormAsset from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.png.asset.json";
+import aberdeenViewingLoungeAsset from "@/assets/uploads/approved-aberdeen-viewing-lounge.png.asset.json";
+import stableAisleWarmAsset from "@/assets/uploads/approved-stable-aisle-detail-warm-light.png.asset.json";
+import stableStallSymmetricAsset from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
+import tackRoomJoineryAsset from "@/assets/uploads/approved-tack-room-joinery.png.asset.json";
+import currentBuildSteelStormAsset from "@/assets/uploads/approved-current-build-steel-frame-storm.png.asset.json";
 
-// Equitana
-import equitanaArena1 from "@/assets/covered-arena-finished-lit.jpg";
-import equitanaArena2 from "@/assets/aberdeen-aisle.jpg";
-import equitanaArena3 from "@/assets/aberdeen-barn-interior.jpg";
-import equitanaArena4 from "@/assets/main-ridge-finished-interior-1.jpg";
-import equitanaArena5 from "@/assets/main-ridge-finished-interior-2.jpg";
+// Equitana / arena programme — approved covered arena + field-notes set
+import coveredArenaInteriorNightAsset from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
+import coveredArenaInteriorDawnAsset from "@/assets/covered-arenas/approved-covered-arena-interior-construction-dawn.png.asset.json";
+import timberKickboardAsset from "@/assets/covered-arenas/approved-timber-kickboard-detail.png.asset.json";
+import compArenaDrainageAsset from "@/assets/field-notes/covered-competition-arena-drainage-detail.png.asset.json";
+import compArenaNightWorkAsset from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
+import compArenaSunsetPuddlesAsset from "@/assets/field-notes/covered-competition-arena-sunset-puddles.png.asset.json";
+import compArenaTruckAccessAsset from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
+import muddyBootsSteelFrameAsset from "@/assets/field-notes/muddy-boots-steel-frame.png.asset.json";
 
-// Canonical surface system image (re-uses living hero)
-import groundlockInstallation from "@/assets/living-hero-wide.jpg";
+const aberdeenExteriorDusk = aberdeenExteriorDuskAsset.url;
+const aberdeenRiderStorm = aberdeenRiderStormAsset.url;
+const aberdeenViewingLounge = aberdeenViewingLoungeAsset.url;
+const stableAisleWarm = stableAisleWarmAsset.url;
+const stableStallSymmetric = stableStallSymmetricAsset.url;
+const tackRoomJoinery = tackRoomJoineryAsset.url;
+const currentBuildSteelStorm = currentBuildSteelStormAsset.url;
+
+const coveredArenaInteriorNight = coveredArenaInteriorNightAsset.url;
+const coveredArenaInteriorDawn = coveredArenaInteriorDawnAsset.url;
+const timberKickboard = timberKickboardAsset.url;
+const compArenaDrainage = compArenaDrainageAsset.url;
+const compArenaNightWork = compArenaNightWorkAsset.url;
+const compArenaSunsetPuddles = compArenaSunsetPuddlesAsset.url;
+const compArenaTruckAccess = compArenaTruckAccessAsset.url;
+const muddyBootsSteelFrame = muddyBootsSteelFrameAsset.url;
+
 
 export interface CaseStudyAct {
   image: string;
@@ -82,8 +101,8 @@ export const CASE_STUDIES: CaseStudyData[] = [
     slug: "aberdeen-farm",
     title: "Private Client",
     location: "Mornington Peninsula",
-    hero: aberdeenStoneworkColor,
-    heroAlt: "Hand-laid stonework stable facade at golden hour",
+    hero: aberdeenExteriorDusk,
+    heroAlt: "Aberdeen stables — full frontage at dusk",
     scope: {
       brief:
         "A private estate stable complex resolved as a single architectural gesture — stone, timber and air, engineered to perform.",
@@ -96,20 +115,20 @@ export const CASE_STUDIES: CaseStudyData[] = [
       ],
     },
     transformation: {
-      before: aberdeenStonework,
-      after: aberdeenStoneworkColor,
-      caption: "Raw stone, resolved façade.",
+      before: currentBuildSteelStorm,
+      after: aberdeenExteriorDusk,
+      caption: "Raw frame to resolved frontage.",
     },
     process: [
-      { src: aberdeenStonework, alt: "Stonework laid by hand, course by course" },
-      { src: aberdeenAisle, alt: "Aisle framing taking shape under natural light" },
-      { src: aberdeenStallsDetail, alt: "Stall joinery detail in raw timber" },
+      { src: currentBuildSteelStorm, alt: "Primary steel under a working storm sky" },
+      { src: stableAisleWarm, alt: "Stable aisle taking shape in warm low light" },
+      { src: tackRoomJoinery, alt: "Tack room joinery, ordered and architectural" },
     ],
     final: [
-      { src: aberdeenBarnInterior, alt: "Barn interior, natural light corridors" },
-      { src: aberdeenStalls, alt: "Custom timber stalls in use" },
-      { src: aberdeenDeck, alt: "Decking and approach at dusk" },
-      { src: aberdeenExterior, alt: "Completed stable exterior in late light" },
+      { src: stableStallSymmetric, alt: "Stall interior, symmetric joinery" },
+      { src: stableAisleWarm, alt: "Stable aisle in warm light" },
+      { src: aberdeenViewingLounge, alt: "Viewing lounge, sheltered and elevated" },
+      { src: aberdeenExteriorDusk, alt: "Completed exterior at dusk" },
     ],
     outcomes: [
       { metric: "100%", label: "Hand-laid stonework" },
@@ -117,18 +136,18 @@ export const CASE_STUDIES: CaseStudyData[] = [
       { metric: "0", label: "Snag list at handover" },
     ],
     understanding: {
-      image: aberdeenBarnInterior,
-      alt: "Barn interior with natural light corridors",
+      image: aberdeenRiderStorm,
+      alt: "Rider arriving at Aberdeen frontage under storm light",
       line: "Full stable complex with integrated stone and timber detailing.",
     },
     solution: {
-      image: aberdeenStalls,
+      image: stableStallSymmetric,
       alt: "Custom timber stalls with engineered ventilation",
       line: "From Dirt to Dynasty.",
     },
     outcome: {
-      image: aberdeenExterior,
-      alt: "Completed stable exterior in late afternoon light",
+      image: aberdeenExteriorDusk,
+      alt: "Completed stable exterior at dusk",
       line: "Private equine estate built to hold up for generations.",
     },
     closingLine: "From Dirt to Dynasty.",
@@ -138,7 +157,7 @@ export const CASE_STUDIES: CaseStudyData[] = [
     slug: "equitana",
     title: "Equitana Melbourne",
     location: "Melbourne",
-    hero: equitanaArena1,
+    hero: coveredArenaInteriorNight,
     heroAlt: "Competition arena under dramatic exhibition lighting",
     scope: {
       brief:
@@ -151,19 +170,19 @@ export const CASE_STUDIES: CaseStudyData[] = [
       ],
     },
     transformation: {
-      before: equitanaArena2,
-      after: equitanaArena4,
-      caption: "Bare floor to competition surface.",
+      before: compArenaTruckAccess,
+      after: coveredArenaInteriorNight,
+      caption: "Bare access track to competition surface.",
     },
     process: [
-      { src: equitanaArena2, alt: "Surface preparation at exhibition scale" },
-      { src: equitanaArena3, alt: "Footing laid to engineered depth" },
-      { src: groundlockInstallation, alt: "Stabilised surface system in situ" },
+      { src: compArenaTruckAccess, alt: "Surface preparation and access at exhibition scale" },
+      { src: compArenaDrainage, alt: "Subsurface drainage cut to engineered depth" },
+      { src: muddyBootsSteelFrame, alt: "Boots on the ground, structure rising" },
     ],
     final: [
-      { src: equitanaArena1, alt: "Arena under exhibition lighting" },
-      { src: equitanaArena4, alt: "Completed competition arena" },
-      { src: equitanaArena5, alt: "Surface in active competition use" },
+      { src: coveredArenaInteriorNight, alt: "Arena under exhibition lighting" },
+      { src: coveredArenaInteriorDawn, alt: "Interior at dawn, fit-out complete" },
+      { src: timberKickboard, alt: "Timber kickboard detail at the surface line" },
     ],
     outcomes: [
       { metric: "National", label: "Stage delivery" },
@@ -171,20 +190,21 @@ export const CASE_STUDIES: CaseStudyData[] = [
       { metric: "0", label: "Surface failures over event run" },
     ],
     understanding: {
-      image: equitanaArena2,
-      alt: "Arena surface preparation at competition scale",
+      image: compArenaSunsetPuddles,
+      alt: "Surface integrity after rain, sunset puddles holding line",
       line: "Competition-grade surface delivered under exhibition conditions.",
     },
     solution: {
-      image: groundlockInstallation,
-      alt: "Stabilised arena surface at competition scale",
+      image: compArenaDrainage,
+      alt: "Stabilised arena drainage and base course",
       line: "From Dirt to Dynasty.",
     },
     outcome: {
-      image: equitanaArena4,
-      alt: "Completed competition arena at Equitana Melbourne",
+      image: compArenaNightWork,
+      alt: "Night work lights over completed competition arena",
       line: "Multi-discipline arena built to perform under national scrutiny.",
     },
     closingLine: "From Dirt to Dynasty.",
   },
 ];
+
