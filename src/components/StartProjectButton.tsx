@@ -47,8 +47,6 @@ export function StartProjectButton({
           className
         )}
         style={{ transitionDuration: "600ms" }}
-
-
       >
         {displayLabel}
       </Button>
@@ -60,14 +58,15 @@ export function StartProjectButton({
       onClick={open}
       className={cn(
         "bg-accent text-accent-foreground hover:bg-accent/90 uppercase tracking-[0.14em] text-xs font-medium btn-hover-lift",
-        "transition-all duration-[600ms] ease-in-out",
+        "transition-all ease-in-out",
         opacityShift,
         engagedGlow,
         className
-
       )}
+      style={{ transitionDuration: "600ms" }}
     >
       {displayLabel} <ArrowRight className="ml-2 h-4 w-4" />
     </Button>
   );
+
 }
