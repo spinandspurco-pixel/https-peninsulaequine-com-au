@@ -157,7 +157,7 @@ while IFS= read -r LINE; do
   fi
 
   if [ -n "$F_FILE" ] && [ -n "$F_LINE" ]; then
-    F_FUNC=$(echo "$F_FUNC" | tr -d '`"\\' | cut -c1-80)
+    F_FUNC=$(echo "$F_FUNC" | tr -d '\n\r`"\\' | cut -c1-80)
     KEY="${F_FILE}:${F_LINE}"
     if ! grep -Fxq "$KEY" "$KEYS_FILE" 2>/dev/null; then
       echo "$KEY" >> "$KEYS_FILE"
