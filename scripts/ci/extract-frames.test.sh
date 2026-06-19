@@ -197,6 +197,16 @@ run_case "lldb/lambda-capturing: mutable, ref-qual, member-context closures" "ll
 /Users/runner/work/repo/src/manager.cpp${TAB}21${TAB}5${TAB}Manager::dispatch::{lambda(std::string&)#2}::operator()(std::string&)
 /Users/runner/work/repo/src/worker.cpp${TAB}42${TAB}17${TAB}Worker::process::{lambda(int)#1}::operator()(int) const"
 
+# Unusual demangled closure syntax — Clang `$_0` anonymous closures, generic
+# lambdas (`{lambda(auto:1)#1}::operator()<int>`), and nested closure types
+# (`{lambda()#1}::{lambda()#2}`). All must pass through unmodified.
+run_case "lldb/lambda-unusual: \$_0, generic auto:1, nested {lambda}::{lambda}" "lldb-lambda-unusual.txt" \
+"/Users/runner/work/repo/src/nest.cpp${TAB}7${TAB}3${TAB}Nest::go::{lambda()#1}::{lambda()#2}::operator()() const
+/Users/runner/work/repo/src/gen.cpp${TAB}21${TAB}5${TAB}Gen::do::{lambda(auto:1)#1}::operator()<int>(int) const
+/Users/runner/work/repo/src/svc.cpp${TAB}42${TAB}17${TAB}Svc::run::\$_0::operator()(int) const"
+
+
+
 
 echo
 printf 'extract-frames: %d passed, %d failed\n' "$PASS" "$FAIL"
