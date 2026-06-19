@@ -26,6 +26,7 @@ import coveredArenaSunsetPuddles from "@/assets/field-notes/covered-competition-
 import coveredArenaNightWorkLights from "@/assets/field-notes/covered-competition-arena-night-work-lights.png.asset.json";
 import coveredArenaTruckAccessTrack from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
 import coveredArenaDrainageDetail from "@/assets/field-notes/covered-competition-arena-drainage-detail.png.asset.json";
+import coveredArenaDozerStormSky from "@/assets/field-notes/covered-competition-arena-dozer-storm-sky.png.asset.json";
 
 // Responsive webp variants for the hero/preview surfaces
 import coveredArenaSunset640 from "@/assets/responsive/covered-competition-arena-sunset-puddles-640.webp.asset.json";
