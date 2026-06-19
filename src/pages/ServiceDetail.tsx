@@ -373,7 +373,7 @@ export default function ServiceDetail() {
   const tiers = servicePricingTiers[service.id] || [];
   const faqs = serviceFaqs[service.id] || [];
   const galleryImages = serviceGalleryImages[service.id] || [];
-  const heroImage = serviceImages[service.id] || equitanaArena;
+  const heroImage = serviceImages[service.id] || peArenaGrading;
 
   // Find adjacent services for navigation
   const currentIndex = services.findIndex((s) => s.id === slug);
