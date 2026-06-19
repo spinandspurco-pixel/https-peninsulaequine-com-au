@@ -9,6 +9,7 @@ import { CRMPipeline } from "@/components/crm/CRMPipeline";
 import { FinancialDashboard } from "@/components/FinancialDashboard";
 import { TodaysPlan } from "@/components/TodaysPlan";
 import { FollowUpCommandView } from "@/components/FollowUpCommandView";
+import { WholePropertyInbox } from "@/components/admin/WholePropertyInbox";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -144,6 +145,24 @@ export default function Admin() {
             </div>
           </div>
         </section>
+
+        {/* ════════════════════════════════════════════ */}
+        {/*  WHOLE-PROPERTY PLANNING INBOX              */}
+        {/* ════════════════════════════════════════════ */}
+        <section id="zone-whole-property" className="border-t border-border/10 pt-14 sm:pt-20 pb-20 sm:pb-28">
+          <div className="max-w-5xl mx-auto px-6">
+            <div className="flex items-center gap-4 mb-10">
+              <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/35">IV</span>
+              <div className="w-6 h-px bg-accent/15" />
+              <h2 className="font-serif text-xl sm:text-2xl font-light text-foreground/90">
+                Whole-Property Planning enquiries
+              </h2>
+            </div>
+            <WholePropertyInbox />
+          </div>
+        </section>
+
+
 
         {/* ════════════════════════════════════════════ */}
         {/*  ZONE 2 — PIPELINE                          */}
