@@ -68,19 +68,24 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             DAYS="${{ inputs.retention_days }}"
+            SOURCE="workflow_dispatch input"
           else
             DAYS="${{ vars.ASSET_SCAN_RETENTION_DAYS }}"
+            SOURCE="ASSET_SCAN_RETENTION_DAYS repository variable"
           fi
           if [ -z "$DAYS" ]; then
             DAYS=30
+            SOURCE="fallback (default)"
           elif ! [[ "$DAYS" =~ ^[0-9]+$ ]] || [ "$DAYS" -lt 1 ]; then
             echo "::warning::ASSET_SCAN_RETENTION_DAYS is invalid ('$DAYS'). Falling back to 30 days."
             DAYS=30
+            SOURCE="fallback (ASSET_SCAN_RETENTION_DAYS invalid)"
           fi
           echo "days=$DAYS" >> "$GITHUB_OUTPUT"
           echo "Artifact retention set to $DAYS day(s)"
           echo "### Artifact Retention" >> "$GITHUB_STEP_SUMMARY"
           echo "Retention period: **$DAYS day(s)**" >> "$GITHUB_STEP_SUMMARY"
+          echo "Source: $SOURCE" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload scan report
         if: steps.verify.outcome != 'skipped'
