@@ -91,27 +91,7 @@ export default function Index() {
       <Layout>
         <div className="type-architectural">
           <section className="relative min-h-[100dvh] overflow-hidden flex items-end">
-            <img
-              src={slidingStop1536.url}
-              srcSet={slidingStopSrcSet}
-              sizes="100vw"
-              alt="Sliding stop horse throwing warm arena dirt through late light"
-              className="absolute inset-0 w-full h-full object-cover"
-              width={1920}
-              height={1080}
-              loading="eager"
-              decoding="async"
-              // @ts-expect-error valid HTML attribute
-              fetchpriority="high"
-              style={{
-                objectPosition: "78% 58%",
-                filter: imageReady
-                  ? "brightness(0.92) contrast(1.1) saturate(0.85)"
-                  : "brightness(0.5) contrast(1.05) saturate(0.7) blur(12px)",
-                transform: imageReady ? "scale(1)" : "scale(1.035)",
-                transition: `filter 1400ms ${EASE}, transform 1400ms ${EASE}`,
-              }}
-            />
+            <div className="absolute inset-0 bg-[hsl(222_20%_6%)]" aria-label="Homepage Hero Image placeholder" />
 
             {/* Readability scrim — anchored to text column, softer on the horse */}
             <div
