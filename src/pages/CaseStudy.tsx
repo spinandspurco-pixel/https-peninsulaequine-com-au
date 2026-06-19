@@ -16,7 +16,7 @@ export default function CaseStudy() {
   const { slug } = useParams<{ slug: string }>();
   const study = CASE_STUDIES.find((s) => s.slug === slug);
 
-  if (!study) return <Navigate to="/gallery" replace />;
+  if (!study) return <Navigate to="/selected-works" replace />;
 
   return (
     <Layout>
