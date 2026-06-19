@@ -19,6 +19,7 @@ import estateAerialAsset from "@/assets/services-new/pe-estate-aerial-masterplan
 
 type Service = {
   k: string;
+  slug: string;
   title: string;
   body: string;
   image: string;
@@ -28,6 +29,13 @@ type Service = {
 };
 
 type Chapter = {
+  code: string;
+  slug: string;
+  title: string;
+  intent: string;
+  services: Service[];
+};
+
   code: string;
   title: string;
   intent: string;
