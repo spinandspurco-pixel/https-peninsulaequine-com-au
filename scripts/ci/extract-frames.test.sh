@@ -107,6 +107,27 @@ run_case "edge/mixed: bash + python + node interleaved, deepest 3 across dialect
 src/config.ts${TAB}42${TAB}17${TAB}parseConfig
 scripts/wrapper.py${TAB}12${TAB}${TAB}<module>"
 
+echo
+echo "extract-frames: Windows paths"
+
+# Edge: Windows drive letter + backslashes in Node frames.
+run_case "edge/windows-node: drive letter + backslash paths in 'at fn (...)'" "windows-node.txt" \
+"C:\\Users\\runner\\work\\repo\\src\\bootstrap.ts${TAB}7${TAB}3${TAB}<anonymous>
+C:\\Users\\runner\\work\\repo\\src\\index.ts${TAB}10${TAB}5${TAB}Object.<anonymous>
+C:\\Users\\runner\\work\\repo\\src\\config.ts${TAB}42${TAB}17${TAB}parseConfig"
+
+# Edge: Windows paths inside Python 'File "..."' traceback (quoting protects the path).
+run_case "edge/windows-python: drive letter + backslashes in 'File \"...\"' frames" "windows-python.txt" \
+"C:\\Users\\runner\\work\\repo\\scripts\\config.py${TAB}42${TAB}${TAB}parse_config
+C:\\Users\\runner\\work\\repo\\scripts\\app.py${TAB}21${TAB}${TAB}main
+C:\\Users\\runner\\work\\repo\\scripts\\bootstrap.py${TAB}7${TAB}${TAB}<module>"
+
+# Edge: Windows paths in tsc diagnostics — drive letter + backslashes must be
+# preserved (previously the [A-Za-z0-9_./+-]+ class stripped them).
+run_case "edge/windows-tsc: drive letter + backslashes in 'file.ts(line,col)'" "windows-tsc.txt" \
+"C:\\Users\\runner\\work\\repo\\src\\bootstrap.ts${TAB}7${TAB}3${TAB}
+C:\\Users\\runner\\work\\repo\\src\\app.ts${TAB}21${TAB}5${TAB}
+C:\\Users\\runner\\work\\repo\\src\\config.ts${TAB}42${TAB}17${TAB}"
 
 
 echo
