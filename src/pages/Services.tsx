@@ -271,7 +271,7 @@ export default function Services() {
               className="mt-8 font-serif italic text-foreground/55 leading-[1.55] max-w-xl mx-auto text-[clamp(0.95rem,0.85rem+0.45vw,1.15rem)] opacity-0 animate-fade-in"
               style={{ animationDelay: "650ms", animationFillMode: "both", animationDuration: "1100ms" }}
             >
-              Peninsula Equine designs and builds premium covered equine environments, stable structures, rural builds and supporting infrastructure for horse properties shaped to last.
+              Purpose-built covered arenas, stables, pavilions and infrastructure shaped around the way horses, people, water, machinery and time move through a property.
             </p>
             <p
               className="mt-8 font-mono text-[10px] uppercase tracking-[0.45em] text-foreground/25 opacity-0 animate-fade-in"

@@ -166,9 +166,7 @@ export default function About() {
                 animationDuration: "900ms",
               }}
             >
-              Peninsula Equine builds environments for horses, riders and
-              properties that need to work every day — from covered arenas and
-              stables to groundworks, drainage and rural structures.
+              Peninsula Equine is shaped by the realities of horse properties — how they move, drain, wear, shelter and work every day.
             </p>
           </div>
         </section>

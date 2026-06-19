@@ -8,7 +8,7 @@ const SITE_ORIGIN = "https://peninsulaequine.com.au";
 const DEFAULT_OG_IMAGE =
   "/__l5e/assets-v1/0fb3dbec-500e-400e-bb23-455301cadcde/og-root.png";
 const DEFAULT_OG_ALT =
-  "Peninsula Equine — premium equine environments on the Mornington Peninsula.";
+  "Peninsula Equine — covered arenas and stable environments shaped from the ground up.";
 
 // Per-route 1200×630 OG cards, mirrored from scripts/prerender.ts so
 // client-side navigation updates og:image / twitter:image alongside
