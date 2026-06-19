@@ -4,11 +4,11 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 
 import heroAsset from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.png.asset.json";
-import arenaVaulted from "@/assets/uploads/approved-covered-arena-interior-wide-dim.png.asset.json";
-import stableStallAsset from "@/assets/uploads/approved-horse-wash-bay-solarium.png.asset.json";
+import arenaVaulted from "@/assets/uploads/approved-covered-arena-interior-wide-gold.png.asset.json";
+import stableStallAsset from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
 import viewingLoungeAsset from "@/assets/uploads/approved-aberdeen-viewing-lounge.png.asset.json";
-import aisleDetailAsset from "@/assets/uploads/approved-stable-aisle-skybridge.png.asset.json";
-import tackRoomAsset from "@/assets/uploads/approved-tack-room-island-joinery-v2.png.asset.json";
+import aisleDetailAsset from "@/assets/uploads/approved-stable-aisle-detail-warm-light.png.asset.json";
+import tackRoomAsset from "@/assets/uploads/approved-tack-room-joinery.png.asset.json";
 
 const FACTS: Array<{ label: string; value: string }> = [
   { label: "Category", value: "Indoor Arena / Stable Precinct" },

@@ -47,7 +47,7 @@ export function LumenArcEntrance() {
   return (
     <div
       aria-hidden="true"
-      className={`fixed inset-0 z-[80] pointer-events-none overflow-hidden bg-background transition-opacity duration-[1100ms] ${
+      className={`fixed inset-0 z-[80] pointer-events-none overflow-hidden bg-background transition-opacity duration-1000 ${
         fading ? "opacity-0" : "opacity-100"
       }`}
       style={{ transitionTimingFunction: "cubic-bezier(0.45, 0, 0.15, 1)" }}

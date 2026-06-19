@@ -9,7 +9,7 @@ import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 // Outdoor-arena-first positioning is removed. Lead with covered & indoor.
 import coveredArenaAsset from "@/assets/uploads/approved-covered-arena-interior-wide-gold.png.asset.json";
 import heroStormAsset from "@/assets/uploads/approved-current-build-crane-storm-lift.png.asset.json";
-import stableAisleAsset from "@/assets/uploads/approved-stable-aisle-skybridge.png.asset.json";
+import stableAisleAsset from "@/assets/uploads/approved-stable-aisle-detail-warm-light.png.asset.json";
 import pavilionAsset from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
 import groundworksAsset from "@/assets/services-new/pe-groundworks-dozer.png.asset.json";
 import drainageAsset from "@/assets/services-new/pe-infrastructure-muddy-site.png.asset.json";

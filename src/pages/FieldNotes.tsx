@@ -115,7 +115,7 @@ export default function FieldNotes() {
                         <img
                           src={steelFront}
                           alt={steelFrontAlt}
-                          className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-[1600ms] ease-out group-hover:scale-[1.03]"
+                          className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-[1.03]"
                           style={{ filter: "brightness(0.78) contrast(1.12) saturate(0.82)" }}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/15 to-transparent" />

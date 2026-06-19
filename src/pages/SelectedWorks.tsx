@@ -104,7 +104,7 @@ export default function SelectedWorks() {
                       <img
                         src={project.image}
                         alt={project.alt}
-                        className={`absolute inset-0 w-full h-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.025] ${project.crop}`}
+                        className={`absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.025] ${project.crop}`}
                         loading={i === 0 ? "eager" : "lazy"}
                         decoding="async"
                         style={{ filter: FILTER }}
