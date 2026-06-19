@@ -32,8 +32,11 @@ import { lessonInfo, glennBrowitt } from "@/data/content";
 import blueprintFacility from "@/assets/blueprint-facility.png";
 import blueprintDetail from "@/assets/blueprint-detail.png";
 import blueprintBarn from "@/assets/blueprint-barn.png";
-import ciroWide from "@/assets/aberdeen-exterior.jpg";
-import ciroWithHorse from "@/assets/covered-arena-finished-lit.jpg";
+// Approved cinematic only — legacy aberdeen-exterior.jpg + covered-arena-finished-lit removed.
+import ciroWideAsset from "@/assets/uploads/approved-aberdeen-exterior-dusk-frontage.png.asset.json";
+import ciroWithHorseAsset from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.png.asset.json";
+const ciroWide = ciroWideAsset.url;
+const ciroWithHorse = ciroWithHorseAsset.url;
 
 // ── Data ──────────────────────────────────────────────
 
