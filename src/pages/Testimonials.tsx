@@ -9,7 +9,8 @@ import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { SectionTransition, AnimatedDivider } from "@/components/SectionTransition";
 import { TestimonialLightbox } from "@/components/TestimonialLightbox";
 import { fetchMergedTestimonials, SERVICE_FILTERS, getTrainerFilters, TRAINER_PROFILES, type TestimonialItem } from "@/lib/testimonials";
-import ciroWithHorse from "@/assets/covered-arena-finished-lit.jpg";
+import ctaBackdropAsset from "@/assets/aberdeen/lounge-serene.png.asset.json";
+const ciroWithHorse = ctaBackdropAsset.url;
 
 function StarRating({ rating }: { rating: number }) {
   return (
