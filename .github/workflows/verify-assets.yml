@@ -73,6 +73,9 @@ jobs:
       - name: Print bash version
         run: bash --version
 
+      - name: Run frame-extractor unit tests
+        run: bash scripts/ci/extract-frames.test.sh
+
       - name: Run retention-policy unit tests
         id: unit-tests
         run: |
