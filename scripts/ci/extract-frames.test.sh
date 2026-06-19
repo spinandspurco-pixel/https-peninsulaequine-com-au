@@ -186,9 +186,9 @@ run_case "lldb/demangled-cxx: templates, operator(), dtor, const& args preserved
 # `operator()` with arguments must survive the greedy `.*` extraction between
 # the module backtick and the trailing ` at file:line:col`.
 run_case "lldb/lambda: demangled {lambda()#N}::operator()(args) const" "lldb-lambda.txt" \
-"/Users/runner/work/repo/src/lambda.cpp${TAB}42${TAB}17${TAB}MyClass::execute::{lambda()#1}::operator()() const
-/Users/runner/work/repo/src/handler.cpp${TAB}21${TAB}5${TAB}Handler::invoke::{lambda(int, std::string const&)#2}::operator()(int, std::string const&)
-/Users/runner/work/repo/src/factory.cpp${TAB}7${TAB}3${TAB}Factory::build::{lambda(std::unique_ptr<Context>)#3}::operator()(std::unique_ptr<Context>) const &"
+"/Users/runner/work/repo/src/lambda.cpp${TAB}42${TAB}17${TAB}A::foo::{lambda()#1}::operator()() const
+/Users/runner/work/repo/src/handler.cpp${TAB}21${TAB}5${TAB}B::bar::{lambda(int)#2}::operator()(int)
+/Users/runner/work/repo/src/factory.cpp${TAB}7${TAB}3${TAB}C::baz::{lambda(char*)#3}::operator()(char*) const &"
 
 
 echo
