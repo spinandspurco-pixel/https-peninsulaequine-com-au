@@ -8,11 +8,12 @@ import { useIntake } from "@/hooks/useIntake";
 
 
 import lumenArcCanopy from "@/assets/lumenarc/canopy.asset.json";
-import pavilionFireplaceDetail from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
 import aberdeenHero from "@/assets/aberdeen/approved-barn-front-twilight.png.asset.json";
 import aberdeenArena from "@/assets/aberdeen/approved-viewing-lounge-arena-fireplace.png.asset.json";
 import steelFrontAsset from "@/assets/field-notes/approved-current-build-black-shed-storm.png.asset.json";
+import coveredArenaExteriorAsset from "@/assets/covered-arenas/approved-covered-arena-exterior-dusk.png.asset.json";
 const steelFront = steelFrontAsset.url;
+const coveredArenaExterior = coveredArenaExteriorAsset.url;
 
 // Responsive webp variants for srcset (generated at 640/1024/1536w)
 import ciro640 from "@/assets/responsive/ciro-ace-quiet-moment-640.webp.asset.json";
@@ -458,12 +459,12 @@ export default function Index() {
                 <RevealOnScroll direction="up" duration={1100} delay={240}>
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <img
-                      src={steelFront}
-                      alt="Current build black shed structure from the side under a storm sky"
+                      src={coveredArenaExterior}
+                      alt="Covered arena exterior at dusk with glowing interior structure and dark storm sky"
                       loading="lazy"
                       decoding="async"
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1600ms] ease-out hover:scale-[1.02]"
-                      style={{ filter: "brightness(0.68) contrast(1.12) saturate(0.76)" }}
+                      style={{ filter: "brightness(0.76) contrast(1.1) saturate(0.78)" }}
                     />
                   </div>
                 </RevealOnScroll>
