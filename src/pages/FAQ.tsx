@@ -16,7 +16,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import blueprintDetail from "@/assets/blueprint-detail.png";
+
 import ctaBackdropAsset from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
 const horseAction = ctaBackdropAsset.url;
 
