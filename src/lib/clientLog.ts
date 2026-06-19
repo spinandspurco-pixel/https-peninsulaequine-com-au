@@ -1,18 +1,25 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Json } from "@/integrations/supabase/types";
 
-type LogPayload = Record<string, unknown>;
+interface ClientLogEntry {
+  event_type: string;
+  payload?: Json | null;
+  page_path?: string | null;
+  user_agent?: string | null;
+  viewport_w?: number | null;
+  viewport_h?: number | null;
+}
 
-const pending: Array<Record<string, unknown>> = [];
+const pending: ClientLogEntry[] = [];
 let flushTimer: number | null = null;
 
 function flush() {
   if (pending.length === 0) return;
   const batch = pending.splice(0, pending.length);
-  supabase
-    .from("client_logs")
-    .insert(batch)
-    .then(() => {})
-    .catch(() => {});
+  Promise.resolve(supabase.from("client_logs").insert(batch)).then(
+    () => {},
+    () => {}
+  );
 }
 
 function scheduleFlush() {
@@ -27,7 +34,7 @@ function scheduleFlush() {
  * Lightweight, fire-and-forget client event logger.
  * Batches inserts to avoid spamming the DB on rapid events.
  */
-export function logClientEvent(eventType: string, payload?: LogPayload) {
+export function logClientEvent(eventType: string, payload?: Record<string, unknown>) {
   if (typeof window === "undefined") return;
 
   pending.push({
