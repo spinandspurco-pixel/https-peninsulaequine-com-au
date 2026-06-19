@@ -7,9 +7,9 @@ const capabilityLinks = [
   { name: "Covered Arenas", href: "/arenas" },
   { name: "Stables & Barns", href: "/stables" },
   { name: "Pavilions & Rural Builds", href: "/selected-works/main-ridge-pavilion" },
+  { name: "Groundworks & Drainage", href: "/infrastructure" },
   { name: "Equine Infrastructure", href: "/infrastructure" },
-  { name: "Whole-Property Planning", href: "/equine-estates" },
-  { name: "LumenArc", href: "/lumenarc" },
+  { name: "LumenArc Recovery", href: "/lumenarc" },
 ];
 
 const studioLinks = [

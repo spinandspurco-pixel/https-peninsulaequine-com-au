@@ -260,18 +260,18 @@ export default function Services() {
           <div className="absolute inset-0 bg-background/60" />
           <div className="absolute inset-0 grain-hero" />
 
-          <div className="section-container relative z-10 text-center max-w-2xl mx-auto">
+          <div className="section-container relative z-10 text-center max-w-3xl mx-auto">
             <h1
               className="heading-display text-foreground opacity-0 animate-fade-in"
               style={{ animationDelay: "400ms", animationFillMode: "both", animationDuration: "1000ms" }}
             >
-              How We Build
+              Built for the way horse properties actually work.
             </h1>
             <p
               className="mt-8 font-serif italic text-foreground/55 leading-[1.55] max-w-xl mx-auto text-[clamp(0.95rem,0.85rem+0.45vw,1.15rem)] opacity-0 animate-fade-in"
               style={{ animationDelay: "650ms", animationFillMode: "both", animationDuration: "1100ms" }}
             >
-              Purpose-built covered arenas, stables, pavilions and infrastructure shaped around the way horses, people, water, machinery and time move through a property.
+              Covered arenas, stables, pavilions and the groundworks beneath them — built by horse people, backed by construction.
             </p>
             <p
               className="mt-8 font-mono text-[10px] uppercase tracking-[0.45em] text-foreground/25 opacity-0 animate-fade-in"
@@ -405,6 +405,32 @@ export default function Services() {
           </div>
         </section>
 
+
+        {/* ═══ WHOLE-PROPERTY PLANNING — supporting concept ═══ */}
+        <section className="relative overflow-hidden border-t border-accent/10">
+          <div className="py-24 sm:py-32">
+            <div className="section-container max-w-4xl mx-auto">
+              <RevealOnScroll direction="up" duration={900}>
+                <div className="flex items-baseline gap-5 mb-10">
+                  <span className="font-mono text-accent/55 text-[10px] tracking-[0.4em] tabular-nums">IV</span>
+                  <span className="h-px flex-1 max-w-[2.5rem] bg-accent/25" />
+                  <span className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.5em]">Supporting Concept</span>
+                </div>
+              </RevealOnScroll>
+              <RevealOnScroll direction="up" duration={1000} delay={120}>
+                <h2 className="font-serif text-foreground/90 leading-[1.04] tracking-[-0.022em] text-[clamp(1.75rem,1.15rem+2vw,2.7rem)] max-w-3xl">
+                  Whole-property planning runs underneath every build.
+                </h2>
+              </RevealOnScroll>
+              <RevealLine width="w-10" delay={220} />
+              <RevealOnScroll direction="up" duration={1000} delay={300}>
+                <p className="mt-8 max-w-2xl font-sans font-light text-foreground/55 leading-[1.85] text-[14px] sm:text-[15px]">
+                  Covered arena, stables, laneways, drainage, machinery access and daily flow are read as one site. Decisions made on the ground in the first weeks are what the finished property feels like in year ten.
+                </p>
+              </RevealOnScroll>
+            </div>
+          </div>
+        </section>
 
         {/* ═══ AUTHORITY LINE ═══════════════════════════════ */}
         <section className="relative overflow-hidden border-t border-accent/10">

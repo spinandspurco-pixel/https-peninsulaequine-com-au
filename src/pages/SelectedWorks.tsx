@@ -80,13 +80,13 @@ export default function SelectedWorks() {
             </RevealOnScroll>
             <RevealOnScroll direction="up" duration={1100} delay={150}>
               <h1 className="mt-8 font-serif text-foreground leading-[0.95] tracking-tight text-[clamp(2.4rem,1.4rem+4.6vw,5.4rem)]">
-                Selected Works
+                A closer look at the work.
               </h1>
             </RevealOnScroll>
             <RevealLine width="w-10" delay={280} className="mx-auto mt-10" />
             <RevealOnScroll direction="up" duration={1000} delay={340}>
               <p className="mt-10 max-w-xl mx-auto font-sans font-light text-foreground/55 leading-[1.85] text-[14px] sm:text-[15px]">
-                A closer look at the builds, structures and details shaped from the ground up.
+                Completed environments and current builds across the Mornington Peninsula — covered arenas, stables, pavilions and the groundworks beneath them.
               </p>
             </RevealOnScroll>
           </div>
