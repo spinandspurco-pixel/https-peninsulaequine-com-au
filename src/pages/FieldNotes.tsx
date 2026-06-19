@@ -238,6 +238,11 @@ export default function FieldNotes() {
         </section>
 
         <section className="relative border-t border-accent/10 py-[clamp(5rem,3rem+6vw,9rem)]">
+          <div aria-hidden className="hidden md:block absolute left-6 lg:left-10 top-0 bottom-0 w-px overflow-hidden">
+            <DraftLine orientation="vertical" tone="charcoal" />
+            <span className="absolute left-1/2 -translate-x-1/2 top-12 w-2 h-2 -ml-px rounded-full bg-accent/55" />
+            <span className="absolute left-1/2 -translate-x-1/2 top-12 ml-3 font-mono text-[9px] tracking-[0.4em] text-accent/55 uppercase whitespace-nowrap">03 / Field Note</span>
+          </div>
           <div className="section-container max-w-5xl mx-auto text-center space-y-6 sm:space-y-8">
             <RevealOnScroll direction="up" duration={900}>
               <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
