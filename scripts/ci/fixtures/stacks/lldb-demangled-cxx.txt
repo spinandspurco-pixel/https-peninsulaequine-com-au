@@ -1,5 +1,5 @@
 * thread #1, queue = 'com.apple.main-thread', stop reason = breakpoint 1.1
-  * frame #0: 0x000000010000a1b2 myapp`std::__1::vector<int, std::__1::allocator<int> >::push_back(int const& __x) at /Users/runner/work/repo/src/config.cpp:42:17
-    frame #1: 0x000000010000a2c3 myapp`example::Parser<std::__1::basic_string<char> >::operator()(std::__1::basic_string<char> const&) const at /Users/runner/work/repo/src/app.cpp:21:5
+  * frame #0: 0x000000010000a1b2 myapp`std::vector<int>::push_back(int const&) at /Users/runner/work/repo/src/config.cpp:42:17
+    frame #1: 0x000000010000a2c3 myapp`example::Parser<std::string>::operator()(std::string const&) const at /Users/runner/work/repo/src/app.cpp:21:5
     frame #2: 0x000000010000a3d4 myapp`example::ns::Service::~Service() at /Users/runner/work/repo/src/bootstrap.cpp:7:3
     frame #3: 0x00007fff20419abc dyld`start + 462
