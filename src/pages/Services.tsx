@@ -5,6 +5,7 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { BlueprintContinuity } from "@/components/BlueprintContinuity";
 import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 import { setActiveServiceChapter } from "@/hooks/useActiveServiceChapter";
+import { DraftTicks, DraftPlanBackdrop } from "@/components/draft";
 
 
 
@@ -371,6 +372,7 @@ export default function Services() {
                                   {chapter.code}.{s.k}
                                 </p>
                               </div>
+                              <DraftTicks count={6} className="mb-4 opacity-70" />
                               <h3 className="font-serif text-2xl sm:text-3xl lg:text-[2.15rem] text-foreground/85 tracking-[-0.018em] leading-[1.08] mb-6">
                                 {s.title}
                               </h3>
