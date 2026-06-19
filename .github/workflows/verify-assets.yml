@@ -49,14 +49,21 @@ jobs:
         run: |
           RD="${{ inputs.retention_days }}"
           MR="${{ inputs.max_retained }}"
-          if ! [[ "$RD" =~ ^[0-9]+$ ]] || [ "$RD" -lt 1 ]; then
-            echo "::error::Invalid retention_days: '$RD'. Must be a positive integer (1 or greater)."
-            exit 1
-          fi
-          if ! [[ "$MR" =~ ^[0-9]+$ ]] || [ "$MR" -lt 1 ]; then
-            echo "::error::Invalid max_retained: '$MR'. Must be a positive integer (1 or greater)."
-            exit 1
-          fi
+
+          validate_int() {
+            local name="$1" value="$2" min="$3" max="$4"
+            if ! [[ "$value" =~ ^[0-9]+$ ]]; then
+              echo "::error::Invalid $name: '$value'. Must be an integer between $min and $max (inclusive)."
+              return 1
+            fi
+            if [ "$value" -lt "$min" ] || [ "$value" -gt "$max" ]; then
+              echo "::error::Invalid $name: $value. Must be between $min and $max (inclusive)."
+              return 1
+            fi
+          }
+
+          validate_int "retention_days" "$RD" 1 365 || exit 1
+          validate_int "max_retained" "$MR" 1 100 || exit 1
 
       - name: Checkout
         uses: actions/checkout@v4
