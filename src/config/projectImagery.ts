@@ -128,8 +128,8 @@ export const projectImagery: Record<string, ProjectImagery> = {
     title: "Covered Arena & Stables Build",
     status: "in-progress",
     surfaces: {
-      // Selected Works = clean steel-frame identity
-      selectedWorks: coveredArenaNightWorkLights,
+      // Selected Works = stormy dozer steel-frame identity
+      selectedWorks: coveredArenaDozerStormSky,
       // Field Notes hero = moody puddles, the project's live signature
       fieldNotesHero: coveredArenaSunsetPuddles,
       // Homepage Field Notes preview matches the Field Notes hero on purpose
