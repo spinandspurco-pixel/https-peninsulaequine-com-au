@@ -17,27 +17,27 @@ const servicesGroups: NavGroup[] = [
   {
     label: "Build",
     items: [
-      { name: "Covered Arenas", href: "/arenas", description: "Covered & indoor riding environments" },
-      { name: "Stables & Barn Structures", href: "/stables", description: "Purpose-built stables and barns" },
-      { name: "Pavilions & Rural Builds", href: "/selected-works/main-ridge-pavilion", description: "Custom rural pavilions and gathering spaces" },
+      { name: "Covered Arenas", href: "/services#covered-arenas", description: "Covered & indoor riding environments" },
+      { name: "Stables & Barn Structures", href: "/services#stables-barn-structures", description: "Purpose-built stables and barns" },
+      { name: "Pavilions & Rural Builds", href: "/services#pavilions-rural-builds", description: "Custom rural pavilions and gathering spaces" },
     ],
   },
   {
     label: "Ground",
     items: [
-      { name: "Groundworks & Site Preparation", href: "/infrastructure#groundworks", description: "Levels, base works, machinery" },
-      { name: "Drainage & Surfacing", href: "/infrastructure#drainage", description: "Drainage systems & surface preparation" },
-      { name: "Equine Infrastructure", href: "/infrastructure", description: "Fencing, yards, laneways, wash areas" },
+      { name: "Groundworks & Site Preparation", href: "/services#groundworks-site-preparation", description: "Levels, base works, machinery" },
+      { name: "Drainage & Surfacing", href: "/services#drainage-surfacing", description: "Drainage systems & surface preparation" },
+      { name: "Equine Infrastructure", href: "/services#equine-infrastructure", description: "Fencing, yards, laneways, wash areas" },
     ],
   },
   {
     label: "Systems",
     items: [
-      { name: "LumenArc Recovery Systems", href: "/lumenarc", description: "Considered recovery environments" },
-      { name: "Whole-Property Planning", href: "/equine-estates", description: "Property considered as one before structures are placed" },
+      { name: "LumenArc Recovery Systems", href: "/services#lumenarc-recovery-systems", description: "Considered recovery environments" },
     ],
   },
 ];
+
 
 
 const servicesChildren: NavChild[] = servicesGroups.flatMap((g) => g.items);
