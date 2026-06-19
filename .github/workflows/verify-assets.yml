@@ -221,6 +221,13 @@ jobs:
           FAILED_FILE='${{ steps.unit-tests.outputs.failed_file }}'
           FAILED_LINENO='${{ steps.unit-tests.outputs.failed_lineno }}'
           FAILED_SOURCE_URL='${{ steps.unit-tests.outputs.failed_source_url }}'
+          FAILED_FRAMES=$(cat <<'FRAMESEOF'
+          ${{ steps.unit-tests.outputs.failed_frames }}
+          FRAMESEOF
+          )
+          # Strip leading indent that the heredoc preserved, then collapse to a
+          # single line with escaped newlines so it fits in a Slack text field.
+          FAILED_FRAMES=$(printf '%s' "$FAILED_FRAMES" | sed 's/^[[:space:]]*//' | awk 'NF' | paste -sd '\n' -)
           if [ -n "$FAILED_FILE" ] && [ -n "$FAILED_LINENO" ]; then
             if [ -n "$FAILED_SOURCE_URL" ]; then
               FAILED_SOURCE_FIELD=$(printf '<%s|%s:%s>' "$FAILED_SOURCE_URL" "$FAILED_FILE" "$FAILED_LINENO")
@@ -230,15 +237,21 @@ jobs:
           else
             FAILED_SOURCE_FIELD='(not detected)'
           fi
+          if [ -z "$FAILED_FRAMES" ]; then
+            FAILED_FRAMES_FIELD='(not detected)'
+          else
+            # Replace newlines with the literal \n that Slack renders as a line break.
+            FAILED_FRAMES_FIELD=$(printf '%s' "$FAILED_FRAMES" | awk 'BEGIN{ORS=""} NR==1{print; next} {print "\\n    "$0}')
+          fi
           STDERR='${{ steps.unit-tests.outputs.stderr }}'
           STDERR_SAFE=""
           if [ -n "$STDERR" ]; then
             STDERR_SAFE=$(printf '%s' "$STDERR" | tr '\n\r\t' '   ' | tr -d '"\\' | cut -c1-500)
           fi
           if [ -n "$EXIT_CODE" ]; then
-            PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Step: %s\n• Command: `%s`\n• Exit code: %s\n• Source: %s\n• Failing line: %s\n• Context: %s\n• Error: %s\n• Commit: <%s|%s>\n• Job URL: %s"}' "$WORKFLOW_NAME" "$JOB_NAME" "$FAILED_STEP" "$FAILED_COMMAND" "$EXIT_CODE" "$FAILED_SOURCE_FIELD" "$FAILED_LINE" "$FAILED_CONTEXT" "$STDERR_SAFE" "$COMMIT_URL" "${COMMIT_SHA:0:7}" "$JOB_URL")
+            PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Step: %s\n• Command: `%s`\n• Exit code: %s\n• Source: %s\n• Top frames:\n    %s\n• Failing line: %s\n• Context: %s\n• Error: %s\n• Commit: <%s|%s>\n• Job URL: %s"}' "$WORKFLOW_NAME" "$JOB_NAME" "$FAILED_STEP" "$FAILED_COMMAND" "$EXIT_CODE" "$FAILED_SOURCE_FIELD" "$FAILED_FRAMES_FIELD" "$FAILED_LINE" "$FAILED_CONTEXT" "$STDERR_SAFE" "$COMMIT_URL" "${COMMIT_SHA:0:7}" "$JOB_URL")
           else
-            PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Step: %s\n• Command: `%s`\n• Source: %s\n• Failing line: %s\n• Context: %s\n• Commit: <%s|%s>\n• Job URL: %s"}' "$WORKFLOW_NAME" "$JOB_NAME" "$FAILED_STEP" "$FAILED_COMMAND" "$FAILED_SOURCE_FIELD" "$FAILED_LINE" "$FAILED_CONTEXT" "$COMMIT_URL" "${COMMIT_SHA:0:7}" "$JOB_URL")
+            PAYLOAD=$(printf '{"text":":x: *%s* — retention test failed\n• Job: %s\n• Step: %s\n• Command: `%s`\n• Source: %s\n• Top frames:\n    %s\n• Failing line: %s\n• Context: %s\n• Commit: <%s|%s>\n• Job URL: %s"}' "$WORKFLOW_NAME" "$JOB_NAME" "$FAILED_STEP" "$FAILED_COMMAND" "$FAILED_SOURCE_FIELD" "$FAILED_FRAMES_FIELD" "$FAILED_LINE" "$FAILED_CONTEXT" "$COMMIT_URL" "${COMMIT_SHA:0:7}" "$JOB_URL")
           fi
           MAX_RETRIES=3
           DELAY=2
