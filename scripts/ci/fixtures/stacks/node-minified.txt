@@ -1,0 +1,4 @@
+TypeError: n is not a function
+    at t (https://cdn.example.com/assets/index-AbC123.min.js:1:23456)
+    at e.default [as render] (dist/bundle-A1b2C3d.min.js:1:54321)
+    at https://cdn.example.com/assets/runtime-9f8e7d.min.js:2:1024
