@@ -40,6 +40,8 @@ jobs:
     name: Retention validator tests (${{ matrix.label }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 5
+    permissions:
+      pull-requests: write
     strategy:
       fail-fast: true
       matrix:
@@ -69,6 +71,15 @@ jobs:
 
       - name: Run retention-policy unit tests
         run: bash scripts/ci/validate-retention.test.sh
+
+      - name: Notify on retention test failure
+        if: failure() && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr comment "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}" \
+            --body ":x: **Retention test failed** on ${{ matrix.label }}. See [run logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})."
 
   verify:
     name: Scan for missing .asset.json references
