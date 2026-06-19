@@ -4,6 +4,8 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { BlueprintContinuity } from "@/components/BlueprintContinuity";
 import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
+import { setActiveServiceChapter } from "@/hooks/useActiveServiceChapter";
+
 
 
 // Locked cinematic image system — one correct visual per service.
@@ -155,6 +157,42 @@ export default function Services() {
     }, 60);
     return () => clearTimeout(t);
   }, [hash]);
+
+  // Observe chapter sections and broadcast the one currently in view so the
+  // global header dropdown can highlight the matching chapter.
+  useEffect(() => {
+    const slugs = CHAPTERS.map((c) => c.slug);
+    const els = slugs
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => !!el);
+    if (!els.length) return;
+
+    const visibility = new Map<string, number>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          visibility.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0);
+        }
+        let bestId: string | null = null;
+        let bestRatio = 0;
+        visibility.forEach((ratio, id) => {
+          if (ratio > bestRatio) {
+            bestRatio = ratio;
+            bestId = id;
+          }
+        });
+        setActiveServiceChapter(bestRatio > 0 ? bestId : null);
+      },
+      { rootMargin: "-25% 0px -55% 0px", threshold: [0, 0.25, 0.5, 0.75, 1] }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => {
+      io.disconnect();
+      setActiveServiceChapter(null);
+    };
+  }, []);
+
+
 
 
   return (

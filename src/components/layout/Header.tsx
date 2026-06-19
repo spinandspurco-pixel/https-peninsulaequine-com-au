@@ -2,7 +2,9 @@ import { useState, useEffect, useRef, KeyboardEvent } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useIntroState } from "@/hooks/useIntroState";
+import { useActiveServiceChapter } from "@/hooks/useActiveServiceChapter";
 import logoImage from "@/assets/logo-pe-mark.webp";
+
 
 type NavChild = { name: string; href: string; description?: string };
 type NavGroup = { label: string; items: NavChild[] };
@@ -62,7 +64,9 @@ export function Header() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const location = useLocation();
+  const activeChapter = useActiveServiceChapter();
   const { headerLogoReady, headerReady } = useIntroState();
+
   const closeTimer = useRef<number | null>(null);
   const mobileToggleRef = useRef<HTMLButtonElement | null>(null);
   const desktopDropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -79,8 +83,26 @@ export function Header() {
     setMobileServicesOpen(false);
   }, [location.pathname]);
 
-  const isActive = (href: string) =>
-    href === "/" ? location.pathname === "/" : location.pathname.startsWith(href);
+  const isActive = (href: string) => {
+    if (href === "/") return location.pathname === "/";
+    const [path, hash] = href.split("#");
+    if (hash) {
+      // For chapter-anchored items, light up when on the same path AND the
+      // chapter currently in view contains this service slug. The activeChapter
+      // is the chapter slug (build/ground/systems); the hash is the service
+      // slug — so we just match path and hash to the live URL hash for the
+      // selected item, and rely on group-level highlighting for the chapter.
+      return (
+        location.pathname === path &&
+        (location.hash === `#${hash}` ||
+          // Chapter-level glow: if the in-view chapter matches the group this
+          // item belongs to, the caller will compute groupActive separately.
+          false)
+      );
+    }
+    return location.pathname.startsWith(href);
+  };
+
 
   const isParentActive = (item: NavItem) =>
     isActive(item.href) || (item.children?.some((c) => isActive(c.href)) ?? false);
@@ -324,6 +346,10 @@ export function Header() {
                               .reduce((acc, g) => acc + g.items.length, 0);
                             const totalCount =
                               1 + (item.groups ?? []).reduce((acc, g) => acc + g.items.length, 0);
+                            const groupActive =
+                              item.name === "Services" &&
+                              location.pathname === "/services" &&
+                              activeChapter === group.label.toLowerCase();
                             return (
                               <div
                                 key={group.label}
@@ -331,9 +357,22 @@ export function Header() {
                               >
                                 <p
                                   id={`${dropdownId}-group-${gIdx}`}
-                                  className="font-mono text-[8.5px] uppercase tracking-[0.5em] text-foreground/32"
+                                  className={cn(
+                                    "font-mono text-[8.5px] uppercase tracking-[0.5em] transition-colors duration-500 flex items-center gap-3",
+                                    groupActive ? "text-[hsl(var(--header-active))]" : "text-foreground/32"
+                                  )}
                                 >
-                                  {group.label}
+                                  <span>{group.label}</span>
+                                  <span
+                                    aria-hidden="true"
+                                    className={cn(
+                                      "h-px transition-all duration-500",
+                                      groupActive ? "w-8 bg-[hsl(var(--header-active))]" : "w-0 bg-transparent"
+                                    )}
+                                  />
+                                  {groupActive && (
+                                    <span className="sr-only">(currently in view)</span>
+                                  )}
                                 </p>
                                 <ul
                                   role="group"
@@ -342,14 +381,16 @@ export function Header() {
                                 >
                                   {group.items.map((child, cIdx) => {
                                     const globalIdx = 1 + priorCount + cIdx;
-                                    const active = isActive(child.href);
+                                    const exact = isActive(child.href);
+                                    const inViewGroup = groupActive;
+                                    const active = exact || inViewGroup;
                                     return (
                                       <li key={child.href}>
                                         <Link
                                           to={child.href}
                                           role="menuitem"
                                           tabIndex={isOpen ? 0 : -1}
-                                          aria-current={active ? "page" : undefined}
+                                          aria-current={exact ? "page" : undefined}
                                           onKeyDown={(e) =>
                                             handleDropdownItemKey(e, item.name, globalIdx, totalCount)
                                           }
@@ -388,6 +429,7 @@ export function Header() {
                               </div>
                             );
                           })}
+
                         </div>
                       </div>
                     </div>
