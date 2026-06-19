@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
+import { DraftLine } from "@/components/draft";
 
 import heroQuiet from "@/assets/about/ciro-ace-quiet-moment.png.asset.json";
 import beliefSlidingStop from "@/assets/about/ciro-ace-sliding-stop.png.asset.json";
@@ -209,6 +210,9 @@ export default function About() {
           </div>
         </section>
 
+        {/* connector — horseman → craft */}
+        <div className="section-container max-w-6xl mx-auto flex justify-center"><DraftLine orientation="vertical" tone="bronze" length="h-24" /></div>
+
         {/* ═══ 3. CRAFTSMANSHIP ═══════════════════════════════ */}
         <FeatureSection
           overline="03 — Craftsmanship"
@@ -219,6 +223,9 @@ export default function About() {
           aspect="aspect-[4/3] md:aspect-[3/2]"
           crop="object-[50%_50%]"
         />
+
+        {/* connector — craft → groundwork */}
+        <div className="section-container max-w-6xl mx-auto flex justify-center"><DraftLine orientation="vertical" tone="bronze" length="h-24" /></div>
 
         {/* ═══ 4. THE WORK ════════════════════════════════════ */}
         <FeatureSection
