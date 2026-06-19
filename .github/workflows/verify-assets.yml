@@ -227,6 +227,7 @@ jobs:
               echo "failed_context=${FAILED_CONTEXT}"
               echo "failed_file=${FAILED_FILE}"
               echo "failed_lineno=${FAILED_LINENO}"
+              echo "failed_func=${FAILED_FUNC}"
               echo "failed_source_url=${FAILED_SOURCE_URL}"
               echo "failed_frames<<FRAMESEOF"
               printf '%b\n' "$FAILED_FRAMES"
