@@ -2,8 +2,9 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 // Covered Arenas hero — approved interior arena image
-import heroAsset from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
+import heroAsset from "@/assets/uploads/approved-covered-arena-interior-night-v2.png.asset.json";
 const heroImg = heroAsset.url;
+
 
 const capabilities = [
   { k: "01", label: "Clear-Span Structures", body: "Engineered steel and blackened timber — competition-ready spans built to ride year-round, under any sky." },
