@@ -102,10 +102,12 @@ jobs:
             fi
             # Respect Retry-After header on 429 (rate limit) or 503 responses.
             WAIT=$DELAY
+            USE_JITTER=true
             if [ "$HTTP_CODE" -eq 429 ] || [ "$HTTP_CODE" -eq 503 ]; then
               RETRY_AFTER=$(grep -i '^retry-after:' "$RESP_HEADERS" | tail -n1 | sed -E 's/^[Rr]etry-[Aa]fter:[[:space:]]*([0-9]+).*/\1/' | tr -d '\r\n')
               if [ -n "$RETRY_AFTER" ] && [ "$RETRY_AFTER" -gt 0 ] 2>/dev/null; then
                 WAIT=$RETRY_AFTER
+                USE_JITTER=false
                 if [ "$WAIT" -gt "$MAX_DELAY" ]; then WAIT=$MAX_DELAY; fi
                 echo "Slack rate-limited (HTTP $HTTP_CODE). Honouring Retry-After: ${WAIT}s (attempt $i/$MAX_RETRIES)."
               else
@@ -113,6 +115,11 @@ jobs:
               fi
             else
               echo "Slack notification attempt $i/$MAX_RETRIES failed (HTTP $HTTP_CODE). Retrying in ${WAIT}s..."
+            fi
+            if [ "$USE_JITTER" = "true" ]; then
+              # Add up to 50% random jitter to avoid synchronized retries across matrix jobs.
+              JITTER=$((RANDOM % (DELAY / 2 + 1)))
+              WAIT=$((WAIT + JITTER))
             fi
             sleep "$WAIT"
             DELAY=$((DELAY * 2))
