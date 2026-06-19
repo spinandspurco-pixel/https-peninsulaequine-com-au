@@ -3,10 +3,16 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { DURATION, EASE } from "@/lib/motion";
 
 /* ── Sequence assets — same site, same angle, 4 phases ── */
-import imgStep1 from "@/assets/sequence-1-bare-ground.jpg";
-import imgStep2 from "@/assets/sequence-2-base-formation.jpg";
-import imgStep3 from "@/assets/sequence-3-system-install.jpg";
-import imgStep4 from "@/assets/sequence-4-completed.jpg";
+// Approved cinematic build sequence — replaces legacy daylight phone shots
+// (sequence-1-bare-ground … sequence-4-completed).
+import imgStep1Asset from "@/assets/field-notes/covered-competition-arena-truck-access-track.png.asset.json";
+import imgStep2Asset from "@/assets/field-notes/covered-competition-arena-drainage-detail.png.asset.json";
+import imgStep3Asset from "@/assets/field-notes/muddy-boots-steel-frame.png.asset.json";
+import imgStep4Asset from "@/assets/uploads/approved-current-build-steel-frame-storm.png.asset.json";
+const imgStep1 = imgStep1Asset.url;
+const imgStep2 = imgStep2Asset.url;
+const imgStep3 = imgStep3Asset.url;
+const imgStep4 = imgStep4Asset.url;
 
 interface Phase {
   id: string;
