@@ -190,6 +190,13 @@ run_case "lldb/lambda: demangled {lambda()#N}::operator()(args) const" "lldb-lam
 /Users/runner/work/repo/src/handler.cpp${TAB}21${TAB}5${TAB}B::bar::{lambda(int)#2}::operator()(int)
 /Users/runner/work/repo/src/lambda.cpp${TAB}42${TAB}17${TAB}A::foo::{lambda()#1}::operator()() const"
 
+# Capturing lambda/functor frames — mutable (non-const) operator(), reference
+# qualifiers, and closure types nested inside member functions.
+run_case "lldb/lambda-capturing: mutable, ref-qual, member-context closures" "lldb-lambda-capturing.txt" \
+"/Users/runner/work/repo/src/app.cpp${TAB}7${TAB}3${TAB}App::main::{lambda(char const*, long)#3}::operator()(char const*, long) const &
+/Users/runner/work/repo/src/manager.cpp${TAB}21${TAB}5${TAB}Manager::dispatch::{lambda(std::string&)#2}::operator()(std::string&)
+/Users/runner/work/repo/src/worker.cpp${TAB}42${TAB}17${TAB}Worker::process::{lambda(int)#1}::operator()(int) const"
+
 
 echo
 printf 'extract-frames: %d passed, %d failed\n' "$PASS" "$FAIL"
