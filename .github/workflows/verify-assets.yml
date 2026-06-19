@@ -11,6 +11,8 @@ on:
     paths:
       - "src/**"
       - "scripts/verify-assets.ts"
+      - "scripts/ci/validate-retention.sh"
+      - "scripts/ci/validate-retention.test.sh"
       - "package.json"
       - "bun.lockb"
       - ".github/workflows/verify-assets.yml"
