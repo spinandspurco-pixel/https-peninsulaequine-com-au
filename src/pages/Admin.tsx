@@ -359,6 +359,17 @@ export default function Admin() {
                       <EmailDiagnostics />
                     </div>
                   )}
+
+                  {isAdmin && (
+                    <div>
+                      <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-6">
+                        Client Preview Gate
+                      </p>
+                      <PreviewMintGate />
+                    </div>
+                  )}
+
+                  )}
                 </div>
               )}
             </div>
