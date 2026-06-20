@@ -2,13 +2,18 @@ import { useState, useEffect, useRef } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
+export type AppRole = "admin" | "employee" | "trainer" | "moderator" | "preview" | "user";
+
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [roles, setRoles] = useState<AppRole[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isEmployee, setIsEmployee] = useState(false);
   const [isTrainer, setIsTrainer] = useState(false);
+  const [isModerator, setIsModerator] = useState(false);
+  const [isPreview, setIsPreview] = useState(false);
   const mounted = useRef(true);
 
   useEffect(() => {
@@ -24,34 +29,37 @@ export function useAuth() {
 
     const fetchRoles = async (userId: string) => {
       try {
-        const { data: roles } = await supabase
+        const { data } = await supabase
           .from("user_roles")
           .select("role")
           .eq("user_id", userId);
 
         if (!mounted.current) return;
-        const roleList = roles?.map(r => r.role) || [];
+        const roleList = (data?.map((r) => r.role) || []) as AppRole[];
+        setRoles(roleList);
         setIsAdmin(roleList.includes("admin"));
         setIsEmployee(roleList.includes("employee"));
         setIsTrainer(roleList.includes("trainer"));
+        setIsModerator(roleList.includes("moderator"));
+        setIsPreview(roleList.includes("preview"));
       } catch (err) {
         console.warn("[useAuth] Role fetch failed:", err);
       }
     };
 
     const clearRoles = () => {
+      setRoles([]);
       setIsAdmin(false);
       setIsEmployee(false);
       setIsTrainer(false);
+      setIsModerator(false);
+      setIsPreview(false);
     };
 
-    // Hard safety timeout — never hang longer than 2s
     const timeout = setTimeout(() => {
-      
       resolve();
     }, 2000);
 
-    // 1. Listen for auth changes FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, newSession) => {
         if (!mounted.current) return;
@@ -67,7 +75,6 @@ export function useAuth() {
       }
     );
 
-    // 2. Then get initial session
     supabase.auth.getSession().then(async ({ data: { session: s } }) => {
       if (!mounted.current) return;
       setSession(s);
@@ -91,10 +98,7 @@ export function useAuth() {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     return { error };
   };
 
@@ -102,9 +106,7 @@ export function useAuth() {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: window.location.origin,
-      },
+      options: { emailRedirectTo: window.location.origin },
     });
     return { error };
   };
@@ -118,9 +120,12 @@ export function useAuth() {
     user,
     session,
     loading,
+    roles,
     isAdmin,
     isEmployee,
     isTrainer,
+    isModerator,
+    isPreview,
     signIn,
     signUp,
     signOut,
