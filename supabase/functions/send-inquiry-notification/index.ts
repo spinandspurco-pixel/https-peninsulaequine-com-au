@@ -413,7 +413,7 @@ const handler = async (req: Request): Promise<Response> => {
     const [notificationResponse, confirmationResponse] = await Promise.all([
       // Send the notification email to the business + trainer
       resend.emails.send({
-        from: FROM_EMAIL,
+        from: HQ_FROM,
         to: notifyRecipients,
         subject: `New Project Inquiry from ${String(inquiry.name).replace(/[\r\n]/g, " ").slice(0, 120)}`,
         html: emailHtml,
@@ -423,6 +423,7 @@ const handler = async (req: Request): Promise<Response> => {
       resend.emails.send({
         from: FROM_EMAIL,
         to: [inquiry.email],
+        reply_to: WELCOME_REPLY_TO,
         subject: "Project Received — Peninsula Equine",
         html: confirmationHtml,
       }),
