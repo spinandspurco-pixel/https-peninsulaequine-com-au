@@ -282,15 +282,15 @@ export default function Aberdeen() {
                   End of chapter · 02
                 </p>
                 <h2 className="mt-6 font-serif text-foreground/95 leading-[0.96] tracking-tight text-[clamp(1.9rem,1.3rem+2.4vw,3.2rem)]">
-                  Start with the ground.
+                  An arena ridden every day.
                   <br />
                   <span className="text-foreground/55 italic font-normal">
-                    Build the legacy.
+                    A precinct lived in.
                   </span>
                 </h2>
                 <p className="mt-6 max-w-md font-sans font-light text-foreground/55 text-[0.95rem] leading-[1.8]">
-                  Talk to Peninsula Equine about arenas, equine facilities and
-                  rural builds that need to perform without compromise.
+                  Talk to Peninsula Equine about indoor arenas, stable precincts
+                  and the daily systems that hold them together.
                 </p>
                 <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-baseline gap-6 sm:gap-10">
                   <Link

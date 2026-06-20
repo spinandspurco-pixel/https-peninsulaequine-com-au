@@ -309,8 +309,8 @@ export default function MainRidgePavilion() {
                   </span>
                 </h2>
                 <p className="mt-6 font-sans font-light text-foreground/55 text-[0.95rem] leading-[1.8] max-w-md">
-                  Talk to Peninsula Equine about your next rural build.
-                  Selection begins with a written brief.
+                  Talk to Peninsula Equine about the rural build that anchors
+                  the rest of the property — pavilion, fire, table, view.
                 </p>
                 <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-baseline gap-6 sm:gap-10">
                   <Link

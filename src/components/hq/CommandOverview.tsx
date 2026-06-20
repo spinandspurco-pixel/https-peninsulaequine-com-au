@@ -93,7 +93,9 @@ export function CommandOverview() {
       setActivity(activityLog.data ?? []);
     };
 
-    load().catch((err) => console.warn("[CommandOverview] load failed", err));
+    load().catch(() => {
+      // Metrics fetch failures are non-fatal — the panel simply shows zeros.
+    });
     return () => {
       cancelled = true;
     };
