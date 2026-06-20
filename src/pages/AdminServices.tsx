@@ -21,6 +21,7 @@ import {
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, GripVertical } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
+import { PreviewNotice } from "@/components/hq/PreviewNotice";
 
 type ManagedService = Tables<"managed_services">;
 
