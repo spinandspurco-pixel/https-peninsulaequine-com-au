@@ -218,14 +218,14 @@ export default function Contact() {
             style={{ animationDelay: "200ms", animationFillMode: "both" }}
           >
             <div className="w-8 h-px bg-accent/40" />
-            <p className="text-overline text-[hsl(var(--accent-light))]/95">Get Started</p>
+            <p className="text-overline text-[hsl(var(--accent-light))]/95">Begin the brief</p>
             <div className="w-8 h-px bg-accent/40" />
           </div>
           <h1
             className="heading-display text-foreground opacity-0 animate-fade-in"
             style={{ animationDelay: "400ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
-            Request Site Assessment
+            The first conversation starts with the ground.
           </h1>
           <p
             className="mt-8 text-[hsl(var(--footer-muted))] text-sm sm:text-base max-w-lg mx-auto leading-relaxed opacity-0 animate-fade-in"
