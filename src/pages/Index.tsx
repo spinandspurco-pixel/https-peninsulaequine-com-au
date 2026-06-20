@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { logClientEvent } from "@/lib/clientLog";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BrandIntro } from "@/components/BrandIntro";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
