@@ -19,6 +19,7 @@ import {
   PreviewWelcome,
   BlueprintField,
   BronzeRule,
+  UserBadge,
 } from "@/components/hq/HqPrimitives";
 import { resolveIdentity } from "@/components/hq/hqIdentity";
 import { WholePropertyInbox } from "@/components/admin/WholePropertyInbox";
