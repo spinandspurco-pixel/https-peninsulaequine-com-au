@@ -179,7 +179,7 @@ export default function AdminServices() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditItem(null)}>Cancel</Button>
-            <Button onClick={handleSave} disabled={saving}>
+            <Button onClick={handleSave} disabled={saving || isPreview} title={isPreview ? "View-only in client preview" : undefined}>
               {saving ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : null}
               {editItem?.id ? "Update" : "Create"}
             </Button>
