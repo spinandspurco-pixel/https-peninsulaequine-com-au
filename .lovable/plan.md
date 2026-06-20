@@ -1,91 +1,131 @@
-# Premiumisation Phase — Plan
+## /hq Command Centre — Slice 8
 
-Scope is large. I'll run it as seven sequenced slices on the public site, then the portal. Each slice ends in a Playwright pass (mobile/tablet/desktop) before moving on, so we keep cinematic integrity instead of stacking regressions.
+Evolve `/hq` from a navigation dashboard into the private operating layer behind the public Peninsula Equine brand. Same serif/mono language, bronze linework, blueprint detail, no SaaS feel.
 
-## Slice 1 — Visual Rhythm Audit
-Goal: every page reads as composed, not assembled.
-- Page-by-page review: Home, Services (+ children), Selected Works, Field Notes, About, LumenArc, Contact.
-- Normalise section vertical rhythm to a shared scale (e.g. `--pause-sm/md/lg/xl`) in `index.css`; replace ad-hoc `py-*` values where they break cadence.
-- Audit chapter labels (`PE / 0X — …`) for consistent placement, weight, and tracking; remove duplicates.
-- Tighten density spikes (intro → grid jumps) by inserting Pause sections or adjusting first-row offsets.
+### New zone architecture
 
-## Slice 2 — Motion System Audit
-Goal: one PE motion language.
-- Codify tokens in `tailwind.config.ts` + `index.css`: durations `arrive=1100ms`, `hold=800ms`, `exit=600ms`; ease `cubic-bezier(0.45,0,0.15,1)`.
-- Sweep components for off-spec durations/easings; replace inline values with tokens.
-- Reveal pattern: single IntersectionObserver hook (`useReveal`) — fade+8px lift, no scale, no blur, staggered by 80ms.
-- Hover states: image scale capped at 1.03, caption lift 4px, 700ms; remove any 300ms ease-out snap.
-- Blueprint motion: line draws only on first arrival; no infinite loops.
+`src/pages/Admin.tsx` is rebuilt around six zones in this exact order, each a `<section>` with the existing roman-numeral + hairline rule header treatment:
 
-## Slice 3 — Image Treatment Audit
-Goal: photography, render, product imagery feel unified.
-- Standardise `CropSafeImage` defaults: blueprint grade (`brightness .88 contrast 1.08 saturate .82`), shared vignette overlay component.
-- Establish crop ratios per surface (hero 21:9, project card 4:5, field note 3:2).
-- Loading: `loading="lazy"` + `decoding="async"` everywhere except above-fold hero; add 600ms fade-in on `onLoad`.
-- Remove one-off gradients; centralise in `src/components/media/ImageVeil.tsx`.
+```text
+01  Command Overview     ← new
+02  Pipeline             ← reuse CRMPipeline
+03  Applications         ← new
+04  Content              ← expand 2×2 → 3×2
+05  Projects             ← new
+06  Client Preview       ← new toggle/mode
+```
 
-## Slice 4 — Mobile-First Luxury Review
-Goal: mobile is designed, not adapted.
-- Typography scale: clamp() for display/serif so headings don't shrink to flat sans on <400px.
-- Thumb-reach: primary actions stay in bottom 60% of viewport; nav menu trigger sized 44px.
-- Section pacing: shorter pauses on mobile (`--pause-md` halves), but keep one full-bleed cinematic beat per page.
-- Re-crop hero/portfolio images for portrait (use `<picture>` with media queries).
-- Header behaviour: hide-on-scroll-down, reveal-on-scroll-up.
+`Today`, `Whole-Property Inbox`, `Financial Snapshot`, and `Team` are not removed — they collapse into a quieter `∞ Operations` drawer at the bottom (one expandable section) so existing staff workflows are preserved.
 
-## Slice 5 — Blueprint System Refinement
-Goal: one cohesive architectural layer.
-- Single source: `src/components/blueprint/` (Grid, Threads, CornerBrackets, ChapterLabel, DraftMark).
-- Reduce overlay opacity ceiling to 3.5%; remove duplicated grids stacking on same section.
-- Chapter labels: one per section, top-right, never on mobile if it collides with header.
-- Remove decorative-only marks that don't reference structure.
+### 01 — Command Overview (`src/components/hq/CommandOverview.tsx`)
 
-## Slice 6 — Conversion Pathway Audit
-Goal: Home → Services → Selected Works → Apply to Build feels inevitable.
-- Trace path; ensure each page ends with a single quiet CTA pointing to the next step.
-- Apply to Build form: progressive disclosure, autosave, clearer qualification copy.
-- Trust signals: insert restrained proof points (project count, region, standard) at one anchor per page — no logo walls.
-- Remove redundant CTAs mid-scroll.
+A single horizontal manifest strip + activity feed + quick actions. No charts.
 
-## Slice 7 — Premium Portfolio Review (Selected Works)
-Goal: strongest page on the site.
-- Feature project (Main Ridge): full-bleed hero with parallax veil, 5-act scroll narrative.
-- Project cards: editorial captions (Location · Year · Discipline), hover reveals one-line thesis.
-- Case study pages: enforce 5-act template (Context, Brief, Ground, Build, Standard).
-- Transitions: route-level fade+lift (240ms) using existing motion tokens.
+- **Metrics row** (6 cells, hairline dividers, mono labels, serif numerals):
+  - Active projects (jobs where status ∈ `in_progress`)
+  - New enquiries (last 7d, `inquiries` where `deal_stage='new'`)
+  - Site visits booked (`site_assessments` upcoming)
+  - Proposals sent (`quotes` where `status='sent'`)
+  - In-progress builds (`jobs` where `profit_status` not null and not completed)
+  - Completed projects (jobs done this quarter)
+- **Recent activity feed** — last 8 rows from `activity_log` rendered as a vertical timeline with thin gold rule.
+- **Quick actions** — five text links: New Enquiry, Create Quote, Log Site Visit, Open Pipeline, Open Applications.
 
-## Slice 8 — Admin / Staff Portal Overhaul
-Goal: PE Command Centre, not SaaS.
+All counts fetched in one `useEffect` with `Promise.all`, skeletons use the pulsing dot pattern already in HQ.
 
-New schema (single migration):
-- `projects` (pipeline) with stage enum, client_id, location, value_band, lead/ops owners
-- `project_notes` (internal)
-- `field_notes_drafts`
-- `selected_works_entries` (CMS-backed portfolio)
-- `staff_resources` (brand assets, SOPs, supplier links)
-- `app_role` enum extended with `client_preview`
-- RLS + GRANTs on every table; `has_role()` SECURITY DEFINER pattern.
+### 02 — Pipeline
 
-Portal surfaces:
-- Dashboard: pipeline health, today's field activity, pending applications, recent notes.
-- Pipeline (Kanban + list).
-- Client Applications inbox (extends current WholePropertyInbox pattern).
-- Field Notes manager (draft → publish).
-- Selected Works manager.
-- Staff resources hub.
-- Client Preview mode: read-only routes, hides ops chrome, branded as "PE Preview".
+Keep existing `CRMPipeline` in kanban mode by default. Add a thin context bar above it showing the eight stages as text chips with counts so the zone reads as a project pipeline, not just a CRM. Stage list standardised to: New Enquiry · Qualified · Site Visit Booked · Proposal Sent · Approved · In Progress · Completed · Archived. Map these to existing `deal_stage` values where possible; surface stage rename in `crmTypes.ts` only (no schema change required for this slice).
 
-Visual: dark blueprint chrome, serif H1s, mono labels, drafting-grid backdrops, no shadcn defaults left untouched.
+### 03 — Applications (`src/components/hq/ApplicationsInbox.tsx`)
 
-## Technical Notes
-- All edits stay token-driven — no hardcoded colours.
-- Motion tokens + reveal hook are prerequisites for slices 2–7; build them first inside slice 2.
-- Each slice: implement → Playwright screenshots at 390 / 834 / 1440 → fix collisions → close.
-- Portal schema goes in one migration with GRANTs and RLS so we don't ship half-secured tables.
+Reads from `inquiries` where `services && ARRAY['full-facility','whole-property']` OR `lead_tags @> '{full-build}'` — i.e. real "Apply to Build" submissions, separated from generic enquiries.
 
-## Sequencing
-Slices 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. I'll pause after each slice for your eye before moving on, unless you'd rather I run 1–5 as one continuous refinement pass and check in before Conversion + Portfolio.
+- **Filter bar** (text links, no selects): Project type · Land type · Location · Stage · Priority.
+- **List rows** (editorial, not a table): code · name · location · build type · tier · last update · next action.
+- **Side drawer** on click: full submission + internal notes textarea (writes to `inquiries.notes`) + three actions: `Good fit`, `Needs review`, `Not aligned` (writes to `lead_tier` / `deal_stage`) + `Convert to project` (creates row in `jobs` linked to inquiry).
 
-## Decisions I need from you
-1. Run slices sequentially with check-ins, or batch 1–5 as one "refinement pass"?
-2. Client Preview role: should it see real project data (masked) or a curated demo dataset?
-3. Portal entry — keep current `/admin` route, or move to `/hq` to match the Command Centre framing?
+### 04 — Content (3×2)
+
+Replace the current 2×2 grid with a six-cell control room. Same minimal card treatment, adds two new cells:
+
+```text
+Services        Testimonials      Events
+Documents       Selected Works    Field Notes
+```
+
+New routes/pages:
+- `/hq/selected-works` → `src/pages/AdminSelectedWorks.tsx` — list the three case-study chapters (Main Ridge, Aberdeen, Covered Arena) with edit-in-place links to their data file. CMS-lite: copy/scope/status edits persist to a `managed_projects` table (created in Slice 8b) or, for this slice, to localStorage with a clear "Demo dataset" pill so the client preview is convincing.
+- `/hq/field-notes` → `src/pages/AdminFieldNotes.tsx` — manage published field notes (`field_notes` content already in `src/pages/FieldNotes.tsx`). Same editorial pattern.
+
+Both pages reuse the existing `Layout` + masthead pattern from `AdminServices.tsx`.
+
+### 05 — Projects (`src/components/hq/ProjectsBoard.tsx` + `src/pages/HqProjectDetail.tsx`)
+
+- **Board view** at zone 05: lists rows from `jobs` (or, for the curated demo dataset, the three case-study projects) showing name · location · build type · status · next action · last update. Click → routes to `/hq/projects/:id`.
+- **Detail page** `/hq/projects/:id`:
+  - Header: project code, location, build type, status pill.
+  - Six tabs as text links (no shadcn Tabs chrome): Status · Scope · Notes · Gallery · Internal Timeline · Client-facing Summary.
+  - Status/scope/summary write back to `jobs` (or demo store).
+  - Gallery uses existing project imagery from `src/config/projectImagery.ts`.
+  - Internal timeline reads `activity_log` filtered to the project.
+  - Client-facing summary field is a textarea explicitly labelled "Visible in Client Portal".
+
+### 06 — Client Preview
+
+A read-only mode rather than a separate route, so the same `/hq` URL can be shared.
+
+- New hook `src/hooks/useHqMode.ts` returns `{ mode: 'staff' | 'preview', isPreview }`. `mode = 'preview'` when:
+  - URL has `?view=preview`, OR
+  - the logged-in user has `user_roles.role = 'preview'` (new enum value, added in a tiny migration), OR
+  - the env flag `?demo=1` is set (for Josh share links).
+- A `HqPreviewBanner` mounts at the top of `/hq` when in preview mode: small bronze pill + "Preview — view only · client demo" + an "Exit preview" link for staff.
+- All write actions (Create Quote, Convert to project, save notes, edit content) are wrapped in a tiny `<WriteGuard>` component that disables the control and shows a "view-only in preview" hover hint.
+- Preview mode also forces the curated demo dataset (Cadence: run-all-seven dataset already loaded in Slice 7) and hides the Team / Operations / Financial sections so the surface stays presentation-grade.
+- Routing: `/hq/preview` becomes a thin alias that sets `?view=preview` and forwards to `/hq`.
+
+A separate migration adds `'preview'` to the `app_role` enum and a policy granting that role read access to the demo content, but no write privileges anywhere.
+
+### Visual rules (applied to every new component)
+
+- Serif numerals at zone headers, mono overlines at `0.3em` tracking, accent rules at `1px` height.
+- Bronze/gold lines use existing `--accent` token at `15–35%` opacity.
+- No bright fill colours, no shadcn `Card` chrome — sections are separated by `border-border/10` hairlines only.
+- Spacing follows existing `pe-pause-*` rhythm.
+- Activity feed and applications list use `min-h-screen` editorial cadence (one row breathes), not dense tables.
+- All interactive elements are text links unless an action is destructive.
+
+### Files touched
+
+New:
+- `src/components/hq/CommandOverview.tsx`
+- `src/components/hq/ApplicationsInbox.tsx`
+- `src/components/hq/ProjectsBoard.tsx`
+- `src/components/hq/HqPreviewBanner.tsx`
+- `src/components/hq/WriteGuard.tsx`
+- `src/hooks/useHqMode.ts`
+- `src/pages/AdminSelectedWorks.tsx`
+- `src/pages/AdminFieldNotes.tsx`
+- `src/pages/HqProjectDetail.tsx`
+
+Edited:
+- `src/pages/Admin.tsx` — restructure to 6 zones, fold legacy sections into `∞ Operations`.
+- `src/App.tsx` — add routes `/hq/projects/:id`, `/hq/selected-works`, `/hq/field-notes`, `/hq/preview`.
+- `src/components/crm/crmTypes.ts` — align stage labels.
+
+DB:
+- One migration adding `'preview'` to `app_role` enum + a `managed_projects` table (id, code, name, location, build_type, status, scope, internal_notes, client_summary, next_action, demo flag) with RLS: `authenticated` admin read/write, `preview` role read-only. Includes the required `GRANT` block.
+
+### Out of scope for this slice
+
+- Editable Selected Works writing back to the public site (still served from `src/data/caseStudyData.ts`). HQ edits land in `managed_projects` for the demo; a follow-up slice wires the public site to read from there if you want.
+- Real activity_log instrumentation across edge functions (uses existing rows only).
+- A full user/permissions admin surface — preview role is added but managed via SQL for now.
+
+### Acceptance
+
+- `/hq` shows the six zones in order, with the bronze hairline header treatment matching Slice 7.
+- Counts in zone 01 are live against the dev DB.
+- An application can be opened, noted, scored, and converted into a project row.
+- `?view=preview` mode disables every write control and hides Operations.
+- Mobile (390px): all zones stack cleanly, the metrics row becomes a 2-column grid, the content grid becomes a single column.
