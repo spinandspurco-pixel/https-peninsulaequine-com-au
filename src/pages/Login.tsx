@@ -51,7 +51,7 @@ export default function Login() {
     toast.success("Welcome back.");
   };
 
-  if (loading) {
+  if (!ready) {
     return (
       <Layout>
         <div className="min-h-[80vh] flex items-center justify-center bg-secondary">
