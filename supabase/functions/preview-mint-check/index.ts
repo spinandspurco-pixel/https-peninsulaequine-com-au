@@ -213,11 +213,15 @@ serve(async (req) => {
     return json(200, {
       passed: findings.length === 0,
       findings,
-
       tablesScanned,
       ranAt: new Date().toISOString(),
-      blocklist: { names: NAME_BLOCKLIST, emails: EMAIL_BLOCKLIST },
+      standard: {
+        names_blocked: NAME_BLOCKLIST,
+        emails_allowed: ALLOWED_EMAIL_DOMAINS,
+        phones_allowed: ["NULL", "0400 000 000", "+614 0000 00000"],
+      },
     });
+
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     return json(500, { error: msg });
