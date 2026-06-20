@@ -57,6 +57,8 @@ function exportPDF(items: ManagedTestimonial[]) {
     : "—";
   const videoCount = items.filter((t) => t.media_type === "video").length;
 
+  const esc = (v: unknown) =>
+    String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string));
   const html = `
     <html><head><title>Peninsula Equine — Testimonials Report</title>
     <style>
@@ -74,19 +76,19 @@ function exportPDF(items: ManagedTestimonial[]) {
       @media print{body{margin:20px}}
     </style></head><body>
     <h1>Peninsula Equine — Testimonials Report</h1>
-    <p class="meta">Generated ${new Date().toLocaleDateString("en-AU", { year: "numeric", month: "long", day: "numeric" })} · ${items.length} testimonials</p>
+    <p class="meta">Generated ${esc(new Date().toLocaleDateString("en-AU", { year: "numeric", month: "long", day: "numeric" }))} · ${items.length} testimonials</p>
     <div class="stats">
-      <span><b>${avgRating}</b> avg rating</span>
+      <span><b>${esc(avgRating)}</b> avg rating</span>
       <span><b>${items.length}</b> reviews</span>
       <span><b>${videoCount}</b> video testimonials</span>
     </div>
     ${items.map((t) => `
       <div class="card">
-        <h3>${t.client_name}</h3>
-        ${t.client_role ? `<p class="role">${t.client_role}</p>` : ""}
+        <h3>${esc(t.client_name)}</h3>
+        ${t.client_role ? `<p class="role">${esc(t.client_role)}</p>` : ""}
         <div class="stars">${stars(t.rating)}</div>
-        <blockquote>"${t.quote}"</blockquote>
-        ${(t.service_tags?.length || t.trainer) ? `<p class="tags">${t.trainer ? `Trainer: ${t.trainer}` : ""}${t.trainer && t.service_tags?.length ? " · " : ""}${(t.service_tags ?? []).join(", ")}</p>` : ""}
+        <blockquote>"${esc(t.quote)}"</blockquote>
+        ${(t.service_tags?.length || t.trainer) ? `<p class="tags">${t.trainer ? `Trainer: ${esc(t.trainer)}` : ""}${t.trainer && t.service_tags?.length ? " · " : ""}${(t.service_tags ?? []).map(esc).join(", ")}</p>` : ""}
       </div>
     `).join("")}
     </body></html>`;
@@ -97,6 +99,7 @@ function exportPDF(items: ManagedTestimonial[]) {
   w.document.close();
   setTimeout(() => w.print(), 400);
   toast.success("PDF report opened for printing");
+
 }
 
 type ManagedTestimonial = Tables<"managed_testimonials">;
