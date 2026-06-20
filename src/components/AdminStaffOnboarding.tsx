@@ -81,9 +81,11 @@ interface StaffMember {
   user_id: string;
   role: string;
   created_at: string;
-  email?: string;
-  display_name?: string;
+  email?: string | null;
+  display_name?: string | null;
+  is_test_account?: boolean;
 }
+
 
 export function AdminStaffOnboarding() {
   const [staff, setStaff] = useState<StaffMember[]>([]);
@@ -110,22 +112,33 @@ export function AdminStaffOnboarding() {
 
   const fetchStaff = async () => {
     setLoadingStaff(true);
-    const { data, error } = await supabase
-      .from("user_roles")
-      .select("user_id, role, created_at")
-      .order("created_at", { ascending: false });
+    // Prefer the admin-only RPC: it joins auth.users so we can render
+    // email, display name, and the e2e test-account flag. Falls back to
+    // the bare user_roles read if the RPC is unavailable (e.g. during
+    // local dev before the migration applies).
+    const { data, error } = await supabase.rpc("list_staff_directory");
 
-    if (error) {
-      toast.error("Failed to load staff");
+    if (error || !data) {
+      const fallback = await supabase
+        .from("user_roles")
+        .select("user_id, role, created_at")
+        .order("created_at", { ascending: false });
+      if (fallback.error) {
+        toast.error("Failed to load staff");
+        setLoadingStaff(false);
+        return;
+      }
+      setStaff(
+        (fallback.data || []).map((r) => ({ ...r, is_test_account: false })),
+      );
       setLoadingStaff(false);
       return;
     }
 
-    // We don't have direct access to auth.users, so we'll display user_id
-    // The edge function sets display_name in user_metadata
-    setStaff(data || []);
+    setStaff(data as StaffMember[]);
     setLoadingStaff(false);
   };
+
 
   const handleInvite = async () => {
     if (!inviteEmail || !invitePassword || !inviteRole) {
