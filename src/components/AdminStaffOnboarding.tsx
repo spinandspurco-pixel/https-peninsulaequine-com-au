@@ -66,6 +66,7 @@ import {
   PERider,
   PEHorseshoe,
 } from "@/components/icons/PEIcons";
+import { MintJoshPreviewCard } from "@/components/hq/MintJoshPreviewCard";
 
 const ROLE_LABELS: Record<string, { label: string; color: string; desc: string }> = {
   admin: { label: "Admin", color: "bg-red-500 text-white", desc: "Full access to all features and staff management" },
@@ -226,6 +227,9 @@ export function AdminStaffOnboarding() {
           </Button>
         </div>
       </div>
+
+      {/* Josh Dales preview-account quick action */}
+      <MintJoshPreviewCard />
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
