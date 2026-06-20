@@ -29,7 +29,10 @@ fi
 EXCLUDES=(
   -g '!node_modules' -g '!dist' -g '!build' -g '!.lovable'
   -g '!scripts/preview-mint-check.sh'
+  -g '!scripts/preview-mint-check.test.sh'
   -g '!supabase/functions/preview-mint-check/index.ts'
+  -g '!supabase/functions/preview-mint-check/scan.ts'
+  -g '!supabase/functions/preview-mint-check/index.test.ts'
   -g '!src/components/hq/PreviewMintGate.tsx'
   -g '!docs/PREVIEW_MODE.md'
   -g '!.github/workflows/preview-mint-check.yml'
@@ -37,6 +40,7 @@ EXCLUDES=(
   # they are removing the data, not introducing it.
   -g '!supabase/migrations/*_remove_test_inquiries.sql'
 )
+
 
 
 hits=0
