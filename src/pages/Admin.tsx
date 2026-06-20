@@ -11,6 +11,7 @@ import { WriteGuard } from "@/components/hq/WriteGuard";
 import { CRMPipeline } from "@/components/crm/CRMPipeline";
 import { QuoteBuilder } from "@/components/QuoteBuilder";
 import { AdminStaffOnboarding } from "@/components/AdminStaffOnboarding";
+import { EmailDiagnostics } from "@/components/hq/EmailDiagnostics";
 import { WholePropertyInbox } from "@/components/admin/WholePropertyInbox";
 import { FinancialDashboard } from "@/components/FinancialDashboard";
 import { TodaysPlan } from "@/components/TodaysPlan";
@@ -300,6 +301,15 @@ export default function Admin() {
                     </p>
                     <AdminStaffOnboarding />
                   </div>
+
+                  {isAdmin && (
+                    <div>
+                      <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-6">
+                        Email Infrastructure
+                      </p>
+                      <EmailDiagnostics />
+                    </div>
+                  )}
                 </div>
               )}
             </div>
