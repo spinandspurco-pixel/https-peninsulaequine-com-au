@@ -97,6 +97,7 @@ export default function Admin() {
                 { label: "Create Quote", action: () => setQuoteForInquiryId("new") },
                 { label: "Pipeline", action: () => document.getElementById("zone-pipeline")?.scrollIntoView({ behavior: "smooth" }) },
                 { label: "Financials", action: () => document.getElementById("zone-financial")?.scrollIntoView({ behavior: "smooth" }) },
+                { label: "Content", action: () => document.getElementById("zone-content")?.scrollIntoView({ behavior: "smooth" }) },
               ].map((item) => (
                 <button
                   key={item.label}
@@ -106,6 +107,7 @@ export default function Admin() {
                   {item.label}
                 </button>
               ))}
+
             </div>
           </div>
         </div>
