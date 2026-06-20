@@ -109,6 +109,7 @@ export default function AdminEvents() {
               <Plus className="h-4 w-4 mr-2" /> Add Event
             </Button>
           </div>
+          <PreviewNotice />
 
           {isLoading ? (
             <div className="flex justify-center py-20"><RefreshCw className="h-6 w-6 animate-spin text-muted-foreground" /></div>
