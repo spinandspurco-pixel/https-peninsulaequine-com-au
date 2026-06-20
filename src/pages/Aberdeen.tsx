@@ -273,39 +273,109 @@ export default function Aberdeen() {
           </div>
         </section>
 
-        <section className="bg-background py-[clamp(5rem,4rem+5vw,8rem)]">
-          <div className="section-container mx-auto max-w-5xl px-6 text-center">
-            <RevealOnScroll direction="up" duration={1000}>
-              <p className="font-serif text-foreground/88 leading-[1.18] tracking-[-0.022em] text-[clamp(1.7rem,1.2rem+1.7vw,2.6rem)]">
-                Start with the ground. Build the legacy.
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" duration={1000} delay={140}>
-              <p className="mx-auto mt-6 max-w-xl font-sans font-light leading-[1.7] text-[15px] text-foreground/55">
-                Talk to Peninsula Equine about arenas, equine facilities and rural builds that need to perform without compromise.
-              </p>
-            </RevealOnScroll>
-            <RevealLine width="w-12" delay={240} className="mx-auto mt-12" />
-            <RevealOnScroll direction="up" duration={1100} delay={260}>
-              <div className="mt-12 flex flex-col items-center justify-center gap-8 sm:flex-row sm:gap-16">
+        {/* Resolved + Next Chapter handoff */}
+        <section className="relative border-t border-accent/10 pe-pause-lg">
+          <div className="section-container max-w-[1280px]">
+            <div className="grid grid-cols-12 gap-10">
+              <div className="col-span-12 md:col-span-6">
+                <p className="font-mono text-[10px] uppercase tracking-[0.5em] text-accent/55">
+                  End of chapter · 02
+                </p>
+                <h2 className="mt-6 font-serif text-foreground/95 leading-[0.96] tracking-tight text-[clamp(1.9rem,1.3rem+2.4vw,3.2rem)]">
+                  Start with the ground.
+                  <br />
+                  <span className="text-foreground/55 italic font-normal">
+                    Build the legacy.
+                  </span>
+                </h2>
+                <p className="mt-6 max-w-md font-sans font-light text-foreground/55 text-[0.95rem] leading-[1.8]">
+                  Talk to Peninsula Equine about arenas, equine facilities and
+                  rural builds that need to perform without compromise.
+                </p>
+                <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-baseline gap-6 sm:gap-10">
+                  <Link
+                    to="/site-assessment"
+                    className="group inline-flex items-baseline gap-4 font-mono text-[10px] uppercase tracking-[0.45em] text-foreground hover:text-accent"
+                    style={{ transition: "color var(--pe-dur-hold) var(--pe-ease)" }}
+                  >
+                    <span>Request Assessment</span>
+                    <span
+                      aria-hidden
+                      className="h-px w-12 bg-accent/55 group-hover:w-24 group-hover:bg-accent"
+                      style={{
+                        transition:
+                          "width var(--pe-dur-hold) var(--pe-ease), background-color var(--pe-dur-hold) var(--pe-ease)",
+                      }}
+                    />
+                  </Link>
+                  <Link
+                    to="/selected-works"
+                    className="font-mono text-[10px] uppercase tracking-[0.45em] text-foreground/55 hover:text-foreground"
+                    style={{ transition: "color var(--pe-dur-hold) var(--pe-ease)" }}
+                  >
+                    ← Back to Selected Works
+                  </Link>
+                </div>
+              </div>
+
+              <div className="col-span-12 md:col-span-5 md:col-start-8">
                 <Link
-                  to="/selected-works"
-                  className="group inline-flex items-center gap-3 font-mono uppercase text-[10px] tracking-[0.42em] text-foreground/62 transition-colors duration-500 hover:text-foreground"
+                  to="/field-notes/covered-arena-stables-build"
+                  className="group block relative aspect-[4/5] overflow-hidden bg-card border-l border-accent/20"
                 >
-                  <span className="h-px w-8 bg-accent/45 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
-                  Back to Selected Works
-                </Link>
-                <Link
-                  to="/site-assessment"
-                  className="group inline-flex items-center gap-3 font-mono uppercase text-[10px] tracking-[0.42em] text-accent transition-colors duration-500 hover:text-foreground"
-                >
-                  Request Assessment
-                  <span className="h-px w-8 bg-accent transition-all duration-700 group-hover:w-14" />
+                  <img
+                    src={arenaVaulted.url}
+                    alt=""
+                    aria-hidden
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-65"
+                    style={{
+                      objectPosition: "50% 50%",
+                      filter: "brightness(0.6) contrast(1.06) saturate(0.72)",
+                      transition: "opacity var(--pe-dur-cinematic) var(--pe-ease)",
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/65 to-background/20" />
+                  <div className="relative z-10 h-full flex flex-col justify-between p-8">
+                    <div className="flex items-center gap-3">
+                      <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse-subtle" />
+                      <p className="font-mono text-[10px] uppercase tracking-[0.5em] text-accent/70">
+                        Live · Chapter 03
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-mono text-[9.5px] uppercase tracking-[0.45em] text-foreground/45">
+                        Covered Arena · Stables
+                      </p>
+                      <h3 className="mt-3 font-serif text-foreground/95 leading-[0.98] tracking-tight text-[clamp(1.6rem,1.1rem+1.8vw,2.4rem)]">
+                        In Progress.
+                      </h3>
+                      <p className="mt-3 font-serif italic text-foreground/65 text-[0.95rem] leading-[1.45] max-w-xs">
+                        Followed through field notes from ground prep to roof on.
+                      </p>
+                      <div
+                        className="mt-5 inline-flex items-baseline gap-3 font-mono text-[10px] uppercase tracking-[0.45em] text-foreground/65 group-hover:text-accent"
+                        style={{ transition: "color var(--pe-dur-hold) var(--pe-ease)" }}
+                      >
+                        <span>Open Field Notes</span>
+                        <span
+                          aria-hidden
+                          className="h-px w-10 bg-accent/50 group-hover:w-20 group-hover:bg-accent"
+                          style={{
+                            transition:
+                              "width var(--pe-dur-hold) var(--pe-ease), background-color var(--pe-dur-hold) var(--pe-ease)",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </Link>
               </div>
-            </RevealOnScroll>
+            </div>
           </div>
         </section>
+
       </article>
     </Layout>
   );
