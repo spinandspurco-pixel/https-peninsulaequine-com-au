@@ -77,6 +77,10 @@ export default function HqProjectDetail() {
 
   const save = async (patch: Partial<Project>) => {
     if (!project) return;
+    if (isPreview) {
+      toast.error("View-only in client preview");
+      return;
+    }
     const { error } = await supabase
       .from("managed_projects")
       .update(patch)

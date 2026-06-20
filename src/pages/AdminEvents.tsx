@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, CalendarIcon, MapPin, Users } from "lucide-react";
 import { format } from "date-fns";
 import type { Tables } from "@/integrations/supabase/types";
+import { PreviewNotice } from "@/components/hq/PreviewNotice";
 
 type ManagedEvent = Tables<"managed_events">;
 
@@ -108,6 +109,7 @@ export default function AdminEvents() {
               <Plus className="h-4 w-4 mr-2" /> Add Event
             </Button>
           </div>
+          <PreviewNotice />
 
           {isLoading ? (
             <div className="flex justify-center py-20"><RefreshCw className="h-6 w-6 animate-spin text-muted-foreground" /></div>
@@ -161,7 +163,7 @@ export default function AdminEvents() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditItem(null)}>Cancel</Button>
-            <Button onClick={handleSave} disabled={saving}>
+            <Button onClick={handleSave} disabled={saving || isPreview} title={isPreview ? "View-only in client preview" : undefined}>
               {saving && <RefreshCw className="h-4 w-4 animate-spin mr-2" />}
               {editItem?.id ? "Update" : "Create"}
             </Button>
@@ -177,7 +179,7 @@ export default function AdminEvents() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground">Delete</AlertDialogAction>
+            <AlertDialogAction onClick={handleDelete} disabled={isPreview} className="bg-destructive text-destructive-foreground">Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
