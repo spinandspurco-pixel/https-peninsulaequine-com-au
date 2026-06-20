@@ -527,10 +527,11 @@ export function EmailDiagnostics() {
 
         {status?.checkedAt && (
           <p className="font-mono text-[9px] text-muted-foreground/35 uppercase tracking-[0.22em]">
-            Snapshot · {new Date(status.checkedAt).toLocaleString()}
+            Operations log · snapshot {new Date(status.checkedAt).toLocaleString()}
           </p>
         )}
       </div>
-    </div>
+    </PreflightFrame>
   );
 }
+
