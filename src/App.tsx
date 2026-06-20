@@ -100,11 +100,15 @@ function AppContent() {
             <Route path="/privacy" element={<LegalPrivacy />} />
             <Route path="/terms" element={<LegalTerms />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/hq" element={<Navigate to="/about" replace />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/admin/services" element={<AdminServices />} />
-            <Route path="/admin/testimonials" element={<AdminTestimonials />} />
-            <Route path="/admin/events" element={<AdminEvents />} />
+            {/* Staff Command Centre — primary at /hq, /admin redirects */}
+            <Route path="/hq" element={<Admin />} />
+            <Route path="/hq/services" element={<AdminServices />} />
+            <Route path="/hq/testimonials" element={<AdminTestimonials />} />
+            <Route path="/hq/events" element={<AdminEvents />} />
+            <Route path="/admin" element={<Navigate to="/hq" replace />} />
+            <Route path="/admin/services" element={<Navigate to="/hq/services" replace />} />
+            <Route path="/admin/testimonials" element={<Navigate to="/hq/testimonials" replace />} />
+            <Route path="/admin/events" element={<Navigate to="/hq/events" replace />} />
             <Route path="/employee" element={<EmployeeDashboard />} />
             <Route path="/lessons" element={<Lessons />} />
             <Route path="/book-lesson" element={<ProtectedRoute><BookLesson /></ProtectedRoute>} />
