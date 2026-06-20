@@ -59,7 +59,8 @@ export function CommandOverview() {
         supabase
           .from("site_assessments")
           .select("id", { count: "exact", head: true })
-          .gte("preferred_date", new Date().toISOString().slice(0, 10)),
+          .gte("slot_date", new Date().toISOString().slice(0, 10)),
+
         supabase.from("quotes").select("id", { count: "exact", head: true }).eq("status", "sent"),
         supabase
           .from("managed_projects")
