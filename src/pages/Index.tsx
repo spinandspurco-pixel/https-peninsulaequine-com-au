@@ -498,14 +498,16 @@ export default function Index() {
                             <span className="w-8 h-px bg-accent/60 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
                             View Field Note
                           </span>
-                          <Link
-                            to="/field-notes"
-                            onClick={(e) => e.stopPropagation()}
-                            className="group/alt inline-flex items-center gap-3 font-mono uppercase text-foreground/50 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
+                          <span
+                            role="link"
+                            tabIndex={0}
+                            onClick={(e) => { e.stopPropagation(); e.preventDefault(); navigate("/field-notes"); }}
+                            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); navigate("/field-notes"); } }}
+                            className="group/alt inline-flex items-center gap-3 font-mono uppercase text-foreground/50 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em] cursor-pointer"
                           >
                             <span className="w-6 h-px bg-foreground/25 transition-all duration-700 group-hover/alt:w-12 group-hover/alt:bg-foreground/60" />
                             Read Field Notes
-                          </Link>
+                          </span>
                         </div>
                       </div>
                     </div>

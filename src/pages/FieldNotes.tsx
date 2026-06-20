@@ -52,8 +52,7 @@ export default function FieldNotes() {
             className="absolute inset-0 h-full w-full object-cover object-[62%_48%] sm:object-[58%_48%] lg:object-center"
             loading="eager"
             decoding="async"
-            // @ts-expect-error valid HTML attribute
-            fetchpriority="high"
+            fetchPriority="high"
             style={{ filter: "brightness(0.7) contrast(1.12) saturate(0.8)" }}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/55 to-background/18" />

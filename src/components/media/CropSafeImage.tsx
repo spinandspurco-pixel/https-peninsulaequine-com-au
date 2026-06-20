@@ -99,8 +99,7 @@ export function CropSafeImage({
         height={height}
         loading={loading}
         decoding={decoding}
-        // @ts-expect-error fetchpriority is valid HTML, missing in older React types
-        fetchpriority={fetchPriority}
+        fetchPriority={fetchPriority}
         // Hard-coded — DO NOT accept overrides from props.
         className="absolute inset-0 h-full w-full object-contain object-center"
         style={imgStyle}
