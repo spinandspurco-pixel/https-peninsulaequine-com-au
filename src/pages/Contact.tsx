@@ -555,7 +555,7 @@ export default function Contact() {
                         <p className="text-[11px] text-[hsl(var(--footer-muted))] mt-1">Optional</p>
                       </div>
                       <SelectField
-                        label="Approximate project investment"
+                        label="Indicative investment range"
                         value={form.budget}
                         onChange={(v) => set("budget", v)}
                         options={BUDGET_RANGES}
