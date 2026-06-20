@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { logClientEvent } from "@/lib/clientLog";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BrandIntro } from "@/components/BrandIntro";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
@@ -48,6 +48,7 @@ export default function Index() {
   const [heroImgLoaded, setHeroImgLoaded] = useState(false);
   const [heroImgFailed, setHeroImgFailed] = useState(false);
   const { open: openIntake } = useIntake();
+  const navigate = useNavigate();
 
 
   const skipIntro = useMemo(() => {
@@ -119,7 +120,7 @@ export default function Index() {
                   srcSet={slidingStopSrcSet}
                   sizes="100vw"
                   alt="Horse and rider executing a sliding stop, dust plume across worked arena footing — Peninsula Equine."
-                  fetchPriority="high"
+                  {...({ fetchpriority: "high" } as any)}
                   decoding="async"
                   onLoad={() => setHeroImgLoaded(true)}
                   onError={() => {
@@ -498,14 +499,16 @@ export default function Index() {
                             <span className="w-8 h-px bg-accent/60 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
                             View Field Note
                           </span>
-                          <Link
-                            to="/field-notes"
-                            onClick={(e) => e.stopPropagation()}
-                            className="group/alt inline-flex items-center gap-3 font-mono uppercase text-foreground/50 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
+                          <span
+                            role="link"
+                            tabIndex={0}
+                            onClick={(e) => { e.stopPropagation(); e.preventDefault(); navigate("/field-notes"); }}
+                            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); navigate("/field-notes"); } }}
+                            className="group/alt inline-flex items-center gap-3 font-mono uppercase text-foreground/50 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em] cursor-pointer"
                           >
                             <span className="w-6 h-px bg-foreground/25 transition-all duration-700 group-hover/alt:w-12 group-hover/alt:bg-foreground/60" />
                             Read Field Notes
-                          </Link>
+                          </span>
                         </div>
                       </div>
                     </div>

@@ -229,8 +229,7 @@ export function Header() {
                 )}
                 loading="eager"
                 decoding="async"
-                // @ts-expect-error — valid HTML attribute
-                fetchpriority="low"
+                {...({ fetchpriority: "low" } as any)}
               />
 
             </div>
