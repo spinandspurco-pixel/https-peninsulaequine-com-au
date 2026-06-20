@@ -22,12 +22,13 @@ interface ScanTarget {
   table: string;
   nameCols: string[];
   emailCols: string[];
+  phoneCols?: string[];
 }
 
 // Only structured identity columns are scanned — never free-text fields like
 // description / notes / scope, which can legitimately mention these words.
 const TARGETS: ScanTarget[] = [
-  { table: "inquiries", nameCols: ["name"], emailCols: ["email"] },
+  { table: "inquiries", nameCols: ["name"], emailCols: ["email"], phoneCols: ["phone"] },
   {
     table: "quotes",
     nameCols: ["client_name", "accepted_by_name"],
@@ -40,11 +41,26 @@ const TARGETS: ScanTarget[] = [
     nameCols: ["client_name", "project_name"],
     emailCols: ["client_email"],
   },
-  { table: "event_rsvps", nameCols: ["name"], emailCols: ["email"] },
-  { table: "equus_ridge_interest", nameCols: ["name"], emailCols: ["email"] },
-  { table: "bookings", nameCols: ["client_name"], emailCols: ["client_email"] },
-  { table: "lesson_bookings", nameCols: ["client_name"], emailCols: ["client_email"] },
-  { table: "site_assessments", nameCols: ["client_name"], emailCols: ["client_email"] },
+  { table: "event_rsvps", nameCols: ["name"], emailCols: ["email"], phoneCols: ["phone"] },
+  {
+    table: "equus_ridge_interest",
+    nameCols: ["name"],
+    emailCols: ["email"],
+    phoneCols: ["phone"],
+  },
+  { table: "bookings", nameCols: ["client_name"], emailCols: ["client_email"], phoneCols: ["client_phone"] },
+  {
+    table: "lesson_bookings",
+    nameCols: ["client_name"],
+    emailCols: ["client_email"],
+    phoneCols: ["client_phone"],
+  },
+  {
+    table: "site_assessments",
+    nameCols: ["client_name"],
+    emailCols: ["client_email"],
+    phoneCols: ["client_phone"],
+  },
   { table: "newsletter_subscribers", nameCols: ["name"], emailCols: ["email"] },
 ];
 
@@ -61,16 +77,20 @@ const NAME_BLOCKLIST = [
   "Lorem Ipsum",
 ];
 
-const EMAIL_BLOCKLIST = [
-  "@example.com",
-  "@example.org",
-  "@test.com",
-  "test@",
-  "demo@",
-  "placeholder@",
-  "noreply@example",
-  "johntest@",
+// Preview rows MUST use one of these email domains. Anything else is treated
+// as a real client address and blocks minting.
+const ALLOWED_EMAIL_DOMAINS = [
+  "example.com",
+  "example.org",
+  "peninsulaequine.com.au",
+  "peninsulaequine.org",
+  "peninsulaequine.systems",
+  "notify.peninsulaequine.org",
 ];
+
+// Phones in preview rows must be NULL or use the obviously-fake 0400 000 000
+// marker. Any other AU mobile pattern is flagged as potentially real PII.
+const FAKE_PHONE_MARKERS = [/0400[\s-]?000[\s-]?000/, /\+614000000000/];
 
 interface Finding {
   table: string;
@@ -79,6 +99,7 @@ interface Finding {
   rowId?: string | null;
   value: string;
 }
+
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
