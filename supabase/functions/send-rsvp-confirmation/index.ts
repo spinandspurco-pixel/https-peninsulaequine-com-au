@@ -1,5 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@2.0.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
+
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -72,12 +74,45 @@ const handler = async (req: Request): Promise<Response> => {
     const NOTIFICATION_EMAIL = Deno.env.get("NOTIFICATION_EMAIL") || "delivered@resend.dev";
     const FROM_EMAIL = Deno.env.get("FROM_EMAIL") || "Peninsula Equine <onboarding@resend.dev>";
 
+    // Require authenticated caller
+    const authHeader = req.headers.get("Authorization") ?? "";
+    if (!authHeader.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!,
+      { global: { headers: { Authorization: authHeader } } }
+    );
+    const { data: userData, error: userErr } = await supabase.auth.getUser();
+    if (userErr || !userData?.user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const resend = new Resend(RESEND_API_KEY);
     const data: RSVPConfirmationRequest = await req.json();
 
     if (!data.name || !data.email || !data.eventTitle) {
       throw new Error("Missing required fields");
     }
+
+    // Verify caller owns the email OR is admin/employee
+    const callerEmail = (userData.user.email ?? "").toLowerCase();
+    if (callerEmail !== data.email.toLowerCase()) {
+      const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+      const { data: roles } = await admin.from("user_roles").select("role").eq("user_id", userData.user.id);
+      const privileged = (roles ?? []).some((r: { role: string }) => ["admin", "employee"].includes(r.role));
+      if (!privileged) {
+        return new Response(JSON.stringify({ error: "Forbidden" }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
 
     const isConfirmed = data.status === "confirmed";
     const formattedDate = new Date(data.eventDate + "T00:00:00").toLocaleDateString("en-AU", {

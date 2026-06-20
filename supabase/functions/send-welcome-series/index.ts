@@ -190,8 +190,19 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
+    // Batch mode (cron) requires service-role / internal secret
+    const INTERNAL_SECRET = Deno.env.get("INTERNAL_FUNCTION_SECRET");
+    const callerSecret = req.headers.get("x-internal-secret") ?? "";
+    const isInternalCall = !!INTERNAL_SECRET && callerSecret === INTERNAL_SECRET;
+
     // ── Batch mode (cron): process subscribers needing next step ──
     if (!email) {
+      if (!isInternalCall) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
       const results: Array<{ email: string; step: number; success: boolean }> = [];
 
       // Step 2: subscribed >24h ago, still on step 1
@@ -251,10 +262,36 @@ serve(async (req) => {
     }
 
     // ── Single-send mode (form submission) ──
-    // Determine which step to send
-    const sendStep = step ?? 1;
+    // Validate email format
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return new Response(JSON.stringify({ error: "Invalid email" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    // Only step 1 allowed from public callers; later steps require internal secret
+    const requestedStep = step ?? 1;
+    if (requestedStep !== 1 && !isInternalCall) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    // Tie public sends to a legitimate recent form submission to prevent abuse
+    if (!isInternalCall) {
+      const tenMinAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+      const [{ data: inq }, { data: sub }] = await Promise.all([
+        supabaseAdmin.from("inquiries").select("id").ilike("email", email).gte("created_at", tenMinAgo).limit(1),
+        supabaseAdmin.from("newsletter_subscribers").select("email").ilike("email", email).gte("created_at", tenMinAgo).limit(1),
+      ]);
+      if ((!inq || inq.length === 0) && (!sub || sub.length === 0)) {
+        return new Response(JSON.stringify({ error: "No matching recent submission" }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+    const sendStep = requestedStep;
     const idx = Math.min(Math.max(sendStep, 1), SERIES.length) - 1;
     const { subject, html } = SERIES[idx](name || "Friend");
+
 
     // Send via Resend
     const resendRes = await fetch("https://api.resend.com/emails", {
