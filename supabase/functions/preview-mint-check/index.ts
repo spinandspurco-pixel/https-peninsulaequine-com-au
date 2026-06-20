@@ -1,15 +1,21 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import {
+  ALLOWED_EMAIL_DOMAINS,
+  Finding,
+  NAME_BLOCKLIST,
+  scanRow,
+  TARGETS,
+} from "./scan.ts";
 
 /**
  * Preview Mint Gate
  * ─────────────────
- * Scans every preview-visible table for placeholder / test / generic identities
- * that would shatter the illusion of a "prepared for you" Client Preview.
+ * Scans every preview-visible table for placeholder / test / generic
+ * identities and real-looking PII that would shatter the illusion of a
+ * "prepared for you" Client Preview.
  *
- * Returns { passed, findings[] } so the HQ admin UI can block account minting
- * until every finding is resolved.
- *
+ * Pure scanning logic lives in ./scan.ts so it can be unit-tested directly.
  * Admin-only.
  */
 
@@ -18,87 +24,6 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface ScanTarget {
-  table: string;
-  nameCols: string[];
-  emailCols: string[];
-  phoneCols?: string[];
-}
-
-// Only structured identity columns are scanned — never free-text fields like
-// description / notes / scope, which can legitimately mention these words.
-const TARGETS: ScanTarget[] = [
-  { table: "inquiries", nameCols: ["name"], emailCols: ["email"], phoneCols: ["phone"] },
-  {
-    table: "quotes",
-    nameCols: ["client_name", "accepted_by_name"],
-    emailCols: ["client_email", "accepted_by_email"],
-  },
-  { table: "managed_testimonials", nameCols: ["client_name"], emailCols: [] },
-  { table: "managed_projects", nameCols: ["name"], emailCols: [] },
-  {
-    table: "client_followups",
-    nameCols: ["client_name", "project_name"],
-    emailCols: ["client_email"],
-  },
-  { table: "event_rsvps", nameCols: ["name"], emailCols: ["email"], phoneCols: ["phone"] },
-  {
-    table: "equus_ridge_interest",
-    nameCols: ["name"],
-    emailCols: ["email"],
-    phoneCols: ["phone"],
-  },
-  { table: "bookings", nameCols: ["client_name"], emailCols: ["client_email"], phoneCols: ["client_phone"] },
-  {
-    table: "lesson_bookings",
-    nameCols: ["client_name"],
-    emailCols: ["client_email"],
-    phoneCols: ["client_phone"],
-  },
-  {
-    table: "site_assessments",
-    nameCols: ["client_name"],
-    emailCols: ["client_email"],
-    phoneCols: ["client_phone"],
-  },
-  { table: "newsletter_subscribers", nameCols: ["name"], emailCols: ["email"] },
-];
-
-const NAME_BLOCKLIST = [
-  "Josh Smith",
-  "Test User",
-  "Test Client",
-  "Demo User",
-  "Placeholder User",
-  "Placeholder",
-  "John Doe",
-  "Jane Doe",
-  "Operator",
-  "Lorem Ipsum",
-];
-
-// Preview rows MUST use one of these email domains. Anything else is treated
-// as a real client address and blocks minting.
-const ALLOWED_EMAIL_DOMAINS = [
-  "example.com",
-  "example.org",
-  "peninsulaequine.com.au",
-  "peninsulaequine.org",
-  "peninsulaequine.systems",
-  "notify.peninsulaequine.org",
-];
-
-// Phones in preview rows must be NULL or use the obviously-fake 0400 000 000
-// marker. Any other AU mobile pattern is flagged as potentially real PII.
-const FAKE_PHONE_MARKERS = [/0400[\s-]?000[\s-]?000/, /\+614000000000/];
-
-interface Finding {
-  table: string;
-  column: string;
-  match: string;
-  rowId?: string | null;
-  value: string;
-}
 
 
 serve(async (req) => {
