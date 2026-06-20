@@ -167,7 +167,7 @@ export default function Admin() {
             {CONTENT_TILES.map((tile) => (
               <button
                 key={tile.label}
-                onClick={() => navigate(tile.to)}
+                onClick={() => navigate(`${tile.to}${isPreview ? "?view=preview" : ""}`)}
                 className="group bg-background text-left px-6 py-8 hover:bg-muted/20 transition-colors duration-500"
               >
                 <div className="flex items-baseline justify-between mb-3">
