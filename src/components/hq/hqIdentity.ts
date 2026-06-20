@@ -40,7 +40,7 @@ export function resolveIdentity(
     return { ...d, firstName: d.name.split(" ")[0] };
   }
 
-  // No directory match — derive a courteous identity, never "Operator".
+  // No directory match — derive a courteous identity, never a generic label.
   const derivedName = local ? titleCase(local) : "Peninsula Equine";
   const firstName = derivedName.split(" ")[0];
 
