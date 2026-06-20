@@ -81,7 +81,7 @@ done
 real_email=$(rg -n --no-heading \
   -g '**/migrations/**' \
   -e "'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'" \
-  "$ROOT" 2>/dev/null \
+  "${SCAN_DIRS[@]}" 2>/dev/null \
   | grep -Ev '@(example\.com|example\.org|peninsulaequine\.(com\.au|org|systems)|notify\.peninsulaequine\.org)' \
   || true)
 if [ -n "$real_email" ]; then
@@ -96,7 +96,7 @@ phone_hit=$(rg -n --no-heading \
   -g '**/migrations/**' \
   -e '\b04[0-9]{2}[ -]?[0-9]{3}[ -]?[0-9]{3}\b' \
   -e '\+614[0-9]{8}\b' \
-  "$ROOT" 2>/dev/null \
+  "${SCAN_DIRS[@]}" 2>/dev/null \
   | grep -Ev '0400[ -]?000[ -]?000|\+614000000000' \
   || true)
 if [ -n "$phone_hit" ]; then
@@ -109,7 +109,7 @@ fi
 addr_hit=$(rg -n --no-heading \
   -g '**/migrations/**' \
   -e '\b[0-9]{1,4}[A-Za-z]?\s+[A-Z][a-z]+\s+(Street|Road|Avenue|Lane|Drive|Court|Crescent|Highway|Boulevard|Parade|Place|Terrace)\b' \
-  "$ROOT" 2>/dev/null || true)
+  "${SCAN_DIRS[@]}" 2>/dev/null || true)
 if [ -n "$addr_hit" ]; then
   hits=$((hits + 1))
   report+=$'\n── Street address in migration/seed\n'"$addr_hit"$'\n'
