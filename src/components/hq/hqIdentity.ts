@@ -3,19 +3,66 @@ import type { User } from "@supabase/supabase-js";
 export interface HqIdentity {
   name: string;
   firstName: string;
+  /** Long-form role description ("Operations & Creative") */
   role: string;
-  rank: string; // short rank shown in bronze marker
+  /** Short bronze chip label ("Admin", "Client Preview") */
+  tag: string;
+  /** Indexed rank shown next to the masthead role marker */
+  rank: string;
+  /** Display identity surfaced under the badge (usually the email) */
+  handle?: string;
 }
 
-const DIRECTORY: Record<string, Omit<HqIdentity, "firstName">> = {
-  ciro: { name: "Ciro Casa", role: "Director", rank: "01 · Director" },
+type DirectoryEntry = Omit<HqIdentity, "firstName" | "handle">;
+
+const DIRECTORY: Record<string, DirectoryEntry> = {
+  // ── People ───────────────────────────────────────────
+  ciro: {
+    name: "Ciro Casa",
+    role: "Director",
+    tag: "Admin",
+    rank: "01 · Director",
+  },
   jordynn: {
     name: "Jordynn Oakley",
     role: "Operations & Creative",
+    tag: "Admin",
     rank: "02 · Operations & Creative",
   },
-  dales: { name: "Josh Dales", role: "Client Preview", rank: "P · Client Preview" },
-  sander: { name: "Sander", role: "Field Operations", rank: "03 · Field Operations" },
+  dales: {
+    name: "Josh Dales",
+    role: "Client Preview",
+    tag: "Client Preview",
+    rank: "P · Client Preview",
+  },
+  sander: {
+    name: "Sander",
+    role: "Field Operations",
+    tag: "Field Ops",
+    rank: "03 · Field Operations",
+  },
+  glenn: {
+    name: "Glenn Browitt",
+    role: "Horsemanship",
+    tag: "Trainer",
+    rank: "04 · Horsemanship",
+  },
+
+  // ── Platform display identities ──────────────────────
+  // These are display-only inboxes used inside HQ. Real password resets
+  // and outbound communication always route through peninsulaequine.org.
+  admin: {
+    name: "Peninsula Equine",
+    role: "Administrator",
+    tag: "Admin",
+    rank: "00 · Administrator",
+  },
+  preview: {
+    name: "Josh Dales",
+    role: "Client Preview",
+    tag: "Client Preview",
+    rank: "P · Client Preview",
+  },
 };
 
 function titleCase(value: string): string {
@@ -37,7 +84,23 @@ export function resolveIdentity(
 
   if (key) {
     const d = DIRECTORY[key];
-    return { ...d, firstName: d.name.split(" ")[0] };
+    // Preview flag always wins over directory tag — a directory member
+    // viewing in preview mode should read as Client Preview.
+    if (flags.isPreview && d.tag !== "Client Preview") {
+      return {
+        ...d,
+        firstName: d.name.split(" ")[0],
+        handle: email || undefined,
+        tag: "Client Preview",
+        rank: "P · Client Preview",
+        role: "Client Preview",
+      };
+    }
+    return {
+      ...d,
+      firstName: d.name.split(" ")[0],
+      handle: email || undefined,
+    };
   }
 
   // No directory match — derive a courteous identity, never a generic label.
@@ -49,7 +112,9 @@ export function resolveIdentity(
       name: derivedName,
       firstName,
       role: "Client Preview",
+      tag: "Client Preview",
       rank: "P · Client Preview",
+      handle: email || undefined,
     };
   }
   if (flags.isAdmin) {
@@ -57,7 +122,9 @@ export function resolveIdentity(
       name: derivedName,
       firstName,
       role: "Administrator",
+      tag: "Admin",
       rank: "00 · Administrator",
+      handle: email || undefined,
     };
   }
   if (flags.isEmployee) {
@@ -65,14 +132,17 @@ export function resolveIdentity(
       name: derivedName,
       firstName,
       role: "Operations",
+      tag: "Operations",
       rank: "Operations",
+      handle: email || undefined,
     };
   }
   return {
     name: derivedName,
     firstName,
     role: "Peninsula Equine",
+    tag: "Peninsula Equine",
     rank: "Peninsula Equine",
+    handle: email || undefined,
   };
 }
-
