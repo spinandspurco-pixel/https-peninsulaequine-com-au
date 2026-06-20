@@ -363,7 +363,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
           
           <div style="padding: 36px 28px; background: #faf8f4;">
-            <p style="font-size: 15px; color: #2d2418; margin: 0 0 20px;">Hi ${inquiry.name.split(" ")[0]},</p>
+            <p style="font-size: 15px; color: #2d2418; margin: 0 0 20px;">Hi ${esc(String(inquiry.name).split(" ")[0])},</p>
             
             <p style="font-size: 15px; color: #444; margin: 0 0 18px;">Thanks for sending through your project.</p>
             
