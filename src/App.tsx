@@ -114,8 +114,8 @@ function AppContent() {
             <Route path="/hq/selected-works" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminSelectedWorks /></ProtectedRoute>} />
             <Route path="/hq/field-notes" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminFieldNotes /></ProtectedRoute>} />
             <Route path="/hq/projects/:id" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><HqProjectDetail /></ProtectedRoute>} />
-            {/* Document portals are private staff surfaces — no preview access. */}
-            <Route path="/hq/documents" element={<ProtectedRoute allowedRoles={["admin","employee"]}><AdminDocuments /></ProtectedRoute>} />
+            {/* /hq/documents is a private staff surface. Preview users see a polite stub. */}
+            <Route path="/hq/documents" element={<ProtectedRoute allowedRoles={["admin","employee","preview"]}><AdminDocuments /></ProtectedRoute>} />
             <Route path="/hq/preview" element={<Navigate to="/hq?view=preview" replace />} />
             <Route path="/admin" element={<Navigate to="/hq" replace />} />
             <Route path="/admin/services" element={<Navigate to="/hq/services" replace />} />

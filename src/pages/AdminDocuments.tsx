@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { DocumentsPreviewStub } from "@/components/hq/DocumentsPreviewStub";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -173,9 +174,10 @@ function FormDataDisplay({ data }: { data: any }) {
 }
 
 export default function AdminDocuments() {
-  const { user, isAdmin, loading: authLoading } = useAuth();
+  const { user, isAdmin, isEmployee, loading: authLoading } = useAuth();
   const { isPreview } = useHqMode();
-  const canAccess = isAdmin || isPreview;
+  const isStaff = isAdmin || isEmployee;
+  const canAccess = isStaff || isPreview;
   const navigate = useNavigate();
 
   const [documents, setDocuments] = useState<StaffDoc[]>([]);
@@ -195,8 +197,8 @@ export default function AdminDocuments() {
   }, [user, canAccess, authLoading, navigate]);
 
   useEffect(() => {
-    if (canAccess) fetchDocuments();
-  }, [canAccess]);
+    if (isStaff) fetchDocuments();
+  }, [isStaff]);
 
   const fetchDocuments = async () => {
     setLoadingDocs(true);
@@ -302,6 +304,10 @@ export default function AdminDocuments() {
   }
 
   if (!canAccess) return null;
+
+  if (isPreview && !isStaff) {
+    return <DocumentsPreviewStub />;
+  }
 
   return (
     <Layout>
