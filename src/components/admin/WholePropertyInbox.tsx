@@ -256,6 +256,7 @@ export function WholePropertyInbox() {
                     )}
                   </div>
                 </div>
+                </div>
               </li>
             );
           })}
