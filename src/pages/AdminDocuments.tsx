@@ -305,6 +305,10 @@ export default function AdminDocuments() {
 
   if (!canAccess) return null;
 
+  if (isPreview && !isStaff) {
+    return <DocumentsPreviewStub />;
+  }
+
   return (
     <Layout>
       <div className="section-padding">
