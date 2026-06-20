@@ -20,6 +20,13 @@ export function WholePropertyInbox() {
   const [items, setItems] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"unread" | "all">("unread");
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const openInquiry = (id: string) => {
+    setActiveId(id);
+    setDrawerOpen(true);
+  };
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -131,8 +138,14 @@ export function WholePropertyInbox() {
             return (
               <li
                 key={i.id}
-                className={`group relative pb-8 pt-6 ${idx > 0 ? "border-t border-border/[0.07]" : ""}`}
+                className={`group relative ${idx > 0 ? "border-t border-border/[0.07]" : ""}`}
               >
+                <button
+                  type="button"
+                  onClick={() => openInquiry(i.id)}
+                  className="w-full text-left pb-8 pt-6 cursor-pointer hover:bg-foreground/[0.015] transition-colors duration-300 focus:outline-none focus:bg-foreground/[0.02]"
+                  aria-label={`Open enquiry from ${i.name}`}
+                >
                 {/* Unread accent thread */}
                 {unread && (
                   <div className="absolute left-0 top-6 bottom-8 w-px bg-gradient-to-b from-accent/50 via-accent/20 to-transparent" />
