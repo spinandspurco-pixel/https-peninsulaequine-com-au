@@ -14,10 +14,12 @@ const FIELD_NOTES = [
 export default function AdminFieldNotes() {
   const navigate = useNavigate();
   const { user, isAdmin, loading: authLoading } = useAuth();
+  const { isPreview } = useHqMode();
+  const canAccess = isAdmin || isPreview;
 
   useEffect(() => {
-    if (!authLoading && (!user || !isAdmin)) navigate("/login");
-  }, [user, isAdmin, authLoading, navigate]);
+    if (!authLoading && (!user || !canAccess)) navigate("/login");
+  }, [user, canAccess, authLoading, navigate]);
 
   if (authLoading) {
     return (
@@ -35,7 +37,7 @@ export default function AdminFieldNotes() {
         <header className="pt-32 sm:pt-40 pb-12">
           <div className="max-w-3xl mx-auto px-6">
             <button
-              onClick={() => navigate("/hq")}
+              onClick={() => navigate(isPreview ? "/hq?view=preview" : "/hq")}
               className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/45 hover:text-foreground mb-6"
             >
               ← HQ
