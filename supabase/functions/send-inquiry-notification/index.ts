@@ -27,6 +27,33 @@ function pad(n: number): string {
   return n.toString().padStart(2, "0");
 }
 
+/**
+ * Escape arbitrary user input for safe HTML interpolation.
+ * Prevents stored XSS / HTML injection in admin notification emails.
+ * Use for ALL user-submitted fields rendered into the email body, attributes,
+ * subject line, or URL parameters that end up inside HTML.
+ */
+function esc(value: unknown): string {
+  if (value === null || value === undefined) return "";
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+/**
+ * Strict-ish URL-attribute sanitiser for href/src values built from user input.
+ * Strips anything that isn't a plain printable ASCII subset and refuses
+ * javascript:/data: schemes.
+ */
+function safeAttr(value: unknown): string {
+  const s = esc(value).replace(/[\r\n\t]/g, "");
+  if (/^\s*(javascript|data|vbscript):/i.test(String(value ?? ""))) return "";
+  return s;
+}
+
 /** Generate a .ics calendar invite for a suggested follow-up consultation */
 function generateConsultationICS(opts: {
   clientName: string;
