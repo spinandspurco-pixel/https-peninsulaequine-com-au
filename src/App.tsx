@@ -104,35 +104,39 @@ function AppContent() {
             <Route path="/privacy" element={<LegalPrivacy />} />
             <Route path="/terms" element={<LegalTerms />} />
             <Route path="/login" element={<Login />} />
-            {/* Staff Command Centre — primary at /hq, /admin redirects */}
-            <Route path="/hq" element={<Admin />} />
-            <Route path="/hq/services" element={<AdminServices />} />
-            <Route path="/hq/testimonials" element={<AdminTestimonials />} />
-            <Route path="/hq/events" element={<AdminEvents />} />
-            <Route path="/hq/selected-works" element={<AdminSelectedWorks />} />
-            <Route path="/hq/field-notes" element={<AdminFieldNotes />} />
-            <Route path="/hq/projects/:id" element={<HqProjectDetail />} />
+            {/* Staff Command Centre — /hq/* requires authenticated staff role.
+                Preview role is allowed on read-only HQ surfaces (DB trigger
+                block_preview_writes enforces read-only at the data layer). */}
+            <Route path="/hq" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><Admin /></ProtectedRoute>} />
+            <Route path="/hq/services" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminServices /></ProtectedRoute>} />
+            <Route path="/hq/testimonials" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminTestimonials /></ProtectedRoute>} />
+            <Route path="/hq/events" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminEvents /></ProtectedRoute>} />
+            <Route path="/hq/selected-works" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminSelectedWorks /></ProtectedRoute>} />
+            <Route path="/hq/field-notes" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminFieldNotes /></ProtectedRoute>} />
+            <Route path="/hq/projects/:id" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><HqProjectDetail /></ProtectedRoute>} />
+            {/* Document portals are private staff surfaces — no preview access. */}
+            <Route path="/hq/documents" element={<ProtectedRoute allowedRoles={["admin","employee"]}><AdminDocuments /></ProtectedRoute>} />
             <Route path="/hq/preview" element={<Navigate to="/hq?view=preview" replace />} />
             <Route path="/admin" element={<Navigate to="/hq" replace />} />
             <Route path="/admin/services" element={<Navigate to="/hq/services" replace />} />
             <Route path="/admin/testimonials" element={<Navigate to="/hq/testimonials" replace />} />
 
             <Route path="/admin/events" element={<Navigate to="/hq/events" replace />} />
-            <Route path="/employee" element={<EmployeeDashboard />} />
+            <Route path="/employee" element={<ProtectedRoute allowedRoles={["admin","employee"]}><EmployeeDashboard /></ProtectedRoute>} />
             <Route path="/lessons" element={<Lessons />} />
             <Route path="/book-lesson" element={<ProtectedRoute><BookLesson /></ProtectedRoute>} />
             <Route path="/events" element={<Events />} />
             <Route path="/process" element={<Navigate to="/services" replace />} />
-            <Route path="/bookings" element={<BookingsDashboard />} />
-            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/bookings" element={<ProtectedRoute allowedRoles={["admin","employee"]}><BookingsDashboard /></ProtectedRoute>} />
+            <Route path="/schedule" element={<ProtectedRoute allowedRoles={["admin","employee","trainer"]}><Schedule /></ProtectedRoute>} />
             <Route path="/thank-you" element={<ThankYou />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/group-booking" element={<GroupBooking />} />
             <Route path="/estimate" element={<Estimate />} />
-            <Route path="/documents" element={<StaffDocuments />} />
-            <Route path="/staff/documents" element={<StaffDocumentPortal />} />
-            <Route path="/trainer/documents" element={<TrainerDocumentPortal />} />
-            <Route path="/hq/documents" element={<AdminDocuments />} />
+            {/* /documents is a private staff surface — auth + staff role required, no preview. */}
+            <Route path="/documents" element={<ProtectedRoute allowedRoles={["admin","employee","trainer"]}><StaffDocuments /></ProtectedRoute>} />
+            <Route path="/staff/documents" element={<ProtectedRoute allowedRoles={["admin","employee"]}><StaffDocumentPortal /></ProtectedRoute>} />
+            <Route path="/trainer/documents" element={<ProtectedRoute allowedRoles={["admin","trainer"]}><TrainerDocumentPortal /></ProtectedRoute>} />
             <Route path="/admin/documents" element={<Navigate to="/hq/documents" replace />} />
             <Route path="/trainers/:slug" element={<TrainerProfile />} />
             <Route path="/equus-ridge" element={<Navigate to="/services#whole-property" replace />} />
