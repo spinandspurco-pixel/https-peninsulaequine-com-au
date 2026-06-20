@@ -137,14 +137,18 @@ serve(async (req) => {
     const tablesScanned: string[] = [];
 
     for (const target of TARGETS) {
-      const cols = ["id", ...target.nameCols, ...target.emailCols].filter(Boolean);
+      const cols = [
+        "id",
+        ...target.nameCols,
+        ...target.emailCols,
+        ...(target.phoneCols ?? []),
+      ].filter(Boolean);
       if (cols.length <= 1) continue;
       const { data, error } = await admin
         .from(target.table)
         .select(cols.join(","))
         .limit(2000);
       if (error) {
-        // Table may not exist in some environments — record and continue.
         findings.push({
           table: target.table,
           column: "_scan",
@@ -155,36 +159,52 @@ serve(async (req) => {
       }
       tablesScanned.push(target.table);
       for (const row of (data ?? []) as Record<string, unknown>[]) {
+        // Names — placeholder / generic identities
         for (const col of target.nameCols) {
           const v = (row[col] ?? "") as string;
           if (!v) continue;
           for (const needle of NAME_BLOCKLIST) {
-            // Word-boundary match so "Operations" doesn't trip "Operator".
             const re = new RegExp(`\\b${needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i");
             if (re.test(v)) {
               findings.push({
                 table: target.table,
                 column: col,
-                match: needle,
+                match: `placeholder:${needle}`,
                 rowId: (row.id as string) ?? null,
                 value: v,
               });
             }
           }
         }
+        // Emails — must use an allowed demo / Peninsula Equine domain
         for (const col of target.emailCols) {
-          const v = ((row[col] ?? "") as string).toLowerCase();
+          const v = ((row[col] ?? "") as string).toLowerCase().trim();
           if (!v) continue;
-          for (const needle of EMAIL_BLOCKLIST) {
-            if (v.includes(needle.toLowerCase())) {
-              findings.push({
-                table: target.table,
-                column: col,
-                match: needle,
-                rowId: (row.id as string) ?? null,
-                value: v,
-              });
-            }
+          const domain = v.split("@")[1] ?? "";
+          const ok = ALLOWED_EMAIL_DOMAINS.some((d) => domain === d || domain.endsWith("." + d));
+          if (!ok) {
+            findings.push({
+              table: target.table,
+              column: col,
+              match: "real_email_domain",
+              rowId: (row.id as string) ?? null,
+              value: v,
+            });
+          }
+        }
+        // Phones — must be NULL or use the fake marker
+        for (const col of target.phoneCols ?? []) {
+          const v = ((row[col] ?? "") as string).trim();
+          if (!v) continue;
+          const isFake = FAKE_PHONE_MARKERS.some((re) => re.test(v));
+          if (!isFake) {
+            findings.push({
+              table: target.table,
+              column: col,
+              match: "real_phone_pii",
+              rowId: (row.id as string) ?? null,
+              value: v,
+            });
           }
         }
       }
@@ -193,6 +213,7 @@ serve(async (req) => {
     return json(200, {
       passed: findings.length === 0,
       findings,
+
       tablesScanned,
       ranAt: new Date().toISOString(),
       blocklist: { names: NAME_BLOCKLIST, emails: EMAIL_BLOCKLIST },
