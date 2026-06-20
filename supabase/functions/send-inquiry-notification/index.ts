@@ -130,8 +130,17 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Get notification email from secret or use default
-    const NOTIFICATION_EMAIL = Deno.env.get("NOTIFICATION_EMAIL") || "delivered@resend.dev";
-    const FROM_EMAIL = Deno.env.get("FROM_EMAIL") || "Peninsula Equine <onboarding@resend.dev>";
+    const NOTIFICATION_EMAIL = Deno.env.get("NOTIFICATION_EMAIL") || "info@peninsulaequine.org";
+    const FROM_EMAIL = Deno.env.get("FROM_EMAIL");
+    const HQ_FROM = Deno.env.get("HQ_EMAIL_FROM");
+    const WELCOME_REPLY_TO = "info@peninsulaequine.org";
+
+    if (!FROM_EMAIL || !HQ_FROM || /resend\.dev/i.test(FROM_EMAIL) || /resend\.dev/i.test(HQ_FROM)) {
+      console.error("[send-inquiry-notification] Missing or invalid sender secrets (FROM_EMAIL / HQ_EMAIL_FROM)");
+      return new Response(JSON.stringify({ error: "Email sender not configured" }), {
+        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     const resend = new Resend(RESEND_API_KEY);
     const inquiry: InquiryNotificationRequest = await req.json();
