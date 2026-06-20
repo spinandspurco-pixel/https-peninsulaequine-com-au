@@ -13,7 +13,15 @@
 set -u
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SCAN_DIRS=("$ROOT/src" "$ROOT/supabase")
+# SCAN_DIRS may be overridden via PE_SCAN_ROOTS (space-separated absolute
+# paths). Used by the test harness to point the gate at fixture trees.
+if [ -n "${PE_SCAN_ROOTS:-}" ]; then
+  # shellcheck disable=SC2206
+  SCAN_DIRS=( ${PE_SCAN_ROOTS} )
+else
+  SCAN_DIRS=("$ROOT/src" "$ROOT/supabase")
+fi
+
 
 # Files that legitimately reference the blocklist (this script, the gate
 # function, the gate UI, this doc) must be excluded — they document the rules,
