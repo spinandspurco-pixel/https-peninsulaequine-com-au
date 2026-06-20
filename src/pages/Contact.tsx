@@ -585,7 +585,7 @@ export default function Contact() {
                       </>
                     ) : (
                       <>
-                        Submit Assessment Request{" "}
+                        Send the brief{" "}
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </>
                     )}
