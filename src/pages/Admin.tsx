@@ -176,6 +176,10 @@ export default function Admin() {
           );
         })()}
 
+        <HqNav />
+
+
+
 
 
         {/* ════════════════════════════════════════════ */}
@@ -231,7 +235,7 @@ export default function Admin() {
           }
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border/10">
-            {CONTENT_TILES.map((tile) => (
+            {contentTiles.map((tile) => (
               <button
                 key={tile.label}
                 onClick={() => navigate(`${tile.to}${isPreview ? "?view=preview" : ""}`)}
