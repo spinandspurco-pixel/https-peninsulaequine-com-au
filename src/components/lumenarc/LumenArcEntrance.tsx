@@ -59,7 +59,7 @@ export function LumenArcEntrance() {
         className="absolute inset-0 h-full w-full object-contain object-center image-bleed la-entrance-bg"
         style={{ filter: "brightness(0.78) contrast(1.08) saturate(0.8)" }}
         decoding="async"
-        fetchPriority="high"
+        {...({ fetchpriority: "high" } as any)}
       />
 
       {/* Cinematic vignette stack — mirrors the LumenArc hero section */}

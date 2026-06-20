@@ -99,7 +99,7 @@ export function CropSafeImage({
         height={height}
         loading={loading}
         decoding={decoding}
-        fetchPriority={fetchPriority}
+        {...(fetchPriority ? { fetchpriority: fetchPriority } as any : {})}
         // Hard-coded — DO NOT accept overrides from props.
         className="absolute inset-0 h-full w-full object-contain object-center"
         style={imgStyle}

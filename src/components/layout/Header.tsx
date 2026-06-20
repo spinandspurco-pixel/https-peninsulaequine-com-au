@@ -229,7 +229,7 @@ export function Header() {
                 )}
                 loading="eager"
                 decoding="async"
-                fetchPriority="low"
+                {...({ fetchpriority: "low" } as any)}
               />
 
             </div>

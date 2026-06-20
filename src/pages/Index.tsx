@@ -120,7 +120,7 @@ export default function Index() {
                   srcSet={slidingStopSrcSet}
                   sizes="100vw"
                   alt="Horse and rider executing a sliding stop, dust plume across worked arena footing — Peninsula Equine."
-                  fetchPriority="high"
+                  {...({ fetchpriority: "high" } as any)}
                   decoding="async"
                   onLoad={() => setHeroImgLoaded(true)}
                   onError={() => {

@@ -364,7 +364,7 @@ export default function RecoveryStation() {
             style={{ filter: "brightness(0.82) contrast(1.06) saturate(0.8)" }}
             loading="eager"
             decoding="async"
-            fetchPriority="high"
+            {...({ fetchpriority: "high" } as any)}
           />
           {/* Cinematic vignette — image reads as full-bleed scene, not a card */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,transparent_35%,hsl(var(--background)/0.55)_80%,hsl(var(--background))_100%)]" />
