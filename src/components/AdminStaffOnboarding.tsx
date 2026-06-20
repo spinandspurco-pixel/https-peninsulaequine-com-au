@@ -266,6 +266,24 @@ export function AdminStaffOnboarding() {
         })}
       </div>
 
+      {/* E2E test-account callout — kept separate from operational counts. */}
+      {staff.some((s) => s.is_test_account) && (
+        <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm flex items-start gap-3">
+          <Shield className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+          <div className="space-y-0.5">
+            <p className="font-medium text-amber-800 dark:text-amber-300">
+              {staff.filter((s) => s.is_test_account).length} automated e2e test account
+              {staff.filter((s) => s.is_test_account).length === 1 ? "" : "s"} present.
+            </p>
+            <p className="text-xs text-amber-700/80 dark:text-amber-400/80">
+              Excluded from operational counts above. Rotate passwords by re-running the{" "}
+              <code className="font-mono">e2e-seed-users</code> edge function.
+            </p>
+          </div>
+        </div>
+      )}
+
+
       {/* Staff Directory Table */}
       <Card>
         <CardHeader>
