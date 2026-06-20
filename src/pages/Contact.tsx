@@ -191,8 +191,8 @@ export default function Contact() {
       });
     } catch {
       toast({
-        title: "Something went wrong",
-        description: "Please try again or call us directly.",
+        title: "Submission failed",
+        description: "Please try again or call the office directly.",
         variant: "destructive",
       });
     } finally {
