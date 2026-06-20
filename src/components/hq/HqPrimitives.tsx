@@ -254,14 +254,16 @@ export function PreviewWelcome({ identity }: { identity: HqIdentity }) {
 
           <div className="max-w-2xl space-y-5 text-[14px] text-foreground/75 leading-[1.7] font-light">
             <p>
-              This is Peninsula Equine HQ — the working operating system that runs every project
-              from first enquiry to final handover.
+              This is Peninsula Equine HQ — the operating system behind every project from first
+              enquiry to final handover.
             </p>
             <p className="text-muted-foreground/65">
-              You are inside a view-only preview. Nothing you do here will alter live data, dispatch
-              communications, or affect any operational record. Move freely.
+              Explore the project pipeline, content systems and operational workflows used to manage
+              Peninsula Equine. This is a view-only preview — nothing you do here will alter live
+              data or dispatch communications. Move freely.
             </p>
           </div>
+
 
           <div className="mt-12">
             <BronzeRule label="Surfaces available to you" />

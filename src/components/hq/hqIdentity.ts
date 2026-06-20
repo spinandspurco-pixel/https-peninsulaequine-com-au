@@ -14,7 +14,7 @@ const DIRECTORY: Record<string, Omit<HqIdentity, "firstName">> = {
     role: "Operations & Creative",
     rank: "02 · Operations & Creative",
   },
-  josh: { name: "Josh Smith", role: "Client Preview", rank: "P · Client Preview" },
+  dales: { name: "Josh Dales", role: "Client Preview", rank: "P · Client Preview" },
   sander: { name: "Sander", role: "Field Operations", rank: "03 · Field Operations" },
 };
 
@@ -40,19 +40,39 @@ export function resolveIdentity(
     return { ...d, firstName: d.name.split(" ")[0] };
   }
 
-  const fallbackName = local ? titleCase(local) : "Operator";
-  const role = flags.isPreview
-    ? "Client Preview"
-    : flags.isAdmin
-    ? "Administrator"
-    : flags.isEmployee
-    ? "Operations"
-    : "Operator";
-  const rank = flags.isPreview ? "P · Client Preview" : flags.isAdmin ? "00 · Administrator" : role;
+  // No directory match — derive a courteous identity, never "Operator".
+  const derivedName = local ? titleCase(local) : "Peninsula Equine";
+  const firstName = derivedName.split(" ")[0];
+
+  if (flags.isPreview) {
+    return {
+      name: derivedName,
+      firstName,
+      role: "Client Preview",
+      rank: "P · Client Preview",
+    };
+  }
+  if (flags.isAdmin) {
+    return {
+      name: derivedName,
+      firstName,
+      role: "Administrator",
+      rank: "00 · Administrator",
+    };
+  }
+  if (flags.isEmployee) {
+    return {
+      name: derivedName,
+      firstName,
+      role: "Operations",
+      rank: "Operations",
+    };
+  }
   return {
-    name: fallbackName,
-    firstName: fallbackName.split(" ")[0],
-    role,
-    rank,
+    name: derivedName,
+    firstName,
+    role: "Peninsula Equine",
+    rank: "Peninsula Equine",
   };
 }
+
