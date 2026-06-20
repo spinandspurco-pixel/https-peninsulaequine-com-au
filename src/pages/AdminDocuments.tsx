@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useHqMode } from "@/hooks/useHqMode";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { exportDocumentAsPDF } from "@/lib/documentUtils";
@@ -173,6 +174,8 @@ function FormDataDisplay({ data }: { data: any }) {
 
 export default function AdminDocuments() {
   const { user, isAdmin, loading: authLoading } = useAuth();
+  const { isPreview } = useHqMode();
+  const canAccess = isAdmin || isPreview;
   const navigate = useNavigate();
 
   const [documents, setDocuments] = useState<StaffDoc[]>([]);
@@ -186,14 +189,14 @@ export default function AdminDocuments() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && (!user || !isAdmin)) {
+    if (!authLoading && (!user || !canAccess)) {
       navigate("/login");
     }
-  }, [user, isAdmin, authLoading, navigate]);
+  }, [user, canAccess, authLoading, navigate]);
 
   useEffect(() => {
-    if (isAdmin) fetchDocuments();
-  }, [isAdmin]);
+    if (canAccess) fetchDocuments();
+  }, [canAccess]);
 
   const fetchDocuments = async () => {
     setLoadingDocs(true);
@@ -208,6 +211,7 @@ export default function AdminDocuments() {
   };
 
   const handleReview = async (status: "approved" | "rejected") => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
     if (!selectedDoc || !user) return;
     setSaving(true);
 
@@ -297,7 +301,7 @@ export default function AdminDocuments() {
     );
   }
 
-  if (!isAdmin) return null;
+  if (!canAccess) return null;
 
   return (
     <Layout>
@@ -312,12 +316,12 @@ export default function AdminDocuments() {
               <div>
                 <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">Document Portal</h1>
                 <p className="text-muted-foreground text-sm mt-0.5">
-                  Review & manage all staff compliance documents
+                  Review & manage all staff compliance documents{isPreview && " · view-only preview"}
                 </p>
               </div>
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={() => navigate("/admin")}>
+              <Button variant="outline" size="sm" onClick={() => navigate(isPreview ? "/hq?view=preview" : "/hq")}>
                 <ArrowLeft className="mr-1.5 h-4 w-4" /> Dashboard
               </Button>
               <Button variant="outline" size="sm" onClick={fetchDocuments}>
@@ -517,8 +521,9 @@ export default function AdminDocuments() {
                   <Textarea
                     value={reviewNotes}
                     onChange={e => setReviewNotes(e.target.value)}
-                    placeholder="Add review notes, corrections needed, or approval comments..."
+                    placeholder={isPreview ? "View-only in client preview" : "Add review notes, corrections needed, or approval comments..."}
                     rows={3}
+                    disabled={isPreview}
                   />
                 </div>
 
@@ -533,7 +538,8 @@ export default function AdminDocuments() {
                   <Button
                     variant="destructive"
                     onClick={() => handleReview("rejected")}
-                    disabled={saving}
+                    disabled={saving || isPreview}
+                    title={isPreview ? "View-only in client preview" : undefined}
                     className="w-full sm:w-auto"
                   >
                     {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <XCircle className="mr-2 h-4 w-4" />}
@@ -541,7 +547,8 @@ export default function AdminDocuments() {
                   </Button>
                   <Button
                     onClick={() => handleReview("approved")}
-                    disabled={saving}
+                    disabled={saving || isPreview}
+                    title={isPreview ? "View-only in client preview" : undefined}
                     className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white"
                   >
                     {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}
