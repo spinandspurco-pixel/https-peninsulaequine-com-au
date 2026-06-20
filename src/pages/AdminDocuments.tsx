@@ -48,6 +48,7 @@ import {
   Heart,
 } from "lucide-react";
 import logoPeMark from "@/assets/logo-pe-mark.webp";
+import { HqNav } from "@/components/hq/HqNav";
 
 const DOC_TYPES = {
   all: { label: "All Documents", icon: FileText, color: "text-foreground" },
@@ -311,6 +312,7 @@ export default function AdminDocuments() {
 
   return (
     <Layout>
+      <HqNav />
       <div className="section-padding">
         <div className="section-container">
           {/* Header */}

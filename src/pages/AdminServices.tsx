@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, GripVertical } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import { PreviewNotice } from "@/components/hq/PreviewNotice";
+import { HqNav } from "@/components/hq/HqNav";
 
 type ManagedService = Tables<"managed_services">;
 
@@ -97,6 +98,7 @@ export default function AdminServices() {
 
   return (
     <Layout>
+      <HqNav />
       <div className="section-padding">
         <div className="section-container max-w-5xl">
           <div className="flex items-center gap-4 mb-8">
