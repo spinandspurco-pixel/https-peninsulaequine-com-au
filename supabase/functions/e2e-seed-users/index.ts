@@ -139,19 +139,40 @@ Deno.serve(async (req) => {
     results.push({ email, role, password, status, user_id: userId });
   }
 
-  // Build a copy-pasteable env block for Playwright.
-  const envBlock = results
+  // Build a copy-pasteable env block for Playwright. Wrap with an
+  // unmissable warning banner so an operator can't paste this anywhere
+  // without seeing the handling rules.
+  const WARNING = [
+    "############################################################",
+    "#  E2E TEST CREDENTIALS — HANDLE AS SECRETS                #",
+    "#                                                          #",
+    "#  DO NOT paste passwords into chat, GitHub, tickets, or   #",
+    "#  shared documents.                                       #",
+    "#  Store only in: local shell session, GitHub Actions      #",
+    "#  secrets, or a password manager.                         #",
+    "#  Re-run this function to rotate.                         #",
+    "############################################################",
+  ].join("\n");
+
+  const credsBlock = results
     .map((r) => {
       const key = r.role.toUpperCase();
       return `TEST_${key}_EMAIL=${r.email}\nTEST_${key}_PASSWORD=${r.password}`;
     })
     .join("\n");
 
+  const envBlock = `${WARNING}\n${credsBlock}\n${WARNING}`;
+
   return json({
     ok: true,
     accounts: results,
     env_block: envBlock,
+    warning:
+      "Do not paste passwords into chat, GitHub, tickets or shared documents. Store test credentials only in local shell, GitHub Actions secrets or a password manager.",
     notice:
-      "Passwords are shown ONCE. Store them in a secret manager or your shell, then discard this response.",
+      "Passwords are shown ONCE. Store them in a secret manager or your shell, then discard this response. Re-run this function any time to rotate.",
+  });
+});
+
   });
 });
