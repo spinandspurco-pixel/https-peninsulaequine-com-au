@@ -180,8 +180,9 @@ serve(async (req) => {
           Authorization: `Bearer ${RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: "Peninsula Equine <onboarding@resend.dev>",
+          from: NOREPLY_FROM,
           to: [submitted_by],
+          reply_to: HQ_REPLY_TO,
           subject: `✅ ${docLabel} Received — Peninsula Equine`,
           html: confirmHtml,
         }),
