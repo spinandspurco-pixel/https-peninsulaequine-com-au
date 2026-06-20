@@ -140,9 +140,16 @@ export function WholePropertyInbox() {
                 key={i.id}
                 className={`group relative ${idx > 0 ? "border-t border-border/[0.07]" : ""}`}
               >
-                <button
-                  type="button"
+                <div
+                  role="button"
+                  tabIndex={0}
                   onClick={() => openInquiry(i.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      openInquiry(i.id);
+                    }
+                  }}
                   className="w-full text-left pb-8 pt-6 cursor-pointer hover:bg-foreground/[0.015] transition-colors duration-300 focus:outline-none focus:bg-foreground/[0.02]"
                   aria-label={`Open enquiry from ${i.name}`}
                 >
@@ -230,7 +237,10 @@ export function WholePropertyInbox() {
                   <div className="flex items-start justify-end lg:pt-1">
                     {unread ? (
                       <button
-                        onClick={() => markRead(i.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          markRead(i.id);
+                        }}
                         className="group/btn flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-muted-foreground/30 hover:text-accent/80 transition-all duration-500"
                         title="Mark as reviewed"
                       >
