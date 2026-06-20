@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useHqMode } from "@/hooks/useHqMode";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +26,8 @@ type ManagedService = Tables<"managed_services">;
 
 export default function AdminServices() {
   const { user, isAdmin, loading } = useAuth();
+  const { isPreview } = useHqMode();
+  const canAccess = isAdmin || isPreview;
   const navigate = useNavigate();
   const [services, setServices] = useState<ManagedService[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,8 +36,8 @@ export default function AdminServices() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (!loading && (!user || !isAdmin)) navigate("/login");
-  }, [user, isAdmin, loading, navigate]);
+    if (!loading && (!user || !canAccess)) navigate("/login");
+  }, [user, canAccess, loading, navigate]);
 
   const fetch = async () => {
     setIsLoading(true);
@@ -46,9 +49,10 @@ export default function AdminServices() {
     setIsLoading(false);
   };
 
-  useEffect(() => { if (isAdmin) fetch(); }, [isAdmin]);
+  useEffect(() => { if (canAccess) fetch(); }, [canAccess]);
 
   const handleSave = async () => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
     if (!editItem?.title?.trim() || !editItem?.slug?.trim()) {
       toast.error("Title and slug are required");
       return;
@@ -80,6 +84,7 @@ export default function AdminServices() {
   };
 
   const handleDelete = async () => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
     if (!deleteItem) return;
     const { error } = await supabase.from("managed_services").delete().eq("id", deleteItem.id);
     if (error) toast.error("Failed to delete"); else toast.success("Deleted");
@@ -87,21 +92,27 @@ export default function AdminServices() {
     fetch();
   };
 
-  if (loading || !isAdmin) return null;
+  if (loading || !canAccess) return null;
 
   return (
     <Layout>
       <div className="section-padding">
         <div className="section-container max-w-5xl">
           <div className="flex items-center gap-4 mb-8">
-            <Button variant="ghost" size="sm" onClick={() => navigate("/admin")}>
+            <Button variant="ghost" size="sm" onClick={() => navigate(isPreview ? "/hq?view=preview" : "/hq")}>
               <ArrowLeft className="h-4 w-4 mr-1" /> Back
             </Button>
             <div className="flex-1">
               <h1 className="font-serif text-3xl font-bold text-foreground">Manage Services</h1>
-              <p className="text-muted-foreground text-sm mt-1">{services.length} services</p>
+              <p className="text-muted-foreground text-sm mt-1">
+                {services.length} services{isPreview && " · view-only preview"}
+              </p>
             </div>
-            <Button onClick={() => setEditItem({ active: true, features: [], sort_order: services.length })}>
+            <Button
+              onClick={() => setEditItem({ active: true, features: [], sort_order: services.length })}
+              disabled={isPreview}
+              title={isPreview ? "View-only in client preview" : undefined}
+            >
               <Plus className="h-4 w-4 mr-2" /> Add Service
             </Button>
           </div>
@@ -129,10 +140,10 @@ export default function AdminServices() {
                       <p className="text-sm text-muted-foreground truncate">{s.short_description}</p>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
-                      <Button variant="ghost" size="sm" onClick={() => setEditItem(s)}>
+                      <Button variant="ghost" size="sm" onClick={() => setEditItem(s)} disabled={isPreview} title={isPreview ? "View-only" : undefined}>
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="sm" onClick={() => setDeleteItem(s)}>
+                      <Button variant="ghost" size="sm" onClick={() => setDeleteItem(s)} disabled={isPreview} title={isPreview ? "View-only" : undefined}>
                         <Trash2 className="h-4 w-4 text-destructive" />
                       </Button>
                     </div>
