@@ -384,7 +384,7 @@ export default function Contact() {
                           type="email"
                           value={form.email}
                           onChange={(e) => set("email", e.target.value)}
-                          placeholder="you@example.com"
+                          placeholder="name@yourdomain.com"
                           maxLength={255}
                         />
                         {errors.email && (
