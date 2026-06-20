@@ -13,7 +13,15 @@
 set -u
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SCAN_DIRS=("$ROOT/src" "$ROOT/supabase")
+# SCAN_DIRS may be overridden via PE_SCAN_ROOTS (space-separated absolute
+# paths). Used by the test harness to point the gate at fixture trees.
+if [ -n "${PE_SCAN_ROOTS:-}" ]; then
+  # shellcheck disable=SC2206
+  SCAN_DIRS=( ${PE_SCAN_ROOTS} )
+else
+  SCAN_DIRS=("$ROOT/src" "$ROOT/supabase")
+fi
+
 
 # Files that legitimately reference the blocklist (this script, the gate
 # function, the gate UI, this doc) must be excluded — they document the rules,
@@ -21,7 +29,10 @@ SCAN_DIRS=("$ROOT/src" "$ROOT/supabase")
 EXCLUDES=(
   -g '!node_modules' -g '!dist' -g '!build' -g '!.lovable'
   -g '!scripts/preview-mint-check.sh'
+  -g '!scripts/preview-mint-check.test.sh'
   -g '!supabase/functions/preview-mint-check/index.ts'
+  -g '!supabase/functions/preview-mint-check/scan.ts'
+  -g '!supabase/functions/preview-mint-check/index.test.ts'
   -g '!src/components/hq/PreviewMintGate.tsx'
   -g '!docs/PREVIEW_MODE.md'
   -g '!.github/workflows/preview-mint-check.yml'
@@ -29,6 +40,7 @@ EXCLUDES=(
   # they are removing the data, not introducing it.
   -g '!supabase/migrations/*_remove_test_inquiries.sql'
 )
+
 
 
 hits=0
@@ -67,9 +79,9 @@ done
 # (example.com / example.org) or the Peninsula Equine operational domain.
 # Anything else is treated as a real client address.
 real_email=$(rg -n --no-heading \
-  -g 'supabase/migrations/**' \
+  -g '**/migrations/**' \
   -e "'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'" \
-  "$ROOT" 2>/dev/null \
+  "${SCAN_DIRS[@]}" 2>/dev/null \
   | grep -Ev '@(example\.com|example\.org|peninsulaequine\.(com\.au|org|systems)|notify\.peninsulaequine\.org)' \
   || true)
 if [ -n "$real_email" ]; then
@@ -81,10 +93,10 @@ fi
 # Matches 04xx xxx xxx and +614xxxxxxxx anywhere in supabase/migrations/.
 # Curated demo phones must use the obviously-fake 0400 000 000 pattern.
 phone_hit=$(rg -n --no-heading \
-  -g 'supabase/migrations/**' \
+  -g '**/migrations/**' \
   -e '\b04[0-9]{2}[ -]?[0-9]{3}[ -]?[0-9]{3}\b' \
   -e '\+614[0-9]{8}\b' \
-  "$ROOT" 2>/dev/null \
+  "${SCAN_DIRS[@]}" 2>/dev/null \
   | grep -Ev '0400[ -]?000[ -]?000|\+614000000000' \
   || true)
 if [ -n "$phone_hit" ]; then
@@ -95,9 +107,9 @@ fi
 # ─── D · Street address patterns in seed SQL ──────────────────
 # A digit followed by a street-type word is almost always a real address.
 addr_hit=$(rg -n --no-heading \
-  -g 'supabase/migrations/**' \
+  -g '**/migrations/**' \
   -e '\b[0-9]{1,4}[A-Za-z]?\s+[A-Z][a-z]+\s+(Street|Road|Avenue|Lane|Drive|Court|Crescent|Highway|Boulevard|Parade|Place|Terrace)\b' \
-  "$ROOT" 2>/dev/null || true)
+  "${SCAN_DIRS[@]}" 2>/dev/null || true)
 if [ -n "$addr_hit" ]; then
   hits=$((hits + 1))
   report+=$'\n── Street address in migration/seed\n'"$addr_hit"$'\n'
