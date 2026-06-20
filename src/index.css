@@ -86,6 +86,26 @@
     --hero-input-bg: 0 0% 100% / 0.06;
     --hero-input-border: 0 0% 100% / 0.12;
     --hero-input-placeholder: 30 8% 50%;
+
+    /* ── PE Motion Language — single source of truth ───────
+       Use these tokens for every transition, reveal, hover.
+       Do not introduce new durations or easings in components. */
+    --pe-ease: cubic-bezier(0.45, 0, 0.15, 1);
+    --pe-ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+    --pe-dur-exit: 600ms;
+    --pe-dur-hold: 800ms;
+    --pe-dur-arrive: 1100ms;
+    --pe-dur-cinematic: 1400ms;
+
+    /* ── PE Vertical Rhythm — section pause scale ──────── */
+    --pause-sm: clamp(3rem, 4vw, 4.5rem);
+    --pause-md: clamp(4.5rem, 7vw, 7rem);
+    --pause-lg: clamp(6rem, 10vw, 10rem);
+    --pause-xl: clamp(8rem, 14vw, 14rem);
+
+    /* ── Image grading — apply via CropSafeImage / ImageVeil */
+    --grade-blueprint: brightness(0.88) contrast(1.08) saturate(0.82);
+    --grade-archive: brightness(0.82) contrast(1.05) saturate(0.7);
   }
 
   /* Dark mode is the default — light mode variant for admin/internal */
