@@ -32,7 +32,11 @@ const Admin = lazy(() => import("./pages/Admin"));
 const AdminServices = lazy(() => import("./pages/AdminServices"));
 const AdminTestimonials = lazy(() => import("./pages/AdminTestimonials"));
 const AdminEvents = lazy(() => import("./pages/AdminEvents"));
+const AdminSelectedWorks = lazy(() => import("./pages/AdminSelectedWorks"));
+const AdminFieldNotes = lazy(() => import("./pages/AdminFieldNotes"));
+const HqProjectDetail = lazy(() => import("./pages/HqProjectDetail"));
 const EmployeeDashboard = lazy(() => import("./pages/EmployeeDashboard"));
+
 const BookLesson = lazy(() => import("./pages/BookLesson"));
 const Lessons = lazy(() => import("./pages/Lessons"));
 const Events = lazy(() => import("./pages/Events"));
