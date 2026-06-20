@@ -72,9 +72,10 @@ export function CommandOverview() {
           .gte("updated_at", sinceQ),
         supabase
           .from("activity_log")
-          .select("id, action, entity_type, created_at, metadata")
+          .select("id, title, action_type, entity_type, created_at")
           .order("created_at", { ascending: false })
           .limit(8),
+
         supabase.from("managed_projects").select("id", { count: "exact", head: true }),
       ]);
 
