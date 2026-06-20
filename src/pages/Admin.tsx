@@ -12,6 +12,13 @@ import { CRMPipeline } from "@/components/crm/CRMPipeline";
 import { QuoteBuilder } from "@/components/QuoteBuilder";
 import { AdminStaffOnboarding } from "@/components/AdminStaffOnboarding";
 import { EmailDiagnostics } from "@/components/hq/EmailDiagnostics";
+import {
+  IdentityHeader,
+  PreviewWelcome,
+  BlueprintField,
+  BronzeRule,
+} from "@/components/hq/HqPrimitives";
+import { resolveIdentity } from "@/components/hq/hqIdentity";
 import { WholePropertyInbox } from "@/components/admin/WholePropertyInbox";
 import { FinancialDashboard } from "@/components/FinancialDashboard";
 import { TodaysPlan } from "@/components/TodaysPlan";
