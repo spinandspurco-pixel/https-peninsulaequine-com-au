@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { PreflightFrame, BronzeRule, StatusLamp, lampLabel, type LampState } from "./HqPrimitives";
 
 // ─────────────────────────────────────────────────────
 // Types
@@ -180,57 +181,88 @@ export function EmailDiagnostics() {
     : [];
 
   return (
-    <div className="border border-border/15 bg-background">
-      {/* ── Masthead ─────────────────────────────────── */}
-      <div className="border-b border-border/10 px-6 py-5 flex items-center justify-between gap-4 flex-wrap">
-        <div>
-          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/55 mb-2">
-            Email · Operations Centre
-          </p>
-          <p className="font-serif text-lg font-light text-foreground/90">
-            Sender health, deliverability, diagnostic ledger.
-          </p>
+    <PreflightFrame
+      designation="EOC-01"
+      title="Email Operations Centre"
+      subtitle="Pre-flight checks · sender authority · diagnostic ledger"
+      actions={
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <StatusLamp
+              state={
+                checklist?.domainVerified && checklist.sendersConfigured
+                  ? "nominal"
+                  : checklist
+                  ? "verify"
+                  : "standby"
+              }
+              glow
+            />
+            <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-muted-foreground/65">
+              {checklist?.domainVerified && checklist.sendersConfigured
+                ? "Systems nominal"
+                : checklist
+                ? "Action required"
+                : "Standby"}
+            </span>
+          </div>
+          <button
+            onClick={refresh}
+            disabled={loadingStatus}
+            className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55 hover:text-foreground/85 transition-colors disabled:opacity-40"
+          >
+            {loadingStatus ? "Polling…" : "Re-poll ↻"}
+          </button>
         </div>
-        <button
-          onClick={refresh}
-          disabled={loadingStatus}
-          className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55 hover:text-foreground/85 transition-colors disabled:opacity-40"
-        >
-          {loadingStatus ? "Refreshing…" : "Refresh ↻"}
-        </button>
-      </div>
-
+      }
+    >
       {error && (
         <div className="border-b border-destructive/30 bg-destructive/5 px-6 py-3 text-[11px] text-destructive font-mono">
           {error}
         </div>
       )}
 
-      <div className="px-6 py-7 space-y-12">
+      <div className="px-6 py-8 space-y-14">
         {/* ════════════════════════════════════════════ */}
-        {/* 01 — SAFE LAUNCH CHECKLIST                  */}
+        {/* 01 — PRE-FLIGHT CHECKLIST                   */}
         {/* ════════════════════════════════════════════ */}
         <section>
-          <SectionHeader index="01" title="Safe launch checklist" />
+          <SectionHeader index="01" title="Pre-flight checklist" />
+          <BronzeRule className="mb-6" />
           {!checklist ? (
-            <p className="text-[11px] text-muted-foreground/45 font-mono">Loading…</p>
+            <p className="text-[11px] text-muted-foreground/45 font-mono">Polling systems…</p>
           ) : (
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3">
-              {checklistRows.map((row) => (
-                <li key={row.label} className="flex items-center gap-3 py-1">
-                  <StatusDot state={row.ok === true ? "ok" : row.ok === false ? "fail" : "muted"} />
-                  <span className="text-[12px] text-foreground/85 flex-1">{row.label}</span>
-                  {row.note && (
-                    <span className="font-mono text-[10px] text-muted-foreground/45">{row.note}</span>
-                  )}
-                  <Pill tone={row.ok === true ? "ok" : row.ok === false ? "fail" : "muted"}>
-                    {row.ok === true ? "Pass" : row.ok === false ? "Fail" : "N/A"}
-                  </Pill>
-                </li>
-              ))}
+            <ul className="divide-y divide-border/10 border-y border-border/10">
+              {checklistRows.map((row, i) => {
+                const lampState: LampState =
+                  row.ok === true ? "nominal" : row.ok === false ? "fault" : "standby";
+                return (
+                  <li
+                    key={row.label}
+                    className="flex items-center gap-5 py-3 px-1 hover:bg-muted/[0.03] transition-colors"
+                  >
+                    <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-accent/45 w-10">
+                      T-{String(i + 1).padStart(2, "0")}
+                    </span>
+                    <StatusLamp state={lampState} glow={lampState === "nominal"} />
+                    <span className="text-[12.5px] text-foreground/85 flex-1 font-light">
+                      {row.label}
+                    </span>
+                    {row.note && (
+                      <span className="font-mono text-[10px] text-muted-foreground/45">
+                        {row.note}
+                      </span>
+                    )}
+                    <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground/60 w-20 text-right">
+                      {lampLabel(lampState)}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </section>
+
 
         {/* ════════════════════════════════════════════ */}
         {/* 02 — SENDER VERIFICATION                    */}
