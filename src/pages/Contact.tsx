@@ -186,8 +186,8 @@ export default function Contact() {
 
       setSubmitted(true);
       toast({
-        title: "Request received",
-        description: "We'll review your enquiry and be in touch shortly.",
+        title: "Brief received",
+        description: "We'll read the details and respond within two business days.",
       });
     } catch {
       toast({
