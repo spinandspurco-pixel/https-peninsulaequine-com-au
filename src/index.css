@@ -86,6 +86,26 @@
     --hero-input-bg: 0 0% 100% / 0.06;
     --hero-input-border: 0 0% 100% / 0.12;
     --hero-input-placeholder: 30 8% 50%;
+
+    /* ── PE Motion Language — single source of truth ───────
+       Use these tokens for every transition, reveal, hover.
+       Do not introduce new durations or easings in components. */
+    --pe-ease: cubic-bezier(0.45, 0, 0.15, 1);
+    --pe-ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+    --pe-dur-exit: 600ms;
+    --pe-dur-hold: 800ms;
+    --pe-dur-arrive: 1100ms;
+    --pe-dur-cinematic: 1400ms;
+
+    /* ── PE Vertical Rhythm — section pause scale ──────── */
+    --pause-sm: clamp(3rem, 4vw, 4.5rem);
+    --pause-md: clamp(4.5rem, 7vw, 7rem);
+    --pause-lg: clamp(6rem, 10vw, 10rem);
+    --pause-xl: clamp(8rem, 14vw, 14rem);
+
+    /* ── Image grading — apply via CropSafeImage / ImageVeil */
+    --grade-blueprint: brightness(0.88) contrast(1.08) saturate(0.82);
+    --grade-archive: brightness(0.82) contrast(1.05) saturate(0.7);
   }
 
   /* Dark mode is the default — light mode variant for admin/internal */
@@ -191,6 +211,32 @@
 
   /* ── Section vertical rhythm — more generous ──────── */
   .section-padding     { @apply py-section sm:py-section-md lg:py-section-lg; }
+
+  /* ── PE Rhythm utilities — token-driven, mobile-aware ── */
+  .pe-pause-sm  { padding-top: var(--pause-sm); padding-bottom: var(--pause-sm); }
+  .pe-pause-md  { padding-top: var(--pause-md); padding-bottom: var(--pause-md); }
+  .pe-pause-lg  { padding-top: var(--pause-lg); padding-bottom: var(--pause-lg); }
+  .pe-pause-xl  { padding-top: var(--pause-xl); padding-bottom: var(--pause-xl); }
+
+  /* ── PE Reveal — one motion vocabulary ──────────────────
+     Apply .pe-reveal to a wrapper, then .pe-revealed when
+     visible (driven by useScrollReveal). Children stagger
+     via inline style: --reveal-delay. */
+  .pe-reveal {
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity var(--pe-dur-arrive) var(--pe-ease) var(--reveal-delay, 0ms),
+      transform var(--pe-dur-arrive) var(--pe-ease) var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  .pe-revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pe-reveal { opacity: 1; transform: none; transition: none; }
+  }
 
   /* ── Content-visibility for below-fold performance ── */
   .cv-auto {
