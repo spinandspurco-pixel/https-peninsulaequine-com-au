@@ -186,13 +186,13 @@ export default function Contact() {
 
       setSubmitted(true);
       toast({
-        title: "Request received",
-        description: "We'll review your enquiry and be in touch shortly.",
+        title: "Brief received",
+        description: "We'll read the details and respond within two business days.",
       });
     } catch {
       toast({
-        title: "Something went wrong",
-        description: "Please try again or call us directly.",
+        title: "Submission failed",
+        description: "Please try again or call the office directly.",
         variant: "destructive",
       });
     } finally {
@@ -218,20 +218,20 @@ export default function Contact() {
             style={{ animationDelay: "200ms", animationFillMode: "both" }}
           >
             <div className="w-8 h-px bg-accent/40" />
-            <p className="text-overline text-[hsl(var(--accent-light))]/95">Get Started</p>
+            <p className="text-overline text-[hsl(var(--accent-light))]/95">Begin the brief</p>
             <div className="w-8 h-px bg-accent/40" />
           </div>
           <h1
             className="heading-display text-foreground opacity-0 animate-fade-in"
             style={{ animationDelay: "400ms", animationFillMode: "both", animationDuration: "1000ms" }}
           >
-            Request Site Assessment
+            The first conversation starts with the ground.
           </h1>
           <p
             className="mt-8 text-[hsl(var(--footer-muted))] text-sm sm:text-base max-w-lg mx-auto leading-relaxed opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
-            Tell us about your site. We'll scope the right system.
+            Tell us where the property sits, what needs to be built, and what the horses need from the space.
           </p>
         </div>
       </section>
@@ -286,16 +286,16 @@ export default function Contact() {
               <RevealLine className="mx-auto mb-12" width="w-8" />
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={80}>
-              <p className="text-overline text-center mb-6">What to Expect</p>
+              <p className="text-overline text-center mb-6">What happens next</p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <div className="space-y-0">
                 {[
-                  { num: "01", text: "Initial assessment and discussion" },
-                  { num: "02", text: "Site-specific recommendations" },
-                  { num: "03", text: "System and scope definition" },
-                  { num: "04", text: "Structured project brief" },
-                  { num: "05", text: "Project scheduling and delivery" },
+                  { num: "01", text: "We read the terrain and listen to the intent" },
+                  { num: "02", text: "A site-specific recommendation is drafted" },
+                  { num: "03", text: "System, scope and sequence are defined together" },
+                  { num: "04", text: "A structured brief becomes the build contract" },
+                  { num: "05", text: "Ground breaks on schedule" },
                 ].map((step, i) => (
                   <div key={step.num} className="flex items-center gap-5 py-4 border-b border-border/15 last:border-b-0">
                     <span className="text-[9px] font-mono tracking-[0.3em] text-[hsl(var(--accent-light))]/95 uppercase w-6 shrink-0">{step.num}</span>
@@ -321,12 +321,11 @@ export default function Contact() {
                     <CheckCircle className="h-8 w-8 text-accent" />
                   </div>
                   <h2 className="heading-section text-foreground">
-                    Request Received
+                    The brief is in.
                   </h2>
                   <p className="text-muted-foreground text-sm leading-[1.8] max-w-md mx-auto">
-                    We'll review your enquiry and be in touch shortly.<br /><br />
-                    Each project is assessed based on scope,<br />
-                    location, and current availability.
+                    We read every submission against current scope and availability.<br /><br />
+                    If the fit is right, we'll be in touch within two business days.
                   </p>
                   <div className="pt-6 flex flex-col sm:flex-row gap-8 justify-center">
                     <a
@@ -367,7 +366,7 @@ export default function Contact() {
                         <Input
                           value={form.name}
                           onChange={(e) => set("name", e.target.value)}
-                          placeholder="Your full name"
+                          placeholder="Your name"
                           maxLength={100}
                         />
                         {errors.name && (
@@ -384,7 +383,7 @@ export default function Contact() {
                           type="email"
                           value={form.email}
                           onChange={(e) => set("email", e.target.value)}
-                          placeholder="you@example.com"
+                          placeholder="name@yourdomain.com"
                           maxLength={255}
                         />
                         {errors.email && (
@@ -508,14 +507,14 @@ export default function Contact() {
                     </div>
                     <div>
                       <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
-                        Tell us about your project
+                        Project notes
                       </label>
                       <textarea
                         value={form.details}
                         onChange={(e) => set("details", e.target.value)}
                         maxLength={2000}
                         rows={5}
-                        placeholder="Describe what you're looking to build — include any known issues, goals, or requirements."
+                        placeholder="What the horses need from the space, any known ground conditions, and the intent behind the build."
                         className={cn(inputClass, "resize-none")}
                       />
                     </div>
@@ -537,7 +536,7 @@ export default function Contact() {
                         </h3>
                       </div>
                       <SelectField
-                        label="When are you looking to start?"
+                        label="When does the ground need to be ready?"
                         value={form.timeline}
                         onChange={(v) => set("timeline", v)}
                         options={TIMELINES}
@@ -555,7 +554,7 @@ export default function Contact() {
                         <p className="text-[11px] text-[hsl(var(--footer-muted))] mt-1">Optional</p>
                       </div>
                       <SelectField
-                        label="Approximate project investment"
+                        label="Indicative investment range"
                         value={form.budget}
                         onChange={(v) => set("budget", v)}
                         options={BUDGET_RANGES}
@@ -585,7 +584,7 @@ export default function Contact() {
                       </>
                     ) : (
                       <>
-                        Submit Assessment Request{" "}
+                        Send the brief{" "}
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </>
                     )}
@@ -608,7 +607,7 @@ export default function Contact() {
           <div className="section-container max-w-md mx-auto text-center relative z-[1] space-y-6">
             <RevealOnScroll direction="up">
               <p className="text-sm text-muted-foreground">
-                Prefer to speak directly?
+                Rather speak first?
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={100}>
