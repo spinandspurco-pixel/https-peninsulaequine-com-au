@@ -195,6 +195,9 @@ serve(async (req) => {
   }
 
   try {
+    const senderBlock = assertSender();
+    if (senderBlock) return senderBlock;
+
     const body = await req.json().catch(() => ({}));
     const { email, name, source, step } = body as WelcomeRequest;
 
