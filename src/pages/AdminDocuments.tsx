@@ -174,9 +174,10 @@ function FormDataDisplay({ data }: { data: any }) {
 }
 
 export default function AdminDocuments() {
-  const { user, isAdmin, loading: authLoading } = useAuth();
+  const { user, isAdmin, isEmployee, loading: authLoading } = useAuth();
   const { isPreview } = useHqMode();
-  const canAccess = isAdmin || isPreview;
+  const isStaff = isAdmin || isEmployee;
+  const canAccess = isStaff || isPreview;
   const navigate = useNavigate();
 
   const [documents, setDocuments] = useState<StaffDoc[]>([]);
@@ -196,8 +197,8 @@ export default function AdminDocuments() {
   }, [user, canAccess, authLoading, navigate]);
 
   useEffect(() => {
-    if (canAccess) fetchDocuments();
-  }, [canAccess]);
+    if (isStaff) fetchDocuments();
+  }, [isStaff]);
 
   const fetchDocuments = async () => {
     setLoadingDocs(true);
