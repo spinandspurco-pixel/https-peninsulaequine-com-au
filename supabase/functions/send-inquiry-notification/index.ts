@@ -27,6 +27,33 @@ function pad(n: number): string {
   return n.toString().padStart(2, "0");
 }
 
+/**
+ * Escape arbitrary user input for safe HTML interpolation.
+ * Prevents stored XSS / HTML injection in admin notification emails.
+ * Use for ALL user-submitted fields rendered into the email body, attributes,
+ * subject line, or URL parameters that end up inside HTML.
+ */
+function esc(value: unknown): string {
+  if (value === null || value === undefined) return "";
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+/**
+ * Strict-ish URL-attribute sanitiser for href/src values built from user input.
+ * Strips anything that isn't a plain printable ASCII subset and refuses
+ * javascript:/data: schemes.
+ */
+function safeAttr(value: unknown): string {
+  const s = esc(value).replace(/[\r\n\t]/g, "");
+  if (/^\s*(javascript|data|vbscript):/i.test(String(value ?? ""))) return "";
+  return s;
+}
+
 /** Generate a .ics calendar invite for a suggested follow-up consultation */
 function generateConsultationICS(opts: {
   clientName: string;
@@ -153,29 +180,29 @@ const handler = async (req: Request): Promise<Response> => {
               <div class="section-title">Contact Information</div>
               <div class="field">
                 <div class="field-label">Name</div>
-                <div class="field-value">${inquiry.name}</div>
+                <div class="field-value">${esc(inquiry.name)}</div>
               </div>
               <div class="field">
                 <div class="field-label">Email</div>
-                <div class="field-value"><a href="mailto:${inquiry.email}">${inquiry.email}</a></div>
+                <div class="field-value"><a href="mailto:${safeAttr(inquiry.email)}">${esc(inquiry.email)}</a></div>
               </div>
               ${inquiry.phone ? `
               <div class="field">
                 <div class="field-label">Phone</div>
-                <div class="field-value"><a href="tel:${inquiry.phone}">${inquiry.phone}</a></div>
+                <div class="field-value"><a href="tel:${safeAttr(inquiry.phone)}">${esc(inquiry.phone)}</a></div>
               </div>
               ` : ""}
               ${inquiry.preferredDate ? `
               <div class="field">
                 <div class="field-label">Preferred Start Date</div>
-                <div class="field-value">${inquiry.preferredDate}</div>
+                <div class="field-value">${esc(inquiry.preferredDate)}</div>
               </div>
               ` : ""}
             </div>
 
             <div class="section">
               <div class="section-title">Services Requested</div>
-              <div class="highlight">${servicesList}</div>
+              <div class="highlight">${esc(servicesList)}</div>
             </div>
 
             ${inquiry.horseName || inquiry.horseAge || inquiry.horseBreed ? `
@@ -184,19 +211,19 @@ const handler = async (req: Request): Promise<Response> => {
               ${inquiry.horseName ? `
               <div class="field">
                 <div class="field-label">Horse Name(s)</div>
-                <div class="field-value">${inquiry.horseName}</div>
+                <div class="field-value">${esc(inquiry.horseName)}</div>
               </div>
               ` : ""}
               ${inquiry.horseAge ? `
               <div class="field">
                 <div class="field-label">Age(s)</div>
-                <div class="field-value">${inquiry.horseAge}</div>
+                <div class="field-value">${esc(inquiry.horseAge)}</div>
               </div>
               ` : ""}
               ${inquiry.horseBreed ? `
               <div class="field">
                 <div class="field-label">Breed(s)</div>
-                <div class="field-value">${inquiry.horseBreed}</div>
+                <div class="field-value">${esc(inquiry.horseBreed)}</div>
               </div>
               ` : ""}
             </div>
@@ -204,25 +231,25 @@ const handler = async (req: Request): Promise<Response> => {
 
             <div class="section">
               <div class="section-title">Project Goals</div>
-              <div class="highlight">${inquiry.goals || "Not specified"}</div>
+              <div class="highlight">${esc(inquiry.goals || "Not specified")}</div>
             </div>
 
             <div class="section">
               <div class="section-title">Experience & Budget</div>
               <div class="field">
                 <div class="field-label">Experience Level</div>
-                <div class="field-value">${inquiry.experienceLevel || "Not specified"}</div>
+                <div class="field-value">${esc(inquiry.experienceLevel || "Not specified")}</div>
               </div>
               <div class="field">
                 <div class="field-label">Budget Range</div>
-                <div class="field-value">${budgetDisplay}</div>
+                <div class="field-value">${esc(budgetDisplay)}</div>
               </div>
             </div>
 
             ${inquiry.additionalNotes ? `
             <div class="section">
               <div class="section-title">Additional Notes</div>
-              <div class="highlight">${inquiry.additionalNotes}</div>
+              <div class="highlight">${esc(inquiry.additionalNotes)}</div>
             </div>
             ` : ""}
           </div>
@@ -336,7 +363,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
           
           <div style="padding: 36px 28px; background: #faf8f4;">
-            <p style="font-size: 15px; color: #2d2418; margin: 0 0 20px;">Hi ${inquiry.name.split(" ")[0]},</p>
+            <p style="font-size: 15px; color: #2d2418; margin: 0 0 20px;">Hi ${esc(String(inquiry.name).split(" ")[0])},</p>
             
             <p style="font-size: 15px; color: #444; margin: 0 0 18px;">Thanks for sending through your project.</p>
             
@@ -379,7 +406,7 @@ const handler = async (req: Request): Promise<Response> => {
       resend.emails.send({
         from: FROM_EMAIL,
         to: notifyRecipients,
-        subject: `New Project Inquiry from ${inquiry.name}`,
+        subject: `New Project Inquiry from ${String(inquiry.name).replace(/[\r\n]/g, " ").slice(0, 120)}`,
         html: emailHtml,
         reply_to: inquiry.email,
       }),
