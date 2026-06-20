@@ -137,7 +137,9 @@ export default function Admin() {
                       { id: "zone-applications", label: "03 · Applications" },
                       { id: "zone-content", label: "04 · Content" },
                       { id: "zone-projects", label: "05 · Projects" },
-                      { id: "zone-preview", label: "06 · Client Preview" },
+                      ...(!isPreview
+                        ? [{ id: "zone-preview", label: "06 · Client Preview" }]
+                        : []),
                     ].map((item) => (
                       <button
                         key={item.id}
@@ -149,12 +151,21 @@ export default function Admin() {
                         {item.label}
                       </button>
                     ))}
+                    {isPreview && (
+                      <button
+                        onClick={handleSignOut}
+                        className="ml-auto text-[10px] uppercase tracking-[0.22em] text-muted-foreground/45 hover:text-foreground/80 transition-colors whitespace-nowrap"
+                      >
+                        Sign out
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
             </>
           );
         })()}
+
 
 
         {/* ════════════════════════════════════════════ */}
