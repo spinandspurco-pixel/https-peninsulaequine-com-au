@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useHqMode } from "@/hooks/useHqMode";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -101,6 +102,8 @@ type ManagedTestimonial = Tables<"managed_testimonials">;
 
 export default function AdminTestimonials() {
   const { user, isAdmin, loading } = useAuth();
+  const { isPreview } = useHqMode();
+  const canAccess = isAdmin || isPreview;
   const navigate = useNavigate();
   const [items, setItems] = useState<ManagedTestimonial[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -109,8 +112,8 @@ export default function AdminTestimonials() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (!loading && (!user || !isAdmin)) navigate("/login");
-  }, [user, isAdmin, loading, navigate]);
+    if (!loading && (!user || !canAccess)) navigate("/login");
+  }, [user, canAccess, loading, navigate]);
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -120,11 +123,13 @@ export default function AdminTestimonials() {
   };
 
   const togglePin = async (item: ManagedTestimonial) => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
     await supabase.from("managed_testimonials").update({ pinned: !(item as any).pinned }).eq("id", item.id);
     fetchData();
   };
 
   const moveItem = async (item: ManagedTestimonial, direction: "up" | "down") => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
     const idx = items.findIndex((i) => i.id === item.id);
     const swapIdx = direction === "up" ? idx - 1 : idx + 1;
     if (swapIdx < 0 || swapIdx >= items.length) return;
@@ -136,9 +141,10 @@ export default function AdminTestimonials() {
     fetchData();
   };
 
-  useEffect(() => { if (isAdmin) fetchData(); }, [isAdmin]);
+  useEffect(() => { if (canAccess) fetchData(); }, [canAccess]);
 
   const handleSave = async () => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
     if (!editItem?.client_name?.trim() || !editItem?.quote?.trim()) {
       toast.error("Name and quote are required");
       return;
@@ -168,6 +174,7 @@ export default function AdminTestimonials() {
   };
 
   const handleDelete = async () => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
     if (!deleteItem) return;
     await supabase.from("managed_testimonials").delete().eq("id", deleteItem.id);
     toast.success("Deleted");
@@ -175,19 +182,21 @@ export default function AdminTestimonials() {
     fetchData();
   };
 
-  if (loading || !isAdmin) return null;
+  if (loading || !canAccess) return null;
 
   return (
     <Layout>
       <div className="section-padding">
         <div className="section-container max-w-5xl">
           <div className="flex items-center gap-4 mb-8">
-            <Button variant="ghost" size="sm" onClick={() => navigate("/admin")}>
+            <Button variant="ghost" size="sm" onClick={() => navigate(isPreview ? "/hq?view=preview" : "/hq")}>
               <ArrowLeft className="h-4 w-4 mr-1" /> Back
             </Button>
             <div className="flex-1">
               <h1 className="font-serif text-3xl font-bold text-foreground">Manage Testimonials</h1>
-              <p className="text-muted-foreground text-sm mt-1">{items.length} testimonials</p>
+              <p className="text-muted-foreground text-sm mt-1">
+                {items.length} testimonials{isPreview && " · view-only preview"}
+              </p>
             </div>
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" onClick={() => exportCSV(items)} disabled={items.length === 0}>
@@ -196,7 +205,7 @@ export default function AdminTestimonials() {
               <Button variant="outline" size="sm" onClick={() => exportPDF(items)} disabled={items.length === 0}>
                 <FileText className="h-4 w-4 mr-1" /> PDF
               </Button>
-              <Button onClick={() => setEditItem({ active: true, rating: 5, sort_order: items.length })}>
+              <Button onClick={() => setEditItem({ active: true, rating: 5, sort_order: items.length })} disabled={isPreview} title={isPreview ? "View-only" : undefined}>
                 <Plus className="h-4 w-4 mr-2" /> Add
               </Button>
             </div>
@@ -213,10 +222,10 @@ export default function AdminTestimonials() {
                   <CardContent className="flex items-start gap-4 py-4">
                     {/* Reorder arrows */}
                     <div className="flex flex-col gap-0.5 shrink-0 pt-1">
-                      <Button variant="ghost" size="icon" className="h-6 w-6" disabled={idx === 0} onClick={() => moveItem(t, "up")}>
+                      <Button variant="ghost" size="icon" className="h-6 w-6" disabled={idx === 0 || isPreview} onClick={() => moveItem(t, "up")}>
                         <ArrowUp className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="h-6 w-6" disabled={idx === items.length - 1} onClick={() => moveItem(t, "down")}>
+                      <Button variant="ghost" size="icon" className="h-6 w-6" disabled={idx === items.length - 1 || isPreview} onClick={() => moveItem(t, "down")}>
                         <ArrowDown className="h-3 w-3" />
                       </Button>
                     </div>
@@ -243,13 +252,14 @@ export default function AdminTestimonials() {
                         variant="ghost"
                         size="sm"
                         onClick={() => togglePin(t)}
-                        title={(t as any).pinned ? "Unpin" : "Pin to top"}
+                        disabled={isPreview}
+                        title={isPreview ? "View-only" : ((t as any).pinned ? "Unpin" : "Pin to top")}
                         className={(t as any).pinned ? "text-accent" : ""}
                       >
                         <Pin className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="sm" onClick={() => setEditItem(t)}><Pencil className="h-4 w-4" /></Button>
-                      <Button variant="ghost" size="sm" onClick={() => setDeleteItem(t)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                      <Button variant="ghost" size="sm" onClick={() => setEditItem(t)} disabled={isPreview} title={isPreview ? "View-only" : undefined}><Pencil className="h-4 w-4" /></Button>
+                      <Button variant="ghost" size="sm" onClick={() => setDeleteItem(t)} disabled={isPreview} title={isPreview ? "View-only" : undefined}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                     </div>
                   </CardContent>
                 </Card>
