@@ -135,8 +135,9 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Peninsula Equine <onboarding@resend.dev>",
+        from: HQ_FROM,
         to: [NOTIFICATION_EMAIL],
+        reply_to: HQ_REPLY_TO,
         subject: `📋 New ${docLabel} — ${title}`,
         html: emailHtml,
       }),
