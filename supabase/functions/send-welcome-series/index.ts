@@ -16,9 +16,22 @@ interface WelcomeRequest {
 }
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
-const FROM_EMAIL =
-  Deno.env.get("FROM_EMAIL") || "Peninsula Equine <hello@peninsulaequine.org>";
+const FROM_EMAIL = Deno.env.get("FROM_EMAIL");
+const WELCOME_REPLY_TO = "info@peninsulaequine.org";
 const SITE_URL = "https://peninsulaequine.lovable.app";
+
+function assertSender(): Response | null {
+  if (!FROM_EMAIL || /resend\.dev/i.test(FROM_EMAIL)) {
+    console.error(
+      "[send-welcome-series] FROM_EMAIL secret missing or points to resend.dev — refusing to send."
+    );
+    return new Response(
+      JSON.stringify({ error: "Email sender not configured" }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  }
+  return null;
+}
 
 // ── Welcome Series Emails ──────────────────────────────────────────
 
