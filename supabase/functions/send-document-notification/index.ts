@@ -3,6 +3,9 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const NOTIFICATION_EMAIL = Deno.env.get("NOTIFICATION_EMAIL") || "info@peninsulaequine.org";
+const HQ_FROM = Deno.env.get("HQ_EMAIL_FROM");
+const NOREPLY_FROM = Deno.env.get("NOREPLY_EMAIL_FROM");
+const HQ_REPLY_TO = "info@peninsulaequine.org";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
