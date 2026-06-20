@@ -537,7 +537,7 @@ export default function Contact() {
                         </h3>
                       </div>
                       <SelectField
-                        label="When are you looking to start?"
+                        label="When does the ground need to be ready?"
                         value={form.timeline}
                         onChange={(v) => set("timeline", v)}
                         options={TIMELINES}
