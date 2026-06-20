@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
 export type HqMode = "staff" | "preview";
@@ -14,31 +13,14 @@ export type HqMode = "staff" | "preview";
  * Preview engages when:
  *  - URL has ?view=preview or ?demo=1
  *  - The signed-in user has the `preview` role in user_roles
+ *
+ * Role state is read from useAuth (single source of truth) — this hook
+ * no longer issues its own user_roles query.
  */
 export function useHqMode() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const [hasPreviewRole, setHasPreviewRole] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    if (!user) {
-      setHasPreviewRole(false);
-      return;
-    }
-    supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .then(({ data }) => {
-        if (cancelled) return;
-        setHasPreviewRole(!!data?.some((r) => r.role === "preview"));
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [user]);
+  const { isPreview: hasPreviewRole } = useAuth();
 
   const params = new URLSearchParams(location.search);
   const urlPreview = params.get("view") === "preview" || params.get("demo") === "1";
@@ -61,6 +43,6 @@ export function useHqMode() {
 
   return useMemo(
     () => ({ mode, isPreview: mode === "preview", exitPreview, enterPreview }),
-    [mode]
+    [mode] // eslint-disable-line react-hooks/exhaustive-deps
   );
 }
