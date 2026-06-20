@@ -48,6 +48,7 @@ export default function Index() {
   const [heroImgLoaded, setHeroImgLoaded] = useState(false);
   const [heroImgFailed, setHeroImgFailed] = useState(false);
   const { open: openIntake } = useIntake();
+  const navigate = useNavigate();
 
 
   const skipIntro = useMemo(() => {
