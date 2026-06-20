@@ -7,6 +7,7 @@ import { ServicesSchemaMarkup } from "@/components/ServicesSchemaMarkup";
 import { setActiveServiceChapter } from "@/hooks/useActiveServiceChapter";
 import { DraftTicks, DraftPlanBackdrop } from "@/components/draft";
 import { WholePropertyInquiryForm } from "@/components/services/WholePropertyInquiryForm";
+import { PageHandoff } from "@/components/architecture";
 
 
 
