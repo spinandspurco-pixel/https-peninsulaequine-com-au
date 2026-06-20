@@ -6,6 +6,7 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import heroAsset from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
 import fireplacePortrait from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
 import parrillaWide from "@/assets/main-ridge/mr-parrilla-wide.png.asset.json";
+import aberdeenHandoffAsset from "@/assets/uploads/approved-aberdeen-exterior-dusk-frontage.png.asset.json";
 
 const FACTS: Array<{ label: string; value: string }> = [
   { label: "Code", value: "PE-MR-024" },
@@ -344,14 +345,14 @@ export default function MainRidgePavilion() {
                   className="group block relative aspect-[4/5] overflow-hidden bg-card border-l border-accent/20"
                 >
                   <img
-                    src="/og.png"
-                    alt=""
-                    aria-hidden
+                    src={aberdeenHandoffAsset.url}
+                    alt="Aberdeen — completed arena and stable frontage at dusk"
                     loading="lazy"
                     decoding="async"
-                    className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40"
+                    className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-85"
                     style={{
-                      filter: "brightness(0.6) contrast(1.05) saturate(0.7)",
+                      objectPosition: "50% 55%",
+                      filter: "brightness(0.62) contrast(1.08) saturate(0.78)",
                       transition: "opacity var(--pe-dur-cinematic) var(--pe-ease)",
                     }}
                   />

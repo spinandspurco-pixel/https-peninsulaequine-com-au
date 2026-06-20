@@ -137,7 +137,7 @@ export default function Aberdeen() {
                 <div className="relative aspect-[16/11] overflow-hidden">
                   <img
                     src={stableStallAsset.url}
-                    alt="Aberdeen horse wash bay with warm timber lining, overhead care system and handler standing with a horse"
+                    alt="Aberdeen stable interior — symmetrical stall view with black steel framing and warm timber lining"
                     className="absolute inset-0 h-full w-full object-cover"
                     loading="lazy"
                     decoding="async"

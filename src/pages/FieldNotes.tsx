@@ -181,7 +181,7 @@ export default function FieldNotes() {
                   </RevealOnScroll>
                   <RevealOnScroll direction="up" duration={1100} delay={140}>
                     <h2 className="font-serif text-foreground leading-[0.96] tracking-tight text-[clamp(1.8rem,1.15rem+2.2vw,3rem)]">
-                      Real progress. Real conditions. Real builds.
+                      Captured while the work is still alive.
                     </h2>
                   </RevealOnScroll>
                   <RevealLine width="w-10" delay={260} />
