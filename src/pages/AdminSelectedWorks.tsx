@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { useAuth } from "@/hooks/useAuth";
+import { useHqMode } from "@/hooks/useHqMode";
 import { supabase } from "@/integrations/supabase/client";
 import { RefreshCw } from "lucide-react";
 
@@ -17,19 +18,22 @@ interface Project {
 export default function AdminSelectedWorks() {
   const navigate = useNavigate();
   const { user, isAdmin, loading: authLoading } = useAuth();
+  const { isPreview } = useHqMode();
+  const canAccess = isAdmin || isPreview;
   const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
-    if (!authLoading && (!user || !isAdmin)) navigate("/login");
-  }, [user, isAdmin, authLoading, navigate]);
+    if (!authLoading && (!user || !canAccess)) navigate("/login");
+  }, [user, canAccess, authLoading, navigate]);
 
   useEffect(() => {
+    if (!canAccess) return;
     supabase
       .from("managed_projects")
       .select("id, code, name, location, build_type, status")
       .order("sort_order")
       .then(({ data }) => setProjects((data as Project[]) ?? []));
-  }, []);
+  }, [canAccess]);
 
   if (authLoading) {
     return (
@@ -47,7 +51,7 @@ export default function AdminSelectedWorks() {
         <header className="pt-32 sm:pt-40 pb-12">
           <div className="max-w-3xl mx-auto px-6">
             <button
-              onClick={() => navigate("/hq")}
+              onClick={() => navigate(isPreview ? "/hq?view=preview" : "/hq")}
               className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/45 hover:text-foreground mb-6"
             >
               ← HQ
@@ -71,7 +75,7 @@ export default function AdminSelectedWorks() {
               {projects.map((p) => (
                 <li key={p.id}>
                   <button
-                    onClick={() => navigate(`/hq/projects/${p.id}`)}
+                    onClick={() => navigate(`/hq/projects/${p.id}${isPreview ? "?view=preview" : ""}`)}
                     className="w-full text-left py-6 grid grid-cols-12 gap-3 items-baseline hover:bg-muted/10 transition-colors"
                   >
                     <span className="col-span-3 font-mono text-[10px] uppercase tracking-[0.25em] text-accent/55">
@@ -81,7 +85,7 @@ export default function AdminSelectedWorks() {
                       {p.name}
                     </span>
                     <span className="col-span-3 text-right font-mono text-[10px] uppercase tracking-[0.2em] text-accent/40">
-                      Open →
+                      {isPreview ? "View →" : "Open →"}
                     </span>
                   </button>
                 </li>

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { useAuth } from "@/hooks/useAuth";
+import { useHqMode } from "@/hooks/useHqMode";
 import { RefreshCw } from "lucide-react";
 
 const FIELD_NOTES = [
