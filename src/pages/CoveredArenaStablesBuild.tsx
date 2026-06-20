@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
-import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
+import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 
 import stormSteelAsset from "@/assets/uploads/approved-current-build-steel-frame-storm.png.asset.json";
 import nightWorkAsset from "@/assets/uploads/approved-current-build-rain-frame-symmetry.png.asset.json";
@@ -17,57 +17,47 @@ const wetGround = wetGroundAsset.url;
 const drainage = drainageAsset.url;
 const muddyBoots = muddyBootsAsset.url;
 
-const facts = [
-  { label: "Category", value: "Covered Arena / Stables" },
+const FACTS: Array<{ label: string; value: string }> = [
+  { label: "Code", value: "PE-CA-026" },
+  { label: "Category", value: "Covered Arena · Stables" },
   { label: "Location", value: "Mornington Peninsula" },
+  { label: "Scope", value: "Steel · Roofing · Drainage · Base" },
+  { label: "Year", value: "2026" },
   { label: "Status", value: "In Progress" },
-  {
-    label: "Scope",
-    value: "Steel Frame / Roofing / Groundworks / Stable Infrastructure / Drainage / Base Preparation",
-  },
 ];
 
-const timeline = [
-  {
-    step: "01",
-    title: "Site Preparation",
-    body: "Access tracks, levels, red clay cuts and base planning — the work that decides how everything above it performs.",
-  },
-  {
-    step: "02",
-    title: "Steel Rising",
-    body: "Structural frame installation. Columns, portals and bracing locked into position as the covered arena form begins to take shape.",
-  },
-  {
-    step: "03",
-    title: "Roof & Shelter",
-    body: "Roof works defining the scale, weather protection and year-round usability of the structure.",
-  },
-  {
-    step: "04",
-    title: "Stable Infrastructure",
-    body: "Stable zones, circulation and practical horse-first spaces progressing alongside the arena works.",
-  },
-  {
-    step: "05",
-    title: "Drainage & Base",
-    body: "The unseen layers — falls, drainage runs and compacted base — that determine performance and longevity.",
-  },
-  {
-    step: "06",
-    title: "Final Surface & Finish",
-    body: "Surface install, fit-off and the final details that bring the environment into daily working use.",
-  },
+const DETAILS = [
+  "Structural steel portals and bracing",
+  "Full-span roof and weather shelter",
+  "Stable precinct and circulation",
+  "Falls, drainage and sub-base sequencing",
+  "Red-clay site cuts and access tracks",
+  "Engineered surface preparation",
 ];
+
+/* ── Shared chapter overline ─────────────────────────── */
+function ChapterMark({ chapter, label }: { chapter: string; label: string }) {
+  return (
+    <div className="flex items-baseline gap-5 mb-10 sm:mb-14">
+      <span className="font-mono text-[10px] uppercase tracking-[0.5em] text-accent/55">
+        {chapter}
+      </span>
+      <span aria-hidden className="h-px w-10 sm:w-16 bg-accent/30" />
+      <span className="font-mono text-[10px] uppercase tracking-[0.5em] text-foreground/45">
+        {label}
+      </span>
+    </div>
+  );
+}
 
 export default function CoveredArenaStablesBuild() {
   useEffect(() => {
-    document.title = "Covered Arena & Stables Build | Field Notes";
+    document.title = "Covered Arena & Stables | Peninsula Equine";
     const meta = document.querySelector('meta[name="description"]');
     const prev = meta?.getAttribute("content") || "";
     meta?.setAttribute(
       "content",
-      "Covered Arena & Stables Build — structural steel, undercover arena works and stable infrastructure in progress across the Mornington Peninsula.",
+      "Covered Arena & Stables — structural steel, roofing and stable infrastructure in progress across the Mornington Peninsula.",
     );
     return () => {
       document.title = "Peninsula Equine";
@@ -77,239 +67,395 @@ export default function CoveredArenaStablesBuild() {
 
   return (
     <Layout>
-      <main className="bg-background text-foreground type-architectural">
-        {/* HERO — stormy steel + dozer */}
-        <section className="relative min-h-[90vh] overflow-hidden flex items-end border-b border-accent/10">
+      <article className="bg-background text-foreground overflow-x-clip">
+        {/* ─────────────────────────────────────────────
+            ACT I — Overture (full-bleed cinematic hero)
+            ───────────────────────────────────────────── */}
+        <section className="relative h-[92svh] min-h-[640px] w-full overflow-hidden bg-background">
           <img
             src={stormSteel}
-            alt="Current build crane lift raising arena structure panels beneath a dramatic storm sky"
-            className="absolute inset-0 h-full w-full object-cover object-[52%_48%] sm:object-[52%_48%] lg:object-center"
-            style={{ filter: "brightness(0.68) contrast(1.14) saturate(0.78)" }}
+            alt="Steel arena frame raised beneath a charged storm sky — crane and panels mid-lift"
+            loading="eager"
+            decoding="async"
+            {...({ fetchpriority: "high" } as any)}
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{
+              objectPosition: "52% 48%",
+              filter: "brightness(0.6) contrast(1.12) saturate(0.78)",
+            }}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/92 via-background/55 to-background/15" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/45 to-background/10" />
+          {/* Cinematic veil */}
+          <div
+            aria-hidden
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(120% 80% at 50% 30%, transparent 0%, hsl(var(--background) / 0.45) 65%, hsl(var(--background) / 0.95) 100%)",
+            }}
+          />
+          <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background via-background/70 to-transparent" />
+          <div className="absolute inset-0 engineering-grid opacity-[0.025]" aria-hidden />
 
-          <div className="relative z-10 section-container w-full pb-[clamp(3.5rem,3rem+5vw,7rem)] pt-28 sm:pt-36">
-            <div className="max-w-3xl space-y-6 sm:space-y-8">
-              <RevealOnScroll direction="up" duration={900}>
-                <p className="font-mono uppercase text-accent/60 text-[10px] tracking-[0.48em]">
-                  Current Project — In Progress
+          {/* Top marks */}
+          <div className="absolute top-28 sm:top-32 left-6 sm:left-10 right-6 sm:right-10 flex items-baseline justify-between z-10">
+            <Link
+              to="/selected-works"
+              className="font-mono text-[10px] uppercase tracking-[0.5em] text-accent/55 hover:text-accent"
+              style={{ transition: "color var(--pe-dur-hold) var(--pe-ease)" }}
+            >
+              ← Selected Works
+            </Link>
+            <span className="hidden sm:flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.5em] text-foreground/35">
+              <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse-subtle" />
+              PE-CA-026 · Chapter 03 · Live
+            </span>
+          </div>
+
+          {/* Title — bottom anchor */}
+          <div className="absolute inset-x-0 bottom-[16%] sm:bottom-[12%] px-6 sm:px-10 z-10">
+            <div className="max-w-5xl">
+              <RevealOnScroll direction="up" duration={1100}>
+                <p className="font-mono text-[10px] uppercase tracking-[0.5em] text-accent/70">
+                  Covered Arena · Stables · In Progress
                 </p>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" duration={1100} delay={120}>
-                <h1 className="font-serif text-foreground leading-[0.92] tracking-tight text-[clamp(2.35rem,1.35rem+4.8vw,5.2rem)] max-w-4xl">
-                  Covered Arena &amp; Stables Build
+              <RevealOnScroll direction="up" duration={1400} delay={180}>
+                <h1 className="mt-5 font-serif text-foreground/95 leading-[0.92] tracking-tight text-[clamp(2.6rem,1.4rem+5.4vw,6rem)]">
+                  Covered Arena
+                  <br />
+                  &amp; Stables.
                 </h1>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" duration={1000} delay={220}>
-                <p className="font-serif italic text-foreground/72 leading-[1.55] text-[clamp(1rem,0.88rem+0.32vw,1.16rem)] max-w-2xl">
-                  Structural steel, groundworks and stable infrastructure in progress.
-                </p>
-              </RevealOnScroll>
-              <RevealLine width="w-10" delay={320} />
-              <RevealOnScroll direction="up" duration={1100} delay={380}>
-                <p className="max-w-2xl font-sans font-light text-foreground/60 leading-[1.85] text-[14px] sm:text-[15px]">
-                  This active project documents the real middle of a Peninsula Equine build — steel rising,
-                  red clay underfoot, machinery moving through changing conditions and every layer setting
-                  the foundation for the finished arena and stable environment.
+              <RevealOnScroll direction="up" duration={1100} delay={420}>
+                <p className="mt-7 max-w-md font-sans font-light text-foreground/55 text-[0.95rem] leading-[1.75]">
+                  Steel rising, red clay underfoot — the honest middle of a build,
+                  documented while the work is still in motion.
                 </p>
               </RevealOnScroll>
             </div>
           </div>
-        </section>
 
-        {/* PROJECT SUMMARY */}
-        <section className="border-t border-accent/10 py-[clamp(4.5rem,3rem+5vw,7rem)]">
-          <div className="section-container max-w-6xl mx-auto grid grid-cols-12 gap-8 lg:gap-12 items-end">
-            <div className="col-span-12 lg:col-span-7 space-y-5">
-              <RevealOnScroll direction="up" duration={900}>
-                <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
-                  Project Summary
-                </p>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" duration={1000} delay={120}>
-                <h2 className="font-serif text-foreground/92 leading-[1.02] tracking-tight text-[clamp(1.8rem,1.2rem+2vw,3rem)]">
-                  Steel, shelter and site sequencing.
-                </h2>
-              </RevealOnScroll>
-              <RevealLine width="w-8" delay={240} />
-              <RevealOnScroll direction="up" duration={1000} delay={320}>
-                <p className="font-sans font-light text-foreground/56 leading-[1.9] text-[14px] sm:text-[15px] max-w-2xl">
-                  This active project documents the real middle of a Peninsula Equine build — steel rising,
-                  red clay underfoot, machinery moving through changing conditions and every layer setting
-                  the foundation for the finished arena and stable environment.
-                </p>
-              </RevealOnScroll>
-            </div>
-            <div className="col-span-12 lg:col-span-5 lg:text-right">
-              <RevealOnScroll direction="up" duration={1000} delay={360}>
-                <dl className="space-y-3 font-sans font-light text-foreground/52 text-[14px] sm:text-[15px]">
-                  {facts.map((fact) => (
-                    <div key={fact.label}>
-                      <dt className="inline text-accent/60">{fact.label}</dt>
-                      <dd className="inline"> — {fact.value}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </RevealOnScroll>
-            </div>
+          {/* Scroll cue */}
+          <div className="absolute bottom-8 right-6 sm:right-10 z-10 hidden sm:flex items-center gap-3">
+            <span className="font-mono text-[9px] uppercase tracking-[0.5em] text-foreground/40">
+              Scroll · Begin Chapter
+            </span>
+            <span aria-hidden className="h-px w-10 bg-accent/40" />
           </div>
         </section>
 
-        {/* EDITORIAL GRID — 6 process images, no duplicates side by side */}
-        <section className="border-t border-accent/10 py-[clamp(5rem,3rem+6vw,9rem)]">
-          <div className="section-container max-w-[1480px] mx-auto">
-            <RevealOnScroll direction="up" duration={900}>
-              <div className="flex items-baseline gap-5 mb-[clamp(2rem,1.2rem+2vw,3rem)]">
-                <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">02</span>
-                <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
-                <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Editorial Grid</span>
+        {/* ─────────────────────────────────────────────
+            ACT II — Manifest (project facts strip)
+            ───────────────────────────────────────────── */}
+        <section className="relative border-t border-accent/10 pe-pause-sm">
+          <div className="section-container max-w-[1280px]">
+            <dl className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-y-8 gap-x-6 border-t border-accent/15 pt-10">
+              {FACTS.map((fact) => (
+                <div key={fact.label} className="flex flex-col gap-3">
+                  <dt className="font-mono uppercase text-accent/55 text-[9px] tracking-[0.45em]">
+                    {fact.label}
+                  </dt>
+                  <dd className="font-serif text-foreground/85 text-[clamp(0.95rem,0.85rem+0.3vw,1.15rem)] leading-[1.3]">
+                    {fact.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+
+        {/* ─────────────────────────────────────────────
+            ACT III — Brief (thesis)
+            ───────────────────────────────────────────── */}
+        <section className="relative border-t border-accent/10 pe-pause-lg">
+          <div className="section-container max-w-[1280px]">
+            <ChapterMark chapter="Chapter 03 · Brief" label="The Ask" />
+            <div className="grid grid-cols-12 gap-x-10 gap-y-8">
+              <div className="col-span-12 md:col-span-5">
+                <RevealOnScroll direction="up" duration={1100}>
+                  <h2 className="font-serif text-foreground/95 leading-[0.98] tracking-tight text-[clamp(1.9rem,1.3rem+2.4vw,3.2rem)]">
+                    A working arena,
+                    <br />
+                    resolved from the ground up.
+                  </h2>
+                </RevealOnScroll>
               </div>
-            </RevealOnScroll>
+              <div className="col-span-12 md:col-span-6 md:col-start-7">
+                <RevealOnScroll direction="up" duration={1100} delay={120}>
+                  <p className="font-serif italic text-foreground/70 text-[clamp(1.1rem,0.95rem+0.6vw,1.4rem)] leading-[1.5]">
+                    Built for weather, scale and year-round use — without compromise below the surface.
+                  </p>
+                  <p className="mt-8 font-sans font-light text-foreground/55 text-[0.98rem] leading-[1.85] max-w-xl">
+                    The brief was clear — a covered arena and stable precinct
+                    that performs in every condition. Drainage, falls and base
+                    sequencing decided first. Steel, roof and shelter built to
+                    match. Stables held to the same standard. Nothing carried
+                    forward unresolved.
+                  </p>
+                </RevealOnScroll>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
-              {/* Row 1: wide night-work + tall muddy boots */}
-              <RevealOnScroll direction="up" duration={1100} className="md:col-span-8">
-                <div className="relative overflow-hidden aspect-[16/10] lg:aspect-[21/10]">
+        {/* ─────────────────────────────────────────────
+            ACT IV — Built (craftsmanship slab)
+            ───────────────────────────────────────────── */}
+        <section className="relative border-t border-accent/10 pe-pause-lg">
+          <div className="section-container max-w-[1480px]">
+            <ChapterMark chapter="Chapter 03 · Built" label="Steel, Shelter, Sequence" />
+
+            <div className="grid grid-cols-12 gap-y-10 gap-x-8 lg:gap-x-12 items-stretch">
+              {/* Portrait detail */}
+              <div className="col-span-12 md:col-span-3 relative aspect-[3/4] md:aspect-auto md:min-h-[520px] overflow-hidden bg-card">
+                <img
+                  src={muddyBoots}
+                  alt="Worn boots standing in red clay beside the steel frame of the covered arena"
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{
+                    objectPosition: "50% 50%",
+                    filter: "brightness(0.84) contrast(1.08) saturate(0.78)",
+                  }}
+                />
+              </div>
+
+              {/* Text column */}
+              <div className="col-span-12 md:col-span-4 flex flex-col justify-between gap-10">
+                <RevealOnScroll direction="up" duration={1100}>
+                  <p className="font-mono uppercase text-accent/65 text-[10px] tracking-[0.45em]">
+                    Built Around
+                  </p>
+                  <h3 className="mt-5 font-serif text-foreground/92 leading-[1.02] tracking-tight text-[clamp(1.6rem,1.1rem+1.8vw,2.4rem)]">
+                    Steel, shelter
+                    <br />
+                    and sequence.
+                  </h3>
+                  <p className="mt-7 font-sans font-light text-foreground/55 text-[0.98rem] leading-[1.8] max-w-md">
+                    Every layer chosen and ordered with intent — site cuts,
+                    drainage falls, structural steel, full-span roof and stable
+                    precinct, finished with engineered surface preparation that
+                    decides how the building performs for decades.
+                  </p>
+                </RevealOnScroll>
+
+                <RevealOnScroll direction="up" duration={1100} delay={200}>
+                  <ul className="divide-y divide-accent/10 border-t border-accent/15">
+                    {DETAILS.map((d) => (
+                      <li
+                        key={d}
+                        className="py-3 flex items-baseline gap-4 font-sans font-light text-foreground/75 text-[0.95rem]"
+                      >
+                        <span aria-hidden className="h-px w-4 bg-accent/45 shrink-0 translate-y-[-3px]" />
+                        <span>{d}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </RevealOnScroll>
+              </div>
+
+              {/* Wide interior */}
+              <div className="col-span-12 md:col-span-5 relative aspect-[4/3] md:aspect-auto md:min-h-[520px] overflow-hidden bg-card">
+                <img
+                  src={truckAccess}
+                  alt="Covered arena interior under construction — roof glazing, structural steel and unfinished surface"
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{
+                    objectPosition: "50% 50%",
+                    filter: "brightness(0.84) contrast(1.1) saturate(0.78)",
+                  }}
+                />
+                <div
+                  aria-hidden
+                  className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background/85 to-transparent"
+                />
+                <figcaption className="absolute bottom-5 left-5 right-5">
+                  <p className="font-serif italic text-foreground/80 text-[0.95rem] leading-[1.5]">
+                    Light, span and shelter — the structure begins to read as a room.
+                  </p>
+                </figcaption>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ─────────────────────────────────────────────
+            ACT IV.b — Editorial Triptych (conditions)
+            ───────────────────────────────────────────── */}
+        <section className="relative border-t border-accent/10 pe-pause-md">
+          <div className="section-container max-w-[1480px]">
+            <ChapterMark chapter="Chapter 03 · Field" label="Conditions on Site" />
+            <div className="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+              <RevealOnScroll direction="up" duration={1100} className="col-span-12 md:col-span-7">
+                <div className="relative overflow-hidden aspect-[16/10]">
                   <img
                     src={nightWork}
-                    alt="Rain-marked interior arena frame in progress with symmetrical roof span and tracked footing lines"
-                    className="absolute inset-0 h-full w-full object-cover object-center"
-                    style={{ filter: "brightness(0.72) contrast(1.12) saturate(0.78)" }}
+                    alt="Rain-marked interior arena frame with symmetrical roof span and tracked footing lines"
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 h-full w-full object-cover"
+                    style={{ filter: "brightness(0.74) contrast(1.1) saturate(0.78)" }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/45 to-transparent" />
                 </div>
               </RevealOnScroll>
 
-              <RevealOnScroll direction="up" duration={1100} delay={120} className="md:col-span-4">
-                <div className="relative overflow-hidden aspect-[4/5] md:h-full md:aspect-auto min-h-[320px]">
-                  <img
-                    src={muddyBoots}
-                    alt="Dirty boots standing in red clay beside the steel frame of the covered arena"
-                    className="absolute inset-0 h-full w-full object-cover object-center"
-                    style={{ filter: "brightness(0.76) contrast(1.12) saturate(0.78)" }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/35 to-transparent" />
-                </div>
-              </RevealOnScroll>
-
-              {/* Row 2: truck access + wet ground + drainage */}
-              <RevealOnScroll direction="up" duration={1100} delay={180} className="md:col-span-5">
-                <div className="relative overflow-hidden aspect-[16/11]">
-                  <img
-                    src={truckAccess}
-                    alt="Covered arena interior under construction with sunbeam light, roof glazing and unfinished riding surface"
-                    className="absolute inset-0 h-full w-full object-cover object-center"
-                    style={{ filter: "brightness(0.78) contrast(1.1) saturate(0.78)" }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
-                </div>
-              </RevealOnScroll>
-
-              <RevealOnScroll direction="up" duration={1100} delay={260} className="md:col-span-4">
-                <div className="relative overflow-hidden aspect-[16/11]">
+              <RevealOnScroll direction="up" duration={1100} delay={140} className="col-span-12 md:col-span-5">
+                <div className="relative overflow-hidden aspect-[16/10]">
                   <img
                     src={wetGround}
-                    alt="Wet ground and puddles across the covered arena footprint at sunset, roof structure overhead"
-                    className="absolute inset-0 h-full w-full object-cover object-[54%_50%]"
-                    style={{ filter: "brightness(0.76) contrast(1.1) saturate(0.78)" }}
+                    alt="Wet ground and puddles across the covered arena footprint at sunset, roof overhead"
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 h-full w-full object-cover"
+                    style={{ objectPosition: "54% 50%", filter: "brightness(0.78) contrast(1.1) saturate(0.78)" }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
                 </div>
               </RevealOnScroll>
 
-              <RevealOnScroll direction="up" duration={1100} delay={340} className="md:col-span-3">
-                <div className="relative overflow-hidden aspect-[16/11]">
+              <RevealOnScroll direction="up" duration={1100} delay={260} className="col-span-12 md:col-span-12">
+                <div className="relative overflow-hidden aspect-[21/8]">
                   <img
                     src={drainage}
                     alt="Drainage detail and base preparation channel cut into the red clay site"
-                    className="absolute inset-0 h-full w-full object-cover object-[52%_50%]"
-                    style={{ filter: "brightness(0.78) contrast(1.1) saturate(0.78)" }}
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 h-full w-full object-cover"
+                    style={{ objectPosition: "52% 50%", filter: "brightness(0.78) contrast(1.1) saturate(0.78)" }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/45 to-transparent" />
+                  <figcaption className="absolute bottom-5 left-5 right-5">
+                    <p className="font-serif italic text-foreground/75 text-[0.95rem] leading-[1.5]">
+                      Falls, drainage and base — the unseen layers that decide everything above.
+                    </p>
+                  </figcaption>
                 </div>
               </RevealOnScroll>
             </div>
           </div>
         </section>
 
-        {/* BUILD TIMELINE */}
-        <section className="border-t border-accent/10 py-[clamp(5rem,3rem+6vw,9rem)]">
-          <div className="section-container max-w-6xl mx-auto grid grid-cols-12 gap-8 lg:gap-12">
-            <div className="col-span-12 lg:col-span-4 space-y-5">
-              <RevealOnScroll direction="up" duration={900}>
-                <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
-                  Build Timeline
-                </p>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" duration={1000} delay={120}>
-                <h2 className="font-serif text-foreground/92 leading-[1.02] tracking-tight text-[clamp(1.8rem,1.15rem+2vw,2.8rem)]">
-                  Current sequence of the work.
-                </h2>
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" duration={1000} delay={220}>
-                <p className="font-sans font-light text-foreground/54 leading-[1.85] text-[14px] sm:text-[15px] max-w-sm">
-                  A direct read of the project as it stands now — practical, structural and still in motion.
-                </p>
-              </RevealOnScroll>
-            </div>
+        {/* ─────────────────────────────────────────────
+            ACT V — Intermission (material breath)
+            ───────────────────────────────────────────── */}
+        <section className="relative border-t border-accent/10 pe-pause-md">
+          <div className="section-container max-w-3xl text-center">
+            <p className="font-mono text-[10px] uppercase tracking-[0.5em] text-accent/45">
+              Method · Standard
+            </p>
+            <p className="mt-6 font-serif italic text-foreground/75 text-[clamp(1.3rem,1rem+1.2vw,1.95rem)] leading-[1.45]">
+              Honest progress now.
+              <br />
+              Finished work later.
+            </p>
+            <RevealLine width="w-10" className="mx-auto mt-8" />
+          </div>
+        </section>
 
-            <div className="col-span-12 lg:col-span-8 divide-y divide-accent/10 border-t border-accent/10">
-              {timeline.map((item, index) => (
-                <RevealOnScroll key={item.step} direction="up" duration={950} delay={index * 90}>
-                  <div className="grid grid-cols-12 gap-4 sm:gap-6 py-6 sm:py-8 items-start">
-                    <div className="col-span-12 sm:col-span-2 font-mono text-accent/55 text-[10px] tracking-[0.42em] uppercase">
-                      {item.step}
-                    </div>
-                    <div className="col-span-12 sm:col-span-10">
-                      <h3 className="font-serif text-foreground/90 leading-[1.05] tracking-tight text-[1.35rem] sm:text-[1.55rem]">
-                        {item.title}
-                      </h3>
-                      <p className="mt-3 font-sans font-light text-foreground/56 leading-[1.85] text-[14px] sm:text-[15px] max-w-2xl">
-                        {item.body}
+        {/* ─────────────────────────────────────────────
+            ACT VI — Resolved + Next Chapter handoff
+            ───────────────────────────────────────────── */}
+        <section className="relative border-t border-accent/10 pe-pause-lg">
+          <div className="section-container max-w-[1280px]">
+            <div className="grid grid-cols-12 gap-10">
+              {/* Resolved */}
+              <div className="col-span-12 md:col-span-6">
+                <p className="font-mono text-[10px] uppercase tracking-[0.5em] text-accent/55">
+                  End of chapter · 03
+                </p>
+                <h2 className="mt-6 font-serif text-foreground/95 leading-[0.96] tracking-tight text-[clamp(1.9rem,1.3rem+2.4vw,3.2rem)]">
+                  From red clay
+                  <br />
+                  <span className="text-foreground/55 italic font-normal">
+                    to working ground.
+                  </span>
+                </h2>
+                <p className="mt-6 font-sans font-light text-foreground/55 text-[0.95rem] leading-[1.8] max-w-md">
+                  Stay with the build, or speak with Peninsula Equine about
+                  arena and stable infrastructure resolved to the same standard.
+                </p>
+                <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-baseline gap-6 sm:gap-10">
+                  <Link
+                    to="/contact"
+                    className="group inline-flex items-baseline gap-4 font-mono text-[10px] uppercase tracking-[0.45em] text-foreground hover:text-accent"
+                    style={{ transition: "color var(--pe-dur-hold) var(--pe-ease)" }}
+                  >
+                    <span>Apply to Build</span>
+                    <span
+                      aria-hidden
+                      className="h-px w-12 bg-accent/55 group-hover:w-24 group-hover:bg-accent"
+                      style={{
+                        transition:
+                          "width var(--pe-dur-hold) var(--pe-ease), background-color var(--pe-dur-hold) var(--pe-ease)",
+                      }}
+                    />
+                  </Link>
+                  <Link
+                    to="/selected-works"
+                    className="font-mono text-[10px] uppercase tracking-[0.45em] text-foreground/55 hover:text-foreground"
+                    style={{ transition: "color var(--pe-dur-hold) var(--pe-ease)" }}
+                  >
+                    ← Back to Selected Works
+                  </Link>
+                </div>
+              </div>
+
+              {/* Next chapter handoff — loop back to Main Ridge */}
+              <div className="col-span-12 md:col-span-5 md:col-start-8">
+                <Link
+                  to="/selected-works/main-ridge-pavilion"
+                  className="group block relative aspect-[4/5] overflow-hidden bg-card border-l border-accent/20"
+                >
+                  <img
+                    src={truckAccess}
+                    alt=""
+                    aria-hidden
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-45"
+                    style={{
+                      filter: "brightness(0.6) contrast(1.05) saturate(0.7)",
+                      transition: "opacity var(--pe-dur-cinematic) var(--pe-ease)",
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
+                  <div className="relative z-10 h-full flex flex-col justify-between p-8">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.5em] text-accent/65">
+                      Return to chapter · 01
+                    </p>
+                    <div>
+                      <p className="font-mono text-[9.5px] uppercase tracking-[0.45em] text-foreground/45">
+                        Pavilion · Rural Build
                       </p>
+                      <h3 className="mt-3 font-serif text-foreground/95 leading-[0.98] tracking-tight text-[clamp(1.6rem,1.1rem+1.8vw,2.4rem)]">
+                        Main Ridge.
+                      </h3>
+                      <div
+                        className="mt-5 inline-flex items-baseline gap-3 font-mono text-[10px] uppercase tracking-[0.45em] text-foreground/65 group-hover:text-accent"
+                        style={{ transition: "color var(--pe-dur-hold) var(--pe-ease)" }}
+                      >
+                        <span>Open</span>
+                        <span
+                          aria-hidden
+                          className="h-px w-10 bg-accent/50 group-hover:w-20 group-hover:bg-accent"
+                          style={{
+                            transition:
+                              "width var(--pe-dur-hold) var(--pe-ease), background-color var(--pe-dur-hold) var(--pe-ease)",
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
-                </RevealOnScroll>
-              ))}
+                </Link>
+              </div>
             </div>
           </div>
         </section>
-
-        {/* CLOSING CTA */}
-        <section className="border-t border-accent/10 py-[clamp(5rem,3rem+6vw,9rem)]">
-          <div className="section-container max-w-5xl mx-auto text-center space-y-6 sm:space-y-8">
-            <RevealOnScroll direction="up" duration={900}>
-              <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
-                Stay with the build
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" duration={1000} delay={120}>
-              <p className="font-serif italic text-foreground/74 leading-[1.4] tracking-tight text-[clamp(1.3rem,0.95rem+1.4vw,2rem)] max-w-3xl mx-auto">
-                Honest progress now. Finished work later.
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="none" duration={1100} delay={280}>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-1">
-                <Link
-                  to="/field-notes"
-                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/72 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
-                >
-                  <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
-                  Back to Field Notes
-                </Link>
-                <Link
-                  to="/contact"
-                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/72 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
-                >
-                  Start a Project
-                  <span className="w-8 h-px bg-foreground/30 transition-all duration-700 group-hover:w-14 group-hover:bg-foreground/70" />
-                </Link>
-              </div>
-            </RevealOnScroll>
-          </div>
-        </section>
-      </main>
+      </article>
     </Layout>
   );
 }
