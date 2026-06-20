@@ -455,34 +455,17 @@ export default function Services() {
           </div>
         </section>
 
-        {/* ═══ CTA ═══════════════════════════════════════ */}
-        <section className="relative overflow-hidden">
-          <div className="divider-grid" />
-          <div className="py-32 sm:py-40 lg:py-48 relative">
-            <div className="absolute inset-0 grain-texture" />
-            <div
-              className="absolute inset-0"
-              style={{ background: "radial-gradient(ellipse 70% 50% at 50% 50%, transparent 20%, hsl(222 20% 3% / 0.5) 100%)" }}
-            />
-            <div className="section-container relative z-10 text-center max-w-lg mx-auto">
-              <RevealOnScroll direction="up">
-                <RevealLine className="mx-auto mb-14" width="w-10" />
-              </RevealOnScroll>
-              <RevealOnScroll direction="up" delay={150}>
-                <Link
-                  to="/contact"
-                  className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/70 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
-                >
-                  <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
-                  Apply to Build
-                </Link>
-                <p className="mt-6 font-mono text-[9px] uppercase tracking-[0.4em] text-foreground/20">
-                  Selected projects only.
-                </p>
-              </RevealOnScroll>
-            </div>
-          </div>
-        </section>
+        {/* ═══ HANDOFF ═══════════════════════════════════════ */}
+        <PageHandoff
+          sheet="Sheet 05"
+          label="Next drawing"
+          headline="The brief begins on the ground."
+          detail="Selected projects only. Peninsula Equine accepts a small number of builds each year across the Mornington Peninsula."
+          to="/site-assessment"
+          cta="Apply to Build"
+          align="center"
+          className="border-t border-accent/10"
+        />
       </article>
     </Layout>
   );

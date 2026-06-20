@@ -37,18 +37,19 @@ export function PageTransition({ children }: PageTransitionProps) {
       return;
     }
 
-    // Fade out
+    // Fade out — quick token (--bp-quick = 420ms), shaved to 360ms for swap headroom
     setPhase("fade-out");
 
     const swapTimer = setTimeout(() => {
       window.scrollTo(0, 0);
       setDisplayChildren(children);
       setPhase("fade-in");
-    }, 400);
+    }, 360);
 
+    // Resolve — --bp-resolve = 900ms
     const doneTimer = setTimeout(() => {
       setPhase("idle");
-    }, 900);
+    }, 1260);
 
     return () => {
       clearTimeout(swapTimer);
@@ -67,10 +68,18 @@ export function PageTransition({ children }: PageTransitionProps) {
       className="relative"
       style={{
         opacity: phase === "fade-out" ? 0 : 1,
-        transform: phase === "fade-out" ? "scale(0.995)" : phase === "fade-in" ? "scale(1)" : "none",
-        transition: phase === "idle" ? "none" : phase === "fade-out"
-          ? "opacity 400ms cubic-bezier(0.4, 0, 1, 1), transform 400ms cubic-bezier(0.4, 0, 1, 1)"
-          : "opacity 500ms cubic-bezier(0, 0, 0.2, 1), transform 500ms cubic-bezier(0, 0, 0.2, 1)",
+        transform:
+          phase === "fade-out"
+            ? "scale(0.997)"
+            : phase === "fade-in"
+              ? "scale(1)"
+              : "none",
+        transition:
+          phase === "idle"
+            ? "none"
+            : phase === "fade-out"
+              ? "opacity 360ms var(--bp-ease-draw), transform 360ms var(--bp-ease-draw)"
+              : "opacity var(--bp-resolve) var(--bp-ease-settle), transform var(--bp-resolve) var(--bp-ease-settle)",
       }}
     >
       {displayChildren}
