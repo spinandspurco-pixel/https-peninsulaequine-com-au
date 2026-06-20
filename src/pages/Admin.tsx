@@ -13,6 +13,8 @@ import { QuoteBuilder } from "@/components/QuoteBuilder";
 import { AdminStaffOnboarding } from "@/components/AdminStaffOnboarding";
 import { EmailDiagnostics } from "@/components/hq/EmailDiagnostics";
 import { PreviewMintGate } from "@/components/hq/PreviewMintGate";
+import { HqNav } from "@/components/hq/HqNav";
+import { canSeeHqItem } from "@/components/hq/hqAccess";
 
 import {
   IdentityHeader,
@@ -40,10 +42,15 @@ const CONTENT_TILES = [
 ];
 
 export default function Admin() {
-  const { user, isAdmin, loading, signOut } = useAuth();
+  const { user, isAdmin, loading, signOut, roles, isPreview: isPreviewRole } = useAuth();
   const { isPreview, enterPreview } = useHqMode();
   const navigate = useNavigate();
   const [quoteForInquiryId, setQuoteForInquiryId] = useState<string | null>(null);
+  const effectiveRoles = isPreview && !isPreviewRole ? [...roles, "preview" as const] : roles;
+  const contentTiles = CONTENT_TILES.filter((t) => {
+    const key = t.to.replace("/hq/", "");
+    return canSeeHqItem(effectiveRoles, key);
+  });
   const [opsOpen, setOpsOpen] = useState(false);
 
   // Allow signed-in users with preview role too (handled by useHqMode)
