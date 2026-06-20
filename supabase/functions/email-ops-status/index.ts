@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { createClient } from "npm:@supabase/supabase-js@2.57.4";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -58,13 +58,13 @@ serve(async (req) => {
     const userClient = createClient(supabaseUrl, anonKey, {
       global: { headers: { Authorization: authHeader } },
     });
-    const token = authHeader.replace("Bearer ", "");
-    const { data: claims } = await userClient.auth.getClaims(token);
-    if (!claims?.claims?.sub) return json(401, { error: "Unauthorized" });
+    const { data: userData, error: userErr } = await userClient.auth.getUser();
+    const userId = userData?.user?.id;
+    if (userErr || !userId) return json(401, { error: "Unauthorized" });
 
     const admin = createClient(supabaseUrl, serviceKey);
     const { data: isAdmin } = await admin.rpc("has_role", {
-      _user_id: claims.claims.sub,
+      _user_id: userId,
       _role: "admin",
     });
     if (!isAdmin) return json(403, { error: "Forbidden" });
