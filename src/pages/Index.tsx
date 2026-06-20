@@ -58,7 +58,6 @@ export default function Index() {
 
   const [imageReady, setImageReady] = useState(skipIntro);
   const [headlineReady, setHeadlineReady] = useState(false);
-  const [sublineReady, setSublineReady] = useState(false);
   const [ctaReady, setCtaReady] = useState(false);
   const [headerReady, setHeaderReady] = useState(skipIntro);
 
@@ -69,14 +68,14 @@ export default function Index() {
     if (skipIntro) {
       setImageReady(true);
       setHeaderReady(true);
-      at(220, () => setHeadlineReady(true));
-      at(520, () => setSublineReady(true));
-      at(840, () => setCtaReady(true));
+      // Two-beat arrival: headline (with support line) → CTA after a hold.
+      at(260, () => setHeadlineReady(true));
+      at(1100, () => setCtaReady(true));
     } else {
-      at(1600, () => setImageReady(true));
-      at(1850, () => setHeadlineReady(true));
-      at(2100, () => setSublineReady(true));
-      at(2300, () => setCtaReady(true));
+      // Three deliberate tracks: backdrop → headline → CTA. No mid-stagger.
+      at(1700, () => setImageReady(true));
+      at(2200, () => setHeadlineReady(true));
+      at(3100, () => setCtaReady(true));
       at(2400, () => setHeaderReady(true));
     }
 
@@ -206,42 +205,32 @@ export default function Index() {
             >
               <div className="max-w-[42rem] space-y-8">
                 <div className="space-y-5">
-                  <p
-                    className="font-mono uppercase text-accent/60 text-[10px] tracking-[0.45em]"
-                    style={{
-                      opacity: headlineReady ? 1 : 0,
-                      transform: headlineReady ? "translateY(0)" : "translateY(8px)",
-                      transition: `opacity 1100ms ${EASE}, transform 1100ms ${EASE}`,
-                    }}
-                  >
-                    Peninsula Equine
-                  </p>
                   <h1
                     className="font-serif text-foreground leading-[0.9] tracking-[-0.03em]"
                     style={{
-                      fontSize: "clamp(3.1rem, 2rem + 5vw, 6.2rem)",
+                      fontSize: "clamp(2.85rem, 1.85rem + 5vw, 6.2rem)",
                       opacity: headlineReady ? 1 : 0,
                       transform: headlineReady ? "translateY(0)" : "translateY(10px)",
-                      transition: `opacity 1200ms ${EASE}, transform 1200ms ${EASE}`,
+                      transition: `opacity 1100ms ${EASE}, transform 1100ms ${EASE}`,
                       textShadow: "0 12px 42px rgba(0,0,0,0.35)",
                     }}
                   >
                     From Dirt to Dynasty
                   </h1>
                   <p
-                    className="max-w-xl font-sans font-light text-foreground/90 leading-[1.8] text-[15px] sm:text-[15px]"
+                    className="max-w-xl font-sans font-light text-foreground/85 leading-[1.7] text-[15px]"
                     style={{
-                      opacity: sublineReady ? 1 : 0,
-                      transform: sublineReady ? "translateY(0)" : "translateY(8px)",
-                      transition: `opacity 1100ms ${EASE}, transform 1100ms ${EASE}`,
+                      opacity: headlineReady ? 1 : 0,
+                      transform: headlineReady ? "translateY(0)" : "translateY(8px)",
+                      transition: `opacity 1100ms ${EASE} 180ms, transform 1100ms ${EASE} 180ms`,
                       textShadow: "0 2px 18px rgba(0,0,0,0.55)",
                     }}
                   >
-                    Covered arenas, stable structures and equine environments built by horse
-                    people — from the ground beneath the ride to the systems that make the
-                    property work.
+                    Covered arenas, stables, and equine environments built by horse people —
+                    Mornington Peninsula and beyond.
                   </p>
                 </div>
+
 
                 <div
                   className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4"
@@ -294,8 +283,8 @@ export default function Index() {
               </RevealOnScroll>
               <RevealOnScroll direction="up" duration={1000} delay={120}>
                 <p className="font-serif text-foreground/82 leading-[1.4] tracking-[-0.022em] text-[clamp(1.5rem,1.05rem+1.8vw,2.45rem)] max-w-4xl">
-                  Covered arenas, stable structures, pavilions and integrated equine builds —
-                  shaped from the ground up with structural clarity across the Mornington Peninsula and beyond.
+                  Built from the ground up — structural clarity from base works to finished
+                  ridgeline.
                 </p>
               </RevealOnScroll>
             </div>

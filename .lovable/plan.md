@@ -1,71 +1,89 @@
-## Site-Wide Intelligence Pass
+## Scope
 
-This is a large scope. To do it properly without churn, I'll work in waves and report after each. Confirming the plan before I start.
+Public site only (items 1–6). No admin portal in this pass. Selected Works stays on existing project content — restyle only. Copy cuts applied directly. Brand direction unchanged: serif/sans pairing, blueprint grading, asymmetric tension, low-opacity micro-lines, silent UX.
 
-### Scope (public pages only)
+The admin overhaul (item 7) and the `projects` pipeline table you approved will follow as a second slice once this lands.
 
-Pass 1 — Anchor pages (highest traffic, set the tone)
-- `Index.tsx` — Hero copy, restructure to your 8-section spec, prune duplicates
-- `Services.tsx` — Reframe 8 services, demote Whole-Property Planning to supporting concept
-- `SelectedWorks.tsx` — 3 editorial project cards (Main Ridge, Aberdeen, Covered Arena & Stables)
-- `FieldNotes.tsx` — Build-journal tone, timeline markers, headings from your list
-- `About.tsx` — "Built by horse people. Backed by construction." Trust-first, not gallery
+## What I'll change
 
-Pass 2 — Case studies
-- `MainRidgePavilion.tsx` — Fire/timber/brick/corrugated steel tone
-- `Aberdeen.tsx` — Indoor arena/stable precinct/viewing tone
-- `CoveredArenaStablesBuild.tsx` — In-progress steel/clay/storm tone
-- `RecoveryStation.tsx` (LumenArc) — Quiet/technical/restorative
+### 1. Homepage hero (`src/pages/Index.tsx`)
 
-Pass 3 — Supporting
-- `Contact.tsx` / Estimate / nav dropdown — CTA standardisation ("Start a Project", "Explore Selected Works", "View Services", "Read Field Notes", "Explore LumenArc")
-- `layout/` nav: remove Whole-Property Planning from services dropdown
-- Footer + `RouteCanonical` meta titles/descriptions per page
+The current entrance fires multiple staggered tracks at once (atmosphere, blueprint overlay, chapter label, headline, support line, CTAs, scroll cue). Result reads busy.
 
-Pass 4 — Construction-intelligence design layer (subtle, no sci-fi)
-- Section numbers (01 / 02 …) on Index + Services + Selected Works
-- Project status pills (`In Progress` / `Completed`) on Selected Works + case studies
-- Hairline technical dividers between major sections
-- Refined image captions (project · location · year)
-- Field Notes timeline dots
-- Reuse existing `BlueprintDivider` / blueprint tokens — no new heavy components
+Refine to a single weighted arrival:
+- Reduce concurrent motion tracks to **three**: backdrop fade-in, headline reveal, then CTA + scroll cue together.
+- Move overlay/blueprint layers to a longer, slower fade behind the headline (1400ms, `cubic-bezier(0.45,0,0.15,1)`) so they read as atmosphere, not events.
+- Tighten the headline timing window — single 900ms reveal, no per-word stagger.
+- Hold a 400ms beat before CTAs appear so the headline lands before the eye moves.
+- Drop the secondary "chapter label" above the headline on hero only (kept on inner sections). It currently competes with the PE mark.
 
-### What I will NOT touch
-- Admin/staff/portal/CRM pages (`Admin*`, `Staff*`, `Employee*`, `Bookings*`, `Client*`, `Trainer*`)
-- Lessons/booking funnel (`Lessons`, `BookLesson`, `GroupBooking`, `Schedule`, `Pricing`)
-- Routing, data fetching, backend, auth, edge functions
-- Image assets themselves — only placement, captions, alt text
-- Hero image loading behaviour (recently shipped)
+### 2. Services dropdown (`src/components/layout/Header.tsx`)
 
-### Image placement rules I will enforce
-Per your spec — sliding stop only in horseman/arena-surface contexts; Ciro+Ace only on About; Main Ridge images only on Main Ridge + Selected Works; Aberdeen images only on Aberdeen + indoor arena/stable sections; boots/clay/steel/machinery only in Field Notes / Groundworks / Covered Arena build; stable aisle only Stables & Aberdeen; drainage only in drainage/groundworks; LumenArc only in LumenArc.
+Today the dropdown lists every service with descriptive sub-copy — overloaded.
 
-I'll audit current usages and move/remove mismatches. Where an image is removed and no correct one exists, the slot becomes a tonal block (charcoal + hairline grid) rather than a placeholder.
+- Group into **3 columns** by intent: *Build* (Arenas, Stables, Covered, Infrastructure), *Plan* (Whole-Property Planning, Site Assessment, Pricing), *Programs* (Lessons, Events, Trainer). Column headers as overline.
+- Strip per-item descriptions to a single hairline label. Description becomes a single sentence per column, not per item.
+- Add one "View all services →" tail link at the bottom-right of the panel.
+- Mobile accordion mirrors the same three groups so structure matches.
 
-### Pages flagged for human review (won't touch without your call)
-- `Arenas.tsx`, `Stables.tsx`, `RoundPens.tsx`, `Infrastructure.tsx`, `Boarding.tsx`, `EquineEstates.tsx` — overlap with new Services structure. Likely consolidate into `ServiceDetail` or remove from nav. I'll list them in the final report rather than delete unilaterally.
-- `TheStandard.tsx`, `WhyWeExist.tsx`, `Process.tsx`, `Visualise.tsx`, `HQ.tsx`, `Testimonials.tsx`, `FAQ.tsx`, `SiteAssessment.tsx` — flag for your decision: keep / fold into Services or About / remove from nav.
+### 3. Selected Works rework (`src/pages/SelectedWorks.tsx`, `src/data/caseStudyData.ts` if needed for ordering only)
 
-### Deliverable per wave
-After each pass I'll report exactly:
-1. Headings improved (before → after)
-2. Copy rewritten (locations)
-3. Sections removed/simplified
-4. Image placements corrected
-5. Pages still needing your review
-6. Build status
+Restyle to a true luxury portfolio. Content unchanged.
 
-### Question before I start
-Two quick calls so I don't ship something you'd reverse:
+- New card composition: full-bleed image, project name in serif overlay, location + year in mono overline, single status line (Resolved / In Progress). No mid-card CTA — whole card is the link.
+- Hierarchy: **one** feature project (Main Ridge) at full-viewport scale, remaining projects in an asymmetric 2-up grid with -3rem bleed alternating left/right.
+- Cinematic transitions: enter via `IntersectionObserver` with a 1100ms image scale-from-1.04 + caption fade, staggered per card.
+- Hover: 600ms image desaturate + 1.02 scale, caption rises 8px. No shadow halos.
+- Page header follows the established `bg-background/55` + engineering grid standard.
 
-**A. The orphan pages above (Arenas, Stables, RoundPens, Infrastructure, Boarding, EquineEstates, TheStandard, WhyWeExist, Process, Visualise, HQ, Testimonials, FAQ, SiteAssessment).** Want me to:
-- (i) Leave them as-is, just flag them; OR
-- (ii) Remove them from nav/footer but keep the routes; OR
-- (iii) Fold service-y ones into `ServiceDetail` and drop the rest from routing.
+### 4. Spacing & overlap audit
 
-**B. Whole-Property Planning** — supporting concept where? Options:
-- (i) A short callout band on Services page only; OR
-- (ii) A section on About; OR
-- (iii) Both.
+Pages I'll sweep: `Index`, `About`, `Services`, `SelectedWorks`, `CaseStudy`, `Contact`, `MainRidgePavilion`, `Arenas`, `Stables`, `Infrastructure`, `FieldNotes`, `Events`.
 
-Reply with A(i/ii/iii) and B(i/ii/iii) and I'll execute the four waves in sequence, reporting after each.
+Focus points:
+- Chapter labels colliding with PE marks at `md` breakpoint — move PE mark to a fixed corner anchor on inner pages.
+- Hero headline clipping at 375–414px — clamp font size via `clamp()` and reduce tracking on `< sm`.
+- Footer top-padding consistency (currently varies between 8rem and 14rem across pages).
+- Section pause blocks: enforce single `py-32 md:py-48` token.
+- Mobile horizontal overflow from `-mx-` bleeds on Selected Works and About — gate bleeds behind `md:`.
+
+### 5. CTA flow
+
+Standardise three site-wide CTAs with consistent label, weight, and placement:
+- **Selected Works** — neutral hairline link, used after editorial sections.
+- **Services** — neutral hairline link, used after capability statements.
+- **Apply to Build** — only filled accent treatment, used once per page max, at decision moments.
+
+Remove duplicate Apply CTAs from mid-scroll on Index and Services. Header keeps the only persistent Apply.
+
+### 6. Copy reduction
+
+Cuts applied directly per your established copy standards (30–50% reduction, 2–3 line paragraphs, no generic descriptors). Targets:
+- Hero support line → one sentence.
+- Index section intros → strip restated mission lines that repeat the homepage header.
+- Services page → remove the second "Why we exist" paragraph (duplicated from About).
+- Selected Works intro → reduce to overline + one sentence.
+- About → consolidate the two philosophy blocks into one.
+
+## What I won't touch in this pass
+
+- Admin portal, dashboard, pipeline, managers, staff resources (item 7).
+- `projects` table migration (deferred to admin slice).
+- Brand tokens, fonts, colour grading.
+- Caves Studio content / case study narrative copy.
+- Selected Works content itself (only layout + transitions).
+
+## Verification
+
+- Playwright headless screenshots at 375 / 768 / 1280 of: Index hero, services dropdown open, Selected Works grid, Selected Works hover state, About header, mobile nav with services accordion open.
+- Console + network check on each route for errors.
+- Re-screenshot the spacing-audit pages at the three breakpoints before claiming done.
+
+## Order of execution
+
+1. Header services dropdown restructure (smallest, unblocks CTA audit).
+2. Homepage hero refinement.
+3. Selected Works rework.
+4. CTA + copy pass across Index, Services, About, Selected Works.
+5. Spacing audit + mobile fixes across the page list.
+6. Verification screenshots, report back with any deferred items.

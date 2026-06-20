@@ -303,7 +303,7 @@ export function Header() {
                           : "opacity-0 invisible -translate-y-1 pointer-events-none"
                       )}
                     >
-                      <div className="relative w-[min(34rem,calc(100vw-2.5rem))] bg-[hsl(var(--background))]/98 backdrop-blur-xl border border-accent/10 shadow-[0_28px_64px_-24px_rgba(0,0,0,0.7)]">
+                      <div className="relative w-[min(28rem,calc(100vw-2.5rem))] bg-[hsl(var(--background))]/98 backdrop-blur-xl border border-accent/10 shadow-[0_28px_64px_-24px_rgba(0,0,0,0.7)]">
                         {/* Blueprint grid overlay */}
                         <div
                           aria-hidden="true"
@@ -317,8 +317,8 @@ export function Header() {
                         {/* Thin gold rule */}
                         <span aria-hidden="true" className="absolute top-0 left-7 right-7 h-px bg-accent/30" />
 
-                        <div className="relative px-8 py-7">
-                          <div className="flex items-baseline justify-between mb-5">
+                        <div className="relative px-7 py-6">
+                          <div className="flex items-baseline justify-between mb-4">
                             <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-[hsl(var(--accent-light))]/95">
                               {item.name}
                             </p>
@@ -333,10 +333,11 @@ export function Header() {
                               aria-current={isActive(item.href) ? "page" : undefined}
                               className="group inline-flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.4em] text-foreground/45 hover:text-foreground transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
                             >
-                              Overview
+                              View all
                               <span aria-hidden="true" className="h-px w-3 bg-accent/40 transition-all duration-500 group-hover:w-6 group-hover:bg-accent" />
                             </Link>
                           </div>
+
 
                           {item.groups?.map((group, gIdx) => {
                             // Compute the global index across all groups for arrow-key nav
@@ -353,7 +354,7 @@ export function Header() {
                             return (
                               <div
                                 key={group.label}
-                                className={cn("space-y-2", gIdx > 0 && "mt-5 pt-5 border-t border-accent/10")}
+                                className={cn("space-y-1.5", gIdx > 0 && "mt-3 pt-3 border-t border-accent/10")}
                               >
                                 <p
                                   id={`${dropdownId}-group-${gIdx}`}
@@ -377,7 +378,7 @@ export function Header() {
                                 <ul
                                   role="group"
                                   aria-labelledby={`${dropdownId}-group-${gIdx}`}
-                                  className="list-none m-0 p-0 space-y-0.5"
+                                  className="list-none m-0 p-0"
                                 >
                                   {group.items.map((child, cIdx) => {
                                     const globalIdx = 1 + priorCount + cIdx;
@@ -395,31 +396,24 @@ export function Header() {
                                             handleDropdownItemKey(e, item.name, globalIdx, totalCount)
                                           }
                                           className={cn(
-                                            "group flex items-start gap-3 py-2 pr-2 transition-colors duration-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm",
+                                            "group flex items-center gap-3 py-1.5 pr-2 transition-colors duration-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm",
                                             active ? "text-[hsl(var(--header-active))]" : "text-foreground/72 hover:text-foreground"
                                           )}
                                         >
                                           <span
                                             aria-hidden="true"
                                             className={cn(
-                                              "mt-[0.65rem] h-px shrink-0 transition-all duration-500",
+                                              "h-px shrink-0 transition-all duration-500",
                                               active
                                                 ? "w-6 bg-[hsl(var(--header-active))]"
                                                 : "w-3 bg-accent/35 group-hover:w-7 group-hover:bg-accent"
                                             )}
                                           />
-                                          <span className="flex-1 min-w-0">
-                                            <span className={cn(
-                                              "block text-[11px] uppercase tracking-[0.2em]",
-                                              active ? "font-medium" : "font-normal"
-                                            )}>
-                                              {child.name}
-                                            </span>
-                                            {child.description && (
-                                              <span className="block mt-1 font-sans text-[11px] font-light leading-[1.55] text-foreground/40">
-                                                {child.description}
-                                              </span>
-                                            )}
+                                          <span className={cn(
+                                            "block text-[11px] uppercase tracking-[0.2em]",
+                                            active ? "font-medium" : "font-normal"
+                                          )}>
+                                            {child.name}
                                           </span>
                                         </Link>
                                       </li>
@@ -429,6 +423,8 @@ export function Header() {
                               </div>
                             );
                           })}
+
+
 
                         </div>
                       </div>
