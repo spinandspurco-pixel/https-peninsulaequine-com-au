@@ -368,10 +368,9 @@ export default function Admin() {
                       <PreviewMintGate />
                     </div>
                   )}
-
-                  )}
                 </div>
               )}
+
             </div>
           </section>
         )}
