@@ -25,7 +25,11 @@ EXCLUDES=(
   -g '!src/components/hq/PreviewMintGate.tsx'
   -g '!docs/PREVIEW_MODE.md'
   -g '!.github/workflows/preview-mint-check.yml'
+  # Cleanup migrations may reference blocklisted names inside DELETE clauses —
+  # they are removing the data, not introducing it.
+  -g '!supabase/migrations/*_remove_test_inquiries.sql'
 )
+
 
 hits=0
 report=""
