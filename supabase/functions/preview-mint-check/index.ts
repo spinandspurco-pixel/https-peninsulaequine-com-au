@@ -84,56 +84,10 @@ serve(async (req) => {
       }
       tablesScanned.push(target.table);
       for (const row of (data ?? []) as Record<string, unknown>[]) {
-        // Names — placeholder / generic identities
-        for (const col of target.nameCols) {
-          const v = (row[col] ?? "") as string;
-          if (!v) continue;
-          for (const needle of NAME_BLOCKLIST) {
-            const re = new RegExp(`\\b${needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i");
-            if (re.test(v)) {
-              findings.push({
-                table: target.table,
-                column: col,
-                match: `placeholder:${needle}`,
-                rowId: (row.id as string) ?? null,
-                value: v,
-              });
-            }
-          }
-        }
-        // Emails — must use an allowed demo / Peninsula Equine domain
-        for (const col of target.emailCols) {
-          const v = ((row[col] ?? "") as string).toLowerCase().trim();
-          if (!v) continue;
-          const domain = v.split("@")[1] ?? "";
-          const ok = ALLOWED_EMAIL_DOMAINS.some((d) => domain === d || domain.endsWith("." + d));
-          if (!ok) {
-            findings.push({
-              table: target.table,
-              column: col,
-              match: "real_email_domain",
-              rowId: (row.id as string) ?? null,
-              value: v,
-            });
-          }
-        }
-        // Phones — must be NULL or use the fake marker
-        for (const col of target.phoneCols ?? []) {
-          const v = ((row[col] ?? "") as string).trim();
-          if (!v) continue;
-          const isFake = FAKE_PHONE_MARKERS.some((re) => re.test(v));
-          if (!isFake) {
-            findings.push({
-              table: target.table,
-              column: col,
-              match: "real_phone_pii",
-              rowId: (row.id as string) ?? null,
-              value: v,
-            });
-          }
-        }
+        for (const f of scanRow(target, row)) findings.push(f);
       }
     }
+
 
     return json(200, {
       passed: findings.length === 0,
