@@ -151,6 +151,56 @@ export function RoleMarker({
 }
 
 // ─────────────────────────────────────────────────────
+// Bronze role tag — short pill used inside the user badge
+// ─────────────────────────────────────────────────────
+
+export function BronzeRoleTag({ label }: { label: string }) {
+  return (
+    <span
+      className="inline-flex items-center font-mono text-[9px] uppercase tracking-[0.28em] text-accent/80 border border-accent/30 px-2 py-[3px] rounded-[2px] bg-accent/[0.04]"
+      style={{ lineHeight: 1 }}
+    >
+      {label}
+    </span>
+  );
+}
+
+// ─────────────────────────────────────────────────────
+// User badge — refined name · role · handle for the masthead
+// ─────────────────────────────────────────────────────
+
+export function UserBadge({
+  identity,
+  align = "right",
+}: {
+  identity: HqIdentity;
+  align?: "left" | "right";
+}) {
+  const isPreview = identity.tag === "Client Preview";
+  return (
+    <div className={`flex flex-col ${align === "right" ? "items-end" : "items-start"} gap-2`}>
+      <div className="flex items-center gap-3">
+        <span className="font-serif text-sm font-light text-foreground/90 tracking-tight">
+          {identity.name}
+        </span>
+        <span className="text-muted-foreground/25 text-[10px]" aria-hidden>·</span>
+        <BronzeRoleTag label={identity.tag} />
+      </div>
+      {identity.handle && (
+        <p className="font-mono text-[10px] tracking-[0.08em] text-muted-foreground/45 lowercase">
+          {identity.handle}
+        </p>
+      )}
+      {isPreview && (
+        <p className="text-[10px] text-muted-foreground/40 italic">
+          View-only demonstration environment
+        </p>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────
 // Identity header — name + role line for masthead
 // ─────────────────────────────────────────────────────
 
