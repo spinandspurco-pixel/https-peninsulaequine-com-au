@@ -1,0 +1,126 @@
+/* ───────────────────────────────────────────────────────────
+ * Living Blueprint — shared motion + drawing tokens.
+ *
+ * One construction language across every public surface:
+ * blueprint lines draw in, bronze rules resolve, corner brackets
+ * pin into place, images emerge from plan into photograph.
+ *
+ * Motion is slow, confident and expensive. Reduced motion is
+ * honoured at the CSS layer so consumers never need to branch.
+ * ─────────────────────────────────────────────────────────── */
+
+:root {
+  /* Durations — sequence of arrival */
+  --bp-quick: 420ms;
+  --bp-resolve: 900ms;
+  --bp-arrive: 1400ms;
+  --bp-handoff: 1800ms;
+
+  /* Easings — drafting pen, then settle */
+  --bp-ease-draw: cubic-bezier(0.45, 0, 0.15, 1);
+  --bp-ease-settle: cubic-bezier(0.25, 0.1, 0.2, 1);
+
+  /* Drawing tokens */
+  --bp-hairline: 1px;
+  --bp-grid-cell: 80px;
+  --bp-grid-opacity: 0.035;
+  --bp-grid-opacity-strong: 0.06;
+  --bp-bronze-strong: 0.55;
+  --bp-bronze-mid: 0.3;
+  --bp-bronze-soft: 0.1;
+}
+
+/* ──────────── Keyframes ──────────── */
+
+@keyframes bp-line-draw {
+  from { stroke-dashoffset: var(--bp-dash, 1000); }
+  to   { stroke-dashoffset: 0; }
+}
+
+@keyframes bp-rule-resolve {
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
+
+@keyframes bp-bracket-pin {
+  0%   { opacity: 0; transform: translate(var(--bp-bracket-x, -2px), var(--bp-bracket-y, -2px)); }
+  100% { opacity: 1; transform: translate(0, 0); }
+}
+
+@keyframes bp-image-emerge {
+  0%   { opacity: 0; filter: blur(6px) saturate(0.6) brightness(0.85); transform: scale(1.015); }
+  100% { opacity: 1; filter: blur(0) saturate(0.95) brightness(0.92); transform: scale(1); }
+}
+
+@keyframes bp-underlay-fade {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes bp-mark-arrive {
+  from { opacity: 0; transform: translateY(6px); letter-spacing: 0.3em; }
+  to   { opacity: 1; transform: translateY(0); letter-spacing: 0.45em; }
+}
+
+/* ──────────── Utility classes ──────────── */
+
+.bp-rule {
+  transform-origin: left center;
+  animation: bp-rule-resolve var(--bp-resolve) var(--bp-ease-draw) both;
+}
+
+.bp-line {
+  stroke-dasharray: var(--bp-dash, 1000);
+  stroke-dashoffset: var(--bp-dash, 1000);
+  animation: bp-line-draw var(--bp-arrive) var(--bp-ease-draw) forwards;
+}
+
+.bp-bracket {
+  animation: bp-bracket-pin var(--bp-resolve) var(--bp-ease-settle) both;
+}
+
+.bp-image-photo {
+  animation: bp-image-emerge var(--bp-arrive) var(--bp-ease-settle) both;
+}
+
+.bp-image-underlay {
+  animation: bp-underlay-fade var(--bp-arrive) var(--bp-ease-draw) both;
+}
+
+.bp-mark {
+  animation: bp-mark-arrive var(--bp-resolve) var(--bp-ease-settle) both;
+}
+
+/* Stagger helpers — apply via inline style or arbitrary class */
+.bp-delay-1 { animation-delay: 120ms; }
+.bp-delay-2 { animation-delay: 260ms; }
+.bp-delay-3 { animation-delay: 420ms; }
+.bp-delay-4 { animation-delay: 620ms; }
+
+/* Gate animations until in-view */
+[data-bp-armed="false"] .bp-rule,
+[data-bp-armed="false"] .bp-line,
+[data-bp-armed="false"] .bp-bracket,
+[data-bp-armed="false"] .bp-image-photo,
+[data-bp-armed="false"] .bp-image-underlay,
+[data-bp-armed="false"] .bp-mark {
+  animation-play-state: paused;
+}
+
+/* ──────────── Reduced motion — instant, no draw ──────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .bp-rule,
+  .bp-line,
+  .bp-bracket,
+  .bp-image-photo,
+  .bp-image-underlay,
+  .bp-mark {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+  .bp-image-underlay { opacity: 0 !important; }
+}
