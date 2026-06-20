@@ -16,9 +16,22 @@ interface WelcomeRequest {
 }
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
-const FROM_EMAIL =
-  Deno.env.get("FROM_EMAIL") || "Peninsula Equine <hello@peninsulaequine.org>";
+const FROM_EMAIL = Deno.env.get("FROM_EMAIL");
+const WELCOME_REPLY_TO = "info@peninsulaequine.org";
 const SITE_URL = "https://peninsulaequine.lovable.app";
+
+function assertSender(): Response | null {
+  if (!FROM_EMAIL || /resend\.dev/i.test(FROM_EMAIL)) {
+    console.error(
+      "[send-welcome-series] FROM_EMAIL secret missing or points to resend.dev — refusing to send."
+    );
+    return new Response(
+      JSON.stringify({ error: "Email sender not configured" }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  }
+  return null;
+}
 
 // ── Welcome Series Emails ──────────────────────────────────────────
 
@@ -182,6 +195,9 @@ serve(async (req) => {
   }
 
   try {
+    const senderBlock = assertSender();
+    if (senderBlock) return senderBlock;
+
     const body = await req.json().catch(() => ({}));
     const { email, name, source, step } = body as WelcomeRequest;
 
@@ -220,7 +236,7 @@ serve(async (req) => {
         const res = await fetch("https://api.resend.com/emails", {
           method: "POST",
           headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ from: FROM_EMAIL, to: [sub.email], subject, html }),
+          body: JSON.stringify({ from: FROM_EMAIL, to: [sub.email], reply_to: WELCOME_REPLY_TO, subject, html }),
         });
         const ok = res.ok;
         await res.text();
@@ -245,7 +261,7 @@ serve(async (req) => {
         const res = await fetch("https://api.resend.com/emails", {
           method: "POST",
           headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ from: FROM_EMAIL, to: [sub.email], subject, html }),
+          body: JSON.stringify({ from: FROM_EMAIL, to: [sub.email], reply_to: WELCOME_REPLY_TO, subject, html }),
         });
         const ok = res.ok;
         await res.text();
@@ -300,7 +316,7 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ from: FROM_EMAIL, to: [email], subject, html }),
+      body: JSON.stringify({ from: FROM_EMAIL, to: [email], reply_to: WELCOME_REPLY_TO, subject, html }),
     });
 
     const resendData = await resendRes.json();

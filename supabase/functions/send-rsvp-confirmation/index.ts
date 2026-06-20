@@ -71,8 +71,18 @@ const handler = async (req: Request): Promise<Response> => {
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
     if (!RESEND_API_KEY) throw new Error("RESEND_API_KEY is not configured");
 
-    const NOTIFICATION_EMAIL = Deno.env.get("NOTIFICATION_EMAIL") || "delivered@resend.dev";
-    const FROM_EMAIL = Deno.env.get("FROM_EMAIL") || "Peninsula Equine <onboarding@resend.dev>";
+    const NOTIFICATION_EMAIL = Deno.env.get("NOTIFICATION_EMAIL");
+    const BOOKINGS_FROM = Deno.env.get("BOOKINGS_EMAIL_FROM");
+    const HQ_FROM = Deno.env.get("HQ_EMAIL_FROM");
+    const BOOKINGS_REPLY_TO = "info@peninsulaequine.org";
+
+    if (!BOOKINGS_FROM || !HQ_FROM || !NOTIFICATION_EMAIL
+        || /resend\.dev/i.test(BOOKINGS_FROM) || /resend\.dev/i.test(HQ_FROM)) {
+      console.error("[send-rsvp-confirmation] Missing or invalid sender secrets (BOOKINGS_EMAIL_FROM / HQ_EMAIL_FROM / NOTIFICATION_EMAIL)");
+      return new Response(JSON.stringify({ error: "Email sender not configured" }), {
+        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     // Require authenticated caller
     const authHeader = req.headers.get("Authorization") ?? "";
@@ -281,8 +291,9 @@ const handler = async (req: Request): Promise<Response> => {
     // Send confirmation to attendee + notify business
     const [confirmRes, notifyRes] = await Promise.all([
       resend.emails.send({
-        from: FROM_EMAIL,
+        from: BOOKINGS_FROM,
         to: [data.email],
+        reply_to: BOOKINGS_REPLY_TO,
         subject: isConfirmed
           ? `RSVP Confirmed: ${data.eventTitle}`
           : `Waitlist: ${data.eventTitle}`,
@@ -290,7 +301,7 @@ const handler = async (req: Request): Promise<Response> => {
         ...(icsAttachments.length > 0 ? { attachments: icsAttachments } : {}),
       }),
       resend.emails.send({
-        from: FROM_EMAIL,
+        from: HQ_FROM,
         to: [NOTIFICATION_EMAIL],
         subject: `New RSVP: ${data.name} → ${data.eventTitle} (${data.status})`,
         html: `<p><strong>${data.name}</strong> (${data.email}) ${isConfirmed ? "confirmed" : "joined waitlist"} for <strong>${data.eventTitle}</strong> on ${formattedDate} — ${data.guests} guest(s).</p>`,

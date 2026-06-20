@@ -3,6 +3,9 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const NOTIFICATION_EMAIL = Deno.env.get("NOTIFICATION_EMAIL") || "info@peninsulaequine.org";
+const HQ_FROM = Deno.env.get("HQ_EMAIL_FROM");
+const NOREPLY_FROM = Deno.env.get("NOREPLY_EMAIL_FROM");
+const HQ_REPLY_TO = "info@peninsulaequine.org";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -72,6 +75,12 @@ serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    if (!HQ_FROM || !NOREPLY_FROM || /resend\.dev/i.test(HQ_FROM) || /resend\.dev/i.test(NOREPLY_FROM)) {
+      console.error("[send-document-notification] Missing or invalid sender secrets (HQ_EMAIL_FROM / NOREPLY_EMAIL_FROM)");
+      return new Response(JSON.stringify({ error: "Email sender not configured" }), {
+        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     const docLabel = DOC_LABELS[document_type] || document_type;
     const category = DOC_CATEGORY[document_type] || "staff";
@@ -126,8 +135,9 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Peninsula Equine <onboarding@resend.dev>",
+        from: HQ_FROM,
         to: [NOTIFICATION_EMAIL],
+        reply_to: HQ_REPLY_TO,
         subject: `📋 New ${docLabel} — ${title}`,
         html: emailHtml,
       }),
@@ -170,8 +180,9 @@ serve(async (req) => {
           Authorization: `Bearer ${RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: "Peninsula Equine <onboarding@resend.dev>",
+          from: NOREPLY_FROM,
           to: [submitted_by],
+          reply_to: HQ_REPLY_TO,
           subject: `✅ ${docLabel} Received — Peninsula Equine`,
           html: confirmHtml,
         }),
