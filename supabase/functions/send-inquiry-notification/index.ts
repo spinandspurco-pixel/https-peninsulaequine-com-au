@@ -406,7 +406,7 @@ const handler = async (req: Request): Promise<Response> => {
       resend.emails.send({
         from: FROM_EMAIL,
         to: notifyRecipients,
-        subject: `New Project Inquiry from ${inquiry.name}`,
+        subject: `New Project Inquiry from ${String(inquiry.name).replace(/[\r\n]/g, " ").slice(0, 120)}`,
         html: emailHtml,
         reply_to: inquiry.email,
       }),
