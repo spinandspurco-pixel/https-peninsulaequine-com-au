@@ -107,6 +107,22 @@ serve(async (req) => {
       html,
     });
 
+    const logRow = {
+      triggered_by: userId,
+      triggered_by_email: userEmail,
+      sender_key: senderKey,
+      from_address: FROM,
+      recipient,
+      subject,
+      status: error ? "failed" : "sent",
+      resend_id: (data as any)?.id ?? null,
+      error_message: error
+        ? (typeof error === "string" ? error : (error as any).message ?? JSON.stringify(error))
+        : null,
+      raw: error ?? data ?? null,
+    };
+    await adminClient.from("email_diagnostic_log").insert(logRow);
+
     if (error) {
       console.error("[send-test-email] Resend error:", error);
       return json(502, {
@@ -115,7 +131,7 @@ serve(async (req) => {
         from: FROM,
         recipient,
         startedAt,
-        error: typeof error === "string" ? error : (error as any).message ?? JSON.stringify(error),
+        error: logRow.error_message,
         raw: error,
       });
     }
