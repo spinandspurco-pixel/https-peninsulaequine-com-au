@@ -231,7 +231,7 @@ export default function Contact() {
             className="mt-8 text-[hsl(var(--footer-muted))] text-sm sm:text-base max-w-lg mx-auto leading-relaxed opacity-0 animate-fade-in"
             style={{ animationDelay: "700ms", animationFillMode: "both" }}
           >
-            Tell us about your site. We'll scope the right system.
+            Tell us where the property sits, what needs to be built, and what the horses need from the space.
           </p>
         </div>
       </section>
