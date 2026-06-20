@@ -79,7 +79,7 @@ done
 # (example.com / example.org) or the Peninsula Equine operational domain.
 # Anything else is treated as a real client address.
 real_email=$(rg -n --no-heading \
-  -g 'supabase/migrations/**' \
+  -g '**/migrations/**' \
   -e "'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'" \
   "$ROOT" 2>/dev/null \
   | grep -Ev '@(example\.com|example\.org|peninsulaequine\.(com\.au|org|systems)|notify\.peninsulaequine\.org)' \
@@ -93,7 +93,7 @@ fi
 # Matches 04xx xxx xxx and +614xxxxxxxx anywhere in supabase/migrations/.
 # Curated demo phones must use the obviously-fake 0400 000 000 pattern.
 phone_hit=$(rg -n --no-heading \
-  -g 'supabase/migrations/**' \
+  -g '**/migrations/**' \
   -e '\b04[0-9]{2}[ -]?[0-9]{3}[ -]?[0-9]{3}\b' \
   -e '\+614[0-9]{8}\b' \
   "$ROOT" 2>/dev/null \
@@ -107,7 +107,7 @@ fi
 # ─── D · Street address patterns in seed SQL ──────────────────
 # A digit followed by a street-type word is almost always a real address.
 addr_hit=$(rg -n --no-heading \
-  -g 'supabase/migrations/**' \
+  -g '**/migrations/**' \
   -e '\b[0-9]{1,4}[A-Za-z]?\s+[A-Z][a-z]+\s+(Street|Road|Avenue|Lane|Drive|Court|Crescent|Highway|Boulevard|Parade|Place|Terrace)\b' \
   "$ROOT" 2>/dev/null || true)
 if [ -n "$addr_hit" ]; then
