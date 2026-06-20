@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { DocumentsPreviewStub } from "@/components/hq/DocumentsPreviewStub";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
