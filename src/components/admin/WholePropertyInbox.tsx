@@ -262,6 +262,18 @@ export function WholePropertyInbox() {
           })}
         </ul>
       )}
+
+      <WholePropertyInquiryDrawer
+        inquiryId={activeId}
+        open={drawerOpen}
+        onOpenChange={(o) => {
+          setDrawerOpen(o);
+          if (!o) {
+            // Refresh status in case it was marked from within drawer in the future
+            load();
+          }
+        }}
+      />
     </div>
   );
 }
