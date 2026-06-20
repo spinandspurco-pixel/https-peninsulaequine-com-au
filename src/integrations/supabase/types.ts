@@ -598,6 +598,51 @@ export type Database = {
           },
         ]
       }
+      email_diagnostic_log: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          from_address: string
+          id: string
+          raw: Json | null
+          recipient: string
+          resend_id: string | null
+          sender_key: string
+          status: string
+          subject: string | null
+          triggered_by: string | null
+          triggered_by_email: string | null
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          from_address: string
+          id?: string
+          raw?: Json | null
+          recipient: string
+          resend_id?: string | null
+          sender_key: string
+          status: string
+          subject?: string | null
+          triggered_by?: string | null
+          triggered_by_email?: string | null
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          from_address?: string
+          id?: string
+          raw?: Json | null
+          recipient?: string
+          resend_id?: string | null
+          sender_key?: string
+          status?: string
+          subject?: string | null
+          triggered_by?: string | null
+          triggered_by_email?: string | null
+        }
+        Relationships: []
+      }
       employee_tasks: {
         Row: {
           assigned_to: string | null
