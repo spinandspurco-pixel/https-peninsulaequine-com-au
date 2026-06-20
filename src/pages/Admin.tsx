@@ -12,6 +12,8 @@ import { CRMPipeline } from "@/components/crm/CRMPipeline";
 import { QuoteBuilder } from "@/components/QuoteBuilder";
 import { AdminStaffOnboarding } from "@/components/AdminStaffOnboarding";
 import { EmailDiagnostics } from "@/components/hq/EmailDiagnostics";
+import { PreviewMintGate } from "@/components/hq/PreviewMintGate";
+
 import {
   IdentityHeader,
   PreviewWelcome,
