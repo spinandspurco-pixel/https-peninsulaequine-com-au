@@ -321,12 +321,11 @@ export default function Contact() {
                     <CheckCircle className="h-8 w-8 text-accent" />
                   </div>
                   <h2 className="heading-section text-foreground">
-                    Request Received
+                    The brief is in.
                   </h2>
                   <p className="text-muted-foreground text-sm leading-[1.8] max-w-md mx-auto">
-                    We'll review your enquiry and be in touch shortly.<br /><br />
-                    Each project is assessed based on scope,<br />
-                    location, and current availability.
+                    We read every submission against current scope and availability.<br /><br />
+                    If the fit is right, we'll be in touch within two business days.
                   </p>
                   <div className="pt-6 flex flex-col sm:flex-row gap-8 justify-center">
                     <a
