@@ -12,11 +12,12 @@ interface Metric {
 
 interface ActivityRow {
   id: string;
-  action: string;
+  title: string;
+  action_type: string;
   entity_type: string | null;
   created_at: string;
-  metadata: any;
 }
+
 
 const SKELETON = "—";
 
