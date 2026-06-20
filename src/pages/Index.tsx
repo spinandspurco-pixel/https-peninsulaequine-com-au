@@ -187,7 +187,7 @@ export default function Index() {
               <span className="absolute bottom-0 left-0 w-px h-6 bg-accent/45" />
               <span className="absolute bottom-0 right-0 w-6 h-px bg-accent/45" />
               <span className="absolute bottom-0 right-0 w-px h-6 bg-accent/45" />
-              <span className="absolute top-2 right-0 font-mono text-accent/55 text-[9px] tracking-[0.4em] uppercase">PE / 01 — Hero</span>
+              <span className="hidden sm:block absolute top-2 right-0 font-mono text-accent/55 text-[9px] tracking-[0.4em] uppercase">PE / 01 — Hero</span>
             </div>
 
 
