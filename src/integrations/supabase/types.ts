@@ -2180,6 +2180,18 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_e2e_test_user: { Args: { _user_id: string }; Returns: boolean }
+      list_staff_directory: {
+        Args: never
+        Returns: {
+          created_at: string
+          display_name: string
+          email: string
+          is_test_account: boolean
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }[]
+      }
       refresh_slot_hold: {
         Args: { p_expires_at: string; p_session_id: string; p_slot_id: string }
         Returns: undefined
