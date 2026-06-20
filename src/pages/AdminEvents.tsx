@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, CalendarIcon, MapPin, Users } from "lucide-react";
 import { format } from "date-fns";
 import type { Tables } from "@/integrations/supabase/types";
+import { PreviewNotice } from "@/components/hq/PreviewNotice";
 
 type ManagedEvent = Tables<"managed_events">;
 
