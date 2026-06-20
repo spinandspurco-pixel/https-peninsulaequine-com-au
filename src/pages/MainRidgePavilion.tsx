@@ -6,6 +6,7 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import heroAsset from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
 import fireplacePortrait from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
 import parrillaWide from "@/assets/main-ridge/mr-parrilla-wide.png.asset.json";
+import aberdeenHandoffAsset from "@/assets/uploads/approved-aberdeen-exterior-dusk-frontage.png.asset.json";
 
 const FACTS: Array<{ label: string; value: string }> = [
   { label: "Code", value: "PE-MR-024" },
