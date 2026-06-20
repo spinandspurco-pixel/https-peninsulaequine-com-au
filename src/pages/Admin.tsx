@@ -13,6 +13,8 @@ import { QuoteBuilder } from "@/components/QuoteBuilder";
 import { AdminStaffOnboarding } from "@/components/AdminStaffOnboarding";
 import { EmailDiagnostics } from "@/components/hq/EmailDiagnostics";
 import { PreviewMintGate } from "@/components/hq/PreviewMintGate";
+import { HqNav } from "@/components/hq/HqNav";
+import { canSeeHqItem } from "@/components/hq/hqAccess";
 
 import {
   IdentityHeader,
@@ -40,10 +42,15 @@ const CONTENT_TILES = [
 ];
 
 export default function Admin() {
-  const { user, isAdmin, loading, signOut } = useAuth();
+  const { user, isAdmin, loading, signOut, roles, isPreview: isPreviewRole } = useAuth();
   const { isPreview, enterPreview } = useHqMode();
   const navigate = useNavigate();
   const [quoteForInquiryId, setQuoteForInquiryId] = useState<string | null>(null);
+  const effectiveRoles = isPreview && !isPreviewRole ? [...roles, "preview" as const] : roles;
+  const contentTiles = CONTENT_TILES.filter((t) => {
+    const key = t.to.replace("/hq/", "");
+    return canSeeHqItem(effectiveRoles, key);
+  });
   const [opsOpen, setOpsOpen] = useState(false);
 
   // Allow signed-in users with preview role too (handled by useHqMode)
@@ -169,6 +176,10 @@ export default function Admin() {
           );
         })()}
 
+        <HqNav />
+
+
+
 
 
         {/* ════════════════════════════════════════════ */}
@@ -223,25 +234,31 @@ export default function Admin() {
               : "The public surface. Each tile opens its own editor."
           }
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border/10">
-            {CONTENT_TILES.map((tile) => (
-              <button
-                key={tile.label}
-                onClick={() => navigate(`${tile.to}${isPreview ? "?view=preview" : ""}`)}
-                className="group bg-background text-left px-6 py-8 hover:bg-muted/20 transition-colors duration-500"
-              >
-                <div className="flex items-baseline justify-between mb-3">
-                  <h3 className="font-serif text-lg font-light text-foreground/90 group-hover:text-foreground transition-colors">
-                    {tile.label}
-                  </h3>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-accent/30 group-hover:text-accent/60 transition-colors">
-                    Open →
-                  </span>
-                </div>
-                <p className="text-[12px] text-muted-foreground/55 leading-relaxed">{tile.note}</p>
-              </button>
-            ))}
-          </div>
+          {contentTiles.length === 0 ? (
+            <p className="text-[12px] text-muted-foreground/55 leading-relaxed px-6 py-8 border border-border/10">
+              Your role doesn't include content authoring surfaces. Speak with an admin if you need access.
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border/10">
+              {contentTiles.map((tile) => (
+                <button
+                  key={tile.label}
+                  onClick={() => navigate(`${tile.to}${isPreview ? "?view=preview" : ""}`)}
+                  className="group bg-background text-left px-6 py-8 hover:bg-muted/20 transition-colors duration-500"
+                >
+                  <div className="flex items-baseline justify-between mb-3">
+                    <h3 className="font-serif text-lg font-light text-foreground/90 group-hover:text-foreground transition-colors">
+                      {tile.label}
+                    </h3>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-accent/30 group-hover:text-accent/60 transition-colors">
+                      Open →
+                    </span>
+                  </div>
+                  <p className="text-[12px] text-muted-foreground/55 leading-relaxed">{tile.note}</p>
+                </button>
+              ))}
+            </div>
+          )}
         </Zone>
 
         {/* ════════════════════════════════════════════ */}

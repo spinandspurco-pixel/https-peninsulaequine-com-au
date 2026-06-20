@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, Star, Pin, ArrowUp, ArrowDown, Download, FileText } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import { PreviewNotice } from "@/components/hq/PreviewNotice";
+import { HqNav } from "@/components/hq/HqNav";
 
 /* ── Export helpers ─────────────────────────────────────────── */
 
@@ -190,6 +191,7 @@ export default function AdminTestimonials() {
 
   return (
     <Layout>
+      <HqNav />
       <div className="section-padding">
         <div className="section-container max-w-5xl">
           <div className="flex items-center gap-4 mb-8">

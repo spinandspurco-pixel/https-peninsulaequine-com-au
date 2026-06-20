@@ -9,6 +9,7 @@ import { WriteGuard } from "@/components/hq/WriteGuard";
 import { toast } from "sonner";
 import { RefreshCw } from "lucide-react";
 import { format } from "date-fns";
+import { HqNav } from "@/components/hq/HqNav";
 
 interface Project {
   id: string;
@@ -124,6 +125,7 @@ export default function HqProjectDetail() {
 
   return (
     <Layout>
+      <HqNav />
       <HqPreviewBanner />
       <div className="min-h-screen bg-background">
         {/* Header */}
