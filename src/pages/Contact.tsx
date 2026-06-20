@@ -607,7 +607,7 @@ export default function Contact() {
           <div className="section-container max-w-md mx-auto text-center relative z-[1] space-y-6">
             <RevealOnScroll direction="up">
               <p className="text-sm text-muted-foreground">
-                Prefer to speak directly?
+                Rather speak first?
               </p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={100}>
