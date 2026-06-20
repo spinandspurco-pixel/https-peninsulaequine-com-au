@@ -212,6 +212,32 @@
   /* ── Section vertical rhythm — more generous ──────── */
   .section-padding     { @apply py-section sm:py-section-md lg:py-section-lg; }
 
+  /* ── PE Rhythm utilities — token-driven, mobile-aware ── */
+  .pe-pause-sm  { padding-top: var(--pause-sm); padding-bottom: var(--pause-sm); }
+  .pe-pause-md  { padding-top: var(--pause-md); padding-bottom: var(--pause-md); }
+  .pe-pause-lg  { padding-top: var(--pause-lg); padding-bottom: var(--pause-lg); }
+  .pe-pause-xl  { padding-top: var(--pause-xl); padding-bottom: var(--pause-xl); }
+
+  /* ── PE Reveal — one motion vocabulary ──────────────────
+     Apply .pe-reveal to a wrapper, then .pe-revealed when
+     visible (driven by useScrollReveal). Children stagger
+     via inline style: --reveal-delay. */
+  .pe-reveal {
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity var(--pe-dur-arrive) var(--pe-ease) var(--reveal-delay, 0ms),
+      transform var(--pe-dur-arrive) var(--pe-ease) var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  .pe-revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pe-reveal { opacity: 1; transform: none; transition: none; }
+  }
+
   /* ── Content-visibility for below-fold performance ── */
   .cv-auto {
     content-visibility: auto;
