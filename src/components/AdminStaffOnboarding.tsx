@@ -322,10 +322,14 @@ export function AdminStaffOnboarding() {
               ) : (() => {
                 const filtered = staff.filter((m) => {
                   const matchesRole = roleFilter === "all" || m.role === roleFilter;
-                  const matchesSearch = !searchQuery || 
-                    m.user_id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    m.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    (ROLE_LABELS[m.role]?.label || "").toLowerCase().includes(searchQuery.toLowerCase());
+                  const q = searchQuery.toLowerCase();
+                  const matchesSearch = !q ||
+                    m.user_id.toLowerCase().includes(q) ||
+                    m.role.toLowerCase().includes(q) ||
+                    (m.email ?? "").toLowerCase().includes(q) ||
+                    (m.display_name ?? "").toLowerCase().includes(q) ||
+                    (ROLE_LABELS[m.role]?.label || "").toLowerCase().includes(q) ||
+                    (m.is_test_account ? "e2e test".includes(q) : false);
                   return matchesRole && matchesSearch;
                 });
                 if (filtered.length === 0) return (
@@ -346,10 +350,30 @@ export function AdminStaffOnboarding() {
                     active: { label: "Active", className: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30" },
                   };
                   const status = statusConfig[onboardingStatus];
+                  const primaryLabel = member.display_name || member.email || `${member.user_id.slice(0, 8)}…`;
                   return (
-                    <TableRow key={`${member.user_id}-${member.role}`} className="group/row">
-                      <TableCell className="font-mono text-xs max-w-[200px] truncate">
-                        {member.user_id.slice(0, 8)}...
+                    <TableRow
+                      key={`${member.user_id}-${member.role}`}
+                      className={`group/row ${member.is_test_account ? "bg-amber-500/[0.04]" : ""}`}
+                    >
+                      <TableCell className="max-w-[260px]">
+                        <div className="flex items-center gap-2">
+                          <div className="min-w-0">
+                            <div className="text-sm font-medium truncate">{primaryLabel}</div>
+                            {member.email && member.email !== primaryLabel && (
+                              <div className="text-[11px] text-muted-foreground truncate">{member.email}</div>
+                            )}
+                          </div>
+                          {member.is_test_account && (
+                            <Badge
+                              variant="outline"
+                              className="shrink-0 border-amber-500/50 bg-amber-500/15 text-amber-700 dark:text-amber-400 text-[10px] uppercase tracking-wider"
+                              title="Automated e2e test account — excluded from operational reporting."
+                            >
+                              E2E Test
+                            </Badge>
+                          )}
+                        </div>
                       </TableCell>
                       <TableCell>
                         <Badge className={info.color}>{info.label}</Badge>
@@ -363,6 +387,7 @@ export function AdminStaffOnboarding() {
                       <TableCell className="whitespace-nowrap text-sm">
                         {format(new Date(member.created_at), "MMM d, yyyy")}
                       </TableCell>
+
                       <TableCell className="text-right">
                         <Button
                           variant="ghost"
