@@ -4,6 +4,7 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 import { CropSafeImage } from "@/components/media/CropSafeImage";
 import { DraftLine } from "@/components/draft";
+import { PageHandoff } from "@/components/architecture";
 
 import {
   getProjectImage,
@@ -236,40 +237,16 @@ export default function FieldNotes() {
           </div>
         </section>
 
-        <section className="relative border-t border-accent/10 py-[clamp(5rem,3rem+6vw,9rem)]">
-          <div aria-hidden className="hidden md:block absolute left-6 lg:left-10 top-0 bottom-0 w-px overflow-hidden">
-            <DraftLine orientation="vertical" tone="charcoal" />
-            <span className="absolute left-1/2 -translate-x-1/2 top-12 w-2 h-2 -ml-px rounded-full bg-accent/55" />
-            <span className="absolute left-1/2 -translate-x-1/2 top-12 ml-3 font-mono text-[9px] tracking-[0.4em] text-accent/55 uppercase whitespace-nowrap">03 / Field Note</span>
-          </div>
-          <div className="section-container max-w-5xl mx-auto text-center space-y-6 sm:space-y-8">
-            <RevealOnScroll direction="up" duration={900}>
-              <p className="font-mono uppercase text-accent/55 text-[10px] tracking-[0.45em]">
-                Current build
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" duration={1000} delay={120}>
-              <h2 className="font-serif text-foreground/92 leading-[1.02] tracking-tight text-[clamp(1.9rem,1.2rem+2.5vw,3.2rem)]">
-                The work is honest in the middle.
-              </h2>
-            </RevealOnScroll>
-            <RevealOnScroll direction="up" duration={1000} delay={240}>
-              <p className="font-sans font-light text-foreground/56 leading-[1.85] text-[14px] sm:text-[15px] max-w-2xl mx-auto">
-                Steel rising, rooflines forming, drainage decisions, machinery movement and ground conditions —
-                this is where performance starts long before the finish.
-              </p>
-            </RevealOnScroll>
-            <RevealOnScroll direction="none" duration={1100} delay={320}>
-              <Link
-                to="/field-notes/covered-arena-stables-build"
-                className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/72 hover:text-foreground transition-colors duration-500 text-[10px] tracking-[0.42em]"
-              >
-                <span className="w-8 h-px bg-accent/50 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
-                View Field Note
-              </Link>
-            </RevealOnScroll>
-          </div>
-        </section>
+        <PageHandoff
+          sheet="Sheet 03"
+          label="Next in the set"
+          headline="The next sheet is the build itself."
+          detail="Step inside the current field note for steel, ground conditions, drainage decisions and the daily detail of a covered arena and stables coming together."
+          to="/field-notes/covered-arena-stables-build"
+          cta="View the field note"
+          align="center"
+          className="border-t border-accent/10"
+        />
       </main>
     </Layout>
   );
