@@ -71,65 +71,91 @@ export default function Admin() {
     <Layout>
       <HqPreviewBanner />
       <div className="min-h-screen bg-background">
-        {/* ── Masthead ──────────────────────────────── */}
-        <header className="pt-28 sm:pt-36 pb-10 sm:pb-14">
-          <div className="max-w-5xl mx-auto px-6">
-            <div className="opacity-0 animate-fade-in" style={{ animationDelay: "100ms", animationFillMode: "both" }}>
-              <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/45 mb-4">
-                Command Centre
-              </p>
-              <h1 className="font-serif text-3xl sm:text-4xl font-light text-foreground tracking-tight">
-                Peninsula Equine HQ
-              </h1>
-              <div className="flex items-center gap-5 mt-4 flex-wrap">
-                <p className="text-[11px] text-muted-foreground/50">{user?.email}</p>
-                <span className="text-muted-foreground/20">·</span>
-                <p className="text-[11px] text-muted-foreground/50">
-                  {format(new Date(), "EEEE, d MMMM yyyy")}
-                </p>
-                <span className="text-muted-foreground/20">·</span>
-                {isAdmin && !isPreview && (
-                  <button
-                    onClick={enterPreview}
-                    className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/45 hover:text-accent/80 transition-colors"
-                  >
-                    Enter client preview
-                  </button>
-                )}
-                <button
-                  onClick={handleSignOut}
-                  className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/45 hover:text-foreground/80 transition-colors"
-                >
-                  Sign out
-                </button>
-              </div>
-            </div>
-          </div>
-        </header>
+        {(() => {
+          const identity = resolveIdentity(user, { isAdmin, isPreview });
+          return (
+            <>
+              {/* ── Masthead ──────────────────────────────── */}
+              {isPreview ? (
+                <header className="pt-24 sm:pt-32">
+                  <PreviewWelcome identity={identity} />
+                </header>
+              ) : (
+                <header className="pt-28 sm:pt-36 pb-12 sm:pb-16">
+                  <BlueprintField intensity="soft">
+                    <div className="max-w-5xl mx-auto px-6">
+                      <div
+                        className="opacity-0 animate-fade-in"
+                        style={{ animationDelay: "100ms", animationFillMode: "both" }}
+                      >
+                        <div className="flex items-start justify-between gap-8 flex-wrap">
+                          <IdentityHeader
+                            identity={identity}
+                            greetingOverline="Peninsula Equine · Command Centre"
+                          />
+                          <div className="flex flex-col items-end gap-2 mt-2">
+                            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground/45">
+                              {format(new Date(), "EEEE · d MMMM yyyy")}
+                            </p>
+                            <p className="text-[10px] text-muted-foreground/35">{user?.email}</p>
+                          </div>
+                        </div>
 
-        {/* Quick rail */}
-        <div className="border-t border-border/10">
-          <div className="max-w-5xl mx-auto px-6 py-4">
-            <div className="flex items-center gap-8 overflow-x-auto">
-              {[
-                { id: "zone-overview", label: "01 · Overview" },
-                { id: "zone-pipeline", label: "02 · Pipeline" },
-                { id: "zone-applications", label: "03 · Applications" },
-                { id: "zone-content", label: "04 · Content" },
-                { id: "zone-projects", label: "05 · Projects" },
-                { id: "zone-preview", label: "06 · Client Preview" },
-              ].map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth" })}
-                  className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/45 hover:text-foreground/80 transition-colors whitespace-nowrap"
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
+                        <div className="mt-10">
+                          <BronzeRule label="Session live" />
+                        </div>
+
+                        <div className="flex items-center gap-6 mt-6 flex-wrap">
+                          {isAdmin && !isPreview && (
+                            <button
+                              onClick={enterPreview}
+                              className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55 hover:text-accent/80 transition-colors"
+                            >
+                              Enter client preview →
+                            </button>
+                          )}
+                          <button
+                            onClick={handleSignOut}
+                            className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/45 hover:text-foreground/80 transition-colors"
+                          >
+                            Sign out
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </BlueprintField>
+                </header>
+              )}
+
+              {/* Quick rail */}
+              <div className="border-t border-border/10">
+                <div className="max-w-5xl mx-auto px-6 py-4">
+                  <div className="flex items-center gap-8 overflow-x-auto">
+                    {[
+                      { id: "zone-overview", label: "01 · Overview" },
+                      { id: "zone-pipeline", label: "02 · Pipeline" },
+                      { id: "zone-applications", label: "03 · Applications" },
+                      { id: "zone-content", label: "04 · Content" },
+                      { id: "zone-projects", label: "05 · Projects" },
+                      { id: "zone-preview", label: "06 · Client Preview" },
+                    ].map((item) => (
+                      <button
+                        key={item.id}
+                        onClick={() =>
+                          document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth" })
+                        }
+                        className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/45 hover:text-foreground/80 transition-colors whitespace-nowrap"
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </>
+          );
+        })()}
+
 
         {/* ════════════════════════════════════════════ */}
         {/* 01 — COMMAND OVERVIEW                       */}
