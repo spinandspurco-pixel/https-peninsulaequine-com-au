@@ -21,6 +21,7 @@ import {
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, Star, Pin, ArrowUp, ArrowDown, Download, FileText } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
+import { PreviewNotice } from "@/components/hq/PreviewNotice";
 
 /* ── Export helpers ─────────────────────────────────────────── */
 
