@@ -180,29 +180,29 @@ const handler = async (req: Request): Promise<Response> => {
               <div class="section-title">Contact Information</div>
               <div class="field">
                 <div class="field-label">Name</div>
-                <div class="field-value">${inquiry.name}</div>
+                <div class="field-value">${esc(inquiry.name)}</div>
               </div>
               <div class="field">
                 <div class="field-label">Email</div>
-                <div class="field-value"><a href="mailto:${inquiry.email}">${inquiry.email}</a></div>
+                <div class="field-value"><a href="mailto:${safeAttr(inquiry.email)}">${esc(inquiry.email)}</a></div>
               </div>
               ${inquiry.phone ? `
               <div class="field">
                 <div class="field-label">Phone</div>
-                <div class="field-value"><a href="tel:${inquiry.phone}">${inquiry.phone}</a></div>
+                <div class="field-value"><a href="tel:${safeAttr(inquiry.phone)}">${esc(inquiry.phone)}</a></div>
               </div>
               ` : ""}
               ${inquiry.preferredDate ? `
               <div class="field">
                 <div class="field-label">Preferred Start Date</div>
-                <div class="field-value">${inquiry.preferredDate}</div>
+                <div class="field-value">${esc(inquiry.preferredDate)}</div>
               </div>
               ` : ""}
             </div>
 
             <div class="section">
               <div class="section-title">Services Requested</div>
-              <div class="highlight">${servicesList}</div>
+              <div class="highlight">${esc(servicesList)}</div>
             </div>
 
             ${inquiry.horseName || inquiry.horseAge || inquiry.horseBreed ? `
@@ -211,19 +211,19 @@ const handler = async (req: Request): Promise<Response> => {
               ${inquiry.horseName ? `
               <div class="field">
                 <div class="field-label">Horse Name(s)</div>
-                <div class="field-value">${inquiry.horseName}</div>
+                <div class="field-value">${esc(inquiry.horseName)}</div>
               </div>
               ` : ""}
               ${inquiry.horseAge ? `
               <div class="field">
                 <div class="field-label">Age(s)</div>
-                <div class="field-value">${inquiry.horseAge}</div>
+                <div class="field-value">${esc(inquiry.horseAge)}</div>
               </div>
               ` : ""}
               ${inquiry.horseBreed ? `
               <div class="field">
                 <div class="field-label">Breed(s)</div>
-                <div class="field-value">${inquiry.horseBreed}</div>
+                <div class="field-value">${esc(inquiry.horseBreed)}</div>
               </div>
               ` : ""}
             </div>
@@ -231,25 +231,25 @@ const handler = async (req: Request): Promise<Response> => {
 
             <div class="section">
               <div class="section-title">Project Goals</div>
-              <div class="highlight">${inquiry.goals || "Not specified"}</div>
+              <div class="highlight">${esc(inquiry.goals || "Not specified")}</div>
             </div>
 
             <div class="section">
               <div class="section-title">Experience & Budget</div>
               <div class="field">
                 <div class="field-label">Experience Level</div>
-                <div class="field-value">${inquiry.experienceLevel || "Not specified"}</div>
+                <div class="field-value">${esc(inquiry.experienceLevel || "Not specified")}</div>
               </div>
               <div class="field">
                 <div class="field-label">Budget Range</div>
-                <div class="field-value">${budgetDisplay}</div>
+                <div class="field-value">${esc(budgetDisplay)}</div>
               </div>
             </div>
 
             ${inquiry.additionalNotes ? `
             <div class="section">
               <div class="section-title">Additional Notes</div>
-              <div class="highlight">${inquiry.additionalNotes}</div>
+              <div class="highlight">${esc(inquiry.additionalNotes)}</div>
             </div>
             ` : ""}
           </div>
