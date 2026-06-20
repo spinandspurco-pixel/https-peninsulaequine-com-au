@@ -75,6 +75,12 @@ serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    if (!HQ_FROM || !NOREPLY_FROM || /resend\.dev/i.test(HQ_FROM) || /resend\.dev/i.test(NOREPLY_FROM)) {
+      console.error("[send-document-notification] Missing or invalid sender secrets (HQ_EMAIL_FROM / NOREPLY_EMAIL_FROM)");
+      return new Response(JSON.stringify({ error: "Email sender not configured" }), {
+        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     const docLabel = DOC_LABELS[document_type] || document_type;
     const category = DOC_CATEGORY[document_type] || "staff";
