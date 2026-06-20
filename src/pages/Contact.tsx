@@ -508,14 +508,14 @@ export default function Contact() {
                     </div>
                     <div>
                       <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
-                        Tell us about your project
+                        Project notes
                       </label>
                       <textarea
                         value={form.details}
                         onChange={(e) => set("details", e.target.value)}
                         maxLength={2000}
                         rows={5}
-                        placeholder="Describe what you're looking to build — include any known issues, goals, or requirements."
+                        placeholder="What the horses need from the space, any known ground conditions, and the intent behind the build."
                         className={cn(inputClass, "resize-none")}
                       />
                     </div>
