@@ -367,7 +367,7 @@ export default function Contact() {
                         <Input
                           value={form.name}
                           onChange={(e) => set("name", e.target.value)}
-                          placeholder="Your full name"
+                          placeholder="Your name"
                           maxLength={100}
                         />
                         {errors.name && (
