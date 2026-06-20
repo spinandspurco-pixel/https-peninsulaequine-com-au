@@ -24,8 +24,9 @@ export function HqPreviewBanner() {
           </p>
           <span className="text-muted-foreground/20 hidden sm:inline">·</span>
           <p className="text-[11px] text-muted-foreground/60 hidden sm:inline">
-            View-only · curated demo dataset
+            Peninsula Equine HQ · view-only
           </p>
+
         </div>
         {isAdmin && (
           <button
