@@ -95,11 +95,11 @@ export default function Admin() {
                             identity={identity}
                             greetingOverline="Peninsula Equine · Command Centre"
                           />
-                          <div className="flex flex-col items-end gap-2 mt-2">
+                          <div className="flex flex-col items-end gap-3 mt-2">
                             <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground/45">
                               {format(new Date(), "EEEE · d MMMM yyyy")}
                             </p>
-                            <p className="text-[10px] text-muted-foreground/35">{user?.email}</p>
+                            <UserBadge identity={identity} />
                           </div>
                         </div>
 

@@ -2,8 +2,12 @@ import { useHqMode } from "@/hooks/useHqMode";
 import { useAuth } from "@/hooks/useAuth";
 
 /**
- * Bronze hairline banner that anchors the page when HQ is in client-preview
- * mode. Staff (admin) see an "Exit preview" link so they can flip back.
+ * Sticky bronze hairline banner shown whenever HQ is in client-preview mode.
+ * Designed to read as an intentional part of the interface — not a warning.
+ *
+ * Staff (admin) see an "Exit preview" link so they can flip back. For preview
+ * users it simply states what this environment is, in the same restrained
+ * register as the rest of HQ.
  */
 export function HqPreviewBanner() {
   const { isPreview, exitPreview } = useHqMode();
@@ -12,26 +16,30 @@ export function HqPreviewBanner() {
   if (!isPreview) return null;
 
   return (
-    <div className="border-b border-accent/25 bg-background/95 backdrop-blur-sm sticky top-0 z-30">
-      <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between gap-6">
-        <div className="flex items-center gap-4">
+    <div className="sticky top-0 z-40 border-b border-accent/20 bg-background/85 backdrop-blur-md">
+      {/* Top hairline gradient — the bronze thread */}
+      <div
+        aria-hidden
+        className="h-px w-full bg-gradient-to-r from-transparent via-accent/40 to-transparent"
+      />
+      <div className="max-w-5xl mx-auto px-6 py-2.5 flex items-center justify-between gap-6">
+        <div className="flex items-center gap-4 min-w-0">
           <span
             aria-hidden
-            className="w-1.5 h-1.5 rounded-full bg-accent/70 animate-pulse"
+            className="w-1.5 h-1.5 rounded-full bg-accent/70 animate-pulse shrink-0"
           />
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent/70">
+          <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-accent/80 shrink-0">
             Client Preview
           </p>
-          <span className="text-muted-foreground/20 hidden sm:inline">·</span>
-          <p className="text-[11px] text-muted-foreground/60 hidden sm:inline">
-            Peninsula Equine HQ · view-only
+          <span className="text-muted-foreground/20 hidden sm:inline" aria-hidden>·</span>
+          <p className="text-[11px] text-muted-foreground/65 hidden sm:inline truncate italic">
+            View-only demonstration environment
           </p>
-
         </div>
         {isAdmin && (
           <button
             onClick={exitPreview}
-            className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground/50 hover:text-foreground/80 transition-colors"
+            className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground/55 hover:text-foreground/85 transition-colors shrink-0"
           >
             Exit preview →
           </button>
