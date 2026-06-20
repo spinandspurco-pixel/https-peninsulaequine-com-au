@@ -1,98 +1,122 @@
 import { useState, useEffect, useRef } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { authLog } from "@/lib/authRouting";
 
 export type AppRole = "admin" | "employee" | "trainer" | "moderator" | "preview" | "user";
+
+/**
+ * Hard cap for how long we are willing to wait on the *initial* role lookup
+ * before declaring the auth flow ready. If the cap fires while a session is
+ * present but roles are still unknown, we sign the session out — rendering
+ * a signed-in user with empty roles is what produced the homepage-bounce
+ * bug, so we refuse to ever enter that state.
+ */
+const ROLE_FETCH_HARD_TIMEOUT_MS = 4000;
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [rolesLoading, setRolesLoading] = useState(true);
   const [roles, setRoles] = useState<AppRole[]>([]);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isEmployee, setIsEmployee] = useState(false);
-  const [isTrainer, setIsTrainer] = useState(false);
-  const [isModerator, setIsModerator] = useState(false);
-  const [isPreview, setIsPreview] = useState(false);
   const mounted = useRef(true);
 
   useEffect(() => {
     mounted.current = true;
-    let resolved = false;
-
-    const resolve = () => {
-      if (!resolved && mounted.current) {
-        resolved = true;
-        setLoading(false);
-      }
-    };
+    let initialResolved = false;
+    let hardTimer: ReturnType<typeof setTimeout> | null = null;
 
     const fetchRoles = async (userId: string) => {
+      authLog("roles:fetch:start", { userId });
       try {
-        const { data } = await supabase
+        const { data, error } = await supabase
           .from("user_roles")
           .select("role")
           .eq("user_id", userId);
-
         if (!mounted.current) return;
-        const roleList = (data?.map((r) => r.role) || []) as AppRole[];
-        setRoles(roleList);
-        setIsAdmin(roleList.includes("admin"));
-        setIsEmployee(roleList.includes("employee"));
-        setIsTrainer(roleList.includes("trainer"));
-        setIsModerator(roleList.includes("moderator"));
-        setIsPreview(roleList.includes("preview"));
+        if (error) {
+          authLog("roles:fetch:error", { error: error.message });
+          setRoles([]);
+        } else {
+          const list = (data?.map((r) => r.role) || []) as AppRole[];
+          setRoles(list);
+          authLog("roles:fetch:ok", { roles: list });
+        }
       } catch (err) {
-        console.warn("[useAuth] Role fetch failed:", err);
+        authLog("roles:fetch:exception", { err: String(err) });
+        if (mounted.current) setRoles([]);
+      } finally {
+        if (mounted.current) setRolesLoading(false);
       }
     };
 
-    const clearRoles = () => {
-      setRoles([]);
-      setIsAdmin(false);
-      setIsEmployee(false);
-      setIsTrainer(false);
-      setIsModerator(false);
-      setIsPreview(false);
+    const applySession = (newSession: Session | null, source: string) => {
+      authLog("session:apply", { source, hasUser: !!newSession?.user });
+      setSession(newSession);
+      setUser(newSession?.user ?? null);
+      setAuthLoading(false);
+
+      if (newSession?.user) {
+        setRolesLoading(true);
+        // Defer the role fetch off the auth callback frame. Supabase
+        // documents that awaiting inside onAuthStateChange can deadlock
+        // subsequent events, so we hop out with setTimeout(0).
+        const uid = newSession.user.id;
+        setTimeout(() => {
+          if (mounted.current) void fetchRoles(uid);
+        }, 0);
+      } else {
+        setRoles([]);
+        setRolesLoading(false);
+      }
+
+      if (!initialResolved) {
+        initialResolved = true;
+        // Start the hard cap on first session resolution.
+        hardTimer = setTimeout(async () => {
+          if (!mounted.current) return;
+          // If we still don't know the roles by the cap and a user is
+          // present, sign out rather than leave a half-resolved state.
+          // ProtectedRoute will then send them through /login cleanly.
+          // We read state via refs would be cleaner, but functional updates
+          // on the next paint are sufficient for this safety net.
+          setRolesLoading((isLoading) => {
+            if (!isLoading) return isLoading;
+            authLog("roles:hard-timeout", { action: "signOut" });
+            void supabase.auth.signOut();
+            return false;
+          });
+        }, ROLE_FETCH_HARD_TIMEOUT_MS);
+      }
     };
 
-    const timeout = setTimeout(() => {
-      resolve();
-    }, 2000);
-
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, newSession) => {
+      (event, newSession) => {
         if (!mounted.current) return;
-        setSession(newSession);
-        setUser(newSession?.user ?? null);
-
-        if (newSession?.user) {
-          await fetchRoles(newSession.user.id);
-        } else {
-          clearRoles();
-        }
-        resolve();
+        applySession(newSession, `event:${event}`);
       }
     );
 
-    supabase.auth.getSession().then(async ({ data: { session: s } }) => {
-      if (!mounted.current) return;
-      setSession(s);
-      setUser(s?.user ?? null);
-
-      if (s?.user) {
-        await fetchRoles(s.user.id);
-      } else {
-        clearRoles();
-      }
-      resolve();
-    }).catch(() => {
-      resolve();
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data: { session: s } }) => {
+        if (!mounted.current) return;
+        // If the auth event already applied a session, this is a no-op duplicate
+        // for the same user, so re-running applySession is safe.
+        applySession(s, "getSession");
+      })
+      .catch((err) => {
+        authLog("getSession:error", { err: String(err) });
+        if (mounted.current) {
+          setAuthLoading(false);
+          setRolesLoading(false);
+        }
+      });
 
     return () => {
       mounted.current = false;
-      clearTimeout(timeout);
+      if (hardTimer) clearTimeout(hardTimer);
       subscription.unsubscribe();
     };
   }, []);
@@ -116,16 +140,23 @@ export function useAuth() {
     return { error };
   };
 
+  // `ready` is the only flag callers should gate routing decisions on.
+  // It guarantees both session state and role state are fully known.
+  const ready = !authLoading && !rolesLoading;
+
   return {
     user,
     session,
-    loading,
+    loading: !ready, // back-compat alias for existing call sites
+    ready,
+    authLoading,
+    rolesLoading,
     roles,
-    isAdmin,
-    isEmployee,
-    isTrainer,
-    isModerator,
-    isPreview,
+    isAdmin: roles.includes("admin"),
+    isEmployee: roles.includes("employee"),
+    isTrainer: roles.includes("trainer"),
+    isModerator: roles.includes("moderator"),
+    isPreview: roles.includes("preview"),
     signIn,
     signUp,
     signOut,

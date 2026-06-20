@@ -1,6 +1,7 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth, type AppRole } from "@/hooks/useAuth";
 import { Loader2 } from "lucide-react";
+import { authLog, resolveLandingPath } from "@/lib/authRouting";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -8,28 +9,38 @@ interface ProtectedRouteProps {
   loginPath?: string;
   /** If set, only users holding at least one of these roles may view the route. */
   allowedRoles?: AppRole[];
-  /** Where to redirect authenticated users that fail the role check (default: /). */
+  /**
+   * Where to redirect authenticated-but-unauthorised users.
+   * Default: each user's own role landing path (never the homepage).
+   * Pass an explicit string to override (e.g. "/portal").
+   */
   forbiddenRedirect?: string;
 }
 
 /**
- * Wraps any route that requires authentication.
- * - Shows a spinner while the auth state is resolving (never renders children early).
- * - Redirects unauthenticated users to /login?redirect=<current-path>.
- * - If `allowedRoles` is provided, redirects authenticated-but-unauthorised users
- *   to `forbiddenRedirect` BEFORE rendering — children never mount, so no
- *   protected content leaks during a hydration race.
+ * Auth + role gate for protected routes.
+ *
+ * Routing rules:
+ *  1. Never decide while `ready` is false — show a spinner.
+ *  2. Unauthenticated → /login?redirect=<current path>.
+ *  3. Authenticated but wrong role → user's own role landing path.
+ *     (Falls back to /login if the user has no recognised role.)
+ *  4. Authenticated and allowed → render children.
+ *
+ * The component never returns the homepage as a redirect target — that was
+ * the source of the "logged in but bounced to /" bug.
  */
 export function ProtectedRoute({
   children,
   loginPath = "/login",
   allowedRoles,
-  forbiddenRedirect = "/",
+  forbiddenRedirect,
 }: ProtectedRouteProps) {
-  const { user, loading, roles } = useAuth();
+  const { user, ready, roles } = useAuth();
   const location = useLocation();
 
-  if (loading) {
+  if (!ready) {
+    authLog("guard:wait", { path: location.pathname });
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-accent" />
@@ -39,15 +50,29 @@ export function ProtectedRoute({
 
   if (!user) {
     const redirect = encodeURIComponent(location.pathname + location.search);
+    authLog("guard:no-user", { redirectTo: location.pathname });
     return <Navigate to={`${loginPath}?redirect=${redirect}`} replace />;
   }
 
   if (allowedRoles && allowedRoles.length > 0) {
     const ok = allowedRoles.some((r) => roles.includes(r));
     if (!ok) {
-      return <Navigate to={forbiddenRedirect} replace />;
+      const fallback = forbiddenRedirect ?? resolveLandingPath(roles);
+      authLog("guard:forbidden", {
+        path: location.pathname,
+        roles,
+        allowed: allowedRoles,
+        redirectTo: fallback,
+      });
+      // Avoid a redirect loop if the user's own landing path is also the
+      // route they just failed — send them to /login instead.
+      if (fallback === location.pathname) {
+        return <Navigate to="/login" replace />;
+      }
+      return <Navigate to={fallback} replace />;
     }
   }
 
+  authLog("guard:allow", { path: location.pathname, roles });
   return <>{children}</>;
 }
