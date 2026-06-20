@@ -247,7 +247,10 @@ export function AdminStaffOnboarding() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {(["admin", "employee", "trainer", "moderator", "preview"] as const).map((role) => {
-          const count = staff.filter((s) => s.role === role).length;
+          // Operational count: real staff only. Test accounts are reported
+          // separately below so dashboards don't double-count fixtures.
+          const count = staff.filter((s) => s.role === role && !s.is_test_account).length;
+
           const info = ROLE_LABELS[role];
           return (
             <Card key={role} className="group hover:border-accent/30 transition-colors">
