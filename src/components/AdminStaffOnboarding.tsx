@@ -72,6 +72,7 @@ const ROLE_LABELS: Record<string, { label: string; color: string; desc: string }
   employee: { label: "Employee", color: "bg-blue-500 text-white", desc: "Task management, bookings view, and daily ops" },
   trainer: { label: "Trainer", color: "bg-emerald-500 text-white", desc: "Lesson bookings, clinic inquiries, and student management" },
   moderator: { label: "Moderator", color: "bg-amber-500 text-white", desc: "Content moderation and limited admin access" },
+  preview: { label: "Client Preview", color: "bg-accent/60 text-accent-foreground", desc: "View-only demo access. Sees seeded demo data across HQ. Cannot edit, delete, or touch real client records." },
   user: { label: "User", color: "bg-muted text-muted-foreground", desc: "Basic authenticated user" },
 };
 
@@ -227,8 +228,8 @@ export function AdminStaffOnboarding() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {(["admin", "employee", "trainer", "moderator"] as const).map((role) => {
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        {(["admin", "employee", "trainer", "moderator", "preview"] as const).map((role) => {
           const count = staff.filter((s) => s.role === role).length;
           const info = ROLE_LABELS[role];
           return (
