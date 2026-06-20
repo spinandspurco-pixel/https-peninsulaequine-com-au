@@ -81,9 +81,11 @@ interface StaffMember {
   user_id: string;
   role: string;
   created_at: string;
-  email?: string;
-  display_name?: string;
+  email?: string | null;
+  display_name?: string | null;
+  is_test_account?: boolean;
 }
+
 
 export function AdminStaffOnboarding() {
   const [staff, setStaff] = useState<StaffMember[]>([]);
@@ -110,22 +112,33 @@ export function AdminStaffOnboarding() {
 
   const fetchStaff = async () => {
     setLoadingStaff(true);
-    const { data, error } = await supabase
-      .from("user_roles")
-      .select("user_id, role, created_at")
-      .order("created_at", { ascending: false });
+    // Prefer the admin-only RPC: it joins auth.users so we can render
+    // email, display name, and the e2e test-account flag. Falls back to
+    // the bare user_roles read if the RPC is unavailable (e.g. during
+    // local dev before the migration applies).
+    const { data, error } = await supabase.rpc("list_staff_directory");
 
-    if (error) {
-      toast.error("Failed to load staff");
+    if (error || !data) {
+      const fallback = await supabase
+        .from("user_roles")
+        .select("user_id, role, created_at")
+        .order("created_at", { ascending: false });
+      if (fallback.error) {
+        toast.error("Failed to load staff");
+        setLoadingStaff(false);
+        return;
+      }
+      setStaff(
+        (fallback.data || []).map((r) => ({ ...r, is_test_account: false })),
+      );
       setLoadingStaff(false);
       return;
     }
 
-    // We don't have direct access to auth.users, so we'll display user_id
-    // The edge function sets display_name in user_metadata
-    setStaff(data || []);
+    setStaff(data as StaffMember[]);
     setLoadingStaff(false);
   };
+
 
   const handleInvite = async () => {
     if (!inviteEmail || !invitePassword || !inviteRole) {
@@ -234,7 +247,10 @@ export function AdminStaffOnboarding() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {(["admin", "employee", "trainer", "moderator", "preview"] as const).map((role) => {
-          const count = staff.filter((s) => s.role === role).length;
+          // Operational count: real staff only. Test accounts are reported
+          // separately below so dashboards don't double-count fixtures.
+          const count = staff.filter((s) => s.role === role && !s.is_test_account).length;
+
           const info = ROLE_LABELS[role];
           return (
             <Card key={role} className="group hover:border-accent/30 transition-colors">
@@ -249,6 +265,24 @@ export function AdminStaffOnboarding() {
           );
         })}
       </div>
+
+      {/* E2E test-account callout — kept separate from operational counts. */}
+      {staff.some((s) => s.is_test_account) && (
+        <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm flex items-start gap-3">
+          <Shield className="h-4 w-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+          <div className="space-y-0.5">
+            <p className="font-medium text-amber-800 dark:text-amber-300">
+              {staff.filter((s) => s.is_test_account).length} automated e2e test account
+              {staff.filter((s) => s.is_test_account).length === 1 ? "" : "s"} present.
+            </p>
+            <p className="text-xs text-amber-700/80 dark:text-amber-400/80">
+              Excluded from operational counts above. Rotate passwords by re-running the{" "}
+              <code className="font-mono">e2e-seed-users</code> edge function.
+            </p>
+          </div>
+        </div>
+      )}
+
 
       {/* Staff Directory Table */}
       <Card>
@@ -291,7 +325,7 @@ export function AdminStaffOnboarding() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>User ID</TableHead>
+                <TableHead>Staff</TableHead>
                 <TableHead>Role</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Permissions</TableHead>
@@ -309,10 +343,14 @@ export function AdminStaffOnboarding() {
               ) : (() => {
                 const filtered = staff.filter((m) => {
                   const matchesRole = roleFilter === "all" || m.role === roleFilter;
-                  const matchesSearch = !searchQuery || 
-                    m.user_id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    m.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    (ROLE_LABELS[m.role]?.label || "").toLowerCase().includes(searchQuery.toLowerCase());
+                  const q = searchQuery.toLowerCase();
+                  const matchesSearch = !q ||
+                    m.user_id.toLowerCase().includes(q) ||
+                    m.role.toLowerCase().includes(q) ||
+                    (m.email ?? "").toLowerCase().includes(q) ||
+                    (m.display_name ?? "").toLowerCase().includes(q) ||
+                    (ROLE_LABELS[m.role]?.label || "").toLowerCase().includes(q) ||
+                    (m.is_test_account ? "e2e test".includes(q) : false);
                   return matchesRole && matchesSearch;
                 });
                 if (filtered.length === 0) return (
@@ -333,10 +371,30 @@ export function AdminStaffOnboarding() {
                     active: { label: "Active", className: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30" },
                   };
                   const status = statusConfig[onboardingStatus];
+                  const primaryLabel = member.display_name || member.email || `${member.user_id.slice(0, 8)}…`;
                   return (
-                    <TableRow key={`${member.user_id}-${member.role}`} className="group/row">
-                      <TableCell className="font-mono text-xs max-w-[200px] truncate">
-                        {member.user_id.slice(0, 8)}...
+                    <TableRow
+                      key={`${member.user_id}-${member.role}`}
+                      className={`group/row ${member.is_test_account ? "bg-amber-500/[0.04]" : ""}`}
+                    >
+                      <TableCell className="max-w-[260px]">
+                        <div className="flex items-center gap-2">
+                          <div className="min-w-0">
+                            <div className="text-sm font-medium truncate">{primaryLabel}</div>
+                            {member.email && member.email !== primaryLabel && (
+                              <div className="text-[11px] text-muted-foreground truncate">{member.email}</div>
+                            )}
+                          </div>
+                          {member.is_test_account && (
+                            <Badge
+                              variant="outline"
+                              className="shrink-0 border-amber-500/50 bg-amber-500/15 text-amber-700 dark:text-amber-400 text-[10px] uppercase tracking-wider"
+                              title="Automated e2e test account — excluded from operational reporting."
+                            >
+                              E2E Test
+                            </Badge>
+                          )}
+                        </div>
                       </TableCell>
                       <TableCell>
                         <Badge className={info.color}>{info.label}</Badge>
@@ -350,6 +408,7 @@ export function AdminStaffOnboarding() {
                       <TableCell className="whitespace-nowrap text-sm">
                         {format(new Date(member.created_at), "MMM d, yyyy")}
                       </TableCell>
+
                       <TableCell className="text-right">
                         <Button
                           variant="ghost"
