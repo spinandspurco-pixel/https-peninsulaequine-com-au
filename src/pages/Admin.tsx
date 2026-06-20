@@ -137,7 +137,9 @@ export default function Admin() {
                       { id: "zone-applications", label: "03 · Applications" },
                       { id: "zone-content", label: "04 · Content" },
                       { id: "zone-projects", label: "05 · Projects" },
-                      { id: "zone-preview", label: "06 · Client Preview" },
+                      ...(!isPreview
+                        ? [{ id: "zone-preview", label: "06 · Client Preview" }]
+                        : []),
                     ].map((item) => (
                       <button
                         key={item.id}
@@ -149,12 +151,21 @@ export default function Admin() {
                         {item.label}
                       </button>
                     ))}
+                    {isPreview && (
+                      <button
+                        onClick={handleSignOut}
+                        className="ml-auto text-[10px] uppercase tracking-[0.22em] text-muted-foreground/45 hover:text-foreground/80 transition-colors whitespace-nowrap"
+                      >
+                        Sign out
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
             </>
           );
         })()}
+
 
 
         {/* ════════════════════════════════════════════ */}
@@ -231,56 +242,59 @@ export default function Admin() {
         </Zone>
 
         {/* ════════════════════════════════════════════ */}
-        {/* 06 — CLIENT PREVIEW                         */}
+        {/* 06 — CLIENT PREVIEW (staff-only control panel) */}
         {/* ════════════════════════════════════════════ */}
-        <Zone
-          id="zone-preview"
-          number="06"
-          title="Client Preview"
-          subtitle="A view-only version of HQ — share with prospects, sponsors or future clients without exposing the working backend."
-        >
-          <div className="space-y-8">
-            <div className="border border-accent/20 px-6 py-8 bg-background">
-              <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/55 mb-4">
-                What preview shows
-              </p>
-              <ul className="text-[13px] text-foreground/75 space-y-2 leading-relaxed">
-                <li>· Command Overview metrics and activity feed</li>
-                <li>· Pipeline (read-only)</li>
-                <li>· Applications inbox (no scoring or conversion)</li>
-                <li>· Content surfaces (no edits)</li>
-                <li>· Selected Works and Field Notes (read-only)</li>
-              </ul>
-              <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/55 mt-8 mb-4">
-                What stays hidden
-              </p>
-              <ul className="text-[13px] text-muted-foreground/60 space-y-2 leading-relaxed">
-                <li>· Team, financial and operational drawers</li>
-                <li>· Database, secrets, user management</li>
-              </ul>
-            </div>
-
-            {isAdmin && (
-              <div className="flex flex-wrap items-center gap-8">
-                <button
-                  onClick={enterPreview}
-                  className="text-[11px] uppercase tracking-[0.22em] text-foreground/85 hover:text-accent transition-colors"
-                >
-                  Enter preview here →
-                </button>
-                <button
-                  onClick={() => {
-                    const url = `${window.location.origin}/hq?view=preview`;
-                    navigator.clipboard.writeText(url);
-                  }}
-                  className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground/55 hover:text-foreground/80 transition-colors"
-                >
-                  Copy share link →
-                </button>
+        {!isPreview && (
+          <Zone
+            id="zone-preview"
+            number="06"
+            title="Client Preview"
+            subtitle="A view-only mirror of HQ — share with prospects, sponsors or future clients without exposing the working backend."
+          >
+            <div className="space-y-8">
+              <div className="border border-accent/20 px-6 py-8 bg-background">
+                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/55 mb-4">
+                  Preview shows
+                </p>
+                <ul className="text-[13px] text-foreground/75 space-y-2 leading-relaxed">
+                  <li>· Command Overview metrics and activity feed</li>
+                  <li>· Pipeline (read-only)</li>
+                  <li>· Applications inbox (no scoring or conversion)</li>
+                  <li>· Content surfaces (no edits)</li>
+                  <li>· Selected Works and Field Notes (read-only)</li>
+                </ul>
+                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/55 mt-8 mb-4">
+                  Preview hides
+                </p>
+                <ul className="text-[13px] text-muted-foreground/60 space-y-2 leading-relaxed">
+                  <li>· Team, financial and operational drawers</li>
+                  <li>· Database, secrets, user management</li>
+                </ul>
               </div>
-            )}
-          </div>
-        </Zone>
+
+              {isAdmin && (
+                <div className="flex flex-wrap items-center gap-8">
+                  <button
+                    onClick={enterPreview}
+                    className="text-[11px] uppercase tracking-[0.22em] text-foreground/85 hover:text-accent transition-colors"
+                  >
+                    Enter preview here →
+                  </button>
+                  <button
+                    onClick={() => {
+                      const url = `${window.location.origin}/hq?view=preview`;
+                      navigator.clipboard.writeText(url);
+                    }}
+                    className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground/55 hover:text-foreground/80 transition-colors"
+                  >
+                    Copy share link →
+                  </button>
+                </div>
+              )}
+            </div>
+          </Zone>
+        )}
+
 
         {/* ════════════════════════════════════════════ */}
         {/* ∞ — OPERATIONS (collapsed)                  */}
