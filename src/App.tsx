@@ -109,9 +109,14 @@ function AppContent() {
             <Route path="/hq/services" element={<AdminServices />} />
             <Route path="/hq/testimonials" element={<AdminTestimonials />} />
             <Route path="/hq/events" element={<AdminEvents />} />
+            <Route path="/hq/selected-works" element={<AdminSelectedWorks />} />
+            <Route path="/hq/field-notes" element={<AdminFieldNotes />} />
+            <Route path="/hq/projects/:id" element={<HqProjectDetail />} />
+            <Route path="/hq/preview" element={<Navigate to="/hq?view=preview" replace />} />
             <Route path="/admin" element={<Navigate to="/hq" replace />} />
             <Route path="/admin/services" element={<Navigate to="/hq/services" replace />} />
             <Route path="/admin/testimonials" element={<Navigate to="/hq/testimonials" replace />} />
+
             <Route path="/admin/events" element={<Navigate to="/hq/events" replace />} />
             <Route path="/employee" element={<EmployeeDashboard />} />
             <Route path="/lessons" element={<Lessons />} />
