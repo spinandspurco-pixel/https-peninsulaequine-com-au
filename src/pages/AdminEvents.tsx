@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useHqMode } from "@/hooks/useHqMode";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +27,8 @@ type ManagedEvent = Tables<"managed_events">;
 
 export default function AdminEvents() {
   const { user, isAdmin, loading } = useAuth();
+  const { isPreview } = useHqMode();
+  const canAccess = isAdmin || isPreview;
   const navigate = useNavigate();
   const [items, setItems] = useState<ManagedEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -34,8 +37,8 @@ export default function AdminEvents() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (!loading && (!user || !isAdmin)) navigate("/login");
-  }, [user, isAdmin, loading, navigate]);
+    if (!loading && (!user || !canAccess)) navigate("/login");
+  }, [user, canAccess, loading, navigate]);
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -44,9 +47,10 @@ export default function AdminEvents() {
     setIsLoading(false);
   };
 
-  useEffect(() => { if (isAdmin) fetchData(); }, [isAdmin]);
+  useEffect(() => { if (canAccess) fetchData(); }, [canAccess]);
 
   const handleSave = async () => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
     if (!editItem?.title?.trim() || !editItem?.event_date) {
       toast.error("Title and date are required");
       return;
@@ -76,6 +80,7 @@ export default function AdminEvents() {
   };
 
   const handleDelete = async () => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
     if (!deleteItem) return;
     await supabase.from("managed_events").delete().eq("id", deleteItem.id);
     toast.success("Deleted");
@@ -83,21 +88,23 @@ export default function AdminEvents() {
     fetchData();
   };
 
-  if (loading || !isAdmin) return null;
+  if (loading || !canAccess) return null;
 
   return (
     <Layout>
       <div className="section-padding">
         <div className="section-container max-w-5xl">
           <div className="flex items-center gap-4 mb-8">
-            <Button variant="ghost" size="sm" onClick={() => navigate("/admin")}>
+            <Button variant="ghost" size="sm" onClick={() => navigate(isPreview ? "/hq?view=preview" : "/hq")}>
               <ArrowLeft className="h-4 w-4 mr-1" /> Back
             </Button>
             <div className="flex-1">
               <h1 className="font-serif text-3xl font-bold text-foreground">Manage Events</h1>
-              <p className="text-muted-foreground text-sm mt-1">{items.length} events</p>
+              <p className="text-muted-foreground text-sm mt-1">
+                {items.length} events{isPreview && " · view-only preview"}
+              </p>
             </div>
-            <Button onClick={() => setEditItem({ active: true, event_date: format(new Date(), "yyyy-MM-dd") })}>
+            <Button onClick={() => setEditItem({ active: true, event_date: format(new Date(), "yyyy-MM-dd") })} disabled={isPreview} title={isPreview ? "View-only" : undefined}>
               <Plus className="h-4 w-4 mr-2" /> Add Event
             </Button>
           </div>
@@ -123,8 +130,8 @@ export default function AdminEvents() {
                       </div>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
-                      <Button variant="ghost" size="sm" onClick={() => setEditItem(ev)}><Pencil className="h-4 w-4" /></Button>
-                      <Button variant="ghost" size="sm" onClick={() => setDeleteItem(ev)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                      <Button variant="ghost" size="sm" onClick={() => setEditItem(ev)} disabled={isPreview} title={isPreview ? "View-only" : undefined}><Pencil className="h-4 w-4" /></Button>
+                      <Button variant="ghost" size="sm" onClick={() => setDeleteItem(ev)} disabled={isPreview} title={isPreview ? "View-only" : undefined}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                     </div>
                   </CardContent>
                 </Card>
