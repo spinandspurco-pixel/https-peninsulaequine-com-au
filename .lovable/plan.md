@@ -1,89 +1,91 @@
-## Scope
+# Premiumisation Phase — Plan
 
-Public site only (items 1–6). No admin portal in this pass. Selected Works stays on existing project content — restyle only. Copy cuts applied directly. Brand direction unchanged: serif/sans pairing, blueprint grading, asymmetric tension, low-opacity micro-lines, silent UX.
+Scope is large. I'll run it as seven sequenced slices on the public site, then the portal. Each slice ends in a Playwright pass (mobile/tablet/desktop) before moving on, so we keep cinematic integrity instead of stacking regressions.
 
-The admin overhaul (item 7) and the `projects` pipeline table you approved will follow as a second slice once this lands.
+## Slice 1 — Visual Rhythm Audit
+Goal: every page reads as composed, not assembled.
+- Page-by-page review: Home, Services (+ children), Selected Works, Field Notes, About, LumenArc, Contact.
+- Normalise section vertical rhythm to a shared scale (e.g. `--pause-sm/md/lg/xl`) in `index.css`; replace ad-hoc `py-*` values where they break cadence.
+- Audit chapter labels (`PE / 0X — …`) for consistent placement, weight, and tracking; remove duplicates.
+- Tighten density spikes (intro → grid jumps) by inserting Pause sections or adjusting first-row offsets.
 
-## What I'll change
+## Slice 2 — Motion System Audit
+Goal: one PE motion language.
+- Codify tokens in `tailwind.config.ts` + `index.css`: durations `arrive=1100ms`, `hold=800ms`, `exit=600ms`; ease `cubic-bezier(0.45,0,0.15,1)`.
+- Sweep components for off-spec durations/easings; replace inline values with tokens.
+- Reveal pattern: single IntersectionObserver hook (`useReveal`) — fade+8px lift, no scale, no blur, staggered by 80ms.
+- Hover states: image scale capped at 1.03, caption lift 4px, 700ms; remove any 300ms ease-out snap.
+- Blueprint motion: line draws only on first arrival; no infinite loops.
 
-### 1. Homepage hero (`src/pages/Index.tsx`)
+## Slice 3 — Image Treatment Audit
+Goal: photography, render, product imagery feel unified.
+- Standardise `CropSafeImage` defaults: blueprint grade (`brightness .88 contrast 1.08 saturate .82`), shared vignette overlay component.
+- Establish crop ratios per surface (hero 21:9, project card 4:5, field note 3:2).
+- Loading: `loading="lazy"` + `decoding="async"` everywhere except above-fold hero; add 600ms fade-in on `onLoad`.
+- Remove one-off gradients; centralise in `src/components/media/ImageVeil.tsx`.
 
-The current entrance fires multiple staggered tracks at once (atmosphere, blueprint overlay, chapter label, headline, support line, CTAs, scroll cue). Result reads busy.
+## Slice 4 — Mobile-First Luxury Review
+Goal: mobile is designed, not adapted.
+- Typography scale: clamp() for display/serif so headings don't shrink to flat sans on <400px.
+- Thumb-reach: primary actions stay in bottom 60% of viewport; nav menu trigger sized 44px.
+- Section pacing: shorter pauses on mobile (`--pause-md` halves), but keep one full-bleed cinematic beat per page.
+- Re-crop hero/portfolio images for portrait (use `<picture>` with media queries).
+- Header behaviour: hide-on-scroll-down, reveal-on-scroll-up.
 
-Refine to a single weighted arrival:
-- Reduce concurrent motion tracks to **three**: backdrop fade-in, headline reveal, then CTA + scroll cue together.
-- Move overlay/blueprint layers to a longer, slower fade behind the headline (1400ms, `cubic-bezier(0.45,0,0.15,1)`) so they read as atmosphere, not events.
-- Tighten the headline timing window — single 900ms reveal, no per-word stagger.
-- Hold a 400ms beat before CTAs appear so the headline lands before the eye moves.
-- Drop the secondary "chapter label" above the headline on hero only (kept on inner sections). It currently competes with the PE mark.
+## Slice 5 — Blueprint System Refinement
+Goal: one cohesive architectural layer.
+- Single source: `src/components/blueprint/` (Grid, Threads, CornerBrackets, ChapterLabel, DraftMark).
+- Reduce overlay opacity ceiling to 3.5%; remove duplicated grids stacking on same section.
+- Chapter labels: one per section, top-right, never on mobile if it collides with header.
+- Remove decorative-only marks that don't reference structure.
 
-### 2. Services dropdown (`src/components/layout/Header.tsx`)
+## Slice 6 — Conversion Pathway Audit
+Goal: Home → Services → Selected Works → Apply to Build feels inevitable.
+- Trace path; ensure each page ends with a single quiet CTA pointing to the next step.
+- Apply to Build form: progressive disclosure, autosave, clearer qualification copy.
+- Trust signals: insert restrained proof points (project count, region, standard) at one anchor per page — no logo walls.
+- Remove redundant CTAs mid-scroll.
 
-Today the dropdown lists every service with descriptive sub-copy — overloaded.
+## Slice 7 — Premium Portfolio Review (Selected Works)
+Goal: strongest page on the site.
+- Feature project (Main Ridge): full-bleed hero with parallax veil, 5-act scroll narrative.
+- Project cards: editorial captions (Location · Year · Discipline), hover reveals one-line thesis.
+- Case study pages: enforce 5-act template (Context, Brief, Ground, Build, Standard).
+- Transitions: route-level fade+lift (240ms) using existing motion tokens.
 
-- Group into **3 columns** by intent: *Build* (Arenas, Stables, Covered, Infrastructure), *Plan* (Whole-Property Planning, Site Assessment, Pricing), *Programs* (Lessons, Events, Trainer). Column headers as overline.
-- Strip per-item descriptions to a single hairline label. Description becomes a single sentence per column, not per item.
-- Add one "View all services →" tail link at the bottom-right of the panel.
-- Mobile accordion mirrors the same three groups so structure matches.
+## Slice 8 — Admin / Staff Portal Overhaul
+Goal: PE Command Centre, not SaaS.
 
-### 3. Selected Works rework (`src/pages/SelectedWorks.tsx`, `src/data/caseStudyData.ts` if needed for ordering only)
+New schema (single migration):
+- `projects` (pipeline) with stage enum, client_id, location, value_band, lead/ops owners
+- `project_notes` (internal)
+- `field_notes_drafts`
+- `selected_works_entries` (CMS-backed portfolio)
+- `staff_resources` (brand assets, SOPs, supplier links)
+- `app_role` enum extended with `client_preview`
+- RLS + GRANTs on every table; `has_role()` SECURITY DEFINER pattern.
 
-Restyle to a true luxury portfolio. Content unchanged.
+Portal surfaces:
+- Dashboard: pipeline health, today's field activity, pending applications, recent notes.
+- Pipeline (Kanban + list).
+- Client Applications inbox (extends current WholePropertyInbox pattern).
+- Field Notes manager (draft → publish).
+- Selected Works manager.
+- Staff resources hub.
+- Client Preview mode: read-only routes, hides ops chrome, branded as "PE Preview".
 
-- New card composition: full-bleed image, project name in serif overlay, location + year in mono overline, single status line (Resolved / In Progress). No mid-card CTA — whole card is the link.
-- Hierarchy: **one** feature project (Main Ridge) at full-viewport scale, remaining projects in an asymmetric 2-up grid with -3rem bleed alternating left/right.
-- Cinematic transitions: enter via `IntersectionObserver` with a 1100ms image scale-from-1.04 + caption fade, staggered per card.
-- Hover: 600ms image desaturate + 1.02 scale, caption rises 8px. No shadow halos.
-- Page header follows the established `bg-background/55` + engineering grid standard.
+Visual: dark blueprint chrome, serif H1s, mono labels, drafting-grid backdrops, no shadcn defaults left untouched.
 
-### 4. Spacing & overlap audit
+## Technical Notes
+- All edits stay token-driven — no hardcoded colours.
+- Motion tokens + reveal hook are prerequisites for slices 2–7; build them first inside slice 2.
+- Each slice: implement → Playwright screenshots at 390 / 834 / 1440 → fix collisions → close.
+- Portal schema goes in one migration with GRANTs and RLS so we don't ship half-secured tables.
 
-Pages I'll sweep: `Index`, `About`, `Services`, `SelectedWorks`, `CaseStudy`, `Contact`, `MainRidgePavilion`, `Arenas`, `Stables`, `Infrastructure`, `FieldNotes`, `Events`.
+## Sequencing
+Slices 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. I'll pause after each slice for your eye before moving on, unless you'd rather I run 1–5 as one continuous refinement pass and check in before Conversion + Portfolio.
 
-Focus points:
-- Chapter labels colliding with PE marks at `md` breakpoint — move PE mark to a fixed corner anchor on inner pages.
-- Hero headline clipping at 375–414px — clamp font size via `clamp()` and reduce tracking on `< sm`.
-- Footer top-padding consistency (currently varies between 8rem and 14rem across pages).
-- Section pause blocks: enforce single `py-32 md:py-48` token.
-- Mobile horizontal overflow from `-mx-` bleeds on Selected Works and About — gate bleeds behind `md:`.
-
-### 5. CTA flow
-
-Standardise three site-wide CTAs with consistent label, weight, and placement:
-- **Selected Works** — neutral hairline link, used after editorial sections.
-- **Services** — neutral hairline link, used after capability statements.
-- **Apply to Build** — only filled accent treatment, used once per page max, at decision moments.
-
-Remove duplicate Apply CTAs from mid-scroll on Index and Services. Header keeps the only persistent Apply.
-
-### 6. Copy reduction
-
-Cuts applied directly per your established copy standards (30–50% reduction, 2–3 line paragraphs, no generic descriptors). Targets:
-- Hero support line → one sentence.
-- Index section intros → strip restated mission lines that repeat the homepage header.
-- Services page → remove the second "Why we exist" paragraph (duplicated from About).
-- Selected Works intro → reduce to overline + one sentence.
-- About → consolidate the two philosophy blocks into one.
-
-## What I won't touch in this pass
-
-- Admin portal, dashboard, pipeline, managers, staff resources (item 7).
-- `projects` table migration (deferred to admin slice).
-- Brand tokens, fonts, colour grading.
-- Caves Studio content / case study narrative copy.
-- Selected Works content itself (only layout + transitions).
-
-## Verification
-
-- Playwright headless screenshots at 375 / 768 / 1280 of: Index hero, services dropdown open, Selected Works grid, Selected Works hover state, About header, mobile nav with services accordion open.
-- Console + network check on each route for errors.
-- Re-screenshot the spacing-audit pages at the three breakpoints before claiming done.
-
-## Order of execution
-
-1. Header services dropdown restructure (smallest, unblocks CTA audit).
-2. Homepage hero refinement.
-3. Selected Works rework.
-4. CTA + copy pass across Index, Services, About, Selected Works.
-5. Spacing audit + mobile fixes across the page list.
-6. Verification screenshots, report back with any deferred items.
+## Decisions I need from you
+1. Run slices sequentially with check-ins, or batch 1–5 as one "refinement pass"?
+2. Client Preview role: should it see real project data (masked) or a curated demo dataset?
+3. Portal entry — keep current `/admin` route, or move to `/hq` to match the Command Centre framing?
