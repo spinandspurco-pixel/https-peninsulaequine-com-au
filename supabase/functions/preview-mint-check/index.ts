@@ -22,12 +22,13 @@ interface ScanTarget {
   table: string;
   nameCols: string[];
   emailCols: string[];
+  phoneCols?: string[];
 }
 
 // Only structured identity columns are scanned — never free-text fields like
 // description / notes / scope, which can legitimately mention these words.
 const TARGETS: ScanTarget[] = [
-  { table: "inquiries", nameCols: ["name"], emailCols: ["email"] },
+  { table: "inquiries", nameCols: ["name"], emailCols: ["email"], phoneCols: ["phone"] },
   {
     table: "quotes",
     nameCols: ["client_name", "accepted_by_name"],
@@ -40,11 +41,26 @@ const TARGETS: ScanTarget[] = [
     nameCols: ["client_name", "project_name"],
     emailCols: ["client_email"],
   },
-  { table: "event_rsvps", nameCols: ["name"], emailCols: ["email"] },
-  { table: "equus_ridge_interest", nameCols: ["name"], emailCols: ["email"] },
-  { table: "bookings", nameCols: ["client_name"], emailCols: ["client_email"] },
-  { table: "lesson_bookings", nameCols: ["client_name"], emailCols: ["client_email"] },
-  { table: "site_assessments", nameCols: ["client_name"], emailCols: ["client_email"] },
+  { table: "event_rsvps", nameCols: ["name"], emailCols: ["email"], phoneCols: ["phone"] },
+  {
+    table: "equus_ridge_interest",
+    nameCols: ["name"],
+    emailCols: ["email"],
+    phoneCols: ["phone"],
+  },
+  { table: "bookings", nameCols: ["client_name"], emailCols: ["client_email"], phoneCols: ["client_phone"] },
+  {
+    table: "lesson_bookings",
+    nameCols: ["client_name"],
+    emailCols: ["client_email"],
+    phoneCols: ["client_phone"],
+  },
+  {
+    table: "site_assessments",
+    nameCols: ["client_name"],
+    emailCols: ["client_email"],
+    phoneCols: ["client_phone"],
+  },
   { table: "newsletter_subscribers", nameCols: ["name"], emailCols: ["email"] },
 ];
 
@@ -61,16 +77,20 @@ const NAME_BLOCKLIST = [
   "Lorem Ipsum",
 ];
 
-const EMAIL_BLOCKLIST = [
-  "@example.com",
-  "@example.org",
-  "@test.com",
-  "test@",
-  "demo@",
-  "placeholder@",
-  "noreply@example",
-  "johntest@",
+// Preview rows MUST use one of these email domains. Anything else is treated
+// as a real client address and blocks minting.
+const ALLOWED_EMAIL_DOMAINS = [
+  "example.com",
+  "example.org",
+  "peninsulaequine.com.au",
+  "peninsulaequine.org",
+  "peninsulaequine.systems",
+  "notify.peninsulaequine.org",
 ];
+
+// Phones in preview rows must be NULL or use the obviously-fake 0400 000 000
+// marker. Any other AU mobile pattern is flagged as potentially real PII.
+const FAKE_PHONE_MARKERS = [/0400[\s-]?000[\s-]?000/, /\+614000000000/];
 
 interface Finding {
   table: string;
@@ -79,6 +99,7 @@ interface Finding {
   rowId?: string | null;
   value: string;
 }
+
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -116,14 +137,18 @@ serve(async (req) => {
     const tablesScanned: string[] = [];
 
     for (const target of TARGETS) {
-      const cols = ["id", ...target.nameCols, ...target.emailCols].filter(Boolean);
+      const cols = [
+        "id",
+        ...target.nameCols,
+        ...target.emailCols,
+        ...(target.phoneCols ?? []),
+      ].filter(Boolean);
       if (cols.length <= 1) continue;
       const { data, error } = await admin
         .from(target.table)
         .select(cols.join(","))
         .limit(2000);
       if (error) {
-        // Table may not exist in some environments — record and continue.
         findings.push({
           table: target.table,
           column: "_scan",
@@ -134,36 +159,52 @@ serve(async (req) => {
       }
       tablesScanned.push(target.table);
       for (const row of (data ?? []) as Record<string, unknown>[]) {
+        // Names — placeholder / generic identities
         for (const col of target.nameCols) {
           const v = (row[col] ?? "") as string;
           if (!v) continue;
           for (const needle of NAME_BLOCKLIST) {
-            // Word-boundary match so "Operations" doesn't trip "Operator".
             const re = new RegExp(`\\b${needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i");
             if (re.test(v)) {
               findings.push({
                 table: target.table,
                 column: col,
-                match: needle,
+                match: `placeholder:${needle}`,
                 rowId: (row.id as string) ?? null,
                 value: v,
               });
             }
           }
         }
+        // Emails — must use an allowed demo / Peninsula Equine domain
         for (const col of target.emailCols) {
-          const v = ((row[col] ?? "") as string).toLowerCase();
+          const v = ((row[col] ?? "") as string).toLowerCase().trim();
           if (!v) continue;
-          for (const needle of EMAIL_BLOCKLIST) {
-            if (v.includes(needle.toLowerCase())) {
-              findings.push({
-                table: target.table,
-                column: col,
-                match: needle,
-                rowId: (row.id as string) ?? null,
-                value: v,
-              });
-            }
+          const domain = v.split("@")[1] ?? "";
+          const ok = ALLOWED_EMAIL_DOMAINS.some((d) => domain === d || domain.endsWith("." + d));
+          if (!ok) {
+            findings.push({
+              table: target.table,
+              column: col,
+              match: "real_email_domain",
+              rowId: (row.id as string) ?? null,
+              value: v,
+            });
+          }
+        }
+        // Phones — must be NULL or use the fake marker
+        for (const col of target.phoneCols ?? []) {
+          const v = ((row[col] ?? "") as string).trim();
+          if (!v) continue;
+          const isFake = FAKE_PHONE_MARKERS.some((re) => re.test(v));
+          if (!isFake) {
+            findings.push({
+              table: target.table,
+              column: col,
+              match: "real_phone_pii",
+              rowId: (row.id as string) ?? null,
+              value: v,
+            });
           }
         }
       }
@@ -174,8 +215,13 @@ serve(async (req) => {
       findings,
       tablesScanned,
       ranAt: new Date().toISOString(),
-      blocklist: { names: NAME_BLOCKLIST, emails: EMAIL_BLOCKLIST },
+      standard: {
+        names_blocked: NAME_BLOCKLIST,
+        emails_allowed: ALLOWED_EMAIL_DOMAINS,
+        phones_allowed: ["NULL", "0400 000 000", "+614 0000 00000"],
+      },
     });
+
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     return json(500, { error: msg });
