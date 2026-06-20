@@ -265,10 +265,9 @@ export default function About() {
             </h2>
             <Link
               to="/contact"
-              className="mt-14 inline-block px-12 py-4 border text-[11px] font-mono uppercase tracking-[0.3em] hover:bg-accent/[0.04] transition-colors duration-500"
+              className="mt-14 inline-block px-12 py-4 border text-[11px] font-mono uppercase tracking-[0.32em] text-foreground bg-accent/[0.04] hover:bg-accent/10 hover:text-accent hover:border-accent/55 transition-colors duration-500"
               style={{
-                borderColor: "hsl(var(--accent) / 0.15)",
-                color: "hsl(var(--foreground) / 0.55)",
+                borderColor: "hsl(var(--accent) / 0.45)",
               }}
             >
               Start a Project →

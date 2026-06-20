@@ -185,7 +185,11 @@ export default function Admin() {
           id="zone-pipeline"
           number="02"
           title="Pipeline"
-          subtitle="From new enquiry through to archived. Move a card to advance the stage."
+          subtitle={
+            isPreview
+              ? "Every enquiry, in sequence — from first contact to resolved build."
+              : "Every enquiry, in sequence — from first contact to resolved build. Move a card to advance the stage."
+          }
         >
           <CRMPipeline onCreateQuote={(id) => !isPreview && setQuoteForInquiryId(id)} />
         </Zone>
@@ -197,7 +201,11 @@ export default function Admin() {
           id="zone-applications"
           number="03"
           title="Applications"
-          subtitle="Apply to Build submissions. Score, note, and convert qualified leads into projects."
+          subtitle={
+            isPreview
+              ? "Apply to Build submissions — read in the same form they arrive."
+              : "Apply to Build submissions. Read, qualify and bring the right ones through to a site assessment."
+          }
         >
           <ApplicationsInbox />
         </Zone>
@@ -209,7 +217,11 @@ export default function Admin() {
           id="zone-content"
           number="04"
           title="Content"
-          subtitle="The public surface. Each tile opens its own editor."
+          subtitle={
+            isPreview
+              ? "The public surface — services, works, field notes and supporting material."
+              : "The public surface. Each tile opens its own editor."
+          }
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border/10">
             {CONTENT_TILES.map((tile) => (
@@ -239,7 +251,11 @@ export default function Admin() {
           id="zone-projects"
           number="05"
           title="Projects"
-          subtitle="Live build register. Open a row for status, scope, gallery, timeline and client-facing summary."
+          subtitle={
+            isPreview
+              ? "The live build register — scope, sequencing and where each project sits today."
+              : "Live build register. Open a row for status, scope, gallery, timeline and client-facing summary."
+          }
         >
           <ProjectsBoard />
         </Zone>

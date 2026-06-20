@@ -404,8 +404,9 @@ function Closing() {
             <span className="text-foreground/55 italic font-normal">Resolved as it lands.</span>
           </h2>
           <p className="font-sans font-light text-foreground/55 text-[0.95rem] leading-[1.75] max-w-md">
-            We take on a small number of builds each year on the Mornington
-            Peninsula. Selection begins with a written brief.
+            Peninsula Equine accepts a small number of builds each year across the
+            Mornington Peninsula. The next chapter of this record starts with a walk
+            of the ground.
           </p>
           <div className="flex flex-col sm:flex-row items-start sm:items-baseline gap-6 sm:gap-10 mt-2">
             <Link
