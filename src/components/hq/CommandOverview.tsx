@@ -171,7 +171,7 @@ export function CommandOverview() {
                 <li key={row.id} className="py-3 group">
                   <div className="flex items-baseline justify-between gap-6">
                     <p className="text-[13px] text-foreground/85 font-light leading-relaxed">
-                      {row.action}
+                      {row.title}
                       {row.entity_type && (
                         <span className="ml-3 font-mono text-[10px] uppercase tracking-[0.2em] text-accent/45">
                           {row.entity_type}
