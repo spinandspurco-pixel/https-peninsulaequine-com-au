@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { resolveLandingPath, authLog } from "@/lib/authRouting";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,18 +17,20 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  const { user, isAdmin, isEmployee, isTrainer, loading, signIn } = useAuth();
+  const { user, roles, ready, signIn } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirect") || null;
 
+  // Single source of truth for post-login routing. We only act once auth
+  // AND roles are fully resolved (`ready`), so we never bounce a freshly
+  // signed-in user to the wrong place during hydration.
   useEffect(() => {
-    if (!loading && user) {
-      if (redirectTo) navigate(redirectTo);
-      else if (isAdmin) navigate("/admin");
-      else if (isEmployee || isTrainer) navigate("/employee");
-    }
-  }, [user, isAdmin, isEmployee, isTrainer, loading, navigate, redirectTo]);
+    if (!ready || !user) return;
+    const dest = resolveLandingPath(roles, redirectTo);
+    authLog("login:redirect", { dest, roles, redirectTo });
+    navigate(dest, { replace: true });
+  }, [user, roles, ready, redirectTo, navigate]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
