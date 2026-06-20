@@ -236,7 +236,7 @@ serve(async (req) => {
         const res = await fetch("https://api.resend.com/emails", {
           method: "POST",
           headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ from: FROM_EMAIL, to: [sub.email], subject, html }),
+          body: JSON.stringify({ from: FROM_EMAIL, to: [sub.email], reply_to: WELCOME_REPLY_TO, subject, html }),
         });
         const ok = res.ok;
         await res.text();
@@ -261,7 +261,7 @@ serve(async (req) => {
         const res = await fetch("https://api.resend.com/emails", {
           method: "POST",
           headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ from: FROM_EMAIL, to: [sub.email], subject, html }),
+          body: JSON.stringify({ from: FROM_EMAIL, to: [sub.email], reply_to: WELCOME_REPLY_TO, subject, html }),
         });
         const ok = res.ok;
         await res.text();
@@ -316,7 +316,7 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ from: FROM_EMAIL, to: [email], subject, html }),
+      body: JSON.stringify({ from: FROM_EMAIL, to: [email], reply_to: WELCOME_REPLY_TO, subject, html }),
     });
 
     const resendData = await resendRes.json();
