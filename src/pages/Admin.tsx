@@ -204,6 +204,50 @@ export default function Admin() {
           </div>
         </section>
 
+        {/* ════════════════════════════════════════════ */}
+        {/*  ZONE 4 — CONTENT                           */}
+        {/* ════════════════════════════════════════════ */}
+        <section id="zone-content" className="border-t border-border/10 pt-14 sm:pt-20 pb-20 sm:pb-28">
+          <div className="max-w-5xl mx-auto px-6">
+            <div className="flex items-center gap-4 mb-10">
+              <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/35">04</span>
+              <div className="w-6 h-px bg-accent/15" />
+              <h2 className="font-serif text-xl sm:text-2xl font-light text-foreground/90">Content</h2>
+            </div>
+
+            <p className="text-[12px] text-muted-foreground/55 max-w-md mb-10 leading-relaxed">
+              Manage what the public sees. Each surface opens its own editor.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border/10">
+              {[
+                { label: "Services", note: "Capabilities, pricing, FAQ", to: "/hq/services" },
+                { label: "Testimonials", note: "Client voices and approvals", to: "/hq/testimonials" },
+                { label: "Events", note: "Clinics, RSVPs, capacity", to: "/hq/events" },
+                { label: "Documents", note: "Client packs, field notes", to: "/hq/documents" },
+              ].map((item) => (
+                <button
+                  key={item.label}
+                  onClick={() => navigate(item.to)}
+                  className="group bg-background text-left px-6 py-8 hover:bg-muted/20 transition-colors duration-500"
+                >
+                  <div className="flex items-baseline justify-between mb-3">
+                    <h3 className="font-serif text-lg font-light text-foreground/90 group-hover:text-foreground transition-colors">
+                      {item.label}
+                    </h3>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-accent/30 group-hover:text-accent/60 transition-colors">
+                      Open →
+                    </span>
+                  </div>
+                  <p className="text-[12px] text-muted-foreground/55 leading-relaxed">
+                    {item.note}
+                  </p>
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ── Staff (collapsed to bottom) ──────────── */}
         <section className="border-t border-border/10 pt-14 sm:pt-20 pb-20 sm:pb-28">
           <div className="max-w-5xl mx-auto px-6">
@@ -215,6 +259,7 @@ export default function Admin() {
             <AdminStaffOnboarding />
           </div>
         </section>
+
 
       </div>
 
