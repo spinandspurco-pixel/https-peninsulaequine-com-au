@@ -103,6 +103,7 @@ export type Database = {
           created_by: string | null
           expires_at: string | null
           id: string
+          is_demo: boolean
           priority: string
           title: string
         }
@@ -113,6 +114,7 @@ export type Database = {
           created_by?: string | null
           expires_at?: string | null
           id?: string
+          is_demo?: boolean
           priority?: string
           title: string
         }
@@ -123,6 +125,7 @@ export type Database = {
           created_by?: string | null
           expires_at?: string | null
           id?: string
+          is_demo?: boolean
           priority?: string
           title?: string
         }
@@ -358,6 +361,7 @@ export type Database = {
           followup_type: string
           id: string
           inquiry_id: string | null
+          is_demo: boolean
           job_id: string | null
           notes: string | null
           project_name: string | null
@@ -377,6 +381,7 @@ export type Database = {
           followup_type?: string
           id?: string
           inquiry_id?: string | null
+          is_demo?: boolean
           job_id?: string | null
           notes?: string | null
           project_name?: string | null
@@ -396,6 +401,7 @@ export type Database = {
           followup_type?: string
           id?: string
           inquiry_id?: string | null
+          is_demo?: boolean
           job_id?: string | null
           notes?: string | null
           project_name?: string | null
@@ -599,6 +605,7 @@ export type Database = {
           created_by: string | null
           description: string | null
           id: string
+          is_demo: boolean
           priority: string | null
           scheduled_date: string
           scheduled_time: string | null
@@ -612,6 +619,7 @@ export type Database = {
           created_by?: string | null
           description?: string | null
           id?: string
+          is_demo?: boolean
           priority?: string | null
           scheduled_date?: string
           scheduled_time?: string | null
@@ -625,6 +633,7 @@ export type Database = {
           created_by?: string | null
           description?: string | null
           id?: string
+          is_demo?: boolean
           priority?: string | null
           scheduled_date?: string
           scheduled_time?: string | null
@@ -640,6 +649,7 @@ export type Database = {
           email: string
           id: string
           interest_type: string
+          is_demo: boolean
           message: string | null
           name: string
           phone: string | null
@@ -650,6 +660,7 @@ export type Database = {
           email: string
           id?: string
           interest_type?: string
+          is_demo?: boolean
           message?: string | null
           name: string
           phone?: string | null
@@ -660,6 +671,7 @@ export type Database = {
           email?: string
           id?: string
           interest_type?: string
+          is_demo?: boolean
           message?: string | null
           name?: string
           phone?: string | null
@@ -782,6 +794,7 @@ export type Database = {
           horse_breed: string | null
           horse_name: string | null
           id: string
+          is_demo: boolean
           last_contact_at: string | null
           lead_tags: string[] | null
           lead_tier: string | null
@@ -814,6 +827,7 @@ export type Database = {
           horse_breed?: string | null
           horse_name?: string | null
           id?: string
+          is_demo?: boolean
           last_contact_at?: string | null
           lead_tags?: string[] | null
           lead_tier?: string | null
@@ -846,6 +860,7 @@ export type Database = {
           horse_breed?: string | null
           horse_name?: string | null
           id?: string
+          is_demo?: boolean
           last_contact_at?: string | null
           lead_tags?: string[] | null
           lead_tier?: string | null
@@ -982,6 +997,7 @@ export type Database = {
           estimated_cost: number
           gross_profit: number
           id: string
+          is_demo: boolean
           job_name: string
           labour_cost: number
           location: string | null
@@ -1001,6 +1017,7 @@ export type Database = {
           estimated_cost?: number
           gross_profit?: number
           id?: string
+          is_demo?: boolean
           job_name: string
           labour_cost?: number
           location?: string | null
@@ -1020,6 +1037,7 @@ export type Database = {
           estimated_cost?: number
           gross_profit?: number
           id?: string
+          is_demo?: boolean
           job_name?: string
           labour_cost?: number
           location?: string | null
@@ -1174,6 +1192,7 @@ export type Database = {
           event_time: string | null
           id: string
           image_url: string | null
+          is_demo: boolean
           location: string | null
           price: string | null
           title: string
@@ -1191,6 +1210,7 @@ export type Database = {
           event_time?: string | null
           id?: string
           image_url?: string | null
+          is_demo?: boolean
           location?: string | null
           price?: string | null
           title: string
@@ -1208,6 +1228,7 @@ export type Database = {
           event_time?: string | null
           id?: string
           image_url?: string | null
+          is_demo?: boolean
           location?: string | null
           price?: string | null
           title?: string
@@ -1285,6 +1306,7 @@ export type Database = {
           icon: string | null
           id: string
           image_url: string | null
+          is_demo: boolean
           short_description: string | null
           slug: string
           sort_order: number
@@ -1300,6 +1322,7 @@ export type Database = {
           icon?: string | null
           id?: string
           image_url?: string | null
+          is_demo?: boolean
           short_description?: string | null
           slug: string
           sort_order?: number
@@ -1315,6 +1338,7 @@ export type Database = {
           icon?: string | null
           id?: string
           image_url?: string | null
+          is_demo?: boolean
           short_description?: string | null
           slug?: string
           sort_order?: number
@@ -1331,6 +1355,7 @@ export type Database = {
           client_role: string | null
           created_at: string
           id: string
+          is_demo: boolean
           media_type: string | null
           media_url: string | null
           pinned: boolean
@@ -1347,6 +1372,7 @@ export type Database = {
           client_role?: string | null
           created_at?: string
           id?: string
+          is_demo?: boolean
           media_type?: string | null
           media_url?: string | null
           pinned?: boolean
@@ -1363,6 +1389,7 @@ export type Database = {
           client_role?: string | null
           created_at?: string
           id?: string
+          is_demo?: boolean
           media_type?: string | null
           media_url?: string | null
           pinned?: boolean
@@ -1690,6 +1717,7 @@ export type Database = {
           id: string
           inquiry_id: string | null
           internal_notes: string | null
+          is_demo: boolean
           location: string | null
           project_overview: string | null
           project_type: string
@@ -1721,6 +1749,7 @@ export type Database = {
           id?: string
           inquiry_id?: string | null
           internal_notes?: string | null
+          is_demo?: boolean
           location?: string | null
           project_overview?: string | null
           project_type?: string
@@ -1752,6 +1781,7 @@ export type Database = {
           id?: string
           inquiry_id?: string | null
           internal_notes?: string | null
+          is_demo?: boolean
           location?: string | null
           project_overview?: string | null
           project_type?: string
@@ -1966,6 +1996,7 @@ export type Database = {
           document_type: string
           form_data: Json
           id: string
+          is_demo: boolean
           review_notes: string | null
           reviewed_at: string | null
           reviewed_by: string | null
@@ -1980,6 +2011,7 @@ export type Database = {
           document_type: string
           form_data?: Json
           id?: string
+          is_demo?: boolean
           review_notes?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
@@ -1994,6 +2026,7 @@ export type Database = {
           document_type?: string
           form_data?: Json
           id?: string
+          is_demo?: boolean
           review_notes?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
