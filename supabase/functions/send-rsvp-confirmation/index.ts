@@ -291,8 +291,9 @@ const handler = async (req: Request): Promise<Response> => {
     // Send confirmation to attendee + notify business
     const [confirmRes, notifyRes] = await Promise.all([
       resend.emails.send({
-        from: FROM_EMAIL,
+        from: BOOKINGS_FROM,
         to: [data.email],
+        reply_to: BOOKINGS_REPLY_TO,
         subject: isConfirmed
           ? `RSVP Confirmed: ${data.eventTitle}`
           : `Waitlist: ${data.eventTitle}`,
@@ -300,7 +301,7 @@ const handler = async (req: Request): Promise<Response> => {
         ...(icsAttachments.length > 0 ? { attachments: icsAttachments } : {}),
       }),
       resend.emails.send({
-        from: FROM_EMAIL,
+        from: HQ_FROM,
         to: [NOTIFICATION_EMAIL],
         subject: `New RSVP: ${data.name} → ${data.eventTitle} (${data.status})`,
         html: `<p><strong>${data.name}</strong> (${data.email}) ${isConfirmed ? "confirmed" : "joined waitlist"} for <strong>${data.eventTitle}</strong> on ${formattedDate} — ${data.guests} guest(s).</p>`,
