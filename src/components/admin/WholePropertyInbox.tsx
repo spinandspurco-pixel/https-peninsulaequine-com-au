@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { Check, RefreshCw, Mail, Phone, Calendar, MessageSquare, Inbox } from "lucide-react";
 import { toast } from "sonner";
+import { WholePropertyInquiryDrawer } from "./WholePropertyInquiryDrawer";
 
 interface Inquiry {
   id: string;
@@ -19,6 +20,13 @@ export function WholePropertyInbox() {
   const [items, setItems] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"unread" | "all">("unread");
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const openInquiry = (id: string) => {
+    setActiveId(id);
+    setDrawerOpen(true);
+  };
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -130,8 +138,21 @@ export function WholePropertyInbox() {
             return (
               <li
                 key={i.id}
-                className={`group relative pb-8 pt-6 ${idx > 0 ? "border-t border-border/[0.07]" : ""}`}
+                className={`group relative ${idx > 0 ? "border-t border-border/[0.07]" : ""}`}
               >
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => openInquiry(i.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      openInquiry(i.id);
+                    }
+                  }}
+                  className="w-full text-left pb-8 pt-6 cursor-pointer hover:bg-foreground/[0.015] transition-colors duration-300 focus:outline-none focus:bg-foreground/[0.02]"
+                  aria-label={`Open enquiry from ${i.name}`}
+                >
                 {/* Unread accent thread */}
                 {unread && (
                   <div className="absolute left-0 top-6 bottom-8 w-px bg-gradient-to-b from-accent/50 via-accent/20 to-transparent" />
@@ -216,7 +237,10 @@ export function WholePropertyInbox() {
                   <div className="flex items-start justify-end lg:pt-1">
                     {unread ? (
                       <button
-                        onClick={() => markRead(i.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          markRead(i.id);
+                        }}
                         className="group/btn flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-muted-foreground/30 hover:text-accent/80 transition-all duration-500"
                         title="Mark as reviewed"
                       >
@@ -232,11 +256,24 @@ export function WholePropertyInbox() {
                     )}
                   </div>
                 </div>
+                </div>
               </li>
             );
           })}
         </ul>
       )}
+
+      <WholePropertyInquiryDrawer
+        inquiryId={activeId}
+        open={drawerOpen}
+        onOpenChange={(o) => {
+          setDrawerOpen(o);
+          if (!o) {
+            // Refresh status in case it was marked from within drawer in the future
+            load();
+          }
+        }}
+      />
     </div>
   );
 }
