@@ -1216,6 +1216,66 @@ export type Database = {
         }
         Relationships: []
       }
+      managed_projects: {
+        Row: {
+          build_type: string | null
+          client_summary: string | null
+          code: string
+          created_at: string
+          hero_image: string | null
+          id: string
+          internal_notes: string | null
+          is_demo: boolean
+          last_update: string | null
+          location: string | null
+          name: string
+          next_action: string | null
+          priority: string
+          scope: string | null
+          sort_order: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          build_type?: string | null
+          client_summary?: string | null
+          code: string
+          created_at?: string
+          hero_image?: string | null
+          id?: string
+          internal_notes?: string | null
+          is_demo?: boolean
+          last_update?: string | null
+          location?: string | null
+          name: string
+          next_action?: string | null
+          priority?: string
+          scope?: string | null
+          sort_order?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          build_type?: string | null
+          client_summary?: string | null
+          code?: string
+          created_at?: string
+          hero_image?: string | null
+          id?: string
+          internal_notes?: string | null
+          is_demo?: boolean
+          last_update?: string | null
+          location?: string | null
+          name?: string
+          next_action?: string | null
+          priority?: string
+          scope?: string | null
+          sort_order?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       managed_services: {
         Row: {
           active: boolean
