@@ -4,6 +4,7 @@ import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 import { CropSafeImage } from "@/components/media/CropSafeImage";
 import { DraftLine } from "@/components/draft";
+import { PageHandoff } from "@/components/architecture";
 
 import {
   getProjectImage,
