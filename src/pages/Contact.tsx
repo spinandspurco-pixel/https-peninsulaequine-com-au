@@ -286,16 +286,16 @@ export default function Contact() {
               <RevealLine className="mx-auto mb-12" width="w-8" />
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={80}>
-              <p className="text-overline text-center mb-6">What to Expect</p>
+              <p className="text-overline text-center mb-6">What happens next</p>
             </RevealOnScroll>
             <RevealOnScroll direction="up" delay={150}>
               <div className="space-y-0">
                 {[
-                  { num: "01", text: "Initial assessment and discussion" },
-                  { num: "02", text: "Site-specific recommendations" },
-                  { num: "03", text: "System and scope definition" },
-                  { num: "04", text: "Structured project brief" },
-                  { num: "05", text: "Project scheduling and delivery" },
+                  { num: "01", text: "We read the terrain and listen to the intent" },
+                  { num: "02", text: "A site-specific recommendation is drafted" },
+                  { num: "03", text: "System, scope and sequence are defined together" },
+                  { num: "04", text: "A structured brief becomes the build contract" },
+                  { num: "05", text: "Ground breaks on schedule" },
                 ].map((step, i) => (
                   <div key={step.num} className="flex items-center gap-5 py-4 border-b border-border/15 last:border-b-0">
                     <span className="text-[9px] font-mono tracking-[0.3em] text-[hsl(var(--accent-light))]/95 uppercase w-6 shrink-0">{step.num}</span>
