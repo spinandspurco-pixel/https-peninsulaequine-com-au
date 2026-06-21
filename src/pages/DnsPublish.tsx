@@ -12,19 +12,27 @@ const HOST = "@";
 const LOVABLE_DOMAINS_URL =
   "https://lovable.dev/projects/ebeb5b18-7fa0-4d1b-b9a3-22ec57bd6cff/settings/domains";
 
+const isValidTxt = (v: string) =>
+  /^google-site-verification=[A-Za-z0-9_-]{43}$/.test(v.trim());
+
 type Field = { label: string; value: string };
 
 export default function DnsPublish() {
   const [copied, setCopied] = useState<string | null>(null);
+  const [inputValue, setInputValue] = useState(TOKEN);
+  const [touched, setTouched] = useState(false);
+
+  const valid = isValidTxt(inputValue);
+  const showStatus = touched || inputValue !== TOKEN;
 
   const fields: Field[] = useMemo(
     () => [
       { label: "Type", value: TYPE },
       { label: "Host / Name", value: HOST },
-      { label: "Value", value: TOKEN },
+      { label: "Value", value: inputValue },
       { label: "TTL", value: TTL },
     ],
-    [],
+    [inputValue],
   );
 
   const copy = useCallback(async (label: string, value: string) => {
