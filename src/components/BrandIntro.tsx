@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import logoImage from "@/assets/logo-pe-mark.webp";
+import logoImage from "@/assets/logo-pe-square.png";
 
 const SESSION_KEY = "pe-brand-intro-seen";
 

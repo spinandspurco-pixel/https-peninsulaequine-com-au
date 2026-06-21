@@ -66,6 +66,13 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     note: "Client packs, field notes",
   },
   {
+    key: "activity",
+    label: "Activity",
+    to: "/hq/activity",
+    roles: ["admin", "moderator", "preview"],
+    note: "Who did what and when — full audit timeline",
+  },
+  {
     key: "dns-verify",
     label: "DNS Verify",
     to: "/hq/dns-verify",
