@@ -221,34 +221,56 @@ export function Header() {
             aria-label="Peninsula Equine — From Dirt to Dynasty — Home"
           >
             {/* Mobile: square mark */}
-            <div className="relative flex-shrink-0 w-8 h-8 sm:hidden">
-              <img
-                src={logoSquare}
-                alt=""
-                width={512}
-                height={512}
-                className={cn(
-                  "w-full h-full object-contain transition-all duration-700 group-hover:scale-105",
-                  isScrolled ? "opacity-100" : "opacity-85 drop-shadow-[0_0_12px_rgba(255,255,255,0.1)]"
-                )}
-                loading="eager"
-                decoding="async"
-              />
+            <div
+              className="relative flex-shrink-0 w-8 h-8 sm:hidden forced-colors:border forced-colors:border-[CanvasText]"
+              role="img"
+              aria-hidden="true"
+            >
+              {squareLogoFailed ? (
+                <span className="flex items-center justify-center w-full h-full font-serif text-sm tracking-[0.18em] text-[hsl(var(--header-foreground))] bg-[hsl(var(--background))]/80 border border-accent/40 rounded-sm">
+                  PE
+                </span>
+              ) : (
+                <img
+                  src={logoSquare}
+                  alt="Peninsula Equine monogram"
+                  width={512}
+                  height={512}
+                  className={cn(
+                    "w-full h-full object-contain transition-all duration-700 group-hover:scale-105 forced-colors:contrast-more",
+                    isScrolled ? "opacity-100" : "opacity-85 drop-shadow-[0_0_12px_rgba(255,255,255,0.1)]"
+                  )}
+                  loading="eager"
+                  decoding="async"
+                  onError={() => setSquareLogoFailed(true)}
+                />
+              )}
             </div>
             {/* Desktop: cinematic wordmark */}
-            <div className="hidden sm:flex relative flex-shrink-0 h-8 lg:h-9">
-              <img
-                src={logoCinematic}
-                alt=""
-                width={1024}
-                height={512}
-                className={cn(
-                  "h-full w-auto object-contain transition-all duration-700 group-hover:scale-[1.02]",
-                  isScrolled ? "opacity-100" : "opacity-85 drop-shadow-[0_0_12px_rgba(255,255,255,0.1)]"
-                )}
-                loading="eager"
-                decoding="async"
-              />
+            <div
+              className="hidden sm:flex relative flex-shrink-0 h-8 lg:h-9 items-center"
+              role="img"
+              aria-hidden="true"
+            >
+              {cinematicLogoFailed ? (
+                <span className="flex items-center h-full px-2 font-serif text-base tracking-[0.22em] text-[hsl(var(--header-foreground))] border-l border-r border-accent/40">
+                  PENINSULA EQUINE
+                </span>
+              ) : (
+                <img
+                  src={logoCinematic}
+                  alt="Peninsula Equine — From Dirt to Dynasty"
+                  width={1024}
+                  height={512}
+                  className={cn(
+                    "h-full w-auto object-contain transition-all duration-700 group-hover:scale-[1.02] forced-colors:contrast-more",
+                    isScrolled ? "opacity-100" : "opacity-85 drop-shadow-[0_0_12px_rgba(255,255,255,0.1)]"
+                  )}
+                  loading="eager"
+                  decoding="async"
+                  onError={() => setCinematicLogoFailed(true)}
+                />
+              )}
             </div>
           </Link>
 
