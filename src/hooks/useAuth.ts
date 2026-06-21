@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, createElement, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { authLog } from "@/lib/authRouting";
@@ -155,7 +155,7 @@ function useAuthState() {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const value = useAuthState();
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return createElement(AuthContext.Provider, { value }, children);
 }
 
 export function useAuth() {
