@@ -134,6 +134,15 @@ export default function DnsVerify() {
     setPolling(false);
   }, []);
 
+  const copyHostname = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText("@");
+      toast.success("Hostname '@' copied to clipboard");
+    } catch {
+      toast.error("Unable to copy to clipboard");
+    }
+  }, []);
+
   const copyToken = useCallback(async () => {
     if (!token) return;
     try {
