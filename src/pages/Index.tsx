@@ -238,8 +238,8 @@ export default function Index() {
                       textShadow: "0 2px 18px rgba(0,0,0,0.55)",
                     }}
                   >
-                    Covered arenas, stables, and equine environments —
-                    Mornington Peninsula and beyond.
+                    Covered arenas, stables and equine environments shaped by horse people.
+                    Built on the Mornington Peninsula. Trusted across Australia.
                   </p>
                 </div>
 
