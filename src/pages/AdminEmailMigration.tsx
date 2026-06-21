@@ -201,6 +201,48 @@ export default function AdminEmailMigration() {
     }
   };
 
+  const exportResults = () => {
+    const payload = {
+      meta: {
+        exportedAt: new Date().toISOString(),
+        domain: "peninsulaequine.systems",
+        source: "AdminEmailMigration",
+        version: "1.0",
+      },
+      summary: {
+        overallPct,
+        total: totals.total,
+        pass: totals.pass,
+        fail: totals.fail,
+        pending: totals.pending,
+      },
+      sections: sections.map((s) => ({
+        id: s.id,
+        title: s.title,
+        dependsOn: s.dependsOn,
+        stats: sectionStats.get(s.id),
+        items: s.items.map((i) => ({
+          id: i.id,
+          label: i.label,
+          detail: i.detail,
+          status: i.status,
+          note: i.note,
+        })),
+      })),
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const ts = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+    a.href = url;
+    a.download = `pe-email-migration-audit-${ts}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    toast({ title: "Audit exported", description: "JSON download started." });
+  };
+
   return (
     <main className="min-h-screen bg-background text-foreground px-6 py-16 md:px-12">
       <div className="mx-auto max-w-5xl">
