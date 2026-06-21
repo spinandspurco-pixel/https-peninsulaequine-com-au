@@ -46,4 +46,32 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Verify internal links
+        id: verify
         run: bunx tsx scripts/verify-internal-links.ts
+
+      - name: Upload link-check report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: internal-links-report
+          path: reports/internal-links/
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Append report summary to job
+        if: always()
+        run: |
+          if [ -f reports/internal-links/report.json ]; then
+            STATUS=$(node -e "console.log(require('./reports/internal-links/report.json').status)")
+            CHECKED=$(node -e "console.log(require('./reports/internal-links/report.json').checked)")
+            FAILS=$(node -e "console.log(require('./reports/internal-links/report.json').failures.length)")
+            {
+              echo "### Internal link check — \`${STATUS}\`"
+              echo ""
+              echo "- Links checked: **${CHECKED}**"
+              echo "- Failures: **${FAILS}**"
+              echo ""
+              echo "Download the full report (JSON + HTML) from the **internal-links-report** artifact above."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
