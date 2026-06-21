@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 const FUNCTION_URL =
@@ -7,6 +7,35 @@ const FUNCTION_URL =
 const DEFAULT_DOMAIN = "peninsulaequine.systems";
 const DEFAULT_TOKEN =
   "google-site-verification=iMvRcyyPNi6aHBd0py3awRWPqS6-Yh2hXIl9y4vkKDU";
+
+const DOMAIN_RE =
+  /^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]$/;
+
+function validateInputs(domain: string, token: string): string[] {
+  const errors: string[] = [];
+  const d = domain.trim().toLowerCase();
+  const t = token.trim();
+
+  if (!d) {
+    errors.push("Domain is required.");
+  } else if (d.length > 253) {
+    errors.push("Domain is too long.");
+  } else if (!DOMAIN_RE.test(d)) {
+    errors.push(
+      "Domain appears malformed. Use a valid hostname like peninsulaequine.systems.",
+    );
+  }
+
+  if (!t) {
+    errors.push("TXT token is required.");
+  } else if (t.length < 10) {
+    errors.push("TXT token is too short to be a valid verification string.");
+  } else if (/\s/.test(t)) {
+    errors.push("TXT token cannot contain spaces.");
+  }
+
+  return errors;
+}
 
 type CheckResult = {
   ready: boolean;
@@ -42,11 +71,22 @@ export default function DnsVerify() {
   const [result, setResult] = useState<CheckResult | null>(null);
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [paramError, setParamError] = useState<string | null>(null);
   const stopRef = useRef(false);
   const autoStartedRef = useRef(false);
 
+  const validationErrors = useMemo(
+    () => validateInputs(domain, token),
+    [domain, token],
+  );
+  const isValid = validationErrors.length === 0;
+
   const runCheck = useCallback(async (): Promise<CheckResult | null> => {
     setError(null);
+    if (!isValid) {
+      setError(validationErrors.join(" "));
+      return null;
+    }
     try {
       const url = `${FUNCTION_URL}?domain=${encodeURIComponent(
         domain,
@@ -69,9 +109,13 @@ export default function DnsVerify() {
       setError((e as Error).message);
       return null;
     }
-  }, [domain, token]);
+  }, [domain, token, isValid, validationErrors]);
 
   const startPolling = useCallback(async () => {
+    if (!isValid) {
+      setError(validationErrors.join(" "));
+      return;
+    }
     stopRef.current = false;
     setPolling(true);
     setAttempts([]);
@@ -82,7 +126,7 @@ export default function DnsVerify() {
       await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
     }
     setPolling(false);
-  }, [runCheck]);
+  }, [runCheck, isValid, validationErrors]);
 
   const stopPolling = useCallback(() => {
     stopRef.current = true;
@@ -101,6 +145,14 @@ export default function DnsVerify() {
     const paramTxt = searchParams.get("txt");
     if (paramDomain || paramTxt) {
       autoStartedRef.current = true;
+      const errs = validateInputs(
+        paramDomain || DEFAULT_DOMAIN,
+        paramTxt || DEFAULT_TOKEN,
+      );
+      if (errs.length > 0) {
+        setParamError(errs.join(" "));
+        return;
+      }
       startPolling();
     }
   }, [searchParams, startPolling]);
