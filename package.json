@@ -7,7 +7,7 @@
     "dev": "vite",
     "prebuild": "bunx tsx scripts/verify-assets.ts",
     "build": "vite build",
-    "postbuild": "bunx tsx scripts/prerender.ts && bunx tsx scripts/verify-prerender.ts",
+    "postbuild": "bunx tsx scripts/prerender.ts && bunx tsx scripts/verify-prerender.ts && bunx tsx scripts/verify-internal-links.ts",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
