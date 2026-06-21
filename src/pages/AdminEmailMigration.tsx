@@ -243,6 +243,49 @@ export default function AdminEmailMigration() {
     toast({ title: "Audit exported", description: "JSON download started." });
   };
 
+  const escapeCSV = (val: string | undefined) => {
+    if (val == null) return "";
+    const s = String(val).replace(/"/g, '""');
+    if (s.includes(",") || s.includes('"') || s.includes("\n") || s.includes("\r")) {
+      return `"${s}"`;
+    }
+    return s;
+  };
+
+  const exportCSV = () => {
+    const rows: string[] = [];
+    rows.push("Section,Step,Item ID,Label,Detail,Status,Note,Section Pass Rate");
+    sections.forEach((sec, secIdx) => {
+      const stats = sectionStats.get(sec.id)!;
+      const pct = stats.total === 0 ? 0 : Math.round((stats.pass / stats.total) * 100);
+      sec.items.forEach((item) => {
+        rows.push(
+          [
+            escapeCSV(sec.title),
+            String(secIdx + 1),
+            escapeCSV(item.id),
+            escapeCSV(item.label),
+            escapeCSV(item.detail),
+            escapeCSV(item.status),
+            escapeCSV(item.note),
+            `${pct}%`,
+          ].join(",")
+        );
+      });
+    });
+    const blob = new Blob([rows.join("\n")], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const ts = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+    a.href = url;
+    a.download = `pe-email-migration-audit-${ts}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    toast({ title: "CSV exported", description: "Spreadsheet download started." });
+  };
+
   return (
     <main className="min-h-screen bg-background text-foreground px-6 py-16 md:px-12">
       <div className="mx-auto max-w-5xl">
