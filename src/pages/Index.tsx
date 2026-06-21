@@ -22,6 +22,8 @@ const coveredArenaExterior = coveredArenaExteriorAsset.url;
 import ciro640 from "@/assets/responsive/ciro-ace-quiet-moment-640.webp.asset.json";
 import ciro1024 from "@/assets/responsive/ciro-ace-quiet-moment-1024.webp.asset.json";
 import ciro1536 from "@/assets/responsive/ciro-ace-quiet-moment-1536.webp.asset.json";
+import ciroArena from "@/assets/about/ciro-ace-arena-standing.png.asset.json";
+import ciroSlidingStop from "@/assets/about/ciro-ace-sliding-stop.png.asset.json";
 import mainRidge640 from "@/assets/responsive/main-ridge-pavilion-wide-fireplace-table-640.webp.asset.json";
 import mainRidge1024 from "@/assets/responsive/main-ridge-pavilion-wide-fireplace-table-1024.webp.asset.json";
 import mainRidge1536 from "@/assets/responsive/main-ridge-pavilion-wide-fireplace-table-1536.webp.asset.json";
