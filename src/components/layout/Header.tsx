@@ -64,6 +64,8 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [squareLogoFailed, setSquareLogoFailed] = useState(false);
+  const [cinematicLogoFailed, setCinematicLogoFailed] = useState(false);
   const location = useLocation();
   const activeChapter = useActiveServiceChapter();
   const { headerLogoReady, headerReady } = useIntroState();
