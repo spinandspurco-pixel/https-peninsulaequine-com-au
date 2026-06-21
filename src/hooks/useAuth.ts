@@ -1,63 +1,60 @@
-import { useState, useEffect, useRef } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { authLog } from "@/lib/authRouting";
 
 export type AppRole = "admin" | "employee" | "trainer" | "moderator" | "preview" | "user";
 
-/**
- * Hard cap for how long we are willing to wait on the *initial* role lookup
- * before declaring the auth flow ready. If the cap fires while a session is
- * present but roles are still unknown, we sign the session out — rendering
- * a signed-in user with empty roles is what produced the homepage-bounce
- * bug, so we refuse to ever enter that state.
- */
-const ROLE_FETCH_HARD_TIMEOUT_MS = 4000;
+type AuthState = ReturnType<typeof useAuthState>;
 
-export function useAuth() {
+const AuthContext = createContext<AuthState | null>(null);
+
+const ROLE_FETCH_RETRY_DELAYS_MS = [0, 350, 900];
+
+function useAuthState() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [rolesLoading, setRolesLoading] = useState(true);
   const [roles, setRoles] = useState<AppRole[]>([]);
   const mounted = useRef(true);
+  const roleRequestId = useRef(0);
 
   useEffect(() => {
     mounted.current = true;
-    let hardTimer: ReturnType<typeof setTimeout> | null = null;
 
-    const clearHardTimer = () => {
-      if (hardTimer) {
-        clearTimeout(hardTimer);
-        hardTimer = null;
-      }
-    };
-
-    const fetchRoles = async (userId: string) => {
-      authLog("roles:fetch:start", { userId });
+    const fetchRoles = async (userId: string, requestId: number) => {
+      authLog("roles:fetch:start", { userId, requestId });
       try {
-        const { data, error } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", userId);
-        if (!mounted.current) return;
-        if (error) {
-          authLog("roles:fetch:error", { error: error.message });
-          setRoles([]);
-        } else {
+        for (let attempt = 0; attempt < ROLE_FETCH_RETRY_DELAYS_MS.length; attempt += 1) {
+          const delay = ROLE_FETCH_RETRY_DELAYS_MS[attempt];
+          if (delay > 0) await new Promise((resolve) => setTimeout(resolve, delay));
+          if (!mounted.current || roleRequestId.current !== requestId) return;
+
+          const { data, error } = await supabase
+            .from("user_roles")
+            .select("role")
+            .eq("user_id", userId);
+
+          if (!mounted.current || roleRequestId.current !== requestId) return;
+          if (error) {
+            authLog("roles:fetch:error", { attempt, error: error.message });
+            if (attempt < ROLE_FETCH_RETRY_DELAYS_MS.length - 1) continue;
+            setRoles([]);
+            return;
+          }
+
           const list = (data?.map((r) => r.role) || []) as AppRole[];
           setRoles(list);
-          authLog("roles:fetch:ok", { roles: list });
+          authLog("roles:fetch:ok", { roles: list, requestId });
+          return;
         }
       } catch (err) {
-        authLog("roles:fetch:exception", { err: String(err) });
+        authLog("roles:fetch:exception", { err: String(err), requestId });
         if (mounted.current) setRoles([]);
       } finally {
-        if (mounted.current) {
+        if (mounted.current && roleRequestId.current === requestId) {
           setRolesLoading(false);
-          // Role state is now known — disarm the safety net so a slow
-          // first lookup followed by a fast sign-in can't trigger it.
-          clearHardTimer();
         }
       }
     };
@@ -69,34 +66,20 @@ export function useAuth() {
       setAuthLoading(false);
 
       if (newSession?.user) {
+        const requestId = roleRequestId.current + 1;
+        roleRequestId.current = requestId;
         setRolesLoading(true);
         // Defer the role fetch off the auth callback frame. Supabase
         // documents that awaiting inside onAuthStateChange can deadlock
         // subsequent events, so we hop out with setTimeout(0).
         const uid = newSession.user.id;
         setTimeout(() => {
-          if (mounted.current) void fetchRoles(uid);
+          if (mounted.current && roleRequestId.current === requestId) void fetchRoles(uid, requestId);
         }, 0);
-
-        // (Re-)arm the safety net only when there is actually a user
-        // whose roles we're waiting on. Replaces any prior timer so each
-        // sign-in gets a fresh budget — fixes the "armed at t=0 with no
-        // user, fires after a delayed sign-in" race that signed users
-        // out mid-lookup.
-        clearHardTimer();
-        hardTimer = setTimeout(() => {
-          if (!mounted.current) return;
-          setRolesLoading((isLoading) => {
-            if (!isLoading) return isLoading;
-            authLog("roles:hard-timeout", { action: "signOut" });
-            void supabase.auth.signOut();
-            return false;
-          });
-        }, ROLE_FETCH_HARD_TIMEOUT_MS);
       } else {
+        roleRequestId.current += 1;
         setRoles([]);
         setRolesLoading(false);
-        clearHardTimer();
       }
     };
 
@@ -123,7 +106,7 @@ export function useAuth() {
 
     return () => {
       mounted.current = false;
-      clearHardTimer();
+      roleRequestId.current += 1;
       subscription.unsubscribe();
     };
   }, []);
@@ -168,4 +151,17 @@ export function useAuth() {
     signUp,
     signOut,
   };
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const value = useAuthState();
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function useAuth() {
+  const value = useContext(AuthContext);
+  if (!value) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
+  return value;
 }
