@@ -60,6 +60,13 @@ jobs:
         id: gate
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          # Optional connector sources — gate cleanly skips a source when its
+          # creds are absent, so partial wiring is non-blocking.
+          WIZ_API_URL: ${{ secrets.WIZ_API_URL }}
+          WIZ_CLIENT_ID: ${{ secrets.WIZ_CLIENT_ID }}
+          WIZ_CLIENT_SECRET: ${{ secrets.WIZ_CLIENT_SECRET }}
+          WIZ_AUTH_URL: ${{ secrets.WIZ_AUTH_URL }}
+          WIZ_PROJECT_ID: ${{ secrets.WIZ_PROJECT_ID }}
         run: bun scripts/security-gate.ts | tee gate-output.txt
         continue-on-error: true
 
@@ -78,6 +85,7 @@ jobs:
           name: nightly-security-report
           path: |
             security-report.json
+            security-added.json
             gate-output.txt
           if-no-files-found: ignore
           retention-days: 30
@@ -114,9 +122,10 @@ jobs:
             // issues: write by checking the manifest contract here.
             core.info("Issue read access confirmed; issues:write declared in workflow permissions.");
 
-      - name: Compile nightly-issue helper for Node
+      - name: Compile nightly-issue helpers for Node
         if: steps.gate.outcome == 'failure' || steps.regression.outcome == 'failure'
-        run: bunx tsc --target es2022 --module commonjs --moduleResolution node --esModuleInterop --skipLibCheck --outDir scripts/ci scripts/ci/nightly-issue.ts
+        run: bunx tsc --target es2022 --module commonjs --moduleResolution node --esModuleInterop --skipLibCheck --outDir scripts/ci scripts/ci/nightly-issue.ts scripts/ci/affected-areas.ts
+
 
       - name: Open or update tracking issue on failure
         if: steps.gate.outcome == 'failure' || steps.regression.outcome == 'failure'
@@ -127,15 +136,35 @@ jobs:
         with:
           script: |
             const fs = require('fs');
+            const { execFileSync } = require('child_process');
             const {
               buildIssueBody,
               reconcileIssue,
               NIGHTLY_ISSUE_TITLE,
               NIGHTLY_ISSUE_LABELS,
             } = require(`${process.env.GITHUB_WORKSPACE}/scripts/ci/nightly-issue.js`);
+            const { mapAffectedAreas } = require(`${process.env.GITHUB_WORKSPACE}/scripts/ci/affected-areas.js`);
 
             let gateOutput = '';
             try { gateOutput = fs.readFileSync('gate-output.txt', 'utf8'); } catch {}
+
+            let added = [];
+            try { added = JSON.parse(fs.readFileSync('security-added.json', 'utf8')).added ?? []; } catch {}
+
+            // ripgrep over the working tree, scoped to source/migrations/edge
+            // functions. Failure modes (no matches, ripgrep missing) collapse
+            // to an empty result so issue creation is never blocked.
+            const search = async (token) => {
+              try {
+                const out = execFileSync('rg', [
+                  '--files-with-matches', '--no-messages', '--fixed-strings',
+                  '--glob', 'src/**', '--glob', 'supabase/**', '--glob', 'scripts/**',
+                  '--max-count', '1', '--', token, '.',
+                ], { encoding: 'utf8', maxBuffer: 4 * 1024 * 1024 });
+                return out.split('\n').filter(Boolean);
+              } catch { return []; }
+            };
+            const affectedFindings = await mapAffectedAreas(added, search);
 
             const body = buildIssueBody({
               serverUrl: process.env.GITHUB_SERVER_URL,
@@ -144,6 +173,7 @@ jobs:
               gateOutcome: process.env.GATE_OUTCOME,
               regressionOutcome: process.env.REGRESSION_OUTCOME,
               gateOutput,
+              affectedFindings,
             });
 
             const client = {
