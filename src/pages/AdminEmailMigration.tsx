@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { Check, X, Minus, RotateCw, Lock } from "lucide-react";
+import { Check, X, Minus, RotateCw, Lock, Download } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -201,6 +201,48 @@ export default function AdminEmailMigration() {
     }
   };
 
+  const exportResults = () => {
+    const payload = {
+      meta: {
+        exportedAt: new Date().toISOString(),
+        domain: "peninsulaequine.systems",
+        source: "AdminEmailMigration",
+        version: "1.0",
+      },
+      summary: {
+        overallPct,
+        total: totals.total,
+        pass: totals.pass,
+        fail: totals.fail,
+        pending: totals.pending,
+      },
+      sections: sections.map((s) => ({
+        id: s.id,
+        title: s.title,
+        dependsOn: s.dependsOn,
+        stats: sectionStats.get(s.id),
+        items: s.items.map((i) => ({
+          id: i.id,
+          label: i.label,
+          detail: i.detail,
+          status: i.status,
+          note: i.note,
+        })),
+      })),
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const ts = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+    a.href = url;
+    a.download = `pe-email-migration-audit-${ts}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    toast({ title: "Audit exported", description: "JSON download started." });
+  };
+
   return (
     <main className="min-h-screen bg-background text-foreground px-6 py-16 md:px-12">
       <div className="mx-auto max-w-5xl">
@@ -262,6 +304,10 @@ export default function AdminEmailMigration() {
               <Button size="sm" variant="outline" onClick={runSmokeTest} disabled={running || lockedSections.has("smoke")}>
                 <RotateCw className={`h-3 w-3 mr-2 ${running ? "animate-spin" : ""}`} />
                 Run ops smoke test
+              </Button>
+              <Button size="sm" variant="outline" onClick={exportResults}>
+                <Download className="h-3 w-3 mr-2" />
+                Export audit
               </Button>
               <Button size="sm" variant="ghost" onClick={resetAll}>Reset</Button>
             </div>
