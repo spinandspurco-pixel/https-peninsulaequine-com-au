@@ -95,6 +95,16 @@ export default function DnsVerify() {
     };
   }, []);
 
+  useEffect(() => {
+    if (autoStartedRef.current) return;
+    const paramDomain = searchParams.get("domain");
+    const paramTxt = searchParams.get("txt");
+    if (paramDomain || paramTxt) {
+      autoStartedRef.current = true;
+      startPolling();
+    }
+  }, [searchParams, startPolling]);
+
   return (
     <main className="min-h-screen bg-background text-foreground px-6 py-16">
       <div className="mx-auto max-w-2xl space-y-10">
