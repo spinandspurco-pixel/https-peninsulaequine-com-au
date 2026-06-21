@@ -29,3 +29,4 @@ dist-ssr
 /blob-report/
 /playwright/.cache/
 /e2e/.auth/
+reports/
