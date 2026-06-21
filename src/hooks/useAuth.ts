@@ -24,8 +24,14 @@ export function useAuth() {
 
   useEffect(() => {
     mounted.current = true;
-    let initialResolved = false;
     let hardTimer: ReturnType<typeof setTimeout> | null = null;
+
+    const clearHardTimer = () => {
+      if (hardTimer) {
+        clearTimeout(hardTimer);
+        hardTimer = null;
+      }
+    };
 
     const fetchRoles = async (userId: string) => {
       authLog("roles:fetch:start", { userId });
@@ -47,7 +53,12 @@ export function useAuth() {
         authLog("roles:fetch:exception", { err: String(err) });
         if (mounted.current) setRoles([]);
       } finally {
-        if (mounted.current) setRolesLoading(false);
+        if (mounted.current) {
+          setRolesLoading(false);
+          // Role state is now known — disarm the safety net so a slow
+          // first lookup followed by a fast sign-in can't trigger it.
+          clearHardTimer();
+        }
       }
     };
 
@@ -66,21 +77,15 @@ export function useAuth() {
         setTimeout(() => {
           if (mounted.current) void fetchRoles(uid);
         }, 0);
-      } else {
-        setRoles([]);
-        setRolesLoading(false);
-      }
 
-      if (!initialResolved) {
-        initialResolved = true;
-        // Start the hard cap on first session resolution.
-        hardTimer = setTimeout(async () => {
+        // (Re-)arm the safety net only when there is actually a user
+        // whose roles we're waiting on. Replaces any prior timer so each
+        // sign-in gets a fresh budget — fixes the "armed at t=0 with no
+        // user, fires after a delayed sign-in" race that signed users
+        // out mid-lookup.
+        clearHardTimer();
+        hardTimer = setTimeout(() => {
           if (!mounted.current) return;
-          // If we still don't know the roles by the cap and a user is
-          // present, sign out rather than leave a half-resolved state.
-          // ProtectedRoute will then send them through /login cleanly.
-          // We read state via refs would be cleaner, but functional updates
-          // on the next paint are sufficient for this safety net.
           setRolesLoading((isLoading) => {
             if (!isLoading) return isLoading;
             authLog("roles:hard-timeout", { action: "signOut" });
@@ -88,6 +93,10 @@ export function useAuth() {
             return false;
           });
         }, ROLE_FETCH_HARD_TIMEOUT_MS);
+      } else {
+        setRoles([]);
+        setRolesLoading(false);
+        clearHardTimer();
       }
     };
 
@@ -102,8 +111,6 @@ export function useAuth() {
       .getSession()
       .then(({ data: { session: s } }) => {
         if (!mounted.current) return;
-        // If the auth event already applied a session, this is a no-op duplicate
-        // for the same user, so re-running applySession is safe.
         applySession(s, "getSession");
       })
       .catch((err) => {
@@ -116,7 +123,7 @@ export function useAuth() {
 
     return () => {
       mounted.current = false;
-      if (hardTimer) clearTimeout(hardTimer);
+      clearHardTimer();
       subscription.unsubscribe();
     };
   }, []);
