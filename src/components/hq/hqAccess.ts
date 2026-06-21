@@ -65,6 +65,13 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     roles: ["admin", "employee", "preview"],
     note: "Client packs, field notes",
   },
+  {
+    key: "dns-verify",
+    label: "DNS Verify",
+    to: "/hq/dns-verify",
+    roles: ["admin"],
+    note: "Google Workspace TXT verification",
+  },
 ];
 
 export function visibleHqItems(roles: AppRole[]): HqNavItem[] {
