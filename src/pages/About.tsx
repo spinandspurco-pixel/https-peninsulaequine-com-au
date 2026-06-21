@@ -243,6 +243,8 @@ export default function About() {
             <img
               src={ctaBackdrop.url}
               alt=""
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover opacity-30"
               style={{ objectPosition: "50% 50%", filter: FILTER }}
             />
