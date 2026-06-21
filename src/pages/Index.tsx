@@ -435,8 +435,8 @@ export default function Index() {
                 <RevealOnScroll direction="up" duration={1300} className="col-span-12 sm:col-span-8">
                   <figure className="relative aspect-[16/10] overflow-hidden group">
                     <img
-                      src={ciroSlidingStop.url}
-                      alt="Rider and horse executing a sliding stop in the home arena — twenty years of horsemanship in a single frame"
+                      src={ciroQuietMoment.url}
+                      alt="Ciro with Ace in the home arena — lived horsemanship behind Peninsula Equine's arena and stable work."
                       loading="lazy"
                       decoding="async"
                       className="absolute inset-0 w-full h-full object-cover object-[50%_45%] will-change-transform group-hover:scale-[1.025]"
@@ -446,7 +446,7 @@ export default function Index() {
                       }}
                     />
                     <figcaption className="absolute bottom-4 left-5 right-5 font-mono uppercase text-[9.5px] tracking-[0.42em] text-foreground/75">
-                      <span className="text-accent/70">01 / Discipline</span> · Sliding stop, home arena
+                      <span className="text-accent/70">01 / Experience</span> · Built from the saddle out
                     </figcaption>
                   </figure>
                 </RevealOnScroll>
