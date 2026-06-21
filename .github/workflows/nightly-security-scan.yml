@@ -122,9 +122,10 @@ jobs:
             // issues: write by checking the manifest contract here.
             core.info("Issue read access confirmed; issues:write declared in workflow permissions.");
 
-      - name: Compile nightly-issue helper for Node
+      - name: Compile nightly-issue helpers for Node
         if: steps.gate.outcome == 'failure' || steps.regression.outcome == 'failure'
-        run: bunx tsc --target es2022 --module commonjs --moduleResolution node --esModuleInterop --skipLibCheck --outDir scripts/ci scripts/ci/nightly-issue.ts
+        run: bunx tsc --target es2022 --module commonjs --moduleResolution node --esModuleInterop --skipLibCheck --outDir scripts/ci scripts/ci/nightly-issue.ts scripts/ci/affected-areas.ts
+
 
       - name: Open or update tracking issue on failure
         if: steps.gate.outcome == 'failure' || steps.regression.outcome == 'failure'
