@@ -134,6 +134,16 @@ export default function DnsVerify() {
     setPolling(false);
   }, []);
 
+  const copyToken = useCallback(async () => {
+    if (!token) return;
+    try {
+      await navigator.clipboard.writeText(token);
+      toast.success("TXT record copied to clipboard");
+    } catch {
+      toast.error("Unable to copy to clipboard");
+    }
+  }, [token]);
+
   useEffect(() => {
     return () => {
       stopRef.current = true;
