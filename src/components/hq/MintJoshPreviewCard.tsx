@@ -24,7 +24,7 @@ interface MintResult {
   message?: string;
 }
 
-const TARGET_EMAIL = "josh.dales@peninsulaequine.org";
+const TARGET_EMAIL = "josh.dales@peninsulaequine.systems";
 
 export function MintJoshPreviewCard() {
   const [confirmOpen, setConfirmOpen] = useState(false);

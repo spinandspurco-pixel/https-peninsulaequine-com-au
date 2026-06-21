@@ -318,10 +318,10 @@ export default function SiteAssessment() {
                       <p className="text-[13px] text-muted-foreground/60 max-w-sm mx-auto">
                         Email{" "}
                         <a
-                          href="mailto:info@peninsulaequine.org?subject=Site%20assessment%20request"
+                          href="mailto:info@peninsulaequine.systems?subject=Site%20assessment%20request"
                           className="text-accent/85 underline underline-offset-4 hover:text-accent"
                         >
-                          info@peninsulaequine.org
+                          info@peninsulaequine.systems
                         </a>{" "}
                         and we will open a slot directly.
                       </p>

@@ -35,7 +35,7 @@ export function ProposalDecision({ quote, accepted, isExpired, onAccept }: Props
           This proposal is no longer valid. Contact us for an updated quote.
         </p>
         <a
-          href="mailto:info@peninsulaequine.org?subject=Updated quote request"
+          href="mailto:info@peninsulaequine.systems?subject=Updated quote request"
           className="inline-flex items-center gap-2 px-8 py-3.5 text-[11px] font-sans uppercase tracking-[0.16em] font-medium transition-opacity duration-300 hover:opacity-85"
           style={{ background: "#8C6A3B", color: "#F6F3EE" }}
         >
@@ -68,7 +68,7 @@ export function ProposalDecision({ quote, accepted, isExpired, onAccept }: Props
         {/* Secondary CTAs */}
         <div className="grid grid-cols-2 gap-3">
           <a
-            href={`mailto:info@peninsulaequine.org?subject=Quote ${quote.quote_number} — Changes Requested`}
+            href={`mailto:info@peninsulaequine.systems?subject=Quote ${quote.quote_number} — Changes Requested`}
             className="flex items-center justify-center gap-2 px-4 py-3.5 text-[10px] font-sans uppercase tracking-[0.13em] transition-opacity duration-300 hover:opacity-65 border"
             style={{ borderColor: "rgba(43,43,43,0.08)", color: "#2B2B2B", opacity: 0.45 }}
           >

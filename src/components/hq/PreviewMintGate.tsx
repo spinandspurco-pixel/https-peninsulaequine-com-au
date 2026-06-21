@@ -87,7 +87,7 @@ export function PreviewMintGate() {
             disabled={!result?.passed}
             onClick={() => {
               const url =
-                "mailto:josh.dales@peninsulaequine.org?subject=Peninsula%20Equine%20HQ%20%E2%80%94%20Client%20Preview%20access&body=Welcome%20to%20Peninsula%20Equine%20HQ.%20Your%20preview%20environment%20is%20ready.";
+                "mailto:josh.dales@peninsulaequine.systems?subject=Peninsula%20Equine%20HQ%20%E2%80%94%20Client%20Preview%20access&body=Welcome%20to%20Peninsula%20Equine%20HQ.%20Your%20preview%20environment%20is%20ready.";
               window.location.href = url;
             }}
             className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground/55 hover:text-foreground/80 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"

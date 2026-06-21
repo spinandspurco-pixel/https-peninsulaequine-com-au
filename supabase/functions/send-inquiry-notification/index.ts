@@ -102,7 +102,7 @@ function generateConsultationICS(opts: {
     `SUMMARY:${summary}`,
     `DESCRIPTION:${description}`,
     `LOCATION:Peninsula Equine, Mornington Peninsula, VIC`,
-    `ORGANIZER;CN=Peninsula Equine:mailto:info@peninsulaequine.org`,
+    `ORGANIZER;CN=Peninsula Equine:mailto:info@peninsulaequine.systems`,
     `ATTENDEE;RSVP=TRUE;CN=${opts.clientName}:mailto:${opts.clientEmail}`,
     "STATUS:TENTATIVE",
     "BEGIN:VALARM",
@@ -130,10 +130,10 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Get notification email from secret or use default
-    const NOTIFICATION_EMAIL = Deno.env.get("NOTIFICATION_EMAIL") || "info@peninsulaequine.org";
+    const NOTIFICATION_EMAIL = Deno.env.get("NOTIFICATION_EMAIL") || "info@peninsulaequine.systems";
     const FROM_EMAIL = Deno.env.get("FROM_EMAIL");
     const HQ_FROM = Deno.env.get("HQ_EMAIL_FROM");
-    const WELCOME_REPLY_TO = "info@peninsulaequine.org";
+    const WELCOME_REPLY_TO = "info@peninsulaequine.systems";
 
     if (!FROM_EMAIL || !HQ_FROM || /resend\.dev/i.test(FROM_EMAIL) || /resend\.dev/i.test(HQ_FROM)) {
       console.error("[send-inquiry-notification] Missing or invalid sender secrets (FROM_EMAIL / HQ_EMAIL_FROM)");
@@ -389,7 +389,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
           
           <div style="background: #1a1d26; padding: 16px; text-align: center;">
-            <p style="color: #6a6050; margin: 0; font-size: 10px; letter-spacing: 1px;">peninsulaequine.org</p>
+            <p style="color: #6a6050; margin: 0; font-size: 10px; letter-spacing: 1px;">peninsulaequine.systems</p>
           </div>
         </div>
       </body>
@@ -398,13 +398,13 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Determine recipients — always notify admin + Sander; add Glenn for lesson/clinic inquiries
     const notifyRecipients: string[] = [NOTIFICATION_EMAIL];
-    const sanderEmail = "sander@peninsulaequine.org";
+    const sanderEmail = "sander@peninsulaequine.systems";
     if (!notifyRecipients.includes(sanderEmail)) {
       notifyRecipients.push(sanderEmail);
     }
     const lessonServices = ["riding-lessons", "clinics-events"];
     const isLessonInquiry = inquiry.services?.some((s: string) => lessonServices.includes(s));
-    const trainerEmail = "glenn@peninsulaequine.org";
+    const trainerEmail = "glenn@peninsulaequine.systems";
     if (isLessonInquiry && !notifyRecipients.includes(trainerEmail)) {
       notifyRecipients.push(trainerEmail);
     }

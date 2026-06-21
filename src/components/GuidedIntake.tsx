@@ -188,8 +188,8 @@ export function GuidedIntake() {
     } catch (err) {
       const message =
         err instanceof Error && err.message
-          ? `We couldn't lodge your application — ${err.message}. Please try again or email info@peninsulaequine.org.`
-          : "We couldn't lodge your application. Please try again or email info@peninsulaequine.org.";
+          ? `We couldn't lodge your application — ${err.message}. Please try again or email info@peninsulaequine.systems.`
+          : "We couldn't lodge your application. Please try again or email info@peninsulaequine.systems.";
       setErrors({ form: message });
     } finally {
       setSubmitting(false);

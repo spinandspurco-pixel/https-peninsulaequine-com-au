@@ -49,7 +49,7 @@ function generateEventICS(opts: {
     `SUMMARY:${opts.summary}`,
     `DESCRIPTION:${opts.description.replace(/\n/g, "\\n")}`,
     `LOCATION:${opts.location}`,
-    `ORGANIZER;CN=Peninsula Equine:mailto:info@peninsulaequine.org`,
+    `ORGANIZER;CN=Peninsula Equine:mailto:info@peninsulaequine.systems`,
     `ATTENDEE;RSVP=TRUE;CN=${opts.attendee}:mailto:${opts.attendee}`,
     "STATUS:CONFIRMED",
     "BEGIN:VALARM",
@@ -74,7 +74,7 @@ const handler = async (req: Request): Promise<Response> => {
     const NOTIFICATION_EMAIL = Deno.env.get("NOTIFICATION_EMAIL");
     const BOOKINGS_FROM = Deno.env.get("BOOKINGS_EMAIL_FROM");
     const HQ_FROM = Deno.env.get("HQ_EMAIL_FROM");
-    const BOOKINGS_REPLY_TO = "info@peninsulaequine.org";
+    const BOOKINGS_REPLY_TO = "info@peninsulaequine.systems";
 
     if (!BOOKINGS_FROM || !HQ_FROM || !NOTIFICATION_EMAIL
         || /resend\.dev/i.test(BOOKINGS_FROM) || /resend\.dev/i.test(HQ_FROM)) {
@@ -247,7 +247,7 @@ const handler = async (req: Request): Promise<Response> => {
             <p style="margin: 0; font-size: 14px; color: #555;">
               📞 <a href="tel:+61418585489" style="color: #c9a227; text-decoration: none;">0418 585 489</a>
               &nbsp;&nbsp;·&nbsp;&nbsp;
-              📧 <a href="mailto:info@peninsulaequine.org" style="color: #c9a227; text-decoration: none;">info@peninsulaequine.org</a>
+              📧 <a href="mailto:info@peninsulaequine.systems" style="color: #c9a227; text-decoration: none;">info@peninsulaequine.systems</a>
             </p>
           </div>
 

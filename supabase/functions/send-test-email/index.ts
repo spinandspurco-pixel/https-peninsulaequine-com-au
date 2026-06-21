@@ -102,7 +102,7 @@ serve(async (req) => {
     const { data, error } = await resend.emails.send({
       from: FROM,
       to: [recipient],
-      reply_to: "info@peninsulaequine.org",
+      reply_to: "info@peninsulaequine.systems",
       subject,
       html,
     });
@@ -141,7 +141,7 @@ serve(async (req) => {
       sender: senderKey,
       from: FROM,
       recipient,
-      replyTo: "info@peninsulaequine.org",
+      replyTo: "info@peninsulaequine.systems",
       subject,
       startedAt,
       finishedAt: new Date().toISOString(),
