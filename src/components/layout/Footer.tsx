@@ -66,9 +66,9 @@ export function Footer() {
 
           {/* Capabilities */}
           <div>
-            <h4 className="text-[9px] font-sans font-semibold uppercase tracking-[0.35em] text-[hsl(var(--accent-light))]/95 mb-10">
+            <h3 className="text-[9px] font-sans font-semibold uppercase tracking-[0.35em] text-[hsl(var(--accent-light))]/95 mb-10">
               Capabilities
-            </h4>
+            </h3>
             <ul className="space-y-5">
               {capabilityLinks.map((link) => (
                 <li key={link.name}>
@@ -85,9 +85,9 @@ export function Footer() {
 
           {/* Studio */}
           <div>
-            <h4 className="text-[9px] font-sans font-semibold uppercase tracking-[0.35em] text-[hsl(var(--accent-light))]/95 mb-10">
+            <h3 className="text-[9px] font-sans font-semibold uppercase tracking-[0.35em] text-[hsl(var(--accent-light))]/95 mb-10">
               Studio
-            </h4>
+            </h3>
             <ul className="space-y-5">
               {studioLinks.map((link) => (
                 <li key={link.name}>
@@ -104,9 +104,9 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-[9px] font-sans font-semibold uppercase tracking-[0.35em] text-[hsl(var(--accent-light))]/95 mb-10">
+            <h3 className="text-[9px] font-sans font-semibold uppercase tracking-[0.35em] text-[hsl(var(--accent-light))]/95 mb-10">
               Contact
-            </h4>
+            </h3>
             <ul className="space-y-5">
               <li>
                 <a
