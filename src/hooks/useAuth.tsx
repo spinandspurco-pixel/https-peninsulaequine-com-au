@@ -155,7 +155,7 @@ function useAuthState() {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const value = useAuthState();
-  return AuthContext.Provider({ value, children });
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
