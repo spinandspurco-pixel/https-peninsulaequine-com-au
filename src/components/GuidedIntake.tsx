@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useId } from "react";
 import { X } from "lucide-react";
 import { useIntake } from "@/hooks/useIntake";
 import { supabase } from "@/integrations/supabase/client";
@@ -404,16 +404,22 @@ function IntakeField({
   placeholder?: string;
   error?: string;
 }) {
+  const fieldId = useId();
   return (
     <div>
-      <label className="block font-mono text-[8px] uppercase tracking-[0.3em] text-foreground/25 mb-2">
+      <label
+        htmlFor={fieldId}
+        className="block font-mono text-[8px] uppercase tracking-[0.3em] text-foreground/25 mb-2"
+      >
         {label}
       </label>
       <input
+        id={fieldId}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        aria-label={label}
         className={cn(
           "w-full bg-transparent border px-4 py-3 text-sm text-foreground/70 placeholder:text-foreground/15 focus:outline-none transition-colors duration-500",
           error ? "border-destructive/30 focus:border-destructive/50" : "border-border/20 focus:border-accent/30"
