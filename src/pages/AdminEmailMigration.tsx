@@ -352,6 +352,10 @@ export default function AdminEmailMigration() {
                 <Download className="h-3 w-3 mr-2" />
                 Export audit
               </Button>
+              <Button size="sm" variant="outline" onClick={exportCSV}>
+                <FileSpreadsheet className="h-3 w-3 mr-2" />
+                Export CSV
+              </Button>
               <Button size="sm" variant="ghost" onClick={resetAll}>Reset</Button>
             </div>
           </div>
