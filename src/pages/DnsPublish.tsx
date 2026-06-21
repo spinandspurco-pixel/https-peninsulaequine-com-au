@@ -12,19 +12,27 @@ const HOST = "@";
 const LOVABLE_DOMAINS_URL =
   "https://lovable.dev/projects/ebeb5b18-7fa0-4d1b-b9a3-22ec57bd6cff/settings/domains";
 
+const isValidTxt = (v: string) =>
+  /^google-site-verification=[A-Za-z0-9_-]{43}$/.test(v.trim());
+
 type Field = { label: string; value: string };
 
 export default function DnsPublish() {
   const [copied, setCopied] = useState<string | null>(null);
+  const [inputValue, setInputValue] = useState(TOKEN);
+  const [touched, setTouched] = useState(false);
+
+  const valid = isValidTxt(inputValue);
+  const showStatus = touched || inputValue !== TOKEN;
 
   const fields: Field[] = useMemo(
     () => [
       { label: "Type", value: TYPE },
       { label: "Host / Name", value: HOST },
-      { label: "Value", value: TOKEN },
+      { label: "Value", value: inputValue },
       { label: "TTL", value: TTL },
     ],
-    [],
+    [inputValue],
   );
 
   const copy = useCallback(async (label: string, value: string) => {
@@ -105,6 +113,35 @@ export default function DnsPublish() {
               </div>
             ))}
           </dl>
+        </section>
+
+        <section className="space-y-4 border-t border-foreground/10 pt-8">
+          <h2 className="text-[0.625rem] uppercase tracking-[0.45em] text-foreground/50">
+            Validation preview
+          </h2>
+          <div className="space-y-2">
+            <label className="text-[0.625rem] uppercase tracking-[0.35em] text-foreground/40">
+              TXT value
+            </label>
+            <textarea
+              value={inputValue}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                setTouched(true);
+              }}
+              rows={2}
+              className="w-full bg-transparent border border-foreground/10 px-3 py-2 text-sm font-mono text-foreground/85 focus:outline-none focus:border-foreground/30 resize-none"
+            />
+            {showStatus && (
+              <p
+                className={`text-xs ${valid ? "text-emerald-400/80" : "text-rose-400/80"}`}
+              >
+                {valid
+                  ? "Valid Google Workspace verification format"
+                  : "Invalid — must be google-site-verification= followed by 43 base64 characters"}
+              </p>
+            )}
+          </div>
         </section>
 
         <section className="space-y-4 border-t border-foreground/10 pt-8">
