@@ -248,6 +248,8 @@ function GalleryLightbox({
             <img
               src={images[currentIndex].src}
               alt={images[currentIndex].caption}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover img-feature transition-opacity duration-300"
             />
           ) : (
@@ -469,6 +471,8 @@ export default function ServiceDetail() {
               <img
                 src={heroImage}
                 alt={service.title}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover"
               />
             </div>
