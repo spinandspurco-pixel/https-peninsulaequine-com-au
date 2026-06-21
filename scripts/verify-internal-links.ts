@@ -47,11 +47,14 @@ function parseRoutes(): { literals: Set<string>; patterns: RegExp[] } {
   let m: RegExpExecArray | null;
   while ((m = re.exec(src)) !== null) {
     const p = m[1];
+    // Skip the catch-all NotFound route — it matches everything and would
+    // mask genuinely broken paths.
+    if (p === "*" || p === "/*") continue;
     if (p.includes(":") || p.includes("*")) {
       const pattern = p
         .replace(/[.+?^${}()|[\]\\]/g, "\\$&")
         .replace(/:[A-Za-z_]+/g, "[^/]+")
-        .replace(/\*/g, ".*");
+        .replace(/\*/g, "[^/]*");
       patterns.push(new RegExp(`^${pattern}$`));
     } else {
       literals.add(p);
