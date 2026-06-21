@@ -376,6 +376,25 @@ function ProjectChapter({
                 </dd>
               </dl>
 
+              {/* Case-study breakdown */}
+              <dl className="mt-10 max-w-2xl divide-y divide-accent/12 border-t border-accent/15">
+                {[
+                  { k: "Scope", v: project.scope },
+                  { k: "Challenge", v: project.challenge },
+                  { k: "Solution", v: project.solution },
+                  { k: "Outcome", v: project.outcome },
+                ].map((row) => (
+                  <div key={row.k} className="grid grid-cols-12 gap-3 py-5">
+                    <dt className="col-span-12 sm:col-span-3 font-mono uppercase text-accent/65 text-[10px] tracking-[0.42em] pt-1">
+                      {row.k}
+                    </dt>
+                    <dd className="col-span-12 sm:col-span-9 font-serif text-foreground/78 text-[clamp(0.95rem,0.88rem+0.18vw,1.05rem)] leading-[1.55]">
+                      {row.v}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+
               <Link
                 to={project.slug}
                 className="group mt-10 inline-flex items-baseline gap-4 font-mono text-[10px] uppercase tracking-[0.45em] text-foreground/70 hover:text-accent"
