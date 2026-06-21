@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 const FUNCTION_URL =
   "https://aizkqajrzkvwuobisnzr.supabase.co/functions/v1/verify-google-dns";
@@ -30,13 +31,19 @@ const POLL_INTERVAL_MS = 15_000;
 const MAX_ATTEMPTS = 40; // ~10 minutes
 
 export default function DnsVerify() {
-  const [domain, setDomain] = useState(DEFAULT_DOMAIN);
-  const [token, setToken] = useState(DEFAULT_TOKEN);
+  const [searchParams] = useSearchParams();
+  const [domain, setDomain] = useState(
+    searchParams.get("domain") || DEFAULT_DOMAIN,
+  );
+  const [token, setToken] = useState(
+    searchParams.get("txt") || DEFAULT_TOKEN,
+  );
   const [polling, setPolling] = useState(false);
   const [result, setResult] = useState<CheckResult | null>(null);
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [error, setError] = useState<string | null>(null);
   const stopRef = useRef(false);
+  const autoStartedRef = useRef(false);
 
   const runCheck = useCallback(async (): Promise<CheckResult | null> => {
     setError(null);
@@ -87,6 +94,16 @@ export default function DnsVerify() {
       stopRef.current = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (autoStartedRef.current) return;
+    const paramDomain = searchParams.get("domain");
+    const paramTxt = searchParams.get("txt");
+    if (paramDomain || paramTxt) {
+      autoStartedRef.current = true;
+      startPolling();
+    }
+  }, [searchParams, startPolling]);
 
   return (
     <main className="min-h-screen bg-background text-foreground px-6 py-16">
