@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Instagram, Facebook, ArrowUpRight } from "lucide-react";
 import { siteConfig } from "@/data/content";
-import logoPeMark from "@/assets/logo-pe-mark.webp";
+import logoPeMark from "@/assets/logo-pe-square.png";
 
 const capabilityLinks = [
   { name: "Covered Arenas", href: "/services#covered-arenas" },
