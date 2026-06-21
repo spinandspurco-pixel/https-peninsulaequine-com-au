@@ -400,16 +400,128 @@ export default function Index() {
             </div>
           </section>
 
+          {/* The Difference Is Experience — human proof section */}
+          <section className="relative py-[clamp(4rem,2.5rem+5vw,9rem)] bg-background overflow-hidden border-t border-accent/10">
+            <div className="section-container max-w-[1480px] mx-auto">
+              <RevealOnScroll direction="up" duration={900}>
+                <div className="flex items-baseline gap-5 mb-[clamp(2rem,1.25rem+2vw,3.5rem)]">
+                  <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">03</span>
+                  <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
+                  <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">The Difference Is Experience</span>
+                </div>
+              </RevealOnScroll>
+
+              <div className="grid grid-cols-12 gap-[clamp(2rem,1.25rem+2vw,3.5rem)] items-end mb-[clamp(2.5rem,1.5rem+2.5vw,4rem)]">
+                <div className="col-span-12 md:col-span-8 space-y-6">
+                  <RevealOnScroll direction="up" duration={1100} delay={120}>
+                    <h2 className="font-serif text-foreground/95 leading-[1.04] tracking-[-0.022em] text-[clamp(1.95rem,1.25rem+2.4vw,3.1rem)] max-w-[24ch]">
+                      Renders can be faked.<br />
+                      <span className="text-foreground/55 italic font-normal">Twenty years on the ground cannot.</span>
+                    </h2>
+                  </RevealOnScroll>
+                  <RevealLine width="w-12" delay={260} />
+                  <RevealOnScroll direction="up" duration={1000} delay={340}>
+                    <p className="font-sans font-light text-foreground/65 leading-[1.85] text-[clamp(0.98rem,0.88rem+0.3vw,1.1rem)] max-w-2xl">
+                      No sales pitch. Just the work. Operator at the controls, hands on the horse,
+                      ground under boots. The proof of a horse property is the years spent on the
+                      ones that came before it.
+                    </p>
+                  </RevealOnScroll>
+                </div>
+              </div>
+
+              {/* Proof grid — three frames, staggered */}
+              <div className="grid grid-cols-12 gap-[clamp(0.75rem,0.5rem+0.75vw,1.5rem)]">
+                <RevealOnScroll direction="up" duration={1300} className="col-span-12 sm:col-span-8">
+                  <figure className="relative aspect-[16/10] overflow-hidden group">
+                    <img
+                      src={ciroSlidingStop.url}
+                      alt="Rider and horse executing a sliding stop in the home arena — twenty years of horsemanship in a single frame"
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 w-full h-full object-cover object-[50%_45%] will-change-transform group-hover:scale-[1.025]"
+                      style={{
+                        filter: "brightness(0.84) contrast(1.08) saturate(0.78)",
+                        transition: "transform var(--pe-dur-cinematic) var(--pe-ease)",
+                      }}
+                    />
+                    <figcaption className="absolute bottom-4 left-5 right-5 font-mono uppercase text-[9.5px] tracking-[0.42em] text-foreground/75">
+                      <span className="text-accent/70">01 / Discipline</span> · Sliding stop, home arena
+                    </figcaption>
+                  </figure>
+                </RevealOnScroll>
+
+                <RevealOnScroll direction="up" duration={1300} delay={120} className="col-span-12 sm:col-span-4">
+                  <figure className="relative aspect-[16/10] sm:aspect-[3/4] overflow-hidden group">
+                    <img
+                      src={ciroArena.url}
+                      alt="Standing with the horse in a finished indoor arena, late light across the footing"
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 w-full h-full object-cover object-[50%_42%] will-change-transform group-hover:scale-[1.025]"
+                      style={{
+                        filter: "brightness(0.82) contrast(1.1) saturate(0.78)",
+                        transition: "transform var(--pe-dur-cinematic) var(--pe-ease)",
+                      }}
+                    />
+                    <figcaption className="absolute bottom-4 left-5 right-5 font-mono uppercase text-[9.5px] tracking-[0.42em] text-foreground/75">
+                      <span className="text-accent/70">02 / Quiet</span> · Standing the ground we built
+                    </figcaption>
+                  </figure>
+                </RevealOnScroll>
+
+                <RevealOnScroll direction="up" duration={1300} delay={220} className="col-span-12 sm:col-span-5">
+                  <figure className="relative aspect-[4/3] overflow-hidden group">
+                    <img
+                      src={steelFront}
+                      alt="Steel frame mid-construction under a storm sky — current covered arena build"
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 w-full h-full object-cover object-center will-change-transform group-hover:scale-[1.025]"
+                      style={{
+                        filter: "brightness(0.82) contrast(1.12) saturate(0.75)",
+                        transition: "transform var(--pe-dur-cinematic) var(--pe-ease)",
+                      }}
+                    />
+                    <figcaption className="absolute bottom-4 left-5 right-5 font-mono uppercase text-[9.5px] tracking-[0.42em] text-foreground/75">
+                      <span className="text-accent/70">03 / Build</span> · Steel up, storm sky
+                    </figcaption>
+                  </figure>
+                </RevealOnScroll>
+
+                <RevealOnScroll direction="up" duration={1300} delay={320} className="col-span-12 sm:col-span-7">
+                  <figure className="relative aspect-[4/3] overflow-hidden group">
+                    <img
+                      src={coveredArenaExterior}
+                      alt="Completed covered arena at dusk, warm interior light against the working land"
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 w-full h-full object-cover object-[50%_55%] will-change-transform group-hover:scale-[1.025]"
+                      style={{
+                        filter: "brightness(0.82) contrast(1.1) saturate(0.78)",
+                        transition: "transform var(--pe-dur-cinematic) var(--pe-ease)",
+                      }}
+                    />
+                    <figcaption className="absolute bottom-4 left-5 right-5 font-mono uppercase text-[9.5px] tracking-[0.42em] text-foreground/75">
+                      <span className="text-accent/70">04 / Resolved</span> · Covered arena, dusk
+                    </figcaption>
+                  </figure>
+                </RevealOnScroll>
+              </div>
+            </div>
+          </section>
+
           <section className="relative py-[clamp(3.75rem,2.25rem+5vw,9rem)] bg-background overflow-hidden border-t border-accent/10">
 
             <div className="section-container max-w-[1480px] mx-auto">
               <RevealOnScroll direction="up" duration={900}>
                 <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4rem)]">
-                  <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">03</span>
+                  <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">04</span>
                   <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
                   <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Selected Works</span>
                 </div>
               </RevealOnScroll>
+
 
               <div className="grid grid-cols-12 gap-[clamp(1.5rem,1rem+1.5vw,3rem)] items-end mb-[clamp(2.5rem,1.5rem+2.5vw,4.5rem)]">
                 <div className="col-span-12 md:col-span-7 space-y-5">
