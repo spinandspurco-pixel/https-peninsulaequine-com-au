@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Helmet } from "react-helmet-async";
+
 import { Check, X, Minus, RotateCw } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -172,10 +172,6 @@ export default function AdminEmailMigration() {
 
   return (
     <main className="min-h-screen bg-background text-foreground px-6 py-16 md:px-12">
-      <Helmet>
-        <title>Email Migration Checklist · HQ</title>
-        <meta name="robots" content="noindex,nofollow" />
-      </Helmet>
 
       <div className="mx-auto max-w-5xl">
         <header className="mb-12 border-b border-border/40 pb-8">
