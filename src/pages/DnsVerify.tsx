@@ -225,6 +225,12 @@ export default function DnsVerify() {
           </div>
         </section>
 
+        {paramError && (
+          <div className="border-l-2 border-amber-400/60 pl-4 text-sm text-amber-400">
+            {paramError}
+          </div>
+        )}
+
         {error && (
           <div className="border-l-2 border-destructive/60 pl-4 text-sm text-destructive">
             {error}
