@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const FUNCTION_URL =
   "https://aizkqajrzkvwuobisnzr.supabase.co/functions/v1/verify-google-dns";
