@@ -215,6 +215,8 @@ export default function FieldNotes() {
                   <img
                     src={sitewideProgress}
                     alt={sitewideProgressAlt}
+                    loading="lazy"
+                    decoding="async"
                     className="absolute inset-0 h-full w-full object-cover object-center"
                     style={{ filter: "brightness(0.8) contrast(1.08) saturate(0.78)" }}
                   />
@@ -227,6 +229,8 @@ export default function FieldNotes() {
                   <img
                     src={redClayRoofline}
                     alt={redClayRooflineAlt}
+                    loading="lazy"
+                    decoding="async"
                     className="absolute inset-0 h-full w-full object-cover object-[54%_50%]"
                     style={{ filter: "brightness(0.78) contrast(1.1) saturate(0.8)" }}
                   />
