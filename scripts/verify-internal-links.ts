@@ -16,8 +16,12 @@
  * use Navigate, hash-only smooth-scroll targets, etc).
  */
 
-import { readdirSync, readFileSync, statSync, existsSync } from "node:fs";
-import { join, resolve, relative } from "node:path";
+import { readdirSync, readFileSync, statSync, existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { join, resolve, relative, dirname } from "node:path";
+
+const REPORT_DIR = resolve(process.env.LINK_REPORT_DIR ?? "reports/internal-links");
+const REPORT_JSON = join(REPORT_DIR, "report.json");
+const REPORT_HTML = join(REPORT_DIR, "report.html");
 
 const ROOT = resolve(".");
 const SRC = resolve("src");
