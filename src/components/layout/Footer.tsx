@@ -4,11 +4,11 @@ import { siteConfig } from "@/data/content";
 import logoPeMark from "@/assets/logo-pe-mark.webp";
 
 const capabilityLinks = [
-  { name: "Covered Arenas", href: "/arenas" },
-  { name: "Stables & Barns", href: "/stables" },
-  { name: "Pavilions & Rural Builds", href: "/selected-works/main-ridge-pavilion" },
-  { name: "Groundworks & Drainage", href: "/infrastructure" },
-  { name: "Equine Infrastructure", href: "/infrastructure" },
+  { name: "Covered Arenas", href: "/services#covered-arenas" },
+  { name: "Stables & Barns", href: "/services#stables-barn-structures" },
+  { name: "Pavilions & Rural Builds", href: "/services#pavilions-rural-builds" },
+  { name: "Groundworks & Drainage", href: "/services#drainage-surfacing" },
+  { name: "Equine Infrastructure", href: "/services#equine-infrastructure" },
   { name: "LumenArc Recovery", href: "/lumenarc" },
 ];
 
