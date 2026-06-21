@@ -305,6 +305,10 @@ export default function AdminEmailMigration() {
                 <RotateCw className={`h-3 w-3 mr-2 ${running ? "animate-spin" : ""}`} />
                 Run ops smoke test
               </Button>
+              <Button size="sm" variant="outline" onClick={exportResults}>
+                <Download className="h-3 w-3 mr-2" />
+                Export audit
+              </Button>
               <Button size="sm" variant="ghost" onClick={resetAll}>Reset</Button>
             </div>
           </div>
