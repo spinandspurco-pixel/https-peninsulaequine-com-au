@@ -602,7 +602,7 @@ export function Header() {
             <Link
               to="/contact"
               tabIndex={isMobileMenuOpen ? 0 : -1}
-              className="block text-xs uppercase tracking-[0.18em] text-accent/70 hover:text-accent transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
+              className="block text-xs uppercase tracking-[0.18em] text-[hsl(var(--accent-light))] hover:text-accent transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
             >
               Apply to Build →
             </Link>
