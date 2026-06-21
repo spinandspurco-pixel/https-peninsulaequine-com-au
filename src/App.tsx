@@ -9,6 +9,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { RouteCanonical } from "./components/RouteCanonical";
 import { IntroContext } from "./hooks/useIntroState";
 import { IntakeProvider } from "./hooks/useIntake";
+import { AuthProvider } from "./hooks/useAuth";
 import { GuidedIntake } from "./components/GuidedIntake";
 
 import Index from "./pages/Index";
@@ -174,10 +175,12 @@ function AppContent() {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <IntakeProvider>
-        <AppContent />
-        <GuidedIntake />
-      </IntakeProvider>
+      <AuthProvider>
+        <IntakeProvider>
+          <AppContent />
+          <GuidedIntake />
+        </IntakeProvider>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
