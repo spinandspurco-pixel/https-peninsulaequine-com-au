@@ -156,10 +156,18 @@ function main() {
   }
 
   const checked = refs.length;
+  writeReports({
+    checked,
+    filesScanned: files.length,
+    failures,
+    generatedAt: new Date().toISOString(),
+  });
+
   if (failures.length === 0) {
     console.log(
       `✓ internal-link check: ${checked} link(s) verified across ${files.length} file(s)`,
     );
+    console.log(`  report: ${relative(ROOT, REPORT_JSON)} | ${relative(ROOT, REPORT_HTML)}`);
     return;
   }
 
@@ -170,8 +178,93 @@ function main() {
     console.error(
       `  [${f.kind}] ${f.ref.file}:${f.ref.line}  →  ${f.ref.target}\n          ${f.detail}`,
     );
+    // GitHub Actions inline annotation on the offending source line.
+    if (process.env.GITHUB_ACTIONS === "true") {
+      const msg = `${f.detail} (target: ${f.ref.target})`;
+      console.log(
+        `::error file=${f.ref.file},line=${f.ref.line},title=Broken internal ${f.kind}::${msg}`,
+      );
+    }
   }
+  console.error(`\n  report: ${relative(ROOT, REPORT_JSON)} | ${relative(ROOT, REPORT_HTML)}`);
   process.exit(1);
+}
+
+type Failure = { kind: "route" | "anchor"; ref: LinkRef; detail: string };
+
+function writeReports(data: {
+  checked: number;
+  filesScanned: number;
+  failures: Failure[];
+  generatedAt: string;
+}) {
+  mkdirSync(REPORT_DIR, { recursive: true });
+  const status = data.failures.length === 0 ? "pass" : "fail";
+  writeFileSync(REPORT_JSON, JSON.stringify({ status, ...data }, null, 2));
+  writeFileSync(REPORT_HTML, renderHtml(status, data));
+}
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function renderHtml(
+  status: "pass" | "fail",
+  data: { checked: number; filesScanned: number; failures: Failure[]; generatedAt: string },
+): string {
+  const rows = data.failures
+    .map(
+      (f) => `<tr>
+        <td><span class="kind ${f.kind}">${f.kind}</span></td>
+        <td><code>${escapeHtml(f.ref.file)}:${f.ref.line}</code></td>
+        <td><code>${escapeHtml(f.ref.target)}</code></td>
+        <td>${escapeHtml(f.detail)}</td>
+      </tr>`,
+    )
+    .join("\n");
+
+  const body = data.failures.length === 0
+    ? `<p class="ok">All ${data.checked} internal links resolved.</p>`
+    : `<table>
+        <thead><tr><th>Kind</th><th>Source</th><th>Target</th><th>Reason</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Internal link check — ${status.toUpperCase()}</title>
+  <style>
+    body { font: 14px/1.5 -apple-system, system-ui, sans-serif; margin: 2rem; color: #1a1a1a; }
+    h1 { margin: 0 0 .25rem; }
+    .meta { color: #666; font-size: 12px; margin-bottom: 1.5rem; }
+    .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    .pill.pass { background: #d1fae5; color: #065f46; }
+    .pill.fail { background: #fee2e2; color: #991b1b; }
+    table { border-collapse: collapse; width: 100%; font-size: 13px; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #eee; vertical-align: top; }
+    th { background: #f7f7f8; font-weight: 600; }
+    code { font: 12px ui-monospace, Menlo, monospace; background: #f4f4f5; padding: 1px 5px; border-radius: 4px; }
+    .kind { display: inline-block; padding: 1px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+    .kind.route { background: #fde68a; color: #78350f; }
+    .kind.anchor { background: #c7d2fe; color: #312e81; }
+    .ok { color: #065f46; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1>Internal link check <span class="pill ${status}">${status.toUpperCase()}</span></h1>
+  <div class="meta">
+    ${data.checked} link(s) checked across ${data.filesScanned} file(s) — ${data.failures.length} failure(s)<br>
+    Generated ${escapeHtml(data.generatedAt)}
+  </div>
+  ${body}
+</body>
+</html>`;
 }
 
 main();
