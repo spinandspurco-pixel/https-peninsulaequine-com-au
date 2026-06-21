@@ -60,6 +60,13 @@ jobs:
         id: gate
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          # Optional connector sources — gate cleanly skips a source when its
+          # creds are absent, so partial wiring is non-blocking.
+          WIZ_API_URL: ${{ secrets.WIZ_API_URL }}
+          WIZ_CLIENT_ID: ${{ secrets.WIZ_CLIENT_ID }}
+          WIZ_CLIENT_SECRET: ${{ secrets.WIZ_CLIENT_SECRET }}
+          WIZ_AUTH_URL: ${{ secrets.WIZ_AUTH_URL }}
+          WIZ_PROJECT_ID: ${{ secrets.WIZ_PROJECT_ID }}
         run: bun scripts/security-gate.ts | tee gate-output.txt
         continue-on-error: true
 
