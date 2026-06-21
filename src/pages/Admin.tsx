@@ -397,6 +397,20 @@ export default function Admin() {
                   {isAdmin && (
                     <div>
                       <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-6">
+                        Domain Infrastructure
+                      </p>
+                      <Link
+                        to="/hq/dns-verify?domain=peninsulaequine.systems&txt=google-site-verification=iMvRcyyPNi6aHBd0py3awRWPqS6-Yh2hXIl9y4vkKDU"
+                        className="text-[12px] text-foreground/75 hover:text-foreground transition-colors"
+                      >
+                        → Verify Google Workspace DNS
+                      </Link>
+                    </div>
+                  )}
+
+                  {isAdmin && (
+                    <div>
+                      <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-6">
                         Client Preview Gate
                       </p>
                       <PreviewMintGate />
