@@ -88,7 +88,7 @@ const AXE_SOURCE = (() => {
 async function auditRoute(browser: Browser, route: string): Promise<RouteResult> {
   const url = new URL(route, BASE_URL).toString();
   const context = await browser.newContext({ viewport: { width: 1280, height: 1800 } });
-  const page = await context.new_page?.() ?? (await context.newPage());
+  const page = await context.newPage();
   try {
     const response = await page.goto(url, { waitUntil: "networkidle", timeout: 30_000 });
     if (!response || !response.ok()) {
