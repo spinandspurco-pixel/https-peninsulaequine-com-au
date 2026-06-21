@@ -38,6 +38,7 @@ const AdminFieldNotes = lazy(() => import("./pages/AdminFieldNotes"));
 const HqProjectDetail = lazy(() => import("./pages/HqProjectDetail"));
 const EmployeeDashboard = lazy(() => import("./pages/EmployeeDashboard"));
 const AdminEmailMigration = lazy(() => import("./pages/AdminEmailMigration"));
+const DnsVerify = lazy(() => import("./pages/DnsVerify"));
 
 const BookLesson = lazy(() => import("./pages/BookLesson"));
 const Lessons = lazy(() => import("./pages/Lessons"));
