@@ -73,6 +73,7 @@ export default function DnsVerify() {
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [paramError, setParamError] = useState<string | null>(null);
+  const [hostnameMode, setHostnameMode] = useState<"at" | "exact">("at");
   const stopRef = useRef(false);
   const autoStartedRef = useRef(false);
 
@@ -135,13 +136,14 @@ export default function DnsVerify() {
   }, []);
 
   const copyHostname = useCallback(async () => {
+    const value = hostnameMode === "at" ? "@" : domain;
     try {
-      await navigator.clipboard.writeText("@");
-      toast.success("Hostname '@' copied to clipboard");
+      await navigator.clipboard.writeText(value);
+      toast.success(`Hostname '${value}' copied to clipboard`);
     } catch {
       toast.error("Unable to copy to clipboard");
     }
-  }, []);
+  }, [hostnameMode, domain]);
 
   const copyToken = useCallback(async () => {
     if (!token) return;
