@@ -31,7 +31,7 @@ import {
   type FailureCode,
 } from "./verify-prerender-core";
 
-const SITE_ORIGIN = "https://peninsulaequine.com.au";
+const SITE_ORIGIN = "https://peninsulaequine.systems";
 const DIST = resolve("dist");
 const ajv = new Ajv({ strict: true, allErrors: true });
 addFormats(ajv);
