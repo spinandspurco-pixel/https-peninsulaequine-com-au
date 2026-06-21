@@ -7,6 +7,8 @@
  * `src/test/nightly-issue.test.ts`).
  */
 
+import { renderAffectedAreas, type AffectedFinding } from "./affected-areas";
+
 export const NIGHTLY_ISSUE_TITLE =
   "Nightly security scan: new findings detected";
 export const NIGHTLY_ISSUE_LABELS = ["security", "nightly-scan"];
@@ -20,6 +22,8 @@ export interface BuildBodyInput {
   gateOutcome: Outcome;
   regressionOutcome: Outcome;
   gateOutput?: string | null;
+  /** Findings added vs baseline, with affected files resolved. */
+  affectedFindings?: AffectedFinding[];
 }
 
 export function buildIssueBody(input: BuildBodyInput): string {
@@ -30,12 +34,18 @@ export function buildIssueBody(input: BuildBodyInput): string {
     gateOutcome,
     regressionOutcome,
     gateOutput,
+    affectedFindings,
   } = input;
 
   let body = "## Nightly security scan detected new findings\n\n";
   body += `- Run: ${serverUrl}/${repository}/actions/runs/${runId}\n`;
   body += `- Gate: **${gateOutcome}**\n`;
   body += `- Regression suite: **${regressionOutcome}**\n\n`;
+
+  if (affectedFindings && affectedFindings.length > 0) {
+    const section = renderAffectedAreas(affectedFindings);
+    if (section) body += section + "\n";
+  }
 
   if (gateOutput && gateOutput.trim().length > 0) {
     const truncated = gateOutput.slice(0, 60000);
