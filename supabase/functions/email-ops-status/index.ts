@@ -15,7 +15,7 @@ const SENDER_SECRETS = [
   "NOREPLY_EMAIL_FROM",
 ] as const;
 
-const VERIFIED_DOMAIN = "notify.peninsulaequine.org";
+const VERIFIED_DOMAIN = "notify.peninsulaequine.systems";
 
 type SenderStatus = {
   secret: string;

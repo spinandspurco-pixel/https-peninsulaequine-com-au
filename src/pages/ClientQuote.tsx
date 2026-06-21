@@ -141,7 +141,7 @@ export default function ClientQuote() {
         <div className="text-center max-w-sm">
           <p className="font-serif text-xl mb-3" style={{ color: "#2B2B2B" }}>Quote Unavailable</p>
           <p className="text-[13px] leading-[1.8] mb-6" style={{ color: "#2B2B2B", opacity: 0.4 }}>{error}</p>
-          <a href="mailto:info@peninsulaequine.org" className="text-[12px] underline" style={{ color: "#8C6A3B" }}>
+          <a href="mailto:info@peninsulaequine.systems" className="text-[12px] underline" style={{ color: "#8C6A3B" }}>
             Contact Peninsula Equine
           </a>
         </div>

@@ -7,7 +7,7 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-const TARGET_EMAIL = "josh.dales@peninsulaequine.org";
+const TARGET_EMAIL = "josh.dales@peninsulaequine.systems";
 const DISPLAY_NAME = "Josh Dales";
 
 function generateStrongPassword(): string {

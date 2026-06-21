@@ -50,7 +50,7 @@ const DIRECTORY: Record<string, DirectoryEntry> = {
 
   // ── Platform display identities ──────────────────────
   // These are display-only inboxes used inside HQ. Real password resets
-  // and outbound communication always route through peninsulaequine.org.
+  // and outbound communication always route through peninsulaequine.systems.
   admin: {
     name: "Peninsula Equine",
     role: "Administrator",

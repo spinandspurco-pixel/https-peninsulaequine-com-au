@@ -85,7 +85,7 @@ export default function Login() {
                     onChange={(e) => setEmail(e.target.value)}
                     onFocus={() => setFocusedField("email")}
                     onBlur={() => setFocusedField(null)}
-                    placeholder="you@peninsulaequine.org"
+                    placeholder="you@peninsulaequine.systems"
                     required
                     autoComplete="email"
                     className="h-11 bg-background/60 border-border/50 rounded-sm text-sm placeholder:text-muted-foreground/50 focus-visible:ring-accent/40"
@@ -171,7 +171,7 @@ export default function Login() {
           <div className="px-6 sm:px-8 py-4 border-t border-border/30 bg-muted/20">
             <p className="text-[11px] text-muted-foreground/70 text-center leading-relaxed">
               Staff accounts are managed by your administrator.{" "}
-              <a href="mailto:info@peninsulaequine.org" className="text-accent/80 hover:text-accent transition-colors">
+              <a href="mailto:info@peninsulaequine.systems" className="text-accent/80 hover:text-accent transition-colors">
                 Request access
               </a>
             </p>

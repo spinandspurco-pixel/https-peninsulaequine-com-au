@@ -6,7 +6,7 @@ export const siteConfig = {
   tagline: "Equine Infrastructure, Engineered Properly",
   description: "Equine facility construction by a horseman. Arenas, barns, and infrastructure — engineered for performance and longevity.",
   phone: "0418 585 489",
-  email: "info@peninsulaequine.org",
+  email: "info@peninsulaequine.systems",
   address: {
     street: "59 Tubbarubba Road",
     city: "Merricks North",

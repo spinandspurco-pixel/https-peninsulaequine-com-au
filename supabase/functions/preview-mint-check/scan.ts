@@ -22,6 +22,7 @@ export const ALLOWED_EMAIL_DOMAINS = [
   "peninsulaequine.org",
   "peninsulaequine.systems",
   "notify.peninsulaequine.org",
+  "notify.peninsulaequine.systems",
 ];
 
 export const FAKE_PHONE_MARKERS = [

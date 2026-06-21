@@ -26,10 +26,10 @@ const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
 type Role = "admin" | "preview" | "employee" | "trainer";
 
 const SEED: Array<{ email: string; role: Role }> = [
-  { email: "test-admin@peninsulaequine.org", role: "admin" },
-  { email: "test-preview@peninsulaequine.org", role: "preview" },
-  { email: "test-employee@peninsulaequine.org", role: "employee" },
-  { email: "test-trainer@peninsulaequine.org", role: "trainer" },
+  { email: "test-admin@peninsulaequine.systems", role: "admin" },
+  { email: "test-preview@peninsulaequine.systems", role: "preview" },
+  { email: "test-employee@peninsulaequine.systems", role: "employee" },
+  { email: "test-trainer@peninsulaequine.systems", role: "trainer" },
 ];
 
 function strongPassword(): string {

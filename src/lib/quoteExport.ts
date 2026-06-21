@@ -74,7 +74,7 @@ function drawFooterBar(doc: jsPDF, pw: number, ph: number, ml: number) {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(5);
   doc.setTextColor("#5a5f6b");
-  doc.text("Peninsula Equine  ·  Engineered Infrastructure  ·  peninsulaequine.org", ml, ph - 8);
+  doc.text("Peninsula Equine  ·  Engineered Infrastructure  ·  peninsulaequine.systems", ml, ph - 8);
   doc.setFontSize(4.5);
   doc.setTextColor("#484d57");
   doc.text("This document is confidential. Investment figures are indicative and subject to confirmed scope.", ml, ph - 4.5);
@@ -671,8 +671,8 @@ export function generateQuotePDF(quote: QuoteData, lineItems: QuoteLineItem[]) {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.setTextColor("#9CA3AF");
-  doc.text("peninsulaequine.org", ml, contactY + 16);
-  doc.text("info@peninsulaequine.org", ml, contactY + 22);
+  doc.text("peninsulaequine.systems", ml, contactY + 16);
+  doc.text("info@peninsulaequine.systems", ml, contactY + 22);
 
   // Brand mark
   doc.setFont("helvetica", "bold");
