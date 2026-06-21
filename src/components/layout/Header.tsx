@@ -3,7 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useIntroState } from "@/hooks/useIntroState";
 import { useActiveServiceChapter } from "@/hooks/useActiveServiceChapter";
-import logoImage from "@/assets/logo-pe-mark.webp";
+import logoSquare from "@/assets/logo-pe-square.png";
+import logoCinematic from "@/assets/logo-pe-cinematic.png";
 
 
 type NavChild = { name: string; href: string; description?: string };
