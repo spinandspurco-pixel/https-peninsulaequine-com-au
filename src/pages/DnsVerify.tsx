@@ -208,6 +208,13 @@ export default function DnsVerify() {
               disabled={polling}
               className="w-full bg-transparent border-b border-foreground/20 py-2 text-xs font-mono focus:outline-none focus:border-foreground/60"
             />
+            <button
+              type="button"
+              onClick={copyToken}
+              className="text-[0.625rem] uppercase tracking-[0.3em] text-foreground/40 hover:text-foreground/70 transition-colors mt-1"
+            >
+              → Copy TXT value
+            </button>
           </label>
 
           <div className="flex gap-6 pt-2 text-xs uppercase tracking-[0.3em]">
