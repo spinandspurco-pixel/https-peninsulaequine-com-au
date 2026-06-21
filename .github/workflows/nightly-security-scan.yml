@@ -136,15 +136,35 @@ jobs:
         with:
           script: |
             const fs = require('fs');
+            const { execFileSync } = require('child_process');
             const {
               buildIssueBody,
               reconcileIssue,
               NIGHTLY_ISSUE_TITLE,
               NIGHTLY_ISSUE_LABELS,
             } = require(`${process.env.GITHUB_WORKSPACE}/scripts/ci/nightly-issue.js`);
+            const { mapAffectedAreas } = require(`${process.env.GITHUB_WORKSPACE}/scripts/ci/affected-areas.js`);
 
             let gateOutput = '';
             try { gateOutput = fs.readFileSync('gate-output.txt', 'utf8'); } catch {}
+
+            let added = [];
+            try { added = JSON.parse(fs.readFileSync('security-added.json', 'utf8')).added ?? []; } catch {}
+
+            // ripgrep over the working tree, scoped to source/migrations/edge
+            // functions. Failure modes (no matches, ripgrep missing) collapse
+            // to an empty result so issue creation is never blocked.
+            const search = async (token) => {
+              try {
+                const out = execFileSync('rg', [
+                  '--files-with-matches', '--no-messages', '--fixed-strings',
+                  '--glob', 'src/**', '--glob', 'supabase/**', '--glob', 'scripts/**',
+                  '--max-count', '1', '--', token, '.',
+                ], { encoding: 'utf8', maxBuffer: 4 * 1024 * 1024 });
+                return out.split('\n').filter(Boolean);
+              } catch { return []; }
+            };
+            const affectedFindings = await mapAffectedAreas(added, search);
 
             const body = buildIssueBody({
               serverUrl: process.env.GITHUB_SERVER_URL,
@@ -153,6 +173,7 @@ jobs:
               gateOutcome: process.env.GATE_OUTCOME,
               regressionOutcome: process.env.REGRESSION_OUTCOME,
               gateOutput,
+              affectedFindings,
             });
 
             const client = {
