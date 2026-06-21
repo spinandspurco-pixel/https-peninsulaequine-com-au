@@ -73,12 +73,19 @@ export function ApplicationsInbox() {
           console.warn("[ApplicationsInbox]", error);
           setRows([]);
         } else {
-          // Applications = inquiries marked as full-build or whole-property tier
+          // Applications = build/site-work inquiries (covers GuidedIntake slugs + legacy tags).
+          const APP_SERVICES = new Set([
+            "full-facility",
+            "whole-property",
+            "arena-construction",
+            "barn-construction",
+            "infrastructure",
+          ]);
+          const APP_TAGS = new Set(["full-build", "construction", "site-work"]);
           const apps = (data ?? []).filter(
             (i: any) =>
-              i.services?.some((s: string) =>
-                ["full-facility", "whole-property"].includes(s)
-              ) || i.lead_tags?.includes("full-build")
+              i.services?.some((s: string) => APP_SERVICES.has(s)) ||
+              i.lead_tags?.some((t: string) => APP_TAGS.has(t))
           );
           setRows(apps as Application[]);
         }

@@ -155,13 +155,13 @@ export function GuidedIntake() {
     setSubmitting(true);
 
     try {
+      // Slug-aligned services so trigger auto_tag_inquiry + ApplicationsInbox both match.
       const services: string[] = [];
-      if (intent === "performance") services.push("Arena Construction");
-      else if (intent === "reining") services.push("Arena Construction");
-      else if (intent === "estate") services.push("Full Property Infrastructure");
-      else services.push("Design & Site Planning");
+      if (intent === "performance" || intent === "reining") services.push("arena-construction");
+      else if (intent === "estate") services.push("full-facility");
+      else services.push("infrastructure");
 
-      await supabase.from("inquiries").insert({
+      const { error: insertError } = await supabase.from("inquiries").insert({
         name: result.data.name,
         email: result.data.email,
         phone: result.data.phone || null,
@@ -177,11 +177,20 @@ export function GuidedIntake() {
         status: "new",
       });
 
+      if (insertError) {
+        console.error("[GuidedIntake] insert failed", insertError);
+        throw insertError;
+      }
+
       trackCtaClick("guided_intake_submit", { intent, land, stage, values });
       setSubmitted(true);
       setStep(5);
-    } catch {
-      setErrors({ form: "Something went wrong. Please try again." });
+    } catch (err) {
+      const message =
+        err instanceof Error && err.message
+          ? `We couldn't lodge your application — ${err.message}. Please try again or email info@peninsulaequine.org.`
+          : "We couldn't lodge your application. Please try again or email info@peninsulaequine.org.";
+      setErrors({ form: message });
     } finally {
       setSubmitting(false);
     }
