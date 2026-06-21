@@ -37,6 +37,7 @@ const AdminSelectedWorks = lazy(() => import("./pages/AdminSelectedWorks"));
 const AdminFieldNotes = lazy(() => import("./pages/AdminFieldNotes"));
 const HqProjectDetail = lazy(() => import("./pages/HqProjectDetail"));
 const EmployeeDashboard = lazy(() => import("./pages/EmployeeDashboard"));
+const AdminEmailMigration = lazy(() => import("./pages/AdminEmailMigration"));
 
 const BookLesson = lazy(() => import("./pages/BookLesson"));
 const Lessons = lazy(() => import("./pages/Lessons"));
@@ -117,6 +118,7 @@ function AppContent() {
             <Route path="/hq/projects/:id" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><HqProjectDetail /></ProtectedRoute>} />
             {/* /hq/documents is a private staff surface. Preview users see a polite stub. */}
             <Route path="/hq/documents" element={<ProtectedRoute allowedRoles={["admin","employee","preview"]}><AdminDocuments /></ProtectedRoute>} />
+            <Route path="/hq/email-migration" element={<ProtectedRoute allowedRoles={["admin"]}><AdminEmailMigration /></ProtectedRoute>} />
             <Route path="/hq/preview" element={<Navigate to="/hq?view=preview" replace />} />
             <Route path="/admin" element={<Navigate to="/hq" replace />} />
             <Route path="/admin/services" element={<Navigate to="/hq/services" replace />} />
