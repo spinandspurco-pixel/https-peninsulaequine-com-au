@@ -3,7 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useIntroState } from "@/hooks/useIntroState";
 import { useActiveServiceChapter } from "@/hooks/useActiveServiceChapter";
-import logoImage from "@/assets/logo-pe-mark.webp";
+import logoSquare from "@/assets/logo-pe-square.png";
+import logoCinematic from "@/assets/logo-pe-cinematic.png";
 
 
 type NavChild = { name: string; href: string; description?: string };
@@ -217,32 +218,35 @@ export function Header() {
             style={{ opacity: headerLogoReady ? 1 : 0 }}
             aria-label="Peninsula Equine — From Dirt to Dynasty — Home"
           >
-            <div className="relative flex-shrink-0 w-8 h-8 sm:w-9 sm:h-9">
+            {/* Mobile: square mark */}
+            <div className="relative flex-shrink-0 w-8 h-8 sm:hidden">
               <img
-                src={logoImage}
+                src={logoSquare}
                 alt=""
-                width={36}
-                height={36}
+                width={512}
+                height={512}
                 className={cn(
                   "w-full h-full object-contain transition-all duration-700 group-hover:scale-105",
                   isScrolled ? "opacity-100" : "opacity-85 drop-shadow-[0_0_12px_rgba(255,255,255,0.1)]"
                 )}
                 loading="eager"
                 decoding="async"
-                {...({ fetchpriority: "low" } as any)}
               />
-
             </div>
-            <div className={cn(
-              "hidden sm:flex flex-col transition-colors duration-500",
-              "text-[hsl(var(--header-foreground))]"
-            )}>
-              <span className="font-serif text-sm font-semibold tracking-[0.08em] leading-none">
-                Peninsula Equine
-              </span>
-              <span className="text-[9px] font-sans tracking-[0.25em] uppercase text-[hsl(var(--accent-light))]/95 mt-1">
-                From Dirt to Dynasty
-              </span>
+            {/* Desktop: cinematic wordmark */}
+            <div className="hidden sm:flex relative flex-shrink-0 h-8 lg:h-9">
+              <img
+                src={logoCinematic}
+                alt=""
+                width={1024}
+                height={512}
+                className={cn(
+                  "h-full w-auto object-contain transition-all duration-700 group-hover:scale-[1.02]",
+                  isScrolled ? "opacity-100" : "opacity-85 drop-shadow-[0_0_12px_rgba(255,255,255,0.1)]"
+                )}
+                loading="eager"
+                decoding="async"
+              />
             </div>
           </Link>
 
