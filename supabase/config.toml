@@ -2,3 +2,6 @@ project_id = "aizkqajrzkvwuobisnzr"
 
 [functions.admin-ai-assistant]
 verify_jwt = false
+
+[functions.verify-google-dns]
+verify_jwt = false
