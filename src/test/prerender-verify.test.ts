@@ -5,7 +5,7 @@ import {
   type Failure,
 } from "../../scripts/verify-prerender-core";
 
-const SITE = "https://peninsulaequine.com.au";
+const SITE = "https://peninsulaequine.systems";
 
 const ROUTE: Expectation = { path: "/about", titleIncludes: "About" };
 
