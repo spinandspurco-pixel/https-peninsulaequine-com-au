@@ -134,6 +134,15 @@ export default function DnsVerify() {
     setPolling(false);
   }, []);
 
+  const copyHostname = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText("@");
+      toast.success("Hostname '@' copied to clipboard");
+    } catch {
+      toast.error("Unable to copy to clipboard");
+    }
+  }, []);
+
   const copyToken = useCallback(async () => {
     if (!token) return;
     try {
@@ -196,6 +205,13 @@ export default function DnsVerify() {
               disabled={polling}
               className="w-full bg-transparent border-b border-foreground/20 py-2 text-sm focus:outline-none focus:border-foreground/60"
             />
+            <button
+              type="button"
+              onClick={copyHostname}
+              className="text-[0.625rem] uppercase tracking-[0.3em] text-foreground/40 hover:text-foreground/70 transition-colors mt-1"
+            >
+              → Copy hostname
+            </button>
           </label>
           <label className="block space-y-1">
             <span className="text-[0.625rem] uppercase tracking-[0.35em] text-foreground/50">
