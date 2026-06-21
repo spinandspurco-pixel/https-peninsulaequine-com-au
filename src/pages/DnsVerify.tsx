@@ -207,13 +207,29 @@ export default function DnsVerify() {
               disabled={polling}
               className="w-full bg-transparent border-b border-foreground/20 py-2 text-sm focus:outline-none focus:border-foreground/60"
             />
-            <button
-              type="button"
-              onClick={copyHostname}
-              className="text-[0.625rem] uppercase tracking-[0.3em] text-foreground/40 hover:text-foreground/70 transition-colors mt-1"
-            >
-              → Copy hostname
-            </button>
+            <div className="flex items-center gap-3 mt-1">
+              <button
+                type="button"
+                onClick={() => setHostnameMode("at")}
+                className={`text-[0.625rem] uppercase tracking-[0.3em] transition-colors ${hostnameMode === "at" ? "text-foreground/70" : "text-foreground/30 hover:text-foreground/50"}`}
+              >
+                @
+              </button>
+              <button
+                type="button"
+                onClick={() => setHostnameMode("exact")}
+                className={`text-[0.625rem] uppercase tracking-[0.3em] transition-colors ${hostnameMode === "exact" ? "text-foreground/70" : "text-foreground/30 hover:text-foreground/50"}`}
+              >
+                {domain || "exact domain"}
+              </button>
+              <button
+                type="button"
+                onClick={copyHostname}
+                className="text-[0.625rem] uppercase tracking-[0.3em] text-foreground/40 hover:text-foreground/70 transition-colors"
+              >
+                → Copy hostname
+              </button>
+            </div>
           </label>
           <label className="block space-y-1">
             <span className="text-[0.625rem] uppercase tracking-[0.35em] text-foreground/50">
