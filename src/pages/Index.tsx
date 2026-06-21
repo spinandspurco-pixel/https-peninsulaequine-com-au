@@ -219,7 +219,7 @@ export default function Index() {
                     From Dirt to Dynasty
                   </h1>
                   <p
-                    className="max-w-xl font-sans font-light text-foreground/85 leading-[1.7] text-[15px]"
+                    className="max-w-xl font-serif italic text-foreground/85 leading-[1.45] text-[clamp(1.05rem,0.9rem+0.5vw,1.35rem)]"
                     style={{
                       opacity: headlineReady ? 1 : 0,
                       transform: headlineReady ? "translateY(0)" : "translateY(8px)",
@@ -227,7 +227,18 @@ export default function Index() {
                       textShadow: "0 2px 18px rgba(0,0,0,0.55)",
                     }}
                   >
-                    Covered arenas, stables, and equine environments built by horse people —
+                    Built by riders. Designed for horses. Crafted for generations.
+                  </p>
+                  <p
+                    className="max-w-xl font-sans font-light text-foreground/65 leading-[1.7] text-[14px]"
+                    style={{
+                      opacity: headlineReady ? 1 : 0,
+                      transform: headlineReady ? "translateY(0)" : "translateY(8px)",
+                      transition: `opacity 1100ms ${EASE} 260ms, transform 1100ms ${EASE} 260ms`,
+                      textShadow: "0 2px 18px rgba(0,0,0,0.55)",
+                    }}
+                  >
+                    Covered arenas, stables, and equine environments —
                     Mornington Peninsula and beyond.
                   </p>
                 </div>
