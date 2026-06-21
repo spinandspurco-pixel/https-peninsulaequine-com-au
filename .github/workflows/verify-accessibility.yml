@@ -1,0 +1,113 @@
+name: Verify accessibility
+
+# Runs axe-core (via Playwright) against every public route in the built
+# site and fails the build on new critical violations. Override the gate
+# by setting A11Y_FAIL_LEVEL=serious in the job env.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "public/**"
+      - "index.html"
+      - "scripts/verify-accessibility.ts"
+      - "package.json"
+      - "bun.lockb"
+      - ".github/workflows/verify-accessibility.yml"
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      fail_level:
+        description: "critical | serious"
+        required: false
+        default: "critical"
+
+concurrency:
+  group: verify-accessibility-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    name: axe-core accessibility audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+    env:
+      A11Y_FAIL_LEVEL: ${{ github.event.inputs.fail_level || 'critical' }}
+      A11Y_BASE_URL: http://127.0.0.1:4173
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: bunx playwright install --with-deps chromium
+
+      - name: Build site
+        run: bun run build
+
+      - name: Serve dist
+        run: |
+          nohup bunx vite preview --host 127.0.0.1 --port 4173 --strictPort > /tmp/preview.log 2>&1 &
+          echo $! > /tmp/preview.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:4173/ > /dev/null; then
+              echo "preview up"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "preview failed to start"
+          cat /tmp/preview.log
+          exit 1
+
+      - name: Run accessibility audit
+        id: audit
+        run: bun run verify:a11y
+
+      - name: Stop preview server
+        if: always()
+        run: |
+          if [ -f /tmp/preview.pid ]; then kill "$(cat /tmp/preview.pid)" || true; fi
+
+      - name: Upload accessibility report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: accessibility-report
+          path: reports/accessibility/
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Append report summary to job
+        if: always()
+        run: |
+          if [ -f reports/accessibility/report.json ]; then
+            STATUS=$(node -e "console.log(require('./reports/accessibility/report.json').status)")
+            LEVEL=$(node -e "console.log(require('./reports/accessibility/report.json').failLevel)")
+            ROUTES=$(node -e "console.log(require('./reports/accessibility/report.json').routesChecked)")
+            BLOCK=$(node -e "console.log(require('./reports/accessibility/report.json').blockingCount)")
+            TOTAL=$(node -e "console.log(require('./reports/accessibility/report.json').totalViolations)")
+            {
+              echo "### Accessibility audit — \`${STATUS}\`"
+              echo ""
+              echo "- Fail level: **${LEVEL}**"
+              echo "- Routes audited: **${ROUTES}**"
+              echo "- Blocking violations: **${BLOCK}**"
+              echo "- Total violations (all impacts): **${TOTAL}**"
+              echo ""
+              echo "Download the full report (JSON + HTML) from the **accessibility-report** artifact above."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
