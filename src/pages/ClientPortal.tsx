@@ -343,10 +343,10 @@ export default function ClientPortal() {
                 </p>
               )}
               <a
-                href="mailto:projects@peninsulaequine.com.au"
+                href="mailto:projects@peninsulaequine.systems"
                 className="inline-block text-[11px] font-mono uppercase tracking-[0.2em] text-accent/40 hover:text-accent/60 transition-colors duration-300 border-b border-accent/10 pb-0.5"
               >
-                projects@peninsulaequine.com.au
+                projects@peninsulaequine.systems
               </a>
             </div>
           </RevealOnScroll>
