@@ -82,8 +82,9 @@ export default function DnsPublish() {
             </h2>
             <button
               type="button"
+              disabled={!valid}
               onClick={copyAll}
-              className="text-[0.625rem] uppercase tracking-[0.3em] text-foreground hover:opacity-60 transition-opacity"
+              className="text-[0.625rem] uppercase tracking-[0.3em] text-foreground hover:opacity-60 transition-opacity disabled:opacity-25 disabled:cursor-not-allowed"
             >
               {copied === "all" ? "✓ Copied" : "→ Copy all"}
             </button>
@@ -105,8 +106,9 @@ export default function DnsPublish() {
                 </div>
                 <button
                   type="button"
+                  disabled={!valid}
                   onClick={() => copy(f.label, f.value)}
-                  className="shrink-0 text-[0.625rem] uppercase tracking-[0.3em] text-foreground/40 hover:text-foreground/70 transition-colors"
+                  className="shrink-0 text-[0.625rem] uppercase tracking-[0.3em] text-foreground/40 hover:text-foreground/70 transition-colors disabled:opacity-25 disabled:cursor-not-allowed"
                 >
                   {copied === f.label ? "✓" : "Copy"}
                 </button>
