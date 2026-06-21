@@ -85,6 +85,7 @@ jobs:
           name: nightly-security-report
           path: |
             security-report.json
+            security-added.json
             gate-output.txt
           if-no-files-found: ignore
           retention-days: 30
