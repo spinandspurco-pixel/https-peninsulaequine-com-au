@@ -19,6 +19,10 @@ type Project = {
   year: string;
   status: "Resolved" | "In Progress";
   thesis: string;
+  scope: string;
+  challenge: string;
+  solution: string;
+  outcome: string;
   image: string;
   alt: string;
   crop: string;
@@ -35,6 +39,14 @@ const projects: Project[] = [
     status: "Resolved",
     thesis:
       "A working pavilion held to a residential standard. Built around the horse first, the land second, the silhouette third.",
+    scope:
+      "Custom rural pavilion with integrated entertaining, parrilla grill, fireplace and handcrafted timber joinery.",
+    challenge:
+      "A working rural site asked to behave like a residence — heat, smoke, footfall and weather all resolved without losing the agricultural language.",
+    solution:
+      "Heavy structural beams left exposed, a brick fireplace mass to anchor airflow, and a single long table milled from on-site timber. Detail held at the same standard as the home above the hill.",
+    outcome:
+      "A pavilion used year-round — for shoeing, for entertaining, for the quiet moments in between.",
     image: getProjectImage("main-ridge-pavilion", "selectedWorks").url,
     alt: getProjectImageAlt("main-ridge-pavilion", "selectedWorks"),
     crop: "object-[50%_55%]",
@@ -49,6 +61,14 @@ const projects: Project[] = [
     status: "Resolved",
     thesis:
       "An indoor arena and stable precinct resolved as one structure — drainage, light, sightlines, and movement engineered together.",
+    scope:
+      "Full indoor arena, stable block, internal lounge and connecting circulation, designed and built as one continuous structure.",
+    challenge:
+      "Extreme weather exposure across the site, with arena and stables needing to share footing, drainage and human flow without compromising any of the three.",
+    solution:
+      "Integrated subsurface drainage tied to the arena base, structural protection on the prevailing weather face, and a horse-first circulation loop between stalls, arena and wash.",
+    outcome:
+      "Year-round usability, reduced maintenance, and a precinct that holds its detail through every season on the Peninsula.",
     image: getProjectImage("aberdeen", "selectedWorks").url,
     alt: getProjectImageAlt("aberdeen", "selectedWorks"),
     crop: "object-[50%_42%]",
@@ -63,11 +83,20 @@ const projects: Project[] = [
     status: "In Progress",
     thesis:
       "A working build, documented as it lands. Followed through field notes from ground prep to roof on.",
+    scope:
+      "Covered competition arena and adjoining stable block — base works, drainage, frame and roof currently in sequence.",
+    challenge:
+      "A wet, exposed site demanding the ground be resolved fully before any structure was committed to it.",
+    solution:
+      "Drainage and base built and tested through a full storm cycle before steel was committed. Truck access tracks held outside the working envelope.",
+    outcome:
+      "Build sequence holding through the wet season. Documented in field notes as it resolves.",
     image: getProjectImage("covered-arena-stables-build", "selectedWorks").url,
     alt: getProjectImageAlt("covered-arena-stables-build", "selectedWorks"),
     crop: "object-center",
   },
 ];
+
 
 const [feature, ...rest] = projects;
 
@@ -345,6 +374,25 @@ function ProjectChapter({
                 <dd className={project.status === "In Progress" ? "text-accent/85" : "text-foreground/70"}>
                   {project.status}
                 </dd>
+              </dl>
+
+              {/* Case-study breakdown */}
+              <dl className="mt-10 max-w-2xl divide-y divide-accent/12 border-t border-accent/15">
+                {[
+                  { k: "Scope", v: project.scope },
+                  { k: "Challenge", v: project.challenge },
+                  { k: "Solution", v: project.solution },
+                  { k: "Outcome", v: project.outcome },
+                ].map((row) => (
+                  <div key={row.k} className="grid grid-cols-12 gap-3 py-5">
+                    <dt className="col-span-12 sm:col-span-3 font-mono uppercase text-accent/65 text-[10px] tracking-[0.42em] pt-1">
+                      {row.k}
+                    </dt>
+                    <dd className="col-span-12 sm:col-span-9 font-serif text-foreground/78 text-[clamp(0.95rem,0.88rem+0.18vw,1.05rem)] leading-[1.55]">
+                      {row.v}
+                    </dd>
+                  </div>
+                ))}
               </dl>
 
               <Link

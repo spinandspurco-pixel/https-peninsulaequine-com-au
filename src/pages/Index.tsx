@@ -219,7 +219,7 @@ export default function Index() {
                     From Dirt to Dynasty
                   </h1>
                   <p
-                    className="max-w-xl font-sans font-light text-foreground/85 leading-[1.7] text-[15px]"
+                    className="max-w-xl font-serif italic text-foreground/85 leading-[1.45] text-[clamp(1.05rem,0.9rem+0.5vw,1.35rem)]"
                     style={{
                       opacity: headlineReady ? 1 : 0,
                       transform: headlineReady ? "translateY(0)" : "translateY(8px)",
@@ -227,7 +227,18 @@ export default function Index() {
                       textShadow: "0 2px 18px rgba(0,0,0,0.55)",
                     }}
                   >
-                    Covered arenas, stables, and equine environments built by horse people —
+                    Built by riders. Designed for horses. Crafted for generations.
+                  </p>
+                  <p
+                    className="max-w-xl font-sans font-light text-foreground/65 leading-[1.7] text-[14px]"
+                    style={{
+                      opacity: headlineReady ? 1 : 0,
+                      transform: headlineReady ? "translateY(0)" : "translateY(8px)",
+                      transition: `opacity 1100ms ${EASE} 260ms, transform 1100ms ${EASE} 260ms`,
+                      textShadow: "0 2px 18px rgba(0,0,0,0.55)",
+                    }}
+                  >
+                    Covered arenas, stables, and equine environments —
                     Mornington Peninsula and beyond.
                   </p>
                 </div>
@@ -332,11 +343,67 @@ export default function Index() {
             </div>
           </section>
 
+          {/* Why Peninsula Equine — institutional contrast section */}
+          <section className="relative py-[clamp(4rem,2.5rem+5vw,9rem)] bg-background overflow-hidden border-t border-accent/10">
+            <div className="section-container max-w-[1480px] mx-auto">
+              <RevealOnScroll direction="up" duration={900}>
+                <div className="flex items-baseline gap-5 mb-[clamp(2rem,1.25rem+2vw,3.5rem)]">
+                  <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">02</span>
+                  <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
+                  <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Why Peninsula Equine</span>
+                </div>
+              </RevealOnScroll>
+
+              <div className="grid grid-cols-12 gap-[clamp(2rem,1.5rem+2vw,4rem)] items-start">
+                <div className="col-span-12 md:col-span-7 space-y-7">
+                  <RevealOnScroll direction="up" duration={1100} delay={120}>
+                    <h2 className="font-serif text-foreground/95 leading-[1.02] tracking-[-0.024em] text-[clamp(2rem,1.3rem+2.6vw,3.4rem)] max-w-[28ch]">
+                      Others build structures.<br />
+                      <span className="text-foreground/55 italic font-normal">We build horse properties.</span>
+                    </h2>
+                  </RevealOnScroll>
+                  <RevealLine width="w-12" delay={260} />
+                  <RevealOnScroll direction="up" duration={1000} delay={340}>
+                    <p className="font-sans font-light text-foreground/65 leading-[1.85] text-[clamp(0.98rem,0.88rem+0.3vw,1.1rem)] max-w-2xl">
+                      Every arena, stable and recovery environment is drawn through the lens of
+                      horse movement, rider flow, drainage, footing and longevity. We understand
+                      the horse before we draw the plans — and we resolve the ground before anything
+                      stands on it.
+                    </p>
+                  </RevealOnScroll>
+                </div>
+
+                <div className="col-span-12 md:col-span-5 md:pt-2">
+                  <RevealOnScroll direction="up" duration={1000} delay={420}>
+                    <dl className="divide-y divide-accent/12 border-t border-accent/15">
+                      {[
+                        { k: "Horse-first", v: "Designed from movement, not aesthetics." },
+                        { k: "Ground-resolved", v: "Drainage, base and footing engineered as one system." },
+                        { k: "Built for decades", v: "Structures finished to a residential standard." },
+                        { k: "Owner-led", v: "Every project carried personally, end to end." },
+                      ].map((row) => (
+                        <div key={row.k} className="grid grid-cols-12 gap-3 py-5">
+                          <dt className="col-span-5 font-mono uppercase text-accent/65 text-[10px] tracking-[0.4em] pt-1">
+                            {row.k}
+                          </dt>
+                          <dd className="col-span-7 font-serif text-foreground/80 text-[clamp(0.98rem,0.9rem+0.2vw,1.1rem)] leading-[1.5]">
+                            {row.v}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </RevealOnScroll>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <section className="relative py-[clamp(3.75rem,2.25rem+5vw,9rem)] bg-background overflow-hidden border-t border-accent/10">
+
             <div className="section-container max-w-[1480px] mx-auto">
               <RevealOnScroll direction="up" duration={900}>
                 <div className="flex items-baseline gap-5 mb-[clamp(2.5rem,1.5rem+2.5vw,4rem)]">
-                  <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">02</span>
+                  <span className="font-mono text-accent/55 text-[0.68rem] tracking-[0.32em] tabular-nums">03</span>
                   <span className="h-px flex-1 max-w-[3.5rem] bg-accent/25" />
                   <span className="font-mono uppercase text-accent/55 text-[0.6rem] tracking-[0.5em]">Selected Works</span>
                 </div>
