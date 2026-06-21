@@ -117,6 +117,35 @@ export default function DnsPublish() {
 
         <section className="space-y-4 border-t border-foreground/10 pt-8">
           <h2 className="text-[0.625rem] uppercase tracking-[0.45em] text-foreground/50">
+            Validation preview
+          </h2>
+          <div className="space-y-2">
+            <label className="text-[0.625rem] uppercase tracking-[0.35em] text-foreground/40">
+              TXT value
+            </label>
+            <textarea
+              value={inputValue}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                setTouched(true);
+              }}
+              rows={2}
+              className="w-full bg-transparent border border-foreground/10 px-3 py-2 text-sm font-mono text-foreground/85 focus:outline-none focus:border-foreground/30 resize-none"
+            />
+            {showStatus && (
+              <p
+                className={`text-xs ${valid ? "text-emerald-400/80" : "text-rose-400/80"}`}
+              >
+                {valid
+                  ? "Valid Google Workspace verification format"
+                  : "Invalid — must be google-site-verification= followed by 43 base64 characters"}
+              </p>
+            )}
+          </div>
+        </section>
+
+        <section className="space-y-4 border-t border-foreground/10 pt-8">
+          <h2 className="text-[0.625rem] uppercase tracking-[0.45em] text-foreground/50">
             Publish path
           </h2>
           <ol className="space-y-3 text-sm text-foreground/70 leading-relaxed list-decimal pl-5">
