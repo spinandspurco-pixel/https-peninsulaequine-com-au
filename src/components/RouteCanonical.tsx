@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-const SITE_ORIGIN = "https://peninsulaequine.com.au";
+const SITE_ORIGIN = "https://peninsulaequine.systems";
 
 // Dedicated 1200×630 branded social card. Sitewide fallback for routes
 // not in ROUTE_IMAGES below.

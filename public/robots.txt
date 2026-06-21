@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://peninsulaequine.com.au/sitemap.xml
+Sitemap: https://peninsulaequine.systems/sitemap.xml

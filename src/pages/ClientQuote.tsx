@@ -193,7 +193,7 @@ export default function ClientQuote() {
               Peninsula Equine · Mornington Peninsula, VIC
             </p>
             <p className="text-[10px] font-sans tracking-[0.15em]" style={{ color: "rgba(43,43,43,0.15)" }}>
-              peninsulaequine.com.au
+              peninsulaequine.systems
             </p>
           </div>
         </footer>
