@@ -157,8 +157,16 @@ export function Footer() {
           <div className="flex gap-8">
             <Link to="/privacy" className="text-[10px] text-[hsl(var(--footer-muted))] hover:text-accent transition-colors duration-500">Privacy</Link>
             <Link to="/terms" className="text-[10px] text-[hsl(var(--footer-muted))] hover:text-accent transition-colors duration-500">Terms</Link>
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent("pe:consent-open"))}
+              className="text-[10px] text-[hsl(var(--footer-muted))] hover:text-accent transition-colors duration-500"
+            >
+              Privacy settings
+            </button>
             <Link to="/hq" className="text-[10px] text-[hsl(var(--footer-muted))] hover:text-accent transition-colors duration-500">Staff</Link>
           </div>
+
         </div>
       </div>
     </footer>
