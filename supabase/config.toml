@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.verify-google-dns]
 verify_jwt = false
+
+[functions.verify-admin-login]
+verify_jwt = false
