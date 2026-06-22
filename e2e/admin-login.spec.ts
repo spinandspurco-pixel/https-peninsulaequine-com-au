@@ -22,8 +22,12 @@ test.describe("admin login — info@peninsulaequine.systems @admin-login", () =>
     const email = process.env.TEST_ADMIN_EMAIL;
     const password = process.env.TEST_ADMIN_PASSWORD;
     test.skip(
-      !email || !password,
-      "TEST_ADMIN_EMAIL / TEST_ADMIN_PASSWORD not set — skipping admin login regression.",
+      !password,
+      "TEST_ADMIN_PASSWORD secret missing — admin-login E2E not executed.",
+    );
+    test.skip(
+      !email,
+      "TEST_ADMIN_EMAIL not set — admin-login E2E not executed.",
     );
     test.skip(
       !!email && email.toLowerCase() !== EXPECTED_EMAIL,
