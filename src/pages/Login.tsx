@@ -48,7 +48,9 @@ export default function Login() {
       return;
     }
 
-    toast.success("Welcome back.");
+    // No success toast — the redirect to the role landing page is the
+    // real confirmation. A standalone "Welcome back" toast on the login
+    // screen reads like success even when state hasn't actually changed.
   };
 
   if (!ready) {
