@@ -80,5 +80,14 @@ export default defineConfig({
       dependencies: ["setup"],
       grep: /@mobile-auth/,
     },
+    {
+      // Exercises the real /login form end-to-end for the renamed admin
+      // identity (info@peninsulaequine.systems). No storageState — the
+      // sign-in itself is what we're regression-testing.
+      name: "admin-login",
+      use: { ...devices["Desktop Chrome"] },
+      grep: /@admin-login/,
+      testMatch: /admin-login\.spec\.ts/,
+    },
   ],
 });
