@@ -6,6 +6,7 @@ Playwright tests covering the production-grade auth flow audit:
 - `role-dashboards.spec.ts` — per-role landing, deep-link, and refresh (admin / preview / employee / trainer).
 - `mobile-resume.spec.ts` — iPhone viewport, background→foreground resume, nested-route refresh.
 - `auth.setup.ts` — signs each role in through `/login` and saves `e2e/.auth/<role>.json`.
+- `admin-login.spec.ts` — regression test for the HQ auth-loop fix using the live `/login` form.
 
 ## Running
 
@@ -39,3 +40,20 @@ bunx playwright install chromium
 | `E2E_PORT`                | Override port when no base URL is set.   |
 
 Roles: `ADMIN`, `PREVIEW`, `EMPLOYEE`, `TRAINER`.
+
+---
+
+## Admin-login regression (`admin-login.spec.ts`)
+
+This test exercises the live `/login` form end-to-end for the renamed admin identity.
+It runs in its own Playwright project and has **no** `storageState`, so the sign-in
+itself is what is being verified.
+
+| Item | Location / instruction |
+|------|------------------------|
+| `TEST_ADMIN_EMAIL` | Hard-coded in `admin-login.spec.ts` as `info@peninsulaequine.systems` |
+| `TEST_ADMIN_PASSWORD` | Add as a **Lovable secret** (Workspace / Project Settings → Secrets). Never commit it. Never paste it in chat or chat history. |
+| Run command | `bunx playwright test --project=admin-login` |
+
+If `TEST_ADMIN_PASSWORD` is missing, the test skips cleanly with:  
+`TEST_ADMIN_PASSWORD secret missing — admin-login E2E not executed.`
