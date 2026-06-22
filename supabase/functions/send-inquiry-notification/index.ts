@@ -80,8 +80,11 @@ async function sendViaGmail(opts: {
     opts.html,
   ].filter(Boolean).join("\r\n");
 
-  // base64url encode
-  const raw = btoa(unescape(encodeURIComponent(headers)))
+  // base64url encode (UTF-8 safe)
+  const utf8 = new TextEncoder().encode(headers);
+  let bin = "";
+  for (let i = 0; i < utf8.length; i++) bin += String.fromCharCode(utf8[i]);
+  const raw = btoa(bin)
     .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 
   try {
