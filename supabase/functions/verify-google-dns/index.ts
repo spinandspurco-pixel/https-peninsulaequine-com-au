@@ -93,8 +93,10 @@ Deno.serve(async (req) => {
     checkedAt: new Date().toISOString(),
   };
 
+  // Always 200 — `ready: false` is a normal polling state, not an HTTP error.
   return new Response(JSON.stringify(body, null, 2), {
-    status: ready ? 200 : 409,
+    status: 200,
     headers: cors,
   });
+
 });
