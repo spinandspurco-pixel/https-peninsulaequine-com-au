@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { RouteCanonical } from "./components/RouteCanonical";
+import { RouteAnalytics } from "./components/RouteAnalytics";
 import { IntroContext } from "./hooks/useIntroState";
 import { IntakeProvider } from "./hooks/useIntake";
 import { AuthProvider } from "./hooks/useAuth";
@@ -79,6 +80,7 @@ function AppContent() {
       <Sonner />
       <BrowserRouter>
         <RouteCanonical />
+        <RouteAnalytics />
         <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<Index />} />

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { trackConversion } from "@/lib/analytics";
 
 const schema = z.object({
   name: z.string().trim().min(1, "Name required").max(120),
@@ -42,6 +43,7 @@ export function WholePropertyInquiryForm() {
       toast.error("Couldn't send. Please try again or email us directly.");
       return;
     }
+    trackConversion("whole_property_inquiry", { service: "whole-property-planning" });
     setDone(true);
   }
 

@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { useIntake } from "@/hooks/useIntake";
 import { supabase } from "@/integrations/supabase/client";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
+import { trackConversion } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { z } from "zod";
 
@@ -183,6 +184,7 @@ export function GuidedIntake() {
       }
 
       trackCtaClick("guided_intake_submit", { intent, land, stage, values });
+      trackConversion("guided_intake", { intent, land, stage, values });
       setSubmitted(true);
       setStep(5);
     } catch (err) {
