@@ -41,6 +41,7 @@ const AdminEmailMigration = lazy(() => import("./pages/AdminEmailMigration"));
 const AdminActivity = lazy(() => import("./pages/AdminActivity"));
 const DnsVerify = lazy(() => import("./pages/DnsVerify"));
 const DnsPublish = lazy(() => import("./pages/DnsPublish"));
+const DnsWizard = lazy(() => import("./pages/DnsWizard"));
 
 const BookLesson = lazy(() => import("./pages/BookLesson"));
 const Lessons = lazy(() => import("./pages/Lessons"));
@@ -125,6 +126,7 @@ function AppContent() {
             <Route path="/hq/activity" element={<ProtectedRoute allowedRoles={["admin","moderator","preview"]}><AdminActivity /></ProtectedRoute>} />
             <Route path="/hq/dns-verify" element={<ProtectedRoute allowedRoles={["admin"]}><DnsVerify /></ProtectedRoute>} />
             <Route path="/hq/dns-publish" element={<ProtectedRoute allowedRoles={["admin"]}><DnsPublish /></ProtectedRoute>} />
+            <Route path="/hq/dns-wizard" element={<ProtectedRoute allowedRoles={["admin"]}><DnsWizard /></ProtectedRoute>} />
             <Route path="/hq/preview" element={<Navigate to="/hq?view=preview" replace />} />
             <Route path="/admin" element={<Navigate to="/hq" replace />} />
             <Route path="/admin/services" element={<Navigate to="/hq/services" replace />} />
