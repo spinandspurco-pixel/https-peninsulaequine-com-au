@@ -5,6 +5,8 @@ import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 import { LogOut, MapPin, Layers, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ChangePasswordDialog } from "@/components/ChangePasswordDialog";
+
 
 /* ── Types ── */
 interface PortalProject {
@@ -353,11 +355,13 @@ export default function ClientPortal() {
         </section>
 
         {/* Footer */}
-        <footer className="py-12 border-t border-primary-foreground/[0.04]">
+        <footer className="py-12 border-t border-primary-foreground/[0.04] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <p className="text-[9px] font-mono uppercase tracking-[0.3em] text-primary-foreground/10">
             Peninsula Equine — Private Client Portal
           </p>
+          <ChangePasswordDialog triggerLabel="Change password" triggerVariant="minimal" />
         </footer>
+
       </div>
     </div>
   );
