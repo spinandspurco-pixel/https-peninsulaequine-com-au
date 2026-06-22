@@ -181,7 +181,7 @@ export function ConsentBanner() {
               </button>
             )}
             <a
-              href="/legal#privacy"
+              href="/privacy"
               className="ml-auto text-foreground/55 hover:text-foreground/80 transition-colors normal-case tracking-normal text-xs underline-offset-4 hover:underline"
             >
               Privacy policy
