@@ -220,14 +220,26 @@ export default function ResendDomainPanel() {
             {loading ? <Loader2 className="h-3 w-3 mr-2 animate-spin" /> : <RotateCw className="h-3 w-3 mr-2" />}
             Refresh status
           </Button>
-          <Button size="sm" variant="outline" onClick={triggerVerify} disabled={verifying || !status?.configured}>
+          <Button size="sm" variant="outline" onClick={() => triggerVerify()} disabled={verifying || !status?.configured}>
             {verifying ? <Loader2 className="h-3 w-3 mr-2 animate-spin" /> : <ShieldCheck className="h-3 w-3 mr-2" />}
             Re-verify with Resend
           </Button>
+          {polling ? (
+            <Button size="sm" variant="outline" onClick={stopPolling}>
+              <CircleStop className="h-3 w-3 mr-2 text-red-400" />
+              Stop auto-poll
+            </Button>
+          ) : (
+            <Button size="sm" variant="outline" onClick={startPolling} disabled={!status?.configured}>
+              <Radar className="h-3 w-3 mr-2" />
+              Auto-poll until verified
+            </Button>
+          )}
           <Button size="sm" onClick={retestInquiry} disabled={testing}>
             {testing ? <Loader2 className="h-3 w-3 mr-2 animate-spin" /> : <MailCheck className="h-3 w-3 mr-2" />}
             Re-test inquiry email
           </Button>
+
         </div>
       </div>
 
