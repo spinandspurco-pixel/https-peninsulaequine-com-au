@@ -503,7 +503,8 @@ const handler = async (req: Request): Promise<Response> => {
       success: true, 
       data: { 
         notification: notificationResponse, 
-        confirmation: confirmationResponse 
+        confirmation: confirmationResponse,
+        gmail: gmailResponse,
       } 
     }), {
       status: 200,
