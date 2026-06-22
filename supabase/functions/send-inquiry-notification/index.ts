@@ -54,6 +54,66 @@ function safeAttr(value: unknown): string {
   return s;
 }
 
+/**
+ * Send an email through the connected Gmail account via the Lovable connector gateway.
+ * Non-blocking: errors are logged but never thrown to the caller.
+ */
+async function sendViaGmail(opts: {
+  to: string[];
+  subject: string;
+  html: string;
+  replyTo?: string;
+}): Promise<{ ok: boolean; status?: number; error?: string; id?: string }> {
+  const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+  const GOOGLE_MAIL_API_KEY = Deno.env.get("GOOGLE_MAIL_API_KEY");
+  if (!LOVABLE_API_KEY || !GOOGLE_MAIL_API_KEY) {
+    return { ok: false, error: "gmail_connector_not_configured" };
+  }
+
+  const headers = [
+    `To: ${opts.to.join(", ")}`,
+    `Subject: ${opts.subject.replace(/[\r\n]/g, " ")}`,
+    opts.replyTo ? `Reply-To: ${opts.replyTo}` : "",
+    `MIME-Version: 1.0`,
+    `Content-Type: text/html; charset="UTF-8"`,
+    "",
+    opts.html,
+  ].filter(Boolean).join("\r\n");
+
+  // base64url encode (UTF-8 safe)
+  const utf8 = new TextEncoder().encode(headers);
+  let bin = "";
+  for (let i = 0; i < utf8.length; i++) bin += String.fromCharCode(utf8[i]);
+  const raw = btoa(bin)
+    .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+
+  try {
+    const res = await fetch(
+      "https://connector-gateway.lovable.dev/google_mail/gmail/v1/users/me/messages/send",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "X-Connection-Api-Key": GOOGLE_MAIL_API_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ raw }),
+      },
+    );
+    const body = await res.text();
+    if (!res.ok) {
+      console.error("[send-inquiry-notification] Gmail send failed", res.status, body);
+      return { ok: false, status: res.status, error: body };
+    }
+    let id: string | undefined;
+    try { id = JSON.parse(body)?.id; } catch { /* ignore */ }
+    return { ok: true, status: res.status, id };
+  } catch (e) {
+    console.error("[send-inquiry-notification] Gmail send threw", e);
+    return { ok: false, error: e instanceof Error ? e.message : String(e) };
+  }
+}
+
 /** Generate a .ics calendar invite for a suggested follow-up consultation */
 function generateConsultationICS(opts: {
   clientName: string;
@@ -114,7 +174,10 @@ function generateConsultationICS(opts: {
     "END:VCALENDAR",
   ].join("\r\n");
 
-  return { icsBase64: btoa(ics), readableDate };
+  const icsBytes = new TextEncoder().encode(ics);
+  let icsBin = "";
+  for (let i = 0; i < icsBytes.length; i++) icsBin += String.fromCharCode(icsBytes[i]);
+  return { icsBase64: btoa(icsBin), readableDate };
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -409,9 +472,10 @@ const handler = async (req: Request): Promise<Response> => {
       notifyRecipients.push(trainerEmail);
     }
 
-    // Send both emails in parallel
-    const [notificationResponse, confirmationResponse] = await Promise.all([
-      // Send the notification email to the business + trainer
+    // Send notification, confirmation, and Gmail mirror in parallel.
+    // Gmail send is best-effort: failures are logged but don't fail the request.
+    const [notificationResponse, confirmationResponse, gmailResponse] = await Promise.all([
+      // Send the notification email to the business + trainer (via Resend, verified domain)
       resend.emails.send({
         from: HQ_FROM,
         to: notifyRecipients,
@@ -427,16 +491,26 @@ const handler = async (req: Request): Promise<Response> => {
         subject: "Project Received — Peninsula Equine",
         html: confirmationHtml,
       }),
+      // Mirror notification through the connected Gmail inbox so it lands in the team's Gmail
+      sendViaGmail({
+        to: notifyRecipients,
+        subject: `[Gmail] New Project Inquiry — ${String(inquiry.name).replace(/[\r\n]/g, " ").slice(0, 120)}`,
+        html: emailHtml,
+        replyTo: inquiry.email,
+      }),
     ]);
 
     console.log("Notification email sent:", notificationResponse);
     console.log("Confirmation email sent:", confirmationResponse);
+    console.log("Gmail notification:", gmailResponse);
+
 
     return new Response(JSON.stringify({ 
       success: true, 
       data: { 
         notification: notificationResponse, 
-        confirmation: confirmationResponse 
+        confirmation: confirmationResponse,
+        gmail: gmailResponse,
       } 
     }), {
       status: 200,
