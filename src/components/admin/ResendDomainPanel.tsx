@@ -243,6 +243,25 @@ export default function ResendDomainPanel() {
         </div>
       </div>
 
+      {polling && (
+        <div className="mt-6 border border-amber-500/30 bg-amber-500/5 px-4 py-3 text-xs flex items-center gap-3 flex-wrap">
+          <Radar className="h-3 w-3 text-amber-300 animate-pulse" />
+          <span className="uppercase tracking-[0.3em] text-[0.6rem] text-amber-300">Auto-poll</span>
+          <span className="font-mono text-muted-foreground/80">
+            attempt {pollAttempts}/{POLL_MAX_ATTEMPTS}
+          </span>
+          {nextPollAt && (
+            <span className="font-mono text-muted-foreground/60">
+              next check in {Math.max(0, Math.ceil((nextPollAt - Date.now()) / 1000))}s
+              {/* tick keeps countdown live */}
+              <span className="hidden">{tick}</span>
+            </span>
+          )}
+          {verifying && <span className="text-muted-foreground/60 italic">checking…</span>}
+        </div>
+      )}
+
+
       {!status && (
         <p className="mt-6 text-xs text-muted-foreground/60 italic">
           Click <span className="font-mono">Refresh status</span> to pull current state from Resend.
