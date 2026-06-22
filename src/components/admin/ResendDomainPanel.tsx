@@ -1,9 +1,14 @@
-import { useState } from "react";
-import { Check, X, Minus, RotateCw, ShieldCheck, MailCheck, Loader2 } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Check, X, Minus, RotateCw, ShieldCheck, MailCheck, Loader2, Radar, CircleStop } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+
+const POLL_INTERVAL_MS = 30_000; // 30s between Resend verify calls
+const POLL_TIMEOUT_MS = 30 * 60 * 1000; // give up after 30 min
+const POLL_MAX_ATTEMPTS = Math.floor(POLL_TIMEOUT_MS / POLL_INTERVAL_MS);
+
 
 interface ResendRecord {
   record: string;
@@ -51,6 +56,14 @@ export default function ResendDomainPanel() {
   const [testResult, setTestResult] = useState<{ ok: boolean; latency?: number; detail?: string } | null>(null);
   const [lastChecked, setLastChecked] = useState<string | null>(null);
 
+  // Auto-poll state
+  const [polling, setPolling] = useState(false);
+  const [pollAttempts, setPollAttempts] = useState(0);
+  const [nextPollAt, setNextPollAt] = useState<number | null>(null);
+  const [tick, setTick] = useState(0);
+  const pollTimerRef = useRef<number | null>(null);
+  const tickTimerRef = useRef<number | null>(null);
+
   const invoke = async (action: "status" | "verify" | "test-inquiry") => {
     const { data, error } = await supabase.functions.invoke("resend-domain-status", {
       body: { action },
@@ -72,22 +85,94 @@ export default function ResendDomainPanel() {
     }
   };
 
-  const triggerVerify = async () => {
+
+  const triggerVerify = useCallback(async (opts?: { silent?: boolean }) => {
     setVerifying(true);
     try {
       const data = await invoke("verify");
       setStatus({ configured: true, domain: data.domain });
       setLastChecked(new Date().toLocaleTimeString());
-      toast({
-        title: "Verification re-checked",
-        description: `Resend status: ${data.domain?.status ?? "unknown"}`,
-      });
+      if (!opts?.silent) {
+        toast({
+          title: "Verification re-checked",
+          description: `Resend status: ${data.domain?.status ?? "unknown"}`,
+        });
+      }
+      return data.domain?.status as string | undefined;
     } catch (e: any) {
-      toast({ title: "Verify failed", description: e?.message, variant: "destructive" });
+      if (!opts?.silent) {
+        toast({ title: "Verify failed", description: e?.message, variant: "destructive" });
+      }
+      throw e;
     } finally {
       setVerifying(false);
     }
-  };
+  }, [toast]);
+
+  const stopPolling = useCallback(() => {
+    if (pollTimerRef.current) { window.clearTimeout(pollTimerRef.current); pollTimerRef.current = null; }
+    if (tickTimerRef.current) { window.clearInterval(tickTimerRef.current); tickTimerRef.current = null; }
+    setPolling(false);
+    setNextPollAt(null);
+  }, []);
+
+  const scheduleNext = useCallback((attempt: number) => {
+    const at = Date.now() + POLL_INTERVAL_MS;
+    setNextPollAt(at);
+    pollTimerRef.current = window.setTimeout(async () => {
+      if (attempt >= POLL_MAX_ATTEMPTS) {
+        stopPolling();
+        toast({ title: "Polling timed out", description: `No verification after ${POLL_MAX_ATTEMPTS} attempts.`, variant: "destructive" });
+        return;
+      }
+      setPollAttempts(attempt + 1);
+      try {
+        const next = (await triggerVerify({ silent: true }))?.toLowerCase();
+        if (next === "verified") {
+          stopPolling();
+          toast({ title: "Domain verified ✓", description: "Resend now accepts sends from peninsulaequine.systems." });
+          return;
+        }
+        if (next === "failed" || next === "failure") {
+          stopPolling();
+          toast({ title: "Verification failed", description: "Resend reports failure — check DNS records.", variant: "destructive" });
+          return;
+        }
+      } catch {
+        // transient error: keep polling
+      }
+      scheduleNext(attempt + 1);
+    }, POLL_INTERVAL_MS);
+  }, [stopPolling, toast, triggerVerify]);
+
+  const startPolling = useCallback(async () => {
+    if (polling) return;
+    setPolling(true);
+    setPollAttempts(1);
+    try {
+      const initial = (await triggerVerify({ silent: true }))?.toLowerCase();
+      if (initial === "verified") {
+        stopPolling();
+        toast({ title: "Domain verified ✓", description: "Already passing — no polling needed." });
+        return;
+      }
+    } catch {
+      // continue into the loop anyway
+    }
+    toast({ title: "Auto-poll started", description: `Re-checking every ${POLL_INTERVAL_MS / 1000}s for up to ${POLL_TIMEOUT_MS / 60_000} min.` });
+    scheduleNext(1);
+  }, [polling, scheduleNext, stopPolling, toast, triggerVerify]);
+
+  // Tick for countdown display
+  useEffect(() => {
+    if (!polling) return;
+    tickTimerRef.current = window.setInterval(() => setTick((t) => t + 1), 1000);
+    return () => { if (tickTimerRef.current) window.clearInterval(tickTimerRef.current); };
+  }, [polling]);
+
+  // Cleanup on unmount
+  useEffect(() => () => stopPolling(), [stopPolling]);
+
 
   const retestInquiry = async () => {
     setTesting(true);
@@ -135,16 +220,47 @@ export default function ResendDomainPanel() {
             {loading ? <Loader2 className="h-3 w-3 mr-2 animate-spin" /> : <RotateCw className="h-3 w-3 mr-2" />}
             Refresh status
           </Button>
-          <Button size="sm" variant="outline" onClick={triggerVerify} disabled={verifying || !status?.configured}>
+          <Button size="sm" variant="outline" onClick={() => triggerVerify()} disabled={verifying || !status?.configured}>
             {verifying ? <Loader2 className="h-3 w-3 mr-2 animate-spin" /> : <ShieldCheck className="h-3 w-3 mr-2" />}
             Re-verify with Resend
           </Button>
+          {polling ? (
+            <Button size="sm" variant="outline" onClick={stopPolling}>
+              <CircleStop className="h-3 w-3 mr-2 text-red-400" />
+              Stop auto-poll
+            </Button>
+          ) : (
+            <Button size="sm" variant="outline" onClick={startPolling} disabled={!status?.configured}>
+              <Radar className="h-3 w-3 mr-2" />
+              Auto-poll until verified
+            </Button>
+          )}
           <Button size="sm" onClick={retestInquiry} disabled={testing}>
             {testing ? <Loader2 className="h-3 w-3 mr-2 animate-spin" /> : <MailCheck className="h-3 w-3 mr-2" />}
             Re-test inquiry email
           </Button>
+
         </div>
       </div>
+
+      {polling && (
+        <div className="mt-6 border border-amber-500/30 bg-amber-500/5 px-4 py-3 text-xs flex items-center gap-3 flex-wrap">
+          <Radar className="h-3 w-3 text-amber-300 animate-pulse" />
+          <span className="uppercase tracking-[0.3em] text-[0.6rem] text-amber-300">Auto-poll</span>
+          <span className="font-mono text-muted-foreground/80">
+            attempt {pollAttempts}/{POLL_MAX_ATTEMPTS}
+          </span>
+          {nextPollAt && (
+            <span className="font-mono text-muted-foreground/60">
+              next check in {Math.max(0, Math.ceil((nextPollAt - Date.now()) / 1000))}s
+              {/* tick keeps countdown live */}
+              <span className="hidden">{tick}</span>
+            </span>
+          )}
+          {verifying && <span className="text-muted-foreground/60 italic">checking…</span>}
+        </div>
+      )}
+
 
       {!status && (
         <p className="mt-6 text-xs text-muted-foreground/60 italic">
