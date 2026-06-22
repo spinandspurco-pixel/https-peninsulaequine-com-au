@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { trackEvent } from "@/lib/analytics";
 
 function getVisitorId(): string {
   const key = "pe_visitor_id";
@@ -23,4 +24,8 @@ export function trackCtaClick(ctaLabel: string, metadata?: Record<string, unknow
   } catch (err) {
     console.warn("[CTA Tracking] Failed:", err);
   }
+
+  // Mirror to GA4 so CTA clicks show up in conversions funnels.
+  trackEvent("cta_click", { cta_label: ctaLabel, ...(metadata ?? {}) });
 }
+
