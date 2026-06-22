@@ -1,9 +1,14 @@
-import { useState } from "react";
-import { Check, X, Minus, RotateCw, ShieldCheck, MailCheck, Loader2 } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Check, X, Minus, RotateCw, ShieldCheck, MailCheck, Loader2, Radar, CircleStop } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+
+const POLL_INTERVAL_MS = 30_000; // 30s between Resend verify calls
+const POLL_TIMEOUT_MS = 30 * 60 * 1000; // give up after 30 min
+const POLL_MAX_ATTEMPTS = Math.floor(POLL_TIMEOUT_MS / POLL_INTERVAL_MS);
+
 
 interface ResendRecord {
   record: string;
@@ -51,6 +56,14 @@ export default function ResendDomainPanel() {
   const [testResult, setTestResult] = useState<{ ok: boolean; latency?: number; detail?: string } | null>(null);
   const [lastChecked, setLastChecked] = useState<string | null>(null);
 
+  // Auto-poll state
+  const [polling, setPolling] = useState(false);
+  const [pollAttempts, setPollAttempts] = useState(0);
+  const [nextPollAt, setNextPollAt] = useState<number | null>(null);
+  const [tick, setTick] = useState(0);
+  const pollTimerRef = useRef<number | null>(null);
+  const tickTimerRef = useRef<number | null>(null);
+
   const invoke = async (action: "status" | "verify" | "test-inquiry") => {
     const { data, error } = await supabase.functions.invoke("resend-domain-status", {
       body: { action },
@@ -71,6 +84,7 @@ export default function ResendDomainPanel() {
       setLoading(false);
     }
   };
+
 
   const triggerVerify = async () => {
     setVerifying(true);
