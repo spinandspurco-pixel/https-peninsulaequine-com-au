@@ -4,6 +4,8 @@ import { Footer } from "./Footer";
 import { SEOSchema } from "@/components/SEOSchema";
 import { PageTransition } from "@/components/PageTransition";
 import { GlobalCinematicBackdrop } from "@/components/GlobalCinematicBackdrop";
+import { ConsentBanner } from "@/components/consent/ConsentBanner";
+
 
 interface LayoutProps {
   children: ReactNode;
@@ -63,6 +65,8 @@ export function Layout({ children }: LayoutProps) {
         <main id="main-content" className="flex-1 relative z-[1]" tabIndex={-1}>{children}</main>
       </PageTransition>
       <Footer />
+      <ConsentBanner />
     </div>
+
   );
 }
