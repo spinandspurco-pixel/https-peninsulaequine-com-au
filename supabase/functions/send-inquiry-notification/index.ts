@@ -174,7 +174,10 @@ function generateConsultationICS(opts: {
     "END:VCALENDAR",
   ].join("\r\n");
 
-  return { icsBase64: btoa(ics), readableDate };
+  const icsBytes = new TextEncoder().encode(ics);
+  let icsBin = "";
+  for (let i = 0; i < icsBytes.length; i++) icsBin += String.fromCharCode(icsBytes[i]);
+  return { icsBase64: btoa(icsBin), readableDate };
 }
 
 const handler = async (req: Request): Promise<Response> => {
