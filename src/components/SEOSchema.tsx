@@ -1,14 +1,16 @@
 import { useEffect } from "react";
 import { siteConfig } from "@/data/content";
 
+const SITE_ORIGIN = "https://peninsulaequine.systems";
+
 // Schema.org structured data for SEO
 const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
-  "@id": "https://peninsulaequine.lovable.app/#business",
+  "@id": `${SITE_ORIGIN}/#business`,
   name: siteConfig.name,
   description: siteConfig.description,
-  url: "https://peninsulaequine.lovable.app",
+  url: SITE_ORIGIN,
   telephone: siteConfig.phone,
   email: siteConfig.email,
   address: {
@@ -39,7 +41,7 @@ const localBusinessSchema = {
     },
   ],
   priceRange: "$$$",
-  image: "https://peninsulaequine.lovable.app/og-image.jpg",
+  image: `${SITE_ORIGIN}/og-image.jpg`,
   sameAs: [siteConfig.social.instagram, siteConfig.social.facebook],
   areaServed: {
     "@type": "GeoCircle",
@@ -92,11 +94,11 @@ const localBusinessSchema = {
 const sportsActivityLocationSchema = {
   "@context": "https://schema.org",
   "@type": "SportsActivityLocation",
-  "@id": "https://peninsulaequine.lovable.app/#facility",
+  "@id": `${SITE_ORIGIN}/#facility`,
   name: `${siteConfig.name} Training Facility`,
   description:
     "Professional equine training facility offering riding lessons and horse training on the Mornington Peninsula.",
-  url: "https://peninsulaequine.lovable.app",
+  url: SITE_ORIGIN,
   telephone: siteConfig.phone,
   address: {
     "@type": "PostalAddress",
@@ -140,10 +142,10 @@ const sportsActivityLocationSchema = {
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "@id": "https://peninsulaequine.lovable.app/#organization",
+  "@id": `${SITE_ORIGIN}/#organization`,
   name: siteConfig.name,
-  url: "https://peninsulaequine.lovable.app",
-  logo: "https://peninsulaequine.lovable.app/logo.png",
+  url: SITE_ORIGIN,
+  logo: `${SITE_ORIGIN}/logo.png`,
   contactPoint: {
     "@type": "ContactPoint",
     telephone: siteConfig.phone,
