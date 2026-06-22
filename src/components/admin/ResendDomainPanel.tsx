@@ -86,22 +86,93 @@ export default function ResendDomainPanel() {
   };
 
 
-  const triggerVerify = async () => {
+  const triggerVerify = useCallback(async (opts?: { silent?: boolean }) => {
     setVerifying(true);
     try {
       const data = await invoke("verify");
       setStatus({ configured: true, domain: data.domain });
       setLastChecked(new Date().toLocaleTimeString());
-      toast({
-        title: "Verification re-checked",
-        description: `Resend status: ${data.domain?.status ?? "unknown"}`,
-      });
+      if (!opts?.silent) {
+        toast({
+          title: "Verification re-checked",
+          description: `Resend status: ${data.domain?.status ?? "unknown"}`,
+        });
+      }
+      return data.domain?.status as string | undefined;
     } catch (e: any) {
-      toast({ title: "Verify failed", description: e?.message, variant: "destructive" });
+      if (!opts?.silent) {
+        toast({ title: "Verify failed", description: e?.message, variant: "destructive" });
+      }
+      throw e;
     } finally {
       setVerifying(false);
     }
-  };
+  }, [toast]);
+
+  const stopPolling = useCallback(() => {
+    if (pollTimerRef.current) { window.clearTimeout(pollTimerRef.current); pollTimerRef.current = null; }
+    if (tickTimerRef.current) { window.clearInterval(tickTimerRef.current); tickTimerRef.current = null; }
+    setPolling(false);
+    setNextPollAt(null);
+  }, []);
+
+  const scheduleNext = useCallback((attempt: number) => {
+    const at = Date.now() + POLL_INTERVAL_MS;
+    setNextPollAt(at);
+    pollTimerRef.current = window.setTimeout(async () => {
+      if (attempt >= POLL_MAX_ATTEMPTS) {
+        stopPolling();
+        toast({ title: "Polling timed out", description: `No verification after ${POLL_MAX_ATTEMPTS} attempts.`, variant: "destructive" });
+        return;
+      }
+      setPollAttempts(attempt + 1);
+      try {
+        const next = (await triggerVerify({ silent: true }))?.toLowerCase();
+        if (next === "verified") {
+          stopPolling();
+          toast({ title: "Domain verified ✓", description: "Resend now accepts sends from peninsulaequine.systems." });
+          return;
+        }
+        if (next === "failed" || next === "failure") {
+          stopPolling();
+          toast({ title: "Verification failed", description: "Resend reports failure — check DNS records.", variant: "destructive" });
+          return;
+        }
+      } catch {
+        // transient error: keep polling
+      }
+      scheduleNext(attempt + 1);
+    }, POLL_INTERVAL_MS);
+  }, [stopPolling, toast, triggerVerify]);
+
+  const startPolling = useCallback(async () => {
+    if (polling) return;
+    setPolling(true);
+    setPollAttempts(1);
+    try {
+      const initial = (await triggerVerify({ silent: true }))?.toLowerCase();
+      if (initial === "verified") {
+        stopPolling();
+        toast({ title: "Domain verified ✓", description: "Already passing — no polling needed." });
+        return;
+      }
+    } catch {
+      // continue into the loop anyway
+    }
+    toast({ title: "Auto-poll started", description: `Re-checking every ${POLL_INTERVAL_MS / 1000}s for up to ${POLL_TIMEOUT_MS / 60_000} min.` });
+    scheduleNext(1);
+  }, [polling, scheduleNext, stopPolling, toast, triggerVerify]);
+
+  // Tick for countdown display
+  useEffect(() => {
+    if (!polling) return;
+    tickTimerRef.current = window.setInterval(() => setTick((t) => t + 1), 1000);
+    return () => { if (tickTimerRef.current) window.clearInterval(tickTimerRef.current); };
+  }, [polling]);
+
+  // Cleanup on unmount
+  useEffect(() => () => stopPolling(), [stopPolling]);
+
 
   const retestInquiry = async () => {
     setTesting(true);
