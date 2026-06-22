@@ -466,9 +466,10 @@ const handler = async (req: Request): Promise<Response> => {
       notifyRecipients.push(trainerEmail);
     }
 
-    // Send both emails in parallel
-    const [notificationResponse, confirmationResponse] = await Promise.all([
-      // Send the notification email to the business + trainer
+    // Send notification, confirmation, and Gmail mirror in parallel.
+    // Gmail send is best-effort: failures are logged but don't fail the request.
+    const [notificationResponse, confirmationResponse, gmailResponse] = await Promise.all([
+      // Send the notification email to the business + trainer (via Resend, verified domain)
       resend.emails.send({
         from: HQ_FROM,
         to: notifyRecipients,
@@ -484,10 +485,19 @@ const handler = async (req: Request): Promise<Response> => {
         subject: "Project Received — Peninsula Equine",
         html: confirmationHtml,
       }),
+      // Mirror notification through the connected Gmail inbox so it lands in the team's Gmail
+      sendViaGmail({
+        to: notifyRecipients,
+        subject: `[Gmail] New Project Inquiry — ${String(inquiry.name).replace(/[\r\n]/g, " ").slice(0, 120)}`,
+        html: emailHtml,
+        replyTo: inquiry.email,
+      }),
     ]);
 
     console.log("Notification email sent:", notificationResponse);
     console.log("Confirmation email sent:", confirmationResponse);
+    console.log("Gmail notification:", gmailResponse);
+
 
     return new Response(JSON.stringify({ 
       success: true, 
