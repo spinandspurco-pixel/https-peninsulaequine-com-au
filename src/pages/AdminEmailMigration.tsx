@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
+import ResendDomainPanel from "@/components/admin/ResendDomainPanel";
+
 
 type Status = "pass" | "fail" | "pending";
 
@@ -361,7 +363,10 @@ export default function AdminEmailMigration() {
           </div>
         </header>
 
+        <ResendDomainPanel />
+
         <div className="space-y-16">
+
           {sections.map((section) => {
             const locked = lockedSections.has(section.id);
             const stats = sectionStats.get(section.id)!;
