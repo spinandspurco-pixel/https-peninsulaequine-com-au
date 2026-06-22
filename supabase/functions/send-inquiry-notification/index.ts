@@ -54,6 +54,63 @@ function safeAttr(value: unknown): string {
   return s;
 }
 
+/**
+ * Send an email through the connected Gmail account via the Lovable connector gateway.
+ * Non-blocking: errors are logged but never thrown to the caller.
+ */
+async function sendViaGmail(opts: {
+  to: string[];
+  subject: string;
+  html: string;
+  replyTo?: string;
+}): Promise<{ ok: boolean; status?: number; error?: string; id?: string }> {
+  const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+  const GOOGLE_MAIL_API_KEY = Deno.env.get("GOOGLE_MAIL_API_KEY");
+  if (!LOVABLE_API_KEY || !GOOGLE_MAIL_API_KEY) {
+    return { ok: false, error: "gmail_connector_not_configured" };
+  }
+
+  const headers = [
+    `To: ${opts.to.join(", ")}`,
+    `Subject: ${opts.subject.replace(/[\r\n]/g, " ")}`,
+    opts.replyTo ? `Reply-To: ${opts.replyTo}` : "",
+    `MIME-Version: 1.0`,
+    `Content-Type: text/html; charset="UTF-8"`,
+    "",
+    opts.html,
+  ].filter(Boolean).join("\r\n");
+
+  // base64url encode
+  const raw = btoa(unescape(encodeURIComponent(headers)))
+    .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+
+  try {
+    const res = await fetch(
+      "https://connector-gateway.lovable.dev/google_mail/gmail/v1/users/me/messages/send",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "X-Connection-Api-Key": GOOGLE_MAIL_API_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ raw }),
+      },
+    );
+    const body = await res.text();
+    if (!res.ok) {
+      console.error("[send-inquiry-notification] Gmail send failed", res.status, body);
+      return { ok: false, status: res.status, error: body };
+    }
+    let id: string | undefined;
+    try { id = JSON.parse(body)?.id; } catch { /* ignore */ }
+    return { ok: true, status: res.status, id };
+  } catch (e) {
+    console.error("[send-inquiry-notification] Gmail send threw", e);
+    return { ok: false, error: e instanceof Error ? e.message : String(e) };
+  }
+}
+
 /** Generate a .ics calendar invite for a suggested follow-up consultation */
 function generateConsultationICS(opts: {
   clientName: string;
