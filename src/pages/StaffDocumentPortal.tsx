@@ -16,6 +16,8 @@ import {
   FileWarning, Download, ArrowLeft, FolderOpen, Bell, ClipboardList, AlertTriangle, Heart,
 } from "lucide-react";
 import logoPeMark from "@/assets/logo-pe-square.png";
+import { ChangePasswordDialog } from "@/components/ChangePasswordDialog";
+
 
 // Staff-specific document types (construction & payroll)
 const STAFF_DOC_TYPES = {
@@ -109,14 +111,16 @@ export default function StaffDocumentPortal() {
                 </p>
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <Button variant="outline" size="sm" onClick={() => navigate("/employee")}>
                 <ArrowLeft className="mr-1.5 h-4 w-4" /> Dashboard
               </Button>
+              <ChangePasswordDialog />
               <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground" onClick={() => navigate("/documents")}>
                 <Plus className="mr-1.5 h-4 w-4" /> New Document
               </Button>
             </div>
+
           </div>
 
           {/* Wednesday Payment Slip Deadline */}
