@@ -41,6 +41,7 @@ const HqProjectDetail = lazy(() => import("./pages/HqProjectDetail"));
 const EmployeeDashboard = lazy(() => import("./pages/EmployeeDashboard"));
 const AdminEmailMigration = lazy(() => import("./pages/AdminEmailMigration"));
 const AdminActivity = lazy(() => import("./pages/AdminActivity"));
+const AdminInquiries = lazy(() => import("./pages/AdminInquiries"));
 const DnsVerify = lazy(() => import("./pages/DnsVerify"));
 const DnsPublish = lazy(() => import("./pages/DnsPublish"));
 const DnsWizard = lazy(() => import("./pages/DnsWizard"));
