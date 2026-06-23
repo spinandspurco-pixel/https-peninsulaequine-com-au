@@ -2283,6 +2283,14 @@ export type Database = {
           user_id: string
         }[]
       }
+      list_staff_for_mentions: {
+        Args: never
+        Returns: {
+          display_name: string
+          email: string
+          user_id: string
+        }[]
+      }
       refresh_slot_hold: {
         Args: { p_expires_at: string; p_session_id: string; p_slot_id: string }
         Returns: undefined
