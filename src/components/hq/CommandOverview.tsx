@@ -28,10 +28,10 @@ export function CommandOverview() {
   useHqMount("CommandOverview");
   const [metrics, setMetrics] = useState<Metric[]>([
     { label: "Active projects", value: SKELETON },
-    { label: "New enquiries", value: SKELETON, hint: "last 7 days" },
-    { label: "Site visits booked", value: SKELETON },
-    { label: "Proposals sent", value: SKELETON },
-    { label: "In-progress builds", value: SKELETON },
+    { label: "New applications", value: SKELETON, hint: "last 7 days" },
+    { label: "Site visits", value: SKELETON },
+    { label: "Proposals", value: SKELETON },
+    { label: "Active builds", value: SKELETON },
     { label: "Completed projects", value: SKELETON, hint: "this quarter" },
   ]);
   const [activity, setActivity] = useState<ActivityRow[]>([]);
