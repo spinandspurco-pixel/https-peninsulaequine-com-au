@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { siteConfig, services as allServices } from "@/data/content";
 import { cn } from "@/lib/utils";
+import { trackConversion, trackFormError } from "@/lib/analytics";
 
 // --- Constants ---
 
@@ -347,9 +348,16 @@ export default function Schedule() {
         },
       }).catch(() => {});
 
+      trackConversion("schedule_follow_up", {
+        services: serviceIds.length > 0 ? serviceIds : ["follow-up-consultation"],
+        preferred_service: primaryServiceId || undefined,
+        preferred_date: dateStr,
+        slot_minutes: serviceMeta.minutes,
+      });
       setSubmitted(true);
       toast({ title: "Follow-up scheduled!", description: "We'll confirm your appointment within 24 hours." });
     } catch {
+      trackFormError("schedule_follow_up", "insert_failed");
       toast({ title: "Something went wrong", description: "Please try again or call us.", variant: "destructive" });
     } finally {
       setSubmitting(false);

@@ -32,6 +32,7 @@ import { StickySubpageCTA } from "@/components/StickySubpageCTA";
 import { useToast } from "@/hooks/use-toast";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
+import { trackConversion, trackFormError } from "@/lib/analytics";
 import { glennBrowitt, lessonInfo, siteConfig } from "@/data/content";
 // Approved cinematic — legacy main-ridge-finished-interior-1.jpg removed.
 import equitanaArena4Asset from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
@@ -515,9 +516,19 @@ function InlineBookingFlow() {
         }${selectedSlot ? ` at ${selectedSlot.start_time}–${selectedSlot.end_time}` : ""}`,
         status: "new",
       });
+      trackConversion("lesson_inquiry", {
+        services: [program.value],
+        program: program.value,
+        program_label: program.label,
+        program_price: program.price,
+        program_price_per: program.pricePer,
+        preferred_date: selectedDate ? format(selectedDate, "yyyy-MM-dd") : undefined,
+        has_slot: Boolean(selectedSlot),
+      });
       setSubmitted(true);
       toast({ title: "Booking request sent!", description: "We'll confirm your lesson within 24 hours." });
     } catch {
+      trackFormError("lesson_inquiry", "insert_failed");
       toast({ title: "Something went wrong", description: "Please try again.", variant: "destructive" });
     } finally {
       setSubmitting(false);

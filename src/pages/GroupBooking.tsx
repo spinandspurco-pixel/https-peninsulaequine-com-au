@@ -17,6 +17,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useToast } from "@/hooks/use-toast";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
+import { trackConversion, trackFormError } from "@/lib/analytics";
 
 // ── Pricing Logic ────────────────────────────────────
 
@@ -296,9 +297,20 @@ function GroupBookingForm() {
         },
       }).catch(() => {});
 
+      trackConversion("group_lesson_booking", {
+        services: ["group-lesson"],
+        group_size: groupSize,
+        preferred_date: selectedDate ? format(selectedDate, "yyyy-MM-dd") : undefined,
+        estimated_total: pricing.total,
+        per_person: pricing.discountedPerPerson,
+        discount_tier: pricing.discountLabel || "none",
+        value: pricing.total,
+        currency: "AUD",
+      });
       setIsSubmitted(true);
       toast({ title: "Group booking request sent!", description: "We'll confirm availability within 1–2 business days." });
     } catch {
+      trackFormError("group_lesson_booking", "insert_failed");
       toast({ title: "Something went wrong", description: "Please try again or call us directly.", variant: "destructive" });
     } finally {
       setIsSubmitting(false);

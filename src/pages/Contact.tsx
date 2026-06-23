@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { siteConfig } from "@/data/content";
 import { cn } from "@/lib/utils";
 import { z } from "zod";
+import { trackConversion, trackFormError } from "@/lib/analytics";
 
 
 
@@ -184,12 +185,21 @@ export default function Contact() {
         })
         .catch(() => {});
 
+      trackConversion("contact_assessment", {
+        services: form.scopes,
+        budget_range: form.budget || undefined,
+        timeline: form.timeline || undefined,
+        property_type: form.propertyType || undefined,
+        property_location: form.propertyLocation.trim() || undefined,
+        service_count: form.scopes.length,
+      });
       setSubmitted(true);
       toast({
         title: "Brief received",
         description: "We'll read the details and respond within two business days.",
       });
     } catch {
+      trackFormError("contact_assessment", "insert_failed");
       toast({
         title: "Submission failed",
         description: "Please try again or call the office directly.",
