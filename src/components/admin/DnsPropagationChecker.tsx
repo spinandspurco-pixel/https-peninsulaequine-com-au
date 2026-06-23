@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Check, X, Loader2, Radar, CircleStop, RotateCw, Download } from "lucide-react";
+import { Check, X, Loader2, Radar, CircleStop, RotateCw, Download, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+
+const NOTIFY_STORAGE_KEY = "dns-propagation-notify-email";
 
 // ---------------------------------------------------------------------------
 // Resolvers — DoH endpoints with permissive CORS so the browser can query them.
@@ -100,6 +104,13 @@ export default function DnsPropagationChecker() {
   const [attempts, setAttempts] = useState(0);
   const [nextAt, setNextAt] = useState<number | null>(null);
   const [, setTick] = useState(0);
+  const [notifyEmail, setNotifyEmail] = useState<string>(() => {
+    if (typeof window === "undefined") return "";
+    return window.localStorage.getItem(NOTIFY_STORAGE_KEY) ?? "";
+  });
+  const [notifySending, setNotifySending] = useState(false);
+  const [notifiedAt, setNotifiedAt] = useState<number | null>(null);
+  const notifiedRef = useRef(false);
   const timerRef = useRef<number | null>(null);
   const tickRef = useRef<number | null>(null);
   const startedAtRef = useRef<number>(0);
@@ -267,6 +278,56 @@ export default function DnsPropagationChecker() {
     toast({ title: "Exported CSV", description: "DNS propagation snapshot downloaded." });
   }, [buildSnapshot, toast]);
 
+  // ---------------------------------------------------------------------------
+  // Notify — email when every resolver turns green
+  // ---------------------------------------------------------------------------
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (notifyEmail) window.localStorage.setItem(NOTIFY_STORAGE_KEY, notifyEmail);
+    else window.localStorage.removeItem(NOTIFY_STORAGE_KEY);
+  }, [notifyEmail]);
+
+  const sendNotification = useCallback(async (manual: boolean) => {
+    const recipient = notifyEmail.trim();
+    if (!recipient || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(recipient)) {
+      if (manual) toast({ title: "Enter a valid email", variant: "destructive" });
+      return;
+    }
+    setNotifySending(true);
+    try {
+      const snap = buildSnapshot();
+      const { data, error } = await supabase.functions.invoke("notify-dns-propagated", {
+        body: { recipient, domain: snap.domain, records: snap.records, attempts },
+      });
+      if (error || (data as any)?.ok === false) {
+        throw new Error((error as any)?.message ?? (data as any)?.error ?? "send failed");
+      }
+      setNotifiedAt(Date.now());
+      notifiedRef.current = true;
+      toast({ title: "Notification sent ✓", description: `Confirmation emailed to ${recipient}.` });
+    } catch (e: any) {
+      toast({ title: "Notification failed", description: e?.message ?? String(e), variant: "destructive" });
+    } finally {
+      setNotifySending(false);
+    }
+  }, [notifyEmail, buildSnapshot, attempts, toast]);
+
+  // auto-fire once when allPass first becomes true
+  useEffect(() => {
+    if (!allPass) return;
+    if (notifiedRef.current) return;
+    if (!notifyEmail.trim()) return;
+    notifiedRef.current = true;
+    void sendNotification(false);
+  }, [allPass, notifyEmail, sendNotification]);
+
+  // reset notified flag if we drop back out of all-green so a future re-pass re-notifies
+  useEffect(() => {
+    if (!allPass) notifiedRef.current = false;
+  }, [allPass]);
+
+
+
 
   const cellClass = (s: CellState) => {
     switch (s) {
@@ -323,6 +384,44 @@ export default function DnsPropagationChecker() {
         </div>
 
       </div>
+
+      {/* Notify-on-green */}
+      <div className="mt-6 border border-border/30 px-4 py-3 flex items-center gap-3 flex-wrap">
+        <Mail className="h-3.5 w-3.5 text-muted-foreground/70" />
+        <div className="flex-1 min-w-[14rem]">
+          <p className="text-[0.55rem] uppercase tracking-[0.3em] text-muted-foreground/60 mb-1">
+            Email me when all checks go green
+          </p>
+          <Input
+            type="email"
+            inputMode="email"
+            placeholder="you@peninsulaequine.systems"
+            value={notifyEmail}
+            onChange={(e) => {
+              setNotifyEmail(e.target.value);
+              notifiedRef.current = false;
+            }}
+            className="h-8 text-xs font-mono"
+          />
+        </div>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => { notifiedRef.current = false; void sendNotification(true); }}
+          disabled={notifySending || !allPass}
+          title={allPass ? "Send confirmation now" : "Available once every resolver is green"}
+        >
+          {notifySending ? <Loader2 className="h-3 w-3 mr-2 animate-spin" /> : <Mail className="h-3 w-3 mr-2" />}
+          {allPass ? "Send now" : "Waiting for green"}
+        </Button>
+        {notifiedAt && (
+          <span className="font-mono text-[0.6rem] text-emerald-300/80 w-full">
+            ✓ notified {new Date(notifiedAt).toLocaleTimeString()} → {notifyEmail}
+          </span>
+        )}
+      </div>
+
+
 
       {polling && (
         <div className="mt-6 border border-amber-500/30 bg-amber-500/5 px-4 py-3 text-xs flex items-center gap-3 flex-wrap">
