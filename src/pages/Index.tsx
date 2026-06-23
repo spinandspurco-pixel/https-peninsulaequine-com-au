@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BrandIntro } from "@/components/BrandIntro";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+// MagneticLink is exposed in src/components/motion for future use.
 import { IntroContext } from "@/hooks/useIntroState";
 import { useIntake } from "@/hooks/useIntake";
 
@@ -46,6 +47,7 @@ const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
 
 export default function Index() {
   const heroContentRef = useRef<HTMLDivElement>(null);
+  const heroImgRef = useRef<HTMLImageElement>(null);
   const [heroFade, setHeroFade] = useState(1);
   const [heroImgLoaded, setHeroImgLoaded] = useState(false);
   const [heroImgFailed, setHeroImgFailed] = useState(false);
@@ -99,6 +101,46 @@ export default function Index() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
+  // Cinematic hero parallax: scale the loaded hero image from 1 → 1.06 and
+  // translate 0 → 36px over the first viewport. RAF-driven, CSS variables —
+  // no React state per frame. Honours prefers-reduced-motion. Defers until
+  // after the entrance transform completes so the two animations don't fight.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!heroImgLoaded) return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    let attached = false;
+    const update = () => {
+      raf = 0;
+      const img = heroImgRef.current;
+      if (!img) return;
+      const y = window.scrollY;
+      const vh = window.innerHeight || 1;
+      const p = Math.min(Math.max(y / vh, 0), 1);
+      const scale = 1 + p * 0.06;
+      const translate = p * 36;
+      img.style.transform = `translate3d(0, ${translate.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
+    };
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(update);
+    };
+    // Wait for the entrance transition (~2400ms) to finish before taking over.
+    const t = window.setTimeout(() => {
+      const img = heroImgRef.current;
+      if (img) img.style.transition = "transform 80ms linear, opacity 1600ms cubic-bezier(0.45,0,0.15,1)";
+      window.addEventListener("scroll", onScroll, { passive: true });
+      attached = true;
+      update();
+    }, 2500);
+    return () => {
+      window.clearTimeout(t);
+      if (attached) window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [heroImgLoaded]);
+
   return (
     <IntroContext.Provider value={{ headerLogoReady: headerReady, headerReady }}>
       <BrandIntro />
@@ -118,6 +160,7 @@ export default function Index() {
             <div className="absolute inset-0 bg-[hsl(222_20%_6%)]">
               {slidingStop1536?.url && !heroImgFailed ? (
                 <img
+                  ref={heroImgRef}
                   src={slidingStop1536.url}
                   srcSet={slidingStopSrcSet}
                   sizes="100vw"
@@ -256,14 +299,38 @@ export default function Index() {
                 >
                   <Link
                     to="/selected-works"
-                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground hover:text-foreground transition-colors duration-500 text-[11px] sm:text-[10px] tracking-[0.42em] py-3 -my-3"
+                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground hover:text-foreground transition-[color,transform] duration-500 text-[11px] sm:text-[10px] tracking-[0.42em] py-3 -my-3 will-change-transform"
+                    style={{ transition: "transform 280ms cubic-bezier(0.22, 1, 0.36, 1), color 500ms ease" }}
+                    onPointerMove={(e) => {
+                      const el = e.currentTarget;
+                      const r = el.getBoundingClientRect();
+                      const dx = e.clientX - (r.left + r.width / 2);
+                      const dy = e.clientY - (r.top + r.height / 2);
+                      const d = Math.hypot(dx, dy);
+                      if (d > 90) { el.style.transform = "translate3d(0,0,0)"; return; }
+                      const k = (1 - d / 90) * 6;
+                      el.style.transform = `translate3d(${((dx/(d||1))*k).toFixed(2)}px, ${((dy/(d||1))*k).toFixed(2)}px, 0)`;
+                    }}
+                    onPointerLeave={(e) => { e.currentTarget.style.transform = "translate3d(0,0,0)"; }}
                   >
                     <span className="w-9 h-px bg-accent/70 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
                     Explore Selected Works
                   </Link>
                   <Link
                     to="/services"
-                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/75 hover:text-foreground transition-colors duration-500 text-[11px] sm:text-[10px] tracking-[0.42em] py-3 -my-3"
+                    className="group inline-flex items-center gap-3 font-mono uppercase text-foreground/75 hover:text-foreground transition-[color,transform] duration-500 text-[11px] sm:text-[10px] tracking-[0.42em] py-3 -my-3 will-change-transform"
+                    style={{ transition: "transform 280ms cubic-bezier(0.22, 1, 0.36, 1), color 500ms ease" }}
+                    onPointerMove={(e) => {
+                      const el = e.currentTarget;
+                      const r = el.getBoundingClientRect();
+                      const dx = e.clientX - (r.left + r.width / 2);
+                      const dy = e.clientY - (r.top + r.height / 2);
+                      const d = Math.hypot(dx, dy);
+                      if (d > 90) { el.style.transform = "translate3d(0,0,0)"; return; }
+                      const k = (1 - d / 90) * 6;
+                      el.style.transform = `translate3d(${((dx/(d||1))*k).toFixed(2)}px, ${((dy/(d||1))*k).toFixed(2)}px, 0)`;
+                    }}
+                    onPointerLeave={(e) => { e.currentTarget.style.transform = "translate3d(0,0,0)"; }}
                   >
                     <span className="w-9 h-px bg-foreground/35 transition-all duration-700 group-hover:w-14 group-hover:bg-foreground/70" />
                     View Services
