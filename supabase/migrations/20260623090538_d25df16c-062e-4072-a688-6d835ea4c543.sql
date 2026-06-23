@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Trainers can view lesson inquiries" ON public.inquiries;
