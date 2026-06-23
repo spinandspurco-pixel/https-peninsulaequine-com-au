@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "bunx tsx scripts/verify-assets.ts",
+    "prebuild": "bunx tsx scripts/verify-assets.ts && bunx tsx scripts/verify-homepage-image-uniqueness.ts",
     "build": "bunx tsx scripts/build-strict.ts",
     "postbuild": "bunx tsx scripts/prerender.ts && bunx tsx scripts/verify-prerender.ts && bunx tsx scripts/verify-internal-links.ts",
     "build:dev": "vite build --mode development",
