@@ -145,31 +145,53 @@ export function CommandOverview() {
     },
   ];
 
+  const byLabel = (label: string) => metrics.find((m) => m.label === label)!;
+  const groups: { heading: string; items: Metric[] }[] = [
+    {
+      heading: "Work",
+      items: [byLabel("Active builds"), byLabel("Active projects"), byLabel("New applications")],
+    },
+    {
+      heading: "Performance",
+      items: [byLabel("Proposals"), byLabel("Site visits"), byLabel("Completed projects")],
+    },
+  ];
+
+  const renderMetric = (m: Metric, i: number, total: number) => (
+    <div
+      key={m.label}
+      className={`px-5 py-6 border-border/10 ${i < total - 1 ? "border-r" : ""}`}
+    >
+      <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">
+        {m.label}
+      </p>
+      <p className="font-serif text-3xl font-light text-foreground/95 leading-none">
+        {m.value}
+      </p>
+      {m.hint && (
+        <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/40 mt-2">
+          {m.hint}
+        </p>
+      )}
+    </div>
+  );
+
   return (
     <div className="space-y-14">
       {loadBanner}
-      {/* Metrics manifest strip */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
-        {metrics.map((m, i) => (
-          <div
-            key={m.label}
-            className={`px-5 py-6 border-border/10 ${
-              i % 2 === 0 ? "border-r" : "lg:border-r"
-            } ${i < 3 ? "border-b lg:border-b-0" : ""} ${
-              i === metrics.length - 1 ? "border-r-0" : ""
-            }`}
-          >
-            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">
-              {m.label}
-            </p>
-            <p className="font-serif text-3xl font-light text-foreground/95 leading-none">
-              {m.value}
-            </p>
-            {m.hint && (
-              <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/40 mt-2">
-                {m.hint}
-              </p>
-            )}
+      {/* Grouped metrics — project delivery framing */}
+      <div className="space-y-10">
+        {groups.map((g) => (
+          <div key={g.heading}>
+            <div className="flex items-baseline gap-3 mb-4">
+              <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/50">
+                {g.heading}
+              </span>
+              <div className="flex-1 h-px bg-border/10" />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 border-t border-b border-border/10">
+              {g.items.map((m, i) => renderMetric(m, i, g.items.length))}
+            </div>
           </div>
         ))}
       </div>
