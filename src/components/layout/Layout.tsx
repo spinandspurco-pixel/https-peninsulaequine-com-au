@@ -1,5 +1,6 @@
 import { ReactNode, useEffect, useState, useRef } from "react";
 import { Header } from "./Header";
+import { HqHeader } from "./HqHeader";
 import { Footer } from "./Footer";
 import { SEOSchema } from "@/components/SEOSchema";
 import { PageTransition } from "@/components/PageTransition";
@@ -50,9 +51,10 @@ function ScrollProgress() {
 }
 
 export function Layout({ children }: LayoutProps) {
-  // SiteRail owns the public nav. Header only renders where SiteRail does not
-  // (private/HQ/portal surfaces) so there is exactly one primary menu system.
-  const { showSiteRail } = useSiteChrome();
+  // SiteRail owns the public nav. On private surfaces (HQ, admin, portal,
+  // staff, trainer, login, quote) we render a slim HqHeader instead and
+  // suppress the public Footer.
+  const { showSiteRail, showFooter, isPrivate } = useSiteChrome();
   return (
     <div className="min-h-screen flex flex-col relative">
       <SEOSchema />
@@ -64,11 +66,11 @@ export function Layout({ children }: LayoutProps) {
       >
         Skip to main content
       </a>
-      {!showSiteRail && <Header />}
+      {showSiteRail ? null : isPrivate ? <HqHeader /> : <Header />}
       <PageTransition>
         <main id="main-content" className="flex-1 relative z-[1]" tabIndex={-1}>{children}</main>
       </PageTransition>
-      <Footer />
+      {showFooter && <Footer />}
       <ConsentBanner />
     </div>
 

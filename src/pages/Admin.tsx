@@ -338,7 +338,7 @@ export default function Admin() {
             id="zone-preview"
             number="06"
             title="Client Preview"
-            subtitle="A view-only mirror of HQ — share with prospects, sponsors or future clients without exposing the working backend."
+            subtitle="A view-only mirror of HQ — share with clients, collaborators or project partners without exposing the working backend."
           >
             <div className="space-y-8">
               <div className="border border-accent/20 px-6 py-8 bg-background">
@@ -356,7 +356,7 @@ export default function Admin() {
                   Preview hides
                 </p>
                 <ul className="text-[13px] text-muted-foreground/60 space-y-2 leading-relaxed">
-                  <li>· Team, financial and operational drawers</li>
+                  <li>· Internal team notes, commercial details and operational controls</li>
                   <li>· Database, secrets, user management</li>
                 </ul>
               </div>

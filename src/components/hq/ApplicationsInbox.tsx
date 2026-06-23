@@ -248,9 +248,11 @@ export function ApplicationsInbox() {
                   onClick={() => openRow(row)}
                   className="w-full text-left py-5 px-1 grid grid-cols-12 gap-4 items-baseline hover:bg-muted/10 transition-colors"
                 >
-                  <span className="col-span-12 sm:col-span-1 font-mono text-[10px] uppercase tracking-[0.22em] text-accent/45">
-                    {row.id.slice(0, 6)}
-                  </span>
+                  {!isPreview && (
+                    <span className="col-span-12 sm:col-span-1 font-mono text-[10px] uppercase tracking-[0.22em] text-accent/45">
+                      {row.id.slice(0, 6)}
+                    </span>
+                  )}
                   <span className="col-span-6 sm:col-span-3 font-serif text-[15px] text-foreground/90">
                     {row.name}
                   </span>
@@ -283,7 +285,7 @@ export function ApplicationsInbox() {
             <>
               <SheetHeader>
                 <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent/50 mb-2">
-                  Application · {selected.id.slice(0, 6)}
+                  Application{isPreview ? "" : ` · ${selected.id.slice(0, 6)}`}
                 </p>
                 <SheetTitle className="font-serif text-2xl font-light">
                   {selected.name}
