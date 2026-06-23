@@ -348,9 +348,16 @@ export default function Schedule() {
         },
       }).catch(() => {});
 
+      trackConversion("schedule_follow_up", {
+        services: serviceIds.length > 0 ? serviceIds : ["follow-up-consultation"],
+        preferred_service: primaryServiceId || undefined,
+        preferred_date: dateStr,
+        slot_minutes: serviceMeta.minutes,
+      });
       setSubmitted(true);
       toast({ title: "Follow-up scheduled!", description: "We'll confirm your appointment within 24 hours." });
     } catch {
+      trackFormError("schedule_follow_up", "insert_failed");
       toast({ title: "Something went wrong", description: "Please try again or call us.", variant: "destructive" });
     } finally {
       setSubmitting(false);
