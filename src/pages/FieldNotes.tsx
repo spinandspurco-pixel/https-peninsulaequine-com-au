@@ -105,9 +105,12 @@ export default function FieldNotes() {
                   </p>
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" duration={1000} delay={120}>
-                  <h2 className="font-serif text-foreground/92 leading-[1.02] tracking-tight text-[clamp(1.8rem,1.2rem+2vw,3rem)]">
-                    Covered Arena &amp; Stables Build
-                  </h2>
+                  <RevealHeading
+                    as="h2"
+                    className="font-serif text-foreground/92 leading-[1.02] tracking-tight text-[clamp(1.8rem,1.2rem+2vw,3rem)]"
+                  >
+                    {"Covered Arena & Stables Build"}
+                  </RevealHeading>
                 </RevealOnScroll>
                 <RevealLine width="w-8" delay={220} />
                 <RevealOnScroll direction="up" duration={1000} delay={300}>
@@ -139,9 +142,12 @@ export default function FieldNotes() {
                             <p className="font-mono uppercase text-accent/60 text-[10px] tracking-[0.42em]">
                               Current Project
                             </p>
-                            <h3 className="font-serif text-foreground/94 leading-[1.02] tracking-tight text-[clamp(1.6rem,1.1rem+1.8vw,2.5rem)]">
-                              Covered Arena &amp; Stables Build
-                            </h3>
+                            <RevealHeading
+                              as="h3"
+                              className="font-serif text-foreground/94 leading-[1.02] tracking-tight text-[clamp(1.6rem,1.1rem+1.8vw,2.5rem)]"
+                            >
+                              {"Covered Arena & Stables Build"}
+                            </RevealHeading>
                             <p className="font-sans font-light text-foreground/62 leading-[1.8] text-[14px] sm:text-[15px] max-w-lg">
                               Structural steel, undercover arena works and stable infrastructure in progress.
                             </p>
@@ -189,9 +195,12 @@ export default function FieldNotes() {
                     </p>
                   </RevealOnScroll>
                   <RevealOnScroll direction="up" duration={1100} delay={140}>
-                    <h2 className="font-serif text-foreground leading-[0.96] tracking-tight text-[clamp(1.8rem,1.15rem+2.2vw,3rem)]">
+                    <RevealHeading
+                      as="h2"
+                      className="font-serif text-foreground leading-[0.96] tracking-tight text-[clamp(1.8rem,1.15rem+2.2vw,3rem)]"
+                    >
                       Captured while the work is still alive.
-                    </h2>
+                    </RevealHeading>
                   </RevealOnScroll>
                   <RevealLine width="w-10" delay={260} />
                   <RevealOnScroll direction="up" duration={1100} delay={320}>
