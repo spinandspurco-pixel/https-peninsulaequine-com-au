@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import ResendDomainPanel from "@/components/admin/ResendDomainPanel";
+import DnsPropagationChecker from "@/components/admin/DnsPropagationChecker";
 
 
 type Status = "pass" | "fail" | "pending";
@@ -363,6 +364,7 @@ export default function AdminEmailMigration() {
           </div>
         </header>
 
+        <DnsPropagationChecker />
         <ResendDomainPanel />
 
         <div className="space-y-16">
