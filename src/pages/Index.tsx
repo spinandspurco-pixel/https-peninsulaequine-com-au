@@ -14,10 +14,14 @@ import aberdeenHero from "@/assets/uploads/approved-aberdeen-rider-exterior-stor
 import aberdeenArena from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
 import steelFrontAsset from "@/assets/uploads/approved-current-build-steel-frame-storm.png.asset.json";
 import coveredArenaExteriorAsset from "@/assets/covered-arenas/approved-covered-arena-exterior-dusk.png.asset.json";
+import muddyBootsCraftAsset from "@/assets/field-notes/muddy-boots-steel-frame.png.asset.json";
+import mainRidgeLegacyAsset from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
 
 
 const steelFront = steelFrontAsset.url;
 const coveredArenaExterior = coveredArenaExteriorAsset.url;
+const craftBoots = muddyBootsCraftAsset.url;
+const legacyPavilion = mainRidgeLegacyAsset.url;
 
 // Responsive webp variants for srcset (generated at 640/1024/1536w)
 import ciro640 from "@/assets/responsive/ciro-ace-quiet-moment-640.webp.asset.json";
