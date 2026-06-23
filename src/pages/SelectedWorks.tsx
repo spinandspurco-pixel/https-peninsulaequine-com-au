@@ -350,7 +350,8 @@ function ProjectChapter({
               <p className="font-mono text-[9.5px] uppercase tracking-[0.45em] text-accent/70">
                 {project.category}
               </p>
-              <h2
+              <RevealHeading
+                as="h2"
                 className={`mt-5 font-serif text-foreground leading-[0.96] tracking-tight ${
                   isFeature
                     ? "text-[clamp(2.4rem,1.4rem+4vw,4.8rem)]"
@@ -358,7 +359,7 @@ function ProjectChapter({
                 }`}
               >
                 {project.title}
-              </h2>
+              </RevealHeading>
               <p
                 className={`mt-6 font-serif italic text-foreground/65 leading-[1.5] ${
                   isFeature
