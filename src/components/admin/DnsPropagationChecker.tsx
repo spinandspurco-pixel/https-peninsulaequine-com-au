@@ -33,6 +33,8 @@ const RECORDS = [
     label: "DKIM",
     host: "resend._domainkey.peninsulaequine.systems",
     type: "TXT",
+    expected:
+      "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC28qaXHsfOfs9r8fZdafVBUgm2Vo38CFO0LLthuiA4aQ0dOsjyoZs/dklsreyPAFJpw1AXpBHh0fxDTbH3sZYtuLRMZN5Yr8UL0jlkLjVBApUpUvYpjAIyIIQoHTek0rekqSIOyWnuUasRstNKoD/+Ip040tPSQ4x+zGbFxJ0ZowIDAQAB",
     expectedHint: "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC28qaXHsfOfs9r8fZdafVBUgm2Vo38C…",
     match: (data: string) => /p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC28qaXHsfOfs9r8fZdafVBUgm2Vo38C/.test(data),
   },
@@ -41,6 +43,7 @@ const RECORDS = [
     label: "MX",
     host: "send.peninsulaequine.systems",
     type: "MX",
+    expected: "10 feedback-smtp.eu-west-1.amazonses.com.",
     expectedHint: "10 feedback-smtp.eu-west-1.amazonses.com.",
     match: (data: string) => /feedback-smtp\.eu-west-1\.amazonses\.com/i.test(data),
   },
@@ -49,6 +52,7 @@ const RECORDS = [
     label: "SPF",
     host: "send.peninsulaequine.systems",
     type: "TXT",
+    expected: "v=spf1 include:amazonses.com ~all",
     expectedHint: "v=spf1 include:amazonses.com ~all",
     match: (data: string) => /v=spf1[^"]*include:amazonses\.com/i.test(data),
   },
@@ -306,6 +310,97 @@ export default function DnsPropagationChecker() {
           </tbody>
         </table>
       </div>
+
+      {/* Detailed per-record / per-resolver expected vs resolved view */}
+      <div className="mt-10 space-y-8">
+        <div className="flex items-baseline justify-between">
+          <p className="text-[0.6rem] uppercase tracking-[0.35em] text-muted-foreground/60">Detailed status</p>
+          <p className="text-[0.6rem] text-muted-foreground/50 font-mono">expected vs resolved · per resolver</p>
+        </div>
+
+        {RECORDS.map((rec) => (
+          <article key={rec.id} className="border border-border/30">
+            <header className="px-4 py-3 border-b border-border/30 bg-muted/10 flex items-baseline justify-between gap-4 flex-wrap">
+              <div>
+                <div className="flex items-baseline gap-3">
+                  <h3 className="font-serif text-lg">{rec.label}</h3>
+                  <span className="font-mono text-[0.6rem] uppercase tracking-[0.25em] text-muted-foreground/60">{rec.type}</span>
+                </div>
+                <div className="mt-1 font-mono text-[0.7rem] text-muted-foreground/80 break-all">{rec.host}</div>
+              </div>
+              <div className="text-right">
+                <p className="text-[0.55rem] uppercase tracking-[0.3em] text-muted-foreground/50">Status</p>
+                <p className="font-mono text-xs mt-1">
+                  {RESOLVERS.filter((res) => grid[rec.id][res.id].state === "pass").length}/{RESOLVERS.length} green
+                </p>
+              </div>
+            </header>
+
+            <div className="px-4 py-3 border-b border-border/30">
+              <p className="text-[0.55rem] uppercase tracking-[0.3em] text-muted-foreground/50 mb-1">Expected value</p>
+              <pre className="font-mono text-[0.7rem] text-emerald-300/90 whitespace-pre-wrap break-all leading-relaxed">{rec.expected}</pre>
+            </div>
+
+            <div className="divide-y divide-border/30">
+              {RESOLVERS.map((res) => {
+                const cell = grid[rec.id][res.id];
+                const match = cell.state === "pass";
+                return (
+                  <div key={res.id} className="px-4 py-3">
+                    <div className="flex items-center justify-between gap-3 mb-2">
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono text-xs">{res.label}</span>
+                        <span className={`inline-flex items-center gap-1.5 border px-2 py-0.5 ${cellClass(cell.state)}`}>
+                          {cellIcon(cell.state)}
+                          <span className="font-mono uppercase tracking-[0.2em] text-[0.55rem]">
+                            {cell.state === "idle" ? "not checked" : cell.state}
+                          </span>
+                        </span>
+                      </div>
+                      {cell.at && (
+                        <span className="font-mono text-[0.6rem] text-muted-foreground/50">
+                          {new Date(cell.at).toLocaleTimeString()}
+                        </span>
+                      )}
+                    </div>
+
+                    <p className="text-[0.55rem] uppercase tracking-[0.3em] text-muted-foreground/50 mb-1">Resolved value</p>
+                    {cell.state === "idle" ? (
+                      <p className="font-mono text-[0.7rem] text-muted-foreground/40 italic">—</p>
+                    ) : cell.state === "checking" ? (
+                      <p className="font-mono text-[0.7rem] text-muted-foreground/60 italic">querying…</p>
+                    ) : cell.data && cell.data.length > 0 ? (
+                      <ul className="space-y-1">
+                        {cell.data.map((d, i) => (
+                          <li
+                            key={i}
+                            className={`font-mono text-[0.7rem] whitespace-pre-wrap break-all leading-relaxed ${
+                              match ? "text-emerald-300/90" : "text-red-300/90"
+                            }`}
+                          >
+                            {d}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="font-mono text-[0.7rem] text-red-300/80">
+                        {cell.message ?? "no answer"}
+                      </p>
+                    )}
+
+                    {!match && cell.state !== "idle" && cell.state !== "checking" && (
+                      <p className="mt-1 text-[0.6rem] text-amber-300/70">
+                        {cell.message ?? "value does not match expected"}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </article>
+        ))}
+      </div>
+
 
       <p className="mt-4 text-[0.65rem] text-muted-foreground/50 leading-relaxed">
         Queries run from your browser via DNS-over-HTTPS — no edge function involved. A green row means that resolver has
