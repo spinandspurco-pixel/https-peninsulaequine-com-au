@@ -6,6 +6,10 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 const NOTIFY_STORAGE_KEY = "dns-propagation-notify-email";
+const NOTIFY_HISTORY_KEY = "dns-propagation-notify-history";
+const COOLDOWN_MS = 5 * 60_000; // 5 min between sends
+const RATE_WINDOW_MS = 60 * 60_000; // 1 hour
+const RATE_MAX_SENDS = 4; // max sends per hour
 
 // ---------------------------------------------------------------------------
 // Resolvers — DoH endpoints with permissive CORS so the browser can query them.
@@ -109,11 +113,29 @@ export default function DnsPropagationChecker() {
     return window.localStorage.getItem(NOTIFY_STORAGE_KEY) ?? "";
   });
   const [notifySending, setNotifySending] = useState(false);
-  const [notifiedAt, setNotifiedAt] = useState<number | null>(null);
+  const [sendHistory, setSendHistory] = useState<number[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = window.localStorage.getItem(NOTIFY_HISTORY_KEY);
+      const arr = raw ? (JSON.parse(raw) as number[]) : [];
+      return Array.isArray(arr) ? arr.filter((n) => typeof n === "number") : [];
+    } catch { return []; }
+  });
+  const [now, setNow] = useState(() => Date.now());
   const notifiedRef = useRef(false);
   const timerRef = useRef<number | null>(null);
   const tickRef = useRef<number | null>(null);
+  const cooldownTickRef = useRef<number | null>(null);
   const startedAtRef = useRef<number>(0);
+
+  const notifiedAt = sendHistory.length ? sendHistory[sendHistory.length - 1] : null;
+  const recentSends = sendHistory.filter((t) => now - t < RATE_WINDOW_MS);
+  const cooldownRemainingMs = notifiedAt ? Math.max(0, COOLDOWN_MS - (now - notifiedAt)) : 0;
+  const cooldownActive = cooldownRemainingMs > 0;
+  const rateLimited = recentSends.length >= RATE_MAX_SENDS;
+  const rateResetMs = rateLimited
+    ? Math.max(0, RATE_WINDOW_MS - (now - recentSends[0]))
+    : 0;
 
   const allPass = RECORDS.every((rec) =>
     RESOLVERS.every((res) => grid[rec.id][res.id].state === "pass"),
@@ -287,10 +309,47 @@ export default function DnsPropagationChecker() {
     else window.localStorage.removeItem(NOTIFY_STORAGE_KEY);
   }, [notifyEmail]);
 
+  // Persist send history + prune anything older than the rate window
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const pruned = sendHistory.filter((t) => Date.now() - t < RATE_WINDOW_MS);
+    if (pruned.length !== sendHistory.length) {
+      setSendHistory(pruned);
+      return;
+    }
+    window.localStorage.setItem(NOTIFY_HISTORY_KEY, JSON.stringify(sendHistory));
+  }, [sendHistory]);
+
+  // Tick once a second while cooldown or rate-limit is active so countdowns refresh
+  useEffect(() => {
+    if (!cooldownActive && !rateLimited) return;
+    cooldownTickRef.current = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => {
+      if (cooldownTickRef.current) window.clearInterval(cooldownTickRef.current);
+      cooldownTickRef.current = null;
+    };
+  }, [cooldownActive, rateLimited]);
+
   const sendNotification = useCallback(async (manual: boolean) => {
     const recipient = notifyEmail.trim();
     if (!recipient || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(recipient)) {
       if (manual) toast({ title: "Enter a valid email", variant: "destructive" });
+      return;
+    }
+    if (cooldownActive) {
+      if (manual) toast({
+        title: "Cooldown active",
+        description: `Wait ${Math.ceil(cooldownRemainingMs / 1000)}s before resending.`,
+        variant: "destructive",
+      });
+      return;
+    }
+    if (rateLimited) {
+      if (manual) toast({
+        title: "Hourly limit reached",
+        description: `Max ${RATE_MAX_SENDS} notifications per hour. Resets in ${Math.ceil(rateResetMs / 60_000)} min.`,
+        variant: "destructive",
+      });
       return;
     }
     setNotifySending(true);
@@ -302,7 +361,9 @@ export default function DnsPropagationChecker() {
       if (error || (data as any)?.ok === false) {
         throw new Error((error as any)?.message ?? (data as any)?.error ?? "send failed");
       }
-      setNotifiedAt(Date.now());
+      const ts = Date.now();
+      setSendHistory((h) => [...h.filter((t) => ts - t < RATE_WINDOW_MS), ts]);
+      setNow(ts);
       notifiedRef.current = true;
       toast({ title: "Notification sent ✓", description: `Confirmation emailed to ${recipient}.` });
     } catch (e: any) {
@@ -310,7 +371,7 @@ export default function DnsPropagationChecker() {
     } finally {
       setNotifySending(false);
     }
-  }, [notifyEmail, buildSnapshot, attempts, toast]);
+  }, [notifyEmail, buildSnapshot, attempts, toast, cooldownActive, cooldownRemainingMs, rateLimited, rateResetMs]);
 
   // auto-fire once when allPass first becomes true
   useEffect(() => {
@@ -408,18 +469,46 @@ export default function DnsPropagationChecker() {
           size="sm"
           variant="outline"
           onClick={() => { notifiedRef.current = false; void sendNotification(true); }}
-          disabled={notifySending || !allPass}
-          title={allPass ? "Send confirmation now" : "Available once every resolver is green"}
+          disabled={notifySending || !allPass || cooldownActive || rateLimited}
+          title={
+            !allPass ? "Available once every resolver is green"
+            : cooldownActive ? `Cooldown — ${Math.ceil(cooldownRemainingMs / 1000)}s remaining`
+            : rateLimited ? `Hourly limit reached — resets in ${Math.ceil(rateResetMs / 60_000)} min`
+            : "Send confirmation now"
+          }
         >
           {notifySending ? <Loader2 className="h-3 w-3 mr-2 animate-spin" /> : <Mail className="h-3 w-3 mr-2" />}
-          {allPass ? "Send now" : "Waiting for green"}
+          {!allPass
+            ? "Waiting for green"
+            : cooldownActive
+              ? `Cooldown ${Math.ceil(cooldownRemainingMs / 1000)}s`
+              : rateLimited
+                ? "Limit reached"
+                : "Send now"}
         </Button>
-        {notifiedAt && (
-          <span className="font-mono text-[0.6rem] text-emerald-300/80 w-full">
-            ✓ notified {new Date(notifiedAt).toLocaleTimeString()} → {notifyEmail}
+        <div className="w-full flex items-center gap-4 flex-wrap text-[0.6rem] font-mono">
+          {notifiedAt && (
+            <span className="text-emerald-300/80">
+              ✓ last sent {new Date(notifiedAt).toLocaleTimeString()} → {notifyEmail}
+            </span>
+          )}
+          <span className="text-muted-foreground/60">
+            {recentSends.length}/{RATE_MAX_SENDS} sends in last hour
           </span>
-        )}
+          {cooldownActive && (
+            <span className="text-amber-300/80">
+              cooldown {Math.floor(cooldownRemainingMs / 60_000)}:{String(Math.ceil((cooldownRemainingMs % 60_000) / 1000)).padStart(2, "0")}
+            </span>
+          )}
+          {rateLimited && (
+            <span className="text-red-300/80">
+              rate limit resets in {Math.ceil(rateResetMs / 60_000)} min
+            </span>
+          )}
+        </div>
       </div>
+
+
 
 
 
