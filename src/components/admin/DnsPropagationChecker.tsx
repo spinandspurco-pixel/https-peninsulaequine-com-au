@@ -104,6 +104,13 @@ export default function DnsPropagationChecker() {
   const [attempts, setAttempts] = useState(0);
   const [nextAt, setNextAt] = useState<number | null>(null);
   const [, setTick] = useState(0);
+  const [notifyEmail, setNotifyEmail] = useState<string>(() => {
+    if (typeof window === "undefined") return "";
+    return window.localStorage.getItem(NOTIFY_STORAGE_KEY) ?? "";
+  });
+  const [notifySending, setNotifySending] = useState(false);
+  const [notifiedAt, setNotifiedAt] = useState<number | null>(null);
+  const notifiedRef = useRef(false);
   const timerRef = useRef<number | null>(null);
   const tickRef = useRef<number | null>(null);
   const startedAtRef = useRef<number>(0);
