@@ -50,8 +50,8 @@ export default function HqProjectDetail() {
   const [loading, setLoading] = useState(true);
   const [draft, setDraft] = useState<Partial<Project>>({});
   const [activity, setActivity] = useState<{ id: string; title: string; created_at: string }[]>([]);
-  const [internalNotes, setInternalNotes] = useState<string>("");
   const [internalNotesDraft, setInternalNotesDraft] = useState<string>("");
+
 
   useEffect(() => {
     if (!authLoading && (!user || (!isAdmin && !isPreview))) navigate("/login");
