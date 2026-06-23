@@ -1,0 +1,36 @@
+name: Strict Build
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: strict-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  strict-build:
+    name: TypeScript · Tailwind · Prerender · Internal links
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: TypeScript typecheck
+        run: bunx tsc --noEmit
+
+      # Runs prebuild (verify-assets) → strict build (fails on Tailwind/PostCSS warnings)
+      # → postbuild (prerender + verify-prerender + verify-internal-links).
+      # Any failure in this chain blocks the merge.
+      - name: Strict build (Tailwind + PostCSS + prerender + internal links)
+        run: bun run build
