@@ -14,6 +14,7 @@ import { QuoteBuilder } from "@/components/QuoteBuilder";
 import { AdminStaffOnboarding } from "@/components/AdminStaffOnboarding";
 import { EmailDiagnostics } from "@/components/hq/EmailDiagnostics";
 import { PreviewMintGate } from "@/components/hq/PreviewMintGate";
+import { ControlRoom } from "@/components/hq/ControlRoom";
 import { HqNav } from "@/components/hq/HqNav";
 import { canSeeHqItem } from "@/components/hq/hqAccess";
 
