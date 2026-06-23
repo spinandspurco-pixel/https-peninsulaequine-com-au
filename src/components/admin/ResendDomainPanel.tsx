@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Check, X, Minus, RotateCw, ShieldCheck, MailCheck, Loader2, Radar, CircleStop } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Check, X, Minus, RotateCw, ShieldCheck, MailCheck, Loader2, Radar, CircleStop, ArrowDownWideNarrow, ArrowUpNarrowWide } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -71,6 +71,33 @@ export default function ResendDomainPanel() {
     const row: HistoryEntry = { id: historyIdRef.current, at: Date.now(), ...entry };
     setHistory((prev) => [row, ...prev].slice(0, 50));
   }, []);
+
+  // History filter / sort controls
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [sourceFilter, setSourceFilter] = useState<string>("all");
+  const [sortDir, setSortDir] = useState<"desc" | "asc">("desc");
+
+  const availableStatuses = useMemo(
+    () => Array.from(new Set(history.map((h) => h.status))).sort(),
+    [history],
+  );
+  const sourceGroup = (src: string) => {
+    if (src.startsWith("auto-poll")) return "auto-poll";
+    return src;
+  };
+  const availableSources = useMemo(
+    () => Array.from(new Set(history.map((h) => sourceGroup(h.source)))).sort(),
+    [history],
+  );
+
+  const visibleHistory = useMemo(() => {
+    const filtered = history.filter((h) => {
+      if (statusFilter !== "all" && h.status !== statusFilter) return false;
+      if (sourceFilter !== "all" && sourceGroup(h.source) !== sourceFilter) return false;
+      return true;
+    });
+    return filtered.sort((a, b) => (sortDir === "desc" ? b.at - a.at : a.at - b.at));
+  }, [history, statusFilter, sourceFilter, sortDir]);
 
   const summariseRecords = (domain?: ResendDomain) => {
     if (!domain?.records?.length) return "—";
@@ -301,19 +328,62 @@ export default function ResendDomainPanel() {
       )}
 
       <div className="mt-6">
-        <div className="flex items-baseline justify-between mb-2">
-          <p className="text-[0.6rem] uppercase tracking-[0.35em] text-muted-foreground/60">
-            Verification history
-          </p>
-          {history.length > 0 && (
+        <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
+          <div className="flex items-baseline gap-3 flex-wrap">
+            <p className="text-[0.6rem] uppercase tracking-[0.35em] text-muted-foreground/60">
+              Verification history
+            </p>
+            {history.length > 0 && visibleHistory.length !== history.length && (
+              <span className="font-mono text-[0.6rem] text-muted-foreground/50">
+                showing {visibleHistory.length} of {history.length}
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              disabled={history.length === 0}
+              className="bg-transparent border border-border/30 px-2 py-1 text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground/80 hover:text-foreground transition-colors disabled:opacity-40 focus:outline-none focus:border-border"
+              aria-label="Filter by status"
+            >
+              <option value="all">All statuses</option>
+              {availableStatuses.map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+            <select
+              value={sourceFilter}
+              onChange={(e) => setSourceFilter(e.target.value)}
+              disabled={history.length === 0}
+              className="bg-transparent border border-border/30 px-2 py-1 text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground/80 hover:text-foreground transition-colors disabled:opacity-40 focus:outline-none focus:border-border"
+              aria-label="Filter by source"
+            >
+              <option value="all">All sources</option>
+              {availableSources.map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
             <button
               type="button"
-              onClick={() => setHistory([])}
-              className="text-[0.6rem] uppercase tracking-[0.3em] text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+              onClick={() => setSortDir((d) => (d === "desc" ? "asc" : "desc"))}
+              disabled={history.length === 0}
+              className="inline-flex items-center gap-1 border border-border/30 px-2 py-1 text-[0.6rem] uppercase tracking-[0.2em] text-muted-foreground/80 hover:text-foreground transition-colors disabled:opacity-40"
+              aria-label="Toggle sort order"
             >
-              Clear history
+              {sortDir === "desc" ? <ArrowDownWideNarrow className="h-3 w-3" /> : <ArrowUpNarrowWide className="h-3 w-3" />}
+              {sortDir === "desc" ? "Newest" : "Oldest"}
             </button>
-          )}
+            {history.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setHistory([])}
+                className="text-[0.6rem] uppercase tracking-[0.3em] text-muted-foreground/50 hover:text-muted-foreground transition-colors px-2 py-1"
+              >
+                Clear
+              </button>
+            )}
+          </div>
         </div>
         <div className="border border-border/30 max-h-64 overflow-y-auto">
           <table className="w-full text-xs">
@@ -332,8 +402,14 @@ export default function ResendDomainPanel() {
                     No checks yet — run a verify or start auto-poll.
                   </td>
                 </tr>
+              ) : visibleHistory.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-3 py-4 text-center text-muted-foreground/50 italic">
+                    No checks match this filter.
+                  </td>
+                </tr>
               ) : (
-                history.map((h) => (
+                visibleHistory.map((h) => (
                   <tr key={h.id} className="align-top">
                     <td className="px-3 py-2 font-mono text-muted-foreground/70 whitespace-nowrap">
                       {new Date(h.at).toLocaleTimeString()}
@@ -356,6 +432,7 @@ export default function ResendDomainPanel() {
           </table>
         </div>
       </div>
+
 
 
 

@@ -1,29 +1,17 @@
-## Add verification attempt history table
+## Add sorting and status filtering to verification history table
 
-Append a scrollable history log to `src/components/admin/ResendDomainPanel.tsx`, rendered directly beneath the amber poll-status row.
+Extend the verification history block in `src/components/admin/ResendDomainPanel.tsx` with lightweight controls that sit in the section header next to "Clear history".
+
+### Controls
+- **Status filter** — minimal `<select>` styled to match the panel's overline/mono aesthetic (transparent bg, border-border/30, uppercase tracking). Options derived from currently present statuses plus a permanent `All` entry: `All · verified · pending · failed · error · not_configured · unknown`. Defaults to `All`.
+- **Sort toggle** — small text button cycling `Newest ↓` ↔ `Oldest ↑`. Applies to the `at` timestamp. Defaults to `Newest ↓` (current behaviour).
+- **Source filter (bonus, same row)** — `All sources · status refresh · manual verify · auto-poll`. `auto-poll #N` entries match the `auto-poll` filter via `startsWith`. Defaults to `All sources`.
 
 ### Behaviour
-- Every verify call (manual "Re-verify with Resend" and silent auto-poll ticks) appends one entry.
-- Initial "Refresh status" calls also append an entry, tagged as `status` vs `verify` so the source is clear.
-- Newest entry on top; cap in-memory at 50 rows to avoid runaway growth.
-- History lives in component state only (no DB persistence) — resets on page reload, matching the existing panel's session-scoped model.
-
-### Row shape
-Each entry records:
-- `timestamp` — ISO time, displayed as local `HH:mm:ss`
-- `source` — `auto-poll #N` / `manual verify` / `status refresh`
-- `status` — `verified` / `pending` / `failed` / `error` with the same colour treatment as the main status badge
-- `message` — Resend error string, failed-record summary (e.g. "DKIM pending, SPF ok"), or "—" on clean success
-
-### UI
-- Section heading: overline "Verification history" matching the panel's existing typography tokens.
-- Uses the existing `@/components/ui/table` primitives (Table/THead/TRow/TCell) for consistency.
-- Columns: Time · Source · Status · Detail.
-- Wrapper `max-h-64 overflow-y-auto` so long histories scroll without stretching the page.
-- Empty state: single muted row "No checks yet — run a verify or start auto-poll."
-- Small ghost "Clear history" text-link in the section header.
+- Filtering/sorting is derived via `useMemo` from the existing `history` state — no changes to how entries are appended.
+- Empty filtered result shows the existing muted "No checks match this filter." row (reworded from the current empty state, which still applies when `history.length === 0`).
+- Row count indicator beside the heading: `showing X of Y` in muted mono when a filter narrows results.
+- "Clear history" stays on the right; controls sit between heading and clear button, wrapping on narrow widths.
 
 ### Files
-- `src/components/admin/ResendDomainPanel.tsx` — add `history` state + `appendHistory()` helper, call it from `triggerStatus`, `triggerVerify`, and the auto-poll tick handler, then render the table below the poll-status row.
-
-No edge-function, schema, or routing changes.
+- `src/components/admin/ResendDomainPanel.tsx` — add `statusFilter`, `sourceFilter`, `sortDir` state, a `useMemo` for the derived list, and the header controls. No edge-function or schema changes.
