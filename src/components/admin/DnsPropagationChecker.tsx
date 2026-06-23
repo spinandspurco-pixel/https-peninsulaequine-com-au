@@ -312,7 +312,16 @@ export default function DnsPropagationChecker() {
               {allPass ? "All green" : "Auto-poll until propagated"}
             </Button>
           )}
+          <Button size="sm" variant="outline" onClick={exportJson}>
+            <Download className="h-3 w-3 mr-2" />
+            JSON
+          </Button>
+          <Button size="sm" variant="outline" onClick={exportCsv}>
+            <Download className="h-3 w-3 mr-2" />
+            CSV
+          </Button>
         </div>
+
       </div>
 
       {polling && (
