@@ -358,8 +358,24 @@ export default function DnsPropagationChecker() {
       const { data, error } = await supabase.functions.invoke("notify-dns-propagated", {
         body: { recipient, domain: snap.domain, records: snap.records, attempts },
       });
+      const serverErr = (data as any)?.error;
       if (error || (data as any)?.ok === false) {
-        throw new Error((error as any)?.message ?? (data as any)?.error ?? "send failed");
+        // Map server-enforced 429s into local cooldown so UI stays consistent
+        if (serverErr === "cooldown" || serverErr === "rate_limited") {
+          const retry = Number((data as any)?.retryAfterSeconds ?? 0);
+          const syntheticTs = serverErr === "cooldown"
+            ? Date.now() - (COOLDOWN_MS - retry * 1000)
+            : Date.now();
+          setSendHistory((h) => [...h.filter((t) => Date.now() - t < RATE_WINDOW_MS), syntheticTs]);
+          setNow(Date.now());
+          toast({
+            title: serverErr === "cooldown" ? "Server cooldown" : "Server rate limit",
+            description: `Try again in ${retry}s.`,
+            variant: "destructive",
+          });
+          return;
+        }
+        throw new Error((error as any)?.message ?? serverErr ?? "send failed");
       }
       const ts = Date.now();
       setSendHistory((h) => [...h.filter((t) => ts - t < RATE_WINDOW_MS), ts]);
