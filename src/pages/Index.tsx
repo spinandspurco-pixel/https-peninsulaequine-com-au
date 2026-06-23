@@ -15,7 +15,7 @@ import aberdeenArena from "@/assets/uploads/approved-stable-stall-interior-symme
 import steelFrontAsset from "@/assets/uploads/approved-current-build-steel-frame-storm.png.asset.json";
 import coveredArenaExteriorAsset from "@/assets/covered-arenas/approved-covered-arena-exterior-dusk.png.asset.json";
 import muddyBootsCraftAsset from "@/assets/field-notes/muddy-boots-steel-frame.png.asset.json";
-import mainRidgeLegacyAsset from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
+import mainRidgeLegacyAsset from "@/assets/main-ridge/mr-parrilla-wide.png.asset.json";
 
 
 const steelFront = steelFrontAsset.url;
@@ -679,7 +679,7 @@ export default function Index() {
                   <figure className="relative aspect-[4/3] overflow-hidden group">
                     <img
                       src={legacyPavilion}
-                      alt="Main Ridge pavilion interior — completed timber and brick fireplace, the legacy environment built for a horse property"
+                      alt="Main Ridge parrilla — the lit fire and finished steel hood of the completed pavilion, the legacy environment built for a horse property"
                       loading="lazy"
                       decoding="async"
                       className="absolute inset-0 w-full h-full object-cover object-[50%_55%] will-change-transform group-hover:scale-[1.025]"
