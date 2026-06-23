@@ -85,6 +85,21 @@ export function CRMPipeline({ onCreateQuote }: Props) {
 
   return (
     <div className="space-y-6">
+      {(loadState === "timeout" || loadState === "error") && (
+        <div className="border border-accent/25 px-4 py-3 flex items-center justify-between gap-4">
+          <p className="text-[11px] text-muted-foreground/75">
+            {loadState === "timeout"
+              ? "Pipeline took longer than 8s to load."
+              : "Pipeline failed to load."}
+          </p>
+          <button
+            onClick={fetchData}
+            className="text-[10px] uppercase tracking-[0.22em] text-foreground/85 hover:text-accent transition-colors"
+          >
+            Retry →
+          </button>
+        </div>
+      )}
       {/* Summary strip */}
       <CRMSummaryCards records={records} quotes={quotes} followUps={followUps} />
 
