@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BrandIntro } from "@/components/BrandIntro";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { MagneticLink } from "@/components/motion/MagneticLink";
 import { IntroContext } from "@/hooks/useIntroState";
 import { useIntake } from "@/hooks/useIntake";
 
@@ -46,6 +47,7 @@ const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
 
 export default function Index() {
   const heroContentRef = useRef<HTMLDivElement>(null);
+  const heroImgRef = useRef<HTMLImageElement>(null);
   const [heroFade, setHeroFade] = useState(1);
   const [heroImgLoaded, setHeroImgLoaded] = useState(false);
   const [heroImgFailed, setHeroImgFailed] = useState(false);
@@ -98,6 +100,36 @@ export default function Index() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
+
+  // Cinematic hero parallax: scale the loaded hero image from 1 → 1.06 and
+  // translate 0 → 36px over the first viewport. RAF-driven, CSS variables —
+  // no React state per frame. Honours prefers-reduced-motion.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const img = heroImgRef.current;
+      if (!img || !heroImgLoaded) return;
+      const y = window.scrollY;
+      const vh = window.innerHeight || 1;
+      const p = Math.min(Math.max(y / vh, 0), 1);
+      const scale = 1 + p * 0.06;
+      const translate = p * 36;
+      img.style.transform = `translate3d(0, ${translate.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
+    };
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [heroImgLoaded]);
 
   return (
     <IntroContext.Provider value={{ headerLogoReady: headerReady, headerReady }}>
