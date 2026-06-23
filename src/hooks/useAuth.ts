@@ -23,22 +23,38 @@ function useAuthState() {
   useEffect(() => {
     mounted.current = true;
 
+    const dbg = (scope: string, payload: Record<string, unknown>) => {
+      // TEMP: unconditional trace for HQ login-hang investigation
+      // eslint-disable-next-line no-console
+      console.log(`[auth:${scope}]`, payload);
+      authLog(scope, payload);
+    };
+
     const fetchRoles = async (userId: string, requestId: number) => {
-      authLog("roles:fetch:start", { userId, requestId });
+      dbg("roles:fetch:start", { userId, requestId });
       try {
         for (let attempt = 0; attempt < ROLE_FETCH_RETRY_DELAYS_MS.length; attempt += 1) {
           const delay = ROLE_FETCH_RETRY_DELAYS_MS[attempt];
           if (delay > 0) await new Promise((resolve) => setTimeout(resolve, delay));
-          if (!mounted.current || roleRequestId.current !== requestId) return;
+          if (!mounted.current || roleRequestId.current !== requestId) {
+            dbg("roles:fetch:cancelled-before-query", { attempt, requestId, current: roleRequestId.current, mounted: mounted.current });
+            return;
+          }
 
+          dbg("roles:fetch:query-begin", { attempt, requestId });
+          const t0 = Date.now();
           const { data, error } = await supabase
             .from("user_roles")
             .select("role")
             .eq("user_id", userId);
+          dbg("roles:fetch:query-end", { attempt, requestId, ms: Date.now() - t0, hasData: !!data, errorMsg: error?.message, errorCode: (error as any)?.code });
 
-          if (!mounted.current || roleRequestId.current !== requestId) return;
+          if (!mounted.current || roleRequestId.current !== requestId) {
+            dbg("roles:fetch:cancelled-after-query", { attempt, requestId, current: roleRequestId.current, mounted: mounted.current });
+            return;
+          }
           if (error) {
-            authLog("roles:fetch:error", { attempt, error: error.message });
+            dbg("roles:fetch:error", { attempt, error: error.message, code: (error as any).code });
             if (attempt < ROLE_FETCH_RETRY_DELAYS_MS.length - 1) continue;
             setRoles([]);
             return;
@@ -46,21 +62,25 @@ function useAuthState() {
 
           const list = (data?.map((r) => r.role) || []) as AppRole[];
           setRoles(list);
-          authLog("roles:fetch:ok", { roles: list, requestId });
+          dbg("roles:fetch:ok", { roles: list, requestId });
           return;
         }
       } catch (err) {
-        authLog("roles:fetch:exception", { err: String(err), requestId });
+        dbg("roles:fetch:exception", { err: String(err), requestId });
         if (mounted.current) setRoles([]);
       } finally {
+        dbg("roles:fetch:finally", { requestId, current: roleRequestId.current, mounted: mounted.current });
         if (mounted.current && roleRequestId.current === requestId) {
           setRolesLoading(false);
+          dbg("roles:fetch:rolesLoading=false", { requestId });
+        } else {
+          dbg("roles:fetch:rolesLoading-NOT-cleared", { requestId, current: roleRequestId.current, mounted: mounted.current });
         }
       }
     };
 
     const applySession = (newSession: Session | null, source: string) => {
-      authLog("session:apply", { source, hasUser: !!newSession?.user });
+      dbg("session:apply", { source, hasUser: !!newSession?.user, uid: newSession?.user?.id });
       setSession(newSession);
       setUser(newSession?.user ?? null);
       setAuthLoading(false);
@@ -69,22 +89,26 @@ function useAuthState() {
         const requestId = roleRequestId.current + 1;
         roleRequestId.current = requestId;
         setRolesLoading(true);
-        // Defer the role fetch off the auth callback frame. Supabase
-        // documents that awaiting inside onAuthStateChange can deadlock
-        // subsequent events, so we hop out with setTimeout(0).
         const uid = newSession.user.id;
+        dbg("session:schedule-roles-fetch", { source, requestId, uid });
         setTimeout(() => {
+          dbg("session:roles-fetch-timer-fired", { requestId, current: roleRequestId.current, mounted: mounted.current });
           if (mounted.current && roleRequestId.current === requestId) void fetchRoles(uid, requestId);
+          else dbg("session:roles-fetch-skipped", { requestId, current: roleRequestId.current, mounted: mounted.current });
         }, 0);
       } else {
         roleRequestId.current += 1;
         setRoles([]);
         setRolesLoading(false);
+        dbg("session:no-user-clear", {});
       }
     };
 
+    dbg("provider:mount", {});
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, newSession) => {
+        dbg("event:onAuthStateChange", { event, hasSession: !!newSession });
         if (!mounted.current) return;
         applySession(newSession, `event:${event}`);
       }
@@ -93,11 +117,12 @@ function useAuthState() {
     supabase.auth
       .getSession()
       .then(({ data: { session: s } }) => {
+        dbg("getSession:then", { hasSession: !!s });
         if (!mounted.current) return;
         applySession(s, "getSession");
       })
       .catch((err) => {
-        authLog("getSession:error", { err: String(err) });
+        dbg("getSession:error", { err: String(err) });
         if (mounted.current) {
           setAuthLoading(false);
           setRolesLoading(false);
@@ -105,11 +130,13 @@ function useAuthState() {
       });
 
     return () => {
+      dbg("provider:unmount", { currentReqId: roleRequestId.current });
       mounted.current = false;
       roleRequestId.current += 1;
       subscription.unsubscribe();
     };
   }, []);
+
 
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
