@@ -1,117 +1,119 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { OverlayNav } from "./OverlayNav";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useSiteChrome } from "@/hooks/useSiteChrome";
 
 /**
- * Minimalist global wayfinder rail.
+ * Single global top chrome for public marketing surfaces.
  *
- *  - On lg+ screens: a 56px fixed left rail with a vertical PE mark, a 1px
- *    scroll-progress thread, and a bare hamburger glyph that opens the
- *    OverlayNav. No boxes, no borders.
- *  - Below lg: just the hamburger glyph in the top-left, which also opens
- *    the overlay.
- *  - Hidden on private / HQ / portal surfaces.
+ *  - Top-left: brand wordmark linking home.
+ *  - Top-right: single Menu trigger that opens the OverlayNav.
+ *  - Optional decorative page indicator (PE / 0X — Section) sits centred on
+ *    desktop only and is non-interactive.
  *
- *  Scroll progress is written through a CSS custom property via rAF — never
- *  React state per frame.
+ *  No left vertical rail, no secondary hamburger. This is the ONLY primary
+ *  nav system for desktop, tablet and mobile.
+ *
+ *  Hidden on private / HQ / portal surfaces via useSiteChrome.
  */
+
+const PAGE_INDEX: Record<string, { code: string; label: string }> = {
+  "/": { code: "00", label: "Index" },
+  "/services": { code: "01", label: "Services" },
+  "/selected-works": { code: "02", label: "Selected Works" },
+  "/field-notes": { code: "03", label: "Field Notes" },
+  "/about": { code: "04", label: "About" },
+  "/contact": { code: "05", label: "Contact" },
+};
+
+function pageIndicatorFor(pathname: string) {
+  if (PAGE_INDEX[pathname]) return PAGE_INDEX[pathname];
+  // Match the closest top-level prefix
+  const top = "/" + pathname.split("/").filter(Boolean)[0];
+  return PAGE_INDEX[top] ?? null;
+}
+
 export function SiteRail() {
   const { showSiteRail } = useSiteChrome();
+  const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
-  const [pastHero, setPastHero] = useState(false);
-  const threadRef = useRef<HTMLSpanElement>(null);
-  const reduce = useReducedMotion();
+  const [scrolled, setScrolled] = useState(false);
+  const rafRef = useRef(0);
 
   useEffect(() => {
     if (!showSiteRail) return;
-    let raf = 0;
     const onScroll = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = 0;
-        const y = window.scrollY;
-        const h = document.documentElement.scrollHeight - window.innerHeight;
-        const p = h > 0 ? Math.min(Math.max(y / h, 0), 1) : 0;
-        const t = threadRef.current;
-        if (t) t.style.transform = `scaleY(${p})`;
-        setPastHero(y > Math.min(window.innerHeight * 0.6, 480));
+      if (rafRef.current) return;
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = 0;
+        setScrolled(window.scrollY > 24);
       });
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
-      if (raf) cancelAnimationFrame(raf);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, [showSiteRail]);
 
   if (!showSiteRail) return null;
 
+  const indicator = pageIndicatorFor(pathname);
+
   return (
     <>
-      {/* Desktop rail */}
-      <aside
-        aria-label="Wayfinder"
-        className="hidden lg:flex fixed top-0 left-0 z-[55] h-screen w-[56px] flex-col items-center justify-between py-8 pointer-events-none"
-      >
-        <Link
-          to="/"
-          className="pointer-events-auto font-mono text-[10px] uppercase tracking-[0.45em] text-foreground/55 hover:text-foreground transition-colors duration-700"
-          aria-label="Peninsula Equine — Home"
-          style={{ writingMode: "vertical-rl" }}
-        >
-          PE — Mornington Peninsula
-        </Link>
-
-        {/* Scroll thread */}
-        <div className="relative flex-1 mx-auto my-6 w-px overflow-hidden">
-          <span className="absolute inset-0 bg-foreground/10" aria-hidden="true" />
-          <span
-            ref={threadRef}
-            aria-hidden="true"
-            className="absolute inset-0 bg-accent origin-top"
-            style={{
-              transform: "scaleY(0)",
-              transition: reduce ? "none" : "transform 200ms linear",
-            }}
-          />
-        </div>
-
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-haspopup="dialog"
-          aria-expanded={open}
-          aria-label="Open navigation"
-          className="pointer-events-auto group flex flex-col items-center gap-[5px] py-2"
-        >
-          <span className="block h-px w-5 bg-foreground/60 group-hover:bg-accent transition-all duration-500" />
-          <span className="block h-px w-3 bg-foreground/60 group-hover:bg-accent transition-all duration-500 group-hover:w-5" />
-          <span className="block h-px w-5 bg-foreground/60 group-hover:bg-accent transition-all duration-500" />
-          <span className="sr-only">Menu</span>
-        </button>
-      </aside>
-
-      {/* Mobile / post-scroll trigger — bare glyph, no box */}
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        aria-label="Open navigation"
-        className="fixed top-5 left-5 z-[55] lg:hidden flex flex-col items-start gap-[5px] py-2 px-2"
+      {/* Top chrome — the only primary nav surface */}
+      <header
+        aria-label="Site chrome"
+        className="fixed top-0 left-0 right-0 z-[55] pointer-events-none"
         style={{
-          opacity: pastHero ? 1 : 0.85,
-          transition: "opacity 500ms ease-out",
+          transition: "background-color 600ms cubic-bezier(0.45,0,0.15,1)",
+          backgroundColor: scrolled ? "hsl(var(--background) / 0.55)" : "transparent",
+          backdropFilter: scrolled ? "blur(14px)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(14px)" : "none",
         }}
       >
-        <span className="block h-px w-6 bg-foreground/70" />
-        <span className="block h-px w-4 bg-foreground/70" />
-        <span className="block h-px w-6 bg-foreground/70" />
-        <span className="sr-only">Menu</span>
-      </button>
+        <div className="relative flex items-center justify-between px-5 sm:px-8 lg:px-10 h-[64px] sm:h-[72px]">
+          {/* Brand mark — top left */}
+          <Link
+            to="/"
+            aria-label="Peninsula Equine — Home"
+            className="pointer-events-auto font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.45em] text-foreground/75 hover:text-foreground transition-colors duration-500"
+          >
+            Peninsula <span className="text-accent/80">Equine</span>
+          </Link>
+
+          {/* Decorative page indicator — desktop only, non-interactive */}
+          {indicator && (
+            <span
+              aria-hidden="true"
+              className="hidden lg:block absolute left-1/2 -translate-x-1/2 font-mono text-[10px] uppercase tracking-[0.5em] text-foreground/35 select-none"
+            >
+              PE / {indicator.code} — {indicator.label}
+            </span>
+          )}
+
+          {/* Single Menu trigger — top right */}
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-haspopup="dialog"
+            aria-expanded={open}
+            aria-controls="site-overlay-nav"
+            aria-label="Open navigation"
+            className="pointer-events-auto group inline-flex items-center gap-3 py-2 -mr-2 px-2"
+          >
+            <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.45em] text-foreground/75 group-hover:text-foreground transition-colors duration-500">
+              Menu
+            </span>
+            <span className="flex flex-col items-end gap-[5px]" aria-hidden="true">
+              <span className="block h-px w-6 bg-foreground/65 group-hover:bg-accent transition-all duration-500" />
+              <span className="block h-px w-4 bg-foreground/65 group-hover:bg-accent group-hover:w-6 transition-all duration-500" />
+            </span>
+          </button>
+        </div>
+      </header>
 
       <OverlayNav open={open} onClose={() => setOpen(false)} />
     </>
