@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useHqMode } from "@/hooks/useHqMode";
 import { format, formatDistanceToNow } from "date-fns";
 import { useHqMount, withHqTimeout } from "@/lib/hqDiagnostics";
+import { MentionsCard } from "@/components/hq/MentionsCard";
 
 interface Metric {
   label: string;
@@ -216,24 +217,27 @@ export function CommandOverview() {
           )}
         </div>
 
-        {/* Quick actions rail */}
-        <div className="lg:w-48">
-          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-6">
-            Quick actions
-          </p>
-          <ul className="space-y-3">
-            {quickActions.map((a) => (
-              <li key={a.label}>
-                <button
-                  onClick={a.action}
-                  disabled={a.locked}
-                  className="text-[12px] text-foreground/75 hover:text-foreground transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-left"
-                >
-                  → {a.label}
-                </button>
-              </li>
-            ))}
-          </ul>
+        {/* Quick actions + mentions rail */}
+        <div className="lg:w-64 space-y-8">
+          {!isPreview && <MentionsCard />}
+          <div>
+            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-6">
+              Quick actions
+            </p>
+            <ul className="space-y-3">
+              {quickActions.map((a) => (
+                <li key={a.label}>
+                  <button
+                    onClick={a.action}
+                    disabled={a.locked}
+                    className="text-[12px] text-foreground/75 hover:text-foreground transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-left"
+                  >
+                    → {a.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
