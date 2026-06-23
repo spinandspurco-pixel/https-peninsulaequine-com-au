@@ -300,6 +300,65 @@ export default function ResendDomainPanel() {
         </div>
       )}
 
+      <div className="mt-6">
+        <div className="flex items-baseline justify-between mb-2">
+          <p className="text-[0.6rem] uppercase tracking-[0.35em] text-muted-foreground/60">
+            Verification history
+          </p>
+          {history.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setHistory([])}
+              className="text-[0.6rem] uppercase tracking-[0.3em] text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+            >
+              Clear history
+            </button>
+          )}
+        </div>
+        <div className="border border-border/30 max-h-64 overflow-y-auto">
+          <table className="w-full text-xs">
+            <thead className="bg-muted/20 text-muted-foreground/70 uppercase tracking-[0.2em] text-[0.6rem] sticky top-0">
+              <tr>
+                <th className="text-left px-3 py-2 font-light">Time</th>
+                <th className="text-left px-3 py-2 font-light">Source</th>
+                <th className="text-left px-3 py-2 font-light">Status</th>
+                <th className="text-left px-3 py-2 font-light">Detail</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/30">
+              {history.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-3 py-4 text-center text-muted-foreground/50 italic">
+                    No checks yet — run a verify or start auto-poll.
+                  </td>
+                </tr>
+              ) : (
+                history.map((h) => (
+                  <tr key={h.id} className="align-top">
+                    <td className="px-3 py-2 font-mono text-muted-foreground/70 whitespace-nowrap">
+                      {new Date(h.at).toLocaleTimeString()}
+                    </td>
+                    <td className="px-3 py-2 font-mono text-muted-foreground/80 whitespace-nowrap">
+                      {h.source}
+                    </td>
+                    <td className="px-3 py-2">
+                      <Badge variant="outline" className={`uppercase tracking-[0.2em] text-[0.55rem] ${statusBadge(h.status)}`}>
+                        {h.status}
+                      </Badge>
+                    </td>
+                    <td className="px-3 py-2 font-mono break-all text-muted-foreground/80">
+                      {h.message}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+
 
       {!status && (
         <p className="mt-6 text-xs text-muted-foreground/60 italic">
