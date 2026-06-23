@@ -113,11 +113,29 @@ export default function DnsPropagationChecker() {
     return window.localStorage.getItem(NOTIFY_STORAGE_KEY) ?? "";
   });
   const [notifySending, setNotifySending] = useState(false);
-  const [notifiedAt, setNotifiedAt] = useState<number | null>(null);
+  const [sendHistory, setSendHistory] = useState<number[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = window.localStorage.getItem(NOTIFY_HISTORY_KEY);
+      const arr = raw ? (JSON.parse(raw) as number[]) : [];
+      return Array.isArray(arr) ? arr.filter((n) => typeof n === "number") : [];
+    } catch { return []; }
+  });
+  const [now, setNow] = useState(() => Date.now());
   const notifiedRef = useRef(false);
   const timerRef = useRef<number | null>(null);
   const tickRef = useRef<number | null>(null);
+  const cooldownTickRef = useRef<number | null>(null);
   const startedAtRef = useRef<number>(0);
+
+  const notifiedAt = sendHistory.length ? sendHistory[sendHistory.length - 1] : null;
+  const recentSends = sendHistory.filter((t) => now - t < RATE_WINDOW_MS);
+  const cooldownRemainingMs = notifiedAt ? Math.max(0, COOLDOWN_MS - (now - notifiedAt)) : 0;
+  const cooldownActive = cooldownRemainingMs > 0;
+  const rateLimited = recentSends.length >= RATE_MAX_SENDS;
+  const rateResetMs = rateLimited
+    ? Math.max(0, RATE_WINDOW_MS - (now - recentSends[0]))
+    : 0;
 
   const allPass = RECORDS.every((rec) =>
     RESOLVERS.every((res) => grid[rec.id][res.id].state === "pass"),
