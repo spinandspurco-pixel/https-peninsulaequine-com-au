@@ -659,8 +659,8 @@ export default function Index() {
                 <RevealOnScroll direction="up" duration={1300} delay={220} className="col-span-12 sm:col-span-5">
                   <figure className="relative aspect-[4/3] overflow-hidden group">
                     <img
-                      src={steelFront}
-                      alt="Steel frame mid-construction under a storm sky — current covered arena build"
+                      src={craftBoots}
+                      alt="Hands and worn boots on a steel frame mid-build — human-led construction on a Peninsula Equine site"
                       loading="lazy"
                       decoding="async"
                       className="absolute inset-0 w-full h-full object-cover object-center will-change-transform group-hover:scale-[1.025]"
@@ -670,7 +670,7 @@ export default function Index() {
                       }}
                     />
                     <figcaption className="absolute bottom-4 left-5 right-5 font-mono uppercase text-[9.5px] tracking-[0.42em] text-foreground/75">
-                      <span className="text-accent/70">03 / Build</span> · Steel up, storm sky
+                      <span className="text-accent/70">03 / Craft</span> · Hands on the work
                     </figcaption>
                   </figure>
                 </RevealOnScroll>
@@ -678,8 +678,8 @@ export default function Index() {
                 <RevealOnScroll direction="up" duration={1300} delay={320} className="col-span-12 sm:col-span-7">
                   <figure className="relative aspect-[4/3] overflow-hidden group">
                     <img
-                      src={coveredArenaExterior}
-                      alt="Completed covered arena at dusk, warm interior light against the working land"
+                      src={legacyPavilion}
+                      alt="Main Ridge pavilion interior — completed timber and brick fireplace, the legacy environment built for a horse property"
                       loading="lazy"
                       decoding="async"
                       className="absolute inset-0 w-full h-full object-cover object-[50%_55%] will-change-transform group-hover:scale-[1.025]"
@@ -689,7 +689,7 @@ export default function Index() {
                       }}
                     />
                     <figcaption className="absolute bottom-4 left-5 right-5 font-mono uppercase text-[9.5px] tracking-[0.42em] text-foreground/75">
-                      <span className="text-accent/70">04 / Resolved</span> · Covered arena, dusk
+                      <span className="text-accent/70">04 / Legacy</span> · Built to outlast the build
                     </figcaption>
                   </figure>
                 </RevealOnScroll>
