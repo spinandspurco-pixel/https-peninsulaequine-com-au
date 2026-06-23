@@ -143,7 +143,15 @@ function AppContent() {
             <Route path="/admin/events" element={<Navigate to="/hq/events" replace />} />
             <Route path="/employee" element={<ProtectedRoute allowedRoles={["admin","employee"]}><EmployeeDashboard /></ProtectedRoute>} />
             <Route path="/lessons" element={<Lessons />} />
-            <Route path="/book-lesson" element={<ProtectedRoute><BookLesson /></ProtectedRoute>} />
+            {/*
+              * /book-lesson is intentionally redirected to /lessons until public lesson
+              * booking is rolled out. The BookLesson page (and create-lesson-checkout slot-hold
+               * hardening) remain in the codebase behind ProtectedRoute, but no public surface
+              * should reach the checkout flow yet. See security memory: "Lesson checkout
+              * slot-hold hardening deferred".
+              */}
+            <Route path="/book-lesson" element={<Navigate to="/lessons" replace />} />
+
             <Route path="/events" element={<Events />} />
             <Route path="/process" element={<Navigate to="/services" replace />} />
             <Route path="/bookings" element={<ProtectedRoute allowedRoles={["admin","employee"]}><BookingsDashboard /></ProtectedRoute>} />
