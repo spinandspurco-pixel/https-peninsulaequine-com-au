@@ -77,14 +77,95 @@ export function trackEvent(name: string, params: Record<string, unknown> = {}) {
   window.gtag("event", name, params);
 }
 
+/* ─── Lead-source attribution ─────────────────────────────────────────────
+ * Captured once per session at app boot. Persisted in sessionStorage so the
+ * source is still available when the user submits a form several pages later.
+ */
+
+export type LeadSource = {
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_term?: string;
+  utm_content?: string;
+  gclid?: string;
+  referrer?: string;
+  landing_page?: string;
+};
+
+const LEAD_SOURCE_KEY = "pe_lead_source";
+
+export function captureLeadSource(): LeadSource {
+  if (typeof window === "undefined") return {};
+  try {
+    const existing = window.sessionStorage.getItem(LEAD_SOURCE_KEY);
+    if (existing) return JSON.parse(existing) as LeadSource;
+  } catch {
+    // sessionStorage unavailable — return what we can derive now.
+  }
+
+  const url = new URL(window.location.href);
+  const get = (k: string) => url.searchParams.get(k) || undefined;
+  const referrer = document.referrer && !document.referrer.includes(window.location.host)
+    ? document.referrer
+    : undefined;
+
+  const source: LeadSource = {
+    utm_source: get("utm_source"),
+    utm_medium: get("utm_medium"),
+    utm_campaign: get("utm_campaign"),
+    utm_term: get("utm_term"),
+    utm_content: get("utm_content"),
+    gclid: get("gclid"),
+    referrer,
+    landing_page: window.location.pathname,
+  };
+
+  // Drop undefined keys for clean GA params.
+  const clean = Object.fromEntries(
+    Object.entries(source).filter(([, v]) => v !== undefined && v !== ""),
+  ) as LeadSource;
+
+  try {
+    window.sessionStorage.setItem(LEAD_SOURCE_KEY, JSON.stringify(clean));
+  } catch {
+    /* ignore */
+  }
+  return clean;
+}
+
+export function getLeadSource(): LeadSource {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = window.sessionStorage.getItem(LEAD_SOURCE_KEY);
+    if (raw) return JSON.parse(raw) as LeadSource;
+  } catch {
+    /* ignore */
+  }
+  return captureLeadSource();
+}
+
 /**
  * Lead conversion. Maps to GA4 recommended `generate_lead` event so it can be
- * marked as a Key Event in the GA4 UI.
+ * marked as a Key Event in the GA4 UI. Automatically merges lead-source params
+ * (UTM tags, referrer, landing page) captured at the start of the session.
  */
 export function trackConversion(form: string, params: Record<string, unknown> = {}) {
   trackEvent("generate_lead", {
     form_id: form,
     page_path: typeof window !== "undefined" ? window.location.pathname : undefined,
+    ...getLeadSource(),
     ...params,
   });
 }
+
+/** Fired when a user begins interacting with a lead form. */
+export function trackFormStart(form: string, params: Record<string, unknown> = {}) {
+  trackEvent("form_start", { form_id: form, ...params });
+}
+
+/** Fired when a lead form submission fails on the client. */
+export function trackFormError(form: string, reason: string, params: Record<string, unknown> = {}) {
+  trackEvent("form_error", { form_id: form, reason, ...params });
+}
+
