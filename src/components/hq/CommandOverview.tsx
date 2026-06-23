@@ -146,6 +146,7 @@ export function CommandOverview() {
 
   return (
     <div className="space-y-14">
+      {loadBanner}
       {/* Metrics manifest strip */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
         {metrics.map((m, i) => (
