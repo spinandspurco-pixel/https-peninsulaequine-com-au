@@ -1675,6 +1675,76 @@ export type Database = {
         }
         Relationships: []
       }
+      project_note_mentions: {
+        Row: {
+          created_at: string
+          id: string
+          mentioned_user_id: string
+          note_id: string
+          read_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          mentioned_user_id: string
+          note_id: string
+          read_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          mentioned_user_id?: string
+          note_id?: string
+          read_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_note_mentions_note_id_fkey"
+            columns: ["note_id"]
+            isOneToOne: false
+            referencedRelation: "project_notes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_notes: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string
+          deleted_at: string | null
+          id: string
+          project_id: string
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          body: string
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          project_id: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          project_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_notes_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "managed_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quote_follow_ups: {
         Row: {
           action_type: string
@@ -2210,6 +2280,14 @@ export type Database = {
           email: string
           is_test_account: boolean
           role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }[]
+      }
+      list_staff_for_mentions: {
+        Args: never
+        Returns: {
+          display_name: string
+          email: string
           user_id: string
         }[]
       }

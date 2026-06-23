@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { RefreshCw } from "lucide-react";
 import { format } from "date-fns";
 import { HqNav } from "@/components/hq/HqNav";
+import { ProjectNotes } from "@/components/hq/ProjectNotes";
 
 interface Project {
   id: string;
@@ -32,6 +33,7 @@ const TABS = [
   { key: "status", label: "Status" },
   { key: "scope", label: "Scope" },
   { key: "notes", label: "Notes" },
+  { key: "brief", label: "Brief" },
   { key: "gallery", label: "Gallery" },
   { key: "timeline", label: "Internal Timeline" },
   { key: "summary", label: "Client Summary" },
@@ -152,7 +154,7 @@ export default function HqProjectDetail() {
         {/* Tab rail */}
         <nav className="border-y border-border/10 sticky top-0 z-20 bg-background/95 backdrop-blur-sm">
           <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-8 overflow-x-auto">
-            {TABS.map((t) => (
+            {TABS.filter((t) => !(t.key === "notes" && isPreview)).map((t) => (
               <button
                 key={t.key}
                 onClick={() => setTab(t.key)}
@@ -218,8 +220,22 @@ export default function HqProjectDetail() {
             </Field>
           )}
 
-          {tab === "notes" && (
-            <Field label="Internal notes" hint="Visible only to HQ staff">
+          {tab === "notes" && !isPreview && (
+            <div>
+              <div className="mb-6">
+                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/45">
+                  Project notes
+                </p>
+                <p className="text-[11px] text-muted-foreground/55 italic mt-1">
+                  Threaded internal discussion. Use @ to notify another staff member.
+                </p>
+              </div>
+              <ProjectNotes projectId={project.id} />
+            </div>
+          )}
+
+          {tab === "brief" && (
+            <Field label="One-line brief" hint="Quick summary field for this project (legacy single-field note).">
               <Editable
                 multiline
                 value={draft.internal_notes ?? ""}
