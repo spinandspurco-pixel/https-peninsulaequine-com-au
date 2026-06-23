@@ -276,8 +276,8 @@ export default function HqProjectDetail() {
                       toast.error(error.message);
                       return;
                     }
-                    setInternalNotes(internalNotesDraft);
                     toast.success("Saved");
+
                   }}
                   placeholder="Site conditions, conversations, blockers."
                 />
