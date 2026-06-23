@@ -104,7 +104,13 @@ export default function ResendDomainPanel() {
       const data = await invoke("status");
       setStatus(data);
       setLastChecked(new Date().toLocaleTimeString());
+      appendHistory({
+        source: "status refresh",
+        status: data?.domain?.status ?? (data?.configured ? "unknown" : "not_configured"),
+        message: data?.configured ? summariseRecords(data?.domain) : (data?.message ?? "—"),
+      });
     } catch (e: any) {
+      appendHistory({ source: "status refresh", status: "error", message: e?.message ?? "Unknown error" });
       toast({ title: "Status check failed", description: e?.message, variant: "destructive" });
     } finally {
       setLoading(false);
