@@ -40,4 +40,16 @@ test.describe("anonymous routing @anon", () => {
     await page.waitForURL(/\/login/);
     await expect(page.getByRole("button", { name: /sign in/i })).toBeVisible();
   });
+
+  test("/login hides HQ header and Sign Out for unauthenticated visitors", async ({ page }) => {
+    await page.goto("/login");
+    await expect(page.getByRole("button", { name: /sign in/i })).toBeVisible();
+    // No Sign Out control should be reachable on the public login screen.
+    await expect(page.getByRole("button", { name: /sign out/i })).toHaveCount(0);
+    // No HQ chrome header should render above the StaffPortalFrame.
+    await expect(page.getByText(/HQ · Command Centre/i)).toHaveCount(0);
+    // Only the StaffPortalFrame title should be present, never duplicated.
+    await expect(page.getByText(/Staff Portal/i)).toHaveCount(1);
+  });
 });
+
