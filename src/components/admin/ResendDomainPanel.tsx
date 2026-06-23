@@ -72,6 +72,33 @@ export default function ResendDomainPanel() {
     setHistory((prev) => [row, ...prev].slice(0, 50));
   }, []);
 
+  // History filter / sort controls
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [sourceFilter, setSourceFilter] = useState<string>("all");
+  const [sortDir, setSortDir] = useState<"desc" | "asc">("desc");
+
+  const availableStatuses = useMemo(
+    () => Array.from(new Set(history.map((h) => h.status))).sort(),
+    [history],
+  );
+  const sourceGroup = (src: string) => {
+    if (src.startsWith("auto-poll")) return "auto-poll";
+    return src;
+  };
+  const availableSources = useMemo(
+    () => Array.from(new Set(history.map((h) => sourceGroup(h.source)))).sort(),
+    [history],
+  );
+
+  const visibleHistory = useMemo(() => {
+    const filtered = history.filter((h) => {
+      if (statusFilter !== "all" && h.status !== statusFilter) return false;
+      if (sourceFilter !== "all" && sourceGroup(h.source) !== sourceFilter) return false;
+      return true;
+    });
+    return filtered.sort((a, b) => (sortDir === "desc" ? b.at - a.at : a.at - b.at));
+  }, [history, statusFilter, sourceFilter, sortDir]);
+
   const summariseRecords = (domain?: ResendDomain) => {
     if (!domain?.records?.length) return "—";
     const counts = domain.records.reduce<Record<string, number>>((acc, r) => {
