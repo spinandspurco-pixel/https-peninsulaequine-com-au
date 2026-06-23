@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { trackConversion } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
+import { useSiteChrome } from "@/hooks/useSiteChrome";
 import { z } from "zod";
 
 /* ── Step data ── */
@@ -95,6 +96,7 @@ function StepWrapper({
 
 /* ── Main overlay ── */
 export function GuidedIntake() {
+  const { showGuidedIntake } = useSiteChrome();
   const { isOpen, close } = useIntake();
   const [step, setStep] = useState(-1); // -1 = qualification gate
   const [gateReady, setGateReady] = useState(false);
