@@ -469,18 +469,46 @@ export default function DnsPropagationChecker() {
           size="sm"
           variant="outline"
           onClick={() => { notifiedRef.current = false; void sendNotification(true); }}
-          disabled={notifySending || !allPass}
-          title={allPass ? "Send confirmation now" : "Available once every resolver is green"}
+          disabled={notifySending || !allPass || cooldownActive || rateLimited}
+          title={
+            !allPass ? "Available once every resolver is green"
+            : cooldownActive ? `Cooldown — ${Math.ceil(cooldownRemainingMs / 1000)}s remaining`
+            : rateLimited ? `Hourly limit reached — resets in ${Math.ceil(rateResetMs / 60_000)} min`
+            : "Send confirmation now"
+          }
         >
           {notifySending ? <Loader2 className="h-3 w-3 mr-2 animate-spin" /> : <Mail className="h-3 w-3 mr-2" />}
-          {allPass ? "Send now" : "Waiting for green"}
+          {!allPass
+            ? "Waiting for green"
+            : cooldownActive
+              ? `Cooldown ${Math.ceil(cooldownRemainingMs / 1000)}s`
+              : rateLimited
+                ? "Limit reached"
+                : "Send now"}
         </Button>
-        {notifiedAt && (
-          <span className="font-mono text-[0.6rem] text-emerald-300/80 w-full">
-            ✓ notified {new Date(notifiedAt).toLocaleTimeString()} → {notifyEmail}
+        <div className="w-full flex items-center gap-4 flex-wrap text-[0.6rem] font-mono">
+          {notifiedAt && (
+            <span className="text-emerald-300/80">
+              ✓ last sent {new Date(notifiedAt).toLocaleTimeString()} → {notifyEmail}
+            </span>
+          )}
+          <span className="text-muted-foreground/60">
+            {recentSends.length}/{RATE_MAX_SENDS} sends in last hour
           </span>
-        )}
+          {cooldownActive && (
+            <span className="text-amber-300/80">
+              cooldown {Math.floor(cooldownRemainingMs / 60_000)}:{String(Math.ceil((cooldownRemainingMs % 60_000) / 1000)).padStart(2, "0")}
+            </span>
+          )}
+          {rateLimited && (
+            <span className="text-red-300/80">
+              rate limit resets in {Math.ceil(rateResetMs / 60_000)} min
+            </span>
+          )}
+        </div>
       </div>
+
+
 
 
 
