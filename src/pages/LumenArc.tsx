@@ -344,7 +344,7 @@ function BlueprintTransition({ next }: { next: string }) {
 }
 
 
-export default function RecoveryStation() {
+export default function LumenArc() {
   const [briefingOpen, setBriefingOpen] = useState(false);
   const [activeChapter, setActiveChapter] = useState("01");
   return (
