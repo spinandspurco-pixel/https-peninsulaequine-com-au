@@ -7,7 +7,9 @@ import { Zap, RefreshCw, Clock, Sun, Sunset } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { format } from "date-fns";
 
+import { useHqMount } from "@/lib/hqDiagnostics";
 export function TodaysPlan() {
+  useHqMount("TodaysPlan");
   const [plan, setPlan] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState(true);

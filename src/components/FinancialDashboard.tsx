@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useHqMount } from "@/lib/hqDiagnostics";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -88,6 +89,7 @@ type DateRange = "month" | "last_month" | "all";
 /* ------------------------------------------------------------------ */
 
 export function FinancialDashboard() {
+  useHqMount("FinancialDashboard");
   const [jobs, setJobs] = useState<Job[]>([]);
   const [cashFlows, setCashFlows] = useState<CashFlowRow[]>([]);
   const [loading, setLoading] = useState(true);

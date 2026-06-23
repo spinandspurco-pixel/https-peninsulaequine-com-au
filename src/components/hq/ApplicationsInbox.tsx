@@ -10,6 +10,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { useHqMount, withHqTimeout } from "@/lib/hqDiagnostics";
 
 interface Application {
   id: string;
@@ -52,8 +53,11 @@ function stageLabel(stage: string | null): string {
 
 export function ApplicationsInbox() {
   const { isPreview } = useHqMode();
+  useHqMount("ApplicationsInbox");
   const [rows, setRows] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadState, setLoadState] = useState<"loading" | "ok" | "timeout" | "error">("loading");
+  const [reloadKey, setReloadKey] = useState(0);
   const [selected, setSelected] = useState<Application | null>(null);
   const [filterType, setFilterType] = useState<string>("All");
   const [filterTier, setFilterTier] = useState<string>("All");
@@ -62,39 +66,53 @@ export function ApplicationsInbox() {
 
   useEffect(() => {
     let cancelled = false;
-    supabase
-      .from("inquiries")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(80)
-      .then(({ data, error }) => {
-        if (cancelled) return;
-        if (error) {
-          console.warn("[ApplicationsInbox]", error);
-          setRows([]);
-        } else {
-          // Applications = build/site-work inquiries (covers GuidedIntake slugs + legacy tags).
-          const APP_SERVICES = new Set([
-            "full-facility",
-            "whole-property",
-            "arena-construction",
-            "barn-construction",
-            "infrastructure",
-          ]);
-          const APP_TAGS = new Set(["full-build", "construction", "site-work"]);
-          const apps = (data ?? []).filter(
-            (i: any) =>
-              i.services?.some((s: string) => APP_SERVICES.has(s)) ||
-              i.lead_tags?.some((t: string) => APP_TAGS.has(t))
-          );
-          setRows(apps as Application[]);
-        }
+    const run = async () => {
+      setLoadState("loading");
+      setLoading(true);
+      const result = await withHqTimeout(
+        "ApplicationsInbox:load",
+        supabase
+          .from("inquiries")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(80),
+      );
+      if (cancelled) return;
+      if (result.kind !== "ok") {
+        setLoadState(result.kind);
+        setRows([]);
         setLoading(false);
-      });
+        return;
+      }
+      const { data, error } = result.data;
+      if (error) {
+        console.warn("[ApplicationsInbox]", error);
+        setLoadState("error");
+        setRows([]);
+      } else {
+        const APP_SERVICES = new Set([
+          "full-facility",
+          "whole-property",
+          "arena-construction",
+          "barn-construction",
+          "infrastructure",
+        ]);
+        const APP_TAGS = new Set(["full-build", "construction", "site-work"]);
+        const apps = (data ?? []).filter(
+          (i: any) =>
+            i.services?.some((s: string) => APP_SERVICES.has(s)) ||
+            i.lead_tags?.some((t: string) => APP_TAGS.has(t)),
+        );
+        setRows(apps as Application[]);
+        setLoadState("ok");
+      }
+      setLoading(false);
+    };
+    run();
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [reloadKey]);
 
   const filtered = useMemo(() => {
     return rows.filter((r) => {
@@ -171,6 +189,21 @@ export function ApplicationsInbox() {
 
   return (
     <div className="space-y-10">
+      {(loadState === "timeout" || loadState === "error") && (
+        <div className="border border-accent/25 px-4 py-3 flex items-center justify-between gap-4">
+          <p className="text-[11px] text-muted-foreground/75">
+            {loadState === "timeout"
+              ? "Applications inbox took longer than 8s to load."
+              : "Applications inbox failed to load."}
+          </p>
+          <button
+            onClick={() => setReloadKey((k) => k + 1)}
+            className="text-[10px] uppercase tracking-[0.22em] text-foreground/85 hover:text-accent transition-colors"
+          >
+            Retry →
+          </button>
+        </div>
+      )}
       {/* Filter bar */}
       <div className="space-y-4">
         {[

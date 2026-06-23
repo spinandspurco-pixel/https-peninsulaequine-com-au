@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useHqMode } from "@/hooks/useHqMode";
 import { Layout } from "@/components/layout/Layout";
+import { hqLog, useHqMount, HQ_DEFAULT_TIMEOUT_MS } from "@/lib/hqDiagnostics";
 import { HqPreviewBanner } from "@/components/hq/HqPreviewBanner";
 import { CommandOverview } from "@/components/hq/CommandOverview";
 import { ApplicationsInbox } from "@/components/hq/ApplicationsInbox";
@@ -53,6 +54,37 @@ export default function Admin() {
   });
   const [opsOpen, setOpsOpen] = useState(false);
 
+  // TEMP HQ-load diagnostics
+  useHqMount("Admin");
+  // Log key state on every render so we can see what gate is being held.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  hqLog("Admin:render", {
+    loading,
+    ready: !loading,
+    hasUser: !!user,
+    isAdmin,
+    isPreviewRole,
+    isPreviewMode: isPreview,
+    canAccess: isAdmin || isPreview,
+    opsOpen,
+    rolesCount: roles.length,
+  });
+
+  // 8s shell fallback — if auth says ready but we're still showing the gate
+  // spinner, surface a diagnostic shell instead of an infinite loader.
+  const [shellTimedOut, setShellTimedOut] = useState(false);
+  useEffect(() => {
+    if (!loading) {
+      setShellTimedOut(false);
+      return;
+    }
+    const t = setTimeout(() => {
+      hqLog("Admin:shell-spinner-timeout", { afterMs: HQ_DEFAULT_TIMEOUT_MS, loading });
+      setShellTimedOut(true);
+    }, HQ_DEFAULT_TIMEOUT_MS);
+    return () => clearTimeout(t);
+  }, [loading]);
+
   // Allow signed-in users with preview role too (handled by useHqMode)
   useEffect(() => {
     if (!loading && !user) navigate("/login");
@@ -69,13 +101,34 @@ export default function Admin() {
   if (loading) {
     return (
       <Layout>
-        <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="min-h-[60vh] flex flex-col items-center justify-center gap-6 px-6 text-center">
           <RefreshCw className="h-5 w-5 animate-spin text-accent/60" />
+          {shellTimedOut && (
+            <div className="max-w-md space-y-3">
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-accent/55">
+                HQ shell · diagnostic
+              </p>
+              <p className="text-[12px] text-muted-foreground/70 leading-relaxed">
+                Auth has not resolved after {Math.round(HQ_DEFAULT_TIMEOUT_MS / 1000)}s.
+                Open the console and filter by <code>[hq:</code> and <code>[auth:</code> to see
+                where the load is held.
+              </p>
+              <button
+                onClick={() => window.location.reload()}
+                className="text-[10px] uppercase tracking-[0.22em] text-foreground/85 hover:text-accent transition-colors"
+              >
+                Hard reload →
+              </button>
+            </div>
+          )}
         </div>
       </Layout>
     );
   }
-  if (!canAccess) return null;
+  if (!canAccess) {
+    hqLog("Admin:blocked-no-access", { roles, isAdmin, isPreview });
+    return null;
+  }
 
   return (
     <Layout>

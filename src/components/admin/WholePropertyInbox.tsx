@@ -5,6 +5,7 @@ import { Check, RefreshCw, Mail, Phone, Calendar, MessageSquare, Inbox } from "l
 import { toast } from "sonner";
 import { WholePropertyInquiryDrawer } from "./WholePropertyInquiryDrawer";
 
+import { useHqMount } from "@/lib/hqDiagnostics";
 interface Inquiry {
   id: string;
   name: string;
@@ -17,6 +18,7 @@ interface Inquiry {
 }
 
 export function WholePropertyInbox() {
+  useHqMount("WholePropertyInbox");
   const [items, setItems] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"unread" | "all">("unread");

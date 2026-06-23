@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useHqMount } from "@/lib/hqDiagnostics";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -83,6 +84,7 @@ const SECTION_CONFIG: Record<TimeGroup, { title: string; desc: string; weight: s
 /* ------------------------------------------------------------------ */
 
 export function FollowUpCommandView() {
+  useHqMount("FollowUpCommandView");
   const [records, setRecords] = useState<FollowUpRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [noteEdits, setNoteEdits] = useState<Record<string, string>>({});

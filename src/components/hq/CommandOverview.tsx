@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useHqMode } from "@/hooks/useHqMode";
 import { format, formatDistanceToNow } from "date-fns";
+import { useHqMount, withHqTimeout } from "@/lib/hqDiagnostics";
 
 interface Metric {
   label: string;
@@ -24,6 +25,7 @@ const SKELETON = "—";
 export function CommandOverview() {
   const navigate = useNavigate();
   const { isPreview } = useHqMode();
+  useHqMount("CommandOverview");
   const [metrics, setMetrics] = useState<Metric[]>([
     { label: "Active projects", value: SKELETON },
     { label: "New enquiries", value: SKELETON, hint: "last 7 days" },
@@ -33,39 +35,26 @@ export function CommandOverview() {
     { label: "Completed projects", value: SKELETON, hint: "this quarter" },
   ]);
   const [activity, setActivity] = useState<ActivityRow[]>([]);
+  const [loadState, setLoadState] = useState<"idle" | "loading" | "ok" | "timeout" | "error">("loading");
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
 
     const load = async () => {
+      setLoadState("loading");
       const since7 = new Date(Date.now() - 7 * 86400_000).toISOString();
       const sinceQ = new Date(Date.now() - 90 * 86400_000).toISOString();
 
-      const [
-        activeProjects,
-        newEnquiries,
-        siteVisits,
-        proposals,
-        inProgress,
-        completed,
-        activityLog,
-        managedActive,
-      ] = await Promise.all([
+      const queries = Promise.all([
         supabase.from("jobs").select("id", { count: "exact", head: true }).eq("status", "active"),
-        supabase
-          .from("inquiries")
-          .select("id", { count: "exact", head: true })
-          .gte("created_at", since7),
+        supabase.from("inquiries").select("id", { count: "exact", head: true }).gte("created_at", since7),
         supabase
           .from("site_assessments")
           .select("id", { count: "exact", head: true })
           .gte("slot_date", new Date().toISOString().slice(0, 10)),
-
         supabase.from("quotes").select("id", { count: "exact", head: true }).eq("status", "sent"),
-        supabase
-          .from("managed_projects")
-          .select("id", { count: "exact", head: true })
-          .eq("status", "in_progress"),
+        supabase.from("managed_projects").select("id", { count: "exact", head: true }).eq("status", "in_progress"),
         supabase
           .from("managed_projects")
           .select("id", { count: "exact", head: true })
@@ -76,11 +65,26 @@ export function CommandOverview() {
           .select("id, title, action_type, entity_type, created_at")
           .order("created_at", { ascending: false })
           .limit(8),
-
         supabase.from("managed_projects").select("id", { count: "exact", head: true }),
       ]);
 
+      const result = await withHqTimeout("CommandOverview:load", queries);
       if (cancelled) return;
+
+      if (result.kind !== "ok") {
+        setLoadState(result.kind);
+        return;
+      }
+      const [
+        activeProjects,
+        newEnquiries,
+        siteVisits,
+        proposals,
+        inProgress,
+        completed,
+        activityLog,
+        managedActive,
+      ] = result.data;
 
       setMetrics([
         { label: "Active projects", value: (activeProjects.count ?? managedActive.count) ?? 0 },
@@ -91,15 +95,31 @@ export function CommandOverview() {
         { label: "Completed projects", value: completed.count ?? 0, hint: "this quarter" },
       ]);
       setActivity(activityLog.data ?? []);
+      setLoadState("ok");
     };
 
-    load().catch(() => {
-      // Metrics fetch failures are non-fatal — the panel simply shows zeros.
-    });
+    load();
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [reloadKey]);
+
+  const loadBanner =
+    loadState === "timeout" || loadState === "error" ? (
+      <div className="mb-6 border border-accent/25 px-4 py-3 flex items-center justify-between gap-4">
+        <p className="text-[11px] text-muted-foreground/75">
+          {loadState === "timeout"
+            ? "Command Overview took longer than 8s to load."
+            : "Command Overview failed to load."}
+        </p>
+        <button
+          onClick={() => setReloadKey((k) => k + 1)}
+          className="text-[10px] uppercase tracking-[0.22em] text-foreground/85 hover:text-accent transition-colors"
+        >
+          Retry →
+        </button>
+      </div>
+    ) : null;
 
   const quickActions = [
     { label: "New enquiry", action: () => navigate("/contact"), locked: false },
@@ -126,6 +146,7 @@ export function CommandOverview() {
 
   return (
     <div className="space-y-14">
+      {loadBanner}
       {/* Metrics manifest strip */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
         {metrics.map((m, i) => (

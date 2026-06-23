@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { PreflightFrame, BronzeRule, StatusLamp } from "@/components/hq/HqPrimitives";
 
+import { useHqMount } from "@/lib/hqDiagnostics";
 interface Finding {
   table: string;
   column: string;
@@ -29,6 +30,7 @@ interface CheckResult {
  * "Josh Smith", "Test User", "Operator", etc.
  */
 export function PreviewMintGate() {
+  useHqMount("PreviewMintGate");
   const { isAdmin } = useAuth();
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<CheckResult | null>(null);
