@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useHqMount, withHqTimeout } from "@/lib/hqDiagnostics";
 
 interface Project {
   id: string;
@@ -24,26 +25,64 @@ const STATUS_LABEL: Record<string, string> = {
 
 export function ProjectsBoard() {
   const navigate = useNavigate();
+  useHqMount("ProjectsBoard");
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadState, setLoadState] = useState<"loading" | "ok" | "timeout" | "error">("loading");
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
-    supabase
-      .from("managed_projects")
-      .select("id, code, name, location, build_type, status, priority, next_action, last_update, updated_at")
-      .order("sort_order", { ascending: true })
-      .order("updated_at", { ascending: false })
-      .then(({ data, error }) => {
-        if (cancelled) return;
-        if (error) console.warn("[ProjectsBoard]", error);
-        setProjects((data as Project[]) ?? []);
+    const run = async () => {
+      setLoading(true);
+      setLoadState("loading");
+      const result = await withHqTimeout(
+        "ProjectsBoard:load",
+        supabase
+          .from("managed_projects")
+          .select("id, code, name, location, build_type, status, priority, next_action, last_update, updated_at")
+          .order("sort_order", { ascending: true })
+          .order("updated_at", { ascending: false }),
+      );
+      if (cancelled) return;
+      if (result.kind !== "ok") {
+        setLoadState(result.kind);
         setLoading(false);
-      });
+        return;
+      }
+      const { data, error } = result.data;
+      if (error) {
+        console.warn("[ProjectsBoard]", error);
+        setLoadState("error");
+      } else {
+        setProjects((data as Project[]) ?? []);
+        setLoadState("ok");
+      }
+      setLoading(false);
+    };
+    run();
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [reloadKey]);
+
+  if (loadState === "timeout" || loadState === "error") {
+    return (
+      <div className="border border-accent/25 px-4 py-3 flex items-center justify-between gap-4">
+        <p className="text-[11px] text-muted-foreground/75">
+          {loadState === "timeout"
+            ? "Projects took longer than 8s to load."
+            : "Projects failed to load."}
+        </p>
+        <button
+          onClick={() => setReloadKey((k) => k + 1)}
+          className="text-[10px] uppercase tracking-[0.22em] text-foreground/85 hover:text-accent transition-colors"
+        >
+          Retry →
+        </button>
+      </div>
+    );
+  }
 
   if (loading) {
     return <p className="text-[12px] text-muted-foreground/45 italic">Loading projects…</p>;
