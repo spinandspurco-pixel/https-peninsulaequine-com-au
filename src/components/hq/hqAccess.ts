@@ -29,6 +29,14 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     note: "Command centre · pipeline, applications, projects",
   },
   {
+    key: "inquiries",
+    label: "Inquiries",
+    to: "/hq/inquiries",
+    roles: ["admin", "employee", "preview"],
+    group: "operations",
+    note: "Inbox · status, notes, timeline",
+  },
+  {
     key: "services",
     label: "Services",
     to: "/hq/services",
