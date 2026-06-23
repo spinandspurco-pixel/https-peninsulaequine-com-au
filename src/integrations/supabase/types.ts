@@ -598,6 +598,27 @@ export type Database = {
           },
         ]
       }
+      dns_notify_sends: {
+        Row: {
+          id: string
+          recipient: string
+          sent_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          recipient: string
+          sent_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          recipient?: string
+          sent_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       email_diagnostic_log: {
         Row: {
           created_at: string
