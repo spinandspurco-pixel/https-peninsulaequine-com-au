@@ -386,95 +386,10 @@ export default function Admin() {
 
 
         {/* ════════════════════════════════════════════ */}
-        {/* ∞ — OPERATIONS (collapsed)                  */}
+        {/* ∞ — CONTROL ROOM (progressive disclosure)   */}
         {/* ════════════════════════════════════════════ */}
-        {!isPreview && (
-          <section className="border-t border-border/10 pt-14 sm:pt-20 pb-20 sm:pb-28">
-            <div className="max-w-5xl mx-auto px-6">
-              <button
-                onClick={() => setOpsOpen((v) => !v)}
-                className="flex items-center gap-4 mb-10 group"
-              >
-                <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/35">∞</span>
-                <div className="w-6 h-px bg-accent/15" />
-                <h2 className="font-serif text-xl sm:text-2xl font-light text-foreground/90 group-hover:text-foreground transition-colors">
-                  Operations
-                </h2>
-                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/40 ml-3">
-                  {opsOpen ? "Collapse −" : "Expand +"}
-                </span>
-              </button>
+        {!isPreview && <ControlRoom isAdmin={isAdmin} />}
 
-              {opsOpen && (
-                <div className="space-y-16">
-                  <div>
-                    <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-6">
-                      Today
-                    </p>
-                    <TodaysPlan />
-                    <div className="mt-10">
-                      <FollowUpCommandView />
-                    </div>
-                  </div>
-
-                  <div>
-                    <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-6">
-                      Whole-Property Inbox
-                    </p>
-                    <WholePropertyInbox />
-                  </div>
-
-                  <div>
-                    <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-6">
-                      Financial Snapshot
-                    </p>
-                    <FinancialDashboard />
-                  </div>
-
-                  <div>
-                    <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-6">
-                      Team
-                    </p>
-                    <AdminStaffOnboarding />
-                  </div>
-
-                  {isAdmin && (
-                    <div>
-                      <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-6">
-                        Email Infrastructure
-                      </p>
-                      <EmailDiagnostics />
-                    </div>
-                  )}
-
-                  {isAdmin && (
-                    <div>
-                      <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-6">
-                        Domain Infrastructure
-                      </p>
-                      <Link
-                        to="/hq/dns-verify?domain=peninsulaequine.systems&txt=google-site-verification=iMvRcyyPNi6aHBd0py3awRWPqS6-Yh2hXIl9y4vkKDU"
-                        className="text-[12px] text-foreground/75 hover:text-foreground transition-colors"
-                      >
-                        → Verify Google Workspace DNS
-                      </Link>
-                    </div>
-                  )}
-
-                  {isAdmin && (
-                    <div>
-                      <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-6">
-                        Client Preview Gate
-                      </p>
-                      <PreviewMintGate />
-                    </div>
-                  )}
-                </div>
-              )}
-
-            </div>
-          </section>
-        )}
       </div>
 
       <Dialog open={!!quoteForInquiryId} onOpenChange={(v) => !v && setQuoteForInquiryId(null)}>
