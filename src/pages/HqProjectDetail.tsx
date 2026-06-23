@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { RefreshCw } from "lucide-react";
 import { format } from "date-fns";
 import { HqNav } from "@/components/hq/HqNav";
+import { ProjectNotes } from "@/components/hq/ProjectNotes";
 
 interface Project {
   id: string;
@@ -32,6 +33,7 @@ const TABS = [
   { key: "status", label: "Status" },
   { key: "scope", label: "Scope" },
   { key: "notes", label: "Notes" },
+  { key: "brief", label: "Brief" },
   { key: "gallery", label: "Gallery" },
   { key: "timeline", label: "Internal Timeline" },
   { key: "summary", label: "Client Summary" },
@@ -218,8 +220,22 @@ export default function HqProjectDetail() {
             </Field>
           )}
 
-          {tab === "notes" && (
-            <Field label="Internal notes" hint="Visible only to HQ staff">
+          {tab === "notes" && !isPreview && (
+            <div>
+              <div className="mb-6">
+                <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/45">
+                  Project notes
+                </p>
+                <p className="text-[11px] text-muted-foreground/55 italic mt-1">
+                  Threaded internal discussion. Use @ to notify another staff member.
+                </p>
+              </div>
+              <ProjectNotes projectId={project.id} />
+            </div>
+          )}
+
+          {tab === "brief" && (
+            <Field label="One-line brief" hint="Quick summary field for this project (legacy single-field note).">
               <Editable
                 multiline
                 value={draft.internal_notes ?? ""}
