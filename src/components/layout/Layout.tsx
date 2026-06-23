@@ -5,6 +5,7 @@ import { SEOSchema } from "@/components/SEOSchema";
 import { PageTransition } from "@/components/PageTransition";
 import { GlobalCinematicBackdrop } from "@/components/GlobalCinematicBackdrop";
 import { ConsentBanner } from "@/components/consent/ConsentBanner";
+import { useSiteChrome } from "@/hooks/useSiteChrome";
 
 
 interface LayoutProps {
