@@ -137,7 +137,17 @@ serve(async (req) => {
       console.error("[notify-dns-propagated] Resend error:", error);
       return json(502, { ok: false, error: (error as any).message ?? String(error) });
     }
-    return json(200, { ok: true, recipient, resendId: (data as any)?.id ?? null });
+    // Log this send so subsequent calls see it for cooldown/rate-limit checks
+    const { error: logErr } = await adminClient
+      .from("dns_notify_sends")
+      .insert({ user_id: userId, recipient });
+    if (logErr) console.error("[notify-dns-propagated] log insert failed", logErr);
+    return json(200, {
+      ok: true,
+      recipient,
+      resendId: (data as any)?.id ?? null,
+      remainingThisHour: Math.max(0, 4 - (sends.length + 1)),
+    });
   } catch (err) {
     console.error("[notify-dns-propagated] error:", err);
     return json(500, { ok: false, error: err instanceof Error ? err.message : String(err) });
