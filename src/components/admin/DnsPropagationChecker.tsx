@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Check, X, Loader2, Radar, CircleStop, RotateCw, Download } from "lucide-react";
+import { Check, X, Loader2, Radar, CircleStop, RotateCw, Download, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+
+const NOTIFY_STORAGE_KEY = "dns-propagation-notify-email";
 
 // ---------------------------------------------------------------------------
 // Resolvers — DoH endpoints with permissive CORS so the browser can query them.
