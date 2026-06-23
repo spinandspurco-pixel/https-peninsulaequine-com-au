@@ -88,10 +88,10 @@ export function CommandOverview() {
 
       setMetrics([
         { label: "Active projects", value: (activeProjects.count ?? managedActive.count) ?? 0 },
-        { label: "New enquiries", value: newEnquiries.count ?? 0, hint: "last 7 days" },
-        { label: "Site visits booked", value: siteVisits.count ?? 0 },
-        { label: "Proposals sent", value: proposals.count ?? 0 },
-        { label: "In-progress builds", value: inProgress.count ?? 0 },
+        { label: "New applications", value: newEnquiries.count ?? 0, hint: "last 7 days" },
+        { label: "Site visits", value: siteVisits.count ?? 0 },
+        { label: "Proposals", value: proposals.count ?? 0 },
+        { label: "Active builds", value: inProgress.count ?? 0 },
         { label: "Completed projects", value: completed.count ?? 0, hint: "this quarter" },
       ]);
       setActivity(activityLog.data ?? []);
