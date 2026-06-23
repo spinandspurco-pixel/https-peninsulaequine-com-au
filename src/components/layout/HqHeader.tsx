@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { MentionsBadge } from "@/components/layout/MentionsBadge";
 
 /**
  * Slim header for private surfaces (HQ, admin, portal, staff, trainer).
