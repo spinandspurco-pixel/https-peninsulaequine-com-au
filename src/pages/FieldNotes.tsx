@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 import { CropSafeImage } from "@/components/media/CropSafeImage";
+import { LensBlurImage } from "@/components/motion/LensBlurImage";
+import { RevealHeading } from "@/components/motion/RevealHeading";
 import { DraftLine } from "@/components/draft";
 import { PageHandoff } from "@/components/architecture";
 
@@ -45,16 +47,18 @@ export default function FieldNotes() {
     <Layout>
       <main className="bg-background text-foreground type-architectural">
         <section className="relative min-h-[92vh] overflow-hidden flex items-end">
-          <img
+          <LensBlurImage
             src={heroDrone}
             srcSet={heroDroneSrcSet}
             sizes="100vw"
             alt={heroDroneAlt}
+            wrapperClassName="absolute inset-0 h-full w-full"
             className="absolute inset-0 h-full w-full object-cover object-[62%_48%] sm:object-[58%_48%] lg:object-center"
             loading="eager"
             decoding="async"
+            blurPx={22}
+            baseFilter="brightness(0.7) contrast(1.12) saturate(0.8)"
             {...({ fetchpriority: "high" } as any)}
-            style={{ filter: "brightness(0.7) contrast(1.12) saturate(0.8)" }}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/55 to-background/18" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/10" />
@@ -66,11 +70,14 @@ export default function FieldNotes() {
                   Field Notes
                 </p>
               </RevealOnScroll>
-              <RevealOnScroll direction="up" duration={1100} delay={140}>
-                <h1 className="font-serif text-foreground leading-[0.92] tracking-tight text-[clamp(2.3rem,1.4rem+4.6vw,5.4rem)] max-w-4xl">
-                  Real progress. Real conditions. Real builds.
-                </h1>
-              </RevealOnScroll>
+              <RevealHeading
+                as="h1"
+                className="font-serif text-foreground leading-[0.92] tracking-tight text-[clamp(2.3rem,1.4rem+4.6vw,5.4rem)] max-w-4xl"
+                stagger={70}
+                duration={1100}
+              >
+                Real progress. Real conditions. Real builds.
+              </RevealHeading>
               <RevealLine width="w-10" delay={260} />
               <RevealOnScroll direction="up" duration={1100} delay={320}>
                 <p className="max-w-2xl font-sans font-light text-foreground/62 leading-[1.85] text-[14px] sm:text-[15px]">
@@ -119,11 +126,12 @@ export default function FieldNotes() {
                   <Link to="/field-notes/covered-arena-stables-build" className="group block">
                     <article className="relative overflow-hidden">
                       <div className="relative aspect-[4/5] sm:aspect-[16/10] xl:aspect-[16/8] overflow-hidden">
-                        <img
+                        <LensBlurImage
                           src={steelFront}
                           alt={steelFrontAlt}
-                          className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-[1.03]"
-                          style={{ filter: "brightness(0.78) contrast(1.12) saturate(0.82)" }}
+                          wrapperClassName="absolute inset-0 h-full w-full"
+                          className="absolute inset-0 h-full w-full object-cover object-center"
+                          baseFilter="brightness(0.78) contrast(1.12) saturate(0.82)"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/15 to-transparent" />
                         <div className="absolute left-0 right-0 bottom-0 p-6 sm:p-8 lg:p-10">
@@ -212,13 +220,14 @@ export default function FieldNotes() {
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
               <RevealOnScroll direction="up" duration={1100} className="md:col-span-8">
                 <div className="relative overflow-hidden aspect-[16/10] lg:aspect-[21/10]">
-                  <img
+                  <LensBlurImage
                     src={sitewideProgress}
                     alt={sitewideProgressAlt}
                     loading="lazy"
                     decoding="async"
+                    wrapperClassName="absolute inset-0 h-full w-full"
                     className="absolute inset-0 h-full w-full object-cover object-center"
-                    style={{ filter: "brightness(0.8) contrast(1.08) saturate(0.78)" }}
+                    baseFilter="brightness(0.8) contrast(1.08) saturate(0.78)"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/45 to-transparent" />
                 </div>
@@ -226,13 +235,14 @@ export default function FieldNotes() {
 
               <RevealOnScroll direction="up" duration={1100} delay={120} className="md:col-span-4">
                 <div className="relative overflow-hidden aspect-[4/5] md:h-full md:aspect-auto min-h-[320px]">
-                  <img
+                  <LensBlurImage
                     src={redClayRoofline}
                     alt={redClayRooflineAlt}
                     loading="lazy"
                     decoding="async"
+                    wrapperClassName="absolute inset-0 h-full w-full"
                     className="absolute inset-0 h-full w-full object-cover object-[54%_50%]"
-                    style={{ filter: "brightness(0.78) contrast(1.1) saturate(0.8)" }}
+                    baseFilter="brightness(0.78) contrast(1.1) saturate(0.8)"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/35 to-transparent" />
                 </div>

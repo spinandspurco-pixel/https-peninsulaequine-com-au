@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { LensBlurImage } from "@/components/motion/LensBlurImage";
 import {
   getProjectImage,
   getProjectImageAlt,
@@ -107,15 +108,17 @@ const [feature, ...rest] = projects;
 function Overture() {
   return (
     <section className="relative h-[88svh] min-h-[640px] w-full overflow-hidden bg-background">
-      <img
+      <LensBlurImage
         src={feature.image}
         alt=""
         aria-hidden="true"
         loading="eager"
         decoding="async"
         {...({ fetchpriority: "high" } as any)}
+        wrapperClassName="absolute inset-0 w-full h-full"
         className={`absolute inset-0 w-full h-full object-cover ${feature.crop}`}
-        style={{ filter: "brightness(0.55) contrast(1.05) saturate(0.7)" }}
+        blurPx={22}
+        baseFilter="brightness(0.55) contrast(1.05) saturate(0.7)"
       />
       {/* Cinematic veil — heavy bottom, soft top */}
       <div
