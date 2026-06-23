@@ -32,6 +32,7 @@ import { StickySubpageCTA } from "@/components/StickySubpageCTA";
 import { useToast } from "@/hooks/use-toast";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
+import { trackConversion, trackFormError } from "@/lib/analytics";
 import { glennBrowitt, lessonInfo, siteConfig } from "@/data/content";
 // Approved cinematic — legacy main-ridge-finished-interior-1.jpg removed.
 import equitanaArena4Asset from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
