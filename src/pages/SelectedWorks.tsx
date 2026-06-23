@@ -455,9 +455,12 @@ function Closing() {
             End of record · 002
           </p>
           <h2 className="font-serif text-foreground/95 leading-[0.96] tracking-tight text-[clamp(2rem,1.3rem+2.6vw,3.5rem)] max-w-2xl">
-            More ground in progress.
-            <br />
-            <span className="text-foreground/55 italic font-normal">Resolved as it lands.</span>
+            <RevealHeading as="span" className="block">
+              More ground in progress.
+            </RevealHeading>
+            <RevealHeading as="span" className="block text-foreground/55 italic font-normal">
+              Resolved as it lands.
+            </RevealHeading>
           </h2>
           <p className="font-sans font-light text-foreground/55 text-[0.95rem] leading-[1.75] max-w-md">
             Peninsula Equine accepts a small number of builds each year across the
