@@ -64,7 +64,7 @@ export function LensBlurImage({
         className={cn("block w-full h-full", className)}
         style={{
           ...style,
-          filter: `blur(${blur}px) saturate(${sat})`,
+          filter: composedFilter,
           transform: active ? "scale(1)" : "scale(1.04)",
           transition: reduce
             ? "none"
