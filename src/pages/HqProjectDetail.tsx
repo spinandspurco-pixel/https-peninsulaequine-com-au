@@ -251,16 +251,44 @@ export default function HqProjectDetail() {
           )}
 
           {tab === "brief" && (
-            <Field label="One-line brief" hint="Quick summary field for this project (legacy single-field note).">
-              <Editable
-                multiline
-                value={draft.internal_notes ?? ""}
-                onChange={(v) => setDraft({ ...draft, internal_notes: v })}
-                onSave={() => save({ internal_notes: draft.internal_notes })}
-                placeholder="Site conditions, conversations, blockers."
-              />
+            <Field
+              label="Private brief"
+              hint={isAdmin ? "Admin-only — not visible to employees or trainers." : "Admin-only field."}
+            >
+              {isAdmin ? (
+                <Editable
+                  multiline
+                  value={internalNotesDraft}
+                  onChange={(v) => setInternalNotesDraft(v)}
+                  onSave={async () => {
+                    if (!project) return;
+                    if (isPreview) {
+                      toast.error("View-only in client preview");
+                      return;
+                    }
+                    const { error } = await supabase
+                      .from("managed_project_internal_notes")
+                      .upsert(
+                        { project_id: project.id, notes: internalNotesDraft },
+                        { onConflict: "project_id" },
+                      );
+                    if (error) {
+                      toast.error(error.message);
+                      return;
+                    }
+                    setInternalNotes(internalNotesDraft);
+                    toast.success("Saved");
+                  }}
+                  placeholder="Site conditions, conversations, blockers."
+                />
+              ) : (
+                <p className="text-[12px] text-muted-foreground/55 italic">
+                  Private project notes are restricted to admin staff.
+                </p>
+              )}
             </Field>
           )}
+
 
           {tab === "gallery" && (
             <div>
