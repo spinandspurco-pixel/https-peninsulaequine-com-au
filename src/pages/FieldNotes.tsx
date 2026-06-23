@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
 import { CropSafeImage } from "@/components/media/CropSafeImage";
+import { LensBlurImage } from "@/components/motion/LensBlurImage";
+import { RevealHeading } from "@/components/motion/RevealHeading";
 import { DraftLine } from "@/components/draft";
 import { PageHandoff } from "@/components/architecture";
 
@@ -45,14 +47,16 @@ export default function FieldNotes() {
     <Layout>
       <main className="bg-background text-foreground type-architectural">
         <section className="relative min-h-[92vh] overflow-hidden flex items-end">
-          <img
+          <LensBlurImage
             src={heroDrone}
             srcSet={heroDroneSrcSet}
             sizes="100vw"
             alt={heroDroneAlt}
+            wrapperClassName="absolute inset-0 h-full w-full"
             className="absolute inset-0 h-full w-full object-cover object-[62%_48%] sm:object-[58%_48%] lg:object-center"
             loading="eager"
             decoding="async"
+            blurPx={22}
             {...({ fetchpriority: "high" } as any)}
             style={{ filter: "brightness(0.7) contrast(1.12) saturate(0.8)" }}
           />
