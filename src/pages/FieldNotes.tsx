@@ -105,9 +105,12 @@ export default function FieldNotes() {
                   </p>
                 </RevealOnScroll>
                 <RevealOnScroll direction="up" duration={1000} delay={120}>
-                  <h2 className="font-serif text-foreground/92 leading-[1.02] tracking-tight text-[clamp(1.8rem,1.2rem+2vw,3rem)]">
-                    Covered Arena &amp; Stables Build
-                  </h2>
+                  <RevealHeading
+                    as="h2"
+                    className="font-serif text-foreground/92 leading-[1.02] tracking-tight text-[clamp(1.8rem,1.2rem+2vw,3rem)]"
+                  >
+                    {"Covered Arena & Stables Build"}
+                  </RevealHeading>
                 </RevealOnScroll>
                 <RevealLine width="w-8" delay={220} />
                 <RevealOnScroll direction="up" duration={1000} delay={300}>
