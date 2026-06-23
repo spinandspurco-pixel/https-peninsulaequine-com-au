@@ -142,9 +142,12 @@ export default function FieldNotes() {
                             <p className="font-mono uppercase text-accent/60 text-[10px] tracking-[0.42em]">
                               Current Project
                             </p>
-                            <h3 className="font-serif text-foreground/94 leading-[1.02] tracking-tight text-[clamp(1.6rem,1.1rem+1.8vw,2.5rem)]">
-                              Covered Arena &amp; Stables Build
-                            </h3>
+                            <RevealHeading
+                              as="h3"
+                              className="font-serif text-foreground/94 leading-[1.02] tracking-tight text-[clamp(1.6rem,1.1rem+1.8vw,2.5rem)]"
+                            >
+                              {"Covered Arena & Stables Build"}
+                            </RevealHeading>
                             <p className="font-sans font-light text-foreground/62 leading-[1.8] text-[14px] sm:text-[15px] max-w-lg">
                               Structural steel, undercover arena works and stable infrastructure in progress.
                             </p>
