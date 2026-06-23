@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useHqMode } from "@/hooks/useHqMode";
 import { Layout } from "@/components/layout/Layout";
@@ -11,9 +11,7 @@ import { ProjectsBoard } from "@/components/hq/ProjectsBoard";
 import { WriteGuard } from "@/components/hq/WriteGuard";
 import { CRMPipeline } from "@/components/crm/CRMPipeline";
 import { QuoteBuilder } from "@/components/QuoteBuilder";
-import { AdminStaffOnboarding } from "@/components/AdminStaffOnboarding";
-import { EmailDiagnostics } from "@/components/hq/EmailDiagnostics";
-import { PreviewMintGate } from "@/components/hq/PreviewMintGate";
+import { ControlRoom } from "@/components/hq/ControlRoom";
 import { ControlRoom } from "@/components/hq/ControlRoom";
 import { HqNav } from "@/components/hq/HqNav";
 import { canSeeHqItem } from "@/components/hq/hqAccess";
@@ -26,10 +24,6 @@ import {
   UserBadge,
 } from "@/components/hq/HqPrimitives";
 import { resolveIdentity } from "@/components/hq/hqIdentity";
-import { WholePropertyInbox } from "@/components/admin/WholePropertyInbox";
-import { FinancialDashboard } from "@/components/FinancialDashboard";
-import { TodaysPlan } from "@/components/TodaysPlan";
-import { FollowUpCommandView } from "@/components/FollowUpCommandView";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { RefreshCw } from "lucide-react";
 import { format } from "date-fns";
