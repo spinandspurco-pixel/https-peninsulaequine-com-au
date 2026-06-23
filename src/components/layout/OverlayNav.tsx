@@ -68,7 +68,7 @@ export function OverlayNav({ open, onClose }: Props) {
       <button
         type="button"
         onClick={onClose}
-        className="absolute top-6 right-6 sm:top-8 sm:right-10 font-mono text-[10px] uppercase tracking-[0.45em] text-foreground/55 hover:text-foreground transition-colors duration-500"
+        className="absolute top-6 right-6 sm:top-8 sm:right-10 z-10 font-mono text-[10px] uppercase tracking-[0.45em] text-foreground/55 hover:text-foreground transition-colors duration-500"
         aria-label="Close navigation"
       >
         Close ✕
