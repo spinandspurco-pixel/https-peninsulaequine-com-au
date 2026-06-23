@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Search, LayoutGrid, List, RefreshCw } from "lucide-react";
+import { useHqMount, withHqTimeout } from "@/lib/hqDiagnostics";
 
 interface Props {
   onCreateQuote: (inquiryId: string) => void;
@@ -17,10 +18,12 @@ interface Props {
 type ViewMode = "kanban" | "list";
 
 export function CRMPipeline({ onCreateQuote }: Props) {
+  useHqMount("CRMPipeline");
   const [records, setRecords] = useState<CRMRecord[]>([]);
   const [quotes, setQuotes] = useState<{ status: string; accepted_at: string | null }[]>([]);
   const [followUps, setFollowUps] = useState<{ status: string; due_date: string }[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadState, setLoadState] = useState<"loading" | "ok" | "timeout" | "error">("loading");
   const [viewMode, setViewMode] = useState<ViewMode>("kanban");
   const [searchTerm, setSearchTerm] = useState("");
   const [stageFilter, setStageFilter] = useState("all");
@@ -28,15 +31,26 @@ export function CRMPipeline({ onCreateQuote }: Props) {
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const [inquiryRes, quoteRes, followUpRes] = await Promise.all([
-      supabase.from("inquiries").select("*").order("created_at", { ascending: false }),
-      supabase.from("quotes").select("status, accepted_at"),
-      supabase.from("quote_follow_ups").select("status, due_date"),
-    ]);
+    setLoadState("loading");
+    const result = await withHqTimeout(
+      "CRMPipeline:load",
+      Promise.all([
+        supabase.from("inquiries").select("*").order("created_at", { ascending: false }),
+        supabase.from("quotes").select("status, accepted_at"),
+        supabase.from("quote_follow_ups").select("status, due_date"),
+      ]),
+    );
 
+    if (result.kind !== "ok") {
+      setLoadState(result.kind);
+      setLoading(false);
+      return;
+    }
+    const [inquiryRes, quoteRes, followUpRes] = result.data;
     if (inquiryRes.data) setRecords(inquiryRes.data as unknown as CRMRecord[]);
     if (quoteRes.data) setQuotes(quoteRes.data);
     if (followUpRes.data) setFollowUps(followUpRes.data);
+    setLoadState("ok");
     setLoading(false);
   }, []);
 
