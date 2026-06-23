@@ -6,6 +6,10 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 const NOTIFY_STORAGE_KEY = "dns-propagation-notify-email";
+const NOTIFY_HISTORY_KEY = "dns-propagation-notify-history";
+const COOLDOWN_MS = 5 * 60_000; // 5 min between sends
+const RATE_WINDOW_MS = 60 * 60_000; // 1 hour
+const RATE_MAX_SENDS = 4; // max sends per hour
 
 // ---------------------------------------------------------------------------
 // Resolvers — DoH endpoints with permissive CORS so the browser can query them.
