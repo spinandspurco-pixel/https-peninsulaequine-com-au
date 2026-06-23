@@ -5,12 +5,16 @@ import type { AppRole } from "@/hooks/useAuth";
  * Backend access (RLS) is NOT defined here — these rules only decide which
  * destinations a given role sees in the HQ navigation menu.
  */
+export type HqNavGroup = "overview" | "content" | "operations";
+
 export type HqNavItem = {
   key: string;
   label: string;
   to: string;
   /** Roles permitted to see this nav entry. */
   roles: AppRole[];
+  /** Visual grouping in the HQ rail. */
+  group: HqNavGroup;
   /** Optional short description for tile views. */
   note?: string;
 };
