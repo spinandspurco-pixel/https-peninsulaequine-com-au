@@ -219,7 +219,7 @@ export function CommandOverview() {
 
         {/* Quick actions + mentions rail */}
         <div className="lg:w-64 space-y-8">
-          {!isPreview && <MentionsCard />}
+          {!isPreview && <div id="mentions" className="scroll-mt-24"><MentionsCard /></div>}
           <div>
             <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-6">
               Quick actions
