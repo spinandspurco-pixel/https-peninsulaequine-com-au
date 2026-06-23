@@ -185,6 +185,7 @@ function AppContent() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
+        <GuidedIntake />
       </BrowserRouter>
     </IntroContext.Provider>
   );
@@ -196,7 +197,6 @@ const App = () => (
       <AuthProvider>
         <IntakeProvider>
           <AppContent />
-          <GuidedIntake />
         </IntakeProvider>
       </AuthProvider>
     </TooltipProvider>
