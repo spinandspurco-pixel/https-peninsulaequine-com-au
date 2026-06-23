@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BrandIntro } from "@/components/BrandIntro";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
-import { MagneticLink } from "@/components/motion/MagneticLink";
+// MagneticLink is exposed in src/components/motion for future use.
 import { IntroContext } from "@/hooks/useIntroState";
 import { useIntake } from "@/hooks/useIntake";
 
