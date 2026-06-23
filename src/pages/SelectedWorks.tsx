@@ -155,9 +155,12 @@ function Overture() {
           </RevealOnScroll>
           <RevealOnScroll direction="up" duration={1400} delay={180}>
             <h1 className="mt-5 font-serif text-foreground/95 leading-[0.92] tracking-tight text-[clamp(2.6rem,1.4rem+5.4vw,6rem)]">
-              The works that
-              <br />
-              speak for themselves.
+              <RevealHeading as="span" className="block">
+                The works that
+              </RevealHeading>
+              <RevealHeading as="span" className="block">
+                speak for themselves.
+              </RevealHeading>
             </h1>
           </RevealOnScroll>
           <RevealOnScroll direction="up" duration={1100} delay={420}>
