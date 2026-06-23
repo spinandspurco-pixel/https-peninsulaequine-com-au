@@ -12,6 +12,7 @@ import { IntroContext } from "./hooks/useIntroState";
 import { IntakeProvider } from "./hooks/useIntake";
 import { AuthProvider } from "./hooks/useAuth";
 import { GuidedIntake } from "./components/GuidedIntake";
+import { SiteRail } from "./components/layout/SiteRail";
 
 import Index from "./pages/Index";
 
@@ -83,6 +84,7 @@ function AppContent() {
       <BrowserRouter>
         <RouteCanonical />
         <RouteAnalytics />
+        <SiteRail />
         <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<Index />} />
