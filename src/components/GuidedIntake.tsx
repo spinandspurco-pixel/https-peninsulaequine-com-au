@@ -98,6 +98,11 @@ function StepWrapper({
 export function GuidedIntake() {
   const { showGuidedIntake } = useSiteChrome();
   const { isOpen, close } = useIntake();
+
+  /* Force-close + unmount if a private route opens while modal was open */
+  useEffect(() => {
+    if (!showGuidedIntake && isOpen) close();
+  }, [showGuidedIntake, isOpen, close]);
   const [step, setStep] = useState(-1); // -1 = qualification gate
   const [gateReady, setGateReady] = useState(false);
   const [intent, setIntent] = useState("");
