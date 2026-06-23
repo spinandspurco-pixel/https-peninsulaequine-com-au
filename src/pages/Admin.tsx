@@ -145,30 +145,28 @@ export default function Admin() {
                         className="opacity-0 animate-fade-in"
                         style={{ animationDelay: "100ms", animationFillMode: "both" }}
                       >
-                        <div className="flex items-start justify-between gap-8 flex-wrap">
-                          <IdentityHeader
-                            identity={identity}
-                            greetingOverline="Peninsula Equine · Command Centre"
-                          />
-                          <div className="flex flex-col items-end gap-3 mt-2">
-                            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground/45">
-                              {format(new Date(), "EEEE · d MMMM yyyy")}
-                            </p>
-                            <UserBadge identity={identity} />
-                          </div>
-                        </div>
+                        <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/55 mb-4">
+                          Peninsula Equine · Command Centre
+                        </p>
+                        <h1 className="font-serif text-3xl sm:text-4xl font-light text-foreground tracking-tight leading-[1.05]">
+                          {identity.role}
+                        </h1>
+                        {identity.handle && (
+                          <p className="mt-2 font-mono text-[11px] tracking-[0.08em] text-muted-foreground/55 lowercase">
+                            {identity.handle}
+                          </p>
+                        )}
+                        <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground/45">
+                          {format(new Date(), "EEEE · d MMMM yyyy")}
+                        </p>
 
-                        <div className="mt-10">
-                          <BronzeRule label="Session live" />
-                        </div>
-
-                        <div className="flex items-center gap-6 mt-6 flex-wrap">
+                        <div className="flex items-center gap-6 mt-8 flex-wrap">
                           {isAdmin && !isPreview && (
                             <button
                               onClick={enterPreview}
                               className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55 hover:text-accent/80 transition-colors"
                             >
-                              Enter client preview →
+                              Client preview →
                             </button>
                           )}
                           <button
