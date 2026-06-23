@@ -7,6 +7,8 @@ type Props = ImgHTMLAttributes<HTMLImageElement> & {
   wrapperClassName?: string;
   /** Blur intensity in px. Default 18. */
   blurPx?: number;
+  /** Additional filter (e.g. `brightness(0.8) contrast(1.1)`) composed AFTER the blur/sat reveal. */
+  baseFilter?: string;
 };
 
 /**
@@ -16,6 +18,7 @@ type Props = ImgHTMLAttributes<HTMLImageElement> & {
 export function LensBlurImage({
   wrapperClassName,
   blurPx = 18,
+  baseFilter,
   className,
   onLoad,
   style,
@@ -52,6 +55,7 @@ export function LensBlurImage({
   const active = revealed && loaded;
   const blur = reduce ? 0 : active ? 0 : blurPx;
   const sat = active ? 1 : 0.65;
+  const composedFilter = `blur(${blur}px) saturate(${sat})${baseFilter ? ` ${baseFilter}` : ""}`;
 
   return (
     <div ref={wrapRef} className={cn("relative overflow-hidden", wrapperClassName)}>
