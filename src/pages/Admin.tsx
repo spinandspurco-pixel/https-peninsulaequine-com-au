@@ -16,11 +16,8 @@ import { HqNav } from "@/components/hq/HqNav";
 import { canSeeHqItem } from "@/components/hq/hqAccess";
 
 import {
-  IdentityHeader,
   PreviewWelcome,
   BlueprintField,
-  BronzeRule,
-  UserBadge,
 } from "@/components/hq/HqPrimitives";
 import { resolveIdentity } from "@/components/hq/hqIdentity";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
