@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { MentionsBadge } from "@/components/layout/MentionsBadge";
 
 /**
  * Slim header for private surfaces (HQ, admin, portal, staff, trainer).
@@ -34,6 +35,7 @@ export function HqHeader() {
           Private HQ · Internal use only
         </span>
         <div className="ml-auto md:ml-6 flex items-center gap-5">
+          <MentionsBadge />
           {user && (
             <span className="hidden sm:inline font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground/55 truncate max-w-[14rem]">
               {primaryRole ? `${primaryRole} · ` : ""}{user.email}
