@@ -18,7 +18,7 @@ import Index from "./pages/Index";
 
 const Arenas = lazy(() => import("./pages/Arenas"));
 const Stables = lazy(() => import("./pages/Stables"));
-const LumenArc = lazy(() => import("./pages/RecoveryStation"));
+const LumenArc = lazy(() => import("./pages/LumenArc"));
 import LumenArcRouteFallback from "./components/lumenarc/LumenArcRouteFallback";
 const InfrastructurePage = lazy(() => import("./pages/Infrastructure"));
 
