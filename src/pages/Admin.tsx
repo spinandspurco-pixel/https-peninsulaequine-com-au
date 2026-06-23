@@ -46,7 +46,7 @@ export default function Admin() {
     const key = t.to.replace("/hq/", "");
     return canSeeHqItem(effectiveRoles, key);
   });
-  const [opsOpen, setOpsOpen] = useState(false);
+  
 
   // TEMP HQ-load diagnostics
   useHqMount("Admin");
@@ -60,7 +60,7 @@ export default function Admin() {
     isPreviewRole,
     isPreviewMode: isPreview,
     canAccess: isAdmin || isPreview,
-    opsOpen,
+    
     rolesCount: roles.length,
   });
 
