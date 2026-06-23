@@ -25,6 +25,7 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     label: "Overview",
     to: "/hq",
     roles: ["admin", "employee", "trainer", "moderator", "preview"],
+    group: "overview",
     note: "Command centre · pipeline, applications, projects",
   },
   {
@@ -32,6 +33,7 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     label: "Services",
     to: "/hq/services",
     roles: ["admin", "moderator", "preview"],
+    group: "content",
     note: "Capabilities, pricing, FAQ",
   },
   {
@@ -39,6 +41,7 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     label: "Testimonials",
     to: "/hq/testimonials",
     roles: ["admin", "moderator", "preview"],
+    group: "content",
     note: "Client voices and approvals",
   },
   {
@@ -46,6 +49,7 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     label: "Events",
     to: "/hq/events",
     roles: ["admin", "moderator", "trainer", "preview"],
+    group: "content",
     note: "Clinics, RSVPs, capacity",
   },
   {
@@ -53,6 +57,7 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     label: "Selected Works",
     to: "/hq/selected-works",
     roles: ["admin", "moderator", "preview"],
+    group: "content",
     note: "Case-study chapters, scope, summary",
   },
   {
@@ -60,6 +65,7 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     label: "Field Notes",
     to: "/hq/field-notes",
     roles: ["admin", "moderator", "employee", "trainer", "preview"],
+    group: "content",
     note: "Editorial dispatches from the build",
   },
   {
@@ -67,6 +73,7 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     label: "Documents",
     to: "/hq/documents",
     roles: ["admin", "employee", "preview"],
+    group: "operations",
     note: "Client packs, field notes",
   },
   {
@@ -74,6 +81,7 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     label: "Activity",
     to: "/hq/activity",
     roles: ["admin", "moderator", "preview"],
+    group: "operations",
     note: "Who did what and when — full audit timeline",
   },
   {
@@ -81,6 +89,7 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     label: "DNS Verify",
     to: "/hq/dns-verify",
     roles: ["admin"],
+    group: "operations",
     note: "Google Workspace TXT verification",
   },
 ];
