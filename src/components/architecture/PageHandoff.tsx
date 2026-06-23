@@ -66,11 +66,15 @@ export function PageHandoff({
 
         <Link
           to={to}
-          className={`bp-mark bp-delay-4 group mt-8 inline-flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.4em] text-foreground/80 hover:text-accent transition-colors duration-[var(--bp-resolve)] ease-[var(--bp-ease-settle)]`}
+          className={`bp-mark bp-delay-4 group mt-8 inline-flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.4em] text-foreground/80 hover:text-accent transition-colors`}
+          style={{ transitionDuration: "var(--bp-resolve)", transitionTimingFunction: "var(--bp-ease-settle)" }}
         >
           <span className="border-l border-t border-accent/50 w-2.5 h-2.5" aria-hidden />
           <span>{cta}</span>
-          <span className="inline-block w-10 h-px bg-accent/55 transition-all duration-[var(--bp-resolve)] ease-[var(--bp-ease-settle)] group-hover:w-16" />
+          <span
+            className="inline-block w-10 h-px bg-accent/55 transition-all group-hover:w-16"
+            style={{ transitionDuration: "var(--bp-resolve)", transitionTimingFunction: "var(--bp-ease-settle)" }}
+          />
           <span className="border-r border-b border-accent/50 w-2.5 h-2.5" aria-hidden />
         </Link>
       </div>
