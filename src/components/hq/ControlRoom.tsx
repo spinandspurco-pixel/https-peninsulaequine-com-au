@@ -12,10 +12,10 @@ import { PreviewMintGate } from "@/components/hq/PreviewMintGate";
 type Status = "nominal" | "action" | "blocked" | "internal";
 
 const STATUS_STYLE: Record<Status, { label: string; cls: string }> = {
-  nominal:  { label: "Nominal",         cls: "text-emerald-400/80 border-emerald-400/25 bg-emerald-400/5" },
-  action:   { label: "Action required", cls: "text-amber-300/85  border-amber-300/30  bg-amber-300/5" },
-  blocked:  { label: "Blocked",         cls: "text-rose-300/85   border-rose-300/30   bg-rose-300/5" },
-  internal: { label: "Internal",        cls: "text-accent/70     border-accent/25     bg-accent/5" },
+  nominal:  { label: "Operational", cls: "text-emerald-400/80 border-emerald-400/25 bg-emerald-400/5" },
+  action:   { label: "Attention",   cls: "text-amber-300/85  border-amber-300/30  bg-amber-300/5" },
+  blocked:  { label: "Blocked",     cls: "text-rose-300/85   border-rose-300/30   bg-rose-300/5" },
+  internal: { label: "Restricted",  cls: "text-accent/70     border-accent/25     bg-accent/5" },
 };
 
 function StatusTag({ status }: { status: Status }) {
