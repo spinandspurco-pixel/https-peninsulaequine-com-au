@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Check, X, Minus, RotateCw, ShieldCheck, MailCheck, Loader2, Radar, CircleStop } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Check, X, Minus, RotateCw, ShieldCheck, MailCheck, Loader2, Radar, CircleStop, ArrowDownWideNarrow, ArrowUpNarrowWide } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
