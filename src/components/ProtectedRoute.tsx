@@ -36,17 +36,22 @@ export function ProtectedRoute({
   allowedRoles,
   forbiddenRedirect,
 }: ProtectedRouteProps) {
-  const { user, ready, roles } = useAuth();
+  const { user, ready, roles, authLoading, rolesLoading } = useAuth();
   const location = useLocation();
 
+  // TEMP: HQ login-hang investigation
+  // eslint-disable-next-line no-console
+  console.log("[auth:guard:render]", { path: location.pathname, ready, authLoading, rolesLoading, hasUser: !!user, roles, allowedRoles });
+
   if (!ready) {
-    authLog("guard:wait", { path: location.pathname });
+    authLog("guard:wait", { path: location.pathname, authLoading, rolesLoading });
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-accent" />
       </div>
     );
   }
+
 
   if (!user) {
     const redirect = encodeURIComponent(location.pathname + location.search);
