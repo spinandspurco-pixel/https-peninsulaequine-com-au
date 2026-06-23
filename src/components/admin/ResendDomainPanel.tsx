@@ -56,6 +56,32 @@ export default function ResendDomainPanel() {
   const [testResult, setTestResult] = useState<{ ok: boolean; latency?: number; detail?: string } | null>(null);
   const [lastChecked, setLastChecked] = useState<string | null>(null);
 
+  // Verification attempt history (in-memory only)
+  type HistoryEntry = {
+    id: number;
+    at: number;
+    source: string;
+    status: string;
+    message: string;
+  };
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const historyIdRef = useRef(0);
+  const appendHistory = useCallback((entry: Omit<HistoryEntry, "id" | "at">) => {
+    historyIdRef.current += 1;
+    const row: HistoryEntry = { id: historyIdRef.current, at: Date.now(), ...entry };
+    setHistory((prev) => [row, ...prev].slice(0, 50));
+  }, []);
+
+  const summariseRecords = (domain?: ResendDomain) => {
+    if (!domain?.records?.length) return "—";
+    const counts = domain.records.reduce<Record<string, number>>((acc, r) => {
+      const k = (r.status ?? "unknown").toLowerCase();
+      acc[k] = (acc[k] ?? 0) + 1;
+      return acc;
+    }, {});
+    return Object.entries(counts).map(([k, v]) => `${v} ${k}`).join(" · ");
+  };
+
   // Auto-poll state
   const [polling, setPolling] = useState(false);
   const [pollAttempts, setPollAttempts] = useState(0);
@@ -78,7 +104,13 @@ export default function ResendDomainPanel() {
       const data = await invoke("status");
       setStatus(data);
       setLastChecked(new Date().toLocaleTimeString());
+      appendHistory({
+        source: "status refresh",
+        status: data?.domain?.status ?? (data?.configured ? "unknown" : "not_configured"),
+        message: data?.configured ? summariseRecords(data?.domain) : (data?.message ?? "—"),
+      });
     } catch (e: any) {
+      appendHistory({ source: "status refresh", status: "error", message: e?.message ?? "Unknown error" });
       toast({ title: "Status check failed", description: e?.message, variant: "destructive" });
     } finally {
       setLoading(false);
@@ -86,12 +118,18 @@ export default function ResendDomainPanel() {
   };
 
 
-  const triggerVerify = useCallback(async (opts?: { silent?: boolean }) => {
+  const triggerVerify = useCallback(async (opts?: { silent?: boolean; source?: string }) => {
     setVerifying(true);
+    const source = opts?.source ?? (opts?.silent ? "auto-poll" : "manual verify");
     try {
       const data = await invoke("verify");
       setStatus({ configured: true, domain: data.domain });
       setLastChecked(new Date().toLocaleTimeString());
+      appendHistory({
+        source,
+        status: data?.domain?.status ?? "unknown",
+        message: summariseRecords(data?.domain),
+      });
       if (!opts?.silent) {
         toast({
           title: "Verification re-checked",
@@ -100,6 +138,7 @@ export default function ResendDomainPanel() {
       }
       return data.domain?.status as string | undefined;
     } catch (e: any) {
+      appendHistory({ source, status: "error", message: e?.message ?? "Unknown error" });
       if (!opts?.silent) {
         toast({ title: "Verify failed", description: e?.message, variant: "destructive" });
       }
@@ -107,7 +146,7 @@ export default function ResendDomainPanel() {
     } finally {
       setVerifying(false);
     }
-  }, [toast]);
+  }, [appendHistory, toast]);
 
   const stopPolling = useCallback(() => {
     if (pollTimerRef.current) { window.clearTimeout(pollTimerRef.current); pollTimerRef.current = null; }
@@ -127,7 +166,7 @@ export default function ResendDomainPanel() {
       }
       setPollAttempts(attempt + 1);
       try {
-        const next = (await triggerVerify({ silent: true }))?.toLowerCase();
+        const next = (await triggerVerify({ silent: true, source: `auto-poll #${attempt + 1}` }))?.toLowerCase();
         if (next === "verified") {
           stopPolling();
           toast({ title: "Domain verified ✓", description: "Resend now accepts sends from peninsulaequine.systems." });
@@ -150,7 +189,7 @@ export default function ResendDomainPanel() {
     setPolling(true);
     setPollAttempts(1);
     try {
-      const initial = (await triggerVerify({ silent: true }))?.toLowerCase();
+      const initial = (await triggerVerify({ silent: true, source: "auto-poll #1" }))?.toLowerCase();
       if (initial === "verified") {
         stopPolling();
         toast({ title: "Domain verified ✓", description: "Already passing — no polling needed." });
@@ -260,6 +299,65 @@ export default function ResendDomainPanel() {
           {verifying && <span className="text-muted-foreground/60 italic">checking…</span>}
         </div>
       )}
+
+      <div className="mt-6">
+        <div className="flex items-baseline justify-between mb-2">
+          <p className="text-[0.6rem] uppercase tracking-[0.35em] text-muted-foreground/60">
+            Verification history
+          </p>
+          {history.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setHistory([])}
+              className="text-[0.6rem] uppercase tracking-[0.3em] text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+            >
+              Clear history
+            </button>
+          )}
+        </div>
+        <div className="border border-border/30 max-h-64 overflow-y-auto">
+          <table className="w-full text-xs">
+            <thead className="bg-muted/20 text-muted-foreground/70 uppercase tracking-[0.2em] text-[0.6rem] sticky top-0">
+              <tr>
+                <th className="text-left px-3 py-2 font-light">Time</th>
+                <th className="text-left px-3 py-2 font-light">Source</th>
+                <th className="text-left px-3 py-2 font-light">Status</th>
+                <th className="text-left px-3 py-2 font-light">Detail</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/30">
+              {history.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-3 py-4 text-center text-muted-foreground/50 italic">
+                    No checks yet — run a verify or start auto-poll.
+                  </td>
+                </tr>
+              ) : (
+                history.map((h) => (
+                  <tr key={h.id} className="align-top">
+                    <td className="px-3 py-2 font-mono text-muted-foreground/70 whitespace-nowrap">
+                      {new Date(h.at).toLocaleTimeString()}
+                    </td>
+                    <td className="px-3 py-2 font-mono text-muted-foreground/80 whitespace-nowrap">
+                      {h.source}
+                    </td>
+                    <td className="px-3 py-2">
+                      <Badge variant="outline" className={`uppercase tracking-[0.2em] text-[0.55rem] ${statusBadge(h.status)}`}>
+                        {h.status}
+                      </Badge>
+                    </td>
+                    <td className="px-3 py-2 font-mono break-all text-muted-foreground/80">
+                      {h.message}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
 
 
       {!status && (
