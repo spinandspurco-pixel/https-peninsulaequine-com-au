@@ -12,7 +12,6 @@ import { WriteGuard } from "@/components/hq/WriteGuard";
 import { CRMPipeline } from "@/components/crm/CRMPipeline";
 import { QuoteBuilder } from "@/components/QuoteBuilder";
 import { ControlRoom } from "@/components/hq/ControlRoom";
-import { ControlRoom } from "@/components/hq/ControlRoom";
 import { HqNav } from "@/components/hq/HqNav";
 import { canSeeHqItem } from "@/components/hq/hqAccess";
 
