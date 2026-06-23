@@ -195,9 +195,12 @@ export default function FieldNotes() {
                     </p>
                   </RevealOnScroll>
                   <RevealOnScroll direction="up" duration={1100} delay={140}>
-                    <h2 className="font-serif text-foreground leading-[0.96] tracking-tight text-[clamp(1.8rem,1.15rem+2.2vw,3rem)]">
+                    <RevealHeading
+                      as="h2"
+                      className="font-serif text-foreground leading-[0.96] tracking-tight text-[clamp(1.8rem,1.15rem+2.2vw,3rem)]"
+                    >
                       Captured while the work is still alive.
-                    </h2>
+                    </RevealHeading>
                   </RevealOnScroll>
                   <RevealLine width="w-10" delay={260} />
                   <RevealOnScroll direction="up" duration={1100} delay={320}>
