@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import {
+import { useHqMount } from "@/lib/hqDiagnostics";
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import {
@@ -83,6 +84,7 @@ const SECTION_CONFIG: Record<TimeGroup, { title: string; desc: string; weight: s
 /* ------------------------------------------------------------------ */
 
 export function FollowUpCommandView() {
+  useHqMount("FollowUpCommandView");
   const [records, setRecords] = useState<FollowUpRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [noteEdits, setNoteEdits] = useState<Record<string, string>>({});

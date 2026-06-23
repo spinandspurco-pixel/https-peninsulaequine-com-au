@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import {
+import { useHqMount } from "@/lib/hqDiagnostics";
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import {
@@ -88,6 +89,7 @@ type DateRange = "month" | "last_month" | "all";
 /* ------------------------------------------------------------------ */
 
 export function FinancialDashboard() {
+  useHqMount("FinancialDashboard");
   const [jobs, setJobs] = useState<Job[]>([]);
   const [cashFlows, setCashFlows] = useState<CashFlowRow[]>([]);
   const [loading, setLoading] = useState(true);
