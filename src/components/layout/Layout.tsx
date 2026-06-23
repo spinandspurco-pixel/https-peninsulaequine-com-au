@@ -50,6 +50,9 @@ function ScrollProgress() {
 }
 
 export function Layout({ children }: LayoutProps) {
+  // SiteRail owns the public nav. Header only renders where SiteRail does not
+  // (private/HQ/portal surfaces) so there is exactly one primary menu system.
+  const { showSiteRail } = useSiteChrome();
   return (
     <div className="min-h-screen flex flex-col relative">
       <SEOSchema />
@@ -61,7 +64,7 @@ export function Layout({ children }: LayoutProps) {
       >
         Skip to main content
       </a>
-      <Header />
+      {!showSiteRail && <Header />}
       <PageTransition>
         <main id="main-content" className="flex-1 relative z-[1]" tabIndex={-1}>{children}</main>
       </PageTransition>
