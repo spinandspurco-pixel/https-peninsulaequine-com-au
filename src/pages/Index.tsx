@@ -103,15 +103,18 @@ export default function Index() {
 
   // Cinematic hero parallax: scale the loaded hero image from 1 → 1.06 and
   // translate 0 → 36px over the first viewport. RAF-driven, CSS variables —
-  // no React state per frame. Honours prefers-reduced-motion.
+  // no React state per frame. Honours prefers-reduced-motion. Defers until
+  // after the entrance transform completes so the two animations don't fight.
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (!heroImgLoaded) return;
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
     let raf = 0;
+    let attached = false;
     const update = () => {
       raf = 0;
       const img = heroImgRef.current;
-      if (!img || !heroImgLoaded) return;
+      if (!img) return;
       const y = window.scrollY;
       const vh = window.innerHeight || 1;
       const p = Math.min(Math.max(y / vh, 0), 1);
@@ -123,10 +126,17 @@ export default function Index() {
       if (raf) return;
       raf = requestAnimationFrame(update);
     };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
+    // Wait for the entrance transition (~2400ms) to finish before taking over.
+    const t = window.setTimeout(() => {
+      const img = heroImgRef.current;
+      if (img) img.style.transition = "transform 80ms linear, opacity 1600ms cubic-bezier(0.45,0,0.15,1)";
+      window.addEventListener("scroll", onScroll, { passive: true });
+      attached = true;
+      update();
+    }, 2500);
     return () => {
-      window.removeEventListener("scroll", onScroll);
+      window.clearTimeout(t);
+      if (attached) window.removeEventListener("scroll", onScroll);
       if (raf) cancelAnimationFrame(raf);
     };
   }, [heroImgLoaded]);
