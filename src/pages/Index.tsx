@@ -14,10 +14,14 @@ import aberdeenHero from "@/assets/uploads/approved-aberdeen-rider-exterior-stor
 import aberdeenArena from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
 import steelFrontAsset from "@/assets/uploads/approved-current-build-steel-frame-storm.png.asset.json";
 import coveredArenaExteriorAsset from "@/assets/covered-arenas/approved-covered-arena-exterior-dusk.png.asset.json";
+import muddyBootsCraftAsset from "@/assets/field-notes/muddy-boots-steel-frame.png.asset.json";
+import mainRidgeLegacyAsset from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
 
 
 const steelFront = steelFrontAsset.url;
 const coveredArenaExterior = coveredArenaExteriorAsset.url;
+const craftBoots = muddyBootsCraftAsset.url;
+const legacyPavilion = mainRidgeLegacyAsset.url;
 
 // Responsive webp variants for srcset (generated at 640/1024/1536w)
 import ciro640 from "@/assets/responsive/ciro-ace-quiet-moment-640.webp.asset.json";
@@ -655,8 +659,8 @@ export default function Index() {
                 <RevealOnScroll direction="up" duration={1300} delay={220} className="col-span-12 sm:col-span-5">
                   <figure className="relative aspect-[4/3] overflow-hidden group">
                     <img
-                      src={steelFront}
-                      alt="Steel frame mid-construction under a storm sky — current covered arena build"
+                      src={craftBoots}
+                      alt="Hands and worn boots on a steel frame mid-build — human-led construction on a Peninsula Equine site"
                       loading="lazy"
                       decoding="async"
                       className="absolute inset-0 w-full h-full object-cover object-center will-change-transform group-hover:scale-[1.025]"
@@ -666,7 +670,7 @@ export default function Index() {
                       }}
                     />
                     <figcaption className="absolute bottom-4 left-5 right-5 font-mono uppercase text-[9.5px] tracking-[0.42em] text-foreground/75">
-                      <span className="text-accent/70">03 / Build</span> · Steel up, storm sky
+                      <span className="text-accent/70">03 / Craft</span> · Hands on the work
                     </figcaption>
                   </figure>
                 </RevealOnScroll>
@@ -674,8 +678,8 @@ export default function Index() {
                 <RevealOnScroll direction="up" duration={1300} delay={320} className="col-span-12 sm:col-span-7">
                   <figure className="relative aspect-[4/3] overflow-hidden group">
                     <img
-                      src={coveredArenaExterior}
-                      alt="Completed covered arena at dusk, warm interior light against the working land"
+                      src={legacyPavilion}
+                      alt="Main Ridge pavilion interior — completed timber and brick fireplace, the legacy environment built for a horse property"
                       loading="lazy"
                       decoding="async"
                       className="absolute inset-0 w-full h-full object-cover object-[50%_55%] will-change-transform group-hover:scale-[1.025]"
@@ -685,7 +689,7 @@ export default function Index() {
                       }}
                     />
                     <figcaption className="absolute bottom-4 left-5 right-5 font-mono uppercase text-[9.5px] tracking-[0.42em] text-foreground/75">
-                      <span className="text-accent/70">04 / Resolved</span> · Covered arena, dusk
+                      <span className="text-accent/70">04 / Legacy</span> · Built to outlast the build
                     </figcaption>
                   </figure>
                 </RevealOnScroll>
