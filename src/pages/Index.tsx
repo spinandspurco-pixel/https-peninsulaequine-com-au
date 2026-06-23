@@ -150,6 +150,7 @@ export default function Index() {
             <div className="absolute inset-0 bg-[hsl(222_20%_6%)]">
               {slidingStop1536?.url && !heroImgFailed ? (
                 <img
+                  ref={heroImgRef}
                   src={slidingStop1536.url}
                   srcSet={slidingStopSrcSet}
                   sizes="100vw"
