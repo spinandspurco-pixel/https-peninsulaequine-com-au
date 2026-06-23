@@ -189,6 +189,21 @@ export function ApplicationsInbox() {
 
   return (
     <div className="space-y-10">
+      {(loadState === "timeout" || loadState === "error") && (
+        <div className="border border-accent/25 px-4 py-3 flex items-center justify-between gap-4">
+          <p className="text-[11px] text-muted-foreground/75">
+            {loadState === "timeout"
+              ? "Applications inbox took longer than 8s to load."
+              : "Applications inbox failed to load."}
+          </p>
+          <button
+            onClick={() => setReloadKey((k) => k + 1)}
+            className="text-[10px] uppercase tracking-[0.22em] text-foreground/85 hover:text-accent transition-colors"
+          >
+            Retry →
+          </button>
+        </div>
+      )}
       {/* Filter bar */}
       <div className="space-y-4">
         {[
