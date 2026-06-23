@@ -208,12 +208,84 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const resend = new Resend(RESEND_API_KEY);
-    const inquiry: InquiryNotificationRequest = await req.json();
+    const rawBody = await req.json().catch(() => null);
+    if (!rawBody || typeof rawBody !== "object") {
+      return new Response(JSON.stringify({ error: "Invalid request body" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
-    // Validate required fields
+    // Normalise: accept both inquiry-style and quote-style payloads
+    const inquiry: InquiryNotificationRequest = {
+      ...rawBody,
+      name: rawBody.name ?? rawBody.client_name ?? "",
+      email: rawBody.email ?? rawBody.client_email ?? "",
+    };
+
+    // Validate required fields + basic length limits to reject abuse payloads
     if (!inquiry.name || !inquiry.email) {
       throw new Error("Missing required fields: name and email");
     }
+    if (typeof inquiry.name !== "string" || typeof inquiry.email !== "string") {
+      return new Response(JSON.stringify({ error: "Invalid field types" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (inquiry.name.length > 200 || inquiry.email.length > 254) {
+      return new Response(JSON.stringify({ error: "Field too long" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inquiry.email)) {
+      return new Response(JSON.stringify({ error: "Invalid email format" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // ABUSE GUARD: This endpoint is public so the website's anonymous contact
+    // forms can trigger it without auth. To prevent spam abuse, verify that the
+    // submitted email matches a recently-created inquiry (or recently-accepted
+    // quote) in the database. The form flows always insert into `inquiries`
+    // (or update `quotes`) immediately before invoking this function, so a
+    // legitimate caller will always find a match.
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      console.error("[send-inquiry-notification] Missing Supabase service credentials");
+      return new Response(JSON.stringify({ error: "Server not configured" }), {
+        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+      auth: { persistSession: false },
+    });
+    const normalisedEmail = inquiry.email.trim().toLowerCase();
+    const recentCutoff = new Date(Date.now() - 15 * 60 * 1000).toISOString();
+    const [{ data: recentInquiries }, { data: recentQuotes }] = await Promise.all([
+      admin
+        .from("inquiries")
+        .select("id")
+        .ilike("email", normalisedEmail)
+        .gte("created_at", recentCutoff)
+        .limit(1),
+      admin
+        .from("quotes")
+        .select("id")
+        .ilike("client_email", normalisedEmail)
+        .gte("updated_at", recentCutoff)
+        .limit(1),
+    ]);
+    const hasRecentActivity =
+      (recentInquiries && recentInquiries.length > 0) ||
+      (recentQuotes && recentQuotes.length > 0);
+    if (!hasRecentActivity) {
+      console.warn("[send-inquiry-notification] Rejected: no recent inquiry/quote for", normalisedEmail);
+      return new Response(
+        JSON.stringify({ error: "No matching recent inquiry found" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
 
     // Format the services list
     const servicesList = inquiry.services?.length 
