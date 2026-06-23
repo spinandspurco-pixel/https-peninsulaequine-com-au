@@ -21,13 +21,13 @@ interface Project {
   status: string;
   priority: string;
   scope: string | null;
-  internal_notes: string | null;
   client_summary: string | null;
   next_action: string | null;
   last_update: string | null;
   hero_image: string | null;
   updated_at: string;
 }
+
 
 const TABS = [
   { key: "status", label: "Status" },
@@ -50,6 +50,8 @@ export default function HqProjectDetail() {
   const [loading, setLoading] = useState(true);
   const [draft, setDraft] = useState<Partial<Project>>({});
   const [activity, setActivity] = useState<{ id: string; title: string; created_at: string }[]>([]);
+  const [internalNotesDraft, setInternalNotesDraft] = useState<string>("");
+
 
   useEffect(() => {
     if (!authLoading && (!user || (!isAdmin && !isPreview))) navigate("/login");
@@ -58,6 +60,15 @@ export default function HqProjectDetail() {
   useEffect(() => {
     if (!id) return;
     let cancelled = false;
+    // Internal notes live in an admin-only sidecar table (`managed_project_internal_notes`).
+    // Only admins are authorised to read it; for non-admin previewers we skip the query.
+    const notesQuery = isAdmin
+      ? supabase
+          .from("managed_project_internal_notes")
+          .select("notes")
+          .eq("project_id", id)
+          .maybeSingle()
+      : Promise.resolve({ data: null, error: null } as { data: { notes: string | null } | null; error: null });
     Promise.all([
       supabase.from("managed_projects").select("*").eq("id", id).maybeSingle(),
       supabase
@@ -66,17 +77,22 @@ export default function HqProjectDetail() {
         .eq("entity_id", id)
         .order("created_at", { ascending: false })
         .limit(20),
-    ]).then(([proj, log]) => {
+      notesQuery,
+    ]).then(([proj, log, notes]) => {
       if (cancelled) return;
       setProject(proj.data as Project | null);
       setDraft(proj.data ?? {});
       setActivity(log.data ?? []);
+      const loadedNotes = notes.data?.notes ?? "";
+      setInternalNotesDraft(loadedNotes);
+
       setLoading(false);
     });
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [id, isAdmin]);
+
 
   const save = async (patch: Partial<Project>) => {
     if (!project) return;
@@ -235,16 +251,44 @@ export default function HqProjectDetail() {
           )}
 
           {tab === "brief" && (
-            <Field label="One-line brief" hint="Quick summary field for this project (legacy single-field note).">
-              <Editable
-                multiline
-                value={draft.internal_notes ?? ""}
-                onChange={(v) => setDraft({ ...draft, internal_notes: v })}
-                onSave={() => save({ internal_notes: draft.internal_notes })}
-                placeholder="Site conditions, conversations, blockers."
-              />
+            <Field
+              label="Private brief"
+              hint={isAdmin ? "Admin-only — not visible to employees or trainers." : "Admin-only field."}
+            >
+              {isAdmin ? (
+                <Editable
+                  multiline
+                  value={internalNotesDraft}
+                  onChange={(v) => setInternalNotesDraft(v)}
+                  onSave={async () => {
+                    if (!project) return;
+                    if (isPreview) {
+                      toast.error("View-only in client preview");
+                      return;
+                    }
+                    const { error } = await supabase
+                      .from("managed_project_internal_notes")
+                      .upsert(
+                        { project_id: project.id, notes: internalNotesDraft },
+                        { onConflict: "project_id" },
+                      );
+                    if (error) {
+                      toast.error(error.message);
+                      return;
+                    }
+                    toast.success("Saved");
+
+                  }}
+                  placeholder="Site conditions, conversations, blockers."
+                />
+              ) : (
+                <p className="text-[12px] text-muted-foreground/55 italic">
+                  Private project notes are restricted to admin staff.
+                </p>
+              )}
             </Field>
           )}
+
 
           {tab === "gallery" && (
             <div>

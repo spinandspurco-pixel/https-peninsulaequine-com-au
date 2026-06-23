@@ -1303,6 +1303,35 @@ export type Database = {
         }
         Relationships: []
       }
+      managed_project_internal_notes: {
+        Row: {
+          created_at: string
+          notes: string | null
+          project_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          notes?: string | null
+          project_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          notes?: string | null
+          project_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "managed_project_internal_notes_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: true
+            referencedRelation: "managed_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       managed_projects: {
         Row: {
           build_type: string | null
@@ -1311,7 +1340,6 @@ export type Database = {
           created_at: string
           hero_image: string | null
           id: string
-          internal_notes: string | null
           is_demo: boolean
           last_update: string | null
           location: string | null
@@ -1330,7 +1358,6 @@ export type Database = {
           created_at?: string
           hero_image?: string | null
           id?: string
-          internal_notes?: string | null
           is_demo?: boolean
           last_update?: string | null
           location?: string | null
@@ -1349,7 +1376,6 @@ export type Database = {
           created_at?: string
           hero_image?: string | null
           id?: string
-          internal_notes?: string | null
           is_demo?: boolean
           last_update?: string | null
           location?: string | null
