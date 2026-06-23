@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Check, X, Loader2, Radar, CircleStop, RotateCw } from "lucide-react";
+import { Check, X, Loader2, Radar, CircleStop, RotateCw, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
