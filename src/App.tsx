@@ -197,8 +197,10 @@ function AppContent() {
           </Routes>
         </Suspense>
         <GuidedIntake />
+        <AuthDebugPanel />
       </BrowserRouter>
     </IntroContext.Provider>
+
   );
 }
 
