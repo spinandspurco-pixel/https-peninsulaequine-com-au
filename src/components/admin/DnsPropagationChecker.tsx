@@ -278,6 +278,56 @@ export default function DnsPropagationChecker() {
     toast({ title: "Exported CSV", description: "DNS propagation snapshot downloaded." });
   }, [buildSnapshot, toast]);
 
+  // ---------------------------------------------------------------------------
+  // Notify — email when every resolver turns green
+  // ---------------------------------------------------------------------------
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (notifyEmail) window.localStorage.setItem(NOTIFY_STORAGE_KEY, notifyEmail);
+    else window.localStorage.removeItem(NOTIFY_STORAGE_KEY);
+  }, [notifyEmail]);
+
+  const sendNotification = useCallback(async (manual: boolean) => {
+    const recipient = notifyEmail.trim();
+    if (!recipient || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(recipient)) {
+      if (manual) toast({ title: "Enter a valid email", variant: "destructive" });
+      return;
+    }
+    setNotifySending(true);
+    try {
+      const snap = buildSnapshot();
+      const { data, error } = await supabase.functions.invoke("notify-dns-propagated", {
+        body: { recipient, domain: snap.domain, records: snap.records, attempts },
+      });
+      if (error || (data as any)?.ok === false) {
+        throw new Error((error as any)?.message ?? (data as any)?.error ?? "send failed");
+      }
+      setNotifiedAt(Date.now());
+      notifiedRef.current = true;
+      toast({ title: "Notification sent ✓", description: `Confirmation emailed to ${recipient}.` });
+    } catch (e: any) {
+      toast({ title: "Notification failed", description: e?.message ?? String(e), variant: "destructive" });
+    } finally {
+      setNotifySending(false);
+    }
+  }, [notifyEmail, buildSnapshot, attempts, toast]);
+
+  // auto-fire once when allPass first becomes true
+  useEffect(() => {
+    if (!allPass) return;
+    if (notifiedRef.current) return;
+    if (!notifyEmail.trim()) return;
+    notifiedRef.current = true;
+    void sendNotification(false);
+  }, [allPass, notifyEmail, sendNotification]);
+
+  // reset notified flag if we drop back out of all-green so a future re-pass re-notifies
+  useEffect(() => {
+    if (!allPass) notifiedRef.current = false;
+  }, [allPass]);
+
+
+
 
   const cellClass = (s: CellState) => {
     switch (s) {
