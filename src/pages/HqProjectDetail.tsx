@@ -154,7 +154,7 @@ export default function HqProjectDetail() {
         {/* Tab rail */}
         <nav className="border-y border-border/10 sticky top-0 z-20 bg-background/95 backdrop-blur-sm">
           <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-8 overflow-x-auto">
-            {TABS.map((t) => (
+            {TABS.filter((t) => !(t.key === "notes" && isPreview)).map((t) => (
               <button
                 key={t.key}
                 onClick={() => setTab(t.key)}
