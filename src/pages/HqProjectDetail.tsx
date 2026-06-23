@@ -21,13 +21,13 @@ interface Project {
   status: string;
   priority: string;
   scope: string | null;
-  internal_notes: string | null;
   client_summary: string | null;
   next_action: string | null;
   last_update: string | null;
   hero_image: string | null;
   updated_at: string;
 }
+
 
 const TABS = [
   { key: "status", label: "Status" },
