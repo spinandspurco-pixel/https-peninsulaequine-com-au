@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { siteConfig, services as allServices } from "@/data/content";
 import { cn } from "@/lib/utils";
+import { trackConversion, trackFormError } from "@/lib/analytics";
 
 // --- Constants ---
 
