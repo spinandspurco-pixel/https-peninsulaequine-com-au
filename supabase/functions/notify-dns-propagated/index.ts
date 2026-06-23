@@ -57,6 +57,50 @@ serve(async (req) => {
       return json(400, { error: "Valid recipient email required" });
     }
 
+    // ── Server-side rate limiting ──────────────────────
+    // 5-min cooldown between sends, max 4 sends per user per hour.
+    const COOLDOWN_MS = 5 * 60_000;
+    const RATE_WINDOW_MS = 60 * 60_000;
+    const RATE_MAX = 4;
+    const sinceIso = new Date(Date.now() - RATE_WINDOW_MS).toISOString();
+    const { data: recent, error: rateErr } = await adminClient
+      .from("dns_notify_sends")
+      .select("sent_at")
+      .eq("user_id", userId)
+      .gte("sent_at", sinceIso)
+      .order("sent_at", { ascending: false });
+    if (rateErr) {
+      console.error("[notify-dns-propagated] rate lookup failed", rateErr);
+      return json(500, { error: "rate_lookup_failed" });
+    }
+    const sends = recent ?? [];
+    if (sends.length > 0) {
+      const lastMs = new Date(sends[0].sent_at).getTime();
+      const cooldownLeft = COOLDOWN_MS - (Date.now() - lastMs);
+      if (cooldownLeft > 0) {
+        const retry = Math.ceil(cooldownLeft / 1000);
+        return new Response(
+          JSON.stringify({ ok: false, error: "cooldown", retryAfterSeconds: retry }),
+          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": String(retry) } },
+        );
+      }
+    }
+    if (sends.length >= RATE_MAX) {
+      const oldestMs = new Date(sends[sends.length - 1].sent_at).getTime();
+      const resetLeft = RATE_WINDOW_MS - (Date.now() - oldestMs);
+      const retry = Math.max(1, Math.ceil(resetLeft / 1000));
+      return new Response(
+        JSON.stringify({
+          ok: false,
+          error: "rate_limited",
+          limit: RATE_MAX,
+          windowSeconds: RATE_WINDOW_MS / 1000,
+          retryAfterSeconds: retry,
+        }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": String(retry) } },
+      );
+    }
+
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
     if (!RESEND_API_KEY) return json(500, { error: "RESEND_API_KEY not configured" });
     const FROM = Deno.env.get("HQ_EMAIL_FROM") || Deno.env.get("FROM_EMAIL");
@@ -93,7 +137,17 @@ serve(async (req) => {
       console.error("[notify-dns-propagated] Resend error:", error);
       return json(502, { ok: false, error: (error as any).message ?? String(error) });
     }
-    return json(200, { ok: true, recipient, resendId: (data as any)?.id ?? null });
+    // Log this send so subsequent calls see it for cooldown/rate-limit checks
+    const { error: logErr } = await adminClient
+      .from("dns_notify_sends")
+      .insert({ user_id: userId, recipient });
+    if (logErr) console.error("[notify-dns-propagated] log insert failed", logErr);
+    return json(200, {
+      ok: true,
+      recipient,
+      resendId: (data as any)?.id ?? null,
+      remainingThisHour: Math.max(0, 4 - (sends.length + 1)),
+    });
   } catch (err) {
     console.error("[notify-dns-propagated] error:", err);
     return json(500, { ok: false, error: err instanceof Error ? err.message : String(err) });
