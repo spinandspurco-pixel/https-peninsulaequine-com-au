@@ -56,6 +56,32 @@ export default function ResendDomainPanel() {
   const [testResult, setTestResult] = useState<{ ok: boolean; latency?: number; detail?: string } | null>(null);
   const [lastChecked, setLastChecked] = useState<string | null>(null);
 
+  // Verification attempt history (in-memory only)
+  type HistoryEntry = {
+    id: number;
+    at: number;
+    source: string;
+    status: string;
+    message: string;
+  };
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const historyIdRef = useRef(0);
+  const appendHistory = useCallback((entry: Omit<HistoryEntry, "id" | "at">) => {
+    historyIdRef.current += 1;
+    const row: HistoryEntry = { id: historyIdRef.current, at: Date.now(), ...entry };
+    setHistory((prev) => [row, ...prev].slice(0, 50));
+  }, []);
+
+  const summariseRecords = (domain?: ResendDomain) => {
+    if (!domain?.records?.length) return "—";
+    const counts = domain.records.reduce<Record<string, number>>((acc, r) => {
+      const k = (r.status ?? "unknown").toLowerCase();
+      acc[k] = (acc[k] ?? 0) + 1;
+      return acc;
+    }, {});
+    return Object.entries(counts).map(([k, v]) => `${v} ${k}`).join(" · ");
+  };
+
   // Auto-poll state
   const [polling, setPolling] = useState(false);
   const [pollAttempts, setPollAttempts] = useState(0);
