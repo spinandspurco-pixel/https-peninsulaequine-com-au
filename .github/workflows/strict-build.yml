@@ -34,3 +34,19 @@ jobs:
       # Any failure in this chain blocks the merge.
       - name: Strict build (Tailwind + PostCSS + prerender + internal links)
         run: bun run build
+
+      # Unit tests (vitest) — includes HqHeader regression guarding that no
+      # Sign Out button or HQ chrome leaks onto /login for unauthenticated
+      # visitors.
+      - name: Unit tests (vitest)
+        run: bun run test
+
+      - name: Install Playwright browser
+        run: bunx playwright install --with-deps chromium
+
+      # Anonymous Playwright suite — covers protected-route redirects plus the
+      # /login header/sign-out regression checks. Restricted to @anon so we
+      # don't require auth fixtures here.
+      - name: E2E anon suite (Playwright)
+        run: bunx playwright test --project=anon-desktop
+
