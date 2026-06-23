@@ -84,8 +84,8 @@ export default function HqProjectDetail() {
       setDraft(proj.data ?? {});
       setActivity(log.data ?? []);
       const loadedNotes = notes.data?.notes ?? "";
-      setInternalNotes(loadedNotes);
       setInternalNotesDraft(loadedNotes);
+
       setLoading(false);
     });
     return () => {
