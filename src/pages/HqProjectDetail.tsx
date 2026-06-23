@@ -50,6 +50,8 @@ export default function HqProjectDetail() {
   const [loading, setLoading] = useState(true);
   const [draft, setDraft] = useState<Partial<Project>>({});
   const [activity, setActivity] = useState<{ id: string; title: string; created_at: string }[]>([]);
+  const [internalNotes, setInternalNotes] = useState<string>("");
+  const [internalNotesDraft, setInternalNotesDraft] = useState<string>("");
 
   useEffect(() => {
     if (!authLoading && (!user || (!isAdmin && !isPreview))) navigate("/login");
@@ -58,6 +60,15 @@ export default function HqProjectDetail() {
   useEffect(() => {
     if (!id) return;
     let cancelled = false;
+    // Internal notes live in an admin-only sidecar table (`managed_project_internal_notes`).
+    // Only admins are authorised to read it; for non-admin previewers we skip the query.
+    const notesQuery = isAdmin
+      ? supabase
+          .from("managed_project_internal_notes")
+          .select("notes")
+          .eq("project_id", id)
+          .maybeSingle()
+      : Promise.resolve({ data: null, error: null } as { data: { notes: string | null } | null; error: null });
     Promise.all([
       supabase.from("managed_projects").select("*").eq("id", id).maybeSingle(),
       supabase
@@ -66,17 +77,22 @@ export default function HqProjectDetail() {
         .eq("entity_id", id)
         .order("created_at", { ascending: false })
         .limit(20),
-    ]).then(([proj, log]) => {
+      notesQuery,
+    ]).then(([proj, log, notes]) => {
       if (cancelled) return;
       setProject(proj.data as Project | null);
       setDraft(proj.data ?? {});
       setActivity(log.data ?? []);
+      const loadedNotes = notes.data?.notes ?? "";
+      setInternalNotes(loadedNotes);
+      setInternalNotesDraft(loadedNotes);
       setLoading(false);
     });
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [id, isAdmin]);
+
 
   const save = async (patch: Partial<Project>) => {
     if (!project) return;
