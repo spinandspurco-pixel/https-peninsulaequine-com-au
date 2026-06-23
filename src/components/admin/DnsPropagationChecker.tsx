@@ -385,6 +385,44 @@ export default function DnsPropagationChecker() {
 
       </div>
 
+      {/* Notify-on-green */}
+      <div className="mt-6 border border-border/30 px-4 py-3 flex items-center gap-3 flex-wrap">
+        <Mail className="h-3.5 w-3.5 text-muted-foreground/70" />
+        <div className="flex-1 min-w-[14rem]">
+          <p className="text-[0.55rem] uppercase tracking-[0.3em] text-muted-foreground/60 mb-1">
+            Email me when all checks go green
+          </p>
+          <Input
+            type="email"
+            inputMode="email"
+            placeholder="you@peninsulaequine.systems"
+            value={notifyEmail}
+            onChange={(e) => {
+              setNotifyEmail(e.target.value);
+              notifiedRef.current = false;
+            }}
+            className="h-8 text-xs font-mono"
+          />
+        </div>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => { notifiedRef.current = false; void sendNotification(true); }}
+          disabled={notifySending || !allPass}
+          title={allPass ? "Send confirmation now" : "Available once every resolver is green"}
+        >
+          {notifySending ? <Loader2 className="h-3 w-3 mr-2 animate-spin" /> : <Mail className="h-3 w-3 mr-2" />}
+          {allPass ? "Send now" : "Waiting for green"}
+        </Button>
+        {notifiedAt && (
+          <span className="font-mono text-[0.6rem] text-emerald-300/80 w-full">
+            ✓ notified {new Date(notifiedAt).toLocaleTimeString()} → {notifyEmail}
+          </span>
+        )}
+      </div>
+
+
+
       {polling && (
         <div className="mt-6 border border-amber-500/30 bg-amber-500/5 px-4 py-3 text-xs flex items-center gap-3 flex-wrap">
           <Radar className="h-3 w-3 text-amber-300 animate-pulse" />
