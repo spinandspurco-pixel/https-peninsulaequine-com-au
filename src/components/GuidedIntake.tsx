@@ -200,6 +200,8 @@ export function GuidedIntake() {
     }
   };
 
+  if (!showGuidedIntake) return null;
+
   return (
     <div
       className="fixed inset-0 z-[100]"
