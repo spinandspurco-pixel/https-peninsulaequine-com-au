@@ -166,7 +166,7 @@ export default function ResendDomainPanel() {
       }
       setPollAttempts(attempt + 1);
       try {
-        const next = (await triggerVerify({ silent: true }))?.toLowerCase();
+        const next = (await triggerVerify({ silent: true, source: `auto-poll #${attempt + 1}` }))?.toLowerCase();
         if (next === "verified") {
           stopPolling();
           toast({ title: "Domain verified ✓", description: "Resend now accepts sends from peninsulaequine.systems." });
