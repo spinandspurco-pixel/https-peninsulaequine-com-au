@@ -189,7 +189,7 @@ export default function ResendDomainPanel() {
     setPolling(true);
     setPollAttempts(1);
     try {
-      const initial = (await triggerVerify({ silent: true }))?.toLowerCase();
+      const initial = (await triggerVerify({ silent: true, source: "auto-poll #1" }))?.toLowerCase();
       if (initial === "verified") {
         stopPolling();
         toast({ title: "Domain verified ✓", description: "Already passing — no polling needed." });
