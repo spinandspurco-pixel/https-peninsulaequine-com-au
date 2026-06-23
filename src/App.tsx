@@ -11,6 +11,7 @@ import { RouteAnalytics } from "./components/RouteAnalytics";
 import { IntroContext } from "./hooks/useIntroState";
 import { IntakeProvider } from "./hooks/useIntake";
 import { AuthProvider } from "./hooks/useAuth";
+import { AuthDebugPanel } from "./components/AuthDebugPanel";
 import { GuidedIntake } from "./components/GuidedIntake";
 import { SiteRail } from "./components/layout/SiteRail";
 
@@ -196,8 +197,10 @@ function AppContent() {
           </Routes>
         </Suspense>
         <GuidedIntake />
+        <AuthDebugPanel />
       </BrowserRouter>
     </IntroContext.Provider>
+
   );
 }
 

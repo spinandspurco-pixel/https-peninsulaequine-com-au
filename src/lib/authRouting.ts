@@ -59,8 +59,42 @@ export function authDebugEnabled(): boolean {
   }
 }
 
+export interface AuthLogEntry {
+  ts: number;
+  scope: string;
+  payload: Record<string, unknown>;
+}
+
+const AUTH_LOG_BUFFER_SIZE = 50;
+const authLogBuffer: AuthLogEntry[] = [];
+const authLogListeners = new Set<(entries: AuthLogEntry[]) => void>();
+
+export function getAuthLogEntries(): AuthLogEntry[] {
+  return authLogBuffer.slice();
+}
+
+export function subscribeAuthLog(listener: (entries: AuthLogEntry[]) => void): () => void {
+  authLogListeners.add(listener);
+  return () => {
+    authLogListeners.delete(listener);
+  };
+}
+
 export function authLog(scope: string, payload: Record<string, unknown>): void {
+  const entry: AuthLogEntry = { ts: Date.now(), scope, payload };
+  authLogBuffer.push(entry);
+  if (authLogBuffer.length > AUTH_LOG_BUFFER_SIZE) {
+    authLogBuffer.splice(0, authLogBuffer.length - AUTH_LOG_BUFFER_SIZE);
+  }
+  for (const listener of authLogListeners) {
+    try {
+      listener(authLogBuffer.slice());
+    } catch {
+      /* ignore listener errors */
+    }
+  }
   if (!authDebugEnabled()) return;
   // eslint-disable-next-line no-console
   console.log(`[auth:${scope}]`, payload);
 }
+
