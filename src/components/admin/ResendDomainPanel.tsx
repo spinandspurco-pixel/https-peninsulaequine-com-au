@@ -118,12 +118,18 @@ export default function ResendDomainPanel() {
   };
 
 
-  const triggerVerify = useCallback(async (opts?: { silent?: boolean }) => {
+  const triggerVerify = useCallback(async (opts?: { silent?: boolean; source?: string }) => {
     setVerifying(true);
+    const source = opts?.source ?? (opts?.silent ? "auto-poll" : "manual verify");
     try {
       const data = await invoke("verify");
       setStatus({ configured: true, domain: data.domain });
       setLastChecked(new Date().toLocaleTimeString());
+      appendHistory({
+        source,
+        status: data?.domain?.status ?? "unknown",
+        message: summariseRecords(data?.domain),
+      });
       if (!opts?.silent) {
         toast({
           title: "Verification re-checked",
@@ -132,6 +138,7 @@ export default function ResendDomainPanel() {
       }
       return data.domain?.status as string | undefined;
     } catch (e: any) {
+      appendHistory({ source, status: "error", message: e?.message ?? "Unknown error" });
       if (!opts?.silent) {
         toast({ title: "Verify failed", description: e?.message, variant: "destructive" });
       }
@@ -139,7 +146,7 @@ export default function ResendDomainPanel() {
     } finally {
       setVerifying(false);
     }
-  }, [toast]);
+  }, [appendHistory, toast]);
 
   const stopPolling = useCallback(() => {
     if (pollTimerRef.current) { window.clearTimeout(pollTimerRef.current); pollTimerRef.current = null; }
