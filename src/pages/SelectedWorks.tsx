@@ -155,9 +155,12 @@ function Overture() {
           </RevealOnScroll>
           <RevealOnScroll direction="up" duration={1400} delay={180}>
             <h1 className="mt-5 font-serif text-foreground/95 leading-[0.92] tracking-tight text-[clamp(2.6rem,1.4rem+5.4vw,6rem)]">
-              The works that
-              <br />
-              speak for themselves.
+              <RevealHeading as="span" className="block">
+                The works that
+              </RevealHeading>
+              <RevealHeading as="span" className="block">
+                speak for themselves.
+              </RevealHeading>
             </h1>
           </RevealOnScroll>
           <RevealOnScroll direction="up" duration={1100} delay={420}>
@@ -452,9 +455,12 @@ function Closing() {
             End of record · 002
           </p>
           <h2 className="font-serif text-foreground/95 leading-[0.96] tracking-tight text-[clamp(2rem,1.3rem+2.6vw,3.5rem)] max-w-2xl">
-            More ground in progress.
-            <br />
-            <span className="text-foreground/55 italic font-normal">Resolved as it lands.</span>
+            <RevealHeading as="span" className="block">
+              More ground in progress.
+            </RevealHeading>
+            <RevealHeading as="span" className="block text-foreground/55 italic font-normal">
+              Resolved as it lands.
+            </RevealHeading>
           </h2>
           <p className="font-sans font-light text-foreground/55 text-[0.95rem] leading-[1.75] max-w-md">
             Peninsula Equine accepts a small number of builds each year across the
