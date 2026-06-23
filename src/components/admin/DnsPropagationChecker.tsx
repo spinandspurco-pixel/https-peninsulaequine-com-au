@@ -200,6 +200,74 @@ export default function DnsPropagationChecker() {
   // cleanup
   useEffect(() => () => stop(), [stop]);
 
+  // ---------------------------------------------------------------------------
+  // Export — download current detailed results as JSON or CSV
+  // ---------------------------------------------------------------------------
+  const buildSnapshot = useCallback(() => {
+    const generatedAt = new Date().toISOString();
+    const records = RECORDS.map((rec) => ({
+      id: rec.id,
+      label: rec.label,
+      type: rec.type,
+      host: rec.host,
+      expected: rec.expected,
+      resolvers: RESOLVERS.map((res) => {
+        const cell = grid[rec.id][res.id];
+        return {
+          id: res.id,
+          label: res.label,
+          state: cell.state,
+          match: cell.state === "pass",
+          resolved: cell.data ?? [],
+          message: cell.message ?? null,
+          checkedAt: cell.at ? new Date(cell.at).toISOString() : null,
+        };
+      }),
+    }));
+    return { generatedAt, domain: "peninsulaequine.systems", records };
+  }, [grid]);
+
+  const triggerDownload = (filename: string, mime: string, body: string) => {
+    const blob = new Blob([body], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const stamp = () => new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+
+  const exportJson = useCallback(() => {
+    const snap = buildSnapshot();
+    triggerDownload(`dns-propagation-${stamp()}.json`, "application/json", JSON.stringify(snap, null, 2));
+    toast({ title: "Exported JSON", description: "DNS propagation snapshot downloaded." });
+  }, [buildSnapshot, toast]);
+
+  const exportCsv = useCallback(() => {
+    const snap = buildSnapshot();
+    const esc = (v: unknown) => {
+      const s = v == null ? "" : String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const header = ["record", "type", "host", "resolver", "state", "match", "expected", "resolved", "message", "checked_at"];
+    const rows: string[] = [header.join(",")];
+    for (const rec of snap.records) {
+      for (const res of rec.resolvers) {
+        rows.push([
+          rec.label, rec.type, rec.host, res.label, res.state, res.match,
+          rec.expected, res.resolved.join(" | "), res.message ?? "", res.checkedAt ?? "",
+        ].map(esc).join(","));
+      }
+    }
+    triggerDownload(`dns-propagation-${stamp()}.csv`, "text/csv", rows.join("\n"));
+    toast({ title: "Exported CSV", description: "DNS propagation snapshot downloaded." });
+  }, [buildSnapshot, toast]);
+
+
   const cellClass = (s: CellState) => {
     switch (s) {
       case "pass": return "bg-emerald-500/15 text-emerald-300 border-emerald-500/30";
