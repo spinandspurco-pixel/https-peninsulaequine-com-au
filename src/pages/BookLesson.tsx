@@ -29,9 +29,12 @@ import { useToast } from "@/hooks/use-toast";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
 import { lessonInfo, glennBrowitt } from "@/data/content";
-import blueprintFacility from "@/assets/blueprint-facility.png";
-import blueprintDetail from "@/assets/blueprint-detail.png";
-import blueprintBarn from "@/assets/blueprint-barn.png";
+import blueprintFacilityAsset from "@/assets/blueprint-facility.png.asset.json";
+import blueprintDetailAsset from "@/assets/blueprint-detail.png.asset.json";
+import blueprintBarnAsset from "@/assets/blueprint-barn.png.asset.json";
+const blueprintFacility = blueprintFacilityAsset.url;
+const blueprintDetail = blueprintDetailAsset.url;
+const blueprintBarn = blueprintBarnAsset.url;
 // Approved cinematic only — legacy aberdeen-exterior.jpg + covered-arena-finished-lit removed.
 import ciroWideAsset from "@/assets/uploads/approved-aberdeen-exterior-dusk-frontage.png.asset.json";
 import ciroWithHorseAsset from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.png.asset.json";

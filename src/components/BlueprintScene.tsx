@@ -1,12 +1,19 @@
 import { ReactNode } from "react";
 import { BlueprintBackground } from "@/components/BlueprintBackground";
 import { BlueprintLineOverlay } from "@/components/BlueprintLineOverlay";
-import blueprintElevation from "@/assets/blueprint-elevation.png";
-import blueprintFacility from "@/assets/blueprint-facility.png";
-import blueprintBarn from "@/assets/blueprint-barn.png";
-import blueprintHorseBarn from "@/assets/blueprint-horse-barn.png";
-import blueprintDoorDetail from "@/assets/blueprint-door-detail.png";
-import blueprintDetail from "@/assets/blueprint-detail.png";
+import blueprintElevationAsset from "@/assets/blueprint-elevation.png.asset.json";
+import blueprintFacilityAsset from "@/assets/blueprint-facility.png.asset.json";
+import blueprintBarnAsset from "@/assets/blueprint-barn.png.asset.json";
+import blueprintHorseBarnAsset from "@/assets/blueprint-horse-barn.png.asset.json";
+import blueprintDoorDetailAsset from "@/assets/blueprint-door-detail.png.asset.json";
+import blueprintDetailAsset from "@/assets/blueprint-detail.png.asset.json";
+
+const blueprintElevation = blueprintElevationAsset.url;
+const blueprintFacility = blueprintFacilityAsset.url;
+const blueprintBarn = blueprintBarnAsset.url;
+const blueprintHorseBarn = blueprintHorseBarnAsset.url;
+const blueprintDoorDetail = blueprintDoorDetailAsset.url;
+const blueprintDetail = blueprintDetailAsset.url;
 
 /* ── Image registry ─────────────────────────────────── */
 const images = {
