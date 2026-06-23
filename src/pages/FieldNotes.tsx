@@ -57,8 +57,8 @@ export default function FieldNotes() {
             loading="eager"
             decoding="async"
             blurPx={22}
+            baseFilter="brightness(0.7) contrast(1.12) saturate(0.8)"
             {...({ fetchpriority: "high" } as any)}
-            style={{ filter: "brightness(0.7) contrast(1.12) saturate(0.8)" }}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/55 to-background/18" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/10" />
