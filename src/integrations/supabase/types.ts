@@ -946,6 +946,85 @@ export type Database = {
         }
         Relationships: []
       }
+      inquiry_activity: {
+        Row: {
+          actor_email: string | null
+          actor_id: string | null
+          created_at: string
+          detail: string | null
+          event_type: string
+          from_value: string | null
+          id: string
+          inquiry_id: string
+          to_value: string | null
+        }
+        Insert: {
+          actor_email?: string | null
+          actor_id?: string | null
+          created_at?: string
+          detail?: string | null
+          event_type: string
+          from_value?: string | null
+          id?: string
+          inquiry_id: string
+          to_value?: string | null
+        }
+        Update: {
+          actor_email?: string | null
+          actor_id?: string | null
+          created_at?: string
+          detail?: string | null
+          event_type?: string
+          from_value?: string | null
+          id?: string
+          inquiry_id?: string
+          to_value?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inquiry_activity_inquiry_id_fkey"
+            columns: ["inquiry_id"]
+            isOneToOne: false
+            referencedRelation: "inquiries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      inquiry_notes: {
+        Row: {
+          author_email: string | null
+          author_id: string
+          body: string
+          created_at: string
+          id: string
+          inquiry_id: string
+        }
+        Insert: {
+          author_email?: string | null
+          author_id: string
+          body: string
+          created_at?: string
+          id?: string
+          inquiry_id: string
+        }
+        Update: {
+          author_email?: string | null
+          author_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          inquiry_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inquiry_notes_inquiry_id_fkey"
+            columns: ["inquiry_id"]
+            isOneToOne: false
+            referencedRelation: "inquiries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       inquiry_nurture: {
         Row: {
           client_email: string
