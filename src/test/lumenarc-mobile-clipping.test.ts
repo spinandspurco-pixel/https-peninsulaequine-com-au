@@ -45,8 +45,8 @@ describe("LumenArc mobile clipping regression", () => {
     });
   });
 
-  describe("RecoveryStation hero image", () => {
-    const source = read("src/pages/RecoveryStation.tsx");
+  describe("LumenArc hero image", () => {
+    const source = read("src/pages/LumenArc.tsx");
 
     it("defaults to object-contain on mobile and only switches to object-cover at md+", () => {
       // Mobile default must be object-contain; the md: breakpoint may upgrade
