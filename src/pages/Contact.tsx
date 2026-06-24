@@ -608,6 +608,7 @@ export default function Contact() {
                         <p className="text-[11px] text-[hsl(var(--footer-muted))] mt-1">Optional</p>
                       </div>
                       <SelectField
+                        id="contact-budget"
                         label="Indicative investment range"
                         value={form.budget}
                         onChange={(v) => set("budget", v)}
@@ -626,11 +627,13 @@ export default function Contact() {
                 <div className="text-center space-y-3">
                   <Button
                     type="submit"
+                    data-testid="contact-submit"
                     size="lg"
                     disabled={submitting}
                     variant="gold"
                     className="uppercase tracking-[0.14em] text-xs font-medium px-10"
                   >
+
                     {submitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
