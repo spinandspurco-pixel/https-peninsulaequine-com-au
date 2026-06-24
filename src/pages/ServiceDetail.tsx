@@ -10,6 +10,7 @@ import { StickySubpageCTA } from "@/components/StickySubpageCTA";
 import { ServicePricingCalculator } from "@/components/ServicePricingCalculator";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { services, siteConfig } from "@/data/content";
+import { useManagedServicesMap } from "@/lib/managedContent";
 import { servicePricingTiers, serviceFaqs } from "@/data/servicePricingFaq";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
