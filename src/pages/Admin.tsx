@@ -184,7 +184,7 @@ export default function Admin() {
                 <div className="max-w-5xl mx-auto px-6 py-4">
                   <div className="flex items-center gap-8 overflow-x-auto">
                     {[
-                      { id: "zone-overview", label: "01 · Overview" },
+                      { id: "zone-overview", label: "01 · Command Centre" },
                       { id: "zone-pipeline", label: "02 · Pipeline" },
                       { id: "zone-applications", label: "03 · Applications" },
                       { id: "zone-content", label: "04 · Content" },
