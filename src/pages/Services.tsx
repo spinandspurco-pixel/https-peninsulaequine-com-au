@@ -176,6 +176,7 @@ function measureHeaderHeight(): number {
 
 export default function Services() {
   const { hash } = useLocation();
+  const { data: managedServices } = useManagedServicesMap();
 
   useEffect(() => {
     document.title = "Capabilities | Peninsula Equine";
