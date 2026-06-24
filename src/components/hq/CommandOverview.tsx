@@ -64,27 +64,29 @@ const humanNameFrom = (
   user: { email?: string | null; user_metadata?: Record<string, unknown> } | null,
   directoryName: string | null,
 ): string => {
-  // Priority: staff directory display_name → auth metadata → derived email → "HQ Admin"
+  // Hierarchy (strict): Staff Directory display_name → auth metadata → email local-part → "HQ Admin"
+  // "HQ Admin" is used ONLY when literally no signal is present.
   if (directoryName) {
     const first = directoryName.trim().split(/\s+/)[0];
     if (first) return first;
   }
-  if (!user) return "HQ Admin";
-  const meta = (user.user_metadata ?? {}) as Record<string, unknown>;
-  const display = (meta.full_name as string) || (meta.name as string) || "";
+  const meta = (user?.user_metadata ?? {}) as Record<string, unknown>;
+  const display =
+    (meta.display_name as string) ||
+    (meta.full_name as string) ||
+    (meta.name as string) ||
+    "";
   if (display) {
     const first = display.trim().split(/\s+/)[0];
     if (first) return first;
   }
-  const local = (user.email ?? "").split("@")[0] ?? "";
-  if (!local) return "HQ Admin";
-  const cleaned = local.replace(/[._-]+/g, " ").trim();
-  const first = cleaned.split(/\s+/)[0] ?? "";
-  if (!first) return "HQ Admin";
-  // Reject generic local-parts like "admin", "info", "hq"
-  const generic = new Set(["admin", "info", "hq", "hello", "team", "office", "contact"]);
-  if (generic.has(first.toLowerCase())) return "HQ Admin";
-  return first.charAt(0).toUpperCase() + first.slice(1);
+  const local = (user?.email ?? "").split("@")[0] ?? "";
+  if (local) {
+    const cleaned = local.replace(/[._-]+/g, " ").trim();
+    const first = cleaned.split(/\s+/)[0] ?? "";
+    if (first) return first.charAt(0).toUpperCase() + first.slice(1);
+  }
+  return "HQ Admin";
 };
 
 const formatStatus = (status: string | null) => {
