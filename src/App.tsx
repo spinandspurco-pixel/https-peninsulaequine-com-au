@@ -49,6 +49,7 @@ const DnsPublish = lazy(() => import("./pages/DnsPublish"));
 const DnsWizard = lazy(() => import("./pages/DnsWizard"));
 const DnsStatus = lazy(() => import("./pages/DnsStatus"));
 const HqWhoAmI = lazy(() => import("./pages/HqWhoAmI"));
+const HqStaffAllowlist = lazy(() => import("./pages/HqStaffAllowlist"));
 
 
 const BookLesson = lazy(() => import("./pages/BookLesson"));
@@ -136,6 +137,7 @@ function AppContent() {
             {/* /hq/documents is a private staff surface. Preview users see a polite stub. */}
             <Route path="/hq/documents" element={<ProtectedRoute allowedRoles={["admin","employee","preview"]}><AdminDocuments /></ProtectedRoute>} />
             <Route path="/hq/email-migration" element={<ProtectedRoute allowedRoles={["admin"]}><AdminEmailMigration /></ProtectedRoute>} />
+            <Route path="/hq/staff-allowlist" element={<ProtectedRoute allowedRoles={["admin"]}><HqStaffAllowlist /></ProtectedRoute>} />
            <Route path="/hq/activity" element={<ProtectedRoute allowedRoles={["admin","moderator","preview"]}><AdminActivity /></ProtectedRoute>} />
            <Route path="/hq/inquiries" element={<ProtectedRoute allowedRoles={["admin","employee","preview"]}><AdminInquiries /></ProtectedRoute>} />
             <Route path="/hq/dns-verify" element={<ProtectedRoute allowedRoles={["admin"]}><DnsVerify /></ProtectedRoute>} />
