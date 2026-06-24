@@ -16,7 +16,12 @@ function fire(...args: unknown[]) {
   }
 }
 
-/** Contact Us conversion (fired on /contact page view). */
+/**
+ * Contact Us conversion.
+ * Fired ONLY after a successful contact form submission (see src/pages/Contact.tsx).
+ * Do NOT call on page view. Any pageview-triggered fire of this event is configured
+ * outside this repo (Google Ads / GTM) and must be disabled there.
+ */
 export function trackContactConversion() {
   fire("event", "ads_conversion_Contact_Us_1", {});
 }
