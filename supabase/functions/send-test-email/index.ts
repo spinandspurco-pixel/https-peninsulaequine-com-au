@@ -46,13 +46,12 @@ serve(async (req) => {
     const userClient = createClient(supabaseUrl, anonKey, {
       global: { headers: { Authorization: authHeader } },
     });
-    const token = authHeader.replace("Bearer ", "");
-    const { data: claims, error: claimsErr } = await userClient.auth.getClaims(token);
-    if (claimsErr || !claims?.claims?.sub) {
+    const { data: userData, error: userErr } = await userClient.auth.getUser();
+    if (userErr || !userData?.user?.id) {
       return json(401, { error: "Unauthorized" });
     }
-    const userId = claims.claims.sub as string;
-    const userEmail = (claims.claims.email as string | undefined) ?? null;
+    const userId = userData.user.id;
+    const userEmail = userData.user.email ?? null;
 
     const adminClient = createClient(supabaseUrl, serviceKey);
     const { data: isAdmin, error: roleErr } = await adminClient.rpc("has_role", {
