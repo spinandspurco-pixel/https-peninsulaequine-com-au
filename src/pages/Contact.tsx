@@ -96,6 +96,8 @@ function SelectField({
 /* ── Main Page ────────────────────────────────────── */
 export default function Contact() {
   const { toast } = useToast();
+  useEffect(() => { trackContactConversion(); }, []);
+
   const [form, setForm] = useState({
     name: "",
     email: "",
