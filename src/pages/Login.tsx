@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate, useSearchParams, Link } from "react-router-dom";
+import { Navigate, useSearchParams, useLocation, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { resolveLandingPath, authLog } from "@/lib/authRouting";
 import { Layout } from "@/components/layout/Layout";
@@ -17,8 +17,9 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  const { user, roles, ready, signIn } = useAuth();
+  const { user, roles, ready, rolesLoading, signIn, signOut } = useAuth();
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const redirectTo = searchParams.get("redirect") || null;
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -47,8 +48,51 @@ export default function Login() {
   // effect lets one frame of the form flash before navigate() runs, which
   // is what produced the "signed-in top bar + login form" bug.
   if (ready && user) {
+    // Wait for roles before deciding destination — otherwise a freshly
+    // signed-in user with roles still loading would briefly resolve to
+    // "/login" (no roles yet) and render a blank <Navigate> loop.
+    if (rolesLoading) {
+      return (
+        <Layout>
+          <div className="min-h-[80vh] flex items-center justify-center bg-secondary">
+            <div className="text-center space-y-4">
+              <Loader2 className="h-8 w-8 animate-spin text-accent mx-auto" />
+              <p className="text-muted-foreground text-[11px] uppercase tracking-[0.2em]">Resolving access…</p>
+            </div>
+          </div>
+        </Layout>
+      );
+    }
     const dest = resolveLandingPath(roles, redirectTo);
-    authLog("login:redirect", { dest, roles, redirectTo });
+    authLog("login:redirect", { dest, roles, redirectTo, here: location.pathname });
+    // Signed in but no recognised role — resolveLandingPath returns "/login",
+    // which would render an empty <Navigate> loop and a blank page. Show an
+    // actionable "no access" state instead.
+    if (dest === location.pathname) {
+      return (
+        <Layout>
+          <div className="min-h-[80vh] flex items-center justify-center bg-secondary px-6">
+            <div className="max-w-md w-full text-center space-y-5">
+              <h1 className="font-serif text-2xl text-foreground">No staff access on this account</h1>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                You're signed in as <span className="font-mono text-foreground/80">{user.email}</span>, but this
+                account has no staff role assigned. Ask an administrator to grant access, or sign out and use a
+                different account.
+              </p>
+              <div className="flex gap-3 justify-center pt-2">
+                <button
+                  type="button"
+                  onClick={async () => { await signOut(); }}
+                  className="text-xs font-mono uppercase tracking-[0.25em] text-foreground hover:text-accent transition-colors"
+                >
+                  Sign out
+                </button>
+              </div>
+            </div>
+          </div>
+        </Layout>
+      );
+    }
     return <Navigate to={dest} replace />;
   }
 
