@@ -10,6 +10,7 @@ type AuthState = ReturnType<typeof useAuthState>;
 const AuthContext = createContext<AuthState | null>(null);
 
 const ROLE_FETCH_RETRY_DELAYS_MS = [0, 350, 900];
+const ROLE_FETCH_WATCHDOG_MS = 8000;
 
 function useAuthState() {
   const [user, setUser] = useState<User | null>(null);
@@ -17,8 +18,11 @@ function useAuthState() {
   const [authLoading, setAuthLoading] = useState(true);
   const [rolesLoading, setRolesLoading] = useState(true);
   const [roles, setRoles] = useState<AppRole[]>([]);
+  const [rolesError, setRolesError] = useState<string | null>(null);
+  const [refetchTick, setRefetchTick] = useState(0);
   const mounted = useRef(true);
   const roleRequestId = useRef(0);
+  const currentUserIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     mounted.current = true;
