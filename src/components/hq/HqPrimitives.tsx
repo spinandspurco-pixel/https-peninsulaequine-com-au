@@ -282,7 +282,7 @@ export function PreflightFrame({
 
 export function PreviewWelcome({ identity }: { identity: HqIdentity }) {
   const surfaces = [
-    { idx: "01", label: "Command Overview", note: "Live operational metrics and activity feed" },
+    { idx: "01", label: "Command Centre", note: "Morning brief, today on the ground, the wire" },
     { idx: "02", label: "Pipeline", note: "From new enquiry through to archive (read-only)" },
     { idx: "03", label: "Applications", note: "Apply to Build submissions" },
     { idx: "04", label: "Content", note: "Editorial surfaces — services, works, field notes" },
