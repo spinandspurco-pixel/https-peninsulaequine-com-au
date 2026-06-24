@@ -2384,6 +2384,48 @@ export type Database = {
         }
         Relationships: []
       }
+      staff_profiles: {
+        Row: {
+          active: boolean
+          avatar_path: string | null
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          display_name: string | null
+          phone: string | null
+          timezone: string | null
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          avatar_path?: string | null
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          display_name?: string | null
+          phone?: string | null
+          timezone?: string | null
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          avatar_path?: string | null
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          display_name?: string | null
+          phone?: string | null
+          timezone?: string | null
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       staff_role_allowlist: {
         Row: {
           created_at: string
@@ -2513,11 +2555,18 @@ export type Database = {
       list_staff_directory: {
         Args: never
         Returns: {
+          active: boolean
+          avatar_url: string
+          bio: string
           created_at: string
           display_name: string
           email: string
           is_test_account: boolean
+          last_active: string
+          phone: string
           role: Database["public"]["Enums"]["app_role"]
+          timezone: string
+          title: string
           user_id: string
         }[]
       }
