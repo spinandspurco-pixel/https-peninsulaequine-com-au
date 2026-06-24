@@ -9,10 +9,8 @@ import { MentionsCard } from "@/components/hq/MentionsCard";
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Command Centre
-// Foundation: cinematic "site office" — calm density, blueprint restraint,
-// living signal. Not a SaaS dashboard. Sections render in a deliberate sequence:
-//   Morning Brief → Today's Operations → Project Spotlight → Recent Activity
-//   → Quiet rail (Mentions + Quick actions) → System Health.
+// Cinematic "site office" — calm density, blueprint restraint, living signal.
+// Morning Brief is the hero; everything below is supporting instrumentation.
 // ──────────────────────────────────────────────────────────────────────────────
 
 interface ActivityRow {
@@ -34,15 +32,24 @@ interface SpotlightProject {
   updated_at: string;
 }
 
+interface UpcomingEvent {
+  id: string;
+  title: string;
+  event_date: string;
+  event_time: string | null;
+  location: string | null;
+}
+
 interface Signal {
   enquiries7: number;
-  activeBuilds: number;
   activeProjects: number;
+  totalProjects: number;
   proposalsOut: number;
   siteVisits: number;
   completedQ: number;
 }
 
+const JOSH_EMAIL = "josh.dales@peninsulaequine.systems";
 const SKELETON = "—";
 
 const greetingFor = (hour: number) => {
@@ -53,21 +60,45 @@ const greetingFor = (hour: number) => {
   return "Late shift";
 };
 
-const firstNameFrom = (user: { email?: string | null; user_metadata?: Record<string, unknown> } | null) => {
-  if (!user) return "Operator";
+const humanNameFrom = (
+  user: { email?: string | null; user_metadata?: Record<string, unknown> } | null,
+  directoryName: string | null,
+): string => {
+  // Priority: staff directory display_name → auth metadata → derived email → "HQ Admin"
+  if (directoryName) {
+    const first = directoryName.trim().split(/\s+/)[0];
+    if (first) return first;
+  }
+  if (!user) return "HQ Admin";
   const meta = (user.user_metadata ?? {}) as Record<string, unknown>;
   const display = (meta.full_name as string) || (meta.name as string) || "";
-  if (display) return display.split(/\s+/)[0];
+  if (display) {
+    const first = display.trim().split(/\s+/)[0];
+    if (first) return first;
+  }
   const local = (user.email ?? "").split("@")[0] ?? "";
-  if (!local) return "Operator";
+  if (!local) return "HQ Admin";
   const cleaned = local.replace(/[._-]+/g, " ").trim();
   const first = cleaned.split(/\s+/)[0] ?? "";
-  return first ? first.charAt(0).toUpperCase() + first.slice(1) : "Operator";
+  if (!first) return "HQ Admin";
+  // Reject generic local-parts like "admin", "info", "hq"
+  const generic = new Set(["admin", "info", "hq", "hello", "team", "office", "contact"]);
+  if (generic.has(first.toLowerCase())) return "HQ Admin";
+  return first.charAt(0).toUpperCase() + first.slice(1);
 };
 
 const formatStatus = (status: string | null) => {
   if (!status) return "Active";
   return status.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+};
+
+const formatEventWhen = (e: UpcomingEvent) => {
+  try {
+    const d = new Date(`${e.event_date}T${e.event_time ?? "00:00"}`);
+    return format(d, "d LLL");
+  } catch {
+    return e.event_date.slice(5);
+  }
 };
 
 export function CommandOverview() {
@@ -78,8 +109,8 @@ export function CommandOverview() {
 
   const [signal, setSignal] = useState<Signal>({
     enquiries7: 0,
-    activeBuilds: 0,
     activeProjects: 0,
+    totalProjects: 0,
     proposalsOut: 0,
     siteVisits: 0,
     completedQ: 0,
@@ -87,11 +118,17 @@ export function CommandOverview() {
   const [signalReady, setSignalReady] = useState(false);
   const [spotlight, setSpotlight] = useState<SpotlightProject | null>(null);
   const [activity, setActivity] = useState<ActivityRow[]>([]);
+  const [nextEvent, setNextEvent] = useState<UpcomingEvent | null>(null);
+  const [joshPreviewReady, setJoshPreviewReady] = useState<boolean | null>(null);
+  const [directoryName, setDirectoryName] = useState<string | null>(null);
   const [loadState, setLoadState] = useState<"idle" | "loading" | "ok" | "timeout" | "error">("loading");
   const [reloadKey, setReloadKey] = useState(0);
 
   const now = useMemo(() => new Date(), [reloadKey]);
-  const firstName = useMemo(() => firstNameFrom(user), [user]);
+  const firstName = useMemo(
+    () => humanNameFrom(user, directoryName),
+    [user, directoryName],
+  );
   const greeting = greetingFor(now.getHours());
 
   useEffect(() => {
@@ -105,14 +142,13 @@ export function CommandOverview() {
       const today = new Date().toISOString().slice(0, 10);
 
       const queries = Promise.all([
-        supabase.from("jobs").select("id", { count: "exact", head: true }).eq("status", "active"),
         supabase.from("inquiries").select("id", { count: "exact", head: true }).gte("created_at", since7),
         supabase
           .from("site_assessments")
           .select("id", { count: "exact", head: true })
           .gte("slot_date", today),
         supabase.from("quotes").select("id", { count: "exact", head: true }).eq("status", "sent"),
-        supabase.from("managed_projects").select("id", { count: "exact", head: true }).eq("status", "in_progress"),
+        supabase.from("managed_projects").select("id", { count: "exact", head: true }).in("status", ["in_progress", "active", "pre_construction"]),
         supabase
           .from("managed_projects")
           .select("id", { count: "exact", head: true })
@@ -130,6 +166,14 @@ export function CommandOverview() {
           .in("status", ["in_progress", "active", "pre_construction"])
           .order("updated_at", { ascending: false })
           .limit(1),
+        supabase
+          .from("managed_events")
+          .select("id, title, event_date, event_time, location")
+          .eq("active", true)
+          .gte("event_date", today)
+          .order("event_date", { ascending: true })
+          .limit(1),
+        supabase.rpc("list_staff_directory"),
       ]);
 
       const result = await withHqTimeout("CommandOverview:load", queries);
@@ -140,21 +184,22 @@ export function CommandOverview() {
         return;
       }
       const [
-        activeProjects,
         newEnquiries,
         siteVisits,
         proposals,
-        inProgress,
+        activeProjects,
         completed,
         activityLog,
-        managedActive,
+        totalProjects,
         spotlightRes,
+        eventRes,
+        staffRes,
       ] = result.data;
 
       setSignal({
         enquiries7: newEnquiries.count ?? 0,
-        activeBuilds: inProgress.count ?? 0,
-        activeProjects: (activeProjects.count ?? managedActive.count) ?? 0,
+        activeProjects: activeProjects.count ?? 0,
+        totalProjects: totalProjects.count ?? 0,
         proposalsOut: proposals.count ?? 0,
         siteVisits: siteVisits.count ?? 0,
         completedQ: completed.count ?? 0,
@@ -162,6 +207,16 @@ export function CommandOverview() {
       setSignalReady(true);
       setActivity(activityLog.data ?? []);
       setSpotlight(((spotlightRes.data ?? [])[0] as SpotlightProject | undefined) ?? null);
+      setNextEvent(((eventRes.data ?? [])[0] as UpcomingEvent | undefined) ?? null);
+
+      const staffRows = (staffRes.data ?? []) as Array<{ email: string; display_name: string; user_id: string }>;
+      const josh = staffRows.find((r) => r.email?.toLowerCase() === JOSH_EMAIL);
+      setJoshPreviewReady(josh ? true : false);
+      const me = user?.email
+        ? staffRows.find((r) => r.email?.toLowerCase() === user.email!.toLowerCase())
+        : undefined;
+      setDirectoryName(me?.display_name ?? null);
+
       setLoadState("ok");
     };
 
@@ -169,7 +224,7 @@ export function CommandOverview() {
     return () => {
       cancelled = true;
     };
-  }, [reloadKey]);
+  }, [reloadKey, user?.email]);
 
   // ─── Narrative brief: short, human, opinionated about today ───────────────
   const briefLines = useMemo(() => {
@@ -182,9 +237,9 @@ export function CommandOverview() {
     } else {
       lines.push(`${signal.enquiries7} new enquiries in the last seven days.`);
     }
-    if (signal.activeBuilds > 0) {
+    if (signal.activeProjects > 0) {
       lines.push(
-        `${signal.activeBuilds} build${signal.activeBuilds === 1 ? "" : "s"} on the ground, ${signal.proposalsOut} proposal${signal.proposalsOut === 1 ? "" : "s"} out.`,
+        `${signal.activeProjects} project${signal.activeProjects === 1 ? "" : "s"} on the ground, ${signal.proposalsOut} proposal${signal.proposalsOut === 1 ? "" : "s"} out.`,
       );
     } else if (signal.proposalsOut > 0) {
       lines.push(`${signal.proposalsOut} proposal${signal.proposalsOut === 1 ? "" : "s"} sitting with clients.`);
@@ -192,8 +247,11 @@ export function CommandOverview() {
     if (signal.siteVisits > 0) {
       lines.push(`${signal.siteVisits} site visit${signal.siteVisits === 1 ? "" : "s"} on the schedule.`);
     }
+    if (nextEvent) {
+      lines.push(`${nextEvent.title} — ${formatEventWhen(nextEvent)}.`);
+    }
     return lines;
-  }, [signal, signalReady]);
+  }, [signal, signalReady, nextEvent]);
 
   const loadBanner =
     loadState === "timeout" || loadState === "error" ? (
@@ -219,11 +277,22 @@ export function CommandOverview() {
     { label: "Compose quote", action: () => navigate("/hq?compose=quote"), locked: isPreview },
   ];
 
-  const opsSignals: { label: string; value: number | string; hint?: string }[] = [
+  const eventValue = nextEvent ? formatEventWhen(nextEvent) : signalReady ? "—" : SKELETON;
+  const eventHint = nextEvent?.title
+    ? nextEvent.title.length > 22
+      ? nextEvent.title.slice(0, 21) + "…"
+      : nextEvent.title
+    : "no events scheduled";
+
+  const joshValue =
+    joshPreviewReady === null ? SKELETON : joshPreviewReady ? "Ready" : "Pending";
+  const joshHint = joshPreviewReady === null ? "" : joshPreviewReady ? "preview minted" : "not provisioned";
+
+  const opsSignals: { label: string; value: number | string; hint?: string; mono?: boolean }[] = [
     { label: "Enquiries", value: signalReady ? signal.enquiries7 : SKELETON, hint: "last 7 days" },
-    { label: "Active builds", value: signalReady ? signal.activeBuilds : SKELETON },
-    { label: "Proposals out", value: signalReady ? signal.proposalsOut : SKELETON },
-    { label: "Site visits", value: signalReady ? signal.siteVisits : SKELETON, hint: "upcoming" },
+    { label: "Active projects", value: signalReady ? signal.activeProjects : SKELETON, hint: signalReady ? `of ${signal.totalProjects} managed` : "" },
+    { label: "Next event", value: eventValue, hint: eventHint, mono: true },
+    { label: "Josh preview", value: joshValue, hint: joshHint, mono: true },
   ];
 
   return (
@@ -240,29 +309,29 @@ export function CommandOverview() {
         }}
       />
 
-      <div className="relative space-y-20">
+      <div className="relative space-y-16 sm:space-y-20">
         {loadBanner}
 
         {/* ════════════════════════════════════════════════════════════════ */}
-        {/* MORNING BRIEF                                                    */}
+        {/* MORNING BRIEF — the hero                                          */}
         {/* ════════════════════════════════════════════════════════════════ */}
-        <section className="grid grid-cols-1 lg:grid-cols-[180px,1fr] gap-x-10 gap-y-6">
+        <section className="grid grid-cols-1 lg:grid-cols-[180px,1fr] gap-x-10 gap-y-4 sm:gap-y-6">
           <div className="space-y-2">
             <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/55">Brief</p>
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/45">
               {format(now, "EEE d LLL · HH:mm")}
             </p>
           </div>
-          <div className="space-y-5">
-            <h2 className="font-serif text-3xl sm:text-4xl font-light text-foreground/95 leading-[1.05] tracking-tight">
+          <div className="space-y-5 sm:space-y-6">
+            <h2 className="font-serif text-[2.25rem] leading-[1.02] sm:text-5xl lg:text-6xl font-light text-foreground/95 tracking-tight">
               {greeting}, <span className="italic text-foreground">{firstName}</span>.
             </h2>
             {briefLines.length > 0 ? (
-              <div className="space-y-1.5 max-w-xl">
+              <div className="space-y-2 max-w-xl">
                 {briefLines.map((line) => (
                   <p
                     key={line}
-                    className="text-[14px] sm:text-[15px] font-light text-foreground/65 leading-relaxed"
+                    className="text-[15px] sm:text-[16px] font-light text-foreground/70 leading-relaxed"
                   >
                     {line}
                   </p>
@@ -277,9 +346,9 @@ export function CommandOverview() {
         </section>
 
         {/* ════════════════════════════════════════════════════════════════ */}
-        {/* TODAY'S OPERATIONS                                               */}
+        {/* TODAY'S SIGNAL STRIP                                              */}
         {/* ════════════════════════════════════════════════════════════════ */}
-        <section className="grid grid-cols-1 lg:grid-cols-[180px,1fr] gap-x-10 gap-y-6">
+        <section className="grid grid-cols-1 lg:grid-cols-[180px,1fr] gap-x-10 gap-y-4 sm:gap-y-6">
           <div className="space-y-2">
             <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/55">Today</p>
             <div className="h-px w-10 bg-border/30" />
@@ -288,16 +357,22 @@ export function CommandOverview() {
             {opsSignals.map((s, i) => (
               <div
                 key={s.label}
-                className={`py-6 pr-6 ${i < opsSignals.length - 1 ? "sm:border-r border-border/10" : ""}`}
+                className={`py-5 sm:py-6 pr-4 sm:pr-6 ${i % 2 === 0 ? "border-r sm:border-r" : ""} ${i < 2 ? "border-b sm:border-b-0" : ""} ${i < opsSignals.length - 1 ? "sm:border-r" : ""} border-border/10`}
               >
                 <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-accent/45 mb-3">
                   {s.label}
                 </p>
-                <p className="font-serif text-[34px] font-light text-foreground/95 leading-none tabular-nums">
-                  {typeof s.value === "number" ? String(s.value).padStart(2, "0") : s.value}
-                </p>
+                {s.mono ? (
+                  <p className="font-mono text-[18px] sm:text-[20px] font-light text-foreground/95 leading-none">
+                    {s.value}
+                  </p>
+                ) : (
+                  <p className="font-serif text-[30px] sm:text-[34px] font-light text-foreground/95 leading-none tabular-nums">
+                    {typeof s.value === "number" ? String(s.value).padStart(2, "0") : s.value}
+                  </p>
+                )}
                 {s.hint && (
-                  <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/40 mt-2">
+                  <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/40 mt-2 truncate">
                     {s.hint}
                   </p>
                 )}
@@ -307,9 +382,9 @@ export function CommandOverview() {
         </section>
 
         {/* ════════════════════════════════════════════════════════════════ */}
-        {/* PROJECT SPOTLIGHT — the living hero                              */}
+        {/* PROJECT SPOTLIGHT                                                 */}
         {/* ════════════════════════════════════════════════════════════════ */}
-        <section className="grid grid-cols-1 lg:grid-cols-[180px,1fr] gap-x-10 gap-y-6">
+        <section className="grid grid-cols-1 lg:grid-cols-[180px,1fr] gap-x-10 gap-y-4 sm:gap-y-6">
           <div className="space-y-2">
             <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/55">Spotlight</p>
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40">
@@ -317,8 +392,8 @@ export function CommandOverview() {
             </p>
           </div>
 
-          <div className="relative -mr-[3rem] sm:-mr-[3rem]">
-            <div className="border-t border-b border-border/15 pl-1 pr-12 py-10 relative overflow-hidden">
+          <div className="relative lg:-mr-[3rem]">
+            <div className="border-t border-b border-border/15 pl-1 pr-6 sm:pr-12 py-8 sm:py-10 relative overflow-hidden">
               {/* Faint blueprint vignette */}
               <div
                 aria-hidden
@@ -332,14 +407,14 @@ export function CommandOverview() {
                 }}
               />
               {spotlight ? (
-                <div className="relative grid grid-cols-1 sm:grid-cols-[1fr,auto] gap-8 items-end">
-                  <div className="space-y-4">
+                <div className="relative grid grid-cols-1 sm:grid-cols-[1fr,auto] gap-6 sm:gap-8 items-end">
+                  <div className="space-y-3 sm:space-y-4">
                     {spotlight.code && (
                       <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-accent/55">
                         {spotlight.code}
                       </p>
                     )}
-                    <h3 className="font-serif text-3xl sm:text-4xl font-light text-foreground/95 leading-[1.05] italic tracking-tight">
+                    <h3 className="font-serif text-2xl sm:text-4xl font-light text-foreground/95 leading-[1.05] italic tracking-tight">
                       {spotlight.name}
                     </h3>
                     {spotlight.location && (
@@ -359,7 +434,7 @@ export function CommandOverview() {
                     )}
                   </div>
 
-                  <div className="space-y-4 sm:text-right">
+                  <div className="space-y-3 sm:space-y-4 sm:text-right">
                     <div>
                       <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-accent/45 mb-2">
                         Status
@@ -385,9 +460,28 @@ export function CommandOverview() {
                   </div>
                 </div>
               ) : (
-                <p className="relative text-[13px] font-light text-muted-foreground/55 italic">
-                  No active build on the ground today. The next project will surface here as soon as it moves.
-                </p>
+                // Polished empty state — keeps the architectural register
+                <div className="relative grid grid-cols-1 sm:grid-cols-[1fr,auto] gap-6 sm:gap-8 items-end">
+                  <div className="space-y-3 sm:space-y-4 max-w-md">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-accent/40">
+                      Awaiting first build
+                    </p>
+                    <h3 className="font-serif text-2xl sm:text-4xl font-light text-foreground/80 leading-[1.05] italic tracking-tight">
+                      Ground unbroken.
+                    </h3>
+                    <p className="text-[13px] sm:text-[14px] font-light text-foreground/55 leading-relaxed">
+                      No managed project is on the ground yet. The next build will surface here the moment it moves into pre-construction.
+                    </p>
+                  </div>
+                  <div className="sm:text-right">
+                    <button
+                      onClick={() => document.getElementById("zone-projects")?.scrollIntoView({ behavior: "smooth" })}
+                      className="text-[11px] uppercase tracking-[0.28em] text-foreground/70 hover:text-accent transition-colors"
+                    >
+                      Open projects →
+                    </button>
+                  </div>
+                </div>
               )}
             </div>
           </div>
@@ -410,11 +504,11 @@ export function CommandOverview() {
                 Nothing on the wire yet. New enquiries, quotes and project moves will record here.
               </p>
             ) : (
-              <ul className="border-l border-accent/20 pl-6 space-y-0">
+              <ul className="border-l border-accent/20 pl-5 sm:pl-6 space-y-0">
                 {activity.map((row) => (
                   <li key={row.id} className="py-3.5 group relative">
-                    <div className="absolute -left-[7px] top-5 h-px w-3 bg-accent/25 group-hover:bg-accent/60 transition-colors" />
-                    <div className="flex items-baseline justify-between gap-6">
+                    <div className="absolute -left-[6px] sm:-left-[7px] top-5 h-px w-3 bg-accent/25 group-hover:bg-accent/60 transition-colors" />
+                    <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-6">
                       <p className="text-[13px] text-foreground/85 font-light leading-relaxed">
                         {row.title}
                         {row.entity_type && (
@@ -465,7 +559,7 @@ export function CommandOverview() {
         </section>
 
         {/* ════════════════════════════════════════════════════════════════ */}
-        {/* SYSTEM HEALTH — a single quiet line                              */}
+        {/* SYSTEM HEALTH                                                     */}
         {/* ════════════════════════════════════════════════════════════════ */}
         <section className="border-t border-border/15 pt-5 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
           <div className="flex items-center gap-3">
