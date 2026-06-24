@@ -105,13 +105,11 @@ const projects: Project[] = [
 ];
 
 
-const [feature, ...rest] = projects;
-
 /* ─────────────────────────────────────────────────────────────
    ACT I — Silent overture
    Full-bleed first frame. No buttons. No counters above the fold.
    ────────────────────────────────────────────────────────────── */
-function Overture() {
+function Overture({ feature, projectCount }: { feature: Project; projectCount: number }) {
   return (
     <section className="relative h-[88svh] min-h-[640px] w-full overflow-hidden bg-background">
       <LensBlurImage
