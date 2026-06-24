@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import {
-  authDebugEnabled,
   getAuthLogEntries,
   subscribeAuthLog,
   type AuthLogEntry,
@@ -25,23 +24,51 @@ function fmtTime(ts: number): string {
   return `${hh}:${mm}:${ss}.${ms}`;
 }
 
+function isLocalHost(): boolean {
+  if (typeof window === "undefined") return false;
+  const h = window.location.hostname;
+  return h === "localhost" || h === "127.0.0.1" || h === "[::1]" || h.endsWith(".local");
+}
+
+function debugAllowed(isAdmin: boolean): boolean {
+  // Panel is hidden in production for everyone (including admins and preview users)
+  // unless one of these is true:
+  //   1. running on localhost
+  //   2. Vite dev build (import.meta.env.DEV)
+  //   3. explicit opt-in via ?debug=auth or localStorage.LOVABLE_AUTH_DEBUG=1
+  //      (the localStorage flag additionally requires an admin signed in)
+  if (isLocalHost()) return true;
+  if (import.meta.env.DEV) return true;
+  if (typeof window !== "undefined") {
+    try {
+      const sp = new URLSearchParams(window.location.search);
+      if (sp.get("debug") === "auth" && isAdmin) return true;
+      if (window.localStorage.getItem("LOVABLE_AUTH_DEBUG") === "1" && isAdmin) return true;
+    } catch {
+      /* ignore */
+    }
+  }
+  return false;
+}
+
 function useIsOpen(isAdmin: boolean): [boolean, (v: boolean) => void] {
-  // Visible when: admin, OR ?debug=auth, OR LOVABLE_AUTH_DEBUG=1, OR manual toggle.
   const [manual, setManual] = useState<boolean | null>(null);
-  const defaultOpen = useMemo(() => isAdmin || authDebugEnabled(), [isAdmin]);
+  const allowed = useMemo(() => debugAllowed(isAdmin), [isAdmin]);
 
   useEffect(() => {
+    if (!allowed) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.shiftKey && (e.key === "A" || e.key === "a")) {
         e.preventDefault();
-        setManual((m) => !(m ?? defaultOpen));
+        setManual((m) => !(m ?? true));
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [defaultOpen]);
+  }, [allowed]);
 
-  const open = manual ?? defaultOpen;
+  if (!allowed) return [false, () => {}];
+  const open = manual ?? true;
   return [open, (v: boolean) => setManual(v)];
 }
 
