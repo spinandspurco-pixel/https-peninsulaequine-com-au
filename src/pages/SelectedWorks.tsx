@@ -144,7 +144,7 @@ function Overture({ feature, projectCount }: { feature: Project; projectCount: n
           PE / 07 — Selected Works
         </span>
         <span className="hidden sm:block font-mono text-[10px] uppercase tracking-[0.5em] text-foreground/35">
-          {projects.length.toString().padStart(2, "0")} Works · 2024 — 2025
+          {projectCount.toString().padStart(2, "0")} Works · 2024 — 2025
         </span>
       </div>
 
