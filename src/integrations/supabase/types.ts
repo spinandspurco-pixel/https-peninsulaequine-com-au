@@ -2384,6 +2384,30 @@ export type Database = {
         }
         Relationships: []
       }
+      staff_role_allowlist: {
+        Row: {
+          created_at: string
+          email: string
+          notes: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          notes?: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          notes?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -2461,6 +2485,10 @@ export type Database = {
       accept_quote_by_share_token: {
         Args: { p_token: string }
         Returns: boolean
+      }
+      bootstrap_user_role: {
+        Args: never
+        Returns: Database["public"]["Enums"]["app_role"][]
       }
       cleanup_expired_holds: { Args: never; Returns: undefined }
       get_event_rsvp_counts: {
