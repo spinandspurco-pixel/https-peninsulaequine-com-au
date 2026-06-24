@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { trackQuoteConversion } from "@/lib/adsConversions";
+
 import { Link } from "react-router-dom";
 import {
   Check,
@@ -258,6 +260,8 @@ function EstimateCTA() {
 // ── Page ─────────────────────────────────────────────
 export default function Estimate() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  useEffect(() => { trackQuoteConversion(); }, []);
+
 
   return (
     <Layout>

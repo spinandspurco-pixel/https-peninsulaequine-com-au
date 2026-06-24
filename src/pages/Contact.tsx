@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, CheckCircle, Loader2, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,8 @@ import { siteConfig } from "@/data/content";
 import { cn } from "@/lib/utils";
 import { z } from "zod";
 import { trackConversion, trackFormError } from "@/lib/analytics";
+import { trackContactConversion } from "@/lib/adsConversions";
+
 
 
 
@@ -94,6 +96,8 @@ function SelectField({
 /* ── Main Page ────────────────────────────────────── */
 export default function Contact() {
   const { toast } = useToast();
+  useEffect(() => { trackContactConversion(); }, []);
+
   const [form, setForm] = useState({
     name: "",
     email: "",
