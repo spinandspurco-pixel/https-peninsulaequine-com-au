@@ -501,6 +501,8 @@ function Closing() {
 }
 
 export default function SelectedWorks() {
+  const { data: managedProjects } = useManagedProjects();
+
   useEffect(() => {
     document.title = "Selected Works | Peninsula Equine";
     const meta = document.querySelector('meta[name="description"]');
@@ -515,11 +517,20 @@ export default function SelectedWorks() {
     };
   }, []);
 
+  // Overlay hardcoded entries with managed_projects rows where the code
+  // family (e.g. `PE-MR`) matches. Imagery, crop and slug stay hardcoded.
+  const resolvedProjects: Project[] = managedProjects
+    ? projects.map((p) =>
+        overlayProject(p, findProjectByCodeFamily(p.code, managedProjects)),
+      )
+    : projects;
+  const [feature, ...rest] = resolvedProjects;
+
   return (
     <Layout>
       <main className="bg-background text-foreground type-architectural overflow-x-clip">
-        <Overture />
-        <IndexManifest />
+        <Overture feature={feature} projectCount={resolvedProjects.length} />
+        <IndexManifest projects={resolvedProjects} />
         <ProjectChapter project={feature} index={1} isFeature />
         <Pause mark="Intermission · 001">
           Function before noise. Resolved before presented.
