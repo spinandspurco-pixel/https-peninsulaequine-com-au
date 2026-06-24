@@ -190,7 +190,7 @@ function Overture({ feature, projectCount }: { feature: Project; projectCount: n
    ACT II — Index Manifest
    A drafting-table contents page. Hover reveals the chapter line.
    ────────────────────────────────────────────────────────────── */
-function IndexManifest() {
+function IndexManifest({ projects }: { projects: Project[] }) {
   return (
     <section className="relative border-t border-accent/10 pe-pause-md">
       <div className="section-container max-w-[1280px]">
