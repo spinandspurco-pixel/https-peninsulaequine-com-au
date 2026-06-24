@@ -17,8 +17,9 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  const { user, roles, ready, signIn } = useAuth();
+  const { user, roles, ready, rolesLoading, signIn, signOut } = useAuth();
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const redirectTo = searchParams.get("redirect") || null;
 
   const handleSignIn = async (e: React.FormEvent) => {
