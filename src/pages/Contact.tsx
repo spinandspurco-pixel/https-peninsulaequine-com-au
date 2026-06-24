@@ -384,10 +384,15 @@ export default function Contact() {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="sm:col-span-2">
-                        <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                        <label
+                          htmlFor="contact-name"
+                          className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono"
+                        >
                           Full Name *
                         </label>
                         <Input
+                          id="contact-name"
+                          data-testid="contact-name"
                           value={form.name}
                           onChange={(e) => set("name", e.target.value)}
                           placeholder="Your name"
@@ -400,10 +405,15 @@ export default function Contact() {
                         )}
                       </div>
                       <div>
-                        <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                        <label
+                          htmlFor="contact-email"
+                          className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono"
+                        >
                           Email Address *
                         </label>
                         <Input
+                          id="contact-email"
+                          data-testid="contact-email"
                           type="email"
                           value={form.email}
                           onChange={(e) => set("email", e.target.value)}
@@ -417,10 +427,15 @@ export default function Contact() {
                         )}
                       </div>
                       <div>
-                        <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                        <label
+                          htmlFor="contact-phone"
+                          className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono"
+                        >
                           Phone Number
                         </label>
                         <Input
+                          id="contact-phone"
+                          data-testid="contact-phone"
                           type="tel"
                           value={form.phone}
                           onChange={(e) => set("phone", e.target.value)}
@@ -428,6 +443,7 @@ export default function Contact() {
                           maxLength={30}
                         />
                       </div>
+
                     </div>
                   </div>
                 </RevealOnScroll>
