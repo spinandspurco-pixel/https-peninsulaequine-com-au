@@ -59,19 +59,28 @@ function SelectField({
   onChange,
   options,
   placeholder,
+  id,
+  testId,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   options: string[];
   placeholder: string;
+  id: string;
+  testId?: string;
 }) {
   return (
     <div>
-      <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+      <label
+        htmlFor={id}
+        className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono"
+      >
         {label}
       </label>
       <select
+        id={id}
+        data-testid={testId}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full rounded-md border border-input bg-background px-3.5 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all appearance-none"
@@ -92,6 +101,7 @@ function SelectField({
     </div>
   );
 }
+
 
 /* ── Main Page ────────────────────────────────────── */
 export default function Contact() {
@@ -374,10 +384,15 @@ export default function Contact() {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="sm:col-span-2">
-                        <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                        <label
+                          htmlFor="contact-name"
+                          className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono"
+                        >
                           Full Name *
                         </label>
                         <Input
+                          id="contact-name"
+                          data-testid="contact-name"
                           value={form.name}
                           onChange={(e) => set("name", e.target.value)}
                           placeholder="Your name"
@@ -390,10 +405,15 @@ export default function Contact() {
                         )}
                       </div>
                       <div>
-                        <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                        <label
+                          htmlFor="contact-email"
+                          className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono"
+                        >
                           Email Address *
                         </label>
                         <Input
+                          id="contact-email"
+                          data-testid="contact-email"
                           type="email"
                           value={form.email}
                           onChange={(e) => set("email", e.target.value)}
@@ -407,10 +427,15 @@ export default function Contact() {
                         )}
                       </div>
                       <div>
-                        <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                        <label
+                          htmlFor="contact-phone"
+                          className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono"
+                        >
                           Phone Number
                         </label>
                         <Input
+                          id="contact-phone"
+                          data-testid="contact-phone"
                           type="tel"
                           value={form.phone}
                           onChange={(e) => set("phone", e.target.value)}
@@ -418,6 +443,7 @@ export default function Contact() {
                           maxLength={30}
                         />
                       </div>
+
                     </div>
                   </div>
                 </RevealOnScroll>
@@ -437,11 +463,15 @@ export default function Contact() {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                        <label
+                          htmlFor="contact-property-location"
+                          className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono"
+                        >
                           <MapPin className="inline h-3 w-3 mr-1" />
                           Property Location
                         </label>
                         <Input
+                          id="contact-property-location"
                           value={form.propertyLocation}
                           onChange={(e) =>
                             set("propertyLocation", e.target.value)
@@ -451,12 +481,14 @@ export default function Contact() {
                         />
                       </div>
                       <SelectField
+                        id="contact-property-type"
                         label="Property Type"
                         value={form.propertyType}
                         onChange={(v) => set("propertyType", v)}
                         options={PROPERTY_TYPES}
                         placeholder="Select type"
                       />
+
                     </div>
                   </div>
                 </RevealOnScroll>
@@ -520,10 +552,15 @@ export default function Contact() {
                       </h3>
                     </div>
                     <div>
-                      <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                      <label
+                        htmlFor="contact-message"
+                        className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono"
+                      >
                         Project notes
                       </label>
                       <textarea
+                        id="contact-message"
+                        data-testid="contact-message"
                         value={form.details}
                         onChange={(e) => set("details", e.target.value)}
                         maxLength={2000}
@@ -532,6 +569,7 @@ export default function Contact() {
                         className={cn(inputClass, "resize-none")}
                       />
                     </div>
+
                   </div>
                 </RevealOnScroll>
 
@@ -550,12 +588,14 @@ export default function Contact() {
                         </h3>
                       </div>
                       <SelectField
+                        id="contact-timeline"
                         label="When does the ground need to be ready?"
                         value={form.timeline}
                         onChange={(v) => set("timeline", v)}
                         options={TIMELINES}
                         placeholder="Select timeline"
                       />
+
                     </div>
                     <div className="space-y-6">
                       <div>
@@ -568,6 +608,7 @@ export default function Contact() {
                         <p className="text-[11px] text-[hsl(var(--footer-muted))] mt-1">Optional</p>
                       </div>
                       <SelectField
+                        id="contact-budget"
                         label="Indicative investment range"
                         value={form.budget}
                         onChange={(v) => set("budget", v)}
@@ -586,11 +627,13 @@ export default function Contact() {
                 <div className="text-center space-y-3">
                   <Button
                     type="submit"
+                    data-testid="contact-submit"
                     size="lg"
                     disabled={submitting}
                     variant="gold"
                     className="uppercase tracking-[0.14em] text-xs font-medium px-10"
                   >
+
                     {submitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
