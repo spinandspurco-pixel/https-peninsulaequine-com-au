@@ -10,6 +10,7 @@ type AuthState = ReturnType<typeof useAuthState>;
 const AuthContext = createContext<AuthState | null>(null);
 
 const ROLE_FETCH_RETRY_DELAYS_MS = [0, 350, 900];
+const ROLE_FETCH_WATCHDOG_MS = 8000;
 
 function useAuthState() {
   const [user, setUser] = useState<User | null>(null);
@@ -17,8 +18,11 @@ function useAuthState() {
   const [authLoading, setAuthLoading] = useState(true);
   const [rolesLoading, setRolesLoading] = useState(true);
   const [roles, setRoles] = useState<AppRole[]>([]);
+  const [rolesError, setRolesError] = useState<string | null>(null);
+  const [refetchTick, setRefetchTick] = useState(0);
   const mounted = useRef(true);
   const roleRequestId = useRef(0);
+  const currentUserIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     mounted.current = true;
@@ -32,6 +36,13 @@ function useAuthState() {
 
     const fetchRoles = async (userId: string, requestId: number) => {
       dbg("roles:fetch:start", { userId, requestId });
+      let watchdog: ReturnType<typeof setTimeout> | null = setTimeout(() => {
+        if (!mounted.current || roleRequestId.current !== requestId) return;
+        dbg("roles:fetch:watchdog-timeout", { requestId, ms: ROLE_FETCH_WATCHDOG_MS });
+        setRolesError("Role lookup timed out. Check connection and retry.");
+        setRolesLoading(false);
+      }, ROLE_FETCH_WATCHDOG_MS);
+      const clearWatchdog = () => { if (watchdog) { clearTimeout(watchdog); watchdog = null; } };
       try {
         for (let attempt = 0; attempt < ROLE_FETCH_RETRY_DELAYS_MS.length; attempt += 1) {
           const delay = ROLE_FETCH_RETRY_DELAYS_MS[attempt];
@@ -57,18 +68,24 @@ function useAuthState() {
             dbg("roles:fetch:error", { attempt, error: error.message, code: (error as any).code });
             if (attempt < ROLE_FETCH_RETRY_DELAYS_MS.length - 1) continue;
             setRoles([]);
+            setRolesError(error.message || "Failed to load roles");
             return;
           }
 
           const list = (data?.map((r) => r.role) || []) as AppRole[];
           setRoles(list);
+          setRolesError(null);
           dbg("roles:fetch:ok", { roles: list, requestId });
           return;
         }
       } catch (err) {
         dbg("roles:fetch:exception", { err: String(err), requestId });
-        if (mounted.current) setRoles([]);
+        if (mounted.current) {
+          setRoles([]);
+          setRolesError(String(err));
+        }
       } finally {
+        clearWatchdog();
         dbg("roles:fetch:finally", { requestId, current: roleRequestId.current, mounted: mounted.current });
         if (mounted.current && roleRequestId.current === requestId) {
           setRolesLoading(false);
@@ -83,12 +100,14 @@ function useAuthState() {
       dbg("session:apply", { source, hasUser: !!newSession?.user, uid: newSession?.user?.id });
       setSession(newSession);
       setUser(newSession?.user ?? null);
+      currentUserIdRef.current = newSession?.user?.id ?? null;
       setAuthLoading(false);
 
       if (newSession?.user) {
         const requestId = roleRequestId.current + 1;
         roleRequestId.current = requestId;
         setRolesLoading(true);
+        setRolesError(null);
         const uid = newSession.user.id;
         dbg("session:schedule-roles-fetch", { source, requestId, uid });
         setTimeout(() => {
@@ -99,12 +118,13 @@ function useAuthState() {
       } else {
         roleRequestId.current += 1;
         setRoles([]);
+        setRolesError(null);
         setRolesLoading(false);
         dbg("session:no-user-clear", {});
       }
     };
 
-    dbg("provider:mount", {});
+    dbg("provider:mount", { refetchTick });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, newSession) => {
@@ -114,28 +134,52 @@ function useAuthState() {
       }
     );
 
-    supabase.auth
-      .getSession()
-      .then(({ data: { session: s } }) => {
-        dbg("getSession:then", { hasSession: !!s });
-        if (!mounted.current) return;
-        applySession(s, "getSession");
-      })
-      .catch((err) => {
-        dbg("getSession:error", { err: String(err) });
-        if (mounted.current) {
-          setAuthLoading(false);
-          setRolesLoading(false);
-        }
+    // Manual refetch path: re-run role fetch for current user without re-creating subscription.
+    if (refetchTick > 0 && currentUserIdRef.current) {
+      const requestId = roleRequestId.current + 1;
+      roleRequestId.current = requestId;
+      setRolesLoading(true);
+      setRolesError(null);
+      const uid = currentUserIdRef.current;
+      dbg("refetch:trigger", { tick: refetchTick, requestId, uid });
+      setTimeout(() => {
+        if (mounted.current && roleRequestId.current === requestId) void fetchRoles(uid, requestId);
+      }, 0);
+    } else {
+      supabase.auth
+        .getSession()
+        .then(({ data: { session: s } }) => {
+          dbg("getSession:then", { hasSession: !!s });
+          if (!mounted.current) return;
+          applySession(s, "getSession");
+        })
+        .catch((err) => {
+          dbg("getSession:error", { err: String(err) });
+          if (mounted.current) {
+            setAuthLoading(false);
+            setRolesLoading(false);
+          }
+        });
+    }
+
+    // Hard auth watchdog: if getSession never resolves, force ready anyway.
+    const authWatchdog = setTimeout(() => {
+      if (!mounted.current) return;
+      setAuthLoading((prev) => {
+        if (prev) dbg("auth:watchdog-timeout", { ms: ROLE_FETCH_WATCHDOG_MS });
+        return false;
       });
+    }, ROLE_FETCH_WATCHDOG_MS);
 
     return () => {
       dbg("provider:unmount", { currentReqId: roleRequestId.current });
       mounted.current = false;
       roleRequestId.current += 1;
+      clearTimeout(authWatchdog);
       subscription.unsubscribe();
     };
-  }, []);
+  }, [refetchTick]);
+
 
 
   const signIn = async (email: string, password: string) => {
@@ -169,6 +213,8 @@ function useAuthState() {
     authLoading,
     rolesLoading,
     roles,
+    rolesError,
+    refetchRoles: () => setRefetchTick((n) => n + 1),
     isAdmin: roles.includes("admin"),
     isEmployee: roles.includes("employee"),
     isTrainer: roles.includes("trainer"),

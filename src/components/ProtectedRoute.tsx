@@ -36,12 +36,12 @@ export function ProtectedRoute({
   allowedRoles,
   forbiddenRedirect,
 }: ProtectedRouteProps) {
-  const { user, ready, roles, authLoading, rolesLoading } = useAuth();
+  const { user, ready, roles, authLoading, rolesLoading, rolesError, refetchRoles, signOut } = useAuth();
   const location = useLocation();
 
   // TEMP: HQ login-hang investigation
   // eslint-disable-next-line no-console
-  console.log("[auth:guard:render]", { path: location.pathname, ready, authLoading, rolesLoading, hasUser: !!user, roles, allowedRoles });
+  console.log("[auth:guard:render]", { path: location.pathname, ready, authLoading, rolesLoading, hasUser: !!user, roles, rolesError, allowedRoles });
 
   if (!ready) {
     authLog("guard:wait", { path: location.pathname, authLoading, rolesLoading });
@@ -52,11 +52,43 @@ export function ProtectedRoute({
     );
   }
 
-
   if (!user) {
     const redirect = encodeURIComponent(location.pathname + location.search);
     authLog("guard:no-user", { redirectTo: location.pathname });
     return <Navigate to={`${loginPath}?redirect=${redirect}`} replace />;
+  }
+
+  // Authenticated but role lookup failed — never infinite-spin; show actionable error.
+  if (rolesError) {
+    authLog("guard:roles-error", { path: location.pathname, rolesError });
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background px-6">
+        <div className="max-w-md w-full space-y-5 text-center">
+          <h1 className="font-serif text-2xl text-foreground">Profile didn't load</h1>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            We couldn't read your access role. This is usually a transient connection issue.
+          </p>
+          <p className="text-xs font-mono text-muted-foreground/70 break-words">{rolesError}</p>
+          <div className="flex gap-3 justify-center pt-2">
+            <button
+              type="button"
+              onClick={() => refetchRoles()}
+              className="text-xs font-mono uppercase tracking-[0.25em] text-foreground hover:text-accent transition-colors"
+            >
+              Retry
+            </button>
+            <span className="text-muted-foreground/40">·</span>
+            <button
+              type="button"
+              onClick={async () => { await signOut(); window.location.href = "/login"; }}
+              className="text-xs font-mono uppercase tracking-[0.25em] text-foreground hover:text-accent transition-colors"
+            >
+              Sign out
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (allowedRoles && allowedRoles.length > 0) {
