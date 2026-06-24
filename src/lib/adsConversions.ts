@@ -1,12 +1,8 @@
 // Google Ads conversion helpers (gtag.js).
 // The base gtag loader + AW-18258586668 config live in index.html.
 
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-    dataLayer?: unknown[];
-  }
-}
+// Window.gtag / dataLayer are already declared globally in src/lib/analytics.ts.
+
 
 function fire(...args: unknown[]) {
   if (typeof window === "undefined") return;
