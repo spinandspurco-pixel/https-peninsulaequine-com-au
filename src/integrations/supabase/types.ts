@@ -598,6 +598,60 @@ export type Database = {
           },
         ]
       }
+      cms_gallery_items: {
+        Row: {
+          alt_text: string | null
+          caption: string | null
+          category: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          image_url: string
+          is_active: boolean
+          location: string | null
+          project: string | null
+          slug: string | null
+          sort_order: number
+          title: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          alt_text?: string | null
+          caption?: string | null
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url: string
+          is_active?: boolean
+          location?: string | null
+          project?: string | null
+          slug?: string | null
+          sort_order?: number
+          title: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          alt_text?: string | null
+          caption?: string | null
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_url?: string
+          is_active?: boolean
+          location?: string | null
+          project?: string | null
+          slug?: string | null
+          sort_order?: number
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       dns_notify_sends: {
         Row: {
           id: string
@@ -1328,8 +1382,12 @@ export type Database = {
       managed_events: {
         Row: {
           active: boolean
+          body: string | null
           capacity: number | null
           created_at: string
+          created_by: string | null
+          cta_label: string | null
+          cta_url: string | null
           description: string | null
           early_bird_deadline: string | null
           early_bird_price: string | null
@@ -1340,14 +1398,21 @@ export type Database = {
           is_demo: boolean
           location: string | null
           price: string | null
+          sort_order: number
+          summary: string | null
           title: string
           trainer: string | null
           updated_at: string
+          updated_by: string | null
         }
         Insert: {
           active?: boolean
+          body?: string | null
           capacity?: number | null
           created_at?: string
+          created_by?: string | null
+          cta_label?: string | null
+          cta_url?: string | null
           description?: string | null
           early_bird_deadline?: string | null
           early_bird_price?: string | null
@@ -1358,14 +1423,21 @@ export type Database = {
           is_demo?: boolean
           location?: string | null
           price?: string | null
+          sort_order?: number
+          summary?: string | null
           title: string
           trainer?: string | null
           updated_at?: string
+          updated_by?: string | null
         }
         Update: {
           active?: boolean
+          body?: string | null
           capacity?: number | null
           created_at?: string
+          created_by?: string | null
+          cta_label?: string | null
+          cta_url?: string | null
           description?: string | null
           early_bird_deadline?: string | null
           early_bird_price?: string | null
@@ -1376,9 +1448,12 @@ export type Database = {
           is_demo?: boolean
           location?: string | null
           price?: string | null
+          sort_order?: number
+          summary?: string | null
           title?: string
           trainer?: string | null
           updated_at?: string
+          updated_by?: string | null
         }
         Relationships: []
       }
@@ -1471,7 +1546,12 @@ export type Database = {
       managed_services: {
         Row: {
           active: boolean
+          body: string | null
+          category: string | null
           created_at: string
+          created_by: string | null
+          cta_label: string | null
+          cta_url: string | null
           description: string | null
           features: string[]
           icon: string | null
@@ -1482,12 +1562,19 @@ export type Database = {
           slug: string
           sort_order: number
           starting_price: string | null
+          summary: string | null
           title: string
           updated_at: string
+          updated_by: string | null
         }
         Insert: {
           active?: boolean
+          body?: string | null
+          category?: string | null
           created_at?: string
+          created_by?: string | null
+          cta_label?: string | null
+          cta_url?: string | null
           description?: string | null
           features?: string[]
           icon?: string | null
@@ -1498,12 +1585,19 @@ export type Database = {
           slug: string
           sort_order?: number
           starting_price?: string | null
+          summary?: string | null
           title: string
           updated_at?: string
+          updated_by?: string | null
         }
         Update: {
           active?: boolean
+          body?: string | null
+          category?: string | null
           created_at?: string
+          created_by?: string | null
+          cta_label?: string | null
+          cta_url?: string | null
           description?: string | null
           features?: string[]
           icon?: string | null
@@ -1514,17 +1608,21 @@ export type Database = {
           slug?: string
           sort_order?: number
           starting_price?: string | null
+          summary?: string | null
           title?: string
           updated_at?: string
+          updated_by?: string | null
         }
         Relationships: []
       }
       managed_testimonials: {
         Row: {
           active: boolean
+          client_context: string | null
           client_name: string
           client_role: string | null
           created_at: string
+          created_by: string | null
           id: string
           is_demo: boolean
           media_type: string | null
@@ -1536,12 +1634,15 @@ export type Database = {
           sort_order: number
           trainer: string | null
           updated_at: string
+          updated_by: string | null
         }
         Insert: {
           active?: boolean
+          client_context?: string | null
           client_name: string
           client_role?: string | null
           created_at?: string
+          created_by?: string | null
           id?: string
           is_demo?: boolean
           media_type?: string | null
@@ -1553,12 +1654,15 @@ export type Database = {
           sort_order?: number
           trainer?: string | null
           updated_at?: string
+          updated_by?: string | null
         }
         Update: {
           active?: boolean
+          client_context?: string | null
           client_name?: string
           client_role?: string | null
           created_at?: string
+          created_by?: string | null
           id?: string
           is_demo?: boolean
           media_type?: string | null
@@ -1570,6 +1674,7 @@ export type Database = {
           sort_order?: number
           trainer?: string | null
           updated_at?: string
+          updated_by?: string | null
         }
         Relationships: []
       }

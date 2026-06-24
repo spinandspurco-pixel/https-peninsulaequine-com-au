@@ -37,6 +37,14 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     note: "Inbox · status, notes, timeline",
   },
   {
+    key: "cms",
+    label: "CMS",
+    to: "/hq/cms",
+    roles: ["admin"],
+    group: "content",
+    note: "Unified editor · services, events, testimonials, gallery",
+  },
+  {
     key: "services",
     label: "Services",
     to: "/hq/services",
