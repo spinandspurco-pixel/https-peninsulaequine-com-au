@@ -59,19 +59,28 @@ function SelectField({
   onChange,
   options,
   placeholder,
+  id,
+  testId,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   options: string[];
   placeholder: string;
+  id: string;
+  testId?: string;
 }) {
   return (
     <div>
-      <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+      <label
+        htmlFor={id}
+        className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono"
+      >
         {label}
       </label>
       <select
+        id={id}
+        data-testid={testId}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="w-full rounded-md border border-input bg-background px-3.5 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all appearance-none"
@@ -92,6 +101,7 @@ function SelectField({
     </div>
   );
 }
+
 
 /* ── Main Page ────────────────────────────────────── */
 export default function Contact() {
