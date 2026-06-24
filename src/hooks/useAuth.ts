@@ -213,6 +213,8 @@ function useAuthState() {
     authLoading,
     rolesLoading,
     roles,
+    rolesError,
+    refetchRoles: () => setRefetchTick((n) => n + 1),
     isAdmin: roles.includes("admin"),
     isEmployee: roles.includes("employee"),
     isTrainer: roles.includes("trainer"),
