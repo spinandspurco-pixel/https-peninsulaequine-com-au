@@ -36,6 +36,7 @@ const Admin = lazy(() => import("./pages/Admin"));
 const AdminServices = lazy(() => import("./pages/AdminServices"));
 const AdminTestimonials = lazy(() => import("./pages/AdminTestimonials"));
 const AdminEvents = lazy(() => import("./pages/AdminEvents"));
+const AdminCMS = lazy(() => import("./pages/AdminCMS"));
 const AdminSelectedWorks = lazy(() => import("./pages/AdminSelectedWorks"));
 const AdminFieldNotes = lazy(() => import("./pages/AdminFieldNotes"));
 const HqProjectDetail = lazy(() => import("./pages/HqProjectDetail"));
@@ -123,6 +124,7 @@ function AppContent() {
                 block_preview_writes enforces read-only at the data layer). */}
             <Route path="/hq" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><Admin /></ProtectedRoute>} />
             <Route path="/hq/services" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminServices /></ProtectedRoute>} />
+            <Route path="/hq/cms" element={<ProtectedRoute allowedRoles={["admin"]}><AdminCMS /></ProtectedRoute>} />
             <Route path="/hq/testimonials" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminTestimonials /></ProtectedRoute>} />
             <Route path="/hq/events" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminEvents /></ProtectedRoute>} />
             <Route path="/hq/selected-works" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminSelectedWorks /></ProtectedRoute>} />
