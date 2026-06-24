@@ -2537,6 +2537,14 @@ export type Database = {
         Args: { p_session_id: string; p_slot_id: string }
         Returns: undefined
       }
+      seed_staff_roles: {
+        Args: never
+        Returns: {
+          out_backfilled: boolean
+          out_email: string
+          out_role: Database["public"]["Enums"]["app_role"]
+        }[]
+      }
     }
     Enums: {
       app_role:
