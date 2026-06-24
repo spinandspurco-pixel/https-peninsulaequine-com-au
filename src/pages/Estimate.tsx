@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { trackQuoteConversion } from "@/lib/adsConversions";
+
 import { Link } from "react-router-dom";
 import {
   Check,
