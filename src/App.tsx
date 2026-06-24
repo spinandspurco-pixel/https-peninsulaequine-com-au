@@ -48,6 +48,7 @@ const DnsVerify = lazy(() => import("./pages/DnsVerify"));
 const DnsPublish = lazy(() => import("./pages/DnsPublish"));
 const DnsWizard = lazy(() => import("./pages/DnsWizard"));
 const DnsStatus = lazy(() => import("./pages/DnsStatus"));
+const HqWhoAmI = lazy(() => import("./pages/HqWhoAmI"));
 
 
 const BookLesson = lazy(() => import("./pages/BookLesson"));
@@ -123,6 +124,8 @@ function AppContent() {
                 Preview role is allowed on read-only HQ surfaces (DB trigger
                 block_preview_writes enforces read-only at the data layer). */}
             <Route path="/hq" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><Admin /></ProtectedRoute>} />
+            {/* Diagnostic: any signed-in user can see their own role mapping */}
+            <Route path="/hq/whoami" element={<HqWhoAmI />} />
             <Route path="/hq/services" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminServices /></ProtectedRoute>} />
             <Route path="/hq/cms" element={<ProtectedRoute allowedRoles={["admin"]}><AdminCMS /></ProtectedRoute>} />
             <Route path="/hq/testimonials" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminTestimonials /></ProtectedRoute>} />
