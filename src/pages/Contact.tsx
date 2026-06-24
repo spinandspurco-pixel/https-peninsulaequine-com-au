@@ -552,10 +552,15 @@ export default function Contact() {
                       </h3>
                     </div>
                     <div>
-                      <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                      <label
+                        htmlFor="contact-message"
+                        className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono"
+                      >
                         Project notes
                       </label>
                       <textarea
+                        id="contact-message"
+                        data-testid="contact-message"
                         value={form.details}
                         onChange={(e) => set("details", e.target.value)}
                         maxLength={2000}
@@ -564,6 +569,7 @@ export default function Contact() {
                         className={cn(inputClass, "resize-none")}
                       />
                     </div>
+
                   </div>
                 </RevealOnScroll>
 
