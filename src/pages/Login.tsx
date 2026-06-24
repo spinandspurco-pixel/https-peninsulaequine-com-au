@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams, Link } from "react-router-dom";
+import { useState } from "react";
+import { Navigate, useSearchParams, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { resolveLandingPath, authLog } from "@/lib/authRouting";
 import { Layout } from "@/components/layout/Layout";
@@ -18,19 +18,8 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const { user, roles, ready, signIn } = useAuth();
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirect") || null;
-
-  // Single source of truth for post-login routing. We only act once auth
-  // AND roles are fully resolved (`ready`), so we never bounce a freshly
-  // signed-in user to the wrong place during hydration.
-  useEffect(() => {
-    if (!ready || !user) return;
-    const dest = resolveLandingPath(roles, redirectTo);
-    authLog("login:redirect", { dest, roles, redirectTo });
-    navigate(dest, { replace: true });
-  }, [user, roles, ready, redirectTo, navigate]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +41,16 @@ export default function Login() {
     // real confirmation. A standalone "Welcome back" toast on the login
     // screen reads like success even when state hasn't actually changed.
   };
+
+  // Render-time redirect: never paint the form (or the authed HqHeader
+  // chrome that sits above it) for a signed-in user. Doing this in an
+  // effect lets one frame of the form flash before navigate() runs, which
+  // is what produced the "signed-in top bar + login form" bug.
+  if (ready && user) {
+    const dest = resolveLandingPath(roles, redirectTo);
+    authLog("login:redirect", { dest, roles, redirectTo });
+    return <Navigate to={dest} replace />;
+  }
 
   if (!ready) {
     return (
