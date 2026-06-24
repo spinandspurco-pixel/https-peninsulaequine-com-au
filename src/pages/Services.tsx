@@ -348,8 +348,13 @@ export default function Services() {
 
                   {/* Services within chapter */}
                   <div className="space-y-[clamp(4rem,3rem+4vw,7rem)]">
-                    {chapter.services.map((s, i) => {
+                    {chapter.services.map((rawService, i) => {
                       const reversed = i % 2 === 1;
+                      const managedSlug =
+                        SERVICE_SLUG_ALIASES[rawService.slug] ?? rawService.slug;
+                      const s = managedServices
+                        ? overlayService(rawService, managedServices[managedSlug])
+                        : rawService;
                       return (
                         <RevealOnScroll key={s.k} direction="up">
                           <div
