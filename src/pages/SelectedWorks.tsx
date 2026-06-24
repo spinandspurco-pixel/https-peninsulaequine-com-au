@@ -8,6 +8,11 @@ import {
   getProjectImage,
   getProjectImageAlt,
 } from "@/config/projectImagery";
+import {
+  useManagedProjects,
+  overlayProject,
+  findProjectByCodeFamily,
+} from "@/lib/managedContent";
 
 /* Single grading filter — matches the new --grade-blueprint token */
 const GRADE = "brightness(0.84) contrast(1.08) saturate(0.78)";
