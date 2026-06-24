@@ -463,11 +463,15 @@ export default function Contact() {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono">
+                        <label
+                          htmlFor="contact-property-location"
+                          className="text-xs uppercase tracking-[0.15em] text-muted-foreground font-medium mb-2 block font-mono"
+                        >
                           <MapPin className="inline h-3 w-3 mr-1" />
                           Property Location
                         </label>
                         <Input
+                          id="contact-property-location"
                           value={form.propertyLocation}
                           onChange={(e) =>
                             set("propertyLocation", e.target.value)
@@ -477,12 +481,14 @@ export default function Contact() {
                         />
                       </div>
                       <SelectField
+                        id="contact-property-type"
                         label="Property Type"
                         value={form.propertyType}
                         onChange={(v) => set("propertyType", v)}
                         options={PROPERTY_TYPES}
                         placeholder="Select type"
                       />
+
                     </div>
                   </div>
                 </RevealOnScroll>
