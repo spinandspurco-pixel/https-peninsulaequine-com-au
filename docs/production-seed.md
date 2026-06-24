@@ -1,36 +1,30 @@
-# Production Seed — Staff Roles (Automated)
+# Staff Roles — Source of Truth & Deploy Sync
 
-Roles on Live are kept in sync **automatically**. You don't need to run anything by hand.
+## Source of truth
+**`public.staff_role_allowlist`** (table). Edit rows there to add/remove staff or change a role. A future HQ admin screen can manage it; the CSV was a one-time import only.
 
-## How it works
+## How sync works
+- `public.seed_staff_roles()` — idempotent backfill. Reads the allowlist, inserts matching `user_roles` rows for any existing `auth.users`. **Does not hardcode emails.** `SECURITY DEFINER`, `service_role` only.
+- **On deploy:** the migration calls `seed_staff_roles()` once, so every publish that ships a migration re-syncs Live.
+- **Daily safety net:** `pg_cron` job `seed-staff-roles-daily` at 03:15 UTC. Skipped gracefully if `pg_cron` isn't installed.
+- **On first sign-in:** `bootstrap_user_role()` (locked to `authenticated`) self-heals from the allowlist.
 
-1. **Source of truth:** `public.seed_staff_roles()` (database function, `SECURITY DEFINER`, `service_role` only).
-   It upserts `staff_role_allowlist` and backfills `user_roles` for any matching `auth.users`. Fully idempotent.
-2. **On deploy:** the migration that defines the function calls it once, so every publish that includes a migration re-seeds Live.
-3. **Daily safety net:** `pg_cron` job `seed-staff-roles-daily` runs `SELECT public.seed_staff_roles();` at 03:15 UTC.
-4. **On first sign-in:** `bootstrap_user_role()` (already in place, now locked to `authenticated`) self-heals a new user's `user_roles` from the allowlist.
-
-## Current allowlist (canonical)
-
-| email                                  | role    |
-| -------------------------------------- | ------- |
-| info@peninsulaequine.systems           | admin   |
-| josh.dales@peninsulaequine.systems     | preview |
-
-To add/change a staff role, edit the `INSERT … VALUES` block inside `seed_staff_roles()` via a new migration. Do **not** insert into `staff_role_allowlist` ad-hoc — the seeder will overwrite drift on the next run.
-
-## Manual re-run (only if needed)
-
-In Cloud → Run SQL, **Live** selected:
-
+## Manual re-run (Cloud → Run SQL, Live)
 ```sql
 SELECT * FROM public.seed_staff_roles();
 ```
+Returns one row per allowlisted email with `out_backfilled = true` once the user has signed in at least once.
 
-Returns one row per allowlisted email with `out_backfilled = true` once that user has signed in at least once.
+## Add a new staff member
+```sql
+INSERT INTO public.staff_role_allowlist (email, role)
+VALUES ('new.person@peninsulaequine.systems', 'admin')
+ON CONFLICT (email) DO UPDATE SET role = EXCLUDED.role;
+
+SELECT public.seed_staff_roles();
+```
 
 ## Verification
-
 ```sql
 SELECT email, role FROM public.staff_role_allowlist ORDER BY email;
 
