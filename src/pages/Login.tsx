@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate, useSearchParams, Link } from "react-router-dom";
+import { Navigate, useSearchParams, useLocation, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { resolveLandingPath, authLog } from "@/lib/authRouting";
 import { Layout } from "@/components/layout/Layout";
