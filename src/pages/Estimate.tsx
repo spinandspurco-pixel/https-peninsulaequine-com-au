@@ -260,6 +260,8 @@ function EstimateCTA() {
 // ── Page ─────────────────────────────────────────────
 export default function Estimate() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  useEffect(() => { trackQuoteConversion(); }, []);
+
 
   return (
     <Layout>
