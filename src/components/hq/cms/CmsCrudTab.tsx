@@ -72,7 +72,7 @@ export function CmsCrudTab<TRow extends { id: string }, TInsert extends Record<s
   const openNew = () => {
     setErrors({});
     setEdit({
-      ...(config.defaults as Partial<TRow>),
+      ...(config.defaults as unknown as Partial<TRow>),
       [config.activeField]: true as never,
       ...(config.sortField ? ({ [config.sortField]: items.length } as Partial<TRow>) : {}),
     });
