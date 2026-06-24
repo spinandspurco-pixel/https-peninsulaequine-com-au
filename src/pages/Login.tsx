@@ -152,12 +152,66 @@ export default function Login() {
             <Button
               type="button"
               variant="outline"
+              disabled={isLoading}
               className="w-full h-11 border-border/50 hover:border-accent/30 hover:bg-accent/5 text-sm rounded-sm transition-all duration-200"
               onClick={async () => {
-                const { error } = await lovable.auth.signInWithOAuth("google", {
+                const inIframe = (() => {
+                  try { return window.self !== window.top; } catch { return true; }
+                })();
+                authLog("oauth:google:click", {
                   redirect_uri: window.location.origin,
+                  href: window.location.href,
+                  inIframe,
                 });
-                if (error) toast.error("Google sign-in failed.");
+                setIsLoading(true);
+                // Safety net: if neither error, redirect, nor SIGNED_IN
+                // happens within 15s, clear the spinner and surface an error
+                // so the button never spins forever on a swallowed popup.
+                const watchdog = window.setTimeout(() => {
+                  authLog("oauth:google:watchdog-timeout", { inIframe });
+                  setIsLoading(false);
+                  toast.error(
+                    inIframe
+                      ? "Google sign-in didn't complete inside the preview. Open the site in a new tab and try again."
+                      : "Google sign-in didn't complete. Check that pop-ups are allowed and try again."
+                  );
+                }, 15000);
+                try {
+                  const result = await lovable.auth.signInWithOAuth("google", {
+                    redirect_uri: window.location.origin,
+                  });
+                  authLog("oauth:google:result", {
+                    hasError: !!result?.error,
+                    errorMsg: result?.error?.message,
+                    redirected: !!result?.redirected,
+                  });
+                  if (result?.error) {
+                    window.clearTimeout(watchdog);
+                    setIsLoading(false);
+                    toast.error(
+                      result.error.message
+                        ? `Google sign-in failed: ${result.error.message}`
+                        : "Google sign-in failed."
+                    );
+                    return;
+                  }
+                  if (result?.redirected) {
+                    // Browser is navigating away — keep spinner, drop watchdog.
+                    window.clearTimeout(watchdog);
+                    return;
+                  }
+                  // Popup flow: tokens already set. The session-driven effect
+                  // above will navigate once `ready && user`. Clear the
+                  // watchdog; spinner stays until that redirect lands.
+                  window.clearTimeout(watchdog);
+                } catch (err) {
+                  window.clearTimeout(watchdog);
+                  authLog("oauth:google:throw", {
+                    msg: err instanceof Error ? err.message : String(err),
+                  });
+                  setIsLoading(false);
+                  toast.error("Google sign-in failed unexpectedly.");
+                }
               }}
             >
               <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
