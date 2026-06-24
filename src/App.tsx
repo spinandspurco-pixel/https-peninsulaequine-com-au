@@ -49,6 +49,7 @@ const DnsPublish = lazy(() => import("./pages/DnsPublish"));
 const DnsWizard = lazy(() => import("./pages/DnsWizard"));
 const DnsStatus = lazy(() => import("./pages/DnsStatus"));
 const HqWhoAmI = lazy(() => import("./pages/HqWhoAmI"));
+const HqStaffAllowlist = lazy(() => import("./pages/HqStaffAllowlist"));
 
 
 const BookLesson = lazy(() => import("./pages/BookLesson"));
