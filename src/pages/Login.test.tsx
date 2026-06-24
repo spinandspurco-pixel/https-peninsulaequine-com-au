@@ -1,14 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import Login from "./Login";
 
 type MockAuth = {
-  user: { id: string } | null;
+  user: { id: string; email?: string } | null;
   roles: string[];
   ready: boolean;
+  rolesLoading: boolean;
   signIn: (e: string, p: string) => Promise<{ error: null | Error }>;
-  signOut: () => Promise<{ error: null }>;
+  signOut: ReturnType<typeof vi.fn>;
 };
 
 let mockAuth: MockAuth;
@@ -47,8 +49,9 @@ describe("Login route guard", () => {
       user: null,
       roles: [],
       ready: true,
+      rolesLoading: false,
       signIn: async () => ({ error: null }),
-      signOut: async () => ({ error: null }),
+      signOut: vi.fn(async () => ({ error: null })),
     };
   });
 
@@ -69,8 +72,6 @@ describe("Login route guard", () => {
   it("honours ?redirect= when authenticated admin lands on /login", () => {
     mockAuth = { ...mockAuth, user: { id: "u1" }, roles: ["admin"] };
     renderAt("/login?redirect=%2Fhq%2Fcms");
-    // We don't register /hq/cms in the test router, but the absence of
-    // the form proves the render-time Navigate fired instead of the form.
     expect(screen.queryByLabelText(/password/i)).not.toBeInTheDocument();
   });
 
@@ -80,4 +81,43 @@ describe("Login route guard", () => {
     expect(screen.getByText(/authenticating/i)).toBeInTheDocument();
     expect(screen.queryByLabelText(/password/i)).not.toBeInTheDocument();
   });
+
+  it("waits on the role lookup instead of rendering a blank Navigate loop", () => {
+    mockAuth = { ...mockAuth, user: { id: "u1" }, roles: [], rolesLoading: true };
+    renderAt("/login");
+    expect(screen.getByText(/resolving access/i)).toBeInTheDocument();
+    expect(screen.queryByLabelText(/password/i)).not.toBeInTheDocument();
+  });
+
+  it("renders the No staff access panel for signed-in users with no role", () => {
+    mockAuth = {
+      ...mockAuth,
+      user: { id: "u1", email: "stale@peninsulaequine.org" },
+      roles: [],
+      rolesLoading: false,
+    };
+    renderAt("/login");
+    // Panel content
+    expect(screen.getByRole("heading", { name: /no staff access/i })).toBeInTheDocument();
+    expect(screen.getByText(/stale@peninsulaequine\.org/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /sign out/i })).toBeInTheDocument();
+    // Login form must NOT be rendered (page must never go blank either —
+    // the heading above proves something rendered).
+    expect(screen.queryByLabelText(/password/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /^sign in$/i })).not.toBeInTheDocument();
+  });
+
+  it("Sign out button on the no-access panel invokes useAuth().signOut()", async () => {
+    const user = userEvent.setup();
+    mockAuth = {
+      ...mockAuth,
+      user: { id: "u1", email: "stale@peninsulaequine.org" },
+      roles: [],
+      rolesLoading: false,
+    };
+    renderAt("/login");
+    await user.click(screen.getByRole("button", { name: /sign out/i }));
+    expect(mockAuth.signOut).toHaveBeenCalledTimes(1);
+  });
 });
+
