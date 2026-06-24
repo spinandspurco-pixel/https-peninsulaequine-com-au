@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { clearLocalAuthCacheAndSignOut } from "@/lib/authCache";
 
 /**
  * /hq/whoami — diagnostic page to verify the current signed-in user's
@@ -111,6 +112,9 @@ export default function HqWhoAmI() {
         <button className="underline opacity-60" onClick={() => void signOut()}>
           Sign out
         </button>
+        <button className="underline opacity-60" onClick={() => void clearLocalAuthCacheAndSignOut()}>
+          Clear local auth cache + sign out
+        </button>
       </section>
 
       {bootstrapResult && (
@@ -119,6 +123,7 @@ export default function HqWhoAmI() {
 
       <section className="border-t border-foreground/10 pt-4 text-xs opacity-60 space-y-1">
         <p>If "useAuth" and "direct query" disagree, the client cache is stale — refetch.</p>
+        <p>If production still says "No staff access" after roles are fixed, use "Clear local auth cache + sign out", then sign in again.</p>
         <p>If both are empty but you are allowlisted, click "Run bootstrap_user_role()".</p>
         <p>If bootstrap returns [] but you should have a role, the allowlist row for your exact email is missing in Live.</p>
       </section>

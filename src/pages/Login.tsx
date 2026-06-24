@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { Eye, EyeOff, Loader2, ArrowLeft, Lock } from "lucide-react";
 import { lovable } from "@/integrations/lovable/index";
 import { StaffPortalFrame } from "@/components/StaffPortalFrame";
+import { clearLocalAuthCacheAndSignOut } from "@/lib/authCache";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -86,6 +87,14 @@ export default function Login() {
                   className="text-xs font-mono uppercase tracking-[0.25em] text-foreground hover:text-accent transition-colors"
                 >
                   Sign out
+                </button>
+                <span className="text-muted-foreground/40">·</span>
+                <button
+                  type="button"
+                  onClick={() => void clearLocalAuthCacheAndSignOut()}
+                  className="text-xs font-mono uppercase tracking-[0.25em] text-foreground hover:text-accent transition-colors"
+                >
+                  Clear cache + sign out
                 </button>
               </div>
             </div>
