@@ -10,6 +10,7 @@ import { StickySubpageCTA } from "@/components/StickySubpageCTA";
 import { ServicePricingCalculator } from "@/components/ServicePricingCalculator";
 import { ParallaxCTA } from "@/components/ParallaxCTA";
 import { services, siteConfig } from "@/data/content";
+import { useManagedServicesMap } from "@/lib/managedContent";
 import { servicePricingTiers, serviceFaqs } from "@/data/servicePricingFaq";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
@@ -388,10 +389,37 @@ function ConstructionProcess() {
 
 export default function ServiceDetail() {
   const { slug } = useParams<{ slug: string }>();
-  const service = services.find((s) => s.id === slug);
+  const hardcoded = services.find((s) => s.id === slug);
   const [showGallery, setShowGallery] = useState(false);
+  const { data: managedServices } = useManagedServicesMap();
 
-  if (!service) return <Navigate to="/services" replace />;
+  if (!hardcoded) return <Navigate to="/services" replace />;
+
+  // Overlay editable text/feature fields from managed_services while keeping
+  // hardcoded imagery, pricing tiers and FAQs intact.
+  const managed = managedServices?.[hardcoded.id];
+  const service = managed
+    ? {
+        ...hardcoded,
+        title:
+          (managed.title && managed.title.trim()) || hardcoded.title,
+        shortDescription:
+          (managed.summary && managed.summary.trim()) ||
+          (managed.short_description && managed.short_description.trim()) ||
+          hardcoded.shortDescription,
+        description:
+          (managed.body && managed.body.trim()) ||
+          (managed.description && managed.description.trim()) ||
+          hardcoded.description,
+        features:
+          managed.features && managed.features.length > 0
+            ? managed.features
+            : hardcoded.features,
+        startingPrice:
+          (managed.starting_price && managed.starting_price.trim()) ||
+          hardcoded.startingPrice,
+      }
+    : hardcoded;
 
   const tiers = servicePricingTiers[service.id] || [];
   const faqs = serviceFaqs[service.id] || [];

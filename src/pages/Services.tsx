@@ -8,6 +8,18 @@ import { setActiveServiceChapter } from "@/hooks/useActiveServiceChapter";
 import { DraftTicks, DraftPlanBackdrop } from "@/components/draft";
 import { WholePropertyInquiryForm } from "@/components/services/WholePropertyInquiryForm";
 import { PageHandoff } from "@/components/architecture";
+import { useManagedServicesMap, overlayService } from "@/lib/managedContent";
+
+// Bridge between the chapter-grouped public slugs and the flat
+// managed_services.slug column. When a chapter service has an alias the CMS
+// row will overlay its text fields; unaliased entries stay fully hardcoded.
+const SERVICE_SLUG_ALIASES: Record<string, string> = {
+  "covered-arenas": "arena-construction",
+  "stables-barn-structures": "barn-construction",
+  "groundworks-site-preparation": "infrastructure",
+  "drainage-surfacing": "infrastructure",
+  "equine-infrastructure": "fencing",
+};
 
 
 
@@ -164,6 +176,7 @@ function measureHeaderHeight(): number {
 
 export default function Services() {
   const { hash } = useLocation();
+  const { data: managedServices } = useManagedServicesMap();
 
   useEffect(() => {
     document.title = "Capabilities | Peninsula Equine";
@@ -335,8 +348,13 @@ export default function Services() {
 
                   {/* Services within chapter */}
                   <div className="space-y-[clamp(4rem,3rem+4vw,7rem)]">
-                    {chapter.services.map((s, i) => {
+                    {chapter.services.map((rawService, i) => {
                       const reversed = i % 2 === 1;
+                      const managedSlug =
+                        SERVICE_SLUG_ALIASES[rawService.slug] ?? rawService.slug;
+                      const s = managedServices
+                        ? overlayService(rawService, managedServices[managedSlug])
+                        : rawService;
                       return (
                         <RevealOnScroll key={s.k} direction="up">
                           <div

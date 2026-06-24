@@ -8,6 +8,11 @@ import {
   getProjectImage,
   getProjectImageAlt,
 } from "@/config/projectImagery";
+import {
+  useManagedProjects,
+  overlayProject,
+  findProjectByCodeFamily,
+} from "@/lib/managedContent";
 
 /* Single grading filter — matches the new --grade-blueprint token */
 const GRADE = "brightness(0.84) contrast(1.08) saturate(0.78)";
@@ -100,13 +105,11 @@ const projects: Project[] = [
 ];
 
 
-const [feature, ...rest] = projects;
-
 /* ─────────────────────────────────────────────────────────────
    ACT I — Silent overture
    Full-bleed first frame. No buttons. No counters above the fold.
    ────────────────────────────────────────────────────────────── */
-function Overture() {
+function Overture({ feature, projectCount }: { feature: Project; projectCount: number }) {
   return (
     <section className="relative h-[88svh] min-h-[640px] w-full overflow-hidden bg-background">
       <LensBlurImage
@@ -141,7 +144,7 @@ function Overture() {
           PE / 07 — Selected Works
         </span>
         <span className="hidden sm:block font-mono text-[10px] uppercase tracking-[0.5em] text-foreground/35">
-          {projects.length.toString().padStart(2, "0")} Works · 2024 — 2025
+          {projectCount.toString().padStart(2, "0")} Works · 2024 — 2025
         </span>
       </div>
 
@@ -187,7 +190,7 @@ function Overture() {
    ACT II — Index Manifest
    A drafting-table contents page. Hover reveals the chapter line.
    ────────────────────────────────────────────────────────────── */
-function IndexManifest() {
+function IndexManifest({ projects }: { projects: Project[] }) {
   return (
     <section className="relative border-t border-accent/10 pe-pause-md">
       <div className="section-container max-w-[1280px]">
@@ -498,6 +501,8 @@ function Closing() {
 }
 
 export default function SelectedWorks() {
+  const { data: managedProjects } = useManagedProjects();
+
   useEffect(() => {
     document.title = "Selected Works | Peninsula Equine";
     const meta = document.querySelector('meta[name="description"]');
@@ -512,11 +517,20 @@ export default function SelectedWorks() {
     };
   }, []);
 
+  // Overlay hardcoded entries with managed_projects rows where the code
+  // family (e.g. `PE-MR`) matches. Imagery, crop and slug stay hardcoded.
+  const resolvedProjects: Project[] = managedProjects
+    ? projects.map((p) =>
+        overlayProject(p, findProjectByCodeFamily(p.code, managedProjects)),
+      )
+    : projects;
+  const [feature, ...rest] = resolvedProjects;
+
   return (
     <Layout>
       <main className="bg-background text-foreground type-architectural overflow-x-clip">
-        <Overture />
-        <IndexManifest />
+        <Overture feature={feature} projectCount={resolvedProjects.length} />
+        <IndexManifest projects={resolvedProjects} />
         <ProjectChapter project={feature} index={1} isFeature />
         <Pause mark="Intermission · 001">
           Function before noise. Resolved before presented.
