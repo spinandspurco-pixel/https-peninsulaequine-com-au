@@ -2545,6 +2545,17 @@ export type Database = {
           out_role: Database["public"]["Enums"]["app_role"]
         }[]
       }
+      verify_staff_seed: {
+        Args: never
+        Returns: {
+          allowlist_present: boolean
+          auth_uid: string
+          auth_user_present: boolean
+          email: string
+          expected_role: Database["public"]["Enums"]["app_role"]
+          user_role_present: boolean
+        }[]
+      }
     }
     Enums: {
       app_role:
