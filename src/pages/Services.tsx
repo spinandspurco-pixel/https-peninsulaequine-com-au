@@ -8,6 +8,18 @@ import { setActiveServiceChapter } from "@/hooks/useActiveServiceChapter";
 import { DraftTicks, DraftPlanBackdrop } from "@/components/draft";
 import { WholePropertyInquiryForm } from "@/components/services/WholePropertyInquiryForm";
 import { PageHandoff } from "@/components/architecture";
+import { useManagedServicesMap, overlayService } from "@/lib/managedContent";
+
+// Bridge between the chapter-grouped public slugs and the flat
+// managed_services.slug column. When a chapter service has an alias the CMS
+// row will overlay its text fields; unaliased entries stay fully hardcoded.
+const SERVICE_SLUG_ALIASES: Record<string, string> = {
+  "covered-arenas": "arena-construction",
+  "stables-barn-structures": "barn-construction",
+  "groundworks-site-preparation": "infrastructure",
+  "drainage-surfacing": "infrastructure",
+  "equine-infrastructure": "fencing",
+};
 
 
 
