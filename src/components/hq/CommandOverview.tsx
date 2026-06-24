@@ -1,16 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useHqMode } from "@/hooks/useHqMode";
+import { useAuth } from "@/hooks/useAuth";
 import { format, formatDistanceToNow } from "date-fns";
 import { useHqMount, withHqTimeout } from "@/lib/hqDiagnostics";
 import { MentionsCard } from "@/components/hq/MentionsCard";
 
-interface Metric {
-  label: string;
-  value: number | string;
-  hint?: string;
-}
+// ──────────────────────────────────────────────────────────────────────────────
+// Command Centre
+// Foundation: cinematic "site office" — calm density, blueprint restraint,
+// living signal. Not a SaaS dashboard. Sections render in a deliberate sequence:
+//   Morning Brief → Today's Operations → Project Spotlight → Recent Activity
+//   → Quiet rail (Mentions + Quick actions) → System Health.
+// ──────────────────────────────────────────────────────────────────────────────
 
 interface ActivityRow {
   id: string;
@@ -20,32 +23,86 @@ interface ActivityRow {
   created_at: string;
 }
 
+interface SpotlightProject {
+  id: string;
+  code: string | null;
+  name: string;
+  location: string | null;
+  status: string | null;
+  next_action: string | null;
+  last_update: string | null;
+  updated_at: string;
+}
+
+interface Signal {
+  enquiries7: number;
+  activeBuilds: number;
+  activeProjects: number;
+  proposalsOut: number;
+  siteVisits: number;
+  completedQ: number;
+}
 
 const SKELETON = "—";
+
+const greetingFor = (hour: number) => {
+  if (hour < 5) return "Still up";
+  if (hour < 12) return "Good morning";
+  if (hour < 17) return "Good afternoon";
+  if (hour < 21) return "Good evening";
+  return "Late shift";
+};
+
+const firstNameFrom = (user: { email?: string | null; user_metadata?: Record<string, unknown> } | null) => {
+  if (!user) return "Operator";
+  const meta = (user.user_metadata ?? {}) as Record<string, unknown>;
+  const display = (meta.full_name as string) || (meta.name as string) || "";
+  if (display) return display.split(/\s+/)[0];
+  const local = (user.email ?? "").split("@")[0] ?? "";
+  if (!local) return "Operator";
+  const cleaned = local.replace(/[._-]+/g, " ").trim();
+  const first = cleaned.split(/\s+/)[0] ?? "";
+  return first ? first.charAt(0).toUpperCase() + first.slice(1) : "Operator";
+};
+
+const formatStatus = (status: string | null) => {
+  if (!status) return "Active";
+  return status.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+};
 
 export function CommandOverview() {
   const navigate = useNavigate();
   const { isPreview } = useHqMode();
+  const { user } = useAuth();
   useHqMount("CommandOverview");
-  const [metrics, setMetrics] = useState<Metric[]>([
-    { label: "Active projects", value: SKELETON },
-    { label: "New applications", value: SKELETON, hint: "last 7 days" },
-    { label: "Site visits", value: SKELETON },
-    { label: "Proposals", value: SKELETON },
-    { label: "Active builds", value: SKELETON },
-    { label: "Completed projects", value: SKELETON, hint: "this quarter" },
-  ]);
+
+  const [signal, setSignal] = useState<Signal>({
+    enquiries7: 0,
+    activeBuilds: 0,
+    activeProjects: 0,
+    proposalsOut: 0,
+    siteVisits: 0,
+    completedQ: 0,
+  });
+  const [signalReady, setSignalReady] = useState(false);
+  const [spotlight, setSpotlight] = useState<SpotlightProject | null>(null);
   const [activity, setActivity] = useState<ActivityRow[]>([]);
   const [loadState, setLoadState] = useState<"idle" | "loading" | "ok" | "timeout" | "error">("loading");
   const [reloadKey, setReloadKey] = useState(0);
+
+  const now = useMemo(() => new Date(), [reloadKey]);
+  const firstName = useMemo(() => firstNameFrom(user), [user]);
+  const greeting = greetingFor(now.getHours());
 
   useEffect(() => {
     let cancelled = false;
 
     const load = async () => {
       setLoadState("loading");
+      setSignalReady(false);
       const since7 = new Date(Date.now() - 7 * 86400_000).toISOString();
       const sinceQ = new Date(Date.now() - 90 * 86400_000).toISOString();
+      const today = new Date().toISOString().slice(0, 10);
 
       const queries = Promise.all([
         supabase.from("jobs").select("id", { count: "exact", head: true }).eq("status", "active"),
@@ -53,7 +110,7 @@ export function CommandOverview() {
         supabase
           .from("site_assessments")
           .select("id", { count: "exact", head: true })
-          .gte("slot_date", new Date().toISOString().slice(0, 10)),
+          .gte("slot_date", today),
         supabase.from("quotes").select("id", { count: "exact", head: true }).eq("status", "sent"),
         supabase.from("managed_projects").select("id", { count: "exact", head: true }).eq("status", "in_progress"),
         supabase
@@ -65,8 +122,14 @@ export function CommandOverview() {
           .from("activity_log")
           .select("id, title, action_type, entity_type, created_at")
           .order("created_at", { ascending: false })
-          .limit(8),
+          .limit(6),
         supabase.from("managed_projects").select("id", { count: "exact", head: true }),
+        supabase
+          .from("managed_projects")
+          .select("id, code, name, location, status, next_action, last_update, updated_at")
+          .in("status", ["in_progress", "active", "pre_construction"])
+          .order("updated_at", { ascending: false })
+          .limit(1),
       ]);
 
       const result = await withHqTimeout("CommandOverview:load", queries);
@@ -85,17 +148,20 @@ export function CommandOverview() {
         completed,
         activityLog,
         managedActive,
+        spotlightRes,
       ] = result.data;
 
-      setMetrics([
-        { label: "Active projects", value: (activeProjects.count ?? managedActive.count) ?? 0 },
-        { label: "New applications", value: newEnquiries.count ?? 0, hint: "last 7 days" },
-        { label: "Site visits", value: siteVisits.count ?? 0 },
-        { label: "Proposals", value: proposals.count ?? 0 },
-        { label: "Active builds", value: inProgress.count ?? 0 },
-        { label: "Completed projects", value: completed.count ?? 0, hint: "this quarter" },
-      ]);
+      setSignal({
+        enquiries7: newEnquiries.count ?? 0,
+        activeBuilds: inProgress.count ?? 0,
+        activeProjects: (activeProjects.count ?? managedActive.count) ?? 0,
+        proposalsOut: proposals.count ?? 0,
+        siteVisits: siteVisits.count ?? 0,
+        completedQ: completed.count ?? 0,
+      });
+      setSignalReady(true);
       setActivity(activityLog.data ?? []);
+      setSpotlight(((spotlightRes.data ?? [])[0] as SpotlightProject | undefined) ?? null);
       setLoadState("ok");
     };
 
@@ -105,17 +171,41 @@ export function CommandOverview() {
     };
   }, [reloadKey]);
 
+  // ─── Narrative brief: short, human, opinionated about today ───────────────
+  const briefLines = useMemo(() => {
+    if (!signalReady) return [] as string[];
+    const lines: string[] = [];
+    if (signal.enquiries7 === 0) {
+      lines.push("No new enquiries in the last seven days. The line is quiet.");
+    } else if (signal.enquiries7 === 1) {
+      lines.push("One new enquiry in the last seven days.");
+    } else {
+      lines.push(`${signal.enquiries7} new enquiries in the last seven days.`);
+    }
+    if (signal.activeBuilds > 0) {
+      lines.push(
+        `${signal.activeBuilds} build${signal.activeBuilds === 1 ? "" : "s"} on the ground, ${signal.proposalsOut} proposal${signal.proposalsOut === 1 ? "" : "s"} out.`,
+      );
+    } else if (signal.proposalsOut > 0) {
+      lines.push(`${signal.proposalsOut} proposal${signal.proposalsOut === 1 ? "" : "s"} sitting with clients.`);
+    }
+    if (signal.siteVisits > 0) {
+      lines.push(`${signal.siteVisits} site visit${signal.siteVisits === 1 ? "" : "s"} on the schedule.`);
+    }
+    return lines;
+  }, [signal, signalReady]);
+
   const loadBanner =
     loadState === "timeout" || loadState === "error" ? (
-      <div className="mb-6 border border-accent/25 px-4 py-3 flex items-center justify-between gap-4">
-        <p className="text-[11px] text-muted-foreground/75">
+      <div className="mb-10 border-y border-accent/20 px-1 py-3 flex items-center justify-between gap-4">
+        <p className="text-[11px] text-muted-foreground/70 font-light">
           {loadState === "timeout"
-            ? "Command Overview took longer than 8s to load."
-            : "Command Overview failed to load."}
+            ? "Brief took longer than expected to load."
+            : "Brief failed to load."}
         </p>
         <button
           onClick={() => setReloadKey((k) => k + 1)}
-          className="text-[10px] uppercase tracking-[0.22em] text-foreground/85 hover:text-accent transition-colors"
+          className="text-[10px] uppercase tracking-[0.28em] text-foreground/80 hover:text-accent transition-colors"
         >
           Retry →
         </button>
@@ -123,144 +213,277 @@ export function CommandOverview() {
     ) : null;
 
   const quickActions = [
-    { label: "New enquiry", action: () => navigate("/contact"), locked: false },
-    { label: "Create quote", action: () => navigate("/hq?compose=quote"), locked: isPreview },
-    {
-      label: "Log site visit",
-      action: () =>
-        document.getElementById("zone-pipeline")?.scrollIntoView({ behavior: "smooth" }),
-      locked: false,
-    },
-    {
-      label: "Open pipeline",
-      action: () =>
-        document.getElementById("zone-pipeline")?.scrollIntoView({ behavior: "smooth" }),
-      locked: false,
-    },
-    {
-      label: "Open applications",
-      action: () =>
-        document.getElementById("zone-applications")?.scrollIntoView({ behavior: "smooth" }),
-      locked: false,
-    },
+    { label: "Open pipeline", action: () => document.getElementById("zone-pipeline")?.scrollIntoView({ behavior: "smooth" }), locked: false },
+    { label: "Open applications", action: () => document.getElementById("zone-applications")?.scrollIntoView({ behavior: "smooth" }), locked: false },
+    { label: "Log site visit", action: () => document.getElementById("zone-pipeline")?.scrollIntoView({ behavior: "smooth" }), locked: false },
+    { label: "Compose quote", action: () => navigate("/hq?compose=quote"), locked: isPreview },
   ];
 
-  const byLabel = (label: string) => metrics.find((m) => m.label === label)!;
-  const groups: { heading: string; items: Metric[] }[] = [
-    {
-      heading: "Work",
-      items: [byLabel("Active builds"), byLabel("Active projects"), byLabel("New applications")],
-    },
-    {
-      heading: "Performance",
-      items: [byLabel("Proposals"), byLabel("Site visits"), byLabel("Completed projects")],
-    },
+  const opsSignals: { label: string; value: number | string; hint?: string }[] = [
+    { label: "Enquiries", value: signalReady ? signal.enquiries7 : SKELETON, hint: "last 7 days" },
+    { label: "Active builds", value: signalReady ? signal.activeBuilds : SKELETON },
+    { label: "Proposals out", value: signalReady ? signal.proposalsOut : SKELETON },
+    { label: "Site visits", value: signalReady ? signal.siteVisits : SKELETON, hint: "upcoming" },
   ];
-
-  const renderMetric = (m: Metric, i: number, total: number) => (
-    <div
-      key={m.label}
-      className={`px-5 py-6 border-border/10 ${i < total - 1 ? "border-r" : ""}`}
-    >
-      <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-3">
-        {m.label}
-      </p>
-      <p className="font-serif text-3xl font-light text-foreground/95 leading-none">
-        {m.value}
-      </p>
-      {m.hint && (
-        <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/40 mt-2">
-          {m.hint}
-        </p>
-      )}
-    </div>
-  );
 
   return (
-    <div className="space-y-14">
-      {loadBanner}
-      {/* Grouped metrics — project delivery framing */}
-      <div className="space-y-10">
-        {groups.map((g) => (
-          <div key={g.heading}>
-            <div className="flex items-baseline gap-3 mb-4">
-              <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/50">
-                {g.heading}
-              </span>
-              <div className="flex-1 h-px bg-border/10" />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 border-t border-b border-border/10">
-              {g.items.map((m, i) => renderMetric(m, i, g.items.length))}
-            </div>
-          </div>
-        ))}
-      </div>
+    <div className="relative">
+      {/* ── Drafting backdrop ─────────────────────────────────────────────── */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 -top-6 bottom-0 opacity-[0.03]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
+          backgroundSize: "80px 80px",
+          color: "hsl(var(--foreground))",
+        }}
+      />
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr,auto] gap-12 lg:gap-20">
-        {/* Activity feed */}
-        <div>
-          <div className="flex items-baseline gap-3 mb-6">
-            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40">
-              Activity
-            </span>
-            <span className="text-[10px] text-muted-foreground/35">
-              {activity.length ? `Last ${activity.length}` : ""}
-            </span>
-          </div>
+      <div className="relative space-y-20">
+        {loadBanner}
 
-          {activity.length === 0 ? (
-            <p className="text-[12px] text-muted-foreground/45 italic">
-              No recorded activity yet. New enquiries and quotes will appear here.
+        {/* ════════════════════════════════════════════════════════════════ */}
+        {/* MORNING BRIEF                                                    */}
+        {/* ════════════════════════════════════════════════════════════════ */}
+        <section className="grid grid-cols-1 lg:grid-cols-[180px,1fr] gap-x-10 gap-y-6">
+          <div className="space-y-2">
+            <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/55">Brief</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/45">
+              {format(now, "EEE d LLL · HH:mm")}
             </p>
-          ) : (
-            <ul className="space-y-px border-l border-accent/15 pl-6">
-              {activity.map((row) => (
-                <li key={row.id} className="py-3 group">
-                  <div className="flex items-baseline justify-between gap-6">
-                    <p className="text-[13px] text-foreground/85 font-light leading-relaxed">
-                      {row.title}
-                      {row.entity_type && (
-                        <span className="ml-3 font-mono text-[10px] uppercase tracking-[0.2em] text-accent/45">
-                          {row.entity_type}
-                        </span>
-                      )}
-                    </p>
-                    <time
-                      dateTime={row.created_at}
-                      title={format(new Date(row.created_at), "PPpp")}
-                      className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/40 whitespace-nowrap"
-                    >
-                      {formatDistanceToNow(new Date(row.created_at), { addSuffix: true })}
-                    </time>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        {/* Quick actions + mentions rail */}
-        <div className="lg:w-64 space-y-8">
-          {!isPreview && <div id="mentions" className="scroll-mt-24"><MentionsCard /></div>}
-          <div>
-            <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent/40 mb-6">
-              Quick actions
-            </p>
-            <ul className="space-y-3">
-              {quickActions.map((a) => (
-                <li key={a.label}>
-                  <button
-                    onClick={a.action}
-                    disabled={a.locked}
-                    className="text-[12px] text-foreground/75 hover:text-foreground transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-left"
+          </div>
+          <div className="space-y-5">
+            <h2 className="font-serif text-3xl sm:text-4xl font-light text-foreground/95 leading-[1.05] tracking-tight">
+              {greeting}, <span className="italic text-foreground">{firstName}</span>.
+            </h2>
+            {briefLines.length > 0 ? (
+              <div className="space-y-1.5 max-w-xl">
+                {briefLines.map((line) => (
+                  <p
+                    key={line}
+                    className="text-[14px] sm:text-[15px] font-light text-foreground/65 leading-relaxed"
                   >
-                    → {a.label}
-                  </button>
-                </li>
-              ))}
-            </ul>
+                    {line}
+                  </p>
+                ))}
+              </div>
+            ) : (
+              <p className="text-[14px] font-light text-muted-foreground/50 italic">
+                Reading the day…
+              </p>
+            )}
           </div>
-        </div>
+        </section>
+
+        {/* ════════════════════════════════════════════════════════════════ */}
+        {/* TODAY'S OPERATIONS                                               */}
+        {/* ════════════════════════════════════════════════════════════════ */}
+        <section className="grid grid-cols-1 lg:grid-cols-[180px,1fr] gap-x-10 gap-y-6">
+          <div className="space-y-2">
+            <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/55">Today</p>
+            <div className="h-px w-10 bg-border/30" />
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 border-t border-border/15">
+            {opsSignals.map((s, i) => (
+              <div
+                key={s.label}
+                className={`py-6 pr-6 ${i < opsSignals.length - 1 ? "sm:border-r border-border/10" : ""}`}
+              >
+                <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-accent/45 mb-3">
+                  {s.label}
+                </p>
+                <p className="font-serif text-[34px] font-light text-foreground/95 leading-none tabular-nums">
+                  {typeof s.value === "number" ? String(s.value).padStart(2, "0") : s.value}
+                </p>
+                {s.hint && (
+                  <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/40 mt-2">
+                    {s.hint}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════════════════════════════════ */}
+        {/* PROJECT SPOTLIGHT — the living hero                              */}
+        {/* ════════════════════════════════════════════════════════════════ */}
+        <section className="grid grid-cols-1 lg:grid-cols-[180px,1fr] gap-x-10 gap-y-6">
+          <div className="space-y-2">
+            <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/55">Spotlight</p>
+            <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40">
+              On the ground
+            </p>
+          </div>
+
+          <div className="relative -mr-[3rem] sm:-mr-[3rem]">
+            <div className="border-t border-b border-border/15 pl-1 pr-12 py-10 relative overflow-hidden">
+              {/* Faint blueprint vignette */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 opacity-[0.04]"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
+                  backgroundSize: "24px 24px",
+                  color: "hsl(var(--accent))",
+                  maskImage: "radial-gradient(ellipse at 90% 50%, black 0%, transparent 70%)",
+                }}
+              />
+              {spotlight ? (
+                <div className="relative grid grid-cols-1 sm:grid-cols-[1fr,auto] gap-8 items-end">
+                  <div className="space-y-4">
+                    {spotlight.code && (
+                      <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-accent/55">
+                        {spotlight.code}
+                      </p>
+                    )}
+                    <h3 className="font-serif text-3xl sm:text-4xl font-light text-foreground/95 leading-[1.05] italic tracking-tight">
+                      {spotlight.name}
+                    </h3>
+                    {spotlight.location && (
+                      <p className="text-[12px] uppercase tracking-[0.25em] text-muted-foreground/55">
+                        {spotlight.location}
+                      </p>
+                    )}
+                    {spotlight.last_update && (
+                      <p className="text-[14px] font-light text-foreground/70 leading-relaxed max-w-md pt-2">
+                        {spotlight.last_update}
+                      </p>
+                    )}
+                    {spotlight.next_action && (
+                      <p className="text-[12px] font-light text-muted-foreground/60 italic">
+                        Next — {spotlight.next_action}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-4 sm:text-right">
+                    <div>
+                      <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-accent/45 mb-2">
+                        Status
+                      </p>
+                      <p className="text-[13px] text-foreground/85 font-light">
+                        {formatStatus(spotlight.status)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-accent/45 mb-2">
+                        Last touch
+                      </p>
+                      <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground/55">
+                        {formatDistanceToNow(new Date(spotlight.updated_at), { addSuffix: true })}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => document.getElementById("zone-projects")?.scrollIntoView({ behavior: "smooth" })}
+                      className="text-[11px] uppercase tracking-[0.28em] text-foreground/75 hover:text-accent transition-colors"
+                    >
+                      Open project →
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <p className="relative text-[13px] font-light text-muted-foreground/55 italic">
+                  No active build on the ground today. The next project will surface here as soon as it moves.
+                </p>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════════════════════════════════ */}
+        {/* ACTIVITY + RAIL                                                   */}
+        {/* ════════════════════════════════════════════════════════════════ */}
+        <section className="grid grid-cols-1 lg:grid-cols-[180px,1fr,auto] gap-x-10 gap-y-8">
+          <div className="space-y-2">
+            <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/55">Activity</p>
+            <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40">
+              {activity.length ? `Last ${activity.length}` : "Quiet"}
+            </p>
+          </div>
+
+          <div>
+            {activity.length === 0 ? (
+              <p className="text-[13px] text-muted-foreground/50 italic font-light">
+                Nothing on the wire yet. New enquiries, quotes and project moves will record here.
+              </p>
+            ) : (
+              <ul className="border-l border-accent/20 pl-6 space-y-0">
+                {activity.map((row) => (
+                  <li key={row.id} className="py-3.5 group relative">
+                    <div className="absolute -left-[7px] top-5 h-px w-3 bg-accent/25 group-hover:bg-accent/60 transition-colors" />
+                    <div className="flex items-baseline justify-between gap-6">
+                      <p className="text-[13px] text-foreground/85 font-light leading-relaxed">
+                        {row.title}
+                        {row.entity_type && (
+                          <span className="ml-3 font-mono text-[10px] uppercase tracking-[0.22em] text-accent/45">
+                            {row.entity_type}
+                          </span>
+                        )}
+                      </p>
+                      <time
+                        dateTime={row.created_at}
+                        title={format(new Date(row.created_at), "PPpp")}
+                        className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40 whitespace-nowrap"
+                      >
+                        {formatDistanceToNow(new Date(row.created_at), { addSuffix: true })}
+                      </time>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <aside className="lg:w-56 space-y-10">
+            {!isPreview && (
+              <div id="mentions" className="scroll-mt-24">
+                <MentionsCard />
+              </div>
+            )}
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/55 mb-5">
+                Move
+              </p>
+              <ul className="space-y-3">
+                {quickActions.map((a) => (
+                  <li key={a.label}>
+                    <button
+                      onClick={a.action}
+                      disabled={a.locked}
+                      className="text-[12px] text-foreground/75 hover:text-foreground transition-colors disabled:opacity-30 disabled:cursor-not-allowed text-left"
+                    >
+                      → {a.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </aside>
+        </section>
+
+        {/* ════════════════════════════════════════════════════════════════ */}
+        {/* SYSTEM HEALTH — a single quiet line                              */}
+        {/* ════════════════════════════════════════════════════════════════ */}
+        <section className="border-t border-border/15 pt-5 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
+          <div className="flex items-center gap-3">
+            <span className="relative inline-flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400/40 animate-ping" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400/80" />
+            </span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.32em] text-foreground/70">
+              System nominal
+            </span>
+            <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/45 hidden sm:inline">
+              · {signal.completedQ} completed this quarter
+            </span>
+          </div>
+          <p className="font-mono text-[9px] uppercase tracking-[0.4em] text-muted-foreground/40">
+            From Dirt to Dynasty
+          </p>
+        </section>
       </div>
     </div>
   );
