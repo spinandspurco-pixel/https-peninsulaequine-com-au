@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import {
-  authDebugEnabled,
   getAuthLogEntries,
   subscribeAuthLog,
   type AuthLogEntry,
