@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ArrowRight, CheckCircle, Loader2, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -96,7 +96,6 @@ function SelectField({
 /* ── Main Page ────────────────────────────────────── */
 export default function Contact() {
   const { toast } = useToast();
-  useEffect(() => { trackContactConversion(); }, []);
 
   const [form, setForm] = useState({
     name: "",
@@ -197,6 +196,7 @@ export default function Contact() {
         property_location: form.propertyLocation.trim() || undefined,
         service_count: form.scopes.length,
       });
+      trackContactConversion();
       setSubmitted(true);
       toast({
         title: "Brief received",
