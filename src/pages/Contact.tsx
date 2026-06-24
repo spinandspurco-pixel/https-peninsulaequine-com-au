@@ -588,12 +588,14 @@ export default function Contact() {
                         </h3>
                       </div>
                       <SelectField
+                        id="contact-timeline"
                         label="When does the ground need to be ready?"
                         value={form.timeline}
                         onChange={(v) => set("timeline", v)}
                         options={TIMELINES}
                         placeholder="Select timeline"
                       />
+
                     </div>
                     <div className="space-y-6">
                       <div>
