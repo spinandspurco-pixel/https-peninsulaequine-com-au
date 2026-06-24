@@ -367,7 +367,7 @@ function EditProfileSheet({
 
       const { error } = await supabase
         .from("staff_profiles")
-        .upsert(payload, { onConflict: "user_id" });
+        .upsert(payload as never, { onConflict: "user_id" });
       if (error) throw error;
 
       toast({ title: "Profile saved" });
