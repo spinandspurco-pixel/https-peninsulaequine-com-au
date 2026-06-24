@@ -110,10 +110,24 @@ function useAuthState() {
         setRolesError(null);
         const uid = newSession.user.id;
         dbg("session:schedule-roles-fetch", { source, requestId, uid });
-        setTimeout(() => {
+        setTimeout(async () => {
           dbg("session:roles-fetch-timer-fired", { requestId, current: roleRequestId.current, mounted: mounted.current });
-          if (mounted.current && roleRequestId.current === requestId) void fetchRoles(uid, requestId);
-          else dbg("session:roles-fetch-skipped", { requestId, current: roleRequestId.current, mounted: mounted.current });
+          if (!mounted.current || roleRequestId.current !== requestId) {
+            dbg("session:roles-fetch-skipped", { requestId, current: roleRequestId.current, mounted: mounted.current });
+            return;
+          }
+          // Bootstrap: if this auth user is on the staff allowlist but has no
+          // user_roles row yet, the RPC inserts it. Idempotent and safe to call
+          // on every sign-in. Failure is non-fatal — fetchRoles still runs.
+          try {
+            const t0 = Date.now();
+            const { error: bootErr } = await (supabase as any).rpc("bootstrap_user_role");
+            dbg("roles:bootstrap", { requestId, ms: Date.now() - t0, errorMsg: bootErr?.message });
+          } catch (err) {
+            dbg("roles:bootstrap:exception", { requestId, err: String(err) });
+          }
+          if (!mounted.current || roleRequestId.current !== requestId) return;
+          void fetchRoles(uid, requestId);
         }, 0);
       } else {
         roleRequestId.current += 1;
