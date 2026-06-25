@@ -100,7 +100,8 @@ describe("Login route guard", () => {
     // Panel content
     expect(screen.getByRole("heading", { name: /no staff access/i })).toBeInTheDocument();
     expect(screen.getByText(/stale@peninsulaequine\.org/)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /sign out/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^sign out$/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /clear cache \+ sign out/i })).toBeInTheDocument();
     // Login form must NOT be rendered (page must never go blank either —
     // the heading above proves something rendered).
     expect(screen.queryByLabelText(/password/i)).not.toBeInTheDocument();
@@ -116,7 +117,7 @@ describe("Login route guard", () => {
       rolesLoading: false,
     };
     renderAt("/login");
-    await user.click(screen.getByRole("button", { name: /sign out/i }));
+    await user.click(screen.getByRole("button", { name: /^sign out$/i }));
     expect(mockAuth.signOut).toHaveBeenCalledTimes(1);
   });
 });
