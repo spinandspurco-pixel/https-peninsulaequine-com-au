@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useHqMode } from "@/hooks/useHqMode";
 import { Layout } from "@/components/layout/Layout";
 import { hqLog, useHqMount, HQ_DEFAULT_TIMEOUT_MS } from "@/lib/hqDiagnostics";
-import { HqPreviewBanner } from "@/components/hq/HqPreviewBanner";
+
 import { CommandOverview } from "@/components/hq/CommandOverview";
 import { ApplicationsInbox } from "@/components/hq/ApplicationsInbox";
 import { ProjectsBoard } from "@/components/hq/ProjectsBoard";
