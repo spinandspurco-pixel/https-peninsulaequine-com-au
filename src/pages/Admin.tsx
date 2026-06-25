@@ -155,33 +155,8 @@ export default function Admin() {
               </header>
 
 
-              {/* Quick rail */}
-              <div className="border-t border-border/10">
-                <div className="max-w-5xl mx-auto px-6 py-4">
-                  <div className="flex items-center gap-8 overflow-x-auto">
-                    {[
-                      { id: "zone-overview", label: "01 · Command Centre" },
-                      { id: "zone-pipeline", label: "02 · Pipeline" },
-                      { id: "zone-applications", label: "03 · Applications" },
-                      { id: "zone-content", label: "04 · Content" },
-                      { id: "zone-projects", label: "05 · Projects" },
-                      ...(!isPreview
-                        ? [{ id: "zone-preview", label: "06 · Client Preview" }]
-                        : []),
-                    ].map((item) => (
-                      <button
-                        key={item.id}
-                        onClick={() =>
-                          document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth" })
-                        }
-                        className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/45 hover:text-foreground/80 transition-colors whitespace-nowrap"
-                      >
-                        {item.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              {/* Numbered scroll strip removed (C.1c): HqNav is the single
+                  source of HQ navigation. Breadcrumbs handle context. */}
             </>
           );
         })()}
