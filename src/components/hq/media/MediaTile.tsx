@@ -7,7 +7,7 @@ interface Props {
   hasSuggestions?: boolean;
 }
 
-export function MediaTile({ asset, onClick }: Props) {
+export function MediaTile({ asset, onClick, hasSuggestions = false }: Props) {
   const [src, setSrc] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
 
