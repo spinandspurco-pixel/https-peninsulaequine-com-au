@@ -898,6 +898,45 @@ export type Database = {
         }
         Relationships: []
       }
+      graph_smoke_reports: {
+        Row: {
+          created_at: string
+          duration_ms: number | null
+          environment: string
+          error_message: string | null
+          exit_code: number
+          id: string
+          report: Json
+          result: string
+          triggered_by: string | null
+          triggered_by_email: string | null
+        }
+        Insert: {
+          created_at?: string
+          duration_ms?: number | null
+          environment?: string
+          error_message?: string | null
+          exit_code?: number
+          id?: string
+          report?: Json
+          result: string
+          triggered_by?: string | null
+          triggered_by_email?: string | null
+        }
+        Update: {
+          created_at?: string
+          duration_ms?: number | null
+          environment?: string
+          error_message?: string | null
+          exit_code?: number
+          id?: string
+          report?: Json
+          result?: string
+          triggered_by?: string | null
+          triggered_by_email?: string | null
+        }
+        Relationships: []
+      }
       hq_graph_edges: {
         Row: {
           created_at: string

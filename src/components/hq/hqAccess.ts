@@ -138,6 +138,14 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     sections: ["clients"],
     note: "Google Workspace TXT verification",
   },
+  {
+    key: "graph-smoke",
+    label: "Graph Smoke Test",
+    to: "/hq/graph-smoke",
+    roles: ["admin"],
+    sections: ["clients"],
+    note: "Run the C.1b Knowledge Graph smoke test against this environment",
+  },
 ];
 
 /** Items the user can reach in any section's sub-row. */
