@@ -127,6 +127,67 @@ export async function pendingSuggestionsFor(
   return (data ?? []) as GraphEdge[];
 }
 
+/**
+ * Bulk fetch: which of the supplied media ids have at least one suggested edge?
+ * Used by Media Vault to render the Smart Attach chip without N round-trips.
+ */
+export async function mediaIdsWithSuggestions(
+  mediaIds: string[],
+): Promise<Set<string>> {
+  if (mediaIds.length === 0) return new Set();
+  const { data, error } = await supabase
+    .from("hq_graph_edges")
+    .select("to_id")
+    .eq("to_type", "media")
+    .eq("status", "suggested")
+    .in("to_id", mediaIds);
+  if (error) throw error;
+  return new Set((data ?? []).map((r) => r.to_id as string));
+}
+
+/** Total open suggestions across the graph. Used by Command Centre. */
+export async function countOpenSuggestions(): Promise<number> {
+  const { count, error } = await supabase
+    .from("hq_graph_edges")
+    .select("id", { count: "exact", head: true })
+    .eq("status", "suggested");
+  if (error) throw error;
+  return count ?? 0;
+}
+
+/** Full suggestion queue with the data needed to render context. */
+export async function listOpenSuggestions(limit = 200): Promise<GraphEdge[]> {
+  const { data, error } = await supabase
+    .from("hq_graph_edges")
+    .select("*")
+    .eq("status", "suggested")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (error) throw error;
+  return (data ?? []) as GraphEdge[];
+}
+
+/**
+ * Human-accepted a suggestion. Promotes status to `verified`; preserves
+ * matched_rules and edge identity. Idempotent.
+ */
+export async function acceptSuggestion(edgeId: string): Promise<void> {
+  const { error } = await supabase
+    .from("hq_graph_edges")
+    .update({ status: "verified" })
+    .eq("id", edgeId);
+  if (error) throw error;
+}
+
+/** Human-rejected a suggestion. Promotes status to `dismissed`. */
+export async function dismissSuggestion(edgeId: string): Promise<void> {
+  const { error } = await supabase
+    .from("hq_graph_edges")
+    .update({ status: "dismissed" })
+    .eq("id", edgeId);
+  if (error) throw error;
+}
+
 export interface CoverageBucket {
   type: NodeType;
   count: number;
