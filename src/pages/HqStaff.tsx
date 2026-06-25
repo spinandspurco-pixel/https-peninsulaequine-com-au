@@ -86,7 +86,7 @@ async function resolveAvatarUrl(rawUrl: string | null): Promise<string | null> {
 }
 
 export default function HqStaff() {
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, isPreview } = useAuth();
   const { toast } = useToast();
 
   const [rows, setRows] = useState<DirectoryRow[]>([]);
@@ -135,7 +135,7 @@ export default function HqStaff() {
   );
 
   const canEdit = (row: DirectoryRow) =>
-    isAdmin || (user?.id && row.user_id === user.id);
+    !isPreview && (isAdmin || (user?.id && row.user_id === user.id));
 
   return (
     <div className="min-h-screen bg-background text-foreground">
