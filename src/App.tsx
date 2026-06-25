@@ -33,6 +33,7 @@ const LegalTerms = lazy(() => import("./pages/Legal").then(m => ({ default: m.Te
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Login = lazy(() => import("./pages/Login"));
 const Admin = lazy(() => import("./pages/Admin"));
+const HqCommandCentre = lazy(() => import("./pages/HqCommandCentre"));
 const AdminServices = lazy(() => import("./pages/AdminServices"));
 const AdminTestimonials = lazy(() => import("./pages/AdminTestimonials"));
 const AdminEvents = lazy(() => import("./pages/AdminEvents"));
@@ -128,7 +129,8 @@ function AppContent() {
             {/* Staff Command Centre — /hq/* requires authenticated staff role.
                 Preview role is allowed on read-only HQ surfaces (DB trigger
                 block_preview_writes enforces read-only at the data layer). */}
-            <Route path="/hq" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><Admin /></ProtectedRoute>} />
+            <Route path="/hq" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><HqCommandCentre /></ProtectedRoute>} />
+            <Route path="/hq/legacy" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><Admin /></ProtectedRoute>} />
             {/* Diagnostic: any signed-in user can see their own role mapping */}
             <Route path="/hq/whoami" element={<HqWhoAmI />} />
             <Route path="/hq/services" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminServices /></ProtectedRoute>} />
