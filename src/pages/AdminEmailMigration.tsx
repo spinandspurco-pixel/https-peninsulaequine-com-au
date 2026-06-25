@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 
 import { Check, X, Minus, RotateCw, Lock, Download, FileSpreadsheet } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -291,6 +292,7 @@ export default function AdminEmailMigration() {
 
   return (
     <main className="min-h-screen bg-background text-foreground px-6 py-16 md:px-12">
+      <HqBreadcrumbs current="Email Migration" />
       <div className="mx-auto max-w-5xl">
         <header className="mb-12 border-b border-border/40 pb-8">
           <p className="text-[0.65rem] uppercase tracking-[0.45em] text-muted-foreground/70">HQ · Infrastructure</p>

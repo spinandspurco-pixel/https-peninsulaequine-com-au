@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { useSearchParams, Link } from "react-router-dom";
 
 const FUNCTION_URL =
@@ -87,6 +88,7 @@ export default function DnsStatus() {
 
   return (
     <main className="min-h-screen bg-background text-foreground px-6 py-16">
+      <HqBreadcrumbs current="DNS Status" />
       <div className="mx-auto max-w-2xl space-y-12">
         <header className="space-y-3">
           <p className="text-[0.625rem] uppercase tracking-[0.45em] text-foreground/50">

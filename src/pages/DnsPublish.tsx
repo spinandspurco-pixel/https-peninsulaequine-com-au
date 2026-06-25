@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
+import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -60,6 +61,7 @@ export default function DnsPublish() {
 
   return (
     <main className="min-h-screen bg-background text-foreground px-6 py-16">
+      <HqBreadcrumbs current="DNS Publish" />
       <div className="mx-auto max-w-2xl space-y-10">
         <header className="space-y-3">
           <p className="text-[0.625rem] uppercase tracking-[0.45em] text-foreground/50">

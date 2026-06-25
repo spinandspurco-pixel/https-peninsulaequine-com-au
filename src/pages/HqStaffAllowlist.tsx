@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -119,6 +120,7 @@ export default function HqStaffAllowlist() {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-12 text-foreground">
+      <HqBreadcrumbs current="Staff Allowlist" />
       <header className="mb-10">
         <p className="text-[0.6rem] uppercase tracking-[0.45em] text-muted-foreground">HQ · Access</p>
         <h1 className="mt-3 font-serif text-4xl leading-tight">Staff Allowlist</h1>

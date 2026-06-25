@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { clearLocalAuthCacheAndSignOut } from "@/lib/authCache";
@@ -54,6 +55,7 @@ export default function HqWhoAmI() {
 
   if (authLoading) {
     return <div className="min-h-screen bg-background text-foreground p-8">Loading auth…</div>;
+      <HqBreadcrumbs current="Who Am I" />
   }
 
   if (!user) {

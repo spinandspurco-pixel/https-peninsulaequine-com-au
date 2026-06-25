@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -181,6 +182,7 @@ export default function DnsVerify() {
 
   return (
     <main className="min-h-screen bg-background text-foreground px-6 py-16">
+      <HqBreadcrumbs current="DNS Verify" />
       <div className="mx-auto max-w-2xl space-y-10">
         <header className="space-y-3">
           <p className="text-[0.625rem] uppercase tracking-[0.45em] text-foreground/50">
