@@ -166,21 +166,30 @@ export function ApplicationsInbox() {
   const convertToProject = async () => {
     if (!selected) return;
     const code = `PE-AP-${selected.id.slice(0, 4).toUpperCase()}`;
-    const { error } = await supabase.from("managed_projects").insert({
-      code,
-      name: `${selected.name} — ${classifyType(selected.services)}`,
-      location: "TBC",
-      build_type: classifyType(selected.services),
-      status: "in_progress",
-      priority: selected.lead_tier === "premium" ? "flagship" : "standard",
-      scope: selected.project_details ?? selected.project_vision,
-      internal_notes: notesDraft || selected.notes,
-      next_action: "Scope confirmation call",
-      last_update: "Converted from application",
-    });
+    const { data: inserted, error } = await supabase
+      .from("managed_projects")
+      .insert({
+        code,
+        name: `${selected.name} — ${classifyType(selected.services)}`,
+        location: "TBC",
+        build_type: classifyType(selected.services),
+        status: "in_progress",
+        priority: selected.lead_tier === "premium" ? "flagship" : "standard",
+        scope: selected.project_details ?? selected.project_vision,
+        next_action: "Scope confirmation call",
+        last_update: "Converted from application",
+      })
+      .select("id")
+      .single();
     if (error) {
       toast.error(error.message);
       return;
+    }
+    const noteBody = notesDraft || selected.notes;
+    if (inserted?.id && noteBody) {
+      await supabase
+        .from("managed_project_internal_notes")
+        .upsert({ project_id: inserted.id, notes: noteBody }, { onConflict: "project_id" });
     }
     await supabase.from("inquiries").update({ deal_stage: "won", notes: notesDraft }).eq("id", selected.id);
     toast.success(`Project ${code} created`);
