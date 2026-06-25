@@ -36,6 +36,8 @@ export default function AdminMedia() {
   const [state, setState] = useState<MediaApprovalState | "all">("all");
   const [type, setType] = useState<MediaAssetType | "all">("all");
   const [search, setSearch] = useState("");
+  const [needsReviewOnly, setNeedsReviewOnly] = useState(false);
+  const [suggestionIds, setSuggestionIds] = useState<Set<string>>(new Set());
   const [uploadOpen, setUploadOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
