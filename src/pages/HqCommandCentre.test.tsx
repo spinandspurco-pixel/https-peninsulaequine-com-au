@@ -107,15 +107,15 @@ describe("HqCommandCentre", () => {
 
   it("each priority card is a link pointing at an existing HQ route", () => {
     renderPage();
-    const expected: Record<string, string> = {
-      Enquiries: "/hq/inquiries",
-      Projects: "/hq/projects",
-      Clients: "/hq/clients",
-      Media: "/hq/media",
-      "Review Queue": "/hq/review",
-    };
-    for (const [label, href] of Object.entries(expected)) {
-      const link = screen.getByRole("link", { name: new RegExp(label, "i") });
+    const expected: Array<[RegExp, string]> = [
+      [/^Enquiries — /, "/hq/inquiries"],
+      [/^Projects — /, "/hq/projects"],
+      [/^Clients — /, "/hq/clients"],
+      [/^Media — /, "/hq/media"],
+      [/^Review Queue — /, "/hq/review"],
+    ];
+    for (const [label, href] of expected) {
+      const link = screen.getByRole("link", { name: label });
       expect(link.getAttribute("href")).toBe(href);
     }
   });
