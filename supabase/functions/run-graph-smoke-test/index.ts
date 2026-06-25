@@ -104,6 +104,7 @@ Deno.serve(async (req) => {
   }
 
   const startedAtIso = new Date().toISOString();
+  const startedAtMs = Date.now();
   const report: Report = {
     run_id: isoStamp(),
     started_at: startedAtIso,
@@ -113,9 +114,9 @@ Deno.serve(async (req) => {
     summary: { started_at: startedAtIso },
   };
 
-
   const ok = (msg: string) => report.steps.push({ ok: true, msg });
   const info = (msg: string) => report.steps.push({ ok: true, msg, info: true });
+
 
   // Create RUNNING row up-front
   const { data: runRow, error: insertErr } = await svc
