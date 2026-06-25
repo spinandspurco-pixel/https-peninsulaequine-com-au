@@ -211,6 +211,13 @@ export function CommandOverview() {
     };
 
     load();
+    countOpenSuggestions()
+      .then((n) => {
+        if (!cancelled) setNeedsReview(n);
+      })
+      .catch(() => {
+        if (!cancelled) setNeedsReview(null);
+      });
     return () => {
       cancelled = true;
     };
