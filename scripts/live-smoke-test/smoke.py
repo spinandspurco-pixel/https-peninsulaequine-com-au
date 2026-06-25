@@ -537,24 +537,30 @@ async def phase_pipeline(env: dict[str, str], conn, main_ridge_id: str) -> None:
 
         async with async_playwright() as pw:
             context, console_log, network_failures = await new_context(pw)
+            context.set_default_timeout(ASSERT_TIMEOUT_MS)
+            context.set_default_navigation_timeout(NAV_TIMEOUT_MS)
             page = await context.new_page()
             try:
                 await login(page, env)
-                await page.goto(f"{env['LIVE_URL']}/hq/review", wait_until="networkidle")
-                await page.screenshot(path=str(RUN_DIR / "ui_review_with_item.png"))
 
-                verify_btn = page.get_by_role("button", name="Verify →")
+                async def _open_review_with_item() -> None:
+                    await page.goto(f"{env['LIVE_URL']}/hq/review", wait_until="networkidle")
+                    await page.screenshot(path=str(RUN_DIR / "ui_review_with_item.png"))
+                    btn = page.get_by_role("button", name="Verify →")
+                    await btn.first.wait_for(timeout=ASSERT_TIMEOUT_MS)
+
                 try:
-                    await verify_btn.first.wait_for(timeout=5000)
-                except PlaywrightTimeout:
+                    await retry_ui("review_with_item", _open_review_with_item)
+                except Exception as e:  # noqa: BLE001
                     diag = await capture_page_diagnostics(page, "review_no_verify", console_log, network_failures)
-                    die(EXIT_VERIFY_FLOW, "Verify button not visible in /hq/review", diag=diag)
+                    die(EXIT_VERIFY_FLOW, f"Verify button not visible in /hq/review: {e}", diag=diag)
 
-                await verify_btn.first.click()
+                # Click is NOT retried — it mutates the edge row.
+                await page.get_by_role("button", name="Verify →").first.click()
                 try:
                     await page.wait_for_function(
                         "() => !document.body.innerText.includes('main-ridge-test.jpg')",
-                        timeout=5000,
+                        timeout=ASSERT_TIMEOUT_MS,
                     )
                 except PlaywrightTimeout:
                     pass
@@ -562,6 +568,7 @@ async def phase_pipeline(env: dict[str, str], conn, main_ridge_id: str) -> None:
                 ok("clicked Verify in /hq/review")
             finally:
                 await context.browser.close() if context.browser else None
+
 
         after = fetch_edge_for(conn, asset_id)
         if not after or after["status"] != "verified":
