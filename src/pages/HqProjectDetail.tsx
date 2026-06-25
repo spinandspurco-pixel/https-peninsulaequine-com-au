@@ -11,6 +11,7 @@ import { RefreshCw } from "lucide-react";
 import { format } from "date-fns";
 import { HqNav } from "@/components/hq/HqNav";
 import { ProjectNotes } from "@/components/hq/ProjectNotes";
+import { ProjectCoverage } from "@/components/hq/ProjectCoverage";
 
 interface Project {
   id: string;
