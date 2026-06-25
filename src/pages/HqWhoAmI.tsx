@@ -55,7 +55,6 @@ export default function HqWhoAmI() {
 
   if (authLoading) {
     return <div className="min-h-screen bg-background text-foreground p-8">Loading auth…</div>;
-      <HqBreadcrumbs current="Who Am I" />
   }
 
   if (!user) {
