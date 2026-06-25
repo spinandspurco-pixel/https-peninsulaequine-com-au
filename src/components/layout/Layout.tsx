@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useState, useRef } from "react";
 import { Header } from "./Header";
 import { HqHeader } from "./HqHeader";
+import { HqPreviewBanner } from "@/components/hq/HqPreviewBanner";
 import { Footer } from "./Footer";
 import { SEOSchema } from "@/components/SEOSchema";
 import { PageTransition } from "@/components/PageTransition";
@@ -67,6 +68,7 @@ export function Layout({ children }: LayoutProps) {
         Skip to main content
       </a>
       {showSiteRail ? null : isPrivate ? <HqHeader /> : <Header />}
+      {isPrivate && !showSiteRail && <HqPreviewBanner />}
       <PageTransition>
         <main id="main-content" className="flex-1 relative z-[1]" tabIndex={-1}>{children}</main>
       </PageTransition>

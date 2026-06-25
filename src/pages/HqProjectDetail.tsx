@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/layout/Layout";
 import { useAuth } from "@/hooks/useAuth";
 import { useHqMode } from "@/hooks/useHqMode";
-import { HqPreviewBanner } from "@/components/hq/HqPreviewBanner";
+
 import { WriteGuard } from "@/components/hq/WriteGuard";
 import { toast } from "sonner";
 import { RefreshCw } from "lucide-react";
@@ -144,7 +144,7 @@ export default function HqProjectDetail() {
   return (
     <Layout>
       <HqNav />
-      <HqPreviewBanner />
+      
       <div className="min-h-screen bg-background">
         {/* Header */}
         <header className="pt-32 sm:pt-40 pb-10">
