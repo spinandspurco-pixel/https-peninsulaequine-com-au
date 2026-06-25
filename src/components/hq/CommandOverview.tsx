@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { format, formatDistanceToNow } from "date-fns";
 import { useHqMount, withHqTimeout } from "@/lib/hqDiagnostics";
 import { MentionsCard } from "@/components/hq/MentionsCard";
+import { ActivityWire } from "@/components/hq/ActivityWire";
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Command Centre
@@ -501,36 +502,7 @@ export function CommandOverview() {
           </div>
 
           <div>
-            {activity.length === 0 ? (
-              <p className="text-[13px] text-muted-foreground/50 italic font-light">
-                Nothing on the wire yet. New enquiries, quotes and project moves will record here.
-              </p>
-            ) : (
-              <ul className="border-l border-accent/20 pl-5 sm:pl-6 space-y-0">
-                {activity.map((row) => (
-                  <li key={row.id} className="py-3.5 group relative">
-                    <div className="absolute -left-[6px] sm:-left-[7px] top-5 h-px w-3 bg-accent/25 group-hover:bg-accent/60 transition-colors" />
-                    <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-6">
-                      <p className="text-[13px] text-foreground/85 font-light leading-relaxed">
-                        {row.title}
-                        {row.entity_type && (
-                          <span className="ml-3 font-mono text-[10px] uppercase tracking-[0.22em] text-accent/45">
-                            {row.entity_type}
-                          </span>
-                        )}
-                      </p>
-                      <time
-                        dateTime={row.created_at}
-                        title={format(new Date(row.created_at), "PPpp")}
-                        className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40 whitespace-nowrap"
-                      >
-                        {formatDistanceToNow(new Date(row.created_at), { addSuffix: true })}
-                      </time>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <ActivityWire limit={5} />
           </div>
 
           <aside className="lg:w-56 space-y-10">
