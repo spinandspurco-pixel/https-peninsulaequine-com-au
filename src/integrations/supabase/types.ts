@@ -2658,6 +2658,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      _hq_graph_eval_media_row: {
+        Args: { _asset: Database["public"]["Tables"]["media_assets"]["Row"] }
+        Returns: undefined
+      }
       accept_quote_by_share_token: {
         Args: { p_token: string }
         Returns: boolean
@@ -2685,6 +2689,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      hq_graph_backfill_media_suggestions: { Args: never; Returns: number }
       is_e2e_test_user: { Args: { _user_id: string }; Returns: boolean }
       list_staff_directory: {
         Args: never
