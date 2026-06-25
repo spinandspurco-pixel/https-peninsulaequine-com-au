@@ -30,3 +30,4 @@ dist-ssr
 /playwright/.cache/
 /e2e/.auth/
 reports/
+scripts/live-smoke-test/.env

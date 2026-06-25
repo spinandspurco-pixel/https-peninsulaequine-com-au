@@ -357,42 +357,86 @@ async def login(page: Page, env: dict[str, str]) -> None:
 # Phase 2 — UI sweep
 # --------------------------------------------------------------------------
 
+# Per-step timeouts
+NAV_TIMEOUT_MS = 20_000          # page.goto
+ASSERT_TIMEOUT_MS = 8_000        # locator waits
+RETRY_BACKOFF_S = 1.5
+
+
+async def retry_ui(label: str, fn) -> None:
+    """Run a UI assertion coroutine factory with one retry (UI/nav only)."""
+    last_exc: Exception | None = None
+    for attempt in (1, 2):
+        try:
+            await fn()
+            if attempt > 1:
+                info(f"{label}: passed on retry {attempt}")
+            return
+        except SystemExit:
+            raise
+        except Exception as e:  # noqa: BLE001
+            last_exc = e
+            if attempt == 1:
+                info(f"{label}: attempt 1 failed ({e}); retrying once after {RETRY_BACKOFF_S}s")
+                await asyncio.sleep(RETRY_BACKOFF_S)
+    raise last_exc  # type: ignore[misc]
+
 
 async def phase_ui_sweep(env: dict[str, str], main_ridge_id: str) -> None:
     print("\n[2/3] UI sweep")
     async with async_playwright() as pw:
         context, console_log, network_failures = await new_context(pw)
+        context.set_default_timeout(ASSERT_TIMEOUT_MS)
+        context.set_default_navigation_timeout(NAV_TIMEOUT_MS)
         page = await context.new_page()
         try:
             await login(page, env)
 
-            await page.goto(f"{env['LIVE_URL']}/hq/projects/{main_ridge_id}", wait_until="networkidle")
-            await page.screenshot(path=str(RUN_DIR / "ui_project.png"))
-            body = (await page.text_content("body")) or ""
-            if "Media" not in body or "5" not in body:
+            async def _coverage() -> None:
+                await page.goto(f"{env['LIVE_URL']}/hq/projects/{main_ridge_id}", wait_until="networkidle")
+                await page.screenshot(path=str(RUN_DIR / "ui_project.png"))
+                body = (await page.text_content("body")) or ""
+                if "Media" not in body or "5" not in body:
+                    raise AssertionError("Project Coverage: expected 'Media' and count 5")
+                for label in ("Documents", "Field Notes"):
+                    if label not in body:
+                        raise AssertionError(f"Project Coverage: missing '{label}'")
+
+            try:
+                await retry_ui("project_coverage", _coverage)
+            except Exception as e:  # noqa: BLE001
                 diag = await capture_page_diagnostics(page, "project_coverage", console_log, network_failures)
-                die(EXIT_VERIFY_MISMATCH, "Project Coverage: expected 'Media' and count 5", diag=diag)
-            for label in ("Documents", "Field Notes"):
-                if label not in body:
-                    diag = await capture_page_diagnostics(page, "project_coverage", console_log, network_failures)
-                    die(EXIT_VERIFY_MISMATCH, f"Project Coverage: missing '{label}'", diag=diag)
+                die(EXIT_VERIFY_MISMATCH, str(e), diag=diag)
             ok("Project Coverage: Media 5 / Documents / Field Notes")
 
-            await page.goto(f"{env['LIVE_URL']}/hq/media", wait_until="networkidle")
-            await page.screenshot(path=str(RUN_DIR / "ui_media.png"))
-            suggested_chips = await page.locator("text=/^Suggested$/i").count()
-            if suggested_chips != 0:
+            async def _media_vault() -> None:
+                await page.goto(f"{env['LIVE_URL']}/hq/media", wait_until="networkidle")
+                await page.screenshot(path=str(RUN_DIR / "ui_media.png"))
+                chips = await page.locator("text=/^Suggested$/i").count()
+                if chips != 0:
+                    raise AssertionError(f"Media Vault: {chips} Suggested chip(s); expected 0")
+
+            try:
+                await retry_ui("media_vault", _media_vault)
+            except Exception as e:  # noqa: BLE001
                 diag = await capture_page_diagnostics(page, "media_vault", console_log, network_failures)
-                die(EXIT_VERIFY_MISMATCH, f"Media Vault: {suggested_chips} Suggested chip(s); expected 0", diag=diag)
+                die(EXIT_VERIFY_MISMATCH, str(e), diag=diag)
             ok("Media Vault: 0 Suggested chips")
 
-            await page.goto(f"{env['LIVE_URL']}/hq/review", wait_until="networkidle")
-            await page.screenshot(path=str(RUN_DIR / "ui_review_empty.png"))
-            body = (await page.text_content("body")) or ""
-            if "queue is clear" not in body.lower():
+            async def _review_empty() -> None:
+                await page.goto(f"{env['LIVE_URL']}/hq/review", wait_until="networkidle")
+                await page.screenshot(path=str(RUN_DIR / "ui_review_empty.png"))
+                body = (await page.text_content("body")) or ""
+                if "queue is clear" not in body.lower():
+                    raise AssertionError("/hq/review: expected empty-state copy")
+
+            try:
+                await retry_ui("review_empty", _review_empty)
+            except Exception as e:  # noqa: BLE001
                 diag = await capture_page_diagnostics(page, "review_empty", console_log, network_failures)
-                die(EXIT_UI_NAV, "/hq/review: expected empty-state copy", diag=diag)
+                die(EXIT_UI_NAV, str(e), diag=diag)
             ok("/hq/review: queue empty")
+
         except SystemExit:
             raise
         except Exception as e:  # noqa: BLE001
@@ -493,24 +537,30 @@ async def phase_pipeline(env: dict[str, str], conn, main_ridge_id: str) -> None:
 
         async with async_playwright() as pw:
             context, console_log, network_failures = await new_context(pw)
+            context.set_default_timeout(ASSERT_TIMEOUT_MS)
+            context.set_default_navigation_timeout(NAV_TIMEOUT_MS)
             page = await context.new_page()
             try:
                 await login(page, env)
-                await page.goto(f"{env['LIVE_URL']}/hq/review", wait_until="networkidle")
-                await page.screenshot(path=str(RUN_DIR / "ui_review_with_item.png"))
 
-                verify_btn = page.get_by_role("button", name="Verify →")
+                async def _open_review_with_item() -> None:
+                    await page.goto(f"{env['LIVE_URL']}/hq/review", wait_until="networkidle")
+                    await page.screenshot(path=str(RUN_DIR / "ui_review_with_item.png"))
+                    btn = page.get_by_role("button", name="Verify →")
+                    await btn.first.wait_for(timeout=ASSERT_TIMEOUT_MS)
+
                 try:
-                    await verify_btn.first.wait_for(timeout=5000)
-                except PlaywrightTimeout:
+                    await retry_ui("review_with_item", _open_review_with_item)
+                except Exception as e:  # noqa: BLE001
                     diag = await capture_page_diagnostics(page, "review_no_verify", console_log, network_failures)
-                    die(EXIT_VERIFY_FLOW, "Verify button not visible in /hq/review", diag=diag)
+                    die(EXIT_VERIFY_FLOW, f"Verify button not visible in /hq/review: {e}", diag=diag)
 
-                await verify_btn.first.click()
+                # Click is NOT retried — it mutates the edge row.
+                await page.get_by_role("button", name="Verify →").first.click()
                 try:
                     await page.wait_for_function(
                         "() => !document.body.innerText.includes('main-ridge-test.jpg')",
-                        timeout=5000,
+                        timeout=ASSERT_TIMEOUT_MS,
                     )
                 except PlaywrightTimeout:
                     pass
@@ -518,6 +568,7 @@ async def phase_pipeline(env: dict[str, str], conn, main_ridge_id: str) -> None:
                 ok("clicked Verify in /hq/review")
             finally:
                 await context.browser.close() if context.browser else None
+
 
         after = fetch_edge_for(conn, asset_id)
         if not after or after["status"] != "verified":
