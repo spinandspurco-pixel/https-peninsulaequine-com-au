@@ -149,8 +149,11 @@ export default function HqReview() {
               Suggested attachments.
             </h1>
             <p className="text-[13px] text-muted-foreground/65 leading-relaxed">
-              Relationships the system inferred from filenames, tags, and prose. Accept
+              Relationships the system inferred from filenames, tags, and prose. Verify
               what reads true; dismiss what doesn't. Nothing here was auto-attached.
+            </p>
+            <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/45">
+              Verify confirms the suggested project link · Dismiss hides it from review.
             </p>
             {!canWrite && (
               <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/55">
