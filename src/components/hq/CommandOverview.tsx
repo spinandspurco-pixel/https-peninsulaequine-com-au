@@ -119,6 +119,7 @@ export function CommandOverview() {
   const [directoryName, setDirectoryName] = useState<string | null>(null);
   const [loadState, setLoadState] = useState<"idle" | "loading" | "ok" | "timeout" | "error">("loading");
   const [reloadKey, setReloadKey] = useState(0);
+  const [needsReview, setNeedsReview] = useState<number | null>(null);
 
   const now = useMemo(() => new Date(), [reloadKey]);
   const firstName = useMemo(
