@@ -112,6 +112,8 @@ Deno.serve(async (req) => {
     steps: [],
   };
 
+  report.summary = { started_at: report.started_at };
+
   const ok = (msg: string) => report.steps.push({ ok: true, msg });
   const info = (msg: string) => report.steps.push({ ok: true, msg, info: true });
 
