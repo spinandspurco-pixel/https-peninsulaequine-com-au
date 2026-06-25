@@ -27,7 +27,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from typing import Any
 
 # Heavy deps imported lazily inside main() so --help works without install.
 psycopg2 = None  # type: ignore[assignment]
