@@ -143,20 +143,12 @@ export default function Admin() {
                       <span className="text-muted-foreground/35"> · {isPreview ? "Client Preview" : identity.role}</span>
                     </p>
                     {isAdmin && !isPreview && (
-                      <div className="ml-auto flex items-center gap-6">
-                        <button
-                          onClick={enterPreview}
-                          className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55 hover:text-accent/80 transition-colors"
-                        >
-                          Client preview →
-                        </button>
-                        <button
-                          onClick={handleSignOut}
-                          className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/45 hover:text-foreground/80 transition-colors"
-                        >
-                          Sign out
-                        </button>
-                      </div>
+                      <button
+                        onClick={enterPreview}
+                        className="ml-auto text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55 hover:text-accent/80 transition-colors"
+                      >
+                        Client preview →
+                      </button>
                     )}
                   </div>
                 </div>
