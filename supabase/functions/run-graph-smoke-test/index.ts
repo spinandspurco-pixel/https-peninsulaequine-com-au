@@ -15,6 +15,17 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const MAIN_RIDGE_CODE = "PE-MR-014";
 
 type Step = { ok: boolean; msg: string; info?: boolean };
+type Summary = {
+  result?: "PASS" | "FAIL";
+  exit_code?: number;
+  started_at: string;
+  finished_at?: string;
+  duration_ms?: number;
+  residue_found?: boolean;
+  suggested_count?: number;
+  orphan_count?: number;
+  duplicate_count?: number;
+};
 type Report = {
   run_id: string;
   started_at: string;
@@ -22,6 +33,7 @@ type Report = {
   environment: string;
   phases: Record<string, unknown>;
   steps: Step[];
+  summary: Summary;
   result?: "PASS" | "FAIL";
   exit_code?: number;
   error?: { code: number; message: string; sql?: string };
