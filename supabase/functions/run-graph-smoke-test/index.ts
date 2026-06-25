@@ -316,8 +316,34 @@ Deno.serve(async (req) => {
       .eq("status", "suggested");
     if (fsErr) throw new SmokeFail(EXIT.CLEANUP, `final suggested check failed: ${fsErr.message}`);
     const finalOrphans = await countOrphans(svc);
-    report.phases.final = { suggested: finalSuggested ?? 0, orphans: finalOrphans };
+    const finalDupes = await countDuplicates(svc);
 
+    // Residue check: throwaway asset row + any edges still pointing at it
+    let residueFound = false;
+    if (assetId) {
+      const { data: residueAsset } = await svc
+        .from("media_assets").select("id").eq("id", assetId).maybeSingle();
+      const { count: residueEdges } = await svc
+        .from("hq_graph_edges")
+        .select("*", { count: "exact", head: true })
+        .eq("to_type", "media").eq("to_id", assetId);
+      residueFound = !!residueAsset || (residueEdges ?? 0) > 0;
+    }
+
+    report.phases.final = {
+      suggested: finalSuggested ?? 0,
+      orphans: finalOrphans,
+      duplicates: finalDupes,
+      residue_found: residueFound,
+    };
+    report.summary.suggested_count = finalSuggested ?? 0;
+    report.summary.orphan_count = finalOrphans;
+    report.summary.duplicate_count = finalDupes;
+    report.summary.residue_found = residueFound;
+
+    if (residueFound) {
+      throw new SmokeFail(EXIT.CLEANUP, "residue detected after cleanup (throwaway row or edges remain)");
+    }
     if ((finalSuggested ?? 0) !== 0) {
       throw new SmokeFail(EXIT.CLEANUP, `suggested != 0 after cleanup (got ${finalSuggested})`);
     }
@@ -326,6 +352,7 @@ Deno.serve(async (req) => {
     }
     ok("suggested = 0 after cleanup (the final bell)");
     ok("orphans = 0 after cleanup");
+    ok("no residue from throwaway asset");
   } catch (err) {
     const f = err instanceof SmokeFail ? err : new SmokeFail(EXIT.CLEANUP, String((err as Error).message ?? err));
     await finalise("FAIL", f.code, { code: f.code, message: f.message });
