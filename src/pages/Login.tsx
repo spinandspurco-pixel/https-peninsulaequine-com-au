@@ -56,12 +56,7 @@ export default function Login() {
     if (rolesLoading) {
       return (
         <Layout>
-          <div className="min-h-[80vh] flex items-center justify-center bg-secondary">
-            <div className="text-center space-y-4">
-              <Loader2 className="h-8 w-8 animate-spin text-accent mx-auto" />
-              <p className="text-muted-foreground text-[11px] uppercase tracking-[0.2em]">Resolving access…</p>
-            </div>
-          </div>
+          <HqLoadingState label="Resolving access…" hint="Verifying your role before routing you in." />
         </Layout>
       );
     }
