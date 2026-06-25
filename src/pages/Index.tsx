@@ -187,8 +187,11 @@ export default function Index() {
                     transform: imageReady && heroImgLoaded ? "scale(1)" : "scale(1.04)",
                     transition: `opacity 1600ms ${EASE}, transform 2400ms ${EASE}`,
                     willChange: "opacity, transform",
+                    // Subtle clarity lift — keeps blueprint grading, sharpens horse/footing texture.
+                    filter: "contrast(1.08) saturate(1.05) brightness(0.97)",
                   }}
                 />
+
               ) : null}
               {heroImgFailed && (
                 <div
