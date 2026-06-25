@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useState, useRef } from "react";
 import { Header } from "./Header";
 import { HqHeader } from "./HqHeader";
+import { HqPreviewBanner } from "@/components/hq/HqPreviewBanner";
 import { Footer } from "./Footer";
 import { SEOSchema } from "@/components/SEOSchema";
 import { PageTransition } from "@/components/PageTransition";
