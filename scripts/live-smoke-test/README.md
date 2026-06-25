@@ -103,6 +103,27 @@ python scripts/live-smoke-test/smoke.py --env live
 python scripts/live-smoke-test/smoke.py --env live --skip-pipeline
 ```
 
+### One-command Live runner
+
+For routine Live runs use the wrapper instead of invoking `python3` directly:
+
+```bash
+cd scripts/live-smoke-test
+export LIVE_CONFIRM=I_UNDERSTAND_THIS_TOUCHES_PRODUCTION
+# plus the rest of the vars from .env.example
+./run-live.sh
+```
+
+The wrapper:
+
+- Refuses to run unless `LIVE_CONFIRM` is **exactly** `I_UNDERSTAND_THIS_TOUCHES_PRODUCTION` (exits `1`).
+- Creates a timestamped wrapper folder `out/wrapper-<ISO>/` **before** invoking `smoke.py`.
+- Tees combined stdout/stderr into `out/wrapper-<ISO>/run.log` so the full session is captured even if `smoke.py` crashes early.
+- Preserves and re-exits with `smoke.py`'s exit code (see the granular codes above).
+- Prints both the wrapper folder and the `smoke.py` artifact folder at the end.
+
+The wrapper is intentionally thin — it does not modify test logic; `smoke.py` remains the single source of truth for verification.
+
 ## Nightly regression (recommended)
 
 Wire `--env test` into CI (GitHub Actions or equivalent) on a nightly schedule
