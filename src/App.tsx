@@ -45,6 +45,7 @@ const AdminEmailMigration = lazy(() => import("./pages/AdminEmailMigration"));
 const AdminActivity = lazy(() => import("./pages/AdminActivity"));
 const AdminInquiries = lazy(() => import("./pages/AdminInquiries"));
 const AdminMedia = lazy(() => import("./pages/AdminMedia"));
+const HqReview = lazy(() => import("./pages/HqReview"));
 const DnsVerify = lazy(() => import("./pages/DnsVerify"));
 const DnsPublish = lazy(() => import("./pages/DnsPublish"));
 const DnsWizard = lazy(() => import("./pages/DnsWizard"));
