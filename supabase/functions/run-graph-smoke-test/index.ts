@@ -139,9 +139,15 @@ Deno.serve(async (req) => {
     exit_code: number,
     error?: { code: number; message: string; sql?: string },
   ) => {
-    report.ended_at = new Date().toISOString();
+    const endedAt = new Date().toISOString();
+    const durationMs = Date.now() - startedAtMs;
+    report.ended_at = endedAt;
     report.result = result;
     report.exit_code = exit_code;
+    report.summary.result = result;
+    report.summary.exit_code = exit_code;
+    report.summary.finished_at = endedAt;
+    report.summary.duration_ms = durationMs;
     if (error) report.error = error;
     await svc
       .from("graph_smoke_reports")
@@ -149,11 +155,12 @@ Deno.serve(async (req) => {
         result,
         exit_code,
         error_message: error?.message ?? null,
-        duration_ms: Date.now() - startedAtMs,
+        duration_ms: durationMs,
         report,
       })
       .eq("id", reportId);
   };
+
 
   // ── Phase 1: SQL verify ───────────────────────────────────────────
   let mainRidgeId: string;
