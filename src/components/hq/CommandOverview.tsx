@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { format, formatDistanceToNow } from "date-fns";
 import { useHqMount, withHqTimeout } from "@/lib/hqDiagnostics";
 import { MentionsCard } from "@/components/hq/MentionsCard";
+import { ActivityWire } from "@/components/hq/ActivityWire";
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Command Centre
@@ -13,13 +14,6 @@ import { MentionsCard } from "@/components/hq/MentionsCard";
 // Morning Brief is the hero; everything below is supporting instrumentation.
 // ──────────────────────────────────────────────────────────────────────────────
 
-interface ActivityRow {
-  id: string;
-  title: string;
-  action_type: string;
-  entity_type: string | null;
-  created_at: string;
-}
 
 interface SpotlightProject {
   id: string;
@@ -119,7 +113,6 @@ export function CommandOverview() {
   });
   const [signalReady, setSignalReady] = useState(false);
   const [spotlight, setSpotlight] = useState<SpotlightProject | null>(null);
-  const [activity, setActivity] = useState<ActivityRow[]>([]);
   const [nextEvent, setNextEvent] = useState<UpcomingEvent | null>(null);
   const [joshPreviewReady, setJoshPreviewReady] = useState<boolean | null>(null);
   const [directoryName, setDirectoryName] = useState<string | null>(null);
@@ -156,11 +149,6 @@ export function CommandOverview() {
           .select("id", { count: "exact", head: true })
           .eq("status", "completed")
           .gte("updated_at", sinceQ),
-        supabase
-          .from("activity_log")
-          .select("id, title, action_type, entity_type, created_at")
-          .order("created_at", { ascending: false })
-          .limit(6),
         supabase.from("managed_projects").select("id", { count: "exact", head: true }),
         supabase
           .from("managed_projects")
@@ -191,7 +179,6 @@ export function CommandOverview() {
         proposals,
         activeProjects,
         completed,
-        activityLog,
         totalProjects,
         spotlightRes,
         eventRes,
@@ -207,7 +194,6 @@ export function CommandOverview() {
         completedQ: completed.count ?? 0,
       });
       setSignalReady(true);
-      setActivity(activityLog.data ?? []);
       setSpotlight(((spotlightRes.data ?? [])[0] as SpotlightProject | undefined) ?? null);
       setNextEvent(((eventRes.data ?? [])[0] as UpcomingEvent | undefined) ?? null);
 
@@ -496,41 +482,12 @@ export function CommandOverview() {
           <div className="space-y-2">
             <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/55">Activity</p>
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40">
-              {activity.length ? `Last ${activity.length}` : "Quiet"}
+              Live wire
             </p>
           </div>
 
           <div>
-            {activity.length === 0 ? (
-              <p className="text-[13px] text-muted-foreground/50 italic font-light">
-                Nothing on the wire yet. New enquiries, quotes and project moves will record here.
-              </p>
-            ) : (
-              <ul className="border-l border-accent/20 pl-5 sm:pl-6 space-y-0">
-                {activity.map((row) => (
-                  <li key={row.id} className="py-3.5 group relative">
-                    <div className="absolute -left-[6px] sm:-left-[7px] top-5 h-px w-3 bg-accent/25 group-hover:bg-accent/60 transition-colors" />
-                    <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-6">
-                      <p className="text-[13px] text-foreground/85 font-light leading-relaxed">
-                        {row.title}
-                        {row.entity_type && (
-                          <span className="ml-3 font-mono text-[10px] uppercase tracking-[0.22em] text-accent/45">
-                            {row.entity_type}
-                          </span>
-                        )}
-                      </p>
-                      <time
-                        dateTime={row.created_at}
-                        title={format(new Date(row.created_at), "PPpp")}
-                        className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40 whitespace-nowrap"
-                      >
-                        {formatDistanceToNow(new Date(row.created_at), { addSuffix: true })}
-                      </time>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <ActivityWire limit={5} />
           </div>
 
           <aside className="lg:w-56 space-y-10">
