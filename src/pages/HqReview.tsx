@@ -93,7 +93,7 @@ export default function HqReview() {
     try {
       await acceptSuggestion(edge.id);
       setEdges((cur) => cur.filter((e) => e.id !== edge.id));
-      toast.success("Attached");
+      toast.success("Verified");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : String(e));
     } finally {
