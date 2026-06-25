@@ -104,12 +104,7 @@ export default function Login() {
   if (!ready) {
     return (
       <Layout>
-        <div className="min-h-[80vh] flex items-center justify-center bg-secondary">
-          <div className="text-center space-y-4">
-            <Loader2 className="h-8 w-8 animate-spin text-accent mx-auto" />
-            <p className="text-muted-foreground text-[11px] uppercase tracking-[0.2em]">Authenticating…</p>
-          </div>
-        </div>
+        <HqLoadingState label="Checking access…" hint="One moment while we verify the session." />
       </Layout>
     );
   }
@@ -117,8 +112,8 @@ export default function Login() {
   return (
     <Layout>
       <StaffPortalFrame
-        title="Staff Portal"
-        subtitle="Secure access with role-based routing."
+        title="HQ Access"
+        subtitle="Workbench sign-in for Peninsula Equine staff."
       >
         <div className="bg-card/80 backdrop-blur border border-border/60 rounded-sm shadow-xl">
           <div className="p-6 sm:p-8 space-y-6">
