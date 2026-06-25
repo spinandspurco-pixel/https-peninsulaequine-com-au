@@ -16,7 +16,6 @@ import { HqNav } from "@/components/hq/HqNav";
 import { canSeeHqItem } from "@/components/hq/hqAccess";
 
 import {
-  PreviewWelcome,
   BlueprintField,
 } from "@/components/hq/HqPrimitives";
 import { resolveIdentity } from "@/components/hq/hqIdentity";
