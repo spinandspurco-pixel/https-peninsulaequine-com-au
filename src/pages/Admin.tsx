@@ -188,14 +188,6 @@ export default function Admin() {
 
         <HqNav />
 
-                  </div>
-                </div>
-              </div>
-            </>
-          );
-        })()}
-
-        <HqNav />
 
 
 
