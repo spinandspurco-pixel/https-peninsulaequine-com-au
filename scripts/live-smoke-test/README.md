@@ -1,59 +1,110 @@
 # Live Smoke Test — Knowledge Graph Phase (C.1b)
 
-Automated end-to-end gate that proves the project → media graph pipeline is
-functioning on Live, not just that migrations ran. Runs after publish + seed.
+Automated end-to-end regression that proves the project → media graph pipeline
+is functioning on a target environment, not just that migrations ran.
 
 ## What it does
 
-1. **Seed verification** — status counts, suggested=0, Main Ridge system_linked=5, no orphans, no duplicates.
-2. **UI sweep** (Playwright, headless) on Live:
+1. **SQL seed verification** — status counts, suggested=0, Main Ridge system_linked=5, no orphans, no duplicates.
+2. **UI sweep** (Playwright, headless):
    - HQ → Project → Main Ridge → Coverage = Media 5 / Documents missing / Field Notes missing
-   - Media Vault → 5 demo assets present, zero Suggested chips
-   - `/hq/review` → empty queue, Command Centre banner hidden
+   - Media Vault → 0 Suggested chips
+   - `/hq/review` → empty queue
 3. **Pipeline smoke test:**
    - Insert throwaway `main-ridge-test.jpg` (no project_id, tag `main-ridge`)
-   - Confirm one `suggested` edge exists for Main Ridge
-   - Open `/hq/review`, click **Verify**, confirm edge.status → `verified` and queue empties
-   - Delete the throwaway asset
-   - Confirm `suggested` count returns to **0** (the final bell)
+   - Confirm one `suggested` edge for Main Ridge
+   - `/hq/review` → click **Verify** → edge.status → `verified`
+   - **Cleanup is guaranteed** by a `finally` block — the throwaway is deleted even when an assertion fails halfway through
+   - Confirm `suggested` returns to **0** (the final bell) and no orphans
 
-Exits non-zero on any failure. Screenshots and a JSON report land in `./out/`.
+## Artifact retention
+
+Every run writes to `out/<ISO-timestamp>/`, never overwriting a previous run:
+
+```
+out/2026-06-25T12-14-33Z/
+  report.json              # full structured report
+  ui_project.png
+  ui_media.png
+  ui_review_empty.png
+  ui_review_with_item.png
+  ui_review_after_verify.png
+  FAIL_*.png               # only on failure
+  FAIL_*.html
+  FAIL_*.console.json
+  FAIL_*.network.json
+```
+
+`report.json` includes: `run_id`, `started_at`/`ended_at`, `environment`,
+`build_id` (commit hash or CI env var), `runtime` (python/platform/host),
+per-phase results, and on failure a `diagnostics` block with URL, screenshot
+filename, DOM snapshot, console logs, network 4xx/5xx, and the failing SQL.
+
+## Exit codes (granular)
+
+| Code | Meaning |
+|---|---|
+| 0 | Pass — C.1b production-ready |
+| 1 | Config: missing env / safety flag |
+| 2 | Verification mismatch (graph integrity or Coverage UI) |
+| 3 | UI navigation / selector failure |
+| 4 | Upload / trigger failure (throwaway didn't produce a suggested edge) |
+| 5 | Verify-flow failure (button missing or status didn't transition) |
+| 6 | Cleanup residue (suggested ≠ 0 or orphans) |
+
+## Production safety flag
+
+Running against Live requires an explicit acknowledgement:
+
+```bash
+export LIVE_CONFIRM=I_UNDERSTAND_THIS_TOUCHES_PRODUCTION
+python scripts/live-smoke-test/smoke.py --env live
+```
+
+Without `LIVE_CONFIRM` the script exits `1` immediately. `--env test` has no
+such gate — it's intended for nightly CI against the Test environment.
 
 ## Prerequisites
 
-Run from a workstation, not the Lovable sandbox (no Live DB access in sandbox).
+Run from a workstation or CI runner — not the Lovable sandbox.
 
 ```bash
-pip install playwright psycopg2-binary
-playwright install chromium
+python -m pip install --no-cache-dir psycopg2-binary playwright
+python -m playwright install chromium
 ```
 
 ## Configuration
 
-Export the following env vars (or put them in `.env` next to the script):
-
 | Var | Purpose |
 |---|---|
-| `LIVE_URL` | Live site origin, e.g. `https://peninsulaequine.systems` |
-| `LIVE_DATABASE_URL` | Live Postgres URL (Cloud View → Connection string) |
-| `LIVE_ADMIN_EMAIL` | Admin login used by the UI sweep |
+| `LIVE_URL` | Target site origin, e.g. `https://peninsulaequine.systems` |
+| `LIVE_DATABASE_URL` | Target Postgres URL |
+| `LIVE_ADMIN_EMAIL` | Admin login for the UI sweep |
 | `LIVE_ADMIN_PASSWORD` | Password for the admin |
-| `LIVE_SUPABASE_URL` | Live Supabase project URL |
-| `LIVE_SUPABASE_ANON_KEY` | Live anon key (for the auth login call) |
+| `LIVE_SUPABASE_URL` | Supabase project URL |
+| `LIVE_SUPABASE_ANON_KEY` | Supabase anon key |
+| `LIVE_CONFIRM` | Must be `I_UNDERSTAND_THIS_TOUCHES_PRODUCTION` when `--env live` |
+| `COMMIT_SHA` / `GITHUB_SHA` / `LOVABLE_COMMIT` | Optional build ID (falls back to `git rev-parse`) |
 
-The script never echoes secrets.
+The script never prints secrets. A `.env` file next to `smoke.py` is loaded
+automatically (and should be gitignored).
 
 ## Run
 
 ```bash
-python scripts/live-smoke-test/smoke.py
+# Test (no safety flag required)
+python scripts/live-smoke-test/smoke.py --env test
+
+# Live (safety flag required)
+export LIVE_CONFIRM=I_UNDERSTAND_THIS_TOUCHES_PRODUCTION
+python scripts/live-smoke-test/smoke.py --env live
+
+# Read-only verification only (skip pipeline writes)
+python scripts/live-smoke-test/smoke.py --env live --skip-pipeline
 ```
 
-Exit codes:
-- `0` — all checks passed; C.1b is production-ready.
-- `1` — SQL verification failed.
-- `2` — UI sweep failed.
-- `3` — Pipeline smoke test failed.
-- `4` — Cleanup left residue (suggested ≠ 0 or orphans).
+## Nightly regression (recommended)
 
-Always inspect `out/report.json` and `out/*.png` for the final state.
+Wire `--env test` into CI (GitHub Actions or equivalent) on a nightly schedule
+or post-deploy hook. Keep `--env live` as a deliberate, manual run after each
+Live publish that touches the graph surface.
