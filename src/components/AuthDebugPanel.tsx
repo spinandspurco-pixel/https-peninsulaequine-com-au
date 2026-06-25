@@ -54,9 +54,10 @@ function debugAllowed(isAdmin: boolean): boolean {
   return false;
 }
 
-function useIsOpen(isAdmin: boolean): [boolean, (v: boolean) => void] {
+function useIsOpen(isAdmin: boolean, search: string): [boolean, (v: boolean) => void] {
   const [manual, setManual] = useState<boolean | null>(null);
-  const allowed = useMemo(() => debugAllowed(isAdmin), [isAdmin]);
+  // search dep so that toggling ?view=preview within the SPA re-evaluates.
+  const allowed = useMemo(() => debugAllowed(isAdmin), [isAdmin, search]);
 
   useEffect(() => {
     if (!allowed) return;
