@@ -86,13 +86,21 @@ export function authLog(scope: string, payload: Record<string, unknown>): void {
   if (authLogBuffer.length > AUTH_LOG_BUFFER_SIZE) {
     authLogBuffer.splice(0, authLogBuffer.length - AUTH_LOG_BUFFER_SIZE);
   }
-  for (const listener of authLogListeners) {
-    try {
-      listener(authLogBuffer.slice());
-    } catch {
-      /* ignore listener errors */
+  // Notify listeners asynchronously so that callers logging during a React
+  // render (e.g. ProtectedRoute) don't trigger setState-in-render warnings
+  // in subscribers like AuthDebugPanel.
+  const snapshot = authLogBuffer.slice();
+  const notify = () => {
+    for (const listener of authLogListeners) {
+      try {
+        listener(snapshot);
+      } catch {
+        /* ignore listener errors */
+      }
     }
-  }
+  };
+  if (typeof queueMicrotask === "function") queueMicrotask(notify);
+  else setTimeout(notify, 0);
   if (!authDebugEnabled()) return;
   // eslint-disable-next-line no-console
   console.log(`[auth:${scope}]`, payload);
