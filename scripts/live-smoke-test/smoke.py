@@ -27,14 +27,35 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-import psycopg2
-import psycopg2.extras
-from playwright.async_api import (
-    async_playwright,
-    BrowserContext,
-    Page,
-    TimeoutError as PlaywrightTimeout,
-)
+from typing import Any
+
+# Heavy deps imported lazily inside main() so --help works without install.
+psycopg2 = None  # type: ignore[assignment]
+psycopg2_extras = None  # type: ignore[assignment]
+async_playwright = None  # type: ignore[assignment]
+BrowserContext = Any  # type: ignore[assignment,misc]
+Page = Any  # type: ignore[assignment,misc]
+PlaywrightTimeout = Exception  # type: ignore[assignment,misc]
+
+
+def _import_runtime_deps() -> None:
+    global psycopg2, psycopg2_extras, async_playwright
+    global BrowserContext, Page, PlaywrightTimeout
+    import psycopg2 as _pg
+    import psycopg2.extras as _pgx
+    from playwright.async_api import (
+        async_playwright as _apw,
+        BrowserContext as _BC,
+        Page as _P,
+        TimeoutError as _PT,
+    )
+    psycopg2 = _pg
+    psycopg2_extras = _pgx
+    async_playwright = _apw
+    BrowserContext = _BC
+    Page = _P
+    PlaywrightTimeout = _PT
+
 
 # --------------------------------------------------------------------------
 # Exit codes (granular)
