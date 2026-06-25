@@ -12,6 +12,7 @@ import {
 import { MediaGrid } from "@/components/hq/media/MediaGrid";
 import { MediaUploadDialog } from "@/components/hq/media/MediaUploadDialog";
 import { MediaDetailDrawer } from "@/components/hq/media/MediaDetailDrawer";
+import { mediaIdsWithSuggestions } from "@/lib/graph/edges";
 
 const STATES: Array<{ value: MediaApprovalState | "all"; label: string }> = [
   { value: "all", label: "All states" },
@@ -35,6 +36,8 @@ export default function AdminMedia() {
   const [state, setState] = useState<MediaApprovalState | "all">("all");
   const [type, setType] = useState<MediaAssetType | "all">("all");
   const [search, setSearch] = useState("");
+  const [needsReviewOnly, setNeedsReviewOnly] = useState(false);
+  const [suggestionIds, setSuggestionIds] = useState<Set<string>>(new Set());
   const [uploadOpen, setUploadOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -47,6 +50,12 @@ export default function AdminMedia() {
     try {
       const data = await listMedia();
       setRows(data);
+      try {
+        const ids = await mediaIdsWithSuggestions(data.map((d) => d.id));
+        setSuggestionIds(ids);
+      } catch {
+        setSuggestionIds(new Set());
+      }
       setError(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
@@ -59,10 +68,10 @@ export default function AdminMedia() {
     load();
   }, [load]);
 
-  const filtered = useMemo(
-    () => applyClientFilter(rows, { approvalState: state, assetType: type, search }),
-    [rows, state, type, search],
-  );
+  const filtered = useMemo(() => {
+    const base = applyClientFilter(rows, { approvalState: state, assetType: type, search });
+    return needsReviewOnly ? base.filter((r) => suggestionIds.has(r.id)) : base;
+  }, [rows, state, type, search, needsReviewOnly, suggestionIds]);
 
   const selected = useMemo(
     () => (selectedId ? rows.find((r) => r.id === selectedId) ?? null : null),
@@ -119,6 +128,18 @@ export default function AdminMedia() {
                 className="bg-transparent border-b border-accent/20 focus:border-accent/60 outline-none px-1 py-1 text-[12px] tracking-normal normal-case font-sans text-foreground/85 w-56"
               />
             </label>
+            <label className="flex items-center gap-2 text-[10px] uppercase tracking-[0.32em] text-foreground/45 font-mono cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={needsReviewOnly}
+                onChange={(e) => setNeedsReviewOnly(e.target.checked)}
+                className="accent-amber-400/80"
+              />
+              Needs review
+              {suggestionIds.size > 0 && (
+                <span className="text-amber-300/80 tabular-nums">{suggestionIds.size}</span>
+              )}
+            </label>
             {isAdmin && (
               <button
                 type="button"
@@ -141,6 +162,7 @@ export default function AdminMedia() {
             rows={filtered}
             loading={loading}
             onSelect={(r) => setSelectedId(r.id)}
+            suggestionIds={suggestionIds}
           />
         </div>
 

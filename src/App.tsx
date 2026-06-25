@@ -45,6 +45,7 @@ const AdminEmailMigration = lazy(() => import("./pages/AdminEmailMigration"));
 const AdminActivity = lazy(() => import("./pages/AdminActivity"));
 const AdminInquiries = lazy(() => import("./pages/AdminInquiries"));
 const AdminMedia = lazy(() => import("./pages/AdminMedia"));
+const HqReview = lazy(() => import("./pages/HqReview"));
 const DnsVerify = lazy(() => import("./pages/DnsVerify"));
 const DnsPublish = lazy(() => import("./pages/DnsPublish"));
 const DnsWizard = lazy(() => import("./pages/DnsWizard"));
@@ -143,7 +144,8 @@ function AppContent() {
             <Route path="/hq/staff" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><HqStaff /></ProtectedRoute>} />
            <Route path="/hq/activity" element={<ProtectedRoute allowedRoles={["admin","moderator","preview"]}><AdminActivity /></ProtectedRoute>} />
            <Route path="/hq/inquiries" element={<ProtectedRoute allowedRoles={["admin","employee","preview"]}><AdminInquiries /></ProtectedRoute>} />
-           <Route path="/hq/media" element={<ProtectedRoute allowedRoles={["admin","moderator","employee","trainer","preview"]}><AdminMedia /></ProtectedRoute>} />
+          <Route path="/hq/media" element={<ProtectedRoute allowedRoles={["admin","moderator","employee","trainer","preview"]}><AdminMedia /></ProtectedRoute>} />
+          <Route path="/hq/review" element={<ProtectedRoute allowedRoles={["admin","moderator","preview"]}><HqReview /></ProtectedRoute>} />
             <Route path="/hq/dns-verify" element={<ProtectedRoute allowedRoles={["admin"]}><DnsVerify /></ProtectedRoute>} />
             <Route path="/hq/dns-publish" element={<ProtectedRoute allowedRoles={["admin"]}><DnsPublish /></ProtectedRoute>} />
             <Route path="/hq/dns-status" element={<ProtectedRoute allowedRoles={["admin"]}><DnsStatus /></ProtectedRoute>} />

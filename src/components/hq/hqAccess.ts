@@ -109,6 +109,14 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     note: "Who did what and when — full audit timeline",
   },
   {
+    key: "review",
+    label: "Needs Review",
+    to: "/hq/review",
+    roles: ["admin", "moderator", "preview"],
+    group: "operations",
+    note: "Suggested knowledge-graph attachments awaiting judgement",
+  },
+  {
     key: "dns-verify",
     label: "DNS Verify",
     to: "/hq/dns-verify",

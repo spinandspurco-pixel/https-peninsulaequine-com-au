@@ -7,6 +7,7 @@ import { format, formatDistanceToNow } from "date-fns";
 import { useHqMount, withHqTimeout } from "@/lib/hqDiagnostics";
 import { MentionsCard } from "@/components/hq/MentionsCard";
 import { ActivityWire } from "@/components/hq/ActivityWire";
+import { countOpenSuggestions } from "@/lib/graph/edges";
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Command Centre
@@ -118,6 +119,7 @@ export function CommandOverview() {
   const [directoryName, setDirectoryName] = useState<string | null>(null);
   const [loadState, setLoadState] = useState<"idle" | "loading" | "ok" | "timeout" | "error">("loading");
   const [reloadKey, setReloadKey] = useState(0);
+  const [needsReview, setNeedsReview] = useState<number | null>(null);
 
   const now = useMemo(() => new Date(), [reloadKey]);
   const firstName = useMemo(
@@ -209,6 +211,13 @@ export function CommandOverview() {
     };
 
     load();
+    countOpenSuggestions()
+      .then((n) => {
+        if (!cancelled) setNeedsReview(n);
+      })
+      .catch(() => {
+        if (!cancelled) setNeedsReview(null);
+      });
     return () => {
       cancelled = true;
     };
@@ -368,6 +377,34 @@ export function CommandOverview() {
             ))}
           </div>
         </section>
+
+        {/* Needs Review — knowledge-graph suggestions awaiting judgement */}
+        {needsReview !== null && needsReview > 0 && (
+          <section className="grid grid-cols-1 lg:grid-cols-[180px,1fr] gap-x-10 gap-y-4">
+            <div className="space-y-2">
+              <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/55">
+                Review
+              </p>
+              <div className="h-px w-10 bg-border/30" />
+            </div>
+            <button
+              type="button"
+              onClick={() => navigate("/hq/review")}
+              className="group text-left border-y border-amber-300/20 py-4 px-1 flex items-center gap-6 hover:border-amber-300/40 transition-colors"
+            >
+              <span className="font-serif text-[28px] font-light text-amber-200/90 tabular-nums leading-none">
+                {String(needsReview).padStart(2, "0")}
+              </span>
+              <span className="flex-1 text-[12px] text-foreground/70 leading-snug">
+                Suggested attachments awaiting review — filenames, tags and prose the
+                system thinks belong to a project.
+              </span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-accent/60 group-hover:text-accent">
+                Open →
+              </span>
+            </button>
+          </section>
+        )}
 
         {/* ════════════════════════════════════════════════════════════════ */}
         {/* PROJECT SPOTLIGHT                                                 */}

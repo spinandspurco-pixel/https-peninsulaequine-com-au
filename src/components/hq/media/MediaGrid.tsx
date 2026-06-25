@@ -5,9 +5,10 @@ interface Props {
   rows: MediaAsset[];
   loading: boolean;
   onSelect: (row: MediaAsset) => void;
+  suggestionIds?: Set<string>;
 }
 
-export function MediaGrid({ rows, loading, onSelect }: Props) {
+export function MediaGrid({ rows, loading, onSelect, suggestionIds }: Props) {
   if (loading && rows.length === 0) {
     return (
       <p className="font-mono uppercase text-[10px] tracking-[0.4em] text-foreground/40">
@@ -30,7 +31,12 @@ export function MediaGrid({ rows, loading, onSelect }: Props) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
       {rows.map((row) => (
-        <MediaTile key={row.id} asset={row} onClick={() => onSelect(row)} />
+        <MediaTile
+          key={row.id}
+          asset={row}
+          onClick={() => onSelect(row)}
+          hasSuggestions={suggestionIds?.has(row.id) ?? false}
+        />
       ))}
     </div>
   );
