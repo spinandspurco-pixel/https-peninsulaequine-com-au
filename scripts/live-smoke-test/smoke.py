@@ -550,6 +550,8 @@ async def phase_pipeline(env: dict[str, str], conn, main_ridge_id: str) -> None:
 
 async def main() -> None:
     args = parse_args()
+    _import_runtime_deps()
+
     env = assert_safety(args)
     print(f"Run dir:    {RUN_DIR}")
     print(f"Env:        {args.env}")
