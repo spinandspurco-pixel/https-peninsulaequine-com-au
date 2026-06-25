@@ -1,9 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useHqMode } from "@/hooks/useHqMode";
-import { visibleHqItems } from "./hqAccess";
+import {
+  HQ_SECTIONS,
+  activeHqSection,
+  visibleHqItemsForSection,
+  type HqSection,
+} from "./hqAccess";
 import { cn } from "@/lib/utils";
 
 interface HqNavProps {
@@ -11,157 +14,136 @@ interface HqNavProps {
   className?: string;
 }
 
-type GroupKey = "content" | "operations";
-const STORAGE_KEY = "hq.nav.groups.v1";
-
-function readStored(): Partial<Record<GroupKey, boolean>> {
-  if (typeof window === "undefined") return {};
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as Partial<Record<GroupKey, boolean>>) : {};
-  } catch {
-    return {};
-  }
-}
-
-function writeStored(state: Record<GroupKey, boolean>) {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch {
-    /* noop */
-  }
-}
-
 /**
- * Role-aware navigation strip for the HQ area.
- * Overview is always visible. Content + Operations are collapsible groups
- * that remember their state in localStorage. Default: open for admin/staff,
- * collapsed for preview. Active child route auto-opens its parent group.
+ * Two-tier HQ navigation.
+ *
+ * Primary row — the four institutional sections (Applications · Content ·
+ * Projects · Clients). Plain text labels, no numbering.
+ *
+ * Sub-row — contextual to the active section only. Always begins with
+ * "Overview" (→ /hq). Hidden entirely when the section has no children
+ * beyond Overview that the current role can see.
+ *
+ * Routes and role gates are preserved from hqAccess.ts; this component
+ * only restructures presentation.
  */
-export function HqNav({ variant = "rail", className }: HqNavProps) {
+export function HqNav({ className }: HqNavProps) {
   const { roles, isPreview: isPreviewRole } = useAuth();
   const { isPreview } = useHqMode();
   const { pathname } = useLocation();
 
-  const effectiveRoles = isPreview && !isPreviewRole ? [...roles, "preview" as const] : roles;
-  const items = visibleHqItems(effectiveRoles);
+  const effectiveRoles =
+    isPreview && !isPreviewRole ? [...roles, "preview" as const] : roles;
 
-  const grouped = useMemo(
-    () => ({
-      overview: items.filter((i) => i.group === "overview"),
-      content: items.filter((i) => i.group === "content"),
-      operations: items.filter((i) => i.group === "operations"),
-    }),
-    [items],
+  const visibleSections = HQ_SECTIONS.filter(
+    (section) => visibleHqItemsForSection(effectiveRoles, section.key).length > 0,
   );
 
+  // If no section has any children for this role, fall back to a bare
+  // Overview link rather than an empty bar.
+  const hasAnySection = visibleSections.length > 0;
+  const currentSection: HqSection = hasAnySection
+    ? activeHqSection(pathname, effectiveRoles)
+    : "applications";
+
+  const subItems = visibleHqItemsForSection(effectiveRoles, currentSection);
+
+  const previewSuffix = (to: string) =>
+    isPreview ? (to.includes("?") ? "&" : "?") + "view=preview" : "";
+
+  const overviewActive = pathname === "/hq";
+
   const isItemActive = (to: string) =>
-    to === "/hq" ? pathname === "/hq" : pathname === to || pathname.startsWith(to + "/");
+    pathname === to || pathname.startsWith(to + "/");
 
-  const activeIn = (key: GroupKey) => grouped[key].some((i) => isItemActive(i.to));
-
-  // Initial state: stored value wins; otherwise default by role; active group always opens.
-  const defaultOpen = !isPreview;
-  const [open, setOpen] = useState<Record<GroupKey, boolean>>(() => {
-    const stored = readStored();
-    return {
-      content: stored.content ?? defaultOpen,
-      operations: stored.operations ?? defaultOpen,
-    };
-  });
-
-  // Auto-open the group containing the active route.
-  useEffect(() => {
-    setOpen((prev) => {
-      const next = { ...prev };
-      (["content", "operations"] as GroupKey[]).forEach((k) => {
-        if (activeIn(k) && !next[k]) next[k] = true;
-      });
-      return next;
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
-
-  const toggle = (key: GroupKey) => {
-    setOpen((prev) => {
-      const next = { ...prev, [key]: !prev[key] };
-      writeStored(next);
-      return next;
-    });
-  };
-
-  if (items.length === 0) return null;
-
-  const renderItem = (item: typeof items[number]) => {
-    const active = isItemActive(item.to);
-    return (
-      <li key={item.key}>
-        <NavLink
-          to={`${item.to}${isPreview ? (item.to.includes("?") ? "&" : "?") + "view=preview" : ""}`}
-          className={cn(
-            "text-[10px] uppercase tracking-[0.22em] transition-colors whitespace-nowrap",
-            active ? "text-accent" : "text-muted-foreground/45 hover:text-foreground/80",
-          )}
-          aria-current={active ? "page" : undefined}
-        >
-          {item.label}
-        </NavLink>
-      </li>
-    );
-  };
-
-  const renderGroup = (key: GroupKey, label: string) => {
-    if (grouped[key].length === 0) return null;
-    const isOpen = open[key];
-    const hasActive = activeIn(key);
-    return (
-      <div className="flex items-start sm:items-center gap-x-4 gap-y-2 flex-wrap">
-        <button
-          type="button"
-          onClick={() => toggle(key)}
-          aria-expanded={isOpen}
-          aria-controls={`hq-nav-${key}`}
-          className={cn(
-            "inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.3em] transition-colors whitespace-nowrap",
-            hasActive ? "text-accent/85" : "text-accent/45 hover:text-accent/70",
-          )}
-        >
-          {label}
-          <ChevronDown
-            className={cn(
-              "h-3 w-3 transition-transform duration-300",
-              isOpen ? "rotate-0" : "-rotate-90",
-            )}
-            aria-hidden
-          />
-        </button>
-        {isOpen && (
-          <ul
-            id={`hq-nav-${key}`}
-            className="flex items-center gap-x-6 gap-y-2 flex-wrap animate-fade-in"
-          >
-            {grouped[key].map(renderItem)}
-          </ul>
-        )}
-      </div>
-    );
-  };
+  const isSectionActive = (section: HqSection) =>
+    !overviewActive && section === currentSection;
 
   return (
     <nav
       aria-label="HQ sections"
-      className={cn("border-y border-border/10 bg-background/60 backdrop-blur-sm", className)}
+      className={cn(
+        "border-y border-border/10 bg-background/60 backdrop-blur-sm",
+        className,
+      )}
     >
-      <div className="max-w-5xl mx-auto px-6 py-3 flex flex-wrap items-start sm:items-center gap-x-10 gap-y-3">
-        {grouped.overview.length > 0 && (
-          <ul className="flex items-center gap-x-6 flex-wrap">
-            {grouped.overview.map(renderItem)}
+      {/* ─── Primary row ──────────────────────────────────────────────── */}
+      <div className="max-w-5xl mx-auto px-6 pt-3 pb-2 flex flex-wrap items-center gap-x-10 gap-y-2">
+        {hasAnySection ? (
+          <ul className="flex items-center gap-x-8 sm:gap-x-10 flex-wrap">
+            {visibleSections.map((section) => {
+              const active = isSectionActive(section.key);
+              // Section link points at its Overview (= /hq) so it always
+              // resolves to a real route.
+              return (
+                <li key={section.key}>
+                  <NavLink
+                    to={`/hq${previewSuffix("/hq")}`}
+                    state={{ hqSection: section.key }}
+                    className={cn(
+                      "text-[11px] uppercase tracking-[0.28em] transition-colors whitespace-nowrap",
+                      active
+                        ? "text-accent"
+                        : "text-foreground/70 hover:text-foreground",
+                    )}
+                    aria-current={active ? "page" : undefined}
+                  >
+                    {section.label}
+                  </NavLink>
+                </li>
+              );
+            })}
           </ul>
+        ) : (
+          <NavLink
+            to={`/hq${previewSuffix("/hq")}`}
+            className="text-[11px] uppercase tracking-[0.28em] text-foreground/70 hover:text-foreground"
+          >
+            Overview
+          </NavLink>
         )}
-        {renderGroup("content", "Content")}
-        {renderGroup("operations", "Operations")}
       </div>
+
+      {/* ─── Contextual sub-row ───────────────────────────────────────── */}
+      {hasAnySection && subItems.length > 0 && (
+        <div className="border-t border-border/5">
+          <div className="max-w-5xl mx-auto px-6 py-2 flex flex-wrap items-center gap-x-6 gap-y-2">
+            <NavLink
+              to={`/hq${previewSuffix("/hq")}`}
+              className={cn(
+                "text-[10px] uppercase tracking-[0.22em] transition-colors whitespace-nowrap",
+                overviewActive
+                  ? "text-accent"
+                  : "text-muted-foreground/55 hover:text-foreground/85",
+              )}
+              aria-current={overviewActive ? "page" : undefined}
+            >
+              Overview
+            </NavLink>
+            <ul className="flex items-center gap-x-6 gap-y-2 flex-wrap">
+              {subItems.map((item) => {
+                const active = isItemActive(item.to);
+                return (
+                  <li key={item.key}>
+                    <NavLink
+                      to={`${item.to}${previewSuffix(item.to)}`}
+                      className={cn(
+                        "text-[10px] uppercase tracking-[0.22em] transition-colors whitespace-nowrap",
+                        active
+                          ? "text-accent"
+                          : "text-muted-foreground/55 hover:text-foreground/85",
+                      )}
+                      aria-current={active ? "page" : undefined}
+                    >
+                      {item.label}
+                    </NavLink>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
