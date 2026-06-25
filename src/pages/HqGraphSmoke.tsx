@@ -291,6 +291,13 @@ export default function HqGraphSmoke() {
                   >
                     JSON
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => copyJson(row)}
+                    className="text-xs tracking-[0.3em] uppercase text-foreground/60 hover:text-foreground"
+                  >
+                    Copy
+                  </button>
                 </li>
               ))}
             </ul>
