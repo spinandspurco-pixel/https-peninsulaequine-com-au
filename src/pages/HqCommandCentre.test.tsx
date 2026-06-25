@@ -34,17 +34,42 @@ vi.mock("@/hooks/command/useMorningBrief", () => ({
   }),
 }));
 
-vi.mock("@/hooks/command/usePriorityCounts", () => ({
-  usePriorityCounts: () => ({
-    data: {
-      enquiries: 2,
-      projects: 4,
-      clients_active: 1,
-      media_pending: 3,
-      review_pending: 0,
-    },
+vi.mock("@/hooks/command/useWorkQueue", () => ({
+  useWorkQueue: () => ({
+    items: [
+      {
+        id: "followup:1",
+        kind: "followup",
+        label: "Reply to Sarah Thompson",
+        detail: "Follow-up 2 days overdue",
+        href: "/hq/inquiries",
+        severity: "warn",
+        score: 120,
+      },
+      {
+        id: "enquiry:2",
+        kind: "enquiry",
+        label: "Triage new enquiry — Acme Stud",
+        detail: "Arrived overnight",
+        href: "/hq/inquiries",
+        severity: "warn",
+        score: 90,
+      },
+      {
+        id: "media:pending:3",
+        kind: "media",
+        label: "Approve 3 media assets",
+        href: "/hq/media",
+        severity: "info",
+        score: 50,
+      },
+    ],
     isLoading: false,
     error: null,
+    snooze: vi.fn(),
+    dismiss: vi.fn(),
+    restore: vi.fn(),
+    hiddenCount: 0,
   }),
 }));
 
@@ -105,19 +130,22 @@ describe("HqCommandCentre", () => {
     expect(screen.getByText(/Watchlist/)).toBeTruthy();
   });
 
-  it("each priority card is a link pointing at an existing HQ route", () => {
+  it("renders ranked work-queue items pointing at their drill-down routes", () => {
     renderPage();
-    const expected: Array<[RegExp, string]> = [
-      [/^Enquiries — /, "/hq/inquiries"],
-      [/^Projects — /, "/hq/projects"],
-      [/^Clients — /, "/hq/clients"],
-      [/^Media — /, "/hq/media"],
-      [/^Review Queue — /, "/hq/review"],
-    ];
-    for (const [label, href] of expected) {
-      const link = screen.getByRole("link", { name: label });
-      expect(link.getAttribute("href")).toBe(href);
-    }
+    const followUp = screen.getByRole("link", { name: /Reply to Sarah Thompson/i });
+    expect(followUp.getAttribute("href")).toBe("/hq/inquiries");
+    const enquiry = screen.getByRole("link", { name: /Triage new enquiry/i });
+    expect(enquiry.getAttribute("href")).toBe("/hq/inquiries");
+    const media = screen.getByRole("link", { name: /Approve 3 media assets/i });
+    expect(media.getAttribute("href")).toBe("/hq/media");
+  });
+
+  it("exposes Snooze and Done controls per work-queue item", () => {
+    renderPage();
+    expect(
+      screen.getAllByRole("button", { name: /Snooze .* for 24 hours/i }).length,
+    ).toBeGreaterThan(0);
+    expect(screen.getAllByRole("button", { name: /^Dismiss /i }).length).toBeGreaterThan(0);
   });
 
   it("shows the admin-only system-health band including Graph Smoke", () => {
