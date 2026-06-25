@@ -7,7 +7,7 @@ import { HqNav } from "@/components/hq/HqNav";
 import { HqLoadingState } from "@/components/hq/HqLoadingState";
 import { resolveCommandView, hasWidget } from "@/lib/commandCentre/roleView";
 import { MorningBrief } from "@/components/hq/command/MorningBrief";
-import { PriorityCards } from "@/components/hq/command/PriorityCards";
+import { WorkQueue } from "@/components/hq/command/WorkQueue";
 import { ActivityFeed } from "@/components/hq/command/ActivityFeed";
 import { Watchlist } from "@/components/hq/command/Watchlist";
 
@@ -78,19 +78,32 @@ export default function HqCommandCentre() {
           </div>
         </section>
 
-        {/* Band 2 — Priority cards */}
+        {/* Band 2 — Work queue (ranked: what should I do first?) */}
         <section
           aria-labelledby="priority-heading"
           className="border-t border-border/10"
         >
           <div className="max-w-5xl mx-auto px-6 py-12 sm:py-16">
-            <h2
-              id="priority-heading"
-              className="font-mono text-[9px] uppercase tracking-[0.32em] text-muted-foreground/55 mb-8"
-            >
-              Priorities
-            </h2>
-            <PriorityCards view={view} />
+            <div className="flex items-baseline justify-between mb-8">
+              <div>
+                <h2
+                  id="priority-heading"
+                  className="font-mono text-[9px] uppercase tracking-[0.32em] text-muted-foreground/55"
+                >
+                  Priorities
+                </h2>
+                <p className="mt-2 text-[11px] text-muted-foreground/50 italic">
+                  What should I do first?
+                </p>
+              </div>
+              <a
+                href="/hq/inquiries"
+                className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/55 hover:text-accent transition-colors"
+              >
+                View all →
+              </a>
+            </div>
+            <WorkQueue />
           </div>
         </section>
 
@@ -105,16 +118,32 @@ export default function HqCommandCentre() {
             </h2>
             <div className="grid gap-12 lg:grid-cols-[2fr_1fr]">
               <div>
-                <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-muted-foreground/55 mb-6">
-                  Activity
-                </p>
+                <div className="flex items-baseline justify-between mb-6">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-muted-foreground/55">
+                    Activity
+                  </p>
+                  <a
+                    href="/hq/activity"
+                    className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/55 hover:text-accent transition-colors"
+                  >
+                    View all →
+                  </a>
+                </div>
                 <ActivityFeed />
               </div>
               {hasWidget(view, "watchlist") && (
                 <div>
-                  <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-muted-foreground/55 mb-6">
-                    Watchlist
-                  </p>
+                  <div className="flex items-baseline justify-between mb-6">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-muted-foreground/55">
+                      Watchlist
+                    </p>
+                    <a
+                      href="/hq/activity"
+                      className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/55 hover:text-accent transition-colors"
+                    >
+                      View all →
+                    </a>
+                  </div>
                   <Watchlist />
                 </div>
               )}

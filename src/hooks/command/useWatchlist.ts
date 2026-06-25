@@ -99,7 +99,7 @@ async function fetchWatchlist(): Promise<WatchlistItem[]> {
     });
   }
 
-  return out;
+  return out.slice(0, 6);
 }
 
 export function useWatchlist() {
