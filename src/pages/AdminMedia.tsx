@@ -50,6 +50,12 @@ export default function AdminMedia() {
     try {
       const data = await listMedia();
       setRows(data);
+      try {
+        const ids = await mediaIdsWithSuggestions(data.map((d) => d.id));
+        setSuggestionIds(ids);
+      } catch {
+        setSuggestionIds(new Set());
+      }
       setError(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
@@ -62,10 +68,10 @@ export default function AdminMedia() {
     load();
   }, [load]);
 
-  const filtered = useMemo(
-    () => applyClientFilter(rows, { approvalState: state, assetType: type, search }),
-    [rows, state, type, search],
-  );
+  const filtered = useMemo(() => {
+    const base = applyClientFilter(rows, { approvalState: state, assetType: type, search });
+    return needsReviewOnly ? base.filter((r) => suggestionIds.has(r.id)) : base;
+  }, [rows, state, type, search, needsReviewOnly, suggestionIds]);
 
   const selected = useMemo(
     () => (selectedId ? rows.find((r) => r.id === selectedId) ?? null : null),
