@@ -93,7 +93,7 @@ export default function HqReview() {
     try {
       await acceptSuggestion(edge.id);
       setEdges((cur) => cur.filter((e) => e.id !== edge.id));
-      toast.success("Attached");
+      toast.success("Verified");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : String(e));
     } finally {
@@ -149,8 +149,11 @@ export default function HqReview() {
               Suggested attachments.
             </h1>
             <p className="text-[13px] text-muted-foreground/65 leading-relaxed">
-              Relationships the system inferred from filenames, tags, and prose. Accept
+              Relationships the system inferred from filenames, tags, and prose. Verify
               what reads true; dismiss what doesn't. Nothing here was auto-attached.
+            </p>
+            <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/45">
+              Verify confirms the suggested project link · Dismiss hides it from review.
             </p>
             {!canWrite && (
               <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/55">
@@ -210,7 +213,7 @@ export default function HqReview() {
                         onClick={() => onAccept(edge)}
                         className="text-[10px] uppercase tracking-[0.28em] text-accent/80 hover:text-accent disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                       >
-                        Attach →
+                        Verify →
                       </button>
                     </div>
                   </li>
