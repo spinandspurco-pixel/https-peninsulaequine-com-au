@@ -183,6 +183,7 @@ export function visibleHqItemsForSection(
  */
 export function activeHqSection(pathname: string, roles: AppRole[]): HqSection {
   if (pathname === "/hq") return "applications";
+  if (SECTION_ROOTS[pathname]) return SECTION_ROOTS[pathname];
   const items = visibleHqItems(roles);
   const match = items.find(
     (item) => pathname === item.to || pathname.startsWith(item.to + "/"),
