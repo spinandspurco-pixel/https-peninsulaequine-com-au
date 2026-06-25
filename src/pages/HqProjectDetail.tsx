@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { RefreshCw } from "lucide-react";
 import { format } from "date-fns";
 import { HqNav } from "@/components/hq/HqNav";
+import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { ProjectNotes } from "@/components/hq/ProjectNotes";
 import { ProjectCoverage } from "@/components/hq/ProjectCoverage";
 
