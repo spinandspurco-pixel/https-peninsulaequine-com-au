@@ -48,7 +48,7 @@ export function HqBreadcrumbs({
   const previewSuffix = (to: string) =>
     isPreview ? (to.includes("?") ? "&" : "?") + "view=preview" : "";
 
-  const { sectionKey, sectionLabel, currentLabel } = useMemo(() => {
+  const { sectionKey, sectionLabel, sectionPath, currentLabel } = useMemo(() => {
     const match = HQ_NAV_ITEMS.find(
       (item) => pathname === item.to || pathname.startsWith(item.to + "/"),
     );
@@ -58,6 +58,7 @@ export function HqBreadcrumbs({
     return {
       sectionKey: sec,
       sectionLabel: secMeta?.label ?? "HQ",
+      sectionPath: secMeta?.defaultPath ?? "/hq",
       currentLabel: current ?? match?.label ?? "Overview",
     };
   }, [pathname, current, sectionOverride]);
@@ -69,7 +70,7 @@ export function HqBreadcrumbs({
     { label: "HQ", to: `/hq${previewSuffix("/hq")}` },
     {
       label: sectionLabel,
-      to: `/hq${previewSuffix("/hq")}`,
+      to: `${sectionPath}${previewSuffix(sectionPath)}`,
     },
     ...(trail ?? []),
     { label: currentLabel },
