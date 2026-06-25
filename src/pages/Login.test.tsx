@@ -78,7 +78,7 @@ describe("Login route guard", () => {
   it("shows the Authenticating spinner while auth is still resolving", () => {
     mockAuth = { ...mockAuth, ready: false };
     renderAt("/login");
-    expect(screen.getByText(/authenticating/i)).toBeInTheDocument();
+    expect(screen.getByText(/checking access/i)).toBeInTheDocument();
     expect(screen.queryByLabelText(/password/i)).not.toBeInTheDocument();
   });
 
