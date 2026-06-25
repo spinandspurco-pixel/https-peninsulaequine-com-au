@@ -362,5 +362,6 @@ export const KIND_BADGE: Record<HqActivityKind, string> = {
   project_updated: "Project",
   cms_updated: "CMS",
   staff_profile_updated: "Staff",
+  media_updated: "Media",
   system: "System",
 };
