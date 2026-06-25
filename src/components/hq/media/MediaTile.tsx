@@ -53,6 +53,14 @@ export function MediaTile({ asset, onClick, hasSuggestions = false }: Props) {
         <div className="absolute top-2 left-2 font-mono text-[8px] uppercase tracking-[0.32em] px-2 py-1 bg-background/70 backdrop-blur-sm text-foreground/70">
           {stateLabel}
         </div>
+        {hasSuggestions && (
+          <div
+            title="Smart Attach — suggested project link awaiting review"
+            className="absolute bottom-2 left-2 font-mono text-[8px] uppercase tracking-[0.32em] px-2 py-1 bg-amber-400/15 backdrop-blur-sm text-amber-300/90 border border-amber-300/30"
+          >
+            ◇ Suggested
+          </div>
+        )}
       </div>
       <div className="pt-3 space-y-1">
         <p className="font-serif text-[0.98rem] text-foreground/85 leading-snug">
