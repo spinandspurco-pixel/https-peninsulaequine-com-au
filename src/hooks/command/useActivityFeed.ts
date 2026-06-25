@@ -24,8 +24,8 @@ export interface FeedEntry {
   href?: string;
 }
 
-const CAP_PER_SOURCE = 12;
-const CAP_TOTAL = 24;
+const CAP_PER_SOURCE = 8;
+const CAP_TOTAL = 8;
 
 function humaniseInquiryEvent(event_type: string, to_value: string | null): string {
   switch (event_type) {
