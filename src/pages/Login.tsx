@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { Eye, EyeOff, Loader2, ArrowLeft, Lock } from "lucide-react";
 import { lovable } from "@/integrations/lovable/index";
 import { StaffPortalFrame } from "@/components/StaffPortalFrame";
+import { HqLoadingState } from "@/components/hq/HqLoadingState";
 import { clearLocalAuthCacheAndSignOut } from "@/lib/authCache";
 
 export default function Login() {
