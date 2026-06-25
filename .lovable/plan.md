@@ -11,6 +11,8 @@ Layer 4  Views             Command Centre · Project Workspace · Daily Brief
 
 Built in two halves: the graph itself (infrastructure), then suggestions (the first consumer).
 
+> **Guiding principle.** Although the graph is generic, Phase C.1 intentionally implements **Project-centric relationships only** (Project ↔ Media · Documents · Field Notes · Activity · Inquiries · Staff). Additional node domains (Client, Horse, Invoice, Proposal, Deliverable) will not be connected until they have a concrete operational need. Relationship Explorer is deferred to future work; **Coverage** is the headline outcome of this phase.
+
 ---
 
 ### The model — `hq_graph`
