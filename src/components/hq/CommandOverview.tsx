@@ -7,6 +7,7 @@ import { format, formatDistanceToNow } from "date-fns";
 import { useHqMount, withHqTimeout } from "@/lib/hqDiagnostics";
 import { MentionsCard } from "@/components/hq/MentionsCard";
 import { ActivityWire } from "@/components/hq/ActivityWire";
+import { countOpenSuggestions } from "@/lib/graph/edges";
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Command Centre
