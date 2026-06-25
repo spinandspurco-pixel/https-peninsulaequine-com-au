@@ -79,7 +79,7 @@ function useIsOpen(isAdmin: boolean, search: string): [boolean, (v: boolean) => 
 export function AuthDebugPanel() {
   const { user, session, ready, authLoading, rolesLoading, roles, isAdmin } = useAuth();
   const location = useLocation();
-  const [open, setOpen] = useIsOpen(isAdmin);
+  const [open, setOpen] = useIsOpen(isAdmin, location.search);
   const [collapsed, setCollapsed] = useState(true);
   const [entries, setEntries] = useState<AuthLogEntry[]>(() => getAuthLogEntries());
 
