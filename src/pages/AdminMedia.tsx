@@ -12,6 +12,7 @@ import {
 import { MediaGrid } from "@/components/hq/media/MediaGrid";
 import { MediaUploadDialog } from "@/components/hq/media/MediaUploadDialog";
 import { MediaDetailDrawer } from "@/components/hq/media/MediaDetailDrawer";
+import { mediaIdsWithSuggestions } from "@/lib/graph/edges";
 
 const STATES: Array<{ value: MediaApprovalState | "all"; label: string }> = [
   { value: "all", label: "All states" },
