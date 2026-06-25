@@ -147,6 +147,12 @@ export async function fetchHqActivity(
       .gte("updated_at", sinceIso)
       .order("updated_at", { ascending: false })
       .limit(perSource),
+    supabase
+      .from("media_assets")
+      .select("id, title, asset_type, approval_state, created_at, updated_at, updated_by, created_by")
+      .gte("updated_at", sinceIso)
+      .order("updated_at", { ascending: false })
+      .limit(perSource),
   ]);
 
   const events: HqActivityEvent[] = [];
