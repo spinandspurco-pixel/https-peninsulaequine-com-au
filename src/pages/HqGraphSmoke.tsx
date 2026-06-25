@@ -109,6 +109,19 @@ export default function HqGraphSmoke() {
     URL.revokeObjectURL(url);
   };
 
+  const copyJson = async (row: ReportRow) => {
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(row.report, null, 2));
+      toast.success("Report JSON copied");
+    } catch (e) {
+      toast.error(`Copy failed: ${(e as Error).message}`);
+    }
+  };
+
+  const latest = rows[0];
+  const latestSummary = latest?.report?.summary;
+
+
   if (authLoading) return null;
   if (!user || !isAdmin) {
     return (
