@@ -15,8 +15,15 @@ export function HqPreviewBanner() {
 
   if (!isPreview) return null;
 
+  // Admins land here by clicking "Client preview" on /hq; they impersonate the
+  // preview view and need a way back. Real preview-role users (Josh) never see
+  // the exit affordance because preview is their permanent role.
+  const handleExit = () => {
+    exitPreview();
+  };
+
   return (
-    <div className="sticky top-0 z-40 border-b border-accent/20 bg-background/85 backdrop-blur-md">
+    <div className="sticky top-14 z-40 border-b border-accent/20 bg-background/85 backdrop-blur-md">
       {/* Top hairline gradient — the bronze thread */}
       <div
         aria-hidden
@@ -32,14 +39,15 @@ export function HqPreviewBanner() {
             Client Preview
           </p>
           <span className="text-muted-foreground/20 hidden sm:inline" aria-hidden>·</span>
-          <p className="text-[11px] text-muted-foreground/65 hidden sm:inline truncate italic">
-            View-only demonstration environment
+          <p className="text-[11px] text-muted-foreground/65 hidden sm:inline truncate">
+            View-only
           </p>
         </div>
         {isAdmin && (
           <button
-            onClick={exitPreview}
-            className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground/55 hover:text-foreground/85 transition-colors shrink-0"
+            type="button"
+            onClick={handleExit}
+            className="font-mono text-[10px] uppercase tracking-[0.25em] text-accent/70 hover:text-accent transition-colors shrink-0"
           >
             Exit preview →
           </button>
