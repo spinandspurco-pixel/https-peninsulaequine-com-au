@@ -33,6 +33,7 @@ const LegalTerms = lazy(() => import("./pages/Legal").then(m => ({ default: m.Te
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Login = lazy(() => import("./pages/Login"));
 const Admin = lazy(() => import("./pages/Admin"));
+const HqCommandCentre = lazy(() => import("./pages/HqCommandCentre"));
 const AdminServices = lazy(() => import("./pages/AdminServices"));
 const AdminTestimonials = lazy(() => import("./pages/AdminTestimonials"));
 const AdminEvents = lazy(() => import("./pages/AdminEvents"));
