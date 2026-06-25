@@ -2664,6 +2664,40 @@ export type Database = {
           user_id: string
         }[]
       }
+      media_vault_asset_for_path: {
+        Args: { _name: string }
+        Returns: {
+          alt_text: string | null
+          approval_state: string
+          asset_type: string
+          created_at: string
+          created_by: string | null
+          credit: string | null
+          description: string | null
+          file_size: number | null
+          file_url: string | null
+          height: number | null
+          id: string
+          is_demo: boolean
+          location: string | null
+          mime_type: string | null
+          project_id: string | null
+          sort_order: number
+          storage_path: string
+          tags: string[]
+          title: string
+          updated_at: string
+          updated_by: string | null
+          usage_rights: string | null
+          width: number | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "media_assets"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       refresh_slot_hold: {
         Args: { p_expires_at: string; p_session_id: string; p_slot_id: string }
         Returns: undefined
