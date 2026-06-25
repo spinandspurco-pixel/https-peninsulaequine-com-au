@@ -144,7 +144,7 @@ export default function HqProjectDetail() {
   return (
     <Layout>
       <HqNav />
-      <HqPreviewBanner />
+      
       <div className="min-h-screen bg-background">
         {/* Header */}
         <header className="pt-32 sm:pt-40 pb-10">
