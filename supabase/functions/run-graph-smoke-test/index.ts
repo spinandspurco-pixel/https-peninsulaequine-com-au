@@ -222,7 +222,12 @@ Deno.serve(async (req) => {
     report.phases.sql_verify = {
       status_counts: statusMap,
       main_ridge_id: mainRidgeId,
+      orphans,
+      duplicates: dupes,
     };
+    report.summary.suggested_count = statusMap.suggested ?? 0;
+    report.summary.orphan_count = orphans;
+    report.summary.duplicate_count = dupes;
   } catch (err) {
     const f = err instanceof SmokeFail ? err : new SmokeFail(EXIT.VERIFY_MISMATCH, String((err as Error).message ?? err));
     await finalise("FAIL", f.code, { code: f.code, message: f.message });
