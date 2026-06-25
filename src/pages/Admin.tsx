@@ -122,7 +122,7 @@ export default function Admin() {
 
   return (
     <Layout>
-      <HqPreviewBanner />
+      
       <div className="min-h-screen bg-background">
         {(() => {
           const identity = resolveIdentity(user, { isAdmin, isPreview });
