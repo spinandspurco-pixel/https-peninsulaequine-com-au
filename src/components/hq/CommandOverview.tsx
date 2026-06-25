@@ -482,7 +482,7 @@ export function CommandOverview() {
           <div className="space-y-2">
             <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-accent/55">Activity</p>
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40">
-              {activity.length ? `Last ${activity.length}` : "Quiet"}
+              Live wire
             </p>
           </div>
 
