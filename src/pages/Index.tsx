@@ -256,16 +256,16 @@ export default function Index() {
               className="relative z-10 section-container w-full pb-[clamp(5rem,4rem+7vw,9rem)] pt-32"
               style={{ opacity: heroFade, willChange: "opacity" }}
             >
-              <div className="max-w-[42rem] space-y-8">
-                <div className="space-y-5">
+              <div className="max-w-[44rem] space-y-10">
+                <div className="space-y-7">
                   <h1
-                    className="font-serif text-foreground leading-[0.9] tracking-[-0.03em]"
+                    className="font-serif text-foreground leading-[0.88] tracking-[-0.035em]"
                     style={{
-                      fontSize: "clamp(2.85rem, 1.85rem + 5vw, 6.2rem)",
+                      fontSize: "clamp(3.1rem, 1.95rem + 5.6vw, 7rem)",
                       opacity: headlineReady ? 1 : 0,
                       transform: headlineReady ? "translateY(0)" : "translateY(10px)",
                       transition: `opacity 1100ms ${EASE}, transform 1100ms ${EASE}`,
-                      textShadow: "0 12px 42px rgba(0,0,0,0.35)",
+                      textShadow: "0 14px 48px rgba(0,0,0,0.45)",
                     }}
                   >
                     From Dirt to Dynasty
@@ -294,6 +294,7 @@ export default function Index() {
                     Built on the Mornington Peninsula. Trusted across Australia.
                   </p>
                 </div>
+
 
 
                 <div
