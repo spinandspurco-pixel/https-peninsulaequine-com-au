@@ -179,14 +179,15 @@ export default function Admin() {
                         {item.label}
                       </button>
                     ))}
-                    {isPreview && (
-                      <button
-                        onClick={handleSignOut}
-                        className="ml-auto text-[10px] uppercase tracking-[0.22em] text-muted-foreground/45 hover:text-foreground/80 transition-colors whitespace-nowrap"
-                      >
-                        Sign out
-                      </button>
-                    )}
+                  </div>
+                </div>
+              </div>
+            </>
+          );
+        })()}
+
+        <HqNav />
+
                   </div>
                 </div>
               </div>
