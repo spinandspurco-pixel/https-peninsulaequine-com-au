@@ -108,6 +108,7 @@ export async function fetchHqActivity(
     projectsRes,
     galleryRes,
     staffRes,
+    mediaRes,
   ] = await Promise.all([
     loadIdentity(),
     supabase
