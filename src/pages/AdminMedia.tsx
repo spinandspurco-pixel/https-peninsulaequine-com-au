@@ -128,6 +128,18 @@ export default function AdminMedia() {
                 className="bg-transparent border-b border-accent/20 focus:border-accent/60 outline-none px-1 py-1 text-[12px] tracking-normal normal-case font-sans text-foreground/85 w-56"
               />
             </label>
+            <label className="flex items-center gap-2 text-[10px] uppercase tracking-[0.32em] text-foreground/45 font-mono cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={needsReviewOnly}
+                onChange={(e) => setNeedsReviewOnly(e.target.checked)}
+                className="accent-amber-400/80"
+              />
+              Needs review
+              {suggestionIds.size > 0 && (
+                <span className="text-amber-300/80 tabular-nums">{suggestionIds.size}</span>
+              )}
+            </label>
             {isAdmin && (
               <button
                 type="button"
@@ -150,6 +162,7 @@ export default function AdminMedia() {
             rows={filtered}
             loading={loading}
             onSelect={(r) => setSelectedId(r.id)}
+            suggestionIds={suggestionIds}
           />
         </div>
 
