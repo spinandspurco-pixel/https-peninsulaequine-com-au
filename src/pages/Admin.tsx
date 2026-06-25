@@ -129,34 +129,28 @@ export default function Admin() {
           const identity = resolveIdentity(user, { isAdmin, isPreview });
           return (
             <>
-              {/* ── Masthead ──────────────────────────────── */}
-              {isPreview ? (
-                <header className="pt-24 sm:pt-32">
-                  <PreviewWelcome identity={identity} />
-                </header>
-              ) : (
-                <header className="pt-24 sm:pt-28 pb-4 sm:pb-6">
-                  <div className="max-w-5xl mx-auto px-6">
-                    <div
-                      className="opacity-0 animate-fade-in flex flex-wrap items-baseline gap-x-6 gap-y-2"
-                      style={{ animationDelay: "100ms", animationFillMode: "both" }}
-                    >
-                      <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/55">
-                        Peninsula Equine · Command Centre
-                      </p>
-                      <p className="font-mono text-[10px] tracking-[0.18em] text-muted-foreground/55">
-                        <span className="text-foreground/75">{identity.name}</span>
-                        <span className="text-muted-foreground/35"> · {identity.role}</span>
-                      </p>
+              {/* ── Masthead (unified slim identity row for admin + preview) ── */}
+              <header className="pt-24 sm:pt-28 pb-4 sm:pb-6">
+                <div className="max-w-5xl mx-auto px-6">
+                  <div
+                    className="opacity-0 animate-fade-in flex flex-wrap items-baseline gap-x-6 gap-y-2"
+                    style={{ animationDelay: "100ms", animationFillMode: "both" }}
+                  >
+                    <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/55">
+                      Peninsula Equine · Command Centre
+                    </p>
+                    <p className="font-mono text-[10px] tracking-[0.18em] text-muted-foreground/55">
+                      <span className="text-foreground/75">{identity.name}</span>
+                      <span className="text-muted-foreground/35"> · {isPreview ? "Client Preview" : identity.role}</span>
+                    </p>
+                    {isAdmin && !isPreview && (
                       <div className="ml-auto flex items-center gap-6">
-                        {isAdmin && !isPreview && (
-                          <button
-                            onClick={enterPreview}
-                            className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55 hover:text-accent/80 transition-colors"
-                          >
-                            Client preview →
-                          </button>
-                        )}
+                        <button
+                          onClick={enterPreview}
+                          className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55 hover:text-accent/80 transition-colors"
+                        >
+                          Client preview →
+                        </button>
                         <button
                           onClick={handleSignOut}
                           className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/45 hover:text-foreground/80 transition-colors"
@@ -164,10 +158,11 @@ export default function Admin() {
                           Sign out
                         </button>
                       </div>
-                    </div>
+                    )}
                   </div>
-                </header>
-              )}
+                </div>
+              </header>
+
 
               {/* Quick rail */}
               <div className="border-t border-border/10">
