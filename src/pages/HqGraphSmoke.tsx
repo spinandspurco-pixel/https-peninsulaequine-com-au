@@ -5,6 +5,18 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+type Summary = {
+  result?: "PASS" | "FAIL";
+  exit_code?: number;
+  started_at?: string;
+  finished_at?: string;
+  duration_ms?: number;
+  residue_found?: boolean;
+  suggested_count?: number;
+  orphan_count?: number;
+  duplicate_count?: number;
+};
+
 type ReportRow = {
   id: string;
   triggered_by_email: string | null;
@@ -13,7 +25,7 @@ type ReportRow = {
   exit_code: number;
   error_message: string | null;
   duration_ms: number | null;
-  report: Record<string, unknown>;
+  report: Record<string, unknown> & { summary?: Summary };
   created_at: string;
 };
 
