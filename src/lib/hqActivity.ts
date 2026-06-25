@@ -13,6 +13,7 @@ export type HqActivityKind =
   | "project_updated"
   | "cms_updated"
   | "staff_profile_updated"
+  | "media_updated"
   | "system";
 
 export interface HqActivityEvent {
