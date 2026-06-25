@@ -4,6 +4,7 @@ import { getSignedUrl, type MediaAsset, APPROVAL_LABEL } from "@/lib/mediaVault"
 interface Props {
   asset: MediaAsset;
   onClick: () => void;
+  hasSuggestions?: boolean;
 }
 
 export function MediaTile({ asset, onClick }: Props) {
