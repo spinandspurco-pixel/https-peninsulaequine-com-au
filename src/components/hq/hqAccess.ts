@@ -5,7 +5,14 @@ import type { AppRole } from "@/hooks/useAuth";
  * Backend access (RLS) is NOT defined here — these rules only decide which
  * destinations a given role sees in the HQ navigation menu.
  */
-export type HqNavGroup = "overview" | "content" | "operations";
+export type HqSection = "applications" | "content" | "projects" | "clients";
+
+export const HQ_SECTIONS: { key: HqSection; label: string }[] = [
+  { key: "applications", label: "Applications" },
+  { key: "content", label: "Content" },
+  { key: "projects", label: "Projects" },
+  { key: "clients", label: "Clients" },
+];
 
 export type HqNavItem = {
   key: string;
@@ -13,35 +20,30 @@ export type HqNavItem = {
   to: string;
   /** Roles permitted to see this nav entry. */
   roles: AppRole[];
-  /** Visual grouping in the HQ rail. */
-  group: HqNavGroup;
+  /** Top-level sections this item appears under (contextual sub-row). */
+  sections: HqSection[];
   /** Optional short description for tile views. */
   note?: string;
 };
 
 export const HQ_NAV_ITEMS: HqNavItem[] = [
-  {
-    key: "overview",
-    label: "Overview",
-    to: "/hq",
-    roles: ["admin", "employee", "trainer", "moderator", "preview"],
-    group: "overview",
-    note: "Command centre · pipeline, applications, projects",
-  },
+  // ── Applications ──────────────────────────────────────────────────────────
   {
     key: "inquiries",
-    label: "Inquiries",
+    label: "Enquiries",
     to: "/hq/inquiries",
     roles: ["admin", "employee", "preview"],
-    group: "operations",
+    sections: ["applications"],
     note: "Inbox · status, notes, timeline",
   },
+
+  // ── Content ───────────────────────────────────────────────────────────────
   {
     key: "cms",
     label: "CMS",
     to: "/hq/cms",
     roles: ["admin"],
-    group: "content",
+    sections: ["content"],
     note: "Unified editor · services, events, testimonials, gallery",
   },
   {
@@ -49,7 +51,7 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     label: "Services",
     to: "/hq/services",
     roles: ["admin", "moderator", "preview"],
-    group: "content",
+    sections: ["content"],
     note: "Capabilities, pricing, FAQ",
   },
   {
@@ -57,7 +59,7 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     label: "Testimonials",
     to: "/hq/testimonials",
     roles: ["admin", "moderator", "preview"],
-    group: "content",
+    sections: ["content"],
     note: "Client voices and approvals",
   },
   {
@@ -65,7 +67,7 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     label: "Events",
     to: "/hq/events",
     roles: ["admin", "moderator", "trainer", "preview"],
-    group: "content",
+    sections: ["content"],
     note: "Clinics, RSVPs, capacity",
   },
   {
@@ -73,62 +75,97 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     label: "Selected Works",
     to: "/hq/selected-works",
     roles: ["admin", "moderator", "preview"],
-    group: "content",
+    sections: ["content", "projects"],
     note: "Case-study chapters, scope, summary",
   },
   {
-    key: "field-notes",
-    label: "Field Notes",
-    to: "/hq/field-notes",
-    roles: ["admin", "moderator", "employee", "trainer", "preview"],
-    group: "content",
-    note: "Editorial dispatches from the build",
-  },
-  {
-    key: "documents",
-    label: "Documents",
-    to: "/hq/documents",
-    roles: ["admin", "employee", "preview"],
-    group: "operations",
-    note: "Client packs, field notes",
-  },
-  {
     key: "media",
-    label: "Media",
+    label: "Media Vault",
     to: "/hq/media",
     roles: ["admin", "moderator", "employee", "trainer", "preview"],
-    group: "content",
+    sections: ["content", "projects"],
     note: "The evidence vault — approved imagery",
-  },
-  {
-    key: "activity",
-    label: "Activity",
-    to: "/hq/activity",
-    roles: ["admin", "moderator", "preview"],
-    group: "operations",
-    note: "Who did what and when — full audit timeline",
   },
   {
     key: "review",
     label: "Needs Review",
     to: "/hq/review",
     roles: ["admin", "moderator", "preview"],
-    group: "operations",
+    sections: ["content"],
     note: "Suggested knowledge-graph attachments awaiting judgement",
+  },
+
+  // ── Projects ──────────────────────────────────────────────────────────────
+  {
+    key: "documents",
+    label: "Documents",
+    to: "/hq/documents",
+    roles: ["admin", "employee", "preview"],
+    sections: ["projects"],
+    note: "Client packs, field notes",
+  },
+  {
+    key: "field-notes",
+    label: "Field Notes",
+    to: "/hq/field-notes",
+    roles: ["admin", "moderator", "employee", "trainer", "preview"],
+    sections: ["projects", "content"],
+    note: "Editorial dispatches from the build",
+  },
+
+  // ── Clients ───────────────────────────────────────────────────────────────
+  {
+    key: "staff",
+    label: "Staff",
+    to: "/hq/staff",
+    roles: ["admin", "employee", "trainer", "moderator", "preview"],
+    sections: ["clients"],
+    note: "Directory and access",
+  },
+  {
+    key: "activity",
+    label: "Activity",
+    to: "/hq/activity",
+    roles: ["admin", "moderator", "preview"],
+    sections: ["clients"],
+    note: "Who did what and when — full audit timeline",
   },
   {
     key: "dns-verify",
     label: "DNS Verify",
     to: "/hq/dns-verify",
     roles: ["admin"],
-    group: "operations",
+    sections: ["clients"],
     note: "Google Workspace TXT verification",
   },
 ];
 
+/** Items the user can reach in any section's sub-row. */
 export function visibleHqItems(roles: AppRole[]): HqNavItem[] {
   if (!roles || roles.length === 0) return [];
   return HQ_NAV_ITEMS.filter((item) => item.roles.some((r) => roles.includes(r)));
+}
+
+/** Items inside a given primary section, filtered by role. */
+export function visibleHqItemsForSection(
+  roles: AppRole[],
+  section: HqSection,
+): HqNavItem[] {
+  return visibleHqItems(roles).filter((item) => item.sections.includes(section));
+}
+
+/**
+ * Pick the active top-level section for the current pathname.
+ * Falls back to "applications" (which owns the /hq Overview).
+ */
+export function activeHqSection(pathname: string, roles: AppRole[]): HqSection {
+  if (pathname === "/hq") return "applications";
+  const items = visibleHqItems(roles);
+  const match = items.find(
+    (item) => pathname === item.to || pathname.startsWith(item.to + "/"),
+  );
+  if (match && match.sections.length > 0) return match.sections[0];
+  return "applications";
 }
 
 export function canSeeHqItem(roles: AppRole[], key: string): boolean {
