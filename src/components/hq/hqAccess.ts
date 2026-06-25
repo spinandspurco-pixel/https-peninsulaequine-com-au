@@ -7,12 +7,27 @@ import type { AppRole } from "@/hooks/useAuth";
  */
 export type HqSection = "applications" | "content" | "projects" | "clients";
 
-export const HQ_SECTIONS: { key: HqSection; label: string }[] = [
-  { key: "applications", label: "Applications" },
-  { key: "content", label: "Content" },
-  { key: "projects", label: "Projects" },
-  { key: "clients", label: "Clients" },
+/**
+ * Each primary HQ section advertises a default landing route. Clicking the
+ * top-level label in <HqNav /> navigates here. Routes are real and registered
+ * in App.tsx — never link to a path that does not resolve.
+ */
+export const HQ_SECTIONS: {
+  key: HqSection;
+  label: string;
+  defaultPath: string;
+}[] = [
+  { key: "applications", label: "Applications", defaultPath: "/hq" },
+  { key: "content", label: "Content", defaultPath: "/hq/media" },
+  { key: "projects", label: "Projects", defaultPath: "/hq/projects" },
+  { key: "clients", label: "Clients", defaultPath: "/hq/clients" },
 ];
+
+/** Section root paths (the section landing pages themselves). */
+const SECTION_ROOTS: Record<string, HqSection> = {
+  "/hq/projects": "projects",
+  "/hq/clients": "clients",
+};
 
 export type HqNavItem = {
   key: string;
@@ -168,6 +183,7 @@ export function visibleHqItemsForSection(
  */
 export function activeHqSection(pathname: string, roles: AppRole[]): HqSection {
   if (pathname === "/hq") return "applications";
+  if (SECTION_ROOTS[pathname]) return SECTION_ROOTS[pathname];
   const items = visibleHqItems(roles);
   const match = items.find(
     (item) => pathname === item.to || pathname.startsWith(item.to + "/"),
