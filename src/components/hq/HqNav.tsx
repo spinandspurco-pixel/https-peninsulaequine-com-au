@@ -73,12 +73,11 @@ export function HqNav({ className }: HqNavProps) {
           <ul className="flex items-center gap-x-8 sm:gap-x-10 flex-wrap">
             {visibleSections.map((section) => {
               const active = isSectionActive(section.key);
-              // Section link points at its Overview (= /hq) so it always
-              // resolves to a real route.
+              const to = section.defaultPath;
               return (
                 <li key={section.key}>
                   <NavLink
-                    to={`/hq${previewSuffix("/hq")}`}
+                    to={`${to}${previewSuffix(to)}`}
                     state={{ hqSection: section.key }}
                     className={cn(
                       "text-[11px] uppercase tracking-[0.28em] transition-colors whitespace-nowrap",
