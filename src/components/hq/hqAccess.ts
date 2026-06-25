@@ -93,6 +93,14 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     note: "Client packs, field notes",
   },
   {
+    key: "media",
+    label: "Media",
+    to: "/hq/media",
+    roles: ["admin", "moderator", "employee", "trainer", "preview"],
+    group: "content",
+    note: "The evidence vault — approved imagery",
+  },
+  {
     key: "activity",
     label: "Activity",
     to: "/hq/activity",
