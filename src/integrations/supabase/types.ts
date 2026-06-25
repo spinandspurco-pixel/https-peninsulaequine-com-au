@@ -1678,6 +1678,92 @@ export type Database = {
         }
         Relationships: []
       }
+      media_assets: {
+        Row: {
+          alt_text: string | null
+          approval_state: string
+          asset_type: string
+          created_at: string
+          created_by: string | null
+          credit: string | null
+          description: string | null
+          file_size: number | null
+          file_url: string | null
+          height: number | null
+          id: string
+          is_demo: boolean
+          location: string | null
+          mime_type: string | null
+          project_id: string | null
+          sort_order: number
+          storage_path: string
+          tags: string[]
+          title: string
+          updated_at: string
+          updated_by: string | null
+          usage_rights: string | null
+          width: number | null
+        }
+        Insert: {
+          alt_text?: string | null
+          approval_state?: string
+          asset_type?: string
+          created_at?: string
+          created_by?: string | null
+          credit?: string | null
+          description?: string | null
+          file_size?: number | null
+          file_url?: string | null
+          height?: number | null
+          id?: string
+          is_demo?: boolean
+          location?: string | null
+          mime_type?: string | null
+          project_id?: string | null
+          sort_order?: number
+          storage_path: string
+          tags?: string[]
+          title: string
+          updated_at?: string
+          updated_by?: string | null
+          usage_rights?: string | null
+          width?: number | null
+        }
+        Update: {
+          alt_text?: string | null
+          approval_state?: string
+          asset_type?: string
+          created_at?: string
+          created_by?: string | null
+          credit?: string | null
+          description?: string | null
+          file_size?: number | null
+          file_url?: string | null
+          height?: number | null
+          id?: string
+          is_demo?: boolean
+          location?: string | null
+          mime_type?: string | null
+          project_id?: string | null
+          sort_order?: number
+          storage_path?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+          usage_rights?: string | null
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_assets_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "managed_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       message_templates: {
         Row: {
           active: boolean

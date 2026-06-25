@@ -1,57 +1,135 @@
-# Cinematic Motion + Global Sidebar Restructure
+# Media Vault v1 — Plan
 
-Two coordinated workstreams. Both honour the existing language (serif headings, low-opacity sans body, blueprint motifs, asymmetric tension, silent UI) — no new palette, no founder names, no prominent buttons.
+PE's evidence vault. Images first, schema flexible for video/PDF later. Sits **alongside** `cms_gallery_items` and `src/assets/**` — no migration in v1.
 
-## 1. Global sidebar navigation (minimalist rail)
+## 1. Data model — `public.media_assets`
 
-A thin left rail, not a panel — consistent with the "interface reduction" rule.
+Flexible enough that v2 (video, PDF) needs no schema change.
 
-- New `src/components/layout/SiteRail.tsx`: fixed 56px rail on `lg+`, holds a small PE wordmark top, vertical text-link nav (Work, Systems, Field Notes, HQ, Apply), and a single 1px thread that grows with scroll progress.
-- Collapses to a bare hamburger glyph (top-left, no box, no border) below `lg`, and on any viewport once the user scrolls past the hero. Opening triggers a full-bleed overlay nav with the same text-link list at large editorial scale.
-- Mount in `src/App.tsx` once, outside `<Routes>`. Existing top nav stays only on routes that already have a hero header; we hide the duplicate via a small `useSiteChrome` hook that returns `{ showTopNav: boolean }` per route.
-- Scroll behaviour driven by `requestAnimationFrame` (per memory), not React state per frame.
-- No changes to admin/portal layouts (`/hq`, `/admin/*`, `/client-portal`, `/employee-dashboard`, `/trainer-portal`, staff portals) — they keep their own chrome.
+```text
+id               uuid pk
+asset_type       text  default 'image'    -- 'image' | 'video' | 'pdf' (v2+)
+storage_path     text  not null            -- 'media-vault/{uuid}/{filename}'
+file_url         text                      -- optional cached signed/public URL
+mime_type        text
+width            int
+height           int
+file_size        bigint
 
-## 2. Cinematic motion pass
+title            text  not null
+description      text
+alt_text         text
 
-All additive, all respect `prefers-reduced-motion`, all use existing `cubic-bezier(0.45, 0, 0.15, 1)` and 800-1400ms timings from memory.
+project_id       uuid  references managed_projects(id) on delete set null
+location         text
+credit           text                      -- photographer / source
+usage_rights     text                      -- 'internal' | 'client' | 'public' | freeform
 
-- **Hero parallax scale**: hero image subtly scales `1 → 1.06` and translates `0 → 40px` over the first viewport. Implemented in `src/components/Hero` (or current homepage hero component) via `useScroll` + `useTransform` from `framer-motion`, but written through `requestAnimationFrame` + CSS variables to avoid React re-renders.
-- **Lens-blur image reveal**: new `src/components/motion/LensBlurImage.tsx` — wraps an `<img>`, starts at `filter: blur(18px) saturate(0.6)` and resolves to crisp as it enters viewport (IntersectionObserver via existing `useInView` hook). Drop-in replacement on hero, Selected Works tiles, and Field Notes covers.
-- **Heading reveal**: new `src/components/motion/RevealHeading.tsx` — splits the serif heading into word spans, each fades + rises 16px with 60ms stagger when the heading enters view. Applied to top-of-section H2s on Index, About, Services, SelectedWorks, FieldNotes. Not a "text scramble" — that reads as gimmick against the institutional tone.
-- **Magnetic affordance**: new `src/components/motion/MagneticLink.tsx` — wraps text links (e.g. "Apply to Build", "Request Assessment"). On `pointermove` within 80px, the link translates up to 6px toward the cursor with a 200ms spring back on leave. Underline (1px, existing thread style) extends on hover. No button boxes added.
-- All new motion components are pure presentation; no business logic, no data, no route changes.
+approval_state   text  not null default 'draft'   -- 'draft' | 'approved' | 'archived'
+is_demo          boolean not null default false
+tags             text[] not null default '{}'
+sort_order       int    not null default 0
 
-## Files
+created_by       uuid  references auth.users(id)
+updated_by       uuid  references auth.users(id)
+created_at       timestamptz not null default now()
+updated_at       timestamptz not null default now()
+```
 
-Created:
-- `src/components/layout/SiteRail.tsx`
-- `src/components/layout/OverlayNav.tsx`
-- `src/hooks/useSiteChrome.ts`
-- `src/components/motion/LensBlurImage.tsx`
-- `src/components/motion/RevealHeading.tsx`
-- `src/components/motion/MagneticLink.tsx`
+Indexes: `(approval_state)`, `(asset_type)`, `(project_id)`, GIN on `tags`, `(sort_order desc, created_at desc)`.
 
-Edited:
-- `src/App.tsx` (mount rail)
-- `src/pages/Index.tsx` (hero parallax, heading reveals, magnetic CTAs, lens-blur on hero img)
-- `src/pages/SelectedWorks.tsx` (lens-blur tiles, heading reveal)
-- `src/pages/FieldNotes.tsx` (lens-blur covers, heading reveal)
-- `src/pages/About.tsx`, `src/pages/Services.tsx` (heading reveal only)
-- `src/index.css` (rail tokens, `--rail-width`, content offset on `lg+`)
+CHECK constraints on `asset_type` and `approval_state` allowed values.
 
-## Out of scope (explicit)
+## 2. RLS — `media_assets`
 
-Not in this pass — flag separately if wanted:
-- Palette shift to #0A0A0A / Raw Steel / Equestrian Tan
-- Curtain-wipe route transitions, blueprint skeletons
-- Layered Earth groundworks interactive, LumenArc pulse
-- Progressive-disclosure rebuild of intake
-- Lottie diagrams, variable-font scroll morphing
+| Role | Visibility |
+|---|---|
+| admin | full CRUD |
+| moderator | read all |
+| employee / trainer | read approved + non-archived |
+| preview | read `approval_state = 'approved' AND is_demo = true` only |
+| anon | no access |
 
-## Technical notes
+Write paths: `INSERT/UPDATE/DELETE` admin-only. `block_preview_writes` trigger attached for defence-in-depth.
 
-- Framer Motion is already a dep — verify with `rg motion package.json` before adding.
-- `useReducedMotion` hook exists in `src/hooks/` — every new motion component must short-circuit to the resolved state when it returns true.
-- Sidebar must not appear over admin chrome; gate via `useSiteChrome` route-prefix check.
-- No sound, no auto-play, no founder names anywhere in nav copy.
+`updated_by` set by trigger on update; `updated_at` via existing `update_updated_at_column`.
+
+## 3. Storage bucket — `media-vault` (private)
+
+- Private bucket.
+- Path convention: `{asset_id}/{filename}`.
+- `storage.objects` policies on bucket `media-vault`:
+  - admin: full CRUD
+  - moderator/employee/trainer: SELECT
+  - preview: SELECT only when the row's `media_assets.is_demo=true AND approval_state='approved'` (enforced via `EXISTS` subquery against the path)
+  - anon: no access
+- Client reads via short-lived **signed URLs** generated on demand from the admin UI — never raw object URLs to preview.
+
+## 4. HQ surface — `/hq/media`
+
+New route + `HqNav` "Media" item.
+
+Layout:
+```text
+HQ / 10 ─────────── Media Vault
+Headline + serif intro line.
+Filters bar (quiet, mono labels):
+  [ Project ▾ ]  [ State ▾ ]  [ Type ▾ ]  [ search ]  [ + Upload ] (admin only)
+Grid (3-4 cols desktop, 2 cols tablet, 1 col mobile):
+  ┌──────────┐   each tile: thumbnail, title, state chip,
+  │  image   │   project code, mono timestamp on hover.
+  │          │   click → drawer with full metadata + edit (admin)
+  └──────────┘
+```
+
+Components:
+- `src/pages/AdminMedia.tsx` — page shell (Layout + HqNav + filters + grid).
+- `src/components/hq/media/MediaGrid.tsx` — responsive grid + empty state.
+- `src/components/hq/media/MediaTile.tsx` — single tile with signed-URL thumbnail.
+- `src/components/hq/media/MediaUploadDialog.tsx` — admin upload (single file v1; drag-drop into modal, image only, ≤ 20 MB).
+- `src/components/hq/media/MediaDetailDrawer.tsx` — view + edit metadata, archive, replace image (admin), read-only (preview/others).
+- `src/lib/mediaVault.ts` — `listMedia()`, `uploadImage()`, `updateMedia()`, `archiveMedia()`, `getSignedThumb()`, with role-aware behaviour.
+
+Empty state: serif italic line — *"The vault is empty. Upload approved work, and it lives here."*
+
+## 5. Activity + Command Centre integration
+
+- Add `media_assets` to `fetchHqActivity()` derived-events list (uses `updated_at`, mirrors current `staff_profiles` pattern). New kind `media_updated`. Preview-safe by RLS.
+- Command Centre: add a 3-tile "Latest media" rail in `CommandOverview` below `ActivityWire`, only if `media_assets` returns rows. Signed thumbs, click → `/hq/media`. Skip render entirely on empty/error to stay low-risk.
+
+## 6. Out of scope (v1)
+
+- Public gallery wiring (`cms_gallery_items` stays untouched).
+- Project detail picker.
+- Bulk upload, drag-and-drop multi-file.
+- Video / PDF upload handling (schema supports, UI does not).
+- `hq_event_log` writer (use derived timestamps).
+- Migration of `src/assets/**` JSON.
+- Backfill from existing gallery.
+
+## 7. Verification
+
+- `tsgo --noEmit` clean.
+- `vitest run` clean.
+- New unit test: `mediaVault.test.ts` — group/sort/filter logic.
+- Manual RLS checks via `supabase--read_query` impersonating admin/preview/anon paths (or by policy inspection).
+- Browser smoke: admin upload → appears in grid → preview session sees only `approved + is_demo`.
+- No console errors on `/hq/media`.
+
+## 8. Technical detail (for reference)
+
+- Migration order per project rules: CREATE TABLE → GRANT (authenticated + service_role; **no anon**) → ENABLE RLS → POLICIES → trigger attachments (`block_preview_writes`, `update_updated_at_column`, `set_updated_by`).
+- `set_updated_by()` SECURITY DEFINER function sets `NEW.updated_by = auth.uid()` on update; `created_by` defaulted on insert from `auth.uid()`.
+- Storage policies reference `media_assets` via `(storage.foldername(name))[1]::uuid = media_assets.id` for the preview EXISTS check.
+- Signed URLs requested with 60 min TTL; cached in React state, refreshed on demand.
+- All copy follows project memory: serif headings, mono overlines at 0.45em, low-opacity sans body, no prominent buttons (upload sits as a text link with hairline rule).
+
+## 9. Build order
+
+1. Migration: table + grants + RLS + triggers.
+2. Storage bucket + `storage.objects` policies.
+3. `src/lib/mediaVault.ts` + unit test.
+4. `/hq/media` page + nav entry + grid + tile + empty state.
+5. Upload dialog + detail drawer (admin gated).
+6. Wire `media_updated` into `fetchHqActivity` + optional Latest Media rail.
+7. Typecheck, tests, smoke check, report.
