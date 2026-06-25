@@ -149,11 +149,6 @@ export function CommandOverview() {
           .select("id", { count: "exact", head: true })
           .eq("status", "completed")
           .gte("updated_at", sinceQ),
-        supabase
-          .from("activity_log")
-          .select("id, title, action_type, entity_type, created_at")
-          .order("created_at", { ascending: false })
-          .limit(6),
         supabase.from("managed_projects").select("id", { count: "exact", head: true }),
         supabase
           .from("managed_projects")
@@ -184,7 +179,6 @@ export function CommandOverview() {
         proposals,
         activeProjects,
         completed,
-        activityLog,
         totalProjects,
         spotlightRes,
         eventRes,
@@ -200,7 +194,6 @@ export function CommandOverview() {
         completedQ: completed.count ?? 0,
       });
       setSignalReady(true);
-      setActivity(activityLog.data ?? []);
       setSpotlight(((spotlightRes.data ?? [])[0] as SpotlightProject | undefined) ?? null);
       setNextEvent(((eventRes.data ?? [])[0] as UpcomingEvent | undefined) ?? null);
 
