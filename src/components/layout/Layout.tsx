@@ -68,6 +68,7 @@ export function Layout({ children }: LayoutProps) {
         Skip to main content
       </a>
       {showSiteRail ? null : isPrivate ? <HqHeader /> : <Header />}
+      {isPrivate && !showSiteRail && <HqPreviewBanner />}
       <PageTransition>
         <main id="main-content" className="flex-1 relative z-[1]" tabIndex={-1}>{children}</main>
       </PageTransition>
