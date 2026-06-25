@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -97,6 +98,7 @@ export default function DnsWizard() {
 
   return (
     <main className="min-h-screen bg-background text-foreground px-6 py-16 md:py-24">
+      <HqBreadcrumbs current="DNS Wizard" />
       <div className="mx-auto max-w-2xl">
         <p className="text-[10px] uppercase tracking-[0.45em] text-foreground/45 mb-6">
           Workspace · DNS Assembly

@@ -4,6 +4,7 @@ import { Layout } from "@/components/layout/Layout";
 import { useAuth } from "@/hooks/useAuth";
 import { useHqMode } from "@/hooks/useHqMode";
 import { RefreshCw } from "lucide-react";
+import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { HqNav } from "@/components/hq/HqNav";
 
 const FIELD_NOTES = [
@@ -35,6 +36,7 @@ export default function AdminFieldNotes() {
   return (
     <Layout>
       <HqNav />
+      <HqBreadcrumbs />
       <div className="min-h-screen bg-background">
         <header className="pt-32 sm:pt-40 pb-12">
           <div className="max-w-3xl mx-auto px-6">

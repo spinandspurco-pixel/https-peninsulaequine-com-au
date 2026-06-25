@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
+import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { HqNav } from "@/components/hq/HqNav";
 import { CmsCrudTab } from "@/components/hq/cms/CmsCrudTab";
 import {
@@ -25,6 +26,7 @@ export default function AdminCMS() {
   return (
     <Layout>
       <HqNav />
+      <HqBreadcrumbs />
       <div className="section-padding">
         <div className="section-container max-w-5xl">
           {/* Header */}

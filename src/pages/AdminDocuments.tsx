@@ -48,6 +48,7 @@ import {
   Heart,
 } from "lucide-react";
 import logoPeMark from "@/assets/logo-pe-square.png";
+import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { HqNav } from "@/components/hq/HqNav";
 
 const DOC_TYPES = {
@@ -313,6 +314,7 @@ export default function AdminDocuments() {
   return (
     <Layout>
       <HqNav />
+      <HqBreadcrumbs />
       <div className="section-padding">
         <div className="section-container">
           {/* Header */}

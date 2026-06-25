@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { RefreshCw } from "lucide-react";
 import { format } from "date-fns";
 import { HqNav } from "@/components/hq/HqNav";
+import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { ProjectNotes } from "@/components/hq/ProjectNotes";
 import { ProjectCoverage } from "@/components/hq/ProjectCoverage";
 
@@ -145,17 +146,15 @@ export default function HqProjectDetail() {
   return (
     <Layout>
       <HqNav />
-      
+      <HqBreadcrumbs
+        sectionOverride="projects"
+        current={project.name}
+      />
+
       <div className="min-h-screen bg-background">
         {/* Header */}
-        <header className="pt-32 sm:pt-40 pb-10">
+        <header className="pt-10 sm:pt-12 pb-10">
           <div className="max-w-5xl mx-auto px-6">
-            <button
-              onClick={() => navigate("/hq")}
-              className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/45 hover:text-foreground mb-6"
-            >
-              ← HQ · Projects
-            </button>
             <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-accent/50 mb-4">
               {project.code} · {project.priority}
             </p>

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { formatDistanceToNowStrict } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -139,6 +140,7 @@ export default function HqStaff() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <HqBreadcrumbs current="Staff" />
       <BlueprintField intensity="soft" className="border-b border-border/40">
         <div className="mx-auto max-w-6xl px-6 py-14 sm:py-16">
           <p className="font-mono text-[0.6rem] uppercase tracking-[0.45em] text-accent/60">

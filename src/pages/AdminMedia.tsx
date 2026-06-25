@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { Layout } from "@/components/layout/Layout";
+import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { HqNav } from "@/components/hq/HqNav";
 import { useAuth } from "@/hooks/useAuth";
 import {

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Layout } from "@/components/layout/Layout";
+import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { HqNav } from "@/components/hq/HqNav";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -127,6 +128,7 @@ export default function HqGraphSmoke() {
     return (
       <Layout>
         <HqNav />
+        <HqBreadcrumbs />
         <div className="max-w-3xl mx-auto px-6 py-16 text-foreground/70">
           Admin access required.
         </div>

@@ -23,6 +23,7 @@ import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, CalendarIcon, MapPin, Users
 import { format } from "date-fns";
 import type { Tables } from "@/integrations/supabase/types";
 import { PreviewNotice } from "@/components/hq/PreviewNotice";
+import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { HqNav } from "@/components/hq/HqNav";
 
 type ManagedEvent = Tables<"managed_events">;
@@ -95,6 +96,7 @@ export default function AdminEvents() {
   return (
     <Layout>
       <HqNav />
+      <HqBreadcrumbs />
       <div className="section-padding">
         <div className="section-container max-w-5xl">
           <div className="flex items-center gap-4 mb-8">
