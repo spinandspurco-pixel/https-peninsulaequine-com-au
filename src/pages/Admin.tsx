@@ -135,47 +135,37 @@ export default function Admin() {
                   <PreviewWelcome identity={identity} />
                 </header>
               ) : (
-                <header className="pt-28 sm:pt-36 pb-12 sm:pb-16">
-                  <BlueprintField intensity="soft">
-                    <div className="max-w-5xl mx-auto px-6">
-                      <div
-                        className="opacity-0 animate-fade-in"
-                        style={{ animationDelay: "100ms", animationFillMode: "both" }}
-                      >
-                        <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/55 mb-4">
-                          Peninsula Equine · Command Centre
-                        </p>
-                        <h1 className="font-serif text-3xl sm:text-4xl font-light text-foreground tracking-tight leading-[1.05]">
-                          {identity.role}
-                        </h1>
-                        {identity.handle && (
-                          <p className="mt-2 font-mono text-[11px] tracking-[0.08em] text-muted-foreground/55 lowercase">
-                            {identity.handle}
-                          </p>
-                        )}
-                        <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground/45">
-                          {format(new Date(), "EEEE · d MMMM yyyy")}
-                        </p>
-
-                        <div className="flex items-center gap-6 mt-8 flex-wrap">
-                          {isAdmin && !isPreview && (
-                            <button
-                              onClick={enterPreview}
-                              className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55 hover:text-accent/80 transition-colors"
-                            >
-                              Client preview →
-                            </button>
-                          )}
+                <header className="pt-24 sm:pt-28 pb-4 sm:pb-6">
+                  <div className="max-w-5xl mx-auto px-6">
+                    <div
+                      className="opacity-0 animate-fade-in flex flex-wrap items-baseline gap-x-6 gap-y-2"
+                      style={{ animationDelay: "100ms", animationFillMode: "both" }}
+                    >
+                      <p className="font-mono text-[9px] uppercase tracking-[0.35em] text-accent/55">
+                        Peninsula Equine · Command Centre
+                      </p>
+                      <p className="font-mono text-[10px] tracking-[0.18em] text-muted-foreground/55">
+                        <span className="text-foreground/75">{identity.name}</span>
+                        <span className="text-muted-foreground/35"> · {identity.role}</span>
+                      </p>
+                      <div className="ml-auto flex items-center gap-6">
+                        {isAdmin && !isPreview && (
                           <button
-                            onClick={handleSignOut}
-                            className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/45 hover:text-foreground/80 transition-colors"
+                            onClick={enterPreview}
+                            className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55 hover:text-accent/80 transition-colors"
                           >
-                            Sign out
+                            Client preview →
                           </button>
-                        </div>
+                        )}
+                        <button
+                          onClick={handleSignOut}
+                          className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/45 hover:text-foreground/80 transition-colors"
+                        >
+                          Sign out
+                        </button>
                       </div>
                     </div>
-                  </BlueprintField>
+                  </div>
                 </header>
               )}
 
