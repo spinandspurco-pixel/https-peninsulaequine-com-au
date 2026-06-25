@@ -137,6 +137,8 @@ function AppContent() {
             <Route path="/hq/events" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminEvents /></ProtectedRoute>} />
             <Route path="/hq/selected-works" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminSelectedWorks /></ProtectedRoute>} />
             <Route path="/hq/field-notes" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><AdminFieldNotes /></ProtectedRoute>} />
+            <Route path="/hq/projects" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><Admin /></ProtectedRoute>} />
+            <Route path="/hq/clients" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><Admin /></ProtectedRoute>} />
             <Route path="/hq/projects/:id" element={<ProtectedRoute allowedRoles={["admin","employee","trainer","moderator","preview"]}><HqProjectDetail /></ProtectedRoute>} />
             {/* /hq/documents is a private staff surface. Preview users see a polite stub. */}
             <Route path="/hq/documents" element={<ProtectedRoute allowedRoles={["admin","employee","preview"]}><AdminDocuments /></ProtectedRoute>} />
