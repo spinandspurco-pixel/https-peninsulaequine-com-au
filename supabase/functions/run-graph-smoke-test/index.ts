@@ -103,16 +103,16 @@ Deno.serve(async (req) => {
     });
   }
 
-  const startedAtMs = Date.now();
+  const startedAtIso = new Date().toISOString();
   const report: Report = {
     run_id: isoStamp(),
-    started_at: new Date().toISOString(),
+    started_at: startedAtIso,
     environment: body.environment ?? "cloud",
     phases: {},
     steps: [],
+    summary: { started_at: startedAtIso },
   };
 
-  report.summary = { started_at: report.started_at };
 
   const ok = (msg: string) => report.steps.push({ ok: true, msg });
   const info = (msg: string) => report.steps.push({ ok: true, msg, info: true });
