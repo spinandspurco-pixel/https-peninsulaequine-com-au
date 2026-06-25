@@ -213,7 +213,7 @@ export default function HqReview() {
                         onClick={() => onAccept(edge)}
                         className="text-[10px] uppercase tracking-[0.28em] text-accent/80 hover:text-accent disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                       >
-                        Attach →
+                        Verify →
                       </button>
                     </div>
                   </li>
