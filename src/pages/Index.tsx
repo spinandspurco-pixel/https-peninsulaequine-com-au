@@ -229,17 +229,16 @@ export default function Index() {
               }}
             />
 
-            {/* Architectural corner brackets — fine construction-drawing detail */}
+            {/* Architectural corner brackets — recede into support, never compete with the subject */}
             <div aria-hidden className="absolute inset-[clamp(1rem,2.5vw,2.5rem)] pointer-events-none z-[2]">
-              <span className="absolute top-0 left-0 w-6 h-px bg-accent/45" />
-              <span className="absolute top-0 left-0 w-px h-6 bg-accent/45" />
-              <span className="absolute top-0 right-0 w-6 h-px bg-accent/45" />
-              <span className="absolute top-0 right-0 w-px h-6 bg-accent/45" />
-              <span className="absolute bottom-0 left-0 w-6 h-px bg-accent/45" />
-              <span className="absolute bottom-0 left-0 w-px h-6 bg-accent/45" />
-              <span className="absolute bottom-0 right-0 w-6 h-px bg-accent/45" />
-              <span className="absolute bottom-0 right-0 w-px h-6 bg-accent/45" />
-              <span className="hidden sm:block absolute top-2 right-0 font-mono text-accent/55 text-[9px] tracking-[0.4em] uppercase">PE / 01 — Hero</span>
+              <span className="absolute top-0 left-0 w-5 h-px bg-accent/20" />
+              <span className="absolute top-0 left-0 w-px h-5 bg-accent/20" />
+              <span className="absolute top-0 right-0 w-5 h-px bg-accent/20" />
+              <span className="absolute top-0 right-0 w-px h-5 bg-accent/20" />
+              <span className="absolute bottom-0 left-0 w-5 h-px bg-accent/20" />
+              <span className="absolute bottom-0 left-0 w-px h-5 bg-accent/20" />
+              <span className="absolute bottom-0 right-0 w-5 h-px bg-accent/20" />
+              <span className="absolute bottom-0 right-0 w-px h-5 bg-accent/20" />
             </div>
 
 
@@ -247,9 +246,10 @@ export default function Index() {
             {/* faint plan-line overlay — text column only, never over the subject */}
             <div
               aria-hidden
-              className="absolute left-0 bottom-0 w-full md:w-[46%] h-[60%] pointer-events-none z-[1] bg-plan-lines opacity-[0.18] animate-plan-drift-x"
+              className="absolute left-0 bottom-0 w-full md:w-[46%] h-[60%] pointer-events-none z-[1] bg-plan-lines opacity-[0.09] animate-plan-drift-x"
               style={{ maskImage: "linear-gradient(to right, black 70%, transparent 100%)", WebkitMaskImage: "linear-gradient(to right, black 70%, transparent 100%)" }}
             />
+
 
             <div
               ref={heroContentRef}
