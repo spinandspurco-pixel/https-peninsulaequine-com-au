@@ -898,6 +898,51 @@ export type Database = {
         }
         Relationships: []
       }
+      hq_graph_edges: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          from_id: string
+          from_type: string
+          id: string
+          matched_rules: string[]
+          relation: string
+          status: string
+          to_id: string
+          to_type: string
+          updated_at: string
+          verified_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          from_id: string
+          from_type: string
+          id?: string
+          matched_rules?: string[]
+          relation?: string
+          status?: string
+          to_id: string
+          to_type: string
+          updated_at?: string
+          verified_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          from_id?: string
+          from_type?: string
+          id?: string
+          matched_rules?: string[]
+          relation?: string
+          status?: string
+          to_id?: string
+          to_type?: string
+          updated_at?: string
+          verified_by?: string | null
+        }
+        Relationships: []
+      }
       inquiries: {
         Row: {
           attachment_urls: string[] | null
@@ -1488,6 +1533,7 @@ export type Database = {
       }
       managed_projects: {
         Row: {
+          aliases: string[]
           build_type: string | null
           client_summary: string | null
           code: string
@@ -1506,6 +1552,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          aliases?: string[]
           build_type?: string | null
           client_summary?: string | null
           code: string
@@ -1524,6 +1571,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          aliases?: string[]
           build_type?: string | null
           client_summary?: string | null
           code?: string
