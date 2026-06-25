@@ -304,6 +304,27 @@ export async function fetchHqActivity(
     });
   }
 
+  // ── media_assets ──────────────────────────────────────────────────────────
+  for (const row of mediaRes.data ?? []) {
+    const editorId = row.updated_by ?? row.created_by ?? null;
+    const actor = resolveActor(ids, { userId: editorId });
+    const isCreate = row.created_at === row.updated_at;
+    events.push({
+      id: `mv:${row.id}:${row.updated_at}`,
+      kind: "media_updated",
+      at: row.updated_at,
+      actorEmail: actor.email,
+      actorName: actor.name,
+      actorRole: actor.role,
+      actionLabel: isCreate ? "Media added" : "Media updated",
+      targetType: "Media",
+      targetLabel: row.title,
+      targetId: row.id,
+      detail: row.approval_state ? row.approval_state : null,
+      href: "/hq/media",
+    });
+  }
+
   events.sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0));
   return events.slice(0, limit);
 }
