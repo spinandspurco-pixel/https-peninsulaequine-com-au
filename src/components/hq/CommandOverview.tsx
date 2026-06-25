@@ -14,13 +14,6 @@ import { ActivityWire } from "@/components/hq/ActivityWire";
 // Morning Brief is the hero; everything below is supporting instrumentation.
 // ──────────────────────────────────────────────────────────────────────────────
 
-interface ActivityRow {
-  id: string;
-  title: string;
-  action_type: string;
-  entity_type: string | null;
-  created_at: string;
-}
 
 interface SpotlightProject {
   id: string;
@@ -120,7 +113,6 @@ export function CommandOverview() {
   });
   const [signalReady, setSignalReady] = useState(false);
   const [spotlight, setSpotlight] = useState<SpotlightProject | null>(null);
-  const [activity, setActivity] = useState<ActivityRow[]>([]);
   const [nextEvent, setNextEvent] = useState<UpcomingEvent | null>(null);
   const [joshPreviewReady, setJoshPreviewReady] = useState<boolean | null>(null);
   const [directoryName, setDirectoryName] = useState<string | null>(null);
