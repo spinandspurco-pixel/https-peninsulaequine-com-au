@@ -15,6 +15,17 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const MAIN_RIDGE_CODE = "PE-MR-014";
 
 type Step = { ok: boolean; msg: string; info?: boolean };
+type Summary = {
+  result?: "PASS" | "FAIL";
+  exit_code?: number;
+  started_at: string;
+  finished_at?: string;
+  duration_ms?: number;
+  residue_found?: boolean;
+  suggested_count?: number;
+  orphan_count?: number;
+  duplicate_count?: number;
+};
 type Report = {
   run_id: string;
   started_at: string;
@@ -22,6 +33,7 @@ type Report = {
   environment: string;
   phases: Record<string, unknown>;
   steps: Step[];
+  summary: Summary;
   result?: "PASS" | "FAIL";
   exit_code?: number;
   error?: { code: number; message: string; sql?: string };
@@ -91,17 +103,20 @@ Deno.serve(async (req) => {
     });
   }
 
+  const startedAtIso = new Date().toISOString();
   const startedAtMs = Date.now();
   const report: Report = {
     run_id: isoStamp(),
-    started_at: new Date().toISOString(),
+    started_at: startedAtIso,
     environment: body.environment ?? "cloud",
     phases: {},
     steps: [],
+    summary: { started_at: startedAtIso },
   };
 
   const ok = (msg: string) => report.steps.push({ ok: true, msg });
   const info = (msg: string) => report.steps.push({ ok: true, msg, info: true });
+
 
   // Create RUNNING row up-front
   const { data: runRow, error: insertErr } = await svc
@@ -124,9 +139,15 @@ Deno.serve(async (req) => {
     exit_code: number,
     error?: { code: number; message: string; sql?: string },
   ) => {
-    report.ended_at = new Date().toISOString();
+    const endedAt = new Date().toISOString();
+    const durationMs = Date.now() - startedAtMs;
+    report.ended_at = endedAt;
     report.result = result;
     report.exit_code = exit_code;
+    report.summary.result = result;
+    report.summary.exit_code = exit_code;
+    report.summary.finished_at = endedAt;
+    report.summary.duration_ms = durationMs;
     if (error) report.error = error;
     await svc
       .from("graph_smoke_reports")
@@ -134,11 +155,12 @@ Deno.serve(async (req) => {
         result,
         exit_code,
         error_message: error?.message ?? null,
-        duration_ms: Date.now() - startedAtMs,
+        duration_ms: durationMs,
         report,
       })
       .eq("id", reportId);
   };
+
 
   // ── Phase 1: SQL verify ───────────────────────────────────────────
   let mainRidgeId: string;
@@ -200,7 +222,12 @@ Deno.serve(async (req) => {
     report.phases.sql_verify = {
       status_counts: statusMap,
       main_ridge_id: mainRidgeId,
+      orphans,
+      duplicates: dupes,
     };
+    report.summary.suggested_count = statusMap.suggested ?? 0;
+    report.summary.orphan_count = orphans;
+    report.summary.duplicate_count = dupes;
   } catch (err) {
     const f = err instanceof SmokeFail ? err : new SmokeFail(EXIT.VERIFY_MISMATCH, String((err as Error).message ?? err));
     await finalise("FAIL", f.code, { code: f.code, message: f.message });
@@ -289,8 +316,34 @@ Deno.serve(async (req) => {
       .eq("status", "suggested");
     if (fsErr) throw new SmokeFail(EXIT.CLEANUP, `final suggested check failed: ${fsErr.message}`);
     const finalOrphans = await countOrphans(svc);
-    report.phases.final = { suggested: finalSuggested ?? 0, orphans: finalOrphans };
+    const finalDupes = await countDuplicates(svc);
 
+    // Residue check: throwaway asset row + any edges still pointing at it
+    let residueFound = false;
+    if (assetId) {
+      const { data: residueAsset } = await svc
+        .from("media_assets").select("id").eq("id", assetId).maybeSingle();
+      const { count: residueEdges } = await svc
+        .from("hq_graph_edges")
+        .select("*", { count: "exact", head: true })
+        .eq("to_type", "media").eq("to_id", assetId);
+      residueFound = !!residueAsset || (residueEdges ?? 0) > 0;
+    }
+
+    report.phases.final = {
+      suggested: finalSuggested ?? 0,
+      orphans: finalOrphans,
+      duplicates: finalDupes,
+      residue_found: residueFound,
+    };
+    report.summary.suggested_count = finalSuggested ?? 0;
+    report.summary.orphan_count = finalOrphans;
+    report.summary.duplicate_count = finalDupes;
+    report.summary.residue_found = residueFound;
+
+    if (residueFound) {
+      throw new SmokeFail(EXIT.CLEANUP, "residue detected after cleanup (throwaway row or edges remain)");
+    }
     if ((finalSuggested ?? 0) !== 0) {
       throw new SmokeFail(EXIT.CLEANUP, `suggested != 0 after cleanup (got ${finalSuggested})`);
     }
@@ -299,6 +352,7 @@ Deno.serve(async (req) => {
     }
     ok("suggested = 0 after cleanup (the final bell)");
     ok("orphans = 0 after cleanup");
+    ok("no residue from throwaway asset");
   } catch (err) {
     const f = err instanceof SmokeFail ? err : new SmokeFail(EXIT.CLEANUP, String((err as Error).message ?? err));
     await finalise("FAIL", f.code, { code: f.code, message: f.message });

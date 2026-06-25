@@ -5,6 +5,18 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+type Summary = {
+  result?: "PASS" | "FAIL";
+  exit_code?: number;
+  started_at?: string;
+  finished_at?: string;
+  duration_ms?: number;
+  residue_found?: boolean;
+  suggested_count?: number;
+  orphan_count?: number;
+  duplicate_count?: number;
+};
+
 type ReportRow = {
   id: string;
   triggered_by_email: string | null;
@@ -13,7 +25,7 @@ type ReportRow = {
   exit_code: number;
   error_message: string | null;
   duration_ms: number | null;
-  report: Record<string, unknown>;
+  report: Record<string, unknown> & { summary?: Summary };
   created_at: string;
 };
 
@@ -97,6 +109,19 @@ export default function HqGraphSmoke() {
     URL.revokeObjectURL(url);
   };
 
+  const copyJson = async (row: ReportRow) => {
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(row.report, null, 2));
+      toast.success("Report JSON copied");
+    } catch (e) {
+      toast.error(`Copy failed: ${(e as Error).message}`);
+    }
+  };
+
+  const latest = rows[0];
+  const latestSummary = latest?.report?.summary;
+
+
   if (authLoading) return null;
   if (!user || !isAdmin) {
     return (
@@ -162,6 +187,63 @@ export default function HqGraphSmoke() {
           {lastMessage && (
             <pre className="text-xs text-foreground/70 whitespace-pre-wrap">{lastMessage}</pre>
           )}
+
+          {latest && (
+            <div className="mt-6 border border-border/10 p-5 space-y-3">
+              <div className="flex items-center gap-3">
+                <span
+                  className={
+                    "text-[0.65rem] tracking-[0.35em] uppercase px-2 py-1 border " +
+                    (latest.result === "PASS"
+                      ? "text-emerald-600 border-emerald-600/40"
+                      : latest.result === "FAIL"
+                      ? "text-red-600 border-red-600/40"
+                      : "text-foreground/40 border-foreground/20")
+                  }
+                >
+                  {latest.result}
+                </span>
+                <span className="text-xs text-foreground/60">
+                  Last run · exit code {latest.exit_code}
+                </span>
+              </div>
+              <dl className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-2 text-xs text-foreground/70">
+                <div>
+                  <dt className="uppercase tracking-[0.25em] text-foreground/40">Started</dt>
+                  <dd>{latestSummary?.started_at ? new Date(latestSummary.started_at).toLocaleString() : "—"}</dd>
+                </div>
+                <div>
+                  <dt className="uppercase tracking-[0.25em] text-foreground/40">Finished</dt>
+                  <dd>{latestSummary?.finished_at ? new Date(latestSummary.finished_at).toLocaleString() : "—"}</dd>
+                </div>
+                <div>
+                  <dt className="uppercase tracking-[0.25em] text-foreground/40">Duration</dt>
+                  <dd>{latest.duration_ms != null ? `${latest.duration_ms} ms` : "—"}</dd>
+                </div>
+                <div>
+                  <dt className="uppercase tracking-[0.25em] text-foreground/40">Residue found</dt>
+                  <dd className={latestSummary?.residue_found ? "text-red-600" : "text-emerald-600"}>
+                    {latestSummary?.residue_found == null ? "—" : latestSummary.residue_found ? "true" : "false"}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="uppercase tracking-[0.25em] text-foreground/40">Suggested (post-cleanup)</dt>
+                  <dd>{latestSummary?.suggested_count ?? "—"}</dd>
+                </div>
+                <div>
+                  <dt className="uppercase tracking-[0.25em] text-foreground/40">Orphans</dt>
+                  <dd>{latestSummary?.orphan_count ?? "—"}</dd>
+                </div>
+                <div>
+                  <dt className="uppercase tracking-[0.25em] text-foreground/40">Duplicates</dt>
+                  <dd>{latestSummary?.duplicate_count ?? "—"}</dd>
+                </div>
+              </dl>
+              {latest.error_message && (
+                <div className="text-xs text-red-600">{latest.error_message}</div>
+              )}
+            </div>
+          )}
         </section>
 
         <section className="space-y-4">
@@ -208,6 +290,13 @@ export default function HqGraphSmoke() {
                     className="text-xs tracking-[0.3em] uppercase text-foreground/60 hover:text-foreground"
                   >
                     JSON
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => copyJson(row)}
+                    className="text-xs tracking-[0.3em] uppercase text-foreground/60 hover:text-foreground"
+                  >
+                    Copy
                   </button>
                 </li>
               ))}
