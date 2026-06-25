@@ -69,7 +69,6 @@ const ANON_ALLOWED_RPCS = [
   "release_slot_hold",
   "refresh_slot_hold",
   "cleanup_expired_holds",
-  "has_role",
 ] as const;
 
 /** A permission-denied response from PostgREST surfaces as code 42501 or 401/403. */
@@ -180,12 +179,33 @@ describe("security regression — internal SECURITY DEFINER functions are NOT an
     });
   }
 
-  it("sanity check: at least one allowed RPC actually exists for anon", async () => {
-    // has_role with a random uuid + an existing role; anon may not own roles
-    // so result is false, but the call itself must succeed without permission error.
+  it("has_role is no longer anon-callable (hardened — must require an authenticated session)", async () => {
+    // has_role used to be in the anon-allowed list. It has since been locked
+    // down to authenticated callers only — anon must receive a permission
+    // error (42501) or a function-not-found response on its search path.
     const { error } = await anon.rpc("has_role" as any, {
       _user_id: "00000000-0000-0000-0000-000000000000",
       _role: "admin",
+    });
+    expect(error).not.toBeNull();
+    const code = error?.code ?? "";
+    const msg = (error?.message ?? "").toLowerCase();
+    const acceptable =
+      code === "42501" ||
+      code === "PGRST202" ||
+      msg.includes("permission denied") ||
+      msg.includes("could not find the function") ||
+      msg.includes("not allowed");
+    expect(acceptable).toBe(true);
+  });
+
+  it("sanity check: at least one allowed RPC actually exists for anon", async () => {
+    // release_slot_hold is intentionally anon-callable so the public booking
+    // flow can release its own hold. A no-op call with a non-existent
+    // session must succeed without a permission error.
+    const { error } = await anon.rpc("release_slot_hold" as any, {
+      p_slot_id: "00000000-0000-0000-0000-000000000000",
+      p_session_id: "regression-test-no-such-session",
     });
     expect(error).toBeNull();
   });
