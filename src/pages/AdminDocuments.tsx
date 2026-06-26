@@ -47,7 +47,7 @@ import {
   AlertTriangle,
   Heart,
 } from "lucide-react";
-import logoPeMark from "@/assets/logo-pe-square.png";
+import logoPeMark from "@/assets/logo-pe-square.webp";
 import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { HqNav } from "@/components/hq/HqNav";
 

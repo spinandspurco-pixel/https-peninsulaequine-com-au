@@ -101,7 +101,7 @@ export function SiteRail() {
             aria-haspopup="dialog"
             aria-expanded={open}
             aria-controls="site-overlay-nav"
-            aria-label="Open navigation"
+            aria-label="Menu — open navigation"
             className="pointer-events-auto group inline-flex items-center gap-2 py-2 -mr-1 px-2"
           >
             <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.42em] text-foreground/75 group-hover:text-foreground transition-colors duration-500">

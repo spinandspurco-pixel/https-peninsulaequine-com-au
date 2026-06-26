@@ -1,4 +1,4 @@
-import logoPeMark from "@/assets/logo-pe-square.png";
+import logoPeMark from "@/assets/logo-pe-square.webp";
 
 interface HqLoadingStateProps {
   /** Primary line, e.g. "Preparing HQ…" or "Checking access…" */
