@@ -51,7 +51,7 @@ import mainRidgeWide1024 from "@/assets/responsive/main-ridge-pavilion-wide-fire
 import mainRidgeWide1536 from "@/assets/responsive/main-ridge-pavilion-wide-fireplace-table-1536.webp.asset.json";
 
 // ---- Aberdeen (completed) ----
-import aberdeenHeroStorm from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.png.asset.json";
+import aberdeenHeroStorm from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.webp.asset.json";
 import aberdeenStableStallInterior from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
 import aberdeenTackRoomJoinery from "@/assets/uploads/approved-tack-room-joinery.png.asset.json";
 

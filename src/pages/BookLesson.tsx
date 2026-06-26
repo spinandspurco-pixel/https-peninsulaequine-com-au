@@ -37,7 +37,7 @@ const blueprintDetail = blueprintDetailAsset.url;
 const blueprintBarn = blueprintBarnAsset.url;
 // Approved cinematic only — legacy aberdeen-exterior.jpg + covered-arena-finished-lit removed.
 import ciroWideAsset from "@/assets/uploads/approved-aberdeen-exterior-dusk-frontage.png.asset.json";
-import ciroWithHorseAsset from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.png.asset.json";
+import ciroWithHorseAsset from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.webp.asset.json";
 const ciroWide = ciroWideAsset.url;
 const ciroWithHorse = ciroWithHorseAsset.url;
 

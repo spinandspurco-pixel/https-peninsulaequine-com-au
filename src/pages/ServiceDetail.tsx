@@ -32,7 +32,7 @@ import peCustomRuralFireplaceHatAsset from "@/assets/services-new/pe-custom-rura
 
 // Approved Aberdeen / stables
 import aberdeenExteriorDuskAsset from "@/assets/uploads/approved-aberdeen-exterior-dusk-frontage.png.asset.json";
-import aberdeenRiderStormAsset from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.png.asset.json";
+import aberdeenRiderStormAsset from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.webp.asset.json";
 import aberdeenRoundPenSunsetAsset from "@/assets/uploads/approved-aberdeen-round-pen-sunset.png.asset.json";
 import stableAisleWarmAsset from "@/assets/uploads/approved-stable-aisle-detail-warm-light.png.asset.json";
 import stableStallSymmetricAsset from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
