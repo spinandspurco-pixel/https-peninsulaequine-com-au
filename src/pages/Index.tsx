@@ -203,6 +203,27 @@ export default function Index() {
                   }}
                 />
               )}
+              {/* Cinematic spotlight — sculpts the horse without lifting overall exposure */}
+              <div
+                aria-hidden
+                className="absolute inset-0 pointer-events-none mix-blend-soft-light"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 30% 38% at 64% 46%, hsl(34 55% 72% / 0.55) 0%, hsl(28 40% 50% / 0.18) 45%, transparent 72%)",
+                  opacity: imageReady && heroImgLoaded ? 1 : 0,
+                  transition: `opacity 1800ms ${EASE} 200ms`,
+                }}
+              />
+              <div
+                aria-hidden
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 28% 34% at 64% 46%, hsl(36 50% 78% / 0.10) 0%, transparent 65%)",
+                  opacity: imageReady && heroImgLoaded ? 1 : 0,
+                  transition: `opacity 1800ms ${EASE} 200ms`,
+                }}
+              />
             </div>
 
             {/* Readability scrim — anchored to text column, softer on the horse */}
