@@ -123,6 +123,7 @@ export default function HqDeployHealth() {
       const out = await Promise.all(TARGETS.map((t) => probe(t.label, t.url)));
       setResults(out);
       setLastCheckedAt(new Date().toISOString());
+      recordResults(out);
     } finally {
       setRunning(false);
     }
