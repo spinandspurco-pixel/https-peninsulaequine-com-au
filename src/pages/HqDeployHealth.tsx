@@ -4,6 +4,7 @@ import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { HqNav } from "@/components/hq/HqNav";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { recordResults } from "@/lib/deployHealth";
 
 /**
  * HQ → Operations → Deploy Health
