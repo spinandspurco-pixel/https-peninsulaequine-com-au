@@ -161,6 +161,14 @@ export const HQ_NAV_ITEMS: HqNavItem[] = [
     sections: ["clients"],
     note: "Run the C.1b Knowledge Graph smoke test against this environment",
   },
+  {
+    key: "deploy-health",
+    label: "Deploy Health",
+    to: "/hq/deploy-health",
+    roles: ["admin"],
+    sections: ["clients"],
+    note: "Detect stuck production promotions; prepare escalation payload",
+  },
 ];
 
 /** Items the user can reach in any section's sub-row. */
