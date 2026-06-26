@@ -17,6 +17,7 @@ export type CommandWidget =
   | "priority-review"
   | "activity-feed"
   | "watchlist"
+  | "ops-signals"
   | "system-health";
 
 export interface CommandView {
