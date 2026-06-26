@@ -50,7 +50,6 @@ function debugAllowed(isAdmin: boolean): boolean {
     }
   }
   if (isLocalHost()) return true;
-  if (import.meta.env.DEV) return true;
   return false;
 }
 
