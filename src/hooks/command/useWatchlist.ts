@@ -16,7 +16,7 @@ export interface WatchlistItem {
   severity: "info" | "warn" | "critical";
 }
 
-async function fetchWatchlist(): Promise<WatchlistItem[]> {
+async function fetchWatchlist(includeOpsSignals: boolean): Promise<WatchlistItem[]> {
   const out: WatchlistItem[] = [];
 
   const [overdueFollowUps, pendingMedia, pendingReview, lastSmoke, staleProjects] =
@@ -38,12 +38,14 @@ async function fetchWatchlist(): Promise<WatchlistItem[]> {
         .from("website_suggestions")
         .select("id", { count: "exact", head: true })
         .in("status", ["pending", "review", "open"]),
-      supabase
-        .from("graph_smoke_reports")
-        .select("id, result, created_at")
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle(),
+      includeOpsSignals
+        ? supabase
+            .from("graph_smoke_reports")
+            .select("id, result, created_at")
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .maybeSingle()
+        : Promise.resolve({ data: null }),
       supabase
         .from("managed_projects")
         .select("id, name")
@@ -80,14 +82,16 @@ async function fetchWatchlist(): Promise<WatchlistItem[]> {
     });
   }
 
-  const smoke = lastSmoke.data;
-  if (smoke && smoke.result && smoke.result.toLowerCase() !== "pass") {
-    out.push({
-      id: "smoke-failed",
-      label: `Last Graph Smoke: ${smoke.result.toUpperCase()}`,
-      href: "/hq/graph-smoke",
-      severity: "critical",
-    });
+  if (includeOpsSignals) {
+    const smoke = lastSmoke.data;
+    if (smoke && smoke.result && smoke.result.toLowerCase() !== "pass") {
+      out.push({
+        id: "smoke-failed",
+        label: `Last Graph Smoke: ${smoke.result.toUpperCase()}`,
+        href: "/hq/graph-smoke",
+        severity: "critical",
+      });
+    }
   }
 
   for (const row of staleProjects.data ?? []) {
@@ -102,10 +106,10 @@ async function fetchWatchlist(): Promise<WatchlistItem[]> {
   return out.slice(0, 6);
 }
 
-export function useWatchlist() {
+export function useWatchlist(includeOpsSignals = false) {
   return useQuery({
-    queryKey: ["command-centre", "watchlist"],
-    queryFn: fetchWatchlist,
+    queryKey: ["command-centre", "watchlist", { ops: includeOpsSignals }],
+    queryFn: () => fetchWatchlist(includeOpsSignals),
     refetchInterval: 60_000,
     refetchIntervalInBackground: false,
     staleTime: 30_000,

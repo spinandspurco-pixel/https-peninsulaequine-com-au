@@ -47,6 +47,7 @@ export default function HqCommandCentre() {
   const effectiveRoles =
     isPreview && !isPreviewRole ? [...roles, "preview" as const] : roles;
   const view = resolveCommandView(effectiveRoles, user?.email ?? null);
+  const includeOpsSignals = hasWidget(view, "ops-signals");
 
   return (
     <Layout>
@@ -103,7 +104,7 @@ export default function HqCommandCentre() {
                 View all →
               </a>
             </div>
-            <WorkQueue />
+            <WorkQueue includeOpsSignals={includeOpsSignals} />
           </div>
         </section>
 
@@ -129,7 +130,7 @@ export default function HqCommandCentre() {
                     View all →
                   </a>
                 </div>
-                <ActivityFeed />
+                <ActivityFeed includeOpsSignals={includeOpsSignals} />
               </div>
               {hasWidget(view, "watchlist") && (
                 <div>
@@ -144,7 +145,7 @@ export default function HqCommandCentre() {
                       View all →
                     </a>
                   </div>
-                  <Watchlist />
+                  <Watchlist includeOpsSignals={includeOpsSignals} />
                 </div>
               )}
             </div>

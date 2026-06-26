@@ -10,8 +10,8 @@ const KIND_LABEL: Record<FeedEntry["kind"], string> = {
   media: "Media",
 };
 
-export function ActivityFeed() {
-  const { data, isLoading, error } = useActivityFeed();
+export function ActivityFeed({ includeOpsSignals = false }: { includeOpsSignals?: boolean } = {}) {
+  const { data, isLoading, error } = useActivityFeed(includeOpsSignals);
 
   if (isLoading) {
     return <p className="text-[12px] text-muted-foreground/55">Loading recent activity…</p>;

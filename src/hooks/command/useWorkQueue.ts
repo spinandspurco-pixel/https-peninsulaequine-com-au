@@ -13,9 +13,9 @@ import {
   type WorkItem,
 } from "@/lib/commandCentre/workQueue";
 
-const QUERY_KEY = ["command-centre", "work-queue"] as const;
+const BASE_KEY = ["command-centre", "work-queue"] as const;
 
-async function fetchWorkQueue(): Promise<WorkItem[]> {
+async function fetchWorkQueue(includeOpsSignals: boolean): Promise<WorkItem[]> {
   const overnight = melbourneOvernightStart();
   const nowIso = new Date().toISOString();
 
@@ -52,29 +52,33 @@ async function fetchWorkQueue(): Promise<WorkItem[]> {
         .in("status", ["active", "in_progress", "in-progress"])
         .is("last_update", null)
         .limit(3),
-      supabase
-        .from("graph_smoke_reports")
-        .select("id, result, created_at")
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle(),
+      includeOpsSignals
+        ? supabase
+            .from("graph_smoke_reports")
+            .select("id, result, created_at")
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .maybeSingle()
+        : Promise.resolve({ data: null }),
     ]);
 
   const items: WorkItem[] = [];
   const now = Date.now();
 
-  // Smoke failure → critical, top of queue
-  const smoke = lastSmoke.data;
-  if (smoke?.result && smoke.result.toLowerCase() !== "pass") {
-    items.push({
-      id: `smoke:${smoke.id}`,
-      kind: "smoke",
-      label: "Investigate failed Graph Smoke run",
-      detail: `Last result: ${smoke.result.toUpperCase()}`,
-      href: "/hq/graph-smoke",
-      severity: "critical",
-      score: SCORE.smokeFailed,
-    });
+  // Smoke failure → critical, top of queue (ops/admin only)
+  if (includeOpsSignals) {
+    const smoke = lastSmoke.data;
+    if (smoke?.result && smoke.result.toLowerCase() !== "pass") {
+      items.push({
+        id: `smoke:${smoke.id}`,
+        kind: "smoke",
+        label: "Investigate failed Graph Smoke run",
+        detail: `Last result: ${smoke.result.toUpperCase()}`,
+        href: "/hq/graph-smoke",
+        severity: "critical",
+        score: SCORE.smokeFailed,
+      });
+    }
   }
 
   // Overdue follow-ups — one row each, scored by lateness
@@ -158,19 +162,20 @@ async function fetchWorkQueue(): Promise<WorkItem[]> {
   return rank(items);
 }
 
-export function useWorkQueue() {
+export function useWorkQueue(includeOpsSignals = false) {
   const qc = useQueryClient();
+  const queryKey = [...BASE_KEY, { ops: includeOpsSignals }] as const;
   const query = useQuery({
-    queryKey: QUERY_KEY,
-    queryFn: fetchWorkQueue,
+    queryKey,
+    queryFn: () => fetchWorkQueue(includeOpsSignals),
     refetchInterval: 60_000,
     refetchIntervalInBackground: false,
     staleTime: 30_000,
   });
 
   const refresh = useCallback(() => {
-    qc.invalidateQueries({ queryKey: QUERY_KEY });
-  }, [qc]);
+    qc.invalidateQueries({ queryKey });
+  }, [qc, queryKey]);
 
   const snooze = useCallback(
     (id: string) => {
@@ -194,7 +199,7 @@ export function useWorkQueue() {
   }, [refresh]);
 
   return {
-    items: query.data ?? [],
+    items: (query.data ?? []) as WorkItem[],
     isLoading: query.isLoading,
     error: query.error,
     snooze,

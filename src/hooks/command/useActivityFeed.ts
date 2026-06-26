@@ -44,7 +44,7 @@ function humaniseInquiryEvent(event_type: string, to_value: string | null): stri
   }
 }
 
-async function fetchActivityFeed(): Promise<FeedEntry[]> {
+async function fetchActivityFeed(includeOpsSignals: boolean): Promise<FeedEntry[]> {
   const [activity, inquiry, smoke, media] = await Promise.all([
     supabase
       .from("activity_log")
@@ -56,11 +56,13 @@ async function fetchActivityFeed(): Promise<FeedEntry[]> {
       .select("id, created_at, event_type, to_value, inquiry_id")
       .order("created_at", { ascending: false })
       .limit(CAP_PER_SOURCE),
-    supabase
-      .from("graph_smoke_reports")
-      .select("id, created_at, result, exit_code, environment")
-      .order("created_at", { ascending: false })
-      .limit(CAP_PER_SOURCE),
+    includeOpsSignals
+      ? supabase
+          .from("graph_smoke_reports")
+          .select("id, created_at, result, exit_code, environment")
+          .order("created_at", { ascending: false })
+          .limit(CAP_PER_SOURCE)
+      : Promise.resolve({ data: [] as Array<{ id: string; created_at: string; result: string | null; exit_code: number | null; environment: string | null }> }),
     supabase
       .from("media_assets")
       .select("id, created_at, title, approval_state, project_id")
@@ -96,15 +98,17 @@ async function fetchActivityFeed(): Promise<FeedEntry[]> {
     });
   }
 
-  for (const row of smoke.data ?? []) {
-    const verdict = row.result?.toUpperCase() ?? "RUN";
-    out.push({
-      id: `smoke:${row.id}`,
-      kind: "smoke",
-      ts: row.created_at,
-      summary: `Graph Smoke · ${verdict}${row.exit_code != null ? ` · exit ${row.exit_code}` : ""}`,
-      href: `/hq/graph-smoke`,
-    });
+  if (includeOpsSignals) {
+    for (const row of smoke.data ?? []) {
+      const verdict = row.result?.toUpperCase() ?? "RUN";
+      out.push({
+        id: `smoke:${row.id}`,
+        kind: "smoke",
+        ts: row.created_at,
+        summary: `Graph Smoke · ${verdict}${row.exit_code != null ? ` · exit ${row.exit_code}` : ""}`,
+        href: `/hq/graph-smoke`,
+      });
+    }
   }
 
   for (const row of media.data ?? []) {
@@ -125,10 +129,10 @@ async function fetchActivityFeed(): Promise<FeedEntry[]> {
   return out.slice(0, CAP_TOTAL);
 }
 
-export function useActivityFeed() {
+export function useActivityFeed(includeOpsSignals = false) {
   return useQuery({
-    queryKey: ["command-centre", "activity-feed"],
-    queryFn: fetchActivityFeed,
+    queryKey: ["command-centre", "activity-feed", { ops: includeOpsSignals }],
+    queryFn: () => fetchActivityFeed(includeOpsSignals),
     refetchInterval: 30_000,
     refetchIntervalInBackground: false,
     staleTime: 15_000,

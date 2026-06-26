@@ -8,8 +8,8 @@ const DOT: Record<"info" | "warn" | "critical", string> = {
   critical: "bg-rose-500/80",
 };
 
-export function Watchlist() {
-  const { data, isLoading, error } = useWatchlist();
+export function Watchlist({ includeOpsSignals = false }: { includeOpsSignals?: boolean } = {}) {
+  const { data, isLoading, error } = useWatchlist(includeOpsSignals);
 
   if (isLoading) {
     return <p className="text-[12px] text-muted-foreground/55">Scanning…</p>;
