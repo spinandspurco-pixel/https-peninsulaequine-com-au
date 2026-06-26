@@ -104,7 +104,7 @@ export default function HqCommandCentre() {
                 View all →
               </a>
             </div>
-            <WorkQueue />
+            <WorkQueue includeOpsSignals={includeOpsSignals} />
           </div>
         </section>
 
@@ -130,7 +130,7 @@ export default function HqCommandCentre() {
                     View all →
                   </a>
                 </div>
-                <ActivityFeed />
+                <ActivityFeed includeOpsSignals={includeOpsSignals} />
               </div>
               {hasWidget(view, "watchlist") && (
                 <div>
@@ -145,7 +145,7 @@ export default function HqCommandCentre() {
                       View all →
                     </a>
                   </div>
-                  <Watchlist />
+                  <Watchlist includeOpsSignals={includeOpsSignals} />
                 </div>
               )}
             </div>
