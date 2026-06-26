@@ -20,7 +20,7 @@
  *   4 — hero asset bundle hash mismatch (old bundle still served)
  *   5 — unexpected error
  */
-import { readFileSync, readdirSync, existsSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const args = process.argv.slice(2);
@@ -143,11 +143,41 @@ async function main() {
 
   console.log("");
   const failed = results.filter((r) => !r.ok);
+  const timestamp = new Date().toISOString();
+
+  // Emit a machine-readable summary so CI can notify on failure without
+  // re-parsing log output.
+  const summaryPath = process.env.SMOKE_SUMMARY_PATH || "smoke-summary.json";
+  try {
+    writeFileSync(
+      summaryPath,
+      JSON.stringify(
+        {
+          base_url: BASE,
+          timestamp,
+          passed: failed.length === 0,
+          checks: results,
+          failed_checks: failed,
+        },
+        null,
+        2,
+      ),
+    );
+  } catch (e) {
+    console.warn("Could not write smoke summary:", String(e));
+  }
+
   if (failed.length === 0) {
     console.log(`All ${results.length} checks passed.`);
     process.exit(0);
   }
   console.log(`${failed.length} of ${results.length} checks failed.`);
+  for (const f of failed) {
+    console.log(`  • ${f.name}${f.detail ? ` — ${f.detail}` : ""}`);
+  }
+  console.log(`Live URL: ${BASE}`);
+  console.log(`Timestamp: ${timestamp}`);
+
   // Map first failure to a granular exit code.
   const first = failed[0].name;
   if (first.startsWith("Homepage")) process.exit(1);
@@ -161,3 +191,4 @@ main().catch((e) => {
   console.error("Unexpected error:", e);
   process.exit(5);
 });
+
