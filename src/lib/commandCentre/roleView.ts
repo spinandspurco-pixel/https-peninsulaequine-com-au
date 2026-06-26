@@ -61,6 +61,7 @@ const FOUNDER_WIDGETS: CommandWidget[] = [
   "priority-review",
   "activity-feed",
   "watchlist",
+  "ops-signals",
 ];
 
 const OPERATIONS_WIDGETS: CommandWidget[] = [
@@ -72,6 +73,7 @@ const OPERATIONS_WIDGETS: CommandWidget[] = [
   "priority-review",
   "activity-feed",
   "watchlist",
+  "ops-signals",
 ];
 
 const ADMIN_WIDGETS: CommandWidget[] = [
