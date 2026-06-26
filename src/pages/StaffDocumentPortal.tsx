@@ -15,7 +15,7 @@ import {
   CheckCircle2, AlertCircle, ChevronDown, ChevronUp, Calendar, ShieldCheck,
   FileWarning, Download, ArrowLeft, FolderOpen, Bell, ClipboardList, AlertTriangle, Heart,
 } from "lucide-react";
-import logoPeMark from "@/assets/logo-pe-square.png";
+import logoPeMark from "@/assets/logo-pe-square.webp";
 import { ChangePasswordDialog } from "@/components/ChangePasswordDialog";
 
 
