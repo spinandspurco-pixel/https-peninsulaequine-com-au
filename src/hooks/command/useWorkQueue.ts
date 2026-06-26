@@ -199,7 +199,7 @@ export function useWorkQueue(includeOpsSignals = false) {
   }, [refresh]);
 
   return {
-    items: query.data ?? [],
+    items: (query.data ?? []) as WorkItem[],
     isLoading: query.isLoading,
     error: query.error,
     snooze,
