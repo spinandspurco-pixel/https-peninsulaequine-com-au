@@ -7,9 +7,15 @@ name: Publish Smoke Test
 #   4. Hero asset bundle hash matches the latest build
 #
 # Triggers:
-#   - workflow_dispatch — manual, e.g. immediately after clicking Update
-#   - schedule          — every 30 minutes, catches silent rollout failures
-#   - push to main      — rebuilds dist/ then compares against live
+#   - workflow_dispatch     — manual, e.g. immediately after clicking Update
+#   - repository_dispatch   — fired by an external webhook on deploy success
+#                             (event_type: "deployment-succeeded")
+#   - push to main          — rebuilds dist/ then compares against live
+#   - schedule (*/2 min)    — lightweight watcher; only runs the full smoke
+#                             test when the live bundle hash has changed
+#                             since the last observed deploy. Acts as the
+#                             automatic post-deploy trigger when no webhook
+#                             is wired up.
 
 on:
   workflow_dispatch:
@@ -18,8 +24,16 @@ on:
         description: "Base URL to smoke-test"
         required: false
         default: "https://peninsulaequine.systems"
+      force:
+        description: "Run even if the live bundle hash has not changed"
+        required: false
+        default: "false"
+  repository_dispatch:
+    types: [deployment-succeeded]
   schedule:
-    - cron: "*/30 * * * *"
+    # Poll every 2 minutes; the watcher step short-circuits when the live
+    # bundle hash is unchanged, so this is cheap.
+    - cron: "*/2 * * * *"
   push:
     branches: [main]
 
@@ -35,26 +49,79 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # ── Watcher: only run the full smoke test when the live bundle hash
+      # has changed since the previous run. On manual/push/webhook triggers
+      # we always run. On schedule triggers we skip when unchanged.
+      - name: Detect live bundle hash
+        id: detect
+        env:
+          SMOKE_BASE_URL: ${{ github.event.inputs.base_url || 'https://peninsulaequine.systems' }}
+        run: |
+          html="$(curl -sSL "$SMOKE_BASE_URL/")"
+          # Match the hashed main entry bundle (e.g. /assets/index-XXXX.js or
+          # a Lovable CDN /__l5e/assets-v1/...index-XXXX.js path).
+          hash="$(printf '%s' "$html" | grep -oE 'index-[A-Za-z0-9_-]+\.js' | head -n1 || true)"
+          if [ -z "$hash" ]; then
+            # Fall back to hero asset filename as a deploy fingerprint.
+            hash="$(printf '%s' "$html" | grep -oE 'approved-aberdeen-rider-exterior-storm[A-Za-z0-9._-]*\.(webp|png)' | head -n1 || true)"
+          fi
+          echo "live_hash=$hash" >> "$GITHUB_OUTPUT"
+          echo "Live bundle fingerprint: ${hash:-<none>}"
+
+      - name: Restore last-seen bundle hash
+        id: cache-hash
+        uses: actions/cache@v4
+        with:
+          path: .last-smoke-hash
+          key: publish-smoke-last-hash-v1
+
+      - name: Decide whether to run
+        id: gate
+        run: |
+          trigger="${{ github.event_name }}"
+          force="${{ github.event.inputs.force }}"
+          live="${{ steps.detect.outputs.live_hash }}"
+          last="$(cat .last-smoke-hash 2>/dev/null || true)"
+          echo "trigger=$trigger last=$last live=$live force=$force"
+          run="true"
+          if [ "$trigger" = "schedule" ] && [ "$force" != "true" ]; then
+            if [ -n "$live" ] && [ "$live" = "$last" ]; then
+              run="false"
+            fi
+          fi
+          echo "run=$run" >> "$GITHUB_OUTPUT"
+          if [ "$run" = "false" ]; then
+            echo "Live bundle unchanged since last run — skipping full smoke test."
+          fi
+
       - name: Setup Bun
+        if: steps.gate.outputs.run == 'true'
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
       - name: Install dependencies
+        if: steps.gate.outputs.run == 'true'
         run: bun install --frozen-lockfile
 
       # Build locally so the hero-asset hash check has a baseline to compare
-      # against. On schedule runs we skip the build and the check soft-passes.
+      # against. On schedule/webhook runs we skip the build and the check
+      # soft-passes.
       - name: Build (for asset hash comparison)
-        if: github.event_name != 'schedule'
+        if: steps.gate.outputs.run == 'true' && github.event_name != 'schedule' && github.event_name != 'repository_dispatch'
         run: bun run build
 
       - name: Run publish smoke test
+        if: steps.gate.outputs.run == 'true'
         env:
           SMOKE_BASE_URL: ${{ github.event.inputs.base_url || 'https://peninsulaequine.systems' }}
         run: |
-          if [ "${{ github.event_name }}" = "schedule" ]; then
+          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ github.event_name }}" = "repository_dispatch" ]; then
             node scripts/publish-smoke-test.mjs --skip-local-build-check
           else
             node scripts/publish-smoke-test.mjs
           fi
+
+      - name: Record observed bundle hash
+        if: steps.gate.outputs.run == 'true' && steps.detect.outputs.live_hash != ''
+        run: printf '%s' "${{ steps.detect.outputs.live_hash }}" > .last-smoke-hash
