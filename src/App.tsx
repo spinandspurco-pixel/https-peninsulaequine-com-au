@@ -153,6 +153,7 @@ function AppContent() {
           <Route path="/hq/media" element={<ProtectedRoute allowedRoles={["admin","moderator","employee","trainer","preview"]}><AdminMedia /></ProtectedRoute>} />
           <Route path="/hq/review" element={<ProtectedRoute allowedRoles={["admin","moderator","preview"]}><HqReview /></ProtectedRoute>} />
           <Route path="/hq/graph-smoke" element={<ProtectedRoute allowedRoles={["admin"]}><HqGraphSmoke /></ProtectedRoute>} />
+          <Route path="/hq/deploy-health" element={<ProtectedRoute allowedRoles={["admin"]}><HqDeployHealth /></ProtectedRoute>} />
             <Route path="/hq/dns-verify" element={<ProtectedRoute allowedRoles={["admin"]}><DnsVerify /></ProtectedRoute>} />
             <Route path="/hq/dns-publish" element={<ProtectedRoute allowedRoles={["admin"]}><DnsPublish /></ProtectedRoute>} />
             <Route path="/hq/dns-status" element={<ProtectedRoute allowedRoles={["admin"]}><DnsStatus /></ProtectedRoute>} />
