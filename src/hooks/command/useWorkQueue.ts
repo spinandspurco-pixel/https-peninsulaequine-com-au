@@ -162,19 +162,20 @@ async function fetchWorkQueue(includeOpsSignals: boolean): Promise<WorkItem[]> {
   return rank(items);
 }
 
-export function useWorkQueue() {
+export function useWorkQueue(includeOpsSignals = false) {
   const qc = useQueryClient();
+  const queryKey = [...BASE_KEY, { ops: includeOpsSignals }] as const;
   const query = useQuery({
-    queryKey: QUERY_KEY,
-    queryFn: fetchWorkQueue,
+    queryKey,
+    queryFn: () => fetchWorkQueue(includeOpsSignals),
     refetchInterval: 60_000,
     refetchIntervalInBackground: false,
     staleTime: 30_000,
   });
 
   const refresh = useCallback(() => {
-    qc.invalidateQueries({ queryKey: QUERY_KEY });
-  }, [qc]);
+    qc.invalidateQueries({ queryKey });
+  }, [qc, queryKey]);
 
   const snooze = useCallback(
     (id: string) => {
