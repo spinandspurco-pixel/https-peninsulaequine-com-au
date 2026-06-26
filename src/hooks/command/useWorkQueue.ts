@@ -13,7 +13,7 @@ import {
   type WorkItem,
 } from "@/lib/commandCentre/workQueue";
 
-const QUERY_KEY = ["command-centre", "work-queue"] as const;
+const BASE_KEY = ["command-centre", "work-queue"] as const;
 
 async function fetchWorkQueue(includeOpsSignals: boolean): Promise<WorkItem[]> {
   const overnight = melbourneOvernightStart();
