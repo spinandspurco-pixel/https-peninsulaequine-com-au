@@ -1,0 +1,28 @@
+{
+  "base_url": "https://peninsulaequine.systems",
+  "timestamp": "2026-06-26T13:05:19.448Z",
+  "passed": true,
+  "checks": [
+    {
+      "name": "Homepage loads (200, shell present)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "/hq route serves SPA (200)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "/login renders (200)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Hero asset bundle hash",
+      "ok": true,
+      "detail": "no local dist/ build to compare (run after `bun run build` to enforce)"
+    }
+  ],
+  "failed_checks": []
+}
