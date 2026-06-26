@@ -20,7 +20,7 @@
  *   4 — hero asset bundle hash mismatch (old bundle still served)
  *   5 — unexpected error
  */
-import { readFileSync, readdirSync, existsSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const args = process.argv.slice(2);
