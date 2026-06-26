@@ -1,0 +1,60 @@
+name: Publish Smoke Test
+
+# Verifies the live site after every deployment:
+#   1. Homepage loads
+#   2. /hq route renders
+#   3. /login renders
+#   4. Hero asset bundle hash matches the latest build
+#
+# Triggers:
+#   - workflow_dispatch — manual, e.g. immediately after clicking Update
+#   - schedule          — every 30 minutes, catches silent rollout failures
+#   - push to main      — rebuilds dist/ then compares against live
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Base URL to smoke-test"
+        required: false
+        default: "https://peninsulaequine.systems"
+  schedule:
+    - cron: "*/30 * * * *"
+  push:
+    branches: [main]
+
+concurrency:
+  group: publish-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: Verify live deployment
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # Build locally so the hero-asset hash check has a baseline to compare
+      # against. On schedule runs we skip the build and the check soft-passes.
+      - name: Build (for asset hash comparison)
+        if: github.event_name != 'schedule'
+        run: bun run build
+
+      - name: Run publish smoke test
+        env:
+          SMOKE_BASE_URL: ${{ github.event.inputs.base_url || 'https://peninsulaequine.systems' }}
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            node scripts/publish-smoke-test.mjs --skip-local-build-check
+          else
+            node scripts/publish-smoke-test.mjs
+          fi
