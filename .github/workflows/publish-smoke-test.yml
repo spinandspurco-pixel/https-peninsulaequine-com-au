@@ -112,9 +112,11 @@ jobs:
         run: bun run build
 
       - name: Run publish smoke test
+        id: smoke
         if: steps.gate.outputs.run == 'true'
         env:
           SMOKE_BASE_URL: ${{ github.event.inputs.base_url || 'https://peninsulaequine.systems' }}
+          SMOKE_SUMMARY_PATH: ${{ github.workspace }}/smoke-summary.json
         run: |
           if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ github.event_name }}" = "repository_dispatch" ]; then
             node scripts/publish-smoke-test.mjs --skip-local-build-check
@@ -125,3 +127,94 @@ jobs:
       - name: Record observed bundle hash
         if: steps.gate.outputs.run == 'true' && steps.detect.outputs.live_hash != ''
         run: printf '%s' "${{ steps.detect.outputs.live_hash }}" > .last-smoke-hash
+
+      # ── Failure notification: write a clear GitHub step summary and
+      # open (or update) a single tracking issue so failures are visible
+      # without subscribing to workflow email noise.
+      - name: Build failure summary
+        id: failmsg
+        if: failure() && steps.gate.outputs.run == 'true'
+        env:
+          BASE: ${{ github.event.inputs.base_url || 'https://peninsulaequine.systems' }}
+          LIVE_HASH: ${{ steps.detect.outputs.live_hash }}
+          TRIGGER: ${{ github.event_name }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -e
+          ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          summary_file="${GITHUB_WORKSPACE}/smoke-summary.json"
+          failed_lines=""
+          if [ -f "$summary_file" ]; then
+            failed_lines="$(node -e "
+              const s=require('$summary_file');
+              for (const f of s.failed_checks||[]) {
+                console.log('- **'+f.name+'**'+(f.detail?' — '+f.detail:''));
+              }
+            ")"
+          fi
+          [ -z "$failed_lines" ] && failed_lines="- (no machine-readable summary; see job logs)"
+
+          {
+            echo "## ❌ Publish smoke test failed"
+            echo ""
+            echo "| field | value |"
+            echo "| --- | --- |"
+            echo "| Live URL | $BASE |"
+            echo "| Live bundle hash | \`${LIVE_HASH:-<none>}\` |"
+            echo "| Trigger | $TRIGGER |"
+            echo "| Timestamp (UTC) | $ts |"
+            echo "| Run | $RUN_URL |"
+            echo ""
+            echo "### Failed checks"
+            echo "$failed_lines"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          {
+            echo "## ❌ Publish smoke test failed"
+            echo ""
+            echo "- **Live URL:** $BASE"
+            echo "- **Live bundle hash:** \`${LIVE_HASH:-<none>}\`"
+            echo "- **Trigger:** $TRIGGER"
+            echo "- **Timestamp (UTC):** $ts"
+            echo "- **Run:** $RUN_URL"
+            echo ""
+            echo "### Failed checks"
+            echo "$failed_lines"
+            echo ""
+            echo "_This issue auto-closes on the next successful run._"
+          } > failure-body.md
+
+          {
+            echo "body<<EOF"
+            cat failure-body.md
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Open or update tracking issue on failure
+        if: failure() && steps.gate.outputs.run == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BODY: ${{ steps.failmsg.outputs.body }}
+        run: |
+          set -e
+          title="Publish smoke test failing on peninsulaequine.systems"
+          existing="$(gh issue list --state open --search "$title in:title" --json number --jq '.[0].number' || true)"
+          if [ -n "$existing" ] && [ "$existing" != "null" ]; then
+            printf '%s' "$BODY" | gh issue comment "$existing" --body-file -
+          else
+            printf '%s' "$BODY" | gh issue create --title "$title" --label "smoke-test,production" --body-file -
+          fi
+
+      - name: Auto-close tracking issue on success
+        if: success() && steps.gate.outputs.run == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          title="Publish smoke test failing on peninsulaequine.systems"
+          existing="$(gh issue list --state open --search "$title in:title" --json number --jq '.[0].number' || true)"
+          if [ -n "$existing" ] && [ "$existing" != "null" ]; then
+            gh issue comment "$existing" --body "✅ Smoke test recovered at $(date -u +%Y-%m-%dT%H:%M:%SZ). Closing."
+            gh issue close "$existing"
+          fi
+
