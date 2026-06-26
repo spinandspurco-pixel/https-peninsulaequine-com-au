@@ -19,9 +19,9 @@ const SEVERITY_DOT: Record<"info" | "warn" | "critical", string> = {
  *   gets quieter as the operator works through it.
  * - "Restore hidden" surfaces only when at least one item is hidden.
  */
-export function WorkQueue() {
+export function WorkQueue({ includeOpsSignals = false }: { includeOpsSignals?: boolean } = {}) {
   const { items, isLoading, error, snooze, dismiss, restore, hiddenCount } =
-    useWorkQueue();
+    useWorkQueue(includeOpsSignals);
 
   if (isLoading) {
     return (
