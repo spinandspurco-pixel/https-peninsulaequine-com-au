@@ -277,12 +277,12 @@ export default function Index() {
               className="relative z-10 section-container w-full pb-[clamp(5rem,4rem+7vw,9rem)] pt-32"
               style={{ opacity: heroFade, willChange: "opacity" }}
             >
-              <div className="max-w-[44rem] space-y-10">
-                <div className="space-y-7">
+              <div className="max-w-[44rem] space-y-12 pt-10 sm:pt-16">
+                <div className="space-y-8">
                   <h1
-                    className="font-serif text-foreground leading-[0.88] tracking-[-0.035em]"
+                    className="font-serif text-foreground leading-[0.82] tracking-[-0.04em]"
                     style={{
-                      fontSize: "clamp(3.1rem, 1.95rem + 5.6vw, 7rem)",
+                      fontSize: "clamp(3.2rem, 1.95rem + 5.8vw, 7.25rem)",
                       opacity: headlineReady ? 1 : 0,
                       transform: headlineReady ? "translateY(0)" : "translateY(10px)",
                       transition: `opacity 1100ms ${EASE}, transform 1100ms ${EASE}`,
@@ -311,8 +311,7 @@ export default function Index() {
                       textShadow: "0 2px 18px rgba(0,0,0,0.55)",
                     }}
                   >
-                    Covered arenas, stables and equine environments shaped by horse people.
-                    Built on the Mornington Peninsula. Trusted across Australia.
+                    Covered arenas, stables and equine environments built by horse people. Trusted across Australia.
                   </p>
                 </div>
 
@@ -342,7 +341,7 @@ export default function Index() {
                     }}
                     onPointerLeave={(e) => { e.currentTarget.style.transform = "translate3d(0,0,0)"; }}
                   >
-                    <span className="w-9 h-px bg-accent/70 transition-all duration-700 group-hover:w-14 group-hover:bg-accent" />
+                    <span className="w-10 h-[2px] bg-accent transition-all duration-700 group-hover:w-16" style={{ boxShadow: "0 0 12px hsl(var(--accent) / 0.45)" }} />
                     Explore Selected Works
                   </Link>
                   <Link
