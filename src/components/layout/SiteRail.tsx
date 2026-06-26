@@ -102,9 +102,9 @@ export function SiteRail() {
             aria-expanded={open}
             aria-controls="site-overlay-nav"
             aria-label="Open navigation"
-            className="pointer-events-auto group inline-flex items-center gap-3 py-2 -mr-2 px-2"
+            className="pointer-events-auto group inline-flex items-center gap-2 py-2 -mr-1 px-2"
           >
-            <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.45em] text-foreground/75 group-hover:text-foreground transition-colors duration-500">
+            <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.42em] text-foreground/75 group-hover:text-foreground transition-colors duration-500">
               Menu
             </span>
             <span className="flex flex-col items-end gap-[5px]" aria-hidden="true">
