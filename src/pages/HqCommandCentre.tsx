@@ -47,6 +47,7 @@ export default function HqCommandCentre() {
   const effectiveRoles =
     isPreview && !isPreviewRole ? [...roles, "preview" as const] : roles;
   const view = resolveCommandView(effectiveRoles, user?.email ?? null);
+  const includeOpsSignals = hasWidget(view, "ops-signals");
 
   return (
     <Layout>
