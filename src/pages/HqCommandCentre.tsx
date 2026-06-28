@@ -10,6 +10,7 @@ import { MorningBrief } from "@/components/hq/command/MorningBrief";
 import { WorkQueue } from "@/components/hq/command/WorkQueue";
 import { ActivityFeed } from "@/components/hq/command/ActivityFeed";
 import { Watchlist } from "@/components/hq/command/Watchlist";
+import { DeployStatusWidget } from "@/components/hq/DeployStatusWidget";
 
 /**
  * HQ Command Centre — the page that answers
@@ -165,6 +166,9 @@ export default function HqCommandCentre() {
               >
                 System health
               </h2>
+              <div className="mb-8">
+                <DeployStatusWidget />
+              </div>
               <ul className="grid gap-x-10 gap-y-6 sm:grid-cols-2 text-[12px] leading-snug">
                 <li>
                   <a
