@@ -16,6 +16,13 @@ import {
   diagnoseOAuthError,
   type OAuthErrorEntry,
 } from "@/lib/oauthErrorLog";
+import {
+  listE2eHistory,
+  recordE2eHistory,
+  clearE2eHistory,
+  formatE2eTime,
+  type E2eHistoryEntry,
+} from "@/lib/e2eHistory";
 
 
 
