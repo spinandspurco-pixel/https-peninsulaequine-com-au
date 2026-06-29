@@ -10,9 +10,11 @@ const MAX_ENTRIES = 25;
 
 export type OAuthErrorSource =
   | "login-button"
+  | "login-retry"
   | "provider-check"
   | "redirect-validator"
-  | "callback";
+  | "callback"
+  | "callback-url";
 
 export type OAuthErrorEntry = {
   ts: number;
