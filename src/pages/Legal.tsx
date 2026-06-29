@@ -59,6 +59,11 @@ export function Privacy() {
 }
 
 export function Terms() {
+  usePageMeta({
+    title: "Terms of Service — Peninsula Equine",
+    description: "The terms governing use of the Peninsula Equine website, enquiry forms and published project information.",
+    path: "/terms",
+  });
   return (
     <Layout>
       <PageHeader title="Terms of Service" description="The terms and conditions governing use of our website and services." />
