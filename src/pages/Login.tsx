@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Eye, EyeOff, Loader2, ArrowLeft, Lock } from "lucide-react";
-import { lovable } from "@/integrations/lovable/index";
+import { supabase } from "@/integrations/supabase/client";
 import { StaffPortalFrame } from "@/components/StaffPortalFrame";
 import { HqLoadingState } from "@/components/hq/HqLoadingState";
 import { clearLocalAuthCacheAndSignOut } from "@/lib/authCache";
@@ -198,54 +198,45 @@ export default function Login() {
               disabled={isLoading}
               className="w-full h-11 border-border/50 hover:border-accent/30 hover:bg-accent/5 text-sm rounded-sm transition-all duration-200"
               onClick={async () => {
-                const inIframe = (() => {
-                  try { return window.self !== window.top; } catch { return true; }
-                })();
                 authLog("oauth:google:click", {
-                  redirect_uri: window.location.origin,
+                  redirectTo: window.location.origin,
                   href: window.location.href,
-                  inIframe,
                 });
                 setIsLoading(true);
-                // Safety net: if neither error, redirect, nor SIGNED_IN
-                // happens within 15s, clear the spinner and surface an error
-                // so the button never spins forever on a swallowed popup.
+                // Safety net: if the browser hasn't navigated to Google
+                // within 15s, clear the spinner and surface an error so
+                // the button never spins forever on a swallowed redirect.
                 const watchdog = window.setTimeout(() => {
-                  authLog("oauth:google:watchdog-timeout", { inIframe });
+                  authLog("oauth:google:watchdog-timeout", {});
                   setIsLoading(false);
                   toast.error(
-                    inIframe
-                      ? "Google sign-in didn't complete inside the preview. Open the site in a new tab and try again."
-                      : "Google sign-in didn't complete. Check that pop-ups are allowed and try again."
+                    "Google sign-in didn't start. Check that pop-ups/redirects are allowed and try again."
                   );
                 }, 15000);
                 try {
-                  const result = await lovable.auth.signInWithOAuth("google", {
-                    redirect_uri: window.location.origin,
+                  const { data, error } = await supabase.auth.signInWithOAuth({
+                    provider: "google",
+                    options: {
+                      redirectTo: window.location.origin,
+                    },
                   });
                   authLog("oauth:google:result", {
-                    hasError: !!result?.error,
-                    errorMsg: result?.error?.message,
-                    redirected: !!result?.redirected,
+                    hasError: !!error,
+                    errorMsg: error?.message,
+                    hasUrl: !!data?.url,
                   });
-                  if (result?.error) {
+                  if (error) {
                     window.clearTimeout(watchdog);
                     setIsLoading(false);
                     toast.error(
-                      result.error.message
-                        ? `Google sign-in failed: ${result.error.message}`
+                      error.message
+                        ? `Google sign-in failed: ${error.message}`
                         : "Google sign-in failed."
                     );
                     return;
                   }
-                  if (result?.redirected) {
-                    // Browser is navigating away — keep spinner, drop watchdog.
-                    window.clearTimeout(watchdog);
-                    return;
-                  }
-                  // Popup flow: tokens already set. The session-driven effect
-                  // above will navigate once `ready && user`. Clear the
-                  // watchdog; spinner stays until that redirect lands.
+                  // Supabase performs a full-page redirect to Google.
+                  // Keep the spinner up; the page is about to unload.
                   window.clearTimeout(watchdog);
                 } catch (err) {
                   window.clearTimeout(watchdog);
