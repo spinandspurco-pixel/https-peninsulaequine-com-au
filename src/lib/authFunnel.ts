@@ -88,3 +88,29 @@ export function resetAuthFunnel() {
     /* ignore */
   }
 }
+
+// ---------------------------------------------------------------------------
+// Google OAuth E2E runner events (HQ → Diagnostics → "Run Google OAuth E2E")
+//
+// These are NOT part of the funnel dedupe — every run must record every state
+// transition so support traces stay accurate.
+// ---------------------------------------------------------------------------
+
+export type AuthE2eEvent =
+  | "auth_e2e_started"
+  | "auth_e2e_success"
+  | "auth_e2e_failure"
+  | "auth_e2e_redirect_uri_mismatch";
+
+export type AuthE2ePayload = {
+  origin?: string;
+  expectedCallback?: string | null;
+  reason?: string;
+  durationMs?: number;
+  [key: string]: unknown;
+};
+
+export function trackAuthE2e(event: AuthE2eEvent, payload: AuthE2ePayload = {}) {
+  authLog(`e2e:${event}`, payload);
+  trackEvent(event, { ...payload, ts: Date.now() });
+}
