@@ -196,11 +196,65 @@ export default function HqDiagnostics() {
           ))}
         </div>
 
-        <p className="mt-8 text-xs opacity-40 font-light leading-relaxed">
-          No secrets are exposed on this page. The publishable key is intentionally public
-          (frontend-bundled) but is masked here as a readability aid. The service-role key is
-          server-only and never reaches the browser.
-        </p>
+        <div className="mt-8 flex items-center justify-between gap-4">
+          <p className="text-xs opacity-40 font-light leading-relaxed max-w-md">
+            No secrets are exposed on this page. The publishable key is intentionally public
+            (frontend-bundled) but is masked here as a readability aid. The service-role key is
+            server-only and never reaches the browser.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              const report = {
+                generatedAt: new Date().toISOString(),
+                host: typeof window !== "undefined" ? window.location.host : null,
+                href: typeof window !== "undefined" ? window.location.href : null,
+                buildMode: mode,
+                userAgent: typeof navigator !== "undefined" ? navigator.userAgent : null,
+                env: {
+                  VITE_SUPABASE_URL: url ?? null,
+                  VITE_SUPABASE_PROJECT_ID: projectId ?? null,
+                  VITE_SUPABASE_PUBLISHABLE_KEY: key ? maskKey(key) : null,
+                  key_format:
+                    !key
+                      ? "missing"
+                      : key.startsWith(LEGACY_PREFIX)
+                        ? "legacy_jwt"
+                        : key.startsWith(SB_PREFIX)
+                          ? "sb_publishable"
+                          : "unknown",
+                },
+                expected: {
+                  project_id: EXPECTED_PROJECT_ID,
+                  url: EXPECTED_URL,
+                  key_prefix: SB_PREFIX,
+                },
+                overall: statusLabel(overall),
+                checks: checks.map((c) => ({
+                  label: c.label,
+                  status: statusLabel(c.status),
+                  detail: c.detail,
+                })),
+              };
+              const blob = new Blob([JSON.stringify(report, null, 2)], {
+                type: "application/json",
+              });
+              const url2 = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+              a.href = url2;
+              a.download = `hq-diagnostics-${stamp}.json`;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url2);
+            }}
+            className="shrink-0 text-[0.6rem] tracking-[0.35em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-1 transition-opacity"
+          >
+            Export report →
+          </button>
+        </div>
+
       </div>
     </div>
   );
