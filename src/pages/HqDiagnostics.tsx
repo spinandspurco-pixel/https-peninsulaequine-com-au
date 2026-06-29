@@ -53,6 +53,82 @@ export default function HqDiagnostics() {
   const [pingDetail, setPingDetail] = useState<string>("Checking…");
   const [googleStatus, setGoogleStatus] = useState<CheckStatus>("info");
   const [googleDetail, setGoogleDetail] = useState<string>("Checking Google OAuth provider…");
+  const [redirectStatus, setRedirectStatus] = useState<CheckStatus>("info");
+  const [redirectDetail, setRedirectDetail] = useState<string>("Idle — run validator to compare with Google.");
+
+  const expectedCallback = url ? `${url.replace(/\/$/, "")}/auth/v1/callback` : null;
+  const appOrigin = typeof window !== "undefined" ? window.location.origin : "";
+
+  const runRedirectUriValidator = useMemo(() => () => {
+    if (!url) {
+      setRedirectStatus("fail");
+      setRedirectDetail("VITE_SUPABASE_URL missing.");
+      return;
+    }
+    setRedirectStatus("info");
+    setRedirectDetail("Opening Google in a popup — sign in (or cancel) to complete the check…");
+    const authorize =
+      `${url.replace(/\/$/, "")}/auth/v1/authorize?provider=google` +
+      `&redirect_to=${encodeURIComponent(window.location.origin + "/hq/diagnostics?oauth=probe")}`;
+    const popup = window.open(authorize, "oauth-validator", "width=520,height=640");
+    if (!popup) {
+      setRedirectStatus("fail");
+      setRedirectDetail("Popup blocked — allow popups for this site and re-run.");
+      return;
+    }
+    const start = Date.now();
+    const timer = window.setInterval(() => {
+      // Cross-origin reads throw; only readable when popup lands back on our origin.
+      try {
+        if (popup.closed) {
+          window.clearInterval(timer);
+          setRedirectStatus("warn");
+          setRedirectDetail("Popup closed before completing — inconclusive.");
+          return;
+        }
+        const href = popup.location.href;
+        if (!href || href === "about:blank") return;
+        const u = new URL(href);
+        if (u.origin !== window.location.origin) return;
+        // Same-origin landing — read params and tokens.
+        const err = u.searchParams.get("error") || u.searchParams.get("error_description") || "";
+        const hash = u.hash || "";
+        const hasCode = u.searchParams.has("code") || hash.includes("access_token=");
+        window.clearInterval(timer);
+        popup.close();
+        if (/redirect_uri_mismatch/i.test(err + " " + hash)) {
+          setRedirectStatus("fail");
+          setRedirectDetail(
+            `MISMATCH — Google rejected the redirect URI Supabase sent. Add ${expectedCallback} to "Authorized redirect URIs" in your Google OAuth client.`
+          );
+          return;
+        }
+        if (err) {
+          setRedirectStatus("warn");
+          setRedirectDetail(`Returned with error: ${decodeURIComponent(err)}`);
+          return;
+        }
+        if (hasCode) {
+          setRedirectStatus("ok");
+          setRedirectDetail(
+            `Google accepted ${expectedCallback} and redirected back to ${u.origin}. Redirect URI is valid.`
+          );
+          return;
+        }
+        setRedirectStatus("warn");
+        setRedirectDetail(`Returned to ${u.origin} without code or error — inconclusive.`);
+      } catch {
+        // Still on Google or Supabase — keep polling.
+      }
+      if (Date.now() - start > 120_000) {
+        window.clearInterval(timer);
+        try { popup.close(); } catch { /* ignore */ }
+        setRedirectStatus("warn");
+        setRedirectDetail("Timed out after 2 minutes without returning to app origin.");
+      }
+    }, 600);
+  }, [url, expectedCallback]);
+
 
   const runGoogleOAuthCheck = useMemo(() => () => {
     setGoogleStatus("info");
