@@ -435,6 +435,13 @@ export default function HqDeployHealth() {
             >
               Copy escalation payload
             </button>
+            <button
+              type="button"
+              onClick={copySupportEmail}
+              className="text-xs tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8"
+            >
+              Copy support email
+            </button>
           </div>
           <p className="text-[0.65rem] text-foreground/40 leading-relaxed">
             Opens your mail client with support@lovable.dev pre-filled (subject,
