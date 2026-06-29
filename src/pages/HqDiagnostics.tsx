@@ -926,7 +926,7 @@ export default function HqDiagnostics() {
                   autoDetected: {
                     status: autoDetected.status,
                     detail: autoDetected.detail,
-                    callbackUri: autoDetected.callbackUri ?? null,
+                    callbackUri: autoDetected.callback ?? null,
                     siteUrl: autoDetected.siteUrl ?? null,
                     googleEnabled: autoDetected.googleEnabled ?? null,
                   },
