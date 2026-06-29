@@ -912,6 +912,111 @@ export default function HqDiagnostics() {
                 </button>
               )}
               {(() => {
+                const buildReport = () => ({
+                  generatedAt: new Date().toISOString(),
+                  app: {
+                    origin: appOrigin || null,
+                    href: typeof window !== "undefined" ? window.location.href : null,
+                  },
+                  supabase: {
+                    url: url || null,
+                    projectId: projectId || null,
+                    expectedCallback: expectedCallback || null,
+                  },
+                  autoDetected: {
+                    status: autoDetected.status,
+                    detail: autoDetected.detail,
+                    callbackUri: autoDetected.callbackUri ?? null,
+                    siteUrl: autoDetected.siteUrl ?? null,
+                    googleEnabled: autoDetected.googleEnabled ?? null,
+                  },
+                  summary: {
+                    pastedCount: parsedUris.length,
+                    requiredMissing: requiredMissing.length,
+                    optionalMissing: optionalMissing.length,
+                    allRequiredMatch,
+                  },
+                  targets: targetResults.map((t) => ({
+                    env: t.env,
+                    label: t.label,
+                    uri: t.uri,
+                    required: t.required,
+                    present: t.present,
+                    isCurrentOrigin: t.isCurrent,
+                    note: t.note ?? null,
+                  })),
+                  pastedUris: parsedUris.map((u) => u.raw),
+                });
+                const download = (filename: string, mime: string, body: string) => {
+                  try {
+                    const blob = new Blob([body], { type: mime });
+                    const href = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = href;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    setTimeout(() => URL.revokeObjectURL(href), 1000);
+                  } catch { /* ignore */ }
+                };
+                const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+                const exportJson = () => {
+                  download(`redirect-uri-report-${stamp}.json`, "application/json",
+                    JSON.stringify(buildReport(), null, 2));
+                };
+                const exportTxt = () => {
+                  const r = buildReport();
+                  const lines: string[] = [];
+                  lines.push("Peninsula Equine — Redirect URI Validation Report");
+                  lines.push(`Generated: ${r.generatedAt}`);
+                  lines.push(`App origin: ${r.app.origin ?? "(unknown)"}`);
+                  lines.push(`Supabase URL: ${r.supabase.url ?? "(missing)"}`);
+                  lines.push(`Expected callback: ${r.supabase.expectedCallback ?? "(missing)"}`);
+                  lines.push("");
+                  lines.push("Auto-detected from Supabase project:");
+                  lines.push(`  status: ${r.autoDetected.status}`);
+                  lines.push(`  callback: ${r.autoDetected.callbackUri ?? "—"}`);
+                  lines.push(`  site_url: ${r.autoDetected.siteUrl ?? "—"}`);
+                  lines.push(`  google_enabled: ${r.autoDetected.googleEnabled ?? "—"}`);
+                  lines.push(`  detail: ${r.autoDetected.detail}`);
+                  lines.push("");
+                  lines.push(`Summary: ${r.summary.pastedCount} pasted · ${r.summary.requiredMissing} required missing · ${r.summary.optionalMissing} optional missing`);
+                  lines.push("");
+                  lines.push("Targets:");
+                  for (const t of r.targets) {
+                    const tag = t.present ? "OK  " : (t.required ? "MISS" : "warn");
+                    lines.push(`  [${tag}] ${t.required ? "REQ " : "OPT "} ${t.label}`);
+                    lines.push(`         ${t.uri}`);
+                    if (t.note) lines.push(`         note: ${t.note}`);
+                  }
+                  lines.push("");
+                  lines.push("Pasted URIs:");
+                  if (r.pastedUris.length === 0) lines.push("  (none)");
+                  for (const u of r.pastedUris) lines.push(`  - ${u}`);
+                  download(`redirect-uri-report-${stamp}.txt`, "text/plain", lines.join("\n"));
+                };
+                return (
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={exportJson}
+                      title="Download JSON report"
+                      className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border border-foreground/25 px-2 py-1 rounded-sm hover:bg-foreground/10 transition-colors"
+                    >
+                      Export JSON
+                    </button>
+                    <button
+                      type="button"
+                      onClick={exportTxt}
+                      title="Download plain-text report"
+                      className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border border-foreground/25 px-2 py-1 rounded-sm hover:bg-foreground/10 transition-colors"
+                    >
+                      Export TXT
+                    </button>
+                  </div>
+                );
+              })()}
                 const missingAll = targetResults.filter((t) => !t.present).map((t) => t.uri);
                 if (missingAll.length === 0) return null;
                 return (
