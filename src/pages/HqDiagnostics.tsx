@@ -95,6 +95,8 @@ export default function HqDiagnostics() {
       .filter((x) => x.raw.length > 0);
   }, [pastedUris]);
 
+  const expectedNorm = expectedCallback ? normalizeUri(expectedCallback) : null;
+
   type ExpectedTarget = {
     env: "supabase" | "dev" | "preview" | "production";
     label: string;
