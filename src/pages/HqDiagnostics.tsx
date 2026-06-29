@@ -279,9 +279,12 @@ export default function HqDiagnostics() {
                 },
                 expected: {
                   project_id: EXPECTED_PROJECT_ID,
+                  project_id_source: EXPECTED_PROJECT_ID_SOURCE,
                   url: EXPECTED_URL,
+                  url_source: EXPECTED_URL_SOURCE,
                   key_prefix: SB_PREFIX,
                 },
+
                 overall: statusLabel(overall),
                 checks: checks.map((c) => ({
                   label: c.label,
