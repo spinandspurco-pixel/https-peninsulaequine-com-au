@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef, KeyboardEvent } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useIntroState } from "@/hooks/useIntroState";
 import { useActiveServiceChapter } from "@/hooks/useActiveServiceChapter";
+import { useAuth } from "@/hooks/useAuth";
 import logoSquare from "@/assets/logo-pe-square.webp";
 import logoCinematic from "@/assets/logo-pe-cinematic.png";
 
