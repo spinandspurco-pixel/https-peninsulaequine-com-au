@@ -543,7 +543,7 @@ export default function HqDiagnostics() {
         }
       }
     }, 600);
-  }, [url, expectedCallback, e2eRunning]);
+  }, [url, expectedCallback, e2eRunning, e2eLabel, appOrigin]);
 
 
 
