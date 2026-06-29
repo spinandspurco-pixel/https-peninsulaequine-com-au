@@ -18,6 +18,7 @@ import { SiteRail } from "./components/layout/SiteRail";
 import Index from "./pages/Index";
 
 const Arenas = lazy(() => import("./pages/Arenas"));
+const DressageArenaConstruction = lazy(() => import("./pages/DressageArenaConstruction"));
 const Stables = lazy(() => import("./pages/Stables"));
 const LumenArc = lazy(() => import("./pages/LumenArc"));
 import LumenArcRouteFallback from "./components/lumenarc/LumenArcRouteFallback";
