@@ -68,8 +68,16 @@ export function Header() {
   const [squareLogoFailed, setSquareLogoFailed] = useState(false);
   const [cinematicLogoFailed, setCinematicLogoFailed] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const activeChapter = useActiveServiceChapter();
   const { headerLogoReady, headerReady } = useIntroState();
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    setIsMobileMenuOpen(false);
+    navigate("/");
+  };
 
   const closeTimer = useRef<number | null>(null);
   const mobileToggleRef = useRef<HTMLButtonElement | null>(null);
