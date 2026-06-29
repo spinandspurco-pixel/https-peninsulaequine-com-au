@@ -188,8 +188,14 @@ export default function HqDiagnostics() {
       detail: `${mode} · host: ${typeof window !== "undefined" ? window.location.host : "—"}`,
     });
 
+    items.push({
+      label: "Google OAuth provider",
+      status: googleStatus,
+      detail: googleDetail,
+    });
+
     return items;
-  }, [url, projectId, key, mode, pingStatus, pingDetail]);
+  }, [url, projectId, key, mode, pingStatus, pingDetail, googleStatus, googleDetail]);
 
   const overall: CheckStatus = useMemo(() => {
     if (checks.some((c) => c.status === "fail")) return "fail";
