@@ -51,6 +51,58 @@ export default function HqDiagnostics() {
 
   const [pingStatus, setPingStatus] = useState<CheckStatus>("info");
   const [pingDetail, setPingDetail] = useState<string>("Checking…");
+  const [googleStatus, setGoogleStatus] = useState<CheckStatus>("info");
+  const [googleDetail, setGoogleDetail] = useState<string>("Checking Google OAuth provider…");
+
+  const runGoogleOAuthCheck = useMemo(() => () => {
+    setGoogleStatus("info");
+    setGoogleDetail("Checking Google OAuth provider…");
+    (async () => {
+      if (!url) {
+        setGoogleStatus("fail");
+        setGoogleDetail("VITE_SUPABASE_URL missing — cannot test /auth/v1/authorize.");
+        return;
+      }
+      try {
+        const target =
+          `${url.replace(/\/$/, "")}/auth/v1/authorize?provider=google` +
+          `&redirect_to=${encodeURIComponent(window.location.origin)}`;
+        const res = await fetch(target, { method: "GET", mode: "no-cors", redirect: "manual" });
+        // Cross-origin with redirect:"manual" → opaqueredirect when Supabase
+        // returns a 302 to accounts.google.com. That proves the provider is
+        // enabled AND a Client Secret (managed or custom) is persisted.
+        if (res.type === "opaqueredirect") {
+          setGoogleStatus("ok");
+          setGoogleDetail("Provider enabled and Client Secret is persisted (Supabase issued a redirect to Google).");
+          return;
+        }
+        // Some browsers/edges expose status 0 + type "opaque". Try a follow
+        // request to read the body for the canonical "missing OAuth secret"
+        // error message.
+        const probe = await fetch(target, { method: "GET" }).catch(() => null);
+        if (probe && probe.ok === false) {
+          const body = await probe.text().catch(() => "");
+          if (/missing\s+oauth\s+secret/i.test(body)) {
+            setGoogleStatus("fail");
+            setGoogleDetail("Supabase returned 400 — Google Client Secret is NOT persisted on the auth service.");
+            return;
+          }
+          setGoogleStatus("warn");
+          setGoogleDetail(`Unexpected response (HTTP ${probe.status}). ${body.slice(0, 160)}`);
+          return;
+        }
+        setGoogleStatus("warn");
+        setGoogleDetail(`Inconclusive: response type "${res.type}". A real sign-in is the definitive test.`);
+      } catch (e) {
+        setGoogleStatus("warn");
+        setGoogleDetail(`Could not reach /auth/v1/authorize: ${e instanceof Error ? e.message : String(e)}`);
+      }
+    })();
+  }, [url]);
+
+  useEffect(() => {
+    runGoogleOAuthCheck();
+  }, [runGoogleOAuthCheck]);
 
   useEffect(() => {
     let cancelled = false;
