@@ -285,6 +285,16 @@ export default function HqDiagnostics() {
     return "ok";
   }, [checks]);
 
+  // When the OAuth popup lands back here it carries ?oauth=probe — render a
+  // tiny acknowledgement so the parent window can read location and close it.
+  if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("oauth") === "probe") {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-background text-foreground">
+        <p className="text-xs opacity-60 font-mono">Probe complete — you can close this window.</p>
+      </main>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="max-w-3xl mx-auto px-6 py-10">
