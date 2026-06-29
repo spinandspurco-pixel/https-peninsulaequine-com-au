@@ -194,6 +194,13 @@ export default function HqDiagnostics() {
           if (/missing\s+oauth\s+secret/i.test(body)) {
             setGoogleStatus("fail");
             setGoogleDetail("Supabase returned 400 — Google Client Secret is NOT persisted on the auth service.");
+            recordOAuthError({
+              provider: "google",
+              source: "provider-check",
+              message: "missing OAuth secret",
+              code: "missing_oauth_secret",
+            });
+            refreshOAuthErrors();
             return;
           }
           setGoogleStatus("warn");
