@@ -69,6 +69,50 @@ export default function HqDiagnostics() {
   const [oauthErrors, setOauthErrors] = useState<OAuthErrorEntry[]>([]);
   const refreshOAuthErrors = () => setOauthErrors(listOAuthErrors());
 
+  const PASTE_KEY = "pe.oauth.googleRedirectUris";
+  const [pastedUris, setPastedUris] = useState<string>(() => {
+    if (typeof window === "undefined") return "";
+    try { return window.localStorage.getItem(PASTE_KEY) ?? ""; } catch { return ""; }
+  });
+
+  const normalizeUri = (raw: string): string | null => {
+    const v = raw.trim().replace(/[,;]+$/, "");
+    if (!v) return null;
+    try {
+      const u = new URL(v);
+      const port = u.port ? `:${u.port}` : "";
+      const path = u.pathname.replace(/\/+$/, "") || "";
+      return `${u.protocol.toLowerCase()}//${u.hostname.toLowerCase()}${port}${path}`;
+    } catch {
+      return v.toLowerCase().replace(/\/+$/, "");
+    }
+  };
+
+  const parsedUris = useMemo(() => {
+    return pastedUris
+      .split(/[\s,]+/)
+      .map((s) => ({ raw: s.trim(), norm: normalizeUri(s) }))
+      .filter((x) => x.raw.length > 0);
+  }, [pastedUris]);
+
+  const expectedNorm = expectedCallback ? normalizeUri(expectedCallback) : null;
+  const pasteMatch = !!expectedNorm && parsedUris.some((u) => u.norm === expectedNorm);
+  const pasteHostMatches = useMemo(() => {
+    if (!expectedNorm) return [];
+    try {
+      const expHost = new URL(expectedCallback!).hostname.toLowerCase();
+      return parsedUris.filter((u) => {
+        if (!u.norm || u.norm === expectedNorm) return false;
+        try { return new URL(u.raw).hostname.toLowerCase() === expHost; } catch { return false; }
+      });
+    } catch { return []; }
+  }, [parsedUris, expectedNorm, expectedCallback]);
+
+  const savePastedUris = (v: string) => {
+    setPastedUris(v);
+    try { window.localStorage.setItem(PASTE_KEY, v); } catch { /* ignore */ }
+  };
+
   useEffect(() => {
     refreshOAuthErrors();
     const onStorage = (e: StorageEvent) => {
@@ -452,6 +496,100 @@ export default function HqDiagnostics() {
             </div>
           ))}
         </div>
+
+        <div className="mb-8 border border-foreground/10 rounded-sm">
+          <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55 flex items-center justify-between gap-4">
+            <span>Paste &amp; compare — Google client redirect URIs</span>
+            <div className="flex items-center gap-4">
+              {pastedUris.trim().length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => savePastedUris("")}
+                  className="text-[0.55rem] tracking-[0.3em] uppercase opacity-60 hover:opacity-100 transition-opacity"
+                >
+                  Clear
+                </button>
+              )}
+              <span
+                className="text-[0.55rem] font-mono"
+                style={{
+                  color: parsedUris.length === 0
+                    ? statusColor("info")
+                    : pasteMatch ? statusColor("ok") : statusColor("fail"),
+                  letterSpacing: "0.2em",
+                }}
+              >
+                {parsedUris.length === 0
+                  ? "IDLE"
+                  : pasteMatch ? "MATCH" : "MISMATCH"}
+              </span>
+            </div>
+          </div>
+          <div className="px-4 py-3 text-[0.7rem] opacity-60 font-light leading-relaxed border-b border-foreground/10">
+            Paste the contents of Google Cloud → APIs &amp; Services → Credentials → your OAuth
+            client → <span className="font-mono opacity-90">Authorized redirect URIs</span>. One
+            URI per line (commas and spaces are also accepted). The list is compared against the
+            Supabase callback above. Stored locally in your browser.
+          </div>
+          <div className="px-4 py-3 border-b border-foreground/10">
+            <textarea
+              value={pastedUris}
+              onChange={(e) => savePastedUris(e.target.value)}
+              spellCheck={false}
+              placeholder={expectedCallback ?? "https://<project>.supabase.co/auth/v1/callback"}
+              className="w-full min-h-[120px] bg-transparent border border-foreground/15 rounded-sm px-3 py-2 text-sm font-mono opacity-90 focus:outline-none focus:border-foreground/40 resize-y"
+            />
+          </div>
+          {parsedUris.length > 0 && (
+            <div className="px-4 py-3 border-b border-foreground/10">
+              <div className="text-[0.6rem] tracking-[0.35em] uppercase opacity-55 mb-2">
+                Expected (Supabase callback)
+              </div>
+              <div className="text-sm font-mono opacity-85 break-all mb-3">
+                {expectedCallback ?? "(missing VITE_SUPABASE_URL)"}
+              </div>
+              <div className="text-[0.6rem] tracking-[0.35em] uppercase opacity-55 mb-2">
+                Pasted entries ({parsedUris.length})
+              </div>
+              <ul className="space-y-1.5">
+                {parsedUris.map((u, i) => {
+                  const isMatch = !!expectedNorm && u.norm === expectedNorm;
+                  return (
+                    <li key={i} className="grid grid-cols-[auto_1fr] gap-3 items-start">
+                      <span
+                        className="text-[0.55rem] font-mono pt-0.5"
+                        style={{ color: isMatch ? statusColor("ok") : "rgba(232,230,225,0.35)", letterSpacing: "0.2em" }}
+                      >
+                        {isMatch ? "MATCH" : "—"}
+                      </span>
+                      <span className="text-xs font-mono opacity-80 break-all">{u.raw}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+              {!pasteMatch && (
+                <div className="mt-4 text-[0.7rem] leading-relaxed font-light"
+                     style={{ color: statusColor("fail") }}>
+                  Supabase callback URI is <strong>not</strong> in the pasted list.
+                  {pasteHostMatches.length > 0 && (
+                    <> Closest host matches: <span className="font-mono opacity-90">{pasteHostMatches.map((m) => m.raw).join(", ")}</span>.</>
+                  )}{" "}
+                  Add <span className="font-mono opacity-90">{expectedCallback}</span> to
+                  &quot;Authorized redirect URIs&quot; in Google Cloud, then save.
+                </div>
+              )}
+              {pasteMatch && (
+                <div className="mt-4 text-[0.7rem] leading-relaxed font-light"
+                     style={{ color: statusColor("ok") }}>
+                  Supabase callback URI is present in the Google client. Redirect configuration
+                  matches.
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+
 
         <div className="mb-8 border border-foreground/10 rounded-sm">
           <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55 flex items-center justify-between gap-4">
