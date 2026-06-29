@@ -286,11 +286,14 @@ export default function Login() {
                     {signInError.hint && (
                       <p className="text-[12px] text-foreground/80 leading-relaxed">{signInError.hint}</p>
                     )}
-                    <p className="text-[11px] text-muted-foreground/80 font-mono break-words">
-                      {signInError.detail}
-                    </p>
+                    {!signInError.hideDetail && (
+                      <p className="text-[11px] text-muted-foreground/80 font-mono break-words">
+                        {signInError.detail}
+                      </p>
+                    )}
                   </div>
                 </div>
+
                 <div className="flex flex-wrap gap-2 pl-7">
                   {signInError.canRetry && signInError.kind !== "credentials" && (
                     <button
