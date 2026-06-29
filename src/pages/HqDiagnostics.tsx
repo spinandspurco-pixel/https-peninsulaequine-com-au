@@ -62,6 +62,10 @@ export default function HqDiagnostics() {
   const [googleDetail, setGoogleDetail] = useState<string>("Checking Google OAuth provider…");
   const [redirectStatus, setRedirectStatus] = useState<CheckStatus>("info");
   const [redirectDetail, setRedirectDetail] = useState<string>("Idle — run validator to compare with Google.");
+  const [e2eStatus, setE2eStatus] = useState<CheckStatus>("info");
+  const [e2eDetail, setE2eDetail] = useState<string>("Idle — click to perform the full Google sign-in flow and confirm /hq.");
+  const [e2eRunning, setE2eRunning] = useState(false);
+  const [e2eLog, setE2eLog] = useState<string[]>([]);
 
   const expectedCallback = url ? `${url.replace(/\/$/, "")}/auth/v1/callback` : null;
   const appOrigin = typeof window !== "undefined" ? window.location.origin : "";
@@ -272,6 +276,150 @@ export default function HqDiagnostics() {
       }
     }, 600);
   }, [url, expectedCallback]);
+
+  const runGoogleE2E = useMemo(() => () => {
+    if (e2eRunning) return;
+    if (!url) {
+      setE2eStatus("fail");
+      setE2eDetail("VITE_SUPABASE_URL missing — cannot start flow.");
+      return;
+    }
+    const pushLog = (line: string) => {
+      const stamp = new Date().toISOString().slice(11, 19);
+      setE2eLog((prev) => [...prev, `[${stamp}] ${line}`]);
+    };
+    setE2eLog([]);
+    setE2eRunning(true);
+    setE2eStatus("info");
+    setE2eDetail("Opening Google sign-in popup…");
+    pushLog("Starting E2E: opening Supabase /authorize with redirect_to=/hq?e2e=1");
+
+    const target = `${window.location.origin}/hq?e2e=1`;
+    const authorize =
+      `${url.replace(/\/$/, "")}/auth/v1/authorize?provider=google` +
+      `&redirect_to=${encodeURIComponent(target)}`;
+    const popup = window.open(authorize, "oauth-e2e", "width=520,height=700");
+    if (!popup) {
+      setE2eRunning(false);
+      setE2eStatus("fail");
+      setE2eDetail("Popup blocked — allow popups for this site and re-run.");
+      pushLog("FAIL: popup blocked");
+      return;
+    }
+
+    let landed = false;
+    let landedHref = "";
+    const start = Date.now();
+    const timer = window.setInterval(() => {
+      try {
+        if (popup.closed) {
+          window.clearInterval(timer);
+          if (!landed) {
+            setE2eRunning(false);
+            setE2eStatus("warn");
+            setE2eDetail("Popup closed before reaching /hq — inconclusive.");
+            pushLog("WARN: popup closed prior to landing");
+          }
+          return;
+        }
+        const href = popup.location.href;
+        if (!href || href === "about:blank") return;
+        const u = new URL(href);
+        if (u.origin !== window.location.origin) return;
+
+        // Same-origin landing — inspect.
+        const err = u.searchParams.get("error") || u.searchParams.get("error_description") || "";
+        const hash = u.hash || "";
+        if (/redirect_uri_mismatch/i.test(err + " " + hash)) {
+          window.clearInterval(timer);
+          try { popup.close(); } catch { /* ignore */ }
+          setE2eRunning(false);
+          setE2eStatus("fail");
+          setE2eDetail(
+            `redirect_uri_mismatch — Google rejected the URI Supabase sent. Add ${expectedCallback} to Authorized redirect URIs.`
+          );
+          pushLog("FAIL: redirect_uri_mismatch from Google");
+          recordOAuthError({
+            provider: "google",
+            source: "redirect-validator",
+            message: "redirect_uri_mismatch",
+            code: "redirect_uri_mismatch",
+            context: { expectedCallback, source: "e2e" },
+          });
+          refreshOAuthErrors();
+          return;
+        }
+        if (err) {
+          window.clearInterval(timer);
+          try { popup.close(); } catch { /* ignore */ }
+          setE2eRunning(false);
+          setE2eStatus("fail");
+          setE2eDetail(`Returned with error: ${decodeURIComponent(err)}`);
+          pushLog(`FAIL: ${decodeURIComponent(err)}`);
+          recordOAuthError({
+            provider: "google",
+            source: "redirect-validator",
+            message: decodeURIComponent(err),
+            context: { source: "e2e" },
+          });
+          refreshOAuthErrors();
+          return;
+        }
+
+        // Track intermediate landings — Supabase /auth/v1/callback then redirect to target.
+        if (!landed) {
+          pushLog(`Same-origin landing: ${u.pathname}${u.search}`);
+        }
+
+        if (u.pathname.startsWith("/hq")) {
+          landed = true;
+          landedHref = href;
+          window.clearInterval(timer);
+          pushLog("Popup reached /hq — verifying session in main window…");
+          // Allow Supabase JS in the popup to persist the session to localStorage.
+          window.setTimeout(async () => {
+            try {
+              const { data, error } = await supabase.auth.getSession();
+              if (error) throw error;
+              const session = data?.session;
+              if (session?.user) {
+                setE2eStatus("ok");
+                setE2eDetail(
+                  `PASS — signed in as ${session.user.email ?? session.user.id} and landed at ${new URL(landedHref).pathname}.`
+                );
+                pushLog(`PASS: session established for ${session.user.email ?? session.user.id}`);
+              } else {
+                setE2eStatus("warn");
+                setE2eDetail("Landed on /hq but no session detected in this window — check storage sync.");
+                pushLog("WARN: no session in main window after landing");
+              }
+            } catch (e) {
+              setE2eStatus("fail");
+              setE2eDetail(`Landed on /hq but session check failed: ${(e as Error).message}`);
+              pushLog(`FAIL: session check error — ${(e as Error).message}`);
+            } finally {
+              setE2eRunning(false);
+              try { popup.close(); } catch { /* ignore */ }
+            }
+          }, 600);
+        }
+      } catch {
+        // Cross-origin (Google/Supabase) — keep polling.
+      }
+      if (Date.now() - start > 120_000) {
+        window.clearInterval(timer);
+        try { popup.close(); } catch { /* ignore */ }
+        if (!landed) {
+          setE2eRunning(false);
+          setE2eStatus("warn");
+          setE2eDetail("Timed out after 2 minutes without reaching /hq.");
+          pushLog("WARN: timeout");
+        }
+      }
+    }, 600);
+  }, [url, expectedCallback, e2eRunning]);
+
+
 
 
   const runGoogleOAuthCheck = useMemo(() => () => {
@@ -528,6 +676,47 @@ export default function HqDiagnostics() {
         </div>
 
         <div className="mb-8 border border-foreground/10 rounded-sm">
+          <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55 flex items-center justify-between gap-4">
+            <span>Google OAuth — End-to-end sign-in</span>
+            <div className="flex items-center gap-4">
+              <span
+                className="text-[0.55rem] font-mono"
+                style={{ color: statusColor(e2eStatus), letterSpacing: "0.2em" }}
+              >
+                {e2eRunning ? "RUNNING" : statusLabel(e2eStatus)}
+              </span>
+              <button
+                type="button"
+                onClick={runGoogleE2E}
+                disabled={e2eRunning}
+                className="text-[0.55rem] tracking-[0.3em] uppercase opacity-80 hover:opacity-100 border-b border-foreground/40 hover:border-foreground/70 pb-0.5 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {e2eRunning ? "Running…" : "Run Google OAuth E2E →"}
+              </button>
+            </div>
+          </div>
+          <div className="px-4 py-3 text-[0.7rem] opacity-70 font-light leading-relaxed border-b border-foreground/10">
+            Performs the full real flow: opens a Google sign-in popup → Supabase callback →
+            redirect to <span className="font-mono opacity-90">/hq?e2e=1</span> → verifies an
+            authenticated session is established in this window. PASS means sign-in completed
+            with no <code className="font-mono">redirect_uri_mismatch</code> or provider errors.
+          </div>
+          <div className="px-4 py-3 text-sm font-light leading-relaxed border-b border-foreground/10"
+               style={{ color: statusColor(e2eStatus) }}>
+            {e2eDetail}
+          </div>
+          {e2eLog.length > 0 && (
+            <div className="px-4 py-3">
+              <div className="text-[0.6rem] tracking-[0.35em] uppercase opacity-55 mb-2">Trace</div>
+              <pre className="text-[0.7rem] font-mono opacity-80 whitespace-pre-wrap leading-relaxed">
+{e2eLog.join("\n")}
+              </pre>
+            </div>
+          )}
+        </div>
+
+        <div className="mb-8 border border-foreground/10 rounded-sm">
+
           <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55 flex items-center justify-between">
             <span>Google OAuth — Authorized redirect URIs</span>
             <button
