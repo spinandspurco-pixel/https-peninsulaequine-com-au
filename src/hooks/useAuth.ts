@@ -2,6 +2,7 @@ import { createContext, createElement, useContext, useEffect, useRef, useState, 
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { authLog } from "@/lib/authRouting";
+import { trackAuthFunnel, resetAuthFunnel } from "@/lib/authFunnel";
 
 export type AppRole = "admin" | "employee" | "trainer" | "moderator" | "preview" | "user";
 
