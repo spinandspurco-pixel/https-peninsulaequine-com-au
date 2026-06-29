@@ -23,6 +23,7 @@ import {
   formatE2eTime,
   type E2eHistoryEntry,
 } from "@/lib/e2eHistory";
+import { trackAuthE2e } from "@/lib/authFunnel";
 
 
 
