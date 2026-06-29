@@ -1014,6 +1014,11 @@ export default function HqDiagnostics() {
                     )}
                   </span>
                   <div className="text-[0.7rem] font-light leading-relaxed opacity-85">
+                    {entry.label && (
+                      <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-65 mb-1">
+                        Account: <span className="font-mono opacity-90 tracking-normal normal-case">{entry.label}</span>
+                      </div>
+                    )}
                     {entry.detail}
                     {entry.mismatch && (
                       <div className="text-[0.65rem] font-mono opacity-60 mt-1 break-all">{entry.mismatch}</div>
