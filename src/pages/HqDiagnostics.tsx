@@ -815,6 +815,90 @@ export default function HqDiagnostics() {
 
         <div className="mb-8 border border-foreground/10 rounded-sm">
           <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55 flex items-center justify-between gap-4">
+            <span>Auto-detected from Supabase project</span>
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={() => { void detectFromProject(); }}
+                className="text-[0.55rem] tracking-[0.3em] uppercase opacity-60 hover:opacity-100 transition-opacity"
+              >
+                Re-detect
+              </button>
+              <span
+                className="text-[0.55rem] font-mono"
+                style={{ color: statusColor(autoDetected.status), letterSpacing: "0.2em" }}
+              >
+                {autoDetected.status === "ok" ? "LIVE" : autoDetected.status === "fail" ? "ERROR" : autoDetected.status === "warn" ? "WARN" : "PROBING"}
+              </span>
+            </div>
+          </div>
+          <div className="px-4 py-3 text-[0.7rem] opacity-60 font-light leading-relaxed border-b border-foreground/10">
+            {autoDetected.detail}
+            {autoDetected.fetchedAt && (
+              <span className="ml-2 opacity-50">· fetched {new Date(autoDetected.fetchedAt).toLocaleTimeString()}</span>
+            )}
+          </div>
+          {(() => {
+            const detectedCb = autoDetected.callback ?? expectedCallback;
+            const detectedNorm = detectedCb ? normalizeUri(detectedCb) : null;
+            const present = !!detectedNorm && parsedUris.some((u) => u.norm === detectedNorm);
+            const rows: { label: string; value: string | null; status: CheckStatus; note?: string }[] = [
+              {
+                label: "Detected Supabase callback URI",
+                value: detectedCb,
+                status: parsedUris.length === 0 ? "info" : present ? "ok" : "fail",
+                note: parsedUris.length === 0
+                  ? "Paste your Google client's redirect URIs below to compare."
+                  : present
+                    ? "Found in your pasted Google redirect URIs."
+                    : "MISSING from your pasted Google redirect URIs — add it to Google Cloud Console.",
+              },
+              {
+                label: "Supabase site_url (auth)",
+                value: autoDetected.siteUrl,
+                status: autoDetected.siteUrl ? "info" : "warn",
+                note: autoDetected.siteUrl ? "Default post-auth landing URL." : "Not exposed by /auth/v1/settings.",
+              },
+              {
+                label: "Google provider",
+                value: autoDetected.googleEnabled === null ? null : autoDetected.googleEnabled ? "enabled" : "disabled",
+                status: autoDetected.googleEnabled === null ? "info" : autoDetected.googleEnabled ? "ok" : "fail",
+              },
+            ];
+            return (
+              <ul className="px-4 py-3 space-y-3">
+                {rows.map((r) => (
+                  <li
+                    key={r.label}
+                    className="grid grid-cols-[auto_1fr_auto] gap-3 items-start border-l-2 pl-3"
+                    style={{ borderColor: statusColor(r.status) }}
+                  >
+                    <span className="text-[0.55rem] font-mono pt-0.5" style={{ color: statusColor(r.status), letterSpacing: "0.2em" }}>
+                      {r.status === "ok" ? "OK" : r.status === "fail" ? "FAIL" : r.status === "warn" ? "WARN" : "—"}
+                    </span>
+                    <div className="min-w-0">
+                      <div className="text-[0.6rem] tracking-[0.35em] uppercase opacity-55 mb-1">{r.label}</div>
+                      <div className="text-sm font-mono opacity-85 break-all">{r.value ?? "(not available)"}</div>
+                      {r.note && <div className="text-[0.7rem] opacity-55 mt-1">{r.note}</div>}
+                    </div>
+                    {r.value && (
+                      <button
+                        type="button"
+                        onClick={() => { void navigator.clipboard?.writeText(r.value!); }}
+                        className="text-[0.55rem] tracking-[0.3em] uppercase opacity-60 hover:opacity-100 transition-opacity"
+                      >
+                        Copy
+                      </button>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            );
+          })()}
+        </div>
+
+        <div className="mb-8 border border-foreground/10 rounded-sm">
+          <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55 flex items-center justify-between gap-4">
             <span>Paste &amp; compare — Google client redirect URIs</span>
             <div className="flex items-center gap-4">
               {pastedUris.trim().length > 0 && (
