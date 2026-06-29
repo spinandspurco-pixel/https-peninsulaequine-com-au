@@ -228,6 +228,64 @@ export default function Login() {
       >
         <div className="bg-card/80 backdrop-blur border border-border/60 rounded-sm shadow-xl">
           <div className="p-6 sm:p-8 space-y-6">
+            {signInError && (
+              <div
+                role="alert"
+                aria-live="assertive"
+                className="border border-destructive/40 bg-destructive/10 rounded-sm p-4 space-y-3"
+              >
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 shrink-0" aria-hidden />
+                  <div className="space-y-1 min-w-0 flex-1">
+                    <p className="text-[12px] font-medium uppercase tracking-[0.1em] text-destructive">
+                      {signInError.title}
+                    </p>
+                    {signInError.hint && (
+                      <p className="text-[12px] text-foreground/80 leading-relaxed">{signInError.hint}</p>
+                    )}
+                    <p className="text-[11px] text-muted-foreground/80 font-mono break-words">
+                      {signInError.detail}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 pl-7">
+                  {signInError.canRetry && signInError.kind !== "credentials" && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (signInError.kind === "roles") {
+                          window.location.reload();
+                        } else {
+                          void retryGoogle();
+                        }
+                      }}
+                      disabled={isLoading}
+                      className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors disabled:opacity-50"
+                    >
+                      <RefreshCw className="h-3 w-3" aria-hidden />
+                      Retry
+                    </button>
+                  )}
+                  {signInError.canClearCache && (
+                    <button
+                      type="button"
+                      onClick={() => void clearLocalAuthCacheAndSignOut()}
+                      className="text-[11px] uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors"
+                    >
+                      Clear cache + retry
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setSignInError(null)}
+                    className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground/70 hover:text-foreground transition-colors ml-auto"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              </div>
+            )}
+
             <form onSubmit={handleSignIn} className="space-y-5">
               <div className="space-y-1.5">
                 <Label htmlFor="email" className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground font-sans">
