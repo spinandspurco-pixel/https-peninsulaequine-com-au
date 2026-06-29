@@ -66,6 +66,18 @@ export default function HqDiagnostics() {
   const expectedCallback = url ? `${url.replace(/\/$/, "")}/auth/v1/callback` : null;
   const appOrigin = typeof window !== "undefined" ? window.location.origin : "";
 
+  const [oauthErrors, setOauthErrors] = useState<OAuthErrorEntry[]>([]);
+  const refreshOAuthErrors = () => setOauthErrors(listOAuthErrors());
+
+  useEffect(() => {
+    refreshOAuthErrors();
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === null || e.key.startsWith("pe.oauth.errorLog")) refreshOAuthErrors();
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
   const runRedirectUriValidator = useMemo(() => () => {
     if (!url) {
       setRedirectStatus("fail");
