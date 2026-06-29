@@ -920,6 +920,7 @@ export default function HqDiagnostics() {
                         expectedCallback,
                         supabaseUrl: url,
                         projectId,
+                        label: e2eLabel.trim() || undefined,
                       });
                       void navigator.clipboard?.writeText(text);
                       setTraceCopiedAt(Date.now());
