@@ -53,6 +53,82 @@ export default function HqDiagnostics() {
   const [pingDetail, setPingDetail] = useState<string>("Checking…");
   const [googleStatus, setGoogleStatus] = useState<CheckStatus>("info");
   const [googleDetail, setGoogleDetail] = useState<string>("Checking Google OAuth provider…");
+  const [redirectStatus, setRedirectStatus] = useState<CheckStatus>("info");
+  const [redirectDetail, setRedirectDetail] = useState<string>("Idle — run validator to compare with Google.");
+
+  const expectedCallback = url ? `${url.replace(/\/$/, "")}/auth/v1/callback` : null;
+  const appOrigin = typeof window !== "undefined" ? window.location.origin : "";
+
+  const runRedirectUriValidator = useMemo(() => () => {
+    if (!url) {
+      setRedirectStatus("fail");
+      setRedirectDetail("VITE_SUPABASE_URL missing.");
+      return;
+    }
+    setRedirectStatus("info");
+    setRedirectDetail("Opening Google in a popup — sign in (or cancel) to complete the check…");
+    const authorize =
+      `${url.replace(/\/$/, "")}/auth/v1/authorize?provider=google` +
+      `&redirect_to=${encodeURIComponent(window.location.origin + "/hq/diagnostics?oauth=probe")}`;
+    const popup = window.open(authorize, "oauth-validator", "width=520,height=640");
+    if (!popup) {
+      setRedirectStatus("fail");
+      setRedirectDetail("Popup blocked — allow popups for this site and re-run.");
+      return;
+    }
+    const start = Date.now();
+    const timer = window.setInterval(() => {
+      // Cross-origin reads throw; only readable when popup lands back on our origin.
+      try {
+        if (popup.closed) {
+          window.clearInterval(timer);
+          setRedirectStatus("warn");
+          setRedirectDetail("Popup closed before completing — inconclusive.");
+          return;
+        }
+        const href = popup.location.href;
+        if (!href || href === "about:blank") return;
+        const u = new URL(href);
+        if (u.origin !== window.location.origin) return;
+        // Same-origin landing — read params and tokens.
+        const err = u.searchParams.get("error") || u.searchParams.get("error_description") || "";
+        const hash = u.hash || "";
+        const hasCode = u.searchParams.has("code") || hash.includes("access_token=");
+        window.clearInterval(timer);
+        popup.close();
+        if (/redirect_uri_mismatch/i.test(err + " " + hash)) {
+          setRedirectStatus("fail");
+          setRedirectDetail(
+            `MISMATCH — Google rejected the redirect URI Supabase sent. Add ${expectedCallback} to "Authorized redirect URIs" in your Google OAuth client.`
+          );
+          return;
+        }
+        if (err) {
+          setRedirectStatus("warn");
+          setRedirectDetail(`Returned with error: ${decodeURIComponent(err)}`);
+          return;
+        }
+        if (hasCode) {
+          setRedirectStatus("ok");
+          setRedirectDetail(
+            `Google accepted ${expectedCallback} and redirected back to ${u.origin}. Redirect URI is valid.`
+          );
+          return;
+        }
+        setRedirectStatus("warn");
+        setRedirectDetail(`Returned to ${u.origin} without code or error — inconclusive.`);
+      } catch {
+        // Still on Google or Supabase — keep polling.
+      }
+      if (Date.now() - start > 120_000) {
+        window.clearInterval(timer);
+        try { popup.close(); } catch { /* ignore */ }
+        setRedirectStatus("warn");
+        setRedirectDetail("Timed out after 2 minutes without returning to app origin.");
+      }
+    }, 600);
+  }, [url, expectedCallback]);
+
 
   const runGoogleOAuthCheck = useMemo(() => () => {
     setGoogleStatus("info");
@@ -194,14 +270,30 @@ export default function HqDiagnostics() {
       detail: googleDetail,
     });
 
+    items.push({
+      label: "Google redirect URI validator",
+      status: redirectStatus,
+      detail: redirectDetail,
+    });
+
     return items;
-  }, [url, projectId, key, mode, pingStatus, pingDetail, googleStatus, googleDetail]);
+  }, [url, projectId, key, mode, pingStatus, pingDetail, googleStatus, googleDetail, redirectStatus, redirectDetail]);
 
   const overall: CheckStatus = useMemo(() => {
     if (checks.some((c) => c.status === "fail")) return "fail";
     if (checks.some((c) => c.status === "warn")) return "warn";
     return "ok";
   }, [checks]);
+
+  // When the OAuth popup lands back here it carries ?oauth=probe — render a
+  // tiny acknowledgement so the parent window can read location and close it.
+  if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("oauth") === "probe") {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-background text-foreground">
+        <p className="text-xs opacity-60 font-mono">Probe complete — you can close this window.</p>
+      </main>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -284,7 +376,45 @@ export default function HqDiagnostics() {
           ))}
         </div>
 
+        <div className="mb-8 border border-foreground/10 rounded-sm">
+          <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55 flex items-center justify-between">
+            <span>Google OAuth — Authorized redirect URIs</span>
+            <button
+              type="button"
+              onClick={runRedirectUriValidator}
+              className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity"
+            >
+              Run live validator →
+            </button>
+          </div>
+          <div className="px-4 py-3 text-[0.7rem] opacity-60 font-light leading-relaxed border-b border-foreground/10">
+            These exact values must appear in your Google Cloud OAuth client's "Authorized
+            redirect URIs". The live validator opens a popup, completes a real OAuth round-trip,
+            and flags <code className="font-mono opacity-90">redirect_uri_mismatch</code> if Google
+            rejects the URI Supabase sends.
+          </div>
+          {[
+            { label: "Supabase callback (required)", value: expectedCallback ?? "(missing VITE_SUPABASE_URL)" },
+            { label: "App origin (post-callback)", value: appOrigin || "(unknown)" },
+          ].map((row) => (
+            <div key={row.label} className="grid grid-cols-[1fr_auto] gap-4 px-4 py-3 border-b border-foreground/10 last:border-b-0 items-center">
+              <div>
+                <div className="text-[0.6rem] tracking-[0.35em] uppercase opacity-55 mb-1.5">{row.label}</div>
+                <div className="text-sm font-mono opacity-85 break-all">{row.value}</div>
+              </div>
+              <button
+                type="button"
+                onClick={() => { void navigator.clipboard?.writeText(row.value); }}
+                className="text-[0.55rem] tracking-[0.3em] uppercase opacity-60 hover:opacity-100 transition-opacity"
+              >
+                Copy
+              </button>
+            </div>
+          ))}
+        </div>
+
         <div className="border-t border-foreground/10">
+
 
           {checks.map((c) => (
             <div
