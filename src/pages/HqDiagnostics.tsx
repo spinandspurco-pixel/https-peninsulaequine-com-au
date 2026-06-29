@@ -388,6 +388,7 @@ export default function HqDiagnostics() {
       setE2eDetail("VITE_SUPABASE_URL missing — cannot start flow.");
       recordE2eHistory({ status: "fail", detail: "VITE_SUPABASE_URL missing — cannot start flow." });
       setE2eHistory(listE2eHistory());
+      trackAuthE2e("auth_e2e_failure", { reason: "missing_supabase_url", origin: appOrigin });
       return;
     }
     const pushLog = (line: string) => {
@@ -395,18 +396,23 @@ export default function HqDiagnostics() {
       setE2eLog((prev) => [...prev, `[${stamp}] ${line}`]);
     };
     const runStart = Date.now();
-    const finish = (status: "ok" | "warn" | "fail", detail: string, mismatch?: string) => {
+    const finish = (status: "ok" | "warn" | "fail", detail: string, mismatch?: string, reason?: string) => {
       setE2eStatus(status);
       setE2eDetail(detail);
       setE2eRunning(false);
-      recordE2eHistory({ status, detail, mismatch, durationMs: Date.now() - runStart });
+      const durationMs = Date.now() - runStart;
+      recordE2eHistory({ status, detail, mismatch, durationMs });
       setE2eHistory(listE2eHistory());
+      const base = { origin: appOrigin, expectedCallback, durationMs, reason: reason ?? detail };
+      if (status === "ok") trackAuthE2e("auth_e2e_success", base);
+      else trackAuthE2e("auth_e2e_failure", { ...base, severity: status });
     };
     setE2eLog([]);
     setE2eRunning(true);
     setE2eStatus("info");
     setE2eDetail("Opening Google sign-in popup…");
     pushLog("Starting E2E: opening Supabase /authorize with redirect_to=/hq?e2e=1");
+    trackAuthE2e("auth_e2e_started", { origin: appOrigin, expectedCallback });
 
     const target = `${window.location.origin}/hq?e2e=1`;
     const authorize =
@@ -415,7 +421,7 @@ export default function HqDiagnostics() {
     const popup = window.open(authorize, "oauth-e2e", "width=520,height=700");
     if (!popup) {
       pushLog("FAIL: popup blocked");
-      finish("fail", "Popup blocked — allow popups for this site and re-run.");
+      finish("fail", "Popup blocked — allow popups for this site and re-run.", undefined, "popup_blocked");
       return;
     }
 
