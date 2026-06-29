@@ -176,6 +176,39 @@ export default function HqDeployHealth() {
     }
   };
 
+  const supportSubject = "Stuck production promotion — force-promote required";
+  const supportBody = useMemo(() => {
+    const next = [
+      "",
+      "------",
+      "Recommended next steps (platform side):",
+      "1. Clear any pinned/stuck production deployment for this project.",
+      "2. Force-promote the latest successful frontend build to:",
+      "     - https://peninsulaequine.systems",
+      "     - https://www.peninsulaequine.systems",
+      "     - https://https-peninsulaequine-com-au.lovable.app",
+      "3. Confirm the served bundle contains `sb_publishable_` and no legacy `eyJhbGci` key.",
+      "4. Reply with the promoted deployment ID + timestamp so we can re-run Deploy Health.",
+      "",
+      "Do NOT rotate API keys again — already rotated to sb_publishable_*.",
+    ].join("\n");
+    return `${escalation}\n${next}`;
+  }, [escalation]);
+
+  const openSupportEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(supportBody);
+    } catch {
+      /* ignore */
+    }
+    const href =
+      `mailto:support@lovable.dev` +
+      `?subject=${encodeURIComponent(supportSubject)}` +
+      `&body=${encodeURIComponent(supportBody)}`;
+    window.location.href = href;
+    toast.success("Opening email — payload also copied to clipboard");
+  };
+
   if (authLoading) {
     return (
       <Layout>
