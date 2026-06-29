@@ -474,13 +474,14 @@ export function Header() {
           {/* CTA */}
           <div className="hidden lg:flex items-center gap-6">
             {user && (
-              <button
-                type="button"
-                onClick={handleSignOut}
-                className="text-[10px] uppercase tracking-[0.2em] text-foreground/50 hover:text-foreground/90 transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
-              >
-                Sign out
-              </button>
+              <SignOutConfirm onConfirm={handleSignOut}>
+                <button
+                  type="button"
+                  className="text-[10px] uppercase tracking-[0.2em] text-foreground/50 hover:text-foreground/90 transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
+                >
+                  Sign out
+                </button>
+              </SignOutConfirm>
             )}
             <Link
               to="/contact"
@@ -625,14 +626,15 @@ export function Header() {
               Apply to Build →
             </Link>
             {user && (
-              <button
-                type="button"
-                tabIndex={isMobileMenuOpen ? 0 : -1}
-                onClick={handleSignOut}
-                className="block text-xs uppercase tracking-[0.18em] text-foreground/55 hover:text-foreground/95 transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
-              >
-                Sign out
-              </button>
+              <SignOutConfirm onConfirm={handleSignOut}>
+                <button
+                  type="button"
+                  tabIndex={isMobileMenuOpen ? 0 : -1}
+                  className="block text-xs uppercase tracking-[0.18em] text-foreground/55 hover:text-foreground/95 transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
+                >
+                  Sign out
+                </button>
+              </SignOutConfirm>
             )}
           </div>
         </nav>
