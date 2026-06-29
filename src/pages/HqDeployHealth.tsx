@@ -167,14 +167,22 @@ export default function HqDeployHealth() {
     return lines.join("\n");
   }, [results, lastCheckedAt, user?.email, pageBundle]);
 
-  const copyEscalation = async () => {
+  const [manualCopy, setManualCopy] = useState<{ label: string; text: string } | null>(null);
+
+  const tryCopy = useCallback(async (label: string, text: string, successMsg: string) => {
     try {
-      await navigator.clipboard.writeText(escalation);
-      toast.success("Escalation payload copied");
-    } catch {
-      toast.error("Copy failed — select and copy manually");
+      if (!navigator.clipboard?.writeText) throw new Error("Clipboard API unavailable");
+      await navigator.clipboard.writeText(text);
+      toast.success(successMsg);
+    } catch (e) {
+      const reason = e instanceof Error ? e.message : "Clipboard blocked";
+      toast.error(`Copy failed — ${reason}. Use the manual copy box.`);
+      setManualCopy({ label, text });
     }
-  };
+  }, []);
+
+  const copyEscalation = () =>
+    tryCopy("Escalation payload", escalation, "Escalation payload copied");
 
   const supportSubject = "Stuck production promotion — force-promote required";
   const supportBody = useMemo(() => {
@@ -197,9 +205,9 @@ export default function HqDeployHealth() {
 
   const openSupportEmail = async () => {
     try {
-      await navigator.clipboard.writeText(supportBody);
+      await navigator.clipboard?.writeText(supportBody);
     } catch {
-      /* ignore */
+      /* ignore — mailto still opens */
     }
     const href =
       `mailto:support@lovable.dev` +
@@ -244,14 +252,8 @@ export default function HqDeployHealth() {
     );
   }, [results, lastCheckedAt, user?.email, pageBundle]);
 
-  const copyEscalationJson = async () => {
-    try {
-      await navigator.clipboard.writeText(escalationJson);
-      toast.success("Escalation payload copied as JSON");
-    } catch {
-      toast.error("Copy failed — select and copy manually");
-    }
-  };
+  const copyEscalationJson = () =>
+    tryCopy("Escalation payload (JSON)", escalationJson, "Escalation payload copied as JSON");
 
   const downloadEscalationTxt = () => {
     try {
@@ -273,18 +275,14 @@ export default function HqDeployHealth() {
     }
   };
 
-  const copySupportEmail = async () => {
+  const copySupportEmail = () => {
     const full =
       `To: support@lovable.dev\n` +
       `Subject: ${supportSubject}\n\n` +
       supportBody;
-    try {
-      await navigator.clipboard.writeText(full);
-      toast.success("Support email copied (To, Subject, payload)");
-    } catch {
-      toast.error("Copy failed — select and copy manually");
-    }
+    return tryCopy("Support email (To, Subject, payload)", full, "Support email copied (To, Subject, payload)");
   };
+
 
   if (authLoading) {
     return (
@@ -579,6 +577,57 @@ export default function HqDeployHealth() {
           </p>
         </section>
       </div>
+
+      {manualCopy && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Manual copy fallback"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-6"
+          onClick={() => setManualCopy(null)}
+        >
+          <div
+            className="w-full max-w-2xl bg-background border border-border/30 shadow-2xl p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-6">
+              <div>
+                <div className="text-[0.65rem] tracking-[0.45em] uppercase text-amber-700">
+                  Manual copy required
+                </div>
+                <h2 className="font-serif text-xl text-foreground mt-1">{manualCopy.label}</h2>
+                <p className="text-xs text-foreground/60 mt-2 leading-relaxed">
+                  Clipboard access was blocked by your browser. Select all (⌘/Ctrl+A) inside the box below, then copy (⌘/Ctrl+C).
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setManualCopy(null)}
+                className="text-xs tracking-[0.3em] uppercase text-foreground/60 hover:text-foreground"
+              >
+                Close
+              </button>
+            </div>
+            <textarea
+              readOnly
+              value={manualCopy.text}
+              onFocus={(e) => e.currentTarget.select()}
+              autoFocus
+              className="w-full h-72 text-[0.7rem] leading-relaxed font-mono text-foreground/80 bg-foreground/[0.02] border border-border/20 p-3 focus:outline-none focus:ring-1 focus:ring-foreground/30 resize-none"
+            />
+            <div className="flex items-center justify-between gap-4 text-[0.65rem] text-foreground/50">
+              <span>{manualCopy.text.length.toLocaleString()} characters</span>
+              <button
+                type="button"
+                onClick={() => tryCopy(manualCopy.label, manualCopy.text, "Copied")}
+                className="text-xs tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8"
+              >
+                Try copy again
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }
