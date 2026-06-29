@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Eye, EyeOff, Loader2, ArrowLeft, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable";
 import { StaffPortalFrame } from "@/components/StaffPortalFrame";
 import { HqLoadingState } from "@/components/hq/HqLoadingState";
 import { clearLocalAuthCacheAndSignOut } from "@/lib/authCache";
@@ -214,29 +215,29 @@ export default function Login() {
                   );
                 }, 15000);
                 try {
-                  const { data, error } = await supabase.auth.signInWithOAuth({
-                    provider: "google",
-                    options: {
-                      redirectTo: window.location.origin,
-                    },
+                  const result = await lovable.auth.signInWithOAuth("google", {
+                    redirect_uri: window.location.origin,
                   });
                   authLog("oauth:google:result", {
-                    hasError: !!error,
-                    errorMsg: error?.message,
-                    hasUrl: !!data?.url,
+                    hasError: !!result.error,
+                    errorMsg: result.error?.message,
+                    redirected: !!result.redirected,
                   });
-                  if (error) {
+                  if (result.error) {
                     window.clearTimeout(watchdog);
                     setIsLoading(false);
                     toast.error(
-                      error.message
-                        ? `Google sign-in failed: ${error.message}`
+                      result.error.message
+                        ? `Google sign-in failed: ${result.error.message}`
                         : "Google sign-in failed."
                     );
                     return;
                   }
-                  // Supabase performs a full-page redirect to Google.
-                  // Keep the spinner up; the page is about to unload.
+                  if (result.redirected) {
+                    window.clearTimeout(watchdog);
+                    return;
+                  }
+                  // Tokens received & session set — auth state listener will redirect.
                   window.clearTimeout(watchdog);
                 } catch (err) {
                   window.clearTimeout(watchdog);
