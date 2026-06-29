@@ -179,7 +179,55 @@ export default function HqDiagnostics() {
           </div>
         </div>
 
+        <div className="mb-8 border border-foreground/10 rounded-sm">
+          <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55">
+            Expected configuration
+          </div>
+          {[
+            {
+              label: "Expected project ID",
+              value: EXPECTED_PROJECT_ID,
+              source: EXPECTED_PROJECT_ID_SOURCE,
+              envVar: "VITE_DIAGNOSTICS_EXPECTED_PROJECT_ID",
+            },
+            {
+              label: "Expected URL",
+              value: EXPECTED_URL,
+              source: EXPECTED_URL_SOURCE,
+              envVar: "VITE_DIAGNOSTICS_EXPECTED_URL",
+            },
+          ].map((row) => (
+            <div
+              key={row.label}
+              className="grid grid-cols-[1fr_auto] gap-4 px-4 py-3 border-b border-foreground/10 last:border-b-0"
+            >
+              <div>
+                <div className="text-[0.6rem] tracking-[0.35em] uppercase opacity-55 mb-1.5">
+                  {row.label}
+                </div>
+                <div className="text-sm font-mono opacity-85 break-all">{row.value}</div>
+              </div>
+              <div className="text-right self-start pt-1">
+                <div
+                  className="text-[0.55rem] font-mono"
+                  style={{
+                    color:
+                      row.source === "env_override"
+                        ? statusColor("ok")
+                        : "rgba(232,230,225,0.5)",
+                    letterSpacing: "0.2em",
+                  }}
+                >
+                  {row.source === "env_override" ? "ENV OVERRIDE" : "DEFAULT"}
+                </div>
+                <div className="text-[0.55rem] font-mono opacity-35 mt-1">{row.envVar}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
         <div className="border-t border-foreground/10">
+
           {checks.map((c) => (
             <div
               key={c.label}
