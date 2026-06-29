@@ -389,12 +389,17 @@ export default function HqDiagnostics() {
 
   const runGoogleE2E = useMemo(() => () => {
     if (e2eRunning) return;
+    const activeLabel = e2eLabel.trim() || undefined;
+    if (activeLabel) {
+      rememberE2eLabel(activeLabel);
+      setE2eSavedLabels(listE2eLabels());
+    }
     if (!url) {
       setE2eStatus("fail");
       setE2eDetail("VITE_SUPABASE_URL missing — cannot start flow.");
-      recordE2eHistory({ status: "fail", detail: "VITE_SUPABASE_URL missing — cannot start flow." });
+      recordE2eHistory({ status: "fail", detail: "VITE_SUPABASE_URL missing — cannot start flow.", label: activeLabel });
       setE2eHistory(listE2eHistory());
-      trackAuthE2e("auth_e2e_failure", { reason: "missing_supabase_url", origin: appOrigin });
+      trackAuthE2e("auth_e2e_failure", { reason: "missing_supabase_url", origin: appOrigin, label: activeLabel });
       return;
     }
     const pushLog = (line: string) => {
@@ -407,18 +412,18 @@ export default function HqDiagnostics() {
       setE2eDetail(detail);
       setE2eRunning(false);
       const durationMs = Date.now() - runStart;
-      recordE2eHistory({ status, detail, mismatch, durationMs });
+      recordE2eHistory({ status, detail, mismatch, durationMs, label: activeLabel });
       setE2eHistory(listE2eHistory());
-      const base = { origin: appOrigin, expectedCallback, durationMs, reason: reason ?? detail };
+      const base = { origin: appOrigin, expectedCallback, durationMs, reason: reason ?? detail, label: activeLabel };
       if (status === "ok") trackAuthE2e("auth_e2e_success", base);
       else trackAuthE2e("auth_e2e_failure", { ...base, severity: status });
     };
     setE2eLog([]);
     setE2eRunning(true);
     setE2eStatus("info");
-    setE2eDetail("Opening Google sign-in popup…");
-    pushLog("Starting E2E: opening Supabase /authorize with redirect_to=/hq?e2e=1");
-    trackAuthE2e("auth_e2e_started", { origin: appOrigin, expectedCallback });
+    setE2eDetail(activeLabel ? `Opening Google sign-in popup for "${activeLabel}"…` : "Opening Google sign-in popup…");
+    pushLog(`Starting E2E${activeLabel ? ` as "${activeLabel}"` : ""}: opening Supabase /authorize with redirect_to=/hq?e2e=1`);
+    trackAuthE2e("auth_e2e_started", { origin: appOrigin, expectedCallback, label: activeLabel });
 
     const target = `${window.location.origin}/hq?e2e=1`;
     const authorize =
