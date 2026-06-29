@@ -351,11 +351,21 @@ export default function HqDiagnostics() {
     if (!url) {
       setE2eStatus("fail");
       setE2eDetail("VITE_SUPABASE_URL missing — cannot start flow.");
+      recordE2eHistory({ status: "fail", detail: "VITE_SUPABASE_URL missing — cannot start flow." });
+      setE2eHistory(listE2eHistory());
       return;
     }
     const pushLog = (line: string) => {
       const stamp = new Date().toISOString().slice(11, 19);
       setE2eLog((prev) => [...prev, `[${stamp}] ${line}`]);
+    };
+    const runStart = Date.now();
+    const finish = (status: "ok" | "warn" | "fail", detail: string, mismatch?: string) => {
+      setE2eStatus(status);
+      setE2eDetail(detail);
+      setE2eRunning(false);
+      recordE2eHistory({ status, detail, mismatch, durationMs: Date.now() - runStart });
+      setE2eHistory(listE2eHistory());
     };
     setE2eLog([]);
     setE2eRunning(true);
@@ -369,10 +379,8 @@ export default function HqDiagnostics() {
       `&redirect_to=${encodeURIComponent(target)}`;
     const popup = window.open(authorize, "oauth-e2e", "width=520,height=700");
     if (!popup) {
-      setE2eRunning(false);
-      setE2eStatus("fail");
-      setE2eDetail("Popup blocked — allow popups for this site and re-run.");
       pushLog("FAIL: popup blocked");
+      finish("fail", "Popup blocked — allow popups for this site and re-run.");
       return;
     }
 
@@ -384,10 +392,8 @@ export default function HqDiagnostics() {
         if (popup.closed) {
           window.clearInterval(timer);
           if (!landed) {
-            setE2eRunning(false);
-            setE2eStatus("warn");
-            setE2eDetail("Popup closed before reaching /hq — inconclusive.");
             pushLog("WARN: popup closed prior to landing");
+            finish("warn", "Popup closed before reaching /hq — inconclusive.");
           }
           return;
         }
@@ -402,11 +408,6 @@ export default function HqDiagnostics() {
         if (/redirect_uri_mismatch/i.test(err + " " + hash)) {
           window.clearInterval(timer);
           try { popup.close(); } catch { /* ignore */ }
-          setE2eRunning(false);
-          setE2eStatus("fail");
-          setE2eDetail(
-            `redirect_uri_mismatch — Google rejected the URI Supabase sent. Add ${expectedCallback} to Authorized redirect URIs.`
-          );
           pushLog("FAIL: redirect_uri_mismatch from Google");
           recordOAuthError({
             provider: "google",
@@ -416,22 +417,26 @@ export default function HqDiagnostics() {
             context: { expectedCallback, source: "e2e" },
           });
           refreshOAuthErrors();
+          finish(
+            "fail",
+            `redirect_uri_mismatch — Google rejected the URI Supabase sent. Add ${expectedCallback} to Authorized redirect URIs.`,
+            `Expected callback: ${expectedCallback ?? "(unknown)"}`,
+          );
           return;
         }
         if (err) {
           window.clearInterval(timer);
           try { popup.close(); } catch { /* ignore */ }
-          setE2eRunning(false);
-          setE2eStatus("fail");
-          setE2eDetail(`Returned with error: ${decodeURIComponent(err)}`);
-          pushLog(`FAIL: ${decodeURIComponent(err)}`);
+          const decoded = decodeURIComponent(err);
+          pushLog(`FAIL: ${decoded}`);
           recordOAuthError({
             provider: "google",
             source: "redirect-validator",
-            message: decodeURIComponent(err),
+            message: decoded,
             context: { source: "e2e" },
           });
           refreshOAuthErrors();
+          finish("fail", `Returned with error: ${decoded}`);
           return;
         }
 
@@ -452,22 +457,18 @@ export default function HqDiagnostics() {
               if (error) throw error;
               const session = data?.session;
               if (session?.user) {
-                setE2eStatus("ok");
-                setE2eDetail(
-                  `PASS — signed in as ${session.user.email ?? session.user.id} and landed at ${new URL(landedHref).pathname}.`
-                );
-                pushLog(`PASS: session established for ${session.user.email ?? session.user.id}`);
+                const id = session.user.email ?? session.user.id;
+                pushLog(`PASS: session established for ${id}`);
+                finish("ok", `PASS — signed in as ${id} and landed at ${new URL(landedHref).pathname}.`);
               } else {
-                setE2eStatus("warn");
-                setE2eDetail("Landed on /hq but no session detected in this window — check storage sync.");
                 pushLog("WARN: no session in main window after landing");
+                finish("warn", "Landed on /hq but no session detected in this window — check storage sync.");
               }
             } catch (e) {
-              setE2eStatus("fail");
-              setE2eDetail(`Landed on /hq but session check failed: ${(e as Error).message}`);
-              pushLog(`FAIL: session check error — ${(e as Error).message}`);
+              const msg = (e as Error).message;
+              pushLog(`FAIL: session check error — ${msg}`);
+              finish("fail", `Landed on /hq but session check failed: ${msg}`);
             } finally {
-              setE2eRunning(false);
               try { popup.close(); } catch { /* ignore */ }
             }
           }, 600);
@@ -479,10 +480,8 @@ export default function HqDiagnostics() {
         window.clearInterval(timer);
         try { popup.close(); } catch { /* ignore */ }
         if (!landed) {
-          setE2eRunning(false);
-          setE2eStatus("warn");
-          setE2eDetail("Timed out after 2 minutes without reaching /hq.");
           pushLog("WARN: timeout");
+          finish("warn", "Timed out after 2 minutes without reaching /hq.");
         }
       }
     }, 600);
