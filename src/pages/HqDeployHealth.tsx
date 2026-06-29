@@ -209,6 +209,50 @@ export default function HqDeployHealth() {
     toast.success("Opening email — payload also copied to clipboard");
   };
 
+  const escalationJson = useMemo(() => {
+    return JSON.stringify(
+      {
+        kind: "stuck_production_promotion",
+        projectId: "ebeb5b18-7fa0-4d1b-b9a3-22ec57bd6cff",
+        checkedAt: lastCheckedAt,
+        triggeredBy: user?.email ?? null,
+        adminPageBundle: pageBundle,
+        targets: results.map((r) => ({
+          label: r.label,
+          url: r.url,
+          fetchedAt: r.fetchedAt,
+          ok: r.ok,
+          bundleFile: r.bundleFile,
+          bundleUrl: r.bundleUrl,
+          bundleBytes: r.bundleBytes,
+          hasLegacyKey: r.hasLegacyKey,
+          hasModernKey: r.hasModernKey,
+          stuck: isStuck(r),
+          error: r.error,
+        })),
+        requiredPlatformAction:
+          "Clear stuck production promotion / pinned deployment and force-promote a fresh frontend build. Do not rotate keys again.",
+        recommendedNextSteps: [
+          "Clear any pinned/stuck production deployment for this project.",
+          "Force-promote the latest successful frontend build to peninsulaequine.systems, www.peninsulaequine.systems, https-peninsulaequine-com-au.lovable.app.",
+          "Confirm served bundle contains sb_publishable_ and no legacy eyJhbGci key.",
+          "Reply with promoted deployment ID + timestamp so Deploy Health can be re-run.",
+        ],
+      },
+      null,
+      2,
+    );
+  }, [results, lastCheckedAt, user?.email, pageBundle]);
+
+  const copyEscalationJson = async () => {
+    try {
+      await navigator.clipboard.writeText(escalationJson);
+      toast.success("Escalation payload copied as JSON");
+    } catch {
+      toast.error("Copy failed — select and copy manually");
+    }
+  };
+
   const copySupportEmail = async () => {
     const full =
       `To: support@lovable.dev\n` +
