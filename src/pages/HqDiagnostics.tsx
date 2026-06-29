@@ -112,11 +112,11 @@ export default function HqDiagnostics() {
       keyStatus = "fail";
       keyDetail = "(missing)";
     } else if (key.startsWith(LEGACY_PREFIX)) {
-      keyStatus = "fail";
-      keyDetail = `${maskKey(key)} — LEGACY JWT format (eyJ…). Replace with sb_publishable_ value from Lovable → Cloud → Backend → API Keys.`;
+      keyStatus = "warn";
+      keyDetail = `${maskKey(key)} — Legacy key format active — valid for this unmigrated project; migrate via Rotate API keys when ready.`;
     } else if (!key.startsWith(SB_PREFIX)) {
       keyStatus = "fail";
-      keyDetail = `${maskKey(key)} — unrecognised format. Must start with sb_publishable_.`;
+      keyDetail = `${maskKey(key)} — unrecognised format. Must start with sb_publishable_ or legacy eyJ.`;
     }
     items.push({
       label: "VITE_SUPABASE_PUBLISHABLE_KEY",

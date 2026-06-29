@@ -40,18 +40,20 @@ export function validateSupabaseEnv(): EnvProblem | null {
   }
 
   if (key.startsWith(LEGACY_JWT_PREFIX)) {
-    return {
-      title: "Legacy JWT-format Supabase key detected",
-      detail: `VITE_SUPABASE_PUBLISHABLE_KEY starts with "${LEGACY_JWT_PREFIX}…" — this is the deprecated anon key format and will cause 401 errors once legacy keys are rotated out.`,
-      fix: "Open Lovable → Cloud → Backend → API Keys, copy the value prefixed sb_publishable_, replace VITE_SUPABASE_PUBLISHABLE_KEY in your hosting environment (Production + Preview), and redeploy with a clean build (no cache).",
-    };
+    // Legacy JWT anon keys remain VALID for un-migrated Lovable Cloud projects.
+    // Surface a console warning but do NOT block boot.
+    // eslint-disable-next-line no-console
+    console.warn(
+      "[Peninsula Equine] Legacy JWT-format Supabase key in use. This is valid for unmigrated projects; migrate via Rotate API keys when ready.",
+    );
+    return null;
   }
 
   if (!key.startsWith(SB_PUBLISHABLE_PREFIX)) {
     return {
       title: "Unrecognised Supabase publishable key format",
-      detail: `VITE_SUPABASE_PUBLISHABLE_KEY must start with "${SB_PUBLISHABLE_PREFIX}". Got: "${key.slice(0, 12)}…"`,
-      fix: "Copy the correct sb_publishable_… value from Lovable → Cloud → Backend → API Keys and replace it in your hosting environment, then redeploy.",
+      detail: `VITE_SUPABASE_PUBLISHABLE_KEY must start with "${SB_PUBLISHABLE_PREFIX}" or the legacy "${LEGACY_JWT_PREFIX}" JWT prefix. Got: "${key.slice(0, 12)}…"`,
+      fix: "Copy the correct publishable key from Lovable → Cloud → Backend → API Keys and replace it in your hosting environment, then redeploy.",
     };
   }
 
