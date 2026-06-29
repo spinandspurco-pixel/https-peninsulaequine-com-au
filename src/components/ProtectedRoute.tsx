@@ -78,13 +78,14 @@ export function ProtectedRoute({
               Retry
             </button>
             <span className="text-muted-foreground/40">·</span>
-            <button
-              type="button"
-              onClick={async () => { await signOut(); window.location.href = "/login"; }}
-              className="text-xs font-mono uppercase tracking-[0.25em] text-foreground hover:text-accent transition-colors"
-            >
-              Sign out
-            </button>
+            <SignOutConfirm onConfirm={async () => { await signOut(); window.location.href = "/login"; }}>
+              <button
+                type="button"
+                className="text-xs font-mono uppercase tracking-[0.25em] text-foreground hover:text-accent transition-colors"
+              >
+                Sign out
+              </button>
+            </SignOutConfirm>
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { useIntroState } from "@/hooks/useIntroState";
 import { useActiveServiceChapter } from "@/hooks/useActiveServiceChapter";
 import { useAuth } from "@/hooks/useAuth";
+import { SignOutConfirm } from "@/components/auth/SignOutConfirm";
 import logoSquare from "@/assets/logo-pe-square.webp";
 import logoCinematic from "@/assets/logo-pe-cinematic.png";
 
