@@ -15,7 +15,7 @@ import { HqLoadingState } from "@/components/hq/HqLoadingState";
 import { clearLocalAuthCacheAndSignOut } from "@/lib/authCache";
 import { trackAuthFunnel } from "@/lib/authFunnel";
 
-type SignInErrorKind = "google" | "session" | "credentials" | "roles";
+type SignInErrorKind = "google" | "session" | "credentials" | "roles" | "cancelled";
 
 interface SignInError {
   kind: SignInErrorKind;
@@ -24,10 +24,34 @@ interface SignInError {
   hint?: string;
   canRetry?: boolean;
   canClearCache?: boolean;
+  /** When true, hide the raw `detail` from the UI (still logged to console). */
+  hideDetail?: boolean;
 }
 
 function classifyOAuthError(message: string): SignInError {
   const msg = (message || "").toLowerCase();
+
+  // Popup closed / user cancelled — surface a friendly, distinct message.
+  if (
+    msg.includes("popup closed") ||
+    msg.includes("popup_closed") ||
+    msg.includes("window closed") ||
+    msg.includes("user closed") ||
+    msg.includes("cancelled") ||
+    msg.includes("canceled") ||
+    msg.includes("access_denied") ||
+    msg.includes("user denied")
+  ) {
+    return {
+      kind: "cancelled",
+      title: "Sign-in was cancelled",
+      detail: message,
+      hint: "Sign-in was cancelled. Please try again.",
+      canRetry: true,
+      hideDetail: true,
+    };
+  }
+
   if (msg.includes("popup") || msg.includes("blocked")) {
     return {
       kind: "google",
@@ -46,13 +70,23 @@ function classifyOAuthError(message: string): SignInError {
       canRetry: true,
     };
   }
-  if (msg.includes("oauth secret") || msg.includes("provider is not enabled")) {
+  if (
+    msg.includes("oauth secret") ||
+    msg.includes("provider is not enabled") ||
+    msg.includes("provider not enabled") ||
+    msg.includes("missing oauth") ||
+    msg.includes("client_secret") ||
+    msg.includes("client secret")
+  ) {
+    // Technical detail logged to console only; user sees a plain message.
+    console.error("[oauth] Google provider/secret misconfigured:", message);
     return {
       kind: "google",
-      title: "Google sign-in is not configured",
+      title: "Google sign-in is temporarily unavailable",
       detail: message,
-      hint: "Contact an administrator — Google credentials need to be re-saved.",
+      hint: "Please use email + password below, or contact an administrator.",
       canRetry: false,
+      hideDetail: true,
     };
   }
   if (msg.includes("refresh") || msg.includes("session") || msg.includes("token")) {
@@ -60,7 +94,7 @@ function classifyOAuthError(message: string): SignInError {
       kind: "session",
       title: "Session couldn't be restored",
       detail: message,
-      hint: "Your previous session expired. Clear the cache and sign in again.",
+      hint: "Your previous session expired. Retry, or clear the cache and sign in again.",
       canRetry: true,
       canClearCache: true,
     };
@@ -73,6 +107,7 @@ function classifyOAuthError(message: string): SignInError {
     canRetry: true,
   };
 }
+
 
 export default function Login() {
   const [email, setEmail] = useState("");
