@@ -3,10 +3,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import {
   EXPECTED_PROJECT_ID,
+  EXPECTED_PROJECT_ID_SOURCE,
   EXPECTED_URL,
+  EXPECTED_URL_SOURCE,
   SB_PUBLISHABLE_PREFIX as SB_PREFIX,
   LEGACY_JWT_PREFIX as LEGACY_PREFIX,
 } from "@/config/diagnostics";
+
 
 
 type CheckStatus = "ok" | "warn" | "fail" | "info";
