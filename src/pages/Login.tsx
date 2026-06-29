@@ -13,6 +13,7 @@ import { lovable } from "@/integrations/lovable";
 import { StaffPortalFrame } from "@/components/StaffPortalFrame";
 import { HqLoadingState } from "@/components/hq/HqLoadingState";
 import { clearLocalAuthCacheAndSignOut } from "@/lib/authCache";
+import { trackAuthFunnel } from "@/lib/authFunnel";
 
 type SignInErrorKind = "google" | "session" | "credentials" | "roles";
 
