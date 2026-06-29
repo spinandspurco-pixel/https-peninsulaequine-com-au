@@ -459,10 +459,16 @@ export default function HqDiagnostics() {
             context: { expectedCallback, source: "e2e" },
           });
           refreshOAuthErrors();
+          trackAuthE2e("auth_e2e_redirect_uri_mismatch", {
+            origin: appOrigin,
+            expectedCallback,
+            reason: "redirect_uri_mismatch",
+          });
           finish(
             "fail",
             `redirect_uri_mismatch — Google rejected the URI Supabase sent. Add ${expectedCallback} to Authorized redirect URIs.`,
             `Expected callback: ${expectedCallback ?? "(unknown)"}`,
+            "redirect_uri_mismatch",
           );
           return;
         }
