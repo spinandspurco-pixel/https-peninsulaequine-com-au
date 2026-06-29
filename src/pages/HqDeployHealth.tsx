@@ -310,6 +310,13 @@ export default function HqDeployHealth() {
               >
                 Copy escalation payload
               </button>
+              <button
+                type="button"
+                onClick={copySupportEmail}
+                className="text-xs tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8"
+              >
+                Copy support email
+              </button>
             </div>
           </section>
         )}
