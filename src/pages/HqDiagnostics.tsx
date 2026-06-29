@@ -1190,6 +1190,137 @@ export default function HqDiagnostics() {
           )}
         </div>
 
+        {/* Did you mean? — near-miss detection between pasted entries and expected targets */}
+        {(() => {
+          if (parsedUris.length === 0) return null;
+          const expectedNormSet = new Set(
+            targetResults.map((t) => t.normalized).filter(Boolean) as string[]
+          );
+          const apex = (h: string) => h.replace(/^www\./, "");
+          type Diff = "scheme" | "www" | "trailing-slash" | "path" | "port" | "case" | "host";
+          type Suggestion = {
+            pasted: string;
+            suggested: string;
+            label: string;
+            diffs: Diff[];
+            score: number;
+          };
+          const suggestions: Suggestion[] = [];
+          for (const p of parsedUris) {
+            if (!p.norm || expectedNormSet.has(p.norm)) continue;
+            let pUrl: URL | null = null;
+            try { pUrl = new URL(p.raw); } catch { /* skip */ }
+            if (!pUrl) continue;
+            let best: Suggestion | null = null;
+            for (const t of targetResults) {
+              let tUrl: URL | null = null;
+              try { tUrl = new URL(t.uri); } catch { continue; }
+              if (!tUrl) continue;
+              const diffs: Diff[] = [];
+              const pHost = pUrl.hostname.toLowerCase();
+              const tHost = tUrl.hostname.toLowerCase();
+              const sameApex = apex(pHost) === apex(tHost);
+              if (!sameApex) continue; // only consider same-apex near-misses
+              if (pHost !== tHost) diffs.push("www");
+              if (pUrl.protocol !== tUrl.protocol) diffs.push("scheme");
+              if (pUrl.port !== tUrl.port) diffs.push("port");
+              const pPath = pUrl.pathname.replace(/\/+$/, "");
+              const tPath = tUrl.pathname.replace(/\/+$/, "");
+              if (pPath.toLowerCase() !== tPath.toLowerCase()) {
+                diffs.push(pPath === tPath ? "case" : "path");
+              } else if (pUrl.pathname !== tUrl.pathname) {
+                diffs.push("trailing-slash");
+              }
+              if (diffs.length === 0) continue;
+              // Lower score = closer. Weight scheme/path heavier than slash/case.
+              const weight: Record<Diff, number> = {
+                "scheme": 3, "host": 4, "path": 3, "port": 2,
+                "www": 1, "trailing-slash": 1, "case": 1,
+              };
+              const score = diffs.reduce((a, d) => a + weight[d], 0);
+              if (!best || score < best.score) {
+                best = { pasted: p.raw, suggested: t.uri, label: t.label, diffs, score };
+              }
+            }
+            if (best && best.score <= 5) suggestions.push(best);
+          }
+          if (suggestions.length === 0) return null;
+
+          const diffLabel: Record<Diff, string> = {
+            "scheme": "http vs https",
+            "www": "www vs apex",
+            "trailing-slash": "trailing slash",
+            "path": "callback path",
+            "port": "port number",
+            "case": "letter case",
+            "host": "hostname",
+          };
+
+          const replacePastedUri = (oldRaw: string, newUri: string) => {
+            // Replace by line/whitespace-token to preserve user's formatting.
+            const next = pastedUris.replace(
+              new RegExp(oldRaw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"),
+              newUri,
+            );
+            savePastedUris(next);
+          };
+
+          return (
+            <div className="mb-8 border rounded-sm"
+                 style={{ borderColor: "rgba(245,158,11,0.3)" }}>
+              <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-70 flex items-center justify-between gap-4">
+                <span>Did you mean? — near-miss origins</span>
+                <span className="text-[0.55rem] font-mono"
+                      style={{ color: statusColor("warn"), letterSpacing: "0.2em" }}>
+                  {suggestions.length} SUGGESTION{suggestions.length === 1 ? "" : "S"}
+                </span>
+              </div>
+              <div className="px-4 py-3 text-[0.7rem] opacity-60 font-light leading-relaxed border-b border-foreground/10">
+                These pasted entries are close to an expected URI but don't match. Common causes:
+                <span className="font-mono opacity-90"> http vs https</span>, trailing slash,
+                www subdomain, callback path, or a stray localhost port.
+              </div>
+              <ul className="divide-y divide-foreground/10">
+                {suggestions.map((s, i) => (
+                  <li key={`${s.pasted}-${i}`} className="px-4 py-3">
+                    <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-55 mb-1">
+                      {s.label} · differs by {s.diffs.map((d) => diffLabel[d]).join(", ")}
+                    </div>
+                    <div className="grid grid-cols-[1fr_auto] gap-3 items-center mb-1.5">
+                      <div className="text-[0.72rem] font-mono opacity-55 line-through break-all">
+                        {s.pasted}
+                      </div>
+                      <span className="text-[0.55rem] tracking-[0.3em] uppercase opacity-40">was</span>
+                    </div>
+                    <div className="grid grid-cols-[1fr_auto_auto] gap-3 items-center">
+                      <div className="text-[0.78rem] font-mono opacity-95 break-all"
+                           style={{ color: statusColor("ok") }}>
+                        {s.suggested}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => { void navigator.clipboard?.writeText(s.suggested); }}
+                        title="Copy corrected URI"
+                        className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border border-foreground/25 px-2 py-1 rounded-sm hover:bg-foreground/10 transition-colors"
+                      >
+                        Copy
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => replacePastedUri(s.pasted, s.suggested)}
+                        title="Replace in pasted list"
+                        className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border border-foreground/25 px-2 py-1 rounded-sm hover:bg-foreground/10 transition-colors"
+                      >
+                        Replace
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })()}
+
         {/* Remediation checklist — surfaces only when mismatches exist */}
         {(() => {
           const missingTargets = targetResults.filter((t) => !t.present);
