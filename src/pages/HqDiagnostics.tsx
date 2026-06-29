@@ -62,6 +62,10 @@ export default function HqDiagnostics() {
   const [googleDetail, setGoogleDetail] = useState<string>("Checking Google OAuth provider…");
   const [redirectStatus, setRedirectStatus] = useState<CheckStatus>("info");
   const [redirectDetail, setRedirectDetail] = useState<string>("Idle — run validator to compare with Google.");
+  const [e2eStatus, setE2eStatus] = useState<CheckStatus>("info");
+  const [e2eDetail, setE2eDetail] = useState<string>("Idle — click to perform the full Google sign-in flow and confirm /hq.");
+  const [e2eRunning, setE2eRunning] = useState(false);
+  const [e2eLog, setE2eLog] = useState<string[]>([]);
 
   const expectedCallback = url ? `${url.replace(/\/$/, "")}/auth/v1/callback` : null;
   const appOrigin = typeof window !== "undefined" ? window.location.origin : "";
