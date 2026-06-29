@@ -602,6 +602,14 @@ export default function HqDiagnostics() {
                   status: statusLabel(c.status),
                   detail: c.detail,
                 })),
+                oauthErrors: oauthErrors.map((e) => ({
+                  ts: new Date(e.ts).toISOString(),
+                  provider: e.provider,
+                  source: e.source,
+                  message: e.message,
+                  code: e.code,
+                  fix: diagnoseOAuthError(e),
+                })),
               };
               const blob = new Blob([JSON.stringify(report, null, 2)], {
                 type: "application/json",
