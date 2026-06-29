@@ -18,6 +18,7 @@ import { SiteRail } from "./components/layout/SiteRail";
 import Index from "./pages/Index";
 
 const Arenas = lazy(() => import("./pages/Arenas"));
+const DressageArenaConstruction = lazy(() => import("./pages/DressageArenaConstruction"));
 const Stables = lazy(() => import("./pages/Stables"));
 const LumenArc = lazy(() => import("./pages/LumenArc"));
 import LumenArcRouteFallback from "./components/lumenarc/LumenArcRouteFallback";
@@ -103,6 +104,7 @@ function AppContent() {
             <Route path="/" element={<Index />} />
 
             <Route path="/arenas" element={<Arenas />} />
+            <Route path="/guides/dressage-arena-construction" element={<DressageArenaConstruction />} />
             <Route path="/stables" element={<Stables />} />
             <Route path="/equine-estates" element={<Navigate to="/services#whole-property" replace />} />
             <Route
