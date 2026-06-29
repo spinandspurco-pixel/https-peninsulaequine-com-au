@@ -676,6 +676,47 @@ export default function HqDiagnostics() {
         </div>
 
         <div className="mb-8 border border-foreground/10 rounded-sm">
+          <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55 flex items-center justify-between gap-4">
+            <span>Google OAuth — End-to-end sign-in</span>
+            <div className="flex items-center gap-4">
+              <span
+                className="text-[0.55rem] font-mono"
+                style={{ color: statusColor(e2eStatus), letterSpacing: "0.2em" }}
+              >
+                {e2eRunning ? "RUNNING" : statusLabel(e2eStatus)}
+              </span>
+              <button
+                type="button"
+                onClick={runGoogleE2E}
+                disabled={e2eRunning}
+                className="text-[0.55rem] tracking-[0.3em] uppercase opacity-80 hover:opacity-100 border-b border-foreground/40 hover:border-foreground/70 pb-0.5 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {e2eRunning ? "Running…" : "Run Google OAuth E2E →"}
+              </button>
+            </div>
+          </div>
+          <div className="px-4 py-3 text-[0.7rem] opacity-70 font-light leading-relaxed border-b border-foreground/10">
+            Performs the full real flow: opens a Google sign-in popup → Supabase callback →
+            redirect to <span className="font-mono opacity-90">/hq?e2e=1</span> → verifies an
+            authenticated session is established in this window. PASS means sign-in completed
+            with no <code className="font-mono">redirect_uri_mismatch</code> or provider errors.
+          </div>
+          <div className="px-4 py-3 text-sm font-light leading-relaxed border-b border-foreground/10"
+               style={{ color: statusColor(e2eStatus) }}>
+            {e2eDetail}
+          </div>
+          {e2eLog.length > 0 && (
+            <div className="px-4 py-3">
+              <div className="text-[0.6rem] tracking-[0.35em] uppercase opacity-55 mb-2">Trace</div>
+              <pre className="text-[0.7rem] font-mono opacity-80 whitespace-pre-wrap leading-relaxed">
+{e2eLog.join("\n")}
+              </pre>
+            </div>
+          )}
+        </div>
+
+        <div className="mb-8 border border-foreground/10 rounded-sm">
+
           <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55 flex items-center justify-between">
             <span>Google OAuth — Authorized redirect URIs</span>
             <button
