@@ -1077,6 +1077,67 @@ export default function HqDiagnostics() {
             <div className="text-[0.6rem] tracking-[0.35em] uppercase opacity-55 mb-3">
               Expected redirect URIs by environment
             </div>
+            {(() => {
+              const anyCurrent = targetResults.some((t) => t.isCurrent);
+              const suggested = appOrigin ? `${appOrigin}/auth/callback` : null;
+              const tone: CheckStatus = !appOrigin ? "info" : anyCurrent ? "ok" : "warn";
+              return (
+                <div
+                  className="mb-3 border-l-2 pl-3 py-2"
+                  style={{ borderColor: statusColor(tone) }}
+                >
+                  <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-55 mb-1 flex items-center gap-2">
+                    <span>Current running origin</span>
+                    <span
+                      className="text-[0.5rem] font-mono px-1.5 py-0.5 rounded-sm"
+                      style={{
+                        color: statusColor(tone),
+                        backgroundColor: tone === "ok"
+                          ? "rgba(16,185,129,0.08)"
+                          : tone === "warn" ? "rgba(245,158,11,0.08)" : "rgba(120,120,120,0.08)",
+                        letterSpacing: "0.2em",
+                      }}
+                    >
+                      {!appOrigin ? "UNKNOWN" : anyCurrent ? "IN LIST" : "UNRECOGNISED"}
+                    </span>
+                  </div>
+                  <div className="text-xs font-mono opacity-85 break-all">
+                    {appOrigin || "(unable to read window.location.origin)"}
+                  </div>
+                  {appOrigin && !anyCurrent && suggested && (
+                    <div className="mt-2 text-[0.7rem] font-light opacity-75 leading-relaxed">
+                      This origin isn't one of the expected environments below — Google sign-in
+                      from here will fail with{" "}
+                      <span className="font-mono opacity-90">redirect_uri_mismatch</span>{" "}
+                      unless the URI below is added to both Supabase (Site URL / Redirect URLs)
+                      and the Google OAuth client's Authorized redirect URIs.
+                      <div className="mt-2 grid grid-cols-[1fr_auto] gap-3 items-center">
+                        <span className="text-[0.78rem] font-mono opacity-95 break-all"
+                              style={{ color: statusColor("warn") }}>
+                          {suggested}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => { void navigator.clipboard?.writeText(suggested); }}
+                          className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border border-foreground/25 px-2 py-1 rounded-sm hover:bg-foreground/10 transition-colors"
+                        >
+                          Copy
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  {appOrigin && anyCurrent && (
+                    <div className="mt-1 text-[0.65rem] opacity-55 font-light">
+                      Matched expected environment{" "}
+                      <span className="font-mono opacity-80">
+                        {targetResults.find((t) => t.isCurrent)?.label}
+                      </span>
+                      .
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
             <ul className="space-y-3">
               {targetResults.map((t) => {
                 const idle = parsedUris.length === 0;
