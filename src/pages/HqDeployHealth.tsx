@@ -282,13 +282,22 @@ export default function HqDeployHealth() {
               Production promotion is stuck. Copy the escalation payload and
               send to Lovable Support.
             </p>
-            <button
-              type="button"
-              onClick={copyEscalation}
-              className="text-xs tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8"
-            >
-              Copy escalation payload
-            </button>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+              <button
+                type="button"
+                onClick={openSupportEmail}
+                className="text-xs tracking-[0.3em] uppercase text-amber-700 underline underline-offset-8"
+              >
+                Contact Lovable Support →
+              </button>
+              <button
+                type="button"
+                onClick={copyEscalation}
+                className="text-xs tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8"
+              >
+                Copy escalation payload
+              </button>
+            </div>
           </section>
         )}
 
