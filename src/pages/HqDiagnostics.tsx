@@ -784,6 +784,67 @@ export default function HqDiagnostics() {
         </div>
 
         <div className="mb-8 border border-foreground/10 rounded-sm">
+          <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55 flex items-center justify-between gap-4">
+            <span>Google OAuth — Recent E2E attempts {e2eHistory.length > 0 && <span className="opacity-50">({e2eHistory.length})</span>}</span>
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={runGoogleE2E}
+                disabled={e2eRunning}
+                className="text-[0.55rem] tracking-[0.3em] uppercase opacity-80 hover:opacity-100 border-b border-foreground/40 hover:border-foreground/70 pb-0.5 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {e2eRunning ? "Running…" : "Re-run →"}
+              </button>
+              <button
+                type="button"
+                onClick={() => { clearE2eHistory(); setE2eHistory([]); }}
+                disabled={e2eHistory.length === 0}
+                className="text-[0.55rem] tracking-[0.3em] uppercase opacity-60 hover:opacity-100 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+          {e2eHistory.length === 0 ? (
+            <div className="px-4 py-3 text-[0.7rem] opacity-55 font-light leading-relaxed">
+              No attempts recorded yet. Stored locally in your browser; never sent anywhere. Last 20 kept.
+            </div>
+          ) : (
+            <div>
+              {e2eHistory.map((entry) => (
+                <div
+                  key={entry.id}
+                  className="grid grid-cols-[auto_auto_1fr] gap-x-4 gap-y-1 px-4 py-3 border-b border-foreground/10 last:border-b-0 items-baseline"
+                >
+                  <span
+                    className="text-[0.55rem] font-mono tracking-[0.2em]"
+                    style={{ color: statusColor(entry.status) }}
+                  >
+                    {entry.status === "ok" ? "PASS" : entry.status === "warn" ? "WARN" : "FAIL"}
+                  </span>
+                  <span className="text-[0.6rem] font-mono opacity-50 whitespace-nowrap">
+                    {formatE2eTime(entry.at)}
+                    {typeof entry.durationMs === "number" && (
+                      <span className="opacity-60"> · {(entry.durationMs / 1000).toFixed(1)}s</span>
+                    )}
+                  </span>
+                  <div className="text-[0.7rem] font-light leading-relaxed opacity-85">
+                    {entry.detail}
+                    {entry.mismatch && (
+                      <div className="text-[0.65rem] font-mono opacity-60 mt-1 break-all">{entry.mismatch}</div>
+                    )}
+                    {entry.origin && entry.origin !== appOrigin && (
+                      <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-40 mt-1">from {entry.origin}</div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="mb-8 border border-foreground/10 rounded-sm">
+
 
           <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55 flex items-center justify-between">
             <span>Google OAuth — Authorized redirect URIs</span>
