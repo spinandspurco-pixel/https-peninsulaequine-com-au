@@ -12,6 +12,7 @@ import { IntroContext } from "./hooks/useIntroState";
 import { IntakeProvider } from "./hooks/useIntake";
 import { AuthProvider } from "./hooks/useAuth";
 import { AuthDebugPanel } from "./components/AuthDebugPanel";
+import { ClientDiagPanel } from "./components/diag/ClientDiagPanel";
 import { GuidedIntake } from "./components/GuidedIntake";
 import { SiteRail } from "./components/layout/SiteRail";
 
@@ -226,6 +227,7 @@ function AppContent() {
         </Suspense>
         <GuidedIntake />
         <AuthDebugPanel />
+        <ClientDiagPanel />
       </BrowserRouter>
     </IntroContext.Provider>
 
