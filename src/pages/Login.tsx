@@ -371,16 +371,20 @@ export default function Login() {
                   redirectTo: window.location.origin,
                   href: window.location.href,
                 });
+                setSignInError(null);
                 setIsLoading(true);
-                // Safety net: if the browser hasn't navigated to Google
-                // within 15s, clear the spinner and surface an error so
-                // the button never spins forever on a swallowed redirect.
                 const watchdog = window.setTimeout(() => {
                   authLog("oauth:google:watchdog-timeout", {});
                   setIsLoading(false);
-                  toast.error(
-                    "Google sign-in didn't start. Check that pop-ups/redirects are allowed and try again."
-                  );
+                  const e: SignInError = {
+                    kind: "google",
+                    title: "Google sign-in didn't start",
+                    detail: "No redirect happened within 15 seconds.",
+                    hint: "Check that pop-ups and redirects are allowed for this site, then retry.",
+                    canRetry: true,
+                  };
+                  setSignInError(e);
+                  toast.error(e.title);
                 }, 15000);
                 try {
                   const result = await lovable.auth.signInWithOAuth("google", {
@@ -394,35 +398,34 @@ export default function Login() {
                   if (result.error) {
                     window.clearTimeout(watchdog);
                     setIsLoading(false);
+                    const classified = classifyOAuthError(result.error.message || "");
+                    setSignInError(classified);
                     recordOAuthError({
                       provider: "google",
                       source: "login-button",
                       message: result.error.message || "Unknown error",
                     });
-                    toast.error(
-                      result.error.message
-                        ? `Google sign-in failed: ${result.error.message}`
-                        : "Google sign-in failed."
-                    );
+                    toast.error(classified.title);
                     return;
                   }
                   if (result.redirected) {
                     window.clearTimeout(watchdog);
                     return;
                   }
-                  // Tokens received & session set — auth state listener will redirect.
                   window.clearTimeout(watchdog);
                 } catch (err) {
                   window.clearTimeout(watchdog);
                   const msg = err instanceof Error ? err.message : String(err);
                   authLog("oauth:google:throw", { msg });
+                  const classified = classifyOAuthError(msg);
+                  setSignInError(classified);
                   recordOAuthError({
                     provider: "google",
                     source: "login-button",
                     message: msg,
                   });
                   setIsLoading(false);
-                  toast.error("Google sign-in failed unexpectedly.");
+                  toast.error(classified.title);
                 }
               }}
             >
