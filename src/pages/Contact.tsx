@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { z } from "zod";
 import { trackConversion, trackFormError } from "@/lib/analytics";
 import { trackContactConversion } from "@/lib/adsConversions";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 
 
@@ -105,7 +106,13 @@ function SelectField({
 
 /* ── Main Page ────────────────────────────────────── */
 export default function Contact() {
+  usePageMeta({
+    title: "Contact — Peninsula Equine",
+    description: "Brief a covered arena, stable precinct or full equine facility build with Peninsula Equine. Direct enquiries and site assessment requests across the Mornington Peninsula.",
+    path: "/contact",
+  });
   const { toast } = useToast();
+
 
   const [form, setForm] = useState({
     name: "",

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealLine, RevealOnScroll } from "@/components/RevealOnScroll";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 import heroAsset from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.webp.asset.json";
 import arenaVaulted from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
@@ -18,21 +19,12 @@ const FACTS: Array<{ label: string; value: string }> = [
 ];
 
 export default function Aberdeen() {
-  useEffect(() => {
-    document.title = "Aberdeen | Peninsula Equine";
-    const meta = document.querySelector('meta[name="description"]');
-    const previousDescription = meta?.getAttribute("content") || "";
+  usePageMeta({
+    title: "Aberdeen — Selected Works | Peninsula Equine",
+    description: "Aberdeen: an indoor arena, stable precinct and viewing lounge resolved as a single equine facility — engineered, detailed and finished for daily ridden use.",
+    path: "/selected-works/aberdeen",
+  });
 
-    meta?.setAttribute(
-      "content",
-      "Aberdeen by Peninsula Equine — indoor arena, stable precinct, viewing lounge and refined equine facility detailing built for daily use.",
-    );
-
-    return () => {
-      document.title = "Peninsula Equine";
-      if (meta && previousDescription) meta.setAttribute("content", previousDescription);
-    };
-  }, []);
 
   return (
     <Layout>

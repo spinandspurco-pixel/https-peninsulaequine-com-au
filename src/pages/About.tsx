@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { DraftLine } from "@/components/draft";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 import heroQuiet from "@/assets/about/ciro-ace-quiet-moment.png.asset.json";
 import beliefSlidingStop from "@/assets/about/ciro-ace-sliding-stop.png.asset.json";
@@ -91,19 +92,12 @@ const FeatureSection = ({
 );
 
 export default function About() {
-  useEffect(() => {
-    document.title = "About | Peninsula Equine";
-    const meta = document.querySelector('meta[name="description"]');
-    const prev = meta?.getAttribute("content") || "";
-    meta?.setAttribute(
-      "content",
-      "Built by horse people, backed by construction. Peninsula Equine builds covered arenas, stables, groundworks and rural structures that work every day."
-    );
-    return () => {
-      document.title = "Peninsula Equine";
-      if (meta && prev) meta.setAttribute("content", prev);
-    };
-  }, []);
+  usePageMeta({
+    title: "About — Peninsula Equine",
+    description: "Built by horse people, backed by construction. The conviction, craft and operating standard behind every Peninsula Equine arena, stable and rural build.",
+    path: "/about",
+  });
+
 
   return (
     <Layout>
