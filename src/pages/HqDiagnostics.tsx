@@ -57,6 +57,7 @@ export default function HqDiagnostics() {
   const mode = import.meta.env.MODE;
 
   const [pingStatus, setPingStatus] = useState<CheckStatus>("info");
+  const [copiedMissingAt, setCopiedMissingAt] = useState<number | null>(null);
   const [pingDetail, setPingDetail] = useState<string>("Checking…");
   const [googleStatus, setGoogleStatus] = useState<CheckStatus>("info");
   const [googleDetail, setGoogleDetail] = useState<string>("Checking Google OAuth provider…");
