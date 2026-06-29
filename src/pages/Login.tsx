@@ -381,6 +381,7 @@ export default function Login() {
                 });
                 setSignInError(null);
                 setIsLoading(true);
+                trackAuthFunnel("auth_login_attempt", { method: "google", force: true });
                 const watchdog = window.setTimeout(() => {
                   authLog("oauth:google:watchdog-timeout", {});
                   setIsLoading(false);
