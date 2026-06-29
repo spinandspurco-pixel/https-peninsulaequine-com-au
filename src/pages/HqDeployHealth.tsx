@@ -564,6 +564,13 @@ export default function HqDeployHealth() {
             >
               Copy as JSON
             </button>
+            <button
+              type="button"
+              onClick={downloadEscalationTxt}
+              className="text-xs tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8"
+            >
+              Download .txt
+            </button>
           </div>
           <p className="text-[0.65rem] text-foreground/40 leading-relaxed">
             Opens your mail client with support@lovable.dev pre-filled (subject,
