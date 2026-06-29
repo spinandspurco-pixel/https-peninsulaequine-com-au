@@ -95,7 +95,72 @@ export default function HqDiagnostics() {
       .filter((x) => x.raw.length > 0);
   }, [pastedUris]);
 
-  const expectedNorm = expectedCallback ? normalizeUri(expectedCallback) : null;
+  type ExpectedTarget = {
+    env: "supabase" | "dev" | "preview" | "production";
+    label: string;
+    uri: string;
+    required: boolean;
+    note?: string;
+  };
+
+  const expectedTargets = useMemo<ExpectedTarget[]>(() => {
+    const list: ExpectedTarget[] = [];
+    if (expectedCallback) {
+      list.push({
+        env: "supabase",
+        label: "Supabase callback (required by Google)",
+        uri: expectedCallback,
+        required: true,
+        note: "Must appear in Google client's Authorized redirect URIs.",
+      });
+    }
+    list.push({
+      env: "dev",
+      label: "Dev origin (local)",
+      uri: "http://localhost:8080/auth/callback",
+      required: false,
+      note: "Used when running the app locally.",
+    });
+    list.push({
+      env: "preview",
+      label: "Lovable preview origin",
+      uri: "https://https-peninsulaequine-com-au.lovable.app/auth/callback",
+      required: false,
+      note: "Published lovable.app preview.",
+    });
+    list.push({
+      env: "production",
+      label: "Production origin",
+      uri: "https://peninsulaequine.systems/auth/callback",
+      required: true,
+      note: "Live custom domain — must be allowed for production sign-in.",
+    });
+    list.push({
+      env: "production",
+      label: "Production origin (www)",
+      uri: "https://www.peninsulaequine.systems/auth/callback",
+      required: false,
+      note: "www subdomain variant.",
+    });
+    return list;
+  }, [expectedCallback]);
+
+  const currentOriginNorm = appOrigin ? normalizeUri(appOrigin) : null;
+  const targetResults = useMemo(() => {
+    return expectedTargets.map((t) => {
+      const tNorm = normalizeUri(t.uri);
+      const present = !!tNorm && parsedUris.some((u) => u.norm === tNorm);
+      let originHost: string | null = null;
+      try { originHost = new URL(t.uri).origin.toLowerCase(); } catch { originHost = null; }
+      const isCurrent = !!currentOriginNorm && !!originHost &&
+        currentOriginNorm.startsWith(originHost);
+      return { ...t, normalized: tNorm, present, isCurrent };
+    });
+  }, [expectedTargets, parsedUris, currentOriginNorm]);
+
+  const requiredMissing = targetResults.filter((r) => r.required && !r.present);
+  const optionalMissing = targetResults.filter((r) => !r.required && !r.present);
+  const allRequiredMatch = requiredMissing.length === 0;
   const pasteMatch = !!expectedNorm && parsedUris.some((u) => u.norm === expectedNorm);
   const pasteHostMatches = useMemo(() => {
     if (!expectedNorm) return [];
