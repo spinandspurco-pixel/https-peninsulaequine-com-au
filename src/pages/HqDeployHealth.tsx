@@ -209,6 +209,19 @@ export default function HqDeployHealth() {
     toast.success("Opening email — payload also copied to clipboard");
   };
 
+  const copySupportEmail = async () => {
+    const full =
+      `To: support@lovable.dev\n` +
+      `Subject: ${supportSubject}\n\n` +
+      supportBody;
+    try {
+      await navigator.clipboard.writeText(full);
+      toast.success("Support email copied (To, Subject, payload)");
+    } catch {
+      toast.error("Copy failed — select and copy manually");
+    }
+  };
+
   if (authLoading) {
     return (
       <Layout>
