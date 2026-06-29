@@ -775,13 +775,65 @@ export default function HqDiagnostics() {
           </div>
           {e2eLog.length > 0 && (
             <div className="px-4 py-3">
-              <div className="text-[0.6rem] tracking-[0.35em] uppercase opacity-55 mb-2">Trace</div>
+              <div className="flex items-center justify-between mb-2 gap-4">
+                <div className="text-[0.6rem] tracking-[0.35em] uppercase opacity-55">Trace</div>
+                <div className="flex items-center gap-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const text = buildE2eTraceReport({
+                        status: e2eStatus,
+                        detail: e2eDetail,
+                        log: e2eLog,
+                        origin: appOrigin,
+                        expectedCallback,
+                        supabaseUrl: url,
+                        projectId,
+                      });
+                      void navigator.clipboard?.writeText(text);
+                      setTraceCopiedAt(Date.now());
+                      window.setTimeout(() => setTraceCopiedAt(null), 2000);
+                    }}
+                    className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity"
+                  >
+                    {traceCopiedAt ? "Copied ✓" : "Copy trace"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const text = buildE2eTraceReport({
+                        status: e2eStatus,
+                        detail: e2eDetail,
+                        log: e2eLog,
+                        origin: appOrigin,
+                        expectedCallback,
+                        supabaseUrl: url,
+                        projectId,
+                      });
+                      const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+                      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+                      const href = URL.createObjectURL(blob);
+                      const a = document.createElement("a");
+                      a.href = href;
+                      a.download = `google-oauth-e2e-trace-${stamp}.txt`;
+                      document.body.appendChild(a);
+                      a.click();
+                      a.remove();
+                      window.setTimeout(() => URL.revokeObjectURL(href), 1000);
+                    }}
+                    className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity"
+                  >
+                    Download .txt
+                  </button>
+                </div>
+              </div>
               <pre className="text-[0.7rem] font-mono opacity-80 whitespace-pre-wrap leading-relaxed">
 {e2eLog.join("\n")}
               </pre>
             </div>
           )}
         </div>
+
 
         <div className="mb-8 border border-foreground/10 rounded-sm">
           <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55 flex items-center justify-between gap-4">
