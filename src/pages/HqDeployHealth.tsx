@@ -361,6 +361,13 @@ export default function HqDeployHealth() {
               >
                 Copy support email
               </button>
+              <button
+                type="button"
+                onClick={copyEscalationJson}
+                className="text-xs tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8"
+              >
+                Copy as JSON
+              </button>
             </div>
           </section>
         )}
