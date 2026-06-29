@@ -16,6 +16,13 @@ import {
   diagnoseOAuthError,
   type OAuthErrorEntry,
 } from "@/lib/oauthErrorLog";
+import {
+  listE2eHistory,
+  recordE2eHistory,
+  clearE2eHistory,
+  formatE2eTime,
+  type E2eHistoryEntry,
+} from "@/lib/e2eHistory";
 
 
 
@@ -67,6 +74,7 @@ export default function HqDiagnostics() {
   const [e2eDetail, setE2eDetail] = useState<string>("Idle — click to perform the full Google sign-in flow and confirm /hq.");
   const [e2eRunning, setE2eRunning] = useState(false);
   const [e2eLog, setE2eLog] = useState<string[]>([]);
+  const [e2eHistory, setE2eHistory] = useState<E2eHistoryEntry[]>(() => listE2eHistory());
 
   const expectedCallback = url ? `${url.replace(/\/$/, "")}/auth/v1/callback` : null;
   const appOrigin = typeof window !== "undefined" ? window.location.origin : "";
@@ -343,11 +351,21 @@ export default function HqDiagnostics() {
     if (!url) {
       setE2eStatus("fail");
       setE2eDetail("VITE_SUPABASE_URL missing — cannot start flow.");
+      recordE2eHistory({ status: "fail", detail: "VITE_SUPABASE_URL missing — cannot start flow." });
+      setE2eHistory(listE2eHistory());
       return;
     }
     const pushLog = (line: string) => {
       const stamp = new Date().toISOString().slice(11, 19);
       setE2eLog((prev) => [...prev, `[${stamp}] ${line}`]);
+    };
+    const runStart = Date.now();
+    const finish = (status: "ok" | "warn" | "fail", detail: string, mismatch?: string) => {
+      setE2eStatus(status);
+      setE2eDetail(detail);
+      setE2eRunning(false);
+      recordE2eHistory({ status, detail, mismatch, durationMs: Date.now() - runStart });
+      setE2eHistory(listE2eHistory());
     };
     setE2eLog([]);
     setE2eRunning(true);
@@ -361,10 +379,8 @@ export default function HqDiagnostics() {
       `&redirect_to=${encodeURIComponent(target)}`;
     const popup = window.open(authorize, "oauth-e2e", "width=520,height=700");
     if (!popup) {
-      setE2eRunning(false);
-      setE2eStatus("fail");
-      setE2eDetail("Popup blocked — allow popups for this site and re-run.");
       pushLog("FAIL: popup blocked");
+      finish("fail", "Popup blocked — allow popups for this site and re-run.");
       return;
     }
 
@@ -376,10 +392,8 @@ export default function HqDiagnostics() {
         if (popup.closed) {
           window.clearInterval(timer);
           if (!landed) {
-            setE2eRunning(false);
-            setE2eStatus("warn");
-            setE2eDetail("Popup closed before reaching /hq — inconclusive.");
             pushLog("WARN: popup closed prior to landing");
+            finish("warn", "Popup closed before reaching /hq — inconclusive.");
           }
           return;
         }
@@ -394,11 +408,6 @@ export default function HqDiagnostics() {
         if (/redirect_uri_mismatch/i.test(err + " " + hash)) {
           window.clearInterval(timer);
           try { popup.close(); } catch { /* ignore */ }
-          setE2eRunning(false);
-          setE2eStatus("fail");
-          setE2eDetail(
-            `redirect_uri_mismatch — Google rejected the URI Supabase sent. Add ${expectedCallback} to Authorized redirect URIs.`
-          );
           pushLog("FAIL: redirect_uri_mismatch from Google");
           recordOAuthError({
             provider: "google",
@@ -408,22 +417,26 @@ export default function HqDiagnostics() {
             context: { expectedCallback, source: "e2e" },
           });
           refreshOAuthErrors();
+          finish(
+            "fail",
+            `redirect_uri_mismatch — Google rejected the URI Supabase sent. Add ${expectedCallback} to Authorized redirect URIs.`,
+            `Expected callback: ${expectedCallback ?? "(unknown)"}`,
+          );
           return;
         }
         if (err) {
           window.clearInterval(timer);
           try { popup.close(); } catch { /* ignore */ }
-          setE2eRunning(false);
-          setE2eStatus("fail");
-          setE2eDetail(`Returned with error: ${decodeURIComponent(err)}`);
-          pushLog(`FAIL: ${decodeURIComponent(err)}`);
+          const decoded = decodeURIComponent(err);
+          pushLog(`FAIL: ${decoded}`);
           recordOAuthError({
             provider: "google",
             source: "redirect-validator",
-            message: decodeURIComponent(err),
+            message: decoded,
             context: { source: "e2e" },
           });
           refreshOAuthErrors();
+          finish("fail", `Returned with error: ${decoded}`);
           return;
         }
 
@@ -444,22 +457,18 @@ export default function HqDiagnostics() {
               if (error) throw error;
               const session = data?.session;
               if (session?.user) {
-                setE2eStatus("ok");
-                setE2eDetail(
-                  `PASS — signed in as ${session.user.email ?? session.user.id} and landed at ${new URL(landedHref).pathname}.`
-                );
-                pushLog(`PASS: session established for ${session.user.email ?? session.user.id}`);
+                const id = session.user.email ?? session.user.id;
+                pushLog(`PASS: session established for ${id}`);
+                finish("ok", `PASS — signed in as ${id} and landed at ${new URL(landedHref).pathname}.`);
               } else {
-                setE2eStatus("warn");
-                setE2eDetail("Landed on /hq but no session detected in this window — check storage sync.");
                 pushLog("WARN: no session in main window after landing");
+                finish("warn", "Landed on /hq but no session detected in this window — check storage sync.");
               }
             } catch (e) {
-              setE2eStatus("fail");
-              setE2eDetail(`Landed on /hq but session check failed: ${(e as Error).message}`);
-              pushLog(`FAIL: session check error — ${(e as Error).message}`);
+              const msg = (e as Error).message;
+              pushLog(`FAIL: session check error — ${msg}`);
+              finish("fail", `Landed on /hq but session check failed: ${msg}`);
             } finally {
-              setE2eRunning(false);
               try { popup.close(); } catch { /* ignore */ }
             }
           }, 600);
@@ -471,10 +480,8 @@ export default function HqDiagnostics() {
         window.clearInterval(timer);
         try { popup.close(); } catch { /* ignore */ }
         if (!landed) {
-          setE2eRunning(false);
-          setE2eStatus("warn");
-          setE2eDetail("Timed out after 2 minutes without reaching /hq.");
           pushLog("WARN: timeout");
+          finish("warn", "Timed out after 2 minutes without reaching /hq.");
         }
       }
     }, 600);
@@ -777,6 +784,67 @@ export default function HqDiagnostics() {
         </div>
 
         <div className="mb-8 border border-foreground/10 rounded-sm">
+          <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55 flex items-center justify-between gap-4">
+            <span>Google OAuth — Recent E2E attempts {e2eHistory.length > 0 && <span className="opacity-50">({e2eHistory.length})</span>}</span>
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={runGoogleE2E}
+                disabled={e2eRunning}
+                className="text-[0.55rem] tracking-[0.3em] uppercase opacity-80 hover:opacity-100 border-b border-foreground/40 hover:border-foreground/70 pb-0.5 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {e2eRunning ? "Running…" : "Re-run →"}
+              </button>
+              <button
+                type="button"
+                onClick={() => { clearE2eHistory(); setE2eHistory([]); }}
+                disabled={e2eHistory.length === 0}
+                className="text-[0.55rem] tracking-[0.3em] uppercase opacity-60 hover:opacity-100 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+          {e2eHistory.length === 0 ? (
+            <div className="px-4 py-3 text-[0.7rem] opacity-55 font-light leading-relaxed">
+              No attempts recorded yet. Stored locally in your browser; never sent anywhere. Last 20 kept.
+            </div>
+          ) : (
+            <div>
+              {e2eHistory.map((entry) => (
+                <div
+                  key={entry.id}
+                  className="grid grid-cols-[auto_auto_1fr] gap-x-4 gap-y-1 px-4 py-3 border-b border-foreground/10 last:border-b-0 items-baseline"
+                >
+                  <span
+                    className="text-[0.55rem] font-mono tracking-[0.2em]"
+                    style={{ color: statusColor(entry.status) }}
+                  >
+                    {entry.status === "ok" ? "PASS" : entry.status === "warn" ? "WARN" : "FAIL"}
+                  </span>
+                  <span className="text-[0.6rem] font-mono opacity-50 whitespace-nowrap">
+                    {formatE2eTime(entry.at)}
+                    {typeof entry.durationMs === "number" && (
+                      <span className="opacity-60"> · {(entry.durationMs / 1000).toFixed(1)}s</span>
+                    )}
+                  </span>
+                  <div className="text-[0.7rem] font-light leading-relaxed opacity-85">
+                    {entry.detail}
+                    {entry.mismatch && (
+                      <div className="text-[0.65rem] font-mono opacity-60 mt-1 break-all">{entry.mismatch}</div>
+                    )}
+                    {entry.origin && entry.origin !== appOrigin && (
+                      <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-40 mt-1">from {entry.origin}</div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="mb-8 border border-foreground/10 rounded-sm">
+
 
           <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55 flex items-center justify-between">
             <span>Google OAuth — Authorized redirect URIs</span>
