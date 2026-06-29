@@ -421,48 +421,76 @@ export default function HqDeployHealth() {
                   <div className="text-xs text-red-600/80">{r.error}</div>
                 )}
 
-                <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-xs">
-                  <dt className="uppercase tracking-[0.3em] text-foreground/40">Live bundle</dt>
-                  <dd>
-                    <code className="text-foreground/80">{r.bundleFile ?? "—"}</code>
-                  </dd>
+                <details className="group border-t border-border/10 pt-3 [&_summary::-webkit-details-marker]:hidden">
+                  <summary className="flex items-center justify-between cursor-pointer list-none text-[0.65rem] tracking-[0.45em] uppercase text-foreground/50 hover:text-foreground/80">
+                    <span>Marker check details</span>
+                    <span className="text-foreground/40 group-open:rotate-90 transition-transform">›</span>
+                  </summary>
+                  <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-xs mt-4">
+                    <dt className="uppercase tracking-[0.3em] text-foreground/40">Live bundle</dt>
+                    <dd>
+                      <code className="text-foreground/80">{r.bundleFile ?? "—"}</code>
+                    </dd>
 
-                  <dt className="uppercase tracking-[0.3em] text-foreground/40">Bundle bytes</dt>
-                  <dd className="text-foreground/70">{r.bundleBytes ?? "—"}</dd>
+                    <dt className="uppercase tracking-[0.3em] text-foreground/40">Bundle bytes</dt>
+                    <dd className="text-foreground/70">{r.bundleBytes ?? "—"}</dd>
 
-                  <dt className="uppercase tracking-[0.3em] text-foreground/40">
-                    Legacy marker <code>eyJhbGci</code>
-                  </dt>
-                  <dd
-                    className={
-                      r.hasLegacyKey === true
-                        ? "text-amber-700"
-                        : r.hasLegacyKey === false
-                        ? "text-emerald-700"
-                        : "text-foreground/50"
-                    }
-                  >
-                    {r.hasLegacyKey === null ? "—" : r.hasLegacyKey ? "present (bad)" : "absent (good)"}
-                  </dd>
+                    <dt className="uppercase tracking-[0.3em] text-foreground/40">
+                      Legacy marker <code>eyJhbGci</code>
+                    </dt>
+                    <dd
+                      className={
+                        r.hasLegacyKey === true
+                          ? "text-amber-700"
+                          : r.hasLegacyKey === false
+                          ? "text-emerald-700"
+                          : "text-foreground/50"
+                      }
+                    >
+                      {r.hasLegacyKey === null ? "—" : r.hasLegacyKey ? "present (bad)" : "absent (good)"}
+                    </dd>
 
-                  <dt className="uppercase tracking-[0.3em] text-foreground/40">
-                    Publishable marker <code>sb_publishable_</code>
-                  </dt>
-                  <dd
-                    className={
-                      r.hasModernKey === true
-                        ? "text-emerald-700"
-                        : r.hasModernKey === false
-                        ? "text-amber-700"
-                        : "text-foreground/50"
-                    }
-                  >
-                    {r.hasModernKey === null ? "—" : r.hasModernKey ? "present (good)" : "absent (bad)"}
-                  </dd>
+                    <dt className="uppercase tracking-[0.3em] text-foreground/40">
+                      Publishable marker <code>sb_publishable_</code>
+                    </dt>
+                    <dd
+                      className={
+                        r.hasModernKey === true
+                          ? "text-emerald-700"
+                          : r.hasModernKey === false
+                          ? "text-amber-700"
+                          : "text-foreground/50"
+                      }
+                    >
+                      {r.hasModernKey === null ? "—" : r.hasModernKey ? "present (good)" : "absent (bad)"}
+                    </dd>
 
-                  <dt className="uppercase tracking-[0.3em] text-foreground/40">Fetched at</dt>
-                  <dd className="text-foreground/70">{r.fetchedAt}</dd>
-                </dl>
+                    <dt className="uppercase tracking-[0.3em] text-foreground/40">Bundle URL</dt>
+                    <dd className="truncate">
+                      {r.bundleUrl ? (
+                        <a href={r.bundleUrl} target="_blank" rel="noreferrer" className="text-foreground/70 underline underline-offset-4">
+                          {r.bundleUrl}
+                        </a>
+                      ) : "—"}
+                    </dd>
+
+                    <dt className="uppercase tracking-[0.3em] text-foreground/40">Fetched at</dt>
+                    <dd className="text-foreground/70">{r.fetchedAt}</dd>
+
+                    <dt className="uppercase tracking-[0.3em] text-foreground/40">Verdict</dt>
+                    <dd
+                      className={
+                        !r.ok
+                          ? "text-foreground/60"
+                          : stuck
+                          ? "text-amber-700"
+                          : "text-emerald-700"
+                      }
+                    >
+                      {!r.ok ? "Probe error" : stuck ? "Stale (platform action required)" : "Fresh (modern key present)"}
+                    </dd>
+                  </dl>
+                </details>
               </article>
             );
           })}
