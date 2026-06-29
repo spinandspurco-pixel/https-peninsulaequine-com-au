@@ -910,6 +910,28 @@ export default function HqDiagnostics() {
                   Clear
                 </button>
               )}
+              {(() => {
+                const missingAll = targetResults.filter((t) => !t.present).map((t) => t.uri);
+                if (missingAll.length === 0) return null;
+                return (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard?.writeText(missingAll.join("\n"));
+                        setCopiedMissingAt(Date.now());
+                      } catch { /* ignore */ }
+                    }}
+                    title={missingAll.join("\n")}
+                    className="text-[0.55rem] tracking-[0.3em] uppercase border border-foreground/25 px-2 py-1 rounded-sm hover:bg-foreground/10 transition-colors"
+                    style={{ color: statusColor(requiredMissing.length > 0 ? "fail" : "warn") }}
+                  >
+                    {copiedMissingAt && Date.now() - copiedMissingAt < 2000
+                      ? `Copied ${missingAll.length}`
+                      : `Copy ${missingAll.length} missing`}
+                  </button>
+                );
+              })()}
               <span
                 className="text-[0.55rem] font-mono"
                 style={{
