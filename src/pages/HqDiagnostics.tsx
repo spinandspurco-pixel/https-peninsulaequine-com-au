@@ -69,6 +69,50 @@ export default function HqDiagnostics() {
   const [oauthErrors, setOauthErrors] = useState<OAuthErrorEntry[]>([]);
   const refreshOAuthErrors = () => setOauthErrors(listOAuthErrors());
 
+  const PASTE_KEY = "pe.oauth.googleRedirectUris";
+  const [pastedUris, setPastedUris] = useState<string>(() => {
+    if (typeof window === "undefined") return "";
+    try { return window.localStorage.getItem(PASTE_KEY) ?? ""; } catch { return ""; }
+  });
+
+  const normalizeUri = (raw: string): string | null => {
+    const v = raw.trim().replace(/[,;]+$/, "");
+    if (!v) return null;
+    try {
+      const u = new URL(v);
+      const port = u.port ? `:${u.port}` : "";
+      const path = u.pathname.replace(/\/+$/, "") || "";
+      return `${u.protocol.toLowerCase()}//${u.hostname.toLowerCase()}${port}${path}`;
+    } catch {
+      return v.toLowerCase().replace(/\/+$/, "");
+    }
+  };
+
+  const parsedUris = useMemo(() => {
+    return pastedUris
+      .split(/[\s,]+/)
+      .map((s) => ({ raw: s.trim(), norm: normalizeUri(s) }))
+      .filter((x) => x.raw.length > 0);
+  }, [pastedUris]);
+
+  const expectedNorm = expectedCallback ? normalizeUri(expectedCallback) : null;
+  const pasteMatch = !!expectedNorm && parsedUris.some((u) => u.norm === expectedNorm);
+  const pasteHostMatches = useMemo(() => {
+    if (!expectedNorm) return [];
+    try {
+      const expHost = new URL(expectedCallback!).hostname.toLowerCase();
+      return parsedUris.filter((u) => {
+        if (!u.norm || u.norm === expectedNorm) return false;
+        try { return new URL(u.raw).hostname.toLowerCase() === expHost; } catch { return false; }
+      });
+    } catch { return []; }
+  }, [parsedUris, expectedNorm, expectedCallback]);
+
+  const savePastedUris = (v: string) => {
+    setPastedUris(v);
+    try { window.localStorage.setItem(PASTE_KEY, v); } catch { /* ignore */ }
+  };
+
   useEffect(() => {
     refreshOAuthErrors();
     const onStorage = (e: StorageEvent) => {
