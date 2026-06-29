@@ -35,6 +35,12 @@ export default function HqCommandCentre() {
     if (!loading && !user) navigate("/login");
   }, [user, loading, navigate]);
 
+  useEffect(() => {
+    if (!loading && user) {
+      trackAuthFunnel("auth_hq_reached", { userId: user.id, roles });
+    }
+  }, [loading, user, roles]);
+
   if (loading) {
     return (
       <Layout>
