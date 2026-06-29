@@ -313,6 +313,14 @@ export default function HqDiagnostics() {
             (frontend-bundled) but is masked here as a readability aid. The service-role key is
             server-only and never reaches the browser.
           </p>
+          <div className="flex items-center gap-4 shrink-0">
+            <button
+              type="button"
+              onClick={runGoogleOAuthCheck}
+              className="text-[0.6rem] tracking-[0.35em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-1 transition-opacity"
+            >
+              Re-check Google OAuth →
+            </button>
           <button
             type="button"
             onClick={() => {
