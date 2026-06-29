@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 import heroAsset from "@/assets/main-ridge/main-ridge-pavilion-wide-fireplace-table.png.asset.json";
 import fireplacePortrait from "@/assets/main-ridge/main-ridge-pavilion-brick-fireplace-detail.png.asset.json";
@@ -42,19 +43,12 @@ function ChapterMark({ chapter, label }: { chapter: string; label: string }) {
 }
 
 export default function MainRidgePavilion() {
-  useEffect(() => {
-    document.title = "Main Ridge Pavilion | Peninsula Equine";
-    const meta = document.querySelector('meta[name="description"]');
-    const prev = meta?.getAttribute("content") || "";
-    meta?.setAttribute(
-      "content",
-      "Main Ridge Pavilion — a custom rural pavilion with brick parrilla, heavy timber framing and handcrafted dining setting, built by Peninsula Equine.",
-    );
-    return () => {
-      document.title = "Peninsula Equine";
-      if (meta && prev) meta.setAttribute("content", prev);
-    };
-  }, []);
+  usePageMeta({
+    title: "Main Ridge Pavilion — Selected Works | Peninsula Equine",
+    description: "A custom rural pavilion on Main Ridge — brick parrilla, heavy timber framing and a handcrafted dining setting, built to host generations.",
+    path: "/selected-works/main-ridge-pavilion",
+  });
+
 
   return (
     <Layout>

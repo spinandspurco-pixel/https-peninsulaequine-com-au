@@ -9,6 +9,7 @@ import { DraftTicks, DraftPlanBackdrop } from "@/components/draft";
 import { WholePropertyInquiryForm } from "@/components/services/WholePropertyInquiryForm";
 import { PageHandoff } from "@/components/architecture";
 import { useManagedServicesMap, overlayService } from "@/lib/managedContent";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 // Bridge between the chapter-grouped public slugs and the flat
 // managed_services.slug column. When a chapter service has an alias the CMS
@@ -175,22 +176,14 @@ function measureHeaderHeight(): number {
 
 
 export default function Services() {
+  usePageMeta({
+    title: "Capabilities — Peninsula Equine",
+    description: "Covered arenas, stable precincts, fencing, groundworks and full-facility builds. Equine-led construction engineered for daily use across the Mornington Peninsula.",
+    path: "/services",
+  });
   const { hash } = useLocation();
   const { data: managedServices } = useManagedServicesMap();
 
-  useEffect(() => {
-    document.title = "Capabilities | Peninsula Equine";
-    const meta = document.querySelector('meta[name="description"]');
-    const prev = meta?.getAttribute("content") || "";
-    meta?.setAttribute(
-      "content",
-      "Arena construction, stables, fencing, infrastructure and full-facility builds across the Mornington Peninsula. Engineered for daily use by horse and rider."
-    );
-    return () => {
-      document.title = "Peninsula Equine";
-      if (meta && prev) meta.setAttribute("content", prev);
-    };
-  }, []);
 
   useEffect(() => {
     if (!hash) return;

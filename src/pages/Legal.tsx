@@ -1,8 +1,14 @@
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
 import { siteConfig } from "@/data/content";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 export function Privacy() {
+  usePageMeta({
+    title: "Privacy Policy — Peninsula Equine",
+    description: "How Peninsula Equine collects, uses and protects the information you share when you enquire about an arena, stable precinct or rural build.",
+    path: "/privacy",
+  });
   return (
     <Layout>
       <PageHeader title="Privacy Policy" description="How we collect, use, and protect your personal information." />

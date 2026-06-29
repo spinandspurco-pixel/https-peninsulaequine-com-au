@@ -51,6 +51,11 @@ const SESSION_KEY = "pe-brand-intro-seen";
 const EASE = "cubic-bezier(0.45, 0, 0.15, 1)";
 
 export default function Index() {
+  usePageMeta({
+    title: "Peninsula Equine — From Dirt to Dynasty",
+    description: "Equine builders on the Mornington Peninsula. Covered arenas, stable precincts, groundworks and rural structures engineered for daily use by horse and rider.",
+    path: "/",
+  });
   const heroContentRef = useRef<HTMLDivElement>(null);
   const heroImgRef = useRef<HTMLImageElement>(null);
   const [heroFade, setHeroFade] = useState(1);

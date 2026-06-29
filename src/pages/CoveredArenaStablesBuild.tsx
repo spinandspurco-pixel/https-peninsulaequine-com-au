@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 import stormSteelAsset from "@/assets/uploads/approved-current-build-steel-frame-storm.png.asset.json";
 import nightWorkAsset from "@/assets/uploads/approved-current-build-rain-frame-symmetry.png.asset.json";
@@ -51,19 +52,12 @@ function ChapterMark({ chapter, label }: { chapter: string; label: string }) {
 }
 
 export default function CoveredArenaStablesBuild() {
-  useEffect(() => {
-    document.title = "Covered Arena & Stables | Peninsula Equine";
-    const meta = document.querySelector('meta[name="description"]');
-    const prev = meta?.getAttribute("content") || "";
-    meta?.setAttribute(
-      "content",
-      "Covered Arena & Stables — structural steel, roofing and stable infrastructure in progress across the Mornington Peninsula.",
-    );
-    return () => {
-      document.title = "Peninsula Equine";
-      if (meta && prev) meta.setAttribute("content", prev);
-    };
-  }, []);
+  usePageMeta({
+    title: "Covered Arena & Stables Build — Field Notes | Peninsula Equine",
+    description: "A current Peninsula Equine build in progress: covered arena, stables and ground systems — captured through structural steel, weather and footing as the precinct takes shape.",
+    path: "/field-notes/covered-arena-stables-build",
+  });
+
 
   return (
     <Layout>

@@ -7,6 +7,7 @@ import { LensBlurImage } from "@/components/motion/LensBlurImage";
 import { RevealHeading } from "@/components/motion/RevealHeading";
 import { DraftLine } from "@/components/draft";
 import { PageHandoff } from "@/components/architecture";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 import {
   getProjectImage,
@@ -29,19 +30,12 @@ const conditionsResp = getProjectResponsive(SLUG, "fieldNotesConditions")!;
 const conditionsAlt = getProjectImageAlt(SLUG, "fieldNotesConditions");
 
 export default function FieldNotes() {
-  useEffect(() => {
-    document.title = "Field Notes | Peninsula Equine";
-    const meta = document.querySelector('meta[name="description"]');
-    const prev = meta?.getAttribute("content") || "";
-    meta?.setAttribute(
-      "content",
-      "Field Notes follows active Peninsula Equine builds through real conditions — structural steel, red clay, drainage and site progress across the Mornington Peninsula.",
-    );
-    return () => {
-      document.title = "Peninsula Equine";
-      if (meta && prev) meta.setAttribute("content", prev);
-    };
-  }, []);
+  usePageMeta({
+    title: "Field Notes — Peninsula Equine",
+    description: "Live record of Peninsula Equine builds in progress. Structural steel, red clay, drainage and weather — documented from site as covered arenas and stables come up.",
+    path: "/field-notes",
+  });
+
 
   return (
     <Layout>

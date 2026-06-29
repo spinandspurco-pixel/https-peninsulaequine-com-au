@@ -13,6 +13,7 @@ import {
   overlayProject,
   findProjectByCodeFamily,
 } from "@/lib/managedContent";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 /* Single grading filter — matches the new --grade-blueprint token */
 const GRADE = "brightness(0.84) contrast(1.08) saturate(0.78)";
@@ -503,19 +504,12 @@ function Closing() {
 export default function SelectedWorks() {
   const { data: managedProjects } = useManagedProjects();
 
-  useEffect(() => {
-    document.title = "Selected Works | Peninsula Equine";
-    const meta = document.querySelector('meta[name="description"]');
-    const prev = meta?.getAttribute("content") || "";
-    meta?.setAttribute(
-      "content",
-      "Selected Works from Peninsula Equine — completed rural builds, indoor arenas and current equine projects across the Mornington Peninsula.",
-    );
-    return () => {
-      document.title = "Peninsula Equine";
-      if (meta && prev) meta.setAttribute("content", prev);
-    };
-  }, []);
+  usePageMeta({
+    title: "Selected Works — Peninsula Equine",
+    description: "Indoor arenas, stable precincts and custom rural builds delivered across the Mornington Peninsula. A curated record of completed and current Peninsula Equine projects.",
+    path: "/selected-works",
+  });
+
 
   // Overlay hardcoded entries with managed_projects rows where the code
   // family (e.g. `PE-MR`) matches. Imagery, crop and slug stay hardcoded.

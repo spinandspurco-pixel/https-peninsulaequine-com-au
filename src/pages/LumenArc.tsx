@@ -5,6 +5,7 @@ import { RevealImage, RevealLine, RevealOnScroll } from "@/components/RevealOnSc
 import { BlueprintContinuity } from "@/components/BlueprintContinuity";
 import { LumenArcEntrance } from "@/components/lumenarc/LumenArcEntrance";
 import { LumenArcBriefingDialog } from "@/components/lumenarc/LumenArcBriefingDialog";
+import { usePageMeta } from "@/lib/usePageMeta";
 import comingSoonAsset from "@/assets/lumenarc/coming-soon.asset.json";
 import canopyAsset from "@/assets/lumenarc/canopy.asset.json";
 import controlColumnAsset from "@/assets/lumenarc/control-column.asset.json";
@@ -345,6 +346,11 @@ function BlueprintTransition({ next }: { next: string }) {
 
 
 export default function LumenArc() {
+  usePageMeta({
+    title: "LumenArc — Equine Recovery & Wellness | Peninsula Equine",
+    description: "LumenArc: a private recovery and wellness precinct for the modern equine athlete. Engineered light, water and rest, built into the facility from day one.",
+    path: "/lumenarc",
+  });
   const [briefingOpen, setBriefingOpen] = useState(false);
   const [activeChapter, setActiveChapter] = useState("01");
   return (
