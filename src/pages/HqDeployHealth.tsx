@@ -397,6 +397,13 @@ export default function HqDeployHealth() {
               >
                 Copy as JSON
               </button>
+              <button
+                type="button"
+                onClick={downloadEscalationTxt}
+                className="text-xs tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8"
+              >
+                Download .txt
+              </button>
             </div>
           </section>
         )}
