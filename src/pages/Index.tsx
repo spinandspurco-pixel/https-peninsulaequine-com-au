@@ -7,6 +7,7 @@ import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
 // MagneticLink is exposed in src/components/motion for future use.
 import { IntroContext } from "@/hooks/useIntroState";
 import { useIntake } from "@/hooks/useIntake";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 
 import lumenArcCanopy from "@/assets/lumenarc/canopy.asset.json";
