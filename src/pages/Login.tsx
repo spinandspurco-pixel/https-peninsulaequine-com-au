@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, useSearchParams, useLocation, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { resolveLandingPath, authLog } from "@/lib/authRouting";
@@ -8,12 +8,70 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Eye, EyeOff, Loader2, ArrowLeft, Lock } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { Eye, EyeOff, Loader2, ArrowLeft, Lock, AlertTriangle, RefreshCw } from "lucide-react";
 import { lovable } from "@/integrations/lovable";
 import { StaffPortalFrame } from "@/components/StaffPortalFrame";
 import { HqLoadingState } from "@/components/hq/HqLoadingState";
 import { clearLocalAuthCacheAndSignOut } from "@/lib/authCache";
+
+type SignInErrorKind = "google" | "session" | "credentials" | "roles";
+
+interface SignInError {
+  kind: SignInErrorKind;
+  title: string;
+  detail: string;
+  hint?: string;
+  canRetry?: boolean;
+  canClearCache?: boolean;
+}
+
+function classifyOAuthError(message: string): SignInError {
+  const msg = (message || "").toLowerCase();
+  if (msg.includes("popup") || msg.includes("blocked")) {
+    return {
+      kind: "google",
+      title: "Google sign-in was blocked",
+      detail: message,
+      hint: "Your browser blocked the Google popup. Allow pop-ups for this site and try again.",
+      canRetry: true,
+    };
+  }
+  if (msg.includes("redirect_uri") || msg.includes("redirect uri")) {
+    return {
+      kind: "google",
+      title: "Google rejected this sign-in URL",
+      detail: message,
+      hint: "An administrator needs to add this domain to the OAuth allow-list.",
+      canRetry: true,
+    };
+  }
+  if (msg.includes("oauth secret") || msg.includes("provider is not enabled")) {
+    return {
+      kind: "google",
+      title: "Google sign-in is not configured",
+      detail: message,
+      hint: "Contact an administrator — Google credentials need to be re-saved.",
+      canRetry: false,
+    };
+  }
+  if (msg.includes("refresh") || msg.includes("session") || msg.includes("token")) {
+    return {
+      kind: "session",
+      title: "Session couldn't be restored",
+      detail: message,
+      hint: "Your previous session expired. Clear the cache and sign in again.",
+      canRetry: true,
+      canClearCache: true,
+    };
+  }
+  return {
+    kind: "google",
+    title: "Google sign-in failed",
+    detail: message || "Unknown error",
+    hint: "Try again, or use email + password below.",
+    canRetry: true,
+  };
+}
 
 export default function Login() {
   const [email, setEmail] = useState("");
