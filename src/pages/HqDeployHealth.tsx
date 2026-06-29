@@ -400,13 +400,27 @@ export default function HqDeployHealth() {
           <pre className="text-[0.7rem] leading-relaxed text-foreground/75 whitespace-pre-wrap border border-border/10 p-4 bg-foreground/[0.015]">
 {escalation}
           </pre>
-          <button
-            type="button"
-            onClick={copyEscalation}
-            className="text-xs tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8"
-          >
-            Copy escalation payload
-          </button>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <button
+              type="button"
+              onClick={openSupportEmail}
+              className="text-xs tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8"
+            >
+              Contact Lovable Support →
+            </button>
+            <button
+              type="button"
+              onClick={copyEscalation}
+              className="text-xs tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8"
+            >
+              Copy escalation payload
+            </button>
+          </div>
+          <p className="text-[0.65rem] text-foreground/40 leading-relaxed">
+            Opens your mail client with support@lovable.dev pre-filled (subject,
+            payload, and recommended next steps). The payload is also copied to
+            your clipboard in case the mail client truncates.
+          </p>
         </section>
       </div>
     </Layout>
