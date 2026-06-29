@@ -1017,6 +1017,7 @@ export default function HqDiagnostics() {
                   </div>
                 );
               })()}
+              {(() => {
                 const missingAll = targetResults.filter((t) => !t.present).map((t) => t.uri);
                 if (missingAll.length === 0) return null;
                 return (
