@@ -115,9 +115,22 @@ export function renderEnvError(problem: EnvProblem): void {
             font-size: 0.9rem;
             line-height: 1.55;
             opacity: 0.85;
-            margin: 0;
+            margin: 0 0 1.75rem;
             font-weight: 300;
           ">${escapeHtml(problem.fix)}</p>
+          <a href="/hq/diagnostics" style="
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: #c9a961;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(201,169,97,0.4);
+            padding-bottom: 0.35rem;
+            font-weight: 400;
+          ">Open Diagnostics Panel →</a>
         </div>
       </div>
     </div>
