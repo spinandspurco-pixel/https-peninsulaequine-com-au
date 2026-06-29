@@ -120,11 +120,25 @@ export default function HqDiagnostics() {
           setRedirectDetail(
             `MISMATCH — Google rejected the redirect URI Supabase sent. Add ${expectedCallback} to "Authorized redirect URIs" in your Google OAuth client.`
           );
+          recordOAuthError({
+            provider: "google",
+            source: "redirect-validator",
+            message: "redirect_uri_mismatch",
+            code: "redirect_uri_mismatch",
+            context: { expectedCallback },
+          });
+          refreshOAuthErrors();
           return;
         }
         if (err) {
           setRedirectStatus("warn");
           setRedirectDetail(`Returned with error: ${decodeURIComponent(err)}`);
+          recordOAuthError({
+            provider: "google",
+            source: "redirect-validator",
+            message: decodeURIComponent(err),
+          });
+          refreshOAuthErrors();
           return;
         }
         if (hasCode) {
