@@ -11,6 +11,7 @@ import { WorkQueue } from "@/components/hq/command/WorkQueue";
 import { ActivityFeed } from "@/components/hq/command/ActivityFeed";
 import { Watchlist } from "@/components/hq/command/Watchlist";
 import { DeployStatusWidget } from "@/components/hq/DeployStatusWidget";
+import { trackAuthFunnel } from "@/lib/authFunnel";
 
 /**
  * HQ Command Centre — the page that answers
