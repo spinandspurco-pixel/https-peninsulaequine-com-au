@@ -11,7 +11,46 @@ export type E2eHistoryEntry = {
   mismatch?: string;
   origin?: string;
   durationMs?: number;
+  label?: string;
 };
+
+const LABELS_KEY = "pe.e2e.labels.v1";
+const LABELS_MAX = 12;
+
+export function listE2eLabels(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(LABELS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as string[]).filter((s) => typeof s === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+export function rememberE2eLabel(label: string): void {
+  if (typeof window === "undefined") return;
+  const trimmed = label.trim();
+  if (!trimmed) return;
+  const existing = listE2eLabels().filter((l) => l.toLowerCase() !== trimmed.toLowerCase());
+  const next = [trimmed, ...existing].slice(0, LABELS_MAX);
+  try {
+    window.localStorage.setItem(LABELS_KEY, JSON.stringify(next));
+  } catch {
+    /* ignore */
+  }
+}
+
+export function forgetE2eLabel(label: string): void {
+  if (typeof window === "undefined") return;
+  const next = listE2eLabels().filter((l) => l.toLowerCase() !== label.trim().toLowerCase());
+  try {
+    window.localStorage.setItem(LABELS_KEY, JSON.stringify(next));
+  } catch {
+    /* ignore */
+  }
+}
 
 const KEY = "pe.e2e.history.v1";
 const MAX = 20;
@@ -50,6 +89,7 @@ export function recordE2eHistory(entry: Omit<E2eHistoryEntry, "id" | "at"> & { a
     mismatch: entry.mismatch,
     origin: entry.origin ?? (typeof window !== "undefined" ? window.location.origin : undefined),
     durationMs: entry.durationMs,
+    label: entry.label?.trim() || undefined,
   };
   const next = [full, ...read()].slice(0, MAX);
   write(next);

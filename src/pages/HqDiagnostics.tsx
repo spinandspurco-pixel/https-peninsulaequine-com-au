@@ -21,6 +21,9 @@ import {
   recordE2eHistory,
   clearE2eHistory,
   formatE2eTime,
+  listE2eLabels,
+  rememberE2eLabel,
+  forgetE2eLabel,
   type E2eHistoryEntry,
 } from "@/lib/e2eHistory";
 import { trackAuthE2e } from "@/lib/authFunnel";
@@ -66,6 +69,7 @@ function buildE2eTraceReport(input: {
   expectedCallback: string | null;
   supabaseUrl: string | undefined;
   projectId: string | undefined;
+  label?: string;
 }): string {
   const lines: string[] = [];
   lines.push("Peninsula Equine — Google OAuth E2E Trace");
@@ -74,6 +78,7 @@ function buildE2eTraceReport(input: {
   lines.push("== Result ==");
   lines.push(`Status: ${statusLabel(input.status)}`);
   lines.push(`Detail: ${input.detail}`);
+  if (input.label) lines.push(`Test account: ${input.label}`);
   lines.push("");
   lines.push("== Context ==");
   lines.push(`App origin:        ${input.origin || "(unknown)"}`);
@@ -110,6 +115,8 @@ export default function HqDiagnostics() {
   const [e2eRunning, setE2eRunning] = useState(false);
   const [e2eLog, setE2eLog] = useState<string[]>([]);
   const [e2eHistory, setE2eHistory] = useState<E2eHistoryEntry[]>(() => listE2eHistory());
+  const [e2eLabel, setE2eLabel] = useState<string>("");
+  const [e2eSavedLabels, setE2eSavedLabels] = useState<string[]>(() => listE2eLabels());
   const [traceCopiedAt, setTraceCopiedAt] = useState<number | null>(null);
 
   const expectedCallback = url ? `${url.replace(/\/$/, "")}/auth/v1/callback` : null;
@@ -384,12 +391,17 @@ export default function HqDiagnostics() {
 
   const runGoogleE2E = useMemo(() => () => {
     if (e2eRunning) return;
+    const activeLabel = e2eLabel.trim() || undefined;
+    if (activeLabel) {
+      rememberE2eLabel(activeLabel);
+      setE2eSavedLabels(listE2eLabels());
+    }
     if (!url) {
       setE2eStatus("fail");
       setE2eDetail("VITE_SUPABASE_URL missing — cannot start flow.");
-      recordE2eHistory({ status: "fail", detail: "VITE_SUPABASE_URL missing — cannot start flow." });
+      recordE2eHistory({ status: "fail", detail: "VITE_SUPABASE_URL missing — cannot start flow.", label: activeLabel });
       setE2eHistory(listE2eHistory());
-      trackAuthE2e("auth_e2e_failure", { reason: "missing_supabase_url", origin: appOrigin });
+      trackAuthE2e("auth_e2e_failure", { reason: "missing_supabase_url", origin: appOrigin, label: activeLabel });
       return;
     }
     const pushLog = (line: string) => {
@@ -402,18 +414,18 @@ export default function HqDiagnostics() {
       setE2eDetail(detail);
       setE2eRunning(false);
       const durationMs = Date.now() - runStart;
-      recordE2eHistory({ status, detail, mismatch, durationMs });
+      recordE2eHistory({ status, detail, mismatch, durationMs, label: activeLabel });
       setE2eHistory(listE2eHistory());
-      const base = { origin: appOrigin, expectedCallback, durationMs, reason: reason ?? detail };
+      const base = { origin: appOrigin, expectedCallback, durationMs, reason: reason ?? detail, label: activeLabel };
       if (status === "ok") trackAuthE2e("auth_e2e_success", base);
       else trackAuthE2e("auth_e2e_failure", { ...base, severity: status });
     };
     setE2eLog([]);
     setE2eRunning(true);
     setE2eStatus("info");
-    setE2eDetail("Opening Google sign-in popup…");
-    pushLog("Starting E2E: opening Supabase /authorize with redirect_to=/hq?e2e=1");
-    trackAuthE2e("auth_e2e_started", { origin: appOrigin, expectedCallback });
+    setE2eDetail(activeLabel ? `Opening Google sign-in popup for "${activeLabel}"…` : "Opening Google sign-in popup…");
+    pushLog(`Starting E2E${activeLabel ? ` as "${activeLabel}"` : ""}: opening Supabase /authorize with redirect_to=/hq?e2e=1`);
+    trackAuthE2e("auth_e2e_started", { origin: appOrigin, expectedCallback, label: activeLabel });
 
     const target = `${window.location.origin}/hq?e2e=1`;
     const authorize =
@@ -533,7 +545,7 @@ export default function HqDiagnostics() {
         }
       }
     }, 600);
-  }, [url, expectedCallback, e2eRunning]);
+  }, [url, expectedCallback, e2eRunning, e2eLabel, appOrigin]);
 
 
 
@@ -817,8 +829,79 @@ export default function HqDiagnostics() {
             authenticated session is established in this window. PASS means sign-in completed
             with no <code className="font-mono">redirect_uri_mismatch</code> or provider errors.
           </div>
+          <div className="px-4 py-3 border-b border-foreground/10">
+            <label className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55 block mb-2">
+              Test account label <span className="opacity-50 normal-case tracking-normal">(optional — tags this run for tracking)</span>
+            </label>
+            <div className="flex items-center gap-2 flex-wrap">
+              <input
+                type="text"
+                value={e2eLabel}
+                onChange={(e) => setE2eLabel(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e2eRunning) {
+                    e.preventDefault();
+                    runGoogleE2E();
+                  }
+                }}
+                placeholder="e.g. josh@peninsulaequine.com.au, ciro-admin, qa-tester-1"
+                list="e2e-label-suggestions"
+                disabled={e2eRunning}
+                className="flex-1 min-w-[18rem] bg-transparent border border-foreground/20 focus:border-foreground/50 outline-none px-2.5 py-1.5 text-[0.75rem] font-mono opacity-90 placeholder:opacity-30 disabled:opacity-40"
+              />
+              <datalist id="e2e-label-suggestions">
+                {e2eSavedLabels.map((l) => (
+                  <option key={l} value={l} />
+                ))}
+              </datalist>
+              {e2eLabel && (
+                <button
+                  type="button"
+                  onClick={() => setE2eLabel("")}
+                  className="text-[0.55rem] tracking-[0.3em] uppercase opacity-50 hover:opacity-90 transition-opacity"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+            {e2eSavedLabels.length > 0 && (
+              <div className="mt-2 flex items-center gap-1.5 flex-wrap">
+                <span className="text-[0.55rem] tracking-[0.3em] uppercase opacity-40 mr-1">Recent:</span>
+                {e2eSavedLabels.map((l) => (
+                  <span key={l} className="inline-flex items-center gap-1 border border-foreground/15 rounded-sm">
+                    <button
+                      type="button"
+                      onClick={() => setE2eLabel(l)}
+                      className="text-[0.65rem] font-mono px-2 py-0.5 opacity-75 hover:opacity-100 transition-opacity"
+                      title="Use this label"
+                    >
+                      {l}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        forgetE2eLabel(l);
+                        setE2eSavedLabels(listE2eLabels());
+                        if (e2eLabel === l) setE2eLabel("");
+                      }}
+                      className="text-[0.65rem] opacity-40 hover:opacity-90 transition-opacity pr-1.5"
+                      title="Forget this label"
+                      aria-label={`Forget ${l}`}
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
           <div className="px-4 py-3 text-sm font-light leading-relaxed border-b border-foreground/10"
                style={{ color: statusColor(e2eStatus) }}>
+            {e2eLabel && !e2eRunning && (
+              <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-50 mb-1">
+                Tracking as: <span className="font-mono opacity-90">{e2eLabel}</span>
+              </div>
+            )}
             {e2eDetail}
           </div>
           {e2eLog.length > 0 && (
@@ -837,6 +920,7 @@ export default function HqDiagnostics() {
                         expectedCallback,
                         supabaseUrl: url,
                         projectId,
+                        label: e2eLabel.trim() || undefined,
                       });
                       void navigator.clipboard?.writeText(text);
                       setTraceCopiedAt(Date.now());
@@ -857,6 +941,7 @@ export default function HqDiagnostics() {
                         expectedCallback,
                         supabaseUrl: url,
                         projectId,
+                        label: e2eLabel.trim() || undefined,
                       });
                       const stamp = new Date().toISOString().replace(/[:.]/g, "-");
                       const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
@@ -929,6 +1014,11 @@ export default function HqDiagnostics() {
                     )}
                   </span>
                   <div className="text-[0.7rem] font-light leading-relaxed opacity-85">
+                    {entry.label && (
+                      <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-65 mb-1">
+                        Account: <span className="font-mono opacity-90 tracking-normal normal-case">{entry.label}</span>
+                      </div>
+                    )}
                     {entry.detail}
                     {entry.mismatch && (
                       <div className="text-[0.65rem] font-mono opacity-60 mt-1 break-all">{entry.mismatch}</div>
