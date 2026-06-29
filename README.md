@@ -1,251 +1,278 @@
-# Welcome to your Lovable project
+# Peninsula Equine
 
-## Project info
+Production codebase for **peninsulaequine.systems** — the public marketing site, client-facing flows (assessments, bookings, portals), and **HQ** (internal operating system covering CMS, projects, relationships, deploy health, and operations).
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+> Single-bundle React SPA. Backend on Lovable Cloud (Supabase). Edited via Lovable, synced to GitHub, deployable to Lovable hosting or Vercel.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 1. Tech stack
 
-**Use Lovable**
+| Layer | Choice |
+|---|---|
+| Framework | React 18 + Vite 5 + TypeScript 5 |
+| Routing | `react-router-dom` v6 (`BrowserRouter`) |
+| Styling | Tailwind CSS v3 + shadcn/ui (Radix primitives) |
+| State / data | `@tanstack/react-query`, `zustand`, `react-hook-form` + `zod` |
+| Backend | Supabase (Lovable Cloud) — Postgres + Auth + Storage + Edge Functions |
+| AI | Lovable AI Gateway (Gemini / GPT-5) via edge functions |
+| PDF / docs | `jspdf`, `react-markdown` |
+| Testing | `vitest`, `@testing-library/react`, `@playwright/test`, `axe-core` |
+| Build wrapper | `scripts/build-strict.ts` (typecheck → vite build → prerender → verify) |
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## 2. Folder structure
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+.
+├── public/                  # Static assets served as-is (favicon, /assets/*, /sounds/*)
+├── src/
+│   ├── App.tsx              # Top-level router (all routes registered here)
+│   ├── main.tsx             # React entry, global providers
+│   ├── index.css            # Design tokens + Tailwind layer
+│   ├── pages/               # 62 route components (public + /hq/*)
+│   ├── components/          # Shared UI; hq/ subdir for HQ-specific
+│   │   └── ui/              # shadcn primitives
+│   ├── integrations/
+│   │   └── supabase/        # Generated client + types (DO NOT EDIT)
+│   ├── lib/                 # Business logic (graph engine, work queue,
+│   │                        # deploy health, auth routing, command centre)
+│   ├── hooks/               # Custom React hooks
+│   ├── stores/              # Zustand stores
+│   ├── data/                # Static seed/content data
+│   ├── config/              # App-level config
+│   └── test/                # Vitest setup
+├── supabase/
+│   ├── config.toml          # Auto-generated, do not hand-edit
+│   ├── migrations/          # SQL migrations (source of truth for schema)
+│   └── functions/           # Edge functions (see §6)
+├── scripts/                 # Build, prerender, verification, smoke tests
+├── .github/workflows/       # CI (strict build, prerender, a11y, smoke, security)
+├── vite.config.ts           # Vite config (alias @ → src/)
+├── vercel.json              # SPA rewrite for Vercel
+├── public/_redirects        # SPA fallback (Netlify-style; harmless on Lovable)
+├── OPS_ALERTS.md            # Live operational alerts (external infra)
+└── REPOSITORY_CLEANUP_PLAN.md  # Audit & staged cleanup roadmap
 ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 3. Key routes
 
-**Use GitHub Codespaces**
+### Public
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+| Path | Purpose |
+|---|---|
+| `/` | Homepage (cinematic hero, narrative sections) |
+| `/arenas`, `/stables`, `/infrastructure` | Service category landings |
+| `/services`, `/services/:slug` | Service catalogue + detail |
+| `/selected-works`, `/selected-works/:slug` | Case studies |
+| `/lumenarc` | LumenArc product line |
+| `/about`, `/contact` | Editorial + lead capture |
+| `/site-assessment`, `/estimate`, `/client-quote` | Paid qualification + quoting flow |
+| `/lessons`, `/book-lesson`, `/group-booking`, `/schedule` | Horsemanship sessions |
+| `/events` | Public events |
+| `/client-portal`, `/client-portal-login` | Magic-link client portal |
+| `/privacy`, `/terms`, `/thank-you`, `/404` | Utility |
 
-## What technologies are used for this project?
+### HQ (auth-gated, role-based via `ProtectedRoute`)
 
-This project is built with:
+| Path | Roles | Purpose |
+|---|---|---|
+| `/hq` | admin, employee, trainer, moderator, preview | Command Centre (Morning Brief, Work Queue, Watchlist) |
+| `/hq/legacy`, `/hq/projects`, `/hq/clients` | same | Legacy admin surface |
+| `/hq/projects/:id` | same | Project workspace |
+| `/hq/cms`, `/hq/services`, `/hq/testimonials`, `/hq/events`, `/hq/selected-works`, `/hq/field-notes` | content roles | CMS surfaces |
+| `/hq/media`, `/hq/review` | admin/mod/preview | Media library + knowledge-graph suggestions |
+| `/hq/inquiries`, `/hq/documents`, `/hq/activity`, `/hq/staff` | mixed | Operations |
+| `/hq/cms`, `/hq/email-migration`, `/hq/staff-allowlist`, `/hq/graph-smoke`, `/hq/deploy-health`, `/hq/dns-*` | **admin only** | Platform / ops |
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+`ProtectedRoute` reads the Supabase session and `user_roles` (separate table — never on profiles; see `src/lib/authRouting.ts`). Preview-role users see a subtle banner; admins see "Exit preview".
 
-## How can I deploy this project?
+---
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## 4. HQ / Admin architecture
 
-## Can I connect a custom domain to my Lovable project?
+- **Entry:** `/hq` → `HqCommandCentre.tsx`. Two-tier navigation (`HqNav`): Primary row (PE · Applications · Content · Projects · Clients) + contextual sub-row per section. Collapsible groups remember state via `localStorage`.
+- **Breadcrumbs:** Every non-top-level HQ page uses `HqBreadcrumbs` (`HQ / Section / Page`).
+- **Work Queue scoring:** `src/lib/commandCentre/workQueue.ts` ranks priorities for the Morning Brief.
+- **Relationship graph (C.1b — frozen):** `hq_graph_edges` + `managed_projects.aliases`; engine in `src/lib/graph/`. `◇ Suggested` chips surface candidate edges in Media, resolved via `/hq/review`.
+- **Deploy Health:** `/hq/deploy-health` + `DeployHealthBanner` + `DeployStatusWidget` track bundle hash drift; escalates to "Platform action required" after a stale streak. Logic in `src/lib/deployHealth.ts`.
+- **Operations widget:** admin/founder-only `ops-signals` widget on the Command Centre (`src/lib/roleView.ts`). Diagnostics never shown to client roles.
+- **Graph Smoke Test:** `/hq/graph-smoke` runs the `run-graph-smoke-test` edge function and reads results from `graph_smoke_reports`.
+- **AuthDebugPanel:** strictly localhost-only — never renders in preview or production (`src/components/AuthDebugPanel.tsx`).
 
-Yes, you can!
+---
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 5. Supabase (Lovable Cloud) setup
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+The Supabase client is auto-generated at `src/integrations/supabase/client.ts` — **do not edit**. Import everywhere as:
 
-## Prerender verification
+```ts
+import { supabase } from "@/integrations/supabase/client";
+```
 
-After every build, `scripts/verify-prerender.ts` checks that each prerendered route ships the correct head tags (`og:image`, `twitter:image`, `canonical`, route-specific alt text, and more). It can emit a machine-readable JSON report and validate that report against a JSON Schema so downstream tooling never receives malformed output.
+### Conventions
 
-### JSON report
+- **RLS is mandatory** on every `public` table, paired with explicit `GRANT`s to `authenticated` / `service_role` (and `anon` only when the policy allows anonymous reads).
+- **Roles** live in a dedicated `user_roles` table (enum: `admin`, `moderator`, `employee`, `trainer`, `preview`, `user`). Checked via the `has_role(uuid, app_role)` security-definer function. Never store role on profiles.
+- **Auth providers:** email + Google. HIBP password protection enabled (`password_hibp_enabled`).
+- **Service role key** is not exposed to the frontend and is unavailable on Lovable Cloud beyond edge-function runtime.
 
-Generate the report by passing `--json` (default path) or `--json=<path>`:
+### Migrations
+
+All schema changes go through `supabase/migrations/*.sql`. The Lovable agent applies these; do not run `supabase db push` against the managed project manually.
+
+---
+
+## 6. Edge functions
+
+Located in `supabase/functions/`. Deployed automatically on commit.
+
+| Function | Purpose |
+|---|---|
+| `admin-ai-assistant` | Lovable AI Gateway proxy for HQ assistant |
+| `generate-enquiry-response` | AI-drafted reply for new inquiries |
+| `send-inquiry-notification`, `send-rsvp-confirmation`, `send-welcome-series`, `send-document-notification`, `send-test-email` | Transactional email (Resend) |
+| `create-lesson-checkout` | Payment session for lessons |
+| `create-staff-account`, `verify-admin-login`, `mint-josh-preview`, `preview-mint-check` | Auth utilities |
+| `e2e-seed-users` | Test fixture seeding |
+| `run-graph-smoke-test` | Knowledge-graph smoke test invoked from `/hq/graph-smoke` |
+| `email-ops-status`, `resend-domain-status`, `notify-dns-propagated`, `verify-google-dns` | Email/DNS health |
+
+---
+
+## 7. Environment variables
+
+Frontend-injected (Vite — must be prefixed `VITE_`):
+
+| Variable | Notes |
+|---|---|
+| `VITE_SUPABASE_URL` | Supabase project URL |
+| `VITE_SUPABASE_PROJECT_ID` | Project ref |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | **Must be `sb_publishable_…` format.** Legacy JWT-shaped keys (`eyJ…`) are forbidden — they cause 401s on rotation. |
+
+Backend-only (set in Supabase dashboard / Lovable Cloud secrets, never in `.env`):
+
+- `SUPABASE_SERVICE_ROLE_KEY` — server only
+- `RESEND_API_KEY`, `LOVABLE_API_KEY`, plus any provider keys edge functions need
+
+`.env` is committed in this repo (publishable values only). Never add service-role or private keys.
+
+---
+
+## 8. Local development
 
 ```bash
-bun run build
-bunx tsx scripts/verify-prerender.ts --json
+bun install
+bun run dev           # Vite dev server on http://localhost:8080
+bun run lint
+bun run test          # vitest
+bun run test:e2e      # playwright (requires test:e2e:install first)
+bun run verify:a11y   # axe-core accessibility sweep
 ```
 
-This writes `dist/prerender-verify.json` and validates it automatically against `scripts/prerender-verify.schema.json`.
+`npm` / `pnpm` work but `bun` is the project standard.
 
-Re-verify only the routes that failed:
+---
 
-```bash
-bunx tsx scripts/verify-prerender.ts --only="/about,/arenas"
-```
+## 9. Build & verification pipeline
 
-### Schema location and required fields
+`bun run build` runs **`scripts/build-strict.ts`**, which:
 
-| File | Purpose |
-|------|---------|
-| `scripts/prerender-verify.schema.json` | JSON Schema (Draft-07) consumed by the verifier to validate every report |
+1. **`prebuild`** — `verify-assets.ts` + `verify-homepage-image-uniqueness.ts` (asset integrity).
+2. **Typecheck** (strict, fails the build).
+3. **Vite build** → `dist/`.
+4. **`postbuild`** — `prerender.ts` (static-renders key public routes), `verify-prerender.ts` (validates output against `prerender-verify.schema.json`), `verify-internal-links.ts`.
 
-The report object must contain these top-level fields:
+### Output
 
-- `timestamp` — ISO 8601 date-time of report generation  
-- `siteOrigin` — canonical origin used for self-reference checks  
-- `checked` — total routes evaluated (integer)  
-- `passed` — routes with zero failures (integer)  
-- `failed` — routes with at least one failure (integer)  
-- `allPassed` — boolean, `true` when no failures were found  
-- `rerunCommand` — shell command to re-verify only the failing routes  
-- `routes` — array of per-route results, each with:  
-  - `path` — route path (e.g. `/about`)  
-  - `file` — absolute path to the prerendered HTML file that was checked  
-  - `passed` — boolean  
-  - `failures` — array of failure objects, each with `route`, `check`, `code`, `path`, `expected`, `received`, and `detail`
+| Setting | Value |
+|---|---|
+| Output dir | `dist` |
+| Entry HTML | `dist/index.html` |
+| Build command | `bun run build` |
+| Install command | `bun install` |
+| Node version | 18+ (Bun handles toolchain) |
 
-### Failure object fields
+---
 
-Every entry in `failures[]` is a structured object so tooling can branch on the failure category without parsing prose:
+## 10. Deployment
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `route` | string | Route path where the failure occurred (e.g. `/about`). |
-| `check` | string | Symbolic name of the check (e.g. `og:image`, `canonical`, `title`). |
-| `code` | enum | Category — one of `missing`, `mismatch`, `too-short`, `placeholder`, `not-absolute`, `wrong-origin`, `file-missing`, `schema`. |
-| `path` | string | CSS-style locator of the offending element (e.g. `meta[property="og:image"]`, `link[rel="canonical"]`, `head > title`). For `file-missing`/`schema` this is a filesystem path. |
-| `expected` | string \| null | The value the verifier expected. `null` when the check doesn't have a single expected value (e.g. a plain `missing` for an optional rule). |
-| `received` | string \| null | The value the verifier actually observed. `null` when the tag was absent. |
-| `detail` | string | Human-readable summary derived from the structured fields — useful for log lines and CI annotations. |
+### Lovable hosting (default)
 
-#### Examples
+- Push to GitHub or edit in Lovable → publish via the Lovable UI.
+- Custom domains: `www.peninsulaequine.systems`, `peninsulaequine.systems`.
+- SPA fallback is built into Lovable hosting — `public/_redirects` is a no-op there but kept for portability.
 
-A **missing** tag has `received: null` and no specific `expected` value:
+### Vercel
 
-```json
-{
-  "route": "/about",
-  "check": "og:image",
-  "code": "missing",
-  "path": "meta[property=\"og:image\"]",
-  "expected": null,
-  "received": null,
-  "detail": "missing og:image"
-}
-```
+1. Import the GitHub repo in Vercel.
+2. **Framework preset:** Vite.
+3. **Build command:** `bun run build` (or `npm run build` if Bun is unavailable on the runner).
+4. **Output dir:** `dist`.
+5. **Install command:** `bun install`.
+6. **Environment variables:** set the three `VITE_SUPABASE_*` values above in the Vercel project settings (Production + Preview).
+7. SPA routing is handled by `vercel.json` (`/(.*) → /index.html`).
 
-A **mismatch** carries both sides for easy diffing:
+After first deploy, verify on the Vercel preview URL:
+- Homepage 200 + new bundle hash (not the stuck `index-BwFYsMqQ.js`).
+- `/hq` renders the login gate.
+- Login completes against Supabase (no 401s — confirms `sb_publishable_*` key is bound correctly).
+- A deep link (e.g. `/services/arenas`) refreshes without 404.
 
-```json
-{
-  "route": "/contact",
-  "check": "canonical",
-  "code": "mismatch",
-  "path": "link[rel=\"canonical\"]",
-  "expected": "https://peninsulaequine.com.au/contact",
-  "received": "https://peninsulaequine.com.au/about",
-  "detail": "expected \"https://peninsulaequine.com.au/contact\", got \"https://peninsulaequine.com.au/about\""
-}
-```
+### Netlify / Cloudflare Pages
 
-### Sample output
+Same build/output settings. `public/_redirects` handles SPA fallback on both.
 
-```json
-{
-  "timestamp": "2026-06-18T09:42:00.000Z",
-  "siteOrigin": "https://peninsulaequine.com.au",
-  "checked": 2,
-  "passed": 1,
-  "failed": 1,
-  "allPassed": false,
-  "rerunCommand": "bun run build && bunx tsx scripts/verify-prerender.ts --only=\"/about\"",
-  "routes": [
-    {
-      "path": "/",
-      "file": "/path/to/project/dist/index.html",
-      "passed": true,
-      "failures": []
-    },
-    {
-      "path": "/about",
-      "file": "/path/to/project/dist/about/index.html",
-      "passed": false,
-      "failures": [
-        {
-          "route": "/about",
-          "check": "og:image",
-          "code": "missing",
-          "path": "meta[property=\"og:image\"]",
-          "expected": null,
-          "received": null,
-          "detail": "missing og:image"
-        }
-      ]
-    }
-  ]
-}
-```
+### SPA fallback summary
 
-### Sample failure report
+| Host | Mechanism |
+|---|---|
+| Lovable | Built-in (no config needed) |
+| Vercel | `vercel.json` rewrites |
+| Netlify / Cloudflare Pages | `public/_redirects` |
 
-A route with multiple failures looks like this. Each failure object carries the full structured set of fields so tooling can group by `code` or `check` and surface `expected` vs `received` directly:
+---
 
-```json
-{
-  "timestamp": "2026-06-18T09:45:30.000Z",
-  "siteOrigin": "https://peninsulaequine.com.au",
-  "checked": 1,
-  "passed": 0,
-  "failed": 1,
-  "allPassed": false,
-  "rerunCommand": "bun run build && bunx tsx scripts/verify-prerender.ts --only=\"/contact\"",
-  "routes": [
-    {
-      "path": "/contact",
-      "file": "/path/to/project/dist/contact/index.html",
-      "passed": false,
-      "failures": [
-        {
-          "route": "/contact",
-          "check": "og:image",
-          "code": "mismatch",
-          "path": "meta[property=\"og:image\"]",
-          "expected": "https://peninsulaequine.com.au/assets/og-contact.jpg",
-          "received": "",
-          "detail": "expected \"https://peninsulaequine.com.au/assets/og-contact.jpg\", got \"\""
-        },
-        {
-          "route": "/contact",
-          "check": "twitter:image",
-          "code": "missing",
-          "path": "meta[name=\"twitter:image\"]",
-          "expected": null,
-          "received": null,
-          "detail": "missing twitter:image"
-        },
-        {
-          "route": "/contact",
-          "check": "canonical",
-          "code": "mismatch",
-          "path": "link[rel=\"canonical\"]",
-          "expected": "https://peninsulaequine.com.au/contact",
-          "received": "https://peninsulaequine.com.au/about",
-          "detail": "expected \"https://peninsulaequine.com.au/contact\", got \"https://peninsulaequine.com.au/about\""
-        }
-      ]
-    }
-  ]
-}
-```
+## 11. CI workflows (`.github/workflows/`)
 
-If the report fails schema validation, the verifier logs the mismatch, records a `_report` level failure, and still exits non-zero so CI catches it.
+| Workflow | Trigger | What it checks |
+|---|---|---|
+| `strict-build.yml` | PR + push | Full `bun run build` (typecheck + prerender + link verify) |
+| `prerender-unit-tests.yml` | PR | Prerender logic unit tests |
+| `verify-prerender.yml` | PR | Prerender output schema |
+| `verify-internal-links.yml` | PR | No broken internal links in prerendered HTML |
+| `verify-accessibility.yml` | PR | axe-core sweep on built output |
+| `verify-assets.yml` | PR | Asset integrity / no orphans introduced |
+| `preview-mint-check.yml` | scheduled | Preview-account session mint health |
+| `publish-smoke-test.yml` | post-publish | Verifies homepage loads, `/hq` renders, login flow, hero bundle hash matches latest build |
+| `security-gate.yml` | PR | Blocks merges with unresolved criticals |
+| `nightly-security-scan.yml` | nightly | Full security scan |
+
+---
+
+## 12. GitHub ↔ Lovable sync
+
+- Two-way sync: edits in Lovable push to GitHub; pushes to GitHub sync into Lovable.
+- Do not run stateful git commands inside the Lovable agent; git state is managed.
+- Local development against GitHub is fully supported — clone, branch, PR, merge. Lovable picks up the merged commit.
+
+---
+
+## 13. Operational status
+
+- **Live alerts:** see [`OPS_ALERTS.md`](./OPS_ALERTS.md). Currently tracks the `procasa.com.au` cPanel AutoSSL renewal failure (disk quota — external, unrelated to this codebase).
+- **Cleanup roadmap:** see [`REPOSITORY_CLEANUP_PLAN.md`](./REPOSITORY_CLEANUP_PLAN.md). **Stage A complete** (orphan asset purge + 8 unused packages removed). Stages B–D pending explicit approval.
+- **Known optimisation target:** `Admin-*.js` (~716 KB) and `index-*.js` (~755 KB) — to be addressed via Vite `manualChunks` before further code deletion.
+
+---
+
+## 14. Conventions & guardrails
+
+- Australian English, Mornington Peninsula focus. No US-centric copy.
+- Institutional voice — no founder names/bios in public copy (limited overrides documented in project memory).
+- Design tokens only — never hardcode colour utilities like `text-white` or `bg-[#…]`. All colours live in `src/index.css` and shadcn variants.
+- Never edit `src/integrations/supabase/{client.ts,types.ts}`, `supabase/config.toml`, or auto-managed `VITE_SUPABASE_*` entries in `.env`.
+- Roles always checked server-side via `has_role()` — never trust client storage for privilege.
