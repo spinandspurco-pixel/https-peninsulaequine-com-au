@@ -374,7 +374,8 @@ export default function HqDiagnostics() {
             className="shrink-0 text-[0.6rem] tracking-[0.35em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-1 transition-opacity"
           >
             Export report →
-          </button>
+            </button>
+          </div>
         </div>
 
       </div>
