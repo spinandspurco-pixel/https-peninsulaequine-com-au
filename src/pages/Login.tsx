@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, useSearchParams, useLocation, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { resolveLandingPath, authLog } from "@/lib/authRouting";
@@ -8,12 +8,70 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Eye, EyeOff, Loader2, ArrowLeft, Lock } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { Eye, EyeOff, Loader2, ArrowLeft, Lock, AlertTriangle, RefreshCw } from "lucide-react";
 import { lovable } from "@/integrations/lovable";
 import { StaffPortalFrame } from "@/components/StaffPortalFrame";
 import { HqLoadingState } from "@/components/hq/HqLoadingState";
 import { clearLocalAuthCacheAndSignOut } from "@/lib/authCache";
+
+type SignInErrorKind = "google" | "session" | "credentials" | "roles";
+
+interface SignInError {
+  kind: SignInErrorKind;
+  title: string;
+  detail: string;
+  hint?: string;
+  canRetry?: boolean;
+  canClearCache?: boolean;
+}
+
+function classifyOAuthError(message: string): SignInError {
+  const msg = (message || "").toLowerCase();
+  if (msg.includes("popup") || msg.includes("blocked")) {
+    return {
+      kind: "google",
+      title: "Google sign-in was blocked",
+      detail: message,
+      hint: "Your browser blocked the Google popup. Allow pop-ups for this site and try again.",
+      canRetry: true,
+    };
+  }
+  if (msg.includes("redirect_uri") || msg.includes("redirect uri")) {
+    return {
+      kind: "google",
+      title: "Google rejected this sign-in URL",
+      detail: message,
+      hint: "An administrator needs to add this domain to the OAuth allow-list.",
+      canRetry: true,
+    };
+  }
+  if (msg.includes("oauth secret") || msg.includes("provider is not enabled")) {
+    return {
+      kind: "google",
+      title: "Google sign-in is not configured",
+      detail: message,
+      hint: "Contact an administrator — Google credentials need to be re-saved.",
+      canRetry: false,
+    };
+  }
+  if (msg.includes("refresh") || msg.includes("session") || msg.includes("token")) {
+    return {
+      kind: "session",
+      title: "Session couldn't be restored",
+      detail: message,
+      hint: "Your previous session expired. Clear the cache and sign in again.",
+      canRetry: true,
+      canClearCache: true,
+    };
+  }
+  return {
+    kind: "google",
+    title: "Google sign-in failed",
+    detail: message || "Unknown error",
+    hint: "Try again, or use email + password below.",
+    canRetry: true,
+  };
+}
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -21,30 +79,81 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  const { user, roles, ready, rolesLoading, signIn, signOut } = useAuth();
+  const [signInError, setSignInError] = useState<SignInError | null>(null);
+  const { user, roles, ready, rolesLoading, rolesError, signIn, signOut } = useAuth();
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const redirectTo = searchParams.get("redirect") || null;
 
+  // Surface URL-borne OAuth errors (Supabase appends ?error=...&error_description=...)
+  useEffect(() => {
+    const err = searchParams.get("error_description") || searchParams.get("error");
+    if (err) {
+      setSignInError(classifyOAuthError(err));
+      recordOAuthError({ provider: "google", source: "callback-url", message: err });
+    }
+  }, [searchParams]);
+
+  // Surface a roles-fetch failure as a persistent banner too.
+  useEffect(() => {
+    if (rolesError) {
+      setSignInError({
+        kind: "roles",
+        title: "Your profile didn't load",
+        detail: rolesError,
+        hint: "This usually clears with a retry. If not, clear the cache and sign in again.",
+        canRetry: true,
+        canClearCache: true,
+      });
+    }
+  }, [rolesError]);
+
+  const retryGoogle = async () => {
+    setSignInError(null);
+    setIsLoading(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) {
+        setIsLoading(false);
+        const classified = classifyOAuthError(result.error.message || "");
+        setSignInError(classified);
+        recordOAuthError({ provider: "google", source: "login-retry", message: result.error.message || "" });
+        return;
+      }
+      if (result.redirected) return;
+    } catch (err) {
+      setIsLoading(false);
+      const msg = err instanceof Error ? err.message : String(err);
+      setSignInError(classifyOAuthError(msg));
+    }
+  };
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setSignInError(null);
 
     const { error } = await signIn(email, password);
 
     if (error) {
+      const isInvalid = error.message === "Invalid login credentials";
+      setSignInError({
+        kind: "credentials",
+        title: isInvalid ? "Email or password is incorrect" : "Sign-in failed",
+        detail: error.message,
+        hint: isInvalid ? "Double-check your credentials, or contact an administrator." : undefined,
+        canRetry: false,
+      });
       toast.error(
-        error.message === "Invalid login credentials"
+        isInvalid
           ? "Invalid email or password. Contact admin if you need access."
           : error.message
       );
       setIsLoading(false);
       return;
     }
-
-    // No success toast — the redirect to the role landing page is the
-    // real confirmation. A standalone "Welcome back" toast on the login
-    // screen reads like success even when state hasn't actually changed.
   };
 
   // Render-time redirect: never paint the form (or the authed HqHeader
@@ -119,6 +228,64 @@ export default function Login() {
       >
         <div className="bg-card/80 backdrop-blur border border-border/60 rounded-sm shadow-xl">
           <div className="p-6 sm:p-8 space-y-6">
+            {signInError && (
+              <div
+                role="alert"
+                aria-live="assertive"
+                className="border border-destructive/40 bg-destructive/10 rounded-sm p-4 space-y-3"
+              >
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 shrink-0" aria-hidden />
+                  <div className="space-y-1 min-w-0 flex-1">
+                    <p className="text-[12px] font-medium uppercase tracking-[0.1em] text-destructive">
+                      {signInError.title}
+                    </p>
+                    {signInError.hint && (
+                      <p className="text-[12px] text-foreground/80 leading-relaxed">{signInError.hint}</p>
+                    )}
+                    <p className="text-[11px] text-muted-foreground/80 font-mono break-words">
+                      {signInError.detail}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 pl-7">
+                  {signInError.canRetry && signInError.kind !== "credentials" && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (signInError.kind === "roles") {
+                          window.location.reload();
+                        } else {
+                          void retryGoogle();
+                        }
+                      }}
+                      disabled={isLoading}
+                      className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors disabled:opacity-50"
+                    >
+                      <RefreshCw className="h-3 w-3" aria-hidden />
+                      Retry
+                    </button>
+                  )}
+                  {signInError.canClearCache && (
+                    <button
+                      type="button"
+                      onClick={() => void clearLocalAuthCacheAndSignOut()}
+                      className="text-[11px] uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors"
+                    >
+                      Clear cache + retry
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setSignInError(null)}
+                    className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground/70 hover:text-foreground transition-colors ml-auto"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              </div>
+            )}
+
             <form onSubmit={handleSignIn} className="space-y-5">
               <div className="space-y-1.5">
                 <Label htmlFor="email" className="text-[11px] uppercase tracking-[0.12em] text-muted-foreground font-sans">
@@ -204,16 +371,20 @@ export default function Login() {
                   redirectTo: window.location.origin,
                   href: window.location.href,
                 });
+                setSignInError(null);
                 setIsLoading(true);
-                // Safety net: if the browser hasn't navigated to Google
-                // within 15s, clear the spinner and surface an error so
-                // the button never spins forever on a swallowed redirect.
                 const watchdog = window.setTimeout(() => {
                   authLog("oauth:google:watchdog-timeout", {});
                   setIsLoading(false);
-                  toast.error(
-                    "Google sign-in didn't start. Check that pop-ups/redirects are allowed and try again."
-                  );
+                  const e: SignInError = {
+                    kind: "google",
+                    title: "Google sign-in didn't start",
+                    detail: "No redirect happened within 15 seconds.",
+                    hint: "Check that pop-ups and redirects are allowed for this site, then retry.",
+                    canRetry: true,
+                  };
+                  setSignInError(e);
+                  toast.error(e.title);
                 }, 15000);
                 try {
                   const result = await lovable.auth.signInWithOAuth("google", {
@@ -227,35 +398,34 @@ export default function Login() {
                   if (result.error) {
                     window.clearTimeout(watchdog);
                     setIsLoading(false);
+                    const classified = classifyOAuthError(result.error.message || "");
+                    setSignInError(classified);
                     recordOAuthError({
                       provider: "google",
                       source: "login-button",
                       message: result.error.message || "Unknown error",
                     });
-                    toast.error(
-                      result.error.message
-                        ? `Google sign-in failed: ${result.error.message}`
-                        : "Google sign-in failed."
-                    );
+                    toast.error(classified.title);
                     return;
                   }
                   if (result.redirected) {
                     window.clearTimeout(watchdog);
                     return;
                   }
-                  // Tokens received & session set — auth state listener will redirect.
                   window.clearTimeout(watchdog);
                 } catch (err) {
                   window.clearTimeout(watchdog);
                   const msg = err instanceof Error ? err.message : String(err);
                   authLog("oauth:google:throw", { msg });
+                  const classified = classifyOAuthError(msg);
+                  setSignInError(classified);
                   recordOAuthError({
                     provider: "google",
                     source: "login-button",
                     message: msg,
                   });
                   setIsLoading(false);
-                  toast.error("Google sign-in failed unexpectedly.");
+                  toast.error(classified.title);
                 }
               }}
             >
