@@ -9,6 +9,13 @@ import {
   SB_PUBLISHABLE_PREFIX as SB_PREFIX,
   LEGACY_JWT_PREFIX as LEGACY_PREFIX,
 } from "@/config/diagnostics";
+import {
+  listOAuthErrors,
+  clearOAuthErrors,
+  recordOAuthError,
+  diagnoseOAuthError,
+  type OAuthErrorEntry,
+} from "@/lib/oauthErrorLog";
 
 
 
@@ -59,6 +66,18 @@ export default function HqDiagnostics() {
   const expectedCallback = url ? `${url.replace(/\/$/, "")}/auth/v1/callback` : null;
   const appOrigin = typeof window !== "undefined" ? window.location.origin : "";
 
+  const [oauthErrors, setOauthErrors] = useState<OAuthErrorEntry[]>([]);
+  const refreshOAuthErrors = () => setOauthErrors(listOAuthErrors());
+
+  useEffect(() => {
+    refreshOAuthErrors();
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === null || e.key.startsWith("pe.oauth.errorLog")) refreshOAuthErrors();
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
   const runRedirectUriValidator = useMemo(() => () => {
     if (!url) {
       setRedirectStatus("fail");
@@ -101,11 +120,25 @@ export default function HqDiagnostics() {
           setRedirectDetail(
             `MISMATCH — Google rejected the redirect URI Supabase sent. Add ${expectedCallback} to "Authorized redirect URIs" in your Google OAuth client.`
           );
+          recordOAuthError({
+            provider: "google",
+            source: "redirect-validator",
+            message: "redirect_uri_mismatch",
+            code: "redirect_uri_mismatch",
+            context: { expectedCallback },
+          });
+          refreshOAuthErrors();
           return;
         }
         if (err) {
           setRedirectStatus("warn");
           setRedirectDetail(`Returned with error: ${decodeURIComponent(err)}`);
+          recordOAuthError({
+            provider: "google",
+            source: "redirect-validator",
+            message: decodeURIComponent(err),
+          });
+          refreshOAuthErrors();
           return;
         }
         if (hasCode) {
@@ -161,6 +194,13 @@ export default function HqDiagnostics() {
           if (/missing\s+oauth\s+secret/i.test(body)) {
             setGoogleStatus("fail");
             setGoogleDetail("Supabase returned 400 — Google Client Secret is NOT persisted on the auth service.");
+            recordOAuthError({
+              provider: "google",
+              source: "provider-check",
+              message: "missing OAuth secret",
+              code: "missing_oauth_secret",
+            });
+            refreshOAuthErrors();
             return;
           }
           setGoogleStatus("warn");
@@ -413,7 +453,82 @@ export default function HqDiagnostics() {
           ))}
         </div>
 
+        <div className="mb-8 border border-foreground/10 rounded-sm">
+          <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55 flex items-center justify-between gap-4">
+            <span>
+              OAuth error log{" "}
+              <span className="opacity-50 normal-case tracking-normal">
+                ({oauthErrors.length}{oauthErrors.length === 25 ? "+" : ""} recent)
+              </span>
+            </span>
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={refreshOAuthErrors}
+                className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity"
+              >
+                Refresh →
+              </button>
+              <button
+                type="button"
+                onClick={() => { clearOAuthErrors(); refreshOAuthErrors(); }}
+                className="text-[0.55rem] tracking-[0.3em] uppercase opacity-50 hover:opacity-90 transition-opacity"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+          {oauthErrors.length === 0 ? (
+            <div className="px-4 py-6 text-[0.7rem] opacity-50 font-light">
+              No OAuth errors recorded on this device. Errors are captured automatically from the
+              login button, the provider check, and the redirect-URI validator above.
+            </div>
+          ) : (
+            oauthErrors.map((entry, i) => {
+              const fix = diagnoseOAuthError(entry);
+              const color = statusColor(fix.severity);
+              return (
+                <div
+                  key={`${entry.ts}-${i}`}
+                  className="px-4 py-4 border-b border-foreground/10 last:border-b-0"
+                >
+                  <div className="flex items-start justify-between gap-4 mb-2">
+                    <div className="min-w-0">
+                      <div className="text-[0.6rem] tracking-[0.35em] uppercase opacity-55 mb-1">
+                        {new Date(entry.ts).toLocaleString()} · {entry.provider} · {entry.source}
+                      </div>
+                      <div className="text-sm font-mono opacity-90 break-words">
+                        {entry.message}
+                      </div>
+                    </div>
+                    <div
+                      className="text-[0.6rem] font-mono shrink-0"
+                      style={{ color, letterSpacing: "0.2em" }}
+                    >
+                      {statusLabel(fix.severity)}
+                    </div>
+                  </div>
+                  <div
+                    className="mt-3 pl-3 border-l"
+                    style={{ borderColor: `${color}55` }}
+                  >
+                    <div className="text-[0.65rem] tracking-[0.3em] uppercase opacity-70 mb-1.5">
+                      Fix · {fix.title}
+                    </div>
+                    <ol className="text-[0.75rem] opacity-75 font-light leading-relaxed space-y-1 list-decimal pl-4">
+                      {fix.steps.map((s, j) => (
+                        <li key={j}>{s}</li>
+                      ))}
+                    </ol>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+
         <div className="border-t border-foreground/10">
+
 
 
           {checks.map((c) => (
@@ -486,6 +601,14 @@ export default function HqDiagnostics() {
                   label: c.label,
                   status: statusLabel(c.status),
                   detail: c.detail,
+                })),
+                oauthErrors: oauthErrors.map((e) => ({
+                  ts: new Date(e.ts).toISOString(),
+                  provider: e.provider,
+                  source: e.source,
+                  message: e.message,
+                  code: e.code,
+                  fix: diagnoseOAuthError(e),
                 })),
               };
               const blob = new Blob([JSON.stringify(report, null, 2)], {

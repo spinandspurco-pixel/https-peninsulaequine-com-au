@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Navigate, useSearchParams, useLocation, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { resolveLandingPath, authLog } from "@/lib/authRouting";
+import { recordOAuthError } from "@/lib/oauthErrorLog";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -226,6 +227,11 @@ export default function Login() {
                   if (result.error) {
                     window.clearTimeout(watchdog);
                     setIsLoading(false);
+                    recordOAuthError({
+                      provider: "google",
+                      source: "login-button",
+                      message: result.error.message || "Unknown error",
+                    });
                     toast.error(
                       result.error.message
                         ? `Google sign-in failed: ${result.error.message}`
@@ -241,8 +247,12 @@ export default function Login() {
                   window.clearTimeout(watchdog);
                 } catch (err) {
                   window.clearTimeout(watchdog);
-                  authLog("oauth:google:throw", {
-                    msg: err instanceof Error ? err.message : String(err),
+                  const msg = err instanceof Error ? err.message : String(err);
+                  authLog("oauth:google:throw", { msg });
+                  recordOAuthError({
+                    provider: "google",
+                    source: "login-button",
+                    message: msg,
                   });
                   setIsLoading(false);
                   toast.error("Google sign-in failed unexpectedly.");
