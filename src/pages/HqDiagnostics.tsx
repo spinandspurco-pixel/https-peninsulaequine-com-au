@@ -74,6 +74,7 @@ export default function HqDiagnostics() {
   const [e2eDetail, setE2eDetail] = useState<string>("Idle — click to perform the full Google sign-in flow and confirm /hq.");
   const [e2eRunning, setE2eRunning] = useState(false);
   const [e2eLog, setE2eLog] = useState<string[]>([]);
+  const [e2eHistory, setE2eHistory] = useState<E2eHistoryEntry[]>(() => listE2eHistory());
 
   const expectedCallback = url ? `${url.replace(/\/$/, "")}/auth/v1/callback` : null;
   const appOrigin = typeof window !== "undefined" ? window.location.origin : "";
