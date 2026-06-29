@@ -69,6 +69,7 @@ function buildE2eTraceReport(input: {
   expectedCallback: string | null;
   supabaseUrl: string | undefined;
   projectId: string | undefined;
+  label?: string;
 }): string {
   const lines: string[] = [];
   lines.push("Peninsula Equine — Google OAuth E2E Trace");
@@ -77,6 +78,7 @@ function buildE2eTraceReport(input: {
   lines.push("== Result ==");
   lines.push(`Status: ${statusLabel(input.status)}`);
   lines.push(`Detail: ${input.detail}`);
+  if (input.label) lines.push(`Test account: ${input.label}`);
   lines.push("");
   lines.push("== Context ==");
   lines.push(`App origin:        ${input.origin || "(unknown)"}`);
