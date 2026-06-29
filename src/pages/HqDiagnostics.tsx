@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
+import {
+  EXPECTED_PROJECT_ID,
+  EXPECTED_URL,
+  SB_PUBLISHABLE_PREFIX as SB_PREFIX,
+  LEGACY_JWT_PREFIX as LEGACY_PREFIX,
+} from "@/config/diagnostics";
 
-const EXPECTED_PROJECT_ID = "aizkqajrzkvwuobisnzr";
-const EXPECTED_URL = `https://${EXPECTED_PROJECT_ID}.supabase.co`;
-const SB_PREFIX = "sb_publishable_";
-const LEGACY_PREFIX = "eyJ";
 
 type CheckStatus = "ok" | "warn" | "fail" | "info";
 
