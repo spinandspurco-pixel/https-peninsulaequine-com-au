@@ -209,6 +209,19 @@ export default function HqDeployHealth() {
     toast.success("Opening email — payload also copied to clipboard");
   };
 
+  const copySupportEmail = async () => {
+    const full =
+      `To: support@lovable.dev\n` +
+      `Subject: ${supportSubject}\n\n` +
+      supportBody;
+    try {
+      await navigator.clipboard.writeText(full);
+      toast.success("Support email copied (To, Subject, payload)");
+    } catch {
+      toast.error("Copy failed — select and copy manually");
+    }
+  };
+
   if (authLoading) {
     return (
       <Layout>
@@ -296,6 +309,13 @@ export default function HqDeployHealth() {
                 className="text-xs tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8"
               >
                 Copy escalation payload
+              </button>
+              <button
+                type="button"
+                onClick={copySupportEmail}
+                className="text-xs tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8"
+              >
+                Copy support email
               </button>
             </div>
           </section>
@@ -414,6 +434,13 @@ export default function HqDeployHealth() {
               className="text-xs tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8"
             >
               Copy escalation payload
+            </button>
+            <button
+              type="button"
+              onClick={copySupportEmail}
+              className="text-xs tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8"
+            >
+              Copy support email
             </button>
           </div>
           <p className="text-[0.65rem] text-foreground/40 leading-relaxed">
