@@ -73,6 +73,66 @@ export default function HqDiagnostics() {
   const [oauthErrors, setOauthErrors] = useState<OAuthErrorEntry[]>([]);
   const refreshOAuthErrors = () => setOauthErrors(listOAuthErrors());
 
+  type AutoDetected = {
+    status: CheckStatus;
+    detail: string;
+    callback: string | null;
+    siteUrl: string | null;
+    googleEnabled: boolean | null;
+    fetchedAt: string | null;
+  };
+  const [autoDetected, setAutoDetected] = useState<AutoDetected>({
+    status: "info",
+    detail: "Auto-detecting from Supabase project…",
+    callback: null,
+    siteUrl: null,
+    googleEnabled: null,
+    fetchedAt: null,
+  });
+
+  const detectFromProject = useMemo(() => async () => {
+    if (!url || !key) {
+      setAutoDetected((s) => ({
+        ...s,
+        status: "fail",
+        detail: "Cannot auto-detect: VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY missing.",
+      }));
+      return;
+    }
+    setAutoDetected((s) => ({ ...s, status: "info", detail: "Probing /auth/v1/settings…" }));
+    try {
+      const res = await fetch(`${url.replace(/\/$/, "")}/auth/v1/settings`, {
+        headers: { apikey: key, Authorization: `Bearer ${key}` },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const j = await res.json();
+      const cb = `${url.replace(/\/$/, "")}/auth/v1/callback`;
+      const google = !!(j?.external?.google);
+      const siteUrl: string | null = typeof j?.site_url === "string" ? j.site_url : null;
+      setAutoDetected({
+        status: google ? "ok" : "warn",
+        detail: google
+          ? "Auto-detected from live Supabase settings. Google provider is enabled."
+          : "Settings reachable, but Google provider is not enabled in this Supabase project.",
+        callback: cb,
+        siteUrl,
+        googleEnabled: google,
+        fetchedAt: new Date().toISOString(),
+      });
+    } catch (e) {
+      setAutoDetected({
+        status: "fail",
+        detail: `Auto-detect failed: ${(e as Error).message}. Falling back to env-derived URI.`,
+        callback: url ? `${url.replace(/\/$/, "")}/auth/v1/callback` : null,
+        siteUrl: null,
+        googleEnabled: null,
+        fetchedAt: new Date().toISOString(),
+      });
+    }
+  }, [url, key]);
+
+  useEffect(() => { void detectFromProject(); }, [detectFromProject]);
+
   const PASTE_KEY = "pe.oauth.googleRedirectUris";
   const [pastedUris, setPastedUris] = useState<string>(() => {
     if (typeof window === "undefined") return "";
