@@ -1,6 +1,9 @@
 {
   "rewrites": [
     { "source": "/__l5e/:path*", "destination": "https://peninsulaequine.systems/__l5e/:path*" },
+    { "source": "/auth/v1/callback", "destination": "/index.html" },
+    { "source": "/auth/callback", "destination": "/index.html" },
+    { "source": "/auth/:path*", "destination": "/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
