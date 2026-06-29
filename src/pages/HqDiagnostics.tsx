@@ -376,7 +376,45 @@ export default function HqDiagnostics() {
           ))}
         </div>
 
+        <div className="mb-8 border border-foreground/10 rounded-sm">
+          <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55 flex items-center justify-between">
+            <span>Google OAuth — Authorized redirect URIs</span>
+            <button
+              type="button"
+              onClick={runRedirectUriValidator}
+              className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity"
+            >
+              Run live validator →
+            </button>
+          </div>
+          <div className="px-4 py-3 text-[0.7rem] opacity-60 font-light leading-relaxed border-b border-foreground/10">
+            These exact values must appear in your Google Cloud OAuth client's "Authorized
+            redirect URIs". The live validator opens a popup, completes a real OAuth round-trip,
+            and flags <code className="font-mono opacity-90">redirect_uri_mismatch</code> if Google
+            rejects the URI Supabase sends.
+          </div>
+          {[
+            { label: "Supabase callback (required)", value: expectedCallback ?? "(missing VITE_SUPABASE_URL)" },
+            { label: "App origin (post-callback)", value: appOrigin || "(unknown)" },
+          ].map((row) => (
+            <div key={row.label} className="grid grid-cols-[1fr_auto] gap-4 px-4 py-3 border-b border-foreground/10 last:border-b-0 items-center">
+              <div>
+                <div className="text-[0.6rem] tracking-[0.35em] uppercase opacity-55 mb-1.5">{row.label}</div>
+                <div className="text-sm font-mono opacity-85 break-all">{row.value}</div>
+              </div>
+              <button
+                type="button"
+                onClick={() => { void navigator.clipboard?.writeText(row.value); }}
+                className="text-[0.55rem] tracking-[0.3em] uppercase opacity-60 hover:opacity-100 transition-opacity"
+              >
+                Copy
+              </button>
+            </div>
+          ))}
+        </div>
+
         <div className="border-t border-foreground/10">
+
 
           {checks.map((c) => (
             <div
