@@ -419,9 +419,11 @@ export default function Login() {
                   }
                   if (result.redirected) {
                     window.clearTimeout(watchdog);
+                    trackAuthFunnel("auth_login_success", { method: "google", via: "redirect", force: true });
                     return;
                   }
                   window.clearTimeout(watchdog);
+                  trackAuthFunnel("auth_login_success", { method: "google", via: "popup", force: true });
                 } catch (err) {
                   window.clearTimeout(watchdog);
                   const msg = err instanceof Error ? err.message : String(err);
