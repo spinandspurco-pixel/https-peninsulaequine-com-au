@@ -180,7 +180,16 @@ export default function Services() {
 
   useEffect(() => {
     document.title = "Capabilities | Peninsula Equine";
-    return () => { document.title = "Peninsula Equine"; };
+    const meta = document.querySelector('meta[name="description"]');
+    const prev = meta?.getAttribute("content") || "";
+    meta?.setAttribute(
+      "content",
+      "Arena construction, stables, fencing, infrastructure and full-facility builds across the Mornington Peninsula. Engineered for daily use by horse and rider."
+    );
+    return () => {
+      document.title = "Peninsula Equine";
+      if (meta && prev) meta.setAttribute("content", prev);
+    };
   }, []);
 
   useEffect(() => {

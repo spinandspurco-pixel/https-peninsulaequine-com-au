@@ -103,6 +103,15 @@ export default function SiteAssessment() {
 
   useEffect(() => {
     document.title = "Apply to Build | Peninsula Equine";
+    const meta = document.querySelector('meta[name="description"]');
+    const prev = meta?.getAttribute("content") || "";
+    meta?.setAttribute(
+      "content",
+      "Book a paid site assessment with Peninsula Equine. We walk your land, confirm feasibility, and produce a build-ready plan for your arena, stables or full facility."
+    );
+    return () => {
+      if (meta && prev) meta.setAttribute("content", prev);
+    };
   }, []);
 
   useEffect(() => {
