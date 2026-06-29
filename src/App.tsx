@@ -104,6 +104,7 @@ function AppContent() {
             <Route path="/" element={<Index />} />
 
             <Route path="/arenas" element={<Arenas />} />
+            <Route path="/guides/dressage-arena-construction" element={<DressageArenaConstruction />} />
             <Route path="/stables" element={<Stables />} />
             <Route path="/equine-estates" element={<Navigate to="/services#whole-property" replace />} />
             <Route
