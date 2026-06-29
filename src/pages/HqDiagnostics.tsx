@@ -9,6 +9,13 @@ import {
   SB_PUBLISHABLE_PREFIX as SB_PREFIX,
   LEGACY_JWT_PREFIX as LEGACY_PREFIX,
 } from "@/config/diagnostics";
+import {
+  listOAuthErrors,
+  clearOAuthErrors,
+  recordOAuthError,
+  diagnoseOAuthError,
+  type OAuthErrorEntry,
+} from "@/lib/oauthErrorLog";
 
 
 
