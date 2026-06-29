@@ -253,6 +253,26 @@ export default function HqDeployHealth() {
     }
   };
 
+  const downloadEscalationTxt = () => {
+    try {
+      const stamp = (lastCheckedAt ?? new Date().toISOString())
+        .replace(/[:.]/g, "-");
+      const filename = `deploy-health-escalation-${stamp}.txt`;
+      const blob = new Blob([supportBody], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success(`Downloaded ${filename}`);
+    } catch {
+      toast.error("Download failed");
+    }
+  };
+
   const copySupportEmail = async () => {
     const full =
       `To: support@lovable.dev\n` +
@@ -376,6 +396,13 @@ export default function HqDeployHealth() {
                 className="text-xs tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8"
               >
                 Copy as JSON
+              </button>
+              <button
+                type="button"
+                onClick={downloadEscalationTxt}
+                className="text-xs tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8"
+              >
+                Download .txt
               </button>
             </div>
           </section>
@@ -536,6 +563,13 @@ export default function HqDeployHealth() {
               className="text-xs tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8"
             >
               Copy as JSON
+            </button>
+            <button
+              type="button"
+              onClick={downloadEscalationTxt}
+              className="text-xs tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8"
+            >
+              Download .txt
             </button>
           </div>
           <p className="text-[0.65rem] text-foreground/40 leading-relaxed">
