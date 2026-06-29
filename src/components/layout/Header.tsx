@@ -472,7 +472,16 @@ export function Header() {
           </ul>
 
           {/* CTA */}
-          <div className="hidden lg:flex items-center">
+          <div className="hidden lg:flex items-center gap-6">
+            {user && (
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="text-[10px] uppercase tracking-[0.2em] text-foreground/50 hover:text-foreground/90 transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
+              >
+                Sign out
+              </button>
+            )}
             <Link
               to="/contact"
               className="text-[10px] uppercase tracking-[0.2em] text-[hsl(var(--accent-light))]/95 hover:text-accent transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
