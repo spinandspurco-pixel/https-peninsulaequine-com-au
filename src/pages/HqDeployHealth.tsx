@@ -167,14 +167,22 @@ export default function HqDeployHealth() {
     return lines.join("\n");
   }, [results, lastCheckedAt, user?.email, pageBundle]);
 
-  const copyEscalation = async () => {
+  const [manualCopy, setManualCopy] = useState<{ label: string; text: string } | null>(null);
+
+  const tryCopy = useCallback(async (label: string, text: string, successMsg: string) => {
     try {
-      await navigator.clipboard.writeText(escalation);
-      toast.success("Escalation payload copied");
-    } catch {
-      toast.error("Copy failed — select and copy manually");
+      if (!navigator.clipboard?.writeText) throw new Error("Clipboard API unavailable");
+      await navigator.clipboard.writeText(text);
+      toast.success(successMsg);
+    } catch (e) {
+      const reason = e instanceof Error ? e.message : "Clipboard blocked";
+      toast.error(`Copy failed — ${reason}. Use the manual copy box.`);
+      setManualCopy({ label, text });
     }
-  };
+  }, []);
+
+  const copyEscalation = () =>
+    tryCopy("Escalation payload", escalation, "Escalation payload copied");
 
   const supportSubject = "Stuck production promotion — force-promote required";
   const supportBody = useMemo(() => {
@@ -197,9 +205,9 @@ export default function HqDeployHealth() {
 
   const openSupportEmail = async () => {
     try {
-      await navigator.clipboard.writeText(supportBody);
+      await navigator.clipboard?.writeText(supportBody);
     } catch {
-      /* ignore */
+      /* ignore — mailto still opens */
     }
     const href =
       `mailto:support@lovable.dev` +
@@ -244,14 +252,8 @@ export default function HqDeployHealth() {
     );
   }, [results, lastCheckedAt, user?.email, pageBundle]);
 
-  const copyEscalationJson = async () => {
-    try {
-      await navigator.clipboard.writeText(escalationJson);
-      toast.success("Escalation payload copied as JSON");
-    } catch {
-      toast.error("Copy failed — select and copy manually");
-    }
-  };
+  const copyEscalationJson = () =>
+    tryCopy("Escalation payload (JSON)", escalationJson, "Escalation payload copied as JSON");
 
   const downloadEscalationTxt = () => {
     try {
@@ -273,18 +275,14 @@ export default function HqDeployHealth() {
     }
   };
 
-  const copySupportEmail = async () => {
+  const copySupportEmail = () => {
     const full =
       `To: support@lovable.dev\n` +
       `Subject: ${supportSubject}\n\n` +
       supportBody;
-    try {
-      await navigator.clipboard.writeText(full);
-      toast.success("Support email copied (To, Subject, payload)");
-    } catch {
-      toast.error("Copy failed — select and copy manually");
-    }
+    return tryCopy("Support email (To, Subject, payload)", full, "Support email copied (To, Subject, payload)");
   };
+
 
   if (authLoading) {
     return (
