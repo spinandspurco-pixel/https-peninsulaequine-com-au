@@ -616,7 +616,7 @@ export function Header() {
               );
             })}
           </ul>
-          <div className="pt-8 mt-6 border-t border-border/20">
+          <div className="pt-8 mt-6 border-t border-border/20 space-y-5">
             <Link
               to="/contact"
               tabIndex={isMobileMenuOpen ? 0 : -1}
@@ -624,6 +624,16 @@ export function Header() {
             >
               Apply to Build →
             </Link>
+            {user && (
+              <button
+                type="button"
+                tabIndex={isMobileMenuOpen ? 0 : -1}
+                onClick={handleSignOut}
+                className="block text-xs uppercase tracking-[0.18em] text-foreground/55 hover:text-foreground/95 transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
+              >
+                Sign out
+              </button>
+            )}
           </div>
         </nav>
       </div>
