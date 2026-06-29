@@ -322,8 +322,9 @@ export default function HqDeployHealth() {
             onClick={run}
             disabled={running}
             className="text-sm tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8 disabled:opacity-40"
+            title="Immediately re-fetch bundle state, markers, and timestamps"
           >
-            {running ? "Checking…" : "Re-check"}
+            {running ? "Re-checking…" : "Re-run deploy health checks"}
           </button>
         </section>
 
@@ -340,6 +341,14 @@ export default function HqDeployHealth() {
               send to Lovable Support.
             </p>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+              <button
+                type="button"
+                onClick={run}
+                disabled={running}
+                className="text-xs tracking-[0.3em] uppercase text-amber-700 underline underline-offset-8 disabled:opacity-40"
+              >
+                {running ? "Re-checking…" : "Re-run checks now"}
+              </button>
               <button
                 type="button"
                 onClick={openSupportEmail}
