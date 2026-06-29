@@ -917,6 +917,181 @@ export default function HqDiagnostics() {
           )}
         </div>
 
+        {/* Remediation checklist — surfaces only when mismatches exist */}
+        {(() => {
+          const missingTargets = targetResults.filter((t) => !t.present);
+          const missingRequired = missingTargets.filter((t) => t.required);
+          const missingOptional = missingTargets.filter((t) => !t.required);
+          const hasAnything = missingTargets.length > 0;
+          const allMissingUris = missingTargets.map((t) => t.uri);
+          const allMissingBlock = allMissingUris.join("\n");
+          const consoleUrl = "https://console.cloud.google.com/apis/credentials";
+
+          return (
+            <div className="mb-8 border rounded-sm"
+                 style={{
+                   borderColor: hasAnything
+                     ? (missingRequired.length > 0 ? "rgba(239,68,68,0.35)" : "rgba(245,158,11,0.3)")
+                     : "rgba(232,230,225,0.1)",
+                 }}>
+              <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-70 flex items-center justify-between gap-4">
+                <span>Remediation checklist — Google redirect URIs</span>
+                <span
+                  className="text-[0.55rem] font-mono"
+                  style={{
+                    color: !hasAnything
+                      ? statusColor("ok")
+                      : missingRequired.length > 0 ? statusColor("fail") : statusColor("warn"),
+                    letterSpacing: "0.2em",
+                  }}
+                >
+                  {!hasAnything
+                    ? "NOTHING TO DO"
+                    : `${missingTargets.length} TO ADD`}
+                </span>
+              </div>
+
+              {!hasAnything ? (
+                <div className="px-4 py-4 text-[0.7rem] opacity-65 font-light leading-relaxed">
+                  Every expected redirect URI is already present in the pasted Google client.
+                  No remediation needed.
+                </div>
+              ) : (
+                <>
+                  <div className="px-4 py-3 text-[0.7rem] opacity-65 font-light leading-relaxed border-b border-foreground/10">
+                    Follow these steps in Google Cloud to resolve the mismatch. Each missing URI
+                    is generated from the environments this app is deployed to — copy them exactly,
+                    no trailing slashes, no stray spaces.
+                  </div>
+
+                  <ol className="px-4 py-3 space-y-3 border-b border-foreground/10 text-[0.75rem] font-light leading-relaxed">
+                    <li className="grid grid-cols-[1.25rem_1fr] gap-2">
+                      <span className="font-mono opacity-50">1.</span>
+                      <span>
+                        Open{" "}
+                        <a
+                          href={consoleUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline opacity-90 hover:opacity-100"
+                        >
+                          Google Cloud → APIs &amp; Services → Credentials
+                        </a>{" "}
+                        and select the OAuth 2.0 Client ID used by this project.
+                      </span>
+                    </li>
+                    <li className="grid grid-cols-[1.25rem_1fr] gap-2">
+                      <span className="font-mono opacity-50">2.</span>
+                      <span>Scroll to <span className="font-mono opacity-90">Authorized redirect URIs</span> and click <span className="font-mono opacity-90">+ ADD URI</span> for each entry below.</span>
+                    </li>
+                    <li className="grid grid-cols-[1.25rem_1fr] gap-2">
+                      <span className="font-mono opacity-50">3.</span>
+                      <span>Paste the URI exactly as shown — Google does string-equality matching, so capitalisation, scheme, and trailing slash all matter.</span>
+                    </li>
+                    <li className="grid grid-cols-[1.25rem_1fr] gap-2">
+                      <span className="font-mono opacity-50">4.</span>
+                      <span>Click <span className="font-mono opacity-90">SAVE</span>. Changes take effect within a few seconds; re-run the validator above to confirm.</span>
+                    </li>
+                  </ol>
+
+                  {missingRequired.length > 0 && (
+                    <div className="px-4 py-3 border-b border-foreground/10">
+                      <div className="flex items-center justify-between gap-4 mb-2">
+                        <div className="text-[0.6rem] tracking-[0.35em] uppercase"
+                             style={{ color: statusColor("fail") }}>
+                          Required — sign-in will fail without these ({missingRequired.length})
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => { void navigator.clipboard?.writeText(missingRequired.map((t) => t.uri).join("\n")); }}
+                          className="text-[0.55rem] tracking-[0.3em] uppercase opacity-60 hover:opacity-100 transition-opacity"
+                        >
+                          Copy all required
+                        </button>
+                      </div>
+                      <ul className="space-y-2">
+                        {missingRequired.map((t) => (
+                          <li key={t.uri}
+                              className="grid grid-cols-[1fr_auto] gap-3 items-start border-l-2 pl-3"
+                              style={{ borderColor: statusColor("fail") }}>
+                            <div>
+                              <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-55 mb-0.5">
+                                {t.env} · {t.label}
+                              </div>
+                              <div className="text-xs font-mono opacity-90 break-all">{t.uri}</div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => { void navigator.clipboard?.writeText(t.uri); }}
+                              className="text-[0.55rem] tracking-[0.3em] uppercase opacity-60 hover:opacity-100 transition-opacity pt-1"
+                            >
+                              Copy
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {missingOptional.length > 0 && (
+                    <div className="px-4 py-3 border-b border-foreground/10">
+                      <div className="flex items-center justify-between gap-4 mb-2">
+                        <div className="text-[0.6rem] tracking-[0.35em] uppercase"
+                             style={{ color: statusColor("warn") }}>
+                          Optional — add if you sign in from this environment ({missingOptional.length})
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => { void navigator.clipboard?.writeText(missingOptional.map((t) => t.uri).join("\n")); }}
+                          className="text-[0.55rem] tracking-[0.3em] uppercase opacity-60 hover:opacity-100 transition-opacity"
+                        >
+                          Copy all optional
+                        </button>
+                      </div>
+                      <ul className="space-y-2">
+                        {missingOptional.map((t) => (
+                          <li key={t.uri}
+                              className="grid grid-cols-[1fr_auto] gap-3 items-start border-l-2 pl-3"
+                              style={{ borderColor: statusColor("warn") }}>
+                            <div>
+                              <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-55 mb-0.5">
+                                {t.env} · {t.label}
+                              </div>
+                              <div className="text-xs font-mono opacity-90 break-all">{t.uri}</div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => { void navigator.clipboard?.writeText(t.uri); }}
+                              className="text-[0.55rem] tracking-[0.3em] uppercase opacity-60 hover:opacity-100 transition-opacity pt-1"
+                            >
+                              Copy
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  <div className="px-4 py-3 flex items-center justify-between gap-4">
+                    <div className="text-[0.65rem] opacity-55 font-light">
+                      Block-paste all {missingTargets.length} URI{missingTargets.length === 1 ? "" : "s"} (one per line) into Google.
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => { void navigator.clipboard?.writeText(allMissingBlock); }}
+                      className="text-[0.6rem] tracking-[0.35em] uppercase opacity-75 hover:opacity-100 transition-opacity border border-foreground/20 px-3 py-1.5 rounded-sm"
+                    >
+                      Copy all ({missingTargets.length})
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          );
+        })()}
+
+
+
 
 
 
