@@ -57,6 +57,40 @@ function statusLabel(s: CheckStatus): string {
   return s === "ok" ? "PASS" : s === "warn" ? "WARN" : s === "fail" ? "FAIL" : "INFO";
 }
 
+function buildE2eTraceReport(input: {
+  status: CheckStatus;
+  detail: string;
+  log: string[];
+  origin: string;
+  expectedCallback: string | null;
+  supabaseUrl: string | undefined;
+  projectId: string | undefined;
+}): string {
+  const lines: string[] = [];
+  lines.push("Peninsula Equine — Google OAuth E2E Trace");
+  lines.push(`Generated: ${new Date().toISOString()}`);
+  lines.push("");
+  lines.push("== Result ==");
+  lines.push(`Status: ${statusLabel(input.status)}`);
+  lines.push(`Detail: ${input.detail}`);
+  lines.push("");
+  lines.push("== Context ==");
+  lines.push(`App origin:        ${input.origin || "(unknown)"}`);
+  lines.push(`Supabase URL:      ${input.supabaseUrl ?? "(missing)"}`);
+  lines.push(`Project ID:        ${input.projectId ?? "(missing)"}`);
+  lines.push(`Expected callback: ${input.expectedCallback ?? "(missing)"}`);
+  lines.push(`User agent:        ${typeof navigator !== "undefined" ? navigator.userAgent : "(unknown)"}`);
+  lines.push("");
+  lines.push("== Timestamped trace ==");
+  if (input.log.length === 0) {
+    lines.push("(no log entries — run has not produced output)");
+  } else {
+    for (const entry of input.log) lines.push(entry);
+  }
+  lines.push("");
+  return lines.join("\n");
+}
+
 export default function HqDiagnostics() {
   const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
   const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID as string | undefined;
