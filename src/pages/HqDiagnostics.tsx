@@ -113,6 +113,8 @@ export default function HqDiagnostics() {
   const [e2eRunning, setE2eRunning] = useState(false);
   const [e2eLog, setE2eLog] = useState<string[]>([]);
   const [e2eHistory, setE2eHistory] = useState<E2eHistoryEntry[]>(() => listE2eHistory());
+  const [e2eLabel, setE2eLabel] = useState<string>("");
+  const [e2eSavedLabels, setE2eSavedLabels] = useState<string[]>(() => listE2eLabels());
   const [traceCopiedAt, setTraceCopiedAt] = useState<number | null>(null);
 
   const expectedCallback = url ? `${url.replace(/\/$/, "")}/auth/v1/callback` : null;
