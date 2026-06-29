@@ -941,6 +941,7 @@ export default function HqDiagnostics() {
                         expectedCallback,
                         supabaseUrl: url,
                         projectId,
+                        label: e2eLabel.trim() || undefined,
                       });
                       const stamp = new Date().toISOString().replace(/[:.]/g, "-");
                       const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
