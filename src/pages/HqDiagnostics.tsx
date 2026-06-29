@@ -270,8 +270,14 @@ export default function HqDiagnostics() {
       detail: googleDetail,
     });
 
+    items.push({
+      label: "Google redirect URI validator",
+      status: redirectStatus,
+      detail: redirectDetail,
+    });
+
     return items;
-  }, [url, projectId, key, mode, pingStatus, pingDetail, googleStatus, googleDetail]);
+  }, [url, projectId, key, mode, pingStatus, pingDetail, googleStatus, googleDetail, redirectStatus, redirectDetail]);
 
   const overall: CheckStatus = useMemo(() => {
     if (checks.some((c) => c.status === "fail")) return "fail";
