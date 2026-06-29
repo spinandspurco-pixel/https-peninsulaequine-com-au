@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef, KeyboardEvent } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useIntroState } from "@/hooks/useIntroState";
 import { useActiveServiceChapter } from "@/hooks/useActiveServiceChapter";
+import { useAuth } from "@/hooks/useAuth";
 import logoSquare from "@/assets/logo-pe-square.webp";
 import logoCinematic from "@/assets/logo-pe-cinematic.png";
 
@@ -67,8 +68,16 @@ export function Header() {
   const [squareLogoFailed, setSquareLogoFailed] = useState(false);
   const [cinematicLogoFailed, setCinematicLogoFailed] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const activeChapter = useActiveServiceChapter();
   const { headerLogoReady, headerReady } = useIntroState();
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    setIsMobileMenuOpen(false);
+    navigate("/");
+  };
 
   const closeTimer = useRef<number | null>(null);
   const mobileToggleRef = useRef<HTMLButtonElement | null>(null);
@@ -463,7 +472,16 @@ export function Header() {
           </ul>
 
           {/* CTA */}
-          <div className="hidden lg:flex items-center">
+          <div className="hidden lg:flex items-center gap-6">
+            {user && (
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="text-[10px] uppercase tracking-[0.2em] text-foreground/50 hover:text-foreground/90 transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
+              >
+                Sign out
+              </button>
+            )}
             <Link
               to="/contact"
               className="text-[10px] uppercase tracking-[0.2em] text-[hsl(var(--accent-light))]/95 hover:text-accent transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
@@ -598,7 +616,7 @@ export function Header() {
               );
             })}
           </ul>
-          <div className="pt-8 mt-6 border-t border-border/20">
+          <div className="pt-8 mt-6 border-t border-border/20 space-y-5">
             <Link
               to="/contact"
               tabIndex={isMobileMenuOpen ? 0 : -1}
@@ -606,6 +624,16 @@ export function Header() {
             >
               Apply to Build →
             </Link>
+            {user && (
+              <button
+                type="button"
+                tabIndex={isMobileMenuOpen ? 0 : -1}
+                onClick={handleSignOut}
+                className="block text-xs uppercase tracking-[0.18em] text-foreground/55 hover:text-foreground/95 transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
+              >
+                Sign out
+              </button>
+            )}
           </div>
         </nav>
       </div>
