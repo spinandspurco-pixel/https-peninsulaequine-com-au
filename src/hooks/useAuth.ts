@@ -2,6 +2,7 @@ import { createContext, createElement, useContext, useEffect, useRef, useState, 
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { authLog } from "@/lib/authRouting";
+import { trackAuthFunnel, resetAuthFunnel } from "@/lib/authFunnel";
 
 export type AppRole = "admin" | "employee" | "trainer" | "moderator" | "preview" | "user";
 
@@ -144,6 +145,15 @@ function useAuthState() {
       (event, newSession) => {
         dbg("event:onAuthStateChange", { event, hasSession: !!newSession });
         if (!mounted.current) return;
+        if (event === "SIGNED_IN" && newSession?.user) {
+          trackAuthFunnel("auth_session_created", {
+            userId: newSession.user.id,
+            via: "onAuthStateChange",
+          });
+        }
+        if (event === "SIGNED_OUT") {
+          resetAuthFunnel();
+        }
         applySession(newSession, `event:${event}`);
       }
     );

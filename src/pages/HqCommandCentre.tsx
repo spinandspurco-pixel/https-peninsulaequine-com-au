@@ -11,6 +11,7 @@ import { WorkQueue } from "@/components/hq/command/WorkQueue";
 import { ActivityFeed } from "@/components/hq/command/ActivityFeed";
 import { Watchlist } from "@/components/hq/command/Watchlist";
 import { DeployStatusWidget } from "@/components/hq/DeployStatusWidget";
+import { trackAuthFunnel } from "@/lib/authFunnel";
 
 /**
  * HQ Command Centre — the page that answers
@@ -33,6 +34,12 @@ export default function HqCommandCentre() {
   useEffect(() => {
     if (!loading && !user) navigate("/login");
   }, [user, loading, navigate]);
+
+  useEffect(() => {
+    if (!loading && user) {
+      trackAuthFunnel("auth_hq_reached", { userId: user.id, roles });
+    }
+  }, [loading, user, roles]);
 
   if (loading) {
     return (

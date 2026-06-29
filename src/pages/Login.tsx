@@ -13,6 +13,7 @@ import { lovable } from "@/integrations/lovable";
 import { StaffPortalFrame } from "@/components/StaffPortalFrame";
 import { HqLoadingState } from "@/components/hq/HqLoadingState";
 import { clearLocalAuthCacheAndSignOut } from "@/lib/authCache";
+import { trackAuthFunnel } from "@/lib/authFunnel";
 
 type SignInErrorKind = "google" | "session" | "credentials" | "roles";
 
@@ -111,6 +112,7 @@ export default function Login() {
   const retryGoogle = async () => {
     setSignInError(null);
     setIsLoading(true);
+    trackAuthFunnel("auth_login_attempt", { method: "google", via: "retry", force: true });
     try {
       const result = await lovable.auth.signInWithOAuth("google", {
         redirect_uri: window.location.origin,
@@ -122,7 +124,11 @@ export default function Login() {
         recordOAuthError({ provider: "google", source: "login-retry", message: result.error.message || "" });
         return;
       }
-      if (result.redirected) return;
+      if (result.redirected) {
+        trackAuthFunnel("auth_login_success", { method: "google", via: "redirect", force: true });
+        return;
+      }
+      trackAuthFunnel("auth_login_success", { method: "google", via: "popup", force: true });
     } catch (err) {
       setIsLoading(false);
       const msg = err instanceof Error ? err.message : String(err);
@@ -134,6 +140,7 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
     setSignInError(null);
+    trackAuthFunnel("auth_login_attempt", { method: "password", force: true });
 
     const { error } = await signIn(email, password);
 
@@ -154,6 +161,7 @@ export default function Login() {
       setIsLoading(false);
       return;
     }
+    trackAuthFunnel("auth_login_success", { method: "password", force: true });
   };
 
   // Render-time redirect: never paint the form (or the authed HqHeader
@@ -373,6 +381,7 @@ export default function Login() {
                 });
                 setSignInError(null);
                 setIsLoading(true);
+                trackAuthFunnel("auth_login_attempt", { method: "google", force: true });
                 const watchdog = window.setTimeout(() => {
                   authLog("oauth:google:watchdog-timeout", {});
                   setIsLoading(false);
@@ -410,9 +419,11 @@ export default function Login() {
                   }
                   if (result.redirected) {
                     window.clearTimeout(watchdog);
+                    trackAuthFunnel("auth_login_success", { method: "google", via: "redirect", force: true });
                     return;
                   }
                   window.clearTimeout(watchdog);
+                  trackAuthFunnel("auth_login_success", { method: "google", via: "popup", force: true });
                 } catch (err) {
                   window.clearTimeout(watchdog);
                   const msg = err instanceof Error ? err.message : String(err);
