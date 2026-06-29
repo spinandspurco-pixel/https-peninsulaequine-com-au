@@ -21,6 +21,9 @@ import {
   recordE2eHistory,
   clearE2eHistory,
   formatE2eTime,
+  listE2eLabels,
+  rememberE2eLabel,
+  forgetE2eLabel,
   type E2eHistoryEntry,
 } from "@/lib/e2eHistory";
 import { trackAuthE2e } from "@/lib/authFunnel";
