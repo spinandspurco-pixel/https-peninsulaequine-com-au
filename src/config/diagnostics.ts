@@ -21,11 +21,21 @@ const envProjectId = import.meta.env.VITE_DIAGNOSTICS_EXPECTED_PROJECT_ID as
   | undefined;
 const envUrl = import.meta.env.VITE_DIAGNOSTICS_EXPECTED_URL as string | undefined;
 
+export type ExpectedSource = "default" | "env_override";
+
 export const EXPECTED_PROJECT_ID: string =
   envProjectId?.trim() || DEFAULT_PROJECT_ID;
 
+export const EXPECTED_PROJECT_ID_SOURCE: ExpectedSource = envProjectId?.trim()
+  ? "env_override"
+  : "default";
+
 export const EXPECTED_URL: string =
   envUrl?.trim() || `https://${EXPECTED_PROJECT_ID}.supabase.co`;
+
+export const EXPECTED_URL_SOURCE: ExpectedSource = envUrl?.trim()
+  ? "env_override"
+  : "default";
 
 /** Required prefix for the modern Supabase publishable key format. */
 export const SB_PUBLISHABLE_PREFIX = "sb_publishable_";
