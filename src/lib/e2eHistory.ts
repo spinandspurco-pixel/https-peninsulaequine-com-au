@@ -89,6 +89,7 @@ export function recordE2eHistory(entry: Omit<E2eHistoryEntry, "id" | "at"> & { a
     mismatch: entry.mismatch,
     origin: entry.origin ?? (typeof window !== "undefined" ? window.location.origin : undefined),
     durationMs: entry.durationMs,
+    label: entry.label?.trim() || undefined,
   };
   const next = [full, ...read()].slice(0, MAX);
   write(next);
