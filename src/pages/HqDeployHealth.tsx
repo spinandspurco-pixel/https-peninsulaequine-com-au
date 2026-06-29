@@ -253,6 +253,26 @@ export default function HqDeployHealth() {
     }
   };
 
+  const downloadEscalationTxt = () => {
+    try {
+      const stamp = (lastCheckedAt ?? new Date().toISOString())
+        .replace(/[:.]/g, "-");
+      const filename = `deploy-health-escalation-${stamp}.txt`;
+      const blob = new Blob([supportBody], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success(`Downloaded ${filename}`);
+    } catch {
+      toast.error("Download failed");
+    }
+  };
+
   const copySupportEmail = async () => {
     const full =
       `To: support@lovable.dev\n` +
