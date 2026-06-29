@@ -79,30 +79,81 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  const { user, roles, ready, rolesLoading, signIn, signOut } = useAuth();
+  const [signInError, setSignInError] = useState<SignInError | null>(null);
+  const { user, roles, ready, rolesLoading, rolesError, signIn, signOut } = useAuth();
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const redirectTo = searchParams.get("redirect") || null;
 
+  // Surface URL-borne OAuth errors (Supabase appends ?error=...&error_description=...)
+  useEffect(() => {
+    const err = searchParams.get("error_description") || searchParams.get("error");
+    if (err) {
+      setSignInError(classifyOAuthError(err));
+      recordOAuthError({ provider: "google", source: "callback-url", message: err });
+    }
+  }, [searchParams]);
+
+  // Surface a roles-fetch failure as a persistent banner too.
+  useEffect(() => {
+    if (rolesError) {
+      setSignInError({
+        kind: "roles",
+        title: "Your profile didn't load",
+        detail: rolesError,
+        hint: "This usually clears with a retry. If not, clear the cache and sign in again.",
+        canRetry: true,
+        canClearCache: true,
+      });
+    }
+  }, [rolesError]);
+
+  const retryGoogle = async () => {
+    setSignInError(null);
+    setIsLoading(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) {
+        setIsLoading(false);
+        const classified = classifyOAuthError(result.error.message || "");
+        setSignInError(classified);
+        recordOAuthError({ provider: "google", source: "login-retry", message: result.error.message || "" });
+        return;
+      }
+      if (result.redirected) return;
+    } catch (err) {
+      setIsLoading(false);
+      const msg = err instanceof Error ? err.message : String(err);
+      setSignInError(classifyOAuthError(msg));
+    }
+  };
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setSignInError(null);
 
     const { error } = await signIn(email, password);
 
     if (error) {
+      const isInvalid = error.message === "Invalid login credentials";
+      setSignInError({
+        kind: "credentials",
+        title: isInvalid ? "Email or password is incorrect" : "Sign-in failed",
+        detail: error.message,
+        hint: isInvalid ? "Double-check your credentials, or contact an administrator." : undefined,
+        canRetry: false,
+      });
       toast.error(
-        error.message === "Invalid login credentials"
+        isInvalid
           ? "Invalid email or password. Contact admin if you need access."
           : error.message
       );
       setIsLoading(false);
       return;
     }
-
-    // No success toast — the redirect to the role landing page is the
-    // real confirmation. A standalone "Welcome back" toast on the login
-    // screen reads like success even when state hasn't actually changed.
   };
 
   // Render-time redirect: never paint the form (or the authed HqHeader
