@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { MentionsBadge } from "@/components/layout/MentionsBadge";
+import { SignOutConfirm } from "@/components/auth/SignOutConfirm";
 
 /**
  * Slim header for private surfaces (HQ, admin, portal, staff, trainer).
@@ -39,12 +40,14 @@ export function HqHeader() {
         </span>
         <div className="ml-auto flex items-center gap-5">
           <MentionsBadge />
-          <button
-            onClick={handleSignOut}
-            className="font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground/55 hover:text-foreground/90 transition-colors"
-          >
-            Sign out
-          </button>
+          <SignOutConfirm onConfirm={handleSignOut}>
+            <button
+              type="button"
+              className="font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground/55 hover:text-foreground/90 transition-colors"
+            >
+              Sign out
+            </button>
+          </SignOutConfirm>
         </div>
       </div>
     </header>
