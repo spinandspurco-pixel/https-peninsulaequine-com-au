@@ -829,8 +829,79 @@ export default function HqDiagnostics() {
             authenticated session is established in this window. PASS means sign-in completed
             with no <code className="font-mono">redirect_uri_mismatch</code> or provider errors.
           </div>
+          <div className="px-4 py-3 border-b border-foreground/10">
+            <label className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55 block mb-2">
+              Test account label <span className="opacity-50 normal-case tracking-normal">(optional — tags this run for tracking)</span>
+            </label>
+            <div className="flex items-center gap-2 flex-wrap">
+              <input
+                type="text"
+                value={e2eLabel}
+                onChange={(e) => setE2eLabel(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e2eRunning) {
+                    e.preventDefault();
+                    runGoogleE2E();
+                  }
+                }}
+                placeholder="e.g. josh@peninsulaequine.com.au, ciro-admin, qa-tester-1"
+                list="e2e-label-suggestions"
+                disabled={e2eRunning}
+                className="flex-1 min-w-[18rem] bg-transparent border border-foreground/20 focus:border-foreground/50 outline-none px-2.5 py-1.5 text-[0.75rem] font-mono opacity-90 placeholder:opacity-30 disabled:opacity-40"
+              />
+              <datalist id="e2e-label-suggestions">
+                {e2eSavedLabels.map((l) => (
+                  <option key={l} value={l} />
+                ))}
+              </datalist>
+              {e2eLabel && (
+                <button
+                  type="button"
+                  onClick={() => setE2eLabel("")}
+                  className="text-[0.55rem] tracking-[0.3em] uppercase opacity-50 hover:opacity-90 transition-opacity"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+            {e2eSavedLabels.length > 0 && (
+              <div className="mt-2 flex items-center gap-1.5 flex-wrap">
+                <span className="text-[0.55rem] tracking-[0.3em] uppercase opacity-40 mr-1">Recent:</span>
+                {e2eSavedLabels.map((l) => (
+                  <span key={l} className="inline-flex items-center gap-1 border border-foreground/15 rounded-sm">
+                    <button
+                      type="button"
+                      onClick={() => setE2eLabel(l)}
+                      className="text-[0.65rem] font-mono px-2 py-0.5 opacity-75 hover:opacity-100 transition-opacity"
+                      title="Use this label"
+                    >
+                      {l}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        forgetE2eLabel(l);
+                        setE2eSavedLabels(listE2eLabels());
+                        if (e2eLabel === l) setE2eLabel("");
+                      }}
+                      className="text-[0.65rem] opacity-40 hover:opacity-90 transition-opacity pr-1.5"
+                      title="Forget this label"
+                      aria-label={`Forget ${l}`}
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
           <div className="px-4 py-3 text-sm font-light leading-relaxed border-b border-foreground/10"
                style={{ color: statusColor(e2eStatus) }}>
+            {e2eLabel && !e2eRunning && (
+              <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-50 mb-1">
+                Tracking as: <span className="font-mono opacity-90">{e2eLabel}</span>
+              </div>
+            )}
             {e2eDetail}
           </div>
           {e2eLog.length > 0 && (
