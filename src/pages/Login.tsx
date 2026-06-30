@@ -342,6 +342,14 @@ export default function Login() {
                       Clear cache + retry
                     </button>
                   )}
+                  {signInError.showDiagnostics && (
+                    <Link
+                      to="/hq/diagnostics"
+                      className="text-[11px] uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors"
+                    >
+                      Open diagnostics →
+                    </Link>
+                  )}
                   <button
                     type="button"
                     onClick={() => setSignInError(null)}
