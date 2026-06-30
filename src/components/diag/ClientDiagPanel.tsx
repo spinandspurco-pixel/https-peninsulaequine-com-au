@@ -584,6 +584,36 @@ export function ClientDiagPanel() {
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+              <span style={{ opacity: 0.6, letterSpacing: "0.06em" }}>FRONTEND ENV SNAPSHOT</span>
+              <button
+                onClick={copyEnvSnapshot}
+                style={btn}
+                title="Copy environment + Supabase key prefix as JSON (no secret values)"
+              >
+                {envCopied ?? "copy env"}
+              </button>
+            </div>
+            {row("environment", environment)}
+            {row("vite mode", `${viteMode}${isDev ? " (dev)" : isProd ? " (prod)" : ""}`)}
+            {row("region", region)}
+            {row("supabase key prefix", supaKeyPrefix)}
+            <div style={{ opacity: 0.5, marginTop: 2, fontSize: 10 }}>
+              Safe to paste into support tickets — key prefix only, never the secret.
+            </div>
+          </div>
+
+
+          <div
+            style={{
+              marginTop: 4,
+              marginBottom: 4,
+              padding: "6px 8px",
+              border: "1px solid #2a313a",
+              borderRadius: 4,
+              background: "rgba(255,255,255,0.02)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
               <span style={{ opacity: 0.6, letterSpacing: "0.06em" }}>
                 BUILD INFO
                 {lastRefreshAt && (
