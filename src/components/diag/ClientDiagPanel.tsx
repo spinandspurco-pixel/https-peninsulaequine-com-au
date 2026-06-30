@@ -375,6 +375,50 @@ export function ClientDiagPanel() {
     setTimeout(() => setDownloaded(null), 2500);
   };
 
+  const [curlCopied, setCurlCopied] = useState<string | null>(null);
+  const buildCurlSnippet = () => {
+    const origin =
+      typeof window !== "undefined" ? window.location.origin : "https://peninsulaequine.systems";
+    const stamp = new Date().toISOString();
+    const ua = `peninsula-diag/1.0 (${environment}; ${host})`;
+    const lines = [
+      `# Peninsula HQ diagnostics — captured ${stamp}`,
+      `# origin: ${origin}`,
+      `# route:  ${path}`,
+      ``,
+      `# 1. Build info (expected: JSON with buildTime, buildCommit, bundleHash)`,
+      `curl -sS -D - -o /tmp/build-info.json \\`,
+      `  -H 'Accept: application/json' \\`,
+      `  -H 'Cache-Control: no-cache' \\`,
+      `  -H 'User-Agent: ${ua}' \\`,
+      `  '${origin}/api/build-info'`,
+      ``,
+      `# 2. Health (expected: JSON with status, service, checkedAt, buildInfo)`,
+      `curl -sS -D - -o /tmp/health.json \\`,
+      `  -H 'Accept: application/json' \\`,
+      `  -H 'Cache-Control: no-cache' \\`,
+      `  -H 'User-Agent: ${ua}' \\`,
+      `  '${origin}/api/health'`,
+      ``,
+      `# 3. Document headers (expected: text/html, no-store on auth surfaces)`,
+      `curl -sS -I \\`,
+      `  -H 'User-Agent: ${ua}' \\`,
+      `  '${origin}${path}'`,
+      ``,
+    ];
+    return lines.join("\n");
+  };
+  const copyCurl = async () => {
+    const snippet = buildCurlSnippet();
+    try {
+      await navigator.clipboard.writeText(snippet);
+      setCurlCopied("copied ✓");
+    } catch {
+      setCurlCopied("copy failed");
+    }
+    setTimeout(() => setCurlCopied(null), 2500);
+  };
+
 
 
 
@@ -465,6 +509,9 @@ export function ClientDiagPanel() {
                 </button>
                 <button onClick={downloadDiagnostics} style={btn} title="Download diagnostics as .json">
                   {downloaded ?? "download"}
+                </button>
+                <button onClick={copyCurl} style={btn} title="Copy curl commands for /api/build-info, /api/health and current page headers">
+                  {curlCopied ?? "copy curl"}
                 </button>
 
               </div>
