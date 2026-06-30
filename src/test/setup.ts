@@ -47,3 +47,21 @@ Object.defineProperty(globalThis, "ResizeObserver", {
   writable: true,
   value: MockResizeObserver,
 });
+
+// Regression guard: ensure the globals our tests rely on are wired up on both
+// `window` and `globalThis`. If a future change drops one of these shims, fail
+// loudly at setup time rather than mid-test with a confusing stack trace.
+const expectedGlobals = [
+  "matchMedia",
+  "IntersectionObserver",
+  "ResizeObserver",
+] as const;
+
+for (const key of expectedGlobals) {
+  if (typeof (globalThis as Record<string, unknown>)[key] === "undefined") {
+    throw new Error(`[test/setup] expected globalThis.${key} to be defined`);
+  }
+  if (typeof (window as unknown as Record<string, unknown>)[key] === "undefined") {
+    throw new Error(`[test/setup] expected window.${key} to be defined`);
+  }
+}
