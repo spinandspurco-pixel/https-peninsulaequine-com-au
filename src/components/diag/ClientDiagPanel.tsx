@@ -55,7 +55,7 @@ export function ClientDiagPanel() {
           return;
         }
         try {
-          const j = await r.json();
+          const j = (await r.json()) as BuildInfo;
           setServerBuild({
             buildTime: j.buildTime,
             buildCommit: j.buildCommit,
