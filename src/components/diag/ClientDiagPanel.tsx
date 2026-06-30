@@ -303,11 +303,11 @@ export function ClientDiagPanel() {
   }
   const language = typeof navigator !== "undefined" ? navigator.language : "(unknown)";
 
-  const copyBuildInfo = async () => {
+  const buildDiagnosticPayload = () => {
     const capturedAt = new Date().toISOString();
     const serverFetchedAt = health?.checkedAt ?? null;
     const serverOk = !!serverBuild && !serverBuild.error;
-    const payload = {
+    return {
       capturedAt,
       url: window.location.href,
       host,
@@ -339,7 +339,10 @@ export function ClientDiagPanel() {
         serverBundleHash: serverOk ? (serverBuild?.bundleHash ?? null) : null,
       },
     };
-    const pretty = JSON.stringify(payload, null, 2);
+  };
+
+  const copyBuildInfo = async () => {
+    const pretty = JSON.stringify(buildDiagnosticPayload(), null, 2);
     try {
       await navigator.clipboard.writeText(pretty);
       setCopied("copied ✓");
@@ -348,6 +351,30 @@ export function ClientDiagPanel() {
     }
     setTimeout(() => setCopied(null), 2500);
   };
+
+  const [downloaded, setDownloaded] = useState<string | null>(null);
+  const downloadDiagnostics = () => {
+    try {
+      const payload = buildDiagnosticPayload();
+      const pretty = JSON.stringify(payload, null, 2);
+      const blob = new Blob([pretty], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const stamp = payload.capturedAt.replace(/[:.]/g, "-");
+      const safeHost = (host || "unknown").replace(/[^a-z0-9.-]/gi, "_");
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `diagnostics-${safeHost}-${stamp}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setDownloaded("saved ✓");
+    } catch (e) {
+      setDownloaded(`failed: ${String((e as Error)?.message ?? e)}`);
+    }
+    setTimeout(() => setDownloaded(null), 2500);
+  };
+
 
 
 
