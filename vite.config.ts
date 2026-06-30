@@ -2,7 +2,7 @@ import { defineConfig, type PluginOption } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
-import type { BuildInfo, HealthResponse } from "./src/types/health";
+import { makeBuildInfoPayload, makeHealthPayload } from "./src/lib/healthPayload";
 
 const BUILD_TIME = new Date().toISOString();
 const BUILD_COMMIT =
