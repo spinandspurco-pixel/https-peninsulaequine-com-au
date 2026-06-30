@@ -130,4 +130,6 @@ export default defineConfig(({ mode }) => {
     __BUILD_TIME__: JSON.stringify(BUILD_TIME),
     __BUILD_COMMIT__: JSON.stringify(BUILD_COMMIT),
   },
-}));
+  };
+});
+
