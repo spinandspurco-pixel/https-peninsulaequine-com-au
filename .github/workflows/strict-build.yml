@@ -26,8 +26,12 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: TypeScript typecheck
-        run: bunx tsc --noEmit
+      # Full-project typecheck via the root tsconfig's project references
+      # (tsconfig.app.json + tsconfig.node.json). Using `tsc -b --force`
+      # ensures non-app files like vite.config.ts are also verified, not just
+      # the src/ tree picked up by tsconfig.app.json.
+      - name: TypeScript typecheck (full project, all references)
+        run: bunx tsc -b --force --pretty
 
       # Runs prebuild (verify-assets) → strict build (fails on Tailwind/PostCSS warnings)
       # → postbuild (prerender + verify-prerender + verify-internal-links).
