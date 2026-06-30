@@ -21,6 +21,15 @@ type HealthState =
     }
   | null;
 
+type DiagState =
+  | ({
+      httpStatus?: number;
+      error?: string;
+      latencyMs?: number;
+      fetchedAt?: string;
+    } & Partial<DiagResponse>)
+  | null;
+
 /**
  * Temporary client-side diagnostic panel.
  *
