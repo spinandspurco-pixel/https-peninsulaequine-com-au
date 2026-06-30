@@ -409,9 +409,53 @@ export function ClientDiagPanel() {
           )}
           {row("supabase url", supaUrl || "(missing)")}
           {row("supabase url valid", supaUrlValid ? "yes" : "no")}
-          {row("supabase key", supaKeyShape)}
-          {row("supabase key prefix", supaKeyPrefix)}
-          {row("supabase key length", supaKeyLen || "—")}
+          {(() => {
+            const family =
+              !supaKey
+                ? "missing"
+                : supaKey.startsWith("sb_publishable_")
+                  ? "new"
+                  : supaKey.startsWith("sb_secret_")
+                    ? "secret"
+                    : supaKey.startsWith("eyJ")
+                      ? "legacy"
+                      : "unknown";
+            const ok = family === "new";
+            const palette =
+              family === "new"
+                ? { bg: "rgba(34,197,94,0.08)", border: "#22c55e", fg: "#86efac", label: "OK", msg: "sb_publishable_ ✓ matches expected format" }
+                : family === "legacy"
+                  ? { bg: "rgba(239,68,68,0.10)", border: "#ef4444", fg: "#fca5a5", label: "MISMATCH", msg: "Legacy JWT (eyJ…) — Supabase disabled this key family. Sign-in will fail. Expected sb_publishable_*." }
+                  : family === "secret"
+                    ? { bg: "rgba(239,68,68,0.18)", border: "#ef4444", fg: "#fecaca", label: "DANGER", msg: "sb_secret_* is a SERVER key. It must never ship to the client. Replace with sb_publishable_*." }
+                    : family === "missing"
+                      ? { bg: "rgba(239,68,68,0.10)", border: "#ef4444", fg: "#fca5a5", label: "MISSING", msg: "VITE_SUPABASE_PUBLISHABLE_KEY is not defined in the build." }
+                      : { bg: "rgba(234,179,8,0.10)", border: "#eab308", fg: "#fde68a", label: "UNKNOWN", msg: "Key prefix is not recognised. Expected sb_publishable_*." };
+            return (
+              <div
+                style={{
+                  marginTop: 4,
+                  marginBottom: 4,
+                  padding: "6px 8px",
+                  border: `1px solid ${palette.border}`,
+                  borderRadius: 4,
+                  background: palette.bg,
+                  color: palette.fg,
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                  <span style={{ letterSpacing: "0.06em", fontWeight: 600 }}>SUPABASE KEY · {palette.label}</span>
+                  <span style={{ opacity: 0.8, fontSize: 10 }}>family: {family}</span>
+                </div>
+                <div style={{ marginBottom: 4, lineHeight: 1.35 }}>{palette.msg}</div>
+                {row("prefix", supaKeyPrefix)}
+                {row("length", supaKeyLen || "—")}
+                {row("expected", "sb_publishable_*")}
+                {!ok && row("action", "Rotate via Lovable Cloud → API keys, then republish")}
+              </div>
+            );
+          })()}
+
           {row("auth ready", ready ? "yes" : "no")}
           {row("authLoading", authLoading ? "true" : "false")}
           {row("rolesLoading", rolesLoading ? "true" : "false")}
