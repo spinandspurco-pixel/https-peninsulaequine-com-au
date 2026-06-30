@@ -27,6 +27,11 @@ export function ClientDiagPanel() {
     | { buildTime?: string; buildCommit?: string; bundleHash?: string | null; error?: string; status?: number }
     | null
   >(null);
+  const [health, setHealth] = useState<
+    | { status?: string; service?: string; checkedAt?: string; bundleHash?: string | null; error?: string; httpStatus?: number }
+    | null
+  >(null);
+
 
   useEffect(() => {
     let cancelled = false;
