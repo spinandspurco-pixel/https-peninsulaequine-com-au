@@ -198,19 +198,22 @@ export default function HqDeployHealth() {
   const retryPromotion = useCallback(async () => {
     setRetrying(true);
     const startedAt = new Date().toISOString();
-    const beforeProbes = results.length
-      ? results
-      : await Promise.all(TARGETS.map((t) => probe(t.label, t.url)));
-    const before = beforeProbes.map((r) => ({
-      label: r.label,
-      bundleFile: r.bundleFile,
-      stuck: isStuck(r),
-    }));
-
-    let afterProbes: ProbeResult[] = beforeProbes;
+    let before: RetryOutcome["before"] = [];
+    let afterProbes: ProbeResult[] = [];
     let attempts = 0;
     const maxAttempts = 4;
+
     try {
+      const beforeProbes = results.length
+        ? results
+        : await Promise.all(TARGETS.map((t) => probe(t.label, t.url)));
+      before = beforeProbes.map((r) => ({
+        label: r.label,
+        bundleFile: r.bundleFile,
+        stuck: isStuck(r),
+      }));
+      afterProbes = beforeProbes;
+
       // Re-probe with a short backoff so a freshly-triggered promotion
       // (CDN cache flush, edge re-pin) has a chance to land.
       for (let i = 0; i < maxAttempts; i++) {
@@ -227,6 +230,60 @@ export default function HqDeployHealth() {
         if (!stillStuck || changed) break;
         await new Promise((res) => setTimeout(res, 1500 * (i + 1)));
       }
+
+
+      // Persist visible state from the final probe pass (strip the cache-bust
+      // suffix from URLs we display).
+      const cleaned = afterProbes.map((r, idx) => ({ ...r, url: TARGETS[idx].url }));
+      setResults(cleaned);
+      setLastCheckedAt(new Date().toISOString());
+      recordResults(cleaned);
+
+      const after = cleaned.map((r) => ({
+        label: r.label,
+        bundleFile: r.bundleFile,
+        stuck: isStuck(r),
+      }));
+      const stillStuck = after.filter((a) => a.stuck);
+      const changed = after.filter((a, idx) => {
+        const b = before[idx];
+        return b && a.bundleFile && b.bundleFile && a.bundleFile !== b.bundleFile;
+      });
+
+      let status: RetryOutcome["status"];
+      let message: string;
+      if (stillStuck.length === 0 && changed.length > 0) {
+        status = "success";
+        message = `Promotion landed — fresh bundle on ${changed.length}/${after.length} target(s).`;
+        toast.success(message);
+      } else if (stillStuck.length === 0) {
+        status = "success";
+        message = `All targets fresh (no stale markers detected).`;
+        toast.success(message);
+      } else if (changed.length > 0) {
+        status = "partial";
+        message = `Partial — ${changed.length} target(s) updated, ${stillStuck.length} still stale.`;
+        toast.warning(message);
+      } else {
+        status = "no_change";
+        message = `No change after ${attempts} attempt(s) — promotion still stuck. Escalate to Lovable Support.`;
+        toast.error(message);
+      }
+
+      setRetryOutcome({
+        startedAt,
+        finishedAt: new Date().toISOString(),
+        attempts,
+        before,
+        after,
+        status,
+        message,
+      });
+      void logDeployHealthAudit(
+        "retry_promotion",
+        status === "success" ? "success" : "failure",
+        { attempts, startedAt, status, message, before, after },
+      );
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       const outcome: RetryOutcome = {
@@ -243,64 +300,9 @@ export default function HqDeployHealth() {
       void logDeployHealthAudit("retry_promotion", "failure", {
         attempts, startedAt, error: msg, before,
       });
+    } finally {
       setRetrying(false);
-      return;
     }
-
-
-    // Persist visible state from the final probe pass (strip the cache-bust
-    // suffix from URLs we display).
-    const cleaned = afterProbes.map((r, idx) => ({ ...r, url: TARGETS[idx].url }));
-    setResults(cleaned);
-    setLastCheckedAt(new Date().toISOString());
-    recordResults(cleaned);
-
-    const after = cleaned.map((r) => ({
-      label: r.label,
-      bundleFile: r.bundleFile,
-      stuck: isStuck(r),
-    }));
-    const stillStuck = after.filter((a) => a.stuck);
-    const changed = after.filter((a, idx) => {
-      const b = before[idx];
-      return b && a.bundleFile && b.bundleFile && a.bundleFile !== b.bundleFile;
-    });
-
-    let status: RetryOutcome["status"];
-    let message: string;
-    if (stillStuck.length === 0 && changed.length > 0) {
-      status = "success";
-      message = `Promotion landed — fresh bundle on ${changed.length}/${after.length} target(s).`;
-      toast.success(message);
-    } else if (stillStuck.length === 0) {
-      status = "success";
-      message = `All targets fresh (no stale markers detected).`;
-      toast.success(message);
-    } else if (changed.length > 0) {
-      status = "partial";
-      message = `Partial — ${changed.length} target(s) updated, ${stillStuck.length} still stale.`;
-      toast.warning(message);
-    } else {
-      status = "no_change";
-      message = `No change after ${attempts} attempt(s) — promotion still stuck. Escalate to Lovable Support.`;
-      toast.error(message);
-    }
-
-    setRetryOutcome({
-      startedAt,
-      finishedAt: new Date().toISOString(),
-      attempts,
-      before,
-      after,
-      status,
-      message,
-    });
-    void logDeployHealthAudit(
-      "retry_promotion",
-      status === "success" ? "success" : "failure",
-      { attempts, startedAt, status, message, before, after },
-    );
-    setRetrying(false);
   }, [results]);
 
 
