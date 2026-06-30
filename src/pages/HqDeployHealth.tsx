@@ -197,10 +197,11 @@ export default function HqDeployHealth() {
     if (isAdmin) {
       void logDeployHealthAudit("view_page", "info", {
         path: typeof location !== "undefined" ? location.pathname : null,
-      });
+      }).then(() => refreshAudit());
       run();
     }
-  }, [isAdmin, run]);
+  }, [isAdmin, run, refreshAudit]);
+
 
 
   const retryPromotion = useCallback(async () => {
