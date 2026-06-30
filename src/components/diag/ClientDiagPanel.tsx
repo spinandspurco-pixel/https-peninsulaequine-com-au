@@ -92,7 +92,10 @@ export function ClientDiagPanel() {
     };
   }, []);
 
+  useEffect(() => {
+    const unsub = subscribeAuthLog(setEntries);
     const onErr = (e: ErrorEvent) =>
+
       setLastError(`${e.message} @ ${e.filename}:${e.lineno}:${e.colno}`);
     const onRej = (e: PromiseRejectionEvent) =>
       setLastError(`unhandledrejection: ${String((e.reason && (e.reason.message || e.reason)) ?? e.reason)}`);
