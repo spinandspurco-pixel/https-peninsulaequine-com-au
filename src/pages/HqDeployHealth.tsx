@@ -7,6 +7,12 @@ import { toast } from "sonner";
 import { recordResults } from "@/lib/deployHealth";
 import { logDeployHealthAudit, type DeployHealthAuditAction } from "@/lib/deployHealthAudit";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  auditRowsToCsv,
+  auditRowsToJson,
+  downloadTextFile,
+  timestampedFilename,
+} from "@/lib/auditExport";
 
 type AuditRow = {
   id: string;
@@ -14,6 +20,7 @@ type AuditRow = {
   actor_email: string | null;
   action: string;
   status: string | null;
+  payload: unknown;
 };
 
 
