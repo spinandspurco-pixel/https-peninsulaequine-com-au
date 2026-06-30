@@ -15,6 +15,7 @@ import { HqLoadingState } from "@/components/hq/HqLoadingState";
 import { clearLocalAuthCacheAndSignOut } from "@/lib/authCache";
 import { trackAuthFunnel } from "@/lib/authFunnel";
 import { attemptGoogleSignIn } from "@/lib/oauthSignIn";
+import { GoogleOAuthConfigBanner } from "@/components/auth/GoogleOAuthConfigBanner";
 
 type SignInErrorKind = "google" | "session" | "credentials" | "roles" | "cancelled";
 
@@ -292,6 +293,7 @@ export default function Login() {
         <div className="bg-card/80 backdrop-blur border border-border/60 rounded-sm shadow-xl">
           <div className="p-6 sm:p-8 space-y-6">
             <LegacyKeyBanner />
+            <GoogleOAuthConfigBanner />
             {signInError && (
               <div
                 role="alert"
