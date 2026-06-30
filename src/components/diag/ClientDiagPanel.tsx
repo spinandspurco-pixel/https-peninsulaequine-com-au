@@ -413,6 +413,17 @@ export function ClientDiagPanel() {
         serverBuildTime: serverOk ? (serverBuild?.buildTime ?? null) : null,
         serverBuildCommit: serverOk ? (serverBuild?.buildCommit ?? null) : null,
       },
+      diag: {
+        fetchedAt: diag?.fetchedAt ?? null,
+        httpStatus: diag?.httpStatus ?? null,
+        reachable: !!diag && !diag.error,
+        error: diag?.error ?? null,
+        latencyMs: diag?.latencyMs ?? null,
+        service: diag?.service ?? null,
+        checkedAt: diag?.checkedAt ?? null,
+        buildInfo: diag?.buildInfo ?? null,
+        supabase: diag?.supabase ?? null,
+      },
       timings: {
         unit: "ms",
         source: "client (performance.now)",
