@@ -911,24 +911,34 @@ export default function HqDeployHealth() {
                 </tbody>
               </table>
             </div>
-            {(retryOutcome.status === "no_change" || retryOutcome.status === "partial") && (
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-1">
-                <button
-                  type="button"
-                  onClick={openSupportEmail}
-                  className="text-xs tracking-[0.3em] uppercase text-red-700 underline underline-offset-8"
-                >
-                  Escalate to Lovable Support →
-                </button>
-                <button
-                  type="button"
-                  onClick={copyEscalationJson}
-                  className="text-xs tracking-[0.3em] uppercase text-foreground/80 underline underline-offset-8"
-                >
-                  Copy payload as JSON
-                </button>
-              </div>
-            )}
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-1">
+              <button
+                type="button"
+                onClick={copyPromotionReport}
+                className="text-xs tracking-[0.3em] uppercase text-foreground/80 underline underline-offset-8"
+                title="Copy full before/after probe JSON for support/debugging"
+              >
+                Copy promotion report
+              </button>
+              {(retryOutcome.status === "no_change" || retryOutcome.status === "partial") && (
+                <>
+                  <button
+                    type="button"
+                    onClick={openSupportEmail}
+                    className="text-xs tracking-[0.3em] uppercase text-red-700 underline underline-offset-8"
+                  >
+                    Escalate to Lovable Support →
+                  </button>
+                  <button
+                    type="button"
+                    onClick={copyEscalationJson}
+                    className="text-xs tracking-[0.3em] uppercase text-foreground/80 underline underline-offset-8"
+                  >
+                    Copy payload as JSON
+                  </button>
+                </>
+              )}
+            </div>
           </section>
         )}
 
