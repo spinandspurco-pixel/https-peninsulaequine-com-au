@@ -2,6 +2,22 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { getAuthLogEntries, subscribeAuthLog, type AuthLogEntry } from "@/lib/authRouting";
+import type { BuildInfo, HealthResponse } from "@/types/health";
+
+type ServerBuildState =
+  | ({ status?: number; error?: string } & Partial<BuildInfo>)
+  | null;
+
+type HealthState =
+  | {
+      httpStatus?: number;
+      error?: string;
+      status?: HealthResponse["status"];
+      service?: HealthResponse["service"];
+      checkedAt?: HealthResponse["checkedAt"];
+      bundleHash?: BuildInfo["bundleHash"];
+    }
+  | null;
 
 /**
  * Temporary client-side diagnostic panel.
@@ -25,14 +41,8 @@ export function ClientDiagPanel() {
   const [cacheHeaders, setCacheHeaders] = useState<Record<string, string | null> | null>(null);
   const [cacheError, setCacheError] = useState<string | null>(null);
   const [cacheCheckedAt, setCacheCheckedAt] = useState<number | null>(null);
-  const [serverBuild, setServerBuild] = useState<
-    | { buildTime?: string; buildCommit?: string; bundleHash?: string | null; error?: string; status?: number }
-    | null
-  >(null);
-  const [health, setHealth] = useState<
-    | { status?: string; service?: string; checkedAt?: string; bundleHash?: string | null; error?: string; httpStatus?: number }
-    | null
-  >(null);
+  const [serverBuild, setServerBuild] = useState<ServerBuildState>(null);
+  const [health, setHealth] = useState<HealthState>(null);
 
 
   useEffect(() => {
@@ -45,7 +55,7 @@ export function ClientDiagPanel() {
           return;
         }
         try {
-          const j = await r.json();
+          const j = (await r.json()) as BuildInfo;
           setServerBuild({
             buildTime: j.buildTime,
             buildCommit: j.buildCommit,
@@ -74,7 +84,7 @@ export function ClientDiagPanel() {
           return;
         }
         try {
-          const j = await r.json();
+          const j = (await r.json()) as HealthResponse;
           setHealth({
             status: j.status,
             service: j.service,
