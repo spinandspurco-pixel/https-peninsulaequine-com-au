@@ -206,9 +206,13 @@ export default function HqDeployHealth() {
       };
       setRetryOutcome(outcome);
       toast.error(outcome.message);
+      void logDeployHealthAudit("retry_promotion", "failure", {
+        attempts, startedAt, error: msg, before,
+      });
       setRetrying(false);
       return;
     }
+
 
     // Persist visible state from the final probe pass (strip the cache-bust
     // suffix from URLs we display).
