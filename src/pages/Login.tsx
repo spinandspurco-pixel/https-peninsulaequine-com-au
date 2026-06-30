@@ -9,11 +9,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Eye, EyeOff, Loader2, ArrowLeft, Lock, AlertTriangle, RefreshCw } from "lucide-react";
-import { lovable } from "@/integrations/lovable";
+
 import { StaffPortalFrame } from "@/components/StaffPortalFrame";
 import { HqLoadingState } from "@/components/hq/HqLoadingState";
 import { clearLocalAuthCacheAndSignOut } from "@/lib/authCache";
 import { trackAuthFunnel } from "@/lib/authFunnel";
+import { attemptGoogleSignIn } from "@/lib/oauthSignIn";
 
 type SignInErrorKind = "google" | "session" | "credentials" | "roles" | "cancelled";
 
@@ -24,6 +25,8 @@ interface SignInError {
   hint?: string;
   canRetry?: boolean;
   canClearCache?: boolean;
+  /** When true, surface an "Open diagnostics →" link for admins. */
+  showDiagnostics?: boolean;
   /** When true, hide the raw `detail` from the UI (still logged to console). */
   hideDetail?: boolean;
 }
@@ -66,8 +69,9 @@ function classifyOAuthError(message: string): SignInError {
       kind: "google",
       title: "Google rejected this sign-in URL",
       detail: message,
-      hint: "An administrator needs to add this domain to the OAuth allow-list.",
+      hint: `Add ${typeof window !== "undefined" ? window.location.origin : "this origin"} to the OAuth client's Authorized redirect URIs, then retry.`,
       canRetry: true,
+      showDiagnostics: true,
     };
   }
   if (
@@ -76,17 +80,18 @@ function classifyOAuthError(message: string): SignInError {
     msg.includes("provider not enabled") ||
     msg.includes("missing oauth") ||
     msg.includes("client_secret") ||
-    msg.includes("client secret")
+    msg.includes("client secret") ||
+    msg.includes("invalid client")
   ) {
-    // Technical detail logged to console only; user sees a plain message.
     console.error("[oauth] Google provider/secret misconfigured:", message);
     return {
       kind: "google",
       title: "Google sign-in is temporarily unavailable",
       detail: message,
-      hint: "Please use email + password below, or contact an administrator.",
+      hint: "The Google provider isn't fully configured. Use email + password below, or open diagnostics to verify the Client ID and Secret.",
       canRetry: false,
       hideDetail: true,
+      showDiagnostics: true,
     };
   }
   if (msg.includes("refresh") || msg.includes("session") || msg.includes("token")) {
@@ -99,12 +104,30 @@ function classifyOAuthError(message: string): SignInError {
       canClearCache: true,
     };
   }
+  if (
+    msg.includes("network") ||
+    msg.includes("failed to fetch") ||
+    msg.includes("timeout") ||
+    msg.includes("timed out") ||
+    msg.includes("503") ||
+    msg.includes("502") ||
+    msg.includes("504")
+  ) {
+    return {
+      kind: "google",
+      title: "Couldn't reach Google",
+      detail: message,
+      hint: "Network or upstream issue. We retried automatically — try once more, or use email + password below.",
+      canRetry: true,
+    };
+  }
   return {
     kind: "google",
     title: "Google sign-in failed",
     detail: message || "Unknown error",
     hint: "Try again, or use email + password below.",
     canRetry: true,
+    showDiagnostics: true,
   };
 }
 
@@ -148,27 +171,24 @@ export default function Login() {
     setSignInError(null);
     setIsLoading(true);
     trackAuthFunnel("auth_login_attempt", { method: "google", via: "retry", force: true });
-    try {
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
-      });
-      if (result.error) {
-        setIsLoading(false);
-        const classified = classifyOAuthError(result.error.message || "");
-        setSignInError(classified);
-        recordOAuthError({ provider: "google", source: "login-retry", message: result.error.message || "" });
-        return;
-      }
-      if (result.redirected) {
-        trackAuthFunnel("auth_login_success", { method: "google", via: "redirect", force: true });
-        return;
-      }
-      trackAuthFunnel("auth_login_success", { method: "google", via: "popup", force: true });
-    } catch (err) {
-      setIsLoading(false);
-      const msg = err instanceof Error ? err.message : String(err);
-      setSignInError(classifyOAuthError(msg));
+    const result = await attemptGoogleSignIn({
+      redirectUri: window.location.origin,
+      maxAttempts: 2,
+      onAttempt: (n) => authLog("oauth:google:retry-attempt", { attempt: n }),
+    });
+    if (result.kind === "ok") {
+      trackAuthFunnel("auth_login_success", { method: "google", via: result.via, force: true });
+      return;
     }
+    setIsLoading(false);
+    const classified = classifyOAuthError(result.message);
+    setSignInError(classified);
+    recordOAuthError({
+      provider: "google",
+      source: "login-retry",
+      message: result.message,
+      context: { attempts: result.attempts, transient: result.transient },
+    });
   };
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -322,6 +342,14 @@ export default function Login() {
                       Clear cache + retry
                     </button>
                   )}
+                  {signInError.showDiagnostics && (
+                    <Link
+                      to="/hq/diagnostics"
+                      className="text-[11px] uppercase tracking-[0.15em] text-foreground hover:text-accent transition-colors"
+                    >
+                      Open diagnostics →
+                    </Link>
+                  )}
                   <button
                     type="button"
                     onClick={() => setSignInError(null)}
@@ -434,49 +462,45 @@ export default function Login() {
                   setSignInError(e);
                   toast.error(e.title);
                 }, 15000);
-                try {
-                  const result = await lovable.auth.signInWithOAuth("google", {
-                    redirect_uri: window.location.origin,
+                const result = await attemptGoogleSignIn({
+                  redirectUri: window.location.origin,
+                  maxAttempts: 2,
+                  onAttempt: (n) =>
+                    authLog("oauth:google:attempt", { attempt: n }),
+                });
+                window.clearTimeout(watchdog);
+                authLog("oauth:google:result", {
+                  kind: result.kind,
+                  attempts: result.attempts,
+                  ...(result.kind === "ok"
+                    ? { via: result.via }
+                    : { transient: result.transient, msg: result.message }),
+                });
+                if (result.kind === "ok") {
+                  trackAuthFunnel("auth_login_success", {
+                    method: "google",
+                    via: result.via,
+                    force: true,
                   });
-                  authLog("oauth:google:result", {
-                    hasError: !!result.error,
-                    errorMsg: result.error?.message,
-                    redirected: !!result.redirected,
-                  });
-                  if (result.error) {
-                    window.clearTimeout(watchdog);
-                    setIsLoading(false);
-                    const classified = classifyOAuthError(result.error.message || "");
-                    setSignInError(classified);
-                    recordOAuthError({
-                      provider: "google",
-                      source: "login-button",
-                      message: result.error.message || "Unknown error",
-                    });
-                    toast.error(classified.title);
-                    return;
-                  }
-                  if (result.redirected) {
-                    window.clearTimeout(watchdog);
-                    trackAuthFunnel("auth_login_success", { method: "google", via: "redirect", force: true });
-                    return;
-                  }
-                  window.clearTimeout(watchdog);
-                  trackAuthFunnel("auth_login_success", { method: "google", via: "popup", force: true });
-                } catch (err) {
-                  window.clearTimeout(watchdog);
-                  const msg = err instanceof Error ? err.message : String(err);
-                  authLog("oauth:google:throw", { msg });
-                  const classified = classifyOAuthError(msg);
-                  setSignInError(classified);
-                  recordOAuthError({
-                    provider: "google",
-                    source: "login-button",
-                    message: msg,
-                  });
-                  setIsLoading(false);
-                  toast.error(classified.title);
+                  return;
                 }
+                setIsLoading(false);
+                const classified = classifyOAuthError(result.message);
+                setSignInError(classified);
+                recordOAuthError({
+                  provider: "google",
+                  source: "login-button",
+                  message: result.message,
+                  context: {
+                    attempts: result.attempts,
+                    transient: result.transient,
+                  },
+                });
+                toast.error(
+                  result.attempts > 1
+                    ? `${classified.title} (retried ${result.attempts}×)`
+                    : classified.title,
+                );
               }}
             >
               <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
