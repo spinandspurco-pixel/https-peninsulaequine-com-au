@@ -354,6 +354,10 @@ export function ClientDiagPanel() {
         <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
           {row("url", window.location.href)}
           {row("route", path)}
+          {row("environment", `${environment} · ${host}`)}
+          {row("vite mode", `${viteMode}${isDev ? " (dev)" : isProd ? " (prod)" : ""}`)}
+          {row("region/tz", `${region} · ${language}`)}
+
           <div
             style={{
               marginTop: 4,
