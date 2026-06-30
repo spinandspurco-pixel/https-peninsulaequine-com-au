@@ -408,14 +408,51 @@ export function ClientDiagPanel() {
                 {row("server bundle", serverBuild.bundleHash ?? "(unknown)")}
                 {row("server buildTime", serverBuild.buildTime ?? "(unknown)")}
                 {row("server buildCommit", (serverBuild.buildCommit ?? "(unknown)").slice(0, 12))}
-                {row(
-                  "match",
-                  serverBuild.bundleHash && serverBuild.bundleHash === bundleHash
-                    ? "✓ client = server"
-                    : "✗ MISMATCH (stale edge)",
-                )}
+                {(() => {
+                  const fields: Array<{ label: string; expected: string; actual: string }> = [
+                    { label: "bundleHash", expected: bundleHash, actual: serverBuild.bundleHash ?? "(unknown)" },
+                    { label: "buildTime", expected: clientBuildTime, actual: serverBuild.buildTime ?? "(unknown)" },
+                    { label: "buildCommit", expected: clientBuildCommit, actual: serverBuild.buildCommit ?? "(unknown)" },
+                  ];
+                  const diffs = fields.filter((f) => f.expected !== f.actual);
+                  if (diffs.length === 0) {
+                    return row("match", "✓ client = server");
+                  }
+                  return (
+                    <div
+                      style={{
+                        marginTop: 4,
+                        padding: "6px 8px",
+                        border: "1px solid #5a2a2a",
+                        borderRadius: 4,
+                        background: "rgba(255, 60, 60, 0.06)",
+                      }}
+                    >
+                      <div style={{ color: "#ff8a8a", marginBottom: 4, letterSpacing: "0.06em" }}>
+                        ✗ MISMATCH ({diffs.length} field{diffs.length > 1 ? "s" : ""})
+                      </div>
+                      {diffs.map((f) => (
+                        <div key={f.label} style={{ marginBottom: 4 }}>
+                          <div style={{ opacity: 0.7 }}>{f.label}</div>
+                          <div style={{ display: "flex", gap: 6, alignItems: "baseline" }}>
+                            <span style={{ color: "#7fbf7f", minWidth: 56 }}>expected</span>
+                            <code style={{ color: "#cfead0", wordBreak: "break-all" }}>{f.expected || "(empty)"}</code>
+                          </div>
+                          <div style={{ display: "flex", gap: 6, alignItems: "baseline" }}>
+                            <span style={{ color: "#ff9a9a", minWidth: 56 }}>actual</span>
+                            <code style={{ color: "#ffd4d4", wordBreak: "break-all" }}>{f.actual || "(empty)"}</code>
+                          </div>
+                        </div>
+                      ))}
+                      <div style={{ opacity: 0.6, marginTop: 2 }}>
+                        edge serving stale bundle — purge cache / re-promote
+                      </div>
+                    </div>
+                  );
+                })()}
               </>
             )}
+
           </div>
 
           {row(
