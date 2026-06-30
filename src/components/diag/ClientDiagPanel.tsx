@@ -84,7 +84,7 @@ export function ClientDiagPanel() {
           return;
         }
         try {
-          const j = await r.json();
+          const j = (await r.json()) as HealthResponse;
           setHealth({
             status: j.status,
             service: j.service,
