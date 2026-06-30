@@ -225,6 +225,34 @@ export function ClientDiagPanel() {
           {row("last event", lastEvent ? `${lastEvent.scope} ${JSON.stringify(lastEvent.payload)}` : "—")}
           {row("last guard", lastGuard ? `${lastGuard.scope} ${JSON.stringify(lastGuard.payload)}` : "—")}
           {row("last client error", lastError ?? "—")}
+          <details style={{ marginTop: 6 }} open>
+            <summary style={{ cursor: "pointer", opacity: 0.7 }}>
+              edge cache headers{cacheCheckedAt ? ` (checked ${new Date(cacheCheckedAt).toISOString().slice(11, 19)}Z)` : ""}
+            </summary>
+            <div style={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 6 }}>
+              {cacheError && row("probe error", cacheError)}
+              {!cacheHeaders && !cacheError && row("status", "probing…")}
+              {cacheHeaders &&
+                Object.keys(cacheHeaders)
+                  .sort()
+                  .map((k) => row(k, cacheHeaders[k] ?? "—"))}
+              <button
+                onClick={() => void probeCache()}
+                style={{
+                  marginTop: 6,
+                  alignSelf: "flex-start",
+                  background: "transparent",
+                  color: "#9aa4af",
+                  border: "1px solid #2a313a",
+                  padding: "2px 6px",
+                  cursor: "pointer",
+                  fontSize: 10,
+                }}
+              >
+                re-probe
+              </button>
+            </div>
+          </details>
           <details style={{ marginTop: 6 }}>
             <summary style={{ cursor: "pointer", opacity: 0.7 }}>auth log buffer ({entries.length})</summary>
             <pre style={{ whiteSpace: "pre-wrap", margin: "6px 0 0", fontSize: 10, opacity: 0.85 }}>
