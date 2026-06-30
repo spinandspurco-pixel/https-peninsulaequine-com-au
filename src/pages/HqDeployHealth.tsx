@@ -155,7 +155,7 @@ export default function HqDeployHealth() {
     try {
       const { data, error } = await supabase
         .from("deploy_health_audit")
-        .select("id, created_at, actor_email, action, status")
+        .select("id, created_at, actor_email, action, status, payload")
         .order("created_at", { ascending: false })
         .limit(25);
       if (error) throw error;
@@ -166,6 +166,28 @@ export default function HqDeployHealth() {
       setAuditLoading(false);
     }
   }, []);
+
+  const exportAudit = useCallback(
+    (format: "csv" | "json") => {
+      if (audit.length === 0) {
+        toast.info("Nothing to export yet — run a check first.");
+        return;
+      }
+      const filename = timestampedFilename("deploy-health-audit", format);
+      const mime = format === "csv" ? "text/csv" : "application/json";
+      const body =
+        format === "csv" ? auditRowsToCsv(audit) : auditRowsToJson(audit);
+      downloadTextFile(filename, mime, body);
+      toast.success(`Exported ${audit.length} row${audit.length === 1 ? "" : "s"} as ${format.toUpperCase()}.`);
+      void logDeployHealthAudit("download_payload", "success", {
+        kind: "audit_log_export",
+        format,
+        rowCount: audit.length,
+        filename,
+      });
+    },
+    [audit],
+  );
 
   const pageBundle = useMemo(getCurrentPageBundle, []);
 
