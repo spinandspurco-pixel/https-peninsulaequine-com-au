@@ -486,6 +486,44 @@ export function ClientDiagPanel() {
 
 
 
+  const buildEnvSnapshot = () => ({
+    capturedAt: new Date().toISOString(),
+    label: "frontend env snapshot",
+    origin: typeof window !== "undefined" ? window.location.origin : null,
+    host,
+    environment,
+    viteMode,
+    viteDev: isDev,
+    viteProd: isProd,
+    region,
+    language,
+    bundleHash,
+    clientBuildTime,
+    clientBuildCommit,
+    supabase: {
+      urlPresent: !!supaUrl,
+      urlValid: supaUrlValid,
+      keyPresent: !!supaKey,
+      keyPrefix: supaKeyPrefix,
+      keyShape: supaKeyShape,
+      keyLength: supaKeyLen,
+      keyExpectedPrefix: "sb_publishable_",
+      keyIsLegacyJwt: !!supaKey && supaKey.startsWith("eyJ"),
+    },
+  });
+
+  const [envCopied, setEnvCopied] = useState<string | null>(null);
+  const copyEnvSnapshot = async () => {
+    const pretty = JSON.stringify(buildEnvSnapshot(), null, 2);
+    try {
+      await navigator.clipboard.writeText(pretty);
+      setEnvCopied("copied ✓");
+    } catch {
+      setEnvCopied("copy failed");
+    }
+    setTimeout(() => setEnvCopied(null), 2500);
+  };
+
   const btn: React.CSSProperties = {
     background: "transparent",
     color: "#9aa4af",
@@ -494,6 +532,8 @@ export function ClientDiagPanel() {
     cursor: "pointer",
     fontSize: 10,
   };
+
+
 
 
   return (
