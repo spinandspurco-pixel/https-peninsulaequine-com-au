@@ -419,6 +419,13 @@ export function ClientDiagPanel() {
               </span>
               <div style={{ display: "flex", gap: 4 }}>
                 <button
+                  onClick={() => setAutoRefresh((v) => !v)}
+                  style={{ ...btn, color: autoRefresh ? "#7fbf7f" : "#9aa4af" }}
+                  title={`Auto-refresh every ${POLL_MS / 1000}s (pauses when tab hidden)`}
+                >
+                  {autoRefresh ? `auto ${POLL_MS / 1000}s ✓` : "auto off"}
+                </button>
+                <button
                   onClick={refreshBuildInfo}
                   style={btn}
                   disabled={refreshing}
@@ -430,6 +437,7 @@ export function ClientDiagPanel() {
                   {copied ?? "copy"}
                 </button>
               </div>
+
             </div>
 
             {row("client bundle", bundleHash)}
