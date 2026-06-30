@@ -39,6 +39,69 @@ export function ClientDiagPanel() {
     };
   }, []);
 
+  // Probe edge caching headers on the current document and main JS bundle.
+  // Uses GET (HEAD is often blocked by edges) with cache:'no-store' so we
+  // observe the edge's own headers, not a cached response. Read-only.
+  const probeCache = async () => {
+    setCacheError(null);
+    try {
+      const targets: { label: string; url: string }[] = [
+        { label: "document", url: window.location.pathname + window.location.search },
+      ];
+      const mainScript = Array.from(document.querySelectorAll<HTMLScriptElement>("script[src]"))
+        .map((s) => s.src)
+        .find((src) => /\/assets\/index-[A-Za-z0-9_-]+\.js$/.test(src));
+      if (mainScript) targets.push({ label: "bundle", url: mainScript });
+
+      const interesting = [
+        "cache-control",
+        "etag",
+        "age",
+        "x-cache",
+        "x-vercel-cache",
+        "cf-cache-status",
+        "x-served-by",
+        "x-vercel-id",
+        "last-modified",
+        "date",
+        "content-type",
+      ];
+      const out: Record<string, string | null> = {};
+      for (const t of targets) {
+        try {
+          const res = await fetch(t.url, { method: "GET", cache: "no-store", credentials: "omit" });
+          for (const h of interesting) {
+            const v = res.headers.get(h);
+            if (v !== null) out[`${t.label}.${h}`] = v;
+          }
+          out[`${t.label}.status`] = String(res.status);
+        } catch (err) {
+          out[`${t.label}.error`] = String((err as Error)?.message ?? err);
+        }
+      }
+      setCacheHeaders(out);
+      setCacheCheckedAt(Date.now());
+    } catch (err) {
+      setCacheError(String((err as Error)?.message ?? err));
+    }
+  };
+
+  useEffect(() => {
+    let enabledNow = false;
+    try {
+      const sp = new URLSearchParams(window.location.search);
+      enabledNow =
+        sp.get("debug") === "1" ||
+        sp.get("debug") === "auth" ||
+        window.localStorage.getItem("LOVABLE_CLIENT_DIAG") === "1";
+    } catch {
+      enabledNow = false;
+    }
+    const onSurface = path === "/login" || path === "/hq" || path.startsWith("/hq/");
+    if (enabledNow && onSurface) void probeCache();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [path]);
+
   // Gate: route + opt-in
   const path = location.pathname;
   const onAuthSurface = path === "/login" || path === "/hq" || path.startsWith("/hq/");
