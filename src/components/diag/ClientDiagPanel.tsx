@@ -20,6 +20,9 @@ export function ClientDiagPanel() {
   const [entries, setEntries] = useState<AuthLogEntry[]>(() => getAuthLogEntries());
   const [lastError, setLastError] = useState<string | null>(null);
   const [open, setOpen] = useState(true);
+  const [cacheHeaders, setCacheHeaders] = useState<Record<string, string | null> | null>(null);
+  const [cacheError, setCacheError] = useState<string | null>(null);
+  const [cacheCheckedAt, setCacheCheckedAt] = useState<number | null>(null);
 
   useEffect(() => {
     const unsub = subscribeAuthLog(setEntries);
