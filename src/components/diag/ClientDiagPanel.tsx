@@ -2,6 +2,22 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { getAuthLogEntries, subscribeAuthLog, type AuthLogEntry } from "@/lib/authRouting";
+import type { BuildInfo, HealthResponse } from "@/types/health";
+
+type ServerBuildState =
+  | ({ status?: number; error?: string } & Partial<BuildInfo>)
+  | null;
+
+type HealthState =
+  | {
+      httpStatus?: number;
+      error?: string;
+      status?: HealthResponse["status"];
+      service?: HealthResponse["service"];
+      checkedAt?: HealthResponse["checkedAt"];
+      bundleHash?: BuildInfo["bundleHash"];
+    }
+  | null;
 
 /**
  * Temporary client-side diagnostic panel.
