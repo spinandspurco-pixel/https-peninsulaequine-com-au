@@ -50,11 +50,27 @@ export function ClientDiagPanel() {
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshAt, setLastRefreshAt] = useState<number | null>(null);
 
+  const measure = () => {
+    const start =
+      typeof performance !== "undefined" && typeof performance.now === "function"
+        ? performance.now()
+        : Date.now();
+    return () =>
+      Math.round(
+        (typeof performance !== "undefined" && typeof performance.now === "function"
+          ? performance.now()
+          : Date.now()) - start,
+      );
+  };
+
   const fetchBuildInfo = useCallback(async () => {
+    const stop = measure();
+    const fetchedAt = new Date().toISOString();
     try {
       const r = await fetch("/api/build-info", { cache: "no-store", credentials: "omit" });
+      const latencyMs = stop();
       if (!r.ok) {
-        setServerBuild({ error: `HTTP ${r.status}`, status: r.status });
+        setServerBuild({ error: `HTTP ${r.status}`, status: r.status, latencyMs, fetchedAt });
         return;
       }
       const j = (await r.json()) as BuildInfo;
@@ -63,17 +79,22 @@ export function ClientDiagPanel() {
         buildCommit: j.buildCommit,
         bundleHash: j.bundleHash,
         status: r.status,
+        latencyMs,
+        fetchedAt,
       });
     } catch (e) {
-      setServerBuild({ error: String((e as Error)?.message ?? e) });
+      setServerBuild({ error: String((e as Error)?.message ?? e), latencyMs: stop(), fetchedAt });
     }
   }, []);
 
   const fetchHealth = useCallback(async () => {
+    const stop = measure();
+    const fetchedAt = new Date().toISOString();
     try {
       const r = await fetch("/api/health", { cache: "no-store", credentials: "omit" });
+      const latencyMs = stop();
       if (!r.ok) {
-        setHealth({ error: `HTTP ${r.status}`, httpStatus: r.status });
+        setHealth({ error: `HTTP ${r.status}`, httpStatus: r.status, latencyMs, fetchedAt });
         return;
       }
       const j = (await r.json()) as HealthResponse;
@@ -83,9 +104,11 @@ export function ClientDiagPanel() {
         checkedAt: j.checkedAt,
         bundleHash: j?.buildInfo?.bundleHash ?? null,
         httpStatus: r.status,
+        latencyMs,
+        fetchedAt,
       });
     } catch (e) {
-      setHealth({ error: String((e as Error)?.message ?? e) });
+      setHealth({ error: String((e as Error)?.message ?? e), latencyMs: stop(), fetchedAt });
     }
   }, []);
 
