@@ -20,6 +20,9 @@ export function ClientDiagPanel() {
   const [entries, setEntries] = useState<AuthLogEntry[]>(() => getAuthLogEntries());
   const [lastError, setLastError] = useState<string | null>(null);
   const [open, setOpen] = useState(true);
+  const [cacheHeaders, setCacheHeaders] = useState<Record<string, string | null> | null>(null);
+  const [cacheError, setCacheError] = useState<string | null>(null);
+  const [cacheCheckedAt, setCacheCheckedAt] = useState<number | null>(null);
 
   useEffect(() => {
     const unsub = subscribeAuthLog(setEntries);
@@ -35,6 +38,72 @@ export function ClientDiagPanel() {
       window.removeEventListener("unhandledrejection", onRej);
     };
   }, []);
+
+  // Probe edge caching headers on the current document and main JS bundle.
+  // Uses GET (HEAD is often blocked by edges) with cache:'no-store' so we
+  // observe the edge's own headers, not a cached response. Read-only.
+  const probeCache = async () => {
+    setCacheError(null);
+    try {
+      const targets: { label: string; url: string }[] = [
+        { label: "document", url: window.location.pathname + window.location.search },
+      ];
+      const mainScript = Array.from(document.querySelectorAll<HTMLScriptElement>("script[src]"))
+        .map((s) => s.src)
+        .find((src) => /\/assets\/index-[A-Za-z0-9_-]+\.js$/.test(src));
+      if (mainScript) targets.push({ label: "bundle", url: mainScript });
+
+      const interesting = [
+        "cache-control",
+        "etag",
+        "age",
+        "x-cache",
+        "x-vercel-cache",
+        "cf-cache-status",
+        "x-served-by",
+        "x-vercel-id",
+        "last-modified",
+        "date",
+        "content-type",
+      ];
+      const out: Record<string, string | null> = {};
+      for (const t of targets) {
+        try {
+          const res = await fetch(t.url, { method: "GET", cache: "no-store", credentials: "omit" });
+          for (const h of interesting) {
+            const v = res.headers.get(h);
+            if (v !== null) out[`${t.label}.${h}`] = v;
+          }
+          out[`${t.label}.status`] = String(res.status);
+        } catch (err) {
+          out[`${t.label}.error`] = String((err as Error)?.message ?? err);
+        }
+      }
+      setCacheHeaders(out);
+      setCacheCheckedAt(Date.now());
+    } catch (err) {
+      setCacheError(String((err as Error)?.message ?? err));
+    }
+  };
+
+  useEffect(() => {
+    let enabledNow = false;
+    try {
+      const sp = new URLSearchParams(window.location.search);
+      enabledNow =
+        sp.get("debug") === "1" ||
+        sp.get("debug") === "auth" ||
+        window.localStorage.getItem("LOVABLE_CLIENT_DIAG") === "1";
+    } catch {
+      enabledNow = false;
+    }
+    const onSurface =
+      location.pathname === "/login" ||
+      location.pathname === "/hq" ||
+      location.pathname.startsWith("/hq/");
+    if (enabledNow && onSurface) void probeCache();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
   // Gate: route + opt-in
   const path = location.pathname;
@@ -156,6 +225,34 @@ export function ClientDiagPanel() {
           {row("last event", lastEvent ? `${lastEvent.scope} ${JSON.stringify(lastEvent.payload)}` : "—")}
           {row("last guard", lastGuard ? `${lastGuard.scope} ${JSON.stringify(lastGuard.payload)}` : "—")}
           {row("last client error", lastError ?? "—")}
+          <details style={{ marginTop: 6 }} open>
+            <summary style={{ cursor: "pointer", opacity: 0.7 }}>
+              edge cache headers{cacheCheckedAt ? ` (checked ${new Date(cacheCheckedAt).toISOString().slice(11, 19)}Z)` : ""}
+            </summary>
+            <div style={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 6 }}>
+              {cacheError && row("probe error", cacheError)}
+              {!cacheHeaders && !cacheError && row("status", "probing…")}
+              {cacheHeaders &&
+                Object.keys(cacheHeaders)
+                  .sort()
+                  .map((k) => row(k, cacheHeaders[k] ?? "—"))}
+              <button
+                onClick={() => void probeCache()}
+                style={{
+                  marginTop: 6,
+                  alignSelf: "flex-start",
+                  background: "transparent",
+                  color: "#9aa4af",
+                  border: "1px solid #2a313a",
+                  padding: "2px 6px",
+                  cursor: "pointer",
+                  fontSize: 10,
+                }}
+              >
+                re-probe
+              </button>
+            </div>
+          </details>
           <details style={{ marginTop: 6 }}>
             <summary style={{ cursor: "pointer", opacity: 0.7 }}>auth log buffer ({entries.length})</summary>
             <pre style={{ whiteSpace: "pre-wrap", margin: "6px 0 0", fontSize: 10, opacity: 0.85 }}>
