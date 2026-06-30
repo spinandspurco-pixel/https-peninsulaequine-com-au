@@ -362,6 +362,31 @@ export function ClientDiagPanel() {
         serverBuildTime: serverOk ? (serverBuild?.buildTime ?? null) : null,
         serverBuildCommit: serverOk ? (serverBuild?.buildCommit ?? null) : null,
       },
+      timings: {
+        unit: "ms",
+        source: "client (performance.now)",
+        buildInfo: {
+          fetchedAt: serverBuild?.fetchedAt ?? null,
+          latencyMs: serverBuild?.latencyMs ?? null,
+          httpStatus: serverBuild?.status ?? null,
+          error: serverBuild?.error ?? null,
+        },
+        health: {
+          fetchedAt: health?.fetchedAt ?? null,
+          latencyMs: health?.latencyMs ?? null,
+          httpStatus: health?.httpStatus ?? null,
+          error: health?.error ?? null,
+        },
+        edgeProbe: {
+          checkedAt: cacheCheckedAt ? new Date(cacheCheckedAt).toISOString() : null,
+          documentLatencyMs: cacheHeaders?.["document.latencyMs"]
+            ? Number(cacheHeaders["document.latencyMs"])
+            : null,
+          bundleLatencyMs: cacheHeaders?.["bundle.latencyMs"]
+            ? Number(cacheHeaders["bundle.latencyMs"])
+            : null,
+        },
+      },
       comparison: {
         bundleHashMatch: serverOk ? serverBuild?.bundleHash === bundleHash : null,
         clientBundleHash: bundleHash,
