@@ -103,7 +103,11 @@ function buildInfoPlugin(supabaseUrl: string | null, supabaseKey: string | null)
 
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+  const supabaseUrl = env.VITE_SUPABASE_URL ?? null;
+  const supabaseKey = env.VITE_SUPABASE_PUBLISHABLE_KEY ?? null;
+  return {
   server: {
     host: "::",
     port: 8080,
@@ -114,8 +118,9 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     mode === "development" && componentTagger(),
-    buildInfoPlugin(),
+    buildInfoPlugin(supabaseUrl, supabaseKey),
   ].filter(Boolean),
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
