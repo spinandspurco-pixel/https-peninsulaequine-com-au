@@ -155,7 +155,7 @@ export default function HqDeployHealth() {
     try {
       const { data, error } = await supabase
         .from("deploy_health_audit")
-        .select("id, created_at, actor_email, action, status, payload")
+        .select("id, created_at, actor_email, action, status, detail")
         .order("created_at", { ascending: false })
         .limit(25);
       if (error) throw error;
