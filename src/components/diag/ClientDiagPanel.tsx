@@ -116,6 +116,8 @@ export function ClientDiagPanel() {
           {row("url", window.location.href)}
           {row("route", path)}
           {row("bundle", bundleHash)}
+          {row("build time", (typeof __BUILD_TIME__ !== "undefined" ? __BUILD_TIME__ : "(unknown)"))}
+          {row("build commit", (typeof __BUILD_COMMIT__ !== "undefined" ? __BUILD_COMMIT__ : "(unknown)").slice(0, 12))}
           {row("supabase url", supaUrl || "(missing)")}
           {row("supabase url valid", supaUrlValid ? "yes" : "no")}
           {row("supabase key", supaKeyShape)}
