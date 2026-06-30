@@ -15,6 +15,7 @@ import { HqLoadingState } from "@/components/hq/HqLoadingState";
 import { clearLocalAuthCacheAndSignOut } from "@/lib/authCache";
 import { trackAuthFunnel } from "@/lib/authFunnel";
 import { attemptGoogleSignIn } from "@/lib/oauthSignIn";
+import { GoogleOAuthConfigBanner } from "@/components/auth/GoogleOAuthConfigBanner";
 
 type SignInErrorKind = "google" | "session" | "credentials" | "roles" | "cancelled";
 
