@@ -247,7 +247,8 @@ export function ClientDiagPanel() {
   const clientBuildTime = typeof __BUILD_TIME__ !== "undefined" ? __BUILD_TIME__ : "(unknown)";
   const clientBuildCommit = typeof __BUILD_COMMIT__ !== "undefined" ? __BUILD_COMMIT__ : "(unknown)";
 
-  const [copied, setCopied] = useState<string | null>(null);
+
+
   const copyBuildInfo = async () => {
     const payload = JSON.stringify(
       {
