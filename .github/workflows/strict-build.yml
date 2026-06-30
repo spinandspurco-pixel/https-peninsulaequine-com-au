@@ -39,15 +39,18 @@ jobs:
       - name: Strict build (Tailwind + PostCSS + prerender + internal links)
         run: bun run build
 
+      # ESLint — catches style violations and likely-bug patterns
+      # (no-explicit-any, no-require-imports, exhaustive-deps, etc.) before
+      # we spend time typechecking tests or booting vitest/Playwright.
+      # Runs the same `eslint .` config developers use locally via `bun run lint`.
+      - name: ESLint
+        run: bun run lint
+
       # Typecheck test files explicitly against tsconfig.app.json so missing
       # types (e.g. `node`, `vitest/globals`) or broken imports in *.test.ts(x)
       # fail CI before vitest ever boots its runner.
-      # ESLint — catches style violations and likely-bug patterns
-      # (no-explicit-any, no-require-imports, exhaustive-deps, etc.) before
-      # we spend time booting vitest or Playwright. Runs the same `eslint .`
-      # config developers use locally via `bun run lint`.
-      - name: ESLint
-        run: bun run lint
+      - name: TypeScript typecheck (test files)
+        run: bunx tsc --noEmit -p tsconfig.app.json
 
       # Unit tests (vitest) — includes HqHeader regression guarding that no
       # Sign Out button or HQ chrome leaks onto /login for unauthenticated
