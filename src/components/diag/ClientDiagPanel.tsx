@@ -69,8 +69,30 @@ export function ClientDiagPanel() {
   const supaUrl = (import.meta as any).env?.VITE_SUPABASE_URL as string | undefined;
   const supaKey = (import.meta as any).env?.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
   const supaUrlValid = !!supaUrl && /^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(supaUrl);
-  const supaKeyShape =
-    !supaKey ? "missing" : supaKey.startsWith("sb_publishable_") ? "sb_publishable_ ✓" : supaKey.startsWith("eyJ") ? "legacy JWT" : "unknown";
+  // Safe key format detection — never render the secret value itself.
+  // We only report: format family, total length, and the non-secret prefix
+  // (the literal `sb_publishable_` token or the JWT header `eyJ`), which
+  // are public format identifiers, not credentials.
+  let supaKeyShape = "missing";
+  let supaKeyLen = 0;
+  let supaKeyPrefix = "—";
+  if (supaKey) {
+    supaKeyLen = supaKey.length;
+    if (supaKey.startsWith("sb_publishable_")) {
+      supaKeyShape = "sb_publishable_ ✓ (new format)";
+      supaKeyPrefix = "sb_publishable_";
+    } else if (supaKey.startsWith("sb_secret_")) {
+      // Should never appear client-side; flag loudly.
+      supaKeyShape = "sb_secret_ ✗ SECRET KEY IN CLIENT";
+      supaKeyPrefix = "sb_secret_";
+    } else if (supaKey.startsWith("eyJ")) {
+      supaKeyShape = "legacy JWT ✗ (disabled by Supabase)";
+      supaKeyPrefix = "eyJ…";
+    } else {
+      supaKeyShape = "unknown format";
+      supaKeyPrefix = "(unrecognised)";
+    }
+  }
 
   const lastEvent = [...entries].reverse().find((e) => e.scope.startsWith("event:"));
   const lastGuard = [...entries].reverse().find((e) => e.scope.startsWith("guard:"));
@@ -121,6 +143,8 @@ export function ClientDiagPanel() {
           {row("supabase url", supaUrl || "(missing)")}
           {row("supabase url valid", supaUrlValid ? "yes" : "no")}
           {row("supabase key", supaKeyShape)}
+          {row("supabase key prefix", supaKeyPrefix)}
+          {row("supabase key length", supaKeyLen || "—")}
           {row("auth ready", ready ? "yes" : "no")}
           {row("authLoading", authLoading ? "true" : "false")}
           {row("rolesLoading", rolesLoading ? "true" : "false")}
