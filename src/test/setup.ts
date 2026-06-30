@@ -28,7 +28,7 @@ Object.defineProperty(window, "IntersectionObserver", {
   writable: true,
   value: MockIntersectionObserver,
 });
-Object.defineProperty(global, "IntersectionObserver", {
+Object.defineProperty(globalThis, "IntersectionObserver", {
   writable: true,
   value: MockIntersectionObserver,
 });
@@ -43,7 +43,7 @@ Object.defineProperty(window, "ResizeObserver", {
   writable: true,
   value: MockResizeObserver,
 });
-Object.defineProperty(global, "ResizeObserver", {
+Object.defineProperty(globalThis, "ResizeObserver", {
   writable: true,
   value: MockResizeObserver,
 });
