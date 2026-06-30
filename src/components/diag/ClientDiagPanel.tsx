@@ -27,6 +27,11 @@ export function ClientDiagPanel() {
     | { buildTime?: string; buildCommit?: string; bundleHash?: string | null; error?: string; status?: number }
     | null
   >(null);
+  const [health, setHealth] = useState<
+    | { status?: string; service?: string; checkedAt?: string; bundleHash?: string | null; error?: string; httpStatus?: number }
+    | null
+  >(null);
+
 
   useEffect(() => {
     let cancelled = false;
@@ -58,8 +63,39 @@ export function ClientDiagPanel() {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
+    fetch("/api/health", { cache: "no-store", credentials: "omit" })
+      .then(async (r) => {
+        if (cancelled) return;
+        if (!r.ok) {
+          setHealth({ error: `HTTP ${r.status}`, httpStatus: r.status });
+          return;
+        }
+        try {
+          const j = await r.json();
+          setHealth({
+            status: j.status,
+            service: j.service,
+            checkedAt: j.checkedAt,
+            bundleHash: j?.buildInfo?.bundleHash ?? null,
+            httpStatus: r.status,
+          });
+        } catch (e) {
+          setHealth({ error: `parse: ${String((e as Error)?.message ?? e)}`, httpStatus: r.status });
+        }
+      })
+      .catch((e) => {
+        if (!cancelled) setHealth({ error: String((e as Error)?.message ?? e) });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
     const unsub = subscribeAuthLog(setEntries);
     const onErr = (e: ErrorEvent) =>
+
       setLastError(`${e.message} @ ${e.filename}:${e.lineno}:${e.colno}`);
     const onRej = (e: PromiseRejectionEvent) =>
       setLastError(`unhandledrejection: ${String((e.reason && (e.reason.message || e.reason)) ?? e.reason)}`);
@@ -255,6 +291,14 @@ export function ClientDiagPanel() {
               "server vs client",
               serverBuild.bundleHash && serverBuild.bundleHash === bundleHash ? "match ✓" : "MISMATCH ✗ (stale edge)",
             )
+          )}
+          {row(
+            "health",
+            health === null
+              ? "fetching…"
+              : health.error
+                ? `error: ${health.error}`
+                : `${health.status ?? "?"} · ${health.service ?? "?"} · ${health.checkedAt ?? "?"}`,
           )}
           {row("supabase url", supaUrl || "(missing)")}
           {row("supabase url valid", supaUrlValid ? "yes" : "no")}
