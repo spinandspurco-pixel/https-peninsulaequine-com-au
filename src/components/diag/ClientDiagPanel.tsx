@@ -352,6 +352,16 @@ export function ClientDiagPanel() {
         region,
         language,
         userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "(unknown)",
+        supabaseUrl: supaUrl ?? null,
+        supabaseUrlValid: supaUrlValid,
+        supabaseKey: {
+          present: !!supaKey,
+          shape: supaKeyShape,
+          prefix: supaKeyPrefix,
+          length: supaKeyLen,
+          expected: "sb_publishable_",
+          isLegacyJwt: !!supaKey && supaKey.startsWith("eyJ"),
+        },
       },
       server: {
         fetchedAt: serverFetchedAt,
