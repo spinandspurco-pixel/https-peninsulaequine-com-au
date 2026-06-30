@@ -17,9 +17,28 @@ const BUILD_COMMIT =
  * Vercel/Netlify/CF Pages all serve static files in front of SPA rewrites.
  */
 function buildInfoPlugin(): PluginOption {
+  const makePayload = (bundleHash: string | null) =>
+    JSON.stringify(
+      { buildTime: BUILD_TIME, buildCommit: BUILD_COMMIT, bundleHash },
+      null,
+      2,
+    ) + "\n";
+
   return {
     name: "emit-build-info",
-    apply: "build",
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        if (!req.url) return next();
+        const url = req.url.split("?")[0];
+        if (url === "/api/build-info" || url === "/api/build-info.json") {
+          res.setHeader("Content-Type", "application/json; charset=utf-8");
+          res.setHeader("Cache-Control", "no-store");
+          res.end(makePayload(null));
+          return;
+        }
+        next();
+      });
+    },
     generateBundle(_options, bundle) {
       let bundleHash: string | null = null;
       for (const fileName of Object.keys(bundle)) {
@@ -29,12 +48,7 @@ function buildInfoPlugin(): PluginOption {
           break;
         }
       }
-      const payload = {
-        buildTime: BUILD_TIME,
-        buildCommit: BUILD_COMMIT,
-        bundleHash,
-      };
-      const source = JSON.stringify(payload, null, 2) + "\n";
+      const source = makePayload(bundleHash);
       this.emitFile({ type: "asset", fileName: "api/build-info", source });
       this.emitFile({ type: "asset", fileName: "api/build-info.json", source });
     },
