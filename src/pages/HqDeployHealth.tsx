@@ -396,6 +396,8 @@ export default function HqDeployHealth() {
   };
 
 
+  const anyStuck = results.some(isStuck);
+
   if (authLoading) {
     return (
       <Layout>
