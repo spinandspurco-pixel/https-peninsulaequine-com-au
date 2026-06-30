@@ -143,6 +143,8 @@ export function ClientDiagPanel() {
           {row("supabase url", supaUrl || "(missing)")}
           {row("supabase url valid", supaUrlValid ? "yes" : "no")}
           {row("supabase key", supaKeyShape)}
+          {row("supabase key prefix", supaKeyPrefix)}
+          {row("supabase key length", supaKeyLen || "—")}
           {row("auth ready", ready ? "yes" : "no")}
           {row("authLoading", authLoading ? "true" : "false")}
           {row("rolesLoading", rolesLoading ? "true" : "false")}
