@@ -122,17 +122,43 @@ export function ClientDiagPanel() {
     }
   }, []);
 
+  const fetchDiag = useCallback(async () => {
+    const stop = measure();
+    const fetchedAt = new Date().toISOString();
+    try {
+      const r = await fetch("/api/diag", { cache: "no-store", credentials: "omit" });
+      const latencyMs = stop();
+      if (!r.ok) {
+        setDiag({ error: `HTTP ${r.status}`, httpStatus: r.status, latencyMs, fetchedAt });
+        return;
+      }
+      const j = (await r.json()) as DiagResponse;
+      setDiag({
+        service: j.service,
+        checkedAt: j.checkedAt,
+        buildInfo: j.buildInfo,
+        supabase: j.supabase,
+        httpStatus: r.status,
+        latencyMs,
+        fetchedAt,
+      });
+    } catch (e) {
+      setDiag({ error: String((e as Error)?.message ?? e), latencyMs: stop(), fetchedAt });
+    }
+  }, []);
+
   const refreshBuildInfo = useCallback(async () => {
     setRefreshing(true);
     setServerBuild(null);
     setHealth(null);
+    setDiag(null);
     try {
-      await Promise.all([fetchBuildInfo(), fetchHealth()]);
+      await Promise.all([fetchBuildInfo(), fetchHealth(), fetchDiag()]);
       setLastRefreshAt(Date.now());
     } finally {
       setRefreshing(false);
     }
-  }, [fetchBuildInfo, fetchHealth]);
+  }, [fetchBuildInfo, fetchHealth, fetchDiag]);
 
   useEffect(() => {
     void fetchBuildInfo();
@@ -142,6 +168,10 @@ export function ClientDiagPanel() {
     void fetchHealth();
   }, [fetchHealth]);
 
+  useEffect(() => {
+    void fetchDiag();
+  }, [fetchDiag]);
+
   const [autoRefresh, setAutoRefresh] = useState(true);
   const POLL_MS = 10_000;
 
@@ -149,14 +179,15 @@ export function ClientDiagPanel() {
     if (!autoRefresh) return;
     const tick = async () => {
       if (document.visibilityState !== "visible") return;
-      await Promise.all([fetchBuildInfo(), fetchHealth()]);
+      await Promise.all([fetchBuildInfo(), fetchHealth(), fetchDiag()]);
       setLastRefreshAt(Date.now());
     };
     const id = window.setInterval(() => {
       void tick();
     }, POLL_MS);
     return () => window.clearInterval(id);
-  }, [autoRefresh, fetchBuildInfo, fetchHealth]);
+  }, [autoRefresh, fetchBuildInfo, fetchHealth, fetchDiag]);
+
 
 
 
