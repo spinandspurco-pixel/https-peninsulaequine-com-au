@@ -787,29 +787,62 @@ export default function HqDeployHealth() {
               <dt className="uppercase tracking-[0.3em] text-foreground/40">Finished</dt>
               <dd>{retryOutcome.finishedAt}</dd>
             </dl>
-            <div className="grid sm:grid-cols-2 gap-4 text-[0.7rem]">
-              <div className="border border-border/10 p-3 space-y-1">
-                <div className="uppercase tracking-[0.3em] text-foreground/40 text-[0.6rem]">Before</div>
-                {retryOutcome.before.map((b) => (
-                  <div key={`b-${b.label}`} className="flex justify-between gap-3">
-                    <span className="text-foreground/60">{b.label}</span>
-                    <code className={b.stuck ? "text-amber-700" : "text-foreground/70"}>
-                      {b.bundleFile ?? "—"}
-                    </code>
-                  </div>
-                ))}
+            <div className="border border-border/10 overflow-x-auto">
+              <div className="px-3 py-2 uppercase tracking-[0.3em] text-foreground/40 text-[0.6rem] border-b border-border/10">
+                Per-domain results
               </div>
-              <div className="border border-border/10 p-3 space-y-1">
-                <div className="uppercase tracking-[0.3em] text-foreground/40 text-[0.6rem]">After</div>
-                {retryOutcome.after.map((a) => (
-                  <div key={`a-${a.label}`} className="flex justify-between gap-3">
-                    <span className="text-foreground/60">{a.label}</span>
-                    <code className={a.stuck ? "text-amber-700" : "text-emerald-700"}>
-                      {a.bundleFile ?? "—"}
-                    </code>
-                  </div>
-                ))}
-              </div>
+              <table className="w-full text-[0.7rem]">
+                <thead>
+                  <tr className="text-left text-foreground/40 uppercase tracking-[0.25em] text-[0.55rem]">
+                    <th className="px-3 py-2 font-normal">Domain</th>
+                    <th className="px-3 py-2 font-normal">Attempts</th>
+                    <th className="px-3 py-2 font-normal">Before</th>
+                    <th className="px-3 py-2 font-normal">After</th>
+                    <th className="px-3 py-2 font-normal">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {retryOutcome.after.map((a, idx) => {
+                    const b = retryOutcome.before[idx];
+                    const beforeHash = b?.bundleFile ?? null;
+                    const afterHash = a.bundleFile ?? null;
+                    const changed = !!(beforeHash && afterHash && beforeHash !== afterHash);
+                    let rowStatus: "success" | "partial" | "no_change" | "error";
+                    let tone: string;
+                    if (!afterHash) {
+                      rowStatus = "error"; tone = "text-red-700";
+                    } else if (!a.stuck && changed) {
+                      rowStatus = "success"; tone = "text-emerald-700";
+                    } else if (!a.stuck) {
+                      rowStatus = "success"; tone = "text-emerald-700";
+                    } else if (changed) {
+                      rowStatus = "partial"; tone = "text-amber-700";
+                    } else {
+                      rowStatus = "no_change"; tone = "text-amber-700";
+                    }
+                    const label = rowStatus === "no_change" ? "no change" : rowStatus;
+                    return (
+                      <tr key={`row-${a.label}`} className="border-t border-border/10 align-top">
+                        <td className="px-3 py-2 text-foreground/70">{a.label}</td>
+                        <td className="px-3 py-2 text-foreground/70">{retryOutcome.attempts}</td>
+                        <td className="px-3 py-2">
+                          <code className={b?.stuck ? "text-amber-700" : "text-foreground/70"}>
+                            {beforeHash ?? "—"}
+                          </code>
+                        </td>
+                        <td className="px-3 py-2">
+                          <code className={a.stuck ? "text-amber-700" : "text-emerald-700"}>
+                            {afterHash ?? "—"}
+                          </code>
+                        </td>
+                        <td className={`px-3 py-2 uppercase tracking-[0.25em] text-[0.6rem] ${tone}`}>
+                          {label}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
             {(retryOutcome.status === "no_change" || retryOutcome.status === "partial") && (
               <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-1">
