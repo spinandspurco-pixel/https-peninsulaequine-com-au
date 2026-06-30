@@ -292,6 +292,14 @@ export function ClientDiagPanel() {
               serverBuild.bundleHash && serverBuild.bundleHash === bundleHash ? "match ✓" : "MISMATCH ✗ (stale edge)",
             )
           )}
+          {row(
+            "health",
+            health === null
+              ? "fetching…"
+              : health.error
+                ? `error: ${health.error}`
+                : `${health.status ?? "?"} · ${health.service ?? "?"} · ${health.checkedAt ?? "?"}`,
+          )}
           {row("supabase url", supaUrl || "(missing)")}
           {row("supabase url valid", supaUrlValid ? "yes" : "no")}
           {row("supabase key", supaKeyShape)}
