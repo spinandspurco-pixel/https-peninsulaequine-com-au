@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { getAuthLogEntries, subscribeAuthLog, type AuthLogEntry } from "@/lib/authRouting";
-import type { BuildInfo, HealthResponse } from "@/types/health";
+import type { BuildInfo, DiagResponse, HealthResponse } from "@/types/health";
 
 type ServerBuildState =
   | ({ status?: number; error?: string; latencyMs?: number; fetchedAt?: string } & Partial<BuildInfo>)
