@@ -826,6 +826,70 @@ export function ClientDiagPanel() {
             );
           })()}
 
+          {(() => {
+            if (diag === null) return row("/api/diag", "fetching…");
+            if (diag.error)
+              return (
+                <>
+                  {row("/api/diag", `error: ${diag.error}`)}
+                  {row("/api/diag ms", diag.latencyMs ?? "—")}
+                </>
+              );
+            const serverKey = diag.supabase?.key;
+            const serverFamily = serverKey?.family ?? "(unknown)";
+            const clientFamily =
+              !supaKey
+                ? "missing"
+                : supaKey.startsWith("sb_publishable_")
+                  ? "sb_publishable"
+                  : supaKey.startsWith("sb_secret_")
+                    ? "sb_secret"
+                    : supaKey.startsWith("eyJ")
+                      ? "legacy_jwt"
+                      : "unknown";
+            const familyMatch = serverFamily === clientFamily;
+            const prefixMatch = (serverKey?.prefix ?? "") === supaKeyPrefix;
+            const lengthMatch = (serverKey?.length ?? -1) === supaKeyLen;
+            const allMatch = familyMatch && prefixMatch && lengthMatch;
+            return (
+              <>
+                {row(
+                  "/api/diag",
+                  `${diag.httpStatus ?? "?"} · ${diag.service ?? "?"} · ${diag.checkedAt ?? "?"}`,
+                )}
+                {row("/api/diag ms", diag.latencyMs ?? "—")}
+                {row("server supabase host", diag.supabase?.urlHost ?? "(unknown)")}
+                {row("server key family", serverFamily)}
+                {row("server key prefix", serverKey?.prefix ?? "—")}
+                {row("server key length", serverKey?.length ?? "—")}
+                {row("client/server match", allMatch ? "✓ identical" : "✗ differs (see below)")}
+                {!allMatch && (
+                  <div
+                    style={{
+                      marginTop: 4,
+                      padding: "6px 8px",
+                      border: "1px solid #5a2a2a",
+                      borderRadius: 4,
+                      background: "rgba(255, 60, 60, 0.06)",
+                      color: "#ffd4d4",
+                    }}
+                  >
+                    <div style={{ color: "#ff8a8a", marginBottom: 4, letterSpacing: "0.06em" }}>
+                      KEY DRIFT — bundle vs /api/diag
+                    </div>
+                    {!familyMatch && row("family", `client ${clientFamily} ≠ server ${serverFamily}`)}
+                    {!prefixMatch && row("prefix", `client ${supaKeyPrefix} ≠ server ${serverKey?.prefix ?? "—"}`)}
+                    {!lengthMatch && row("length", `client ${supaKeyLen} ≠ server ${serverKey?.length ?? "—"}`)}
+                    <div style={{ opacity: 0.6, marginTop: 2 }}>
+                      Bundle and /api/diag are emitted from the same build — drift indicates a stale edge.
+                    </div>
+                  </div>
+                )}
+              </>
+            );
+          })()}
+
+
           {row("auth ready", ready ? "yes" : "no")}
           {row("authLoading", authLoading ? "true" : "false")}
           {row("rolesLoading", rolesLoading ? "true" : "false")}
