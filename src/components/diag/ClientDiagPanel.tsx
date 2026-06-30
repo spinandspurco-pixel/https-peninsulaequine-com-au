@@ -249,6 +249,29 @@ export function ClientDiagPanel() {
 
 
 
+  const viteEnv = (import.meta as any).env ?? {};
+  const viteMode: string = viteEnv.MODE ?? "(unknown)";
+  const isDev: boolean = !!viteEnv.DEV;
+  const isProd: boolean = !!viteEnv.PROD;
+  const host = typeof window !== "undefined" ? window.location.hostname : "";
+  const environment =
+    host === "localhost" || host === "127.0.0.1"
+      ? "local"
+      : host.includes("id-preview--") || host.endsWith(".lovable.app")
+        ? host.includes("id-preview--")
+          ? "lovable-preview"
+          : "lovable-published"
+        : host.endsWith("peninsulaequine.systems")
+          ? "production"
+          : "custom";
+  let region = "(unknown)";
+  try {
+    region = Intl.DateTimeFormat().resolvedOptions().timeZone || "(unknown)";
+  } catch {
+    /* ignore */
+  }
+  const language = typeof navigator !== "undefined" ? navigator.language : "(unknown)";
+
   const copyBuildInfo = async () => {
     const payload = JSON.stringify(
       {
@@ -264,6 +287,14 @@ export function ClientDiagPanel() {
           serverBuild && !serverBuild.error
             ? serverBuild.bundleHash === bundleHash
             : null,
+        environment,
+        host,
+        viteMode,
+        viteDev: isDev,
+        viteProd: isProd,
+        region,
+        language,
+        userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "(unknown)",
         url: window.location.href,
         capturedAt: new Date().toISOString(),
       },
@@ -278,6 +309,7 @@ export function ClientDiagPanel() {
     }
     setTimeout(() => setCopied(null), 2500);
   };
+
 
   const btn: React.CSSProperties = {
     background: "transparent",
