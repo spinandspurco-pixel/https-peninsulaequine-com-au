@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
+import { OAuthProviderPanel } from "@/components/hq/OAuthProviderPanel";
 import {
   EXPECTED_PROJECT_ID,
   EXPECTED_PROJECT_ID_SOURCE,
@@ -1032,6 +1033,12 @@ export default function HqDiagnostics() {
             </div>
           )}
         </div>
+
+        <OAuthProviderPanel
+          url={url}
+          expectedCallback={expectedCallback}
+          appOrigin={appOrigin}
+        />
 
         <div className="mb-8 border border-foreground/10 rounded-sm">
 
