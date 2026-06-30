@@ -600,6 +600,109 @@ export default function HqDeployHealth() {
           </div>
         </section>
 
+        <section
+          className={
+            "border px-5 py-4 space-y-4 " +
+            (keyFormatDiff.shape === "modern"
+              ? "border-emerald-600/30 bg-emerald-600/5"
+              : "border-red-600/40 bg-red-600/5")
+          }
+        >
+          <div className="flex items-center justify-between gap-4">
+            <div
+              className={
+                "text-[0.65rem] tracking-[0.45em] uppercase " +
+                (keyFormatDiff.shape === "modern" ? "text-emerald-700" : "text-red-700")
+              }
+            >
+              VITE_SUPABASE_PUBLISHABLE_KEY · format diff
+            </div>
+            <span
+              className={
+                "text-[0.6rem] tracking-[0.35em] uppercase px-2 py-1 border " +
+                (keyFormatDiff.shape === "modern"
+                  ? "text-emerald-700 border-emerald-600/40"
+                  : "text-red-700 border-red-600/40")
+              }
+            >
+              {keyFormatDiff.shape === "modern"
+                ? "Match"
+                : keyFormatDiff.shape === "legacy_jwt"
+                ? "Legacy JWT"
+                : keyFormatDiff.shape === "empty"
+                ? "Missing"
+                : "Unknown"}
+            </span>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4 text-[0.7rem]">
+            <div className="border border-border/10 p-3 space-y-2 bg-foreground/[0.015]">
+              <div className="uppercase tracking-[0.3em] text-foreground/40 text-[0.6rem]">
+                Expected
+              </div>
+              <dl className="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1">
+                <dt className="text-foreground/50">prefix</dt>
+                <dd><code className="text-emerald-700">{keyFormatDiff.expected.prefix}</code></dd>
+                <dt className="text-foreground/50">min length</dt>
+                <dd className="text-foreground/80">{keyFormatDiff.expected.minLength}</dd>
+                <dt className="text-foreground/50">example</dt>
+                <dd className="truncate"><code className="text-foreground/70">{keyFormatDiff.expected.example}</code></dd>
+              </dl>
+            </div>
+            <div className="border border-border/10 p-3 space-y-2 bg-foreground/[0.015]">
+              <div className="uppercase tracking-[0.3em] text-foreground/40 text-[0.6rem]">
+                Actual (in this bundle)
+              </div>
+              <dl className="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1">
+                <dt className="text-foreground/50">prefix</dt>
+                <dd>
+                  <code
+                    className={
+                      keyFormatDiff.isModern ? "text-emerald-700" : "text-red-700"
+                    }
+                  >
+                    {keyFormatDiff.prefix || "(empty)"}
+                  </code>
+                </dd>
+                <dt className="text-foreground/50">length</dt>
+                <dd
+                  className={
+                    keyFormatDiff.length >= keyFormatDiff.expected.minLength
+                      ? "text-foreground/80"
+                      : "text-red-700"
+                  }
+                >
+                  {keyFormatDiff.length}
+                </dd>
+                <dt className="text-foreground/50">shape</dt>
+                <dd
+                  className={
+                    keyFormatDiff.shape === "modern" ? "text-emerald-700" : "text-red-700"
+                  }
+                >
+                  {keyFormatDiff.shape}
+                </dd>
+              </dl>
+            </div>
+          </div>
+
+          {keyFormatDiff.shape !== "modern" && (
+            <div className="border-t border-border/10 pt-3 space-y-2">
+              <div className="text-[0.65rem] tracking-[0.45em] uppercase text-red-700">
+                Fix checklist
+              </div>
+              <ol className="text-xs text-foreground/80 leading-relaxed space-y-1 list-decimal pl-5">
+                <li>Rotate Supabase API keys to the <code>sb_publishable_*</code> format in Backend → API Keys.</li>
+                <li>Confirm <code>.env</code> writes <code>VITE_SUPABASE_PUBLISHABLE_KEY</code> starting with <code>sb_publishable_</code>.</li>
+                <li>Republish the frontend so the new key is baked into <code>/assets/index-*.js</code>.</li>
+                <li>Run <strong>Re-run checks</strong> above and confirm every target shows <strong>Fresh</strong>.</li>
+                <li>If the bundle still serves a legacy key after republish, use <strong>Copy support email</strong> to escalate (promotion is stuck, not the key).</li>
+              </ol>
+            </div>
+          )}
+        </section>
+
+
         {anyStuck && (
           <section className="border border-amber-600/50 bg-amber-600/5 px-5 py-4 flex items-start justify-between gap-6">
             <div className="space-y-1">
