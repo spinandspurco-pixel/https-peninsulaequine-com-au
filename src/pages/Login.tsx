@@ -545,11 +545,11 @@ function LegacyKeyBanner() {
     <div
       role="alert"
       aria-live="polite"
-      className="border border-destructive/60 bg-destructive/15 rounded-sm p-4 text-[12px] leading-relaxed space-y-2"
+      className="border border-destructive/60 bg-destructive/15 rounded-sm p-4 text-[12px] leading-relaxed space-y-3"
     >
       <div className="flex items-start gap-2">
         <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 shrink-0" aria-hidden />
-        <div className="min-w-0 flex-1 space-y-1">
+        <div className="min-w-0 flex-1 space-y-2">
           <p className="font-medium uppercase tracking-[0.1em] text-destructive">
             {isSecret
               ? "Secret key exposed in client"
@@ -557,20 +557,52 @@ function LegacyKeyBanner() {
                 ? "Legacy Supabase key — sign-in disabled"
                 : "Unrecognised Supabase key format"}
           </p>
+
           <p className="text-foreground/85">
             {isSecret
               ? "A sb_secret_* key is bundled in the client. This is a critical misconfiguration — rotate immediately and rebuild."
               : isLegacy
-                ? "This build is using the legacy JWT publishable key, which Supabase has disabled. Sign-in will fail with “Legacy API keys disabled.” Republish after rotating to the new sb_publishable_* key."
+                ? "Sign-in will fail with “Legacy API keys are disabled.” The frontend bundle still embeds the old JWT publishable key, even though the backend has been rotated."
                 : "The configured publishable key does not match any expected Supabase format. Sign-in will likely fail."}
           </p>
-          <p className="text-muted-foreground/80 font-mono text-[11px]">
-            detected prefix: {isLegacy ? "eyJ… (legacy JWT)" : isSecret ? "sb_secret_" : "(unknown)"}{" "}
-            · see{" "}
-            <Link to="/login?debug=1" className="underline">
-              /login?debug=1
-            </Link>
-          </p>
+
+          {isLegacy && (
+            <div className="space-y-1.5 text-foreground/80">
+              <p>
+                <span className="text-muted-foreground/80">What’s stale:</span>{" "}
+                frontend <code className="font-mono">VITE_SUPABASE_PUBLISHABLE_KEY</code> baked
+                into this bundle. The backend (auth + Data API) is already on the new format —
+                only the client env is out of date.
+              </p>
+              <p>
+                <span className="text-muted-foreground/80">Expected:</span>{" "}
+                <code className="font-mono">sb_publishable_…</code> (≈40 chars).{" "}
+                <span className="text-muted-foreground/80">Detected:</span>{" "}
+                <code className="font-mono">eyJ…</code> (legacy JWT, ~200+ chars).
+              </p>
+              <p>
+                <span className="text-muted-foreground/80">Fix:</span> rotate API keys, then
+                republish so the new key is embedded into a fresh bundle.
+              </p>
+            </div>
+          )}
+
+          <div className="border-t border-destructive/30 pt-2 text-muted-foreground/80 space-y-1">
+            <p className="font-mono text-[11px]">
+              detected prefix:{" "}
+              {isLegacy ? "eyJ… (legacy JWT)" : isSecret ? "sb_secret_" : "(unknown)"}
+            </p>
+            <p className="text-[11px]">
+              Verify in <Link to="/login?debug=1" className="underline">/login?debug=1</Link> →{" "}
+              <span className="font-mono">SUPABASE KEY</span> row, or in the copied diagnostics
+              payload under{" "}
+              <span className="font-mono">client.supabaseKey.shape</span> /{" "}
+              <span className="font-mono">client.supabaseKey.prefix</span>. Server-side rotation
+              status is in <span className="font-mono">server.serverBundleHash</span> vs{" "}
+              <span className="font-mono">client.bundleHash</span> — a mismatch confirms the
+              edge is still serving the old bundle.
+            </p>
+          </div>
         </div>
       </div>
     </div>
