@@ -41,14 +41,8 @@ export function ClientDiagPanel() {
   const [cacheHeaders, setCacheHeaders] = useState<Record<string, string | null> | null>(null);
   const [cacheError, setCacheError] = useState<string | null>(null);
   const [cacheCheckedAt, setCacheCheckedAt] = useState<number | null>(null);
-  const [serverBuild, setServerBuild] = useState<
-    | { buildTime?: string; buildCommit?: string; bundleHash?: string | null; error?: string; status?: number }
-    | null
-  >(null);
-  const [health, setHealth] = useState<
-    | { status?: string; service?: string; checkedAt?: string; bundleHash?: string | null; error?: string; httpStatus?: number }
-    | null
-  >(null);
+  const [serverBuild, setServerBuild] = useState<ServerBuildState>(null);
+  const [health, setHealth] = useState<HealthState>(null);
 
 
   useEffect(() => {
