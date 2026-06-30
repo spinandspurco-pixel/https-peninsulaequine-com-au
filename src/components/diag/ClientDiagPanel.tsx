@@ -195,15 +195,19 @@ export function ClientDiagPanel() {
       ];
       const out: Record<string, string | null> = {};
       for (const t of targets) {
+        const stop = measure();
         try {
           const res = await fetch(t.url, { method: "GET", cache: "no-store", credentials: "omit" });
+          const latencyMs = stop();
           for (const h of interesting) {
             const v = res.headers.get(h);
             if (v !== null) out[`${t.label}.${h}`] = v;
           }
           out[`${t.label}.status`] = String(res.status);
+          out[`${t.label}.latencyMs`] = String(latencyMs);
         } catch (err) {
           out[`${t.label}.error`] = String((err as Error)?.message ?? err);
+          out[`${t.label}.latencyMs`] = String(stop());
         }
       }
       setCacheHeaders(out);
