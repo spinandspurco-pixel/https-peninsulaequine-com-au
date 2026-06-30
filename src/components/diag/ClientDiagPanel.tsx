@@ -5,7 +5,7 @@ import { getAuthLogEntries, subscribeAuthLog, type AuthLogEntry } from "@/lib/au
 import type { BuildInfo, HealthResponse } from "@/types/health";
 
 type ServerBuildState =
-  | ({ status?: number; error?: string } & Partial<BuildInfo>)
+  | ({ status?: number; error?: string; latencyMs?: number; fetchedAt?: string } & Partial<BuildInfo>)
   | null;
 
 type HealthState =
@@ -16,6 +16,8 @@ type HealthState =
       service?: HealthResponse["service"];
       checkedAt?: HealthResponse["checkedAt"];
       bundleHash?: BuildInfo["bundleHash"];
+      latencyMs?: number;
+      fetchedAt?: string;
     }
   | null;
 
@@ -48,11 +50,27 @@ export function ClientDiagPanel() {
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshAt, setLastRefreshAt] = useState<number | null>(null);
 
+  const measure = () => {
+    const start =
+      typeof performance !== "undefined" && typeof performance.now === "function"
+        ? performance.now()
+        : Date.now();
+    return () =>
+      Math.round(
+        (typeof performance !== "undefined" && typeof performance.now === "function"
+          ? performance.now()
+          : Date.now()) - start,
+      );
+  };
+
   const fetchBuildInfo = useCallback(async () => {
+    const stop = measure();
+    const fetchedAt = new Date().toISOString();
     try {
       const r = await fetch("/api/build-info", { cache: "no-store", credentials: "omit" });
+      const latencyMs = stop();
       if (!r.ok) {
-        setServerBuild({ error: `HTTP ${r.status}`, status: r.status });
+        setServerBuild({ error: `HTTP ${r.status}`, status: r.status, latencyMs, fetchedAt });
         return;
       }
       const j = (await r.json()) as BuildInfo;
@@ -61,17 +79,22 @@ export function ClientDiagPanel() {
         buildCommit: j.buildCommit,
         bundleHash: j.bundleHash,
         status: r.status,
+        latencyMs,
+        fetchedAt,
       });
     } catch (e) {
-      setServerBuild({ error: String((e as Error)?.message ?? e) });
+      setServerBuild({ error: String((e as Error)?.message ?? e), latencyMs: stop(), fetchedAt });
     }
   }, []);
 
   const fetchHealth = useCallback(async () => {
+    const stop = measure();
+    const fetchedAt = new Date().toISOString();
     try {
       const r = await fetch("/api/health", { cache: "no-store", credentials: "omit" });
+      const latencyMs = stop();
       if (!r.ok) {
-        setHealth({ error: `HTTP ${r.status}`, httpStatus: r.status });
+        setHealth({ error: `HTTP ${r.status}`, httpStatus: r.status, latencyMs, fetchedAt });
         return;
       }
       const j = (await r.json()) as HealthResponse;
@@ -81,9 +104,11 @@ export function ClientDiagPanel() {
         checkedAt: j.checkedAt,
         bundleHash: j?.buildInfo?.bundleHash ?? null,
         httpStatus: r.status,
+        latencyMs,
+        fetchedAt,
       });
     } catch (e) {
-      setHealth({ error: String((e as Error)?.message ?? e) });
+      setHealth({ error: String((e as Error)?.message ?? e), latencyMs: stop(), fetchedAt });
     }
   }, []);
 
@@ -170,15 +195,19 @@ export function ClientDiagPanel() {
       ];
       const out: Record<string, string | null> = {};
       for (const t of targets) {
+        const stop = measure();
         try {
           const res = await fetch(t.url, { method: "GET", cache: "no-store", credentials: "omit" });
+          const latencyMs = stop();
           for (const h of interesting) {
             const v = res.headers.get(h);
             if (v !== null) out[`${t.label}.${h}`] = v;
           }
           out[`${t.label}.status`] = String(res.status);
+          out[`${t.label}.latencyMs`] = String(latencyMs);
         } catch (err) {
           out[`${t.label}.error`] = String((err as Error)?.message ?? err);
+          out[`${t.label}.latencyMs`] = String(stop());
         }
       }
       setCacheHeaders(out);
@@ -332,6 +361,31 @@ export function ClientDiagPanel() {
         serverBundleHash: serverOk ? (serverBuild?.bundleHash ?? null) : null,
         serverBuildTime: serverOk ? (serverBuild?.buildTime ?? null) : null,
         serverBuildCommit: serverOk ? (serverBuild?.buildCommit ?? null) : null,
+      },
+      timings: {
+        unit: "ms",
+        source: "client (performance.now)",
+        buildInfo: {
+          fetchedAt: serverBuild?.fetchedAt ?? null,
+          latencyMs: serverBuild?.latencyMs ?? null,
+          httpStatus: serverBuild?.status ?? null,
+          error: serverBuild?.error ?? null,
+        },
+        health: {
+          fetchedAt: health?.fetchedAt ?? null,
+          latencyMs: health?.latencyMs ?? null,
+          httpStatus: health?.httpStatus ?? null,
+          error: health?.error ?? null,
+        },
+        edgeProbe: {
+          checkedAt: cacheCheckedAt ? new Date(cacheCheckedAt).toISOString() : null,
+          documentLatencyMs: cacheHeaders?.["document.latencyMs"]
+            ? Number(cacheHeaders["document.latencyMs"])
+            : null,
+          bundleLatencyMs: cacheHeaders?.["bundle.latencyMs"]
+            ? Number(cacheHeaders["bundle.latencyMs"])
+            : null,
+        },
       },
       comparison: {
         bundleHashMatch: serverOk ? serverBuild?.bundleHash === bundleHash : null,
@@ -526,6 +580,7 @@ export function ClientDiagPanel() {
             ) : serverBuild.error ? (
               <>
                 {row("server", `error ${serverBuild.status ?? ""} ${serverBuild.error}`.trim())}
+                {row("/api/build-info ms", serverBuild.latencyMs ?? "—")}
                 {row("hint", "/api/build-info unreachable — check rewrite & cache")}
               </>
             ) : (
@@ -533,6 +588,7 @@ export function ClientDiagPanel() {
                 {row("server bundle", serverBuild.bundleHash ?? "(unknown)")}
                 {row("server buildTime", serverBuild.buildTime ?? "(unknown)")}
                 {row("server buildCommit", (serverBuild.buildCommit ?? "(unknown)").slice(0, 12))}
+                {row("/api/build-info ms", serverBuild.latencyMs ?? "—")}
                 {(() => {
                   const fields: Array<{ label: string; expected: string; actual: string }> = [
                     { label: "bundleHash", expected: bundleHash, actual: serverBuild.bundleHash ?? "(unknown)" },
@@ -588,6 +644,7 @@ export function ClientDiagPanel() {
                 ? `error: ${health.error}`
                 : `${health.status ?? "?"} · ${health.service ?? "?"} · ${health.checkedAt ?? "?"}`,
           )}
+          {row("/api/health ms", health?.latencyMs ?? "—")}
           {row("supabase url", supaUrl || "(missing)")}
           {row("supabase url valid", supaUrlValid ? "yes" : "no")}
           {(() => {
