@@ -283,42 +283,51 @@ export function ClientDiagPanel() {
   const language = typeof navigator !== "undefined" ? navigator.language : "(unknown)";
 
   const copyBuildInfo = async () => {
-    const payload = JSON.stringify(
-      {
-        client: { bundleHash, buildTime: clientBuildTime, buildCommit: clientBuildCommit },
-        server: serverBuild?.error
-          ? { error: serverBuild.error }
-          : {
-              bundleHash: serverBuild?.bundleHash ?? null,
-              buildTime: serverBuild?.buildTime ?? null,
-              buildCommit: serverBuild?.buildCommit ?? null,
-            },
-        match:
-          serverBuild && !serverBuild.error
-            ? serverBuild.bundleHash === bundleHash
-            : null,
-        environment,
-        host,
+    const capturedAt = new Date().toISOString();
+    const serverFetchedAt = health?.checkedAt ?? null;
+    const serverOk = !!serverBuild && !serverBuild.error;
+    const payload = {
+      capturedAt,
+      url: window.location.href,
+      host,
+      environment,
+      client: {
+        capturedAt,
+        bundleHash: bundleHash,
+        clientBuildTime: clientBuildTime,
+        clientBuildCommit: clientBuildCommit,
         viteMode,
         viteDev: isDev,
         viteProd: isProd,
         region,
         language,
         userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "(unknown)",
-        url: window.location.href,
-        capturedAt: new Date().toISOString(),
       },
-      null,
-      2,
-    );
+      server: {
+        fetchedAt: serverFetchedAt,
+        reachable: serverOk,
+        httpStatus: serverBuild?.status ?? null,
+        error: serverBuild?.error ?? null,
+        serverBundleHash: serverOk ? (serverBuild?.bundleHash ?? null) : null,
+        serverBuildTime: serverOk ? (serverBuild?.buildTime ?? null) : null,
+        serverBuildCommit: serverOk ? (serverBuild?.buildCommit ?? null) : null,
+      },
+      comparison: {
+        bundleHashMatch: serverOk ? serverBuild?.bundleHash === bundleHash : null,
+        clientBundleHash: bundleHash,
+        serverBundleHash: serverOk ? (serverBuild?.bundleHash ?? null) : null,
+      },
+    };
+    const pretty = JSON.stringify(payload, null, 2);
     try {
-      await navigator.clipboard.writeText(payload);
+      await navigator.clipboard.writeText(pretty);
       setCopied("copied ✓");
     } catch {
       setCopied("copy failed — select & copy below");
     }
     setTimeout(() => setCopied(null), 2500);
   };
+
 
 
   const btn: React.CSSProperties = {
