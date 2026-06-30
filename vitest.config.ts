@@ -14,6 +14,32 @@ export default defineConfig({
     typecheck: {
       tsconfig: "./tsconfig.app.json",
     },
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "text-summary", "html", "lcov", "json-summary"],
+      reportsDirectory: "./coverage",
+      // Cover application source only — exclude tests, config, generated
+      // Supabase types, and entry shims that have no meaningful logic.
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: [
+        "src/**/*.{test,spec}.{ts,tsx}",
+        "src/test/**",
+        "src/main.tsx",
+        "src/vite-env.d.ts",
+        "src/integrations/supabase/types.ts",
+        "src/types/**",
+      ],
+      // Agreed thresholds — set ~4pp below the current baseline
+      // (statements 59% / branches 51% / functions 57% / lines 62%) so
+      // routine churn doesn't break CI but a real regression does.
+      // Raise these as coverage improves; never lower without review.
+      thresholds: {
+        statements: 55,
+        branches: 47,
+        functions: 53,
+        lines: 57,
+      },
+    },
   },
   // Ensure the esbuild transform that powers Vitest also reads tsconfig.app,
   // keeping path aliases and target/lib settings consistent with the build.
