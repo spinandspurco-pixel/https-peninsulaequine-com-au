@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 /**
  * Mobile visual-regression guard for the LumenArc teaser.
@@ -15,8 +16,11 @@ import { resolve } from "node:path";
  * the assertions below in the same commit.
  */
 
-const read = (rel: string) =>
-  readFileSync(resolve(process.cwd(), rel), "utf8");
+// Resolve paths relative to the repo root via import.meta.url so the suite
+// runs identically under Vitest 4 (ESM-only) regardless of CWD.
+const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
+const read = (rel: string) => readFileSync(resolve(repoRoot, rel), "utf8");
+
 
 describe("LumenArc mobile clipping regression", () => {
   describe("LumenArcEntrance backdrop", () => {
