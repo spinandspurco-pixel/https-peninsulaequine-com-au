@@ -261,8 +261,14 @@ export default function HqDeployHealth() {
       status,
       message,
     });
+    void logDeployHealthAudit(
+      "retry_promotion",
+      status === "success" ? "success" : "failure",
+      { attempts, startedAt, status, message, before, after },
+    );
     setRetrying(false);
   }, [results]);
+
 
 
 
