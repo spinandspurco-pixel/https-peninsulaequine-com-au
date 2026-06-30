@@ -284,7 +284,7 @@ export function ClientDiagPanel() {
 
   const copyBuildInfo = async () => {
     const capturedAt = new Date().toISOString();
-    const serverFetchedAt = serverBuild?.checkedAt ?? null;
+    const serverFetchedAt = health?.checkedAt ?? null;
     const serverOk = !!serverBuild && !serverBuild.error;
     const payload = {
       capturedAt,
