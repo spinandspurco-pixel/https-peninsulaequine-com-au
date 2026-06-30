@@ -45,64 +45,68 @@ export function ClientDiagPanel() {
   const [health, setHealth] = useState<HealthState>(null);
 
 
-  useEffect(() => {
-    let cancelled = false;
-    fetch("/api/build-info", { cache: "no-store", credentials: "omit" })
-      .then(async (r) => {
-        if (cancelled) return;
-        if (!r.ok) {
-          setServerBuild({ error: `HTTP ${r.status}`, status: r.status });
-          return;
-        }
-        try {
-          const j = (await r.json()) as BuildInfo;
-          setServerBuild({
-            buildTime: j.buildTime,
-            buildCommit: j.buildCommit,
-            bundleHash: j.bundleHash,
-            status: r.status,
-          });
-        } catch (e) {
-          setServerBuild({ error: `parse: ${String((e as Error)?.message ?? e)}`, status: r.status });
-        }
-      })
-      .catch((e) => {
-        if (!cancelled) setServerBuild({ error: String((e as Error)?.message ?? e) });
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastRefreshAt, setLastRefreshAt] = useState<number | null>(null);
+
+  const fetchBuildInfo = React.useCallback(async () => {
+    try {
+      const r = await fetch("/api/build-info", { cache: "no-store", credentials: "omit" });
+      if (!r.ok) {
+        setServerBuild({ error: `HTTP ${r.status}`, status: r.status });
+        return;
+      }
+      const j = (await r.json()) as BuildInfo;
+      setServerBuild({
+        buildTime: j.buildTime,
+        buildCommit: j.buildCommit,
+        bundleHash: j.bundleHash,
+        status: r.status,
       });
-    return () => {
-      cancelled = true;
-    };
+    } catch (e) {
+      setServerBuild({ error: String((e as Error)?.message ?? e) });
+    }
   }, []);
 
-  useEffect(() => {
-    let cancelled = false;
-    fetch("/api/health", { cache: "no-store", credentials: "omit" })
-      .then(async (r) => {
-        if (cancelled) return;
-        if (!r.ok) {
-          setHealth({ error: `HTTP ${r.status}`, httpStatus: r.status });
-          return;
-        }
-        try {
-          const j = (await r.json()) as HealthResponse;
-          setHealth({
-            status: j.status,
-            service: j.service,
-            checkedAt: j.checkedAt,
-            bundleHash: j?.buildInfo?.bundleHash ?? null,
-            httpStatus: r.status,
-          });
-        } catch (e) {
-          setHealth({ error: `parse: ${String((e as Error)?.message ?? e)}`, httpStatus: r.status });
-        }
-      })
-      .catch((e) => {
-        if (!cancelled) setHealth({ error: String((e as Error)?.message ?? e) });
+  const fetchHealth = React.useCallback(async () => {
+    try {
+      const r = await fetch("/api/health", { cache: "no-store", credentials: "omit" });
+      if (!r.ok) {
+        setHealth({ error: `HTTP ${r.status}`, httpStatus: r.status });
+        return;
+      }
+      const j = (await r.json()) as HealthResponse;
+      setHealth({
+        status: j.status,
+        service: j.service,
+        checkedAt: j.checkedAt,
+        bundleHash: j?.buildInfo?.bundleHash ?? null,
+        httpStatus: r.status,
       });
-    return () => {
-      cancelled = true;
-    };
+    } catch (e) {
+      setHealth({ error: String((e as Error)?.message ?? e) });
+    }
   }, []);
+
+  const refreshBuildInfo = React.useCallback(async () => {
+    setRefreshing(true);
+    setServerBuild(null);
+    setHealth(null);
+    try {
+      await Promise.all([fetchBuildInfo(), fetchHealth()]);
+      setLastRefreshAt(Date.now());
+    } finally {
+      setRefreshing(false);
+    }
+  }, [fetchBuildInfo, fetchHealth]);
+
+  useEffect(() => {
+    void fetchBuildInfo();
+  }, [fetchBuildInfo]);
+
+  useEffect(() => {
+    void fetchHealth();
+  }, [fetchHealth]);
+
 
   useEffect(() => {
     const unsub = subscribeAuthLog(setEntries);
