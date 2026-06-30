@@ -54,6 +54,7 @@ export function ClientDiagPanel() {
   const [cacheCheckedAt, setCacheCheckedAt] = useState<number | null>(null);
   const [serverBuild, setServerBuild] = useState<ServerBuildState>(null);
   const [health, setHealth] = useState<HealthState>(null);
+  const [diag, setDiag] = useState<DiagState>(null);
 
 
   const [refreshing, setRefreshing] = useState(false);
