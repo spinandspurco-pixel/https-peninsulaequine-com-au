@@ -392,11 +392,29 @@ export function ClientDiagPanel() {
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-              <span style={{ opacity: 0.6, letterSpacing: "0.06em" }}>BUILD INFO</span>
-              <button onClick={copyBuildInfo} style={btn} title="Copy build info JSON">
-                {copied ?? "copy"}
-              </button>
+              <span style={{ opacity: 0.6, letterSpacing: "0.06em" }}>
+                BUILD INFO
+                {lastRefreshAt && (
+                  <span style={{ opacity: 0.5, marginLeft: 6 }}>
+                    · refreshed {new Date(lastRefreshAt).toISOString().slice(11, 19)}
+                  </span>
+                )}
+              </span>
+              <div style={{ display: "flex", gap: 4 }}>
+                <button
+                  onClick={refreshBuildInfo}
+                  style={btn}
+                  disabled={refreshing}
+                  title="Re-fetch /api/build-info and /api/health"
+                >
+                  {refreshing ? "refreshing…" : "refresh"}
+                </button>
+                <button onClick={copyBuildInfo} style={btn} title="Copy build info JSON">
+                  {copied ?? "copy"}
+                </button>
+              </div>
             </div>
+
             {row("client bundle", bundleHash)}
             {row("client buildTime", clientBuildTime)}
             {row("client buildCommit", clientBuildCommit.slice(0, 12))}
