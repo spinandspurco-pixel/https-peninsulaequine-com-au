@@ -509,3 +509,70 @@ export default function Login() {
     </Layout>
   );
 }
+
+/**
+ * Visible warning when the Supabase publishable key embedded in the client
+ * is in the legacy JWT format (`eyJ…`). Legacy keys were disabled by Supabase
+ * and will cause every auth call to fail with "Legacy API keys disabled".
+ * Only renders when the wrong format is detected — otherwise null.
+ */
+function LegacyKeyBanner() {
+  const key = (import.meta as unknown as { env?: Record<string, string | undefined> }).env
+    ?.VITE_SUPABASE_PUBLISHABLE_KEY;
+  if (!key) {
+    return (
+      <div
+        role="alert"
+        className="border border-destructive/60 bg-destructive/15 rounded-sm p-4 text-[12px] leading-relaxed"
+      >
+        <p className="font-medium uppercase tracking-[0.1em] text-destructive mb-1">
+          Configuration error
+        </p>
+        <p className="text-foreground/85">
+          No Supabase publishable key is configured in this build. Sign-in will fail. Open{" "}
+          <Link to="/login?debug=1" className="underline">
+            /login?debug=1
+          </Link>{" "}
+          for details.
+        </p>
+      </div>
+    );
+  }
+  if (key.startsWith("sb_publishable_")) return null;
+  const isLegacy = key.startsWith("eyJ");
+  const isSecret = key.startsWith("sb_secret_");
+  return (
+    <div
+      role="alert"
+      aria-live="polite"
+      className="border border-destructive/60 bg-destructive/15 rounded-sm p-4 text-[12px] leading-relaxed space-y-2"
+    >
+      <div className="flex items-start gap-2">
+        <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 shrink-0" aria-hidden />
+        <div className="min-w-0 flex-1 space-y-1">
+          <p className="font-medium uppercase tracking-[0.1em] text-destructive">
+            {isSecret
+              ? "Secret key exposed in client"
+              : isLegacy
+                ? "Legacy Supabase key — sign-in disabled"
+                : "Unrecognised Supabase key format"}
+          </p>
+          <p className="text-foreground/85">
+            {isSecret
+              ? "A sb_secret_* key is bundled in the client. This is a critical misconfiguration — rotate immediately and rebuild."
+              : isLegacy
+                ? "This build is using the legacy JWT publishable key, which Supabase has disabled. Sign-in will fail with “Legacy API keys disabled.” Republish after rotating to the new sb_publishable_* key."
+                : "The configured publishable key does not match any expected Supabase format. Sign-in will likely fail."}
+          </p>
+          <p className="text-muted-foreground/80 font-mono text-[11px]">
+            detected prefix: {isLegacy ? "eyJ… (legacy JWT)" : isSecret ? "sb_secret_" : "(unknown)"}{" "}
+            · see{" "}
+            <Link to="/login?debug=1" className="underline">
+              /login?debug=1
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
