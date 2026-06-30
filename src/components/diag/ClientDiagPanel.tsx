@@ -644,6 +644,7 @@ export function ClientDiagPanel() {
                 ? `error: ${health.error}`
                 : `${health.status ?? "?"} · ${health.service ?? "?"} · ${health.checkedAt ?? "?"}`,
           )}
+          {row("/api/health ms", health?.latencyMs ?? "—")}
           {row("supabase url", supaUrl || "(missing)")}
           {row("supabase url valid", supaUrlValid ? "yes" : "no")}
           {(() => {
