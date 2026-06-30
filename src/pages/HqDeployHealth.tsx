@@ -369,7 +369,32 @@ export default function HqDeployHealth() {
 
   const supportSubject = "Stuck production promotion — force-promote required";
   const supportBody = useMemo(() => {
+    const keyLines: string[] = ["", "------", "Supabase key-type mismatch details:"];
+    if (results.length === 0) {
+      keyLines.push("  (no probes run yet)");
+    } else {
+      for (const r of results) {
+        const keyType =
+          !r.ok
+            ? "unknown (probe error)"
+            : r.hasLegacyKey
+              ? "LEGACY JWT (eyJhbGci) — stale"
+              : r.hasModernKey
+                ? "sb_publishable_ — fresh"
+                : "neither marker present — unknown";
+        keyLines.push(`  - ${r.label}: ${keyType}`);
+        keyLines.push(`      bundle: ${r.bundleFile ?? "—"}  stuck: ${isStuck(r)}`);
+      }
+      const stuck = results.filter(isStuck).map((r) => r.label);
+      keyLines.push("");
+      keyLines.push(
+        stuck.length === 0
+          ? "  Overall: all targets fresh (no key mismatch detected)."
+          : `  Overall: KEY MISMATCH on ${stuck.length}/${results.length} — ${stuck.join(", ")}`,
+      );
+    }
     const next = [
+      ...keyLines,
       "",
       "------",
       "Recommended next steps (platform side):",
@@ -384,7 +409,8 @@ export default function HqDeployHealth() {
       "Do NOT rotate API keys again — already rotated to sb_publishable_*.",
     ].join("\n");
     return `${escalation}\n${next}`;
-  }, [escalation]);
+  }, [escalation, results]);
+
 
   const openSupportEmail = async () => {
     let clipboardOk = false;
