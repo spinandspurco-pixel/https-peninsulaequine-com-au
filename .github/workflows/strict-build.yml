@@ -35,6 +35,12 @@ jobs:
       - name: Strict build (Tailwind + PostCSS + prerender + internal links)
         run: bun run build
 
+      # Typecheck test files explicitly against tsconfig.app.json so missing
+      # types (e.g. `node`, `vitest/globals`) or broken imports in *.test.ts(x)
+      # fail CI before vitest ever boots its runner.
+      - name: TypeScript typecheck (test files)
+        run: bunx tsc --noEmit -p tsconfig.app.json
+
       # Unit tests (vitest) — includes HqHeader regression guarding that no
       # Sign Out button or HQ chrome leaks onto /login for unauthenticated
       # visitors.
