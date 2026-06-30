@@ -138,15 +138,6 @@ export default function HqDeployHealth() {
   const [lastCheckedAt, setLastCheckedAt] = useState<string | null>(null);
   const [retrying, setRetrying] = useState(false);
   const [retryOutcome, setRetryOutcome] = useState<RetryOutcome | null>(null);
-  const pageBundle = useMemo(getCurrentPageBundle, []);
-
-  const run = useCallback(async () => {
-    setRunning(true);
-    try {
-      const out = await Promise.all(TARGETS.map((t) => probe(t.label, t.url)));
-      setResults(out);
-      setLastCheckedAt(new Date().toISOString());
-      recordResults(out);
   const [audit, setAudit] = useState<AuditRow[]>([]);
   const [auditLoading, setAuditLoading] = useState(false);
   const [auditError, setAuditError] = useState<string | null>(null);
