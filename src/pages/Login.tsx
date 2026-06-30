@@ -454,49 +454,45 @@ export default function Login() {
                   setSignInError(e);
                   toast.error(e.title);
                 }, 15000);
-                try {
-                  const result = await lovable.auth.signInWithOAuth("google", {
-                    redirect_uri: window.location.origin,
+                const result = await attemptGoogleSignIn({
+                  redirectUri: window.location.origin,
+                  maxAttempts: 2,
+                  onAttempt: (n) =>
+                    authLog("oauth:google:attempt", { attempt: n }),
+                });
+                window.clearTimeout(watchdog);
+                authLog("oauth:google:result", {
+                  kind: result.kind,
+                  attempts: result.attempts,
+                  ...(result.kind === "ok"
+                    ? { via: result.via }
+                    : { transient: result.transient, msg: result.message }),
+                });
+                if (result.kind === "ok") {
+                  trackAuthFunnel("auth_login_success", {
+                    method: "google",
+                    via: result.via,
+                    force: true,
                   });
-                  authLog("oauth:google:result", {
-                    hasError: !!result.error,
-                    errorMsg: result.error?.message,
-                    redirected: !!result.redirected,
-                  });
-                  if (result.error) {
-                    window.clearTimeout(watchdog);
-                    setIsLoading(false);
-                    const classified = classifyOAuthError(result.error.message || "");
-                    setSignInError(classified);
-                    recordOAuthError({
-                      provider: "google",
-                      source: "login-button",
-                      message: result.error.message || "Unknown error",
-                    });
-                    toast.error(classified.title);
-                    return;
-                  }
-                  if (result.redirected) {
-                    window.clearTimeout(watchdog);
-                    trackAuthFunnel("auth_login_success", { method: "google", via: "redirect", force: true });
-                    return;
-                  }
-                  window.clearTimeout(watchdog);
-                  trackAuthFunnel("auth_login_success", { method: "google", via: "popup", force: true });
-                } catch (err) {
-                  window.clearTimeout(watchdog);
-                  const msg = err instanceof Error ? err.message : String(err);
-                  authLog("oauth:google:throw", { msg });
-                  const classified = classifyOAuthError(msg);
-                  setSignInError(classified);
-                  recordOAuthError({
-                    provider: "google",
-                    source: "login-button",
-                    message: msg,
-                  });
-                  setIsLoading(false);
-                  toast.error(classified.title);
+                  return;
                 }
+                setIsLoading(false);
+                const classified = classifyOAuthError(result.message);
+                setSignInError(classified);
+                recordOAuthError({
+                  provider: "google",
+                  source: "login-button",
+                  message: result.message,
+                  context: {
+                    attempts: result.attempts,
+                    transient: result.transient,
+                  },
+                });
+                toast.error(
+                  result.attempts > 1
+                    ? `${classified.title} (retried ${result.attempts}×)`
+                    : classified.title,
+                );
               }}
             >
               <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
