@@ -1033,6 +1033,12 @@ export default function HqDiagnostics() {
           )}
         </div>
 
+        <OAuthProviderPanel
+          url={url}
+          expectedCallback={expectedCallback}
+          appOrigin={appOrigin}
+        />
+
         <div className="mb-8 border border-foreground/10 rounded-sm">
 
 
