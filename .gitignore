@@ -31,3 +31,6 @@ dist-ssr
 /e2e/.auth/
 reports/
 scripts/live-smoke-test/.env
+
+# Vitest coverage output
+coverage/

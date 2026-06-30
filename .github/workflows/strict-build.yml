@@ -52,11 +52,21 @@ jobs:
       - name: TypeScript typecheck (test files)
         run: bunx tsc --noEmit -p tsconfig.app.json
 
-      # Unit tests (vitest) — includes HqHeader regression guarding that no
-      # Sign Out button or HQ chrome leaks onto /login for unauthenticated
-      # visitors.
-      - name: Unit tests (vitest)
-        run: bun run test
+      # Unit tests (vitest) with v8 coverage — fails the build if coverage
+      # drops below the agreed thresholds defined in vitest.config.ts. Also
+      # includes the HqHeader regression guarding that no Sign Out button or
+      # HQ chrome leaks onto /login for unauthenticated visitors.
+      - name: Unit tests (vitest) + coverage thresholds
+        run: bun run test:coverage
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitest-coverage
+          path: coverage/
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Install Playwright browser
         run: bunx playwright install --with-deps chromium
