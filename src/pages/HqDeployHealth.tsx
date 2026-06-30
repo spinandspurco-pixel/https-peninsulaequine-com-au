@@ -6,6 +6,16 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { recordResults } from "@/lib/deployHealth";
 import { logDeployHealthAudit, type DeployHealthAuditAction } from "@/lib/deployHealthAudit";
+import { supabase } from "@/integrations/supabase/client";
+
+type AuditRow = {
+  id: string;
+  created_at: string;
+  actor_email: string | null;
+  action: string;
+  status: string | null;
+};
+
 
 /**
  * HQ → Operations → Deploy Health
