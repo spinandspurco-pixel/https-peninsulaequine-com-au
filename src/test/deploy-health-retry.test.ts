@@ -111,7 +111,7 @@ describe("runRetryPromotion", () => {
     const probeFn = vi.fn(async (label: string) =>
       fresh(label, "index-new.js"),
     );
-    const sleep = vi.fn(async () => {});
+    const sleep = vi.fn(async (_ms: number) => {});
     const result = await runRetryPromotion({
       targets: TARGETS,
       probe: probeFn,
@@ -140,7 +140,7 @@ describe("runRetryPromotion", () => {
       if (passIndex < 3) return stuckLegacy(label, "index-old.js");
       return fresh(label, "index-new.js");
     });
-    const sleep = vi.fn(async () => {});
+    const sleep = vi.fn(async (_ms: number) => {});
     const result = await runRetryPromotion({
       targets: TARGETS,
       probe: probeFn,
@@ -175,7 +175,7 @@ describe("runRetryPromotion", () => {
       if (label === "Custom domain") return fresh(label, "index-new.js");
       return stuckLegacy(label, "index-old.js");
     });
-    const sleep = vi.fn(async () => {});
+    const sleep = vi.fn(async (_ms: number) => {});
     const result = await runRetryPromotion({
       targets: TARGETS,
       probe: probeFn,
@@ -195,7 +195,7 @@ describe("runRetryPromotion", () => {
     const probeFn = vi.fn(async (label: string) =>
       stuckLegacy(label, "index-old.js"),
     );
-    const sleep = vi.fn(async () => {});
+    const sleep = vi.fn(async (_ms: number) => {});
     const result = await runRetryPromotion({
       targets: TARGETS,
       probe: probeFn,
@@ -219,7 +219,7 @@ describe("runRetryPromotion", () => {
       if (calls <= TARGETS.length) return stuckLegacy(label, "index-old.js");
       throw new Error("network down");
     });
-    const sleep = vi.fn(async () => {});
+    const sleep = vi.fn(async (_ms: number) => {});
     const result = await runRetryPromotion({
       targets: TARGETS,
       probe: probeFn,
@@ -238,7 +238,7 @@ describe("runRetryPromotion", () => {
     const probeFn = vi.fn(async (label: string) =>
       fresh(label, "index-new.js"),
     );
-    const sleep = vi.fn(async () => {});
+    const sleep = vi.fn(async (_ms: number) => {});
     const result = await runRetryPromotion({
       targets: TARGETS,
       probe: probeFn,
