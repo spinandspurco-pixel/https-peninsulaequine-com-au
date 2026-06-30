@@ -84,8 +84,25 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
+      # Cache Playwright's browser binaries keyed by the resolved Playwright
+      # version in the lockfile. On a hit we skip the ~100MB chromium
+      # download and only run `--with-deps` to ensure system libs are present.
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('bun.lock', 'bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
       - name: Install Playwright browser
-        run: bunx playwright install --with-deps chromium
+        run: |
+          if [ "${{ steps.playwright-cache.outputs.cache-hit }}" = "true" ]; then
+            bunx playwright install-deps chromium
+          else
+            bunx playwright install --with-deps chromium
+          fi
 
       # Anonymous Playwright suite — covers protected-route redirects plus the
       # /login header/sign-out regression checks. Restricted to @anon so we
