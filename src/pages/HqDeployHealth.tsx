@@ -410,7 +410,7 @@ export default function HqDeployHealth() {
   }, [results, lastCheckedAt, user?.email, pageBundle]);
 
   const copyEscalationJson = () =>
-    tryCopy("Escalation payload (JSON)", escalationJson, "Escalation payload copied as JSON");
+    tryCopy("Escalation payload (JSON)", escalationJson, "Escalation payload copied as JSON", "copy_escalation_json");
 
   const downloadEscalationTxt = () => {
     try {
@@ -427,8 +427,13 @@ export default function HqDeployHealth() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       toast.success(`Downloaded ${filename}`);
-    } catch {
+      void logDeployHealthAudit("download_escalation_txt", "success", {
+        filename, bytes: supportBody.length,
+      });
+    } catch (e) {
+      const reason = e instanceof Error ? e.message : "Download failed";
       toast.error("Download failed");
+      void logDeployHealthAudit("download_escalation_txt", "failure", { reason });
     }
   };
 
@@ -437,8 +442,9 @@ export default function HqDeployHealth() {
       `To: support@lovable.dev\n` +
       `Subject: ${supportSubject}\n\n` +
       supportBody;
-    return tryCopy("Support email (To, Subject, payload)", full, "Support email copied (To, Subject, payload)");
+    return tryCopy("Support email (To, Subject, payload)", full, "Support email copied (To, Subject, payload)", "copy_support_email");
   };
+
 
 
   const anyStuck = results.some(isStuck);
