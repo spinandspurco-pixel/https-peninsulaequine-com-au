@@ -179,7 +179,7 @@ export default function HqDeployHealth() {
         format === "csv" ? auditRowsToCsv(audit) : auditRowsToJson(audit);
       downloadTextFile(filename, mime, body);
       toast.success(`Exported ${audit.length} row${audit.length === 1 ? "" : "s"} as ${format.toUpperCase()}.`);
-      void logDeployHealthAudit("download_payload", "success", {
+      void logDeployHealthAudit("export_audit_log", "success", {
         kind: "audit_log_export",
         format,
         rowCount: audit.length,
