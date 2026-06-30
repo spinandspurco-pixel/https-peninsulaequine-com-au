@@ -449,16 +449,121 @@ export default function HqDeployHealth() {
               <code className="text-foreground/80">{pageBundle ?? "—"}</code>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={run}
-            disabled={running}
-            className="text-sm tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8 disabled:opacity-40"
-            title="Immediately re-fetch bundle state, markers, and timestamps"
-          >
-            {running ? "Re-checking…" : "Re-run deploy health checks"}
-          </button>
+          <div className="flex items-center gap-6">
+            <button
+              type="button"
+              onClick={retryPromotion}
+              disabled={retrying || running}
+              className="text-sm tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8 disabled:opacity-40"
+              title="Re-probe each domain with cache-bust + backoff to detect whether a fresh bundle has landed"
+            >
+              {retrying ? "Retrying promotion…" : "Retry promotion"}
+            </button>
+            <button
+              type="button"
+              onClick={run}
+              disabled={running || retrying}
+              className="text-sm tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8 disabled:opacity-40"
+              title="Immediately re-fetch bundle state, markers, and timestamps"
+            >
+              {running ? "Re-checking…" : "Re-run checks"}
+            </button>
+          </div>
         </section>
+
+        {retryOutcome && (
+          <section
+            className={
+              "border px-5 py-4 space-y-3 " +
+              (retryOutcome.status === "success"
+                ? "border-emerald-600/40 bg-emerald-600/5"
+                : retryOutcome.status === "partial"
+                ? "border-amber-600/40 bg-amber-600/5"
+                : retryOutcome.status === "no_change"
+                ? "border-red-600/40 bg-red-600/5"
+                : "border-red-600/40 bg-red-600/5")
+            }
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div
+                className={
+                  "text-[0.65rem] tracking-[0.45em] uppercase " +
+                  (retryOutcome.status === "success"
+                    ? "text-emerald-700"
+                    : retryOutcome.status === "partial"
+                    ? "text-amber-700"
+                    : "text-red-700")
+                }
+              >
+                {retryOutcome.status === "success"
+                  ? "Retry succeeded"
+                  : retryOutcome.status === "partial"
+                  ? "Retry partial"
+                  : retryOutcome.status === "no_change"
+                  ? "Retry — no change"
+                  : "Retry error"}
+              </div>
+              <button
+                type="button"
+                onClick={() => setRetryOutcome(null)}
+                className="text-[0.6rem] tracking-[0.3em] uppercase text-foreground/50 hover:text-foreground/80"
+              >
+                Dismiss
+              </button>
+            </div>
+            <p className="text-sm text-foreground/80 leading-relaxed">{retryOutcome.message}</p>
+            <dl className="grid grid-cols-[max-content_1fr] gap-x-6 gap-y-1 text-[0.7rem] text-foreground/70">
+              <dt className="uppercase tracking-[0.3em] text-foreground/40">Attempts</dt>
+              <dd>{retryOutcome.attempts}</dd>
+              <dt className="uppercase tracking-[0.3em] text-foreground/40">Started</dt>
+              <dd>{retryOutcome.startedAt}</dd>
+              <dt className="uppercase tracking-[0.3em] text-foreground/40">Finished</dt>
+              <dd>{retryOutcome.finishedAt}</dd>
+            </dl>
+            <div className="grid sm:grid-cols-2 gap-4 text-[0.7rem]">
+              <div className="border border-border/10 p-3 space-y-1">
+                <div className="uppercase tracking-[0.3em] text-foreground/40 text-[0.6rem]">Before</div>
+                {retryOutcome.before.map((b) => (
+                  <div key={`b-${b.label}`} className="flex justify-between gap-3">
+                    <span className="text-foreground/60">{b.label}</span>
+                    <code className={b.stuck ? "text-amber-700" : "text-foreground/70"}>
+                      {b.bundleFile ?? "—"}
+                    </code>
+                  </div>
+                ))}
+              </div>
+              <div className="border border-border/10 p-3 space-y-1">
+                <div className="uppercase tracking-[0.3em] text-foreground/40 text-[0.6rem]">After</div>
+                {retryOutcome.after.map((a) => (
+                  <div key={`a-${a.label}`} className="flex justify-between gap-3">
+                    <span className="text-foreground/60">{a.label}</span>
+                    <code className={a.stuck ? "text-amber-700" : "text-emerald-700"}>
+                      {a.bundleFile ?? "—"}
+                    </code>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {(retryOutcome.status === "no_change" || retryOutcome.status === "partial") && (
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-1">
+                <button
+                  type="button"
+                  onClick={openSupportEmail}
+                  className="text-xs tracking-[0.3em] uppercase text-red-700 underline underline-offset-8"
+                >
+                  Escalate to Lovable Support →
+                </button>
+                <button
+                  type="button"
+                  onClick={copyEscalationJson}
+                  className="text-xs tracking-[0.3em] uppercase text-foreground/80 underline underline-offset-8"
+                >
+                  Copy payload as JSON
+                </button>
+              </div>
+            )}
+          </section>
+        )}
 
         {anyStuck && (
           <section className="border border-amber-600/40 bg-amber-600/5 px-5 py-4 space-y-2">
