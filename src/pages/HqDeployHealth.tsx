@@ -369,7 +369,32 @@ export default function HqDeployHealth() {
 
   const supportSubject = "Stuck production promotion — force-promote required";
   const supportBody = useMemo(() => {
+    const keyLines: string[] = ["", "------", "Supabase key-type mismatch details:"];
+    if (results.length === 0) {
+      keyLines.push("  (no probes run yet)");
+    } else {
+      for (const r of results) {
+        const keyType =
+          !r.ok
+            ? "unknown (probe error)"
+            : r.hasLegacyKey
+              ? "LEGACY JWT (eyJhbGci) — stale"
+              : r.hasModernKey
+                ? "sb_publishable_ — fresh"
+                : "neither marker present — unknown";
+        keyLines.push(`  - ${r.label}: ${keyType}`);
+        keyLines.push(`      bundle: ${r.bundleFile ?? "—"}  stuck: ${isStuck(r)}`);
+      }
+      const stuck = results.filter(isStuck).map((r) => r.label);
+      keyLines.push("");
+      keyLines.push(
+        stuck.length === 0
+          ? "  Overall: all targets fresh (no key mismatch detected)."
+          : `  Overall: KEY MISMATCH on ${stuck.length}/${results.length} — ${stuck.join(", ")}`,
+      );
+    }
     const next = [
+      ...keyLines,
       "",
       "------",
       "Recommended next steps (platform side):",
@@ -384,7 +409,8 @@ export default function HqDeployHealth() {
       "Do NOT rotate API keys again — already rotated to sb_publishable_*.",
     ].join("\n");
     return `${escalation}\n${next}`;
-  }, [escalation]);
+  }, [escalation, results]);
+
 
   const openSupportEmail = async () => {
     let clipboardOk = false;
@@ -568,14 +594,25 @@ export default function HqDeployHealth() {
                 payload below and send it to Lovable Support to force-promote a fresh build.
               </p>
             </div>
-            <button
-              type="button"
-              onClick={copyEscalationJson}
-              className="shrink-0 text-sm tracking-[0.3em] uppercase text-amber-800 border border-amber-700/50 px-4 py-2 hover:bg-amber-600/10"
-              title="Copy the full deploy-health JSON payload to your clipboard"
-            >
-              Copy JSON payload
-            </button>
+            <div className="shrink-0 flex flex-col gap-2">
+              <button
+                type="button"
+                onClick={copySupportEmail}
+                className="text-sm tracking-[0.3em] uppercase text-amber-900 bg-amber-600/15 border border-amber-700/50 px-4 py-2 hover:bg-amber-600/25"
+                title="Generate a ready-to-send support email (To, Subject, body with key-type mismatch details) and copy it to your clipboard"
+              >
+                Copy support email
+              </button>
+              <button
+                type="button"
+                onClick={copyEscalationJson}
+                className="text-xs tracking-[0.3em] uppercase text-amber-800 border border-amber-700/40 px-4 py-2 hover:bg-amber-600/10"
+                title="Copy the full deploy-health JSON payload to your clipboard"
+              >
+                Copy JSON payload
+              </button>
+            </div>
+
           </section>
         )}
 
