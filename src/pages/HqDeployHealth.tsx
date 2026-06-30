@@ -353,8 +353,10 @@ export default function HqDeployHealth() {
   }, [escalation]);
 
   const openSupportEmail = async () => {
+    let clipboardOk = false;
     try {
       await navigator.clipboard?.writeText(supportBody);
+      clipboardOk = true;
     } catch {
       /* ignore — mailto still opens */
     }
@@ -364,7 +366,13 @@ export default function HqDeployHealth() {
       `&body=${encodeURIComponent(supportBody)}`;
     window.location.href = href;
     toast.success("Opening email — payload also copied to clipboard");
+    void logDeployHealthAudit("open_support_email", "success", {
+      subject: supportSubject,
+      bodyBytes: supportBody.length,
+      clipboardCopied: clipboardOk,
+    });
   };
+
 
   const escalationJson = useMemo(() => {
     return JSON.stringify(
