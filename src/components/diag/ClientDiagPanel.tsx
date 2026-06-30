@@ -242,6 +242,50 @@ export function ClientDiagPanel() {
     </div>
   );
 
+  const clientBuildTime = typeof __BUILD_TIME__ !== "undefined" ? __BUILD_TIME__ : "(unknown)";
+  const clientBuildCommit = typeof __BUILD_COMMIT__ !== "undefined" ? __BUILD_COMMIT__ : "(unknown)";
+
+  const [copied, setCopied] = useState<string | null>(null);
+  const copyBuildInfo = async () => {
+    const payload = JSON.stringify(
+      {
+        client: { bundleHash, buildTime: clientBuildTime, buildCommit: clientBuildCommit },
+        server: serverBuild?.error
+          ? { error: serverBuild.error }
+          : {
+              bundleHash: serverBuild?.bundleHash ?? null,
+              buildTime: serverBuild?.buildTime ?? null,
+              buildCommit: serverBuild?.buildCommit ?? null,
+            },
+        match:
+          serverBuild && !serverBuild.error
+            ? serverBuild.bundleHash === bundleHash
+            : null,
+        url: window.location.href,
+        capturedAt: new Date().toISOString(),
+      },
+      null,
+      2,
+    );
+    try {
+      await navigator.clipboard.writeText(payload);
+      setCopied("copied ✓");
+    } catch {
+      setCopied("copy failed — select & copy below");
+    }
+    setTimeout(() => setCopied(null), 2500);
+  };
+
+  const btn: React.CSSProperties = {
+    background: "transparent",
+    color: "#9aa4af",
+    border: "1px solid #2a313a",
+    padding: "2px 6px",
+    cursor: "pointer",
+    fontSize: 10,
+  };
+
+
   return (
     <div
       style={{
