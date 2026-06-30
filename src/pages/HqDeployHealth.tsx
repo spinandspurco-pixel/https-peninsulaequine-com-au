@@ -472,6 +472,73 @@ export default function HqDeployHealth() {
   const copyEscalationJson = () =>
     tryCopy("Escalation payload (JSON)", escalationJson, "Escalation payload copied as JSON", "copy_escalation_json");
 
+  const promotionReportJson = useMemo(() => {
+    return JSON.stringify(
+      {
+        kind: "promotion_report",
+        projectId: "ebeb5b18-7fa0-4d1b-b9a3-22ec57bd6cff",
+        generatedAt: new Date().toISOString(),
+        triggeredBy: user?.email ?? null,
+        adminPageBundle: pageBundle,
+        lastCheckedAt,
+        retry: retryOutcome
+          ? {
+              startedAt: retryOutcome.startedAt,
+              finishedAt: retryOutcome.finishedAt,
+              attempts: retryOutcome.attempts,
+              status: retryOutcome.status,
+              message: retryOutcome.message,
+              perDomain: retryOutcome.after.map((a, idx) => {
+                const b = retryOutcome.before[idx];
+                const beforeHash = b?.bundleFile ?? null;
+                const afterHash = a.bundleFile ?? null;
+                const changed = !!(beforeHash && afterHash && beforeHash !== afterHash);
+                let domainStatus: "success" | "partial" | "no_change" | "error";
+                if (!afterHash) domainStatus = "error";
+                else if (!a.stuck) domainStatus = "success";
+                else if (changed) domainStatus = "partial";
+                else domainStatus = "no_change";
+                return {
+                  label: a.label,
+                  attempts: retryOutcome.attempts,
+                  before: { bundleFile: beforeHash, stuck: b?.stuck ?? null },
+                  after: { bundleFile: afterHash, stuck: a.stuck },
+                  changed,
+                  status: domainStatus,
+                };
+              }),
+            }
+          : null,
+        currentProbes: results.map((r) => ({
+          label: r.label,
+          url: r.url,
+          fetchedAt: r.fetchedAt,
+          ok: r.ok,
+          bundleFile: r.bundleFile,
+          bundleUrl: r.bundleUrl,
+          bundleBytes: r.bundleBytes,
+          hasLegacyKey: r.hasLegacyKey,
+          hasModernKey: r.hasModernKey,
+          stuck: isStuck(r),
+          error: r.error,
+        })),
+      },
+      null,
+      2,
+    );
+  }, [retryOutcome, results, lastCheckedAt, user?.email, pageBundle]);
+
+  const copyPromotionReport = () =>
+    tryCopy(
+      "Promotion report (JSON)",
+      promotionReportJson,
+      retryOutcome
+        ? "Promotion report copied"
+        : "Promotion report copied (no retry run yet — current probes only)",
+      "copy_promotion_report",
+    );
+
+
   const downloadEscalationTxt = () => {
     try {
       const stamp = (lastCheckedAt ?? new Date().toISOString())
