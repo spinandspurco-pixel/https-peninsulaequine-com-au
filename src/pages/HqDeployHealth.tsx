@@ -137,6 +137,14 @@ export default function HqDeployHealth() {
       setResults(out);
       setLastCheckedAt(new Date().toISOString());
       recordResults(out);
+      void logDeployHealthAudit("run_checks", "success", {
+        targets: out.map((r) => ({
+          label: r.label,
+          ok: r.ok,
+          bundleFile: r.bundleFile,
+          stuck: isStuck(r),
+        })),
+      });
       return out;
     } finally {
       setRunning(false);
@@ -144,8 +152,14 @@ export default function HqDeployHealth() {
   }, []);
 
   useEffect(() => {
-    if (isAdmin) run();
+    if (isAdmin) {
+      void logDeployHealthAudit("view_page", "info", {
+        path: typeof location !== "undefined" ? location.pathname : null,
+      });
+      run();
+    }
   }, [isAdmin, run]);
+
 
   const retryPromotion = useCallback(async () => {
     setRetrying(true);
