@@ -31,7 +31,7 @@ export async function logDeployHealthAudit(
       actor_email: user.email ?? null,
       action,
       status,
-      detail,
+      detail: detail as never,
       user_agent:
         typeof navigator !== "undefined" ? navigator.userAgent : null,
     });
