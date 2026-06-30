@@ -306,20 +306,32 @@ export default function HqDeployHealth() {
 
   const [manualCopy, setManualCopy] = useState<{ label: string; text: string } | null>(null);
 
-  const tryCopy = useCallback(async (label: string, text: string, successMsg: string) => {
+  const tryCopy = useCallback(async (
+    label: string,
+    text: string,
+    successMsg: string,
+    auditAction?: DeployHealthAuditAction,
+  ) => {
     try {
       if (!navigator.clipboard?.writeText) throw new Error("Clipboard API unavailable");
       await navigator.clipboard.writeText(text);
       toast.success(successMsg);
+      if (auditAction) {
+        void logDeployHealthAudit(auditAction, "success", { label, bytes: text.length });
+      }
     } catch (e) {
       const reason = e instanceof Error ? e.message : "Clipboard blocked";
       toast.error(`Copy failed — ${reason}. Use the manual copy box.`);
       setManualCopy({ label, text });
+      if (auditAction) {
+        void logDeployHealthAudit(auditAction, "failure", { label, reason, fallback: "manual_copy_box" });
+      }
     }
   }, []);
 
   const copyEscalation = () =>
-    tryCopy("Escalation payload", escalation, "Escalation payload copied");
+    tryCopy("Escalation payload", escalation, "Escalation payload copied", "copy_escalation_text");
+
 
   const supportSubject = "Stuck production promotion — force-promote required";
   const supportBody = useMemo(() => {
