@@ -7,6 +7,12 @@ import { toast } from "sonner";
 import { recordResults } from "@/lib/deployHealth";
 import { logDeployHealthAudit, type DeployHealthAuditAction } from "@/lib/deployHealthAudit";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  auditRowsToCsv,
+  auditRowsToJson,
+  downloadTextFile,
+  timestampedFilename,
+} from "@/lib/auditExport";
 
 type AuditRow = {
   id: string;
@@ -14,6 +20,7 @@ type AuditRow = {
   actor_email: string | null;
   action: string;
   status: string | null;
+  detail: unknown;
 };
 
 
@@ -148,7 +155,7 @@ export default function HqDeployHealth() {
     try {
       const { data, error } = await supabase
         .from("deploy_health_audit")
-        .select("id, created_at, actor_email, action, status")
+        .select("id, created_at, actor_email, action, status, detail")
         .order("created_at", { ascending: false })
         .limit(25);
       if (error) throw error;
@@ -159,6 +166,28 @@ export default function HqDeployHealth() {
       setAuditLoading(false);
     }
   }, []);
+
+  const exportAudit = useCallback(
+    (format: "csv" | "json") => {
+      if (audit.length === 0) {
+        toast.info("Nothing to export yet — run a check first.");
+        return;
+      }
+      const filename = timestampedFilename("deploy-health-audit", format);
+      const mime = format === "csv" ? "text/csv" : "application/json";
+      const body =
+        format === "csv" ? auditRowsToCsv(audit) : auditRowsToJson(audit);
+      downloadTextFile(filename, mime, body);
+      toast.success(`Exported ${audit.length} row${audit.length === 1 ? "" : "s"} as ${format.toUpperCase()}.`);
+      void logDeployHealthAudit("export_audit_log", "success", {
+        kind: "audit_log_export",
+        format,
+        rowCount: audit.length,
+        filename,
+      });
+    },
+    [audit],
+  );
 
   const pageBundle = useMemo(getCurrentPageBundle, []);
 
@@ -1180,14 +1209,34 @@ export default function HqDeployHealth() {
             <div className="text-[0.65rem] tracking-[0.45em] uppercase text-foreground/40">
               Audit log · last 25
             </div>
-            <button
-              type="button"
-              onClick={refreshAudit}
-              disabled={auditLoading}
-              className="text-[0.65rem] tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8 disabled:opacity-40"
-            >
-              {auditLoading ? "Loading…" : "Refresh"}
-            </button>
+            <div className="flex items-center gap-5">
+              <button
+                type="button"
+                onClick={() => exportAudit("csv")}
+                disabled={auditLoading || audit.length === 0}
+                title="Download the audit log as CSV for support"
+                className="text-[0.65rem] tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8 disabled:opacity-40"
+              >
+                Export CSV
+              </button>
+              <button
+                type="button"
+                onClick={() => exportAudit("json")}
+                disabled={auditLoading || audit.length === 0}
+                title="Download the audit log as JSON for support"
+                className="text-[0.65rem] tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8 disabled:opacity-40"
+              >
+                Export JSON
+              </button>
+              <button
+                type="button"
+                onClick={refreshAudit}
+                disabled={auditLoading}
+                className="text-[0.65rem] tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8 disabled:opacity-40"
+              >
+                {auditLoading ? "Loading…" : "Refresh"}
+              </button>
+            </div>
           </div>
           <p className="text-xs text-foreground/60 max-w-2xl leading-relaxed">
             Every admin diagnostic action on this page — view, run checks,
