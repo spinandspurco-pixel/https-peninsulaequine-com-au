@@ -69,8 +69,9 @@ function classifyOAuthError(message: string): SignInError {
       kind: "google",
       title: "Google rejected this sign-in URL",
       detail: message,
-      hint: "An administrator needs to add this domain to the OAuth allow-list.",
+      hint: `Add ${typeof window !== "undefined" ? window.location.origin : "this origin"} to the OAuth client's Authorized redirect URIs, then retry.`,
       canRetry: true,
+      showDiagnostics: true,
     };
   }
   if (
@@ -79,17 +80,18 @@ function classifyOAuthError(message: string): SignInError {
     msg.includes("provider not enabled") ||
     msg.includes("missing oauth") ||
     msg.includes("client_secret") ||
-    msg.includes("client secret")
+    msg.includes("client secret") ||
+    msg.includes("invalid client")
   ) {
-    // Technical detail logged to console only; user sees a plain message.
     console.error("[oauth] Google provider/secret misconfigured:", message);
     return {
       kind: "google",
       title: "Google sign-in is temporarily unavailable",
       detail: message,
-      hint: "Please use email + password below, or contact an administrator.",
+      hint: "The Google provider isn't fully configured. Use email + password below, or open diagnostics to verify the Client ID and Secret.",
       canRetry: false,
       hideDetail: true,
+      showDiagnostics: true,
     };
   }
   if (msg.includes("refresh") || msg.includes("session") || msg.includes("token")) {
@@ -102,12 +104,30 @@ function classifyOAuthError(message: string): SignInError {
       canClearCache: true,
     };
   }
+  if (
+    msg.includes("network") ||
+    msg.includes("failed to fetch") ||
+    msg.includes("timeout") ||
+    msg.includes("timed out") ||
+    msg.includes("503") ||
+    msg.includes("502") ||
+    msg.includes("504")
+  ) {
+    return {
+      kind: "google",
+      title: "Couldn't reach Google",
+      detail: message,
+      hint: "Network or upstream issue. We retried automatically — try once more, or use email + password below.",
+      canRetry: true,
+    };
+  }
   return {
     kind: "google",
     title: "Google sign-in failed",
     detail: message || "Unknown error",
     hint: "Try again, or use email + password below.",
     canRetry: true,
+    showDiagnostics: true,
   };
 }
 
