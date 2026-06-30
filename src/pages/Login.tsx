@@ -14,6 +14,7 @@ import { StaffPortalFrame } from "@/components/StaffPortalFrame";
 import { HqLoadingState } from "@/components/hq/HqLoadingState";
 import { clearLocalAuthCacheAndSignOut } from "@/lib/authCache";
 import { trackAuthFunnel } from "@/lib/authFunnel";
+import { attemptGoogleSignIn } from "@/lib/oauthSignIn";
 
 type SignInErrorKind = "google" | "session" | "credentials" | "roles" | "cancelled";
 
@@ -24,6 +25,8 @@ interface SignInError {
   hint?: string;
   canRetry?: boolean;
   canClearCache?: boolean;
+  /** When true, surface an "Open diagnostics →" link for admins. */
+  showDiagnostics?: boolean;
   /** When true, hide the raw `detail` from the UI (still logged to console). */
   hideDetail?: boolean;
 }
