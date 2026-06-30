@@ -509,6 +509,24 @@ export default function HqDeployHealth() {
 
   const anyStuck = results.some(isStuck);
 
+  const keyFormatDiff = useMemo(() => {
+    const raw = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined) ?? "";
+    const trimmed = raw.trim();
+    const length = trimmed.length;
+    const prefix = trimmed.slice(0, 16);
+    const isModern = trimmed.startsWith("sb_publishable_");
+    const isLegacy = trimmed.startsWith("eyJ");
+    const shape: "modern" | "legacy_jwt" | "empty" | "unknown" =
+      length === 0 ? "empty" : isModern ? "modern" : isLegacy ? "legacy_jwt" : "unknown";
+    const expected = {
+      prefix: "sb_publishable_",
+      minLength: 40,
+      example: "sb_publishable_XXXXXXXXXXXXXXXXXXXXXX",
+    };
+    return { raw: trimmed, length, prefix, shape, expected, isModern, isLegacy };
+  }, []);
+
+
   if (authLoading) {
     return (
       <Layout>
