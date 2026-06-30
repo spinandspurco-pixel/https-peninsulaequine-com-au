@@ -147,7 +147,45 @@ export default function HqDeployHealth() {
       setResults(out);
       setLastCheckedAt(new Date().toISOString());
       recordResults(out);
+  const [audit, setAudit] = useState<AuditRow[]>([]);
+  const [auditLoading, setAuditLoading] = useState(false);
+  const [auditError, setAuditError] = useState<string | null>(null);
+
+  const refreshAudit = useCallback(async () => {
+    setAuditLoading(true);
+    setAuditError(null);
+    try {
+      const { data, error } = await supabase
+        .from("deploy_health_audit")
+        .select("id, created_at, actor_email, action, status")
+        .order("created_at", { ascending: false })
+        .limit(25);
+      if (error) throw error;
+      setAudit((data ?? []) as AuditRow[]);
+    } catch (e) {
+      setAuditError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setAuditLoading(false);
+    }
+  }, []);
+
+  const pageBundle = useMemo(getCurrentPageBundle, []);
+
+  const run = useCallback(async () => {
+    setRunning(true);
+    try {
+      const out = await Promise.all(TARGETS.map((t) => probe(t.label, t.url)));
+      setResults(out);
+      setLastCheckedAt(new Date().toISOString());
+      recordResults(out);
       void logDeployHealthAudit("run_checks", "success", {
+        targets: out.map((r) => ({
+          label: r.label,
+          ok: r.ok,
+          bundleFile: r.bundleFile,
+          stuck: isStuck(r),
+        })),
+      }).then(() => refreshAudit());
         targets: out.map((r) => ({
           label: r.label,
           ok: r.ok,
