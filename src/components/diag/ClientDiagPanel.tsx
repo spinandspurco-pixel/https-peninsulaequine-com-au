@@ -322,23 +322,47 @@ export function ClientDiagPanel() {
         <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
           {row("url", window.location.href)}
           {row("route", path)}
-          {row("bundle", bundleHash)}
-          {row("build time", (typeof __BUILD_TIME__ !== "undefined" ? __BUILD_TIME__ : "(unknown)"))}
-          {row("build commit", (typeof __BUILD_COMMIT__ !== "undefined" ? __BUILD_COMMIT__ : "(unknown)").slice(0, 12))}
-          {row(
-            "server build",
-            serverBuild === null
-              ? "fetching…"
-              : serverBuild.error
-                ? `error: ${serverBuild.error}`
-                : `${serverBuild.buildTime ?? "?"} · ${(serverBuild.buildCommit ?? "?").slice(0, 12)} · ${serverBuild.bundleHash ?? "?"}`,
-          )}
-          {serverBuild && !serverBuild.error && (
-            row(
-              "server vs client",
-              serverBuild.bundleHash && serverBuild.bundleHash === bundleHash ? "match ✓" : "MISMATCH ✗ (stale edge)",
-            )
-          )}
+          <div
+            style={{
+              marginTop: 4,
+              marginBottom: 4,
+              padding: "6px 8px",
+              border: "1px solid #2a313a",
+              borderRadius: 4,
+              background: "rgba(255,255,255,0.02)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+              <span style={{ opacity: 0.6, letterSpacing: "0.06em" }}>BUILD INFO</span>
+              <button onClick={copyBuildInfo} style={btn} title="Copy build info JSON">
+                {copied ?? "copy"}
+              </button>
+            </div>
+            {row("client bundle", bundleHash)}
+            {row("client buildTime", clientBuildTime)}
+            {row("client buildCommit", clientBuildCommit.slice(0, 12))}
+            {serverBuild === null ? (
+              row("server", "loading…")
+            ) : serverBuild.error ? (
+              <>
+                {row("server", `error ${serverBuild.status ?? ""} ${serverBuild.error}`.trim())}
+                {row("hint", "/api/build-info unreachable — check rewrite & cache")}
+              </>
+            ) : (
+              <>
+                {row("server bundle", serverBuild.bundleHash ?? "(unknown)")}
+                {row("server buildTime", serverBuild.buildTime ?? "(unknown)")}
+                {row("server buildCommit", (serverBuild.buildCommit ?? "(unknown)").slice(0, 12))}
+                {row(
+                  "match",
+                  serverBuild.bundleHash && serverBuild.bundleHash === bundleHash
+                    ? "✓ client = server"
+                    : "✗ MISMATCH (stale edge)",
+                )}
+              </>
+            )}
+          </div>
+
           {row(
             "health",
             health === null
