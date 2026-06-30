@@ -5,7 +5,7 @@ import { getAuthLogEntries, subscribeAuthLog, type AuthLogEntry } from "@/lib/au
 import type { BuildInfo, HealthResponse } from "@/types/health";
 
 type ServerBuildState =
-  | ({ status?: number; error?: string } & Partial<BuildInfo>)
+  | ({ status?: number; error?: string; latencyMs?: number; fetchedAt?: string } & Partial<BuildInfo>)
   | null;
 
 type HealthState =
@@ -16,6 +16,8 @@ type HealthState =
       service?: HealthResponse["service"];
       checkedAt?: HealthResponse["checkedAt"];
       bundleHash?: BuildInfo["bundleHash"];
+      latencyMs?: number;
+      fetchedAt?: string;
     }
   | null;
 
