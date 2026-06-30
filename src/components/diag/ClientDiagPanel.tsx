@@ -107,6 +107,23 @@ export function ClientDiagPanel() {
     void fetchHealth();
   }, [fetchHealth]);
 
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const POLL_MS = 10_000;
+
+  useEffect(() => {
+    if (!autoRefresh) return;
+    const tick = async () => {
+      if (document.visibilityState !== "visible") return;
+      await Promise.all([fetchBuildInfo(), fetchHealth()]);
+      setLastRefreshAt(Date.now());
+    };
+    const id = window.setInterval(() => {
+      void tick();
+    }, POLL_MS);
+    return () => window.clearInterval(id);
+  }, [autoRefresh, fetchBuildInfo, fetchHealth]);
+
+
 
   useEffect(() => {
     const unsub = subscribeAuthLog(setEntries);
