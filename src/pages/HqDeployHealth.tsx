@@ -20,7 +20,7 @@ type AuditRow = {
   actor_email: string | null;
   action: string;
   status: string | null;
-  payload: unknown;
+  detail: unknown;
 };
 
 
