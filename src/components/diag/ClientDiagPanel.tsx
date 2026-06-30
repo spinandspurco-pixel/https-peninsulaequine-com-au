@@ -23,6 +23,39 @@ export function ClientDiagPanel() {
   const [cacheHeaders, setCacheHeaders] = useState<Record<string, string | null> | null>(null);
   const [cacheError, setCacheError] = useState<string | null>(null);
   const [cacheCheckedAt, setCacheCheckedAt] = useState<number | null>(null);
+  const [serverBuild, setServerBuild] = useState<
+    | { buildTime?: string; buildCommit?: string; bundleHash?: string | null; error?: string; status?: number }
+    | null
+  >(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/build-info", { cache: "no-store", credentials: "omit" })
+      .then(async (r) => {
+        if (cancelled) return;
+        if (!r.ok) {
+          setServerBuild({ error: `HTTP ${r.status}`, status: r.status });
+          return;
+        }
+        try {
+          const j = await r.json();
+          setServerBuild({
+            buildTime: j.buildTime,
+            buildCommit: j.buildCommit,
+            bundleHash: j.bundleHash,
+            status: r.status,
+          });
+        } catch (e) {
+          setServerBuild({ error: `parse: ${String((e as Error)?.message ?? e)}`, status: r.status });
+        }
+      })
+      .catch((e) => {
+        if (!cancelled) setServerBuild({ error: String((e as Error)?.message ?? e) });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const unsub = subscribeAuthLog(setEntries);
@@ -209,6 +242,20 @@ export function ClientDiagPanel() {
           {row("bundle", bundleHash)}
           {row("build time", (typeof __BUILD_TIME__ !== "undefined" ? __BUILD_TIME__ : "(unknown)"))}
           {row("build commit", (typeof __BUILD_COMMIT__ !== "undefined" ? __BUILD_COMMIT__ : "(unknown)").slice(0, 12))}
+          {row(
+            "server build",
+            serverBuild === null
+              ? "fetching…"
+              : serverBuild.error
+                ? `error: ${serverBuild.error}`
+                : `${serverBuild.buildTime ?? "?"} · ${(serverBuild.buildCommit ?? "?").slice(0, 12)} · ${serverBuild.bundleHash ?? "?"}`,
+          )}
+          {serverBuild && !serverBuild.error && (
+            row(
+              "server vs client",
+              serverBuild.bundleHash && serverBuild.bundleHash === bundleHash ? "match ✓" : "MISMATCH ✗ (stale edge)",
+            )
+          )}
           {row("supabase url", supaUrl || "(missing)")}
           {row("supabase url valid", supaUrlValid ? "yes" : "no")}
           {row("supabase key", supaKeyShape)}
