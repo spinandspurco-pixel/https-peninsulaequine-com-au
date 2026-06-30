@@ -7,7 +7,7 @@
  * for both the dev middleware and the static assets emitted at build time.
  */
 
-import type { BuildInfo, HealthResponse } from "@/types/health";
+import type { BuildInfo, HealthResponse } from "../types/health";
 
 export interface BuildInfoInput {
   buildTime: string;
