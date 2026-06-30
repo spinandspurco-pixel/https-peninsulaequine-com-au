@@ -63,7 +63,35 @@ export function ClientDiagPanel() {
   }, []);
 
   useEffect(() => {
-    const unsub = subscribeAuthLog(setEntries);
+    let cancelled = false;
+    fetch("/api/health", { cache: "no-store", credentials: "omit" })
+      .then(async (r) => {
+        if (cancelled) return;
+        if (!r.ok) {
+          setHealth({ error: `HTTP ${r.status}`, httpStatus: r.status });
+          return;
+        }
+        try {
+          const j = await r.json();
+          setHealth({
+            status: j.status,
+            service: j.service,
+            checkedAt: j.checkedAt,
+            bundleHash: j?.buildInfo?.bundleHash ?? null,
+            httpStatus: r.status,
+          });
+        } catch (e) {
+          setHealth({ error: `parse: ${String((e as Error)?.message ?? e)}`, httpStatus: r.status });
+        }
+      })
+      .catch((e) => {
+        if (!cancelled) setHealth({ error: String((e as Error)?.message ?? e) });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
     const onErr = (e: ErrorEvent) =>
       setLastError(`${e.message} @ ${e.filename}:${e.lineno}:${e.colno}`);
     const onRej = (e: PromiseRejectionEvent) =>
