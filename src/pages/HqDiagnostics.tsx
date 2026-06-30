@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
+import { OAuthProviderPanel } from "@/components/hq/OAuthProviderPanel";
 import {
   EXPECTED_PROJECT_ID,
   EXPECTED_PROJECT_ID_SOURCE,
