@@ -48,7 +48,7 @@ export function ClientDiagPanel() {
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshAt, setLastRefreshAt] = useState<number | null>(null);
 
-  const fetchBuildInfo = React.useCallback(async () => {
+  const fetchBuildInfo = useCallback(async () => {
     try {
       const r = await fetch("/api/build-info", { cache: "no-store", credentials: "omit" });
       if (!r.ok) {
@@ -67,7 +67,7 @@ export function ClientDiagPanel() {
     }
   }, []);
 
-  const fetchHealth = React.useCallback(async () => {
+  const fetchHealth = useCallback(async () => {
     try {
       const r = await fetch("/api/health", { cache: "no-store", credentials: "omit" });
       if (!r.ok) {
@@ -87,7 +87,7 @@ export function ClientDiagPanel() {
     }
   }, []);
 
-  const refreshBuildInfo = React.useCallback(async () => {
+  const refreshBuildInfo = useCallback(async () => {
     setRefreshing(true);
     setServerBuild(null);
     setHealth(null);
