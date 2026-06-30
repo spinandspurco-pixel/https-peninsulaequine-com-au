@@ -107,6 +107,23 @@ export function ClientDiagPanel() {
     void fetchHealth();
   }, [fetchHealth]);
 
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const POLL_MS = 10_000;
+
+  useEffect(() => {
+    if (!autoRefresh) return;
+    const tick = async () => {
+      if (document.visibilityState !== "visible") return;
+      await Promise.all([fetchBuildInfo(), fetchHealth()]);
+      setLastRefreshAt(Date.now());
+    };
+    const id = window.setInterval(() => {
+      void tick();
+    }, POLL_MS);
+    return () => window.clearInterval(id);
+  }, [autoRefresh, fetchBuildInfo, fetchHealth]);
+
+
 
   useEffect(() => {
     const unsub = subscribeAuthLog(setEntries);
@@ -402,6 +419,13 @@ export function ClientDiagPanel() {
               </span>
               <div style={{ display: "flex", gap: 4 }}>
                 <button
+                  onClick={() => setAutoRefresh((v) => !v)}
+                  style={{ ...btn, color: autoRefresh ? "#7fbf7f" : "#9aa4af" }}
+                  title={`Auto-refresh every ${POLL_MS / 1000}s (pauses when tab hidden)`}
+                >
+                  {autoRefresh ? `auto ${POLL_MS / 1000}s ✓` : "auto off"}
+                </button>
+                <button
                   onClick={refreshBuildInfo}
                   style={btn}
                   disabled={refreshing}
@@ -413,6 +437,7 @@ export function ClientDiagPanel() {
                   {copied ?? "copy"}
                 </button>
               </div>
+
             </div>
 
             {row("client bundle", bundleHash)}
