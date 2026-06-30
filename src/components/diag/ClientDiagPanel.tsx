@@ -97,10 +97,13 @@ export function ClientDiagPanel() {
     } catch {
       enabledNow = false;
     }
-    const onSurface = path === "/login" || path === "/hq" || path.startsWith("/hq/");
+    const onSurface =
+      location.pathname === "/login" ||
+      location.pathname === "/hq" ||
+      location.pathname.startsWith("/hq/");
     if (enabledNow && onSurface) void probeCache();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [path]);
+  }, [location.pathname]);
 
   // Gate: route + opt-in
   const path = location.pathname;
