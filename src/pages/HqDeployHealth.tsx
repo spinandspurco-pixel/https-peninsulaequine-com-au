@@ -110,11 +110,23 @@ function isStuck(r: ProbeResult): boolean {
   return r.hasLegacyKey === true || r.hasModernKey === false;
 }
 
+type RetryOutcome = {
+  startedAt: string;
+  finishedAt: string;
+  attempts: number;
+  before: { label: string; bundleFile: string | null; stuck: boolean }[];
+  after: { label: string; bundleFile: string | null; stuck: boolean }[];
+  status: "success" | "partial" | "no_change" | "error";
+  message: string;
+};
+
 export default function HqDeployHealth() {
   const { user, isAdmin, loading: authLoading } = useAuth();
   const [results, setResults] = useState<ProbeResult[]>([]);
   const [running, setRunning] = useState(false);
   const [lastCheckedAt, setLastCheckedAt] = useState<string | null>(null);
+  const [retrying, setRetrying] = useState(false);
+  const [retryOutcome, setRetryOutcome] = useState<RetryOutcome | null>(null);
   const pageBundle = useMemo(getCurrentPageBundle, []);
 
   const run = useCallback(async () => {
@@ -124,6 +136,7 @@ export default function HqDeployHealth() {
       setResults(out);
       setLastCheckedAt(new Date().toISOString());
       recordResults(out);
+      return out;
     } finally {
       setRunning(false);
     }
@@ -133,7 +146,106 @@ export default function HqDeployHealth() {
     if (isAdmin) run();
   }, [isAdmin, run]);
 
-  const anyStuck = results.some(isStuck);
+  const retryPromotion = useCallback(async () => {
+    setRetrying(true);
+    const startedAt = new Date().toISOString();
+    const beforeProbes = results.length
+      ? results
+      : await Promise.all(TARGETS.map((t) => probe(t.label, t.url)));
+    const before = beforeProbes.map((r) => ({
+      label: r.label,
+      bundleFile: r.bundleFile,
+      stuck: isStuck(r),
+    }));
+
+    let afterProbes: ProbeResult[] = beforeProbes;
+    let attempts = 0;
+    const maxAttempts = 4;
+    try {
+      // Re-probe with a short backoff so a freshly-triggered promotion
+      // (CDN cache flush, edge re-pin) has a chance to land.
+      for (let i = 0; i < maxAttempts; i++) {
+        attempts = i + 1;
+        // Cache-bust hint via query param on the HTML root
+        afterProbes = await Promise.all(
+          TARGETS.map((t) => probe(t.label, `${t.url}?_rh=${Date.now()}`)),
+        );
+        const stillStuck = afterProbes.some(isStuck);
+        const changed = afterProbes.some((r, idx) => {
+          const b = before[idx];
+          return b && r.bundleFile && b.bundleFile && r.bundleFile !== b.bundleFile;
+        });
+        if (!stillStuck || changed) break;
+        await new Promise((res) => setTimeout(res, 1500 * (i + 1)));
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      const outcome: RetryOutcome = {
+        startedAt,
+        finishedAt: new Date().toISOString(),
+        attempts,
+        before,
+        after: before,
+        status: "error",
+        message: `Retry failed: ${msg}`,
+      };
+      setRetryOutcome(outcome);
+      toast.error(outcome.message);
+      setRetrying(false);
+      return;
+    }
+
+    // Persist visible state from the final probe pass (strip the cache-bust
+    // suffix from URLs we display).
+    const cleaned = afterProbes.map((r, idx) => ({ ...r, url: TARGETS[idx].url }));
+    setResults(cleaned);
+    setLastCheckedAt(new Date().toISOString());
+    recordResults(cleaned);
+
+    const after = cleaned.map((r) => ({
+      label: r.label,
+      bundleFile: r.bundleFile,
+      stuck: isStuck(r),
+    }));
+    const stillStuck = after.filter((a) => a.stuck);
+    const changed = after.filter((a, idx) => {
+      const b = before[idx];
+      return b && a.bundleFile && b.bundleFile && a.bundleFile !== b.bundleFile;
+    });
+
+    let status: RetryOutcome["status"];
+    let message: string;
+    if (stillStuck.length === 0 && changed.length > 0) {
+      status = "success";
+      message = `Promotion landed — fresh bundle on ${changed.length}/${after.length} target(s).`;
+      toast.success(message);
+    } else if (stillStuck.length === 0) {
+      status = "success";
+      message = `All targets fresh (no stale markers detected).`;
+      toast.success(message);
+    } else if (changed.length > 0) {
+      status = "partial";
+      message = `Partial — ${changed.length} target(s) updated, ${stillStuck.length} still stale.`;
+      toast.warning(message);
+    } else {
+      status = "no_change";
+      message = `No change after ${attempts} attempt(s) — promotion still stuck. Escalate to Lovable Support.`;
+      toast.error(message);
+    }
+
+    setRetryOutcome({
+      startedAt,
+      finishedAt: new Date().toISOString(),
+      attempts,
+      before,
+      after,
+      status,
+      message,
+    });
+    setRetrying(false);
+  }, [results]);
+
+
 
   const escalation = useMemo(() => {
     const lines: string[] = [];
@@ -284,6 +396,8 @@ export default function HqDeployHealth() {
   };
 
 
+  const anyStuck = results.some(isStuck);
+
   if (authLoading) {
     return (
       <Layout>
@@ -335,16 +449,121 @@ export default function HqDeployHealth() {
               <code className="text-foreground/80">{pageBundle ?? "—"}</code>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={run}
-            disabled={running}
-            className="text-sm tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8 disabled:opacity-40"
-            title="Immediately re-fetch bundle state, markers, and timestamps"
-          >
-            {running ? "Re-checking…" : "Re-run deploy health checks"}
-          </button>
+          <div className="flex items-center gap-6">
+            <button
+              type="button"
+              onClick={retryPromotion}
+              disabled={retrying || running}
+              className="text-sm tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8 disabled:opacity-40"
+              title="Re-probe each domain with cache-bust + backoff to detect whether a fresh bundle has landed"
+            >
+              {retrying ? "Retrying promotion…" : "Retry promotion"}
+            </button>
+            <button
+              type="button"
+              onClick={run}
+              disabled={running || retrying}
+              className="text-sm tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8 disabled:opacity-40"
+              title="Immediately re-fetch bundle state, markers, and timestamps"
+            >
+              {running ? "Re-checking…" : "Re-run checks"}
+            </button>
+          </div>
         </section>
+
+        {retryOutcome && (
+          <section
+            className={
+              "border px-5 py-4 space-y-3 " +
+              (retryOutcome.status === "success"
+                ? "border-emerald-600/40 bg-emerald-600/5"
+                : retryOutcome.status === "partial"
+                ? "border-amber-600/40 bg-amber-600/5"
+                : retryOutcome.status === "no_change"
+                ? "border-red-600/40 bg-red-600/5"
+                : "border-red-600/40 bg-red-600/5")
+            }
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div
+                className={
+                  "text-[0.65rem] tracking-[0.45em] uppercase " +
+                  (retryOutcome.status === "success"
+                    ? "text-emerald-700"
+                    : retryOutcome.status === "partial"
+                    ? "text-amber-700"
+                    : "text-red-700")
+                }
+              >
+                {retryOutcome.status === "success"
+                  ? "Retry succeeded"
+                  : retryOutcome.status === "partial"
+                  ? "Retry partial"
+                  : retryOutcome.status === "no_change"
+                  ? "Retry — no change"
+                  : "Retry error"}
+              </div>
+              <button
+                type="button"
+                onClick={() => setRetryOutcome(null)}
+                className="text-[0.6rem] tracking-[0.3em] uppercase text-foreground/50 hover:text-foreground/80"
+              >
+                Dismiss
+              </button>
+            </div>
+            <p className="text-sm text-foreground/80 leading-relaxed">{retryOutcome.message}</p>
+            <dl className="grid grid-cols-[max-content_1fr] gap-x-6 gap-y-1 text-[0.7rem] text-foreground/70">
+              <dt className="uppercase tracking-[0.3em] text-foreground/40">Attempts</dt>
+              <dd>{retryOutcome.attempts}</dd>
+              <dt className="uppercase tracking-[0.3em] text-foreground/40">Started</dt>
+              <dd>{retryOutcome.startedAt}</dd>
+              <dt className="uppercase tracking-[0.3em] text-foreground/40">Finished</dt>
+              <dd>{retryOutcome.finishedAt}</dd>
+            </dl>
+            <div className="grid sm:grid-cols-2 gap-4 text-[0.7rem]">
+              <div className="border border-border/10 p-3 space-y-1">
+                <div className="uppercase tracking-[0.3em] text-foreground/40 text-[0.6rem]">Before</div>
+                {retryOutcome.before.map((b) => (
+                  <div key={`b-${b.label}`} className="flex justify-between gap-3">
+                    <span className="text-foreground/60">{b.label}</span>
+                    <code className={b.stuck ? "text-amber-700" : "text-foreground/70"}>
+                      {b.bundleFile ?? "—"}
+                    </code>
+                  </div>
+                ))}
+              </div>
+              <div className="border border-border/10 p-3 space-y-1">
+                <div className="uppercase tracking-[0.3em] text-foreground/40 text-[0.6rem]">After</div>
+                {retryOutcome.after.map((a) => (
+                  <div key={`a-${a.label}`} className="flex justify-between gap-3">
+                    <span className="text-foreground/60">{a.label}</span>
+                    <code className={a.stuck ? "text-amber-700" : "text-emerald-700"}>
+                      {a.bundleFile ?? "—"}
+                    </code>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {(retryOutcome.status === "no_change" || retryOutcome.status === "partial") && (
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-1">
+                <button
+                  type="button"
+                  onClick={openSupportEmail}
+                  className="text-xs tracking-[0.3em] uppercase text-red-700 underline underline-offset-8"
+                >
+                  Escalate to Lovable Support →
+                </button>
+                <button
+                  type="button"
+                  onClick={copyEscalationJson}
+                  className="text-xs tracking-[0.3em] uppercase text-foreground/80 underline underline-offset-8"
+                >
+                  Copy payload as JSON
+                </button>
+              </div>
+            )}
+          </section>
+        )}
 
         {anyStuck && (
           <section className="border border-amber-600/40 bg-amber-600/5 px-5 py-4 space-y-2">
