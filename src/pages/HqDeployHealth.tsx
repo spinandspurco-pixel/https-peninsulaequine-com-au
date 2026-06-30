@@ -1209,14 +1209,34 @@ export default function HqDeployHealth() {
             <div className="text-[0.65rem] tracking-[0.45em] uppercase text-foreground/40">
               Audit log · last 25
             </div>
-            <button
-              type="button"
-              onClick={refreshAudit}
-              disabled={auditLoading}
-              className="text-[0.65rem] tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8 disabled:opacity-40"
-            >
-              {auditLoading ? "Loading…" : "Refresh"}
-            </button>
+            <div className="flex items-center gap-5">
+              <button
+                type="button"
+                onClick={() => exportAudit("csv")}
+                disabled={auditLoading || audit.length === 0}
+                title="Download the audit log as CSV for support"
+                className="text-[0.65rem] tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8 disabled:opacity-40"
+              >
+                Export CSV
+              </button>
+              <button
+                type="button"
+                onClick={() => exportAudit("json")}
+                disabled={auditLoading || audit.length === 0}
+                title="Download the audit log as JSON for support"
+                className="text-[0.65rem] tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8 disabled:opacity-40"
+              >
+                Export JSON
+              </button>
+              <button
+                type="button"
+                onClick={refreshAudit}
+                disabled={auditLoading}
+                className="text-[0.65rem] tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8 disabled:opacity-40"
+              >
+                {auditLoading ? "Loading…" : "Refresh"}
+              </button>
+            </div>
           </div>
           <p className="text-xs text-foreground/60 max-w-2xl leading-relaxed">
             Every admin diagnostic action on this page — view, run checks,
