@@ -9,7 +9,7 @@ export type AuditExportRow = {
   actor_email: string | null;
   action: string;
   status: string | null;
-  payload?: unknown;
+  detail?: unknown;
 };
 
 const CSV_COLUMNS = [
@@ -18,7 +18,7 @@ const CSV_COLUMNS = [
   "actor_email",
   "action",
   "status",
-  "payload",
+  "detail",
 ] as const;
 
 function csvEscape(value: unknown): string {
