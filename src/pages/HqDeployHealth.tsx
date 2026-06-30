@@ -5,6 +5,17 @@ import { HqNav } from "@/components/hq/HqNav";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { recordResults } from "@/lib/deployHealth";
+import { logDeployHealthAudit, type DeployHealthAuditAction } from "@/lib/deployHealthAudit";
+import { supabase } from "@/integrations/supabase/client";
+
+type AuditRow = {
+  id: string;
+  created_at: string;
+  actor_email: string | null;
+  action: string;
+  status: string | null;
+};
+
 
 /**
  * HQ → Operations → Deploy Health
@@ -136,15 +147,62 @@ export default function HqDeployHealth() {
       setResults(out);
       setLastCheckedAt(new Date().toISOString());
       recordResults(out);
+  const [audit, setAudit] = useState<AuditRow[]>([]);
+  const [auditLoading, setAuditLoading] = useState(false);
+  const [auditError, setAuditError] = useState<string | null>(null);
+
+  const refreshAudit = useCallback(async () => {
+    setAuditLoading(true);
+    setAuditError(null);
+    try {
+      const { data, error } = await supabase
+        .from("deploy_health_audit")
+        .select("id, created_at, actor_email, action, status")
+        .order("created_at", { ascending: false })
+        .limit(25);
+      if (error) throw error;
+      setAudit((data ?? []) as AuditRow[]);
+    } catch (e) {
+      setAuditError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setAuditLoading(false);
+    }
+  }, []);
+
+  const pageBundle = useMemo(getCurrentPageBundle, []);
+
+  const run = useCallback(async () => {
+    setRunning(true);
+    try {
+      const out = await Promise.all(TARGETS.map((t) => probe(t.label, t.url)));
+      setResults(out);
+      setLastCheckedAt(new Date().toISOString());
+      recordResults(out);
+      void logDeployHealthAudit("run_checks", "success", {
+        targets: out.map((r) => ({
+          label: r.label,
+          ok: r.ok,
+          bundleFile: r.bundleFile,
+          stuck: isStuck(r),
+        })),
+      }).then(() => refreshAudit());
       return out;
     } finally {
       setRunning(false);
     }
-  }, []);
+  }, [refreshAudit]);
+
 
   useEffect(() => {
-    if (isAdmin) run();
-  }, [isAdmin, run]);
+    if (isAdmin) {
+      void logDeployHealthAudit("view_page", "info", {
+        path: typeof location !== "undefined" ? location.pathname : null,
+      }).then(() => refreshAudit());
+      run();
+    }
+  }, [isAdmin, run, refreshAudit]);
+
+
 
   const retryPromotion = useCallback(async () => {
     setRetrying(true);
@@ -191,9 +249,13 @@ export default function HqDeployHealth() {
       };
       setRetryOutcome(outcome);
       toast.error(outcome.message);
+      void logDeployHealthAudit("retry_promotion", "failure", {
+        attempts, startedAt, error: msg, before,
+      });
       setRetrying(false);
       return;
     }
+
 
     // Persist visible state from the final probe pass (strip the cache-bust
     // suffix from URLs we display).
@@ -242,8 +304,14 @@ export default function HqDeployHealth() {
       status,
       message,
     });
+    void logDeployHealthAudit(
+      "retry_promotion",
+      status === "success" ? "success" : "failure",
+      { attempts, startedAt, status, message, before, after },
+    );
     setRetrying(false);
   }, [results]);
+
 
 
 
@@ -281,20 +349,32 @@ export default function HqDeployHealth() {
 
   const [manualCopy, setManualCopy] = useState<{ label: string; text: string } | null>(null);
 
-  const tryCopy = useCallback(async (label: string, text: string, successMsg: string) => {
+  const tryCopy = useCallback(async (
+    label: string,
+    text: string,
+    successMsg: string,
+    auditAction?: DeployHealthAuditAction,
+  ) => {
     try {
       if (!navigator.clipboard?.writeText) throw new Error("Clipboard API unavailable");
       await navigator.clipboard.writeText(text);
       toast.success(successMsg);
+      if (auditAction) {
+        void logDeployHealthAudit(auditAction, "success", { label, bytes: text.length });
+      }
     } catch (e) {
       const reason = e instanceof Error ? e.message : "Clipboard blocked";
       toast.error(`Copy failed — ${reason}. Use the manual copy box.`);
       setManualCopy({ label, text });
+      if (auditAction) {
+        void logDeployHealthAudit(auditAction, "failure", { label, reason, fallback: "manual_copy_box" });
+      }
     }
   }, []);
 
   const copyEscalation = () =>
-    tryCopy("Escalation payload", escalation, "Escalation payload copied");
+    tryCopy("Escalation payload", escalation, "Escalation payload copied", "copy_escalation_text");
+
 
   const supportSubject = "Stuck production promotion — force-promote required";
   const supportBody = useMemo(() => {
@@ -316,8 +396,10 @@ export default function HqDeployHealth() {
   }, [escalation]);
 
   const openSupportEmail = async () => {
+    let clipboardOk = false;
     try {
       await navigator.clipboard?.writeText(supportBody);
+      clipboardOk = true;
     } catch {
       /* ignore — mailto still opens */
     }
@@ -327,7 +409,13 @@ export default function HqDeployHealth() {
       `&body=${encodeURIComponent(supportBody)}`;
     window.location.href = href;
     toast.success("Opening email — payload also copied to clipboard");
+    void logDeployHealthAudit("open_support_email", "success", {
+      subject: supportSubject,
+      bodyBytes: supportBody.length,
+      clipboardCopied: clipboardOk,
+    });
   };
+
 
   const escalationJson = useMemo(() => {
     return JSON.stringify(
@@ -365,7 +453,7 @@ export default function HqDeployHealth() {
   }, [results, lastCheckedAt, user?.email, pageBundle]);
 
   const copyEscalationJson = () =>
-    tryCopy("Escalation payload (JSON)", escalationJson, "Escalation payload copied as JSON");
+    tryCopy("Escalation payload (JSON)", escalationJson, "Escalation payload copied as JSON", "copy_escalation_json");
 
   const downloadEscalationTxt = () => {
     try {
@@ -382,8 +470,13 @@ export default function HqDeployHealth() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       toast.success(`Downloaded ${filename}`);
-    } catch {
+      void logDeployHealthAudit("download_escalation_txt", "success", {
+        filename, bytes: supportBody.length,
+      });
+    } catch (e) {
+      const reason = e instanceof Error ? e.message : "Download failed";
       toast.error("Download failed");
+      void logDeployHealthAudit("download_escalation_txt", "failure", { reason });
     }
   };
 
@@ -392,8 +485,9 @@ export default function HqDeployHealth() {
       `To: support@lovable.dev\n` +
       `Subject: ${supportSubject}\n\n` +
       supportBody;
-    return tryCopy("Support email (To, Subject, payload)", full, "Support email copied (To, Subject, payload)");
+    return tryCopy("Support email (To, Subject, payload)", full, "Support email copied (To, Subject, payload)", "copy_support_email");
   };
+
 
 
   const anyStuck = results.some(isStuck);
@@ -795,7 +889,77 @@ export default function HqDeployHealth() {
             your clipboard in case the mail client truncates.
           </p>
         </section>
+
+        <section className="border-t border-border/10 pt-6 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="text-[0.65rem] tracking-[0.45em] uppercase text-foreground/40">
+              Audit log · last 25
+            </div>
+            <button
+              type="button"
+              onClick={refreshAudit}
+              disabled={auditLoading}
+              className="text-[0.65rem] tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8 disabled:opacity-40"
+            >
+              {auditLoading ? "Loading…" : "Refresh"}
+            </button>
+          </div>
+          <p className="text-xs text-foreground/60 max-w-2xl leading-relaxed">
+            Every admin diagnostic action on this page — view, run checks,
+            retry promotion, copy, download, open support email — is recorded
+            in <code>deploy_health_audit</code>. Insert and read are gated by
+            row-level security to the <code>admin</code> role.
+          </p>
+          {auditError && (
+            <div className="text-xs text-red-600/80">Failed to load: {auditError}</div>
+          )}
+          {!auditError && audit.length === 0 && !auditLoading && (
+            <div className="text-xs text-foreground/50">No audit entries yet.</div>
+          )}
+          {audit.length > 0 && (
+            <div className="border border-border/10">
+              <table className="w-full text-[0.7rem]">
+                <thead>
+                  <tr className="text-foreground/40 uppercase tracking-[0.3em]">
+                    <th className="text-left font-normal px-3 py-2">When</th>
+                    <th className="text-left font-normal px-3 py-2">Actor</th>
+                    <th className="text-left font-normal px-3 py-2">Action</th>
+                    <th className="text-left font-normal px-3 py-2">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {audit.map((row) => (
+                    <tr key={row.id} className="border-t border-border/10">
+                      <td className="px-3 py-2 text-foreground/70 whitespace-nowrap">
+                        {new Date(row.created_at).toLocaleString()}
+                      </td>
+                      <td className="px-3 py-2 text-foreground/70">
+                        {row.actor_email ?? "—"}
+                      </td>
+                      <td className="px-3 py-2 text-foreground/80">
+                        <code>{row.action}</code>
+                      </td>
+                      <td
+                        className={
+                          "px-3 py-2 " +
+                          (row.status === "success"
+                            ? "text-emerald-700"
+                            : row.status === "failure"
+                            ? "text-red-700"
+                            : "text-foreground/60")
+                        }
+                      >
+                        {row.status ?? "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
       </div>
+
 
       {manualCopy && (
         <div

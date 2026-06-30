@@ -652,6 +652,39 @@ export type Database = {
         }
         Relationships: []
       }
+      deploy_health_audit: {
+        Row: {
+          action: string
+          actor_email: string | null
+          actor_user_id: string | null
+          created_at: string
+          detail: Json
+          id: string
+          status: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_email?: string | null
+          actor_user_id?: string | null
+          created_at?: string
+          detail?: Json
+          id?: string
+          status?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_email?: string | null
+          actor_user_id?: string | null
+          created_at?: string
+          detail?: Json
+          id?: string
+          status?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       dns_notify_sends: {
         Row: {
           id: string
