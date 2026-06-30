@@ -1,8 +1,12 @@
-import { defineConfig, type PluginOption } from "vite";
+import { defineConfig, loadEnv, type PluginOption } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
-import { makeBuildInfoPayload, makeHealthPayload } from "./src/lib/healthPayload";
+import {
+  makeBuildInfoPayload,
+  makeDiagPayload,
+  makeHealthPayload,
+} from "./src/lib/healthPayload";
 
 const BUILD_TIME = new Date().toISOString();
 const BUILD_COMMIT =
@@ -16,8 +20,13 @@ const BUILD_COMMIT =
  * so the deployed site exposes /api/build-info as a JSON document containing
  * build time, the main bundle hash, and the commit SHA. No server required —
  * Vercel/Netlify/CF Pages all serve static files in front of SPA rewrites.
+ *
+ * Also emits `/api/diag` — a non-secret snapshot of the Supabase env vars
+ * baked into the bundle (URL host + key prefix/family/length). Used by
+ * support to confirm what the deployed frontend is wired to after a
+ * republish without ever exposing the key value itself.
  */
-function buildInfoPlugin(): PluginOption {
+function buildInfoPlugin(supabaseUrl: string | null, supabaseKey: string | null): PluginOption {
   const makeBuildInfo = (bundleHash: string | null) =>
     JSON.stringify(
       makeBuildInfoPayload({ buildTime: BUILD_TIME, buildCommit: BUILD_COMMIT, bundleHash }),
@@ -32,6 +41,18 @@ function buildInfoPlugin(): PluginOption {
       2,
     ) + "\n";
 
+  const makeDiag = (bundleHash: string | null) =>
+    JSON.stringify(
+      makeDiagPayload({
+        buildTime: BUILD_TIME,
+        buildCommit: BUILD_COMMIT,
+        bundleHash,
+        supabaseUrl,
+        supabaseKey,
+      }),
+      null,
+      2,
+    ) + "\n";
 
   return {
     name: "emit-build-info",
@@ -49,6 +70,9 @@ function buildInfoPlugin(): PluginOption {
         }
         if (url === "/api/health" || url === "/api/health.json") {
           return json(makeHealth(null));
+        }
+        if (url === "/api/diag" || url === "/api/diag.json") {
+          return json(makeDiag(null));
         }
         next();
       });
@@ -68,13 +92,22 @@ function buildInfoPlugin(): PluginOption {
       const health = makeHealth(bundleHash);
       this.emitFile({ type: "asset", fileName: "api/health", source: health });
       this.emitFile({ type: "asset", fileName: "api/health.json", source: health });
+      const diag = makeDiag(bundleHash);
+      this.emitFile({ type: "asset", fileName: "api/diag", source: diag });
+      this.emitFile({ type: "asset", fileName: "api/diag.json", source: diag });
     },
   };
 }
 
 
+
+
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+  const supabaseUrl = env.VITE_SUPABASE_URL ?? null;
+  const supabaseKey = env.VITE_SUPABASE_PUBLISHABLE_KEY ?? null;
+  return {
   server: {
     host: "::",
     port: 8080,
@@ -85,8 +118,9 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     mode === "development" && componentTagger(),
-    buildInfoPlugin(),
+    buildInfoPlugin(supabaseUrl, supabaseKey),
   ].filter(Boolean),
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -96,4 +130,6 @@ export default defineConfig(({ mode }) => ({
     __BUILD_TIME__: JSON.stringify(BUILD_TIME),
     __BUILD_COMMIT__: JSON.stringify(BUILD_COMMIT),
   },
-}));
+  };
+});
+

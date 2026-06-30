@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { getAuthLogEntries, subscribeAuthLog, type AuthLogEntry } from "@/lib/authRouting";
-import type { BuildInfo, HealthResponse } from "@/types/health";
+import type { BuildInfo, DiagResponse, HealthResponse } from "@/types/health";
 
 type ServerBuildState =
   | ({ status?: number; error?: string; latencyMs?: number; fetchedAt?: string } & Partial<BuildInfo>)
@@ -19,6 +19,15 @@ type HealthState =
       latencyMs?: number;
       fetchedAt?: string;
     }
+  | null;
+
+type DiagState =
+  | ({
+      httpStatus?: number;
+      error?: string;
+      latencyMs?: number;
+      fetchedAt?: string;
+    } & Partial<DiagResponse>)
   | null;
 
 /**
@@ -45,6 +54,7 @@ export function ClientDiagPanel() {
   const [cacheCheckedAt, setCacheCheckedAt] = useState<number | null>(null);
   const [serverBuild, setServerBuild] = useState<ServerBuildState>(null);
   const [health, setHealth] = useState<HealthState>(null);
+  const [diag, setDiag] = useState<DiagState>(null);
 
 
   const [refreshing, setRefreshing] = useState(false);
@@ -112,17 +122,43 @@ export function ClientDiagPanel() {
     }
   }, []);
 
+  const fetchDiag = useCallback(async () => {
+    const stop = measure();
+    const fetchedAt = new Date().toISOString();
+    try {
+      const r = await fetch("/api/diag", { cache: "no-store", credentials: "omit" });
+      const latencyMs = stop();
+      if (!r.ok) {
+        setDiag({ error: `HTTP ${r.status}`, httpStatus: r.status, latencyMs, fetchedAt });
+        return;
+      }
+      const j = (await r.json()) as DiagResponse;
+      setDiag({
+        service: j.service,
+        checkedAt: j.checkedAt,
+        buildInfo: j.buildInfo,
+        supabase: j.supabase,
+        httpStatus: r.status,
+        latencyMs,
+        fetchedAt,
+      });
+    } catch (e) {
+      setDiag({ error: String((e as Error)?.message ?? e), latencyMs: stop(), fetchedAt });
+    }
+  }, []);
+
   const refreshBuildInfo = useCallback(async () => {
     setRefreshing(true);
     setServerBuild(null);
     setHealth(null);
+    setDiag(null);
     try {
-      await Promise.all([fetchBuildInfo(), fetchHealth()]);
+      await Promise.all([fetchBuildInfo(), fetchHealth(), fetchDiag()]);
       setLastRefreshAt(Date.now());
     } finally {
       setRefreshing(false);
     }
-  }, [fetchBuildInfo, fetchHealth]);
+  }, [fetchBuildInfo, fetchHealth, fetchDiag]);
 
   useEffect(() => {
     void fetchBuildInfo();
@@ -132,6 +168,10 @@ export function ClientDiagPanel() {
     void fetchHealth();
   }, [fetchHealth]);
 
+  useEffect(() => {
+    void fetchDiag();
+  }, [fetchDiag]);
+
   const [autoRefresh, setAutoRefresh] = useState(true);
   const POLL_MS = 10_000;
 
@@ -139,14 +179,15 @@ export function ClientDiagPanel() {
     if (!autoRefresh) return;
     const tick = async () => {
       if (document.visibilityState !== "visible") return;
-      await Promise.all([fetchBuildInfo(), fetchHealth()]);
+      await Promise.all([fetchBuildInfo(), fetchHealth(), fetchDiag()]);
       setLastRefreshAt(Date.now());
     };
     const id = window.setInterval(() => {
       void tick();
     }, POLL_MS);
     return () => window.clearInterval(id);
-  }, [autoRefresh, fetchBuildInfo, fetchHealth]);
+  }, [autoRefresh, fetchBuildInfo, fetchHealth, fetchDiag]);
+
 
 
 
@@ -371,6 +412,17 @@ export function ClientDiagPanel() {
         serverBundleHash: serverOk ? (serverBuild?.bundleHash ?? null) : null,
         serverBuildTime: serverOk ? (serverBuild?.buildTime ?? null) : null,
         serverBuildCommit: serverOk ? (serverBuild?.buildCommit ?? null) : null,
+      },
+      diag: {
+        fetchedAt: diag?.fetchedAt ?? null,
+        httpStatus: diag?.httpStatus ?? null,
+        reachable: !!diag && !diag.error,
+        error: diag?.error ?? null,
+        latencyMs: diag?.latencyMs ?? null,
+        service: diag?.service ?? null,
+        checkedAt: diag?.checkedAt ?? null,
+        buildInfo: diag?.buildInfo ?? null,
+        supabase: diag?.supabase ?? null,
       },
       timings: {
         unit: "ms",
@@ -773,6 +825,70 @@ export function ClientDiagPanel() {
               </div>
             );
           })()}
+
+          {(() => {
+            if (diag === null) return row("/api/diag", "fetching…");
+            if (diag.error)
+              return (
+                <>
+                  {row("/api/diag", `error: ${diag.error}`)}
+                  {row("/api/diag ms", diag.latencyMs ?? "—")}
+                </>
+              );
+            const serverKey = diag.supabase?.key;
+            const serverFamily = serverKey?.family ?? "(unknown)";
+            const clientFamily =
+              !supaKey
+                ? "missing"
+                : supaKey.startsWith("sb_publishable_")
+                  ? "sb_publishable"
+                  : supaKey.startsWith("sb_secret_")
+                    ? "sb_secret"
+                    : supaKey.startsWith("eyJ")
+                      ? "legacy_jwt"
+                      : "unknown";
+            const familyMatch = serverFamily === clientFamily;
+            const prefixMatch = (serverKey?.prefix ?? "") === supaKeyPrefix;
+            const lengthMatch = (serverKey?.length ?? -1) === supaKeyLen;
+            const allMatch = familyMatch && prefixMatch && lengthMatch;
+            return (
+              <>
+                {row(
+                  "/api/diag",
+                  `${diag.httpStatus ?? "?"} · ${diag.service ?? "?"} · ${diag.checkedAt ?? "?"}`,
+                )}
+                {row("/api/diag ms", diag.latencyMs ?? "—")}
+                {row("server supabase host", diag.supabase?.urlHost ?? "(unknown)")}
+                {row("server key family", serverFamily)}
+                {row("server key prefix", serverKey?.prefix ?? "—")}
+                {row("server key length", serverKey?.length ?? "—")}
+                {row("client/server match", allMatch ? "✓ identical" : "✗ differs (see below)")}
+                {!allMatch && (
+                  <div
+                    style={{
+                      marginTop: 4,
+                      padding: "6px 8px",
+                      border: "1px solid #5a2a2a",
+                      borderRadius: 4,
+                      background: "rgba(255, 60, 60, 0.06)",
+                      color: "#ffd4d4",
+                    }}
+                  >
+                    <div style={{ color: "#ff8a8a", marginBottom: 4, letterSpacing: "0.06em" }}>
+                      KEY DRIFT — bundle vs /api/diag
+                    </div>
+                    {!familyMatch && row("family", `client ${clientFamily} ≠ server ${serverFamily}`)}
+                    {!prefixMatch && row("prefix", `client ${supaKeyPrefix} ≠ server ${serverKey?.prefix ?? "—"}`)}
+                    {!lengthMatch && row("length", `client ${supaKeyLen} ≠ server ${serverKey?.length ?? "—"}`)}
+                    <div style={{ opacity: 0.6, marginTop: 2 }}>
+                      Bundle and /api/diag are emitted from the same build — drift indicates a stale edge.
+                    </div>
+                  </div>
+                )}
+              </>
+            );
+          })()}
+
 
           {row("auth ready", ready ? "yes" : "no")}
           {row("authLoading", authLoading ? "true" : "false")}
