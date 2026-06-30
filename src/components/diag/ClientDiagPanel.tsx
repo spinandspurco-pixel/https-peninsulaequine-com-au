@@ -23,6 +23,39 @@ export function ClientDiagPanel() {
   const [cacheHeaders, setCacheHeaders] = useState<Record<string, string | null> | null>(null);
   const [cacheError, setCacheError] = useState<string | null>(null);
   const [cacheCheckedAt, setCacheCheckedAt] = useState<number | null>(null);
+  const [serverBuild, setServerBuild] = useState<
+    | { buildTime?: string; buildCommit?: string; bundleHash?: string | null; error?: string; status?: number }
+    | null
+  >(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/build-info", { cache: "no-store", credentials: "omit" })
+      .then(async (r) => {
+        if (cancelled) return;
+        if (!r.ok) {
+          setServerBuild({ error: `HTTP ${r.status}`, status: r.status });
+          return;
+        }
+        try {
+          const j = await r.json();
+          setServerBuild({
+            buildTime: j.buildTime,
+            buildCommit: j.buildCommit,
+            bundleHash: j.bundleHash,
+            status: r.status,
+          });
+        } catch (e) {
+          setServerBuild({ error: `parse: ${String((e as Error)?.message ?? e)}`, status: r.status });
+        }
+      })
+      .catch((e) => {
+        if (!cancelled) setServerBuild({ error: String((e as Error)?.message ?? e) });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const unsub = subscribeAuthLog(setEntries);
