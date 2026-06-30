@@ -110,11 +110,23 @@ function isStuck(r: ProbeResult): boolean {
   return r.hasLegacyKey === true || r.hasModernKey === false;
 }
 
+type RetryOutcome = {
+  startedAt: string;
+  finishedAt: string;
+  attempts: number;
+  before: { label: string; bundleFile: string | null; stuck: boolean }[];
+  after: { label: string; bundleFile: string | null; stuck: boolean }[];
+  status: "success" | "partial" | "no_change" | "error";
+  message: string;
+};
+
 export default function HqDeployHealth() {
   const { user, isAdmin, loading: authLoading } = useAuth();
   const [results, setResults] = useState<ProbeResult[]>([]);
   const [running, setRunning] = useState(false);
   const [lastCheckedAt, setLastCheckedAt] = useState<string | null>(null);
+  const [retrying, setRetrying] = useState(false);
+  const [retryOutcome, setRetryOutcome] = useState<RetryOutcome | null>(null);
   const pageBundle = useMemo(getCurrentPageBundle, []);
 
   const run = useCallback(async () => {
@@ -124,6 +136,7 @@ export default function HqDeployHealth() {
       setResults(out);
       setLastCheckedAt(new Date().toISOString());
       recordResults(out);
+      return out;
     } finally {
       setRunning(false);
     }
@@ -133,7 +146,106 @@ export default function HqDeployHealth() {
     if (isAdmin) run();
   }, [isAdmin, run]);
 
-  const anyStuck = results.some(isStuck);
+  const retryPromotion = useCallback(async () => {
+    setRetrying(true);
+    const startedAt = new Date().toISOString();
+    const beforeProbes = results.length
+      ? results
+      : await Promise.all(TARGETS.map((t) => probe(t.label, t.url)));
+    const before = beforeProbes.map((r) => ({
+      label: r.label,
+      bundleFile: r.bundleFile,
+      stuck: isStuck(r),
+    }));
+
+    let afterProbes: ProbeResult[] = beforeProbes;
+    let attempts = 0;
+    const maxAttempts = 4;
+    try {
+      // Re-probe with a short backoff so a freshly-triggered promotion
+      // (CDN cache flush, edge re-pin) has a chance to land.
+      for (let i = 0; i < maxAttempts; i++) {
+        attempts = i + 1;
+        // Cache-bust hint via query param on the HTML root
+        afterProbes = await Promise.all(
+          TARGETS.map((t) => probe(t.label, `${t.url}?_rh=${Date.now()}`)),
+        );
+        const stillStuck = afterProbes.some(isStuck);
+        const changed = afterProbes.some((r, idx) => {
+          const b = before[idx];
+          return b && r.bundleFile && b.bundleFile && r.bundleFile !== b.bundleFile;
+        });
+        if (!stillStuck || changed) break;
+        await new Promise((res) => setTimeout(res, 1500 * (i + 1)));
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      const outcome: RetryOutcome = {
+        startedAt,
+        finishedAt: new Date().toISOString(),
+        attempts,
+        before,
+        after: before,
+        status: "error",
+        message: `Retry failed: ${msg}`,
+      };
+      setRetryOutcome(outcome);
+      toast.error(outcome.message);
+      setRetrying(false);
+      return;
+    }
+
+    // Persist visible state from the final probe pass (strip the cache-bust
+    // suffix from URLs we display).
+    const cleaned = afterProbes.map((r, idx) => ({ ...r, url: TARGETS[idx].url }));
+    setResults(cleaned);
+    setLastCheckedAt(new Date().toISOString());
+    recordResults(cleaned);
+
+    const after = cleaned.map((r) => ({
+      label: r.label,
+      bundleFile: r.bundleFile,
+      stuck: isStuck(r),
+    }));
+    const stillStuck = after.filter((a) => a.stuck);
+    const changed = after.filter((a, idx) => {
+      const b = before[idx];
+      return b && a.bundleFile && b.bundleFile && a.bundleFile !== b.bundleFile;
+    });
+
+    let status: RetryOutcome["status"];
+    let message: string;
+    if (stillStuck.length === 0 && changed.length > 0) {
+      status = "success";
+      message = `Promotion landed — fresh bundle on ${changed.length}/${after.length} target(s).`;
+      toast.success(message);
+    } else if (stillStuck.length === 0) {
+      status = "success";
+      message = `All targets fresh (no stale markers detected).`;
+      toast.success(message);
+    } else if (changed.length > 0) {
+      status = "partial";
+      message = `Partial — ${changed.length} target(s) updated, ${stillStuck.length} still stale.`;
+      toast.warning(message);
+    } else {
+      status = "no_change";
+      message = `No change after ${attempts} attempt(s) — promotion still stuck. Escalate to Lovable Support.`;
+      toast.error(message);
+    }
+
+    setRetryOutcome({
+      startedAt,
+      finishedAt: new Date().toISOString(),
+      attempts,
+      before,
+      after,
+      status,
+      message,
+    });
+    setRetrying(false);
+  }, [results]);
+
+
 
   const escalation = useMemo(() => {
     const lines: string[] = [];
