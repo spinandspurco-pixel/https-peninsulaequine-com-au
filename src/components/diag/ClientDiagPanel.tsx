@@ -510,6 +510,9 @@ export function ClientDiagPanel() {
                 <button onClick={downloadDiagnostics} style={btn} title="Download diagnostics as .json">
                   {downloaded ?? "download"}
                 </button>
+                <button onClick={copyCurl} style={btn} title="Copy curl commands for /api/build-info, /api/health and current page headers">
+                  {curlCopied ?? "copy curl"}
+                </button>
 
               </div>
 
