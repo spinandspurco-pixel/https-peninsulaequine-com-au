@@ -186,18 +186,12 @@ export default function HqDeployHealth() {
           stuck: isStuck(r),
         })),
       }).then(() => refreshAudit());
-        targets: out.map((r) => ({
-          label: r.label,
-          ok: r.ok,
-          bundleFile: r.bundleFile,
-          stuck: isStuck(r),
-        })),
-      });
       return out;
     } finally {
       setRunning(false);
     }
-  }, []);
+  }, [refreshAudit]);
+
 
   useEffect(() => {
     if (isAdmin) {
