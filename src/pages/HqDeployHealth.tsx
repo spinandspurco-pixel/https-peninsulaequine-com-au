@@ -5,7 +5,7 @@ import { HqNav } from "@/components/hq/HqNav";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { recordResults } from "@/lib/deployHealth";
-import { logDeployHealthAudit } from "@/lib/deployHealthAudit";
+import { logDeployHealthAudit, type DeployHealthAuditAction } from "@/lib/deployHealthAudit";
 
 /**
  * HQ → Operations → Deploy Health
