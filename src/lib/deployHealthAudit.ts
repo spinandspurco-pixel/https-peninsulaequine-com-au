@@ -9,6 +9,7 @@ export type DeployHealthAuditAction =
   | "copy_support_email"
   | "download_escalation_txt"
   | "copy_promotion_report"
+  | "export_audit_log"
   | "open_support_email";
 
 export type DeployHealthAuditStatus = "success" | "failure" | "info";
