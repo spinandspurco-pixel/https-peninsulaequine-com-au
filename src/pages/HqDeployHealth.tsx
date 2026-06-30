@@ -889,7 +889,77 @@ export default function HqDeployHealth() {
             your clipboard in case the mail client truncates.
           </p>
         </section>
+
+        <section className="border-t border-border/10 pt-6 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="text-[0.65rem] tracking-[0.45em] uppercase text-foreground/40">
+              Audit log · last 25
+            </div>
+            <button
+              type="button"
+              onClick={refreshAudit}
+              disabled={auditLoading}
+              className="text-[0.65rem] tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8 disabled:opacity-40"
+            >
+              {auditLoading ? "Loading…" : "Refresh"}
+            </button>
+          </div>
+          <p className="text-xs text-foreground/60 max-w-2xl leading-relaxed">
+            Every admin diagnostic action on this page — view, run checks,
+            retry promotion, copy, download, open support email — is recorded
+            in <code>deploy_health_audit</code>. Insert and read are gated by
+            row-level security to the <code>admin</code> role.
+          </p>
+          {auditError && (
+            <div className="text-xs text-red-600/80">Failed to load: {auditError}</div>
+          )}
+          {!auditError && audit.length === 0 && !auditLoading && (
+            <div className="text-xs text-foreground/50">No audit entries yet.</div>
+          )}
+          {audit.length > 0 && (
+            <div className="border border-border/10">
+              <table className="w-full text-[0.7rem]">
+                <thead>
+                  <tr className="text-foreground/40 uppercase tracking-[0.3em]">
+                    <th className="text-left font-normal px-3 py-2">When</th>
+                    <th className="text-left font-normal px-3 py-2">Actor</th>
+                    <th className="text-left font-normal px-3 py-2">Action</th>
+                    <th className="text-left font-normal px-3 py-2">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {audit.map((row) => (
+                    <tr key={row.id} className="border-t border-border/10">
+                      <td className="px-3 py-2 text-foreground/70 whitespace-nowrap">
+                        {new Date(row.created_at).toLocaleString()}
+                      </td>
+                      <td className="px-3 py-2 text-foreground/70">
+                        {row.actor_email ?? "—"}
+                      </td>
+                      <td className="px-3 py-2 text-foreground/80">
+                        <code>{row.action}</code>
+                      </td>
+                      <td
+                        className={
+                          "px-3 py-2 " +
+                          (row.status === "success"
+                            ? "text-emerald-700"
+                            : row.status === "failure"
+                            ? "text-red-700"
+                            : "text-foreground/60")
+                        }
+                      >
+                        {row.status ?? "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
       </div>
+
 
       {manualCopy && (
         <div
