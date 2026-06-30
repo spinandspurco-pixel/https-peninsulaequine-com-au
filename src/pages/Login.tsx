@@ -171,27 +171,24 @@ export default function Login() {
     setSignInError(null);
     setIsLoading(true);
     trackAuthFunnel("auth_login_attempt", { method: "google", via: "retry", force: true });
-    try {
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
-      });
-      if (result.error) {
-        setIsLoading(false);
-        const classified = classifyOAuthError(result.error.message || "");
-        setSignInError(classified);
-        recordOAuthError({ provider: "google", source: "login-retry", message: result.error.message || "" });
-        return;
-      }
-      if (result.redirected) {
-        trackAuthFunnel("auth_login_success", { method: "google", via: "redirect", force: true });
-        return;
-      }
-      trackAuthFunnel("auth_login_success", { method: "google", via: "popup", force: true });
-    } catch (err) {
-      setIsLoading(false);
-      const msg = err instanceof Error ? err.message : String(err);
-      setSignInError(classifyOAuthError(msg));
+    const result = await attemptGoogleSignIn({
+      redirectUri: window.location.origin,
+      maxAttempts: 2,
+      onAttempt: (n) => authLog("oauth:google:retry-attempt", { attempt: n }),
+    });
+    if (result.kind === "ok") {
+      trackAuthFunnel("auth_login_success", { method: "google", via: result.via, force: true });
+      return;
     }
+    setIsLoading(false);
+    const classified = classifyOAuthError(result.message);
+    setSignInError(classified);
+    recordOAuthError({
+      provider: "google",
+      source: "login-retry",
+      message: result.message,
+      context: { attempts: result.attempts, transient: result.transient },
+    });
   };
 
   const handleSignIn = async (e: React.FormEvent) => {
