@@ -2,7 +2,7 @@ import { defineConfig, type PluginOption } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
-import type { BuildInfo, HealthResponse } from "./src/types/health";
+import { makeBuildInfoPayload, makeHealthPayload } from "./src/lib/healthPayload";
 
 const BUILD_TIME = new Date().toISOString();
 const BUILD_COMMIT =
@@ -18,29 +18,20 @@ const BUILD_COMMIT =
  * Vercel/Netlify/CF Pages all serve static files in front of SPA rewrites.
  */
 function buildInfoPlugin(): PluginOption {
-  const makeBuildInfo = (bundleHash: string | null) => {
-    const payload: BuildInfo = {
-      buildTime: BUILD_TIME,
-      buildCommit: BUILD_COMMIT,
-      bundleHash,
-    };
-    return JSON.stringify(payload, null, 2) + "\n";
-  };
+  const makeBuildInfo = (bundleHash: string | null) =>
+    JSON.stringify(
+      makeBuildInfoPayload({ buildTime: BUILD_TIME, buildCommit: BUILD_COMMIT, bundleHash }),
+      null,
+      2,
+    ) + "\n";
 
-  const makeHealth = (bundleHash: string | null) => {
-    const payload: HealthResponse = {
-      status: "ok",
-      service: "peninsula-os-web",
-      uptime: "static",
-      checkedAt: new Date().toISOString(),
-      buildInfo: {
-        buildTime: BUILD_TIME,
-        buildCommit: BUILD_COMMIT,
-        bundleHash,
-      },
-    };
-    return JSON.stringify(payload, null, 2) + "\n";
-  };
+  const makeHealth = (bundleHash: string | null) =>
+    JSON.stringify(
+      makeHealthPayload({ buildTime: BUILD_TIME, buildCommit: BUILD_COMMIT, bundleHash }),
+      null,
+      2,
+    ) + "\n";
+
 
   return {
     name: "emit-build-info",
