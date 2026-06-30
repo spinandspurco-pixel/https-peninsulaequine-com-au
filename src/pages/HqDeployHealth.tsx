@@ -556,6 +556,30 @@ export default function HqDeployHealth() {
           </div>
         </section>
 
+        {anyStuck && (
+          <section className="border border-amber-600/50 bg-amber-600/5 px-5 py-4 flex items-start justify-between gap-6">
+            <div className="space-y-1">
+              <div className="text-[0.65rem] tracking-[0.45em] uppercase text-amber-700">
+                Supabase key mismatch detected
+              </div>
+              <p className="text-sm text-foreground/80 leading-relaxed max-w-2xl">
+                One or more live bundles still contain the legacy <code>eyJhbGci</code> key
+                or are missing the modern <code>sb_publishable_</code> marker. Copy the full
+                payload below and send it to Lovable Support to force-promote a fresh build.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={copyEscalationJson}
+              className="shrink-0 text-sm tracking-[0.3em] uppercase text-amber-800 border border-amber-700/50 px-4 py-2 hover:bg-amber-600/10"
+              title="Copy the full deploy-health JSON payload to your clipboard"
+            >
+              Copy JSON payload
+            </button>
+          </section>
+        )}
+
+
         {retryOutcome && (
           <section
             className={
