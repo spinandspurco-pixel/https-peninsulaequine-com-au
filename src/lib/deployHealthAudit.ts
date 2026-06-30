@@ -8,6 +8,7 @@ export type DeployHealthAuditAction =
   | "copy_escalation_json"
   | "copy_support_email"
   | "download_escalation_txt"
+  | "copy_promotion_report"
   | "open_support_email";
 
 export type DeployHealthAuditStatus = "success" | "failure" | "info";
