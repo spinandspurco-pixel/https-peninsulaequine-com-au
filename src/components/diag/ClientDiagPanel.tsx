@@ -463,6 +463,10 @@ export function ClientDiagPanel() {
                 <button onClick={copyBuildInfo} style={btn} title="Copy build info JSON">
                   {copied ?? "copy"}
                 </button>
+                <button onClick={downloadDiagnostics} style={btn} title="Download diagnostics as .json">
+                  {downloaded ?? "download"}
+                </button>
+
               </div>
 
             </div>
