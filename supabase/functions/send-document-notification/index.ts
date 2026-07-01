@@ -89,10 +89,11 @@ serve(async (req) => {
     const summaryLines: string[] = [];
     if (form_data) {
       for (const [key, value] of Object.entries(form_data)) {
+        const safeKey = esc(key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase()));
         if (typeof value === "string" && value) {
-          summaryLines.push(`<strong>${key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())}:</strong> ${value}`);
+          summaryLines.push(`<strong>${safeKey}:</strong> ${esc(value)}`);
         } else if (typeof value === "number") {
-          summaryLines.push(`<strong>${key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())}:</strong> ${value}`);
+          summaryLines.push(`<strong>${safeKey}:</strong> ${esc(String(value))}`);
         }
       }
     }
