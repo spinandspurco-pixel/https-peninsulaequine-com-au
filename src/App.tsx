@@ -54,6 +54,8 @@ const HqReview = lazy(() => import("./pages/HqReview"));
 const HqGraphSmoke = lazy(() => import("./pages/HqGraphSmoke"));
 const HqDiagnostics = lazy(() => import("./pages/HqDiagnostics"));
 const HqDeployHealth = lazy(() => import("./pages/HqDeployHealth"));
+const HqDbLints = lazy(() => import("./pages/HqDbLints"));
+
 const DnsVerify = lazy(() => import("./pages/DnsVerify"));
 const DnsPublish = lazy(() => import("./pages/DnsPublish"));
 const DnsWizard = lazy(() => import("./pages/DnsWizard"));
