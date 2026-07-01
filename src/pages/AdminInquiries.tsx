@@ -79,6 +79,7 @@ export default function AdminInquiries() {
   const [selected, setSelected] = useState<Set<string>>(() => new Set());
   const [pendingAction, setPendingAction] = useState<BulkAction | null>(null);
   const [bulkRunning, setBulkRunning] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
   // Clear selection when the visible dataset changes.
   useEffect(() => {
