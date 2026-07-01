@@ -262,6 +262,48 @@ export function OAuthProviderPanel({
             {observedClientId || <span className="opacity-40">(awaiting paste)</span>}
           </code>
         </div>
+
+        {/* Redirect URI validation */}
+        <div className="mt-4 pt-3 border-t border-foreground/10">
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55">
+              Redirect URI validation
+            </div>
+            <span
+              className="text-[0.55rem] font-mono"
+              style={{ color: statusColor(redirectStatus), letterSpacing: "0.2em" }}
+            >
+              {redirectStatus === "ok" ? "MATCH" : redirectStatus === "fail" ? "MISMATCH" : "IDLE"}
+            </span>
+          </div>
+          <div
+            className="text-[0.7rem] font-light leading-relaxed mb-2"
+            style={{ color: statusColor(redirectStatus) }}
+          >
+            {redirectStatus === "ok"
+              ? "MATCH — Google is redirecting to the expected Supabase callback."
+              : redirectStatus === "fail"
+                ? "MISMATCH — the redirect_uri Google received does not equal the expected Supabase callback. Update Google Cloud → Authorized redirect URIs, or Supabase Site/Callback URL."
+                : "Idle — paste the Google authorize URL above to compare redirect_uri."}
+          </div>
+          <div className="grid grid-cols-[10rem_1fr] gap-x-3 gap-y-1.5 text-[0.7rem]">
+            <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-55 pt-1">
+              Expected
+            </div>
+            <code className="font-mono opacity-85 break-all">
+              {expectedCallback || <span className="opacity-40">(missing VITE_SUPABASE_URL)</span>}
+            </code>
+            <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-55 pt-1">
+              Observed
+            </div>
+            <code
+              className="font-mono opacity-85 break-all"
+              style={{ color: redirectStatus === "fail" ? statusColor("fail") : undefined }}
+            >
+              {observedRedirectUri || <span className="opacity-40">(awaiting paste)</span>}
+            </code>
+          </div>
+        </div>
       </div>
     </div>
   );
