@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 import { EventRSVPForm } from "@/components/events/EventRSVPForm";
 import { EventGuestList } from "@/components/events/EventGuestList";
 import { usePageMeta } from "@/lib/usePageMeta";
+import { eventListSchema, breadcrumbSchema } from "@/lib/seo/schema";
 
 // Approved cinematic event imagery only — legacy covered-arena-finished-lit
 // and main-ridge-finished-interior phone shots removed.
