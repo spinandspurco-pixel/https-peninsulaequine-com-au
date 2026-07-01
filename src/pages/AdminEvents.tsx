@@ -19,7 +19,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, CalendarIcon, MapPin, Users, Eye, EyeOff } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, CalendarIcon, MapPin, Users, Eye, EyeOff, Sparkles } from "lucide-react";
 import { format } from "date-fns";
 import type { Tables } from "@/integrations/supabase/types";
 import { PreviewNotice } from "@/components/hq/PreviewNotice";
