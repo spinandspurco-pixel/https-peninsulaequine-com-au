@@ -184,9 +184,13 @@ export default function HqDbLints() {
             </p>
           </div>
           <div className="flex items-center gap-4 text-xs text-foreground/50">
-            {fetchedAt && (
-              <span>Last fetched {fetchedAt.toLocaleTimeString()}</span>
+            {meta && (
+              <span>
+                {meta.endpoint} · {new Date(meta.fetched_at).toLocaleTimeString()} ·{" "}
+                {meta.duration_ms}ms
+              </span>
             )}
+
             <button
               type="button"
               onClick={load}
