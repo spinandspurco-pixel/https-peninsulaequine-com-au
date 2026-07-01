@@ -186,11 +186,13 @@ export default function LessonInquiry({
       // Upload attachments via the server-side validated edge function
       // (enforces size, MIME/extension, and magic-byte checks).
       let attachment_urls: string[] = [];
+      let attachment_ids: string[] = [];
       let attachments: import("@/lib/uploadInquiryAttachment").AttachmentRecord[] = [];
       if (files.length > 0) {
         const { uploadInquiryAttachments } = await import("@/lib/uploadInquiryAttachment");
         const result = await uploadInquiryAttachments(files);
         attachment_urls = result.paths;
+        attachment_ids = result.ids;
         attachments = result.records;
       }
 
@@ -219,6 +221,10 @@ export default function LessonInquiry({
         .single();
 
       if (error) throw error;
+      if (attachment_ids.length) {
+        const { linkAttachmentsToInquiry } = await import("@/lib/uploadInquiryAttachment");
+        await linkAttachmentsToInquiry(attachment_ids, inserted.id).catch(() => {});
+      }
       setConfirmation({ id: inserted.id });
       // fire-and-forget notification
       supabase.functions
