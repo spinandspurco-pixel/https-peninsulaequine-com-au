@@ -79,6 +79,8 @@ export type InquiryPageProps = {
   lockedType?: "lesson" | "consult";
   metaTitle?: string;
   metaDescription?: string;
+  metaPath?: string;
+  metaJsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
   headerOverline?: string;
   headerTitle?: string;
   headerSubtitle?: string;
@@ -90,13 +92,15 @@ export default function LessonInquiry({
   lockedType,
   metaTitle = "Lesson & consult inquiry — Peninsula Equine",
   metaDescription = "Request a riding lesson or horsemanship consult on the Mornington Peninsula. Guided intake with confirmation.",
+  metaPath,
+  metaJsonLd,
   headerOverline,
   headerTitle = "Request a lesson or consult",
   headerSubtitle = "A short guided intake. Under two minutes.",
   backLink = { to: "/lessons", label: "Back to lessons" },
   requireAttachments = false,
 }: InquiryPageProps = {}) {
-  usePageMeta({ title: metaTitle, description: metaDescription });
+  usePageMeta({ title: metaTitle, description: metaDescription, path: metaPath, jsonLd: metaJsonLd });
 
   const [step, setStep] = useState(0);
   const [data, setData] = useState<FormState>({
