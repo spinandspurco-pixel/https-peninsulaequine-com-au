@@ -8,6 +8,7 @@ import {
   BlueprintField,
   BronzeRule,
 } from "@/components/hq/HqPrimitives";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 const PROJECT_TYPES = [
   "Arena Construction",
