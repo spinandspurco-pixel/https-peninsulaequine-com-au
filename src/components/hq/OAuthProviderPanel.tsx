@@ -106,6 +106,11 @@ export function OAuthProviderPanel({
   }, [url, appOrigin]);
 
   const observedClientId = useMemo(() => extractClientId(pastedUrl), [pastedUrl]);
+  const observedRedirectUri = useMemo(() => extractRedirectUri(pastedUrl), [pastedUrl]);
+  const redirectStatus = useMemo(
+    () => compareRedirectUri(observedRedirectUri, expectedCallback),
+    [observedRedirectUri, expectedCallback],
+  );
 
   const intendedNorm = intendedClientId.trim();
   const status: "ok" | "warn" | "fail" | "info" = !observedClientId
