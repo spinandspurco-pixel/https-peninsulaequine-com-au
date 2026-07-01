@@ -154,6 +154,10 @@ export default function Contact() {
       next.push(f);
     }
     setFiles(next);
+    uploader.syncFiles(next);
+  };
+  // (moved below) uploader defined after addFiles closure to keep prior structure
+  const _addFilesEnd = null;
   };
 
   const uploader = useAttachmentUpload();
