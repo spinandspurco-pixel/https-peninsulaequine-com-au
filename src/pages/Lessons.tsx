@@ -1004,7 +1004,7 @@ export default function Lessons() {
               size="lg"
               className="bg-accent text-accent-foreground hover:bg-accent/90"
             >
-              <Link to="/book-lesson">
+              <Link to="/lessons/book">
                 <CalendarIcon className="mr-2 h-5 w-5" />
                 Book a Lesson
                 <ArrowRight className="ml-2 h-4 w-4" />
