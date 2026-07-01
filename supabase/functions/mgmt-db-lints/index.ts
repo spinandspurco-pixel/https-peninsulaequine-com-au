@@ -23,20 +23,18 @@ const ALLOWED_ENDPOINTS = {
   lints: `https://api.supabase.com/v1/projects/${PROJECT_REF}/database/lints`,
 } as const;
 
-// Resolve the token once so the sanitiser knows what value to strip.
-const MGMT_TOKEN = Deno.env.get(TOKEN_NAME) ?? "";
-
 /**
  * Scrub the token value + env-var name out of any string, Error, or plain
  * object before it leaves the function (log line or HTTP response body).
- * Only strings ≥ 8 chars are replaced — avoids nuking short unrelated
- * substrings if MGMT_TOKEN is misconfigured.
+ * The token value is resolved lazily via `Deno.env.get` so tests can toggle
+ * it between requests.
  */
 export function redact(value: unknown): unknown {
+  const token = Deno.env.get(TOKEN_NAME) ?? "";
   const scrubString = (s: string): string => {
     let out = s;
-    if (MGMT_TOKEN && MGMT_TOKEN.length >= 8 && out.includes(MGMT_TOKEN)) {
-      out = out.split(MGMT_TOKEN).join(REDACTED);
+    if (token && token.length >= 8 && out.includes(token)) {
+      out = out.split(token).join(REDACTED);
     }
     if (out.includes(TOKEN_NAME)) {
       out = out.split(TOKEN_NAME).join(REDACTED);
@@ -83,12 +81,13 @@ function json(body: unknown, status = 200) {
   });
 }
 
-Deno.serve(async (req) => {
+export async function handler(req: Request): Promise<Response> {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "GET") return json({ error: "method_not_allowed" }, 405);
 
   // 1. Server-side secret. Never returned, never logged.
-  if (!MGMT_TOKEN) {
+  const mgmtToken = Deno.env.get(TOKEN_NAME);
+  if (!mgmtToken) {
     console.error("mgmt token is not configured");
     return json({ error: "server_misconfigured" }, 500);
   }
@@ -124,7 +123,7 @@ Deno.serve(async (req) => {
     const upstream = await fetch(ALLOWED_ENDPOINTS.lints, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${MGMT_TOKEN}`,
+        Authorization: `Bearer ${mgmtToken}`,
         Accept: "application/json",
       },
     });
@@ -147,4 +146,6 @@ Deno.serve(async (req) => {
     console.error("mgmt api fetch failed", redact(e));
     return json({ error: "mgmt_api_unreachable" }, 502);
   }
-});
+}
+
+Deno.serve(handler);
