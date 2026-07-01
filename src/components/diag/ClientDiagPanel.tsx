@@ -448,6 +448,14 @@ export function ClientDiagPanel() {
       }
       setCacheHeaders(out);
       setCacheCheckedAt(Date.now());
+      const docMs = Number(out["document.latencyMs"]);
+      if (Number.isFinite(docMs)) {
+        setDocCacheHistory((prev) => [...prev, docMs].slice(-HISTORY_MAX));
+      }
+      const bundleMs = Number(out["bundle.latencyMs"]);
+      if (Number.isFinite(bundleMs)) {
+        setBundleCacheHistory((prev) => [...prev, bundleMs].slice(-HISTORY_MAX));
+      }
     } catch (err) {
       setCacheError(String((err as Error)?.message ?? err));
     }
