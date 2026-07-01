@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { BrandIntro } from "@/components/BrandIntro";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { HomeTestimonialsStrip } from "@/components/home/HomeTestimonialsStrip";
+import { HomeEventsStrip } from "@/components/home/HomeEventsStrip";
 // MagneticLink is exposed in src/components/motion for future use.
 import { IntroContext } from "@/hooks/useIntroState";
 import { useIntake } from "@/hooks/useIntake";
@@ -883,7 +885,11 @@ export default function Index() {
             </div>
           </section>
 
+          <HomeTestimonialsStrip />
+          <HomeEventsStrip />
+
           <section className="relative py-[clamp(4rem,2.5rem+6vw,10rem)] bg-background overflow-hidden">
+
             <div className="absolute inset-0 bg-gradient-to-b from-background via-background/82 to-background" />
             <div className="relative section-container max-w-3xl mx-auto text-center space-y-[clamp(2rem,1.25rem+2.5vw,3rem)]">
               <RevealOnScroll direction="up" duration={900}>
