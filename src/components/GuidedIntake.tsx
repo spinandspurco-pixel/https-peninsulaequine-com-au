@@ -550,7 +550,13 @@ export function GuidedIntake() {
               />
             </label>
 
-            <AttachmentPreviewList files={files} onRemove={removeFile} />
+            <AttachmentPreviewList
+              files={files}
+              onRemove={removeFile}
+              statuses={uploader.statuses}
+              onRetry={() => uploader.uploadAll(files).catch(() => {})}
+              busy={uploader.isUploading || submitting}
+            />
 
             {errors.files && (
               <p className="text-xs text-destructive/70">{errors.files}</p>
