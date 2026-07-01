@@ -65,6 +65,9 @@ const HqStaff = lazy(() => import("./pages/HqStaff"));
 
 const BookLesson = lazy(() => import("./pages/BookLesson"));
 const LessonInquiry = lazy(() => import("./pages/LessonInquiry"));
+const BookLessonInquiry = lazy(() => import("./pages/BookLessonInquiry"));
+const ConsultInquiry = lazy(() => import("./pages/ConsultInquiry"));
+
 const Lessons = lazy(() => import("./pages/Lessons"));
 const Events = lazy(() => import("./pages/Events"));
 const BookingsDashboard = lazy(() => import("./pages/BookingsDashboard"));
