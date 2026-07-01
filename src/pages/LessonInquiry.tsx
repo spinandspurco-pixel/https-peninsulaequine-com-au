@@ -370,6 +370,9 @@ export default function LessonInquiry({
               onRemoveFile={removeFile}
               maxFiles={MAX_FILES}
               requireAttachments={requireAttachments}
+              uploadStatuses={uploader.statuses}
+              onRetryUpload={() => uploader.uploadAll(files).catch(() => {})}
+              uploaderBusy={uploader.isUploading || submitting}
             />
           )}
 
