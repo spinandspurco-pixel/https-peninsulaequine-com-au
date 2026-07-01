@@ -76,6 +76,14 @@ export default function AdminInquiries() {
   const [page, setPage] = useState(0);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(() => new Set());
+  const [pendingAction, setPendingAction] = useState<BulkAction | null>(null);
+  const [bulkRunning, setBulkRunning] = useState(false);
+
+  // Clear selection when the visible dataset changes.
+  useEffect(() => {
+    setSelected(new Set());
+  }, [debouncedSearch, statusFilter, sort, page]);
 
   useEffect(() => {
     document.title = "Inquiries | Peninsula Equine HQ";
