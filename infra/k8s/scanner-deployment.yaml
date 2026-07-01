@@ -1,0 +1,63 @@
+# Scanner worker Deployment (Kubernetes)
+
+This manifest provides a Deployment for the ClamAV-based scanner worker that processes `attachments` with `scan_status = 'pending'`.
+
+Customize image and namespace before applying.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pe-scanner
+  namespace: default
+  labels:
+    app: pe-scanner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pe-scanner
+  template:
+    metadata:
+      labels:
+        app: pe-scanner
+    spec:
+      serviceAccountName: supabase-worker-sa
+      containers:
+        - name: pe-scanner
+          image: gcr.io/your-project/pe-scanner:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SUPABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-credentials
+                  key: SUPABASE_URL
+            - name: SUPABASE_SERVICE_ROLE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: supabase-credentials
+                  key: SUPABASE_SERVICE_ROLE_KEY
+            - name: SCAN_BUCKET
+              value: "inquiry-attachments"
+            - name: POLL_MS
+              value: "30000"
+            - name: MAX_WORK
+              value: "5"
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+          livenessProbe:
+            exec:
+              command: ["/bin/sh", "-c", "pgrep node || exit 1"]
+            initialDelaySeconds: 60
+            periodSeconds: 60
+          readinessProbe:
+            exec:
+              command: ["/bin/sh", "-c", "pgrep node || exit 1"]
+            initialDelaySeconds: 30
+            periodSeconds: 30
+      restartPolicy: Always

@@ -1,0 +1,41 @@
+# ServiceAccount, RoleBinding and Secret template
+
+# ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: supabase-worker-sa
+  namespace: default
+
+---
+
+# NOTE: Create a Kubernetes Secret named `supabase-credentials` with keys SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.
+# Example (do not store service role in plaintext in code repository):
+# kubectl create secret generic supabase-credentials --from-literal=SUPABASE_URL="https://xyz.supabase.co" --from-literal=SUPABASE_SERVICE_ROLE_KEY="<service-role-key>"
+
+---
+
+# ConfigMap to hold cleanup script
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pe-cleanup-scripts
+  namespace: default
+data:
+  cleanup-orphans.js: |
+    // This script expects SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY env vars
+    const { createClient } = require('@supabase/supabase-js');
+    (async function(){
+      const SUPABASE_URL = process.env.SUPABASE_URL;
+      const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+      if(!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) return console.error('missing env');
+      const supa = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
+      const cutoff = new Date(Date.now() - 7*24*3600*1000).toISOString();
+      const { data } = await supa.from('attachments').select('id,object_path').is('inquiry_id', null).lt('uploaded_at', cutoff);
+      if(!data || data.length===0) return;
+      const paths = data.map(r=>r.object_path);
+      await supa.storage.from('inquiry-attachments').remove(paths).catch(()=>{});
+      const ids = data.map(r=>r.id);
+      await supa.from('attachments').delete().in('id', ids).catch(()=>{});
+      console.log('cleaned', ids.length);
+    })();
