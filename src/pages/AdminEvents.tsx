@@ -19,7 +19,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, CalendarIcon, MapPin, Users, Eye, EyeOff } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, CalendarIcon, MapPin, Users, Eye, EyeOff, Sparkles } from "lucide-react";
 import { format } from "date-fns";
 import type { Tables } from "@/integrations/supabase/types";
 import { PreviewNotice } from "@/components/hq/PreviewNotice";
@@ -69,6 +69,7 @@ export default function AdminEvents() {
       capacity: editItem.capacity ?? null,
       image_url: editItem.image_url || null,
       active: editItem.active ?? true,
+      featured: (editItem as any).featured ?? false,
     };
 
     if (editItem.id) {
@@ -99,6 +100,15 @@ export default function AdminEvents() {
     if (error) { toast.error("Failed to update"); return; }
     toast.success(next ? "Published" : "Unpublished");
     setItems((prev) => prev.map((x) => (x.id === ev.id ? { ...x, active: next } : x)));
+  };
+
+  const toggleFeatured = async (ev: ManagedEvent) => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
+    const next = !(ev as any).featured;
+    const { error } = await supabase.from("managed_events").update({ featured: next }).eq("id", ev.id);
+    if (error) { toast.error("Failed to update"); return; }
+    toast.success(next ? "Featured on homepage" : "Removed from homepage");
+    setItems((prev) => prev.map((x) => (x.id === ev.id ? ({ ...x, featured: next } as ManagedEvent) : x)));
   };
 
   if (loading || !canAccess) return null;
@@ -157,6 +167,7 @@ export default function AdminEvents() {
                         ) : (
                           <Badge variant="secondary" className="text-xs">Draft</Badge>
                         )}
+                        {(ev as any).featured && <Badge variant="outline" className="text-[10px] border-amber-400/50 text-amber-400">Homepage</Badge>}
                       </div>
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1"><CalendarIcon className="h-3 w-3" />{format(new Date(ev.event_date), "MMM d, yyyy")}</span>
@@ -173,6 +184,16 @@ export default function AdminEvents() {
                         title={isPreview ? "View-only" : ev.active ? "Unpublish (hide from public site)" : "Publish (show on public site)"}
                       >
                         {ev.active ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4 text-emerald-500" />}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => toggleFeatured(ev)}
+                        disabled={isPreview}
+                        title={isPreview ? "View-only" : ((ev as any).featured ? "Remove from homepage" : "Feature on homepage")}
+                        className={(ev as any).featured ? "text-amber-400" : ""}
+                      >
+                        <Sparkles className="h-4 w-4" />
                       </Button>
                       <Button variant="ghost" size="sm" onClick={() => setEditItem(ev)} disabled={isPreview} title={isPreview ? "View-only" : undefined}><Pencil className="h-4 w-4" /></Button>
                       <Button variant="ghost" size="sm" onClick={() => setDeleteItem(ev)} disabled={isPreview} title={isPreview ? "View-only" : undefined}><Trash2 className="h-4 w-4 text-destructive" /></Button>
@@ -202,6 +223,12 @@ export default function AdminEvents() {
               <Switch checked={editItem?.active ?? true} onCheckedChange={(v) => setEditItem({ ...editItem, active: v })} />
               <Label className="cursor-pointer">
                 {editItem?.active ?? true ? "Published — visible on public site" : "Draft — hidden from public site"}
+              </Label>
+            </div>
+            <div className="flex items-center gap-3 rounded-md border border-border/40 bg-muted/20 px-3 py-2">
+              <Switch checked={(editItem as any)?.featured ?? false} onCheckedChange={(v) => setEditItem({ ...editItem, featured: v } as any)} />
+              <Label className="cursor-pointer">
+                {(editItem as any)?.featured ? "Featured — shown in homepage events" : "Not featured on homepage"}
               </Label>
             </div>
           </div>

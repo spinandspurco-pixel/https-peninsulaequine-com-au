@@ -19,7 +19,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, Star, Pin, Download, FileText, Eye, EyeOff } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, Star, Pin, Download, FileText, Eye, EyeOff, Sparkles } from "lucide-react";
 import { SortableList, persistSortOrder } from "@/components/hq/SortableList";
 import type { Tables } from "@/integrations/supabase/types";
 import { PreviewNotice } from "@/components/hq/PreviewNotice";
@@ -135,6 +135,15 @@ export default function AdminTestimonials() {
     fetchData();
   };
 
+  const toggleFeatured = async (item: ManagedTestimonial) => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
+    const next = !(item as any).featured;
+    const { error } = await supabase.from("managed_testimonials").update({ featured: next }).eq("id", item.id);
+    if (error) { toast.error("Failed to update"); return; }
+    toast.success(next ? "Featured on homepage" : "Removed from homepage");
+    setItems((prev) => prev.map((x) => (x.id === item.id ? ({ ...x, featured: next } as ManagedTestimonial) : x)));
+  };
+
   // Drag-and-drop reorder handled by SortableList (see below).
 
   useEffect(() => { if (canAccess) fetchData(); }, [canAccess]);
@@ -155,6 +164,7 @@ export default function AdminTestimonials() {
       media_url: editItem.media_url || null,
       sort_order: editItem.sort_order ?? 0,
       active: editItem.active ?? true,
+      featured: (editItem as any).featured ?? false,
     };
 
     if (editItem.id) {
@@ -253,6 +263,7 @@ export default function AdminTestimonials() {
                           <Badge variant="secondary" className="text-xs">Draft</Badge>
                         )}
                         {(t as any).pinned && <Badge className="text-[10px] bg-accent text-accent-foreground">Pinned</Badge>}
+                        {(t as any).featured && <Badge variant="outline" className="text-[10px] border-amber-400/50 text-amber-400">Homepage</Badge>}
                       </div>
                       <p className="text-sm text-muted-foreground line-clamp-2 italic">"{t.quote}"</p>
                       <div className="flex items-center gap-2 mt-1">
@@ -284,6 +295,16 @@ export default function AdminTestimonials() {
                       >
                         <Pin className="h-4 w-4" />
                       </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => toggleFeatured(t)}
+                        disabled={isPreview}
+                        title={isPreview ? "View-only" : ((t as any).featured ? "Remove from homepage" : "Feature on homepage")}
+                        className={(t as any).featured ? "text-amber-400" : ""}
+                      >
+                        <Sparkles className="h-4 w-4" />
+                      </Button>
                       <Button variant="ghost" size="sm" onClick={() => setEditItem(t)} disabled={isPreview} title={isPreview ? "View-only" : undefined}><Pencil className="h-4 w-4" /></Button>
                       <Button variant="ghost" size="sm" onClick={() => setDeleteItem(t)} disabled={isPreview} title={isPreview ? "View-only" : undefined}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                     </div>
@@ -310,6 +331,12 @@ export default function AdminTestimonials() {
               <Switch checked={editItem?.active ?? true} onCheckedChange={(v) => setEditItem({ ...editItem, active: v })} />
               <Label className="cursor-pointer">
                 {editItem?.active ?? true ? "Published — visible on public site" : "Draft — hidden from public site"}
+              </Label>
+            </div>
+            <div className="flex items-center gap-3 rounded-md border border-border/40 bg-muted/20 px-3 py-2">
+              <Switch checked={(editItem as any)?.featured ?? false} onCheckedChange={(v) => setEditItem({ ...editItem, featured: v } as any)} />
+              <Label className="cursor-pointer">
+                {(editItem as any)?.featured ? "Featured — shown in homepage testimonials" : "Not featured on homepage"}
               </Label>
             </div>
           </div>
