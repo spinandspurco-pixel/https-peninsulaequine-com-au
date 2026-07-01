@@ -1372,6 +1372,99 @@ export function ClientDiagPanel() {
               </button>
             </div>
           </details>
+          <details style={{ marginTop: 6 }} open>
+            <summary style={{ cursor: "pointer", opacity: 0.7 }}>
+              probe history ({probeHistory.length}/{PROBE_HISTORY_MAX})
+            </summary>
+            {probeHistory.length === 0 ? (
+              <div style={{ opacity: 0.5, fontSize: 10, marginTop: 4 }}>
+                No probes recorded yet. Run "probe now" or wait for auto-probe.
+              </div>
+            ) : (
+              <div style={{ marginTop: 4 }}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "78px 78px 44px 60px 74px 1fr",
+                    columnGap: 8,
+                    rowGap: 2,
+                    fontSize: 10,
+                    fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+                  }}
+                >
+                  <div style={{ opacity: 0.5 }}>time</div>
+                  <div style={{ opacity: 0.5 }}>endpoint</div>
+                  <div style={{ opacity: 0.5 }}>ok</div>
+                  <div style={{ opacity: 0.5 }}>latency</div>
+                  <div style={{ opacity: 0.5 }}>hash</div>
+                  <div style={{ opacity: 0.5 }}>notes</div>
+                  {[...probeHistory]
+                    .slice()
+                    .reverse()
+                    .map((p, idx, arr) => {
+                      const prevSameEndpoint = arr
+                        .slice(idx + 1)
+                        .find((x) => x.endpoint === p.endpoint);
+                      const hashChanged =
+                        !!prevSameEndpoint &&
+                        !!p.payloadHash &&
+                        !!prevSameEndpoint.payloadHash &&
+                        prevSameEndpoint.payloadHash !== p.payloadHash;
+                      return (
+                        <React.Fragment key={p.id}>
+                          <div>{p.fetchedAt.slice(11, 19)}</div>
+                          <div>{p.endpoint}</div>
+                          <div style={{ color: p.ok ? "#7fbf7f" : "#ff8a8a" }}>
+                            {p.ok ? "✓" : "✗"}
+                            {typeof p.httpStatus === "number" ? ` ${p.httpStatus}` : ""}
+                          </div>
+                          <div style={{ color: latencyColor(p.latencyMs) }}>{p.latencyMs} ms</div>
+                          <div
+                            style={{ color: hashChanged ? "#eab308" : undefined }}
+                            title={hashChanged ? "payload changed since previous probe" : ""}
+                          >
+                            {p.payloadHash ?? "—"}
+                            {hashChanged ? " Δ" : ""}
+                          </div>
+                          <div style={{ opacity: 0.7, wordBreak: "break-all" }}>
+                            {p.error
+                              ? `error: ${p.error.length > 60 ? p.error.slice(0, 60) + "…" : p.error}`
+                              : typeof p.bytes === "number"
+                                ? `${p.bytes} B`
+                                : ""}
+                          </div>
+                        </React.Fragment>
+                      );
+                    })}
+                </div>
+                <div style={{ display: "flex", gap: 6, marginTop: 6 }}>
+                  <button
+                    style={btn}
+                    onClick={() => {
+                      const json = JSON.stringify(probeHistory, null, 2);
+                      navigator.clipboard?.writeText(json).catch(() => {});
+                    }}
+                    title="Copy full probe history as JSON"
+                  >
+                    copy JSON
+                  </button>
+                  <button
+                    style={btn}
+                    onClick={() => {
+                      setProbeHistory([]);
+                      try {
+                        window.localStorage.removeItem("pe.diag.probeHistory");
+                      } catch {
+                        /* ignore */
+                      }
+                    }}
+                  >
+                    clear
+                  </button>
+                </div>
+              </div>
+            )}
+          </details>
           <details style={{ marginTop: 6 }}>
             <summary style={{ cursor: "pointer", opacity: 0.7 }}>auth log buffer ({entries.length})</summary>
             <pre style={{ whiteSpace: "pre-wrap", margin: "6px 0 0", fontSize: 10, opacity: 0.85 }}>
