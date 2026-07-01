@@ -16,6 +16,7 @@ const schema = z.object({
 export function WholePropertyInquiryForm() {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+  const spamGuard = useSpamGuard();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -28,6 +29,12 @@ export function WholePropertyInquiryForm() {
     });
     if (!parsed.success) {
       toast.error(parsed.error.issues[0]?.message ?? "Please check the form.");
+      return;
+    }
+    // Silent spam guard — pretend success on trip so bots don't retry.
+    const guard = spamGuard.check();
+    if (!guard.ok) {
+      setDone(true);
       return;
     }
     setSubmitting(true);
