@@ -73,18 +73,36 @@ const STEPS = ["Focus", "Contact", "Horse & goals", "Timing"] as const;
 
 // ── Component ─────────────────────────────────────────
 
-export default function LessonInquiry() {
-  usePageMeta({
-    title: "Lesson & consult inquiry — Peninsula Equine",
-    description:
-      "Request a riding lesson or horsemanship consult on the Mornington Peninsula. Guided intake with confirmation.",
-  });
+export type InquiryPageProps = {
+  lockedType?: "lesson" | "consult";
+  metaTitle?: string;
+  metaDescription?: string;
+  headerOverline?: string;
+  headerTitle?: string;
+  headerSubtitle?: string;
+  backLink?: { to: string; label: string };
+};
+
+export default function LessonInquiry({
+  lockedType,
+  metaTitle = "Lesson & consult inquiry — Peninsula Equine",
+  metaDescription = "Request a riding lesson or horsemanship consult on the Mornington Peninsula. Guided intake with confirmation.",
+  headerOverline,
+  headerTitle = "Request a lesson or consult",
+  headerSubtitle = "A short guided intake. Under two minutes.",
+  backLink = { to: "/lessons", label: "Back to lessons" },
+}: InquiryPageProps = {}) {
+  usePageMeta({ title: metaTitle, description: metaDescription });
 
   const [step, setStep] = useState(0);
-  const [data, setData] = useState<FormState>(DEFAULTS);
+  const [data, setData] = useState<FormState>({
+    ...DEFAULTS,
+    inquiry_type: lockedType ?? DEFAULTS.inquiry_type,
+  });
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [submitting, setSubmitting] = useState(false);
   const [confirmation, setConfirmation] = useState<{ id: string } | null>(null);
+
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setData((prev) => ({ ...prev, [key]: value }));
