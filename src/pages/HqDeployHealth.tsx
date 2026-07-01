@@ -780,6 +780,10 @@ export default function HqDeployHealth() {
         )}
 
 
+        <RetryOutcomeErrorBoundary
+          debugPayload={retryOutcome}
+          onReset={() => setRetryOutcome(null)}
+        >
         {retryOutcome && (
           <section
             className={
