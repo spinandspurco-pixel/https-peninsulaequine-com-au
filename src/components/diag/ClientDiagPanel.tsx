@@ -1393,6 +1393,7 @@ export function ClientDiagPanel() {
                   }
                 >
                   {latencyToasts ? "toasts ✓" : "toasts off"}
+                </button>
                 <button
                   onClick={async () => {
                     setProbing(true);
