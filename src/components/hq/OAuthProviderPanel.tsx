@@ -362,6 +362,88 @@ export function OAuthProviderPanel({
           </div>
         </div>
       </div>
+
+      {/* Diagnostics history log */}
+      <div className="border-t border-foreground/10">
+        <div className="px-4 py-2.5 border-b border-foreground/10 flex items-center justify-between gap-4">
+          <div className="text-[0.6rem] tracking-[0.4em] uppercase opacity-55">
+            Diagnostics history <span className="opacity-60 normal-case tracking-normal">({history.length})</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={onCopyHistory}
+              disabled={history.length === 0}
+              className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity disabled:opacity-30"
+            >
+              {historyCopiedAt ? "Copied" : "Copy JSON"}
+            </button>
+            <button
+              type="button"
+              onClick={onClearHistory}
+              disabled={history.length === 0}
+              className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity disabled:opacity-30"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+        {history.length === 0 ? (
+          <div className="px-4 py-3 text-[0.7rem] opacity-55 font-light">
+            No verification attempts logged yet. Paste an authorize URL above to record one.
+          </div>
+        ) : (
+          <div className="max-h-72 overflow-auto">
+            <table className="w-full text-[0.68rem] font-mono">
+              <thead className="text-[0.55rem] tracking-[0.25em] uppercase opacity-55">
+                <tr className="border-b border-foreground/10">
+                  <th className="text-left font-normal px-4 py-1.5 w-40">Timestamp</th>
+                  <th className="text-left font-normal px-2 py-1.5">Client ID</th>
+                  <th className="text-left font-normal px-2 py-1.5">Redirect URI</th>
+                  <th className="text-left font-normal px-2 py-1.5 w-20">Client</th>
+                  <th className="text-left font-normal px-4 py-1.5 w-20">Redirect</th>
+                </tr>
+              </thead>
+              <tbody>
+                {history.map((e) => (
+                  <tr key={e.ts} className="border-b border-foreground/5 align-top">
+                    <td className="px-4 py-1.5 opacity-75 whitespace-nowrap">{fmtTs(e.ts)}</td>
+                    <td
+                      className="px-2 py-1.5 break-all"
+                      title={e.clientId ?? ""}
+                    >
+                      <div style={{ color: e.clientStatus === "fail" ? statusColor("fail") : undefined }}>
+                        {shortId(e.clientId)}
+                      </div>
+                      <div className="opacity-40 text-[0.6rem]" title={e.providedUrl}>
+                        {shortUrl(e.providedUrl)}
+                      </div>
+                    </td>
+                    <td className="px-2 py-1.5 opacity-85 break-all" title={e.redirectUri ?? ""}>
+                      {e.redirectUri ? shortId(e.redirectUri) : "—"}
+                    </td>
+                    <td
+                      className="px-2 py-1.5"
+                      style={{ color: statusColor(e.clientStatus), letterSpacing: "0.15em" }}
+                    >
+                      {e.clientStatus === "ok" ? "MATCH" : e.clientStatus === "fail" ? "MISS" : e.clientStatus === "warn" ? "CAP" : "IDLE"}
+                    </td>
+                    <td
+                      className="px-4 py-1.5"
+                      style={{ color: statusColor(e.redirectStatus), letterSpacing: "0.15em" }}
+                    >
+                      {e.redirectStatus === "ok" ? "MATCH" : e.redirectStatus === "fail" ? "MISS" : "IDLE"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <div className="px-4 py-2 border-t border-foreground/10 text-[0.6rem] opacity-45 font-light">
+          Stored locally in this browser only. Nothing sent to a server. Capped at the last 25 entries.
+        </div>
+      </div>
     </div>
   );
 }
