@@ -897,7 +897,8 @@ export default function Lessons() {
 
               <div className="flex flex-wrap gap-3">
                 <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
-                  <Link to="/book-lesson">
+                  <Link to="/lessons/book">
+
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     Book a Lesson
                   </Link>
