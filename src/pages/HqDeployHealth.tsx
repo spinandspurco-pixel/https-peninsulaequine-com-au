@@ -6,6 +6,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { recordResults } from "@/lib/deployHealth";
 import { logDeployHealthAudit, type DeployHealthAuditAction } from "@/lib/deployHealthAudit";
+import {
+  runRetryPromotion,
+  isStuck as isStuckShared,
+  type RetryOutcome as SharedRetryOutcome,
+} from "@/lib/deployHealth/retry";
 import { supabase } from "@/integrations/supabase/client";
 import {
   auditRowsToCsv,
@@ -13,6 +18,7 @@ import {
   downloadTextFile,
   timestampedFilename,
 } from "@/lib/auditExport";
+
 
 type AuditRow = {
   id: string;
@@ -122,21 +128,15 @@ async function probe(label: string, url: string): Promise<ProbeResult> {
   }
 }
 
+// Local wrapper preserves the existing ProbeResult signature at call sites
+// but delegates the actual staleness rule to the shared lib so the retry
+// loop and its unit tests stay in lock-step.
 function isStuck(r: ProbeResult): boolean {
-  if (!r.ok) return false;
-  // Stuck = legacy JWT still baked in, OR modern publishable key missing.
-  return r.hasLegacyKey === true || r.hasModernKey === false;
+  return isStuckShared(r);
 }
 
-type RetryOutcome = {
-  startedAt: string;
-  finishedAt: string;
-  attempts: number;
-  before: { label: string; bundleFile: string | null; stuck: boolean }[];
-  after: { label: string; bundleFile: string | null; stuck: boolean }[];
-  status: "success" | "partial" | "no_change" | "error";
-  message: string;
-};
+type RetryOutcome = SharedRetryOutcome;
+
 
 export default function HqDeployHealth() {
   const { user, isAdmin, loading: authLoading } = useAuth();
@@ -226,113 +226,56 @@ export default function HqDeployHealth() {
 
   const retryPromotion = useCallback(async () => {
     setRetrying(true);
-    const startedAt = new Date().toISOString();
-    let before: RetryOutcome["before"] = [];
-    let afterProbes: ProbeResult[] = [];
-    let attempts = 0;
-    const maxAttempts = 4;
-
     try {
-      const beforeProbes = results.length
-        ? results
-        : await Promise.all(TARGETS.map((t) => probe(t.label, t.url)));
-      before = beforeProbes.map((r) => ({
-        label: r.label,
-        bundleFile: r.bundleFile,
-        stuck: isStuck(r),
-      }));
-      afterProbes = beforeProbes;
+      const { outcome, finalProbes } = await runRetryPromotion<ProbeResult>({
+        targets: TARGETS,
+        probe,
+        sleep: (ms) => new Promise((res) => setTimeout(res, ms)),
+        now: () => new Date().toISOString(),
+        maxAttempts: 4,
+        // Preserve the original per-attempt backoff (1500ms, 3000ms, …).
+        backoffMs: (i) => 1500 * (i + 1),
+        // Re-use the currently-visible probes as the "before" snapshot when
+        // available so the retry doesn't double-fetch on the first pass.
+        initialBefore: results.length ? results : null,
+      });
 
-      // Re-probe with a short backoff so a freshly-triggered promotion
-      // (CDN cache flush, edge re-pin) has a chance to land.
-      for (let i = 0; i < maxAttempts; i++) {
-        attempts = i + 1;
-        // Cache-bust hint via query param on the HTML root
-        afterProbes = await Promise.all(
-          TARGETS.map((t) => probe(t.label, `${t.url}?_rh=${Date.now()}`)),
-        );
-        const stillStuck = afterProbes.some(isStuck);
-        const changed = afterProbes.some((r, idx) => {
-          const b = before[idx];
-          return b && r.bundleFile && b.bundleFile && r.bundleFile !== b.bundleFile;
-        });
-        if (!stillStuck || changed) break;
-        await new Promise((res) => setTimeout(res, 1500 * (i + 1)));
-      }
-
-
-      // Persist visible state from the final probe pass (strip the cache-bust
-      // suffix from URLs we display).
-      const cleaned = afterProbes.map((r, idx) => ({ ...r, url: TARGETS[idx].url }));
-      setResults(cleaned);
+      // Persist the final probe pass (URLs already stripped of cache-bust).
+      setResults(finalProbes);
       setLastCheckedAt(new Date().toISOString());
-      recordResults(cleaned);
-
-      const after = cleaned.map((r) => ({
-        label: r.label,
-        bundleFile: r.bundleFile,
-        stuck: isStuck(r),
-      }));
-      const stillStuck = after.filter((a) => a.stuck);
-      const changed = after.filter((a, idx) => {
-        const b = before[idx];
-        return b && a.bundleFile && b.bundleFile && a.bundleFile !== b.bundleFile;
-      });
-
-      let status: RetryOutcome["status"];
-      let message: string;
-      if (stillStuck.length === 0 && changed.length > 0) {
-        status = "success";
-        message = `Promotion landed — fresh bundle on ${changed.length}/${after.length} target(s).`;
-        toast.success(message);
-      } else if (stillStuck.length === 0) {
-        status = "success";
-        message = `All targets fresh (no stale markers detected).`;
-        toast.success(message);
-      } else if (changed.length > 0) {
-        status = "partial";
-        message = `Partial — ${changed.length} target(s) updated, ${stillStuck.length} still stale.`;
-        toast.warning(message);
-      } else {
-        status = "no_change";
-        message = `No change after ${attempts} attempt(s) — promotion still stuck. Escalate to Lovable Support.`;
-        toast.error(message);
-      }
-
-      setRetryOutcome({
-        startedAt,
-        finishedAt: new Date().toISOString(),
-        attempts,
-        before,
-        after,
-        status,
-        message,
-      });
-      void logDeployHealthAudit(
-        "retry_promotion",
-        status === "success" ? "success" : "failure",
-        { attempts, startedAt, status, message, before, after },
-      );
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
-      const outcome: RetryOutcome = {
-        startedAt,
-        finishedAt: new Date().toISOString(),
-        attempts,
-        before,
-        after: before,
-        status: "error",
-        message: `Retry failed: ${msg}`,
-      };
+      recordResults(finalProbes);
       setRetryOutcome(outcome);
-      toast.error(outcome.message);
-      void logDeployHealthAudit("retry_promotion", "failure", {
-        attempts, startedAt, error: msg, before,
-      });
+
+      if (outcome.status === "success") toast.success(outcome.message);
+      else if (outcome.status === "partial") toast.warning(outcome.message);
+      else toast.error(outcome.message);
+
+      if (outcome.status === "error") {
+        void logDeployHealthAudit("retry_promotion", "failure", {
+          attempts: outcome.attempts,
+          startedAt: outcome.startedAt,
+          error: outcome.message,
+          before: outcome.before,
+        });
+      } else {
+        void logDeployHealthAudit(
+          "retry_promotion",
+          outcome.status === "success" ? "success" : "failure",
+          {
+            attempts: outcome.attempts,
+            startedAt: outcome.startedAt,
+            status: outcome.status,
+            message: outcome.message,
+            before: outcome.before,
+            after: outcome.after,
+          },
+        );
+      }
     } finally {
       setRetrying(false);
     }
   }, [results]);
+
 
 
 
