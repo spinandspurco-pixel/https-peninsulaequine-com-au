@@ -26,22 +26,23 @@ export function EnvKeyDebug() {
   const prefix =
     info.family === "missing"
       ? "(missing)"
-      : info.family === "new"
+      : info.family === "modern"
       ? "sb_publishable_"
       : info.family === "secret"
       ? "sb_secret_"
-      : info.family === "legacy"
+      : info.family === "legacy_jwt"
       ? "eyJ… (legacy JWT)"
       : key.slice(0, 12) + "…";
 
   const palette: Record<string, { bg: string; border: string; fg: string; label: string }> = {
-    new: { bg: "rgba(34,197,94,0.12)", border: "#22c55e", fg: "#86efac", label: "OK" },
-    legacy: { bg: "rgba(239,68,68,0.14)", border: "#ef4444", fg: "#fca5a5", label: "LEGACY" },
+    modern: { bg: "rgba(34,197,94,0.12)", border: "#22c55e", fg: "#86efac", label: "OK" },
+    legacy_jwt: { bg: "rgba(239,68,68,0.14)", border: "#ef4444", fg: "#fca5a5", label: "LEGACY" },
     secret: { bg: "rgba(239,68,68,0.22)", border: "#ef4444", fg: "#fecaca", label: "DANGER" },
     missing: { bg: "rgba(239,68,68,0.14)", border: "#ef4444", fg: "#fca5a5", label: "MISSING" },
     unknown: { bg: "rgba(234,179,8,0.14)", border: "#eab308", fg: "#fde68a", label: "UNKNOWN" },
   };
   const tone = palette[info.family] ?? palette.unknown;
+
 
   const base: React.CSSProperties = {
     position: "fixed",
