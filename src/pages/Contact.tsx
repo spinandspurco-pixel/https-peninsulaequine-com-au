@@ -134,6 +134,8 @@ export default function Contact() {
   const MAX_FILES = 5;
   const MAX_SIZE = 10 * 1024 * 1024; // 10MB per file
   const ALLOWED = /\.(pdf|jpe?g|png|webp|heic|dwg|dxf|doc|docx|xls|xlsx)$/i;
+  // Flip to true (or wire to form state) to require attachments before submit.
+  const REQUIRE_ATTACHMENTS = false;
 
   const addFiles = (incoming: FileList | null) => {
     if (!incoming) return;
@@ -182,7 +184,12 @@ export default function Contact() {
       setErrors({ scopes: "Please select at least one." });
       return;
     }
+    if (REQUIRE_ATTACHMENTS && files.length === 0) {
+      setFileError("Please attach at least one file before submitting.");
+      return;
+    }
     setErrors({});
+    setFileError(null);
     setSubmitting(true);
 
     try {
@@ -261,13 +268,24 @@ export default function Contact() {
         title: "Brief received",
         description: "We'll read the details and respond within two business days.",
       });
-    } catch {
-      trackFormError("contact_assessment", "insert_failed");
-      toast({
-        title: "Submission failed",
-        description: "Please try again or call the office directly.",
-        variant: "destructive",
-      });
+    } catch (err) {
+      const { UploadValidationError } = await import("@/lib/uploadInquiryAttachment");
+      if (err instanceof UploadValidationError) {
+        trackFormError("contact_assessment", `upload_${err.code}`);
+        setFileError(err.message);
+        toast({
+          title: "Attachment rejected",
+          description: err.message,
+          variant: "destructive",
+        });
+      } else {
+        trackFormError("contact_assessment", "insert_failed");
+        toast({
+          title: "Submission failed",
+          description: "Please try again or call the office directly.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setSubmitting(false);
     }
