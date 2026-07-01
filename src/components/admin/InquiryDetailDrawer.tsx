@@ -128,7 +128,7 @@ export function InquiryDetailDrawer({ inquiryId, open, onOpenChange, onChanged }
       toast.error("Couldn't load inquiry.");
       return;
     }
-    setInquiry(inq as FullInquiry);
+    setInquiry(inq as unknown as FullInquiry);
     setNotes((noteRows ?? []) as NoteRow[]);
     setActivity((actRows ?? []) as ActivityRow[]);
 
