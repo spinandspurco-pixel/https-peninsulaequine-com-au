@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { EnvKeyDebug } from "./EnvKeyDebug";
 
@@ -114,16 +114,15 @@ describe("<EnvKeyDebug /> copy button", () => {
     setClipboard(writeText);
 
     renderWithEnv({ key: KEY, mode: "development" });
-    const user = userEvent.setup();
 
     const badge = screen.getByTestId("env-key-debug");
-    await user.click(badge); // expand to reveal the copy button
+    fireEvent.click(badge); // expand to reveal the copy button
     const copyBtn = screen.getByTestId("env-key-debug-copy");
     expect(copyBtn).toHaveTextContent("Copy payload");
 
-    await user.click(copyBtn);
+    fireEvent.click(copyBtn);
 
-    expect(writeText).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(writeText).toHaveBeenCalledTimes(1));
     const written = JSON.parse(writeText.mock.calls[0][0] as string);
     expect(written).toEqual({
       family: "modern",
@@ -145,14 +144,13 @@ describe("<EnvKeyDebug /> copy button", () => {
     setClipboard(writeText);
 
     renderWithEnv({ key: KEY });
-    const user = userEvent.setup();
 
-    await user.click(screen.getByTestId("env-key-debug"));
+    fireEvent.click(screen.getByTestId("env-key-debug"));
     const copyBtn = screen.getByTestId("env-key-debug-copy");
 
-    await user.click(copyBtn);
+    fireEvent.click(copyBtn);
 
-    expect(writeText).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(writeText).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(copyBtn).toHaveTextContent("Copy failed"));
 
     await waitFor(
