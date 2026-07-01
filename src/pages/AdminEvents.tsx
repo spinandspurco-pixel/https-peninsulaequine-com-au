@@ -167,6 +167,7 @@ export default function AdminEvents() {
                         ) : (
                           <Badge variant="secondary" className="text-xs">Draft</Badge>
                         )}
+                        {(ev as any).featured && <Badge variant="outline" className="text-[10px] border-amber-400/50 text-amber-400">Homepage</Badge>}
                       </div>
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1"><CalendarIcon className="h-3 w-3" />{format(new Date(ev.event_date), "MMM d, yyyy")}</span>
