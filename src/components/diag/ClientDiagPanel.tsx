@@ -883,26 +883,35 @@ export function ClientDiagPanel() {
     const ua = `peninsula-diag/1.0 (${environment}; ${host})`;
     const fmtMs = (ms: number | null | undefined) =>
       typeof ms === "number" && isFinite(ms) ? `${ms} ms` : "not measured";
-    const tier = (ms: number | null | undefined) => {
+    const tier = (ms: number | null | undefined, endpoint?: EndpointKey) => {
       if (typeof ms !== "number" || !isFinite(ms)) return "n/a";
-      if (ms >= latencyThresholds.crit) return `slow (≥ ${latencyThresholds.crit} ms)`;
-      if (ms >= latencyThresholds.warn) return `warn (≥ ${latencyThresholds.warn} ms)`;
+      const p = pairFor(endpoint);
+      if (ms >= p.crit) return `slow (≥ ${p.crit} ms)`;
+      if (ms >= p.warn) return `warn (≥ ${p.warn} ms)`;
       return "ok";
+    };
+    const d = latencyThresholds.default;
+    const fmtPair = (k: EndpointKey) => {
+      const p = latencyThresholds[k];
+      return p ? `warn ≥ ${p.warn} · crit ≥ ${p.crit}` : `inherit default`;
     };
     const lines = [
       `# Peninsula HQ diagnostics — captured ${stamp}`,
       `# origin: ${origin}`,
       `# route:  ${path}`,
-      `# latency thresholds: warn ≥ ${latencyThresholds.warn} ms · crit ≥ ${latencyThresholds.crit} ms`,
+      `# latency thresholds (default): warn ≥ ${d.warn} ms · crit ≥ ${d.crit} ms`,
+      `#   /api/build-info override: ${fmtPair("buildInfo")}`,
+      `#   /api/health override:     ${fmtPair("health")}`,
+      `#   /api/diag override:       ${fmtPair("diag")}`,
       `# observed latencies (client-measured, performance.now):`,
-      `#   /api/build-info: ${fmtMs(serverBuild?.latencyMs)} [${tier(serverBuild?.latencyMs)}]  fetchedAt=${serverBuild?.fetchedAt ?? "—"}`,
-      `#   /api/health:     ${fmtMs(health?.latencyMs)} [${tier(health?.latencyMs)}]  fetchedAt=${health?.fetchedAt ?? "—"}`,
-      `#   /api/diag:       ${fmtMs(diag?.latencyMs)} [${tier(diag?.latencyMs)}]  fetchedAt=${diag?.fetchedAt ?? "—"}`,
+      `#   /api/build-info: ${fmtMs(serverBuild?.latencyMs)} [${tier(serverBuild?.latencyMs, "buildInfo")}]  fetchedAt=${serverBuild?.fetchedAt ?? "—"}`,
+      `#   /api/health:     ${fmtMs(health?.latencyMs)} [${tier(health?.latencyMs, "health")}]  fetchedAt=${health?.fetchedAt ?? "—"}`,
+      `#   /api/diag:       ${fmtMs(diag?.latencyMs)} [${tier(diag?.latencyMs, "diag")}]  fetchedAt=${diag?.fetchedAt ?? "—"}`,
       `#   document probe:  ${fmtMs(cacheHeaders?.["document.latencyMs"] ? Number(cacheHeaders["document.latencyMs"]) : null)}`,
       `#   bundle probe:    ${fmtMs(cacheHeaders?.["bundle.latencyMs"] ? Number(cacheHeaders["bundle.latencyMs"]) : null)}`,
       ``,
       `# 1. Build info (expected: JSON with buildTime, buildCommit, bundleHash)`,
-      `# observed: ${fmtMs(serverBuild?.latencyMs)} [${tier(serverBuild?.latencyMs)}]`,
+      `# observed: ${fmtMs(serverBuild?.latencyMs)} [${tier(serverBuild?.latencyMs, "buildInfo")}]`,
       `curl -sS -w '\\n# curl timing: total=%{time_total}s connect=%{time_connect}s ttfb=%{time_starttransfer}s http=%{http_code}\\n' \\`,
       `  -D - -o /tmp/build-info.json \\`,
       `  -H 'Accept: application/json' \\`,
