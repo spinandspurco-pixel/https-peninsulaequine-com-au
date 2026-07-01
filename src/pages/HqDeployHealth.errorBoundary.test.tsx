@@ -119,8 +119,25 @@ afterEach(() => {
 
 describe("HqDeployHealth · RetryOutcomeErrorBoundary integration", () => {
   it("catches a render-time crash in the outcome section and shows the friendly fallback", async () => {
-    // Malformed outcome: `after` is null, so `retryOutcome.after.map(...)`
-    // inside the outcome renderer will throw at render time.
+    // Craft an `after` array whose `.map` succeeds for the JSON-report
+    // useMemo (which runs in the parent, ABOVE the error boundary) but
+    // throws on the second call — which happens inside the outcome
+    // renderer's `<tbody>` mapping (line ~981), which IS inside the
+    // RetryOutcomeErrorBoundary.
+    const validItems = [
+      { label: "Custom domain", bundleFile: "index-NEW.js", stuck: false },
+    ];
+    let mapCallCount = 0;
+    const after = Object.assign([...validItems], {
+      map(fn: (item: unknown, idx: number) => unknown) {
+        mapCallCount += 1;
+        if (mapCallCount >= 2) {
+          throw new Error("Simulated outcome-renderer crash");
+        }
+        return Array.prototype.map.call(validItems, fn);
+      },
+    });
+
     const brokenOutcome = {
       startedAt: "2026-07-01T00:00:00.000Z",
       finishedAt: "2026-07-01T00:00:05.000Z",
@@ -128,7 +145,7 @@ describe("HqDeployHealth · RetryOutcomeErrorBoundary integration", () => {
       before: [
         { label: "Custom domain", bundleFile: "index-OLD.js", stuck: true },
       ],
-      after: null as unknown as RetryOutcome["after"],
+      after: after as unknown as RetryOutcome["after"],
       status: "success" as const,
       message: "Boundary integration probe",
     } as unknown as RetryOutcome;
