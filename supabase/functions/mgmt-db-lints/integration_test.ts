@@ -80,6 +80,7 @@ Deno.test({
     !body.includes("SB_MGMT_ACCESS_TOKEN"),
     "env-var name must never appear in response",
   );
+  },
 });
 
 Deno.test("OPTIONS preflight is allowed regardless of secret state", async () => {
