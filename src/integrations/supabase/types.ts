@@ -1998,6 +1998,33 @@ export type Database = {
         }
         Relationships: []
       }
+      oauth_provider_config: {
+        Row: {
+          created_at: string
+          expected_redirect_uri: string | null
+          intended_client_id: string | null
+          provider: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          expected_redirect_uri?: string | null
+          intended_client_id?: string | null
+          provider: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          expected_redirect_uri?: string | null
+          intended_client_id?: string | null
+          provider?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       overheads: {
         Row: {
           amount: number
