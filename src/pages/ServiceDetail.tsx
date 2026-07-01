@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useParams, Link, Navigate, useNavigate } from "react-router-dom";
+import { useParams, Link, Navigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, CheckCircle, Phone, Star, X, ZoomIn, ChevronLeft, ChevronRight, HelpCircle, Images, Calendar, MessageSquare } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { PageHeader } from "@/components/PageHeader";
@@ -393,10 +393,17 @@ function ConstructionProcess() {
 export default function ServiceDetail() {
   const { slug } = useParams<{ slug: string }>();
   const hardcoded = services.find((s) => s.id === slug);
+  if (!hardcoded) return <Navigate to="/services" replace />;
+  return <ServiceDetailContent hardcoded={hardcoded} />;
+}
+
+function ServiceDetailContent({
+  hardcoded,
+}: {
+  hardcoded: (typeof services)[number];
+}) {
   const [showGallery, setShowGallery] = useState(false);
   const { data: managedServices } = useManagedServicesMap();
-
-  if (!hardcoded) return <Navigate to="/services" replace />;
 
   // Overlay editable text/feature fields from managed_services while keeping
   // hardcoded imagery, pricing tiers and FAQs intact.
@@ -471,7 +478,7 @@ export default function ServiceDetail() {
 
 
   // Find adjacent services for navigation
-  const currentIndex = services.findIndex((s) => s.id === slug);
+  const currentIndex = services.findIndex((s) => s.id === hardcoded.id);
   const prevService = currentIndex > 0 ? services[currentIndex - 1] : null;
   const nextService = currentIndex < services.length - 1 ? services[currentIndex + 1] : null;
 

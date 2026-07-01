@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
  * HQ → Operations → Database Lints
  *
  * Admin-only. Invokes the `mgmt-db-lints` edge function which server-side
- * proxies Supabase Management API's database linter using SB_MGMT_ACCESS_TOKEN.
+ * proxies Supabase Management API's database linter using the server-side management token.
  * Strictly read-only.
  */
 

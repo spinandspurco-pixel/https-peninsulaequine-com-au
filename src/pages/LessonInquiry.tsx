@@ -35,7 +35,7 @@ const step2Schema = z.object({
     .string()
     .trim()
     .max(40, "Phone is too long")
-    .regex(/^[0-9 +()\-]{6,}$/i, "Enter a valid phone number")
+    .regex(/^[0-9 +()-]{6,}$/i, "Enter a valid phone number")
     .optional()
     .or(z.literal("")),
   preferred_contact: contactEnum,
