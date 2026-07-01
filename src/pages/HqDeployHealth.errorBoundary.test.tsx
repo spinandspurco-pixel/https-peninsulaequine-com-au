@@ -168,17 +168,17 @@ describe("HqDeployHealth · RetryOutcomeErrorBoundary integration", () => {
     fireEvent.click(btn);
 
     // Friendly fallback surfaces — role="alert" heading + descriptive copy
-    // + Dismiss button + copy-payload affordance.
-    const alert = await waitFor(() => screen.getByRole("alert"));
+    // + Copy debug payload + Reset button.
+    const alert = await screen.findByRole("alert", {}, { timeout: 3000 });
     expect(alert).toBeInTheDocument();
     expect(
-      screen.getByText(/Retry outcome renderer crashed/i),
+      screen.getByText(/Retry outcome — render error/i),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /Copy debug payload/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /^Dismiss$/i }),
+      screen.getByRole("button", { name: /^Reset$/i }),
     ).toBeInTheDocument();
 
     // The normal outcome banner must NOT render alongside the fallback.
