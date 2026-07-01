@@ -295,7 +295,18 @@ export default function LessonInquiry({
 
           {step === 1 && <StepContact data={data} set={set} errors={errors} />}
           {step === 2 && <StepGoals data={data} set={set} errors={errors} />}
-          {step === 3 && <StepTiming data={data} set={set} errors={errors} />}
+          {step === 3 && (
+            <StepTiming
+              data={data}
+              set={set}
+              errors={errors}
+              files={files}
+              fileError={fileError}
+              onAddFiles={addFiles}
+              onRemoveFile={removeFile}
+              maxFiles={MAX_FILES}
+            />
+          )}
 
           <div className="flex items-center justify-between pt-6 border-t border-foreground/10">
             <button
