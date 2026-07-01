@@ -123,7 +123,8 @@ function generateConsultationICS(opts: {
   services: string[];
   isConstruction: boolean;
 }): { icsBase64: string; readableDate: string } {
-  const uid = crypto.randomUUID() + "@peninsulaequine.systems";  const now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  const uid = crypto.randomUUID() + "@peninsulaequine.systems";
+  const now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
 
   // Suggest consultation 3 business days from now at 10am Melbourne time
   const suggestedDate = new Date();
