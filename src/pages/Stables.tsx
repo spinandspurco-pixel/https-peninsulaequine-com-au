@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { usePageMeta } from "@/lib/usePageMeta";
 import heroAsset from "@/assets/uploads/approved-stable-aisle-detail-warm-light.png.asset.json";
 import stallInteriorAsset from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
+
 
 
 const heroImg = heroAsset.url;
