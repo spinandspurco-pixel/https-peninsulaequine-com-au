@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 
 export interface UploadedAttachment {
+  id: string;
   path: string;
   size: number;
   mime: string;
