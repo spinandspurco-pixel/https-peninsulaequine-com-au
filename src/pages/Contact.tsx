@@ -14,6 +14,7 @@ import { trackContactConversion } from "@/lib/adsConversions";
 import { usePageMeta } from "@/lib/usePageMeta";
 import { useSpamGuard } from "@/lib/spamGuard";
 import { HoneypotField } from "@/components/HoneypotField";
+import { AttachmentPreviewList } from "@/components/inquiry/AttachmentPreviewList";
 
 
 
@@ -742,22 +743,7 @@ export default function Contact() {
                         />
                       </label>
                       {files.length > 0 && (
-                        <ul className="space-y-1.5">
-                          {files.map((f, i) => (
-                            <li key={`${f.name}-${i}`} className="flex items-center justify-between rounded-sm border border-border/60 bg-background/40 px-3 py-2 text-xs">
-                              <span className="truncate pr-3 text-foreground/80">
-                                {f.name} <span className="text-[hsl(var(--footer-muted))]">· {(f.size / 1024 / 1024).toFixed(2)}MB</span>
-                              </span>
-                              <button
-                                type="button"
-                                onClick={() => removeFile(i)}
-                                className="text-[10px] uppercase tracking-[0.15em] text-[hsl(var(--footer-muted))] hover:text-foreground"
-                              >
-                                Remove
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
+                        <AttachmentPreviewList files={files} onRemove={removeFile} />
                       )}
                       {fileError && (
                         <p className="text-xs text-destructive">{fileError}</p>

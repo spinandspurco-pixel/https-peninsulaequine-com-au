@@ -15,6 +15,7 @@ import {
 import { z } from "zod";
 import { useSpamGuard } from "@/lib/spamGuard";
 import { HoneypotField } from "@/components/HoneypotField";
+import { AttachmentPreviewList } from "@/components/inquiry/AttachmentPreviewList";
 
 const MAX_FILES = 5;
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
@@ -542,31 +543,7 @@ export function GuidedIntake() {
               />
             </label>
 
-            {files.length > 0 && (
-              <ul className="space-y-2">
-                {files.map((f, i) => (
-                  <li
-                    key={`${f.name}-${i}`}
-                    className="flex items-center justify-between border border-border/15 px-3 py-2 text-xs text-foreground/60"
-                  >
-                    <span className="truncate mr-3">
-                      {f.name}
-                      <span className="text-foreground/25 ml-2">
-                        {(f.size / 1024 / 1024).toFixed(2)} MB
-                      </span>
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => removeFile(i)}
-                      className="text-foreground/30 hover:text-destructive/80 transition-colors"
-                      aria-label={`Remove ${f.name}`}
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <AttachmentPreviewList files={files} onRemove={removeFile} />
 
             {errors.files && (
               <p className="text-xs text-destructive/70">{errors.files}</p>
