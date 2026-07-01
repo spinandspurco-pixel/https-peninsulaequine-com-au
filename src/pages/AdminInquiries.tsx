@@ -494,7 +494,93 @@ export default function AdminInquiries() {
             </div>
           </div>
 
+          {/* Saved filter presets */}
+          <div className="mb-6 flex flex-wrap items-center gap-2">
+            <span className="mr-2 flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.35em] text-muted-foreground/45">
+              <Bookmark className="h-3 w-3" strokeWidth={1.25} />
+              Presets
+            </span>
+            {allPresets.map((preset) => {
+              const active = activePresetId === preset.id;
+              return (
+                <span
+                  key={preset.id}
+                  className={`group inline-flex items-center border transition-colors ${
+                    active
+                      ? "border-accent/60 bg-accent/[0.08] text-accent"
+                      : "border-border/25 text-foreground/60 hover:border-accent/40 hover:text-accent/90"
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => applyPreset(preset)}
+                    className="px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.28em]"
+                  >
+                    {preset.label}
+                  </button>
+                  {!preset.builtin && (
+                    <button
+                      type="button"
+                      onClick={() => deletePreset(preset.id)}
+                      className="border-l border-border/20 px-1.5 py-1 text-muted-foreground/40 hover:text-red-400/90"
+                      aria-label={`Delete preset ${preset.label}`}
+                    >
+                      <X className="h-2.5 w-2.5" strokeWidth={1.5} />
+                    </button>
+                  )}
+                </span>
+              );
+            })}
+            {savingPreset ? (
+              <span className="inline-flex items-center gap-2 border border-accent/40 bg-accent/[0.05] px-2 py-1">
+                <input
+                  autoFocus
+                  value={presetDraftName}
+                  onChange={(e) => setPresetDraftName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") saveCurrentAsPreset();
+                    if (e.key === "Escape") {
+                      setSavingPreset(false);
+                      setPresetDraftName("");
+                    }
+                  }}
+                  placeholder="Preset name"
+                  maxLength={40}
+                  className="w-32 bg-transparent font-mono text-[10px] uppercase tracking-[0.24em] text-foreground/85 placeholder:text-muted-foreground/40 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={saveCurrentAsPreset}
+                  className="font-mono text-[10px] uppercase tracking-[0.28em] text-accent hover:text-accent/80"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSavingPreset(false);
+                    setPresetDraftName("");
+                  }}
+                  className="text-muted-foreground/50 hover:text-foreground/80"
+                  aria-label="Cancel"
+                >
+                  <X className="h-2.5 w-2.5" strokeWidth={1.5} />
+                </button>
+              </span>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setSavingPreset(true)}
+                className="inline-flex items-center gap-1.5 border border-dashed border-border/30 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/55 hover:border-accent/40 hover:text-accent/90 transition-colors"
+              >
+                <Plus className="h-2.5 w-2.5" strokeWidth={1.5} />
+                Save current
+              </button>
+            )}
+          </div>
+
           {/* Search bar */}
+
           <div className="mb-8 flex items-center gap-4 border-b border-border/20 pb-3">
             <Search className="h-3.5 w-3.5 text-muted-foreground/45" />
             <input
