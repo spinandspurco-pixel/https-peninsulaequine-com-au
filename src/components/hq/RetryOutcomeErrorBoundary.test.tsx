@@ -255,4 +255,43 @@ describe("RetryOutcomeErrorBoundary", () => {
     // Stack trace disclosure should be hidden when error.stack is falsy.
     expect(screen.queryByText(/Stack trace/i)).not.toBeInTheDocument();
   });
+
+  it("invokes onCapture with a structured report including component stack", () => {
+    const onCapture = vi.fn();
+    render(
+      <RetryOutcomeErrorBoundary
+        onCapture={onCapture}
+        debugPayload={{ status: "error" }}
+        debugContext={{ attempt: 3 }}
+      >
+        <Bomb message="analytics wired" />
+      </RetryOutcomeErrorBoundary>,
+    );
+
+    expect(onCapture).toHaveBeenCalledTimes(1);
+    const report = onCapture.mock.calls[0][0];
+    expect(report).toMatchObject({
+      surface: "retry-outcome",
+      error: { name: "Error", message: "analytics wired" },
+      hasDebugPayload: true,
+      hasDebugContext: true,
+    });
+    expect(typeof report.timestamp).toBe("string");
+    expect(report.componentStack).toBeTruthy();
+    expect(report.componentStack).toContain("Bomb");
+  });
+
+  it("swallows exceptions thrown from onCapture without breaking the fallback UI", () => {
+    const onCapture = vi.fn(() => {
+      throw new Error("monitoring offline");
+    });
+    render(
+      <RetryOutcomeErrorBoundary onCapture={onCapture}>
+        <Bomb message="analytics failure" />
+      </RetryOutcomeErrorBoundary>,
+    );
+    expect(onCapture).toHaveBeenCalledTimes(1);
+    // Fallback UI still renders even when the hook throws.
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+  });
 });
