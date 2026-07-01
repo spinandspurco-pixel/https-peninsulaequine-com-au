@@ -13,6 +13,7 @@ import {
   HardHat,
 } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
+import { usePageMeta } from "@/lib/usePageMeta";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { StickySubpageCTA } from "@/components/StickySubpageCTA";
