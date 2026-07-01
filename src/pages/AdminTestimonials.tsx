@@ -295,6 +295,16 @@ export default function AdminTestimonials() {
                       >
                         <Pin className="h-4 w-4" />
                       </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => toggleFeatured(t)}
+                        disabled={isPreview}
+                        title={isPreview ? "View-only" : ((t as any).featured ? "Remove from homepage" : "Feature on homepage")}
+                        className={(t as any).featured ? "text-amber-400" : ""}
+                      >
+                        <Sparkles className="h-4 w-4" />
+                      </Button>
                       <Button variant="ghost" size="sm" onClick={() => setEditItem(t)} disabled={isPreview} title={isPreview ? "View-only" : undefined}><Pencil className="h-4 w-4" /></Button>
                       <Button variant="ghost" size="sm" onClick={() => setDeleteItem(t)} disabled={isPreview} title={isPreview ? "View-only" : undefined}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                     </div>
