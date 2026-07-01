@@ -190,6 +190,27 @@ export function GuidedIntake() {
         throw insertError;
       }
 
+      // Fire admin notification email. Non-blocking: submission is already
+      // persisted, so a delivery failure must not surface to the applicant.
+      supabase.functions
+        .invoke("send-inquiry-notification", {
+          body: {
+            name: result.data.name,
+            email: result.data.email,
+            phone: result.data.phone || undefined,
+            services,
+            additionalNotes: [
+              `Intent: ${intent}`,
+              `Land: ${land}`,
+              `Stage: ${stage}`,
+              `Values: ${values}`,
+              location ? `Location: ${location}` : null,
+              notes ? `Notes: ${notes}` : null,
+            ].filter(Boolean).join(" | "),
+          },
+        })
+        .catch((e) => console.warn("[GuidedIntake] notification invoke failed", e));
+
       trackCtaClick("guided_intake_submit", { intent, land, stage, values });
       trackConversion("guided_intake", { intent, land, stage, values });
       setSubmitted(true);
