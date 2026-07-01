@@ -164,59 +164,103 @@ export function InquiryAttachmentsQuickView({ inquiryId, count, inquiryName }: P
         )}
 
         {!loading && !error && items && items.length > 0 && (
-          <ul className="max-h-[380px] overflow-y-auto divide-y divide-border/[0.08]">
+          <ul className="max-h-[520px] overflow-y-auto divide-y divide-border/[0.08]">
             {items.map((item) => {
               const isImg = isImageMime(item.mime_type, item.filename);
+              const isPdf = isPdfMime(item.mime_type, item.filename);
+              const canPreview = (isImg || isPdf) && !!item.signedUrl;
+              const isOpen = previewing.has(item.id);
               return (
-                <li key={item.id} className="px-4 py-3 flex items-start gap-3">
-                  <div className="shrink-0 h-10 w-10 border border-border/25 bg-foreground/[0.02] overflow-hidden flex items-center justify-center">
-                    {isImg && item.signedUrl ? (
-                      <img
-                        src={item.signedUrl}
-                        alt={item.filename}
-                        className="h-full w-full object-cover"
-                        loading="lazy"
-                      />
-                    ) : isImg ? (
-                      <ImageIcon className="h-4 w-4 text-muted-foreground/50" strokeWidth={1.5} />
-                    ) : (
-                      <FileText className="h-4 w-4 text-muted-foreground/50" strokeWidth={1.5} />
-                    )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="font-sans text-[12px] text-foreground/85 truncate" title={item.filename}>
-                      {item.filename}
-                    </p>
-                    <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground/50 mt-0.5">
-                      {[item.mime_type?.split("/")[1], humanBytes(item.size_bytes)].filter(Boolean).join(" · ")}
-                    </p>
-                    <div className="flex items-center gap-4 mt-1.5">
-                      {item.signedUrl && (
-                        <a
-                          href={item.signedUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-[0.3em] text-foreground/60 hover:text-accent transition-colors"
-                        >
-                          <ExternalLink className="h-3 w-3" strokeWidth={1.5} />
-                          Open
-                        </a>
+                <li key={item.id} className="px-4 py-3">
+                  <div className="flex items-start gap-3">
+                    <div className="shrink-0 h-10 w-10 border border-border/25 bg-foreground/[0.02] overflow-hidden flex items-center justify-center">
+                      {isImg && item.signedUrl ? (
+                        <img
+                          src={item.signedUrl}
+                          alt={item.filename}
+                          className="h-full w-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : isImg ? (
+                        <ImageIcon className="h-4 w-4 text-muted-foreground/50" strokeWidth={1.5} />
+                      ) : (
+                        <FileText className="h-4 w-4 text-muted-foreground/50" strokeWidth={1.5} />
                       )}
-                      <button
-                        type="button"
-                        onClick={() => download(item)}
-                        disabled={!item.signedUrl}
-                        className="inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-[0.3em] text-foreground/60 hover:text-accent transition-colors disabled:opacity-40"
-                      >
-                        <Download className="h-3 w-3" strokeWidth={1.5} />
-                        Download
-                      </button>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-sans text-[12px] text-foreground/85 truncate" title={item.filename}>
+                        {item.filename}
+                      </p>
+                      <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground/50 mt-0.5">
+                        {[item.mime_type?.split("/")[1], humanBytes(item.size_bytes)].filter(Boolean).join(" · ")}
+                      </p>
+                      <div className="flex items-center gap-4 mt-1.5">
+                        {canPreview && (
+                          <button
+                            type="button"
+                            onClick={() => togglePreview(item.id)}
+                            className="inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-[0.3em] text-foreground/60 hover:text-accent transition-colors"
+                            aria-expanded={isOpen}
+                          >
+                            {isOpen ? (
+                              <>
+                                <EyeOff className="h-3 w-3" strokeWidth={1.5} />
+                                Hide
+                              </>
+                            ) : (
+                              <>
+                                <Eye className="h-3 w-3" strokeWidth={1.5} />
+                                Preview
+                              </>
+                            )}
+                          </button>
+                        )}
+                        {item.signedUrl && (
+                          <a
+                            href={item.signedUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-[0.3em] text-foreground/60 hover:text-accent transition-colors"
+                          >
+                            <ExternalLink className="h-3 w-3" strokeWidth={1.5} />
+                            Open
+                          </a>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => download(item)}
+                          disabled={!item.signedUrl}
+                          className="inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-[0.3em] text-foreground/60 hover:text-accent transition-colors disabled:opacity-40"
+                        >
+                          <Download className="h-3 w-3" strokeWidth={1.5} />
+                          Download
+                        </button>
+                      </div>
                     </div>
                   </div>
+                  {isOpen && canPreview && item.signedUrl && (
+                    <div className="mt-3 border border-border/25 bg-foreground/[0.02] overflow-hidden">
+                      {isImg ? (
+                        <img
+                          src={item.signedUrl}
+                          alt={item.filename}
+                          className="w-full max-h-[420px] object-contain bg-black/40"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <iframe
+                          src={`${item.signedUrl}#toolbar=0&navpanes=0&view=FitH`}
+                          title={item.filename}
+                          className="w-full h-[440px] bg-background"
+                        />
+                      )}
+                    </div>
+                  )}
                 </li>
               );
             })}
           </ul>
+
         )}
       </PopoverContent>
     </Popover>
