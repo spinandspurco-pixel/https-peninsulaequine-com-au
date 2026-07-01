@@ -54,10 +54,12 @@ export function friendlyUploadMessage(
     case "file_too_large": {
       const max = typeof details?.max === "number" ? details.max : 10 * 1024 * 1024;
       const maxMb = Math.round(max / 1024 / 1024);
-      return `${who} exceeds the ${maxMb} MB limit.`;
+      return `${who} exceeds the ${maxMb} MB limit. Compress it or upload a smaller version.`;
     }
     case "mime_not_allowed":
       return `${who} isn't a supported file type. Use PDF, image, or common office formats.`;
+    case "invalid_filename":
+      return `${who} has an invalid filename. Rename it without special characters and try again.`;
     case "extension_mismatch":
       return `${who} extension doesn't match its contents. Re-save it and try again.`;
     case "content_mismatch":
@@ -69,13 +71,24 @@ export function friendlyUploadMessage(
     case "method_not_allowed":
       return "Upload endpoint rejected the request. Please try again.";
     case "storage_write_failed":
-      return `${who} couldn't be saved. Please try again in a moment.`;
+    case "upload_failed":
+      return `${who} couldn't be saved to storage. Please retry in a moment.`;
+    case "persist_failed":
+      return `${who} uploaded but couldn't be recorded. Please retry.`;
+    case "server_misconfigured":
+      return "Uploads are temporarily unavailable. Please try again shortly or email us the file directly.";
+    case "rate_limit":
+    case "too_many_requests":
+      return "Too many uploads in a short time. Wait a moment and try again.";
+    case "unauthorized":
+    case "forbidden":
+      return "Your session expired. Refresh the page and try again.";
     case "network_error":
       return `${who} couldn't reach the server. Check your connection and retry.`;
     case "aborted":
       return `${who} upload was cancelled.`;
     default:
-      return `${who} couldn't be uploaded (${code}).`;
+      return `${who} couldn't be uploaded. Please retry or choose a different file.`;
   }
 }
 
