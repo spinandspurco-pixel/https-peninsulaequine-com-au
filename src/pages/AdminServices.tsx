@@ -95,6 +95,15 @@ export default function AdminServices() {
     fetch();
   };
 
+  const togglePublish = async (s: ManagedService) => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
+    const next = !s.active;
+    const { error } = await supabase.from("managed_services").update({ active: next }).eq("id", s.id);
+    if (error) { toast.error("Failed to update"); return; }
+    toast.success(next ? "Published" : "Unpublished");
+    setServices((prev) => prev.map((x) => (x.id === s.id ? { ...x, active: next } : x)));
+  };
+
   if (loading || !canAccess) return null;
 
   return (
