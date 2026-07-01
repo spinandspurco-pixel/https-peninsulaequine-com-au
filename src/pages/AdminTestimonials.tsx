@@ -273,6 +273,15 @@ export default function AdminTestimonials() {
                       <Button
                         variant="ghost"
                         size="sm"
+                        onClick={() => togglePublish(t)}
+                        disabled={isPreview}
+                        title={isPreview ? "View-only" : t.active ? "Unpublish (hide from public site)" : "Publish (show on public site)"}
+                      >
+                        {t.active ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4 text-emerald-500" />}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         onClick={() => togglePin(t)}
                         disabled={isPreview}
                         title={isPreview ? "View-only" : ((t as any).pinned ? "Unpin" : "Pin to top")}
