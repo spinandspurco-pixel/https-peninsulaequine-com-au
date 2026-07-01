@@ -202,13 +202,6 @@ export async function handler(req: Request): Promise<Response> {
       { received_content_type: contentType || null },
     );
   }
-    return errorResponse(
-      400,
-      "invalid_multipart",
-      "Request body must be multipart/form-data.",
-      { received_content_type: contentType || null },
-    );
-  }
 
   let form: FormData;
   try {
