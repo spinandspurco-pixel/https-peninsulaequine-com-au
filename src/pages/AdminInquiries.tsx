@@ -631,6 +631,23 @@ export default function AdminInquiries() {
                 Save current
               </button>
             )}
+
+            <span className="mx-2 h-3 w-px bg-border/30" aria-hidden />
+
+            <button
+              type="button"
+              onClick={() => setAttachmentsOnly((v) => !v)}
+              aria-pressed={attachmentsOnly}
+              title="Show only inquiries with uploaded attachments"
+              className={`inline-flex items-center gap-1.5 border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.28em] transition-colors ${
+                attachmentsOnly
+                  ? "border-accent/60 bg-accent/[0.08] text-accent"
+                  : "border-border/25 text-foreground/60 hover:border-accent/40 hover:text-accent/90"
+              }`}
+            >
+              <Paperclip className="h-2.5 w-2.5" strokeWidth={1.5} />
+              Attachments only
+            </button>
           </div>
 
           {/* Search bar */}
