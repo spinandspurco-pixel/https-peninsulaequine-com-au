@@ -1361,6 +1361,18 @@ export function ClientDiagPanel() {
             <div style={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 6 }}>
               {cacheError && row("probe error", cacheError)}
               {!cacheHeaders && !cacheError && row("status", "probing…")}
+              <div style={{ display: "flex", flexDirection: "column", gap: 2, marginBottom: 4 }}>
+                {latencyRow(
+                  "document ms",
+                  docCacheHistory.length ? docCacheHistory[docCacheHistory.length - 1] : null,
+                  docCacheHistory,
+                )}
+                {latencyRow(
+                  "bundle ms",
+                  bundleCacheHistory.length ? bundleCacheHistory[bundleCacheHistory.length - 1] : null,
+                  bundleCacheHistory,
+                )}
+              </div>
               {cacheHeaders &&
                 Object.keys(cacheHeaders)
                   .sort()
