@@ -184,6 +184,12 @@ export default function LessonInquiry({
       return;
     }
     setFileError(null);
+    // Silent spam short-circuit — mimic success without writing to DB.
+    const guardResult = spamGuard.check();
+    if (!guardResult.ok) {
+      setConfirmation({ id: "spam-suppressed" });
+      return;
+    }
     setSubmitting(true);
     try {
       // Upload attachments via the server-side validated edge function
