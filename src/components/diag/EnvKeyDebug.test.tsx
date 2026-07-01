@@ -103,9 +103,9 @@ describe("<EnvKeyDebug /> copy button", () => {
   const KEY = "sb_publishable_abcdefghij1234567890ABCDEF";
 
   const setClipboard = (writeText: (t: string) => Promise<void>) => {
-    Object.defineProperty(navigator, "clipboard", {
+    Object.defineProperty(window, "navigator", {
       configurable: true,
-      value: { writeText },
+      value: { ...window.navigator, clipboard: { writeText } },
     });
   };
 
