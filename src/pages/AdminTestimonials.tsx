@@ -19,7 +19,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, Star, Pin, ArrowUp, ArrowDown, Download, FileText } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, Star, Pin, ArrowUp, ArrowDown, Download, FileText, Eye, EyeOff } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import { PreviewNotice } from "@/components/hq/PreviewNotice";
 import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
@@ -188,6 +188,15 @@ export default function AdminTestimonials() {
     fetchData();
   };
 
+  const togglePublish = async (t: ManagedTestimonial) => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
+    const next = !t.active;
+    const { error } = await supabase.from("managed_testimonials").update({ active: next }).eq("id", t.id);
+    if (error) { toast.error("Failed to update"); return; }
+    toast.success(next ? "Published" : "Unpublished");
+    setItems((prev) => prev.map((x) => (x.id === t.id ? { ...x, active: next } : x)));
+  };
+
   if (loading || !canAccess) return null;
 
   return (
@@ -243,7 +252,11 @@ export default function AdminTestimonials() {
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold text-foreground">{t.client_name}</h3>
                         {t.client_role && <span className="text-xs text-muted-foreground">· {t.client_role}</span>}
-                        {!t.active && <Badge variant="secondary" className="text-xs">Draft</Badge>}
+                        {t.active ? (
+                          <Badge variant="outline" className="text-xs border-emerald-500/40 text-emerald-500">Published</Badge>
+                        ) : (
+                          <Badge variant="secondary" className="text-xs">Draft</Badge>
+                        )}
                         {(t as any).pinned && <Badge className="text-[10px] bg-accent text-accent-foreground">Pinned</Badge>}
                       </div>
                       <p className="text-sm text-muted-foreground line-clamp-2 italic">"{t.quote}"</p>
@@ -257,6 +270,15 @@ export default function AdminTestimonials() {
                       </div>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => togglePublish(t)}
+                        disabled={isPreview}
+                        title={isPreview ? "View-only" : t.active ? "Unpublish (hide from public site)" : "Publish (show on public site)"}
+                      >
+                        {t.active ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4 text-emerald-500" />}
+                      </Button>
                       <Button
                         variant="ghost"
                         size="sm"
@@ -289,9 +311,11 @@ export default function AdminTestimonials() {
             <div><Label>Media Type</Label><Input value={editItem?.media_type || ""} onChange={(e) => setEditItem({ ...editItem, media_type: e.target.value })} placeholder="image or video" /></div>
             <div><Label>Media URL</Label><Input value={editItem?.media_url || ""} onChange={(e) => setEditItem({ ...editItem, media_url: e.target.value })} /></div>
             <div><Label>Sort Order</Label><Input type="number" value={editItem?.sort_order ?? 0} onChange={(e) => setEditItem({ ...editItem, sort_order: parseInt(e.target.value) || 0 })} /></div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 rounded-md border border-border/40 bg-muted/20 px-3 py-2">
               <Switch checked={editItem?.active ?? true} onCheckedChange={(v) => setEditItem({ ...editItem, active: v })} />
-              <Label>Active</Label>
+              <Label className="cursor-pointer">
+                {editItem?.active ?? true ? "Published — visible on public site" : "Draft — hidden from public site"}
+              </Label>
             </div>
           </div>
           <DialogFooter>

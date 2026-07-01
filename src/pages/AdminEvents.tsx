@@ -19,7 +19,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, CalendarIcon, MapPin, Users } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, CalendarIcon, MapPin, Users, Eye, EyeOff } from "lucide-react";
 import { format } from "date-fns";
 import type { Tables } from "@/integrations/supabase/types";
 import { PreviewNotice } from "@/components/hq/PreviewNotice";
@@ -91,6 +91,15 @@ export default function AdminEvents() {
     fetchData();
   };
 
+  const togglePublish = async (ev: ManagedEvent) => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
+    const next = !ev.active;
+    const { error } = await supabase.from("managed_events").update({ active: next }).eq("id", ev.id);
+    if (error) { toast.error("Failed to update"); return; }
+    toast.success(next ? "Published" : "Unpublished");
+    setItems((prev) => prev.map((x) => (x.id === ev.id ? { ...x, active: next } : x)));
+  };
+
   if (loading || !canAccess) return null;
 
   return (
@@ -127,7 +136,11 @@ export default function AdminEvents() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold text-foreground">{ev.title}</h3>
-                        {!ev.active && <Badge variant="secondary" className="text-xs">Draft</Badge>}
+                        {ev.active ? (
+                          <Badge variant="outline" className="text-xs border-emerald-500/40 text-emerald-500">Published</Badge>
+                        ) : (
+                          <Badge variant="secondary" className="text-xs">Draft</Badge>
+                        )}
                       </div>
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1"><CalendarIcon className="h-3 w-3" />{format(new Date(ev.event_date), "MMM d, yyyy")}</span>
@@ -136,6 +149,15 @@ export default function AdminEvents() {
                       </div>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => togglePublish(ev)}
+                        disabled={isPreview}
+                        title={isPreview ? "View-only" : ev.active ? "Unpublish (hide from public site)" : "Publish (show on public site)"}
+                      >
+                        {ev.active ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4 text-emerald-500" />}
+                      </Button>
                       <Button variant="ghost" size="sm" onClick={() => setEditItem(ev)} disabled={isPreview} title={isPreview ? "View-only" : undefined}><Pencil className="h-4 w-4" /></Button>
                       <Button variant="ghost" size="sm" onClick={() => setDeleteItem(ev)} disabled={isPreview} title={isPreview ? "View-only" : undefined}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                     </div>
@@ -160,9 +182,11 @@ export default function AdminEvents() {
             <div><Label>Location</Label><Input value={editItem?.location || ""} onChange={(e) => setEditItem({ ...editItem, location: e.target.value })} /></div>
             <div><Label>Capacity</Label><Input type="number" value={editItem?.capacity ?? ""} onChange={(e) => setEditItem({ ...editItem, capacity: e.target.value ? parseInt(e.target.value) : null })} /></div>
             <div><Label>Image URL</Label><Input value={editItem?.image_url || ""} onChange={(e) => setEditItem({ ...editItem, image_url: e.target.value })} /></div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 rounded-md border border-border/40 bg-muted/20 px-3 py-2">
               <Switch checked={editItem?.active ?? true} onCheckedChange={(v) => setEditItem({ ...editItem, active: v })} />
-              <Label>Active</Label>
+              <Label className="cursor-pointer">
+                {editItem?.active ?? true ? "Published — visible on public site" : "Draft — hidden from public site"}
+              </Label>
             </div>
           </div>
           <DialogFooter>

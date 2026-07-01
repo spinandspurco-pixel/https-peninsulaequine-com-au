@@ -19,7 +19,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, GripVertical } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCw, ArrowLeft, GripVertical, Eye, EyeOff } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import { PreviewNotice } from "@/components/hq/PreviewNotice";
 import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
@@ -95,6 +95,15 @@ export default function AdminServices() {
     fetch();
   };
 
+  const togglePublish = async (s: ManagedService) => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
+    const next = !s.active;
+    const { error } = await supabase.from("managed_services").update({ active: next }).eq("id", s.id);
+    if (error) { toast.error("Failed to update"); return; }
+    toast.success(next ? "Published" : "Unpublished");
+    setServices((prev) => prev.map((x) => (x.id === s.id ? { ...x, active: next } : x)));
+  };
+
   if (loading || !canAccess) return null;
 
   return (
@@ -136,7 +145,11 @@ export default function AdminServices() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <h3 className="font-semibold text-foreground truncate">{s.title}</h3>
-                        {!s.active && <Badge variant="secondary" className="text-xs">Draft</Badge>}
+                        {s.active ? (
+                          <Badge variant="outline" className="text-xs border-emerald-500/40 text-emerald-500">Published</Badge>
+                        ) : (
+                          <Badge variant="secondary" className="text-xs">Draft</Badge>
+                        )}
                         {s.starting_price && (
                           <Badge variant="outline" className="text-xs text-accent border-accent/30">
                             From {s.starting_price}
@@ -146,6 +159,15 @@ export default function AdminServices() {
                       <p className="text-sm text-muted-foreground truncate">{s.short_description}</p>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => togglePublish(s)}
+                        disabled={isPreview}
+                        title={isPreview ? "View-only" : s.active ? "Unpublish (hide from public site)" : "Publish (show on public site)"}
+                      >
+                        {s.active ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4 text-emerald-500" />}
+                      </Button>
                       <Button variant="ghost" size="sm" onClick={() => setEditItem(s)} disabled={isPreview} title={isPreview ? "View-only" : undefined}>
                         <Pencil className="h-4 w-4" />
                       </Button>
@@ -176,9 +198,11 @@ export default function AdminServices() {
             <div><Label>Features (one per line)</Label><Textarea value={(editItem?.features || []).join("\n")} onChange={(e) => setEditItem({ ...editItem, features: e.target.value.split("\n").filter(Boolean) })} rows={4} placeholder="Custom base preparation&#10;Premium footing" /></div>
             <div><Label>Image URL</Label><Input value={editItem?.image_url || ""} onChange={(e) => setEditItem({ ...editItem, image_url: e.target.value })} /></div>
             <div><Label>Sort Order</Label><Input type="number" value={editItem?.sort_order ?? 0} onChange={(e) => setEditItem({ ...editItem, sort_order: parseInt(e.target.value) || 0 })} /></div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 rounded-md border border-border/40 bg-muted/20 px-3 py-2">
               <Switch checked={editItem?.active ?? true} onCheckedChange={(v) => setEditItem({ ...editItem, active: v })} />
-              <Label>Active (visible on site)</Label>
+              <Label className="cursor-pointer">
+                {editItem?.active ?? true ? "Published — visible on public site" : "Draft — hidden from public site"}
+              </Label>
             </div>
           </div>
           <DialogFooter>
