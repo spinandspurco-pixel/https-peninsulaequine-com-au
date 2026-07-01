@@ -87,6 +87,79 @@ export function preflightValidateFile(file: File): PreflightIssue | null {
   return null;
 }
 
+/**
+ * Server-authoritative upload config (max size, allowed types) returned
+ * by `GET /functions/v1/validate-inquiry-upload`. Lets the client show
+ * accurate limits when operators tune `INQUIRY_UPLOAD_MAX_BYTES` or the
+ * allow-list via env, without redeploying the frontend.
+ */
+export interface ServerUploadConfig {
+  maxBytes: number;
+  allowedTypes: Record<string, string[]>;
+  allowedMime: string[];
+  allowedExtensions: string[];
+}
+
+let _cachedConfig: ServerUploadConfig | null = null;
+let _inflight: Promise<ServerUploadConfig> | null = null;
+
+/**
+ * Fetch (and cache) the live upload limits from the edge function. Falls
+ * back to the client-side constants above if the endpoint is unreachable,
+ * so form UX never blocks on a config lookup.
+ */
+export async function fetchUploadConfig(
+  options: { force?: boolean } = {},
+): Promise<ServerUploadConfig> {
+  if (!options.force && _cachedConfig) return _cachedConfig;
+  if (_inflight) return _inflight;
+
+  _inflight = (async () => {
+    try {
+      const url = `${(supabase as unknown as { supabaseUrl: string }).supabaseUrl}/functions/v1/validate-inquiry-upload`;
+      const res = await fetch(url, { method: "GET" });
+      if (!res.ok) throw new Error(`config_http_${res.status}`);
+      const raw = (await res.json()) as {
+        max_bytes?: unknown;
+        allowed_types?: unknown;
+        allowed_mime?: unknown;
+        allowed_extensions?: unknown;
+      };
+      const maxBytes =
+        typeof raw.max_bytes === "number" && raw.max_bytes > 0
+          ? raw.max_bytes
+          : CLIENT_MAX_BYTES;
+      const allowedTypes =
+        raw.allowed_types && typeof raw.allowed_types === "object"
+          ? (raw.allowed_types as Record<string, string[]>)
+          : CLIENT_ALLOWED_MIME;
+      const allowedMime = Array.isArray(raw.allowed_mime)
+        ? (raw.allowed_mime as string[])
+        : Object.keys(allowedTypes);
+      const allowedExtensions = Array.isArray(raw.allowed_extensions)
+        ? (raw.allowed_extensions as string[])
+        : Array.from(new Set(Object.values(allowedTypes).flat())).sort();
+      _cachedConfig = { maxBytes, allowedTypes, allowedMime, allowedExtensions };
+      return _cachedConfig;
+    } catch {
+      _cachedConfig = {
+        maxBytes: CLIENT_MAX_BYTES,
+        allowedTypes: CLIENT_ALLOWED_MIME,
+        allowedMime: Object.keys(CLIENT_ALLOWED_MIME),
+        allowedExtensions: Array.from(
+          new Set(Object.values(CLIENT_ALLOWED_MIME).flat()),
+        ).sort(),
+      };
+      return _cachedConfig;
+    } finally {
+      _inflight = null;
+    }
+  })();
+
+  return _inflight;
+}
+
+
 
 /**
  * Typed error thrown when the server rejects an upload. Carries the
