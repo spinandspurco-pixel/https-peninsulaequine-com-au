@@ -180,8 +180,12 @@ function AppContent() {
             <Route path="/admin/events" element={<Navigate to="/hq/events" replace />} />
             <Route path="/employee" element={<ProtectedRoute allowedRoles={["admin","employee"]}><EmployeeDashboard /></ProtectedRoute>} />
             <Route path="/lessons" element={<Lessons />} />
-            <Route path="/lessons/inquiry" element={<LessonInquiry />} />
-            <Route path="/consult" element={<LessonInquiry />} />
+            <Route path="/lessons/inquiry" element={<BookLessonInquiry />} />
+            <Route path="/lessons/book" element={<BookLessonInquiry />} />
+            <Route path="/consult" element={<ConsultInquiry />} />
+            <Route path="/consult/request" element={<ConsultInquiry />} />
+            <Route path="/inquiry" element={<LessonInquiry />} />
+
             {/*
               * /book-lesson is intentionally redirected to /lessons until public lesson
               * booking is rolled out. The BookLesson page (and create-lesson-checkout slot-hold
