@@ -767,7 +767,7 @@ export default function AdminInquiries() {
                         </div>
                       )}
                     </div>
-                    <div className="col-span-11 sm:col-span-3 flex sm:justify-end items-start">
+                    <div className="col-span-11 sm:col-span-3 flex sm:justify-end items-start gap-3">
                       <span
                         className={`font-mono text-[10px] uppercase tracking-[0.3em] ${
                           STATUS_TONE[r.status] ?? "text-foreground/55"
@@ -777,6 +777,15 @@ export default function AdminInquiries() {
                       </span>
                     </div>
                   </button>
+                  {attachmentCounts[r.id] > 0 && (
+                    <div className="absolute right-4 top-5 hidden sm:block">
+                      <InquiryAttachmentsQuickView
+                        inquiryId={r.id}
+                        count={attachmentCounts[r.id]}
+                        inquiryName={r.name}
+                      />
+                    </div>
+                  )}
                 </li>
               );
             })}
