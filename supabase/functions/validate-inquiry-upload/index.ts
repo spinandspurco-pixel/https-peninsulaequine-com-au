@@ -253,10 +253,10 @@ export async function handler(req: Request): Promise<Response> {
   if (file.size <= 0) {
     return errorResponse(400, "empty_file", "File is empty.", { size: file.size });
   }
-  if (file.size > MAX_BYTES) {
-    return errorResponse(413, "file_too_large", `File exceeds ${MAX_BYTES} bytes (10 MB).`, {
+  if (file.size > maxBytes) {
+    return errorResponse(413, "file_too_large", `File exceeds ${maxBytes} bytes.`, {
       size: file.size,
-      max: MAX_BYTES,
+      max: maxBytes,
     });
   }
 
