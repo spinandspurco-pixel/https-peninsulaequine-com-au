@@ -711,11 +711,29 @@ export function ClientDiagPanel() {
         : "";
     const cur = opts?.currentError ?? null;
     const last = opts?.lastError ?? null;
+    const classification =
+      typeof ms === "number" && isFinite(ms)
+        ? ms >= pair.crit
+          ? `crit (≥ ${pair.crit}ms)`
+          : ms >= pair.warn
+            ? `warn (≥ ${pair.warn}ms, < ${pair.crit}ms)`
+            : `ok (< ${pair.warn}ms)`
+        : "no sample yet";
+    const sourceNote = endpoint
+      ? latencyThresholds[endpoint]
+        ? " · source: per-endpoint override"
+        : " · source: default"
+      : "";
+    const tooltip =
+      `${label}\n` +
+      `current: ${display}\n` +
+      `classification: ${classification}\n` +
+      `warn ≥ ${pair.warn}ms · crit ≥ ${pair.crit}ms${sourceNote}`;
     return (
       <div className="leading-snug">
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center" title={tooltip}>
           <span className="opacity-50 min-w-[140px]">{label}</span>
-          <span className="font-mono break-all" style={color ? { color } : undefined}>
+          <span className="font-mono break-all" style={color ? { color } : undefined} title={tooltip}>
             {display}
             {tier}
           </span>
