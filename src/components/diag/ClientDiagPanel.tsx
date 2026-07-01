@@ -636,15 +636,18 @@ export function ClientDiagPanel() {
     opts?: {
       currentError?: { message: string; httpStatus?: number } | null;
       lastError?: LastErr;
+      endpoint?: EndpointKey;
     },
   ) => {
-    const color = latencyColor(ms);
+    const endpoint = opts?.endpoint;
+    const pair = pairFor(endpoint);
+    const color = latencyColor(ms, endpoint);
     const display = typeof ms === "number" && isFinite(ms) ? `${ms} ms` : "—";
     const tier =
       typeof ms === "number" && isFinite(ms)
-        ? ms >= latencyThresholds.crit
+        ? ms >= pair.crit
           ? " · slow"
-          : ms >= latencyThresholds.warn
+          : ms >= pair.warn
             ? " · warn"
             : " · ok"
         : "";
