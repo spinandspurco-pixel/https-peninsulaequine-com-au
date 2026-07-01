@@ -20,7 +20,9 @@
  *   bun scripts/security-gate.ts --update-baseline   # rewrite baseline locally
  *
  * Env (required):
- *   SUPABASE_ACCESS_TOKEN   personal access token w/ read access to the lint endpoint
+ *   SB_MGMT_ACCESS_TOKEN    Supabase management API token w/ read access to the lint endpoint
+ *                           (legacy SUPABASE_ACCESS_TOKEN is still honoured as a fallback)
+
  *
  * Env (optional — Wiz connector findings are merged in when all are set):
  *   WIZ_API_URL             e.g. https://api.us17.app.wiz.io/graphql
@@ -39,7 +41,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 
 const PROJECT_REF = process.env.SUPABASE_PROJECT_REF ?? "aizkqajrzkvwuobisnzr";
-const TOKEN = process.env.SUPABASE_ACCESS_TOKEN ?? "";
+const TOKEN = process.env.SB_MGMT_ACCESS_TOKEN ?? process.env.SUPABASE_ACCESS_TOKEN ?? "";
 const BASELINE_PATH = resolve(process.cwd(), ".security/baseline.json");
 const REPORT_PATH = resolve(process.cwd(), "security-report.json");
 const ADDED_PATH = resolve(process.cwd(), "security-added.json");
@@ -93,10 +95,11 @@ function fp(source: string, parts: Array<string | undefined>): string {
 async function fetchSupabaseFindings(): Promise<Finding[]> {
   if (!TOKEN) {
     console.error(
-      "ERROR: SUPABASE_ACCESS_TOKEN is not set. Add it as a GitHub Actions secret " +
+      "ERROR: SB_MGMT_ACCESS_TOKEN is not set. Add it as a GitHub Actions secret " +
         "with read access to project " + PROJECT_REF + ".",
     );
     process.exit(2);
+
   }
   const url = `https://api.supabase.com/v1/projects/${PROJECT_REF}/database/lints`;
   const res = await fetch(url, { headers: { Authorization: `Bearer ${TOKEN}` } });
