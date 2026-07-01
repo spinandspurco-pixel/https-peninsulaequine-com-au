@@ -775,6 +775,9 @@ export default function Contact() {
                       {fileError && (
                         <p className="text-xs text-destructive">{fileError}</p>
                       )}
+                      {!fileError && uploader.errorSummary && (
+                        <p className="text-xs text-destructive">{uploader.errorSummary}</p>
+                      )}
                     </div>
                   </div>
                 </RevealOnScroll>
