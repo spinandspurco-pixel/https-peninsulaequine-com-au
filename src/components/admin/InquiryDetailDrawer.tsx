@@ -133,7 +133,7 @@ export function InquiryDetailDrawer({ inquiryId, open, onOpenChange, onChanged }
     setActivity((actRows ?? []) as ActivityRow[]);
 
     // Prefer rich metadata from `attachments`; fall back to `attachment_urls`.
-    const meta = (Array.isArray(inq.attachments) ? inq.attachments : []) as AttachmentMeta[];
+    const meta = (Array.isArray(inq.attachments) ? inq.attachments : []) as unknown as AttachmentMeta[];
     const urls = (inq.attachment_urls ?? []) as string[];
     const merged: AttachmentMeta[] = meta.length > 0
       ? meta
