@@ -328,7 +328,8 @@ export default function Events() {
         .from("managed_events")
         .select("*")
         .eq("active", true)
-        .order("event_date");
+        .order("sort_order", { ascending: true })
+        .order("event_date", { ascending: true });
       if (error) throw error;
       // Cast needed: new columns (price, early_bird_price, early_bird_deadline) not yet in generated types
       return (data as unknown as DBEvent[]) || [];
