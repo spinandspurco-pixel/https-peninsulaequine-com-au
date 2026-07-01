@@ -59,6 +59,8 @@ export function ClientDiagPanel() {
   const [healthHistory, setHealthHistory] = useState<number[]>([]);
   const [diagHistory, setDiagHistory] = useState<number[]>([]);
   const [buildHistory, setBuildHistory] = useState<number[]>([]);
+  const [docCacheHistory, setDocCacheHistory] = useState<number[]>([]);
+  const [bundleCacheHistory, setBundleCacheHistory] = useState<number[]>([]);
   const HISTORY_MAX = 10;
 
   // Unified probe history — last N entries across all endpoints, so users
