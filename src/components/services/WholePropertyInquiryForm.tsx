@@ -3,6 +3,8 @@ import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { trackConversion } from "@/lib/analytics";
+import { useSpamGuard } from "@/lib/spamGuard";
+import { HoneypotField } from "@/components/HoneypotField";
 
 const schema = z.object({
   name: z.string().trim().min(1, "Name required").max(120),
