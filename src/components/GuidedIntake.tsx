@@ -207,6 +207,7 @@ export function GuidedIntake() {
       next.push(f);
     }
     setFiles(next);
+    uploader.syncFiles(next);
     setErrors((prev) => ({
       ...prev,
       files: nextErrors.join(" ") || "",
@@ -214,7 +215,11 @@ export function GuidedIntake() {
   };
 
   const removeFile = (idx: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== idx));
+    setFiles((prev) => {
+      const nxt = prev.filter((_, i) => i !== idx);
+      uploader.syncFiles(nxt);
+      return nxt;
+    });
   };
 
   const handleSubmit = async () => {
