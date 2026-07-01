@@ -31,7 +31,13 @@ export async function uploadInquiryAttachment(
     if (ctx && typeof ctx.json === "function") {
       try {
         const payload = await ctx.json();
-        message = payload?.error?.message ?? message;
+        // New shape: { error: string, code, details? }.
+        // Legacy shape: { error: { code, message } }.
+        if (typeof payload?.error === "string") {
+          message = payload.error;
+        } else if (payload?.error?.message) {
+          message = payload.error.message;
+        }
       } catch {
         /* ignore */
       }
