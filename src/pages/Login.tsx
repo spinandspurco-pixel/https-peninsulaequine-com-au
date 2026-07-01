@@ -13,6 +13,7 @@ import { Eye, EyeOff, Loader2, ArrowLeft, Lock, AlertTriangle, RefreshCw } from 
 import { StaffPortalFrame } from "@/components/StaffPortalFrame";
 import { HqLoadingState } from "@/components/hq/HqLoadingState";
 import { clearLocalAuthCacheAndSignOut } from "@/lib/authCache";
+import { usePageMeta } from "@/lib/usePageMeta";
 import { trackAuthFunnel } from "@/lib/authFunnel";
 import { attemptGoogleSignIn } from "@/lib/oauthSignIn";
 import { GoogleOAuthConfigBanner } from "@/components/auth/GoogleOAuthConfigBanner";
