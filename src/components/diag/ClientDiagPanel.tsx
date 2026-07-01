@@ -1713,6 +1713,18 @@ export function ClientDiagPanel() {
                   </span>
                 </div>
                 <div style={{ marginBottom: 4, lineHeight: 1.35 }}>{palette.msg}</div>
+                {row(
+                  "family",
+                  family === "new"
+                    ? "sb_publishable_ (new — expected)"
+                    : family === "legacy"
+                      ? "eyJ legacy (disabled by Supabase)"
+                      : family === "secret"
+                        ? "sb_secret_ (SERVER-ONLY — must not ship to client)"
+                        : family === "missing"
+                          ? "missing (VITE_SUPABASE_PUBLISHABLE_KEY undefined)"
+                          : "unknown (unrecognised prefix)",
+                )}
                 {row("masked", supaKeyMasked)}
                 {row("prefix", supaKeyPrefix)}
                 {row("checksum", supaKeyChecksum)}
