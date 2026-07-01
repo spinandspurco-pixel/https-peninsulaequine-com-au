@@ -73,18 +73,36 @@ const STEPS = ["Focus", "Contact", "Horse & goals", "Timing"] as const;
 
 // ── Component ─────────────────────────────────────────
 
-export default function LessonInquiry() {
-  usePageMeta({
-    title: "Lesson & consult inquiry — Peninsula Equine",
-    description:
-      "Request a riding lesson or horsemanship consult on the Mornington Peninsula. Guided intake with confirmation.",
-  });
+export type InquiryPageProps = {
+  lockedType?: "lesson" | "consult";
+  metaTitle?: string;
+  metaDescription?: string;
+  headerOverline?: string;
+  headerTitle?: string;
+  headerSubtitle?: string;
+  backLink?: { to: string; label: string };
+};
+
+export default function LessonInquiry({
+  lockedType,
+  metaTitle = "Lesson & consult inquiry — Peninsula Equine",
+  metaDescription = "Request a riding lesson or horsemanship consult on the Mornington Peninsula. Guided intake with confirmation.",
+  headerOverline,
+  headerTitle = "Request a lesson or consult",
+  headerSubtitle = "A short guided intake. Under two minutes.",
+  backLink = { to: "/lessons", label: "Back to lessons" },
+}: InquiryPageProps = {}) {
+  usePageMeta({ title: metaTitle, description: metaDescription });
 
   const [step, setStep] = useState(0);
-  const [data, setData] = useState<FormState>(DEFAULTS);
+  const [data, setData] = useState<FormState>({
+    ...DEFAULTS,
+    inquiry_type: lockedType ?? DEFAULTS.inquiry_type,
+  });
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [submitting, setSubmitting] = useState(false);
   const [confirmation, setConfirmation] = useState<{ id: string } | null>(null);
+
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setData((prev) => ({ ...prev, [key]: value }));
@@ -183,8 +201,8 @@ export default function LessonInquiry() {
               If you'd like to add site photos or paperwork, reply to our confirmation with attachments.
             </p>
             <div className="flex gap-6 pt-4 text-xs uppercase tracking-[0.3em]">
-              <Link to="/lessons" className="text-foreground/70 hover:text-foreground border-b border-foreground/20 pb-1">
-                Back to lessons
+              <Link to={backLink.to} className="text-foreground/70 hover:text-foreground border-b border-foreground/20 pb-1">
+                {backLink.label}
               </Link>
               <Link to="/" className="text-foreground/70 hover:text-foreground border-b border-foreground/20 pb-1">
                 Return home
@@ -200,9 +218,9 @@ export default function LessonInquiry() {
   return (
     <Layout>
       <PageHeader
-        overline={`Step ${step + 1} of ${STEPS.length}`}
-        title="Request a lesson or consult"
-        subtitle="A short guided intake. Under two minutes."
+        overline={headerOverline ?? `Step ${step + 1} of ${STEPS.length}`}
+        title={headerTitle}
+        subtitle={headerSubtitle}
       />
       <section className="max-w-2xl mx-auto px-6 pb-24">
         <Stepper current={step} />
@@ -215,7 +233,9 @@ export default function LessonInquiry() {
             else submit();
           }}
         >
-          {step === 0 && <StepFocus data={data} set={set} errors={errors} />}
+          {step === 0 && <StepFocus data={data} set={set} errors={errors} lockedType={lockedType} />}
+
+
           {step === 1 && <StepContact data={data} set={set} errors={errors} />}
           {step === 2 && <StepGoals data={data} set={set} errors={errors} />}
           {step === 3 && <StepTiming data={data} set={set} errors={errors} />}
@@ -281,36 +301,39 @@ function FieldError({ msg }: { msg?: string }) {
   return <p className="mt-1 text-xs text-destructive">{msg}</p>;
 }
 
-function StepFocus({ data, set, errors }: StepProps) {
+function StepFocus({ data, set, errors, lockedType }: StepProps & { lockedType?: "lesson" | "consult" }) {
   return (
     <div className="space-y-8">
-      <div>
-        <Label className="text-xs uppercase tracking-[0.3em] text-foreground/60">What do you need?</Label>
-        <RadioGroup
-          value={data.inquiry_type}
-          onValueChange={(v) => set("inquiry_type", v as FormState["inquiry_type"])}
-          className="mt-4 grid grid-cols-2 gap-3"
-        >
-          {[
-            { v: "lesson", label: "Riding lesson", sub: "Weekly or one-off." },
-            { v: "consult", label: "Horsemanship consult", sub: "Behaviour, groundwork, plan." },
-          ].map((opt) => (
-            <label
-              key={opt.v}
-              className={`cursor-pointer border p-4 transition-colors ${
-                data.inquiry_type === opt.v
-                  ? "border-foreground/40 bg-foreground/[0.03]"
-                  : "border-foreground/10 hover:border-foreground/25"
-              }`}
-            >
-              <RadioGroupItem value={opt.v} className="sr-only" />
-              <p className="font-serif text-lg">{opt.label}</p>
-              <p className="text-xs text-foreground/50 mt-1">{opt.sub}</p>
-            </label>
-          ))}
-        </RadioGroup>
-        <FieldError msg={errors.inquiry_type} />
-      </div>
+      {!lockedType && (
+        <div>
+          <Label className="text-xs uppercase tracking-[0.3em] text-foreground/60">What do you need?</Label>
+          <RadioGroup
+            value={data.inquiry_type}
+            onValueChange={(v) => set("inquiry_type", v as FormState["inquiry_type"])}
+            className="mt-4 grid grid-cols-2 gap-3"
+          >
+            {[
+              { v: "lesson", label: "Riding lesson", sub: "Weekly or one-off." },
+              { v: "consult", label: "Horsemanship consult", sub: "Behaviour, groundwork, plan." },
+            ].map((opt) => (
+              <label
+                key={opt.v}
+                className={`cursor-pointer border p-4 transition-colors ${
+                  data.inquiry_type === opt.v
+                    ? "border-foreground/40 bg-foreground/[0.03]"
+                    : "border-foreground/10 hover:border-foreground/25"
+                }`}
+              >
+                <RadioGroupItem value={opt.v} className="sr-only" />
+                <p className="font-serif text-lg">{opt.label}</p>
+                <p className="text-xs text-foreground/50 mt-1">{opt.sub}</p>
+              </label>
+            ))}
+          </RadioGroup>
+          <FieldError msg={errors.inquiry_type} />
+        </div>
+      )}
+
 
       <div>
         <Label className="text-xs uppercase tracking-[0.3em] text-foreground/60">Rider level</Label>
