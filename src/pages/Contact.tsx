@@ -142,6 +142,8 @@ export default function Contact() {
   // Flip to true (or wire to form state) to require attachments before submit.
   const REQUIRE_ATTACHMENTS = false;
 
+  const uploader = useAttachmentUpload();
+
   const addFiles = (incoming: FileList | null) => {
     if (!incoming) return;
     setFileError(null);
@@ -156,11 +158,6 @@ export default function Contact() {
     setFiles(next);
     uploader.syncFiles(next);
   };
-  // (moved below) uploader defined after addFiles closure to keep prior structure
-  const _addFilesEnd = null;
-  };
-
-  const uploader = useAttachmentUpload();
 
   const removeFile = (idx: number) => {
     setFiles((prev) => {
