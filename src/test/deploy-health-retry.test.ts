@@ -285,3 +285,96 @@ describe("retry outcome -> UI banner mapping", () => {
     expect(bannerFor("error")).toEqual({ tone: "red", label: "Retry error" });
   });
 });
+
+describe("runRetryPromotion cache-bust behavior", () => {
+  const collectProbe = (calls: string[]) => async (label: string, url: string) => {
+    calls.push(url);
+    // Always report the same stuck legacy bundle so we exhaust maxAttempts.
+    return stuckLegacy(label, "index-old.js");
+  };
+
+  it("applies ?_rh=<i> to every attempt for every target when never promoted", async () => {
+    const calls: string[] = [];
+    const { outcome } = await runRetryPromotion({
+      targets: TARGETS,
+      probe: collectProbe(calls),
+      sleep: async () => {},
+      now: () => "2026-01-01T00:00:00Z",
+      maxAttempts: 4,
+      backoffMs: () => 0,
+    });
+
+    // 1 initial "before" probe per target + 4 attempts * 2 targets = 10 total
+    expect(calls).toHaveLength(2 + 4 * TARGETS.length);
+    expect(outcome.attempts).toBe(4);
+    expect(outcome.status).toBe("no_change");
+
+    // Initial "before" probes carry NO cache-bust marker.
+    expect(calls.slice(0, 2).every((u) => !u.includes("_rh="))).toBe(true);
+
+    // Each attempt hits every target with the same _rh=<i> value.
+    for (let i = 0; i < 4; i++) {
+      const attempt = calls.slice(2 + i * TARGETS.length, 2 + (i + 1) * TARGETS.length);
+      expect(attempt).toEqual([
+        `https://example.test?_rh=${i}`,
+        `https://example-pub.test?_rh=${i}`,
+      ]);
+    }
+  });
+
+  it("uses the same ?_rh=<i> scheme when initialBefore skips the pre-probe", async () => {
+    const calls: string[] = [];
+    const before = TARGETS.map((t) => stuckLegacy(t.label, "index-old.js"));
+
+    await runRetryPromotion({
+      targets: TARGETS,
+      probe: collectProbe(calls),
+      sleep: async () => {},
+      now: () => "2026-01-01T00:00:00Z",
+      maxAttempts: 4,
+      backoffMs: () => 0,
+      initialBefore: before,
+    });
+
+    // No pre-probe when initialBefore is provided: 4 * 2 = 8 calls.
+    expect(calls).toHaveLength(4 * TARGETS.length);
+    for (let i = 0; i < 4; i++) {
+      const attempt = calls.slice(i * TARGETS.length, (i + 1) * TARGETS.length);
+      expect(attempt).toEqual([
+        `https://example.test?_rh=${i}`,
+        `https://example-pub.test?_rh=${i}`,
+      ]);
+    }
+  });
+
+  it("still applies ?_rh=0 on the attempt that promotes and then stops", async () => {
+    const calls: string[] = [];
+    let attemptIdx = 0;
+    const probeFn = async (label: string, url: string) => {
+      calls.push(url);
+      // "Before" probes (no _rh) return the stuck legacy bundle.
+      if (!url.includes("_rh=")) return stuckLegacy(label, "index-old.js");
+      // First retry attempt reports a fresh bundle — should terminate the loop.
+      attemptIdx = Math.max(attemptIdx, 1);
+      return fresh(label, "index-new.js");
+    };
+
+    const { outcome } = await runRetryPromotion({
+      targets: TARGETS,
+      probe: probeFn,
+      sleep: async () => {},
+      now: () => "2026-01-01T00:00:00Z",
+      maxAttempts: 4,
+      backoffMs: () => 0,
+    });
+
+    expect(outcome.attempts).toBe(1);
+    expect(outcome.status).toBe("success");
+    // 2 pre-probes + 2 attempt-0 probes, and every attempted probe used _rh=0.
+    expect(calls).toHaveLength(2 + TARGETS.length);
+    const attemptCalls = calls.slice(2);
+    expect(attemptCalls.every((u) => u.endsWith("?_rh=0"))).toBe(true);
+    // No further attempts (?_rh=1, ?_rh=2, …) fired once promoted.
+    expect(calls.some((u) => /_rh=[1-9]/.test(u))).toBe(false);
+  });
+});
