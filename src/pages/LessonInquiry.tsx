@@ -13,6 +13,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { usePageMeta } from "@/lib/usePageMeta";
 import { useSpamGuard } from "@/lib/spamGuard";
 import { HoneypotField } from "@/components/HoneypotField";
+import { AttachmentPreviewList } from "@/components/inquiry/AttachmentPreviewList";
 
 // ── Schema ────────────────────────────────────────────
 
