@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.validate-inquiry-upload]
 verify_jwt = false
+
+[functions.submit-inquiry]
+verify_jwt = false
