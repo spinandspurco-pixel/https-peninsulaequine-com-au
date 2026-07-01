@@ -46,7 +46,13 @@ export type RetryDeps<P extends ProbeLike> = {
   backoffMs?: (attemptIndex: number) => number;
   /** Re-use already-fetched probes as the "before" snapshot. */
   initialBefore?: P[] | null;
+  /**
+   * Progress callback fired once per attempt, before the probe pass runs.
+   * Lets the UI show "Retrying promotion… (2/4)" without polling.
+   */
+  onAttempt?: (attempt: number, maxAttempts: number) => void;
 };
+
 
 export function isStuck(r: ProbeLike): boolean {
   if (!r.ok) return false;
@@ -128,6 +134,7 @@ export async function runRetryPromotion<P extends ProbeLike>(
     maxAttempts = 4,
     backoffMs = defaultBackoff,
     initialBefore = null,
+    onAttempt,
   } = deps;
 
   const startedAt = now();
@@ -143,6 +150,11 @@ export async function runRetryPromotion<P extends ProbeLike>(
   try {
     for (let i = 0; i < maxAttempts; i++) {
       attempts = i + 1;
+      try {
+        onAttempt?.(attempts, maxAttempts);
+      } catch {
+        /* progress callback errors must not break the retry loop */
+      }
       afterProbes = await Promise.all(
         targets.map((t) => probe(t.label, `${t.url}?_rh=${i}`)),
       );

@@ -145,6 +145,7 @@ export default function HqDeployHealth() {
   const [running, setRunning] = useState(false);
   const [lastCheckedAt, setLastCheckedAt] = useState<string | null>(null);
   const [retrying, setRetrying] = useState(false);
+  const [retryProgress, setRetryProgress] = useState<{ attempt: number; max: number } | null>(null);
   const [retryOutcome, setRetryOutcome] = useState<RetryOutcome | null>(null);
   const [audit, setAudit] = useState<AuditRow[]>([]);
   const [auditLoading, setAuditLoading] = useState(false);
@@ -227,6 +228,7 @@ export default function HqDeployHealth() {
 
   const retryPromotion = useCallback(async () => {
     setRetrying(true);
+    setRetryProgress({ attempt: 0, max: 4 });
     try {
       const { outcome, finalProbes } = await runRetryPromotion<ProbeResult>({
         targets: TARGETS,
@@ -239,6 +241,7 @@ export default function HqDeployHealth() {
         // Re-use the currently-visible probes as the "before" snapshot when
         // available so the retry doesn't double-fetch on the first pass.
         initialBefore: results.length ? results : null,
+        onAttempt: (attempt, max) => setRetryProgress({ attempt, max }),
       });
 
       // Persist the final probe pass (URLs already stripped of cache-bust).
@@ -274,6 +277,7 @@ export default function HqDeployHealth() {
       }
     } finally {
       setRetrying(false);
+      setRetryProgress(null);
     }
   }, [results]);
 
@@ -621,25 +625,42 @@ export default function HqDeployHealth() {
             </div>
           </div>
           <div className="flex items-center gap-6">
-            <button
-              type="button"
-              onClick={retryPromotion}
-              disabled={retrying || running}
-              className="text-sm tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8 disabled:opacity-40"
-              title="Re-probe each domain with cache-bust + backoff to detect whether a fresh bundle has landed"
-            >
-              {retrying ? "Retrying promotion…" : "Retry promotion"}
-            </button>
+            <div className="flex flex-col items-start gap-1">
+              <button
+                type="button"
+                onClick={retryPromotion}
+                disabled={retrying || running}
+                aria-busy={retrying}
+                className="text-sm tracking-[0.3em] uppercase text-foreground/90 underline underline-offset-8 disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Re-probe each domain with cache-bust + backoff to detect whether a fresh bundle has landed"
+              >
+                {retrying
+                  ? retryProgress && retryProgress.attempt > 0
+                    ? `Retrying… attempt ${retryProgress.attempt}/${retryProgress.max}`
+                    : "Retrying promotion…"
+                  : "Retry promotion"}
+              </button>
+              <span
+                role="status"
+                aria-live="polite"
+                className="text-[10px] tracking-[0.25em] uppercase text-foreground/40 min-h-[12px]"
+              >
+                {retrying && retryProgress && retryProgress.attempt > 0
+                  ? `Attempt ${retryProgress.attempt} of ${retryProgress.max} in flight`
+                  : ""}
+              </span>
+            </div>
             <button
               type="button"
               onClick={run}
               disabled={running || retrying}
-              className="text-sm tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8 disabled:opacity-40"
+              className="text-sm tracking-[0.3em] uppercase text-foreground/60 underline underline-offset-8 disabled:opacity-40 disabled:cursor-not-allowed"
               title="Immediately re-fetch bundle state, markers, and timestamps"
             >
               {running ? "Re-checking…" : "Re-run checks"}
             </button>
           </div>
+
         </section>
 
         <section
