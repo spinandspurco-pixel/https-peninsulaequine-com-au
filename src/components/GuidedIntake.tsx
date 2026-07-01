@@ -482,22 +482,121 @@ export function GuidedIntake() {
               We take on a limited number of projects each season.
             </p>
             <button
-              onClick={handleSubmit}
-              disabled={submitting}
-              className={cn(
-                "w-full py-4 text-xs uppercase tracking-[0.2em] font-medium transition-all duration-500 mt-4",
-                submitting
-                  ? "bg-accent/20 text-accent-foreground/30 cursor-wait"
-                  : "bg-accent text-accent-foreground hover:bg-accent/90"
-              )}
+              onClick={handleDetailsContinue}
+              className="w-full py-4 text-xs uppercase tracking-[0.2em] font-medium transition-all duration-500 mt-4 bg-accent text-accent-foreground hover:bg-accent/90"
             >
-              {submitting ? "Submitting…" : "Apply for Consideration"}
+              Continue
             </button>
           </div>
         </StepWrapper>
 
-        {/* Step 5 — Confirmation */}
+        {/* Step 5 — Attachments (optional) */}
         <StepWrapper visible={step === 5}>
+          <div className="w-full space-y-6 max-w-md">
+            <div className="space-y-2">
+              <p className="font-serif text-lg sm:text-xl text-foreground/70 tracking-tight">
+                Attach anything relevant.
+              </p>
+              <p className="font-serif text-[12px] text-foreground/35 italic leading-relaxed">
+                Site photos, sketches, surveys, or briefs. Optional — up to {MAX_FILES} files, 10 MB each.
+              </p>
+            </div>
+
+            <label
+              htmlFor="guided-intake-files"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                e.preventDefault();
+                addFiles(e.dataTransfer?.files ?? null);
+              }}
+              className="block cursor-pointer border border-dashed border-border/30 hover:border-accent/40 transition-colors duration-500 px-6 py-8 text-center"
+            >
+              <Paperclip className="mx-auto w-4 h-4 text-foreground/30 mb-3" />
+              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/50">
+                Drop files or click to browse
+              </p>
+              <p className="font-serif text-[11px] text-foreground/25 italic mt-2">
+                PDF, images, or common office formats
+              </p>
+              <input
+                ref={fileInputRef}
+                id="guided-intake-files"
+                type="file"
+                multiple
+                accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+                className="sr-only"
+                onChange={(e) => {
+                  addFiles(e.target.files);
+                  if (fileInputRef.current) fileInputRef.current.value = "";
+                }}
+              />
+            </label>
+
+            {files.length > 0 && (
+              <ul className="space-y-2">
+                {files.map((f, i) => (
+                  <li
+                    key={`${f.name}-${i}`}
+                    className="flex items-center justify-between border border-border/15 px-3 py-2 text-xs text-foreground/60"
+                  >
+                    <span className="truncate mr-3">
+                      {f.name}
+                      <span className="text-foreground/25 ml-2">
+                        {(f.size / 1024 / 1024).toFixed(2)} MB
+                      </span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeFile(i)}
+                      className="text-foreground/30 hover:text-destructive/80 transition-colors"
+                      aria-label={`Remove ${f.name}`}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {errors.files && (
+              <p className="text-xs text-destructive/70">{errors.files}</p>
+            )}
+            {errors.form && (
+              <p className="text-xs text-destructive/70">{errors.form}</p>
+            )}
+
+            <div className="flex items-center gap-3 mt-6">
+              <button
+                type="button"
+                onClick={() => setStep(4)}
+                disabled={submitting}
+                className="flex-1 py-4 text-xs uppercase tracking-[0.2em] font-medium border border-border/25 text-foreground/60 hover:text-foreground/90 transition-colors duration-500"
+              >
+                Back
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={submitting}
+                className={cn(
+                  "flex-[2] py-4 text-xs uppercase tracking-[0.2em] font-medium transition-all duration-500",
+                  submitting
+                    ? "bg-accent/20 text-accent-foreground/30 cursor-wait"
+                    : "bg-accent text-accent-foreground hover:bg-accent/90"
+                )}
+              >
+                {submitting
+                  ? files.length
+                    ? "Uploading…"
+                    : "Submitting…"
+                  : "Apply for Consideration"}
+              </button>
+            </div>
+          </div>
+        </StepWrapper>
+
+        {/* Step 6 — Confirmation */}
+        <StepWrapper visible={step === 6}>
+
           <div className="w-full text-center space-y-6 max-w-md">
             <p className="font-serif text-xl sm:text-2xl text-foreground/70 tracking-tight">
               Application received.
