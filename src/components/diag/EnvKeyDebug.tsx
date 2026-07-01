@@ -96,7 +96,7 @@ export function EnvKeyDebug() {
             <span style={{ opacity: 0.6 }}>mode</span>{" "}
             <code>{import.meta.env.MODE}</code>
           </div>
-          {info.family !== "new" && (
+          {info.family !== "modern" && (
             <div style={{ marginTop: 4, opacity: 0.9 }}>{info.message}</div>
           )}
           <div style={{ marginTop: 4, opacity: 0.55 }}>
