@@ -295,16 +295,88 @@ export default function AdminInquiries() {
             </div>
           )}
 
+          {/* Bulk action bar */}
+          {rows.length > 0 && (
+            <div className="mb-3 flex flex-wrap items-center gap-6 border-b border-border/[0.12] pb-3 px-2">
+              <label className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.35em] text-foreground/55 cursor-pointer">
+                <Checkbox
+                  checked={
+                    allOnPageSelected
+                      ? true
+                      : someOnPageSelected
+                        ? "indeterminate"
+                        : false
+                  }
+                  onCheckedChange={togglePage}
+                  aria-label="Select all inquiries on this page"
+                />
+                <span>
+                  {selected.size > 0
+                    ? `${selected.size} selected`
+                    : "Select all on page"}
+                </span>
+              </label>
+              {selected.size > 0 && (
+                <div className="flex flex-wrap items-center gap-5 ml-auto">
+                  <button
+                    type="button"
+                    disabled={bulkRunning}
+                    onClick={() => setPendingAction("approve")}
+                    className="font-mono text-[10px] uppercase tracking-[0.35em] text-emerald-400/85 hover:text-emerald-300 disabled:opacity-40 transition-colors"
+                  >
+                    Approve → In Progress
+                  </button>
+                  <button
+                    type="button"
+                    disabled={bulkRunning}
+                    onClick={() => setPendingAction("complete")}
+                    className="font-mono text-[10px] uppercase tracking-[0.35em] text-foreground/70 hover:text-foreground disabled:opacity-40 transition-colors"
+                  >
+                    Mark complete
+                  </button>
+                  <button
+                    type="button"
+                    disabled={bulkRunning}
+                    onClick={() => setPendingAction("delete")}
+                    className="font-mono text-[10px] uppercase tracking-[0.35em] text-red-400/85 hover:text-red-300 disabled:opacity-40 transition-colors"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelected(new Set())}
+                    className="font-mono text-[10px] uppercase tracking-[0.35em] text-muted-foreground/45 hover:text-foreground/70 transition-colors"
+                  >
+                    Clear
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
           <ul className="divide-y divide-border/[0.08] border-t border-border/[0.12]">
             {rows.map((r) => {
               const preview = r.project_vision ?? r.project_details ?? "";
+              const isChecked = selected.has(r.id);
               return (
-                <li key={r.id}>
+                <li
+                  key={r.id}
+                  className={`grid grid-cols-12 gap-4 py-5 px-2 transition-colors duration-300 ${
+                    isChecked ? "bg-accent/[0.04]" : "hover:bg-foreground/[0.015]"
+                  }`}
+                >
+                  <div className="col-span-1 sm:col-span-1 flex items-start pt-1">
+                    <Checkbox
+                      checked={isChecked}
+                      onCheckedChange={() => toggleOne(r.id)}
+                      aria-label={`Select inquiry from ${r.name}`}
+                    />
+                  </div>
                   <button
                     onClick={() => open(r.id)}
-                    className="w-full text-left grid grid-cols-12 gap-4 py-5 hover:bg-foreground/[0.015] transition-colors duration-300 px-2"
+                    className="col-span-11 text-left grid grid-cols-11 gap-4"
                   >
-                    <div className="col-span-12 sm:col-span-3 font-mono uppercase text-[10px] tracking-[0.35em] text-foreground/45">
+                    <div className="col-span-11 sm:col-span-3 font-mono uppercase text-[10px] tracking-[0.35em] text-foreground/45">
                       <div className="text-foreground/70">
                         {format(new Date(r.created_at), "dd MMM yyyy")}
                       </div>
@@ -312,7 +384,7 @@ export default function AdminInquiries() {
                         {formatDistanceToNow(new Date(r.created_at), { addSuffix: true })}
                       </div>
                     </div>
-                    <div className="col-span-12 sm:col-span-6 space-y-1.5">
+                    <div className="col-span-11 sm:col-span-5 space-y-1.5">
                       <div className="flex flex-wrap items-baseline gap-3">
                         <span className="font-serif text-[1.05rem] leading-snug text-foreground/90">
                           {r.name}
@@ -344,7 +416,7 @@ export default function AdminInquiries() {
                         </div>
                       )}
                     </div>
-                    <div className="col-span-12 sm:col-span-3 flex sm:justify-end items-start">
+                    <div className="col-span-11 sm:col-span-3 flex sm:justify-end items-start">
                       <span
                         className={`font-mono text-[10px] uppercase tracking-[0.3em] ${
                           STATUS_TONE[r.status] ?? "text-foreground/55"
@@ -358,6 +430,7 @@ export default function AdminInquiries() {
               );
             })}
           </ul>
+
 
           {/* Pagination */}
           {count > PAGE_SIZE && (
