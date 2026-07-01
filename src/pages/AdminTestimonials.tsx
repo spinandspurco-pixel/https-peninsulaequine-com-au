@@ -135,18 +135,7 @@ export default function AdminTestimonials() {
     fetchData();
   };
 
-  const moveItem = async (item: ManagedTestimonial, direction: "up" | "down") => {
-    if (isPreview) { toast.error("View-only in client preview"); return; }
-    const idx = items.findIndex((i) => i.id === item.id);
-    const swapIdx = direction === "up" ? idx - 1 : idx + 1;
-    if (swapIdx < 0 || swapIdx >= items.length) return;
-    const other = items[swapIdx];
-    await Promise.all([
-      supabase.from("managed_testimonials").update({ sort_order: other.sort_order }).eq("id", item.id),
-      supabase.from("managed_testimonials").update({ sort_order: item.sort_order }).eq("id", other.id),
-    ]);
-    fetchData();
-  };
+  // Drag-and-drop reorder handled by SortableList (see below).
 
   useEffect(() => { if (canAccess) fetchData(); }, [canAccess]);
 
