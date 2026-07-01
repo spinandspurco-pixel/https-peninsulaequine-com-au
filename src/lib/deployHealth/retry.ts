@@ -37,6 +37,41 @@ export type RetryOutcome = {
   message: string;
 };
 
+export type RetryLogPhase = "before" | "attempt" | "outcome";
+
+export type RetryLogEvent = {
+  /** Stable command name — makes correlation across logs trivial. */
+  command: "runRetryPromotion";
+  phase: RetryLogPhase;
+  /** 0 for the "before" pre-probe, 1..maxAttempts for retry passes, maxAttempts for the final outcome. */
+  attempt: number;
+  maxAttempts: number;
+  /** ISO timestamps for correlation with latency history rows. */
+  startedAt: string;
+  finishedAt: string;
+  /** Wall-clock duration of this phase, in ms. */
+  durationMs: number;
+  /** Per-target probe result recorded during this phase. */
+  targets: Array<{
+    label: string;
+    url: string;
+    ok: boolean;
+    bundleFile: string | null;
+    stuck: boolean;
+  }>;
+  /** Only set on `phase: "attempt" | "outcome"`. */
+  classification?: {
+    stillStuck: boolean;
+    changed: boolean;
+    willRetry: boolean;
+    /** Final RetryOutcome status — only set on `phase: "outcome"`. */
+    status?: RetryStatus;
+    message?: string;
+  };
+  /** Present when the loop threw. */
+  error?: string;
+};
+
 export type RetryDeps<P extends ProbeLike> = {
   targets: RetryTarget[];
   probe: (label: string, url: string) => Promise<P>;
@@ -51,7 +86,14 @@ export type RetryDeps<P extends ProbeLike> = {
    * Lets the UI show "Retrying promotion… (2/4)" without polling.
    */
   onAttempt?: (attempt: number, maxAttempts: number) => void;
+  /**
+   * Structured log callback. Fires once for the "before" pre-probe, once per
+   * retry attempt, and once with the final classification. Support uses these
+   * events to correlate a stuck promotion with the observed latency history.
+   */
+  onLog?: (event: RetryLogEvent) => void;
 };
+
 
 
 export function isStuck(r: ProbeLike): boolean {
@@ -135,14 +177,49 @@ export async function runRetryPromotion<P extends ProbeLike>(
     backoffMs = defaultBackoff,
     initialBefore = null,
     onAttempt,
+    onLog,
   } = deps;
 
+  const emit = (event: RetryLogEvent) => {
+    if (!onLog) return;
+    try {
+      onLog(event);
+    } catch {
+      /* logging must never break the retry loop */
+    }
+  };
+
+  const targetSummary = (probes: P[]) =>
+    probes.map((r) => ({
+      label: r.label,
+      url: targets.find((t) => t.label === r.label)?.url ?? r.url,
+      ok: r.ok,
+      bundleFile: r.bundleFile,
+      stuck: isStuck(r),
+    }));
+
   const startedAt = now();
+  const beforePhaseStart = startedAt;
   const beforeProbes =
     initialBefore && initialBefore.length
       ? initialBefore
       : await Promise.all(targets.map((t) => probe(t.label, t.url)));
+  const beforePhaseEnd = now();
   const before = beforeProbes.map(snapshot);
+
+  emit({
+    command: "runRetryPromotion",
+    phase: "before",
+    attempt: 0,
+    maxAttempts,
+    startedAt: beforePhaseStart,
+    finishedAt: beforePhaseEnd,
+    durationMs: Math.max(
+      0,
+      new Date(beforePhaseEnd).getTime() - new Date(beforePhaseStart).getTime(),
+    ),
+    targets: targetSummary(beforeProbes),
+  });
 
   let afterProbes: P[] = beforeProbes;
   let attempts = 0;
@@ -155,14 +232,33 @@ export async function runRetryPromotion<P extends ProbeLike>(
       } catch {
         /* progress callback errors must not break the retry loop */
       }
+      const attemptStart = now();
       afterProbes = await Promise.all(
         targets.map((t) => probe(t.label, `${t.url}?_rh=${i}`)),
       );
+      const attemptEnd = now();
       const stillStuck = afterProbes.some(isStuck);
       const changed = afterProbes.some((r, idx) => {
         const b = before[idx];
         return !!(b && r.bundleFile && b.bundleFile && r.bundleFile !== b.bundleFile);
       });
+      const willRetry = stillStuck && !changed && i < maxAttempts - 1;
+
+      emit({
+        command: "runRetryPromotion",
+        phase: "attempt",
+        attempt: attempts,
+        maxAttempts,
+        startedAt: attemptStart,
+        finishedAt: attemptEnd,
+        durationMs: Math.max(
+          0,
+          new Date(attemptEnd).getTime() - new Date(attemptStart).getTime(),
+        ),
+        targets: targetSummary(afterProbes),
+        classification: { stillStuck, changed, willRetry },
+      });
+
       if (!stillStuck || changed) break;
       if (i < maxAttempts - 1) {
         await sleep(backoffMs(i));
@@ -170,10 +266,32 @@ export async function runRetryPromotion<P extends ProbeLike>(
     }
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
+    const finishedAt = now();
+    emit({
+      command: "runRetryPromotion",
+      phase: "outcome",
+      attempt: attempts,
+      maxAttempts,
+      startedAt,
+      finishedAt,
+      durationMs: Math.max(
+        0,
+        new Date(finishedAt).getTime() - new Date(startedAt).getTime(),
+      ),
+      targets: targetSummary(beforeProbes),
+      classification: {
+        stillStuck: before.some((b) => b.stuck),
+        changed: false,
+        willRetry: false,
+        status: "error",
+        message: `Retry failed: ${msg}`,
+      },
+      error: msg,
+    });
     return {
       outcome: {
         startedAt,
-        finishedAt: now(),
+        finishedAt,
         attempts,
         before,
         after: before,
@@ -188,11 +306,36 @@ export async function runRetryPromotion<P extends ProbeLike>(
   const cleaned = afterProbes.map((r, idx) => ({ ...r, url: targets[idx].url }));
   const after = cleaned.map(snapshot);
   const { status, message } = classifyRetryOutcome(before, after, attempts);
+  const finishedAt = now();
+
+  emit({
+    command: "runRetryPromotion",
+    phase: "outcome",
+    attempt: attempts,
+    maxAttempts,
+    startedAt,
+    finishedAt,
+    durationMs: Math.max(
+      0,
+      new Date(finishedAt).getTime() - new Date(startedAt).getTime(),
+    ),
+    targets: targetSummary(cleaned),
+    classification: {
+      stillStuck: after.some((a) => a.stuck),
+      changed: after.some((a, idx) => {
+        const b = before[idx];
+        return !!(b && a.bundleFile && b.bundleFile && a.bundleFile !== b.bundleFile);
+      }),
+      willRetry: false,
+      status,
+      message,
+    },
+  });
 
   return {
     outcome: {
       startedAt,
-      finishedAt: now(),
+      finishedAt,
       attempts,
       before,
       after,
@@ -202,3 +345,4 @@ export async function runRetryPromotion<P extends ProbeLike>(
     finalProbes: cleaned,
   };
 }
+
