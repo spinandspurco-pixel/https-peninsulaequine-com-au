@@ -3,6 +3,8 @@ import { readdirSync, readFileSync, statSync, existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import {
   assertMgmtToken,
+  scrubError,
+  scrub,
   MissingMgmtTokenError,
   ClientSideMgmtTokenError,
 } from "../../scripts/ci/assertMgmtToken";
