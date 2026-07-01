@@ -188,3 +188,33 @@ describe("Supabase Management API allowlist", () => {
     ).toEqual([]);
   });
 });
+
+describe("URL normaliser", () => {
+  const CANON = "/v1/projects/{ref}/database/lints";
+  const variants = [
+    "/v1/projects/${ref}/database/lints",
+    "/v1/projects/${projectRef}/database/lints",
+    "/v1/projects/${ PROJECT_REF }/database/lints",
+    "/v1/projects/${cfg.projectRef}/database/lints",
+    "/v1/projects/aizkqajrzkvwuobisnzr/database/lints",
+    "/v1/projects/${ref}/database/lints/",
+    "/v1/projects/${ref}/database/lints?include_definition=true",
+    "/v1/projects/${ref}/database/lints#section",
+    "/v1/projects/${ref}/database/lints/?foo=bar",
+    "/v1/projects//${ref}//database//lints",
+  ];
+
+  for (const v of variants) {
+    it(`collapses ${v} → ${CANON}`, () => {
+      expect(normalise(v)).toBe(CANON);
+    });
+  }
+
+  it("does not touch unrelated occurrences of the known project ref", () => {
+    // A hard-coded ref outside the /projects/<ref>/ slot must be left as-is
+    // so we don't accidentally rewrite log lines or unrelated identifiers.
+    expect(normalise("/v1/other/aizkqajrzkvwuobisnzr/details")).toBe(
+      "/v1/other/aizkqajrzkvwuobisnzr/details",
+    );
+  });
+});
