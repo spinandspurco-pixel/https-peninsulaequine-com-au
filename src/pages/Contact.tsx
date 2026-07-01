@@ -788,7 +788,7 @@ export default function Contact() {
                     type="submit"
                     data-testid="contact-submit"
                     size="lg"
-                    disabled={submitting}
+                    disabled={submitting || uploader.isUploading || uploader.hasErrors}
                     variant="gold"
                     className="uppercase tracking-[0.14em] text-xs font-medium px-10"
                   >
