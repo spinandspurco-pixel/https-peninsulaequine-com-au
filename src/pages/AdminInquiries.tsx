@@ -120,6 +120,10 @@ export default function AdminInquiries() {
   const [exporting, setExporting] = useState(false);
   const [customPresets, setCustomPresets] = useState<FilterPreset[]>(() => loadCustomPresets());
   const [attachmentCounts, setAttachmentCounts] = useState<Record<string, number>>({});
+  const [attachmentsOnly, setAttachmentsOnly] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem(ATTACHMENTS_ONLY_STORAGE_KEY) === "1";
+  });
   const [activePresetId, setActivePresetId] = useState<string | null>(() => {
     if (typeof window === "undefined") return null;
     return window.localStorage.getItem(ACTIVE_PRESET_STORAGE_KEY);
