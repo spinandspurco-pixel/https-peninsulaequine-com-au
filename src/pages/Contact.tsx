@@ -238,6 +238,8 @@ export default function Contact() {
               .filter(Boolean)
               .join(" | "),
             source: "contact-assessment",
+            hp: spamGuard.honeypotProps.value,
+            elapsed_ms: spamGuard.elapsedMs(),
           },
         },
       );
