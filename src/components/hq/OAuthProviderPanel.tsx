@@ -160,8 +160,8 @@ export function OAuthProviderPanel({
   const observedClientId = useMemo(() => extractClientId(pastedUrl), [pastedUrl]);
   const observedRedirectUri = useMemo(() => extractRedirectUri(pastedUrl), [pastedUrl]);
   const redirectStatus = useMemo(
-    () => compareRedirectUri(observedRedirectUri, expectedCallback),
-    [observedRedirectUri, expectedCallback],
+    () => compareRedirectUri(observedRedirectUri, effectiveExpectedCallback),
+    [observedRedirectUri, effectiveExpectedCallback],
   );
 
   const intendedNorm = intendedClientId.trim();
