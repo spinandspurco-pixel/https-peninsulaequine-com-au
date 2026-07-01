@@ -6,6 +6,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { recordResults } from "@/lib/deployHealth";
 import { logDeployHealthAudit, type DeployHealthAuditAction } from "@/lib/deployHealthAudit";
+import {
+  runRetryPromotion,
+  isStuck as isStuckShared,
+  type RetryOutcome as SharedRetryOutcome,
+} from "@/lib/deployHealth/retry";
 import { supabase } from "@/integrations/supabase/client";
 import {
   auditRowsToCsv,
@@ -13,6 +18,7 @@ import {
   downloadTextFile,
   timestampedFilename,
 } from "@/lib/auditExport";
+
 
 type AuditRow = {
   id: string;
