@@ -97,17 +97,18 @@ function fp(source: string, parts: Array<string | undefined>): string {
 // ----------------------------------------------------------------------------
 
 async function fetchSupabaseFindings(): Promise<Finding[]> {
-  if (!TOKEN) {
-    console.error(
-      "ERROR: SB_MGMT_ACCESS_TOKEN is not set. Add it as a GitHub Actions secret " +
-        "with read access to project " + PROJECT_REF + ".",
-    );
+  // Runtime guard: aborts if the mgmt token is missing AND installs a console
+  // sanitiser so the token cannot leak via subsequent logging.
+  try {
+    assertMgmtToken();
+  } catch (err) {
+    console.error(`ERROR: ${(err as Error).message} (project ${PROJECT_REF}).`);
     process.exit(2);
-
   }
   const url = `https://api.supabase.com/v1/projects/${PROJECT_REF}/database/lints`;
   const res = await fetch(url, { headers: { Authorization: `Bearer ${TOKEN}` } });
   if (!res.ok) {
+
     console.error(`ERROR: Supabase linter fetch failed: ${res.status} ${await res.text()}`);
     process.exit(2);
   }
