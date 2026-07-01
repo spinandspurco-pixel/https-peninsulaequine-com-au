@@ -61,6 +61,13 @@ function StarRating({ rating }: { rating: number }) {
 export default function TrainerProfile() {
   const { slug } = useParams<{ slug: string }>();
   const trainer = slug ? TRAINERS[slug] : undefined;
+  usePageMeta({
+    title: trainer ? `${trainer.name} — ${trainer.title} | Peninsula Equine` : "Trainer — Peninsula Equine",
+    description: trainer ? `${trainer.name}, ${trainer.title}. ${trainer.specialties.slice(0, 3).join(" · ")}.` : "Peninsula Equine trainer profile.",
+    path: slug ? `/trainers/${slug}` : "/trainers",
+    ogType: "profile",
+    image: trainer?.portrait,
+  });
   const [testimonials, setTestimonials] = useState<TestimonialItem[]>([]);
   const [loading, setLoading] = useState(true);
 
