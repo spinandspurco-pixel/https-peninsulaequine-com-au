@@ -134,6 +134,7 @@ export async function runRetryPromotion<P extends ProbeLike>(
     maxAttempts = 4,
     backoffMs = defaultBackoff,
     initialBefore = null,
+    onAttempt,
   } = deps;
 
   const startedAt = now();
