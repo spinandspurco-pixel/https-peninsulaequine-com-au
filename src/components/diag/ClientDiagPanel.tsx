@@ -600,6 +600,59 @@ export function ClientDiagPanel() {
     if (ms >= p.warn) return "#fde68a";
     return "#86efac";
   };
+
+  // Optional: when any endpoint's latest latency is at or above its crit
+  // threshold (or has a current error), automatically re-run /api/health
+  // and /api/diag. Debounced to avoid tight re-probe loops.
+  const [critAutoProbe, setCritAutoProbe] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem("pe.diag.critAutoProbe") === "1";
+  });
+  useEffect(() => {
+    try {
+      window.localStorage.setItem("pe.diag.critAutoProbe", critAutoProbe ? "1" : "0");
+    } catch {
+      /* ignore */
+    }
+  }, [critAutoProbe]);
+  const [lastCritReprobeAt, setLastCritReprobeAt] = useState<number | null>(null);
+  const [lastCritReason, setLastCritReason] = useState<string | null>(null);
+  useEffect(() => {
+    if (!critAutoProbe) return;
+    const CRIT_COOLDOWN_MS = 5000;
+    const now = Date.now();
+    if (lastCritReprobeAt && now - lastCritReprobeAt < CRIT_COOLDOWN_MS) return;
+    const offenders: string[] = [];
+    const check = (endpoint: EndpointKey, label: string, ms?: number | null, err?: string | null) => {
+      if (err) {
+        offenders.push(`${label} error`);
+        return;
+      }
+      if (typeof ms === "number" && isFinite(ms) && ms >= pairFor(endpoint).crit) {
+        offenders.push(`${label} ${ms}ms ≥ ${pairFor(endpoint).crit}ms`);
+      }
+    };
+    check("buildInfo", "/api/build-info", serverBuild?.latencyMs, serverBuild?.error);
+    check("health", "/api/health", health?.latencyMs, health?.error);
+    check("diag", "/api/diag", diag?.latencyMs, diag?.error);
+    if (offenders.length === 0) return;
+    setLastCritReprobeAt(now);
+    setLastCritReason(offenders.join(" · "));
+    void Promise.all([fetchHealth(), fetchDiag()]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    critAutoProbe,
+    serverBuild?.latencyMs,
+    serverBuild?.fetchedAt,
+    serverBuild?.error,
+    health?.latencyMs,
+    health?.fetchedAt,
+    health?.error,
+    diag?.latencyMs,
+    diag?.fetchedAt,
+    diag?.error,
+  ]);
+
   const sparkline = (points: number[]) => {
     if (!points || points.length < 2) return null;
     const w = 60;
@@ -1224,6 +1277,17 @@ export function ClientDiagPanel() {
                   title="Auto-probe interval — cycles off / 5s / 10s / 30s / 60s. Pauses when tab hidden."
                 >
                   {pollSeconds ? `auto ${pollSeconds}s ✓` : "auto off"}
+                </button>
+                <button
+                  onClick={() => setCritAutoProbe((v) => !v)}
+                  style={{ ...btn, color: critAutoProbe ? "#ff8a8a" : "#9aa4af" }}
+                  title={
+                    critAutoProbe
+                      ? `Auto re-probe on ≥ crit / error is ON${lastCritReprobeAt ? ` · last trigger ${new Date(lastCritReprobeAt).toISOString().slice(11, 19)} (${lastCritReason ?? ""})` : ""}`
+                      : "Auto re-probe /api/health + /api/diag whenever any endpoint hits its crit threshold or errors (5s cooldown)"
+                  }
+                >
+                  {critAutoProbe ? `crit-reprobe ✓${lastCritReprobeAt ? ` · ${new Date(lastCritReprobeAt).toISOString().slice(11, 19)}` : ""}` : "crit-reprobe off"}
                 </button>
                 <button
                   onClick={async () => {
