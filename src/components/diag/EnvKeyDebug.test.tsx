@@ -98,3 +98,73 @@ describe("<EnvKeyDebug /> family detection", () => {
     expect(screen.queryByTestId("env-key-debug")).toBeNull();
   });
 });
+
+describe("<EnvKeyDebug /> copy button", () => {
+  const KEY = "sb_publishable_abcdefghij1234567890ABCDEF";
+
+  const setClipboard = (writeText: (t: string) => Promise<void>) => {
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+  };
+
+  it("shows ✓ Copied and writes the expected JSON payload on success", async () => {
+    vi.useFakeTimers();
+    try {
+      const writeText = vi.fn().mockResolvedValue(undefined);
+      setClipboard(writeText);
+
+      renderWithEnv({ key: KEY, mode: "development" });
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+
+      const badge = screen.getByTestId("env-key-debug");
+      await user.click(badge); // expand to reveal the copy button
+      const copyBtn = screen.getByTestId("env-key-debug-copy");
+      expect(copyBtn).toHaveTextContent("Copy payload");
+
+      await user.click(copyBtn);
+
+      expect(writeText).toHaveBeenCalledTimes(1);
+      const written = JSON.parse(writeText.mock.calls[0][0] as string);
+      expect(written).toEqual({
+        family: "modern",
+        prefix: "sb_publishable_",
+        length: KEY.length,
+        mode: "development",
+      });
+      expect(copyBtn).toHaveTextContent("✓ Copied");
+
+      // Status auto-resets after 1.5s.
+      vi.advanceTimersByTime(1600);
+      expect(copyBtn).toHaveTextContent("Copy payload");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("shows Copy failed when the clipboard write rejects", async () => {
+    vi.useFakeTimers();
+    try {
+      const writeText = vi.fn().mockRejectedValue(new Error("denied"));
+      setClipboard(writeText);
+
+      renderWithEnv({ key: KEY });
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+
+      await user.click(screen.getByTestId("env-key-debug"));
+      const copyBtn = screen.getByTestId("env-key-debug-copy");
+
+      await user.click(copyBtn);
+
+      expect(writeText).toHaveBeenCalledTimes(1);
+      expect(copyBtn).toHaveTextContent("Copy failed");
+
+      vi.advanceTimersByTime(1600);
+      expect(copyBtn).toHaveTextContent("Copy payload");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});
+
