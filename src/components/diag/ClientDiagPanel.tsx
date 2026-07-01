@@ -1748,6 +1748,7 @@ export function ClientDiagPanel() {
                     title="Download a full snapshot: latest probe results, timestamps, and current threshold settings"
                   >
                     export snapshot
+                  </button>
                   <button
                     style={btn}
                     onClick={() => {
