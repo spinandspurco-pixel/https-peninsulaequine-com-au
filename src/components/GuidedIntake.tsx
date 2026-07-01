@@ -153,6 +153,7 @@ export function GuidedIntake() {
         setLocation("");
         setNotes("");
         setFiles([]);
+        uploader.reset();
         setErrors({});
         setSubmitted(false);
       }, 500);
