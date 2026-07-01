@@ -168,7 +168,7 @@ const handler = async (req: Request): Promise<Response> => {
 
           <!-- Event Details Card -->
           <div style="background: white; border: 1px solid #e8e2d6; border-radius: 8px; padding: 20px; margin: 20px 0;">
-            <h2 style="margin: 0 0 14px; font-size: 18px; color: #2d2418;">${data.eventTitle}</h2>
+            <h2 style="margin: 0 0 14px; font-size: 18px; color: #2d2418;">${esc(data.eventTitle)}</h2>
             <table style="width: 100%; border-collapse: collapse;">
               <tr>
                 <td style="padding: 7px 0; font-weight: 600; color: #888; width: 100px; font-size: 14px;">📅 Date</td>
