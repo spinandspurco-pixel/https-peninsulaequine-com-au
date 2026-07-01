@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.verify-admin-login]
 verify_jwt = false
+
+[functions.validate-inquiry-upload]
+verify_jwt = false
