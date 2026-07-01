@@ -466,7 +466,45 @@ export default function AdminInquiries() {
         }}
         onChanged={load}
       />
+
+      <AlertDialog
+        open={pendingAction !== null}
+        onOpenChange={(o) => {
+          if (!o && !bulkRunning) setPendingAction(null);
+        }}
+      >
+        <AlertDialogContent>
+          {pendingAction && (
+            <>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{BULK_COPY[pendingAction].title}</AlertDialogTitle>
+                <AlertDialogDescription>
+                  {BULK_COPY[pendingAction].body(selected.size)}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel disabled={bulkRunning}>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  disabled={bulkRunning}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (pendingAction) void runBulk(pendingAction);
+                  }}
+                  className={
+                    BULK_COPY[pendingAction].destructive
+                      ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      : undefined
+                  }
+                >
+                  {bulkRunning ? "Working…" : BULK_COPY[pendingAction].confirm}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </>
+          )}
+        </AlertDialogContent>
+      </AlertDialog>
     </Layout>
+
   );
 }
 
