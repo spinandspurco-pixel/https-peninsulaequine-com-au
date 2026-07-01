@@ -149,6 +149,54 @@ export function OAuthProviderPanel({
   const looksLikeGoogleClientId = (v: string) =>
     /^\d{6,}-[a-z0-9]+\.apps\.googleusercontent\.com$/i.test(v.trim());
 
+  // Debounced recording: whenever the pasted URL yields a parseable value
+  // (client_id or redirect_uri), log an entry after the admin stops typing.
+  const recordTimerRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (!pastedUrl.trim()) return;
+    if (!observedClientId && !observedRedirectUri) return;
+    if (recordTimerRef.current !== null) {
+      window.clearTimeout(recordTimerRef.current);
+    }
+    recordTimerRef.current = window.setTimeout(() => {
+      const next = appendEntry({
+        providedUrl: pastedUrl,
+        clientId: observedClientId,
+        redirectUri: observedRedirectUri,
+        intendedClientId: intendedNorm || null,
+        expectedRedirectUri: expectedCallback ?? null,
+        clientStatus: status,
+        redirectStatus,
+      });
+      setHistory(next);
+    }, 600);
+    return () => {
+      if (recordTimerRef.current !== null) {
+        window.clearTimeout(recordTimerRef.current);
+      }
+    };
+  }, [pastedUrl, observedClientId, observedRedirectUri, intendedNorm, expectedCallback, status, redirectStatus]);
+
+  const onClearHistory = () => {
+    clearHistory();
+    setHistory([]);
+  };
+  const onCopyHistory = () => {
+    void navigator.clipboard.writeText(historyToJson(history)).then(() => {
+      setHistoryCopiedAt(Date.now());
+      window.setTimeout(() => setHistoryCopiedAt(null), 1500);
+    });
+  };
+  const fmtTs = (ts: number) => {
+    const d = new Date(ts);
+    return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
+  };
+  const shortId = (v: string | null) => {
+    if (!v) return "—";
+    return v.length > 42 ? `${v.slice(0, 20)}…${v.slice(-16)}` : v;
+  };
+  const shortUrl = (v: string) => (v.length > 80 ? `${v.slice(0, 60)}…${v.slice(-16)}` : v);
+
   return (
     <div className="mb-8 border border-foreground/10 rounded-sm">
       <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55 flex items-center justify-between gap-4">
