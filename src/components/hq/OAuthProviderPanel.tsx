@@ -34,16 +34,40 @@ function statusColor(s: "ok" | "warn" | "fail" | "info"): string {
   }
 }
 
-function extractClientId(input: string): string | null {
+function extractParam(input: string, name: string): string | null {
   const trimmed = input.trim();
   if (!trimmed) return null;
   try {
     const u = new URL(trimmed);
-    const cid = u.searchParams.get("client_id");
-    if (cid) return cid;
+    const v = u.searchParams.get(name);
+    if (v) return v;
   } catch { /* fall through to regex */ }
-  const m = trimmed.match(/[?&#]client_id=([^&\s]+)/);
+  const m = trimmed.match(new RegExp(`[?&#]${name}=([^&\\s]+)`));
   return m ? decodeURIComponent(m[1]) : null;
+}
+
+function extractClientId(input: string): string | null {
+  return extractParam(input, "client_id");
+}
+
+export function extractRedirectUri(input: string): string | null {
+  return extractParam(input, "redirect_uri");
+}
+
+export function compareRedirectUri(
+  observed: string | null,
+  expected: string | null,
+): "ok" | "fail" | "info" {
+  if (!observed || !expected) return "info";
+  const norm = (u: string) => {
+    try {
+      const url = new URL(u);
+      return `${url.protocol}//${url.host}${url.pathname.replace(/\/+$/, "")}`.toLowerCase();
+    } catch {
+      return u.trim().replace(/\/+$/, "").toLowerCase();
+    }
+  };
+  return norm(observed) === norm(expected) ? "ok" : "fail";
 }
 
 export function OAuthProviderPanel({
