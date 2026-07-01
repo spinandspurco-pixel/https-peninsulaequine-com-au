@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { PECalendar, PEHorseshoe, PERider } from "@/components/icons/PEIcons";
 import { CalendarSyncButtons } from "@/components/CalendarSyncButtons";
+import { usePageMeta } from "@/lib/usePageMeta";
 import { supabase } from "@/integrations/supabase/client";
 import { EventRSVPForm } from "@/components/events/EventRSVPForm";
 import { EventGuestList } from "@/components/events/EventGuestList";
