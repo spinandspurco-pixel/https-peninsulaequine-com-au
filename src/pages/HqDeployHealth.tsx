@@ -242,6 +242,31 @@ export default function HqDeployHealth() {
         // available so the retry doesn't double-fetch on the first pass.
         initialBefore: results.length ? results : null,
         onAttempt: (attempt, max) => setRetryProgress({ attempt, max }),
+        onLog: (event) => {
+          // Structured, single-line JSON so support can grep the console
+          // and correlate with latency history (matching ISO timestamps).
+          try {
+            // eslint-disable-next-line no-console
+            console.info("[deploy-health.retry]", JSON.stringify(event));
+          } catch {
+            /* noop */
+          }
+          if (event.phase === "attempt") {
+            void logDeployHealthAudit(
+              "retry_promotion_attempt",
+              event.classification?.willRetry ? "info" : "info",
+              {
+                attempt: event.attempt,
+                maxAttempts: event.maxAttempts,
+                durationMs: event.durationMs,
+                startedAt: event.startedAt,
+                finishedAt: event.finishedAt,
+                classification: event.classification,
+                targets: event.targets,
+              },
+            );
+          }
+        },
       });
 
       // Persist the final probe pass (URLs already stripped of cache-bust).
