@@ -1,12 +1,22 @@
-import { useState, useEffect, useCallback, useId } from "react";
-import { X } from "lucide-react";
+import { useState, useEffect, useCallback, useId, useMemo, useRef } from "react";
+import { X, Paperclip, Trash2 } from "lucide-react";
 import { useIntake } from "@/hooks/useIntake";
 import { supabase } from "@/integrations/supabase/client";
 import { trackCtaClick } from "@/hooks/useCtaTracking";
 import { trackConversion } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { useSiteChrome } from "@/hooks/useSiteChrome";
+import {
+  uploadInquiryAttachments,
+  linkAttachmentsToInquiry,
+  UploadValidationError,
+  type AttachmentRecord,
+} from "@/lib/uploadInquiryAttachment";
 import { z } from "zod";
+
+const MAX_FILES = 5;
+const MAX_FILE_BYTES = 10 * 1024 * 1024;
+
 
 /* ── Step data ── */
 const INTENT_OPTIONS = [
