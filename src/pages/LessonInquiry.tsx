@@ -144,9 +144,18 @@ export default function LessonInquiry({
       if (!merged.some((m) => m.name === f.name && m.size === f.size)) merged.push(f);
     }
     setFiles(merged);
+    uploader.syncFiles(merged);
   };
 
-  const removeFile = (i: number) => setFiles((prev) => prev.filter((_, idx) => idx !== i));
+  const uploader = useAttachmentUpload();
+
+  const removeFile = (i: number) => {
+    setFiles((prev) => {
+      const next = prev.filter((_, idx) => idx !== i);
+      uploader.syncFiles(next);
+      return next;
+    });
+  };
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setData((prev) => ({ ...prev, [key]: value }));
