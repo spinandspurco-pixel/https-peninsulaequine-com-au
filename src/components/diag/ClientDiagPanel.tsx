@@ -160,6 +160,10 @@ export function ClientDiagPanel() {
     }
   }, [fetchBuildInfo, fetchHealth, fetchDiag]);
 
+  const [probing, setProbing] = useState(false);
+  const [lastProbeAt, setLastProbeAt] = useState<number | null>(null);
+
+
   useEffect(() => {
     void fetchBuildInfo();
   }, [fetchBuildInfo]);
@@ -683,6 +687,24 @@ export function ClientDiagPanel() {
                   {autoRefresh ? `auto ${POLL_MS / 1000}s ✓` : "auto off"}
                 </button>
                 <button
+                  onClick={async () => {
+                    setProbing(true);
+                    try {
+                      await Promise.all([fetchBuildInfo(), fetchHealth(), fetchDiag(), probeCache()]);
+                      const now = Date.now();
+                      setLastRefreshAt(now);
+                      setLastProbeAt(now);
+                    } finally {
+                      setProbing(false);
+                    }
+                  }}
+                  style={{ ...btn, color: probing ? "#eab308" : "#7fbf7f" }}
+                  disabled={probing}
+                  title="Re-run /api/build-info, /api/health, /api/diag, and edge cache probe now"
+                >
+                  {probing ? "probing…" : lastProbeAt ? `probe now ✓ ${new Date(lastProbeAt).toISOString().slice(11, 19)}` : "probe now"}
+                </button>
+                <button
                   onClick={refreshBuildInfo}
                   style={btn}
                   disabled={refreshing}
@@ -690,6 +712,7 @@ export function ClientDiagPanel() {
                 >
                   {refreshing ? "refreshing…" : "refresh"}
                 </button>
+
                 <button onClick={copyBuildInfo} style={btn} title="Copy build info JSON">
                   {copied ?? "copy"}
                 </button>
