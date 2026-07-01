@@ -201,6 +201,22 @@ export default function LessonInquiry({
       setStep(STEPS.length - 1);
       return;
     }
+    if (uploader.isUploading) {
+      const msg = "Please wait for uploads to finish before submitting.";
+      setFileError(msg);
+      toast.error(msg);
+      setStep(STEPS.length - 1);
+      return;
+    }
+    if (uploader.hasErrors) {
+      const msg =
+        uploader.errorSummary ??
+        "Some attachments failed. Retry or remove them before submitting.";
+      setFileError(msg);
+      toast.error(msg);
+      setStep(STEPS.length - 1);
+      return;
+    }
     setFileError(null);
     // Silent spam short-circuit — mimic success without writing to DB.
     const guardResult = spamGuard.check();
