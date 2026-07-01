@@ -57,7 +57,7 @@ function emailStep1(name: string): { subject: string; html: string } {
 
 <!-- Body -->
 <tr><td style="padding:0 32px 24px;color:#d6d3d1;font-size:15px;line-height:1.7;">
-  <p>Hi ${first},</p>
+  <p>Hi ${esc(first)},</p>
   <p>Thank you for reaching out to Peninsula Equine. We're a family-run operation on Victoria's Mornington Peninsula, and we're thrilled you're interested in what we do.</p>
   <p>Over the next few days we'll share some helpful resources to get you started:</p>
   <table width="100%" cellpadding="0" cellspacing="0" style="margin:16px 0;">
@@ -107,7 +107,7 @@ function emailStep2(name: string): { subject: string; html: string } {
 </td></tr>
 
 <tr><td style="padding:0 32px 24px;color:#d6d3d1;font-size:15px;line-height:1.7;">
-  <p>Hi ${first},</p>
+  <p>Hi ${esc(first)},</p>
   <p>Whether you're booking a lesson, touring our facilities, or planning a build — here's what to keep in mind:</p>
   
   <table width="100%" cellpadding="0" cellspacing="0" style="margin:16px 0;">
@@ -157,7 +157,7 @@ function emailStep3(name: string): { subject: string; html: string } {
 </td></tr>
 
 <tr><td style="padding:0 32px 24px;color:#d6d3d1;font-size:15px;line-height:1.7;">
-  <p>Hi ${first},</p>
+  <p>Hi ${esc(first)},</p>
   <p>Peninsula Equine is built on decades of horsemanship, craftsmanship, and a genuine love of the equestrian lifestyle.</p>
   
   <table width="100%" cellpadding="0" cellspacing="0" style="margin:16px 0;">
