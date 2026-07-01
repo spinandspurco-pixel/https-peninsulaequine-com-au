@@ -251,6 +251,4 @@ export default function ThankYou() {
     </Layout>
   );
 }
-    </Layout>
-  );
-}
+
