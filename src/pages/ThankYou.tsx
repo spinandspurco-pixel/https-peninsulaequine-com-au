@@ -57,6 +57,11 @@ function getConsultationDate(daysOut: number): string {
 const featured = testimonials[0];
 
 export default function ThankYou() {
+  usePageMeta({
+    title: "Inquiry Received — Peninsula Equine",
+    description: "Thank you — your inquiry has been received. We'll follow up within one business day.",
+    path: "/thank-you",
+  });
   const [searchParams] = useSearchParams();
   const serviceIds = searchParams.get("services")?.split(",").filter(Boolean) || [];
   const clientName = searchParams.get("name") || "";
