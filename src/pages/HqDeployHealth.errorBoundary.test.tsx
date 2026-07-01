@@ -119,22 +119,24 @@ afterEach(() => {
 
 describe("HqDeployHealth · RetryOutcomeErrorBoundary integration", () => {
   it("catches a render-time crash in the outcome section and shows the friendly fallback", async () => {
-    // Craft an `after` array whose `.map` succeeds for the JSON-report
-    // useMemo (which runs in the parent, ABOVE the error boundary) but
-    // throws on the second call — which happens inside the outcome
-    // renderer's `<tbody>` mapping (line ~981), which IS inside the
-    // RetryOutcomeErrorBoundary.
+    // Craft an `after` array whose `.map` throws only when React is
+    // rendering the outcome `<tbody>` (whose callback returns React
+    // elements). The parent's promotionReportJson useMemo calls .map with
+    // a callback that returns plain objects — we detect that case and let
+    // it succeed. This way the crash lands INSIDE the RetryOutcomeErrorBoundary
+    // subtree, exactly as it would in production.
     const validItems = [
       { label: "Custom domain", bundleFile: "index-NEW.js", stuck: false },
     ];
-    let mapCallCount = 0;
     const after = Object.assign([...validItems], {
       map(fn: (item: unknown, idx: number) => unknown) {
-        mapCallCount += 1;
-        if (mapCallCount >= 2) {
+        const results = Array.prototype.map.call(validItems, fn) as unknown[];
+        const first = results[0] as { $$typeof?: symbol } | null;
+        // React elements carry a $$typeof symbol; plain report objects don't.
+        if (first && typeof first === "object" && "$$typeof" in first) {
           throw new Error("Simulated outcome-renderer crash");
         }
-        return Array.prototype.map.call(validItems, fn);
+        return results;
       },
     });
 
