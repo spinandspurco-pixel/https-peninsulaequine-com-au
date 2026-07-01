@@ -87,7 +87,7 @@ export async function fetchMergedTestimonials(): Promise<TestimonialItem[]> {
   try {
     const { data, error } = await supabase
       .from("managed_testimonials")
-      .select("id, client_name, client_role, quote, rating, media_type, media_url, service_tags, pinned, trainer")
+      .select("id, client_name, client_role, quote, rating, media_type, media_url, service_tags, pinned, featured, trainer")
       .eq("active", true)
       .order("pinned", { ascending: false })
       .order("sort_order", { ascending: true });
@@ -108,6 +108,7 @@ export async function fetchMergedTestimonials(): Promise<TestimonialItem[]> {
       quote: t.quote,
       rating: t.rating,
       pinned: (t as any).pinned ?? false,
+      featured: (t as any).featured ?? false,
       mediaType: (t.media_type as "image" | "video" | null) ?? null,
       mediaUrl: t.media_url ?? null,
       serviceTags: (t.service_tags as string[]) ?? [],
