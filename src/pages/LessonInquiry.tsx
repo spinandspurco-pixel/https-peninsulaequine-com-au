@@ -201,8 +201,8 @@ export default function LessonInquiry({
               If you'd like to add site photos or paperwork, reply to our confirmation with attachments.
             </p>
             <div className="flex gap-6 pt-4 text-xs uppercase tracking-[0.3em]">
-              <Link to="/lessons" className="text-foreground/70 hover:text-foreground border-b border-foreground/20 pb-1">
-                Back to lessons
+              <Link to={backLink.to} className="text-foreground/70 hover:text-foreground border-b border-foreground/20 pb-1">
+                {backLink.label}
               </Link>
               <Link to="/" className="text-foreground/70 hover:text-foreground border-b border-foreground/20 pb-1">
                 Return home
@@ -215,6 +215,26 @@ export default function LessonInquiry({
   }
 
   // ── Form ──
+  return (
+    <Layout>
+      <PageHeader
+        overline={headerOverline ?? `Step ${step + 1} of ${STEPS.length}`}
+        title={headerTitle}
+        subtitle={headerSubtitle}
+      />
+      <section className="max-w-2xl mx-auto px-6 pb-24">
+        <Stepper current={step} />
+
+        <form
+          className="mt-12 space-y-8"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (step < STEPS.length - 1) goNext();
+            else submit();
+          }}
+        >
+          {step === 0 && <StepFocus data={data} set={set} errors={errors} lockedType={lockedType} />}
+
   return (
     <Layout>
       <PageHeader
