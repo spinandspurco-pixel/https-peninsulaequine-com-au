@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { HqNav } from "@/components/hq/HqNav";
+import { RetryOutcomeErrorBoundary } from "@/components/hq/RetryOutcomeErrorBoundary";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { recordResults } from "@/lib/deployHealth";
@@ -779,6 +780,10 @@ export default function HqDeployHealth() {
         )}
 
 
+        <RetryOutcomeErrorBoundary
+          debugPayload={retryOutcome}
+          onReset={() => setRetryOutcome(null)}
+        >
         {retryOutcome && (
           <section
             className={
@@ -915,6 +920,9 @@ export default function HqDeployHealth() {
             </div>
           </section>
         )}
+        </RetryOutcomeErrorBoundary>
+
+
 
         {anyStuck && (
           <section className="border border-amber-600/40 bg-amber-600/5 px-5 py-4 space-y-2">
