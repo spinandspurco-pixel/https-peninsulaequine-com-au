@@ -31,6 +31,11 @@ const isImageMime = (mime: string | null | undefined, filename: string) => {
   return /\.(png|jpe?g|gif|webp|avif|heic)$/i.test(filename);
 };
 
+const isPdfMime = (mime: string | null | undefined, filename: string) => {
+  if (mime === "application/pdf") return true;
+  return /\.pdf$/i.test(filename);
+};
+
 interface Props {
   inquiryId: string;
   count: number;
