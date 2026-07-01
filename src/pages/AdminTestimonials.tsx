@@ -164,6 +164,7 @@ export default function AdminTestimonials() {
       media_url: editItem.media_url || null,
       sort_order: editItem.sort_order ?? 0,
       active: editItem.active ?? true,
+      featured: (editItem as any).featured ?? false,
     };
 
     if (editItem.id) {
