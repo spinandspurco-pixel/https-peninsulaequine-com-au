@@ -1279,6 +1279,17 @@ export function ClientDiagPanel() {
                   {pollSeconds ? `auto ${pollSeconds}s ✓` : "auto off"}
                 </button>
                 <button
+                  onClick={() => setCritAutoProbe((v) => !v)}
+                  style={{ ...btn, color: critAutoProbe ? "#ff8a8a" : "#9aa4af" }}
+                  title={
+                    critAutoProbe
+                      ? `Auto re-probe on ≥ crit / error is ON${lastCritReprobeAt ? ` · last trigger ${new Date(lastCritReprobeAt).toISOString().slice(11, 19)} (${lastCritReason ?? ""})` : ""}`
+                      : "Auto re-probe /api/health + /api/diag whenever any endpoint hits its crit threshold or errors (5s cooldown)"
+                  }
+                >
+                  {critAutoProbe ? `crit-reprobe ✓${lastCritReprobeAt ? ` · ${new Date(lastCritReprobeAt).toISOString().slice(11, 19)}` : ""}` : "crit-reprobe off"}
+                </button>
+                <button
                   onClick={async () => {
                     setProbing(true);
                     try {
