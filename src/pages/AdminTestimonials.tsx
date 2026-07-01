@@ -135,9 +135,21 @@ export default function AdminTestimonials() {
     fetchData();
   };
 
+  const FEATURED_LIMIT = 1;
   const toggleFeatured = async (item: ManagedTestimonial) => {
     if (isPreview) { toast.error("View-only in client preview"); return; }
     const next = !(item as any).featured;
+    if (next) {
+      const currentFeatured = items.filter((x) => (x as any).featured && x.id !== item.id);
+      if (currentFeatured.length >= FEATURED_LIMIT) {
+        // Auto-swap: unfeature the existing one to enforce single featured testimonial
+        const existing = currentFeatured[0];
+        const { error: unsetErr } = await supabase.from("managed_testimonials").update({ featured: false }).eq("id", existing.id);
+        if (unsetErr) { toast.error("Failed to update"); return; }
+        toast.message(`Replaced featured testimonial (${existing.client_name})`);
+        setItems((prev) => prev.map((x) => (x.id === existing.id ? ({ ...x, featured: false } as ManagedTestimonial) : x)));
+      }
+    }
     const { error } = await supabase.from("managed_testimonials").update({ featured: next }).eq("id", item.id);
     if (error) { toast.error("Failed to update"); return; }
     toast.success(next ? "Featured on homepage" : "Removed from homepage");
@@ -155,6 +167,15 @@ export default function AdminTestimonials() {
       return;
     }
     setSaving(true);
+    const wantFeatured = (editItem as any).featured ?? false;
+    if (wantFeatured) {
+      const others = items.filter((x) => (x as any).featured && x.id !== editItem.id);
+      if (others.length >= FEATURED_LIMIT) {
+        const existing = others[0];
+        await supabase.from("managed_testimonials").update({ featured: false }).eq("id", existing.id);
+        toast.message(`Replaced featured testimonial (${existing.client_name})`);
+      }
+    }
     const payload = {
       client_name: editItem.client_name.trim(),
       client_role: editItem.client_role || null,
@@ -164,7 +185,7 @@ export default function AdminTestimonials() {
       media_url: editItem.media_url || null,
       sort_order: editItem.sort_order ?? 0,
       active: editItem.active ?? true,
-      featured: (editItem as any).featured ?? false,
+      featured: wantFeatured,
     };
 
     if (editItem.id) {

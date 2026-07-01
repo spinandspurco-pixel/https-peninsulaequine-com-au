@@ -59,6 +59,14 @@ export default function AdminEvents() {
       toast.error("Title and date are required");
       return;
     }
+    const wantFeatured = (editItem as any).featured ?? false;
+    if (wantFeatured) {
+      const others = items.filter((x) => (x as any).featured && x.id !== editItem.id).length;
+      if (others >= 3) {
+        toast.error("Only 3 events can be featured. Unfeature another first.");
+        return;
+      }
+    }
     setSaving(true);
     const payload = {
       title: editItem.title.trim(),
@@ -69,7 +77,7 @@ export default function AdminEvents() {
       capacity: editItem.capacity ?? null,
       image_url: editItem.image_url || null,
       active: editItem.active ?? true,
-      featured: (editItem as any).featured ?? false,
+      featured: wantFeatured,
     };
 
     if (editItem.id) {
@@ -102,9 +110,17 @@ export default function AdminEvents() {
     setItems((prev) => prev.map((x) => (x.id === ev.id ? { ...x, active: next } : x)));
   };
 
+  const FEATURED_EVENTS_LIMIT = 3;
   const toggleFeatured = async (ev: ManagedEvent) => {
     if (isPreview) { toast.error("View-only in client preview"); return; }
     const next = !(ev as any).featured;
+    if (next) {
+      const currentFeaturedCount = items.filter((x) => (x as any).featured && x.id !== ev.id).length;
+      if (currentFeaturedCount >= FEATURED_EVENTS_LIMIT) {
+        toast.error(`Only ${FEATURED_EVENTS_LIMIT} events can be featured. Unfeature another first.`);
+        return;
+      }
+    }
     const { error } = await supabase.from("managed_events").update({ featured: next }).eq("id", ev.id);
     if (error) { toast.error("Failed to update"); return; }
     toast.success(next ? "Featured on homepage" : "Removed from homepage");
