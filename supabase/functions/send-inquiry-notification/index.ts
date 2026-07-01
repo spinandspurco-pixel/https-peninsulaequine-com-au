@@ -123,8 +123,7 @@ function generateConsultationICS(opts: {
   services: string[];
   isConstruction: boolean;
 }): { icsBase64: string; readableDate: string } {
-  const uid = crypto.randomUUID() + "@peninsulaequine.com";
-  const now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  const uid = crypto.randomUUID() + "@peninsulaequine.systems";  const now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
 
   // Suggest consultation 3 business days from now at 10am Melbourne time
   const suggestedDate = new Date();
@@ -486,8 +485,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Tailored CTA based on service type
     const ctaUrl = isLessons
-      ? `https://peninsulaequine.lovable.app/book-lesson`
-      : `https://peninsulaequine.lovable.app/schedule?services=${encodeURIComponent((inquiry.services || []).join(","))}&name=${encodeURIComponent(inquiry.name || "")}&email=${encodeURIComponent(inquiry.email || "")}`;
+      ? `https://peninsulaequine.systems/book-lesson`
+      : `https://peninsulaequine.systems/schedule?services=${encodeURIComponent((inquiry.services || []).join(","))}&name=${encodeURIComponent(inquiry.name || "")}&email=${encodeURIComponent(inquiry.email || "")}`;
     const ctaText = isLessons ? "Browse Lesson Programs" : "Schedule a Follow-Up Call";
     const ctaEmoji = isLessons ? "🐴" : "📅";
 

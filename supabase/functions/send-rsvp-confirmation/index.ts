@@ -33,7 +33,7 @@ function generateEventICS(opts: {
   dtEnd: string;
   attendee: string;
 }): string {
-  const uid = crypto.randomUUID() + "@peninsulaequine.com";
+  const uid = crypto.randomUUID() + "@peninsulaequine.systems";
   const now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
   return [
     "BEGIN:VCALENDAR",
@@ -234,11 +234,11 @@ const handler = async (req: Request): Promise<Response> => {
           `}
 
           <div style="text-align: center; margin: 24px 0;">
-            <a href="https://peninsulaequine.lovable.app/events" style="background: #c9a227; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600; font-size: 15px;">View All Upcoming Events</a>
+            <a href="https://peninsulaequine.systems/events" style="background: #c9a227; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600; font-size: 15px;">View All Upcoming Events</a>
           </div>
           ` : `
           <div style="text-align: center; margin: 24px 0;">
-            <a href="https://peninsulaequine.lovable.app/events" style="background: #c9a227; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600; font-size: 15px;">Browse Other Events</a>
+            <a href="https://peninsulaequine.systems/events" style="background: #c9a227; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600; font-size: 15px;">Browse Other Events</a>
           </div>
           `}
 
