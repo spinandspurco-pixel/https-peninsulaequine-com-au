@@ -10,7 +10,7 @@ import { servicePricingTiers, serviceFaqs } from "@/data/servicePricingFaq";
  */
 export function ServicesSchemaMarkup() {
   useEffect(() => {
-    const baseUrl = "https://peninsulaequine.lovable.app";
+    const baseUrl = "https://peninsulaequine.systems";
 
     // 1. OfferCatalog — each service as an Offer > Service
     const offerCatalog = {
