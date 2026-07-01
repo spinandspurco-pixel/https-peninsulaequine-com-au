@@ -4,7 +4,7 @@ import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { HqNav } from "@/components/hq/HqNav";
 import { supabase } from "@/integrations/supabase/client";
 import { format, formatDistanceToNow } from "date-fns";
-import { Search, RefreshCw, Inbox, Download, Bookmark, Plus, X } from "lucide-react";
+import { Search, RefreshCw, Inbox, Download, Bookmark, Plus, X, Paperclip } from "lucide-react";
 import { toast } from "sonner";
 import { InquiryDetailDrawer } from "@/components/admin/InquiryDetailDrawer";
 import { InquiryAttachmentsQuickView } from "@/components/admin/InquiryAttachmentsQuickView";
@@ -84,6 +84,7 @@ const BUILTIN_PRESETS: FilterPreset[] = [
 
 const PRESETS_STORAGE_KEY = "hq.inquiries.presets.v1";
 const ACTIVE_PRESET_STORAGE_KEY = "hq.inquiries.activePreset.v1";
+const ATTACHMENTS_ONLY_STORAGE_KEY = "hq.inquiries.attachmentsOnly.v1";
 
 function loadCustomPresets(): FilterPreset[] {
   if (typeof window === "undefined") return [];
@@ -119,6 +120,10 @@ export default function AdminInquiries() {
   const [exporting, setExporting] = useState(false);
   const [customPresets, setCustomPresets] = useState<FilterPreset[]>(() => loadCustomPresets());
   const [attachmentCounts, setAttachmentCounts] = useState<Record<string, number>>({});
+  const [attachmentsOnly, setAttachmentsOnly] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem(ATTACHMENTS_ONLY_STORAGE_KEY) === "1";
+  });
   const [activePresetId, setActivePresetId] = useState<string | null>(() => {
     if (typeof window === "undefined") return null;
     return window.localStorage.getItem(ACTIVE_PRESET_STORAGE_KEY);
@@ -129,7 +134,7 @@ export default function AdminInquiries() {
   // Clear selection when the visible dataset changes.
   useEffect(() => {
     setSelected(new Set());
-  }, [debouncedSearch, statusFilter, sort, page]);
+  }, [debouncedSearch, statusFilter, sort, page, attachmentsOnly]);
 
   useEffect(() => {
     document.title = "Inquiries | Peninsula Equine HQ";
@@ -143,11 +148,41 @@ export default function AdminInquiries() {
 
   useEffect(() => {
     setPage(0);
-  }, [debouncedSearch, statusFilter, sort]);
+  }, [debouncedSearch, statusFilter, sort, attachmentsOnly]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(ATTACHMENTS_ONLY_STORAGE_KEY, attachmentsOnly ? "1" : "0");
+  }, [attachmentsOnly]);
 
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
+
+    // "Attachments only" — pre-fetch inquiry ids that have at least one attachment.
+    let attachmentOnlyIds: string[] | null = null;
+    if (attachmentsOnly) {
+      const { data: attRows, error: attErr } = await supabase
+        .from("inquiry_attachments")
+        .select("inquiry_id")
+        .not("inquiry_id", "is", null);
+      if (attErr) {
+        setLoading(false);
+        setError(attErr.message);
+        return;
+      }
+      attachmentOnlyIds = Array.from(
+        new Set((attRows ?? []).map((r: any) => r.inquiry_id).filter(Boolean))
+      );
+      if (attachmentOnlyIds.length === 0) {
+        setRows([]);
+        setCount(0);
+        setAttachmentCounts({});
+        setLoading(false);
+        return;
+      }
+    }
+
     let q = supabase
       .from("inquiries")
       .select(
@@ -155,6 +190,7 @@ export default function AdminInquiries() {
         { count: "exact" }
       );
 
+    if (attachmentOnlyIds) q = q.in("id", attachmentOnlyIds);
     if (statusFilter !== "all") q = q.eq("status", statusFilter);
 
     if (debouncedSearch) {
@@ -202,7 +238,7 @@ export default function AdminInquiries() {
     } else {
       setAttachmentCounts({});
     }
-  }, [debouncedSearch, statusFilter, sort, page]);
+  }, [debouncedSearch, statusFilter, sort, page, attachmentsOnly]);
 
   useEffect(() => {
     load();
@@ -595,6 +631,23 @@ export default function AdminInquiries() {
                 Save current
               </button>
             )}
+
+            <span className="mx-2 h-3 w-px bg-border/30" aria-hidden />
+
+            <button
+              type="button"
+              onClick={() => setAttachmentsOnly((v) => !v)}
+              aria-pressed={attachmentsOnly}
+              title="Show only inquiries with uploaded attachments"
+              className={`inline-flex items-center gap-1.5 border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.28em] transition-colors ${
+                attachmentsOnly
+                  ? "border-accent/60 bg-accent/[0.08] text-accent"
+                  : "border-border/25 text-foreground/60 hover:border-accent/40 hover:text-accent/90"
+              }`}
+            >
+              <Paperclip className="h-2.5 w-2.5" strokeWidth={1.5} />
+              Attachments only
+            </button>
           </div>
 
           {/* Search bar */}
