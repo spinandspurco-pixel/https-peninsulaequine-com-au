@@ -136,6 +136,7 @@ export async function uploadInquiryAttachment(
 }
 
 export interface AttachmentRecord {
+  id: string;
   path: string;
   name: string;
   size: number;
@@ -146,7 +147,7 @@ export interface AttachmentRecord {
 export async function uploadInquiryAttachments(
   files: File[],
   folder = crypto.randomUUID(),
-): Promise<{ paths: string[]; records: AttachmentRecord[] }> {
+): Promise<{ ids: string[]; paths: string[]; records: AttachmentRecord[] }> {
   // Sequential so the first failure surfaces cleanly with its file name.
   const uploaded: UploadedAttachment[] = [];
   for (const f of files) {
@@ -154,11 +155,33 @@ export async function uploadInquiryAttachments(
   }
   const now = new Date().toISOString();
   const records: AttachmentRecord[] = uploaded.map((u) => ({
+    id: u.id,
     path: u.path,
     name: u.name,
     size: u.size,
     mime: u.mime,
     uploaded_at: now,
   }));
-  return { paths: records.map((r) => r.path), records };
+  return {
+    ids: records.map((r) => r.id),
+    paths: records.map((r) => r.path),
+    records,
+  };
 }
+
+/**
+ * Links previously uploaded attachment rows to a newly created inquiry.
+ * Called by the submit flow once the `inquiries` row exists so admins
+ * can query attachments by inquiry_id.
+ */
+export async function linkAttachmentsToInquiry(
+  ids: string[],
+  inquiryId: string,
+): Promise<void> {
+  if (!ids.length) return;
+  await supabase
+    .from("inquiry_attachments")
+    .update({ inquiry_id: inquiryId })
+    .in("id", ids);
+}
+
