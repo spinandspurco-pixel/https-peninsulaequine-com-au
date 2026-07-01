@@ -404,7 +404,7 @@ export function OAuthProviderPanel({
               Expected
             </div>
             <code className="font-mono opacity-85 break-all">
-              {expectedCallback || <span className="opacity-40">(missing VITE_SUPABASE_URL)</span>}
+              {effectiveExpectedCallback || <span className="opacity-40">(missing VITE_SUPABASE_URL)</span>}
             </code>
             <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-55 pt-1">
               Observed
