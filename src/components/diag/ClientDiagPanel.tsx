@@ -903,11 +903,11 @@ export function ClientDiagPanel() {
               </span>
               <div style={{ display: "flex", gap: 4 }}>
                 <button
-                  onClick={() => setAutoRefresh((v) => !v)}
-                  style={{ ...btn, color: autoRefresh ? "#7fbf7f" : "#9aa4af" }}
-                  title={`Auto-refresh every ${POLL_MS / 1000}s (pauses when tab hidden)`}
+                  onClick={cyclePollSeconds}
+                  style={{ ...btn, color: pollSeconds ? "#7fbf7f" : "#9aa4af" }}
+                  title="Auto-probe interval — cycles off / 5s / 10s / 30s / 60s. Pauses when tab hidden."
                 >
-                  {autoRefresh ? `auto ${POLL_MS / 1000}s ✓` : "auto off"}
+                  {pollSeconds ? `auto ${pollSeconds}s ✓` : "auto off"}
                 </button>
                 <button
                   onClick={async () => {
