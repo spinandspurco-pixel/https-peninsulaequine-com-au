@@ -920,6 +920,9 @@ export default function HqDeployHealth() {
             </div>
           </section>
         )}
+        </RetryOutcomeErrorBoundary>
+
+
 
         {anyStuck && (
           <section className="border border-amber-600/40 bg-amber-600/5 px-5 py-4 space-y-2">
