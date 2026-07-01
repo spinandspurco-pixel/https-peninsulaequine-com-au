@@ -405,7 +405,36 @@ export function ClientDiagPanel() {
     if (ms >= latencyThresholds.warn) return "#fde68a";
     return "#86efac";
   };
-  const latencyRow = (label: string, ms: number | null | undefined) => {
+  const sparkline = (points: number[]) => {
+    if (!points || points.length < 2) return null;
+    const w = 60;
+    const h = 14;
+    const min = Math.min(...points);
+    const max = Math.max(...points);
+    const range = max - min || 1;
+    const step = w / (points.length - 1);
+    const path = points
+      .map((v, i) => {
+        const x = i * step;
+        const y = h - ((v - min) / range) * h;
+        return `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`;
+      })
+      .join(" ");
+    const last = points[points.length - 1];
+    const stroke = latencyColor(last) ?? "currentColor";
+    return (
+      <svg
+        width={w}
+        height={h}
+        viewBox={`0 0 ${w} ${h}`}
+        style={{ opacity: 0.85 }}
+        aria-label={`last ${points.length} latencies: ${points.join(", ")} ms`}
+      >
+        <path d={path} fill="none" stroke={stroke} strokeWidth={1} />
+      </svg>
+    );
+  };
+  const latencyRow = (label: string, ms: number | null | undefined, history?: number[]) => {
     const color = latencyColor(ms);
     const display = typeof ms === "number" && isFinite(ms) ? `${ms} ms` : "—";
     const tier =
@@ -416,16 +445,30 @@ export function ClientDiagPanel() {
             ? " · warn"
             : " · ok"
         : "";
+    const points = history ?? [];
+    const stats =
+      points.length >= 2
+        ? ` · min ${Math.min(...points)} / max ${Math.max(...points)} / n=${points.length}`
+        : "";
     return (
-      <div className="flex gap-2 leading-snug">
+      <div className="flex gap-2 leading-snug items-center">
         <span className="opacity-50 min-w-[140px]">{label}</span>
         <span className="font-mono break-all" style={color ? { color } : undefined}>
           {display}
           {tier}
         </span>
+        {points.length >= 2 ? (
+          <>
+            <span className="inline-flex items-center" title={`last ${points.length}: ${points.join(", ")} ms`}>
+              {sparkline(points)}
+            </span>
+            <span className="opacity-40 font-mono text-[10px]">{stats}</span>
+          </>
+        ) : null}
       </div>
     );
   };
+
 
 
   const clientBuildTime = typeof __BUILD_TIME__ !== "undefined" ? __BUILD_TIME__ : "(unknown)";
