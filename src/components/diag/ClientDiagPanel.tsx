@@ -473,7 +473,15 @@ export function ClientDiagPanel() {
       </svg>
     );
   };
-  const latencyRow = (label: string, ms: number | null | undefined, history?: number[]) => {
+  const latencyRow = (
+    label: string,
+    ms: number | null | undefined,
+    history?: number[],
+    opts?: {
+      currentError?: { message: string; httpStatus?: number } | null;
+      lastError?: LastErr;
+    },
+  ) => {
     const color = latencyColor(ms);
     const display = typeof ms === "number" && isFinite(ms) ? `${ms} ms` : "—";
     const tier =
@@ -489,24 +497,70 @@ export function ClientDiagPanel() {
       points.length >= 2
         ? ` · min ${Math.min(...points)} / max ${Math.max(...points)} / n=${points.length}`
         : "";
+    const cur = opts?.currentError ?? null;
+    const last = opts?.lastError ?? null;
     return (
-      <div className="flex gap-2 leading-snug items-center">
-        <span className="opacity-50 min-w-[140px]">{label}</span>
-        <span className="font-mono break-all" style={color ? { color } : undefined}>
-          {display}
-          {tier}
-        </span>
-        {points.length >= 2 ? (
-          <>
-            <span className="inline-flex items-center" title={`last ${points.length}: ${points.join(", ")} ms`}>
-              {sparkline(points)}
+      <div className="leading-snug">
+        <div className="flex gap-2 items-center">
+          <span className="opacity-50 min-w-[140px]">{label}</span>
+          <span className="font-mono break-all" style={color ? { color } : undefined}>
+            {display}
+            {tier}
+          </span>
+          {points.length >= 2 ? (
+            <>
+              <span
+                className="inline-flex items-center"
+                title={`last ${points.length}: ${points.join(", ")} ms`}
+              >
+                {sparkline(points)}
+              </span>
+              <span className="opacity-40 font-mono text-[10px]">{stats}</span>
+            </>
+          ) : null}
+          {cur ? (
+            <span
+              className="font-mono text-[10px]"
+              style={{ color: "#ff8a8a" }}
+              title={cur.message}
+            >
+              ✗ {cur.httpStatus ? `HTTP ${cur.httpStatus} · ` : ""}
+              {cur.message.length > 60 ? cur.message.slice(0, 60) + "…" : cur.message}
             </span>
-            <span className="opacity-40 font-mono text-[10px]">{stats}</span>
-          </>
+          ) : last ? (
+            <span
+              className="font-mono text-[10px] opacity-60"
+              style={{ color: "#eab308" }}
+              title={`${last.httpStatus ? `HTTP ${last.httpStatus} · ` : ""}${last.message} @ ${last.at}`}
+            >
+              ⚠ recovered · last error {last.at.slice(11, 19)}
+            </span>
+          ) : (
+            <span className="font-mono text-[10px] opacity-40" style={{ color: "#7fbf7f" }}>
+              ✓ ok
+            </span>
+          )}
+        </div>
+        {cur ? (
+          <div
+            className="font-mono text-[10px] mt-0.5"
+            style={{ color: "#ff9a9a", paddingLeft: 148, wordBreak: "break-all" }}
+          >
+            cause: {cur.message}
+          </div>
+        ) : last ? (
+          <div
+            className="font-mono text-[10px] mt-0.5 opacity-60"
+            style={{ paddingLeft: 148, wordBreak: "break-all" }}
+          >
+            last cause: {last.httpStatus ? `HTTP ${last.httpStatus} · ` : ""}
+            {last.message}
+          </div>
         ) : null}
       </div>
     );
   };
+
 
 
 
