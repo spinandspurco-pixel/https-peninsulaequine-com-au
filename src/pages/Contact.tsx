@@ -218,11 +218,10 @@ export default function Contact() {
       let attachment_ids: string[] = [];
       let attachments: import("@/lib/uploadInquiryAttachment").AttachmentRecord[] = [];
       if (files.length > 0) {
-        const { uploadInquiryAttachments } = await import("@/lib/uploadInquiryAttachment");
-        const result = await uploadInquiryAttachments(files);
-        attachment_urls = result.paths;
-        attachment_ids = result.ids;
-        attachments = result.records;
+        const records = await uploader.uploadAll(files);
+        attachments = records;
+        attachment_ids = records.map((r) => r.id);
+        attachment_urls = records.map((r) => r.path);
       }
 
       const { data: submitResp, error } = await supabase.functions.invoke(
