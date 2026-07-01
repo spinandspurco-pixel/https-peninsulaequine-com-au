@@ -1,5 +1,35 @@
 import { supabase } from "@/integrations/supabase/client";
 
+/**
+ * Client-side mirror of the edge function's allow-list. Kept in sync with
+ * `supabase/functions/validate-inquiry-upload/index.ts` DEFAULT_ALLOWED so
+ * users get instant feedback for obvious type/size problems without a
+ * roundtrip. The server remains authoritative (magic-byte sniff, etc.).
+ */
+export const CLIENT_MAX_BYTES = 10 * 1024 * 1024; // 10 MB
+
+export const CLIENT_ALLOWED_MIME: Record<string, string[]> = {
+  "image/jpeg": ["jpg", "jpeg"],
+  "image/png": ["png"],
+  "image/webp": ["webp"],
+  "image/heic": ["heic"],
+  "image/heif": ["heif"],
+  "image/gif": ["gif"],
+  "application/pdf": ["pdf"],
+  "application/msword": ["doc"],
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": ["docx"],
+  "application/vnd.ms-excel": ["xls"],
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ["xlsx"],
+  "text/csv": ["csv"],
+  "text/plain": ["txt"],
+};
+
+/** Accept attribute string usable in <input type="file" accept="..."> */
+export const CLIENT_ACCEPT_ATTR = [
+  ...Object.keys(CLIENT_ALLOWED_MIME),
+  ...Object.values(CLIENT_ALLOWED_MIME).flat().map((e) => `.${e}`),
+].join(",");
+
 export interface UploadedAttachment {
   id: string;
   path: string;
@@ -7,6 +37,56 @@ export interface UploadedAttachment {
   mime: string;
   name: string;
 }
+
+export interface PreflightIssue {
+  code:
+    | "empty_file"
+    | "file_too_large"
+    | "mime_not_allowed"
+    | "extension_mismatch"
+    | "invalid_filename";
+  details?: Record<string, unknown>;
+}
+
+/**
+ * Fast, offline sanity-check for a single file against the same size/type
+ * rules the edge function enforces. Returns `null` if the file passes.
+ * The server still validates authoritatively (magic bytes, MIME sniff).
+ */
+export function preflightValidateFile(file: File): PreflightIssue | null {
+  if (!file || file.size <= 0) {
+    return { code: "empty_file", details: { size: file?.size ?? 0 } };
+  }
+  if (file.size > CLIENT_MAX_BYTES) {
+    return {
+      code: "file_too_large",
+      details: { size: file.size, max: CLIENT_MAX_BYTES },
+    };
+  }
+  const rawName = (file.name || "").split(/[\\/]/).pop() || "";
+  const safeBase = rawName.replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, 120);
+  if (!safeBase || safeBase.startsWith(".")) {
+    return { code: "invalid_filename", details: { received: rawName } };
+  }
+  const mime = (file.type || "").toLowerCase();
+  const allowedExts = CLIENT_ALLOWED_MIME[mime];
+  if (!allowedExts) {
+    return {
+      code: "mime_not_allowed",
+      details: { mime: mime || null, allowed: Object.keys(CLIENT_ALLOWED_MIME) },
+    };
+  }
+  const extMatch = safeBase.match(/\.([a-zA-Z0-9]+)$/);
+  const ext = extMatch ? extMatch[1].toLowerCase() : "";
+  if (!ext || !allowedExts.includes(ext)) {
+    return {
+      code: "extension_mismatch",
+      details: { extension: ext || null, mime, allowed_extensions: allowedExts },
+    };
+  }
+  return null;
+}
+
 
 /**
  * Typed error thrown when the server rejects an upload. Carries the

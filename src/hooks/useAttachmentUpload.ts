@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
+  friendlyUploadMessage,
+  preflightValidateFile,
   uploadInquiryAttachment,
   UploadValidationError,
   type AttachmentRecord,
@@ -80,12 +82,23 @@ export function useAttachmentUpload(): UseAttachmentUploadResult {
   const syncFiles = useCallback(
     (files: File[]) => {
       // Preserve status for files that are byte-identical at the same slot;
-      // treat any change as a fresh pending entry.
+      // treat any change as a fresh pending entry. Run a preflight so
+      // obvious size/type failures render inline immediately, without
+      // waiting for the user to submit.
       const prevFiles = filesRef.current;
       const prev = statusesRef.current;
-      const next: AttachmentStatus[] = files.map((f, i) =>
-        sameFile(prevFiles[i], f) && prev[i] ? prev[i] : pending(),
-      );
+      const next: AttachmentStatus[] = files.map((f, i) => {
+        if (sameFile(prevFiles[i], f) && prev[i]) return prev[i];
+        const issue = preflightValidateFile(f);
+        if (issue) {
+          return {
+            state: "error",
+            code: issue.code,
+            message: friendlyUploadMessage(issue.code, issue.details, f.name),
+          };
+        }
+        return pending();
+      });
       filesRef.current = files.slice();
       write(next);
     },
@@ -116,6 +129,19 @@ export function useAttachmentUpload(): UseAttachmentUploadResult {
         for (let i = 0; i < files.length; i++) {
           const current = statusesRef.current[i];
           if (current?.state === "success") continue;
+          // Preflight already flagged this file — skip the roundtrip and
+          // keep the inline error surfaced.
+          if (current?.state === "error") {
+            const issue = preflightValidateFile(files[i]);
+            if (issue) {
+              throw new UploadValidationError({
+                message: friendlyUploadMessage(issue.code, issue.details, files[i].name),
+                code: issue.code,
+                details: issue.details,
+                fileName: files[i].name,
+              });
+            }
+          }
 
           patch(i, { state: "uploading", progress: 0 });
           try {
