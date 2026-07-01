@@ -167,6 +167,21 @@ export async function handler(req: Request): Promise<Response> {
     return json({ ok: false, code: "persist_failed" }, 502);
   }
 
+  // Link previously uploaded attachment rows to this inquiry.
+  const attachmentIds = p.attachment_ids ?? [];
+  if (attachmentIds.length > 0) {
+    const { error: linkErr } = await supabase
+      .from("inquiry_attachments")
+      .update({ inquiry_id: data.id })
+      .in("id", attachmentIds)
+      .is("inquiry_id", null);
+    if (linkErr) {
+      console.error("submit-inquiry: attachment link failed", linkErr);
+      // Non-fatal: the inquiry row was created; attachments can be
+      // reconciled by folder/storage_path.
+    }
+  }
+
   const received = {
     name: row.name,
     email: row.email,
