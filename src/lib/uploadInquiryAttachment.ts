@@ -178,10 +178,11 @@ export async function linkAttachmentsToInquiry(
   ids: string[],
   inquiryId: string,
 ): Promise<void> {
-  if (!ids.length) return;
-  await supabase
-    .from("inquiry_attachments")
-    .update({ inquiry_id: inquiryId })
-    .in("id", ids);
+  if (!ids.length || !inquiryId) return;
+  await supabase.rpc("link_inquiry_attachments", {
+    _ids: ids,
+    _inquiry_id: inquiryId,
+  });
 }
+
 
