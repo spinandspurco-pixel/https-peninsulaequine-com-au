@@ -20,7 +20,9 @@
  *   bun scripts/security-gate.ts --update-baseline   # rewrite baseline locally
  *
  * Env (required):
- *   SUPABASE_ACCESS_TOKEN   personal access token w/ read access to the lint endpoint
+ *   SB_MGMT_ACCESS_TOKEN    Supabase management API token w/ read access to the lint endpoint
+ *                           (legacy SUPABASE_ACCESS_TOKEN is still honoured as a fallback)
+
  *
  * Env (optional — Wiz connector findings are merged in when all are set):
  *   WIZ_API_URL             e.g. https://api.us17.app.wiz.io/graphql
