@@ -469,6 +469,11 @@ function GroupBookingForm() {
 // ── Page ─────────────────────────────────────────────
 
 export default function GroupBooking() {
+  usePageMeta({
+    title: "Group Rates & Booking — Peninsula Equine",
+    description: "Group riding lesson rates with 5–20% discounts. Calendar-aware pricing for friends, family and teams on the Mornington Peninsula.",
+    path: "/group-booking",
+  });
   return (
     <Layout>
       <PageHeader
