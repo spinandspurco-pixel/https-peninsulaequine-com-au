@@ -15,6 +15,7 @@ import { servicePricingTiers, serviceFaqs } from "@/data/servicePricingFaq";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
 import { EditorialPlaceholder } from "@/components/EditorialPlaceholder";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 // ── Approved cinematic asset library ────────────────────────────────────
 // All legacy bright-daytime phone photos (covered-arena-finished-lit,
