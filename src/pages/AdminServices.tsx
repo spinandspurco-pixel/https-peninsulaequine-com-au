@@ -198,9 +198,11 @@ export default function AdminServices() {
             <div><Label>Features (one per line)</Label><Textarea value={(editItem?.features || []).join("\n")} onChange={(e) => setEditItem({ ...editItem, features: e.target.value.split("\n").filter(Boolean) })} rows={4} placeholder="Custom base preparation&#10;Premium footing" /></div>
             <div><Label>Image URL</Label><Input value={editItem?.image_url || ""} onChange={(e) => setEditItem({ ...editItem, image_url: e.target.value })} /></div>
             <div><Label>Sort Order</Label><Input type="number" value={editItem?.sort_order ?? 0} onChange={(e) => setEditItem({ ...editItem, sort_order: parseInt(e.target.value) || 0 })} /></div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 rounded-md border border-border/40 bg-muted/20 px-3 py-2">
               <Switch checked={editItem?.active ?? true} onCheckedChange={(v) => setEditItem({ ...editItem, active: v })} />
-              <Label>Active (visible on site)</Label>
+              <Label className="cursor-pointer">
+                {editItem?.active ?? true ? "Published — visible on public site" : "Draft — hidden from public site"}
+              </Label>
             </div>
           </div>
           <DialogFooter>
