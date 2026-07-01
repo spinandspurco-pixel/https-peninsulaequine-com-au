@@ -118,6 +118,7 @@ export default function AdminInquiries() {
   const [bulkRunning, setBulkRunning] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [customPresets, setCustomPresets] = useState<FilterPreset[]>(() => loadCustomPresets());
+  const [attachmentCounts, setAttachmentCounts] = useState<Record<string, number>>({});
   const [activePresetId, setActivePresetId] = useState<string | null>(() => {
     if (typeof window === "undefined") return null;
     return window.localStorage.getItem(ACTIVE_PRESET_STORAGE_KEY);
