@@ -39,6 +39,7 @@ const EXEMPT_FILES: readonly string[] = [
   "scripts/ci/verifyMgmtTokenScopes.ts",
   "scripts/ci/assertMgmtToken.ts", // only mentions the host in a JSDoc comment
   "src/test/mgmt-api-allowlist.test.ts", // this file
+  "src/test/mgmt-api-guard.test.ts", // negative-test fixtures for the runtime guard
 ];
 
 // Match `https://api.supabase.com<path>` where <path> is a template literal
