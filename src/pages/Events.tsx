@@ -341,6 +341,46 @@ export default function Events() {
 
   const events = dbEvents;
 
+  const eventsJsonLd = useMemo(() => {
+    const today = startOfDay(new Date());
+    const upcoming = events.filter(
+      (e) => !isBefore(startOfDay(parseISO(e.event_date)), today),
+    );
+    const graphs: Array<Record<string, unknown>> = [
+      breadcrumbSchema([
+        { name: "Home", path: "/" },
+        { name: "Clinics & Events", path: "/events" },
+      ]),
+    ];
+    if (upcoming.length > 0) {
+      graphs.push(
+        eventListSchema(
+          upcoming.map((e) => ({
+            id: e.id,
+            title: e.title,
+            description: e.description,
+            event_date: e.event_date,
+            event_time: e.event_time,
+            location: e.location,
+            capacity: e.capacity,
+            image_url: e.image_url,
+            price: e.price,
+          })),
+        ),
+      );
+    }
+    return graphs;
+  }, [events]);
+
+  usePageMeta({
+    title: "Clinics & Events — Peninsula Equine",
+    description:
+      "Upcoming clinics, guest instructors and events on the Mornington Peninsula. Reserve your place at Peninsula Equine.",
+    path: "/events",
+    jsonLd: eventsJsonLd,
+  });
+
+
   // Filter by time, search, and selected calendar date
   const displayEvents = useMemo(() => {
     let filtered = events;
