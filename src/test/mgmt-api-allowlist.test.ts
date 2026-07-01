@@ -24,10 +24,14 @@ const REPO_ROOT = join(__dirname, "..", "..");
 const SCAN_ROOTS = ["scripts", "supabase/functions", "src"];
 
 // Endpoint templates the app is allowed to call. `{ref}` matches any
-// project ref; any other path segment must match literally.
-const ALLOWED_PATHS: readonly string[] = [
-  "/v1/projects/{ref}/database/lints",
-];
+// project ref; any other path segment must match literally. Each path
+// is paired with the exact HTTP methods it may be invoked with so a
+// future edit cannot quietly upgrade a read to a write against the
+// same URL (which would require broader token scopes).
+const ALLOWED_ENDPOINTS: Readonly<Record<string, readonly string[]>> = {
+  "/v1/projects/{ref}/database/lints": ["GET"],
+};
+const ALLOWED_PATHS: readonly string[] = Object.keys(ALLOWED_ENDPOINTS);
 
 // Files whose entire purpose is to enumerate Management API endpoints.
 // They document surface area rather than call it in production flows.
