@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Paperclip, Download, ExternalLink, FileText, Image as ImageIcon, Loader2 } from "lucide-react";
+import { Paperclip, Download, ExternalLink, FileText, Image as ImageIcon, Loader2, Eye, EyeOff } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
