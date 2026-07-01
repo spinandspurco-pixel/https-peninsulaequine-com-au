@@ -229,6 +229,18 @@ export function GuidedIntake() {
       return;
     }
     setErrors({});
+    if (uploader.isUploading) {
+      setErrors({ files: "Please wait for uploads to finish before submitting." });
+      return;
+    }
+    if (uploader.hasErrors) {
+      setErrors({
+        files:
+          uploader.errorSummary ??
+          "Some attachments failed. Retry or remove them before submitting.",
+      });
+      return;
+    }
     // Silent spam guard: pretend success and skip the database write.
     const guard = spamGuard.check();
     if (!guard.ok) {
