@@ -418,6 +418,188 @@ export function OAuthProviderPanel({
           </div>
         </div>
       </div>
+
+      {/* Google Cloud setup helper — copy-ready redirect URI + checklist */}
+      <GoogleSetupHelper
+        expectedCallback={effectiveExpectedCallback}
+        appOrigin={appOrigin}
+        intendedClientId={intendedNorm}
+        onCopy={copy}
+      />
+    </div>
+  );
+}
+
+function GoogleSetupHelper({
+  expectedCallback,
+  appOrigin,
+  intendedClientId,
+  onCopy,
+}: {
+  expectedCallback: string | null;
+  appOrigin: string;
+  intendedClientId: string;
+  onCopy: (text: string) => void;
+}) {
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+
+  const originHost = useMemo(() => {
+    try { return new URL(appOrigin).origin; } catch { return appOrigin || ""; }
+  }, [appOrigin]);
+
+  // Google allows multiple redirect URIs on one client. Provide every host we
+  // know the app is served from so a single copy-paste covers dev + prod.
+  const redirectUris = useMemo(() => {
+    const set = new Set<string>();
+    if (expectedCallback) set.add(expectedCallback);
+    return Array.from(set);
+  }, [expectedCallback]);
+
+  const authorizedOrigins = useMemo(() => {
+    const set = new Set<string>();
+    if (originHost) set.add(originHost);
+    if (expectedCallback) {
+      try { set.add(new URL(expectedCallback).origin); } catch { /* ignore */ }
+    }
+    return Array.from(set);
+  }, [originHost, expectedCallback]);
+
+  const copyBlock = (key: string, text: string) => {
+    onCopy(text);
+    setCopiedKey(key);
+    window.setTimeout(() => setCopiedKey((k) => (k === key ? null : k)), 1500);
+  };
+
+  const checklist: { label: string; done: boolean; hint?: string }[] = [
+    {
+      label: "OAuth consent screen configured (User type, app name, support email)",
+      done: false,
+      hint: "Google Cloud → APIs & Services → OAuth consent screen",
+    },
+    {
+      label: "Scopes: openid, .../auth/userinfo.email, .../auth/userinfo.profile",
+      done: false,
+    },
+    {
+      label: "OAuth 2.0 Client ID created (Web application)",
+      done: Boolean(intendedClientId),
+      hint: intendedClientId ? "Intended Client ID recorded above" : "Paste the Client ID into the Intended field above",
+    },
+    {
+      label: "Authorized JavaScript origins include this app's origin",
+      done: false,
+      hint: authorizedOrigins.join(", ") || "(unknown origin)",
+    },
+    {
+      label: "Authorized redirect URIs include the Supabase callback",
+      done: false,
+      hint: expectedCallback ?? "(missing VITE_SUPABASE_URL)",
+    },
+    {
+      label: "Client ID + Secret pasted into Supabase → Authentication → Providers → Google",
+      done: false,
+    },
+    {
+      label: "Google provider toggle is ENABLED in Supabase",
+      done: false,
+    },
+  ];
+
+  return (
+    <div className="border-t border-foreground/10">
+      <div className="px-4 py-2.5 border-b border-foreground/10 text-[0.6rem] tracking-[0.4em] uppercase opacity-55">
+        Google Cloud — Setup helper
+      </div>
+
+      <div className="px-4 py-3 border-b border-foreground/10">
+        <div className="flex items-center justify-between mb-1.5 gap-4">
+          <div className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55">
+            Authorized redirect URIs (paste verbatim)
+          </div>
+          <button
+            type="button"
+            onClick={() => copyBlock("redirects", redirectUris.join("\n"))}
+            disabled={redirectUris.length === 0}
+            className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity disabled:opacity-30"
+          >
+            {copiedKey === "redirects" ? "Copied" : "Copy"}
+          </button>
+        </div>
+        <pre className="text-[0.72rem] font-mono opacity-90 whitespace-pre-wrap break-all bg-foreground/[0.02] border border-foreground/10 rounded-sm px-2.5 py-2">
+{redirectUris.length ? redirectUris.join("\n") : "(no redirect URI available — set VITE_SUPABASE_URL)"}
+        </pre>
+        <div className="text-[0.6rem] opacity-45 mt-1.5 font-light">
+          One entry per line. Google Cloud → Credentials → your OAuth 2.0 Client → Authorized redirect URIs → Add URI.
+        </div>
+      </div>
+
+      <div className="px-4 py-3 border-b border-foreground/10">
+        <div className="flex items-center justify-between mb-1.5 gap-4">
+          <div className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55">
+            Authorized JavaScript origins (paste verbatim)
+          </div>
+          <button
+            type="button"
+            onClick={() => copyBlock("origins", authorizedOrigins.join("\n"))}
+            disabled={authorizedOrigins.length === 0}
+            className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity disabled:opacity-30"
+          >
+            {copiedKey === "origins" ? "Copied" : "Copy"}
+          </button>
+        </div>
+        <pre className="text-[0.72rem] font-mono opacity-90 whitespace-pre-wrap break-all bg-foreground/[0.02] border border-foreground/10 rounded-sm px-2.5 py-2">
+{authorizedOrigins.length ? authorizedOrigins.join("\n") : "(unknown origin)"}
+        </pre>
+      </div>
+
+      <div className="px-4 py-3">
+        <div className="flex items-center justify-between mb-2 gap-4">
+          <div className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55">
+            Admin checklist
+          </div>
+          <button
+            type="button"
+            onClick={() => copyBlock(
+              "checklist",
+              [
+                "Google OAuth client setup checklist",
+                ...checklist.map((c) => `- [${c.done ? "x" : " "}] ${c.label}${c.hint ? `  (${c.hint})` : ""}`),
+                "",
+                "Authorized redirect URIs:",
+                ...redirectUris.map((u) => `  ${u}`),
+                "",
+                "Authorized JavaScript origins:",
+                ...authorizedOrigins.map((o) => `  ${o}`),
+              ].join("\n"),
+            )}
+            className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity"
+          >
+            {copiedKey === "checklist" ? "Copied" : "Copy checklist"}
+          </button>
+        </div>
+        <ul className="text-[0.7rem] font-light leading-relaxed space-y-1.5">
+          {checklist.map((c) => (
+            <li key={c.label} className="flex gap-2.5">
+              <span
+                aria-hidden
+                className="mt-[0.35em] shrink-0 w-2.5 h-2.5 border rounded-[1px]"
+                style={{
+                  borderColor: c.done ? statusColor("ok") : "rgba(232,230,225,0.35)",
+                  background: c.done ? statusColor("ok") : "transparent",
+                }}
+              />
+              <span className="opacity-85">
+                {c.label}
+                {c.hint && (
+                  <span className="opacity-50 block text-[0.65rem] font-mono mt-0.5 break-all">
+                    {c.hint}
+                  </span>
+                )}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
