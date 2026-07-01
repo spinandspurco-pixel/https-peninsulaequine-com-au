@@ -902,7 +902,7 @@ export default function HqDeployHealth() {
             } catch {
               // trackEvent swallows on its own; extra guard just in case.
             }
-            void logDeployHealthAudit("retry_promotion_attempt", {
+            void logDeployHealthAudit("retry_promotion_attempt", "failure", {
               kind: "render_error",
               error_name: report.error.name,
               error_message: report.error.message,
