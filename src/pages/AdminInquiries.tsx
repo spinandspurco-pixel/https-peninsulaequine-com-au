@@ -118,6 +118,7 @@ export default function AdminInquiries() {
   const [pendingAction, setPendingAction] = useState<BulkAction | null>(null);
   const [bulkRunning, setBulkRunning] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [downloadingAttachments, setDownloadingAttachments] = useState(false);
   const [customPresets, setCustomPresets] = useState<FilterPreset[]>(() => loadCustomPresets());
   const [attachmentCounts, setAttachmentCounts] = useState<Record<string, number>>({});
   const [attachmentsOnly, setAttachmentsOnly] = useState<boolean>(() => {
