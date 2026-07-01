@@ -593,9 +593,12 @@ type TimingProps = StepProps & {
   onRemoveFile: (i: number) => void;
   maxFiles: number;
   requireAttachments?: boolean;
+  uploadStatuses?: import("@/hooks/useAttachmentUpload").AttachmentStatus[];
+  onRetryUpload?: () => void;
+  uploaderBusy?: boolean;
 };
 
-function StepTiming({ data, set, errors, files, fileError, onAddFiles, onRemoveFile, maxFiles, requireAttachments }: TimingProps) {
+function StepTiming({ data, set, errors, files, fileError, onAddFiles, onRemoveFile, maxFiles, requireAttachments, uploadStatuses, onRetryUpload, uploaderBusy }: TimingProps) {
   const summary = useMemo(() => {
     return [
       `${data.inquiry_type === "lesson" ? "Lesson" : "Consult"} · ${data.level}`,
