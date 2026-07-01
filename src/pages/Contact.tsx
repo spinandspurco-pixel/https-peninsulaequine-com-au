@@ -186,6 +186,24 @@ export default function Contact() {
     setSubmitting(true);
 
     try {
+      // 1. Upload attachments (if any) BEFORE creating the inquiry row.
+      let attachment_urls: string[] = [];
+      if (files.length > 0) {
+        const folder = crypto.randomUUID();
+        const uploads = await Promise.all(
+          files.map(async (file) => {
+            const safeName = file.name.replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, 120);
+            const path = `${folder}/${Date.now()}-${safeName}`;
+            const { error: upErr } = await supabase.storage
+              .from("inquiry-attachments")
+              .upload(path, file, { cacheControl: "3600", upsert: false, contentType: file.type || undefined });
+            if (upErr) throw upErr;
+            return path;
+          })
+        );
+        attachment_urls = uploads;
+      }
+
       const { error } = await supabase.from("inquiries").insert({
         name: form.name.trim().slice(0, 100),
         email: form.email.trim().slice(0, 255),
@@ -194,6 +212,7 @@ export default function Contact() {
         budget_range: form.budget || null,
         preferred_start: form.timeline || null,
         project_details: form.details.trim().slice(0, 2000) || null,
+        attachment_urls,
         notes: [
           form.propertyLocation.trim() ? `Location: ${form.propertyLocation.trim()}` : "",
           form.propertyType ? `Type: ${form.propertyType}` : "",
@@ -214,6 +233,7 @@ export default function Contact() {
             services: form.scopes,
             budgetRange: form.budget || undefined,
             goals: form.details.trim() || "Site assessment request",
+            attachmentCount: attachment_urls.length,
           },
         })
         .catch(() => {});
