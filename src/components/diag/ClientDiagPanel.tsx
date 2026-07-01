@@ -1711,7 +1711,9 @@ export function ClientDiagPanel() {
                   </span>
                 </div>
                 <div style={{ marginBottom: 4, lineHeight: 1.35 }}>{palette.msg}</div>
+                {row("masked", supaKeyMasked)}
                 {row("prefix", supaKeyPrefix)}
+                {row("checksum", supaKeyChecksum)}
                 {row("length", supaKeyLen || "—")}
                 {row("expected", "sb_publishable_*")}
                 {!ok && row("action", "Rotate via Lovable Cloud → API keys, then republish")}
