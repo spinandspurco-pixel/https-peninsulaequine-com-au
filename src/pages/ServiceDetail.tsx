@@ -427,11 +427,44 @@ export default function ServiceDetail() {
   const galleryImages = serviceGalleryImages[service.id] || [];
   const heroImage = serviceImages[service.id] || peArenaGrading;
 
+  const description =
+    service.shortDescription ||
+    service.description?.slice(0, 155) ||
+    "Peninsula Equine service.";
+
+  const jsonLd = useMemo(() => {
+    const graphs: Array<Record<string, unknown>> = [
+      serviceSchema({
+        id: service.id,
+        name: service.title,
+        description,
+        path: `/services/${service.id}`,
+        image: typeof heroImage === "string" ? heroImage : undefined,
+        tiers,
+      }),
+      breadcrumbSchema([
+        { name: "Home", path: "/" },
+        { name: "Capabilities", path: "/services" },
+        { name: service.title, path: `/services/${service.id}` },
+      ]),
+    ];
+    if (faqs.length > 0) {
+      graphs.push(
+        faqSchema(
+          faqs.map((f) => ({ question: f.question, answer: f.answer })),
+          `${SITE_BASE}/services/${service.id}#faq`,
+        ),
+      );
+    }
+    return graphs;
+  }, [service.id, service.title, description, heroImage, tiers, faqs]);
+
   usePageMeta({
     title: `${service.title} — Peninsula Equine`,
-    description: service.shortDescription || service.description?.slice(0, 155) || "Peninsula Equine service.",
+    description,
     path: `/services/${service.id}`,
-    image: heroImage,
+    image: typeof heroImage === "string" ? heroImage : undefined,
+    jsonLd,
   });
 
 
