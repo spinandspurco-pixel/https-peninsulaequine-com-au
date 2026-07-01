@@ -549,20 +549,32 @@ export function ClientDiagPanel() {
   );
 
   // Configurable latency thresholds (ms). Persisted in localStorage.
-  const readThresholds = () => {
+  // Shape supports a shared `default` plus optional per-endpoint overrides
+  // for /api/build-info, /api/health, /api/diag so each can be fine-tuned.
+  type ThresholdPair = { warn: number; crit: number };
+  type EndpointKey = "buildInfo" | "health" | "diag";
+  type LatencyThresholds = { default: ThresholdPair } & Partial<Record<EndpointKey, ThresholdPair>>;
+  const DEFAULT_PAIR: ThresholdPair = { warn: 200, crit: 500 };
+  const readThresholds = (): LatencyThresholds => {
     try {
       const raw = window.localStorage.getItem("LOVABLE_DIAG_LATENCY");
       if (raw) {
         const p = JSON.parse(raw);
-        if (typeof p?.warn === "number" && typeof p?.crit === "number") return p as { warn: number; crit: number };
+        // Migrate legacy shape { warn, crit } → { default: { warn, crit } }
+        if (typeof p?.warn === "number" && typeof p?.crit === "number") {
+          return { default: { warn: p.warn, crit: p.crit } };
+        }
+        if (p?.default && typeof p.default.warn === "number" && typeof p.default.crit === "number") {
+          return p as LatencyThresholds;
+        }
       }
     } catch {
       /* ignore */
     }
-    return { warn: 200, crit: 500 };
+    return { default: { ...DEFAULT_PAIR } };
   };
-  const [latencyThresholds, setLatencyThresholds] = useState<{ warn: number; crit: number }>(readThresholds);
-  const persistThresholds = (next: { warn: number; crit: number }) => {
+  const [latencyThresholds, setLatencyThresholds] = useState<LatencyThresholds>(readThresholds);
+  const persistThresholds = (next: LatencyThresholds) => {
     setLatencyThresholds(next);
     try {
       window.localStorage.setItem("LOVABLE_DIAG_LATENCY", JSON.stringify(next));
@@ -570,10 +582,22 @@ export function ClientDiagPanel() {
       /* ignore */
     }
   };
-  const latencyColor = (ms: number | null | undefined): string | undefined => {
+  const pairFor = (endpoint?: EndpointKey): ThresholdPair =>
+    (endpoint && latencyThresholds[endpoint]) || latencyThresholds.default;
+  const setEndpointPair = (endpoint: EndpointKey, pair: ThresholdPair | null) => {
+    const next: LatencyThresholds = { ...latencyThresholds };
+    if (pair === null) {
+      delete next[endpoint];
+    } else {
+      next[endpoint] = pair;
+    }
+    persistThresholds(next);
+  };
+  const latencyColor = (ms: number | null | undefined, endpoint?: EndpointKey): string | undefined => {
     if (typeof ms !== "number" || !isFinite(ms)) return undefined;
-    if (ms >= latencyThresholds.crit) return "#ff8a8a";
-    if (ms >= latencyThresholds.warn) return "#fde68a";
+    const p = pairFor(endpoint);
+    if (ms >= p.crit) return "#ff8a8a";
+    if (ms >= p.warn) return "#fde68a";
     return "#86efac";
   };
   const sparkline = (points: number[]) => {
