@@ -211,17 +211,32 @@ export function OAuthProviderPanel({
 
       {/* Expected callback URI — always visible, with copy */}
       <div className="px-4 py-3 border-b border-foreground/10">
-        <div className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55 mb-1.5">
-          Expected callback URI (Google → Authorized redirect URIs)
+        <div className="flex items-center justify-between mb-1.5 gap-4">
+          <div className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55">
+            Expected callback URI (Google → Authorized redirect URIs)
+          </div>
+          <span
+            className="text-[0.55rem] font-mono opacity-60"
+            style={{ letterSpacing: "0.2em" }}
+            title="Where the expected value is coming from"
+          >
+            {syncState === "loading"
+              ? "SYNCING…"
+              : syncState === "loaded" && remoteExpected.trim()
+                ? "FROM APP CONFIG"
+                : syncState === "unavailable"
+                  ? "LOCAL ONLY"
+                  : "FROM ENV"}
+          </span>
         </div>
         <div className="flex items-center gap-3">
           <code className="flex-1 text-[0.75rem] font-mono opacity-90 break-all">
-            {expectedCallback ?? "(missing VITE_SUPABASE_URL)"}
+            {effectiveExpectedCallback ?? "(missing VITE_SUPABASE_URL)"}
           </code>
-          {expectedCallback && (
+          {effectiveExpectedCallback && (
             <button
               type="button"
-              onClick={() => copy(expectedCallback)}
+              onClick={() => copy(effectiveExpectedCallback)}
               className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity shrink-0"
             >
               {copiedAt ? "Copied" : "Copy"}
@@ -232,7 +247,25 @@ export function OAuthProviderPanel({
           Paste this exact value into Google Cloud Console → APIs &amp; Services → Credentials →
           your OAuth 2.0 Client → Authorized redirect URIs.
         </div>
+        <div className="mt-3">
+          <label className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55 block mb-1.5">
+            Override expected redirect URI <span className="opacity-50 normal-case tracking-normal">(saved to app config)</span>
+          </label>
+          <input
+            type="text"
+            value={remoteExpected}
+            onChange={(e) => setRemoteExpected(e.target.value)}
+            placeholder={expectedCallback ?? "https://<project>.supabase.co/auth/v1/callback"}
+            spellCheck={false}
+            autoComplete="off"
+            className="w-full bg-transparent border border-foreground/20 focus:border-foreground/50 outline-none px-2.5 py-1.5 text-[0.75rem] font-mono opacity-90 placeholder:opacity-25"
+          />
+          <div className="text-[0.6rem] opacity-45 mt-1 font-light">
+            Leave blank to fall back to the value derived from <code className="font-mono opacity-80">VITE_SUPABASE_URL</code>.
+          </div>
+        </div>
       </div>
+
 
       {/* Intended Client ID input */}
       <div className="px-4 py-3 border-b border-foreground/10">
