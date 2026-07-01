@@ -268,6 +268,8 @@ export default function Contact() {
             budgetRange: form.budget || undefined,
             goals: form.details.trim() || "Site assessment request",
             attachmentCount: attachment_urls.length,
+            inquiryId: submitResp?.id,
+            attachmentIds: attachment_ids,
           },
         })
         .catch(() => {});
