@@ -301,36 +301,39 @@ function FieldError({ msg }: { msg?: string }) {
   return <p className="mt-1 text-xs text-destructive">{msg}</p>;
 }
 
-function StepFocus({ data, set, errors }: StepProps) {
+function StepFocus({ data, set, errors, lockedType }: StepProps & { lockedType?: "lesson" | "consult" }) {
   return (
     <div className="space-y-8">
-      <div>
-        <Label className="text-xs uppercase tracking-[0.3em] text-foreground/60">What do you need?</Label>
-        <RadioGroup
-          value={data.inquiry_type}
-          onValueChange={(v) => set("inquiry_type", v as FormState["inquiry_type"])}
-          className="mt-4 grid grid-cols-2 gap-3"
-        >
-          {[
-            { v: "lesson", label: "Riding lesson", sub: "Weekly or one-off." },
-            { v: "consult", label: "Horsemanship consult", sub: "Behaviour, groundwork, plan." },
-          ].map((opt) => (
-            <label
-              key={opt.v}
-              className={`cursor-pointer border p-4 transition-colors ${
-                data.inquiry_type === opt.v
-                  ? "border-foreground/40 bg-foreground/[0.03]"
-                  : "border-foreground/10 hover:border-foreground/25"
-              }`}
-            >
-              <RadioGroupItem value={opt.v} className="sr-only" />
-              <p className="font-serif text-lg">{opt.label}</p>
-              <p className="text-xs text-foreground/50 mt-1">{opt.sub}</p>
-            </label>
-          ))}
-        </RadioGroup>
-        <FieldError msg={errors.inquiry_type} />
-      </div>
+      {!lockedType && (
+        <div>
+          <Label className="text-xs uppercase tracking-[0.3em] text-foreground/60">What do you need?</Label>
+          <RadioGroup
+            value={data.inquiry_type}
+            onValueChange={(v) => set("inquiry_type", v as FormState["inquiry_type"])}
+            className="mt-4 grid grid-cols-2 gap-3"
+          >
+            {[
+              { v: "lesson", label: "Riding lesson", sub: "Weekly or one-off." },
+              { v: "consult", label: "Horsemanship consult", sub: "Behaviour, groundwork, plan." },
+            ].map((opt) => (
+              <label
+                key={opt.v}
+                className={`cursor-pointer border p-4 transition-colors ${
+                  data.inquiry_type === opt.v
+                    ? "border-foreground/40 bg-foreground/[0.03]"
+                    : "border-foreground/10 hover:border-foreground/25"
+                }`}
+              >
+                <RadioGroupItem value={opt.v} className="sr-only" />
+                <p className="font-serif text-lg">{opt.label}</p>
+                <p className="text-xs text-foreground/50 mt-1">{opt.sub}</p>
+              </label>
+            ))}
+          </RadioGroup>
+          <FieldError msg={errors.inquiry_type} />
+        </div>
+      )}
+
 
       <div>
         <Label className="text-xs uppercase tracking-[0.3em] text-foreground/60">Rider level</Label>
