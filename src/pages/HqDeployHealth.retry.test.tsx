@@ -232,9 +232,12 @@ describe("HqDeployHealth · retry classifications", () => {
     );
     expect(screen.getByText(outcome.message)).toBeInTheDocument();
     expect(screen.getAllByText(/no change/i).length).toBeGreaterThanOrEqual(2);
-    expect(screen.getByText(/Escalate to Lovable Support/i)).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("button", { name: /Escalate to Lovable Support/i }).length,
+    ).toBeGreaterThanOrEqual(1);
     // Attempts value from fixture (4) rendered in the summary.
     expect(screen.getAllByText("4").length).toBeGreaterThanOrEqual(1);
+
   });
 
   it("renders ERROR banner and does NOT surface escalation actions", async () => {
