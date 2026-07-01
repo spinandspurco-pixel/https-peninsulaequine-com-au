@@ -427,6 +427,14 @@ export default function ServiceDetail() {
   const galleryImages = serviceGalleryImages[service.id] || [];
   const heroImage = serviceImages[service.id] || peArenaGrading;
 
+  usePageMeta({
+    title: `${service.title} — Peninsula Equine`,
+    description: service.shortDescription || service.description?.slice(0, 155) || "Peninsula Equine service.",
+    path: `/services/${service.id}`,
+    image: heroImage,
+  });
+
+
   // Find adjacent services for navigation
   const currentIndex = services.findIndex((s) => s.id === slug);
   const prevService = currentIndex > 0 ? services[currentIndex - 1] : null;
