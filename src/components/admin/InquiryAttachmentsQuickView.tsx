@@ -47,6 +47,16 @@ export function InquiryAttachmentsQuickView({ inquiryId, count, inquiryName }: P
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState<AttachmentRow[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [previewing, setPreviewing] = useState<Set<string>>(() => new Set());
+
+  const togglePreview = useCallback((id: string) => {
+    setPreviewing((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
 
   const load = useCallback(async () => {
     setLoading(true);
