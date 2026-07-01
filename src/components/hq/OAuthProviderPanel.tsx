@@ -95,6 +95,8 @@ export function OAuthProviderPanel({
     try { return window.localStorage.getItem(LAST_PASTED_KEY) ?? ""; } catch { return ""; }
   });
   const [copiedAt, setCopiedAt] = useState<number | null>(null);
+  const [history, setHistory] = useState<OAuthDiagnosticsEntry[]>(() => loadHistory());
+  const [historyCopiedAt, setHistoryCopiedAt] = useState<number | null>(null);
 
   useEffect(() => {
     try { window.localStorage.setItem(INTENDED_KEY, intendedClientId); } catch { /* ignore */ }
