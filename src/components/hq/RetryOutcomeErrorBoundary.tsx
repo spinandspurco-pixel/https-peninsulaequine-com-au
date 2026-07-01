@@ -67,6 +67,7 @@ export class RetryOutcomeErrorBoundary extends Component<Props, State> {
         : null,
       componentStack: info?.componentStack ?? null,
       retryOutcome: this.props.debugPayload ?? null,
+      retryContext: this.props.debugContext ?? null,
     };
   }
 
