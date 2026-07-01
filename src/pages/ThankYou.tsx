@@ -196,7 +196,7 @@ export default function ThankYou() {
 
       {/* CTAs */}
       <section className="section-padding bg-background">
-        <div className="section-container max-w-xl text-center space-y-4">
+        <div className="section-container max-w-2xl text-center space-y-4">
           <p className="text-muted-foreground text-sm mb-6">In the meantime, you can:</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
@@ -207,6 +207,12 @@ export default function ThankYou() {
               }).toString()}`}>
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 Schedule a Call
+              </Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link to="/services">
+                <Layers className="mr-2 h-4 w-4" />
+                Browse Our Services
               </Link>
             </Button>
             <Button asChild variant="outline">
@@ -222,8 +228,29 @@ export default function ThankYou() {
               </Link>
             </Button>
           </div>
+
+          {originPath && (
+            <div className="pt-8 mt-8 border-t border-border/60">
+              <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground/70 mb-3">
+                Need to amend something?
+              </p>
+              <Button asChild variant="link" className="text-muted-foreground hover:text-accent">
+                <Link to={originPath}>
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Return to {originLabel}
+                </Link>
+              </Button>
+              <p className="text-xs text-muted-foreground/60 mt-2 max-w-md mx-auto">
+                Submitting again will create a separate inquiry. To update your existing one,
+                reply to the acknowledgement email{referenceId ? ` and quote ${shortRef(referenceId)}` : ""}.
+              </p>
+            </div>
+          )}
         </div>
       </section>
+    </Layout>
+  );
+}
     </Layout>
   );
 }
