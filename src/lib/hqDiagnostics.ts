@@ -20,7 +20,7 @@ export const HQ_DEFAULT_TIMEOUT_MS = 8000;
 
 export function hqLog(scope: string, payload: Record<string, unknown> = {}): void {
   // Unconditional, prefixed for easy filtering: console filter `[hq:`
-  // eslint-disable-next-line no-console
+   
   console.log(`[hq:${scope}]`, payload);
 }
 

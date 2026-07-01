@@ -102,7 +102,7 @@ export function authLog(scope: string, payload: Record<string, unknown>): void {
   if (typeof queueMicrotask === "function") queueMicrotask(notify);
   else setTimeout(notify, 0);
   if (!authDebugEnabled()) return;
-  // eslint-disable-next-line no-console
+   
   console.log(`[auth:${scope}]`, payload);
 }
 

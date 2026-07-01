@@ -47,7 +47,7 @@ export default function Admin() {
   // TEMP HQ-load diagnostics
   useHqMount("Admin");
   // Log key state on every render so we can see what gate is being held.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   hqLog("Admin:render", {
     loading,
     ready: !loading,
