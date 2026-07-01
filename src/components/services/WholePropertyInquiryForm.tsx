@@ -69,6 +69,7 @@ export function WholePropertyInquiryForm() {
 
   return (
     <form onSubmit={onSubmit} className="mt-12 max-w-2xl grid gap-6 sm:grid-cols-2" noValidate>
+      <HoneypotField guard={spamGuard} />
       <label className="block sm:col-span-1">
         <span className="font-mono uppercase text-[9px] tracking-[0.42em] text-foreground/40">Name</span>
         <input name="name" required maxLength={120} autoComplete="name" className={fieldClass} />
