@@ -13,7 +13,7 @@ import { readdirSync, readFileSync, statSync, existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 const TOKEN_NAME = "SB_MGMT_ACCESS_TOKEN";
-const ROOT = resolve(__dirname, "..");
+const ROOT = resolve(process.cwd());
 const DIST_DIR = resolve(ROOT, "dist");
 
 const SCANNED_EXT = /\.(js|mjs|cjs|css|html|map|json|txt|svg)$/i;
