@@ -26,6 +26,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { assertMgmtCall, MgmtApiGuardError } from "../_shared/mgmtApiGuard.ts";
 
 const PROJECT_REF = "aizkqajrzkvwuobisnzr";
 const REDACTED = "[REDACTED_MGMT_TOKEN]";
@@ -273,6 +274,16 @@ export async function handler(req: Request): Promise<Response> {
   }
 
   try {
+    // Runtime guard — throws before any network call if the URL/method
+    // drifts outside the shared allowlist.
+    try {
+      assertMgmtCall(ALLOWED_ENDPOINTS[endpoint], "GET");
+    } catch (guardErr) {
+      const msg = guardErr instanceof MgmtApiGuardError ? guardErr.message : "mgmt guard rejected call";
+      console.error("mgmt guard blocked call", msg);
+      return fail(endpoint, startedAt, 500, "mgmt_guard_blocked", msg);
+    }
+
     const upstream = await fetch(ALLOWED_ENDPOINTS[endpoint], {
       method: "GET",
       headers: {

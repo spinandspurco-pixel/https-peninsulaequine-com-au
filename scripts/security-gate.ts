@@ -40,6 +40,7 @@ import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { assertMgmtToken } from "./ci/assertMgmtToken";
+import { assertMgmtCall, MgmtApiGuardError } from "./ci/mgmtApiGuard";
 
 const PROJECT_REF = process.env.SUPABASE_PROJECT_REF ?? "aizkqajrzkvwuobisnzr";
 // Prefer the standard SB_MGMT_ACCESS_TOKEN. Legacy fallback stays for one release
@@ -106,6 +107,13 @@ async function fetchSupabaseFindings(): Promise<Finding[]> {
     process.exit(2);
   }
   const url = `https://api.supabase.com/v1/projects/${PROJECT_REF}/database/lints`;
+  try {
+    assertMgmtCall(url, "GET");
+  } catch (err) {
+    const msg = err instanceof MgmtApiGuardError ? err.message : String(err);
+    console.error(`ERROR: mgmt guard blocked call: ${msg}`);
+    process.exit(2);
+  }
   const res = await fetch(url, { headers: { Authorization: `Bearer ${TOKEN}` } });
   if (!res.ok) {
 
