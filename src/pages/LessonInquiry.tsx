@@ -578,6 +578,57 @@ function StepTiming({ data, set, errors, files, fileError, onAddFiles, onRemoveF
         <FieldError msg={errors.notes} />
       </div>
 
+      <div>
+        <Label htmlFor="attachments" className="text-xs uppercase tracking-[0.3em] text-foreground/60">
+          Attachments <span className="text-foreground/40 normal-case tracking-normal">(optional)</span>
+        </Label>
+        <label
+          htmlFor="attachments"
+          className="mt-2 flex cursor-pointer flex-col items-center justify-center border border-dashed border-foreground/20 px-4 py-6 text-center transition-colors hover:border-foreground/40"
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => {
+            e.preventDefault();
+            if (e.dataTransfer.files?.length) onAddFiles(e.dataTransfer.files);
+          }}
+        >
+          <p className="text-sm text-foreground/70">Drop files or click to upload</p>
+          <p className="mt-1 text-xs text-foreground/40">
+            Up to {maxFiles} · 10 MB each · JPG, PNG, WEBP, HEIC, PDF, DOC
+          </p>
+          <input
+            id="attachments"
+            type="file"
+            multiple
+            className="sr-only"
+            accept=".jpg,.jpeg,.png,.webp,.heic,.pdf,.doc,.docx"
+            onChange={(e) => {
+              if (e.target.files?.length) onAddFiles(e.target.files);
+              e.target.value = "";
+            }}
+          />
+        </label>
+        {fileError && <p className="mt-2 text-xs text-destructive">{fileError}</p>}
+        {files.length > 0 && (
+          <ul className="mt-3 space-y-1 text-xs text-foreground/70">
+            {files.map((f, i) => (
+              <li key={`${f.name}-${i}`} className="flex items-center justify-between border-b border-foreground/10 py-1">
+                <span className="truncate pr-3">
+                  {f.name} <span className="text-foreground/40">· {(f.size / 1024 / 1024).toFixed(2)} MB</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => onRemoveFile(i)}
+                  className="text-[10px] uppercase tracking-[0.25em] text-foreground/50 hover:text-destructive"
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+
       <div className="border-t border-foreground/10 pt-6">
         <p className="text-[10px] uppercase tracking-[0.35em] text-foreground/50">Review</p>
         <ul className="mt-3 space-y-1 text-sm text-foreground/70">
