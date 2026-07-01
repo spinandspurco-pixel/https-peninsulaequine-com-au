@@ -207,6 +207,17 @@ export default function Contact() {
       setFileError("Please attach at least one file before submitting.");
       return;
     }
+    if (uploader.isUploading) {
+      setFileError("Please wait for uploads to finish before submitting.");
+      return;
+    }
+    if (uploader.hasErrors) {
+      setFileError(
+        uploader.errorSummary ??
+          "Some attachments failed. Retry or remove them before submitting.",
+      );
+      return;
+    }
     setErrors({});
     setFileError(null);
     setSubmitting(true);
@@ -764,6 +775,9 @@ export default function Contact() {
                       {fileError && (
                         <p className="text-xs text-destructive">{fileError}</p>
                       )}
+                      {!fileError && uploader.errorSummary && (
+                        <p className="text-xs text-destructive">{uploader.errorSummary}</p>
+                      )}
                     </div>
                   </div>
                 </RevealOnScroll>
@@ -777,7 +791,7 @@ export default function Contact() {
                     type="submit"
                     data-testid="contact-submit"
                     size="lg"
-                    disabled={submitting}
+                    disabled={submitting || uploader.isUploading || uploader.hasErrors}
                     variant="gold"
                     className="uppercase tracking-[0.14em] text-xs font-medium px-10"
                   >

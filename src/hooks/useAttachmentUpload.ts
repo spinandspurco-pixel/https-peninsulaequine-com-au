@@ -18,6 +18,10 @@ export interface UseAttachmentUploadResult {
   isUploading: boolean;
   /** True when at least one file finished in the "error" state. */
   hasErrors: boolean;
+  /** Number of files currently in the "error" state. */
+  errorCount: number;
+  /** Concise inline message summarising failed uploads (for use near submit). */
+  errorSummary: string | null;
   /**
    * Uploads any file that isn't already `success`. Resolves with the full
    * record set (in file order) on success, throws on the first failure so
@@ -163,7 +167,13 @@ export function useAttachmentUpload(): UseAttachmentUploadResult {
     [patch, syncFiles],
   );
 
-  const hasErrors = statuses.some((s) => s.state === "error");
+  const errorCount = statuses.reduce((n, s) => (s.state === "error" ? n + 1 : n), 0);
+  const hasErrors = errorCount > 0;
+  const errorSummary = hasErrors
+    ? errorCount === 1
+      ? (statuses.find((s) => s.state === "error") as { message: string } | undefined)?.message ?? null
+      : `${errorCount} files couldn't be uploaded. Retry them or remove them before submitting.`
+    : null;
 
-  return { statuses, isUploading, hasErrors, uploadAll, reset, syncFiles };
+  return { statuses, isUploading, hasErrors, errorCount, errorSummary, uploadAll, reset, syncFiles };
 }

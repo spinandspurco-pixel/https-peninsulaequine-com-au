@@ -201,6 +201,22 @@ export default function LessonInquiry({
       setStep(STEPS.length - 1);
       return;
     }
+    if (uploader.isUploading) {
+      const msg = "Please wait for uploads to finish before submitting.";
+      setFileError(msg);
+      toast.error(msg);
+      setStep(STEPS.length - 1);
+      return;
+    }
+    if (uploader.hasErrors) {
+      const msg =
+        uploader.errorSummary ??
+        "Some attachments failed. Retry or remove them before submitting.";
+      setFileError(msg);
+      toast.error(msg);
+      setStep(STEPS.length - 1);
+      return;
+    }
     setFileError(null);
     // Silent spam short-circuit — mimic success without writing to DB.
     const guardResult = spamGuard.check();
@@ -387,11 +403,20 @@ export default function LessonInquiry({
             >
               ← Back
             </button>
-            <Button type="submit" disabled={submitting} variant="default">
+            <Button
+              type="submit"
+              disabled={
+                submitting ||
+                (step === STEPS.length - 1 && (uploader.isUploading || uploader.hasErrors))
+              }
+              variant="default"
+            >
               {step === STEPS.length - 1
                 ? submitting
                   ? "Sending…"
-                  : "Submit inquiry"
+                  : uploader.isUploading
+                    ? "Uploading…"
+                    : "Submit inquiry"
                 : "Continue →"}
             </Button>
           </div>

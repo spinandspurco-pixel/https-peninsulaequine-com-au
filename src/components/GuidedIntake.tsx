@@ -229,6 +229,18 @@ export function GuidedIntake() {
       return;
     }
     setErrors({});
+    if (uploader.isUploading) {
+      setErrors({ files: "Please wait for uploads to finish before submitting." });
+      return;
+    }
+    if (uploader.hasErrors) {
+      setErrors({
+        files:
+          uploader.errorSummary ??
+          "Some attachments failed. Retry or remove them before submitting.",
+      });
+      return;
+    }
     // Silent spam guard: pretend success and skip the database write.
     const guard = spamGuard.check();
     if (!guard.ok) {
@@ -578,19 +590,25 @@ export function GuidedIntake() {
               </button>
               <button
                 onClick={handleSubmit}
-                disabled={submitting}
+                disabled={submitting || uploader.isUploading || uploader.hasErrors}
                 className={cn(
                   "flex-[2] py-4 text-xs uppercase tracking-[0.2em] font-medium transition-all duration-500",
-                  submitting
+                  submitting || uploader.isUploading
                     ? "bg-accent/20 text-accent-foreground/30 cursor-wait"
-                    : "bg-accent text-accent-foreground hover:bg-accent/90"
+                    : uploader.hasErrors
+                      ? "bg-accent/10 text-accent-foreground/40 cursor-not-allowed"
+                      : "bg-accent text-accent-foreground hover:bg-accent/90"
                 )}
               >
                 {submitting
                   ? files.length
                     ? "Uploading…"
                     : "Submitting…"
-                  : "Apply for Consideration"}
+                  : uploader.isUploading
+                    ? "Uploading…"
+                    : uploader.hasErrors
+                      ? "Fix attachments to continue"
+                      : "Apply for Consideration"}
               </button>
             </div>
           </div>
