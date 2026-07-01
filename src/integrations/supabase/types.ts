@@ -215,6 +215,62 @@ export type Database = {
         }
         Relationships: []
       }
+      attachments: {
+        Row: {
+          bucket: string
+          checksum: string | null
+          created_at: string
+          file_name: string
+          file_size: number
+          id: string
+          inquiry_id: string | null
+          metadata: Json
+          mime_type: string
+          owner_id: string | null
+          status: string
+          storage_path: string
+          updated_at: string
+        }
+        Insert: {
+          bucket?: string
+          checksum?: string | null
+          created_at?: string
+          file_name: string
+          file_size: number
+          id?: string
+          inquiry_id?: string | null
+          metadata?: Json
+          mime_type: string
+          owner_id?: string | null
+          status?: string
+          storage_path: string
+          updated_at?: string
+        }
+        Update: {
+          bucket?: string
+          checksum?: string | null
+          created_at?: string
+          file_name?: string
+          file_size?: number
+          id?: string
+          inquiry_id?: string | null
+          metadata?: Json
+          mime_type?: string
+          owner_id?: string | null
+          status?: string
+          storage_path?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attachments_inquiry_id_fkey"
+            columns: ["inquiry_id"]
+            isOneToOne: false
+            referencedRelation: "inquiries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       automation_settings: {
         Row: {
           category: string
