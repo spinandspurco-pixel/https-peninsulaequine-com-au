@@ -179,11 +179,11 @@ export default function LessonInquiry({
       toast.error("Please review the form for errors");
       return;
     }
-    // Flip to true (or pass via props) when attachments must be included.
-    const REQUIRE_ATTACHMENTS = false;
-    if (REQUIRE_ATTACHMENTS && files.length === 0) {
-      setFileError("Please attach at least one file before submitting.");
-      toast.error("Please attach at least one file before submitting.");
+    if (requireAttachments && files.length === 0) {
+      const msg = "Please attach at least one file (photo, PDF, or doc) before submitting.";
+      setFileError(msg);
+      toast.error(msg);
+      setStep(STEPS.length - 1);
       return;
     }
     setFileError(null);
