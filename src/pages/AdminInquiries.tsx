@@ -4,7 +4,7 @@ import { HqBreadcrumbs } from "@/components/hq/HqBreadcrumbs";
 import { HqNav } from "@/components/hq/HqNav";
 import { supabase } from "@/integrations/supabase/client";
 import { format, formatDistanceToNow } from "date-fns";
-import { Search, RefreshCw, Inbox } from "lucide-react";
+import { Search, RefreshCw, Inbox, Download } from "lucide-react";
 import { toast } from "sonner";
 import { InquiryDetailDrawer } from "@/components/admin/InquiryDetailDrawer";
 import { INQUIRY_STATUSES, statusLabel, STATUS_TONE, type InquiryStatus } from "@/lib/inquiryStatus";
@@ -79,6 +79,7 @@ export default function AdminInquiries() {
   const [selected, setSelected] = useState<Set<string>>(() => new Set());
   const [pendingAction, setPendingAction] = useState<BulkAction | null>(null);
   const [bulkRunning, setBulkRunning] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
   // Clear selection when the visible dataset changes.
   useEffect(() => {
@@ -208,6 +209,123 @@ export default function AdminInquiries() {
     }
   }, [selected, load]);
 
+  const exportCsv = useCallback(async () => {
+    setExporting(true);
+    try {
+      let q = supabase
+        .from("inquiries")
+        .select(
+          "id,name,email,phone,status,services,project_vision,project_details,preferred_start,budget_range,created_at,updated_at",
+        );
+
+      if (statusFilter !== "all") q = q.eq("status", statusFilter);
+      if (debouncedSearch) {
+        const term = debouncedSearch.replace(/[%,]/g, " ");
+        const like = `%${term}%`;
+        q = q.or(
+          [
+            `name.ilike.${like}`,
+            `email.ilike.${like}`,
+            `phone.ilike.${like}`,
+            `preferred_start.ilike.${like}`,
+            `project_vision.ilike.${like}`,
+            `project_details.ilike.${like}`,
+          ].join(","),
+        );
+      }
+      if (sort === "newest") q = q.order("created_at", { ascending: false });
+      else if (sort === "oldest") q = q.order("created_at", { ascending: true });
+      else q = q.order("updated_at", { ascending: false });
+      q = q.limit(5000);
+
+      const { data, error: err } = await q;
+      if (err) throw err;
+      const inquiries = data ?? [];
+      if (inquiries.length === 0) {
+        toast.message("Nothing to export.");
+        return;
+      }
+
+      const ids = inquiries.map((i: any) => i.id);
+      const { data: atts, error: aErr } = await supabase
+        .from("inquiry_attachments")
+        .select("inquiry_id, filename")
+        .in("inquiry_id", ids);
+      if (aErr) throw aErr;
+      const attMap = new Map<string, string[]>();
+      (atts ?? []).forEach((a: any) => {
+        if (!a.inquiry_id) return;
+        const arr = attMap.get(a.inquiry_id) ?? [];
+        arr.push(a.filename);
+        attMap.set(a.inquiry_id, arr);
+      });
+
+      const escape = (v: unknown) => {
+        if (v === null || v === undefined) return "";
+        const s = Array.isArray(v) ? v.join("; ") : String(v);
+        return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+      };
+      const headers = [
+        "id",
+        "created_at",
+        "updated_at",
+        "name",
+        "email",
+        "phone",
+        "status",
+        "services",
+        "budget_range",
+        "preferred_start",
+        "project_vision",
+        "project_details",
+        "attachment_count",
+        "attachment_filenames",
+      ];
+      const lines = [headers.join(",")];
+      for (const r of inquiries as any[]) {
+        const files = attMap.get(r.id) ?? [];
+        lines.push(
+          [
+            r.id,
+            r.created_at,
+            r.updated_at,
+            r.name,
+            r.email,
+            r.phone,
+            statusLabel(r.status as InquiryStatus),
+            r.services,
+            r.budget_range,
+            r.preferred_start,
+            r.project_vision,
+            r.project_details,
+            files.length,
+            files,
+          ]
+            .map(escape)
+            .join(","),
+        );
+      }
+      const csv = "\ufeff" + lines.join("\r\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const stamp = format(new Date(), "yyyyMMdd-HHmm");
+      const scope = statusFilter === "all" ? "all" : statusFilter;
+      a.href = url;
+      a.download = `inquiries-${scope}-${stamp}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success(`Exported ${inquiries.length} ${inquiries.length === 1 ? "inquiry" : "inquiries"}.`);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Export failed");
+    } finally {
+      setExporting(false);
+    }
+  }, [debouncedSearch, statusFilter, sort]);
+
+
 
   return (
     <Layout>
@@ -275,9 +393,20 @@ export default function AdminInquiries() {
             >
               <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
             </button>
+            <button
+              onClick={exportCsv}
+              disabled={exporting || loading}
+              className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground/50 hover:text-accent/80 disabled:opacity-40 transition-colors"
+              aria-label="Export filtered inquiries as CSV"
+              title="Export current filter as CSV"
+            >
+              <Download className={`h-3.5 w-3.5 ${exporting ? "animate-pulse" : ""}`} />
+              <span className="hidden sm:inline">{exporting ? "Exporting…" : "Export CSV"}</span>
+            </button>
             <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground/40">
               {String(count).padStart(3, "0")}
             </span>
+
           </div>
 
           {error && (
