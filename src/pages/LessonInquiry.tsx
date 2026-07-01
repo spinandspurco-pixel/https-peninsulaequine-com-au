@@ -403,11 +403,20 @@ export default function LessonInquiry({
             >
               ← Back
             </button>
-            <Button type="submit" disabled={submitting} variant="default">
+            <Button
+              type="submit"
+              disabled={
+                submitting ||
+                (step === STEPS.length - 1 && (uploader.isUploading || uploader.hasErrors))
+              }
+              variant="default"
+            >
               {step === STEPS.length - 1
                 ? submitting
                   ? "Sending…"
-                  : "Submit inquiry"
+                  : uploader.isUploading
+                    ? "Uploading…"
+                    : "Submit inquiry"
                 : "Continue →"}
             </Button>
           </div>
