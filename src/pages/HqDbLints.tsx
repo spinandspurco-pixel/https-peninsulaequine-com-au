@@ -26,6 +26,22 @@ type Lint = {
   cache_key?: string;
 };
 
+type RequestMeta = {
+  endpoint: string;
+  project_ref: string;
+  fetched_at: string;
+  duration_ms: number;
+};
+
+type Envelope =
+  | { status: "ok"; request: RequestMeta; lints: Lint[] }
+  | {
+      status: "error";
+      request: RequestMeta;
+      lints: Lint[];
+      error: { code: string; message: string; upstream_status?: number };
+    };
+
 const LEVEL_ORDER: Record<string, number> = {
   ERROR: 0,
   WARN: 1,
@@ -39,11 +55,57 @@ function levelClasses(level?: string) {
   return "text-foreground/70 border-border/60 bg-background/40";
 }
 
+/**
+ * Validate a raw response body against the v1 envelope contract. Anything
+ * outside the contract is rejected so the UI never renders partial garbage.
+ */
+function parseEnvelope(data: unknown): Envelope {
+  if (!data || typeof data !== "object") {
+    throw new Error("Malformed response: not an object.");
+  }
+  const d = data as Record<string, unknown>;
+  const status = d.status;
+  if (status !== "ok" && status !== "error") {
+    throw new Error("Malformed response: missing status.");
+  }
+  const req = d.request as Partial<RequestMeta> | undefined;
+  if (
+    !req ||
+    typeof req.endpoint !== "string" ||
+    typeof req.project_ref !== "string" ||
+    typeof req.fetched_at !== "string" ||
+    typeof req.duration_ms !== "number"
+  ) {
+    throw new Error("Malformed response: missing request metadata.");
+  }
+  const lints = Array.isArray(d.lints) ? (d.lints as Lint[]) : [];
+  if (status === "error") {
+    const err = d.error as
+      | { code?: unknown; message?: unknown; upstream_status?: unknown }
+      | undefined;
+    if (!err || typeof err.code !== "string" || typeof err.message !== "string") {
+      throw new Error("Malformed error response.");
+    }
+    return {
+      status: "error",
+      request: req as RequestMeta,
+      lints,
+      error: {
+        code: err.code,
+        message: err.message,
+        upstream_status:
+          typeof err.upstream_status === "number" ? err.upstream_status : undefined,
+      },
+    };
+  }
+  return { status: "ok", request: req as RequestMeta, lints };
+}
+
 export default function HqDbLints() {
   const [lints, setLints] = useState<Lint[] | null>(null);
+  const [meta, setMeta] = useState<RequestMeta | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [fetchedAt, setFetchedAt] = useState<Date | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -53,21 +115,22 @@ export default function HqDbLints() {
         "mgmt-db-lints",
         { method: "GET" },
       );
-      if (fnError) throw fnError;
+      // supabase-js surfaces non-2xx as fnError but still parses the body into
+      // `data`. Prefer the envelope shape when present so we get the code.
+      const envelope = data ? parseEnvelope(data) : null;
 
-      // Response may be an array directly, or a wrapped { error, ... } payload.
-      if (data && typeof data === "object" && !Array.isArray(data) && "error" in data) {
-        const err = (data as { error: string; status?: number }).error;
-        throw new Error(`${err}${(data as any).status ? ` (${(data as any).status})` : ""}`);
+      if (envelope?.status === "error") {
+        const suffix = envelope.error.upstream_status
+          ? ` (upstream ${envelope.error.upstream_status})`
+          : "";
+        throw new Error(
+          `${envelope.error.code}: ${envelope.error.message}${suffix}`,
+        );
       }
+      if (fnError) throw fnError;
+      if (!envelope) throw new Error("Empty response from mgmt-db-lints.");
 
-      const list: Lint[] = Array.isArray(data)
-        ? (data as Lint[])
-        : Array.isArray((data as any)?.lints)
-          ? ((data as any).lints as Lint[])
-          : [];
-
-      list.sort((a, b) => {
+      const list = [...envelope.lints].sort((a, b) => {
         const la = LEVEL_ORDER[(a.level ?? "").toUpperCase()] ?? 99;
         const lb = LEVEL_ORDER[(b.level ?? "").toUpperCase()] ?? 99;
         if (la !== lb) return la - lb;
@@ -75,11 +138,12 @@ export default function HqDbLints() {
       });
 
       setLints(list);
-      setFetchedAt(new Date());
+      setMeta(envelope.request);
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       setError(msg || "Failed to load database lints.");
       setLints(null);
+      setMeta(null);
     } finally {
       setLoading(false);
     }
@@ -88,6 +152,7 @@ export default function HqDbLints() {
   useEffect(() => {
     load();
   }, [load]);
+
 
   const summary = useMemo(() => {
     if (!lints) return null;
@@ -119,9 +184,13 @@ export default function HqDbLints() {
             </p>
           </div>
           <div className="flex items-center gap-4 text-xs text-foreground/50">
-            {fetchedAt && (
-              <span>Last fetched {fetchedAt.toLocaleTimeString()}</span>
+            {meta && (
+              <span>
+                {meta.endpoint} · {new Date(meta.fetched_at).toLocaleTimeString()} ·{" "}
+                {meta.duration_ms}ms
+              </span>
             )}
+
             <button
               type="button"
               onClick={load}
