@@ -53,7 +53,7 @@ async function fetchText(url, retries = 3, retryDelayMs = 2000) {
       lastErr = e;
       if (attempt < retries) {
         console.log(
-          `  ↻ fetch attempt ${attempt} failed (${e}); retrying in ${retryDelayMs}ms…`,
+          `  ↻ fetch attempt ${attempt} failed (${String(e)}); retrying in ${retryDelayMs}ms…`,
         );
         await sleep(retryDelayMs);
       }
