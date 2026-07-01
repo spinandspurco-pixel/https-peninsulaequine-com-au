@@ -13,6 +13,7 @@ import { Eye, EyeOff, Loader2, ArrowLeft, Lock, AlertTriangle, RefreshCw } from 
 import { StaffPortalFrame } from "@/components/StaffPortalFrame";
 import { HqLoadingState } from "@/components/hq/HqLoadingState";
 import { clearLocalAuthCacheAndSignOut } from "@/lib/authCache";
+import { usePageMeta } from "@/lib/usePageMeta";
 import { trackAuthFunnel } from "@/lib/authFunnel";
 import { attemptGoogleSignIn } from "@/lib/oauthSignIn";
 import { GoogleOAuthConfigBanner } from "@/components/auth/GoogleOAuthConfigBanner";
@@ -134,6 +135,11 @@ function classifyOAuthError(message: string): SignInError {
 
 
 export default function Login() {
+  usePageMeta({
+    title: "Sign In — Peninsula Equine HQ",
+    description: "Sign in to Peninsula Equine HQ.",
+    path: "/login",
+  });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);

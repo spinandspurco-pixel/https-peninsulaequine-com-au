@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { usePageMeta } from "@/lib/usePageMeta";
 // Covered Arenas hero — approved wide indoor arena image
 import heroAsset from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
 const heroImg = heroAsset.url;
@@ -13,6 +14,11 @@ const capabilities = [
 ];
 
 export default function Arenas() {
+  usePageMeta({
+    title: "Covered Arenas — Peninsula Equine",
+    description: "Clear-span covered arenas engineered for year-round riding. Steel and blackened timber, engineered footing, resolved at handover.",
+    path: "/arenas",
+  });
   return (
     <Layout>
       <article className="bg-background text-foreground type-architectural">

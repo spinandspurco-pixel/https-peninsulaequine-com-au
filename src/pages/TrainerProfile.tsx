@@ -11,6 +11,7 @@ import { TrainerVideoPlaylist } from "@/components/TrainerVideoPlaylist";
 import { TrainerClinicRSVP } from "@/components/TrainerClinicRSVP";
 import { fetchMergedTestimonials, TRAINER_PROFILES, SERVICE_FILTERS, type TestimonialItem } from "@/lib/testimonials";
 import { glennBrowitt, aboutCiro } from "@/data/content";
+import { usePageMeta } from "@/lib/usePageMeta";
 // Approved cinematic — legacy covered-arena-finished-lit removed.
 import ciroWithHorseAsset from "@/assets/uploads/approved-aberdeen-rider-exterior-storm.webp.asset.json";
 const ciroWithHorse = ciroWithHorseAsset.url;
@@ -60,6 +61,13 @@ function StarRating({ rating }: { rating: number }) {
 export default function TrainerProfile() {
   const { slug } = useParams<{ slug: string }>();
   const trainer = slug ? TRAINERS[slug] : undefined;
+  usePageMeta({
+    title: trainer ? `${trainer.name} — ${trainer.title} | Peninsula Equine` : "Trainer — Peninsula Equine",
+    description: trainer ? `${trainer.name}, ${trainer.title}. ${trainer.specialties.slice(0, 3).join(" · ")}.` : "Peninsula Equine trainer profile.",
+    path: slug ? `/trainers/${slug}` : "/trainers",
+    ogType: "profile",
+    image: trainer?.portrait,
+  });
   const [testimonials, setTestimonials] = useState<TestimonialItem[]>([]);
   const [loading, setLoading] = useState(true);
 

@@ -1,7 +1,7 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { usePageMeta } from "@/lib/usePageMeta";
 import heroAsset from "@/assets/covered-arenas/approved-covered-arena-interior-night.png.asset.json";
 
 const heroImg = heroAsset.url;
@@ -87,18 +87,12 @@ const SECTIONS = [
 ];
 
 export default function DressageArenaConstruction() {
-  useEffect(() => {
-    const prevTitle = document.title;
-    document.title = META_TITLE;
-    const meta = document.querySelector('meta[name="description"]');
-    const prevDesc = meta?.getAttribute("content") || "";
-    meta?.setAttribute("content", META_DESCRIPTION);
-
-    // JSON-LD: Article + FAQPage + BreadcrumbList
-    const ld = document.createElement("script");
-    ld.type = "application/ld+json";
-    ld.dataset.guide = "dressage-arena-construction";
-    ld.text = JSON.stringify([
+  usePageMeta({
+    title: META_TITLE,
+    description: META_DESCRIPTION,
+    path: "/guides/dressage-arena-construction",
+    ogType: "article",
+    jsonLd: [
       {
         "@context": "https://schema.org",
         "@type": "TechArticle",
@@ -128,15 +122,9 @@ export default function DressageArenaConstruction() {
           { "@type": "ListItem", position: 3, name: "Dressage Arena Construction", item: CANONICAL },
         ],
       },
-    ]);
-    document.head.appendChild(ld);
+    ],
+  });
 
-    return () => {
-      document.title = prevTitle;
-      if (meta && prevDesc) meta.setAttribute("content", prevDesc);
-      ld.remove();
-    };
-  }, []);
 
   return (
     <Layout>

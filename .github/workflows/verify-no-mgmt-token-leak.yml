@@ -1,0 +1,88 @@
+name: Verify no SB_MGMT_ACCESS_TOKEN leak
+
+# Builds the client bundle with sourcemaps enabled and greps every built
+# artifact for the literal string `SB_MGMT_ACCESS_TOKEN`. This token name
+# should only ever appear in server-side code (edge functions, CI scripts).
+# If it lands in the client bundle or a sourcemap, the job fails so we
+# catch accidental imports before they ship to production.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: verify-no-mgmt-token-leak-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    name: Grep built artifacts for SB_MGMT_ACCESS_TOKEN
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Cache Bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            node_modules
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock', 'bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build client bundle with sourcemaps
+        env:
+          # Force sourcemap emission so the grep also inspects the mapped
+          # original module paths, not just minified output.
+          VITE_SOURCEMAP: "true"
+        run: bunx vite build --sourcemap
+
+      - name: Grep dist/ for SB_MGMT_ACCESS_TOKEN
+        run: |
+          set -euo pipefail
+          NEEDLE="SB_MGMT_ACCESS_TOKEN"
+          if [ ! -d dist ]; then
+            echo "::error::dist/ was not produced by the build step."
+            exit 1
+          fi
+
+          # Search every file under dist/ (JS, CSS, HTML, .map, etc.).
+          # -r recursive, -I skip binary, -F fixed string, -l list matching files.
+          MATCHES=$(grep -rIlF "$NEEDLE" dist/ || true)
+
+          if [ -n "$MATCHES" ]; then
+            echo "::error::Found literal '$NEEDLE' in built artifacts:"
+            echo "$MATCHES"
+            {
+              echo "## SB_MGMT_ACCESS_TOKEN leak detected"
+              echo ""
+              echo "The following built artifacts contain the literal string \`$NEEDLE\`:"
+              echo ""
+              echo '```'
+              echo "$MATCHES"
+              echo '```'
+              echo ""
+              echo "This token name should only appear in server-side code (edge functions, CI). Remove any client-side reference before merging."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+          echo "OK — no occurrences of $NEEDLE in dist/."
+          echo "## SB_MGMT_ACCESS_TOKEN leak check passed" >> "$GITHUB_STEP_SUMMARY"

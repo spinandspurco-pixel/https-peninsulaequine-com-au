@@ -215,6 +215,62 @@ export type Database = {
         }
         Relationships: []
       }
+      attachments: {
+        Row: {
+          bucket: string
+          checksum: string | null
+          created_at: string
+          file_name: string
+          file_size: number
+          id: string
+          inquiry_id: string | null
+          metadata: Json
+          mime_type: string
+          owner_id: string | null
+          status: string
+          storage_path: string
+          updated_at: string
+        }
+        Insert: {
+          bucket?: string
+          checksum?: string | null
+          created_at?: string
+          file_name: string
+          file_size: number
+          id?: string
+          inquiry_id?: string | null
+          metadata?: Json
+          mime_type: string
+          owner_id?: string | null
+          status?: string
+          storage_path: string
+          updated_at?: string
+        }
+        Update: {
+          bucket?: string
+          checksum?: string | null
+          created_at?: string
+          file_name?: string
+          file_size?: number
+          id?: string
+          inquiry_id?: string | null
+          metadata?: Json
+          mime_type?: string
+          owner_id?: string | null
+          status?: string
+          storage_path?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attachments_inquiry_id_fkey"
+            columns: ["inquiry_id"]
+            isOneToOne: false
+            referencedRelation: "inquiries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       automation_settings: {
         Row: {
           category: string
@@ -1018,6 +1074,7 @@ export type Database = {
       inquiries: {
         Row: {
           attachment_urls: string[] | null
+          attachments: Json
           budget_range: string | null
           created_at: string
           deal_stage: string | null
@@ -1051,6 +1108,7 @@ export type Database = {
         }
         Insert: {
           attachment_urls?: string[] | null
+          attachments?: Json
           budget_range?: string | null
           created_at?: string
           deal_stage?: string | null
@@ -1084,6 +1142,7 @@ export type Database = {
         }
         Update: {
           attachment_urls?: string[] | null
+          attachments?: Json
           budget_range?: string | null
           created_at?: string
           deal_stage?: string | null
@@ -1154,6 +1213,50 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "inquiry_activity_inquiry_id_fkey"
+            columns: ["inquiry_id"]
+            isOneToOne: false
+            referencedRelation: "inquiries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      inquiry_attachments: {
+        Row: {
+          created_at: string
+          filename: string
+          folder: string
+          id: string
+          inquiry_id: string | null
+          mime_type: string
+          size_bytes: number
+          storage_path: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          filename: string
+          folder: string
+          id?: string
+          inquiry_id?: string | null
+          mime_type: string
+          size_bytes: number
+          storage_path: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          filename?: string
+          folder?: string
+          id?: string
+          inquiry_id?: string | null
+          mime_type?: string
+          size_bytes?: number
+          storage_path?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inquiry_attachments_inquiry_id_fkey"
             columns: ["inquiry_id"]
             isOneToOne: false
             referencedRelation: "inquiries"
@@ -1510,6 +1613,7 @@ export type Database = {
           early_bird_price: string | null
           event_date: string
           event_time: string | null
+          featured: boolean
           id: string
           image_url: string | null
           is_demo: boolean
@@ -1535,6 +1639,7 @@ export type Database = {
           early_bird_price?: string | null
           event_date: string
           event_time?: string | null
+          featured?: boolean
           id?: string
           image_url?: string | null
           is_demo?: boolean
@@ -1560,6 +1665,7 @@ export type Database = {
           early_bird_price?: string | null
           event_date?: string
           event_time?: string | null
+          featured?: boolean
           id?: string
           image_url?: string | null
           is_demo?: boolean
@@ -1743,6 +1849,7 @@ export type Database = {
           client_role: string | null
           created_at: string
           created_by: string | null
+          featured: boolean
           id: string
           is_demo: boolean
           media_type: string | null
@@ -1763,6 +1870,7 @@ export type Database = {
           client_role?: string | null
           created_at?: string
           created_by?: string | null
+          featured?: boolean
           id?: string
           is_demo?: boolean
           media_type?: string | null
@@ -1783,6 +1891,7 @@ export type Database = {
           client_role?: string | null
           created_at?: string
           created_by?: string | null
+          featured?: boolean
           id?: string
           is_demo?: boolean
           media_type?: string | null
@@ -2790,6 +2899,10 @@ export type Database = {
       }
       hq_graph_backfill_media_suggestions: { Args: never; Returns: number }
       is_e2e_test_user: { Args: { _user_id: string }; Returns: boolean }
+      link_inquiry_attachments: {
+        Args: { _ids: string[]; _inquiry_id: string }
+        Returns: number
+      }
       list_staff_directory: {
         Args: never
         Returns: {

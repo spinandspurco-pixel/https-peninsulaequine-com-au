@@ -11,10 +11,21 @@ import { CaseStudyUnderstanding } from "@/components/casestudy/CaseStudyUndersta
 import { CaseStudySolution } from "@/components/casestudy/CaseStudySolution";
 import { CaseStudyOutcome } from "@/components/casestudy/CaseStudyOutcome";
 import { CaseStudyClose } from "@/components/casestudy/CaseStudyClose";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 export default function CaseStudy() {
   const { slug } = useParams<{ slug: string }>();
   const study = CASE_STUDIES.find((s) => s.slug === slug);
+
+  usePageMeta({
+    title: study ? `${study.title} — Selected Works | Peninsula Equine` : "Selected Works — Peninsula Equine",
+    description: study
+      ? `${study.title}, ${study.location}. A Peninsula Equine case study.`
+      : "Selected Works — Peninsula Equine projects.",
+    path: slug ? `/project/${slug}` : "/selected-works",
+    ogType: "article",
+    image: study?.hero,
+  });
 
   if (!study) return <Navigate to="/selected-works" replace />;
 

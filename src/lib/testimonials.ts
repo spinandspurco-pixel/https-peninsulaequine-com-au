@@ -10,6 +10,7 @@ export interface TestimonialItem {
   quote: string;
   rating: number;
   pinned?: boolean;
+  featured?: boolean;
   mediaType?: "image" | "video" | null;
   mediaUrl?: string | null;
   serviceTags: string[];
@@ -86,7 +87,7 @@ export async function fetchMergedTestimonials(): Promise<TestimonialItem[]> {
   try {
     const { data, error } = await supabase
       .from("managed_testimonials")
-      .select("id, client_name, client_role, quote, rating, media_type, media_url, service_tags, pinned, trainer")
+      .select("id, client_name, client_role, quote, rating, media_type, media_url, service_tags, pinned, featured, trainer")
       .eq("active", true)
       .order("pinned", { ascending: false })
       .order("sort_order", { ascending: true });
@@ -107,6 +108,7 @@ export async function fetchMergedTestimonials(): Promise<TestimonialItem[]> {
       quote: t.quote,
       rating: t.rating,
       pinned: (t as any).pinned ?? false,
+      featured: (t as any).featured ?? false,
       mediaType: (t.media_type as "image" | "video" | null) ?? null,
       mediaUrl: t.media_url ?? null,
       serviceTags: (t.service_tags as string[]) ?? [],
@@ -138,4 +140,17 @@ export function getTrainerFilters(testimonials: TestimonialItem[]): string[] {
     if (t.trainer) trainers.add(t.trainer);
   });
   return Array.from(trainers).sort();
+}
+
+/**
+ * Fetch only testimonials flagged as `featured` for use in homepage sections.
+ * Falls back to pinned entries, then the first N merged entries.
+ */
+export async function fetchFeaturedTestimonials(limit = 3): Promise<TestimonialItem[]> {
+  const all = await fetchMergedTestimonials();
+  const featured = all.filter((t) => t.featured);
+  if (featured.length > 0) return featured.slice(0, limit);
+  const pinned = all.filter((t) => t.pinned);
+  if (pinned.length > 0) return pinned.slice(0, limit);
+  return all.slice(0, limit);
 }

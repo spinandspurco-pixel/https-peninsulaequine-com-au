@@ -13,6 +13,7 @@ import {
   HardHat,
 } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
+import { usePageMeta } from "@/lib/usePageMeta";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { StickySubpageCTA } from "@/components/StickySubpageCTA";
@@ -259,6 +260,11 @@ function EstimateCTA() {
 
 // ── Page ─────────────────────────────────────────────
 export default function Estimate() {
+  usePageMeta({
+    title: "Construction Pricing & Estimate — Peninsula Equine",
+    description: "Indicative pricing for covered arenas, stables, pavilions and equine infrastructure built across the Mornington Peninsula.",
+    path: "/estimate",
+  });
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   useEffect(() => { trackQuoteConversion(); }, []);
 

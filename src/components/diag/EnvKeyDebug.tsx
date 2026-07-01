@@ -15,6 +15,7 @@ import { classifyClientSupabaseKey } from "@/lib/supabaseKeyIndicator";
  */
 export function EnvKeyDebug() {
   const [open, setOpen] = useState(false);
+  const [copyStatus, setCopyStatus] = useState<"idle" | "ok" | "error">("idle");
   const key = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined) ?? "";
   const info = useMemo(() => classifyClientSupabaseKey(key), [key]);
 
@@ -98,9 +99,49 @@ export function EnvKeyDebug() {
           {info.family !== "modern" && (
             <div style={{ marginTop: 4, opacity: 0.9 }}>{info.message}</div>
           )}
+          <div style={{ marginTop: 6 }}>
+            <button
+              type="button"
+              data-testid="env-key-debug-copy"
+              onClick={async (e) => {
+                e.stopPropagation();
+                const payload = {
+                  family: info.family,
+                  prefix,
+                  length: key ? key.length : 0,
+                  mode: import.meta.env.MODE,
+                };
+                try {
+                  await navigator.clipboard.writeText(
+                    JSON.stringify(payload, null, 2),
+                  );
+                  setCopyStatus("ok");
+                } catch {
+                  setCopyStatus("error");
+                }
+                setTimeout(() => setCopyStatus("idle"), 1500);
+              }}
+              style={{
+                font: "inherit",
+                color: tone.fg,
+                background: "transparent",
+                border: `1px solid ${tone.border}`,
+                borderRadius: 3,
+                padding: "2px 6px",
+                cursor: "pointer",
+              }}
+            >
+              {copyStatus === "ok"
+                ? "✓ Copied"
+                : copyStatus === "error"
+                ? "Copy failed"
+                : "Copy payload"}
+            </button>
+          </div>
           <div style={{ marginTop: 4, opacity: 0.55 }}>
             Non-production only · hidden in production builds
           </div>
+
         </div>
       )}
     </div>

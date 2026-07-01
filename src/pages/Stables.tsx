@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { RevealOnScroll, RevealLine } from "@/components/RevealOnScroll";
+import { usePageMeta } from "@/lib/usePageMeta";
 import heroAsset from "@/assets/uploads/approved-stable-aisle-detail-warm-light.png.asset.json";
 import stallInteriorAsset from "@/assets/uploads/approved-stable-stall-interior-symmetric.png.asset.json";
+
 
 
 const heroImg = heroAsset.url;
@@ -23,6 +25,11 @@ const capabilities = [
 ];
 
 export default function Stables() {
+  usePageMeta({
+    title: "Stables & Barn Structures — Peninsula Equine",
+    description: "Cross-ventilated stables and barns with custom joinery and integrated services. Cinematic timber and steel, engineered around the horse.",
+    path: "/stables",
+  });
   return (
     <Layout>
       <article className="bg-background text-foreground type-architectural">

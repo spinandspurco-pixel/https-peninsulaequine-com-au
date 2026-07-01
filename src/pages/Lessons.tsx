@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { PECalendar, PEHorseshoe, PERider } from "@/components/icons/PEIcons";
 import { CalendarSyncButtons } from "@/components/CalendarSyncButtons";
+import { usePageMeta } from "@/lib/usePageMeta";
 import { supabase } from "@/integrations/supabase/client";
 import { EventRSVPForm } from "@/components/events/EventRSVPForm";
 import { EventGuestList } from "@/components/events/EventGuestList";
@@ -795,11 +796,16 @@ function InlineBookingFlow() {
 // ── Page ─────────────────────────────────────────────
 
 export default function Lessons() {
+  usePageMeta({
+    title: "Riding Lessons — Peninsula Equine, Mornington Peninsula",
+    description: "Structured riding lessons on the Mornington Peninsula. Expert tuition for every level, from first sit to competition preparation.",
+    path: "/lessons",
+  });
   const { ref: trainerRef, isVisible: trainerVisible } = useScrollAnimation<HTMLElement>({ threshold: 0.15 });
 
   return (
     <Layout>
-      <StickySubpageCTA ctaLabel="Book a Lesson" ctaHref="/book-lesson" />
+      <StickySubpageCTA ctaLabel="Book a Lesson" ctaHref="/lessons/book" />
 
       <PageHeader
         title="Riding Lessons"
@@ -897,7 +903,8 @@ export default function Lessons() {
 
               <div className="flex flex-wrap gap-3">
                 <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
-                  <Link to="/book-lesson">
+                  <Link to="/lessons/book">
+
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     Book a Lesson
                   </Link>
@@ -1003,7 +1010,7 @@ export default function Lessons() {
               size="lg"
               className="bg-accent text-accent-foreground hover:bg-accent/90"
             >
-              <Link to="/book-lesson">
+              <Link to="/lessons/book">
                 <CalendarIcon className="mr-2 h-5 w-5" />
                 Book a Lesson
                 <ArrowRight className="ml-2 h-4 w-4" />
