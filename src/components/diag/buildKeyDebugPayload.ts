@@ -115,10 +115,11 @@ export function buildKeyDebugPayload(input: KeyDebugPayloadInput): KeyDebugPaylo
   if (diag === null) {
     serverComparison = { state: "pending" };
   } else if ("error" in diag && diag.error) {
+    const errDiag = diag as { error: string; httpStatus?: number | null };
     serverComparison = {
       state: "error",
-      error: diag.error,
-      httpStatus: diag.httpStatus ?? null,
+      error: errDiag.error,
+      httpStatus: errDiag.httpStatus ?? null,
     };
   } else {
     const serverKey = (diag as { supabase?: { key?: { family?: string | null; prefix?: string | null; length?: number | null } | null } }).supabase?.key;
