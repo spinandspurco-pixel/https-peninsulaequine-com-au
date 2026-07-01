@@ -25,6 +25,11 @@ const capabilities = [
 ];
 
 export default function Stables() {
+  usePageMeta({
+    title: "Stables & Barn Structures — Peninsula Equine",
+    description: "Cross-ventilated stables and barns with custom joinery and integrated services. Cinematic timber and steel, engineered around the horse.",
+    path: "/stables",
+  });
   return (
     <Layout>
       <article className="bg-background text-foreground type-architectural">
