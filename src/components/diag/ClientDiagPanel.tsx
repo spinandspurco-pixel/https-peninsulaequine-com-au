@@ -152,6 +152,29 @@ export function ClientDiagPanel() {
     }
   }, []);
 
+  const lastBuildStamp = serverBuild?.fetchedAt ?? null;
+  const lastHealthStamp = health?.fetchedAt ?? null;
+  const lastDiagStamp = diag?.fetchedAt ?? null;
+  useEffect(() => {
+    const ms = serverBuild?.latencyMs;
+    if (typeof ms === "number" && isFinite(ms)) {
+      setBuildHistory((h) => [...h, ms].slice(-HISTORY_MAX));
+    }
+  }, [lastBuildStamp, serverBuild?.latencyMs]);
+  useEffect(() => {
+    const ms = health?.latencyMs;
+    if (typeof ms === "number" && isFinite(ms)) {
+      setHealthHistory((h) => [...h, ms].slice(-HISTORY_MAX));
+    }
+  }, [lastHealthStamp, health?.latencyMs]);
+  useEffect(() => {
+    const ms = diag?.latencyMs;
+    if (typeof ms === "number" && isFinite(ms)) {
+      setDiagHistory((h) => [...h, ms].slice(-HISTORY_MAX));
+    }
+  }, [lastDiagStamp, diag?.latencyMs]);
+
+
   const refreshBuildInfo = useCallback(async () => {
     setRefreshing(true);
     setServerBuild(null);
