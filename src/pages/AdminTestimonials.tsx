@@ -135,9 +135,21 @@ export default function AdminTestimonials() {
     fetchData();
   };
 
+  const FEATURED_LIMIT = 1;
   const toggleFeatured = async (item: ManagedTestimonial) => {
     if (isPreview) { toast.error("View-only in client preview"); return; }
     const next = !(item as any).featured;
+    if (next) {
+      const currentFeatured = items.filter((x) => (x as any).featured && x.id !== item.id);
+      if (currentFeatured.length >= FEATURED_LIMIT) {
+        // Auto-swap: unfeature the existing one to enforce single featured testimonial
+        const existing = currentFeatured[0];
+        const { error: unsetErr } = await supabase.from("managed_testimonials").update({ featured: false }).eq("id", existing.id);
+        if (unsetErr) { toast.error("Failed to update"); return; }
+        toast.message(`Replaced featured testimonial (${existing.client_name})`);
+        setItems((prev) => prev.map((x) => (x.id === existing.id ? ({ ...x, featured: false } as ManagedTestimonial) : x)));
+      }
+    }
     const { error } = await supabase.from("managed_testimonials").update({ featured: next }).eq("id", item.id);
     if (error) { toast.error("Failed to update"); return; }
     toast.success(next ? "Featured on homepage" : "Removed from homepage");
