@@ -46,7 +46,13 @@ export type RetryDeps<P extends ProbeLike> = {
   backoffMs?: (attemptIndex: number) => number;
   /** Re-use already-fetched probes as the "before" snapshot. */
   initialBefore?: P[] | null;
+  /**
+   * Progress callback fired once per attempt, before the probe pass runs.
+   * Lets the UI show "Retrying promotion… (2/4)" without polling.
+   */
+  onAttempt?: (attempt: number, maxAttempts: number) => void;
 };
+
 
 export function isStuck(r: ProbeLike): boolean {
   if (!r.ok) return false;
