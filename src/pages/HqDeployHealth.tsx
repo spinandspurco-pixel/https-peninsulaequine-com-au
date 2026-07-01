@@ -277,6 +277,7 @@ export default function HqDeployHealth() {
       }
     } finally {
       setRetrying(false);
+      setRetryProgress(null);
     }
   }, [results]);
 
