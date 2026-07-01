@@ -6,6 +6,10 @@
 // Public function (verify_jwt = false) — inquiry forms are accessible to anonymous
 // visitors, matching the current storage RLS. Rate limiting is left to the
 // Supabase edge platform / upstream WAF.
+//
+// Error contract: every failure returns
+//   { error: string, code: string, details?: Record<string, unknown> }
+// at HTTP status matching the class of failure.
 
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
@@ -37,15 +41,13 @@ const SIGS: Record<string, SigCheck> = {
   "image/webp": (b) =>
     b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46 &&
     b[8] === 0x57 && b[9] === 0x45 && b[10] === 0x42 && b[11] === 0x50,
-  "image/heic": (b) => b[4] === 0x66 && b[5] === 0x74 && b[6] === 0x79 && b[7] === 0x70, // ftyp box
+  "image/heic": (b) => b[4] === 0x66 && b[5] === 0x74 && b[6] === 0x79 && b[7] === 0x70,
   "image/heif": (b) => b[4] === 0x66 && b[5] === 0x74 && b[6] === 0x79 && b[7] === 0x70,
   "application/pdf": (b) => b[0] === 0x25 && b[1] === 0x50 && b[2] === 0x44 && b[3] === 0x46,
-  // Office ZIP-based (docx, xlsx) — PK.. header
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": (b) =>
     b[0] === 0x50 && b[1] === 0x4b && (b[2] === 0x03 || b[2] === 0x05 || b[2] === 0x07),
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": (b) =>
     b[0] === 0x50 && b[1] === 0x4b && (b[2] === 0x03 || b[2] === 0x05 || b[2] === 0x07),
-  // Legacy OLE compound file (doc, xls)
   "application/msword": (b) =>
     b[0] === 0xd0 && b[1] === 0xcf && b[2] === 0x11 && b[3] === 0xe0,
   "application/vnd.ms-excel": (b) =>
@@ -54,45 +56,93 @@ const SIGS: Record<string, SigCheck> = {
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-function jsonError(status: number, code: string, message: string) {
-  return new Response(JSON.stringify({ error: { code, message } }), {
+function errorResponse(
+  status: number,
+  code: string,
+  message: string,
+  details?: Record<string, unknown>,
+) {
+  const body: Record<string, unknown> = { error: message, code };
+  if (details) body.details = details;
+  return new Response(JSON.stringify(body), {
     status,
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 }
 
-Deno.serve(async (req) => {
+export async function handler(req: Request): Promise<Response> {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
-  if (req.method !== "POST") return jsonError(405, "method_not_allowed", "Use POST.");
+  if (req.method !== "POST") {
+    return errorResponse(405, "method_not_allowed", "Use POST.", { method: req.method });
+  }
+
+  const contentType = req.headers.get("content-type") ?? "";
+  if (!contentType.toLowerCase().includes("multipart/form-data")) {
+    return errorResponse(
+      400,
+      "invalid_multipart",
+      "Request body must be multipart/form-data.",
+      { received_content_type: contentType || null },
+    );
+  }
 
   let form: FormData;
   try {
     form = await req.formData();
-  } catch {
-    return jsonError(400, "invalid_multipart", "Request body must be multipart/form-data.");
+  } catch (e) {
+    return errorResponse(
+      400,
+      "invalid_multipart",
+      "Request body must be multipart/form-data.",
+      { reason: e instanceof Error ? e.message : "parse_failed" },
+    );
   }
 
   const file = form.get("file");
   const folderRaw = String(form.get("folder") ?? "").trim();
 
-  if (!(file instanceof File)) {
-    return jsonError(400, "file_required", "A `file` field is required.");
+  if (file === null) {
+    return errorResponse(400, "file_required", "A `file` field is required.", {
+      field: "file",
+    });
   }
-  if (!folderRaw || !UUID_RE.test(folderRaw)) {
-    return jsonError(400, "invalid_folder", "`folder` must be a UUID.");
+  if (!(file instanceof File)) {
+    return errorResponse(400, "file_required", "A `file` field is required.", {
+      field: "file",
+      received: typeof file,
+    });
+  }
+  if (!folderRaw) {
+    return errorResponse(400, "invalid_folder", "`folder` must be a UUID.", {
+      field: "folder",
+      reason: "missing",
+    });
+  }
+  if (!UUID_RE.test(folderRaw)) {
+    return errorResponse(400, "invalid_folder", "`folder` must be a UUID.", {
+      field: "folder",
+      reason: "not_uuid",
+    });
   }
 
   // 1. Size
-  if (file.size <= 0) return jsonError(400, "empty_file", "File is empty.");
+  if (file.size <= 0) {
+    return errorResponse(400, "empty_file", "File is empty.", { size: file.size });
+  }
   if (file.size > MAX_BYTES) {
-    return jsonError(413, "file_too_large", `File exceeds ${MAX_BYTES} bytes (10 MB).`);
+    return errorResponse(413, "file_too_large", `File exceeds ${MAX_BYTES} bytes (10 MB).`, {
+      size: file.size,
+      max: MAX_BYTES,
+    });
   }
 
   // 2. Filename sanitisation
   const originalName = (file.name || "upload").split(/[\\/]/).pop() || "upload";
   const safeBase = originalName.replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, MAX_FILENAME_LEN);
   if (!safeBase || safeBase.startsWith(".")) {
-    return jsonError(400, "invalid_filename", "Filename is invalid.");
+    return errorResponse(400, "invalid_filename", "Filename is invalid.", {
+      received: originalName,
+    });
   }
   const extMatch = safeBase.match(/\.([a-zA-Z0-9]+)$/);
   const ext = extMatch ? extMatch[1].toLowerCase() : "";
@@ -101,22 +151,40 @@ Deno.serve(async (req) => {
   const mime = (file.type || "").toLowerCase();
   const allowedExts = ALLOWED[mime];
   if (!allowedExts) {
-    return jsonError(415, "mime_not_allowed", `Content-Type "${mime || "unknown"}" is not accepted.`);
+    return errorResponse(
+      415,
+      "mime_not_allowed",
+      `Content-Type "${mime || "unknown"}" is not accepted.`,
+      { mime: mime || null, allowed: Object.keys(ALLOWED) },
+    );
   }
   if (!ext || !allowedExts.includes(ext)) {
-    return jsonError(415, "extension_mismatch", `Extension .${ext || "(none)"} does not match ${mime}.`);
+    return errorResponse(
+      415,
+      "extension_mismatch",
+      `Extension .${ext || "(none)"} does not match ${mime}.`,
+      { extension: ext || null, mime, allowed_extensions: allowedExts },
+    );
   }
 
   // 4. Magic-byte sniff — must match declared MIME
   const headBuf = new Uint8Array(await file.slice(0, 16).arrayBuffer());
   const sig = SIGS[mime];
   if (!sig || !sig(headBuf)) {
-    return jsonError(415, "content_mismatch", "File contents do not match the declared type.");
+    return errorResponse(
+      415,
+      "content_mismatch",
+      "File contents do not match the declared type.",
+      { mime },
+    );
   }
 
   // 5. Upload with service role (bypasses public INSERT policy safely).
-  const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
-  const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+  const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!SUPABASE_URL || !SERVICE_KEY) {
+    return errorResponse(500, "server_misconfigured", "Storage credentials unavailable.");
+  }
   const admin = createClient(SUPABASE_URL, SERVICE_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
@@ -128,11 +196,13 @@ Deno.serve(async (req) => {
     .upload(path, bytes, { contentType: mime, upsert: false, cacheControl: "3600" });
 
   if (upErr) {
-    return jsonError(500, "upload_failed", upErr.message);
+    return errorResponse(502, "upload_failed", "Failed to store attachment.");
   }
 
   return new Response(
     JSON.stringify({ path, size: file.size, mime, name: safeBase }),
     { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
   );
-});
+}
+
+Deno.serve(handler);
