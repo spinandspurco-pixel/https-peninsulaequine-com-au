@@ -135,4 +135,39 @@ describe("assertMgmtToken() runtime guard", () => {
       expect(line).toContain("[REDACTED:SB_MGMT_ACCESS_TOKEN]");
     }
   });
+
+  it("scrubError() strips the token from message, stack, and cause chain", () => {
+    const token = "sbp_deep_secret_9876";
+    assertMgmtToken({
+      env: { SB_MGMT_ACCESS_TOKEN: token },
+      skipConsoleSanitiser: true,
+      skipProcessHandlers: true,
+    });
+
+    const inner = new Error(`upstream 401 with header Bearer ${token}`);
+    const outer = new Error(`fetch failed for token ${token}`);
+    (outer as { cause?: unknown }).cause = inner;
+
+    const safe = scrubError(outer);
+    expect(safe.message).not.toContain(token);
+    expect(safe.message).toContain("[REDACTED:SB_MGMT_ACCESS_TOKEN]");
+    expect(safe.stack ?? "").not.toContain(token);
+    const cause = (safe as { cause?: Error }).cause;
+    expect(cause).toBeInstanceOf(Error);
+    expect(cause!.message).not.toContain(token);
+    expect(cause!.message).toContain("[REDACTED:SB_MGMT_ACCESS_TOKEN]");
+  });
+
+  it("scrub() redacts the token inside nested plain objects", () => {
+    const token = "sbp_object_secret_5555";
+    assertMgmtToken({
+      env: { SB_MGMT_ACCESS_TOKEN: token },
+      skipConsoleSanitiser: true,
+      skipProcessHandlers: true,
+    });
+    const payload = { req: { headers: { authorization: `Bearer ${token}` } }, note: "ok" };
+    const safe = scrub(payload) as typeof payload;
+    expect(JSON.stringify(safe)).not.toContain(token);
+    expect(JSON.stringify(safe)).toContain("[REDACTED:SB_MGMT_ACCESS_TOKEN]");
+  });
 });
