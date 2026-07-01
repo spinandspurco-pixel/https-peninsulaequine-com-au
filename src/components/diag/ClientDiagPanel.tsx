@@ -174,6 +174,27 @@ export function ClientDiagPanel() {
     }
   }, [lastDiagStamp, diag?.latencyMs]);
 
+  // Track the most recent error cause per endpoint so we can surface it
+  // next to the latency row even after a subsequent probe recovers.
+  type LastErr = { message: string; httpStatus?: number; at: string } | null;
+  const [buildLastErr, setBuildLastErr] = useState<LastErr>(null);
+  const [healthLastErr, setHealthLastErr] = useState<LastErr>(null);
+  const [diagLastErr, setDiagLastErr] = useState<LastErr>(null);
+  useEffect(() => {
+    if (serverBuild?.error && serverBuild.fetchedAt) {
+      setBuildLastErr({ message: serverBuild.error, httpStatus: serverBuild.status, at: serverBuild.fetchedAt });
+    }
+  }, [serverBuild?.error, serverBuild?.status, serverBuild?.fetchedAt]);
+  useEffect(() => {
+    if (health?.error && health.fetchedAt) {
+      setHealthLastErr({ message: health.error, httpStatus: health.httpStatus, at: health.fetchedAt });
+    }
+  }, [health?.error, health?.httpStatus, health?.fetchedAt]);
+  useEffect(() => {
+    if (diag?.error && diag.fetchedAt) {
+      setDiagLastErr({ message: diag.error, httpStatus: diag.httpStatus, at: diag.fetchedAt });
+    }
+  }, [diag?.error, diag?.httpStatus, diag?.fetchedAt]);
 
   const refreshBuildInfo = useCallback(async () => {
     setRefreshing(true);
@@ -452,7 +473,15 @@ export function ClientDiagPanel() {
       </svg>
     );
   };
-  const latencyRow = (label: string, ms: number | null | undefined, history?: number[]) => {
+  const latencyRow = (
+    label: string,
+    ms: number | null | undefined,
+    history?: number[],
+    opts?: {
+      currentError?: { message: string; httpStatus?: number } | null;
+      lastError?: LastErr;
+    },
+  ) => {
     const color = latencyColor(ms);
     const display = typeof ms === "number" && isFinite(ms) ? `${ms} ms` : "—";
     const tier =
@@ -468,24 +497,70 @@ export function ClientDiagPanel() {
       points.length >= 2
         ? ` · min ${Math.min(...points)} / max ${Math.max(...points)} / n=${points.length}`
         : "";
+    const cur = opts?.currentError ?? null;
+    const last = opts?.lastError ?? null;
     return (
-      <div className="flex gap-2 leading-snug items-center">
-        <span className="opacity-50 min-w-[140px]">{label}</span>
-        <span className="font-mono break-all" style={color ? { color } : undefined}>
-          {display}
-          {tier}
-        </span>
-        {points.length >= 2 ? (
-          <>
-            <span className="inline-flex items-center" title={`last ${points.length}: ${points.join(", ")} ms`}>
-              {sparkline(points)}
+      <div className="leading-snug">
+        <div className="flex gap-2 items-center">
+          <span className="opacity-50 min-w-[140px]">{label}</span>
+          <span className="font-mono break-all" style={color ? { color } : undefined}>
+            {display}
+            {tier}
+          </span>
+          {points.length >= 2 ? (
+            <>
+              <span
+                className="inline-flex items-center"
+                title={`last ${points.length}: ${points.join(", ")} ms`}
+              >
+                {sparkline(points)}
+              </span>
+              <span className="opacity-40 font-mono text-[10px]">{stats}</span>
+            </>
+          ) : null}
+          {cur ? (
+            <span
+              className="font-mono text-[10px]"
+              style={{ color: "#ff8a8a" }}
+              title={cur.message}
+            >
+              ✗ {cur.httpStatus ? `HTTP ${cur.httpStatus} · ` : ""}
+              {cur.message.length > 60 ? cur.message.slice(0, 60) + "…" : cur.message}
             </span>
-            <span className="opacity-40 font-mono text-[10px]">{stats}</span>
-          </>
+          ) : last ? (
+            <span
+              className="font-mono text-[10px] opacity-60"
+              style={{ color: "#eab308" }}
+              title={`${last.httpStatus ? `HTTP ${last.httpStatus} · ` : ""}${last.message} @ ${last.at}`}
+            >
+              ⚠ recovered · last error {last.at.slice(11, 19)}
+            </span>
+          ) : (
+            <span className="font-mono text-[10px] opacity-40" style={{ color: "#7fbf7f" }}>
+              ✓ ok
+            </span>
+          )}
+        </div>
+        {cur ? (
+          <div
+            className="font-mono text-[10px] mt-0.5"
+            style={{ color: "#ff9a9a", paddingLeft: 148, wordBreak: "break-all" }}
+          >
+            cause: {cur.message}
+          </div>
+        ) : last ? (
+          <div
+            className="font-mono text-[10px] mt-0.5 opacity-60"
+            style={{ paddingLeft: 148, wordBreak: "break-all" }}
+          >
+            last cause: {last.httpStatus ? `HTTP ${last.httpStatus} · ` : ""}
+            {last.message}
+          </div>
         ) : null}
       </div>
     );
   };
+
 
 
 
@@ -958,7 +1033,7 @@ export function ClientDiagPanel() {
             ) : serverBuild.error ? (
               <>
                 {row("server", `error ${serverBuild.status ?? ""} ${serverBuild.error}`.trim())}
-                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null, buildHistory)}
+                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null, buildHistory, { currentError: serverBuild.error ? { message: serverBuild.error, httpStatus: serverBuild.status } : null, lastError: buildLastErr })}
                 {row("hint", "/api/build-info unreachable — check rewrite & cache")}
               </>
             ) : (
@@ -966,7 +1041,7 @@ export function ClientDiagPanel() {
                 {row("server bundle", serverBuild.bundleHash ?? "(unknown)")}
                 {row("server buildTime", serverBuild.buildTime ?? "(unknown)")}
                 {row("server buildCommit", (serverBuild.buildCommit ?? "(unknown)").slice(0, 12))}
-                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null, buildHistory)}
+                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null, buildHistory, { currentError: serverBuild.error ? { message: serverBuild.error, httpStatus: serverBuild.status } : null, lastError: buildLastErr })}
                 {(() => {
                   const fields: Array<{ label: string; expected: string; actual: string }> = [
                     { label: "bundleHash", expected: bundleHash, actual: serverBuild.bundleHash ?? "(unknown)" },
@@ -1022,7 +1097,7 @@ export function ClientDiagPanel() {
                 ? `error: ${health.error}`
                 : `${health.status ?? "?"} · ${health.service ?? "?"} · ${health.checkedAt ?? "?"}`,
           )}
-          {latencyRow("/api/health ms", health?.latencyMs ?? null, healthHistory)}
+          {latencyRow("/api/health ms", health?.latencyMs ?? null, healthHistory, { currentError: health?.error ? { message: health.error, httpStatus: health.httpStatus } : null, lastError: healthLastErr })}
           {row("supabase url", supaUrl || "(missing)")}
           {row("supabase url valid", supaUrlValid ? "yes" : "no")}
           {(() => {
@@ -1078,7 +1153,7 @@ export function ClientDiagPanel() {
               return (
                 <>
                   {row("/api/diag", `error: ${diag.error}`)}
-                  {latencyRow("/api/diag ms", diag.latencyMs ?? null, diagHistory)}
+                  {latencyRow("/api/diag ms", diag.latencyMs ?? null, diagHistory, { currentError: diag.error ? { message: diag.error, httpStatus: diag.httpStatus } : null, lastError: diagLastErr })}
                 </>
               );
             const serverKey = diag.supabase?.key;
@@ -1103,7 +1178,7 @@ export function ClientDiagPanel() {
                   "/api/diag",
                   `${diag.httpStatus ?? "?"} · ${diag.service ?? "?"} · ${diag.checkedAt ?? "?"}`,
                 )}
-                {latencyRow("/api/diag ms", diag.latencyMs ?? null, diagHistory)}
+                {latencyRow("/api/diag ms", diag.latencyMs ?? null, diagHistory, { currentError: diag.error ? { message: diag.error, httpStatus: diag.httpStatus } : null, lastError: diagLastErr })}
                 {row("server supabase host", diag.supabase?.urlHost ?? "(unknown)")}
                 {row("server key family", serverFamily)}
                 {row("server key prefix", serverKey?.prefix ?? "—")}
