@@ -1,4 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
+import {
+  fetchOAuthProviderConfig,
+  saveOAuthProviderConfig,
+  type OAuthProviderConfig,
+} from "@/lib/oauthProviderConfig";
 
 /**
  * Google OAuth provider verification panel.
@@ -88,6 +93,12 @@ export function OAuthProviderPanel({
     try { return window.localStorage.getItem(LAST_PASTED_KEY) ?? ""; } catch { return ""; }
   });
   const [copiedAt, setCopiedAt] = useState<number | null>(null);
+  const [remote, setRemote] = useState<OAuthProviderConfig | null>(null);
+  const [remoteExpected, setRemoteExpected] = useState<string>("");
+  const [syncState, setSyncState] = useState<"idle" | "loading" | "loaded" | "unavailable">("idle");
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [savedAt, setSavedAt] = useState<number | null>(null);
 
   useEffect(() => {
     try { window.localStorage.setItem(INTENDED_KEY, intendedClientId); } catch { /* ignore */ }
@@ -95,6 +106,47 @@ export function OAuthProviderPanel({
   useEffect(() => {
     try { window.localStorage.setItem(LAST_PASTED_KEY, pastedUrl); } catch { /* ignore */ }
   }, [pastedUrl]);
+
+  // Load persisted config from Lovable Cloud once (admin-only via RLS).
+  useEffect(() => {
+    let cancelled = false;
+    setSyncState("loading");
+    fetchOAuthProviderConfig("google")
+      .then((cfg) => {
+        if (cancelled) return;
+        setRemote(cfg);
+        setSyncState("loaded");
+        if (cfg?.intended_client_id) setIntendedClientId(cfg.intended_client_id);
+        if (cfg?.expected_redirect_uri) setRemoteExpected(cfg.expected_redirect_uri);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        // Non-admins (or unauth) get blocked by RLS — fall back silently.
+        setSyncState("unavailable");
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  const effectiveExpectedCallback = remoteExpected.trim() || expectedCallback;
+
+  const save = async () => {
+    setSaving(true);
+    setSaveError(null);
+    try {
+      const saved = await saveOAuthProviderConfig({
+        intended_client_id: intendedClientId.trim() || null,
+        expected_redirect_uri: remoteExpected.trim() || expectedCallback || null,
+      });
+      setRemote(saved);
+      setSavedAt(Date.now());
+      window.setTimeout(() => setSavedAt(null), 2000);
+    } catch (e) {
+      setSaveError(e instanceof Error ? e.message : "Save failed");
+    } finally {
+      setSaving(false);
+    }
+  };
+
 
   const authorizeUrl = useMemo(() => {
     if (!url) return null;
@@ -108,8 +160,8 @@ export function OAuthProviderPanel({
   const observedClientId = useMemo(() => extractClientId(pastedUrl), [pastedUrl]);
   const observedRedirectUri = useMemo(() => extractRedirectUri(pastedUrl), [pastedUrl]);
   const redirectStatus = useMemo(
-    () => compareRedirectUri(observedRedirectUri, expectedCallback),
-    [observedRedirectUri, expectedCallback],
+    () => compareRedirectUri(observedRedirectUri, effectiveExpectedCallback),
+    [observedRedirectUri, effectiveExpectedCallback],
   );
 
   const intendedNorm = intendedClientId.trim();
@@ -159,17 +211,32 @@ export function OAuthProviderPanel({
 
       {/* Expected callback URI — always visible, with copy */}
       <div className="px-4 py-3 border-b border-foreground/10">
-        <div className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55 mb-1.5">
-          Expected callback URI (Google → Authorized redirect URIs)
+        <div className="flex items-center justify-between mb-1.5 gap-4">
+          <div className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55">
+            Expected callback URI (Google → Authorized redirect URIs)
+          </div>
+          <span
+            className="text-[0.55rem] font-mono opacity-60"
+            style={{ letterSpacing: "0.2em" }}
+            title="Where the expected value is coming from"
+          >
+            {syncState === "loading"
+              ? "SYNCING…"
+              : syncState === "loaded" && remoteExpected.trim()
+                ? "FROM APP CONFIG"
+                : syncState === "unavailable"
+                  ? "LOCAL ONLY"
+                  : "FROM ENV"}
+          </span>
         </div>
         <div className="flex items-center gap-3">
           <code className="flex-1 text-[0.75rem] font-mono opacity-90 break-all">
-            {expectedCallback ?? "(missing VITE_SUPABASE_URL)"}
+            {effectiveExpectedCallback ?? "(missing VITE_SUPABASE_URL)"}
           </code>
-          {expectedCallback && (
+          {effectiveExpectedCallback && (
             <button
               type="button"
-              onClick={() => copy(expectedCallback)}
+              onClick={() => copy(effectiveExpectedCallback)}
               className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity shrink-0"
             >
               {copiedAt ? "Copied" : "Copy"}
@@ -180,12 +247,33 @@ export function OAuthProviderPanel({
           Paste this exact value into Google Cloud Console → APIs &amp; Services → Credentials →
           your OAuth 2.0 Client → Authorized redirect URIs.
         </div>
+        <div className="mt-3">
+          <label className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55 block mb-1.5">
+            Override expected redirect URI <span className="opacity-50 normal-case tracking-normal">(saved to app config)</span>
+          </label>
+          <input
+            type="text"
+            value={remoteExpected}
+            onChange={(e) => setRemoteExpected(e.target.value)}
+            placeholder={expectedCallback ?? "https://<project>.supabase.co/auth/v1/callback"}
+            spellCheck={false}
+            autoComplete="off"
+            className="w-full bg-transparent border border-foreground/20 focus:border-foreground/50 outline-none px-2.5 py-1.5 text-[0.75rem] font-mono opacity-90 placeholder:opacity-25"
+          />
+          <div className="text-[0.6rem] opacity-45 mt-1 font-light">
+            Leave blank to fall back to the value derived from <code className="font-mono opacity-80">VITE_SUPABASE_URL</code>.
+          </div>
+        </div>
       </div>
+
 
       {/* Intended Client ID input */}
       <div className="px-4 py-3 border-b border-foreground/10">
         <label className="text-[0.55rem] tracking-[0.35em] uppercase opacity-55 block mb-2">
-          Intended Google Client ID <span className="opacity-50 normal-case tracking-normal">(persisted locally)</span>
+          Intended Google Client ID{" "}
+          <span className="opacity-50 normal-case tracking-normal">
+            (cached locally, synced via Save to app config)
+          </span>
         </label>
         <input
           type="text"
@@ -202,7 +290,32 @@ export function OAuthProviderPanel({
             <code className="font-mono opacity-90"> ….apps.googleusercontent.com</code>.
           </div>
         )}
+
+        {/* Save to app config */}
+        <div className="mt-3 flex items-center gap-4 flex-wrap">
+          <button
+            type="button"
+            onClick={save}
+            disabled={saving || syncState === "unavailable"}
+            className="text-[0.55rem] tracking-[0.3em] uppercase opacity-80 hover:opacity-100 border border-foreground/25 hover:border-foreground/60 px-3 py-1.5 transition-opacity disabled:opacity-30"
+          >
+            {saving ? "Saving…" : savedAt ? "Saved" : "Save to app config"}
+          </button>
+          <div className="text-[0.6rem] opacity-55 font-light">
+            {syncState === "unavailable"
+              ? "App-config sync unavailable (admin role required)."
+              : remote?.updated_at
+                ? `Last synced ${new Date(remote.updated_at).toLocaleString()}`
+                : "Not yet saved to app config — currently cached in this browser only."}
+          </div>
+          {saveError && (
+            <div className="text-[0.6rem]" style={{ color: statusColor("fail") }}>
+              {saveError}
+            </div>
+          )}
+        </div>
       </div>
+
 
       {/* Probe row */}
       <div className="px-4 py-3 border-b border-foreground/10">
@@ -291,7 +404,7 @@ export function OAuthProviderPanel({
               Expected
             </div>
             <code className="font-mono opacity-85 break-all">
-              {expectedCallback || <span className="opacity-40">(missing VITE_SUPABASE_URL)</span>}
+              {effectiveExpectedCallback || <span className="opacity-40">(missing VITE_SUPABASE_URL)</span>}
             </code>
             <div className="text-[0.55rem] tracking-[0.3em] uppercase opacity-55 pt-1">
               Observed
