@@ -207,6 +207,17 @@ export default function Contact() {
       setFileError("Please attach at least one file before submitting.");
       return;
     }
+    if (uploader.isUploading) {
+      setFileError("Please wait for uploads to finish before submitting.");
+      return;
+    }
+    if (uploader.hasErrors) {
+      setFileError(
+        uploader.errorSummary ??
+          "Some attachments failed. Retry or remove them before submitting.",
+      );
+      return;
+    }
     setErrors({});
     setFileError(null);
     setSubmitting(true);
