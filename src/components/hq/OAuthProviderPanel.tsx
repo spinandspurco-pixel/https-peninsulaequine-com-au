@@ -237,15 +237,7 @@ export function OAuthProviderPanel({
           <code className="flex-1 text-[0.75rem] font-mono opacity-90 break-all">
             {expectedCallback ?? "(missing VITE_SUPABASE_URL)"}
           </code>
-          {expectedCallback && (
-            <button
-              type="button"
-              onClick={() => copy(expectedCallback)}
-              className="text-[0.55rem] tracking-[0.3em] uppercase opacity-70 hover:opacity-100 border-b border-foreground/30 hover:border-foreground/60 pb-0.5 transition-opacity shrink-0"
-            >
-              {copiedAt ? "Copied" : "Copy"}
-            </button>
-          )}
+          {expectedCallback && <CopyBtn text={expectedCallback} k="expected-callback" />}
         </div>
         <div className="text-[0.6rem] opacity-45 mt-1.5 font-light">
           Paste this exact value into Google Cloud Console → APIs &amp; Services → Credentials →
