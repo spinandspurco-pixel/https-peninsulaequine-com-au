@@ -745,7 +745,7 @@ export default function ServiceDetail() {
                 Tell us about your project and receive a personalised quote within 1–2 business days.
               </p>
               <Button asChild variant="outline" className="w-full">
-                <Link to={`/contact?services=${service.id}&ref=consult-cta`}>
+                <Link to={`/consult?services=${service.id}&ref=consult-cta`}>
                   <Phone className="mr-2 h-4 w-4" />
                   Request a Consult
                 </Link>
