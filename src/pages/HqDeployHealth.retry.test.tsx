@@ -221,8 +221,11 @@ describe("HqDeployHealth · retry classifications", () => {
     expect(screen.getByText(outcome.message)).toBeInTheDocument();
     expect(screen.getAllByText(/^success$/i).length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText(/no change/i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText(/Escalate to Lovable Support/i)).toBeInTheDocument();
-    expect(screen.getByText(/Copy payload as JSON/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Escalate to Lovable Support/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Copy payload as JSON/i })).toBeInTheDocument();
+
   });
 
   it("renders NO_CHANGE banner with escalation actions and no fresh rows", async () => {
