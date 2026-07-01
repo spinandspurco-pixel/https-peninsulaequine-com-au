@@ -14,11 +14,14 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 
-const MAX_BYTES = 10 * 1024 * 1024; // 10 MB
 const MAX_FILENAME_LEN = 120;
+const DEFAULT_MAX_BYTES = 10 * 1024 * 1024; // 10 MB
+const ABSOLUTE_MAX_BYTES = 50 * 1024 * 1024; // hard ceiling regardless of env
 
-// Allowed MIME types and matching extension set. Both must agree.
-const ALLOWED: Record<string, string[]> = {
+// Default allowed MIME → extension map. Overridable per environment
+// via INQUIRY_UPLOAD_ALLOWED_TYPES (JSON) or the pair
+// INQUIRY_UPLOAD_ALLOWED_MIME / INQUIRY_UPLOAD_ALLOWED_EXT (CSV).
+const DEFAULT_ALLOWED: Record<string, string[]> = {
   "image/jpeg": ["jpg", "jpeg"],
   "image/png": ["png"],
   "image/webp": ["webp"],
@@ -30,6 +33,112 @@ const ALLOWED: Record<string, string[]> = {
   "application/vnd.ms-excel": ["xls"],
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ["xlsx"],
 };
+
+export type UploadConfig = {
+  maxBytes: number;
+  allowed: Record<string, string[]>;
+};
+
+function normaliseExt(ext: string): string {
+  return ext.trim().toLowerCase().replace(/^\./, "");
+}
+
+function normaliseMime(mime: string): string {
+  return mime.trim().toLowerCase();
+}
+
+/**
+ * Resolve upload limits from env, with strict validation. Called per-request
+ * so tests (and hot config reloads) can toggle env between invocations.
+ *
+ * Precedence for MIME/extension mapping:
+ *   1. INQUIRY_UPLOAD_ALLOWED_TYPES  — JSON object `{ "image/png": ["png"] }`
+ *   2. INQUIRY_UPLOAD_ALLOWED_MIME + INQUIRY_UPLOAD_ALLOWED_EXT — CSV pair
+ *      where every listed MIME accepts every listed extension.
+ *   3. Built-in defaults.
+ *
+ * Size:
+ *   INQUIRY_UPLOAD_MAX_BYTES — positive integer, capped at 50 MB.
+ */
+export function loadUploadConfig(
+  env: { get: (k: string) => string | undefined } = Deno.env,
+): { config: UploadConfig; errors: string[] } {
+  const errors: string[] = [];
+
+  // ---- size ----
+  let maxBytes = DEFAULT_MAX_BYTES;
+  const rawMax = env.get("INQUIRY_UPLOAD_MAX_BYTES");
+  if (rawMax !== undefined && rawMax !== "") {
+    const parsed = Number(rawMax);
+    if (!Number.isFinite(parsed) || !Number.isInteger(parsed) || parsed <= 0) {
+      errors.push("INQUIRY_UPLOAD_MAX_BYTES must be a positive integer");
+    } else if (parsed > ABSOLUTE_MAX_BYTES) {
+      errors.push(
+        `INQUIRY_UPLOAD_MAX_BYTES=${parsed} exceeds hard cap ${ABSOLUTE_MAX_BYTES}`,
+      );
+    } else {
+      maxBytes = parsed;
+    }
+  }
+
+  // ---- allowed types ----
+  let allowed: Record<string, string[]> | null = null;
+  const rawJson = env.get("INQUIRY_UPLOAD_ALLOWED_TYPES");
+  if (rawJson !== undefined && rawJson !== "") {
+    try {
+      const parsed = JSON.parse(rawJson);
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+        throw new Error("must be a JSON object");
+      }
+      const map: Record<string, string[]> = {};
+      for (const [mime, exts] of Object.entries(parsed as Record<string, unknown>)) {
+        if (!Array.isArray(exts) || exts.length === 0) {
+          throw new Error(`entry "${mime}" must be a non-empty array of extensions`);
+        }
+        const cleanMime = normaliseMime(mime);
+        if (!cleanMime.includes("/")) throw new Error(`invalid MIME "${mime}"`);
+        const cleanExts = exts.map((e) => {
+          if (typeof e !== "string") throw new Error(`extension for "${mime}" must be a string`);
+          const ne = normaliseExt(e);
+          if (!ne || !/^[a-z0-9]+$/.test(ne)) throw new Error(`invalid extension "${e}"`);
+          return ne;
+        });
+        map[cleanMime] = Array.from(new Set(cleanExts));
+      }
+      if (Object.keys(map).length === 0) {
+        throw new Error("must define at least one MIME type");
+      }
+      allowed = map;
+    } catch (e) {
+      errors.push(
+        `INQUIRY_UPLOAD_ALLOWED_TYPES invalid JSON: ${e instanceof Error ? e.message : String(e)}`,
+      );
+    }
+  } else {
+    const mimeCsv = env.get("INQUIRY_UPLOAD_ALLOWED_MIME");
+    const extCsv = env.get("INQUIRY_UPLOAD_ALLOWED_EXT");
+    if ((mimeCsv && mimeCsv !== "") || (extCsv && extCsv !== "")) {
+      const mimes = (mimeCsv ?? "").split(",").map(normaliseMime).filter(Boolean);
+      const exts = (extCsv ?? "").split(",").map(normaliseExt).filter(Boolean);
+      if (mimes.length === 0 || exts.length === 0) {
+        errors.push(
+          "INQUIRY_UPLOAD_ALLOWED_MIME and INQUIRY_UPLOAD_ALLOWED_EXT must both list at least one value",
+        );
+      } else if (mimes.some((m) => !m.includes("/"))) {
+        errors.push("INQUIRY_UPLOAD_ALLOWED_MIME contains an invalid MIME");
+      } else if (exts.some((e) => !/^[a-z0-9]+$/.test(e))) {
+        errors.push("INQUIRY_UPLOAD_ALLOWED_EXT contains an invalid extension");
+      } else {
+        allowed = Object.fromEntries(mimes.map((m) => [m, [...exts]]));
+      }
+    }
+  }
+
+  return {
+    config: { maxBytes, allowed: allowed ?? DEFAULT_ALLOWED },
+    errors,
+  };
+}
 
 // Magic-byte signatures ("file type sniffing") so a renamed .exe cannot pose as an image.
 type SigCheck = (b: Uint8Array) => boolean;
