@@ -1274,7 +1274,7 @@ export function ClientDiagPanel() {
             ) : serverBuild.error ? (
               <>
                 {row("server", `error ${serverBuild.status ?? ""} ${serverBuild.error}`.trim())}
-                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null, buildHistory, { currentError: serverBuild.error ? { message: serverBuild.error, httpStatus: serverBuild.status } : null, lastError: buildLastErr })}
+                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null, buildHistory, { currentError: serverBuild.error ? { message: serverBuild.error, httpStatus: serverBuild.status } : null, lastError: buildLastErr, endpoint: "buildInfo" })}
                 {row("hint", "/api/build-info unreachable — check rewrite & cache")}
               </>
             ) : (
@@ -1282,7 +1282,7 @@ export function ClientDiagPanel() {
                 {row("server bundle", serverBuild.bundleHash ?? "(unknown)")}
                 {row("server buildTime", serverBuild.buildTime ?? "(unknown)")}
                 {row("server buildCommit", (serverBuild.buildCommit ?? "(unknown)").slice(0, 12))}
-                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null, buildHistory, { currentError: serverBuild.error ? { message: serverBuild.error, httpStatus: serverBuild.status } : null, lastError: buildLastErr })}
+                {latencyRow("/api/build-info ms", serverBuild.latencyMs ?? null, buildHistory, { currentError: serverBuild.error ? { message: serverBuild.error, httpStatus: serverBuild.status } : null, lastError: buildLastErr, endpoint: "buildInfo" })}
                 {(() => {
                   const fields: Array<{ label: string; expected: string; actual: string }> = [
                     { label: "bundleHash", expected: bundleHash, actual: serverBuild.bundleHash ?? "(unknown)" },
@@ -1338,7 +1338,7 @@ export function ClientDiagPanel() {
                 ? `error: ${health.error}`
                 : `${health.status ?? "?"} · ${health.service ?? "?"} · ${health.checkedAt ?? "?"}`,
           )}
-          {latencyRow("/api/health ms", health?.latencyMs ?? null, healthHistory, { currentError: health?.error ? { message: health.error, httpStatus: health.httpStatus } : null, lastError: healthLastErr })}
+          {latencyRow("/api/health ms", health?.latencyMs ?? null, healthHistory, { currentError: health?.error ? { message: health.error, httpStatus: health.httpStatus } : null, lastError: healthLastErr, endpoint: "health" })}
           {row("supabase url", supaUrl || "(missing)")}
           {row("supabase url valid", supaUrlValid ? "yes" : "no")}
           {(() => {
@@ -1394,7 +1394,7 @@ export function ClientDiagPanel() {
               return (
                 <>
                   {row("/api/diag", `error: ${diag.error}`)}
-                  {latencyRow("/api/diag ms", diag.latencyMs ?? null, diagHistory, { currentError: diag.error ? { message: diag.error, httpStatus: diag.httpStatus } : null, lastError: diagLastErr })}
+                  {latencyRow("/api/diag ms", diag.latencyMs ?? null, diagHistory, { currentError: diag.error ? { message: diag.error, httpStatus: diag.httpStatus } : null, lastError: diagLastErr, endpoint: "diag" })}
                 </>
               );
             const serverKey = diag.supabase?.key;
@@ -1419,7 +1419,7 @@ export function ClientDiagPanel() {
                   "/api/diag",
                   `${diag.httpStatus ?? "?"} · ${diag.service ?? "?"} · ${diag.checkedAt ?? "?"}`,
                 )}
-                {latencyRow("/api/diag ms", diag.latencyMs ?? null, diagHistory, { currentError: diag.error ? { message: diag.error, httpStatus: diag.httpStatus } : null, lastError: diagLastErr })}
+                {latencyRow("/api/diag ms", diag.latencyMs ?? null, diagHistory, { currentError: diag.error ? { message: diag.error, httpStatus: diag.httpStatus } : null, lastError: diagLastErr, endpoint: "diag" })}
                 {row("server supabase host", diag.supabase?.urlHost ?? "(unknown)")}
                 {row("server key family", serverFamily)}
                 {row("server key prefix", serverKey?.prefix ?? "—")}
