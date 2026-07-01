@@ -59,6 +59,8 @@ export function ClientDiagPanel() {
   const [healthHistory, setHealthHistory] = useState<number[]>([]);
   const [diagHistory, setDiagHistory] = useState<number[]>([]);
   const [buildHistory, setBuildHistory] = useState<number[]>([]);
+  const [docCacheHistory, setDocCacheHistory] = useState<number[]>([]);
+  const [bundleCacheHistory, setBundleCacheHistory] = useState<number[]>([]);
   const HISTORY_MAX = 10;
 
   // Unified probe history — last N entries across all endpoints, so users
@@ -446,6 +448,14 @@ export function ClientDiagPanel() {
       }
       setCacheHeaders(out);
       setCacheCheckedAt(Date.now());
+      const docMs = Number(out["document.latencyMs"]);
+      if (Number.isFinite(docMs)) {
+        setDocCacheHistory((prev) => [...prev, docMs].slice(-HISTORY_MAX));
+      }
+      const bundleMs = Number(out["bundle.latencyMs"]);
+      if (Number.isFinite(bundleMs)) {
+        setBundleCacheHistory((prev) => [...prev, bundleMs].slice(-HISTORY_MAX));
+      }
     } catch (err) {
       setCacheError(String((err as Error)?.message ?? err));
     }
@@ -1351,6 +1361,18 @@ export function ClientDiagPanel() {
             <div style={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 6 }}>
               {cacheError && row("probe error", cacheError)}
               {!cacheHeaders && !cacheError && row("status", "probing…")}
+              <div style={{ display: "flex", flexDirection: "column", gap: 2, marginBottom: 4 }}>
+                {latencyRow(
+                  "document ms",
+                  docCacheHistory.length ? docCacheHistory[docCacheHistory.length - 1] : null,
+                  docCacheHistory,
+                )}
+                {latencyRow(
+                  "bundle ms",
+                  bundleCacheHistory.length ? bundleCacheHistory[bundleCacheHistory.length - 1] : null,
+                  bundleCacheHistory,
+                )}
+              </div>
               {cacheHeaders &&
                 Object.keys(cacheHeaders)
                   .sort()
