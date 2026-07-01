@@ -38,10 +38,28 @@ function record(name, ok, detail = "") {
   console.log(`${tag} ${name}${detail ? ` — ${detail}` : ""}`);
 }
 
-async function fetchText(url) {
-  const res = await fetch(url, { redirect: "follow" });
-  const text = await res.text();
-  return { status: res.status, text, url: res.url };
+async function sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+async function fetchText(url, retries = 3, retryDelayMs = 2000) {
+  let lastErr;
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const res = await fetch(url, { redirect: "follow" });
+      const text = await res.text();
+      return { status: res.status, text, url: res.url };
+    } catch (e) {
+      lastErr = e;
+      if (attempt < retries) {
+        console.log(
+          `  ↻ fetch attempt ${attempt} failed (${e}); retrying in ${retryDelayMs}ms…`,
+        );
+        await sleep(retryDelayMs);
+      }
+    }
+  }
+  throw lastErr;
 }
 
 async function checkHomepage() {

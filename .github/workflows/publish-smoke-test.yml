@@ -223,6 +223,9 @@ jobs:
           BODY: ${{ steps.failmsg.outputs.body }}
         run: |
           set -e
+          # Ensure the required labels exist (idempotent — no-op if already present)
+          gh label create smoke-test --color "e11d48" --description "Live smoke test failure tracking" 2>/dev/null || true
+          gh label create production --color "dc2626" --description "Production issue" 2>/dev/null || true
           title="Publish smoke test failing on peninsulaequine.systems"
           existing="$(gh issue list --state open --search "$title in:title" --json number --jq '.[0].number' || true)"
           if [ -n "$existing" ] && [ "$existing" != "null" ]; then
