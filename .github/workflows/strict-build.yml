@@ -49,6 +49,20 @@ jobs:
       - name: TypeScript typecheck (full project, all references)
         run: bunx tsc -b --force --pretty
 
+      # Focused canary: typecheck src/pages/HqDeployHealth.tsx in isolation
+      # so stale TS1472 (and other) errors on that file surface as a clearly
+      # attributable step, not buried in the full project build log.
+      # Uses tsconfig.app.json so path aliases + lib settings match runtime.
+      - name: TypeScript canary — HqDeployHealth.tsx (guards against TS1472)
+        run: |
+          set -o pipefail
+          bunx tsc --noEmit -p tsconfig.app.json --pretty 2>&1 | tee /tmp/tsc-full.log
+          if grep -E "src/pages/HqDeployHealth\.tsx.*error TS" /tmp/tsc-full.log; then
+            echo "::error file=src/pages/HqDeployHealth.tsx::TypeScript errors detected in HqDeployHealth.tsx"
+            exit 1
+          fi
+
+
       # Runs prebuild (verify-assets) → strict build (fails on Tailwind/PostCSS warnings)
       # → postbuild (prerender + verify-prerender + verify-internal-links).
       # Any failure in this chain blocks the merge.
