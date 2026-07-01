@@ -6,6 +6,7 @@ import { Layout } from "@/components/layout/Layout";
 import { CalendarSyncButtons } from "@/components/CalendarSyncButtons";
 import { siteConfig, testimonials, services } from "@/data/content";
 import type { CalendarEvent } from "@/lib/calendarSync";
+import { usePageMeta } from "@/lib/usePageMeta";
 
 // Whitelist of allowed originating form paths — prevents open-redirect via ?from=
 const ALLOWED_ORIGIN_PATHS: Record<string, string> = {
