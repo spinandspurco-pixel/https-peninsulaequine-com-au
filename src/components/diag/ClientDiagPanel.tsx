@@ -552,33 +552,63 @@ export function ClientDiagPanel() {
       typeof window !== "undefined" ? window.location.origin : "https://peninsulaequine.systems";
     const stamp = new Date().toISOString();
     const ua = `peninsula-diag/1.0 (${environment}; ${host})`;
+    const fmtMs = (ms: number | null | undefined) =>
+      typeof ms === "number" && isFinite(ms) ? `${ms} ms` : "not measured";
+    const tier = (ms: number | null | undefined) => {
+      if (typeof ms !== "number" || !isFinite(ms)) return "n/a";
+      if (ms >= latencyThresholds.crit) return `slow (≥ ${latencyThresholds.crit} ms)`;
+      if (ms >= latencyThresholds.warn) return `warn (≥ ${latencyThresholds.warn} ms)`;
+      return "ok";
+    };
     const lines = [
       `# Peninsula HQ diagnostics — captured ${stamp}`,
       `# origin: ${origin}`,
       `# route:  ${path}`,
+      `# latency thresholds: warn ≥ ${latencyThresholds.warn} ms · crit ≥ ${latencyThresholds.crit} ms`,
+      `# observed latencies (client-measured, performance.now):`,
+      `#   /api/build-info: ${fmtMs(serverBuild?.latencyMs)} [${tier(serverBuild?.latencyMs)}]  fetchedAt=${serverBuild?.fetchedAt ?? "—"}`,
+      `#   /api/health:     ${fmtMs(health?.latencyMs)} [${tier(health?.latencyMs)}]  fetchedAt=${health?.fetchedAt ?? "—"}`,
+      `#   /api/diag:       ${fmtMs(diag?.latencyMs)} [${tier(diag?.latencyMs)}]  fetchedAt=${diag?.fetchedAt ?? "—"}`,
+      `#   document probe:  ${fmtMs(cacheHeaders?.["document.latencyMs"] ? Number(cacheHeaders["document.latencyMs"]) : null)}`,
+      `#   bundle probe:    ${fmtMs(cacheHeaders?.["bundle.latencyMs"] ? Number(cacheHeaders["bundle.latencyMs"]) : null)}`,
       ``,
       `# 1. Build info (expected: JSON with buildTime, buildCommit, bundleHash)`,
-      `curl -sS -D - -o /tmp/build-info.json \\`,
+      `# observed: ${fmtMs(serverBuild?.latencyMs)} [${tier(serverBuild?.latencyMs)}]`,
+      `curl -sS -w '\\n# curl timing: total=%{time_total}s connect=%{time_connect}s ttfb=%{time_starttransfer}s http=%{http_code}\\n' \\`,
+      `  -D - -o /tmp/build-info.json \\`,
       `  -H 'Accept: application/json' \\`,
       `  -H 'Cache-Control: no-cache' \\`,
       `  -H 'User-Agent: ${ua}' \\`,
       `  '${origin}/api/build-info'`,
       ``,
       `# 2. Health (expected: JSON with status, service, checkedAt, buildInfo)`,
-      `curl -sS -D - -o /tmp/health.json \\`,
+      `# observed: ${fmtMs(health?.latencyMs)} [${tier(health?.latencyMs)}]`,
+      `curl -sS -w '\\n# curl timing: total=%{time_total}s connect=%{time_connect}s ttfb=%{time_starttransfer}s http=%{http_code}\\n' \\`,
+      `  -D - -o /tmp/health.json \\`,
       `  -H 'Accept: application/json' \\`,
       `  -H 'Cache-Control: no-cache' \\`,
       `  -H 'User-Agent: ${ua}' \\`,
       `  '${origin}/api/health'`,
       ``,
-      `# 3. Document headers (expected: text/html, no-store on auth surfaces)`,
-      `curl -sS -I \\`,
+      `# 3. Diag (expected: JSON with supabase key metadata)`,
+      `# observed: ${fmtMs(diag?.latencyMs)} [${tier(diag?.latencyMs)}]`,
+      `curl -sS -w '\\n# curl timing: total=%{time_total}s connect=%{time_connect}s ttfb=%{time_starttransfer}s http=%{http_code}\\n' \\`,
+      `  -D - -o /tmp/diag.json \\`,
+      `  -H 'Accept: application/json' \\`,
+      `  -H 'Cache-Control: no-cache' \\`,
+      `  -H 'User-Agent: ${ua}' \\`,
+      `  '${origin}/api/diag'`,
+      ``,
+      `# 4. Document headers (expected: text/html, no-store on auth surfaces)`,
+      `curl -sS -w '\\n# curl timing: total=%{time_total}s connect=%{time_connect}s ttfb=%{time_starttransfer}s http=%{http_code}\\n' \\`,
+      `  -I \\`,
       `  -H 'User-Agent: ${ua}' \\`,
       `  '${origin}${path}'`,
       ``,
     ];
     return lines.join("\n");
   };
+
   const copyCurl = async () => {
     const snippet = buildCurlSnippet();
     try {
