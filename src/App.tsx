@@ -229,6 +229,7 @@ function AppContent() {
         <GuidedIntake />
         <AuthDebugPanel />
         <ClientDiagPanel />
+        <EnvKeyDebug />
       </BrowserRouter>
     </IntroContext.Provider>
 
