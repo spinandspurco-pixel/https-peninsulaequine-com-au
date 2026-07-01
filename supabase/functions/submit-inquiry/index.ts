@@ -85,6 +85,7 @@ const InquirySchema = z.object({
 
   // Attachments (already validated + stored by validate-inquiry-upload)
   attachment_urls: z.array(z.string().max(500)).max(10).optional(),
+  attachment_ids: z.array(z.string().uuid()).max(10).optional(),
   attachments: z.array(AttachmentSchema).max(10).optional(),
 
   // Optional client hint for source/campaign; never trusted for auth.
