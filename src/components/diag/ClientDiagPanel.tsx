@@ -1624,9 +1624,78 @@ export function ClientDiagPanel() {
                   color: palette.fg,
                 }}
               >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, gap: 8 }}>
                   <span style={{ letterSpacing: "0.06em", fontWeight: 600 }}>SUPABASE KEY · {palette.label}</span>
-                  <span style={{ opacity: 0.8, fontSize: 10 }}>family: {family}</span>
+                  <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        const serverKey = diag && !diag.error ? diag.supabase?.key : undefined;
+                        const payload = {
+                          capturedAt: new Date().toISOString(),
+                          origin: typeof window !== "undefined" ? window.location.origin : null,
+                          bundleHash,
+                          supabase: {
+                            url: supaUrl ?? null,
+                            urlValid: supaUrlValid,
+                            urlHost: supaUrl ? (() => { try { return new URL(supaUrl).host; } catch { return null; } })() : null,
+                          },
+                          publishableKey: {
+                            family,
+                            status: palette.label,
+                            message: palette.msg,
+                            prefix: supaKeyPrefix,
+                            length: supaKeyLen || null,
+                            shape: supaKeyShape,
+                            expectedPrefix: "sb_publishable_",
+                          },
+                          serverComparison: diag === null
+                            ? { state: "pending" }
+                            : diag.error
+                              ? { state: "error", error: diag.error, httpStatus: diag.httpStatus ?? null }
+                              : {
+                                  state: "ok",
+                                  urlHost: diag.supabase?.urlHost ?? null,
+                                  keyFamily: serverKey?.family ?? null,
+                                  keyPrefix: serverKey?.prefix ?? null,
+                                  keyLength: serverKey?.length ?? null,
+                                  familyMatch: (serverKey?.family ?? null) === (
+                                    !supaKey ? "missing"
+                                      : supaKey.startsWith("sb_publishable_") ? "sb_publishable"
+                                        : supaKey.startsWith("sb_secret_") ? "sb_secret"
+                                          : supaKey.startsWith("eyJ") ? "legacy_jwt"
+                                            : "unknown"
+                                  ),
+                                  prefixMatch: (serverKey?.prefix ?? "") === supaKeyPrefix,
+                                  lengthMatch: (serverKey?.length ?? -1) === supaKeyLen,
+                                },
+                        };
+                        const pretty = JSON.stringify(payload, null, 2);
+                        try {
+                          await navigator.clipboard.writeText(pretty);
+                          setCopied("key-payload:copied ✓");
+                        } catch {
+                          setCopied("key-payload:copy failed");
+                        }
+                        setTimeout(() => setCopied(null), 2500);
+                      }}
+                      style={{
+                        fontSize: 10,
+                        letterSpacing: "0.05em",
+                        padding: "2px 6px",
+                        border: `1px solid ${palette.border}`,
+                        background: "transparent",
+                        color: palette.fg,
+                        cursor: "pointer",
+                        borderRadius: 3,
+                      }}
+                      title="Copy publishable-key debug payload for bug reports (no secret value)"
+                      aria-label="Copy publishable-key debug payload"
+                    >
+                      {copied?.startsWith("key-payload:") ? copied.slice("key-payload:".length) : "copy payload"}
+                    </button>
+                    <span style={{ opacity: 0.8, fontSize: 10 }}>family: {family}</span>
+                  </span>
                 </div>
                 <div style={{ marginBottom: 4, lineHeight: 1.35 }}>{palette.msg}</div>
                 {row("prefix", supaKeyPrefix)}
