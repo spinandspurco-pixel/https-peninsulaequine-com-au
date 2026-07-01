@@ -252,7 +252,11 @@ export default function AdminTestimonials() {
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold text-foreground">{t.client_name}</h3>
                         {t.client_role && <span className="text-xs text-muted-foreground">· {t.client_role}</span>}
-                        {!t.active && <Badge variant="secondary" className="text-xs">Draft</Badge>}
+                        {t.active ? (
+                          <Badge variant="outline" className="text-xs border-emerald-500/40 text-emerald-500">Published</Badge>
+                        ) : (
+                          <Badge variant="secondary" className="text-xs">Draft</Badge>
+                        )}
                         {(t as any).pinned && <Badge className="text-[10px] bg-accent text-accent-foreground">Pinned</Badge>}
                       </div>
                       <p className="text-sm text-muted-foreground line-clamp-2 italic">"{t.quote}"</p>
