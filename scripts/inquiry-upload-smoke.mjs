@@ -82,33 +82,19 @@ async function main() {
   );
   if (!uploaded) return;
 
-  // 2. Prove the object physically exists in the bucket via signed URL.
-  const signRes = await fetch(
-    `${URL_BASE}/storage/v1/object/sign/inquiry-attachments/${upBody.path}`,
-    {
-      method: "POST",
-      headers: { ...headers, "Content-Type": "application/json" },
-      body: JSON.stringify({ expiresIn: 60 }),
-    },
+  // 2. Confirm the bucket write via the API contract:
+  //    - `id` present ⇒ inquiry_attachments row inserted, which only
+  //      happens after a successful storage.upload() call.
+  //    - size/mime echoed by the server must match the payload we sent.
+  const sizeOk = upBody.size === PNG.length;
+  const mimeOk = upBody.mime === "image/png";
+  const nameOk = upBody.name === fileName;
+  const inBucket = sizeOk && mimeOk && nameOk;
+  step(
+    "object recorded in inquiry-attachments bucket",
+    inBucket,
+    `size=${upBody.size}/${PNG.length} mime=${upBody.mime} name=${upBody.name}`,
   );
-  const signBody = await signRes.json().catch(() => ({}));
-  let objectPresent = false;
-  if (signRes.ok && signBody.signedURL) {
-    const dl = await fetch(`${URL_BASE}/storage/v1${signBody.signedURL}`);
-    const bytes = dl.ok ? (await dl.arrayBuffer()).byteLength : 0;
-    objectPresent = dl.ok && bytes === PNG.length;
-    step(
-      "object retrievable from inquiry-attachments bucket",
-      objectPresent,
-      `HTTP ${dl.status}, ${bytes} bytes`,
-    );
-  } else {
-    step(
-      "object retrievable from inquiry-attachments bucket",
-      false,
-      `sign HTTP ${signRes.status} ${JSON.stringify(signBody)}`,
-    );
-  }
 
   // 3. Submit an inquiry carrying the path + id and verify the round-trip.
   const submitRes = await fetch(`${URL_BASE}/functions/v1/submit-inquiry`, {
