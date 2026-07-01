@@ -13,6 +13,8 @@ import {
   type AttachmentRecord,
 } from "@/lib/uploadInquiryAttachment";
 import { z } from "zod";
+import { useSpamGuard } from "@/lib/spamGuard";
+import { HoneypotField } from "@/components/HoneypotField";
 
 const MAX_FILES = 5;
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
@@ -128,6 +130,7 @@ export function GuidedIntake() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const spamGuard = useSpamGuard();
   const attachmentFolder = useMemo(() => crypto.randomUUID(), [isOpen]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -218,6 +221,12 @@ export function GuidedIntake() {
       return;
     }
     setErrors({});
+    // Silent spam guard: pretend success and skip the database write.
+    const guard = spamGuard.check();
+    if (!guard.ok) {
+      setSubmitted(true);
+      return;
+    }
     setSubmitting(true);
 
     try {
