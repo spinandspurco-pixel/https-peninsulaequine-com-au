@@ -58,6 +58,23 @@ export class RetryOutcomeErrorBoundary extends Component<Props, State> {
     this.setState({ info });
     // eslint-disable-next-line no-console
     console.error("[RetryOutcomeErrorBoundary]", error, info);
+    try {
+      const report: RetryOutcomeErrorReport = {
+        surface: "retry-outcome",
+        timestamp: new Date().toISOString(),
+        href: typeof window !== "undefined" ? window.location.href : "",
+        userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "",
+        error: { name: error.name, message: error.message, stack: error.stack },
+        componentStack: info.componentStack ?? null,
+        hasDebugPayload: this.props.debugPayload !== undefined,
+        hasDebugContext: this.props.debugContext !== undefined,
+      };
+      this.props.onCapture?.(report);
+    } catch (hookError) {
+      // Never let the monitoring hook itself break the fallback UI.
+      // eslint-disable-next-line no-console
+      console.error("[RetryOutcomeErrorBoundary] onCapture failed", hookError);
+    }
   }
 
   componentWillUnmount() {
