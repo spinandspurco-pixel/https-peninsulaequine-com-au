@@ -188,6 +188,15 @@ export default function AdminTestimonials() {
     fetchData();
   };
 
+  const togglePublish = async (t: ManagedTestimonial) => {
+    if (isPreview) { toast.error("View-only in client preview"); return; }
+    const next = !t.active;
+    const { error } = await supabase.from("managed_testimonials").update({ active: next }).eq("id", t.id);
+    if (error) { toast.error("Failed to update"); return; }
+    toast.success(next ? "Published" : "Unpublished");
+    setItems((prev) => prev.map((x) => (x.id === t.id ? { ...x, active: next } : x)));
+  };
+
   if (loading || !canAccess) return null;
 
   return (
