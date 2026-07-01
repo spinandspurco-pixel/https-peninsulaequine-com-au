@@ -288,7 +288,7 @@ Same build/output settings. `public/_redirects` handles SPA fallback on both.
 
 ## 13. Operational status
 
-- **Live alerts:** see [`OPS_ALERTS.md`](./OPS_ALERTS.md). Currently tracks the `procasa.com.au` cPanel AutoSSL renewal failure (disk quota — external, unrelated to this codebase).
+- **Live alerts:** see [`OPS_ALERTS.md`](./OPS_ALERTS.md). No open alerts.
 - **Cleanup roadmap:** see [`REPOSITORY_CLEANUP_PLAN.md`](./REPOSITORY_CLEANUP_PLAN.md). **Stage A complete** (orphan asset purge + 8 unused packages removed). Stages B–D pending explicit approval.
 - **Known optimisation target:** `Admin-*.js` (~716 KB) and `index-*.js` (~755 KB) — to be addressed via Vite `manualChunks` before further code deletion.
 
