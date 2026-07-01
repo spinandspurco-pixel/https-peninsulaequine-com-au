@@ -235,25 +235,7 @@ export default function LessonInquiry({
         >
           {step === 0 && <StepFocus data={data} set={set} errors={errors} lockedType={lockedType} />}
 
-  return (
-    <Layout>
-      <PageHeader
-        overline={`Step ${step + 1} of ${STEPS.length}`}
-        title="Request a lesson or consult"
-        subtitle="A short guided intake. Under two minutes."
-      />
-      <section className="max-w-2xl mx-auto px-6 pb-24">
-        <Stepper current={step} />
 
-        <form
-          className="mt-12 space-y-8"
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (step < STEPS.length - 1) goNext();
-            else submit();
-          }}
-        >
-          {step === 0 && <StepFocus data={data} set={set} errors={errors} />}
           {step === 1 && <StepContact data={data} set={set} errors={errors} />}
           {step === 2 && <StepGoals data={data} set={set} errors={errors} />}
           {step === 3 && <StepTiming data={data} set={set} errors={errors} />}
